@@ -61,6 +61,7 @@ class FieldMultiselect extends PureComponent {
       searchFacetKey: "",
       sizeDropDownList: {},
       sizeDropDownKey: "",
+      showMore: false,
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
@@ -523,9 +524,11 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: { data },
     } = this.props;
+    const { showMore } = this.state;
     if (this.props.isSortBy) {
       return null;
     }
+    console.log("muskan--->",this.props.filter);
     if (data) {
       return (
         <div block="MultiSelectOption">
@@ -544,9 +547,20 @@ class FieldMultiselect extends PureComponent {
                         ? "Out of Stock"
                         : val.label;
                     return (
-                      <li key={key} block="selectedListItem">
-                        {label}
-                      </li>
+                      <>
+                        <li key={key} block="selectedListItem">
+                          {label}
+                        </li>
+                        {showMore ? (
+                          <div block="PDPDetailWrapper" elem="Button">
+                            <button
+                              onClick={() => this.updateShowMoreState(false)}
+                            >
+                              {__("SHOW MORE")}
+                            </button>
+                          </div>
+                        ) : null}
+                      </>
                     );
                   }
                 });
@@ -559,9 +573,20 @@ class FieldMultiselect extends PureComponent {
                       ? "Out of Stock"
                       : values.label;
                   return (
-                    <li key={keys} block="selectedListItem">
-                      {label}
-                    </li>
+                    <>
+                      <li key={keys} block="selectedListItem">
+                        {label}
+                      </li>
+                      {showMore ? (
+                        <div block="PDPDetailWrapper" elem="Button">
+                          <button
+                            onClick={() => this.updateShowMoreState(false)}
+                          >
+                            {__("SHOW MORE")}
+                          </button>
+                        </div>
+                      ) : null}
+                    </>
                   );
                 }
               }
@@ -571,6 +596,27 @@ class FieldMultiselect extends PureComponent {
       );
     }
   }
+
+  updateShowMoreState = (state) => {
+    this.setState({ showMore: state });
+  };
+
+  // showMoreText = () => {
+  //   // Get all the elements from the page
+  //   var points = document.getElementById("points");
+  //   var showMoreText = document.getElementById("moreText");
+  //   var buttonText = document.getElementById("textButton");
+  //   if (points.style.display === "none") {
+  //     showMoreText.style.display = "none";
+  //     points.style.display = "inline";
+  //     buttonText.innerHTML = "Show More";
+  //   }
+  //   else {
+  //     showMoreText.style.display = "inline";
+  //     points.style.display = "none";
+  //     buttonText.innerHTML = "Show Less";
+  //   }
+  // };
 
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;
