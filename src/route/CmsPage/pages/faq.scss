@@ -7,6 +7,10 @@
         }
 
         .showHide {
+            @include mobile {
+                margin-top: 40px;
+            }
+
             input {
                 display: none;
             }
@@ -76,17 +80,37 @@
                 margin-right: 5px;
             }
         }
+
         @include mobile {
-            padding-top: 90px;
-            padding-bottom: 80px;
+            padding-top: 0;
+            padding-bottom: 0;
         }
     }
 
     .return-information {
         @include mobile {
-            padding: 100px 16px 80px 16px;
+            padding: 0px 16px 0px 16px;
+            margin-top: 60px;
         }
     }
+}
+
+.MyAccountMobileHeader {
+    &-TabOptionHeader {
+        display: flex;
+        z-index: 99;
+        background: #fff;
+        height: 60px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        align-items: center;
+    }
+}
+
+.noPadding {
+    padding-top: 0 !important;
 }
 
 .PageWrapper {
