@@ -175,6 +175,10 @@
 }
 
 .Products-Filter {
+    @include desktop{
+        position: unset;
+    }
+
     .PLPFilters {
         // margin: 0 20px;
         // display: flex;
@@ -185,6 +189,9 @@
         ////grid-template-columns: 1;
         ////grid-gap: 10px;
         ////margin-block: 10px;
+        @include desktop{
+            position: unset;
+        }
         .FieldMultiselect {
             direction: unset;
             border-bottom: solid 1px var(--field-multiselect-border);
@@ -349,10 +356,10 @@
             }
         }
         .SortBy{
-            position: fixed;
-            right: 168px;
-            z-index: 5;
-            top: 220px;
+            position: absolute;
+            z-index: 2;
+            top: 25px;
+            right: 0;
             height: 34px;
             width: 87px;
             border: 1px solid #000000;
@@ -360,6 +367,7 @@
             background-color: #FFFFFF;
             .FieldMultiselect{
                 height: 34px;
+                border-bottom: unset;
                 &-FilterButton{
                     padding: 7px 0;
                     font-size: 13px;
