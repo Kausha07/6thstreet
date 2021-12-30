@@ -15,6 +15,11 @@ export const resetPassword = (email) => MobileAPI.post(
     email
 ) || {};
 
+export const sendOTP = ({ phone, flag }) => MobileAPI.post(
+    '/otp/send',
+    { mobile: phone, flag }
+) || {};
+
 export const resetPasswordWithToken = (data) => MagentoAPI.post(
     '/customers/resetPassword',
     data
