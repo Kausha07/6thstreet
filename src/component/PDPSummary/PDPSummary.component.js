@@ -153,6 +153,18 @@ class PDPSummary extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const url = new URL(window.location.href);
+
+    if (isMobile.any()) {
+      return <div>
+        <h1>{brand_name}</h1>
+        <ShareButton
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        >hello</ShareButton>
+      </div>
+    }
 
     return <h1>{brand_name}</h1>;
   }
@@ -345,7 +357,7 @@ class PDPSummary extends PureComponent {
       simple_products &&
       selectedSizeCode &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-        parseInt(simple_products[selectedSizeCode]?.quantity) &&
+      parseInt(simple_products[selectedSizeCode]?.quantity) &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
     ) {
       tags.push(__("International Shipment"));
