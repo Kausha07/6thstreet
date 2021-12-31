@@ -11,28 +11,28 @@ export const mapStateToProps = (_state) => ({
 class PLPLoadMore extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            wasRequested: false,
-        };
+        // this.state = {
+        //     wasRequested: false            
+        // };
+        this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 
 
-    handleLoadMore() {
-
+    handleLoadMore(e) {
+        e.preventDefault();
         const pageIndex = parseInt(this.props.pageKey) + 1;
-        // const { wasRequested } = this.state;
-        // if (isVisible && !wasRequested) {
-
-        //this.setState({ wasRequested: true });
         WebUrlParser.setPage(pageIndex);
-        // }
     }
     render() {
-        const { productMeta: { hits_count: totalProducts, limit, page, page_count } } = this.props
         const pageKey = this.props.pageKey;
+        
+        const  { productMeta: { hits_count: totalProducts, limit, page, page_count : totalPageCount} } = this.props
+        //const pageKey = this.props.pageKey;
 
+        //let page_count = totalPageCount - 1;
+        let page_count = totalPageCount;
+        //console.log("load more pp", totalProducts, limit, page, page_count )
         let loadedProduct = limit * pageKey;
-        //let lastPage = page_count - 1;
         let lastPageProduct = totalProducts - ((page_count - 1) * limit);
         if (page_count == pageKey) {
             loadedProduct = limit * (page_count - 1);
@@ -50,7 +50,7 @@ class PLPLoadMore extends PureComponent {
                     </div>
                 </div>
                 <div block="LoadMore">
-                    <button block="button" onClick={() => this.handleLoadMore()}>Load More</button>
+                    <button block="button" onClick={(e) => this.handleLoadMore(e)}>Load More</button>
                 </div>
 
             </div>

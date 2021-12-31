@@ -1,8 +1,12 @@
 .PLPDetails {
-    // display: flex;
-    // align-items: center;
-    // grid-gap: 20px;
-    margin-bottom: 57px;
+    display: flex;
+    align-items: center;
+    &-Wrapper {
+        display: flex;
+        align-items: center;
+        grid-gap: 20px;
+        margin-bottom: 55px;
+    }
     &-ShareIcon {
         display: flex;
         justify-content: flex-end;
@@ -21,49 +25,31 @@
         font-weight: 600;
         letter-spacing: -1px;
         line-height: 55px;
-        text-align: center;
-        margin: 16px 0;
     }
     &-BrandHTML {
         font-size: 18px;
         letter-spacing: 0;
         line-height: 25px;
-        text-align: center;
         * {
             font-size: 18px;
             letter-spacing: 0;
             line-height: 25px;
-            margin: 0 !important;
             padding: 0 !important;
+            margin: 0 !important
         }
     }
+    &-BrandImage {
+        flex: 1;
+        padding-block: 1rem;
+    }
     &-BrandDescription {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 20px;
-        flex-wrap: wrap;
-        @include mobile {
-            flex-direction: column;
-        }
-        .PLPDetails {
-            &-BrandImage {
-                flex: 1;
-            }
-            &-BrandHTML {
-                flex: 1;
-                font-size: 18px;
-                letter-spacing: 0;
-                line-height: 25px;
-                text-align: left;
-                text-align: justify;
-                * {
-                    // font-size: 18px;
-                    // letter-spacing: 0;
-                    // line-height: 25px;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                }
+        flex: 1;
+        padding-block: 1rem;
+        &.notBrandImageVisible {
+            text-align: center;
+            .PLPDetails-BrandName {
+                margin-top: 16px;
+                margin-bottom: 16px;
             }
         }
     }
