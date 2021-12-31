@@ -731,10 +731,9 @@
     "ADULT SIZES": null,
     "MEN’S CLOTHING SIZE GUIDE": null,
     "WOMEN’S CLOTHING SIZE GUIDE": null,
-    "KIDS’ SHOES SIZE GUIDE": null,
-    "KIDS’ CLOTHING SIZE GUIDE": null,
     "KID’S CLOTHING SIZE GUIDE": null,
     "KID’S SHOES SIZE GUIDE": null,
+    "KIDS’ CLOTHING SIZE GUIDE": null,
     "EUR": null,
     "USA": null,
     "CM": null,
@@ -945,5 +944,6 @@
     "Contact & Help": null,
     "Q&A": null,
     "Return Policy": null,
-    "FAQ": null
+    "FAQ": null,
+    "OTP sent successfully": null
 }

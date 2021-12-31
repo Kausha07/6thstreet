@@ -8,6 +8,7 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
 import {
   CUSTOMER_ACCOUNT,
@@ -30,7 +31,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import MyAccountOverlay from "./MyAccountOverlay.component";
-
+import { sendOTP } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -39,6 +40,7 @@ import {
   STATE_FORGOT_PASSWORD_SUCCESS,
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
+  STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
 
 export const MyAccountDispatcher = import(
@@ -60,13 +62,21 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.forgotPassword(dispatch, options)
     ),
-  createAccount: (options) =>
+  createAccountNew: (options) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.createAccount(options, dispatch)
+      dispatcher.createAccountNew(options, dispatch)
+    ),
+  loginAccount: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.loginAccount(options, dispatch)
     ),
   signIn: (options) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.signIn(options, dispatch)
+    ),
+  signInOTP: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.signInOTP(options, dispatch)
     ),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
@@ -75,16 +85,18 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, headerState)),
   goToPreviousHeaderState: () =>
     dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
+  showError: (message) => dispatch(showNotification("error", message)),
 });
 
 export class MyAccountOverlayContainer extends PureComponent {
   static propTypes = {
     forgotPassword: PropTypes.func.isRequired,
     signIn: PropTypes.func.isRequired,
+    signInOTP: PropTypes.func.isRequired,
     isPasswordForgotSend: PropTypes.bool.isRequired,
     isSignedIn: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
-    createAccount: PropTypes.func.isRequired,
+    createAccountNew: PropTypes.func.isRequired,
     isPopup: PropTypes.bool.isRequired,
     showOverlay: PropTypes.func.isRequired,
     setHeaderState: PropTypes.func.isRequired,
@@ -97,14 +109,17 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   static defaultProps = {
     isCheckout: false,
-    onSignIn: () => {},
-    goToPreviousHeaderState: () => {},
+    onSignIn: () => { },
+    goToPreviousHeaderState: () => { },
   };
 
   containerFunctions = {
     onSignInSuccess: this.onSignInSuccess.bind(this),
     onSignInAttempt: this.onSignInAttempt.bind(this),
+    onSignInOption: this.onSignInOption.bind(this),
     onCreateAccountAttempt: this.onCreateAccountAttempt.bind(this),
+    OTPFieldChange: this.OTPFieldChange.bind(this),
+    resendOTP: this.resendOTP.bind(this),
     onCreateAccountSuccess: this.onCreateAccountSuccess.bind(this),
     onForgotPasswordSuccess: this.onForgotPasswordSuccess.bind(this),
     onForgotPasswordAttempt: this.onForgotPasswordAttempt.bind(this),
@@ -114,6 +129,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     handleCreateAccount: this.handleCreateAccount.bind(this),
     onCreateAccountClick: this.onCreateAccountClick.bind(this),
     onVisible: this.onVisible.bind(this),
+    OtpErrorClear: this.OtpErrorClear.bind(this)
   };
 
   constructor(props) {
@@ -178,7 +194,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     const { isSignedIn: prevIsSignedIn } = prevProps;
     const { state: oldMyAccountState } = prevState;
     const { state: newMyAccountState } = this.state;
-
     const {
       isSignedIn,
       hideActiveOverlay,
@@ -210,6 +225,9 @@ export class MyAccountOverlayContainer extends PureComponent {
       // eslint-disable-next-line react/no-unused-state
       isPasswordForgotSend,
       isLoading: false,
+      customerRegisterData: {},
+      customerLoginData: {},
+      otpError: "",
     };
 
     // if customer got here from forgot-password
@@ -243,6 +261,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
+    console.log("sign in ran")
     try {
       await signIn(fields);
       onSignIn();
@@ -270,43 +289,163 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
   }
 
+  onSignInOption(isOTP, fields, countryCode) {
+    if (!isOTP) {
+      return this.onSignInSuccess(fields);
+    }
+    this.sendOTP(countryCode, fields);
+  }
+
+  async sendOTP(countryCode, fields) {
+    const { email } = fields;
+    const phoneNumber = `${countryCode}${email}`;
+    const { showError } = this.props;
+    try {
+      const { success, error } = await sendOTP({
+        phone: phoneNumber,
+        flag: "login",
+      });
+      if (success) {
+        this.setState({
+          customerLoginData: { username: phoneNumber },
+          state: STATE_VERIFY_NUMBER,
+        });
+      } else {
+        showError(error);
+      }
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+      console.log("error while sending OTP", error);
+    }
+  }
+
   onSignInAttempt() {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, otpError: "" });
+  }
+
+  async OTPFieldChange(field) {
+    this.setState({ otpError: "" });
+    try {
+      const { createAccountNew, loginAccount } = this.props;
+      const { customerLoginData, customerRegisterData } = this.state;
+      if (
+        field?.length === 5 &&
+        (Object.entries(customerRegisterData)?.length ||
+          Object.entries(customerLoginData)?.length)
+      ) {
+        this.setState({ isLoading: true });
+        let response;
+        let payload;
+        if (Object.entries(customerRegisterData)?.length) {
+          payload = { ...customerRegisterData, otp: field };
+          response = await createAccountNew(payload);
+        } else {
+          payload = {
+            ...customerLoginData,
+            password: field,
+            is_phone: true,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          };
+          response = await loginAccount(payload);
+        }
+        const { success } = response;
+        if (success) {
+          const { signInOTP, showNotification } = this.props;
+          try {
+            await signInOTP(response);
+            this.checkForOrder();
+          } catch (e) {
+            this.setState({ isLoading: false });
+            showNotification("error", e.message);
+          }
+          this.setState({
+            isLoading: false,
+            customerRegisterData: {},
+            customerLoginData: {},
+          });
+        }
+        if (typeof response === "string") {
+          // showError(response);
+          this.setState({ otpError: response });
+        }
+        this.setState({ isLoading: false });
+      }
+    } catch (err) {
+      this.setState({ isLoading: false });
+      console.log("Error while creating customer", err);
+    }
   }
 
   onCreateAccountAttempt(_, invalidFields) {
     this.setState({ isLoading: !invalidFields });
   }
 
-  onCreateAccountSuccess(fields) {
-    const { createAccount } = this.props;
+  async resendOTP() {
+    const { customerLoginData, customerRegisterData } = this.state;
+    const { showNotification } = this.props;
+    this.setState({ isLoading: true });
+    try {
+      if (Object.entries(customerRegisterData)?.length) {
+        const { contact_no } = customerRegisterData;
+        const { success, error } = await sendOTP({
+          phone: contact_no,
+          flag: "register",
+        });
+        if (success) {
+          showNotification("success", __("OTP sent successfully"));
+        } else if (error) {
+          showNotification("error", error);
+        }
+      } else if (Object.entries(customerLoginData)?.length) {
+        const { username } = customerLoginData;
+        const { success, error } = await sendOTP({
+          phone: username,
+          flag: "login",
+        });
+        if (success) {
+          showNotification("success", __("OTP sent successfully"));
+        } else if (error) {
+          showNotification("error", error);
+        }
+      }
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+      console.log("error while resend otp", error);
+    }
+  }
 
-    const { password, email, fullname, privacyPolicy, gender } = fields;
+  async onCreateAccountSuccess(fields, countryCode) {
+    const { showError } = this.props;
 
-    const [firstname, ...rest] = fullname?.split(" ");
+    const { password, email, fullname, gender, phone } = fields;
+    const phoneNumber = `${countryCode}${phone}`;
     const customerData = {
-      customer: {
-        firstname,
-        lastname: rest?.join(" ") || "",
-        email,
-        is_subscribed: privacyPolicy,
-        gender,
-      },
+      name: fullname,
+      gender,
+      email,
       password,
+      contact_no: phoneNumber,
     };
-
-    createAccount(customerData).then((code) => {
-      // if user needs confirmation
-      if (code === 2) {
-        this.setState({ state: STATE_CONFIRM_EMAIL });
+    try {
+      const { success, error } = await sendOTP({
+        phone: phoneNumber,
+        flag: "register",
+      });
+      if (success) {
+        this.setState({
+          customerRegisterData: customerData,
+          state: STATE_VERIFY_NUMBER,
+        });
+      } else {
+        showError(error);
       }
-
-      if (code === 1) {
-        this.onSignInSuccess({ email, password });
-      }
-
-      this.stopLoading();
-    }, this.stopLoading);
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+      console.log("error while sending OTP", error);
+    }
   }
 
   onForgotPasswordSuccess(fields) {
@@ -383,6 +522,9 @@ export class MyAccountOverlayContainer extends PureComponent {
     });
   }
 
+  OtpErrorClear() {
+    this.setState({ otpError: "" });
+  }
   render() {
     const { state } = this.state;
     const { hideActiveOverlay } = this.props;

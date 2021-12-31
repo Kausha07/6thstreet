@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-:root {
+ :root {
   --checkbox-label-color: #0a0a0a;
   --my-account-input-label-color: rgba(10, 10, 10, 0.59);
   --my-account-overlay-width: 450px;
@@ -18,6 +18,15 @@
   --gray-color: #9b9b9b;
   --btn-bg-lite-gray-color: #d1d3d4;
   --likelink-button-color: #4a4a4a;
+}
+.sk-three-bounce > div {
+  height: 6px;
+  width: 6px;
+  margin-right: 5px;
+}
+.sk-circle {
+  width: 10px;
+  height: 30px;
 }
 
 .MyAccountOverlay {
@@ -36,7 +45,10 @@
     opacity: 0;
     overflow: hidden;
   }
-
+  &-LoadingButton {
+    background-color: #a9a9a9 !important;
+    border: #a9a9a9 !important;
+  }
   &-Image {
     display: flex;
     justify-content: center;
@@ -115,6 +127,113 @@
       font-weight: var(--fw-medium);
       letter-spacing: 0.5px;
       line-height: 16px;
+    }
+  }
+  .VerifyPhone {
+    height: auto;
+    text-align: center;
+    margin: 30px 0;
+
+    &-Text {
+      font-family: var(--avenir-demi-font);
+      margin: 0 60px;
+      display: grid;
+
+      &-Title {
+        font-size: 18px;
+        font-weight: var(--fw-demi);
+        text-transform: capitalize;
+        margin: 0px 0 10px;
+      }
+
+      &-Message {
+        color: #4a4a4a;
+        font-size: 14px;
+      }
+
+      &-SubTitle {
+        margin: 16px 0;
+        margin: 6px auto;
+        font-size: 14px;
+      }
+
+      &-Phone {
+        width: 100%;
+        button {
+          text-decoration: underline;
+          margin-top: -7px;
+          font-weight: var(--fw-demi);
+        }
+      }
+    }
+    &-Code {
+      input {
+        text-align: center;
+        width: calc(100% - 15px);
+        background-color: transparent;
+        border: 0;
+        letter-spacing: 15px;
+        font-size: 27px;
+        margin-left: 15px;
+        caret-color: transparent;
+      }
+    }
+    &-ErrMessage {
+      display: none;
+      &_isValidated {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        color: #f01136;
+        font-size: 13px;
+        margin-top: 11px;
+      }
+    }
+    &-OtpLoader {
+      display: none;
+      &_isSubmitted {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0px 40px 0px;
+      }
+    }
+    &-ResendCode {
+      display: none;
+      &_isVerifying {
+        display: block;
+        margin: 40px 0px 40px 0px;
+      }
+      button {
+        font-weight: var(--fw-regular);
+        font-size: 14px;
+        margin-top: 0;
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: #4a4a4a;
+      }
+    }
+
+    @include before-desktop() {
+      background-color: #ffffff;
+    }
+
+    & form {
+      padding: 15px 60px 0px 60px;
+    }
+    @include after-mobile() {
+      margin-left: 0;
+      width: 100%;
+
+      button {
+        width: unset;
+      }
+    }
+
+    @include mobile() {
+      width: auto;
+      margin-inline: 0;
+      margin-left: 0;
+      margin-right: 0;
     }
   }
 
@@ -197,8 +316,9 @@
   }
 
   &-Action {
-    display: grid;
-    grid-template-rows: max-content 1fr;
+    display: block;
+    // display: grid;
+    // grid-template-rows: max-content 1fr;
     overflow-y: auto;
 
     &_state {
@@ -243,6 +363,16 @@
       &_signIn {
         height: 100vh;
         @include desktop() {
+          max-height: 88vh;
+        }
+        h4 {
+          text-align: center;
+        }
+      }
+      &_otpVerification {
+        height: 100vh;
+        @include desktop() {
+          height: 642px;
           max-height: 88vh;
         }
         h4 {
@@ -372,7 +502,7 @@
     &::before,
     &::after {
       background-color: var(--header-color);
-      content: '';
+      content: "";
       height: 20px;
       position: absolute;
       right: 27px;
@@ -544,7 +674,7 @@
     &_isSignIn {
       &::after {
         position: absolute;
-        content: '';
+        content: "";
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -578,7 +708,7 @@
       margin-top: 24px;
       &::after {
         position: absolute;
-        content: '';
+        content: "";
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -662,7 +792,7 @@
     margin-top: 15px;
     display: flex;
 
-    .Field [type='checkbox'] {
+    .Field [type="checkbox"] {
       + label {
         margin-right: 10px;
       }
@@ -677,7 +807,7 @@
     }
 
     &_isArabic {
-      .Field [type='checkbox'] {
+      .Field [type="checkbox"] {
         + label {
           margin-left: 10px;
           margin-right: 0;
@@ -690,7 +820,7 @@
     display: flex;
     margin-top: 10px;
 
-    .Field [type='radio'] {
+    .Field [type="radio"] {
       + label {
         position: relative;
         height: 14px;
@@ -782,6 +912,12 @@
         border-bottom: 0.5px solid #d1d3d4;
         border-left: 0.5px solid #d1d3d4;
         border-radius: 6px;
+        margin-bottom: 16px;
+        .Field-Message {
+          margin: 5px 0 0;
+          font-size: 12px;
+          line-height: 14px;
+        }
       }
       .PhoneCountryCodeField {
         height: 40px;
@@ -859,41 +995,110 @@
   }
 
   &-PhoneNumber {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 40px;
     margin-top: 10px;
-    .PhoneCountryCodeField {
-      height: 40px;
-      margin-bottom: 32px;
-      margin-top: 0px;
-      width: 104px;
-      .CountryMiniFlag {
-        &-Container {
-          margin-bottom: -36px;
-        }
+    .UserIdentifierFieldsContainerCreate {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 48px;
+      border-top: 0.5px solid #d1d3d4;
+      border-right: 0.5px solid #d1d3d4;
+      border-bottom: 0.5px solid #d1d3d4;
+      border-left: 0.5px solid #d1d3d4;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      .Field-Message {
+        margin: 5px 0 0;
+        font-size: 12px;
+        line-height: 12px;
       }
-      select {
+      .PhoneCountryCodeField {
         height: 40px;
-        border: 0.5px solid #d1d3d4;
-        border-radius: 6px;
+        margin-bottom: 32px;
+        margin-top: 0px;
+        width: 104px;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        .CountryMiniFlag {
+          &-Container {
+            margin-bottom: -36px;
+          }
+        }
+        .Field {
+          border-top: none;
+          border-right: none;
+          border-bottom: none;
+          border-left: none;
+          &_type_select {
+            height: 40px;
+            .FieldSelect-Select {
+              border-top: none;
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+              height: 40px;
+            }
+          }
+        }
       }
-    }
-    .Field {
-      height: 40px;
-      margin-top: 0;
-      &_type_text {
-        width: calc(100% - 112px);
-        margin-left: 8px;
-        input {
+      .Field {
+        min-height: 40px;
+        margin-top: 0;
+        width: 100%;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        &_type_phone {
           height: 40px;
-          border: 0.5px solid #d1d3d4;
-          border-radius: 6px;
+          width: calc(100% - 104px);
+          input {
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            border-left: none;
+            height: 40px;
+          }
         }
       }
     }
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    // width: 100%;
+    // height: 40px;
+    // margin-top: 10px;
+    // .PhoneCountryCodeField {
+    //   height: 40px;
+    //   margin-bottom: 32px;
+    //   margin-top: 0px;
+    //   width: 104px;
+    //   .CountryMiniFlag {
+    //     &-Container {
+    //       margin-bottom: -36px;
+    //     }
+    //   }
+    //   select {
+    //     height: 40px;
+    //     border: 0.5px solid #d1d3d4;
+    //     border-radius: 6px;
+    //   }
+    // }
+    // .Field {
+    //   height: 40px;
+    //   margin-top: 0;
+    //   &_type_text {
+    //     width: calc(100% - 112px);
+    //     margin-left: 8px;
+    //     input {
+    //       height: 40px;
+    //       border: 0.5px solid #d1d3d4;
+    //       border-radius: 6px;
+    //     }
+    //   }
+    // }
   }
 
   &-LockImg {

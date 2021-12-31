@@ -869,7 +869,7 @@ class PDPDetailsSection extends PureComponent {
             {this.renderDescription()}
           </Accordion>
           {this.renderAccordionSeperator()}
-          {this.renderShareButton()}
+          {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
 
