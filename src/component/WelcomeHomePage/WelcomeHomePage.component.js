@@ -7,7 +7,7 @@ import Link from "Component/Link";
 import { connect } from 'react-redux';
 import { LocationType } from "Type/Common";
 import history from "Util/History";
-import { setCountry, setLanguage, setLanguageForWelcome } from 'Store/AppState/AppState.action';
+import { setCountry, setLanguage, setLanguageForWelcome, setGender} from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
@@ -29,12 +29,14 @@ import './WelcomeHomePage.style';
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
     language: state.AppState.language,
-    country: state.AppState.country
+    country: state.AppState.country,
+    gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
+    setGender: (value) => dispatch(setGender(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
@@ -42,6 +44,7 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
+export const PREVIOUS_USER = 'PREVIOUS_USER';
 
 class WelcomeHomePage extends PureComponent {
     static propTypes = {
@@ -52,6 +55,15 @@ class WelcomeHomePage extends PureComponent {
     constructor(props) {
         super(props);
         let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+        let a = BrowserDatabase.getItem('PREVIOUS_USER')
+        if(a){
+            const { country, language, gender } = this.props;
+            const locale = `${language}-${country.toLowerCase()}`;
+            let url = URLS[locale] + `/${gender}.html`
+            console.log("url:", url, locale)
+            window.location.href = url
+
+        }
         if (k){
             this.state = {
                 isPopupOpen: false,
@@ -64,10 +76,7 @@ class WelcomeHomePage extends PureComponent {
                 locale,
                 gender
             } = k;
-            // if(locale !== ""){
 
-
-            // }
 
         }
         else{
@@ -144,8 +153,17 @@ class WelcomeHomePage extends PureComponent {
     onGenderSelect = (val) => {
         const { country, language } = this.props;
         const locale = `${language}-${country.toLowerCase()}`;
+        this.props.setGender(val);
+
+        let data = {
+            locale: locale
+        }
+
+        BrowserDatabase.setItem(data, 'PREVIOUS_USER');
         let url = URLS[locale] + `/${val}.html`
+        console.log("url:", url, locale)
         window.location.href = url
+
     }
 
     getWelcomeImageUrl = () => {
