@@ -24,21 +24,23 @@ class PLPLoadMore extends PureComponent {
         WebUrlParser.setPage(pageIndex);
     }
     render() {
-        const pageKey = this.props.pageKey;
-        
-        const  { productMeta: { hits_count: totalProducts, limit, page, page_count : totalPageCount} } = this.props
-        //const pageKey = this.props.pageKey;
+        const pageKey = parseInt(this.props.pageKey);        
+        const  { productMeta: { hits_count: totalProducts, limit, page, page_count } } = this.props;        
+        let loadedProduct;
+        let disablebtn =false;
 
-        //let page_count = totalPageCount - 1;
-        let page_count = totalPageCount;
-        //console.log("load more pp", totalProducts, limit, page, page_count )
-        let loadedProduct = limit * pageKey;
-        let lastPageProduct = totalProducts - ((page_count - 1) * limit);
-        if (page_count == pageKey) {
-            loadedProduct = limit * (page_count - 1);
-            loadedProduct = loadedProduct + lastPageProduct;
+        if(pageKey == 0){
+            loadedProduct = limit;   
+        }
+        if(pageKey == (page_count - 1)){   
+            disablebtn = true;         
+            loadedProduct = (limit * (page_count - 1)) + (totalProducts - ((page_count - 1) * limit));
+        }
+        if(pageKey !== 0 && pageKey !== (page_count - 1)){   
+            loadedProduct = limit * pageKey;
         }
         let progressWidth = loadedProduct * 100 / totalProducts;
+
         return (
             <div block="Product-LoadMore">
                 <div block="Product-Loaded-Info">
@@ -49,8 +51,11 @@ class PLPLoadMore extends PureComponent {
                         <div block="Product-ProgressBar-Bar" style={{ width: `${progressWidth}%` }}></div>
                     </div>
                 </div>
+                
                 <div block="LoadMore">
-                    <button block="button" onClick={(e) => this.handleLoadMore(e)}>Load More</button>
+                    <button block="button" onClick={(e) => this.handleLoadMore(e)} disabled={disablebtn}>
+                        {disablebtn ? "All Products Loaded" : "Load More"}
+                    </button>
                 </div>
 
             </div>
