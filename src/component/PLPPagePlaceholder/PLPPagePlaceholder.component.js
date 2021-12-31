@@ -22,8 +22,7 @@ class PLPPagePlaceholder extends PureComponent {
     return Array.from({ length: placeholderCount }, this.renderPlaceholder);
   }
   renderPlaceholderMobile() {
-    const { onVisibilityChange, isFirst } = this.props;
-    console.log("mobile view");
+    const { onVisibilityChange, isFirst } = this.props;    
     return (
       <VisibilitySensor
         delayedCall
@@ -37,13 +36,16 @@ class PLPPagePlaceholder extends PureComponent {
       </VisibilitySensor>
     )
   }
-  renderPlaceholderDesktop() {
-    console.log("desktop view");
-    const { isFirst } = this.props;
+  renderPlaceholderDesktop() {    
+    const { onVisibilityChange, isFirst } = this.props;    
     return (
       <VisibilitySensor
+        delayedCall
+        partialVisibility={["top", "bottom"]}
+        minTopValue="1"
+        onChange={onVisibilityChange}
       >
-        <div block="PLPPagePlaceholder" >
+        <div block="PLPPagePlaceholder" mods={{ isFirst }}>
           {this.renderPlaceholders()}
         </div>
       </VisibilitySensor>
