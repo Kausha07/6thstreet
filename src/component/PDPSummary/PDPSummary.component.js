@@ -156,13 +156,13 @@ class PDPSummary extends PureComponent {
     const url = new URL(window.location.href);
 
     if (isMobile.any()) {
-      return <div>
+      return <div block="PDPSummary" elem="Heading">
         <h1>{brand_name}</h1>
         <ShareButton
           title={document.title}
           text={`Hey check this out: ${document.title}`}
           url={url.searchParams.append("utm_source", "pdp_share")}
-        >hello</ShareButton>
+        />
       </div>
     }
 
