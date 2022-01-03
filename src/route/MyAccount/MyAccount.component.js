@@ -1,4 +1,5 @@
 import ContactHelp from "Component/ContactHelp";
+import SettingsScreen from "Component/SettingsScreen";
 import ContentWrapper from "Component/ContentWrapper";
 import Image from "Component/Image";
 import Link from "Component/Link";
@@ -20,6 +21,7 @@ import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
   CONTACT_HELP,
+  SETTINGS_SCREEN,
   DASHBOARD,
   MY_ORDERS,
   MY_WISHLIST,
@@ -64,6 +66,7 @@ export class MyAccount extends SourceMyAccount {
     [MY_WISHLIST]: MyAccountMyWishlist,
     [ADDRESS_BOOK]: MyAccountAddressBook,
     [CONTACT_HELP]: ContactHelp,
+    [SETTINGS_SCREEN]: SettingsScreen,
   };
 
   linksMap = [

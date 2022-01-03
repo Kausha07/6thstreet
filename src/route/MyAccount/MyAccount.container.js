@@ -15,6 +15,7 @@ import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
   CONTACT_HELP,
+  SETTINGS_SCREEN,
   DASHBOARD,
   MY_ORDERS,
   MY_WISHLIST,
@@ -68,6 +69,10 @@ export const tabMap = {
   [ADDRESS_BOOK]: {
     url: "/address-book",
     name: __("My Address Book"),
+  },
+  [SETTINGS_SCREEN]: {
+    url: "/settings",
+    name: __("Settings"),
   },
   [CONTACT_HELP]: {
     url: "/contact-help",

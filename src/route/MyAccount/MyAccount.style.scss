@@ -146,6 +146,11 @@
           background-image: url(./icons/contact-help.png);
         }
       }
+      &_settings {
+        &:before {
+          background-image: url(./icons/settings.png);
+        }
+      }
     }
   }
 
