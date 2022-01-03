@@ -326,11 +326,12 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async OTPFieldChange(field) {
     this.setState({ otpError: "" });
+    const inputValue = field.target.value;
     try {
       const { createAccountNew, loginAccount } = this.props;
       const { customerLoginData, customerRegisterData } = this.state;
       if (
-        field?.length === 5 &&
+        inputValue?.length === 5 &&
         (Object.entries(customerRegisterData)?.length ||
           Object.entries(customerLoginData)?.length)
       ) {
@@ -338,12 +339,12 @@ export class MyAccountOverlayContainer extends PureComponent {
         let response;
         let payload;
         if (Object.entries(customerRegisterData)?.length) {
-          payload = { ...customerRegisterData, otp: field };
+          payload = { ...customerRegisterData, otp: inputValue };
           response = await createAccountNew(payload);
         } else {
           payload = {
             ...customerLoginData,
-            password: field,
+            password: inputValue,
             is_phone: true,
             cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
           };
