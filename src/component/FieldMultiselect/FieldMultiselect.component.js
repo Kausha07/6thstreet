@@ -80,7 +80,15 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidMount() {
+    const {
+      filter: { selected_filters_count },
+    } = this.props;
     document.addEventListener("mousedown", this.handleClickOutside);
+    if (selected_filters_count > 0) {
+      this.setState({ showMore: true });
+    } else {
+      this.setState({ showMore: false });
+    }
   }
 
   componentWillUnmount() {
@@ -533,7 +541,7 @@ class FieldMultiselect extends PureComponent {
     if (data) {
       return (
         <div block="MultiSelectOption">
-          <ul block="selectedOptionLists">
+          <ul block="selectedOptionLists" mods={{ showMore }}>
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
                 return Object.values(values.subcategories).map(function (
@@ -552,15 +560,6 @@ class FieldMultiselect extends PureComponent {
                         <li key={key} block="selectedListItem">
                           {label}
                         </li>
-                        {showMore ? (
-                          <div block="PDPDetailWrapper" elem="Button">
-                            <button
-                              onClick={() => this.updateShowMoreState(false)}
-                            >
-                              {__("SHOW MORE")}
-                            </button>
-                          </div>
-                        ) : null}
                       </>
                     );
                   }
@@ -578,21 +577,19 @@ class FieldMultiselect extends PureComponent {
                       <li key={keys} block="selectedListItem">
                         {label}
                       </li>
-                      {showMore ? (
-                        <div block="PDPDetailWrapper" elem="Button">
-                          <button
-                            onClick={() => this.updateShowMoreState(false)}
-                          >
-                            {__("SHOW MORE")}
-                          </button>
-                        </div>
-                      ) : null}
                     </>
                   );
                 }
               }
             })}
           </ul>
+          {showMore ? (
+            <div block="FieldMultiselect" elem="ShowButton">
+              <div onClick={() => this.updateShowMoreState(false)}>
+                {__("Show More")}
+              </div>
+            </div>
+          ) : null}
         </div>
       );
     }
@@ -601,23 +598,6 @@ class FieldMultiselect extends PureComponent {
   updateShowMoreState = (state) => {
     this.setState({ showMore: state });
   };
-
-  // showMoreText = () => {
-  //   // Get all the elements from the page
-  //   var points = document.getElementById("points");
-  //   var showMoreText = document.getElementById("moreText");
-  //   var buttonText = document.getElementById("textButton");
-  //   if (points.style.display === "none") {
-  //     showMoreText.style.display = "none";
-  //     points.style.display = "inline";
-  //     buttonText.innerHTML = "Show More";
-  //   }
-  //   else {
-  //     showMoreText.style.display = "inline";
-  //     points.style.display = "none";
-  //     buttonText.innerHTML = "Show Less";
-  //   }
-  // };
 
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;

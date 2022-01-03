@@ -298,6 +298,8 @@ class PLPFilters extends PureComponent {
       Object.keys(activeFilters).map((key) => {
         if (key !== "categories.level1") {
           count = count + 1;
+        } else if (key === "categories.level1") {
+          count = count - 1;
         }
       });
     const displayCount = count;
