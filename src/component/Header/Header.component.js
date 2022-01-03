@@ -17,12 +17,20 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
-  return  {checkoutDetails: state.CartReducer.checkoutDetails}
+  return {
+    checkoutDetails: state.CartReducer.checkoutDetails,
+  }
 };
+
+export const mapDispatchToProps = (dispatch) => ({
+  resetProduct: () =>
+    PDPDispatcher.resetProduct({}, dispatch),
+});
 export class Header extends PureComponent {
   static propTypes = {
     navigationState: PropTypes.shape({
@@ -42,40 +50,44 @@ export class Header extends PureComponent {
     this.timer = setInterval(this.tick, delay);
   }
 
-  componentDidUpdate(prevState) {
-      const { delay } = this.state;
-      if (prevState !== delay) {
-          clearInterval(this.timer);
-          this.timer = setInterval(this.tick, delay);
-      }
+  componentDidUpdate(prevProps, prevState) {
+    const { delay, type } = this.state;
+    const { resetProduct } = this.props;
+    if (prevProps !== delay) {
+      clearInterval(this.timer);
+      this.timer = setInterval(this.tick, delay);
+    }
+    if (prevState.type !== type && type !== TYPE_PRODUCT) {
+      resetProduct()
+    }
   }
 
   componentWillUnmount() {
-      this.timer = null;
+    this.timer = null;
   }
 
   tick = () => {
-      this.setState({
-          type: this.getPageType(),
-      });
+    this.setState({
+      type: this.getPageType(),
+    });
   };
 
   getPageType() {
     if (location.pathname === '/' || location.pathname === '') {
-        return TYPE_HOME;
+      return TYPE_HOME;
     }
     if (matchPath(location.pathname, '/brands')) {
-        return TYPE_BRAND;
+      return TYPE_BRAND;
     }
     if (matchPath(location.pathname, '/my-account')) {
-        return TYPE_ACCOUNT;
+      return TYPE_ACCOUNT;
     }
     if (matchPath(location.pathname, '/cart')) {
-        return TYPE_CART;
+      return TYPE_CART;
     }
 
     return window.pageType;
-}
+  }
 
   headerSections = [
     HeaderTopBar,
@@ -105,7 +117,7 @@ export class Header extends PureComponent {
 
   getHideHeaderFooter = () => {
     const { isMobile } = this.state;
-    if(!isMobile){
+    if (!isMobile) {
       return false
     }
     const result = this.isPDP() || location.pathname.match(/cart/)
@@ -173,7 +185,7 @@ export class Header extends PureComponent {
     return (
       <>
         <header block="Header" mods={{ name }}>
-          { this.renderHeaderSections() }
+          {(isCheckout && !checkoutDetails) ? null : isMobile && checkoutDetails ? null : hideHeaderFooter ? this.headerSectionsTwo.map(this.renderSection) : this.headerSections.map(this.renderSection)}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
         <OfflineNotice />
@@ -182,4 +194,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

@@ -28,13 +28,6 @@ import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
 import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
-
-import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
-import {
-  hideActiveOverlay,
-  toggleOverlayByKey,
-} from "Store/Overlay/Overlay.action";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
