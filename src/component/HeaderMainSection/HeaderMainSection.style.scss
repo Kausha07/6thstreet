@@ -20,7 +20,6 @@ main {
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
-
   .leftContainer {
     display: flex;
     justify-content: flex-end;
@@ -120,6 +119,11 @@ main {
       &_isArabic {
         margin-right: 15%;
         margin-left: unset;
+      }
+
+      &_isPDP {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
     }
     @include tablet {

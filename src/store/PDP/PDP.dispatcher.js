@@ -2,6 +2,7 @@ import {
   setPDPData,
   setPDPClickAndCollect,
   setPDPLoading,
+  setPDPShowSearch
 } from "Store/PDP/PDP.action";
 import {
   sendNotifyMeEmail,
@@ -101,6 +102,11 @@ export class PDPDispatcher {
 
   async sendNotifyMeEmail(data) {
     return sendNotifyMeEmail(data);
+  }
+
+  async setPDPShowSearch(payload, dispatch) {
+    const { displaySearch } = payload
+    dispatch(setPDPShowSearch(displaySearch));
   }
 }
 
