@@ -4,6 +4,7 @@ import { PLPContainer } from "Route/PLP/PLP.container";
 import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
 import PLPPages from "./PLPPages.component";
 import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
+import isMobile from "Util/Mobile";
 
 export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
@@ -59,9 +60,14 @@ export class PLPPagesContainer extends PureComponent {
     const filteredPages = Object.keys(pages).filter(
       (page) => page !== "undefined"
     );
+
     const lastRequestedPage = Math.max(...Object.keys(filteredPages));
     const page = lastRequestedPage < 0 ? -1 : lastRequestedPage;
-    const pagesToShow = page + 2;
+    let pagetoShowinit = 1;
+    if (isMobile.any() || isMobile.tablet()) {
+      pagetoShowinit = 2
+    }
+    const pagesToShow = page + pagetoShowinit;
     const maxPage = page_count + 1;
 
     // assume there are pages before and after our current page
