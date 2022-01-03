@@ -94,33 +94,37 @@ export class MyAccount extends SourceMyAccount {
   renderAppColumn() {
     return this.linksMap.map((column) => (
       <div block="FooterMain" elem="LastColumn" key={column.title}>
-        <h4>{column.title}</h4>
+        <h4 block="FooterMain" elem="FooterHeading">
+          {column.title}
+        </h4>
         <div block="FooterMain" elem="Nav">
           {column.items.map((items) => (
             <Fragment key="last_main_footer_column">
               <div block="FooterMain" elem="WrapperFirst">
-                <Link to={items.app_onclick} key={items.id_app}>
-                  <Image
-                    lazyLoad={true}
-                    src={items.app_store}
-                    alt="app store download"
-                  />
-                </Link>
-                <Link to={items.google_onclick} key={items.id_google}>
-                  <Image
-                    lazyLoad={true}
-                    src={items.google_play}
-                    alt="google play download"
-                  />{" "}
-                </Link>
-                <Link to={items.gallery_onclick} key={items.id_gallery}>
-                  <Image
-                    lazyLoad={true}
-                    src={items.app_gallery}
-                    alt="app gallery download"
-                    className="appGallery"
-                  />
-                </Link>
+                <div block="MobileFooterMain">
+                  <Link to={items.app_onclick} key={items.id_app}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_store}
+                      alt="app store download"
+                    />
+                  </Link>
+                  <Link to={items.google_onclick} key={items.id_google}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.google_play}
+                      alt="google play download"
+                    />{" "}
+                  </Link>
+                  <Link to={items.gallery_onclick} key={items.id_gallery}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_gallery}
+                      alt="app gallery download"
+                      className="appGallery"
+                    />
+                  </Link>
+                </div>
               </div>
             </Fragment>
           ))}
