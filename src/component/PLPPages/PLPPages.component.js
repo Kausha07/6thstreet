@@ -353,7 +353,7 @@ class PLPPages extends PureComponent {
     return (
       <div block="PLPPages Products-Lists">
         {!isMobile.any() && (
-          <div class="ProductToolBar">
+          <div block="ProductToolBar">
             <div block="ProductSelectedFilters">
               {this.renderSelectedFilters()}
             </div>
@@ -361,7 +361,7 @@ class PLPPages extends PureComponent {
         )}
 
         {this.renderPages()}
-        {this.renderLoadMore()}
+        {/* {this.renderLoadMore()} */}
       </div>
     );
   }

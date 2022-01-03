@@ -67,23 +67,26 @@ class PLPDetails extends PureComponent {
     if (isMobile) {
       return null;
     }
-    console.log("error", !brandImg && !isMobile)
-    console.log("error", !isMobile)
-    console.log("error", !brandImg )
+    const brandImageVisible = brandImg ? "brandImageVisible" : "notBrandImageVisible";
+
     return (
-      <>
-        {isMobile ? "" : this.renderBrandName()}
-        {!brandImg && !isMobile ? this.renderBrandHtml() : ""}
+      <div block="PLPDetails" elem="Wrapper">
+        
         {!brandImg ? "" :
-         <div block="PLPDetails" elem="BrandDescription">
-          {isMobile ? "" : this.renderBrandImage()}
+          <div block="PLPDetails" elem="BrandImage">
+            {isMobile ? "" : this.renderBrandImage()}
+          </div>
+        }
+        <div block="PLPDetails" elem={`BrandDescription ${brandImageVisible}`}>
+          {/* {this.renderActionButtons()} */}
+          {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>
-        }
-        
 
-       
-      </>
+
+
+
+      </div>
     );
   };
 
