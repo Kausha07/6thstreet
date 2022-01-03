@@ -26,21 +26,23 @@ class PLPLoadMore extends PureComponent {
     render() {
         const pageKey = parseInt(this.props.pageKey);        
         const  { productMeta: { hits_count: totalProducts, limit, page, page_count } } = this.props;        
-        let loadedProduct;
+        let loadedProduct, progressWidth;
         let disablebtn =false;
-
-        if(pageKey == 0){
-            loadedProduct = limit;   
-        }
-        if(pageKey == (page_count - 1)){   
-            disablebtn = true;         
-            loadedProduct = (limit * (page_count - 1)) + (totalProducts - ((page_count - 1) * limit));
-        }
-        if(pageKey !== 0 && pageKey !== (page_count - 1)){   
-            loadedProduct = limit * pageKey;
-        }
-        let progressWidth = loadedProduct * 100 / totalProducts;
-
+        
+            if(pageKey == 0){
+                
+                loadedProduct = limit;   
+            }
+            if(pageKey == (page_count - 1)){   
+                
+                disablebtn = true; 
+                       
+                loadedProduct = (limit * (page_count - 1)) + (totalProducts - ((page_count - 1) * limit));
+            }
+            if(pageKey !== 0 && pageKey !== (page_count - 1)){ 
+                loadedProduct = (limit * pageKey) + 15 ;
+            }
+            progressWidth = loadedProduct * 100 / totalProducts;
         return (
             <div block="Product-LoadMore">
                 <div block="Product-Loaded-Info">
