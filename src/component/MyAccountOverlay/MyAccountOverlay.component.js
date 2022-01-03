@@ -400,11 +400,11 @@ export class MyAccountOverlay extends PureComponent {
       const abc = evt.target.value;
       if (invalidChars.includes(evt.key)) {
         evt.preventDefault();
-        return false
+        return false;
       }
       if (abc.length > 4) {
         return evt.preventDefault();
-      }      
+      }
     };
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
@@ -508,6 +508,7 @@ export class MyAccountOverlay extends PureComponent {
       this.state;
     this.setState({ isSignInValidated: false });
     OtpErrorClear();
+    const countryLabel = getCountryFromUrl();
     return (
       <Form
         key="create-account"
@@ -522,7 +523,7 @@ export class MyAccountOverlay extends PureComponent {
         <fieldset block="MyAccountOverlay" elem="PhoneNumber">
           <div block="UserIdentifierFieldsContainerCreate">
             <PhoneCountryCodeField
-              label={countryCode}
+              label={countryLabel}
               onSelect={(value) =>
                 this.setState({
                   countryCode: value,
