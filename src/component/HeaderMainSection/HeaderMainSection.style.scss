@@ -38,8 +38,11 @@ main {
     -webkit-transition-property: all;
     -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function: ease-in-out;
-    &[data-visible="false"] {
-      display: none;
+    &[data-visible='false'] {
+      // display: none;
+      // width:0;
+      // height:0;
+      visibility: hidden;
       top: -50px;
     }
   }
@@ -53,8 +56,10 @@ main {
     -webkit-transition-property: all;
     -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function: ease-in-out;
-    &[data-visible="false"] {
-      display: none;
+    &[data-visible='false'] {
+      // display: none;
+      // top: -50px;
+      visibility: hidden;
       top: -50px;
     }
   }
@@ -86,7 +91,7 @@ main {
       cursor: pointer;
     }
     &-Button {
-      content: "";
+      content: '';
       background: url(./icons/search-black.svg) no-repeat;
       background-size: 24px;
       width: 24px;
@@ -122,6 +127,7 @@ main {
       }
 
       &_isPDP {
+        top: 5px;
         margin-left: 0 !important;
         margin-right: 0 !important;
       }
@@ -191,7 +197,7 @@ main {
         display: none;
       }
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 10px;
         left: 5px;

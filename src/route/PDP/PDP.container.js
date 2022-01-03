@@ -137,6 +137,8 @@ export class PDPContainer extends PureComponent {
       product,
       menuCategories = [],
     } = this.props;
+    console.log("previous props", prevProps)
+    console.log("props", this.props)
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku } = this.state;
@@ -208,7 +210,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")

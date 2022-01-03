@@ -38,7 +38,7 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   static defaultProps = {
-    changeMenuGender: () => {},
+    changeMenuGender: () => { },
   };
 
   constructor(props) {
@@ -368,9 +368,14 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
   renderSearch() {
+    const { displaySearch } = this.props
+    const isPDPSearchVisible = this.isPDP() && displaySearch
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() ? null : (
-        <HeaderSearch key="search" />
+        <div block="HeaderSearchSection"
+          mods={{ isPDPSearchVisible }}>
+          <HeaderSearch key="search" />
+        </div>
       );
     }
 
