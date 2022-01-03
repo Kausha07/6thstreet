@@ -422,7 +422,7 @@ class FieldMultiselect extends PureComponent {
       >
         <Field
           formRef={this.allFieldRef}
-          onClick={() => {}}
+          onClick={() => this.onDeselectAllCategory(initialFacetKey)}
           mix={{
             block: "PLPFilterOption",
             elem: "Input",
@@ -441,18 +441,22 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  renderFilterSearchbox(label, category) {
+  renderFilterSearchbox(label, category, data) {
     let placeholder = label
       ? label
       : `${category.charAt(0).toUpperCase()}${
           category.split(category.charAt(0))[1]
         }`;
+    const { currentActiveFilter } = this.props;
     const { isArabic } = this.state;
+    if (currentActiveFilter !== category) {
+      return null;
+    }
     return (
       <div block="Search-Container">
         <input
           type="text"
-          id={category}
+          id={currentActiveFilter}
           placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
           onChange={(event) => this.handleFilterSearch(event)}
         />
@@ -606,7 +610,9 @@ class FieldMultiselect extends PureComponent {
       isHidden,
       filter: { data = {}, subcategories = {}, category, is_radio, label },
       initialOptions,
+      currentActiveFilter,
     } = this.props;
+    let conditionalData = data ? data : subcategories;
 
     const datakeys = [];
     if (category === "sizes") {
@@ -614,7 +620,6 @@ class FieldMultiselect extends PureComponent {
         datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
       });
     }
-    let conditionalData = data ? data : subcategories;
 
     if (category === "categories_without_path") {
       let categoryLevel1 = initialOptions.q.split(" ")[1];
@@ -648,9 +653,9 @@ class FieldMultiselect extends PureComponent {
         {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
-            {/* {Object.keys(conditionalData).length > 10
-              ? this.renderFilterSearchbox(label, category)
-              : null} */}
+            {Object.keys(conditionalData).length > 10
+              ? this.renderFilterSearchbox(label, category, conditionalData)
+              : null}
             {category === "sizes" && !isMobile.any()
               ? this.renderSizeDropDown(datakeys)
               : null}
@@ -671,7 +676,7 @@ class FieldMultiselect extends PureComponent {
           }}
         >
           {isMobile.any() && Object.keys(conditionalData).length > 10
-            ? this.renderFilterSearchbox(label, category)
+            ? this.renderFilterSearchbox(label, category, conditionalData)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>
         </div>

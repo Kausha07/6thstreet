@@ -256,6 +256,9 @@ $select-arrow-width: 6px !default;
     // left: 10px;
     transition: 0;
     top: 40px;
+    &_showSearch {
+      top: 86px !important;
+    }
     &_toggleOptionsList {
       border: 1px solid var(--field-multiselect-border);
       border-top: none;
@@ -284,7 +287,7 @@ $select-arrow-width: 6px !default;
     }
     @include mobile {
       position: fixed;
-      top: 86px;
+      top: 52px;
       right: 0;
       left: unset;
       width: 65%;
@@ -301,9 +304,9 @@ $select-arrow-width: 6px !default;
 
   .Search-Container {
     @include mobile {
-      position: fixed;
-      width: 65%;
-      top: 52px;
+      position: relative;
+      // width: 65%;
+      // top: 52px;
     }
     input {
       background-color: #f5f5f5;
