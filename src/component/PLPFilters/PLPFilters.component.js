@@ -275,7 +275,6 @@ class PLPFilters extends PureComponent {
 
   renderFiltersCount() {
     const displayCount = this.getFilterCount();
-
     if (displayCount < 0) {
       return "(0)";
     }
@@ -296,9 +295,7 @@ class PLPFilters extends PureComponent {
       : { count: 0 };
     Object.keys(activeFilters).length > 0 &&
       Object.keys(activeFilters).map((key) => {
-        if (key !== "categories.level1") {
-          count = count + 1;
-        } else if (key === "categories.level1") {
+        if (key === "categories.level1") {
           count = count - 1;
         }
       });
