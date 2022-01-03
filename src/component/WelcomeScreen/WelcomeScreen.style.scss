@@ -124,7 +124,13 @@
             }
             &-Check {
                 float: left;
+                left: 0;
+                right: unset;
             }
+        }
+        .CountryMiniFlag-Container{
+            margin-left: 8px;
+            margin-right: 0px;
         }
     }
 }

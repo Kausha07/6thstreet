@@ -18,6 +18,26 @@
       padding-right: 0;
     }
   }
+  .PDPDetail {
+    @include mobile {
+      flex-wrap: wrap;
+      &-BrandImage {
+        padding: 0;
+        flex: auto;
+        text-align: center;
+      }
+      &-BrandDescription {
+        h1 {
+          text-align: center;
+        }
+        padding: 0;
+        flex: auto;
+      }
+      .BrandDescription {
+        display: none;
+      }
+    }
+  }
 
   .VueProductSlider {
     @include mobile {
@@ -239,12 +259,12 @@
     }
   }
 
-  &-Highlights {
-    &-SKU {
-      @include mobile {
-        margin-top: 30px;
-      }
+  .BottomHighlights {
+    @include mobile {
+      margin-top: 30px;
     }
+  }
+  &-Highlights {
     &-ModelDetails {
       font-weight: var(--fw-regular);
       margin-top: 16px;
@@ -598,12 +618,17 @@
         }
       }
     }
+    @include mobile {
+      margin-bottom: 20px;
+    }
   }
 }
 .ContactUs {
   font-weight: 400;
   @include mobile {
     margin-bottom: 26px;
+    margin-left: 20px;
+    margin-right: 20px;
   }
   &-Message {
     font-size: 13px;
@@ -649,11 +674,15 @@
     background-color: #efefef;
   }
 }
+.ContactUsWrapper {
+  padding-bottom: 85px;
+}
 .FromBrand {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0 10px 0;
+  margin: 30px 0;
+  // padding-bottom: 100px;
   &-MoreButton {
     height: 40px;
     width: 175px;

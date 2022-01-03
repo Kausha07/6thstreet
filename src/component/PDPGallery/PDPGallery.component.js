@@ -4,6 +4,8 @@ import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
+import ShareButton from "Component/ShareButton";
+import SearchIcon from "Component/Icons/Search";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
@@ -89,6 +91,7 @@ class PDPGallery extends PureComponent {
     const { isArabic } = this.state;
     return <HeaderCart showCartPopUp={false} mods={{ isArabic }} />;
   }
+
   renderWishlistIcon() {
     const { isArabic } = this.state;
     const { sku, product, renderMySignInPopup } = this.props;
@@ -100,6 +103,39 @@ class PDPGallery extends PureComponent {
         pageType="pdp"
         data={product}
       />
+    );
+  }
+  renderShareButton() {
+    const url = new URL(window.location.href);
+    if (!!!isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <div block="ShareIcon">
+        <ShareButton
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
+    );
+  }
+
+  renderSearchButton() {
+    const url = new URL(window.location.href);
+    if (!!!isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <div block="SearchIcon">
+        <SearchIcon
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
     );
   }
 
@@ -405,6 +441,8 @@ class PDPGallery extends PureComponent {
         <div block="OverlayIcons" mods={{ isArabic }}>
           {this.renderCartIcon()}
           {this.renderWishlistIcon()}
+          {/* {this.renderShareButton()} */}
+          {this.renderSearchButton()}
         </div>
         <button
           ref={this.overlaybuttonRef}

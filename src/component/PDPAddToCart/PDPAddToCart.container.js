@@ -28,6 +28,13 @@ import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
 import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
+import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
+
+import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -297,16 +304,16 @@ export class PDPAddToCartContainer extends PureComponent {
         //if success
         if (response.message) {
           showNotification("error", response.message);
-          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: false, isOutOfStock: true });
         } else {
-          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: true, isOutOfStock: true });
           if (customer && customer.id) {
             //if user is logged in then change email
             const loginEvent = new CustomEvent("userLogin");
             window.dispatchEvent(loginEvent);
           }
           setTimeout(() => {
-            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+            this.setState({ notifyMeSuccess: false, isOutOfStock: true });
           }, 4000);
         }
       } else {

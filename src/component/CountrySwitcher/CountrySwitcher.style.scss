@@ -36,6 +36,12 @@
       right: 0px;
       top: 6px;
     }
+    &_isOpen{
+      &::after {
+        background: url(../Icons/ChevronUp/icon.svg) no-repeat;
+        background-size: 12px;
+      }
+    }
   }
 
   .Field {
@@ -66,6 +72,12 @@
           background-size: 12px;
           left: 0;
           top: 6px;
+        }
+        &_isOpen{
+          &::before {
+            background: url(../Icons/ChevronUp/icon.svg) no-repeat;
+            background-size: 12px;
+          }
         }
       }
     }

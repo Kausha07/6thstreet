@@ -193,9 +193,9 @@ class FieldMultiselect extends PureComponent {
       if (finalData) {
         Object.values(finalData).map((subData) => {
           if (subData.facet_value === "0") {
-            return (subData.label = "Out of Stock");
+            return (subData.label = __("Out of Stock"));
           } else if (subData.facet_value === "1") {
-            return (subData.label = "In Stock");
+            return (subData.label = __("In Stock"));
           }
         });
       }

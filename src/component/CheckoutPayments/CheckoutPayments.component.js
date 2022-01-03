@@ -3,7 +3,6 @@
 import PropTypes from "prop-types";
 import isMobile from "Util/Mobile";
 
-import CheckoutComApplePay from "Component/CheckoutComApplePay";
 import CheckoutPayment from "Component/CheckoutPayment";
 import { PAYMENTS_DATA } from "Component/CheckoutPayment/CheckoutPayment.config";
 import tabbyAr from "Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png";
@@ -73,10 +72,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     script.src = "https://checkout.tabby.ai/tabby-card.js";
     script.async = true;
-    script.onload =  function(){
+    script.onload = function () {
       let s = document.createElement('script');
       s.type = 'text/javascript';
-      const  code = `new TabbyCard({
+      const code = `new TabbyCard({
         selector: '#tabbyCard', // empty div for TabbyCard
         currency: 'AED', // or SAR, BHD, KWD; required, currency for your product
         price: '100.00', // required, price or your product
@@ -96,33 +95,33 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   componentDidUpdate(prevProps) {
     const {
       selectedPaymentCode,
-      totals: { total,currency_code },
+      totals: { total, currency_code },
     } = this.props;
-    const { isArabic ,isMobile} = this.state;
-    if(selectedPaymentCode === TABBY_ISTALLMENTS){
+    const { isArabic, isMobile } = this.state;
+    if (selectedPaymentCode === TABBY_ISTALLMENTS) {
       const script = document.createElement("script");
 
-    script.src = "https://checkout.tabby.ai/tabby-card.js";
-    script.async = true;
-    script.onload =  function(){
-      let s = document.createElement('script');
-      s.type = 'text/javascript';
-      const  code = `new TabbyCard({
+      script.src = "https://checkout.tabby.ai/tabby-card.js";
+      script.async = true;
+      script.onload = function () {
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const code = `new TabbyCard({
         selector: '#tabbyCard', // empty div for TabbyCard
         currency: '${currency_code}', // or SAR, BHD, KWD; required, currency for your product
         price: '${total}', // required, price or your product
-        lang: '${isArabic ? `ar`:`en`}', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
+        lang: '${isArabic ? `ar` : `en`}', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
         size: 'wide' // or wide
         });`;
-      try {
-        s.appendChild(document.createTextNode(code));
-        document.body.appendChild(s);
-      } catch (e) {
-        s.text = code;
-        document.body.appendChild(s);
+        try {
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
+        } catch (e) {
+          s.text = code;
+          document.body.appendChild(s);
+        }
       }
-    }
-    document.body.appendChild(script);
+      document.body.appendChild(script);
     }
   }
   handleChange = (activeImage) => {
@@ -139,7 +138,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       isClickAndCollect
     } = this.props;
     const { m_code } = method;
-    if(m_code==="msp_cashondelivery" && isClickAndCollect){
+    if (m_code === "msp_cashondelivery" && isClickAndCollect) {
       return null;
     }
 
@@ -186,10 +185,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderCashOnDelivery() {
     const { isClickAndCollect } = this.props;
-    if(isClickAndCollect){
+    if (isClickAndCollect) {
       return null;
     }
-  
+
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();
@@ -255,10 +254,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderApplePayMethods() {
     const { isClickAndCollect } = this.props;
-    if(isClickAndCollect){
+    if (isClickAndCollect) {
       return null;
     }
-  
+
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();
@@ -272,7 +271,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           {method_description}
         </p>
         <div block="CheckoutPayments" elem="MethodImage">
-        <img src={Applepay} alt="Apple pay" />
+          <img src={Applepay} alt="Apple pay" />
         </div>
       </div>
     );
@@ -288,7 +287,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
     } = this.props;
     const { img } = PAYMENTS_DATA[m_code];
-    const { isArabic , isMobile} = this.state;
+    const { isArabic, isMobile } = this.state;
 
     const isSelected = m_code === selectedPaymentCode;
 
@@ -301,8 +300,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const check = isMobile ? true : false;
 
     return (
-      <div block="CheckoutPayments" elem="TabbyPayment" key={m_code} mods={{check}}>
-      <div block="CheckoutPayments" elem="TabbyPaymentSelect" mods={{check}}>
+      <div block="CheckoutPayments" elem="TabbyPayment" key={m_code} mods={{ check }}>
+        <div block="CheckoutPayments" elem="TabbyPaymentSelect" mods={{ check }}>
           <CheckoutPayment
             key={m_code}
             isSelected={isSelected}
@@ -319,10 +318,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 <img src={info} alt="info" />
               </button>
             ) : (
-              <button onClick={this.openTabbyPayLaterTooltip}>
-                <img src={info} alt="info" />
-              </button>
-            )}
+                <button onClick={this.openTabbyPayLaterTooltip}>
+                  <img src={info} alt="info" />
+                </button>
+              )}
           </div>
           <div id="tabbyCard"></div>
         </div>
