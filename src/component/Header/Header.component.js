@@ -17,20 +17,12 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
-  return {
-    checkoutDetails: state.CartReducer.checkoutDetails,
-  }
+  return { checkoutDetails: state.CartReducer.checkoutDetails }
 };
-
-export const mapDispatchToProps = (dispatch) => ({
-  resetProduct: () =>
-    PDPDispatcher.resetProduct({}, dispatch),
-});
 export class Header extends PureComponent {
   static propTypes = {
     navigationState: PropTypes.shape({
@@ -50,15 +42,11 @@ export class Header extends PureComponent {
     this.timer = setInterval(this.tick, delay);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { delay, type } = this.state;
-    const { resetProduct } = this.props;
-    if (prevProps !== delay) {
+  componentDidUpdate(prevState) {
+    const { delay } = this.state;
+    if (prevState !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
-    }
-    if (prevState.type !== type && type !== TYPE_PRODUCT) {
-      resetProduct()
     }
   }
 
@@ -159,16 +147,16 @@ export class Header extends PureComponent {
     const isCheckout = this.getIsCheckout();
     const hideHeaderFooter = this.getHideHeaderFooter();
     const { isMobile } = this.state;
-  
-    if(isCheckout && !checkoutDetails) {
+
+    if (isCheckout && !checkoutDetails) {
       return null;
     }
 
-    if(isMobile && checkoutDetails) {
+    if (isMobile && checkoutDetails) {
       return null;
     }
 
-    if(hideHeaderFooter) {
+    if (hideHeaderFooter) {
       return this.headerSectionsTwo.map(this.renderSection);
     }
 
@@ -179,13 +167,13 @@ export class Header extends PureComponent {
     const {
       navigationState: { name }
     } = this.props;
-    
+
     this.shouldChatBeHidden();
-    
+
     return (
       <>
         <header block="Header" mods={{ name }}>
-          {(isCheckout && !checkoutDetails) ? null : isMobile && checkoutDetails ? null : hideHeaderFooter ? this.headerSectionsTwo.map(this.renderSection) : this.headerSections.map(this.renderSection)}
+          {this.renderHeaderSections()}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
         <OfflineNotice />
@@ -194,4 +182,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
+export default connect(mapStateToProps)(withRouter(Header));
