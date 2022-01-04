@@ -98,6 +98,7 @@ export class PDPContainer extends PureComponent {
 
   state = {
     productSku: null,
+    currentLocation: ""
   };
 
   constructor(props) {
@@ -106,40 +107,28 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const {
-      product: { product_type_6s, sku, url },
-      location: { state },
-      product,
-    } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
-        url: window.location.href,
-        sourceProdID: sku,
-        sourceCatgID: product_type_6s, // TODO: replace with category id
-      },
-    });
+    const { location: { pathname } } = this.props
+    this.setState({ currentLocation: pathname })
   }
-
   componentDidUpdate(prevProps) {
     const {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName } = {},
+      product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
+      location: { state },
       product,
       menuCategories = [],
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
-    const { productSku } = this.state;
+    const { productSku, currentLocation } = this.state;
+
+
+    // if (sku != undefined)
+    if (productSku != sku && (currentLocation === this.props.location.pathname)) {
+      this.renderVueHits();
+    }
 
     // Request product, if URL rewrite has changed
     if (id !== prevId) {
@@ -160,6 +149,32 @@ export class PDPContainer extends PureComponent {
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
+    });
+  }
+
+  renderVueHits() {
+    const {
+      product: { product_type_6s, sku, url, price },
+      location: { state },
+      product,
+    } = this.props;
+    const itemPrice = price ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : null;
+    const basePrice = price ? price[0][Object.keys(price[0])[0]]["6s_base_price"] : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
+        sourceProdID: sku,
+        sourceCatgID: product_type_6s, // TODO: replace with category id
+        prodPrice: itemPrice,
+      },
     });
   }
 
@@ -208,7 +223,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
