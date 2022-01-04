@@ -51,35 +51,29 @@ export class SettingsScreen extends PureComponent {
         <ul block="SettingsList">
           <li block="MyAccountTabListItem">
             <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/faq" block="MyAccountTabListItem" elem="ButtonText">x
-                <div>
-                  {__("Language")}
-                </div>
-                <div>
-                  {currency}
-                </div>
+              <Link to="/faq" block="MyAccountTabListItem" elem="ButtonText">
+                <div>{__("Language")}</div>
+                <div>{currency}</div>
               </Link>
             </button>
           </li>
           <li block="MyAccountTabListItem">
-            <Link to="/return-information" block="MyAccountTabListItem" elem="ButtonText">
-              <div>
-                {__("Country")}
-              </div>
-              <div>
-                {currency}
-              </div>
-            </Link>
+            <button block="MyAccountTabListItem" elem="Button" role="link">
+              <Link
+                to="/return-information"
+                block="MyAccountTabListItem"
+                elem="ButtonText"
+              >
+                <div>{__("Country")}</div>
+                <div>{currency}</div>
+              </Link>
+            </button>
           </li>
           <li block="MyAccountTabListItem">
             <button block="MyAccountTabListItem" elem="Button" role="link">
               <div block="MyAccountTabListItem" elem="ButtonText">
-                <div>
-                  {__("Currency")}
-                </div>
-                <div>
-                  {currency}
-                </div>
+                <div>{__("Currency")}</div>
+                <div>{currency}</div>
               </div>
             </button>
           </li>
