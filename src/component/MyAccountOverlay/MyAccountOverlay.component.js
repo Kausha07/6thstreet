@@ -12,7 +12,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-import { getCountryFromUrl } from 'Util/Url/Url';
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -167,7 +167,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -267,7 +267,6 @@ export class MyAccountOverlay extends PureComponent {
     if (state === STATE_FORGOT_PASSWORD) {
       handleSignIn(e);
     } else if (state === STATE_VERIFY_NUMBER) {
-      console.log("back state");
       this.setState({ isCreateValidated: false, isSignInValidated: false });
       handleSignIn(e);
     } else {
@@ -396,7 +395,17 @@ export class MyAccountOverlay extends PureComponent {
       otpError,
     } = this.props;
     const { isArabic } = this.state;
-    console.log("otpError", this.props);
+    const isNumber = (evt) => {
+      const invalidChars = ["-", "+", "e", "E", "."];
+      const abc = evt.target.value;
+      if (invalidChars.includes(evt.key)) {
+        evt.preventDefault();
+        return false;
+      }
+      if (abc.length > 4) {
+        return evt.preventDefault();
+      }
+    };
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <div block="VerifyPhone" elem="Text">
@@ -408,20 +417,22 @@ export class MyAccountOverlay extends PureComponent {
           </div>
           <div block="VerifyPhone-Text" elem="Phone">
             <button onClick={() => console.log("change mobile number")}>
-              {`${customerRegisterData?.contact_no || customerLoginData?.username
-                }`}
+              {`${
+                customerRegisterData?.contact_no || customerLoginData?.username
+              }`}
             </button>
           </div>
         </div>
         {/* <Form onSubmitSuccess={(e) => console.log("hello")}> */}
         <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
-          <Field
-            maxlength="5"
-            type="phone"
+          <input
+            type="number"
             placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
             name="otp"
+            disabled={isLoading}
             id="otp"
             onChange={OTPFieldChange}
+            onKeyPress={(e) => isNumber(e)}
           />
         </div>
         {/* </Form> */}
@@ -486,13 +497,18 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   renderCreateAccount() {
-    const { onCreateAccountAttempt, onCreateAccountSuccess, isLoading, OtpErrorClear } =
-      this.props;
+    const {
+      onCreateAccountAttempt,
+      onCreateAccountSuccess,
+      isLoading,
+      OtpErrorClear,
+    } = this.props;
 
     const { gender, isChecked, isArabic, isCreateValidated, countryCode } =
       this.state;
     this.setState({ isSignInValidated: false });
-    OtpErrorClear()
+    OtpErrorClear();
+    const countryLabel = getCountryFromUrl();
     return (
       <Form
         key="create-account"
@@ -507,7 +523,7 @@ export class MyAccountOverlay extends PureComponent {
         <fieldset block="MyAccountOverlay" elem="PhoneNumber">
           <div block="UserIdentifierFieldsContainerCreate">
             <PhoneCountryCodeField
-              label={countryCode}
+              label={countryLabel}
               onSelect={(value) =>
                 this.setState({
                   countryCode: value,
@@ -797,7 +813,7 @@ export class MyAccountOverlay extends PureComponent {
 
     const { isArabic, isSignInValidated, isOTP, countryCode } = this.state;
     this.setState({ isCreateValidated: false, isForgotValidated: false });
-    const countryLabel = getCountryFromUrl()
+    const countryLabel = getCountryFromUrl();
     return (
       <Form
         key="sign-in"
@@ -826,8 +842,9 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              placeholder={`${
+                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+              }*`}
               id="email"
               name="email"
               value={email}
@@ -910,7 +927,6 @@ export class MyAccountOverlay extends PureComponent {
   render() {
     const { isLoading, onVisible, state, isCheckout, isHidden } = this.props;
     const { isPopup, isArabic } = this.state;
-    console.log("current state:", state);
     return (
       <div block="HeaderAccount" elem="PopUp" mods={{ isHidden }}>
         <Overlay

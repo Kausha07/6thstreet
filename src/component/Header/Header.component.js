@@ -17,17 +17,15 @@ import {
   TYPE_PRODUCT,
 } from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import isMobile from "Util/Mobile";
 import "./Header.style";
+import isMobile from "Util/Mobile";
 
 export const mapStateToProps = (state) => {
-  return {
-    checkoutDetails: state.CartReducer.checkoutDetails,
-  };
+  return { checkoutDetails: state.CartReducer.checkoutDetails }
 };
-
 export const mapDispatchToProps = (dispatch) => ({
-  resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
+    resetProduct: () =>
+    PDPDispatcher.resetProduct({}, dispatch),
 });
 export class Header extends PureComponent {
   static propTypes = {
@@ -48,13 +46,13 @@ export class Header extends PureComponent {
     this.timer = setInterval(this.tick, delay);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { delay, type } = this.state;
-    const { resetProduct } = this.props;
-    if (prevProps !== delay) {
+  componentDidUpdate(prevState) {
+    const { delay,type } = this.state;
+    if (prevState !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
     }
+    const { resetProduct } = this.props;
     if (prevState.type !== type && type !== TYPE_PRODUCT) {
       resetProduct();
     }
@@ -192,4 +190,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));

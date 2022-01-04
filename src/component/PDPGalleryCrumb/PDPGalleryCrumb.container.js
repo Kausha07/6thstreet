@@ -45,8 +45,9 @@ export class PDPGalleryCrumbContainer extends PureComponent {
   };
 
   onClick() {
-    const { index ,onSlideChange} = this.props;
-    return onSlideChange(index)
+    const { index, onSlideChange } = this.props;
+
+    return onSlideChange(index);
   }
 
   containerProps = () => ({
