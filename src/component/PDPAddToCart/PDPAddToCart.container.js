@@ -9,6 +9,10 @@ import { setMinicartOpen } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { customerType } from "Type/Account";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -20,15 +24,10 @@ import Event, {
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
+import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
+import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
-
-import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
-import {
-  hideActiveOverlay,
-  toggleOverlayByKey,
-} from "Store/Overlay/Overlay.action";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -506,6 +505,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
+      console.log("itemPrice", itemPrice);
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
@@ -518,7 +518,7 @@ export class PDPAddToCartContainer extends PureComponent {
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }
@@ -583,7 +583,7 @@ export class PDPAddToCartContainer extends PureComponent {
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }

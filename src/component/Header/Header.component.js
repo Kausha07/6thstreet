@@ -17,12 +17,16 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
-
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
-  return  {checkoutDetails: state.CartReducer.checkoutDetails}
+  return { checkoutDetails: state.CartReducer.checkoutDetails }
 };
+export const mapDispatchToProps = (dispatch) => ({
+    resetProduct: () =>
+    PDPDispatcher.resetProduct({}, dispatch),
+});
 export class Header extends PureComponent {
   static propTypes = {
     navigationState: PropTypes.shape({
@@ -43,39 +47,43 @@ export class Header extends PureComponent {
   }
 
   componentDidUpdate(prevState) {
-      const { delay } = this.state;
-      if (prevState !== delay) {
-          clearInterval(this.timer);
-          this.timer = setInterval(this.tick, delay);
-      }
+    const { delay,type } = this.state;
+    if (prevState !== delay) {
+      clearInterval(this.timer);
+      this.timer = setInterval(this.tick, delay);
+    }
+    const { resetProduct } = this.props;
+    if (prevState.type !== type && type !== TYPE_PRODUCT) {
+      resetProduct()
+    }
   }
 
   componentWillUnmount() {
-      this.timer = null;
+    this.timer = null;
   }
 
   tick = () => {
-      this.setState({
-          type: this.getPageType(),
-      });
+    this.setState({
+      type: this.getPageType(),
+    });
   };
 
   getPageType() {
     if (location.pathname === '/' || location.pathname === '') {
-        return TYPE_HOME;
+      return TYPE_HOME;
     }
     if (matchPath(location.pathname, '/brands')) {
-        return TYPE_BRAND;
+      return TYPE_BRAND;
     }
     if (matchPath(location.pathname, '/my-account')) {
-        return TYPE_ACCOUNT;
+      return TYPE_ACCOUNT;
     }
     if (matchPath(location.pathname, '/cart')) {
-        return TYPE_CART;
+      return TYPE_CART;
     }
 
     return window.pageType;
-}
+  }
 
   headerSections = [
     HeaderTopBar,
@@ -105,7 +113,7 @@ export class Header extends PureComponent {
 
   getHideHeaderFooter = () => {
     const { isMobile } = this.state;
-    if(!isMobile){
+    if (!isMobile) {
       return false
     }
     const result = this.isPDP() || location.pathname.match(/cart/)
@@ -147,16 +155,16 @@ export class Header extends PureComponent {
     const isCheckout = this.getIsCheckout();
     const hideHeaderFooter = this.getHideHeaderFooter();
     const { isMobile } = this.state;
-  
-    if(isCheckout && !checkoutDetails) {
+
+    if (isCheckout && !checkoutDetails) {
       return null;
     }
 
-    if(isMobile && checkoutDetails) {
+    if (isMobile && checkoutDetails) {
       return null;
     }
 
-    if(hideHeaderFooter) {
+    if (hideHeaderFooter) {
       return this.headerSectionsTwo.map(this.renderSection);
     }
 
@@ -167,13 +175,13 @@ export class Header extends PureComponent {
     const {
       navigationState: { name }
     } = this.props;
-    
+
     this.shouldChatBeHidden();
-    
+
     return (
       <>
         <header block="Header" mods={{ name }}>
-          { this.renderHeaderSections() }
+          {this.renderHeaderSections()}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
         <OfflineNotice />
@@ -182,4 +190,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));
