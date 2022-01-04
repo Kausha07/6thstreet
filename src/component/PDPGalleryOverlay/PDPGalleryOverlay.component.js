@@ -46,45 +46,53 @@ class PDPGalleryOverlay extends PureComponent {
       positionX: 0,
       addY: 0,
       addX: 0,
+      initialScale: 1,
     };
   }
 
   componentDidMount() {
-    const { onSliderChange } = this.props;
+    const { onSliderChange, currentIndex } = this.props;
     const { imageRef, overlayRef } = this;
     const imgHeight =
       imageRef.current === null ? null : imageRef.current.offsetHeight;
     const imgWidth =
       imageRef.current === null ? null : imageRef.current.offsetWidth;
-    const overlayHeight = overlayRef.current.children[3].offsetHeight;
-    const overlayWidth = overlayRef.current.children[3].offsetWidth;
+    const overlayHeight = overlayRef.current.children[5].offsetHeight;
+    const overlayWidth = overlayRef.current.children[5].offsetWidth;
     const addX =
       (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
     const addY =
       (overlayHeight - imgHeight) / 2 - (overlayHeight - imgHeight * 1.5) / 2;
 
-    this.setState({ addX, addY });
-
+    const imageScale = 1 - (overlayWidth - imgWidth) / overlayWidth;
+    this.setState({
+      addX,
+      addY,
+      initialScale: 0.5,
+      scale: Math.floor(imageScale / 0.5) * 0.5,
+    });
     onSliderChange(0);
     this.listenArrowKey();
-    // alert("mount");
   }
+
   componentWillUnmount() {
-    // alert("unmount");
     document.removeEventListener("keydown", this.handleArrorKeySlide);
   }
 
-  renderCrumb = (index, i) => (
-    <PDPGalleryCrumb
-      key={i}
-      // prefer numerical index
-      index={+index}
-    />
-  );
+  renderCrumb = (index, i) => {
+    const { onSliderChange } = this.props;
+    return (
+      <PDPGalleryCrumb
+        onSlideChange={onSliderChange}
+        key={i}
+        // prefer numerical index
+        index={+index}
+      />
+    );
+  };
 
   zoomIn = () => {
     const { scale, addX, addY } = this.state;
-
     if (scale < 8) {
       this.setState({
         scale: scale + 0.5,
@@ -95,8 +103,8 @@ class PDPGalleryOverlay extends PureComponent {
   };
 
   zoomOut = () => {
-    const { scale, addX, addY } = this.state;
-    if (scale !== 1) {
+    const { scale, addX, addY, initialScale } = this.state;
+    if (scale > initialScale) {
       this.setState({
         scale: scale - 0.5,
         positionX: -addX,
@@ -107,24 +115,8 @@ class PDPGalleryOverlay extends PureComponent {
 
   renderImage(src, i) {
     const { isZoomEnabled, handleZoomChange, disableZoom } = this.props;
-    const { scale, positionX, positionY } = this.state;
-    // return <Image lazyLoad={false} src={src} key={i} />;
+    const { scale, positionX, positionY, initialScale } = this.state;
 
-    // return (
-    //   <TransformWrapper
-    //     initialScale={1}
-    //     initialPositionX={0}
-    //     initialPositionY={0}
-    //   >
-    //     {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-    //       <React.Fragment>
-    //         <TransformComponent>
-    //           <Image lazyLoad={false} src={src} key={i} />
-    //         </TransformComponent>
-    //       </React.Fragment>
-    //     )}
-    //   </TransformWrapper>
-    // );
     return (
       <TransformWrapper
         key={i}
@@ -138,7 +130,7 @@ class PDPGalleryOverlay extends PureComponent {
         }}
         options={{
           limitToBounds: true,
-          minScale: 1,
+          minScale: 0.5,
           minPositionX: positionX,
           minPositionY: positionY,
         }}
@@ -151,25 +143,26 @@ class PDPGalleryOverlay extends PureComponent {
           positionX,
           positionY,
           options,
+          centerView,
         }) => {
           const { minPositionY, minPositionX } = options;
-          if (scale === 1 && previousScale !== 1) {
-            resetTransform();
+          if (scale === 0.5 && previousScale !== 0.5) {
+            // resetTransform();
           }
 
-          if (scale !== previousScale && scale !== 1) {
-            setTransform(
-              positionX - minPositionX,
-              positionY - minPositionY,
-              scale,
-              0
-            );
-          }
+          // if (scale !== previousScale && scale !== 0.5) {
+          //   setTransform(
+          //     positionX - minPositionX,
+          //     positionY - minPositionY,
+          //     scale,
+          //     0
+          //   );
+          // }
 
           return (
             <ProductGalleryBaseImage
               imageRef={this.imageRef}
-              //   centerContent
+              centerContent
               setTransform={setTransform}
               index={i}
               mediaData={src}
