@@ -65,7 +65,7 @@ class PDP extends PureComponent {
     );
   }
   renderMainSection() {
-    return <PDPMainSection renderMySignInPopup={this.showMyAccountPopup} />;
+    return <PDPMainSection renderMySignInPopup={this.showMyAccountPopup} {...this.props} />;
   }
 
   renderDetailsSection() {
