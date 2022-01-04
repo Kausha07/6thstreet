@@ -20,7 +20,6 @@ main {
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
-
   .leftContainer {
     display: flex;
     justify-content: flex-end;
@@ -39,8 +38,11 @@ main {
     -webkit-transition-property: all;
     -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function: ease-in-out;
-    &[data-visible="false"] {
-      display: none;
+    &[data-visible='false'] {
+      // display: none;
+      // width:0;
+      // height:0;
+      visibility: hidden;
       top: -50px;
     }
   }
@@ -54,8 +56,10 @@ main {
     -webkit-transition-property: all;
     -webkit-transition-duration: 0.5s;
     -webkit-transition-timing-function: ease-in-out;
-    &[data-visible="false"] {
-      display: none;
+    &[data-visible='false'] {
+      // display: none;
+      // top: -50px;
+      visibility: hidden;
       top: -50px;
     }
   }
@@ -87,7 +91,7 @@ main {
       cursor: pointer;
     }
     &-Button {
-      content: "";
+      content: '';
       background: url(./icons/search-black.svg) no-repeat;
       background-size: 24px;
       width: 24px;
@@ -120,6 +124,12 @@ main {
       &_isArabic {
         margin-right: 15%;
         margin-left: unset;
+      }
+
+      &_isPDP {
+        top: 5px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
     }
     @include tablet {
@@ -187,7 +197,7 @@ main {
         display: none;
       }
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 10px;
         left: 5px;
@@ -304,7 +314,8 @@ main {
     }
   }
 
-  .HeaderSearch {
+  .HeaderSearch,
+  .PDPHeaderSearch {
     @include mobile {
       background: $white;
       position: fixed;
@@ -329,6 +340,33 @@ main {
     }
     @include after-mobile {
       // display: none;
+    }
+  }
+  .HeaderSearch {
+    @include mobile {
+      top: 49px;
+    }
+    @include tablet {
+      top: 49px;
+    }
+  }
+
+  .PDPHeaderSearch {
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    @include mobile {
+      top: -49px;
+      &_isPDPSearchVisible {
+        top: 49px;
+      }
+    }
+    @include tablet {
+      top: -49px;
+      &_isPDPSearchVisible {
+        top: 49px;
+      }
     }
   }
 
@@ -424,7 +462,8 @@ main {
     height: 40px;
     left: 0;
     z-index: 10;
-    .HeaderSearch {
+    .HeaderSearch,
+    .PDPHeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);

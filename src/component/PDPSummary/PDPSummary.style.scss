@@ -88,6 +88,11 @@
     line-height: 30px;
     text-align: right;
   }
+    &-Heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   &-Name {
     font-size: 18px;

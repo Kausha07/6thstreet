@@ -17,6 +17,17 @@ import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
 import "./PDPGallery.style";
 import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { connect } from 'react-redux';
+
+export const mapStateToProps = (state) => ({
+  displaySearch: state.PDP.displaySearch
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+});
+
 class PDPGallery extends PureComponent {
   static propTypes = {
     currentIndex: PropTypes.number.isRequired,
@@ -129,7 +140,7 @@ class PDPGallery extends PureComponent {
     }
 
     return (
-      <div block="SearchIcon">
+      <div block="SearchIcon" onClick={this.searchButtonClick}>
         <SearchIcon
           title={document.title}
           text={`Hey check this out: ${document.title}`}
@@ -371,7 +382,11 @@ class PDPGallery extends PureComponent {
       }
     }
   };
-
+  searchButtonClick = (e) => {
+    e.stopPropagation();
+    const { displaySearch, showPDPSearch } = this.props
+    showPDPSearch(!displaySearch)
+  }
   stopVideo() {
     const { isVideoPlaying, listener } = this.state;
 
@@ -460,4 +475,4 @@ class PDPGallery extends PureComponent {
   }
 }
 
-export default PDPGallery;
+export default connect(mapStateToProps, mapDispatchToProps)(PDPGallery);
