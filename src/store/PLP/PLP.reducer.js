@@ -11,14 +11,12 @@ import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
   isLoading: true,
-  // actual data (pages, filters, options)
   pages: {},
   lastSelectedKey: null,
   lastSelectedValue: null,
   filters: {},
   meta: {},
   options: {},
-  // initial data (filters, options)
   initialFilters: {},
   initialOptions: {},
   plpWidgetData: [],
@@ -28,7 +26,6 @@ export const formatFilters = (filters = {}) =>
   Object.entries(filters).reduce((acc, [key, filter]) => {
     const { data = [] } = filter;
 
-    // skip filters with no options
     if (data.length === 0) {
       return acc;
     }
@@ -41,24 +38,26 @@ export const formatFilters = (filters = {}) =>
 
 export const combineFilters = (
   filters = {},
-  _initialFilters,
-  lastSelectedKey,
-  lastSelectedValue
+  allFilters = {},
+  requestedOptions = {}
 ) => {
-  let combineFilterData = _initialFilters;
-  let lastSelectKey = lastSelectedKey
-    ? lastSelectedKey
-    : localStorage.getItem("lastSelectedKey");
-  if (lastSelectKey) {
-    Object.keys(filters).map((key) => {
-      if (key !== "categories.level1" && key !== lastSelectKey) {
-        combineFilterData[key] = filters[key];
-      }
-    });
-  } else {
-    combineFilterData = filters;
-  }
-  return combineFilterData;
+  let finalFilters = filters;
+  let selectedFilterArr = [];
+  let exceptFilter = ["categories.level1", "page", "q", " visibility_catalog"];
+  Object.keys(requestedOptions).map((option) => {
+    if (!exceptFilter.includes(option)) {
+      selectedFilterArr.push(option);
+    }
+  });
+  Object.entries(filters).map((filter) => {
+    if (!selectedFilterArr.includes(filter[0]) && allFilters[filter[0]]) {
+      finalFilters = {
+        ...finalFilters,
+        [filter[0]]: allFilters[filter[0]],
+      };
+    }
+  });
+  return finalFilters;
 };
 
 // TODO: implement initial reducer, needed to handle filter count
@@ -104,15 +103,21 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_PLP_DATA:
       const {
-        response: { data: products = {}, meta = {}, filters = {} },
+        response: {
+          data: products = {},
+          meta = {},
+          filters = {},
+          allFilters = {},
+        },
         options: requestedOptions = {},
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-
+     
       return {
         ...state,
         filters: filters,
+        // filters:combineFilters(filters, allFilters, requestedOptions),
         options: requestedOptions,
         meta,
         pages: {

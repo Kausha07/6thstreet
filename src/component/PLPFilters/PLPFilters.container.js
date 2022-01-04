@@ -113,7 +113,7 @@ export class PLPFiltersContainer extends PureComponent {
 
     const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
       const { selected_filters_count, data = {} } = filter[1];
-
+     
       if (selected_filters_count !== 0) {
         if (filter[0] === SIZES) {
           const mappedData = Object.entries(data).reduce((acc, size) => {
@@ -166,7 +166,13 @@ export class PLPFiltersContainer extends PureComponent {
   };
 
   mapData(data = {}) {
-    const mappedData = Object.entries(data).reduce((acc, option) => {
+    const { initialOptions } = this.props;
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let formattedData = data;
+    if (data[categoryLevel1]) {
+      formattedData = data[categoryLevel1].subcategories;
+    }
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
       const { is_selected } = option[1];
       if (is_selected) {
         acc.push(option[0]);
@@ -174,7 +180,6 @@ export class PLPFiltersContainer extends PureComponent {
 
       return acc;
     }, []);
-
     return mappedData;
   }
 

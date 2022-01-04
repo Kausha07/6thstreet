@@ -68,7 +68,6 @@ export class PLP extends PureComponent {
   // }
 
   updateFiltersState = (activeFilters) => {
-    console.log("active filters", activeFilters);
     this.setState({ activeFilters });
   }
 
