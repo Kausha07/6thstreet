@@ -9,7 +9,7 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
- :root {
+:root {
   --checkbox-label-color: #0a0a0a;
   --my-account-input-label-color: rgba(10, 10, 10, 0.59);
   --my-account-overlay-width: 450px;
@@ -169,13 +169,14 @@
     &-Code {
       input {
         text-align: center;
-        width: calc(100% - 15px);
+        // width: 50%;
+        margin: auto;
         background-color: transparent;
         border: 0;
         letter-spacing: 15px;
         font-size: 27px;
-        margin-left: 15px;
-        caret-color: transparent;
+        // margin-left: 15px;
+        // caret-color: transparent;
       }
     }
     &-ErrMessage {

@@ -231,7 +231,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
-    options.hasOwnProperty("type") ? setAuthorizationToken(t) : null;
+    setAuthorizationToken(t)
     if (isPhone) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }

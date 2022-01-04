@@ -34,7 +34,7 @@ class MenuCategory extends PureComponent {
   onLeave = this.handleHover.bind(this, false);
 
   handleHover(isVisible) {
-    this.setState({ isVisible: true });
+    this.setState({ isVisible});
   }
   toggleMobileMenuSideBar = () => {
     const { toggleOverlayByKey } = this.props;
