@@ -396,7 +396,7 @@ export class MyAccountOverlay extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     const isNumber = (evt) => {
-      const invalidChars = ["-", "+", "e", "E"];
+      const invalidChars = ["-", "+", "e", "E", "."];
       const abc = evt.target.value;
       if (invalidChars.includes(evt.key)) {
         evt.preventDefault();
