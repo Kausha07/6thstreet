@@ -17,12 +17,16 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
-
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
   return { checkoutDetails: state.CartReducer.checkoutDetails }
 };
+export const mapDispatchToProps = (dispatch) => ({
+    resetProduct: () =>
+    PDPDispatcher.resetProduct({}, dispatch),
+});
 export class Header extends PureComponent {
   static propTypes = {
     navigationState: PropTypes.shape({
@@ -43,10 +47,14 @@ export class Header extends PureComponent {
   }
 
   componentDidUpdate(prevState) {
-    const { delay } = this.state;
+    const { delay,type } = this.state;
     if (prevState !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
+    }
+    const { resetProduct } = this.props;
+    if (prevState.type !== type && type !== TYPE_PRODUCT) {
+      resetProduct()
     }
   }
 
@@ -182,4 +190,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));
