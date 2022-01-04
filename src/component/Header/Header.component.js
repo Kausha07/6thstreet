@@ -24,8 +24,10 @@ export const mapStateToProps = (state) => {
   return { checkoutDetails: state.CartReducer.checkoutDetails }
 };
 export const mapDispatchToProps = (dispatch) => ({
-    resetProduct: () =>
+  resetProduct: () =>
     PDPDispatcher.resetProduct({}, dispatch),
+  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+
 });
 export class Header extends PureComponent {
   static propTypes = {
@@ -47,14 +49,15 @@ export class Header extends PureComponent {
   }
 
   componentDidUpdate(prevState) {
-    const { delay,type } = this.state;
+    const { delay, type } = this.state;
     if (prevState !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
     }
-    const { resetProduct } = this.props;
+    const { resetProduct, showPDPSearch } = this.props;
     if (prevState.type !== type && type !== TYPE_PRODUCT) {
       resetProduct()
+      showPDPSearch(false)
     }
   }
 
@@ -190,4 +193,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
