@@ -25,5 +25,11 @@
                 justify-content: space-between;
             }
         }
+        .StoreSwitcherPopup {
+            position: relative !important;
+            &-Container {
+                right: 0;
+            }
+        }
     }
 }

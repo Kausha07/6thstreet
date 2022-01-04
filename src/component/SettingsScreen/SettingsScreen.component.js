@@ -15,6 +15,8 @@ import Link from "Component/Link";
 import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./SettingsScreen.style";
+import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 
 export class SettingsScreen extends PureComponent {
   static propTypes = {};
@@ -51,22 +53,18 @@ export class SettingsScreen extends PureComponent {
         <ul block="SettingsList">
           <li block="MyAccountTabListItem">
             <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/faq" block="MyAccountTabListItem" elem="ButtonText">
+              <div block="MyAccountTabListItem" elem="ButtonText">
                 <div>{__("Language")}</div>
-                <div>{currency}</div>
-              </Link>
+                <LanguageSwitcher />
+              </div>
             </button>
           </li>
           <li block="MyAccountTabListItem">
             <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link
-                to="/return-information"
-                block="MyAccountTabListItem"
-                elem="ButtonText"
-              >
+              <div block="MyAccountTabListItem" elem="ButtonText">
                 <div>{__("Country")}</div>
-                <div>{currency}</div>
-              </Link>
+                <CountrySwitcher />
+              </div>
             </button>
           </li>
           <li block="MyAccountTabListItem">
