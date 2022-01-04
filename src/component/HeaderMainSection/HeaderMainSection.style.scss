@@ -314,7 +314,8 @@ main {
     }
   }
 
-  .HeaderSearch {
+  .HeaderSearch,
+  .PDPHeaderSearch {
     @include mobile {
       background: $white;
       position: fixed;
@@ -339,6 +340,33 @@ main {
     }
     @include after-mobile {
       // display: none;
+    }
+  }
+  .HeaderSearch {
+    @include mobile {
+      top: 49px;
+    }
+    @include tablet {
+      top: 49px;
+    }
+  }
+
+  .PDPHeaderSearch {
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    @include mobile {
+      top: -49px;
+      &_isPDPSearchVisible {
+        top: 49px;
+      }
+    }
+    @include tablet {
+      top: -49px;
+      &_isPDPSearchVisible {
+        top: 49px;
+      }
     }
   }
 
@@ -434,7 +462,8 @@ main {
     height: 40px;
     left: 0;
     z-index: 10;
-    .HeaderSearch {
+    .HeaderSearch,
+    .PDPHeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);

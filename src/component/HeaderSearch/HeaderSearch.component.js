@@ -77,7 +77,7 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
-    const { hideSearchBar,onSearchClean } = this.props;
+    const { hideSearchBar, onSearchClean } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
@@ -163,7 +163,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search, renderMySignInPopup,onSearchClean } = this.props;
+    const { search, renderMySignInPopup, onSearchClean } = this.props;
     const { showSearch } = this.state;
 
     if (!showSearch) {
@@ -184,11 +184,12 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isPDP, isPDPSearchVisible } = this.props
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
         <ClickOutside onClick={this.closeSearch}>
-          <div block="HeaderSearch" mods={{ isArabic }}>
+          <div block={isPDP ? "PDPHeaderSearch" : "HeaderSearch"} mods={{ isArabic, isPDPSearchVisible }}>
             {this.renderField()}
             {this.renderSuggestion()}
           </div>

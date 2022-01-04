@@ -374,7 +374,7 @@ class HeaderMainSection extends NavigationAbstract {
       return this.isPLP() ? null : (
         <div block="HeaderSearchSection"
           mods={{ isPDPSearchVisible }}>
-          <HeaderSearch key="search" />
+          <HeaderSearch key="search" isPDP={this.isPDP()} isPDPSearchVisible={isPDPSearchVisible} />
         </div>
       );
     }
