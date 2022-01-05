@@ -56,7 +56,6 @@ export class PDPGalleryContainer extends PureComponent {
     window.pageType = TYPE_HOME
     switch (chosenGender) {
       case "women":
-        window.ty
         history.push("/women.html");
         break;
       case "men":
