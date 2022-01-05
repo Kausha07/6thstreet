@@ -79,7 +79,7 @@ class LanguageSwitcher extends PureComponent {
         <span
           block={
             language === "en"
-              ? "Language-Active english"
+              ? "Language-Active english hidden"
               : "Language-Inactive arabic"
           }
           onClick={() => onLanguageSelect(buttonLabelObject[0].id)}
@@ -89,7 +89,7 @@ class LanguageSwitcher extends PureComponent {
         <span
           block={
             language === "ar"
-              ? "Language-Active arabic"
+              ? "Language-Active arabic hidden"
               : "Language-Inactive english"
           }
           onClick={() => onLanguageSelect(buttonLabelObject[0].id)}
