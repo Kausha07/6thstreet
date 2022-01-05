@@ -441,7 +441,7 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  renderFilterSearchbox(label, category, data) {
+  renderFilterSearchbox(label, category) {
     let placeholder = label
       ? label
       : `${category.charAt(0).toUpperCase()}${
@@ -449,7 +449,7 @@ class FieldMultiselect extends PureComponent {
         }`;
     const { currentActiveFilter } = this.props;
     const { isArabic } = this.state;
-    if (currentActiveFilter !== category) {
+    if (isMobile.any() && currentActiveFilter !== category) {
       return null;
     }
     return (
@@ -654,7 +654,7 @@ class FieldMultiselect extends PureComponent {
         {toggleOptionsList && !isMobile.any() && (
           <>
             {Object.keys(conditionalData).length > 10
-              ? this.renderFilterSearchbox(label, category, conditionalData)
+              ? this.renderFilterSearchbox(label, category)
               : null}
             {category === "sizes" && !isMobile.any()
               ? this.renderSizeDropDown(datakeys)
@@ -676,7 +676,7 @@ class FieldMultiselect extends PureComponent {
           }}
         >
           {isMobile.any() && Object.keys(conditionalData).length > 10
-            ? this.renderFilterSearchbox(label, category, conditionalData)
+            ? this.renderFilterSearchbox(label, category)
             : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>
         </div>

@@ -104,10 +104,12 @@ export class UrlRewritesContainer extends PureComponent {
     let previousLocation = location.href;
     window.onload = function () {
       const url = new URL(previousLocation.replace(/%20&%20/gi, "%20%26%20"));
-      url.searchParams.set("p", 0);
-      const { pathname, search } = url;
-      resetPLPPage();
-      history.push(pathname + search);
+      if (url.searchParams.get("p") !== "0") {
+        resetPLPPage();
+        url.searchParams.set("p", 0);
+        const { pathname, search } = url;
+        history.push(pathname + search);
+      }
     };
   };
   async requestUrlRewrite(isUpdate = false) {
