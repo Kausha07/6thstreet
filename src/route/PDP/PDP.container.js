@@ -120,6 +120,8 @@ export class PDPContainer extends PureComponent {
       product,
       menuCategories = [],
     } = this.props;
+    console.log("previous props", prevProps)
+    console.log("props", this.props)
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku, currentLocation } = this.state;
@@ -348,7 +350,7 @@ export class PDPContainer extends PureComponent {
   render() {
     const { product } = this.props;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    return <PDP {...this.containerProps()} />;
+    return <PDP {...this.containerProps()} {...this.props} />;
   }
 }
 

@@ -799,5 +799,14 @@
     "Return Policy": null,
     "Language": null,
     "Currency": null,
-    "Track": null
+    "Track": null,
+    "Shipping Policy": null,
+    "Returns Policy": null,
+    "Sign In / Sign Up": null,
+    "Free Delivery on min. order": null,
+    "100 Days Free Return": null,
+    "Sign In / Register": null,
+    "Available all days::": null,
+    "Available all days:": null,
+    "Available all days: ": null
 }

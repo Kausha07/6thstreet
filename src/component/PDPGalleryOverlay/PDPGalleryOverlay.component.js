@@ -47,28 +47,32 @@ class PDPGalleryOverlay extends PureComponent {
       addY: 0,
       addX: 0,
       initialScale: 1,
+      isMobile: isMobile.any() || isMobile.tablet(),
     };
   }
 
   componentDidMount() {
     const { onSliderChange, currentIndex } = this.props;
     const { imageRef, overlayRef } = this;
+    const { isMobile } = this.state;
     const imgHeight =
       imageRef.current === null ? null : imageRef.current.offsetHeight;
     const imgWidth =
       imageRef.current === null ? null : imageRef.current.offsetWidth;
-    const overlayHeight = overlayRef.current.children[5].offsetHeight;
-    const overlayWidth = overlayRef.current.children[5].offsetWidth;
+    const overlayHeight = overlayRef.current.children[6].offsetHeight;
+    const overlayWidth = overlayRef.current.children[6].offsetWidth;
     const addX =
       (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
     const addY =
       (overlayHeight - imgHeight) / 2 - (overlayHeight - imgHeight * 1.5) / 2;
 
-    const imageScale = 1 - (overlayWidth - imgWidth) / overlayWidth;
+    const imageScale = overlayWidth
+      ? 1 - (overlayWidth - imgWidth) / overlayWidth
+      : 1;
     this.setState({
       addX,
       addY,
-      initialScale: 0.5,
+      initialScale: isMobile ? 1 : 0.5,
       scale: Math.floor(imageScale / 0.5) * 0.5,
     });
     onSliderChange(0);
@@ -76,7 +80,10 @@ class PDPGalleryOverlay extends PureComponent {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleArrorKeySlide);
+    const { isMobile } = this.state;
+    if (!isMobile) {
+      document.removeEventListener("keydown", this.handleArrorKeySlide);
+    }
   }
 
   renderCrumb = (index, i) => {
@@ -115,16 +122,18 @@ class PDPGalleryOverlay extends PureComponent {
 
   renderImage(src, i) {
     const { isZoomEnabled, handleZoomChange, disableZoom } = this.props;
-    const { scale, positionX, positionY, initialScale } = this.state;
+    const { scale, positionX, positionY, initialScale, isMobile } = this.state;
 
     return (
       <TransformWrapper
         key={i}
         scale={scale}
         onZoomChange={handleZoomChange}
+        defaultPositionY={positionY}
         wheel={{ disabled: true, wheelEnabled: false }}
         pan={{
-          //   disabled: !isZoomEnabled,
+          disabled: isMobile ? !isZoomEnabled : false,
+          // disabled: false,
           limitToWrapperBounds: true,
           velocity: false,
         }}
@@ -134,6 +143,7 @@ class PDPGalleryOverlay extends PureComponent {
           minPositionX: positionX,
           minPositionY: positionY,
         }}
+        centerZoomedOut={true}
       >
         {({
           scale,
@@ -143,11 +153,13 @@ class PDPGalleryOverlay extends PureComponent {
           positionX,
           positionY,
           options,
-          centerView,
         }) => {
           const { minPositionY, minPositionX } = options;
-          if (scale === 0.5 && previousScale !== 0.5) {
-            // resetTransform();
+          console.log({ scale, previousScale });
+          if (scale === initialScale && previousScale !== initialScale) {
+            if (isMobile) {
+              resetTransform();
+            }
           }
 
           // if (scale !== previousScale && scale !== 0.5) {
@@ -246,12 +258,12 @@ class PDPGalleryOverlay extends PureComponent {
   }
   prev = () => {
     const { currentIndex, onSliderChange, gallery = [] } = this.props;
+
     if (currentIndex === 0) {
       return;
     } else {
       onSliderChange(currentIndex - 1);
     }
-    console.log("prev clicked");
   };
   next = () => {
     const { currentIndex, onSliderChange, gallery = [] } = this.props;
@@ -260,7 +272,6 @@ class PDPGalleryOverlay extends PureComponent {
     } else {
       onSliderChange(currentIndex + 1);
     }
-    console.log("next clicked");
   };
 
   handleArrorKeySlide = (e) => {
@@ -278,7 +289,25 @@ class PDPGalleryOverlay extends PureComponent {
     }
   };
   listenArrowKey = () => {
-    document.addEventListener("keydown", this.handleArrorKeySlide);
+    const { isMobile } = this.state;
+    if (!isMobile) {
+      document.addEventListener("keydown", this.handleArrorKeySlide);
+    }
+  };
+  renderPrevButton = () => {
+    return (
+      <button block="PDPGalleryOverlay" elem="Prev" onClick={this.prev}>
+        <ChevronLeft />
+      </button>
+    );
+  };
+
+  renderNextButton = () => {
+    return (
+      <button block="PDPGalleryOverlay" elem="Next" onClick={this.next}>
+        <ChevronRight />
+      </button>
+    );
   };
 
   render() {
@@ -299,12 +328,8 @@ class PDPGalleryOverlay extends PureComponent {
         <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={this.zoomOut}>
           <Minus />
         </button>
-        <button block="PDPGalleryOverlay" elem="Prev" onClick={this.prev}>
-          <ChevronLeft />
-        </button>
-        <button block="PDPGalleryOverlay" elem="Next" onClick={this.next}>
-          <ChevronRight />
-        </button>
+        {this.renderPrevButton()}
+        {this.renderNextButton()}
         {this.renderCrumbs()}
         {this.renderSlider()}
       </div>
