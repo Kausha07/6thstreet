@@ -306,3 +306,66 @@
     width: 100%;
   }
 }
+
+@include mobile {
+  .MobileCards {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    .CardsContainer {
+      margin: 0 5px;
+      height: 176px;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      background-color: #ffffff;
+      padding: 14px;
+      width: 33.33%;
+      display: flex;
+      flex-direction: column;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        height: 30px !important;
+        width: 30px !important;
+      }
+      .CardTitle {
+        color: #000000;
+        font-family: "Avenir Next";
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 22px;
+        text-align: center;
+      }
+      a {
+        border-radius: 8px;
+        background-color: #000000;
+        width: 100%;
+        height: 29px;
+        color: white;
+        font-family: "Avenir Next";
+        padding: 0 4px;
+        text-transform: capitalize;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 18px;
+        justify-content: center;
+        align-items: center;
+        &:hover, &:focus &:active {
+          text-decoration: none;
+          color: white;
+        }
+      }
+    }
+  }
+}

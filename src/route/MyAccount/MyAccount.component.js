@@ -1,5 +1,4 @@
 import ContactHelp from "Component/ContactHelp";
-import SettingsScreen from "Component/SettingsScreen";
 import ContentWrapper from "Component/ContentWrapper";
 import Image from "Component/Image";
 import Link from "Component/Link";
@@ -13,6 +12,7 @@ import { RETURN_ITEM_LABEL } from "Component/MyAccountOrderView/MyAccountOrderVi
 import MyAccountReturns from "Component/MyAccountReturns";
 import MyAccountStoreCredit from "Component/MyAccountStoreCredit";
 import MyAccountTabList from "Component/MyAccountTabList";
+import SettingsScreen from "Component/SettingsScreen";
 import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { MyAccount as SourceMyAccount } from "SourceRoute/MyAccount/MyAccount.component";
@@ -21,17 +21,19 @@ import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
   CONTACT_HELP,
-  SETTINGS_SCREEN,
   DASHBOARD,
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
+  SETTINGS_SCREEN,
   STORE_CREDIT,
   tabMapType,
 } from "Type/Account";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import box from "./icons/box.png";
+import contactHelp from "./icons/contact-help.png";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -251,6 +253,23 @@ export class MyAccount extends SourceMyAccount {
           name={isCancel ? alternateName : name}
         />
         <div block={hiddenTabList}>
+          <div block="MobileCards">
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={box} alt={"box"} />
+              <div block="CardTitle"> {__("Club Apparel")} </div>
+              <Link to="/">{__("Link Now")}</Link>
+            </div>
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={box} alt={"box"} />
+              <div block="CardTitle"> {__("My Orders")} </div>
+              <Link to="/my-account/my-orders">{__("Track")}</Link>
+            </div>
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={contactHelp} alt={"box"} />
+              <div block="CardTitle"> {__("Contact & Help")} </div>
+              <Link to="/">{__("Live Chat")}</Link>
+            </div>
+          </div>
           <MyAccountTabList
             tabMap={tabMap}
             activeTab={activeTab}
