@@ -285,9 +285,9 @@ function getFilters({ locale, facets, raw_facets, query }) {
 }
 
 /*
-  Removes `category` facets for:
-  - other genders than the selected ones
-  - 'Outlet'
+Removes `category` facets for:
+- other genders than the selected ones
+- 'Outlet'
 */
 
 const filterOutCategoryValues = ({
@@ -307,14 +307,14 @@ const filterOutCategoryValues = ({
     if (genders.length) {
       keepValue = !!genders.find((genderValue) => {
         /*
-          Women and Men -> Women /// Shoes
-                           Men /// Shoes
+Women and Men -> Women /// Shoes
+Men /// Shoes
 
-          Kids          -> Kids /// Girl /// Shoes
-                           Kids /// Boy /// Shoes
-                           Kids /// Baby Girl /// Shoes
-                           Kids /// Baby Boy /// Shoes
-        */
+Kids -> Kids /// Girl /// Shoes
+Kids /// Boy /// Shoes
+Kids /// Baby Girl /// Shoes
+Kids /// Baby Boy /// Shoes
+*/
 
         if (VISIBLE_GENDERS.KIDS[genderValue]) {
           return key.match(`Kids /// ${genderValue}`);
@@ -393,7 +393,7 @@ const _formatFacets = ({ facets, queryParams }) => {
   }, {});
 };
 
-function getPLP(URL, options = {}) {
+function getPLP(URL, options = {}, params = {}) {
   const { client, env } = options;
 
   return new Promise((resolve, reject) => {
@@ -416,25 +416,99 @@ function getPLP(URL, options = {}) {
     // Build search query
     const { facetFilters, numericFilters } = getAlgoliaFilters(queryParams);
     const query = {
-      ...defaultSearchParams,
-      facetFilters,
-      numericFilters,
-      query: q,
-      page,
-      hitsPerPage: limit,
-      clickAnalytics: true,
+      indexName: indexName,
+      params: {
+        ...defaultSearchParams,
+        facetFilters,
+        numericFilters,
+        query: q,
+        page,
+        hitsPerPage: limit,
+        clickAnalytics: true,
+      },
     };
+    console.log("muskan facetFilters", query);
 
-    index.search(query, (err, res = {}) => {
+    let selectedFilterArr = [];
+    let exceptFilter = [
+      "page",
+      "q",
+      "sort",
+      "discount",
+      "visibility_catalog",
+      "categories.level1",
+    ];
+    Object.keys(params).map((option) => {
+      if (!exceptFilter.includes(option)) {
+        selectedFilterArr.push(option);
+      }
+    });
+    let queries = [];
+    queries.push(query);
+    if (selectedFilterArr.length > 0) {
+      selectedFilterArr.map((filter) => {
+        let finalFacetObj = [];
+        facetFilters.map((facetfilter) => {
+          if (
+            selectedFilterArr.includes(facetfilter[0].split(":")[0]) &&
+            facetfilter[0].split(":")[0] !== filter
+          ) {
+            finalFacetObj.push(facetfilter[0]);
+          }
+        });
+        let searchParam = JSON.parse(JSON.stringify(defaultSearchParams));
+        searchParam["facets"] = [filter];
+        queries.push({
+          indexName: indexName,
+          params: {
+            ...searchParam,
+            facetFilters: finalFacetObj,
+            numericFilters,
+            query: q,
+            page,
+            hitsPerPage: limit,
+            clickAnalytics: true,
+          },
+        });
+      });
+    }
+
+    client.search(queries, (err, res = {}) => {
       if (err) {
         return reject(err);
       }
 
-      const { hits, facets, nbHits, nbPages, hitsPerPage, queryID } = res;
+      const { hits, facets, nbHits, nbPages, hitsPerPage, queryID } =
+        res.results[0];
+      let finalFiltersData = [];
+      if (Object.values(res.results).length > 1) {
+        Object.entries(res.results).map((result, index) => {
+          if (index > 0) {
+            // const { filters } = getFilters({
+            //   locale,
+            //   facets: _formatFacets({ facets: result[0].facets, queryParams }),
+            //   raw_facets: result[0].facets,
+            //   query: queryParams,
+            // });
+            console.log("muskan ----------->",result);
+            // finalFiltersData.push(filters);
+          }
+        });
+      }
 
+      const facetsAllFilter = res.results[0].facets;
+      const { filters: allFilters, _filtersUnselected: _allFiltersUnselected } =
+        getFilters({
+          locale,
+          facets: _formatFacets({ facets: facetsAllFilter, queryParams }),
+          raw_facets: res.results[0].facets,
+          query: queryParams,
+        });
+
+      const facetsFilter = res.results[0].facets;
       const { filters, _filtersUnselected } = getFilters({
         locale,
-        facets: _formatFacets({ facets, queryParams }),
+        facets: _formatFacets({ facets: facetsFilter, queryParams }),
         raw_facets: facets,
         query: queryParams,
       });
@@ -443,6 +517,8 @@ function getPLP(URL, options = {}) {
         facets,
         data: hits.map(formatNewInTag),
         filters,
+        allFilters,
+        finalFiltersData,
         meta: {
           page: res.page,
           limit: hitsPerPage,

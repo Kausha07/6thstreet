@@ -49,7 +49,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`);
+    return AlgoliaSDK.getPLP(`/?${url}`,params);
   }
 
   async getPDP(params = {}) {

@@ -114,12 +114,13 @@ export const PLPReducer = (state = getInitialState(), action) => {
           meta = {},
           filters = {},
           allFilters = {},
+          finalFiltersData
         },
         options: requestedOptions = {},
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-
+      console.log("muskan reducer",finalFiltersData);
       return {
         ...state,
         filters: filters,
