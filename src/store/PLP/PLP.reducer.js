@@ -4,6 +4,7 @@ import {
   SET_PLP_INIT_FILTERS,
   SET_PLP_LOADING,
   SET_PLP_PAGE,
+  RESET_PLP_PAGE,
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
 } from "./PLP.action";
@@ -82,7 +83,12 @@ export const PLPReducer = (state = getInitialState(), action) => {
           [page]: pageProducts,
         },
       };
-
+    case RESET_PLP_PAGE:
+      return {
+        ...state,
+        pages: {},
+      };
+      
     case UPDATE_PLP_INIT_FILTERS:
       const { updatedFilters, facet_key, facet_value } = action;
       return {
@@ -113,7 +119,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-     
+
       return {
         ...state,
         filters: filters,

@@ -25,7 +25,6 @@ import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 
-
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -101,7 +100,6 @@ export class PLPContainer extends PureComponent {
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
-
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);
@@ -367,6 +365,7 @@ export class PLPContainer extends PureComponent {
       plpWidgetData,
       gender,
       filters,
+      pages
     } = this.props;
 
     // isDisabled: this._getIsDisabled()
@@ -379,6 +378,7 @@ export class PLPContainer extends PureComponent {
       plpWidgetData,
       gender,
       filters,
+      pages
     };
   };
 
