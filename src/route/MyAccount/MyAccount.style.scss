@@ -141,6 +141,11 @@
           background-image: url(./icons/address.png);
         }
       }
+      &_contact-help {
+        &:before {
+          background-image: url(./icons/contact-help.png);
+        }
+      }
     }
   }
 
@@ -243,6 +248,7 @@
     }
     @include before-desktop {
       padding: 0;
+      max-height: 100%;
     }
   }
 

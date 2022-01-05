@@ -676,6 +676,7 @@ class PDPDetailsSection extends PureComponent {
                         sourceCatgID={categories_without_path[0]}
                         pageType={"pdp"}
                         key={`DynamicContentVueProductSliderContainer${index}`}
+                        index={index}
                       />
                     </div>
                   </>

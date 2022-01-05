@@ -120,6 +120,7 @@ class DynamicContent extends PureComponent {
           type={type}
           key={i}
           isHomePage={true}
+          index={i}
         />
       );
     } else {
@@ -142,7 +143,6 @@ class DynamicContent extends PureComponent {
         }));
       };
     }
-
     return (
       <Component
         ref={this.comprefs[i]}
@@ -153,6 +153,7 @@ class DynamicContent extends PureComponent {
         tag={tag}
         key={i}
         isHomePage={true}
+        index={i}
       />
     );
   };
