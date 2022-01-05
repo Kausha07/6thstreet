@@ -43,7 +43,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       >
         <AccountIcon />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("My account")}
+          {__("My Profile")}
         </span>
       </Link>
     );
@@ -62,7 +62,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("Order history")}
+          {__("My Orders")}
         </span>
       </Link>
     );
@@ -81,7 +81,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("Return An Item")}
+          {__("My Returns")}
         </span>
       </Link>
     );
@@ -148,7 +148,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("Delivery addresses")}
+          {__("My Address Book")}
         </span>
       </Link>
     );

@@ -4,11 +4,14 @@ import { connect } from "react-redux";
 import { setPDPGaleryImage } from "Store/PDP/PDP.action";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import PDPGallery from "./PDPGallery.component";
-
+import {
+  TYPE_HOME,
+} from 'Route/UrlRewrites/UrlRewrites.config';
 export const mapStateToProps = (state) => ({
   currentIndex: state.PDP.imageIndex,
   isLoading: state.PDP.isLoading,
   product: state.PDP.product,
+  chosenGender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -30,10 +33,11 @@ export class PDPGalleryContainer extends PureComponent {
 
   containerFunctions = {
     onSliderChange: this.onSliderChange.bind(this),
+    homeFromPDP: this.homeFromPDP.bind(this)
   };
 
   containerProps = () => {
-    const { currentIndex, product,renderMySignInPopup } = this.props;
+    const { currentIndex, product, renderMySignInPopup } = this.props;
 
     return {
       gallery: this.getGallery(),
@@ -44,6 +48,25 @@ export class PDPGalleryContainer extends PureComponent {
       product,
       renderMySignInPopup
     };
+  };
+
+  homeFromPDP() {
+    console.log("props in gallery", this.props)
+    const { chosenGender, history } = this.props;
+    window.pageType = TYPE_HOME
+    switch (chosenGender) {
+      case "women":
+        history.push("/women.html");
+        break;
+      case "men":
+        history.push("/men.html");
+        break;
+      case "kids":
+        history.push("/kids.html");
+        break;
+      default:
+        history.push("/");
+    }
   };
 
   onSliderChange(activeSlide) {

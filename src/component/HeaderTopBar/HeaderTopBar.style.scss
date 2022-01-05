@@ -3,7 +3,7 @@
 }
 
 .HeaderTopBar {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex: 0.6;
@@ -17,7 +17,6 @@
   transition: 0.5s ease-in-out;
 
   @include desktop {
-    display: flex;
     width: 100%;
     position: relative;
     top: 0;
@@ -29,8 +28,23 @@
     padding: 0;
   }
 
-  @include mobile{
-    bottom: 70px;
+  @include mobile {
+    position: fixed;
+    top: 15.5px;
+    height: 31px;
+    z-index: 95;
+    background-color: transparent;
+  }
+
+  @include tablet {
+    width: 100%;
+    position: relative;
+    top: 0;
+    z-index: 91;
+    box-shadow: unset;
+    background: none;
+    height: 31px;
+    padding: 0;
   }
 
   &-ContentWrapper {
@@ -39,11 +53,13 @@
     margin: 0 auto;
     width: var(--main-container-width-dsk);
     justify-content: space-between;
-    @include tablet {
-      justify-content: center;
-    }
     @include mobile {
-      justify-content: center;
+      margin: 0;
+      width: 100%;
+    }
+    @include tablet {
+      margin: 0;
+      width: 100%;
     }
   }
 
@@ -69,15 +85,15 @@
     }
   }
 
-  &_isOnMobile {
+  &_isHidden {
     display: none;
   }
 
-  &_isHidden {
-    @include mobile {
-      bottom: 0;
-    }
-  }
+  // &_isHidden {
+  //   @include mobile {
+  //     bottom: 0;
+  //   }
+  // }
   .Switcher {
     display: flex;
     align-items: center;

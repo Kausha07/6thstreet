@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
+import Link from "Component/Link";
 import ClickOutside from "Component/ClickOutside";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import { Info } from "Component/Icons";
+import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
@@ -18,6 +21,8 @@ class InlineCustomerSupport extends PureComponent {
 
   state = {
     isExpanded: false,
+    signInPopUp: "",
+    showPopup: false,
     isArabic: isArabic(),
   };
 
@@ -85,17 +90,56 @@ class InlineCustomerSupport extends PureComponent {
     const { openHoursLabel } = this.props;
 
     return (
-      <>
-        <p>{__("We are available all days from:")}</p>
-        <p block="InlineCustomerSupport" elem="OpenHours">
-          {openHoursLabel}
-        </p>
-      </>
+      <p block="InlineCustomerSupport" elem="OpenHours">
+        <span>{ __("Available all days: ")}</span>
+        <span>{openHoursLabel}</span>
+      </p>
     );
+  }
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "", showPopup: false });
+  };
+
+  showPopup = () => {
+    this.setState({ signInPopUp: "", showPopup: true });
+  }
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
+
+  isHidden = () => {
+    const { pathname } = location
+    if( isMobile.any() &&
+        !(
+          pathname === "/" || pathname === "" ||
+          pathname === "/women.html" || pathname === "/men.html" || pathname === "/kids.html" || pathname === "/home.html" ||
+          pathname.includes("catalogsearch")
+        )
+      ) {
+      return true;
+    }
+    return false
   }
 
   renderDropdown() {
     const { isExpanded, isArabic } = this.state;
+    const { location } = this.props;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
     return (
@@ -103,7 +147,10 @@ class InlineCustomerSupport extends PureComponent {
         <button
           block="InlineCustomerSupport"
           elem="Button"
-          mods={{ isExpanded }}
+          mods={{
+            isExpanded,
+            isHidden: this.isHidden()
+          }}
           mix={{
             block: "InlineCustomerSupport",
             elem: "Button",
@@ -111,7 +158,13 @@ class InlineCustomerSupport extends PureComponent {
           }}
           onClick={() => this.onDropdownClick()}
         >
-          {__("customer service")}
+          { 
+            isMobile.any()
+            ?
+            <Info />
+            :
+            __("customer service")
+          }
         </button>
         <div
           block="InlineCustomerSupport"
@@ -143,7 +196,74 @@ class InlineCustomerSupport extends PureComponent {
           ) : (
             Email
           )}
-        </div>
+            <div block="InlineCustomerSupport" elem="DisplayFAQ">
+              <div
+                block="InlineCustomerSupport"
+                elem="FAQsIcon"
+                mods={{ isArabic }}
+              />
+              <Link
+              block="InlineCustomerSupport"
+              elem="faq"
+              mods={{ isArabic }}
+              to='/faq'
+              >
+                { __("FAQs") }
+              </Link>
+            </div>
+
+            <div>
+              <div block="InlineCustomerSupport" elem="DisplayShipping">
+                <div
+                  block="InlineCustomerSupport"
+                  elem="ShippingIcon"
+                  mods={{ isArabic }}
+                />
+                <Link
+                  block="InlineCustomerSupport"
+                  elem="shippingpolicy"
+                  mods={{ isArabic }}
+                  to='/shipping-policy'
+                >
+                  { __("Free Delivery on min. order") }
+                </Link>
+              </div>
+            </div>
+
+            <div block="InlineCustomerSupport" elem="DisplayReturns">
+              <div
+                block="InlineCustomerSupport"
+                elem="ReturnIcon"
+                mods={{ isArabic }}
+              />
+                <Link
+                  block="InlineCustomerSupport"
+                  elem="returnpolicy"
+                  mods={{ isArabic }}
+                  to='/return-information'
+                >
+                  { __("100 Days Free Return") }
+                </Link>
+              </div>
+
+              {
+                !isSignedIn() && (isMobile.any() || isMobile.tablet())
+                ?
+                <div block="InlineCustomerSupport" elem="DisplayAuthentication" onClick={this.showPopup}>
+                  <div
+                    block="InlineCustomerSupport"
+                    elem="AccountIcon"
+                    mods={{ isArabic }}
+                  />
+                  { __("Sign In / Register") }
+                </div>
+                :
+                null
+              }
+            <div block="InlineCustomerSupport" elem="CheckoutCommunication">
+              CoD | multiple payment options | T&amp;Cs apply
+            </div>
+          </div>
       </div>
     );
   }
@@ -183,12 +303,15 @@ class InlineCustomerSupport extends PureComponent {
   render() {
     const { isArabic } = this.state;
     return (
-      <div block="InlineCustomerSupport" mods={{ isArabic }}>
-        <ClickOutside onClick={this.onClickOutside}>
-          {this.renderDropdown()}
-          {/* {this.renderQuickAccess()} */}
-        </ClickOutside>
-      </div>
+      <>
+        <div block="InlineCustomerSupport" mods={{ isArabic }}>
+          <ClickOutside onClick={this.onClickOutside}>
+            {this.renderDropdown()}
+            {/* {this.renderQuickAccess()} */}
+          </ClickOutside>
+        </div>
+        { this.renderMySignInPopup() }
+      </>
     );
   }
 }

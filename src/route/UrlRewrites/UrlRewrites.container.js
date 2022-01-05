@@ -49,16 +49,22 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
-    this.requestUrlRewrite();
+    const possibleSku = this.getPossibleSku();
+    this.setState({
+      sku: possibleSku,
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
 
-    const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
-
+    const { prevPathname, query, sku } = this.state;
+    const {
+      prevPathname: prevStatePathname,
+      query: prevQuery,
+      sku: prevSku,
+    } = prevState;
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -79,6 +85,7 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
+      sku !== prevSku ||
       !prevStatePathname
     ) {
       hideActiveOverlay();
@@ -97,10 +104,12 @@ export class UrlRewritesContainer extends PureComponent {
     const possibleSku = this.getPossibleSku();
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
+    this.setState({
+      prevPathname: urlParam,
+    });
     if (search.startsWith("?q=")) {
       this.setState({
         prevPathname: urlParam,

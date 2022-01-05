@@ -30,6 +30,7 @@ export class InlineCustomerSupportContainer extends PureComponent {
   containerProps = () => {
     const {
       config: { support_email: email },
+      location,
     } = this.props;
 
     const {
@@ -42,6 +43,7 @@ export class InlineCustomerSupportContainer extends PureComponent {
     } = this.getCountryConfigs();
 
     return {
+      location,
       email,
       isEmailSupported,
       isPhoneSupported,
@@ -76,6 +78,7 @@ export class InlineCustomerSupportContainer extends PureComponent {
   }
 
   render() {
+
     return (
       <InlineCustomerSupport
         {...this.containerFunctions}
