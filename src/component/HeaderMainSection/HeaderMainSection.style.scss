@@ -156,7 +156,8 @@ main {
       display: none;
     }
   }
-  .BackArrow {
+  .BackArrow,
+  .PDPBackArrow {
     height: 40px;
     width: 40px;
     border-radius: 20px;
@@ -171,7 +172,8 @@ main {
       right: 15px;
       left: unset;
 
-      .BackArrow {
+      .BackArrow,
+      .PDPBackArrow {
         &-Button {
           right: 5px;
           left: unset;
@@ -212,6 +214,26 @@ main {
 
     @include after-mobile {
       display: none;
+    }
+  }
+
+  .PDPBackArrow {
+    background: transparent;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    @include mobile {
+      top: -20px;
+      &_isPDPSearchVisible {
+        top: 15px;
+      }
+    }
+    @include tablet {
+      top: -20px;
+      &_isPDPSearchVisible {
+        top: 15px;
+      }
     }
   }
 
