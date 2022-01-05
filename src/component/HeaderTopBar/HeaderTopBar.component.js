@@ -71,7 +71,7 @@ class HeaderTopBar extends NavigationAbstract {
   }
 
   renderCustomerSupport() {
-    return <InlineCustomerSupport key="support" />;
+    return <InlineCustomerSupport key="support" {...this.props} />;
   }
 
   renderStoreSwitcher() {
@@ -85,12 +85,19 @@ class HeaderTopBar extends NavigationAbstract {
     );
   }
 
+  isHidden = () => {
+    const { pathname } = location;
+    if( isMobile.any() && !(pathname === "/" || pathname === "" || pathname.includes("catalogsearch")) ) {
+      return true;
+    }
+    return false
+  }
+
   render() {
-    const { isHidden, isOnMobile } = this.state;
-    const offset = window.pageYOffset;
+    const { location } = this.props;
 
     return (
-      <div block="HeaderTopBar" mods={{ isOnMobile }}>
+      <div block="HeaderTopBar" mods={{ isHidden: this.isHidden() }}>
         <div block="HeaderTopBar" elem="ContentWrapper">
           {this.renderNavigationState()}
         </div>

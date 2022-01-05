@@ -45,7 +45,7 @@ class FooterMiddle extends PureComponent {
     renderCustomerSupport() {
         return (
             <div block="FooterMiddle" elem="CustomerSupport">
-                <InlineCustomerSupport key="support" />
+                <InlineCustomerSupport key="support" {...this.props} />
             </div>
         );
     }
