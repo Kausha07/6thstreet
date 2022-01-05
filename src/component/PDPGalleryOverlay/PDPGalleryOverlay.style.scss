@@ -193,6 +193,9 @@
       z-index: 601;
       left: 0;
       transform: translateY(-50%);
+      @include mobile {
+        display: none;
+      }
     }
     &-Next {
       position: absolute;
@@ -200,6 +203,9 @@
       z-index: 601;
       right: 0;
       transform: translateY(-50%);
+      @include mobile {
+        display: none;
+      }
     }
 
     &-Crumbs {
