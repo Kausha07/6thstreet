@@ -137,7 +137,13 @@ export class MyAccount extends SourceMyAccount {
       </div>
     ));
   }
+
+  chat() {
+    document.querySelector(".ori-cursor-ptr").click();
+  }
+
   handleTabChange(key) {
+    console.log("key", key);
     const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
 
     setMobileTabActive(!mobileTabActive);
@@ -145,8 +151,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   openTabMenu() {
-    const { mobileTabActive, setMobileTabActive } = this.props;
-
+    const { mobileTabActive, setMobileTabActive, history } = this.props;
+    history.push("/my-account");
     setMobileTabActive(!mobileTabActive);
   }
 
@@ -257,17 +263,21 @@ export class MyAccount extends SourceMyAccount {
             <div block="CardsContainer">
               <Image block="CardsIcon" src={box} alt={"box"} />
               <div block="CardTitle"> {__("Club Apparel")} </div>
-              <Link to="/">{__("Link Now")}</Link>
+              <button onClick={() => this.handleTabChange("club-apparel")}>
+                {__("Link Now")}
+              </button>
             </div>
             <div block="CardsContainer">
               <Image block="CardsIcon" src={box} alt={"box"} />
               <div block="CardTitle"> {__("My Orders")} </div>
-              <Link to="/my-account/my-orders">{__("Track")}</Link>
+              <button onClick={() => this.handleTabChange("my-orders")}>
+                {__("Track")}
+              </button>
             </div>
             <div block="CardsContainer">
               <Image block="CardsIcon" src={contactHelp} alt={"box"} />
               <div block="CardTitle"> {__("Contact & Help")} </div>
-              <Link to="/">{__("Live Chat")}</Link>
+              <button onClick={this.chat}>{__("Live Chat")}</button>
             </div>
           </div>
           <MyAccountTabList
