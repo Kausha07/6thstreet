@@ -90,12 +90,10 @@ class InlineCustomerSupport extends PureComponent {
     const { openHoursLabel } = this.props;
 
     return (
-      <>
-        <p>{__("We are available all days from:")}</p>
-        <p block="InlineCustomerSupport" elem="OpenHours">
-          {openHoursLabel}
-        </p>
-      </>
+      <p block="InlineCustomerSupport" elem="OpenHours">
+        <span>{ __("Available all days: ")}</span>
+        <span>{openHoursLabel}</span>
+      </p>
     );
   }
 
@@ -127,7 +125,13 @@ class InlineCustomerSupport extends PureComponent {
 
   isHidden = () => {
     const { pathname } = location
-    if( isMobile.any() && !(pathname === "/" || pathname === "" || pathname.includes("catalogsearch")) ) {
+    if( isMobile.any() &&
+        !(
+          pathname === "/" || pathname === "" ||
+          pathname === "/women.html" || pathname === "/men.html" || pathname === "/kids.html" || pathname === "/home.html" ||
+          pathname.includes("catalogsearch")
+        )
+      ) {
       return true;
     }
     return false
@@ -226,7 +230,7 @@ class InlineCustomerSupport extends PureComponent {
                     mods={{ isArabic }}
                     to='/shipping-policy'
                   >
-                    { __("Shipping Policy") }
+                    { __("Free Delivery on min. order") }
                   </Link>
                 </div>
               </div>
@@ -243,7 +247,7 @@ class InlineCustomerSupport extends PureComponent {
                     mods={{ isArabic }}
                     to='/return-information'
                   >
-                    { __("Returns Policy") }
+                    { __("100 Days Free Return") }
                   </Link>
                 </div>
 
@@ -256,13 +260,13 @@ class InlineCustomerSupport extends PureComponent {
                       elem="AccountIcon"
                       mods={{ isArabic }}
                     />
-                    { __("Sign In / Sign Up") }
+                    { __("Sign In / Register") }
                   </div>
                   :
                   null
                 }
               <div block="InlineCustomerSupport" elem="CheckoutCommunication">
-                CoD available | Free delivery on min. order value | T&amp;C apply
+                CoD | multiple payment options | T&amp;Cs apply
               </div>
             </>
             :
