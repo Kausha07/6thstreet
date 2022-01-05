@@ -456,7 +456,7 @@ class FieldMultiselect extends PureComponent {
       <div block="Search-Container">
         <input
           type="text"
-          id={currentActiveFilter}
+          id={isMobile.any() ? currentActiveFilter : category}
           placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
           onChange={(event) => this.handleFilterSearch(event)}
         />
