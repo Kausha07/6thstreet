@@ -19,7 +19,7 @@ import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from 'react-redux';
-
+import HomeIcon from "Component/Icons/Home/home.png"
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch
 });
@@ -69,9 +69,13 @@ class PDPGallery extends PureComponent {
 
   renderBackButton() {
     const { isArabic } = this.state;
+    const { homeFromPDP } = this.props
     return (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={browserHistory.goBack} />
+        <div block="BackArrow-HomeIcon" onClick={homeFromPDP}>
+          <img src={HomeIcon} alt="home" />
+        </div>
       </div>
     );
   }

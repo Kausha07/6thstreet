@@ -45,6 +45,10 @@
             -webkit-transform: rotate(-45deg);
           }
         }
+        &-HomeIcon {
+          // right: 5px;
+          left: unset;
+        }
       }
     }
 
@@ -59,7 +63,7 @@
         display: none;
       }
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 5px;
         border: solid #000000;
@@ -69,6 +73,13 @@
         transform: rotate(135deg);
         -webkit-transform: rotate(135deg);
       }
+    }
+    &-HomeIcon {
+      top: 15px;
+      background-size: 30px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
     }
 
     @include after-mobile {
