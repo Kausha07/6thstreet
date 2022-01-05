@@ -45,6 +45,9 @@ main {
       visibility: hidden;
       top: -50px;
     }
+    &[data-visible='true'] {
+      z-index: 94;
+    }
   }
   @include tablet {
     z-index: 90;

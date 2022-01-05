@@ -196,82 +196,73 @@ class InlineCustomerSupport extends PureComponent {
           ) : (
             Email
           )}
+            <div block="InlineCustomerSupport" elem="DisplayFAQ">
+              <div
+                block="InlineCustomerSupport"
+                elem="FAQsIcon"
+                mods={{ isArabic }}
+              />
+              <Link
+              block="InlineCustomerSupport"
+              elem="faq"
+              mods={{ isArabic }}
+              to='/faq'
+              >
+                { __("FAQs") }
+              </Link>
+            </div>
 
-          {
-            isMobile.any()
-            ?
-            <>
-              <div block="InlineCustomerSupport" elem="DisplayFAQ">
+            <div>
+              <div block="InlineCustomerSupport" elem="DisplayShipping">
                 <div
                   block="InlineCustomerSupport"
-                  elem="FAQsIcon"
+                  elem="ShippingIcon"
                   mods={{ isArabic }}
                 />
                 <Link
-                block="InlineCustomerSupport"
-                elem="faq"
-                mods={{ isArabic }}
-                to='/faq'
+                  block="InlineCustomerSupport"
+                  elem="shippingpolicy"
+                  mods={{ isArabic }}
+                  to='/shipping-policy'
                 >
-                  { __("FAQs") }
+                  { __("Free Delivery on min. order") }
+                </Link>
+              </div>
+            </div>
+
+            <div block="InlineCustomerSupport" elem="DisplayReturns">
+              <div
+                block="InlineCustomerSupport"
+                elem="ReturnIcon"
+                mods={{ isArabic }}
+              />
+                <Link
+                  block="InlineCustomerSupport"
+                  elem="returnpolicy"
+                  mods={{ isArabic }}
+                  to='/return-information'
+                >
+                  { __("100 Days Free Return") }
                 </Link>
               </div>
 
-              <div>
-                <div block="InlineCustomerSupport" elem="DisplayShipping">
+              {
+                !isSignedIn() && (isMobile.any() || isMobile.tablet())
+                ?
+                <div block="InlineCustomerSupport" elem="DisplayAuthentication" onClick={this.showPopup}>
                   <div
                     block="InlineCustomerSupport"
-                    elem="ShippingIcon"
+                    elem="AccountIcon"
                     mods={{ isArabic }}
                   />
-                  <Link
-                    block="InlineCustomerSupport"
-                    elem="shippingpolicy"
-                    mods={{ isArabic }}
-                    to='/shipping-policy'
-                  >
-                    { __("Free Delivery on min. order") }
-                  </Link>
+                  { __("Sign In / Register") }
                 </div>
-              </div>
-
-              <div block="InlineCustomerSupport" elem="DisplayReturns">
-                <div
-                  block="InlineCustomerSupport"
-                  elem="ReturnIcon"
-                  mods={{ isArabic }}
-                />
-                  <Link
-                    block="InlineCustomerSupport"
-                    elem="returnpolicy"
-                    mods={{ isArabic }}
-                    to='/return-information'
-                  >
-                    { __("100 Days Free Return") }
-                  </Link>
-                </div>
-
-                {
-                  !isSignedIn() && isMobile.any()
-                  ?
-                  <div block="InlineCustomerSupport" elem="DisplayAuthentication" onClick={this.showPopup}>
-                    <div
-                      block="InlineCustomerSupport"
-                      elem="AccountIcon"
-                      mods={{ isArabic }}
-                    />
-                    { __("Sign In / Register") }
-                  </div>
-                  :
-                  null
-                }
-              <div block="InlineCustomerSupport" elem="CheckoutCommunication">
-                CoD | multiple payment options | T&amp;Cs apply
-              </div>
-            </>
-            :
-            null
-          }
+                :
+                null
+              }
+            <div block="InlineCustomerSupport" elem="CheckoutCommunication">
+              CoD | multiple payment options | T&amp;Cs apply
+            </div>
           </div>
       </div>
     );
