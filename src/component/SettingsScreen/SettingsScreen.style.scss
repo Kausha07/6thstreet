@@ -4,6 +4,7 @@
             &:first-child {
                 border-bottom: 2px solid var(--lightest-gray);
             }
+
             &:last-child {
                 button {
                     &:before {
@@ -11,11 +12,14 @@
                     }
                 }
             }
+
             button {
                 font-weight: normal;
             }
+
             &:hover {
                 font-weight: normal;
+
                 button {
                     font-weight: normal;
                 }
@@ -65,7 +69,9 @@
                             right: unset;
                         }
                     }
+
                     .MyAccountTabListItem {
+
                         &-Button,
                         button {
                             padding-right: 0 !important;
@@ -84,6 +90,9 @@
                 }
 
                 span {
+                    padding-left: 0;
+                    border-left: unset;
+
                     &:last-child {
                         padding-left: 0 !important;
                         padding-right: 15px !important;
@@ -92,18 +101,19 @@
                 }
             }
         }
-        // button {
-        //     &:last-child {
-        //         padding-right: 0 !important;
-        //     }
 
-        //     span {
-        //         &:last-child {
-        //             padding-right: 0 !important;
-        //             border-right: unset;
-        //         }
-        //     }
-        // }
+        button {
+            &:last-child {
+                padding-right: 0 !important;
+            }
+
+            span {
+                &:last-child {
+                    padding-right: 0 !important;
+                    border-right: unset;
+                }
+            }
+        }
     }
 
     // .PageWrapper {

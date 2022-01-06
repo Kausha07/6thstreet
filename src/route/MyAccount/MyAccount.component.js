@@ -2,6 +2,7 @@ import ContactHelp from "Component/ContactHelp";
 import ContentWrapper from "Component/ContentWrapper";
 import Image from "Component/Image";
 import Link from "Component/Link";
+import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountAddressBook from "Component/MyAccountAddressBook";
 import MyAccountClubApparel from "Component/MyAccountClubApparel";
 import MyAccountDashboard from "Component/MyAccountDashboard";
@@ -247,6 +248,9 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
+    const customer = BrowserDatabase.getItem("customer");
+    const firstname = customer && customer.firstname ? customer.firstname : null;
+    console.log("firstname",firstname)
     return (
       <ContentWrapper
         label={__("My Account page")}
@@ -259,6 +263,10 @@ export class MyAccount extends SourceMyAccount {
           name={isCancel ? alternateName : name}
         />
         <div block={hiddenTabList}>
+          <div block="UserBlock">
+            <span>{__("Hello, ")}</span>
+            <span block="UserName">{firstname}</span> 
+          </div>
           <div block="MobileCards">
             <div block="CardsContainer">
               <Image block="CardsIcon" src={box} alt={"box"} />

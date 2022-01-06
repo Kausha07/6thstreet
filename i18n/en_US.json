@@ -744,5 +744,7 @@
     "Language": null,
     "Currency": null,
     "Q&A": null,
-    "Return Policy": null
+    "Return Policy": null,
+    "Hello,": null,
+    "Hello, ": null
 }

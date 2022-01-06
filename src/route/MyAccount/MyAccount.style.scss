@@ -220,8 +220,10 @@
 
 .FooterMain {
   &-FooterHeading {
-    margin-left: 14px;
-    text-align: center;
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     margin-top: 20px;
   }
 }
@@ -368,5 +370,16 @@
         }
       }
     }
+  }
+}
+
+
+.UserBlock {
+  font-size: 20px;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  margin-left: 5px;
+  .UserName {
+    font-weight: bold;
   }
 }

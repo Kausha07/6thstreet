@@ -45,18 +45,18 @@ export const tabMap = {
     alternativePageName: __("Balance"),
     linkClassName: "StoreCreditLink",
   },
-  [CLUB_APPAREL]: {
-    url: "/club-apparel",
-    name: __("Club Apparel Loyalty"),
-  },
+  // [CLUB_APPAREL]: {
+  //   url: "/club-apparel",
+  //   name: __("Club Apparel Loyalty"),
+  // },
   [DASHBOARD]: {
     url: "/dashboard",
     name: __("My Profile"),
   },
-  [MY_ORDERS]: {
-    url: "/my-orders",
-    name: __("My Orders"),
-  },
+  // [MY_ORDERS]: {
+  //   url: "/my-orders",
+  //   name: __("My Orders"),
+  // },
   [RETURN_ITEM]: {
     url: "/return-item",
     name: __("My Returns"),
@@ -74,10 +74,10 @@ export const tabMap = {
     url: "/settings",
     name: __("Settings"),
   },
-  [CONTACT_HELP]: {
-    url: "/contact-help",
-    name: __("Contact & Help"),
-  },
+  // [CONTACT_HELP]: {
+  //   url: "/contact-help",
+  //   name: __("Contact & Help"),
+  // },
 };
 
 export class MyAccountContainer extends SourceMyAccountContainer {
