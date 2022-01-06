@@ -161,7 +161,7 @@ class InlineCustomerSupport extends PureComponent {
           { 
             isMobile.any()
             ?
-            <Info />
+            null
             :
             __("customer service")
           }

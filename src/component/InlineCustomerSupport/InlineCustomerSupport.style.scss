@@ -19,6 +19,8 @@
 
   @include mobile {
     left: 20px;
+    position: fixed;
+    top: 14px;
     &_isArabic {
       left: unset;
       right: 20px;
@@ -48,6 +50,14 @@
 
     &_isHidden {
       display: none!important;
+    }
+
+    @include mobile {
+      content: "";
+      background: url(../Icons/Info/icon.svg) no-repeat;
+      background-size: 24px;
+      width: 24px;
+      height: 24px;
     }
 
     @include desktop {
