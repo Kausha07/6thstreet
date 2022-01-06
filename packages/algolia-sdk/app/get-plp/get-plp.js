@@ -106,7 +106,7 @@ const filterKeys = ({ allFacets, keys }) => {
   return filteredKeys;
 };
 
-function getFilters({ locale, facets, raw_facets, query }) {
+function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -277,9 +277,16 @@ function getFilters({ locale, facets, raw_facets, query }) {
       });
     }
   });
-
+  let finalFilterObj = filtersObject;
+  if (additionalFilter) {
+    Object.keys(facets).map((facet) => {
+      finalFilterObj = {
+        [facet]: filtersObject[facet],
+      };
+    });
+  }
   return {
-    filters: filtersObject,
+    filters: finalFilterObj,
     _filtersUnselected,
   };
 }
@@ -427,7 +434,6 @@ function getPLP(URL, options = {}, params = {}) {
         clickAnalytics: true,
       },
     };
-    console.log("muskan facetFilters", query);
 
     let selectedFilterArr = [];
     let exceptFilter = [
@@ -436,7 +442,6 @@ function getPLP(URL, options = {}, params = {}) {
       "sort",
       "discount",
       "visibility_catalog",
-      "categories.level1",
     ];
     Object.keys(params).map((option) => {
       if (!exceptFilter.includes(option)) {
@@ -481,17 +486,18 @@ function getPLP(URL, options = {}, params = {}) {
       const { hits, facets, nbHits, nbPages, hitsPerPage, queryID } =
         res.results[0];
       let finalFiltersData = [];
+
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
           if (index > 0) {
-            // const { filters } = getFilters({
-            //   locale,
-            //   facets: _formatFacets({ facets: result[0].facets, queryParams }),
-            //   raw_facets: result[0].facets,
-            //   query: queryParams,
-            // });
-            console.log("muskan ----------->",result);
-            // finalFiltersData.push(filters);
+            const { filters } = getFilters({
+              locale,
+              facets: _formatFacets({ facets: result[1].facets, queryParams }),
+              raw_facets: result[1].facets,
+              query: queryParams,
+              additionalFilter: true,
+            });
+            finalFiltersData.push(filters);
           }
         });
       }
@@ -503,6 +509,7 @@ function getPLP(URL, options = {}, params = {}) {
           facets: _formatFacets({ facets: facetsAllFilter, queryParams }),
           raw_facets: res.results[0].facets,
           query: queryParams,
+          additionalFilter: false,
         });
 
       const facetsFilter = res.results[0].facets;
@@ -511,6 +518,7 @@ function getPLP(URL, options = {}, params = {}) {
         facets: _formatFacets({ facets: facetsFilter, queryParams }),
         raw_facets: facets,
         query: queryParams,
+        additionalFilter: false,
       });
 
       const output = {
