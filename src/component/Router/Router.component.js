@@ -338,22 +338,8 @@ export class Router extends SourceRouter {
 
 
   renderWelcomeHomePage() {
-    let navigationState = {name: 'default'}
-    let newMenuGender = ""
-    let pathname = window.location
-
     return (
-      <div>
-        {/* <HeaderTopBar/> */}
-        <HeaderTopBar
-          navigationState={navigationState}
-          changeMenuGender={this.changeMenuGender}
-          newMenuGender={newMenuGender}
-          pathname={pathname}
-        />
         <WelcomeHomePage/>
-
-      </div>
     );
   }
 
@@ -378,9 +364,8 @@ export class Router extends SourceRouter {
       return this.renderContent();
     }
 
-    return this.renderWelcomeHomePage()
+    return this.renderWelcomeHomePage();
 
-    return this.renderLocaleWizard();
   }
 }
 

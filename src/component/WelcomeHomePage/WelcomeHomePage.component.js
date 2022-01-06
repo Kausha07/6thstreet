@@ -49,42 +49,26 @@ export const PREVIOUS_USER = 'PREVIOUS_USER';
 class WelcomeHomePage extends PureComponent {
     static propTypes = {
         location: LocationType.isRequired
-      };
+    };
 
 
     constructor(props) {
         super(props);
-        let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-        let a = BrowserDatabase.getItem('PREVIOUS_USER')
-        if(a){
+        const appStateCacheKey = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+        const PREVIOUS_USER = BrowserDatabase.getItem('PREVIOUS_USER')
+        if(PREVIOUS_USER){
             const { country, language, gender } = this.props;
             const locale = `${language}-${country.toLowerCase()}`;
-            let url = URLS[locale] + `/${gender}.html`
-            console.log("url:", url, locale)
-            window.location.href = url
-
+            let url =  `${URLS[locale]}/${gender}.html`
+            window.location.href = url;
         }
-        if (k){
-            this.state = {
-                isPopupOpen: false,
-                isArabic: false,
-                welcomeImg: null
-            }
-            const {
-                country,
-                language,
-                locale,
-                gender
-            } = k;
-
-
+        if(appStateCacheKey){
+            const { country, language, locale, gender } = appStateCacheKey;
         }
-        else{
-            this.state = {
-                isPopupOpen: true,
-                isArabic: false,
-                welcomeImg: null
-            }
+
+        this.state = {
+            isPopupOpen: !isMobile.any() && !!!appStateCacheKey,
+            welcomeImg: null
         }
     }
 
@@ -118,12 +102,13 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
+        window.pageType="welcome";
         this.getWelcomeImageUrl();
     }
+
     componentDidUpdate(){
-        let lang = this.props.language
-        let country = this.props.country
-        const locale = `${lang}-${country.toLowerCase()}`
+        const { language, country } = this.props;
+        const locale = `${language}-${country.toLowerCase()}`
         let genders = ["women", "men", "kids"]
         genders.forEach((gender) => {
             const hint = document.createElement("link");
@@ -131,8 +116,10 @@ class WelcomeHomePage extends PureComponent {
             hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
 
             try {
-                const head = document.getElementsByTagName("head")[0]
-                head.appendChild(hint);
+                const head = document.getElementsByTagName("head");
+                if(head?.length){
+                    head[0].appendChild(hint);
+                }
             }
             catch(err){
                 console.error(err);
@@ -140,47 +127,46 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
-    closePopup = () => {
-        let lang = this.props.language
-        let country = this.props.country
-        this.props.setLanguageForWelcome(lang)
+    componentWillUnmount() {
+        window.pageType = undefined;
+    }
 
+    closePopup = () => {
+        const { language, setLanguageForWelcome, country } = this.props;
+        setCountry(country);
+        setLanguage(language);
+        setLanguageForWelcome(language);
         this.setState({
             isPopupOpen: false
         })
     }
 
-    onGenderSelect = (val) => {
-        const { country, language } = this.props;
+    onGenderSelect = (event, val) => {
+        event.persist();
+        event.preventDefault();
+        const { country, language, setGender } = this.props;
         const locale = `${language}-${country.toLowerCase()}`;
-        this.props.setGender(val);
-
+        setGender(val);
         let data = {
             locale: locale
         }
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
-        let url = URLS[locale] + `/${val}.html`
-        console.log("url:", url, locale)
+        console.log(event);
+        let url = `${URLS[locale]}/${val}.html`
         window.location.href = url
-
     }
 
-    getWelcomeImageUrl = () => {
+    getWelcomeImageUrl = async () => {
         let device = isMobile.any() ? 'm' : 'd'
-        console.log("hiiiiii", device);
         let url = `homepage/${device}/home.json`;
-        const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
-
         try {
-            const resp = CDN.get(`config_staging/${url}`)
-                .then((res) => {
-                    if (res.men) {
-                        this.setState({
-                            welcomeImg: res
-                        })
-                    }
-                });
+            const resp = await CDN.get(`config_staging/${url}`);
+            if (resp) {
+                this.setState({
+                    welcomeImg: resp
+                })
+            }
         }
         catch (error) {
             console.error(error);
@@ -215,27 +201,23 @@ class WelcomeHomePage extends PureComponent {
     }
 
     render() {
-        const { isArabic } = this.state;
-        let lang = this.props.language;
-        let showSotreSwitcher = !this.state.isPopupOpen || isMobile.any()
+        const { isPopupOpen, welcomeImg } = this.state;
+        const { language, country } = this.props;
+        const locale = `${language}-${country.toLowerCase()}`;
         return (
-            <div>
+            <>
                 <div block="WelcomeHomePage">
                     <div block="WelcomeHomePage" elem="Top" >
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
                         </div>
                     </div>
-                    {   showSotreSwitcher &&
+                    {   isMobile.any() &&
                         <div block="WelcomeHomePage" elem="StoreSwitcher">
-                            {   isMobile.any() &&
-                                <div block="Text">
-                                    <div block="Text-welcome">Welcome,</div>
-                                    <div block="Text-shop">You are shopping in</div>
-                                </div>
-
-                            }
-
+                            <div block="Text">
+                                <div block="Text-welcome">Welcome, </div>
+                                <div block="Text-shop">you are shopping in</div>
+                            </div>
                             <div  block="WelcomeHomePage" elem="LanguageSwitcher">
                                 <LanguageSwitcher/>
                             </div>
@@ -245,49 +227,61 @@ class WelcomeHomePage extends PureComponent {
                         </div>
                     }
 
-                    { this.state.isPopupOpen &&
+                    { isPopupOpen &&
                         <div block="WelcomeHomePage" elem="Popup">
-                            <div  block="WelcomeHomePage" elem="Popup-LanguageSwitcher">
-                                <div block="Popup-text">
-                                    <div block="Popup-text-welcome">Welcome,</div>
-                                    <div block="Popup-text-shop">You are shopping in</div>
+                            <div block="WelcomeHomePage-Popup" elem="Action">
+                                <img  block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup}/>
+                            </div>
+                            <div block="WelcomeHomePage-Popup" elem="Content">
+                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                        <span>Welcome, </span>
+                                        <span>you are shopping in</span>
                                 </div>
-                                <LanguageSwitcher welcomePagePopup={true}/>
+                                <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer">
+                                    <LanguageSwitcher welcomePagePopup={true}/>
+                                    <CountrySwitcher/>
+                                    <button
+                                        block="WelcomeHomePage-Popup-Content-SwitcherContainer"
+                                        elem="ConfirmButton"
+                                        onClick={this.closePopup}
+                                    >
+                                        OK
+                                    </button>
+                                </div>
                             </div>
-                            <div  block="WelcomeHomePage" elem="Popup-CountrySwitcher">
-                                <CountrySwitcher/>
-                            </div>
-                            <button block="WelcomeHomePage" elem="Popup-Button" onClick={this.closePopup}>OK</button>
-                            <img  block="WelcomeHomePage" elem="Popup-Close" src={close} onClick={this.closePopup}/>
-
                         </div>
                     }
 
                     {
-                    this.state.welcomeImg &&
+                    welcomeImg &&
                         <div block="WelcomeHomePage" elem="MainSection" >
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.women.img[lang]} onClick={() => this.onGenderSelect('women')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Women</button>
-                            </div>
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.men.img[lang]} onClick={() => this.onGenderSelect('men')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Men</button>
-                            </div>
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.kids.img[lang]} onClick={() => this.onGenderSelect('kids')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Kids</button>
-                            </div>
+                            {
+                                Object.keys(welcomeImg).map((gender) => {
+                                    const navigateTo = `${URLS[locale]}/${gender}.html`
+                                    return (
+                                        <a
+                                            href={navigateTo}
+                                            block="WelcomeHomePage-GenderSelection"
+                                            onClick={(e) => this.onGenderSelect(e, gender)}
+                                        >
+                                            <img src={welcomeImg[gender].img[language]} />
+                                            <button block="WelcomeHomePage-GenderSelection-Button">
+                                                { `Shop ${gender.toUpperCase()} ` }
+                                            </button>
+                                        </a>
+                                    )
+                                })
+                            }
                         </div>
                     }
-                    {this.state.isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
+                    { isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                 </div>
                 <div block="WelcomeHomePage" elem="Bottom">
                     {this.renderAppColumn()}
                 </div>
                 <Footer />
 
-            </div>
+            </>
 
         );
     }
