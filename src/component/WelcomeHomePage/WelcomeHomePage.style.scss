@@ -91,12 +91,6 @@
     }
 
     &-Bottom{
-        @include desktop{
-            display: none;
-        }
-        @include mobile{
-            display: none;
-        }
         .FooterMain{
             &-LastColumn{
                 text-align: center;

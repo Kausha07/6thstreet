@@ -6,12 +6,9 @@ import CDN from "../../util/API/provider/CDN";
 import Link from "Component/Link";
 import { connect } from 'react-redux';
 import { LocationType } from "Type/Common";
-import history from "Util/History";
 import { setCountry, setLanguage, setLanguageForWelcome, setGender} from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
-import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
-import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import Footer from "Component/Footer";
 import Image from "Component/Image";
@@ -19,9 +16,7 @@ import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
 import logo from './icons/6TH_Logo.svg'
 import isMobile from "Util/Mobile";
-import facebook from "./icons/facebook.png";
 import close from "../Icons/Close/icon.svg"
-import instagram from "./icons/instagram.png";
 import './WelcomeHomePage.style';
 
 
@@ -113,7 +108,8 @@ class WelcomeHomePage extends PureComponent {
         genders.forEach((gender) => {
             const hint = document.createElement("link");
             hint.setAttribute("rel", "prefetch");
-            hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
+            hint.setAttribute("as", "document");
+            hint.setAttribute("href", `${URLS[locale]}/${gender}.html`);
 
             try {
                 const head = document.getElementsByTagName("head");
@@ -152,7 +148,6 @@ class WelcomeHomePage extends PureComponent {
         }
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
-        console.log(event);
         let url = `${URLS[locale]}/${val}.html`
         window.location.href = url
     }
@@ -191,7 +186,6 @@ class WelcomeHomePage extends PureComponent {
                             <br />
                             <Link to={items.gallery_onclick} key={items.id_gallery}>
                                 <Image lazyLoad={true} src={items.app_gallery} alt="app gallery download" className="appGallery" />
-
                             </Link>
                         </div>
                     </Fragment>
@@ -264,9 +258,9 @@ class WelcomeHomePage extends PureComponent {
                                             block="WelcomeHomePage-GenderSelection"
                                             onClick={(e) => this.onGenderSelect(e, gender)}
                                         >
-                                            <img src={welcomeImg[gender].img[language]} />
+                                            <img src={welcomeImg[gender][language].img} />
                                             <button block="WelcomeHomePage-GenderSelection-Button">
-                                                { `Shop ${gender.toUpperCase()} ` }
+                                                { welcomeImg[gender][language].label }
                                             </button>
                                         </a>
                                     )
@@ -276,11 +270,22 @@ class WelcomeHomePage extends PureComponent {
                     }
                     { isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                 </div>
-                <div block="WelcomeHomePage" elem="Bottom">
-                    {this.renderAppColumn()}
-                </div>
-                <Footer />
-
+                {
+                    isMobile.tablet()
+                    ?
+                    <div block="WelcomeHomePage" elem="Bottom">
+                        {this.renderAppColumn()}
+                    </div>
+                    :
+                    null
+                }
+                {
+                    isMobile.any() || isMobile.tablet()
+                    ?
+                    null
+                    :
+                    <Footer />
+                }
             </>
 
         );

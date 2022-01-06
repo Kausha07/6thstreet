@@ -10,7 +10,6 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
-import HeaderTopBar from "Component/HeaderTopBar";
 
 import {
   BRANDS,
