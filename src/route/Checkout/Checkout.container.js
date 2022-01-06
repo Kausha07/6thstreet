@@ -222,48 +222,26 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const paymentInformation = JSON.parse(
           localStorage.getItem("PAYMENT_INFO")
         );
-        console.log("paymentInformation", paymentInformation);
         const { tabbyPaymentId } = paymentInformation;
 
         verifyPayment(tabbyPaymentId).then(async (data) => {
           if (data) {
-            
+            localStorage.removeItem("Shipping_Address");
             const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
             this.setState({ QPayOrderDetails: order });
 
             const { status } = data;
 
-
-            this.setState({ PaymentRedirect: false });
             if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
-
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-
-              this.setState({
-                tabbyPaymentStatus: status,
-              });
-
-              updateTabbyPayment(tabbyPaymentId, order_id);
-
               this.setDetailsStep(order_id, increment_id);
-
+              this.setState({ isLoading: false });
               this.resetCart();
-
-              localStorage.removeItem("Shipping_Address");
             } else {
-              console.log("Payment declined or failed");
               cancelOrder(order_id, PAYMENT_FAILED);
-
               this.setState({ isFailed: true });
-
               this.setDetailsStep(order_id, increment_id);
               this.resetCart();
-
-              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-
-              localStorage.removeItem("TABBY_ORDER_DETAILS");
-
-              localStorage.removeItem("PAYMENT_INFO");
             }
           }
           return;
