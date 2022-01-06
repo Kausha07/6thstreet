@@ -328,7 +328,7 @@
   &-BackButton {
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       width: 0;
       height: 0;
       border: solid #000000;
@@ -393,5 +393,8 @@
         border-radius: 50px;
       }
     }
+  }
+  &-AccordionTitle {
+    margin-left: 8px;
   }
 }

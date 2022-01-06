@@ -38,13 +38,13 @@ import TimerImage from "./icons/timer.png";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
 import {
+  CANCEL_ITEM_LABEL,
   DELIVERY_FAILED,
   DELIVERY_SUCCESSFUL,
+  RETURN_ITEM_LABEL,
   STATUS_IN_TRANSIT,
   STATUS_LABEL_MAP,
   STATUS_PROCESSING,
-  RETURN_ITEM_LABEL,
-  CANCEL_ITEM_LABEL
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 
@@ -109,28 +109,40 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     const {
       openOrderCancelation,
-      order: { groups = [], status, increment_id, is_returnable, is_cancelable },
+      order: {
+        groups = [],
+        status,
+        increment_id,
+        is_returnable,
+        is_cancelable,
+      },
     } = this.props;
     const buttonText =
       status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
-        <h3 block="Heading" elem="HeadingText">{__("Order #%s", increment_id)}</h3>
-        {(STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable)) ?
-          is_returnable && is_cancelable ?
-            (
-              <div block="MyAccountOrderView" elem="HeadingButtons">
-                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>{RETURN_ITEM_LABEL}</button>
-                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>{CANCEL_ITEM_LABEL}</button>
-              </div>
-            ) : (
-              <div block="MyAccountOrderView" elem="HeadingButton">
-                <button onClick={() => openOrderCancelation(buttonText)}>{buttonText}</button>
-              </div>
-            )
-          : null
-        }
+        <h3 block="Heading" elem="HeadingText">
+          {__("Order #%s", increment_id)}
+        </h3>
+        {STATUS_BEING_PROCESSED.includes(status) ||
+        (status === STATUS_COMPLETE && is_returnable) ? (
+          is_returnable && is_cancelable ? (
+            <div block="MyAccountOrderView" elem="HeadingButtons">
+              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                {RETURN_ITEM_LABEL}
+              </button>
+              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                {CANCEL_ITEM_LABEL}
+              </button>
+            </div>
+          ) : (
+            <div block="MyAccountOrderView" elem="HeadingButton">
+              <button onClick={() => openOrderCancelation(buttonText)}>
+                {buttonText}
+              </button>
+            </div>
+          )
+        ) : null}
       </div>
     );
   }
@@ -202,11 +214,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -216,9 +228,10 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordionTitle(title, image, status = null) {
     const STATUS_LABELS = Object.assign({}, STATUS_LABEL_MAP);
-    delete STATUS_LABELS[STATUS_PROCESSING];
-    delete STATUS_LABELS[DELIVERY_FAILED];
-    const { [status]: statusTitle = null } = STATUS_LABELS;
+    // delete STATUS_LABELS[STATUS_PROCESSING];
+    // delete STATUS_LABELS[DELIVERY_FAILED];
+    const { [status.toLowerCase().replace(" ", "_")]: statusTitle = null } =
+      STATUS_LABELS;
 
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
@@ -367,6 +380,12 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     const itemNumber = shipped.length;
     const suffixNumber = appendOrdinalSuffix(itemNumber - index);
+    const getIcon =
+      item.status === "Cancelled" || item.status === "cancelled"
+        ? CancelledImage
+        : item.status === "Processing" || item.status === "processing"
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -380,7 +399,7 @@ class MyAccountOrderView extends PureComponent {
           shortDescription={this.renderAccordionProgress(item.status)}
           title={this.renderAccordionTitle(
             __("%s Package", suffixNumber),
-            PackageImage,
+            getIcon,
             item.status
           )}
         >
@@ -416,8 +435,8 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="Accordions">
         {shipped.map((item, index) => this.renderAccordion(item, index))}
-        {this.renderProcessingItems()}
-        {this.renderCanceledAccordion()}
+        {/* {this.renderProcessingItems()}
+        {this.renderCanceledAccordion()} */}
       </div>
     );
   }
@@ -518,8 +537,8 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-                this.renderMiniCard(scheme?.toLowerCase())
-              )}
+            this.renderMiniCard(scheme?.toLowerCase())
+          )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
           <div block="MyAccountOrderView" elem="Number-Dots">
@@ -655,15 +674,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
