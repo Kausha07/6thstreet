@@ -294,7 +294,11 @@ export class CheckoutSuccess extends PureComponent {
 
   renderTotalsItems() {
     const { paymentMethod } = this.props;
-    if (paymentMethod?.code === "checkout_qpay") {
+    if (
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_checkout" ||
+      paymentMethod?.code === "tabby_installments"
+    ) {
       const {
         order: { status, unship = [], base_currency_code: currency },
         incrementID,
@@ -349,7 +353,11 @@ export class CheckoutSuccess extends PureComponent {
   renderTotalPrice() {
     const { paymentMethod } = this.props;
     let fullPrice;
-    if (paymentMethod?.code === "checkout_qpay") {
+    if (
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments" ||
+      paymentMethod?.code === "tabby_checkout"
+    ) {
       const {
         order: { grand_total = 0, currency_code = getCurrency() },
       } = this.props;
@@ -892,7 +900,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       customer,
       billingAddress: { guest_email },
-      paymentMethod
+      paymentMethod,
     } = this.props;
     return (
       <div block="CheckoutSuccess">

@@ -236,7 +236,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
             this.setState({ PaymentRedirect: false });
             if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
-              console.log("Payment done");
 
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
 
@@ -249,8 +248,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.setDetailsStep(order_id, increment_id);
 
               this.resetCart();
-
-              localStorage.removeItem("TABBY_ORDER_DETAILS");
 
               localStorage.removeItem("Shipping_Address");
             } else {
@@ -273,13 +270,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         });
       } else if (now.getTime() >= TABBY_CHECK?.expiry) {
         console.log("Session expired");
-        cancelOrder(order_id, PAYMENT_ABORTED);
-        this.setState({ PaymentRedirect: false, isFailed: true });
-        this.setDetailsStep(order_id, increment_id);
-        showErrorNotification("Tabby Session Expired");
         localStorage.removeItem("TABBY_ORDER_DETAILS");
-        localStorage.removeItem("PAYMENT_INFO");
-        this.resetCart();
       }
     } catch (error) {
       this.setState({ PaymentRedirect: false });
