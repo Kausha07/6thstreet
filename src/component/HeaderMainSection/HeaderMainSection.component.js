@@ -302,19 +302,19 @@ class HeaderMainSection extends NavigationAbstract {
         history.push("/kids.html");
         break;
       case "home":
-          history.push("/home.html");
-          break;
+        history.push("/home.html");
+        break;
       default:
         history.push("/");
     }
   };
 
   renderBack() {
-    const { history } = this.props;
+    const { history, displaySearch } = this.props;
     const { isArabic } = this.state;
-
+    const isPDPSearchVisible = this.isPDP() && displaySearch
     return this.isPLP() || this.isPDP() ? (
-      <div block="BackArrow" mods={{ isArabic }} key="back">
+      <div block={this.isPDP() ? "PDPBackArrow" : "BackArrow"} mods={{ isArabic, isPDPSearchVisible }} key="back">
         <button
           block="BackArrow-Button"
           onClick={this.isPLP() ? this.backFromPLP : history.goBack}
