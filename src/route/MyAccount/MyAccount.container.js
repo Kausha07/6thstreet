@@ -14,7 +14,7 @@ import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
-  CONTACT_HELP,
+  // CONTACT_HELP,
   SETTINGS_SCREEN,
   DASHBOARD,
   MY_ORDERS,
@@ -23,6 +23,7 @@ import {
   STORE_CREDIT,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
+import isMobile from "Util/Mobile";
 
 export { BreadcrumbsDispatcher, MyAccountDispatcher };
 
@@ -39,6 +40,48 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export const tabMap = {
+  [STORE_CREDIT]: {
+    url: "/storecredit/info",
+    name: <StoreCredit />,
+    alternativePageName: __("Balance"),
+    linkClassName: "StoreCreditLink",
+  },
+  [CLUB_APPAREL]: {
+    url: "/club-apparel",
+    name: __("Club Apparel Loyalty"),
+  },
+  [DASHBOARD]: {
+    url: "/dashboard",
+    name: __("My Profile"),
+  },
+  [MY_ORDERS]: {
+    url: "/my-orders",
+    name: __("My Orders"),
+  },
+  [RETURN_ITEM]: {
+    url: "/return-item",
+    name: __("My Returns"),
+    alternateName: __("Cancel an item"),
+  },
+  [MY_WISHLIST]: {
+    url: "/my-wishlist",
+    name: __("My wishlist"),
+  },
+  [ADDRESS_BOOK]: {
+    url: "/address-book",
+    name: __("My Address Book"),
+  },
+  // [SETTINGS_SCREEN]: {
+  //   url: "/settings",
+  //   name: __("Settings"),
+  // },
+  // [CONTACT_HELP]: {
+  //   url: "/contact-help",
+  //   name: __("Contact & Help"),
+  // },
+};
+
+export const mobileTabMap = {
   [STORE_CREDIT]: {
     url: "/storecredit/info",
     name: <StoreCredit />,
@@ -89,7 +132,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     updateStoreCredit: PropTypes.func.isRequired,
   };
 
-  tabMap = tabMap;
+  tabMap = isMobile.any() ? mobileTabMap : tabMap ;
 
   componentDidMount() {
     const { setMeta, updateStoreCredit } = this.props;
