@@ -59,8 +59,10 @@ class PDPGalleryOverlay extends PureComponent {
       imageRef.current === null ? null : imageRef.current.offsetHeight;
     const imgWidth =
       imageRef.current === null ? null : imageRef.current.offsetWidth;
-    const overlayHeight = overlayRef.current.children[6].offsetHeight;
-    const overlayWidth = overlayRef.current.children[6].offsetWidth;
+    const overlayHeight =
+      overlayRef.current.children[isMobile ? 6 : 5].offsetHeight;
+    const overlayWidth =
+      overlayRef.current.children[isMobile ? 6 : 5].offsetWidth;
     const addX =
       (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
     const addY =
@@ -75,7 +77,8 @@ class PDPGalleryOverlay extends PureComponent {
       initialScale: isMobile ? 1 : 0.5,
       scale: Math.floor(imageScale / 0.5) * 0.5,
     });
-    onSliderChange(0);
+    onSliderChange(currentIndex);
+
     this.listenArrowKey();
   }
 
@@ -121,9 +124,9 @@ class PDPGalleryOverlay extends PureComponent {
   };
 
   renderImage(src, i) {
-    const { isZoomEnabled, handleZoomChange, disableZoom } = this.props;
+    const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex } =
+      this.props;
     const { scale, positionX, positionY, initialScale, isMobile } = this.state;
-
     return (
       <TransformWrapper
         key={i}
@@ -143,7 +146,6 @@ class PDPGalleryOverlay extends PureComponent {
           minPositionX: positionX,
           minPositionY: positionY,
         }}
-        centerZoomedOut={true}
       >
         {({
           scale,
@@ -155,13 +157,13 @@ class PDPGalleryOverlay extends PureComponent {
           options,
         }) => {
           const { minPositionY, minPositionX } = options;
-          console.log({ scale, previousScale });
           if (scale === initialScale && previousScale !== initialScale) {
             if (isMobile) {
               resetTransform();
             }
           }
 
+          // do not remove this code
           // if (scale !== previousScale && scale !== 0.5) {
           //   setTransform(
           //     positionX - minPositionX,
@@ -174,6 +176,7 @@ class PDPGalleryOverlay extends PureComponent {
           return (
             <ProductGalleryBaseImage
               imageRef={this.imageRef}
+              currentIndex={currentIndex}
               centerContent
               setTransform={setTransform}
               index={i}
@@ -243,6 +246,7 @@ class PDPGalleryOverlay extends PureComponent {
     if (!gallery.length) {
       return null;
     }
+    console.log({ currentIndex }, typeof currentIndex);
 
     return (
       <Slider
@@ -277,13 +281,11 @@ class PDPGalleryOverlay extends PureComponent {
   handleArrorKeySlide = (e) => {
     switch (e.keyCode) {
       case 37:
-        // alert("left");
         this.prev();
 
         break;
 
       case 39:
-        // alert("right");
         this.next();
         break;
     }
@@ -312,6 +314,7 @@ class PDPGalleryOverlay extends PureComponent {
 
   render() {
     const { closeGalleryOverlay } = this.props;
+    const { rendered } = this.state;
 
     return (
       <div block="PDPGalleryOverlay" ref={this.overlayRef}>
