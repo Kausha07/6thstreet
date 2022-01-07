@@ -348,7 +348,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   componentDidMount() {
     const { setMeta } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
-    this.refreshCart();
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    const TABBY_CHECK = JSON.parse(
+      localStorage.getItem("TABBY_ORDER_DETAILS")
+    );
+    if (!QPAY_CHECK || !TABBY_CHECK)
+      this.refreshCart();
     setMeta({ title: __("Checkout") });
     this.getQPayData();
     this.getTabbyData();
