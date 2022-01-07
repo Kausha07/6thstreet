@@ -2,7 +2,6 @@ import ContactHelp from "Component/ContactHelp";
 import ContentWrapper from "Component/ContentWrapper";
 import Image from "Component/Image";
 import Link from "Component/Link";
-import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountAddressBook from "Component/MyAccountAddressBook";
 import MyAccountClubApparel from "Component/MyAccountClubApparel";
 import MyAccountDashboard from "Component/MyAccountDashboard";
@@ -32,6 +31,7 @@ import {
 } from "Type/Account";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import box from "./icons/box.png";
 import contactHelp from "./icons/contact-help.png";
@@ -144,7 +144,6 @@ export class MyAccount extends SourceMyAccount {
   }
 
   handleTabChange(key) {
-    console.log("key", key);
     const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
 
     setMobileTabActive(!mobileTabActive);
@@ -249,8 +248,8 @@ export class MyAccount extends SourceMyAccount {
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
-    const firstname = customer && customer.firstname ? customer.firstname : null;
-    console.log("firstname",firstname)
+    const firstname =
+      customer && customer.firstname ? customer.firstname : null;
     return (
       <ContentWrapper
         label={__("My Account page")}
@@ -265,7 +264,7 @@ export class MyAccount extends SourceMyAccount {
         <div block={hiddenTabList}>
           <div block="UserBlock">
             <span>{__("Hello, ")}</span>
-            <span block="UserName">{firstname}</span> 
+            <span block="UserName">{firstname}</span>
           </div>
           <div block="MobileCards">
             <div block="CardsContainer">

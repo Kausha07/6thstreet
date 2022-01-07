@@ -14,16 +14,15 @@ import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
-  // CONTACT_HELP,
-  SETTINGS_SCREEN,
+  CONTACT_HELP,
   DASHBOARD,
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
+  SETTINGS_SCREEN,
   STORE_CREDIT,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
-import isMobile from "Util/Mobile";
 
 export { BreadcrumbsDispatcher, MyAccountDispatcher };
 
@@ -71,14 +70,14 @@ export const tabMap = {
     url: "/address-book",
     name: __("My Address Book"),
   },
-  // [SETTINGS_SCREEN]: {
-  //   url: "/settings",
-  //   name: __("Settings"),
-  // },
-  // [CONTACT_HELP]: {
-  //   url: "/contact-help",
-  //   name: __("Contact & Help"),
-  // },
+  [SETTINGS_SCREEN]: {
+    url: "/settings",
+    name: __("Settings"),
+  },
+  [CONTACT_HELP]: {
+    url: "/contact-help",
+    name: __("Contact & Help"),
+  },
 };
 
 export const mobileTabMap = {
@@ -132,7 +131,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     updateStoreCredit: PropTypes.func.isRequired,
   };
 
-  tabMap = isMobile.any() ? mobileTabMap : tabMap ;
+  tabMap = tabMap;
 
   componentDidMount() {
     const { setMeta, updateStoreCredit } = this.props;
