@@ -6,6 +6,7 @@ import CDN from "../../util/API/provider/CDN";
 import Link from "Component/Link";
 import { connect } from 'react-redux';
 import { LocationType } from "Type/Common";
+import Header from "Component/Header";
 import { setCountry, setLanguage, setLanguageForWelcome, setGender} from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
@@ -201,6 +202,13 @@ class WelcomeHomePage extends PureComponent {
         return (
             <>
                 <div block="WelcomeHomePage">
+                    {
+                        !isMobile.any()
+                        ?
+                        <Header />
+                        :
+                        null
+                    }
                     <div block="WelcomeHomePage" elem="Top" >
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
@@ -209,8 +217,8 @@ class WelcomeHomePage extends PureComponent {
                     {   isMobile.any() &&
                         <div block="WelcomeHomePage" elem="StoreSwitcher">
                             <div block="Text">
-                                <div block="Text-welcome">Welcome, </div>
-                                <div block="Text-shop">you are shopping in</div>
+                                <div block="Text-welcome">{__("Welcome, ")}</div>
+                                <div block="Text-shop">{__("you are shopping in")}</div>
                             </div>
                             <div  block="WelcomeHomePage" elem="LanguageSwitcher">
                                 <LanguageSwitcher/>

@@ -338,7 +338,7 @@ export class Router extends SourceRouter {
 
   renderWelcomeHomePage() {
     return (
-        <WelcomeHomePage/>
+      <WelcomeHomePage/>
     );
   }
 
