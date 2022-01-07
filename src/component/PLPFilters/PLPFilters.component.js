@@ -625,13 +625,27 @@ class PLPFilters extends PureComponent {
             });
           });
         } else {
-          filter[1].selected_filters_count = 0;
-          Object.entries(filter[1].data).map((filterData) => {
-            if (filterData[1].is_selected) {
-              filterData[1].is_selected = false;
-              activeFilters[filter[0]] = [];
-            }
-          });
+          if(category === "sizes"){
+            Object.entries(filter[1].data).map((entry)=>{
+              entry[1].selected_filters_count = 0;
+              Object.entries(entry[1].subcategories).map((filterData) => {
+                if (filterData[1].is_selected) {
+                  filterData[1].is_selected = false;
+                  activeFilters[entry[1]] = [];
+                }
+              });
+            })
+           
+          }else{
+            filter[1].selected_filters_count = 0;
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                filterData[1].is_selected = false;
+                activeFilters[filter[0]] = [];
+              }
+            });
+          }
+        
         }
       } else {
         if (
