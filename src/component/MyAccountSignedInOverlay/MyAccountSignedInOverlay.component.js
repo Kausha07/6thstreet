@@ -1,20 +1,17 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Overlay from "Component/Overlay";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { ReactComponent as AccountIcon } from "Style/account.svg";
 import { isArabic } from "Util/App";
-
 import AddressIcon from "./icons/address.svg";
+import OrdersIcon from "./icons/cat-menu.svg";
 import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
 import LogoutIcon from "./icons/logout.png";
-import OrdersIcon from "./icons/cat-menu.svg";
 import ReturnIcon from "./icons/return.svg";
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
-
 import "./MyAccountSignedInOverlay.style";
 
 export class MyAccountSignedInOverlay extends PureComponent {
