@@ -1,5 +1,8 @@
 import ContactHelp from "Component/ContactHelp";
 import ContentWrapper from "Component/ContentWrapper";
+import Image from "Component/Image";
+import Link from "Component/Link";
+import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountAddressBook from "Component/MyAccountAddressBook";
 import MyAccountClubApparel from "Component/MyAccountClubApparel";
 import MyAccountDashboard from "Component/MyAccountDashboard";
@@ -10,7 +13,9 @@ import { RETURN_ITEM_LABEL } from "Component/MyAccountOrderView/MyAccountOrderVi
 import MyAccountReturns from "Component/MyAccountReturns";
 import MyAccountStoreCredit from "Component/MyAccountStoreCredit";
 import MyAccountTabList from "Component/MyAccountTabList";
+import SettingsScreen from "Component/SettingsScreen";
 import PropTypes from "prop-types";
+import { Fragment } from "react";
 import { MyAccount as SourceMyAccount } from "SourceRoute/MyAccount/MyAccount.component";
 import {
   activeTabType,
@@ -21,12 +26,15 @@ import {
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
+  SETTINGS_SCREEN,
   STORE_CREDIT,
   tabMapType,
 } from "Type/Account";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import box from "./icons/box.png";
+import contactHelp from "./icons/contact-help.png";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -61,9 +69,82 @@ export class MyAccount extends SourceMyAccount {
     [MY_WISHLIST]: MyAccountMyWishlist,
     [ADDRESS_BOOK]: MyAccountAddressBook,
     [CONTACT_HELP]: ContactHelp,
+    [SETTINGS_SCREEN]: SettingsScreen,
   };
 
+  linksMap = [
+    {
+      title: __("Download The App"),
+      items: [
+        {
+          id_app: "App1",
+          app_store:
+            "https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg",
+          app_onclick:
+            "https://apps.apple.com/ro/app/6thstreet-com/id1370217070",
+          id_google: "Google1",
+          google_play:
+            "https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg",
+          google_onclick:
+            "https://play.google.com/store/apps/details?id=com.apparel.app6thstreet",
+          id_gallery: "Gallery1",
+          app_gallery:
+            "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg",
+          gallery_onclick: "https://appgallery.huawei.com/#/app/C102324663",
+          header: __("Follow the latest trends"),
+        },
+      ],
+    },
+  ];
+
+  renderAppColumn() {
+    return this.linksMap.map((column) => (
+      <div block="FooterMain" elem="LastColumn" key={column.title}>
+        <h4 block="FooterMain" elem="FooterHeading">
+          {column.title}
+        </h4>
+        <div block="FooterMain" elem="Nav">
+          {column.items.map((items) => (
+            <Fragment key="last_main_footer_column">
+              <div block="FooterMain" elem="WrapperFirst">
+                <div block="MobileFooterMain">
+                  <Link to={items.app_onclick} key={items.id_app}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_store}
+                      alt="app store download"
+                    />
+                  </Link>
+                  <Link to={items.google_onclick} key={items.id_google}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.google_play}
+                      alt="google play download"
+                    />{" "}
+                  </Link>
+                  <Link to={items.gallery_onclick} key={items.id_gallery}>
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_gallery}
+                      alt="app gallery download"
+                      className="appGallery"
+                    />
+                  </Link>
+                </div>
+              </div>
+            </Fragment>
+          ))}
+        </div>
+      </div>
+    ));
+  }
+
+  chat() {
+    document.querySelector(".ori-cursor-ptr").click();
+  }
+
   handleTabChange(key) {
+    console.log("key", key);
     const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
 
     setMobileTabActive(!mobileTabActive);
@@ -71,8 +152,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   openTabMenu() {
-    const { mobileTabActive, setMobileTabActive } = this.props;
-
+    const { mobileTabActive, setMobileTabActive, history } = this.props;
+    history.push("/my-account");
     setMobileTabActive(!mobileTabActive);
   }
 
@@ -167,6 +248,9 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
+    const customer = BrowserDatabase.getItem("customer");
+    const firstname = customer && customer.firstname ? customer.firstname : null;
+    console.log("firstname",firstname)
     return (
       <ContentWrapper
         label={__("My Account page")}
@@ -179,12 +263,38 @@ export class MyAccount extends SourceMyAccount {
           name={isCancel ? alternateName : name}
         />
         <div block={hiddenTabList}>
+          <div block="UserBlock">
+            <span>{__("Hello, ")}</span>
+            <span block="UserName">{firstname}</span> 
+          </div>
+          <div block="MobileCards">
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={box} alt={"box"} />
+              <div block="CardTitle"> {__("Club Apparel")} </div>
+              <button onClick={() => this.handleTabChange("club-apparel")}>
+                {__("Link Now")}
+              </button>
+            </div>
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={box} alt={"box"} />
+              <div block="CardTitle"> {__("My Orders")} </div>
+              <button onClick={() => this.handleTabChange("my-orders")}>
+                {__("Track")}
+              </button>
+            </div>
+            <div block="CardsContainer">
+              <Image block="CardsIcon" src={contactHelp} alt={"box"} />
+              <div block="CardTitle"> {__("Contact & Help")} </div>
+              <button onClick={this.chat}>{__("Live Chat")}</button>
+            </div>
+          </div>
           <MyAccountTabList
             tabMap={tabMap}
             activeTab={activeTab}
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
+          <div>{isMobile ? this.renderAppColumn() : null}</div>
         </div>
         <div block={hiddenTabContent}>
           <div block="MyAccount" elem="TabContent">
