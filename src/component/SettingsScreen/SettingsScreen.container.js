@@ -12,7 +12,7 @@
 
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import ContactHelp from "./ContactHelp.component";
+import SettingsScreen from "./SettingsScreen.component";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -22,12 +22,12 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({});
 
-export class ContactHelpContainer extends PureComponent {
+export class SettingsScreenContainer extends PureComponent {
   containerFunctions = {};
   state;
   render() {
     return (
-      <ContactHelp
+      <SettingsScreen
         {...this.props}
         {...this.state}
         {...this.containerFunctions}
@@ -39,4 +39,4 @@ export class ContactHelpContainer extends PureComponent {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ContactHelpContainer);
+)(SettingsScreenContainer);

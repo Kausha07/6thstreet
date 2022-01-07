@@ -233,8 +233,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       isSignedIn,
       isClickAndCollect,
       savePaymentInformationApplePay,
-      isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable
+      isTabbyInstallmentAvailable
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -264,7 +263,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
         isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
-        isTabbyPayLaterAvailable={isTabbyPayLaterAvailable}
       />
     );
   }
@@ -375,8 +373,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
     const isTabbyPay =
-      paymentMethod === "tabby_installments" ||
-      paymentMethod === "tabby_checkout";
+      paymentMethod === "tabby_installments"
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -409,39 +406,39 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               </button>
             </div>
           ) : (
-              <button
-                type="submit"
-                block="Button"
-                disabled={
-                  isDisabled ||
-                  processingRequest ||
-                  processingPaymentSelectRequest ||
-                  isApplePay
-                }
-                mix={{
-                  block: "CheckoutBilling",
-                  elem:
-                    processingRequest || processingPaymentSelectRequest
-                      ? "spinningButton"
-                      : isTabbyPay
-                        ? "tabbyButton"
-                        : "Button",
-                }}
-              >
-                {processingRequest || processingPaymentSelectRequest ? (
-                  <Spinner
-                    className="loadingSpinner"
-                    name="three-bounce"
-                    color="white"
-                    fadeIn="none"
-                  />
-                ) : isTabbyPay ? (
-                  __("Place tabby order")
-                ) : (
-                      this.renderButtonPlaceholder()
-                    )}
-              </button>
-            )}
+            <button
+              type="submit"
+              block="Button"
+              disabled={
+                isDisabled ||
+                processingRequest ||
+                processingPaymentSelectRequest ||
+                isApplePay
+              }
+              mix={{
+                block: "CheckoutBilling",
+                elem:
+                  processingRequest || processingPaymentSelectRequest
+                    ? "spinningButton"
+                    : isTabbyPay
+                      ? "tabbyButton"
+                      : "Button",
+              }}
+            >
+              {processingRequest || processingPaymentSelectRequest ? (
+                <Spinner
+                  className="loadingSpinner"
+                  name="three-bounce"
+                  color="white"
+                  fadeIn="none"
+                />
+              ) : isTabbyPay ? (
+                __("Place tabby order")
+              ) : (
+                this.renderButtonPlaceholder()
+              )}
+            </button>
+          )}
         </div>
       </>
     );
@@ -474,26 +471,26 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     return formContent ? (
       this.renderAddAdress()
     ) : (
-        <Form
-          mix={{ block: "CheckoutBilling" }}
-          id={BILLING_STEP}
-          onSubmitError={onBillingError}
-          onSubmitSuccess={onBillingSuccess}
-          onSubmit={setOrderButtonDisabled}
-        >
-          {this.renderAddresses()}
-          <div block="CheckoutBilling" elem="Bin"></div>
-          {isSameAsShipping ? null : (
-            <div block="CheckoutBilling" elem="Line">
-              <hr />
-            </div>
-          )}
-          {this.renderPayments()}
-          {this.renderTermsAndConditions()}
-          {this.renderActions()}
-          {this.renderPopup()}
-        </Form>
-      );
+      <Form
+        mix={{ block: "CheckoutBilling" }}
+        id={BILLING_STEP}
+        onSubmitError={onBillingError}
+        onSubmitSuccess={onBillingSuccess}
+        onSubmit={setOrderButtonDisabled}
+      >
+        {this.renderAddresses()}
+        <div block="CheckoutBilling" elem="Bin"></div>
+        {isSameAsShipping ? null : (
+          <div block="CheckoutBilling" elem="Line">
+            <hr />
+          </div>
+        )}
+        {this.renderPayments()}
+        {this.renderTermsAndConditions()}
+        {this.renderActions()}
+        {this.renderPopup()}
+      </Form>
+    );
   }
 }
 

@@ -5,15 +5,12 @@ import CheckoutGuestForm from "Component/CheckoutGuestForm";
 import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 import {
   TABBY_ISTALLMENTS,
-  TABBY_PAY_LATER,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import CheckoutShipping from "Component/CheckoutShipping";
 import CheckoutSuccess from "Component/CheckoutSuccess";
 import ContentWrapper from "Component/ContentWrapper";
 import CreditCardPopup from "Component/CreditCardPopup";
 import HeaderLogo from "Component/HeaderLogo";
-import TabbyPopup from "Component/TabbyPopup";
-import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
 import PropTypes from "prop-types";
 import Popup from "SourceComponent/Popup";
 import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.component";
@@ -44,7 +41,6 @@ export class Checkout extends SourceCheckout {
     isFailed: PropTypes.bool.isRequired,
     processApplePay: PropTypes.bool.isRequired,
     initialTotals: TotalsType.isRequired,
-    isTabbyPopupShown: PropTypes.bool,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
     isClickAndCollect: PropTypes.string.isRequired,
@@ -58,7 +54,6 @@ export class Checkout extends SourceCheckout {
     isInvalidEmail: false,
     isArabic: isArabic(),
     tabbyInstallmentsUrl: "",
-    tabbyPayLaterUrl: "",
     tabbyPaymentId: "",
     tabbyPaymentStatus: "",
     paymentInformation: {},
@@ -84,7 +79,7 @@ export class Checkout extends SourceCheckout {
 
     if (
       prevState?.paymentInformation?.paymentMethod?.code !==
-        paymentInformation?.paymentMethod?.code &&
+      paymentInformation?.paymentMethod?.code &&
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
@@ -172,45 +167,12 @@ export class Checkout extends SourceCheckout {
     });
   }
 
-  processTabbyWithTimeout(counter, paymentInformation) {
-    const { tabbyPaymentStatus } = this.state;
-    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
-      this.props;
-
-    // Need to get payment data from Tabby.
-    // Could not get callback of Tabby another way because Tabby is iframe in iframe
-    if (
-      tabbyPaymentStatus !== AUTHORIZED_STATUS &&
-      tabbyPaymentStatus !== CAPTURED_STATUS &&
-      counter < 60 &&
-      activeOverlay === TABBY_POPUP_ID
-    ) {
-      setTimeout(() => {
-        this.processTabby(paymentInformation);
-        this.processTabbyWithTimeout(counter + 1, paymentInformation);
-      }, 5000);
-    }
-
-    if (counter === 60) {
-      showErrorNotification("Tabby session timeout");
-      hideActiveOverlay();
-    }
-
-    if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
-      //this.setState({ isTabbyPopupShown: false });
-    }
-  }
-
   setTabbyWebUrl = (url, paymentId, type) => {
     const { setTabbyURL } = this.props;
     this.setState({ tabbyPaymentId: paymentId });
     switch (type) {
       case TABBY_ISTALLMENTS:
         this.setState({ tabbyInstallmentsUrl: url });
-        setTabbyURL(url);
-        break;
-      case TABBY_PAY_LATER:
-        this.setState({ tabbyPayLaterUrl: url });
         setTabbyURL(url);
         break;
       default:
@@ -450,24 +412,6 @@ export class Checkout extends SourceCheckout {
     }
 
     return <CreditCardPopup threeDsUrl={threeDsUrl} />;
-  }
-
-  renderTabbyIframe() {
-    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
-      this.state;
-    const { isTabbyPopupShown } = this.props;
-    if (!isTabbyPopupShown) {
-      return null;
-    }
-    return (
-      <TabbyPopup
-        tabbyWebUrl={
-          selectedPaymentMethod === TABBY_ISTALLMENTS
-            ? tabbyInstallmentsUrl
-            : tabbyPayLaterUrl
-        }
-      />
-    );
   }
 
   renderDetailsStep() {
@@ -797,7 +741,6 @@ export class Checkout extends SourceCheckout {
               <div block="Checkout" elem="Additional">
                 {this.renderSummary()}
                 {this.renderPromo()}
-                {this.renderTabbyIframe()}
                 {this.renderCreditCardIframe()}
               </div>
             </div>
