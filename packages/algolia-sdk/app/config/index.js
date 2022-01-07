@@ -26,7 +26,7 @@ const FACET_FILTERS = [
   "toe_shape",
   "tommy_label",
   "in_stock",
-  "age"
+  "age",
 ];
 
 const config = {

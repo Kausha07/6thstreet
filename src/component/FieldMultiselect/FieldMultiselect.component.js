@@ -69,10 +69,12 @@ class FieldMultiselect extends PureComponent {
 
   static getDerivedStateFromProps(props) {
     if (isMobile.any()) {
-      const { currentActiveFilter, filter } = props;
-
+      const {
+        currentActiveFilter,
+        filter: { category, selected_filters_count },
+      } = props;
       return {
-        toggleOptionsList: currentActiveFilter === filter.category,
+        toggleOptionsList: currentActiveFilter === category,
       };
     }
 
@@ -96,6 +98,12 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const {
+      filter: { selected_filters_count },
+    } = this.props;
+    const {
+      filter: { selected_filters_count: prevCount },
+    } = prevProps;
     if (
       JSON.stringify(prevProps.parentActiveFilters) !==
       JSON.stringify(this.props.parentActiveFilters)
@@ -103,6 +111,11 @@ class FieldMultiselect extends PureComponent {
       this.setState({
         parentActiveFilters: this.props.parentActiveFilters,
       });
+      if (selected_filters_count > 6) {
+        this.setState({ showMore: true });
+      } else {
+        this.setState({ showMore: false });
+      }
     }
   }
 
@@ -340,19 +353,18 @@ class FieldMultiselect extends PureComponent {
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
     let totalCount = 0;
+
     if (!is_radio) {
       if (data && category !== "categories_without_path") {
         Object.values(data).map((category) => {
           totalCount = totalCount + category.product_count;
         });
       } else {
-        let categoryLevel1 = initialOptions.q.split(" ")[1];
-        if (data[categoryLevel1]) {
-          let filterData = data[categoryLevel1].subcategories;
-          Object.values(filterData).map((category) => {
-            totalCount = totalCount + category.product_count;
+        Object.entries(data).map((filterData) => {
+          Object.entries(filterData[1].subcategories).map((entry) => {
+            totalCount = totalCount + entry[1].product_count;
           });
-        }
+        });
       }
     }
 

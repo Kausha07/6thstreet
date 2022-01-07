@@ -5,6 +5,7 @@ import {
   SET_PLP_LOADING,
   SET_PLP_PAGE,
   RESET_PLP_PAGE,
+  SET_LOADING,
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
 } from "./PLP.action";
@@ -12,6 +13,7 @@ import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
   isLoading: true,
+  productLoading: true,
   pages: {},
   lastSelectedKey: null,
   lastSelectedValue: null,
@@ -37,30 +39,16 @@ export const formatFilters = (filters = {}) =>
     };
   }, {});
 
-export const combineFilters = (
-  filters = {},
-  allFilters = {},
-  requestedOptions = {}
-) => {
-  let finalFilters = filters;
-  let selectedFilterArr = [];
-  let exceptFilter = ["categories.level1", "page", "q", " visibility_catalog"];
-  Object.keys(requestedOptions).map((option) => {
-    if (!exceptFilter.includes(option)) {
-      selectedFilterArr.push(option);
-    }
+export const combineFilters = (completeFilter = {}, restFilter = []) => {
+  let mainFilterData = completeFilter;
+  restFilter.map((filter, index) => {
+    Object.entries(filter).map((entry) => {
+      mainFilterData[entry[0]] = entry[1];
+    });
   });
-  Object.entries(filters).map((filter) => {
-    if (!selectedFilterArr.includes(filter[0]) && allFilters[filter[0]]) {
-      finalFilters = {
-        ...finalFilters,
-        [filter[0]]: allFilters[filter[0]],
-      };
-    }
-  });
-  return finalFilters;
-};
 
+  return mainFilterData;
+};
 // TODO: implement initial reducer, needed to handle filter count
 export const PLPReducer = (state = getInitialState(), action) => {
   const { type } = action;
@@ -88,9 +76,16 @@ export const PLPReducer = (state = getInitialState(), action) => {
         ...state,
         pages: {},
       };
-      
+
+    case SET_LOADING:
+      return {
+        ...state,
+        productLoading: action.isLoading,
+      };
+
     case UPDATE_PLP_INIT_FILTERS:
       const { updatedFilters, facet_key, facet_value } = action;
+
       return {
         ...state,
         filters: updatedFilters,
@@ -113,17 +108,16 @@ export const PLPReducer = (state = getInitialState(), action) => {
           data: products = {},
           meta = {},
           filters = {},
-          allFilters = {},
+          finalFiltersData,
         },
         options: requestedOptions = {},
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-
       return {
         ...state,
         filters: filters,
-        // filters:combineFilters(filters, allFilters, requestedOptions),
+        // filters: combineFilters(filters, finalFiltersData),
         options: requestedOptions,
         meta,
         pages: {
