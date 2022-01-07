@@ -183,13 +183,13 @@ class SearchSuggestion extends PureComponent {
     if (brandValue) {
       catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
         formatQuerySuggestions(query)
-      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
+      )}&p=0&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
         brandValue
       )}`;
     } else {
       catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
         formatQuerySuggestions(query)
-      )}&dFR[gender][0]=${genderInURL}`;
+      )}&p=0&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -453,7 +453,6 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderPrice = (price) => {
-
     if (price && price.length > 0) {
       const priceObj = price?.[0],
         currency = getCurrency();
@@ -512,7 +511,7 @@ class SearchSuggestion extends PureComponent {
       }
     }
     let parseLink = url?.includes("catalogsearch/result")
-      ? url?.split("&")[0] + `&dFR[gender][0]=${genderInURL}`
+      ? url?.split("&")[0] + `&p=0&dFR[gender][0]=${genderInURL}`
       : url;
 
     return (
@@ -718,7 +717,7 @@ class SearchSuggestion extends PureComponent {
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   label
-                )}&dFR[gender][0]=${genderInURL}`,
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
             state: {
               prevPath: window.location.href,
             },
@@ -826,7 +825,7 @@ class SearchSuggestion extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   search
-                )}&dFR[gender][0]=${genderInURL}`,
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
             state: { prevPath: window.location.href },
           }}
           onClick={() => this.onSearchQueryClick(search)}
@@ -899,7 +898,7 @@ class SearchSuggestion extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&dFR[gender][0]=${genderInURL}`
+                )}&p=0&dFR[gender][0]=${genderInURL}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >

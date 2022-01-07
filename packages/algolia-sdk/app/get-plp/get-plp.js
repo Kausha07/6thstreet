@@ -436,13 +436,7 @@ function getPLP(URL, options = {}, params = {}) {
     };
 
     let selectedFilterArr = [];
-    let exceptFilter = [
-      "page",
-      "q",
-      "sort",
-      "discount",
-      "visibility_catalog",
-    ];
+    let exceptFilter = ["page", "q", "sort", "discount", "visibility_catalog"];
     Object.keys(params).map((option) => {
       if (!exceptFilter.includes(option)) {
         selectedFilterArr.push(option);
@@ -485,34 +479,19 @@ function getPLP(URL, options = {}, params = {}) {
 
       const { hits, facets, nbHits, nbPages, hitsPerPage, queryID } =
         res.results[0];
-      let finalFiltersData = [];
+
+      let finalFiltersData = deepCopy(res.results[0]);
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
           if (index > 0) {
-            const { filters } = getFilters({
-              locale,
-              facets: _formatFacets({ facets: result[1].facets, queryParams }),
-              raw_facets: result[1].facets,
-              query: queryParams,
-              additionalFilter: true,
+            Object.entries(result[1].facets).map((entry) => {
+              finalFiltersData.facets[[entry[0]]] = entry[1];
             });
-            finalFiltersData.push(filters);
           }
         });
       }
-
-      const facetsAllFilter = res.results[0].facets;
-      const { filters: allFilters, _filtersUnselected: _allFiltersUnselected } =
-        getFilters({
-          locale,
-          facets: _formatFacets({ facets: facetsAllFilter, queryParams }),
-          raw_facets: res.results[0].facets,
-          query: queryParams,
-          additionalFilter: false,
-        });
-
-      const facetsFilter = res.results[0].facets;
+      const facetsFilter = finalFiltersData.facets;
       const { filters, _filtersUnselected } = getFilters({
         locale,
         facets: _formatFacets({ facets: facetsFilter, queryParams }),
@@ -525,8 +504,6 @@ function getPLP(URL, options = {}, params = {}) {
         facets,
         data: hits.map(formatNewInTag),
         filters,
-        allFilters,
-        finalFiltersData,
         meta: {
           page: res.page,
           limit: hitsPerPage,

@@ -30,15 +30,25 @@ class PLPPages extends PureComponent {
       activeFilters: {},
       isReset: false,
       defaultFilters: false,
-      pageKey: 0
+      pageKey: 0,
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { activeFilters } = this.props;
+    const { activeFilters: prevActiveFilters } = prevProps;
+
+    if (activeFilters !== prevActiveFilters) {
+      this.setState({
+        activeFilters: activeFilters,
+      });
+    }
+  }
   renderPage = ([key, page]) => {
-    const { products, isPlaceholder, isFirst = false } = page; 
+    const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
-      pageKey : key
-    })   
+      pageKey: key,
+    });
     const {
       impressions,
       query,
@@ -57,7 +67,7 @@ class PLPPages extends PureComponent {
         />
       );
     }
-    
+
     return (
       <PLPPage
         key={key}
@@ -98,7 +108,7 @@ class PLPPages extends PureComponent {
       return (
         <ul>
           {Object.values(selectedFilters).map(function (values, index) {
-            if (values.data) {
+            if (values && values.data) {
               return Object.values(values.data).map(function (value, index) {
                 if (value.subcategories) {
                   return Object.values(value.subcategories).map(function (
@@ -115,7 +125,7 @@ class PLPPages extends PureComponent {
                       );
                     }
                   });
-                } else {
+                } else if (values) {
                   if (
                     value.is_selected === true &&
                     value.facet_key !== "categories.level1"
@@ -156,7 +166,6 @@ class PLPPages extends PureComponent {
       </div>
     );
   }
-  
 
   renderButtonView(label, onClick) {
     return (
@@ -337,16 +346,15 @@ class PLPPages extends PureComponent {
     const { query, updateFiltersState } = this.props;
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
-      Object.keys(activeFilters).map((key) =>
-        WebUrlParser.setParam(key, activeFilters[key], query)
-      );
+      Object.keys(activeFilters).map((key) => {
+        if (key !== "categories.level1")
+          WebUrlParser.setParam(key, activeFilters[key], query);
+      });
     }
   };
 
-  renderLoadMore(){
-    return (
-      <ProductLoad pageKey={this.state.pageKey}/>
-    )
+  renderLoadMore() {
+    return <ProductLoad pageKey={this.state.pageKey} />;
   }
 
   render() {

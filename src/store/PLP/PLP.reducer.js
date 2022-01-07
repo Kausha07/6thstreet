@@ -37,37 +37,14 @@ export const formatFilters = (filters = {}) =>
     };
   }, {});
 
-// export const combineFilters = (
-//   filters = {},
-//   allFilters = {},
-//   requestedOptions = {}
-// ) => {
-//   let finalFilters = filters;
-//   let selectedFilterArr = [];
-//   let exceptFilter = ["categories.level1", "page", "q", " visibility_catalog"];
-//   Object.keys(requestedOptions).map((option) => {
-//     if (!exceptFilter.includes(option)) {
-//       selectedFilterArr.push(option);
-//     }
-//   });
-//   Object.entries(filters).map((filter) => {
-//     if (!selectedFilterArr.includes(filter[0]) && allFilters[filter[0]]) {
-//       finalFilters = {
-//         ...finalFilters,
-//         [filter[0]]: allFilters[filter[0]],
-//       };
-//     }
-//   });
-//   return finalFilters;
-// };
-
 export const combineFilters = (completeFilter = {}, restFilter = []) => {
   let mainFilterData = completeFilter;
-  restFilter.map((filter) => {
+  restFilter.map((filter, index) => {
     Object.entries(filter).map((entry) => {
       mainFilterData[entry[0]] = entry[1];
     });
   });
+
   return mainFilterData;
 };
 // TODO: implement initial reducer, needed to handle filter count
@@ -100,6 +77,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case UPDATE_PLP_INIT_FILTERS:
       const { updatedFilters, facet_key, facet_value } = action;
+
       return {
         ...state,
         filters: updatedFilters,
@@ -122,7 +100,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
           data: products = {},
           meta = {},
           filters = {},
-          allFilters = {},
           finalFiltersData,
         },
         options: requestedOptions = {},
@@ -131,9 +108,8 @@ export const PLPReducer = (state = getInitialState(), action) => {
       const { page: initialPage } = requestedOptions;
       return {
         ...state,
-        // filters: filters,
-        filters: combineFilters(filters, finalFiltersData),
-        // filters:combineFilters(filters, allFilters, requestedOptions),
+        filters: filters,
+        // filters: combineFilters(filters, finalFiltersData),
         options: requestedOptions,
         meta,
         pages: {
