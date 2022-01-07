@@ -34,7 +34,6 @@ export class PLPDispatcher {
       dispatch(setPLPLoading(true));
       try {
         const response = await new Algolia().getPLP(options);
-
         localStorage.setItem("queryID", response.queryID);
         dispatch(setProductLoading(false));
 

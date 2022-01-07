@@ -34,6 +34,16 @@ class PLPPages extends PureComponent {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { activeFilters } = this.props;
+    const { activeFilters: prevActiveFilters } = prevProps;
+
+    if (activeFilters !== prevActiveFilters) {
+      this.setState({
+        activeFilters: activeFilters,
+      });
+    }
+  }
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
@@ -47,7 +57,7 @@ class PLPPages extends PureComponent {
       filters,
       productLoading,
     } = this.props;
-    if (isMobile.any() ? isPlaceholder : (isPlaceholder || productLoading)) {
+    if (isMobile.any() ? isPlaceholder : isPlaceholder || productLoading) {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
@@ -72,7 +82,7 @@ class PLPPages extends PureComponent {
 
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-    if (pages && pages.length === 0 && productLoading ) {
+    if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
           isPlaceholder: true,
@@ -98,7 +108,7 @@ class PLPPages extends PureComponent {
       return (
         <ul>
           {Object.values(selectedFilters).map(function (values, index) {
-            if (values.data) {
+            if (values && values.data) {
               return Object.values(values.data).map(function (value, index) {
                 if (value.subcategories) {
                   return Object.values(value.subcategories).map(function (
@@ -115,7 +125,7 @@ class PLPPages extends PureComponent {
                       );
                     }
                   });
-                } else {
+                } else if (values) {
                   if (
                     value.is_selected === true &&
                     value.facet_key !== "categories.level1"
@@ -336,14 +346,20 @@ class PLPPages extends PureComponent {
     const { query, updateFiltersState } = this.props;
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
-      Object.keys(activeFilters).map((key) =>
-        WebUrlParser.setParam(key, activeFilters[key], query)
-      );
+      Object.keys(activeFilters).map((key) => {
+        if (key !== "categories.level1")
+          WebUrlParser.setParam(key, activeFilters[key], query);
+      });
     }
   };
 
   renderLoadMore() {
-    return <ProductLoad pageKey={this.state.pageKey} productLoad={this.props.productLoading} />;
+    return (
+      <ProductLoad
+        pageKey={this.state.pageKey}
+        productLoad={this.props.productLoading}
+      />
+    );
   }
 
   render() {
@@ -357,7 +373,7 @@ class PLPPages extends PureComponent {
           </div>
         )}
 
-        {this.renderPages()}        
+        {this.renderPages()}
         {!isMobile.any() && this.renderLoadMore()}
       </div>
     );

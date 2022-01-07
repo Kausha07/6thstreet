@@ -112,28 +112,29 @@ export class PLPFiltersContainer extends PureComponent {
     const { activeFilters } = this.state;
 
     const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
-      const { selected_filters_count, data = {} } = filter[1];
-     
-      if (selected_filters_count !== 0) {
-        if (filter[0] === SIZES) {
-          const mappedData = Object.entries(data).reduce((acc, size) => {
-            const { subcategories } = size[1];
-            const mappedSizeData = this.mapData(subcategories);
+      if (filter[1]) {
+        const { selected_filters_count, data = {} } = filter[1];
 
-            acc = { ...acc, [size[0]]: mappedSizeData };
+        if (selected_filters_count !== 0) {
+          if (filter[0] === SIZES) {
+            const mappedData = Object.entries(data).reduce((acc, size) => {
+              const { subcategories } = size[1];
+              const mappedSizeData = this.mapData(subcategories);
 
-            return acc;
-          }, []);
+              acc = { ...acc, [size[0]]: mappedSizeData };
 
-          acc = { ...acc, ...mappedData };
-        } else {
-          acc = { ...acc, [filter[0]]: this.mapData(data) };
+              return acc;
+            }, []);
+
+            acc = { ...acc, ...mappedData };
+          } else {
+            acc = { ...acc, [filter[0]]: this.mapData(data) };
+          }
         }
+
+        return acc;
       }
-
-      return acc;
     }, {});
-
     if (!this.compareObjects(activeFilters, newActiveFilters)) {
       this.setActveFilters(newActiveFilters);
     }

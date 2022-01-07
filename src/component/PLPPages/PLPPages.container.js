@@ -25,6 +25,7 @@ export class PLPPagesContainer extends PureComponent {
   state = {
     pages: {},
     impressions: [],
+    activeFilters: {},
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -38,11 +39,85 @@ export class PLPPagesContainer extends PureComponent {
       };
     }
   }
+  componentDidUpdate() {
+    const { filters = {} } = this.props;
+    const { activeFilters } = this.state;
+
+    const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
+      if (filter[1]) {
+        const { selected_filters_count, data = {} } = filter[1];
+
+        if (selected_filters_count !== 0) {
+          if (filter[0] === 'sizes') {
+            const mappedData = Object.entries(data).reduce((acc, size) => {
+              const { subcategories } = size[1];
+              const mappedSizeData = this.mapData(subcategories);
+
+              acc = { ...acc, [size[0]]: mappedSizeData };
+
+              return acc;
+            }, []);
+
+            acc = { ...acc, ...mappedData };
+          } else {
+            acc = { ...acc, [filter[0]]: this.mapData(data) };
+          }
+        }
+
+        return acc;
+      }
+    }, {});
+
+    if (!this.compareObjects(activeFilters, newActiveFilters)) {
+      this.setState({ activeFilters: newActiveFilters });
+    }
+  }
+
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
+
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
+    }
+
+    return false;
+  }
+
+  mapData(data = {}) {
+    const { initialOptions } = this.props;
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let formattedData = data;
+    if (data[categoryLevel1]) {
+      formattedData = data[categoryLevel1].subcategories;
+    }
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
+      const { is_selected } = option[1];
+      if (is_selected) {
+        acc.push(option[0]);
+      }
+
+      return acc;
+    }, []);
+    return mappedData;
+  }
 
   containerProps = () => ({
     pages: this.getPages(),
     query: this.props.query,
     filters: this.props.filters,
+    activeFilters:this.state.activeFilters,
     productLoading:this.props.productLoading,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
@@ -67,7 +142,7 @@ export class PLPPagesContainer extends PureComponent {
     const page = lastRequestedPage < 0 ? -1 : lastRequestedPage;
     let pagetoShowinit = 1;
     if (isMobile.any() || isMobile.tablet()) {
-      pagetoShowinit = 2
+      pagetoShowinit = 2;
     }
     const pagesToShow = page + pagetoShowinit;
     const maxPage = page_count + 1;

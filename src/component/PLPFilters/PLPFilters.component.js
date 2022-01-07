@@ -52,7 +52,7 @@ class PLPFilters extends PureComponent {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { activeOverlay, filters = {} } = props;
+    const { activeOverlay, filters = {}, activeFilters } = props;
     const { activeFilter } = state;
 
     if (!activeOverlay) {
@@ -64,6 +64,7 @@ class PLPFilters extends PureComponent {
         return {
           isOpen: activeOverlay === "PLPFilter",
           activeFilter: Object.keys(filters)[0],
+          activeFilters: activeFilters,
         };
       }
     }
@@ -73,9 +74,20 @@ class PLPFilters extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.plpPageActiveFilters !== prevProps.plpPageActiveFilters) {
+    const { activeFilters, plpPageActiveFilters } = this.props;
+    const {
+      activeFilters: prevActiveFilters,
+      plpPageActiveFilters: prevPlpPageActiveFilters,
+    } = prevProps;
+    if (plpPageActiveFilters !== prevPlpPageActiveFilters) {
       this.setState({
-        activeFilters: this.props.plpPageActiveFilters,
+        activeFilters: plpPageActiveFilters,
+      });
+    }
+
+    if (activeFilters !== prevActiveFilters) {
+      this.setState({
+        activeFilters: activeFilters,
       });
     }
   }
@@ -110,10 +122,12 @@ class PLPFilters extends PureComponent {
       //     this.renderFilter([size, data[size]])
       //   );
       // }
-      if (filter[0] === "sort" && !isMobile.any()) {
-        return this.renderSortBy([filter[0], filter[1]]);
+      if (filter[1]) {
+        if (filter[0] === "sort" && !isMobile.any()) {
+          return this.renderSortBy([filter[0], filter[1]]);
+        }
+        return this.renderFilter([filter[0], filter[1]]);
       }
-      return this.renderFilter([filter[0], filter[1]]);
     });
   }
 
@@ -284,7 +298,6 @@ class PLPFilters extends PureComponent {
 
   getFilterCount() {
     const { activeFilters = {} } = this.props;
-
     let { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
           (prev, [_key, value]) => ({
@@ -588,9 +601,10 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     if (!isMobile.any() || isQuickFilters) {
-      Object.keys(activeFilters).map((key) =>
-        WebUrlParser.setParam(key, activeFilters[key], query)
-      );
+      Object.keys(activeFilters).map((key) => {
+        if (key !== "categories.level1")
+          WebUrlParser.setParam(key, activeFilters[key], query);
+      });
     }
   };
 
@@ -603,24 +617,35 @@ class PLPFilters extends PureComponent {
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
         if (category === "categories_without_path") {
-          filter[1].data[categoryLevel1].selected_filters_count = 0;
-          filter[1].selected_filters_count = 0;
-          return Object.entries(
-            filter[1].data[categoryLevel1].subcategories
-          ).map((filterData) => {
-            if (filterData[1].is_selected) {
-              filterData[1].is_selected = false;
+          return Object.entries(filter[1].data).map((filterData) => {
+            filterData[1].selected_filters_count = 0;
+            return Object.entries(filterData[1].subcategories).map((entry) => {
+              entry[1].is_selected = false;
               activeFilters[filter[0]] = [];
-            }
+            });
           });
         } else {
-          filter[1].selected_filters_count = 0;
-          Object.entries(filter[1].data).map((filterData) => {
-            if (filterData[1].is_selected) {
-              filterData[1].is_selected = false;
-              activeFilters[filter[0]] = [];
-            }
-          });
+          if(category === "sizes"){
+            Object.entries(filter[1].data).map((entry)=>{
+              entry[1].selected_filters_count = 0;
+              Object.entries(entry[1].subcategories).map((filterData) => {
+                if (filterData[1].is_selected) {
+                  filterData[1].is_selected = false;
+                  activeFilters[entry[1]] = [];
+                }
+              });
+            })
+           
+          }else{
+            filter[1].selected_filters_count = 0;
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                filterData[1].is_selected = false;
+                activeFilters[filter[0]] = [];
+              }
+            });
+          }
+        
         }
       } else {
         if (
@@ -695,6 +720,7 @@ class PLPFilters extends PureComponent {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
+
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
