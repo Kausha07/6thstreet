@@ -3,6 +3,7 @@ import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
+import { resetPLPPage } from "Store/PLP/PLP.action";
 import { LocationType } from "Type/Common";
 import history from "Util/History";
 import { fetchQuery } from "Util/Request";
@@ -19,6 +20,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (_dispatch) => ({
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+  resetPLPPage: () => _dispatch(resetPLPPage()),
 });
 
 export class UrlRewritesContainer extends PureComponent {
@@ -58,7 +60,6 @@ export class UrlRewritesContainer extends PureComponent {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
-
     const { prevPathname, query, sku } = this.state;
     const {
       prevPathname: prevStatePathname,
@@ -66,6 +67,7 @@ export class UrlRewritesContainer extends PureComponent {
       sku: prevSku,
     } = prevState;
 
+    this.onPageReload();
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -97,6 +99,19 @@ export class UrlRewritesContainer extends PureComponent {
     }
   }
 
+  onPageReload = () => {
+    const { resetPLPPage } = this.props;
+    let previousLocation = location.href;
+    window.onload = function () {
+      const url = new URL(previousLocation.replace(/%20&%20/gi, "%20%26%20"));
+      if (url.searchParams.get("p") !== "0") {
+        resetPLPPage();
+        url.searchParams.set("p", 0);
+        const { pathname, search } = url;
+        history.push(pathname + search);
+      }
+    };
+  };
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;

@@ -10,7 +10,7 @@ class PLPPagePlaceholder extends PureComponent {
     onVisibilityChange: PropTypes.func.isRequired,
   };
   state = {
-    isMobile: isMobile.any() || isMobile.tablet()
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   renderPlaceholder = (_, index) => (
@@ -21,22 +21,37 @@ class PLPPagePlaceholder extends PureComponent {
     const placeholderCount = this.state.isMobile ? 8 : 9;
     return Array.from({ length: placeholderCount }, this.renderPlaceholder);
   }
-  
-
-  render() {
+  renderPlaceholderMobile() {
     const { onVisibilityChange, isFirst } = this.props;
-
     return (
       <VisibilitySensor
         delayedCall
         partialVisibility={["top", "bottom"]}
         minTopValue="1"
-        onChange={this.state.isMobile?onVisibilityChange : ()=>{} }
+        onChange={onVisibilityChange}
       >
         <div block="PLPPagePlaceholder" mods={{ isFirst }}>
           {this.renderPlaceholders()}
         </div>
       </VisibilitySensor>
+    );
+  }
+  renderPlaceholderDesktop() {
+    const { onVisibilityChange, isFirst } = this.props;
+    return (
+      <div block="PLPPagePlaceholder" mods={{ isFirst }}>
+        {this.renderPlaceholders()}
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <>
+        {!this.state.isMobile
+          ? this.renderPlaceholderDesktop()
+          : this.renderPlaceholderMobile()}
+      </>
     );
   }
 }

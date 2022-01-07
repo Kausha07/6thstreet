@@ -173,16 +173,13 @@ class ProductItem extends PureComponent {
       product: { thumbnail_url },
       lazyLoad = true,
     } = this.props;
-    let imageHight = "314px";
-    if (isMobile.any()){
-      imageHight = "271px"
-    }
+
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} height={imageHight}/>
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()}
-        {/* {this.renderColors()} */}
+        {this.renderColors()}
       </div>
     );
   }

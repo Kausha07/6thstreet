@@ -1,6 +1,7 @@
 .Product-LoadMore {
     text-align: center;
     margin-bottom: 34px;
+    margin-top: 88px;
     .Product-Loaded-Info {
         color: #000000;
         font-family: "Avenir Next";
@@ -43,6 +44,11 @@
             box-sizing: border-box;
             border: 1px solid #000000;
             border-radius: 6px;
+            &:disabled {
+                background: #000000;
+                color: #FFFFFF;
+                opacity: .3;
+            }
         }
     }
 }

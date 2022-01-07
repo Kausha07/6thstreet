@@ -52,9 +52,9 @@ export class SearchPageContainer extends PLPContainer {
       pages,
       isLoading,
       location: { prevPath = null },
+      filters
     } = this.props;
-
-    return { options, pages, isLoading, prevPath };
+    return { options, pages, isLoading, prevPath,filters };
   };
 
   setMetaData() {

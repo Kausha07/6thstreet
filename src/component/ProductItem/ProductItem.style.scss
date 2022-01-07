@@ -12,6 +12,9 @@
     padding-left: 0;
     position: relative;
     text-align: center;
+    &:last-child {
+        margin-bottom: 25.7px;
+    }
     &_isArabic {
         .Price {
             display: flex;
