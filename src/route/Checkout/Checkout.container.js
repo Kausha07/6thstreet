@@ -724,7 +724,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 id,
                 increment_id,
                 // keep details in localstorage for 2 mins only
-                expiry: now.getTime() + 120000,
+                expiry: now.getTime() + 600000,
               };
 
               localStorage.setItem("TABBY_ORDER_DETAILS", JSON.stringify(obj));
