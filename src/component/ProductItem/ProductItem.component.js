@@ -301,7 +301,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {this.renderAddToCartOnHover()}
+        {!isMobile.any() && this.renderAddToCartOnHover()}
       </li>
     );
   }
