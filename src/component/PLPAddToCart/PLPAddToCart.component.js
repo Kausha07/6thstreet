@@ -251,66 +251,67 @@ class PLPAddToCart extends PureComponent {
         //   });
         // }
 
-        if (!insertedSizeStatus) {
-          this.setState({ isLoading: true });
-          const code = Object.keys(productStock);
-          addProductToCart(
-            {
-              sku: code[0],
-              configSKU,
-              qty: 1,
-              optionId: "",
-              optionValue: "",
-            },
-            color,
-            null,
-            basePrice,
-            brand_name,
-            thumbnail_url,
-            url,
-            itemPrice,
-            searchQueryId
-          ).then((response) => {
-            // Response is sent only if error appear
-            if (response) {
-              showNotification("error", __(response));
-              this.afterAddToCart(false);
-            } else {
-              this.afterAddToCart(true);
-            }
-          });
-
-        //   Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
-        //     product: {
-        //       brand: brand_name,
-        //       category: "",
-        //       id: configSKU,
-        //       name,
-        //       price: itemPrice,
-        //       quantity: 1,
-        //       size: "",
-        //       variant: "",
+        // if (!insertedSizeStatus) {
+        //   this.setState({ isLoading: true });
+        //   const code = Object.keys(productStock);
+        //   addProductToCart(
+        //     {
+        //       sku: code[0],
+        //       configSKU,
+        //       qty: 1,
+        //       optionId: "",
+        //       optionValue: "",
         //     },
+        //     color,
+        //     null,
+        //     basePrice,
+        //     brand_name,
+        //     thumbnail_url,
+        //     url,
+        //     itemPrice,
+        //     searchQueryId
+        //   ).then((response) => {
+        //     // Response is sent only if error appear
+        //     if (response) {
+        //       showNotification("error", __(response));
+        //       this.afterAddToCart(false);
+        //     } else {
+        //       this.afterAddToCart(true);
+        //     }
         //   });
 
-          // vue analytics
-        //   const locale = VueIntegrationQueries.getLocaleFromUrl();
-        //   VueIntegrationQueries.vueAnalayticsLogger({
-        //     event_name: VUE_ADD_TO_CART,
-        //     params: {
-        //       event: VUE_ADD_TO_CART,
-        //       pageType: "plp",
-        //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        //       clicked: Date.now(),
-        //       uuid: getUUID(),
-        //       referrer: state?.prevPath ? state?.prevPath : null,
-        //       url: window.location.href,
-        //       sourceProdID: configSKU,
-        //       sourceCatgID: product_type_6s, // TODO: replace with category id
-        //       prodPrice: basePrice,
-        //     },
-        //   });
-        }}
+        // //   Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
+        // //     product: {
+        // //       brand: brand_name,
+        // //       category: "",
+        // //       id: configSKU,
+        // //       name,
+        // //       price: itemPrice,
+        // //       quantity: 1,
+        // //       size: "",
+        // //       variant: "",
+        // //     },
+        // //   });
+
+        //   // vue analytics
+        // //   const locale = VueIntegrationQueries.getLocaleFromUrl();
+        // //   VueIntegrationQueries.vueAnalayticsLogger({
+        // //     event_name: VUE_ADD_TO_CART,
+        // //     params: {
+        // //       event: VUE_ADD_TO_CART,
+        // //       pageType: "plp",
+        // //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        // //       clicked: Date.now(),
+        // //       uuid: getUUID(),
+        // //       referrer: state?.prevPath ? state?.prevPath : null,
+        // //       url: window.location.href,
+        // //       sourceProdID: configSKU,
+        // //       sourceCatgID: product_type_6s, // TODO: replace with category id
+        // //       prodPrice: basePrice,
+        // //     },
+        // //   });
+        // }
+    }
     }
 
     afterAddToCart(isAdded = 'true') {
