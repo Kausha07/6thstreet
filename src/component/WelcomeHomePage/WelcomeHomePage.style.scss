@@ -4,6 +4,9 @@
             display: flex;
             img{
                 margin: 0 auto;
+                @include mobile {
+                    margin: 0 0 0 20px;
+                }
                 width: 270px;
                 padding: 36px 0;
             }
@@ -29,7 +32,7 @@
             flex-direction: column;
         }
         .WelcomeHomePage-GenderSelection{
-
+            margin-left: unset;
             img{
                 width: 362px;
                 cursor: pointer;
@@ -72,7 +75,7 @@
             }
 
             @include mobile{
-                margin-bottom: 5px;
+                margin-bottom: 2px;
                 height: 157px;
                 // &::after{
                 //     content: '\A';
@@ -88,12 +91,6 @@
     }
 
     &-Bottom{
-        @include desktop{
-            display: none;
-        }
-        @include mobile{
-            display: none;
-        }
         .FooterMain{
             &-LastColumn{
                 text-align: center;
@@ -144,6 +141,10 @@
                 font-weight: 600;
                 letter-spacing: 0;
                 line-height: 30px;
+                @include mobile {
+                    font-size: 18px;
+                    line-height: 22px;
+                }
             }
             &-shop{
                 font-size: 15px;
@@ -151,6 +152,10 @@
                 line-height: 20px;
                 text-align: center;
                 margin-left: 5px;
+                @include mobile {
+                    font-size: 18px;
+                    line-height: 22px;
+                }
             }
         }
 
@@ -169,6 +174,8 @@
             @include mobile{
                 padding-left: 0px;
                 &-CountryBtn{
+                    margin-left: unset;
+                    padding: initial;
                     span{
                         font-size: 18px;
                         font-weight: 600;
@@ -179,7 +186,8 @@
                         height: 18px;
                         background-size: 18px;
                         top: 3px;
-                        right: -5px;
+                        right: unset;
+                        left: 100%
 
                     }
                 }
@@ -239,6 +247,7 @@
                     background-color: #9B9B9B;
                     color: white;
                     width: 117px;
+                    opacity: 0.4;
                 }
                 span{
                     &:first-child{
@@ -252,93 +261,138 @@
 
     &-Popup{
         width: var(--main-container-width-dsk);
-        height: 147px;
+        height: auto;
         padding: 30px;
         border-radius: 12px;
         background-color: #FFFFFF;
         box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
-        display: flex;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
         justify-content: center;
         max-width: var(--container-max-width);
-        margin: 0 auto;
+        // margin: 0 auto;
         margin-bottom: 50px;
         z-index: 3;
         pointer-events: all;
         @include tablet{
             width: auto;
-            margin-right: 30px;
-            margin-left: 30px;
-            margin-bottom: 40px;
             max-width: 100%;
         }
-        @include mobile{
-            display: none;
+        // @include mobile{
+        //     display: none;
+        // }
+        display: flex;
+        &-Action {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 20px;
+            right: 17px;
+            cursor: pointer;
         }
-        &-LanguageSwitcher{
-            .Popup-text{
+        &-Content {
+            &-Text{
                 display: flex;
-                align-items: center;
+                align-items: baseline;
+                margin-bottom: 12px;
 
-                &-welcome{
-                    font-size: 22px;
+                span:nth-child(1) {
+                    font-size: 24px;
                     font-weight: 600;
                     letter-spacing: 0;
                     line-height: 30px;
                 }
-                &-shop{
-                    font-size: 15px;
+                span:nth-child(2) {
+                    font-size: 17px;
                     letter-spacing: 0;
                     line-height: 20px;
                     text-align: center;
                     margin-left: 5px;
                 }
             }
-            .LanguageSwitcher{
-
-            }
-
-        }
-        &-CountrySwitcher{
-            align-self: end;
-            margin-bottom: 15px;
-            margin-left: 35px;;
-            .CountrySwitcher{
-                &-CountryBtn{
-                    span{
-                        font-size: 13px;
-                        font-weight: bold;
-                        text-transform: uppercase;
-                    }
-                    &::after{
-                        width: 14px;
-                        height: 14px;
-                        background-size: 14px;
-                        top: 5px;
-
+            &-SwitcherContainer {
+                display: flex;
+                justify-content: flex-start;
+                margin-top: 24px;
+                .LanguageSwitcher {
+                    margin-left: 0;
+                    margin-right: 32px;
+                    .Popup-button {
+                        margin-top: auto;
+                        padding: initial;
+                        .Language-Active{
+                            display: block;
+                            border: 1px solid #000000;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            letter-spacing: 0;
+                            line-height: 16px;
+                            text-align: center;
+                            text-transform: uppercase;
+                            padding: 11px 30px;
+                            text-decoration: none;
+                            width: 117px;
+                            color: black;
+                        }
+                        .Language-Inactive{
+                            font-size: 16px;
+                            font-weight: 600;
+                            letter-spacing: 0;
+                            line-height: 16px;
+                            text-align: center;
+                            text-transform: uppercase;
+                            padding: 12px 30px;
+                            text-decoration: none;
+                            border-radius: 6px;
+                            background-color: #9B9B9B;
+                            color: white;
+                            width: 117px;
+                            opacity: 0.4;
+                        }
+                        span{
+                            &:first-child{
+                                margin-right: 14.44px;
+                            }
+                        }
                     }
                 }
-
-
+                .CountrySwitcher{
+                    margin-left: 32px;
+                    &-CountryBtn{
+                        span{
+                            font-size: 15px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                        }
+                        &::after{
+                            width: 14px;
+                            height: 14px;
+                            background-size: 14px;
+                            top: 5px;
+                            right: unset;
+                            left: 100%
+                        }
+                    }
+                    
+                }
+                &-ConfirmButton{
+                    align-self: end;
+                    height: 40px;
+                    width: 95px;
+                    border-radius: 6px;
+                    background-color: #000000;
+                    color: white;
+                    margin-left: 80px;
+                    font-weight: bold;
+                    letter-spacing: 0;
+                    line-height: 16px;
+                    margin-right: 40px;
+                    padding: initial;
+                    font-size: 16px;
+                }
             }
-        }
-        &-Button{
-            align-self: end;
-            height: 40px;
-            width: 95px;
-            border-radius: 6px;
-            background-color: #000000;
-            color: white;
-            margin-left: 80px;
-            margin-bottom: 5px;
-        }
-
-        &-Close{
-            width: 16px;
-            height: 16px;
-            position: absolute;
-            top: 20px;
-            right: 17px;
-            cursor: pointer;
         }
 
     }

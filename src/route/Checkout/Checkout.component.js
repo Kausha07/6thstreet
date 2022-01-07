@@ -24,7 +24,7 @@ import {
   AUTHORIZED_STATUS,
   BILLING_STEP,
   CAPTURED_STATUS,
-  SHIPPING_STEP
+  SHIPPING_STEP,
 } from "./Checkout.config";
 import "./Checkout.style";
 import GiftIconSmall from "./icons/gift-heart.png";
@@ -47,7 +47,7 @@ export class Checkout extends SourceCheckout {
     isTabbyPopupShown: PropTypes.bool,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {
@@ -148,7 +148,7 @@ export class Checkout extends SourceCheckout {
 
   savePaymentInformationApplePay = (paymentInformation) => {
     this.setState({ paymentInformation });
-  }
+  };
 
   processTabby(paymentInformation) {
     const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
@@ -202,15 +202,16 @@ export class Checkout extends SourceCheckout {
   }
 
   setTabbyWebUrl = (url, paymentId, type) => {
+    const { setTabbyURL } = this.props;
     this.setState({ tabbyPaymentId: paymentId });
     switch (type) {
       case TABBY_ISTALLMENTS:
         this.setState({ tabbyInstallmentsUrl: url });
-
+        setTabbyURL(url);
         break;
       case TABBY_PAY_LATER:
         this.setState({ tabbyPayLaterUrl: url });
-
+        setTabbyURL(url);
         break;
       default:
         break;
@@ -226,9 +227,12 @@ export class Checkout extends SourceCheckout {
   };
 
   renderLoader() {
-    const { isLoading, checkoutStep , QPAYRedirect} = this.props;
+    const { isLoading, checkoutStep, PaymentRedirect } = this.props;
 
-    if ((checkoutStep === BILLING_STEP && isLoading) || (checkoutStep === SHIPPING_STEP && QPAYRedirect)) {
+    if (
+      (checkoutStep === BILLING_STEP && isLoading) ||
+      (checkoutStep === SHIPPING_STEP && PaymentRedirect)
+    ) {
       return (
         <div block="CheckoutSuccess">
           <div block="LoadingOverlay" dir="ltr">
@@ -288,7 +292,7 @@ export class Checkout extends SourceCheckout {
                 elem="DeliveryLabel"
                 mods={{ checkoutStep }}
               >
-                { isClickAndCollect ? __("Pick Up") : __("Delivery") }
+                {isClickAndCollect ? __("Pick Up") : __("Delivery")}
               </span>
             </button>
           </div>
@@ -331,7 +335,7 @@ export class Checkout extends SourceCheckout {
       getBinPromotion,
       updateTotals,
       setBillingStep,
-      isClickAndCollect
+      isClickAndCollect,
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
@@ -344,7 +348,7 @@ export class Checkout extends SourceCheckout {
               <span>{__("Edit")}</span>
             </button>
           )}
-          <button onClick={()=>setBillingStep()}>
+          <button onClick={() => setBillingStep()}>
             {this.renderHeading(__("Delivery Options"), true)}
             <span>{__("Edit")}</span>
           </button>
@@ -419,7 +423,7 @@ export class Checkout extends SourceCheckout {
       onCreateUserChange,
       onPasswordChange,
       isGuestEmailSaved,
-      isLoading
+      isLoading,
     } = this.props;
     const { continueAsGuest, isInvalidEmail } = this.state;
     const isBilling = checkoutStep === BILLING_STEP;
@@ -475,8 +479,8 @@ export class Checkout extends SourceCheckout {
       initialTotals,
       isVerificationCodeSent,
       newCardVisible,
-      QPayDetails, 
-      QPayOrderDetails
+      QPayDetails,
+      QPayOrderDetails,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -484,7 +488,6 @@ export class Checkout extends SourceCheckout {
       creditCardData,
     } = this.state;
     this.setState({ isSuccess: true });
-
 
     if (!isFailed) {
       return (
@@ -500,7 +503,7 @@ export class Checkout extends SourceCheckout {
           isVerificationCodeSent={isVerificationCodeSent}
           QPAY_DETAILS={QPayDetails}
           selectedCard={newCardVisible ? {} : selectedCard}
-          order = {QPayOrderDetails}
+          order={QPayOrderDetails}
         />
       );
     }
@@ -516,7 +519,7 @@ export class Checkout extends SourceCheckout {
         isVerificationCodeSent={isVerificationCodeSent}
         selectedCard={newCardVisible ? {} : selectedCard}
         QPAY_DETAILS={QPayDetails}
-        order = {QPayOrderDetails}
+        order={QPayOrderDetails}
       />
     );
   }
@@ -534,7 +537,7 @@ export class Checkout extends SourceCheckout {
       setLoading,
       isLoading,
       isClickAndCollect,
-      handleClickNCollectPayment
+      handleClickNCollectPayment,
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
@@ -560,17 +563,15 @@ export class Checkout extends SourceCheckout {
 
     return (
       <>
-        {
-          continueAsGuest || isSignedIn
-          ?
-          null
-          :
-          this.renderHeading(__("Login / Sign Up"), false)
-        }
+        {continueAsGuest || isSignedIn
+          ? null
+          : this.renderHeading(__("Login / Sign Up"), false)}
         <div block="Checkout" elem="GuestCheckout" mods={{ continueAsGuest }}>
           {continueAsGuest ? (
             <h3 block="Checkout" elem="DeliveryMessageGuest">
-              { isClickAndCollect ? __("Please Confirm your contact details") : __("Where can we send your order?")}
+              {isClickAndCollect
+                ? __("Please Confirm your contact details")
+                : __("Where can we send your order?")}
             </h3>
           ) : null}
           {this.renderGuestForm()}
@@ -609,22 +610,21 @@ export class Checkout extends SourceCheckout {
 
   redirectURL = () => {
     const { isMobile, continueAsGuest } = this.state;
-    const { history, goBack, setGender, setBillingStep ,checkoutStep} = this.props;
+    const { history, goBack, setGender, setBillingStep, checkoutStep } =
+      this.props;
 
     if (isMobile) {
-     
       const path = location.pathname.match(/checkout/);
-   
 
       if (path) {
-        if(checkoutStep ==="SHIPPING_STEP"){
+        if (checkoutStep === "SHIPPING_STEP") {
           return history.push("/cart");
         }
         if (continueAsGuest) {
-          this.continueAsGuest()
-          setBillingStep()
+          this.continueAsGuest();
+          setBillingStep();
         } else {
-          setBillingStep()
+          setBillingStep();
         }
       } else {
         goBack();

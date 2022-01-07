@@ -19,9 +19,19 @@
 
   @include mobile {
     left: 20px;
+    position: fixed;
+    top: 14px;
+    &_isArabic {
+      left: unset;
+      right: 20px;
+    }
   }
   @include tablet {
     left: 20px;
+    &_isArabic {
+      left: unset;
+      right: 20px;
+    }
   }
 
   &-Button {
@@ -40,6 +50,14 @@
 
     &_isHidden {
       display: none!important;
+    }
+
+    @include mobile {
+      content: "";
+      background: url(../Icons/Info/icon.svg) no-repeat;
+      background-size: 24px;
+      width: 24px;
+      height: 24px;
     }
 
     @include desktop {
@@ -78,10 +96,10 @@
 
     &_isArabic {
       padding-left: 31px !important;
-      text-align: left !important;
+      text-align: right !important;
 
       &::after {
-        right: 121px;
+        right: 100px;
       }
     }
   }
@@ -168,11 +186,11 @@
         left: unset!important;
         right: 5px
       }
-      &::after {
-        content: "ضغط ل WHATSAPP";
-        left: unset!important;
-        right: 22px
-      }
+      // &::after {
+      //   content: "ضغط ل WHATSAPP";
+      //   left: unset!important;
+      //   right: 22px
+      // }
     }
 
     @include desktop {
