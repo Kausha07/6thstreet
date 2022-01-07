@@ -45,18 +45,18 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     ...SourceCheckoutBilling.defaultProps,
     processApplePay: true,
     processingPaymentSelectRequest: false,
-    placeOrder: () => {},
+    placeOrder: () => { },
     isLoading: false,
     applePayDisabled: true,
     button_style: "",
   };
 
   componentDidMount() {
-    const { termsAreEnabled , paymentMethod} = this.props;
+    const { termsAreEnabled, paymentMethod, isApplePayAvailable } = this.props;
     if (!termsAreEnabled) {
       this.setState({ isOrderButtonEnabled: true });
     }
-    if (paymentMethod === CHECKOUT_APPLE_PAY) {
+    if (paymentMethod === CHECKOUT_APPLE_PAY && isApplePayAvailable) {
       const { requestConfig, launchPaymentMethod } = this.props;
       requestConfig().then(launchPaymentMethod);
     }
@@ -233,8 +233,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       isSignedIn,
       isClickAndCollect,
       savePaymentInformationApplePay,
-      isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable
+      isTabbyInstallmentAvailable
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -263,8 +262,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
-        isTabbyInstallmentAvailable = {isTabbyInstallmentAvailable}
-        isTabbyPayLaterAvailable={isTabbyPayLaterAvailable}
+        isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
       />
     );
   }
@@ -375,8 +373,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
     const isTabbyPay =
-      paymentMethod === "tabby_installments" ||
-      paymentMethod === "tabby_checkout";
+      paymentMethod === "tabby_installments"
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -424,8 +421,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                   processingRequest || processingPaymentSelectRequest
                     ? "spinningButton"
                     : isTabbyPay
-                    ? "tabbyButton"
-                    : "Button",
+                      ? "tabbyButton"
+                      : "Button",
               }}
             >
               {processingRequest || processingPaymentSelectRequest ? (

@@ -48,12 +48,14 @@ export class LanguageSwitcherContainer extends PureComponent {
         const {
             language,
             config,
-            country
+            country,
+            welcomePagePopup
         } = this.props;
 
         return {
             languageSelectOptions: getCountryLocaleForSelect(config, country),
-            language
+            language,
+            welcomePagePopup
         };
     };
 

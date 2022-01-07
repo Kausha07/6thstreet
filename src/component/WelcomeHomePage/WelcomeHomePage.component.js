@@ -1,23 +1,23 @@
 import { Fragment, PureComponent } from 'react';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import { isArabic } from 'Util/App';
 import PropTypes from 'prop-types';
 import CDN from "../../util/API/provider/CDN";
 import Link from "Component/Link";
 import { connect } from 'react-redux';
-import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import { LocationType } from "Type/Common";
+import Header from "Component/Header";
+import { setCountry, setLanguage, setLanguageForWelcome, setGender} from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
-import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
-import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import Footer from "Component/Footer";
 import Image from "Component/Image";
 import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
-import logo from './icons/6thstreet_logo.png'
+import logo from './icons/6TH_Logo.svg'
 import isMobile from "Util/Mobile";
-import facebook from "./icons/facebook.png";
-import instagram from "./icons/instagram.png";
+import close from "../Icons/Close/icon.svg"
 import './WelcomeHomePage.style';
 
 
@@ -25,21 +25,49 @@ import './WelcomeHomePage.style';
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
     language: state.AppState.language,
-    country: state.AppState.country
+    country: state.AppState.country,
+    gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
+    setGender: (value) => dispatch(setGender(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
-    updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
+
 });
 
+export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
+export const PREVIOUS_USER = 'PREVIOUS_USER';
+
 class WelcomeHomePage extends PureComponent {
-    state = {
-        isArabic: false,
-        welcomeImg: null
+    static propTypes = {
+        location: LocationType.isRequired
     };
+
+
+    constructor(props) {
+        super(props);
+        const appStateCacheKey = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+        const PREVIOUS_USER = BrowserDatabase.getItem('PREVIOUS_USER')
+        if(PREVIOUS_USER){
+            const { country, language, gender } = this.props;
+            const locale = `${language}-${country.toLowerCase()}`;
+            let url =  `${URLS[locale]}/${gender}.html`
+            window.location.href = url;
+        }
+        if(appStateCacheKey){
+            const { country, language, locale, gender } = appStateCacheKey;
+        }
+
+        this.state = {
+            isPopupOpen: !isMobile.any() && !!!appStateCacheKey,
+            welcomeImg: null
+        }
+    }
+
 
     linkMap = {
         title: __("Download The App"),
@@ -70,21 +98,25 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
+        window.pageType="welcome";
         this.getWelcomeImageUrl();
     }
+
     componentDidUpdate(){
-        let lang = this.props.language
-        let country = this.props.country
-        const locale = `${lang}-${country.toLowerCase()}`
+        const { language, country } = this.props;
+        const locale = `${language}-${country.toLowerCase()}`
         let genders = ["women", "men", "kids"]
         genders.forEach((gender) => {
             const hint = document.createElement("link");
             hint.setAttribute("rel", "prefetch");
-            hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
+            hint.setAttribute("as", "document");
+            hint.setAttribute("href", `${URLS[locale]}/${gender}.html`);
 
             try {
-                const head = document.getElementsByTagName("head")[0]
-                head.appendChild(hint);
+                const head = document.getElementsByTagName("head");
+                if(head?.length){
+                    head[0].appendChild(hint);
+                }
             }
             catch(err){
                 console.error(err);
@@ -92,29 +124,45 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
-    onGenderSelect = (val) => {
-        const { country, language } = this.props;
-        console.log(val, country, language)
+    componentWillUnmount() {
+        window.pageType = undefined;
+    }
+
+    closePopup = () => {
+        const { language, setLanguageForWelcome, country } = this.props;
+        setCountry(country);
+        setLanguage(language);
+        setLanguageForWelcome(language);
+        this.setState({
+            isPopupOpen: false
+        })
+    }
+
+    onGenderSelect = (event, val) => {
+        event.persist();
+        event.preventDefault();
+        const { country, language, setGender } = this.props;
         const locale = `${language}-${country.toLowerCase()}`;
-        let url = URLS[locale] + `/${val}.html`
+        setGender(val);
+        let data = {
+            locale: locale
+        }
+
+        BrowserDatabase.setItem(data, 'PREVIOUS_USER');
+        let url = `${URLS[locale]}/${val}.html`
         window.location.href = url
     }
 
-    getWelcomeImageUrl = () => {
+    getWelcomeImageUrl = async () => {
         let device = isMobile.any() ? 'm' : 'd'
-        console.log("hiiiiii", device);
-        let url = 'homepage/m/home.json';
-        const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
-
+        let url = `homepage/${device}/home.json`;
         try {
-            const resp = CDN.get(`${directory}/${url}`)
-                .then((res) => {
-                    if (res.men) {
-                        this.setState({
-                            welcomeImg: res
-                        })
-                    }
-                });
+            const resp = await CDN.get(`config_staging/${url}`);
+            if (resp) {
+                this.setState({
+                    welcomeImg: resp
+                })
+            }
         }
         catch (error) {
             console.error(error);
@@ -139,7 +187,6 @@ class WelcomeHomePage extends PureComponent {
                             <br />
                             <Link to={items.gallery_onclick} key={items.id_gallery}>
                                 <Image lazyLoad={true} src={items.app_gallery} alt="app gallery download" className="appGallery" />
-
                             </Link>
                         </div>
                     </Fragment>
@@ -149,54 +196,105 @@ class WelcomeHomePage extends PureComponent {
     }
 
     render() {
-        const { isArabic } = this.state;
-        let lang = this.props.language
-        let uni = isMobile.any()
-        console.log(uni);
+        const { isPopupOpen, welcomeImg } = this.state;
+        const { language, country } = this.props;
+        const locale = `${language}-${country.toLowerCase()}`;
         return (
-            <div>
+            <>
                 <div block="WelcomeHomePage">
+                    {
+                        !isMobile.any()
+                        ?
+                        <Header />
+                        :
+                        null
+                    }
                     <div block="WelcomeHomePage" elem="Top" >
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
                         </div>
                     </div>
-                    <div block="WelcomeHomePage" elem="StoreSwitcher">
-                        {
+                    {   isMobile.any() &&
+                        <div block="WelcomeHomePage" elem="StoreSwitcher">
+                            <div block="Text">
+                                <div block="Text-welcome">{__("Welcome, ")}</div>
+                                <div block="Text-shop">{__("you are shopping in")}</div>
+                            </div>
                             <div  block="WelcomeHomePage" elem="LanguageSwitcher">
                                 <LanguageSwitcher/>
                             </div>
-                        }
-                        {
                             <div  block="WelcomeHomePage" elem="CountrySwitcher">
                                 <CountrySwitcher/>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
 
-                    {
-                    this.state.welcomeImg &&
-                        <div block="WelcomeHomePage" elem="MainSection" >
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.women.img[lang]} onClick={() => this.onGenderSelect('women')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Women</button>
+                    { isPopupOpen &&
+                        <div block="WelcomeHomePage" elem="Popup">
+                            <div block="WelcomeHomePage-Popup" elem="Action">
+                                <img  block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup}/>
                             </div>
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.men.img[lang]} onClick={() => this.onGenderSelect('men')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Men</button>
-                            </div>
-                            <div block="WelcomeHomePage-GenderSelection">
-                                <img src={this.state.welcomeImg.kids.img[lang]} onClick={() => this.onGenderSelect('kids')} />
-                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Kids</button>
+                            <div block="WelcomeHomePage-Popup" elem="Content">
+                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                        <span>Welcome, </span>
+                                        <span>you are shopping in</span>
+                                </div>
+                                <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer">
+                                    <LanguageSwitcher welcomePagePopup={true}/>
+                                    <CountrySwitcher/>
+                                    <button
+                                        block="WelcomeHomePage-Popup-Content-SwitcherContainer"
+                                        elem="ConfirmButton"
+                                        onClick={this.closePopup}
+                                    >
+                                        OK
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     }
+
+                    {
+                    welcomeImg &&
+                        <div block="WelcomeHomePage" elem="MainSection" >
+                            {
+                                Object.keys(welcomeImg).map((gender) => {
+                                    const navigateTo = `${URLS[locale]}/${gender}.html`
+                                    return (
+                                        <a
+                                            href={navigateTo}
+                                            block="WelcomeHomePage-GenderSelection"
+                                            onClick={(e) => this.onGenderSelect(e, gender)}
+                                        >
+                                            <img src={welcomeImg[gender][language].img} />
+                                            <button block="WelcomeHomePage-GenderSelection-Button">
+                                                { welcomeImg[gender][language].label }
+                                            </button>
+                                        </a>
+                                    )
+                                })
+                            }
+                        </div>
+                    }
+                    { isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                 </div>
-                <div block="WelcomeHomePage" elem="Bottom">
-                    {this.renderAppColumn()}
-                </div>
-                <Footer />
-            </div>
+                {
+                    isMobile.tablet()
+                    ?
+                    <div block="WelcomeHomePage" elem="Bottom">
+                        {this.renderAppColumn()}
+                    </div>
+                    :
+                    null
+                }
+                {
+                    isMobile.any() || isMobile.tablet()
+                    ?
+                    null
+                    :
+                    <Footer />
+                }
+            </>
 
         );
     }

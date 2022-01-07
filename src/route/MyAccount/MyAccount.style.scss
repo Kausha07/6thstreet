@@ -16,6 +16,18 @@
     }
   }
 
+  &-HeadingBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include before-desktop {
+      display: none;
+      @include mobile {
+        display: none;
+      }
+    }
+  }
+
   &-Heading {
     @include before-desktop {
       display: none;
@@ -23,6 +35,18 @@
         display: none;
       }
     }
+  }
+
+  &-ReturnButton {
+    margin: 0 5px;
+    border: 1px solid var(--black);
+    border-radius: 5px;
+    font-family: var(--avenir-regular-font);
+    font-size: 14px;
+    font-weight: var(--fw-normal);
+    height: auto;
+    padding: 10px;
+    text-transform: none;
   }
 
   &-TabContent {
@@ -117,6 +141,16 @@
           background-image: url(./icons/address.png);
         }
       }
+      &_contact-help {
+        &:before {
+          background-image: url(./icons/contact-help.png);
+        }
+      }
+      &_settings {
+        &:before {
+          background-image: url(./icons/settings.png);
+        }
+      }
     }
   }
 
@@ -173,6 +207,26 @@
     }
   }
 }
+.MobileFooterMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include mobile {
+    a + a {
+      margin-left: 0;
+    }
+  }
+}
+
+.FooterMain {
+  &-FooterHeading {
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+}
 
 .MyAccountTabList {
   @include after-mobile {
@@ -219,6 +273,7 @@
     }
     @include before-desktop {
       padding: 0;
+      max-height: 100%;
     }
   }
 
@@ -252,5 +307,79 @@
 
   .MyAccountTabListItem-Button {
     width: 100%;
+  }
+}
+
+@include mobile {
+  .MobileCards {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    .CardsContainer {
+      margin: 0 5px;
+      height: 176px;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      background-color: #ffffff;
+      padding: 14px;
+      width: 33.33%;
+      display: flex;
+      flex-direction: column;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        height: 30px !important;
+        width: 30px !important;
+      }
+      .CardTitle {
+        color: #000000;
+        font-family: "Avenir Next";
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 22px;
+        text-align: center;
+      }
+      button {
+        border-radius: 8px;
+        background-color: #000000;
+        width: 100%;
+        height: 29px;
+        color: white;
+        font-family: "Avenir Next";
+        padding: 0 4px;
+        text-transform: capitalize;
+        display: flex;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 18px;
+        justify-content: center;
+        align-items: center;
+        &:hover, &:focus &:active {
+          text-decoration: none;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+
+.UserBlock {
+  font-size: 20px;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  margin-left: 5px;
+  .UserName {
+    font-weight: bold;
   }
 }

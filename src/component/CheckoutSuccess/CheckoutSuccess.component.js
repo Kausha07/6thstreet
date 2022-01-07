@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
-import { getDiscountFromTotals, isArabic , getCurrency} from "Util/App";
+import { getDiscountFromTotals, isArabic, getCurrency } from "Util/App";
 import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
@@ -283,44 +283,51 @@ export class CheckoutSuccess extends PureComponent {
       order: { base_currency_code: currency },
     } = this.props;
 
-    return <MyAccountOrderViewItem item={item} currency={currency} displayDiscountPercentage={true} />;
+    return (
+      <MyAccountOrderViewItem
+        item={item}
+        currency={currency}
+        displayDiscountPercentage={true}
+      />
+    );
   };
 
   renderTotalsItems() {
-    const {paymentMethod} = this.props
-    if(paymentMethod?.code === "checkout_qpay"){
-
+    const { paymentMethod } = this.props;
+    if (
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments"
+    ) {
       const {
-      order: { status, unship = [] , base_currency_code: currency},
-      incrementID,
-    } = this.props;
+        order: { status, unship = [], base_currency_code: currency },
+        incrementID,
+      } = this.props;
 
-    return (
-      <div block="TotalItems">
+      return (
+        <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
             {`${__("Order")} #${incrementID} ${__("Details")}`}
           </div>
           <ul block="TotalItems" elem="Items">
             {unship
-            .reduce((acc, { items }) => [...acc, ...items], [])
-            .filter(
-              ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
-            )
-            .map(this.renderItem)}
+              .reduce((acc, { items }) => [...acc, ...items], [])
+              .filter(
+                ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
+              )
+              .map(this.renderItem)}
           </ul>
-        </div>     
-    );
-
-    }else{
+        </div>
+      );
+    } else {
       const {
         initialTotals: { items = [], quote_currency_code },
         incrementID,
       } = this.props;
-  
+
       if (!items || items.length < 1) {
         return <p>{__("There are no products in totals.")}</p>;
       }
-  
+
       return (
         <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
@@ -343,24 +350,23 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderTotalPrice() {
-    const {paymentMethod} = this.props
+    const { paymentMethod } = this.props;
     let fullPrice;
-    if(paymentMethod?.code === "checkout_qpay"){
+    if (
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments"
+    ) {
       const {
-        order: {
-          grand_total = 0,
-          currency_code = getCurrency(),
-        },
+        order: { grand_total = 0, currency_code = getCurrency() },
       } = this.props;
-       fullPrice = `${currency_code} ${grand_total}`;
-    }else{
+      fullPrice = `${currency_code} ${grand_total}`;
+    } else {
       const {
         initialTotals: { total, quote_currency_code },
       } = this.props;
       const finalPrice = getFinalPrice(total, quote_currency_code);
       fullPrice = `${quote_currency_code} ${finalPrice}`;
     }
-
 
     return (
       <div block="Totals">
@@ -376,17 +382,16 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderPriceLine(price, name) {
-
     if (!price) {
       return null;
     }
 
-      const {
-        initialTotals: { quote_currency_code },
-      } = this.props;
-      const finalPrice = getFinalPrice(price, quote_currency_code);
-  
-      const fullPrice = `${quote_currency_code} ${finalPrice}`;
+    const {
+      initialTotals: { quote_currency_code },
+    } = this.props;
+    const finalPrice = getFinalPrice(price, quote_currency_code);
+
+    const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
     return (
       <div block="Totals">
@@ -419,7 +424,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
@@ -430,7 +435,9 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-        {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Discount")) : null}
+        {couponCode || (discount && discount != 0)
+          ? this.renderPriceLine(discount, __("Discount"))
+          : null}
 
         {this.renderTotalPrice()}
       </div>
@@ -489,17 +496,19 @@ export class CheckoutSuccess extends PureComponent {
 
   renderClickAndCollectStoreName() {
     const {
-      item: {
-        extension_attributes
-      }
+      item: { extension_attributes },
     } = this.props;
 
     const { isArabic } = this.state;
-    if(extension_attributes?.click_to_collect_store) {
+    if (extension_attributes?.click_to_collect_store) {
       return (
         <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
-          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
-          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ extension_attributes?.click_to_collect_store_name}</div>
+          <div block="CartPageItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
         </div>
       );
     }
@@ -670,7 +679,13 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       selectedCard,
     } = this.props;
-    if (number && expMonth && expYear && cvv && !paymentMethod?.code?.match(/cash/)) {
+    if (
+      number &&
+      expMonth &&
+      expYear &&
+      cvv &&
+      !paymentMethod?.code?.match(/cash/)
+    ) {
       const displayNumberDigits = 4;
       const slicedNumber = number.slice(number.length - displayNumberDigits);
 
@@ -719,8 +734,6 @@ export class CheckoutSuccess extends PureComponent {
 
     if (paymentMethod?.code?.match(/tabby_installments/)) {
       this.setState({ paymentTitle: __("Tabby: Pay in installments") });
-    } else if (paymentMethod?.code?.match(/tabby_checkout/)) {
-      this.setState({ paymentTitle: __("Tabby: Pay later") });
     } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple Pay") });
     } else if (paymentMethod?.code?.match(/cash/)) {
@@ -883,7 +896,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       customer,
       billingAddress: { guest_email },
-      paymentMethod
+      paymentMethod,
     } = this.props;
     return (
       <div block="CheckoutSuccess">
@@ -897,7 +910,10 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}
-          {paymentMethod?.code === "checkout_qpay" ? this.renderPaymentSummary() : this.renderTotals()}
+          {paymentMethod?.code === "checkout_qpay" ||
+            paymentMethod?.code === "tabby_installments"
+            ? this.renderPaymentSummary()
+            : this.renderTotals()}
           {this.renderContact()}
         </div>
         {this.renderButton()}

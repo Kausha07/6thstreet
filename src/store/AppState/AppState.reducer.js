@@ -14,9 +14,11 @@ export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
 
 export const APP_STATE_CACHE_KEY_WELCOME = 'APP_STATE_CACHE_KEY_WELCOME';
 
-export const getInitialCountry = () => {
+export const getInitials = () => {
+
     let country = ''
     let lang = ''
+    let locale = ''
     let langOptions = ['en', 'ar']
 
     let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
@@ -25,6 +27,9 @@ export const getInitialCountry = () => {
     }
     if(k && k.data.language){
         lang = k.data.language
+    }
+    if(k && k.data.locale){
+        locale = k.data.locale
     }
 
     if(!k){
@@ -38,7 +43,8 @@ export const getInitialCountry = () => {
     }
     let data = {
         language: lang,
-        country: country
+        country: country,
+        locale: locale
     }
     return data
 
@@ -48,12 +54,13 @@ export const getInitialCountry = () => {
 export const getInitialState = () => (
     {
         ...(BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
-            locale: '', // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
-            country: getInitialCountry().country, // one of AE, SA, KW, OM, BH, QA
-            language: getInitialCountry().language, // one of en, ar
+            locale: getInitials().locale, // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
+            country: getInitials().country, // one of AE, SA, KW, OM, BH, QA
+            language: getInitials().language, // one of en, ar
             gender: 'women' // one of 'men', 'women', 'kids'
         }),
         pdpWidgetsData: []
+
     }
 );
 
@@ -75,12 +82,13 @@ export const AppStateReducer = (state = getInitialState(), action) => {
     const {
         country,
         language
+
     } = state;
 
     const {
         type,
         gender,
-        locale = '',
+        locale,
         pdpWidgetsData,
         country: actionCountry,
         language: actionLanguage,
@@ -104,7 +112,7 @@ export const AppStateReducer = (state = getInitialState(), action) => {
         case SET_GENDER:
             return updateCacheAndReturn({
                 ...state,
-                gender
+                gender: gender
             });
 
         case SET_LOCALE:

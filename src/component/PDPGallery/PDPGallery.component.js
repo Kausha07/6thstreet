@@ -4,6 +4,8 @@ import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
+import ShareButton from "Component/ShareButton";
+import SearchIcon from "Component/Icons/Search";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
@@ -15,6 +17,17 @@ import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
 import "./PDPGallery.style";
 import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { connect } from 'react-redux';
+import HomeIcon from "Component/Icons/Home/home.png"
+export const mapStateToProps = (state) => ({
+  displaySearch: state.PDP.displaySearch
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+});
+
 class PDPGallery extends PureComponent {
   static propTypes = {
     currentIndex: PropTypes.number.isRequired,
@@ -56,9 +69,13 @@ class PDPGallery extends PureComponent {
 
   renderBackButton() {
     const { isArabic } = this.state;
+    const { homeFromPDP } = this.props
     return (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={browserHistory.goBack} />
+        <div block="BackArrow-HomeIcon" onClick={homeFromPDP}>
+          <img src={HomeIcon} alt="home" />
+        </div>
       </div>
     );
   }
@@ -89,6 +106,7 @@ class PDPGallery extends PureComponent {
     const { isArabic } = this.state;
     return <HeaderCart showCartPopUp={false} mods={{ isArabic }} />;
   }
+
   renderWishlistIcon() {
     const { isArabic } = this.state;
     const { sku, product, renderMySignInPopup } = this.props;
@@ -100,6 +118,39 @@ class PDPGallery extends PureComponent {
         pageType="pdp"
         data={product}
       />
+    );
+  }
+  renderShareButton() {
+    const url = new URL(window.location.href);
+    if (!!!isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <div block="ShareIcon">
+        <ShareButton
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
+    );
+  }
+
+  renderSearchButton() {
+    const url = new URL(window.location.href);
+    if (!!!isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <div block="SearchIcon" onClick={this.searchButtonClick}>
+        <SearchIcon
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
     );
   }
 
@@ -335,7 +386,11 @@ class PDPGallery extends PureComponent {
       }
     }
   };
-
+  searchButtonClick = (e) => {
+    e.stopPropagation();
+    const { displaySearch, showPDPSearch } = this.props
+    showPDPSearch(!displaySearch)
+  }
   stopVideo() {
     const { isVideoPlaying, listener } = this.state;
 
@@ -405,6 +460,8 @@ class PDPGallery extends PureComponent {
         <div block="OverlayIcons" mods={{ isArabic }}>
           {this.renderCartIcon()}
           {this.renderWishlistIcon()}
+          {/* {this.renderShareButton()} */}
+          {this.renderSearchButton()}
         </div>
         <button
           ref={this.overlaybuttonRef}
@@ -422,4 +479,4 @@ class PDPGallery extends PureComponent {
   }
 }
 
-export default PDPGallery;
+export default connect(mapStateToProps, mapDispatchToProps)(PDPGallery);
