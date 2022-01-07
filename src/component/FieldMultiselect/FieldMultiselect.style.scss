@@ -144,7 +144,7 @@ $select-arrow-width: 6px !default;
       text-align: right;
       &:after {
         right: unset;
-        left: 1px;
+        left: 10px;
       }
     }
   }
@@ -303,6 +303,14 @@ $select-arrow-width: 6px !default;
   }
 
   .Search-Container {
+    &_isArabic {
+      input {
+        direction: rtl;
+        &::placeholder {
+          text-align: right !important;
+        }
+      }
+    }
     @include mobile {
       position: relative;
       // width: 65%;

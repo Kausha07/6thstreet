@@ -465,7 +465,7 @@ class FieldMultiselect extends PureComponent {
       return null;
     }
     return (
-      <div block="Search-Container">
+      <div block="Search-Container" mods={{ isArabic }}>
         <input
           type="text"
           id={isMobile.any() ? currentActiveFilter : category}
