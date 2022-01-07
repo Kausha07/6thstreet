@@ -261,7 +261,7 @@ class InlineCustomerSupport extends PureComponent {
                 null
               }
             <div block="InlineCustomerSupport" elem="CheckoutCommunication">
-              CoD | multiple payment options | T&amp;Cs apply
+              { __("CoD | multiple payment options | T&Cs apply") }
             </div>
           </div>
       </div>

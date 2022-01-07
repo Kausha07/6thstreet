@@ -508,7 +508,7 @@
     "ALL PRICES ARE INCLUSIVE OF VAT": "جميع الأسعار شاملة ضريبة القيمة المضافة",
     "Customize your shopping experience": "أضف طابعك الشخصي حول تجربتك في التسوق ",
     "Welcome": "أهلا بك،",
-    "you are shopping in": "أنت تتسوق في",
+    "you are shopping in": null,
     "Product details:": ":ميزات المنتج",
     "card number": "رقم البطاقة",
     "exp date": "تاريخ انتهاء الصلاحية",
@@ -914,7 +914,9 @@
     "Available all days::": null,
     "Available all days:": null,
     "Available all days: ": null,
-    "Hello,": null,
     "Cancelled": null,
+    "Welcome, ": null,
+    "CoD | multiple payment options | T&amp;Cs apply": null,
+    "CoD | multiple payment options | T&Cs apply": null,
     "Hello, ": null
 }
