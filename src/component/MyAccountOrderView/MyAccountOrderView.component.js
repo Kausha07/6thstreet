@@ -42,6 +42,7 @@ import {
   DELIVERY_FAILED,
   DELIVERY_SUCCESSFUL,
   RETURN_ITEM_LABEL,
+  STATUS_CANCELLED,
   STATUS_IN_TRANSIT,
   STATUS_LABEL_MAP,
   STATUS_PROCESSING,
@@ -230,7 +231,7 @@ class MyAccountOrderView extends PureComponent {
     const STATUS_LABELS = Object.assign({}, STATUS_LABEL_MAP);
     // delete STATUS_LABELS[STATUS_PROCESSING];
     // delete STATUS_LABELS[DELIVERY_FAILED];
-    const { [status.toLowerCase().replace(" ", "_")]: statusTitle = null } =
+    const { [status?.toLowerCase().replace(" ", "_")]: statusTitle = null } =
       STATUS_LABELS;
 
     return (
@@ -305,26 +306,25 @@ class MyAccountOrderView extends PureComponent {
     if (STATUS_FAILED.includes(status) || !unship.length) {
       return null;
     }
-
-    return (
-      <div block="MyAccountOrderView" elem="AccordionWrapper">
-        <Accordion
-          mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
-          title={this.renderAccordionTitle(
-            __("Items under processing"),
-            TimerImage
-          )}
-          is_expanded
-        >
-          {unship
-            .reduce((acc, { items }) => [...acc, ...items], [])
-            .filter(
-              ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
-            )
-            .map(this.renderItem)}
-        </Accordion>
-      </div>
-    );
+    const processingItems = unship
+      .reduce((acc, { items }) => [...acc, ...items], [])
+      .filter(({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered);
+    if (processingItems.length > 0) {
+      return (
+        <div block="MyAccountOrderView" elem="AccordionWrapper">
+          <Accordion
+            mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
+            title={this.renderAccordionTitle(
+              __("Items under processing"),
+              TimerImage
+            )}
+            is_expanded
+          >
+            {processingItems.map(this.renderItem)}
+          </Accordion>
+        </div>
+      );
+    }
   }
 
   renderCanceledAccordion() {
@@ -434,9 +434,27 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="Accordions">
-        {shipped.map((item, index) => this.renderAccordion(item, index))}
-        {/* {this.renderProcessingItems()}
-        {this.renderCanceledAccordion()} */}
+        {console.log(
+          "check",
+          shipped.filter(
+            (item) =>
+              item.status !== STATUS_PROCESSING &&
+              item.status !== "Processing" &&
+              item.status !== STATUS_CANCELLED &&
+              item.status !== "Cancelled"
+          )
+        )}
+        {shipped
+          .filter(
+            (item) =>
+              item.status !== STATUS_PROCESSING &&
+              item.status !== "Processing" &&
+              item.status !== STATUS_CANCELLED &&
+              item.status !== "Cancelled"
+          )
+          .map((item, index) => this.renderAccordion(item, index))}
+        {this.renderProcessingItems()}
+        {this.renderCanceledAccordion()}
       </div>
     );
   }
