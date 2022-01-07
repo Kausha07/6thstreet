@@ -611,8 +611,8 @@ class PLPFilters extends PureComponent {
   onUnselectAllPress = (category) => {
     const { filters, initialOptions, updatePLPInitialFilters, query } =
       this.props;
+    const { activeFilters } = this.state;
     let categoryLevel1 = initialOptions.q.split(" ")[1];
-    let activeFilters = {};
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
@@ -621,22 +621,21 @@ class PLPFilters extends PureComponent {
             filterData[1].selected_filters_count = 0;
             return Object.entries(filterData[1].subcategories).map((entry) => {
               entry[1].is_selected = false;
-              activeFilters[filter[0]] = [];
+              activeFilters[entry[0]] = [];
             });
           });
         } else {
-          if(category === "sizes"){
-            Object.entries(filter[1].data).map((entry)=>{
+          if (category === "sizes") {
+            Object.entries(filter[1].data).map((entry) => {
               entry[1].selected_filters_count = 0;
               Object.entries(entry[1].subcategories).map((filterData) => {
                 if (filterData[1].is_selected) {
                   filterData[1].is_selected = false;
-                  activeFilters[entry[1]] = [];
+                  activeFilters[entry[0]] = [];
                 }
               });
-            })
-           
-          }else{
+            });
+          } else {
             filter[1].selected_filters_count = 0;
             Object.entries(filter[1].data).map((filterData) => {
               if (filterData[1].is_selected) {
@@ -645,7 +644,6 @@ class PLPFilters extends PureComponent {
               }
             });
           }
-        
         }
       } else {
         if (
