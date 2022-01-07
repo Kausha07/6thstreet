@@ -55,9 +55,9 @@ class PLPPages extends PureComponent {
       renderMySignInPopup,
       prevPath = null,
       filters,
+      productLoading,
     } = this.props;
-
-    if (isPlaceholder) {
+    if (isMobile.any() ? isPlaceholder : isPlaceholder || productLoading) {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
@@ -81,8 +81,8 @@ class PLPPages extends PureComponent {
   };
 
   renderPages() {
-    const { pages = {} } = this.props;
-    if (pages && pages.length === 0) {
+    const { pages = {}, productLoading } = this.props;
+    if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
           isPlaceholder: true,
@@ -354,7 +354,12 @@ class PLPPages extends PureComponent {
   };
 
   renderLoadMore() {
-    return <ProductLoad pageKey={this.state.pageKey} />;
+    return (
+      <ProductLoad
+        pageKey={this.state.pageKey}
+        productLoad={this.props.productLoading}
+      />
+    );
   }
 
   render() {

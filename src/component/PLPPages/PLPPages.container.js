@@ -9,6 +9,7 @@ import isMobile from "Util/Mobile";
 export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
   initialOptions: state.PLP.initialOptions,
+  productLoading: state.PLP.productLoading,
   meta: state.PLP.meta,
 });
 export const mapDispatchToProps = (_dispatch) => ({
@@ -117,6 +118,7 @@ export class PLPPagesContainer extends PureComponent {
     query: this.props.query,
     filters: this.props.filters,
     activeFilters:this.state.activeFilters,
+    productLoading:this.props.productLoading,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
   });

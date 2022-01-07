@@ -3,6 +3,7 @@ export const SET_PLP_LOADING = "SET_PLP_LOADING";
 export const SET_PLP_INIT_FILTERS = "SET_PLP_INIT_FILTERS";
 export const SET_PLP_PAGE = "SET_PLP_PAGE";
 export const RESET_PLP_PAGE = "RESET_PLP_PAGE";
+export const SET_LOADING = "SET_LOADING";
 export const SET_PLP_WIDGET_DATA = "SET_PLP_WIDGET_DATA";
 export const UPDATE_PLP_INIT_FILTERS = "UPDATE_PLP_INIT_FILTERS";
 
@@ -18,6 +19,11 @@ export const setPLPPage = (pageProducts, page) => ({
 
 export const resetPLPPage = () => ({
   type: RESET_PLP_PAGE,
+});
+
+export const setProductLoading = (isLoading) => ({
+  type: SET_LOADING,
+  isLoading,
 });
 
 export const setPLPData = (response, options, isInitial) => ({

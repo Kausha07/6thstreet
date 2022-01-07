@@ -5,6 +5,7 @@ import {
   SET_PLP_LOADING,
   SET_PLP_PAGE,
   RESET_PLP_PAGE,
+  SET_LOADING,
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
 } from "./PLP.action";
@@ -12,6 +13,7 @@ import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
   isLoading: true,
+  productLoading: true,
   pages: {},
   lastSelectedKey: null,
   lastSelectedValue: null,
@@ -73,6 +75,12 @@ export const PLPReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         pages: {},
+      };
+
+    case SET_LOADING:
+      return {
+        ...state,
+        productLoading: action.isLoading,
       };
 
     case UPDATE_PLP_INIT_FILTERS:
