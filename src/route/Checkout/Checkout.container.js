@@ -348,7 +348,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   componentDidMount() {
     const { setMeta } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
-    this.refreshCart();
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    const TABBY_CHECK = JSON.parse(
+      localStorage.getItem("TABBY_ORDER_DETAILS")
+    );
+    if (!QPAY_CHECK || !TABBY_CHECK)
+      this.refreshCart();
     setMeta({ title: __("Checkout") });
     this.getQPayData();
     this.getTabbyData();
@@ -718,8 +723,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 order_id,
                 id,
                 increment_id,
-                // keep details in localstorage for 2 mins only
-                expiry: now.getTime() + 120000,
+                // keep details in localstorage for 10 mins only
+                expiry: now.getTime() + 600000,
               };
 
               localStorage.setItem("TABBY_ORDER_DETAILS", JSON.stringify(obj));
