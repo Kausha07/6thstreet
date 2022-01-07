@@ -30,24 +30,24 @@ class PLPPages extends PureComponent {
       activeFilters: {},
       isReset: false,
       defaultFilters: false,
-      pageKey: 0
+      pageKey: 0,
     };
   }
 
   renderPage = ([key, page]) => {
-    const { products, isPlaceholder, isFirst = false } = page; 
+    const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
-      pageKey : key
-    })   
+      pageKey: key,
+    });
     const {
       impressions,
       query,
       renderMySignInPopup,
       prevPath = null,
       filters,
+      productLoading,
     } = this.props;
-
-    if (isPlaceholder) {
+    if (isMobile.any() ? isPlaceholder : (isPlaceholder || productLoading)) {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
@@ -57,7 +57,7 @@ class PLPPages extends PureComponent {
         />
       );
     }
-    
+
     return (
       <PLPPage
         key={key}
@@ -71,8 +71,8 @@ class PLPPages extends PureComponent {
   };
 
   renderPages() {
-    const { pages = {} } = this.props;
-    if (pages && pages.length === 0) {
+    const { pages = {}, productLoading } = this.props;
+    if (pages && pages.length === 0 && productLoading ) {
       const placeholderConfig = [
         {
           isPlaceholder: true,
@@ -156,7 +156,6 @@ class PLPPages extends PureComponent {
       </div>
     );
   }
-  
 
   renderButtonView(label, onClick) {
     return (
@@ -343,10 +342,8 @@ class PLPPages extends PureComponent {
     }
   };
 
-  renderLoadMore(){
-    return (
-      <ProductLoad pageKey={this.state.pageKey}/>
-    )
+  renderLoadMore() {
+    return <ProductLoad pageKey={this.state.pageKey} productLoad={this.props.productLoading} />;
   }
 
   render() {
@@ -360,7 +357,7 @@ class PLPPages extends PureComponent {
           </div>
         )}
 
-        {this.renderPages()}
+        {this.renderPages()}        
         {!isMobile.any() && this.renderLoadMore()}
       </div>
     );

@@ -6,6 +6,7 @@ import {
   setPLPLoading,
   setPLPPage,
   setPLPWidget,
+  setProductLoading,
 } from "Store/PLP/PLP.action";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -35,6 +36,8 @@ export class PLPDispatcher {
         const response = await new Algolia().getPLP(options);
 
         localStorage.setItem("queryID", response.queryID);
+        dispatch(setProductLoading(false));
+
         dispatch(setPLPInitialFilters(response.filters, options));
         dispatch(setPLPData(response, options, false));
       } catch (e) {
@@ -58,7 +61,7 @@ export class PLPDispatcher {
 
     try {
       const { data: products } = await new Algolia().getPLP(options);
-
+      dispatch(setProductLoading(false));
       dispatch(setPLPPage(products, page));
     } catch (e) {
       Logger.log(e);
