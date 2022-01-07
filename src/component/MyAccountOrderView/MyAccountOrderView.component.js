@@ -434,16 +434,6 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="Accordions">
-        {console.log(
-          "check",
-          shipped.filter(
-            (item) =>
-              item.status !== STATUS_PROCESSING &&
-              item.status !== "Processing" &&
-              item.status !== STATUS_CANCELLED &&
-              item.status !== "Cancelled"
-          )
-        )}
         {shipped
           .filter(
             (item) =>
