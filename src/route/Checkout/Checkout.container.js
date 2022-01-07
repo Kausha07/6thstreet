@@ -723,7 +723,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 order_id,
                 id,
                 increment_id,
-                // keep details in localstorage for 2 mins only
+                // keep details in localstorage for 10 mins only
                 expiry: now.getTime() + 600000,
               };
 
