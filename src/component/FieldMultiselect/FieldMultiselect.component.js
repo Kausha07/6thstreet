@@ -11,6 +11,7 @@ import selectedImage from "./icons/select.png";
 import selectImage from "./icons/add.png";
 import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
+import { v4 } from 'uuid';
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -181,7 +182,7 @@ class FieldMultiselect extends PureComponent {
     const display = isClosed ? "none" : "block";
 
     return (
-      <div block="FieldMultiselect" elem="MobileOptions">
+      <div block="FieldMultiselect" elem="MobileOptions" key={v4()}>
         <button
           block="FieldMultiselect"
           elem="MobileOptionButton"
@@ -224,7 +225,7 @@ class FieldMultiselect extends PureComponent {
 
     return (
       <PLPFilterOption
-        key={key}
+        key={v4()}
         option={option}
         isRadio={is_radio}
         activeFilter={activeFilter}
@@ -258,7 +259,7 @@ class FieldMultiselect extends PureComponent {
             block="FieldMultiselect"
             elem="sizesOption"
             mods={{ selectedSize: value.is_selected }}
-            key={index}
+            key={v4()}
             id={facet_key}
             name={facet_value}
             value={value.is_selected}
@@ -308,7 +309,7 @@ class FieldMultiselect extends PureComponent {
           {sizeObject.map((size = "") => {
             return (
               <option
-                key={size.key}
+                key={v4()}
                 block="FieldMultiselect"
                 elem="SizeTypeOption"
                 value={size.key}
@@ -573,7 +574,7 @@ class FieldMultiselect extends PureComponent {
                         : val.label;
                     return (
                       <>
-                        <li key={key} block="selectedListItem">
+                        <li key={v4()} block="selectedListItem">
                           {label}
                         </li>
                       </>
@@ -590,7 +591,7 @@ class FieldMultiselect extends PureComponent {
                       : values.label;
                   return (
                     <>
-                      <li key={keys} block="selectedListItem">
+                      <li key={v4()} block="selectedListItem">
                         {label}
                       </li>
                     </>

@@ -176,8 +176,7 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
-      this.props;
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
@@ -246,7 +245,6 @@ class PDPAddToCart extends PureComponent {
       sizeObject = {},
       productStock = {},
     } = this.props;
-
     if (
       sizeObject.sizeCodes !== undefined &&
       Object.keys(productStock).length !== 0 &&

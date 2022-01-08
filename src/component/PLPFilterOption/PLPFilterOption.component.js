@@ -6,7 +6,7 @@ import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
-
+import { v4 } from 'uuid';
 import "./PLPFilterOption.style";
 
 class PLPFilterOption extends PureComponent {
@@ -179,13 +179,14 @@ class PLPFilterOption extends PureComponent {
   render() {
     const { isArabic } = this.state;
     const {
-      option: { facet_value },
+      option: { facet_value }
     } = this.props;
     if (!facet_value) {
       return null;
     }
     return (
       <li
+        key={v4()}
         ref={this.optionRef}
         block="PLPFilterOption"
         elem="List"

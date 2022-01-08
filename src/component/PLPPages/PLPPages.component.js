@@ -8,7 +8,7 @@ import { Close } from "Component/Icons";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
 import ProductLoad from "Component/PLPLoadMore";
-
+import { v4 } from 'uuid';
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -61,16 +61,15 @@ class PLPPages extends PureComponent {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
-          key={key}
+          key={v4()}
           pageIndex={key}
           query={query}
         />
       );
     }
-
     return (
       <PLPPage
-        key={key}
+        key={v4()}
         products={products}
         impressions={impressions}
         renderMySignInPopup={renderMySignInPopup}
@@ -117,7 +116,7 @@ class PLPPages extends PureComponent {
                   ) {
                     if (val.is_selected === true) {
                       return (
-                        <li>
+                        <li key={v4()}>
                           {thisRef.renderButtonView(val.label, () =>
                             thisRef.OnDeselectFilter(val, values)
                           )}
@@ -131,7 +130,7 @@ class PLPPages extends PureComponent {
                     value.facet_key !== "categories.level1"
                   ) {
                     return (
-                      <li>
+                      <li key={v4()}>
                         {thisRef.renderButtonView(value.label, () =>
                           thisRef.OnDeselectFilter(value, values)
                         )}
@@ -364,16 +363,18 @@ class PLPPages extends PureComponent {
 
   render() {
     return (
-      <div block="PLPPages Products-Lists">
-        {!isMobile.any() && (
-          <div block="ProductToolBar">
-            <div block="ProductSelectedFilters">
-              {this.renderSelectedFilters()}
+      <div block="PLPPagesContainer">
+        <div block="PLPPages Products-Lists">
+          {!isMobile.any() && (
+            <div block="ProductToolBar">
+              <div block="ProductSelectedFilters">
+                {this.renderSelectedFilters()}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {this.renderPages()}
+          {this.renderPages()}
+        </div>
         {!isMobile.any() && this.renderLoadMore()}
       </div>
     );
