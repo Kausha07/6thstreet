@@ -93,24 +93,26 @@ export class PLPContainer extends PureComponent {
 
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
-  static getDerivedStateFromProps(props, state) {
-    const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions();
-    const { page, ...restOptions } = requestOptions;
-    const {
-      prevRequestOptions: { page: prevPage, ...prevRestOptions },
-    } = state;
-    if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
-      // if queries match (excluding pages) => not inital
-      PLPContainer.requestProductList(props);
-    } else if (page !== prevPage && !pages[page]) {
-      // if only page has changed, and it is not yet loaded => request that page
-      PLPContainer.requestProductListPage(props);
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
+
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
     }
 
-    return {
-      prevRequestOptions: requestOptions,
-    };
+    return false;
   }
 
   static getRequestOptions() {
@@ -148,6 +150,7 @@ export class PLPContainer extends PureComponent {
   containerFunctions = {
     // getData: this.getData.bind(this)
     resetPLPData: this.resetPLPData.bind(this),
+    compareObjects: this.compareObjects.bind(this),
   };
 
   resetPLPData() {
@@ -209,11 +212,16 @@ export class PLPContainer extends PureComponent {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { isLoading, setIsLoading, menuCategories = [] } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
-
+    const requestOptions = PLPContainer.getRequestOptions();
+    const { pages } = this.props;
+    const { page } = requestOptions;
+    const {
+      prevRequestOptions: { page: prevPage },
+    } = this.state;
     // update loading from here, validate for last
     // options recieved results from
     if (
@@ -227,6 +235,15 @@ export class PLPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
+    }
+
+    if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
+      PLPContainer.requestProductList(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
+    } else if (page !== prevPage && !pages[page]) {
+      // if only page has changed, and it is not yet loaded => request that page
+      PLPContainer.requestProductListPage(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
     }
   }
 
@@ -365,7 +382,7 @@ export class PLPContainer extends PureComponent {
       plpWidgetData,
       gender,
       filters,
-      pages
+      pages,
     } = this.props;
 
     // isDisabled: this._getIsDisabled()
@@ -378,7 +395,7 @@ export class PLPContainer extends PureComponent {
       plpWidgetData,
       gender,
       filters,
-      pages
+      pages,
     };
   };
 

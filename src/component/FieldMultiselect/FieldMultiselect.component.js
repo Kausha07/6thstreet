@@ -82,15 +82,7 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidMount() {
-    const {
-      filter: { selected_filters_count },
-    } = this.props;
     document.addEventListener("mousedown", this.handleClickOutside);
-    if (selected_filters_count > 8) {
-      this.setState({ showMore: true });
-    } else {
-      this.setState({ showMore: false });
-    }
   }
 
   componentWillUnmount() {
