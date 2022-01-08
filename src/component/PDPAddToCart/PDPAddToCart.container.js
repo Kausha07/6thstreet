@@ -143,9 +143,25 @@ export class PDPAddToCartContainer extends PureComponent {
     this.startCheckoutHide = null;
   }
 
+  updateDefaultSizeType() {
+    const { product } = this.props;
+    if(product?.size_eu &&  product?.size_uk && product?.size_us) {
+      const sizeTypes = ['eu', 'uk', 'us'];
+      let index = 0;
+      while(product[`size_${sizeTypes[index]}`]?.length <= 0){
+        index = index + 1;
+      }
+
+      if(index >= sizeTypes.length) {
+        index = 0;
+      }
+      this.setState({selectedSizeType: sizeTypes[index]});
+    }
+  }
+
+
   static getDerivedStateFromProps(props) {
     const { product } = props;
-
     if (product.simple_products !== undefined) {
       const { simple_products, size_eu } = product;
 
@@ -222,6 +238,7 @@ export class PDPAddToCartContainer extends PureComponent {
       setGuestUserEmail,
       simple_products = [],
     } = this.props;
+    this.updateDefaultSizeType();
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
     if (email) {
       setGuestUserEmail(email);
@@ -324,6 +341,7 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       totals: { total = null },
     } = this.props;
+
     const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
 
     if (productAdded && total && PrevTotal !== total) {
@@ -505,7 +523,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
-      console.log("itemPrice", itemPrice);
+
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {

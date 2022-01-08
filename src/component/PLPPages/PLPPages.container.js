@@ -38,6 +38,7 @@ export class PLPPagesContainer extends PureComponent {
         impressions: Object.keys(pages).flatMap((key) => pages[key]),
       };
     }
+    return null;
   }
   componentDidUpdate() {
     const { filters = {} } = this.props;
