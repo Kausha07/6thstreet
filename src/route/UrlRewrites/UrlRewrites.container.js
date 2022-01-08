@@ -60,6 +60,7 @@ export class UrlRewritesContainer extends PureComponent {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
+
     const { prevPathname, query, sku } = this.state;
     const {
       prevPathname: prevStatePathname,
@@ -121,10 +122,12 @@ export class UrlRewritesContainer extends PureComponent {
     const possibleSku = this.getPossibleSku();
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
+    this.setState({
+      prevPathname: urlParam,
+    });
     if (search.startsWith("?q=")) {
       this.setState({
         prevPathname: urlParam,

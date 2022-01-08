@@ -162,7 +162,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 30px;
+      width: 10%;
 
       .PageWrapper_isArabic & {
         left: unset;
@@ -176,6 +176,12 @@
           width: calc(50% + 10px);
         }
       }
+      &_inTransit {
+        width: 50%
+      }
+      &_isDelivered {
+        width: 100%
+      }
     }
 
     &Checkbox {
@@ -183,7 +189,7 @@
       border: 2px solid var(--primary-base-color);
       border-radius: 100%;
       height: 15px;
-      left: 30px;
+      left: 10%;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -214,6 +220,12 @@
           left: unset;
           right: calc(50% + 10px);
         }
+      }
+      &_inTransit {
+        left: 50%
+      }
+      &_isDelivered {
+        left: 100%
       }
     }
   }

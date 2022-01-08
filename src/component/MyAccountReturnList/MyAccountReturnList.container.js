@@ -41,7 +41,7 @@ export class MyAccountReturnListContainer extends PureComponent {
     handleCreateClick() {
         const { history } = this.props;
 
-        history.push('/my-account/return-item/create');
+        history.push('/my-account/my-orders/');
     }
 
     containerProps = () => {
@@ -71,8 +71,8 @@ export class MyAccountReturnListContainer extends PureComponent {
     render() {
         return (
             <MyAccountReturnList
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
+                {...this.containerFunctions}
+                {...this.containerProps()}
             />
         );
     }

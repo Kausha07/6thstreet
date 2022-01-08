@@ -547,10 +547,29 @@ class PDPAddToCart extends PureComponent {
     }
     return null;
   }
+  renderAppParity() {
+    const {
+      product: { brand_name },
+    } = this.props;
+
+    if (
+      brand_name.toLowerCase() === "trendyol" ||
+      brand_name.toLowerCase() === "ترينديول"
+    ) {
+      return (
+        <div block="AppParity">
+          <p block="AppParity" elem="Text">
+            {__("Select a size up for the right fit")}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  }
 
   renderContent() {
     const {
-      product: { in_stock, stock_qty },
+      product: { in_stock, stock_qty, brand_name },
       isOutOfStock,
       productStock = {},
       sizeObject = {},
@@ -582,6 +601,7 @@ class PDPAddToCart extends PureComponent {
         sizeObject.sizeTypes.length !== 0 ? (
           <>
             <div block="SeperatorAddtoCart" />
+            {this.renderAppParity()}
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <span block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}

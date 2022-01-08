@@ -20,6 +20,7 @@ import { setStoreCredit } from "Store/StoreCredit/StoreCredit.action";
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import { getInitialState as getStoreCreditInitialState } from "Store/StoreCredit/StoreCredit.reducer";
 import WishlistDispatcher from "Store/Wishlist/Wishlist.dispatcher";
+import MobileAPI from "Util/API/provider/MobileAPI";
 import {
   getMobileApiAuthorizationToken,
   getOrders,
@@ -137,31 +138,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
    * @param {{customer: Object, password: String}} [options={}]
    * @memberof MyAccountDispatcher
    */
-  createAccount(options = {}, dispatch) {
-    const mutation = MyAccountQuery.getCreateAccountMutation(options);
 
-    return fetchMutation(mutation).then(
-      (data) => {
-        const {
-          createCustomer: { customer },
-        } = data;
-        const { confirmation_required } = customer;
-
-        if (confirmation_required) {
-          return 2;
-        }
-
-        return 1;
-      },
-      (error) => {
-        dispatch(showNotification("error", error[0].message));
-        Promise.reject();
-
-        return false;
-      }
-    );
+  async createAccountNew(options) {
+    return await MobileAPI.post(`/register`, options);
   }
-
+  async loginAccount(options) {
+    return await MobileAPI.post("/login", options)
+  }
   async signInCommonBlock(dispatch) {
     const wishlistItem = localStorage.getItem("Wishlist_Item");
     if (wishlistItem) {
@@ -176,6 +159,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
   }
 
+  async signInOTP(options = {}, dispatch) {
+    try {
+      await this.handleMobileAuthorizationOTP(dispatch, options);
+      dispatch(updateCustomerSignInStatus(true));
+      this.signInCommonBlock(dispatch);
+      return true;
+    } catch ([e]) {
+      deleteAuthorizationToken();
+      deleteMobileAuthorizationToken();
+      throw e;
+    }
+  }
   async signIn(options = {}, dispatch) {
     if (options.hasOwnProperty("type")) {
       try {
@@ -222,6 +217,43 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     return "";
   }
+  // handleMobileAuthCommonBlockOTP(){}
+
+  async handleMobileAuthorizationOTP(dispatch, options) {
+    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } = options
+
+    const phoneAttribute = custom_attributes?.filter(
+      ({ attribute_code }) => attribute_code === "contact_no"
+    );
+    const isPhone = phoneAttribute[0]?.value
+      ? phoneAttribute[0].value.search("undefined") < 0
+      : false;
+
+    dispatch(setCartId(null));
+    setMobileAuthorizationToken(token);
+    setAuthorizationToken(t)
+    if (isPhone) {
+      this.setCustomAttributes(dispatch, custom_attributes);
+    }
+
+    this.setGender(dispatch, gender);
+
+    // Run async as Club Apparel is not visible anywhere after login
+    ClubApparelDispatcher.getMember(dispatch, id);
+
+    // Temporarily disabled art merge logic
+    // const { Cart: { cartItems: oldCartItems = [] } } = getStore().getState();
+    // if (oldCartItems.length !== 0) {
+    //     await CartDispatcher.getCart(dispatch);
+    //     this._addProductsFromGuest(dispatch, oldCartItems);
+    //     return;
+    // }
+    dispatch(removeCartItems());
+
+    // Run async otherwise login gets slow
+    CartDispatcher.getCart(dispatch);
+  }
+
   // handleMobileAuthCommonBlock(){}
   async handleMobileAuthorization(dispatch, options) {
     const { email: username, password } = options;
@@ -230,10 +262,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-              username,
-              password,
-              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            }
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
       );
 
     const phoneAttribute = custom_attributes?.filter(

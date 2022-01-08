@@ -549,8 +549,10 @@ class PDPDetailsSection extends PureComponent {
       >
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
-        {this.renderModelDetails(model_height, model_wearing_size)}
-        {this.renderSKU(sku)}
+        <div block="BottomHighlights">
+          {this.renderModelDetails(model_height, model_wearing_size)}
+          {this.renderSKU(sku)}
+        </div>
         {/* {this.renderMoreDetailsList()} */}
       </div>
     );
@@ -674,6 +676,7 @@ class PDPDetailsSection extends PureComponent {
                         sourceCatgID={categories_without_path[0]}
                         pageType={"pdp"}
                         key={`DynamicContentVueProductSliderContainer${index}`}
+                        index={index}
                       />
                     </div>
                   </>
@@ -866,7 +869,7 @@ class PDPDetailsSection extends PureComponent {
             {this.renderDescription()}
           </Accordion>
           {this.renderAccordionSeperator()}
-          {this.renderShareButton()}
+          {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
 

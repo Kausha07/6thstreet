@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { VUE_PAGE_VIEW } from "Util/Event";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
     CART, CART_EDITING, CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
@@ -32,6 +34,8 @@ import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 import { appendWithStoreCode } from 'Util/Url';
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 import CartPage from './CartPage.component';
 
@@ -132,12 +136,27 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit } = this.props;
-
+        const { updateMeta, updateStoreCredit, location: { state }, } = this.props;
+        const locale = VueIntegrationQueries.getLocaleFromUrl();
+        const customer = BrowserDatabase.getItem("customer");
+        const userID = customer && customer.id ? customer.id : null;
+        VueIntegrationQueries.vueAnalayticsLogger({
+            event_name: VUE_PAGE_VIEW,
+            params: {
+                clicked: Date.now(),
+                currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+                event: VUE_PAGE_VIEW,
+                pageType: "cart",
+                referrer: state?.prevPath ? state?.prevPath : null,
+                userID: userID,
+                uuid: getUUID(),
+            },
+        });
         updateMeta({ title: __('Cart') });
         updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
+
     }
 
     componentDidUpdate(prevProps) {
@@ -160,7 +179,7 @@ export class CartPageContainer extends PureComponent {
         }
 
         if (items_qty !== prevItemsQty) {
-            const title = `${ items_qty || '0' } Items`;
+            const title = `${items_qty || '0'} Items`;
             changeHeaderState({
                 ...headerState,
                 title
@@ -171,7 +190,7 @@ export class CartPageContainer extends PureComponent {
     changeActiveTab(activeTab) {
         const { history } = this.props;
         const { [activeTab]: { url } } = tabMap;
-        history.push(`${ MY_ACCOUNT_URL }${ url }`);
+        history.push(`${MY_ACCOUNT_URL}${url}`);
     }
 
     onCheckoutButtonClick(e) {
@@ -183,7 +202,7 @@ export class CartPageContainer extends PureComponent {
         } = this.props;
         const { isCheckoutAvailable } = this.state;
         if (isCheckoutAvailable) {
-        // to prevent outside-click handler trigger
+            // to prevent outside-click handler trigger
             e.nativeEvent.stopImmediatePropagation();
 
             if (guest_checkout) {
@@ -265,10 +284,10 @@ export class CartPageContainer extends PureComponent {
     render() {
         return (
             <CartPage
-              { ...this.props }
-              { ...this.state }
-              { ...this.containerFunctions }
-              tabMap={ tabMap }
+                {...this.props}
+                {...this.state}
+                {...this.containerFunctions}
+                tabMap={tabMap}
             />
         );
     }

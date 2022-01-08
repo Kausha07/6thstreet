@@ -31,6 +31,7 @@ class PLPLoadMore extends PureComponent {
         //   }, 1000);
         
     }
+    
     render() {
         const pageKey = parseInt(this.props.pageKey);
         const {
@@ -50,39 +51,41 @@ class PLPLoadMore extends PureComponent {
             loadedProduct = limit * pageKey + 15;
         }
         progressWidth = (loadedProduct * 100) / totalProducts;
-        return (
-            <>
-            {/* <div ref={this.ref}></div> */}
-            <div block="Product-LoadMore">
-                {totalProducts && 
-                    <>
-                        <div block="Product-Loaded-Info">
-                            {__(`You’ve viewed ${loadedProduct} of ${totalProducts} products`)}
-                        </div>
-
-                        <div block="Product-ProgressBar">
-                            <div block="Product-ProgressBar-Container">
-                                <div
-                                    block="Product-ProgressBar-Bar"
-                                    style={{ width: `${progressWidth}%` }}
-                                ></div>
+        if(totalProducts  >= 15){
+            return (                             
+                <div block="Product-LoadMore">
+                    {totalProducts && 
+                        <>
+                            <div block="Product-Loaded-Info">
+                                {__(`You’ve viewed ${loadedProduct} of ${totalProducts} products`)}
                             </div>
-                        </div>
-                    </>
-                }
-
-                <div block="LoadMore">
-                    <button
-                        block="button"
-                        onClick={(e) => this.handleLoadMore(e)}
-                        disabled={disablebtn || this.props.productLoad}
-                    >
-                        {disablebtn ? __("All Products Loaded") : this.props.productLoad ? __("Loading...") : __("Load More")}
-                    </button>
+    
+                            <div block="Product-ProgressBar">
+                                <div block="Product-ProgressBar-Container">
+                                    <div
+                                        block="Product-ProgressBar-Bar"
+                                        style={{ width: `${progressWidth}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </>
+                    }
+    
+                    <div block="LoadMore">
+                        <button
+                            block="button"
+                            onClick={(e) => this.handleLoadMore(e)}
+                            disabled={disablebtn || this.props.productLoad}
+                        >
+                            {disablebtn ? __("All Products Loaded") : this.props.productLoad ? __("Loading...") : __("Load More")}
+                        </button>
+                    </div>
                 </div>
-            </div>
-            </>
-        );
+            );
+          } else{
+            return  (null);
+          }
+        
     }
 }
 

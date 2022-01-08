@@ -259,12 +259,12 @@
     }
   }
 
-  &-Highlights {
-    &-SKU {
-      @include mobile {
-        margin-top: 30px;
-      }
+  .BottomHighlights {
+    @include mobile {
+      margin-top: 30px;
     }
+  }
+  &-Highlights {
     &-ModelDetails {
       font-weight: var(--fw-regular);
       margin-top: 16px;

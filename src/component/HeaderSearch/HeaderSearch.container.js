@@ -68,17 +68,17 @@ export class HeaderSearchContainer extends PureComponent {
       const productData = await new Algolia().searchBy(
         isArabic()
           ? {
-              query: search,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: getGenderInArabic(gender),
-              addAnalytics: true,
-            }
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: getGenderInArabic(gender),
+            addAnalytics: true,
+          }
           : {
-              query: search,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: gender,
-              addAnalytics: true,
-            }
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: gender,
+            addAnalytics: true,
+          }
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
@@ -166,10 +166,10 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { focusInput, renderMySignInPopup } = this.props;
+    const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput, renderMySignInPopup };
+    return { search, focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible };
   };
 
   onSearchChange(search) {
