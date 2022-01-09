@@ -107,7 +107,7 @@ class HeaderSearch extends PureComponent {
             spellCheck="false"
             placeholder={
               isMobile.any() || isMobile.tablet()
-                ? __(" What are you looking for ?")
+                ? __("What are you looking for?")
                 : __("Search for items, brands, inspiration and styles")
             }
             onChange={onSearchChange}

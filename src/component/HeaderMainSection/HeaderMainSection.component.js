@@ -111,6 +111,7 @@ class HeaderMainSection extends NavigationAbstract {
     if (!showPopup) {
       return null;
     }
+
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}
@@ -385,9 +386,21 @@ class HeaderMainSection extends NavigationAbstract {
     return null;
   }
 
+  getHeaderMainSectionVisibility = () => {
+    const { visible } = this.state;
+    const { displaySearch } = this.props;
+
+    if(this.isPDP()){
+      if(!displaySearch){
+        return visible;
+      }
+    }
+    return true;
+  }
+
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { signInPopUp } = this.state;
+    const { signInPopUp, showPopup } = this.state;
     const { displaySearch } = this.props
     const isPDPSearchVisible = this.isPDP() && displaySearch
     return pageWithHiddenHeader.includes(this.getPageType()) &&
@@ -395,7 +408,7 @@ class HeaderMainSection extends NavigationAbstract {
       <div
         block="HeaderMainSection"
         mods={{ isPDPSearchVisible }}
-        data-visible={this.isPDP() && !displaySearch ? this.state.visible : true}
+        data-visible={this.getHeaderMainSectionVisibility()}
       >
         {this.renderMySignInPopup()}
         {this.renderNavigationState()}

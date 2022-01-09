@@ -422,6 +422,11 @@ $select-arrow-width: 6px !default;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    &_isArabic {
+      left: unset;
+      right: 50%;
+      transform: translateX(50%);
+    }
     width: 168px;
     height: 40px;
     font-weight: var(--fw-bold);
@@ -685,8 +690,8 @@ $select-arrow-width: 6px !default;
       }
 
       &-SizeSelector {
-        margin-left: 0;
-        margin-right: 20px;
+        margin-right: 0px;
+        margin-left: 20px;
       }
     }
   }
