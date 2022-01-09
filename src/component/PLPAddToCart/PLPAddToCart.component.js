@@ -3,7 +3,6 @@ import { isArabic } from 'Util/App';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import StrikeThrough from "./icons/strike-through.png";
-import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { setMinicartOpen } from "Store/Cart/Cart.action";
@@ -579,7 +578,10 @@ class PLPAddToCart extends PureComponent {
                   mix={{
                     block: "PLPAddToCart",
                     elem: "AddToCartButton",
-                    mods: { addedToCart },
+                    mods: {
+                      addedToCart,
+                      isArabic: isArabic()
+                    }
                   }}
                 //   disabled={disabled}
                 >

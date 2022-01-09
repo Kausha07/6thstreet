@@ -53,9 +53,7 @@ class Price extends PureComponent {
           :
           country && DISPLAY_DISCOUNT_PERCENTAGE[country]
           ?
-          <>
-            {`${__("On Sale")} ${this.discountPercentage()} Off`}
-          </>
+          `${__("On Sale")} ${this.discountPercentage()} ${__("Off")}`
           :
           null
         }
