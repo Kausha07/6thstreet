@@ -22,8 +22,8 @@ import Event, {
 } from "Util/Event";
 import "./ProductItem.style";
 
-
-var urlWithQueryID
+//Global Variable for PLP AddToCart
+var urlWithQueryID;
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,

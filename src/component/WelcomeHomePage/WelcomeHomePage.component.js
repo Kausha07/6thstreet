@@ -52,15 +52,15 @@ class WelcomeHomePage extends PureComponent {
         super(props);
         const appStateCacheKey = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
         const PREVIOUS_USER = BrowserDatabase.getItem('PREVIOUS_USER')
-        if(PREVIOUS_USER){
-            const { country, language, gender } = this.props;
-            const locale = `${language}-${country.toLowerCase()}`;
-            let url =  `${URLS[locale]}/${gender}.html`
-            window.location.href = url;
-        }
-        if(appStateCacheKey){
-            const { country, language, locale, gender } = appStateCacheKey;
-        }
+        // if(PREVIOUS_USER){
+        //     const { country, language, gender } = this.props;
+        //     const locale = `${language}-${country.toLowerCase()}`;
+        //     let url =  `${URLS[locale]}/${gender}.html`
+        //     window.location.href = url;
+        // }
+        // if(appStateCacheKey){
+        //     const { country, language, locale, gender } = appStateCacheKey;
+        // }
 
         this.state = {
             isPopupOpen: !isMobile.any() && !!!appStateCacheKey,
