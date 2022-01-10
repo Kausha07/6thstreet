@@ -50,8 +50,13 @@ class HeaderSearch extends PureComponent {
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
-    const { search } = props;
-
+    const { search, isPDP, isPDPSearchVisible } = props;
+    if (isPDP) {
+      return {
+        isClearVisible: search !== "",
+        showSearch: isPDPSearchVisible
+      };
+    }
     return {
       isClearVisible: search !== "",
     };
@@ -165,9 +170,24 @@ class HeaderSearch extends PureComponent {
   renderSuggestion() {
     const { search, renderMySignInPopup, onSearchClean } = this.props;
     const { showSearch } = this.state;
+    const { isPDPSearchVisible } = this.props
 
     if (!showSearch) {
       return null;
+    }
+    if (isMobile.any() || isMobile.tablet()) {
+      return (
+        <>
+          <SearchSuggestion
+            closeSearch={this.closeSearch}
+            cleanSearch={onSearchClean}
+            renderMySignInPopup={renderMySignInPopup}
+            search={search}
+            isPDPSearchVisible={isPDPSearchVisible}
+          />
+        </>
+      )
+
     }
 
     return (
@@ -188,8 +208,8 @@ class HeaderSearch extends PureComponent {
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
-        <ClickOutside onClick={this.closeSearch}>
-          <div block={isPDP ? "PDPHeaderSearch" : "HeaderSearch"} mods={{ isArabic, isPDPSearchVisible }}>
+        <ClickOutside onClick={() => { isPDP ? null : this.closeSearch() }}>
+          <div block="HeaderSearch" mods={{ isArabic }}>
             {this.renderField()}
             {this.renderSuggestion()}
           </div>

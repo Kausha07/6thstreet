@@ -34,10 +34,6 @@ main {
     width: 100%;
     background: $white;
     top: 0;
-    transition: all 0.5s ease-in-out;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-in-out;
     &[data-visible='false'] {
       // display: none;
       // width:0;
@@ -55,10 +51,6 @@ main {
     width: 100%;
     background: $white;
     top: 0;
-    transition: all 0.5s ease-in-out;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-in-out;
     &[data-visible='false'] {
       // display: none;
       // top: -50px;
@@ -159,8 +151,7 @@ main {
       display: none;
     }
   }
-  .BackArrow,
-  .PDPBackArrow {
+  .BackArrow {
     height: 40px;
     width: 40px;
     border-radius: 20px;
@@ -175,8 +166,7 @@ main {
       right: 15px;
       left: unset;
 
-      .BackArrow,
-      .PDPBackArrow {
+      .BackArrow {
         &-Button {
           right: 5px;
           left: unset;
@@ -217,26 +207,6 @@ main {
 
     @include after-mobile {
       display: none;
-    }
-  }
-
-  .PDPBackArrow {
-    background: transparent;
-    transition: all 0.5s ease-in-out;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-in-out;
-    @include mobile {
-      top: -20px;
-      &_isPDPSearchVisible {
-        top: 15px;
-      }
-    }
-    @include tablet {
-      top: -20px;
-      &_isPDPSearchVisible {
-        top: 15px;
-      }
     }
   }
 
@@ -339,8 +309,7 @@ main {
     }
   }
 
-  .HeaderSearch,
-  .PDPHeaderSearch {
+  .HeaderSearch {
     @include mobile {
       background: $white;
       position: fixed;
@@ -373,25 +342,6 @@ main {
     }
     @include tablet {
       top: 49px;
-    }
-  }
-
-  .PDPHeaderSearch {
-    transition: all 0.5s ease-in-out;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-in-out;
-    @include mobile {
-      top: -49px;
-      &_isPDPSearchVisible {
-        top: 49px;
-      }
-    }
-    @include tablet {
-      top: -49px;
-      &_isPDPSearchVisible {
-        top: 49px;
-      }
     }
   }
 
@@ -487,8 +437,7 @@ main {
     height: 40px;
     left: 0;
     z-index: 10;
-    .HeaderSearch,
-    .PDPHeaderSearch {
+    .HeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);

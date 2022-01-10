@@ -60,6 +60,11 @@
     @include desktop {
       right: 4px;
     }
+    &_isPDPSearchVisible {
+      @include before-desktop {
+        min-height: 100vh;
+      }
+    }
   }
 
   @include desktop() {
@@ -285,7 +290,7 @@
     margin-bottom: 10px;
     margin-top: 10px;
     width: 70px;
-    font-family: "Avenir Next";
+    font-family: 'Avenir Next';
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -445,7 +450,6 @@
       &-Del {
         display: inline-block;
         margin-right: 10px;
-       
       }
       &-Currency {
         font-weight: var(--fw-demi);
