@@ -789,6 +789,11 @@
     "My Profile": null,
     "Out of Stock": null,
     "In Stock": null,
+    "Clear all": null,
+    "Filters": null,
+    "SHOW MORE": null,
+    "Clear": null,
+    "Show More": null,
     "Choose one size above your actual size": null,
     "Select a size up for the right fit": null,
     "OTP sent successfully": null,
@@ -813,5 +818,10 @@
     "Welcome, ": null,
     "CoD | multiple payment options | T&amp;Cs apply": null,
     "CoD | multiple payment options | T&Cs apply": null,
-    "Hello, ": null
+    "Hello, ": null,
+    "All Products Loaded": null,
+    "Loading...": null,
+    "Load More": null,
+    "out of stck": null,
+    "VIEW DETAILS": null
 }

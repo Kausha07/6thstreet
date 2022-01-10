@@ -677,6 +677,7 @@ class PDPDetailsSection extends PureComponent {
                         pageType={"pdp"}
                         key={`DynamicContentVueProductSliderContainer${index}`}
                         index={index}
+                        isArabic={isArabic()}
                       />
                     </div>
                   </>
@@ -793,7 +794,7 @@ class PDPDetailsSection extends PureComponent {
       <>
         <Accordion
           mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-          title={__("About ") + brand_name}
+          title={ `${__("About")} ${brand_name}`}
           is_expanded={this.state.isExpanded["3"]}
         >
           {this.renderBrandDetail()}

@@ -185,7 +185,14 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isHome } = this.props;
 
     return (
-      <div block="VueProductSlider" elem="HeaderContainer" mods={{ isHome }}>
+      <div
+        block="VueProductSlider"
+        elem="HeaderContainer"
+        mods={{
+          isHome,
+          isArabic: isArabic()
+        }}
+      >
         <h4>{heading}</h4>
         {/* {this.viewAllBtn()} */}
       </div>
@@ -256,7 +263,10 @@ class DynamicContentVueProductSlider extends PureComponent {
             elem="SliderContainer"
             id="ScrollWrapper"
             ref={this.cmpRef}
-            mods={{ isHome }}
+            mods={{
+              isHome,
+              isArabic: isArabic()
+            }}
             onScroll={(e) => {
               this.handleContainerScroll(widgetID, e);
             }}
@@ -298,6 +308,9 @@ class DynamicContentVueProductSlider extends PureComponent {
           id={`productSlider-${index}`}
           block="VueProductSlider"
           elem="Container"
+          mods={{
+            isArabic: isArabic()
+          }}
         >
           {this.renderHeader()}
           {this.renderSliderContainer()}
