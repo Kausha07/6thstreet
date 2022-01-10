@@ -654,6 +654,7 @@ class PDPDetailsSection extends PureComponent {
       product: { sku = null, categories_without_path = [] },
     } = this.props;
     const { pdpWidgetsAPIData } = this.state;
+    const { innerWidth: width } = window;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <React.Fragment>
@@ -665,7 +666,11 @@ class PDPDetailsSection extends PureComponent {
               if (data && data.length > 0) {
                 return (
                   <>
-                    <div block="PDPWidgets" elem="Slider">
+                    <div
+                      block="PDPWidgets"
+                      elem="Slider"
+                      mods={{ largeScreen: width > 1440 }}
+                    >
                       <DynamicContentVueProductSliderContainer
                         widgetID={widgetID}
                         products={data}
@@ -794,7 +799,7 @@ class PDPDetailsSection extends PureComponent {
       <>
         <Accordion
           mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-          title={ `${__("About")} ${brand_name}`}
+          title={`${__("About")} ${brand_name}`}
           is_expanded={this.state.isExpanded["3"]}
         >
           {this.renderBrandDetail()}

@@ -261,7 +261,6 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
-    console.log("sign in ran")
     try {
       await signIn(fields);
       onSignIn();

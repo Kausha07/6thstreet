@@ -211,7 +211,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const now = new Date();
       if (TABBY_CHECK && now.getTime() < TABBY_CHECK?.expiry) {
         this.setState({ PaymentRedirect: true, isLoading: false });
-        localStorage.removeItem("TABBY_ORDER_DETAILS");
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")
         );
@@ -241,13 +240,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.resetCart();
             }
           }
+          localStorage.removeItem("TABBY_ORDER_DETAILS");
           return;
         });
       } else if (now.getTime() >= TABBY_CHECK?.expiry) {
-        console.log("Session expired");
         localStorage.removeItem("TABBY_ORDER_DETAILS");
       }
     } catch (error) {
+      localStorage.getItem("TABBY_ORDER_DETAILS")
       this.setState({ PaymentRedirect: false });
       console.error("error while auth in tabby pay case", error);
     }
@@ -262,7 +262,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { getPaymentAuthorizationQPay, capturePayment, cancelOrder } =
           this.props;
 
-        localStorage.removeItem("QPAY_ORDER_DETAILS");
 
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")
@@ -336,11 +335,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
           }
         }
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
         return;
       } else if (now.getTime() >= QPAY_CHECK?.expiry) {
         localStorage.removeItem("QPAY_ORDER_DETAILS");
       }
     } catch (error) {
+      localStorage.removeItem("QPAY_ORDER_DETAILS");
       console.error("error while auth in qpay case", error);
     }
   };
@@ -352,8 +353,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const TABBY_CHECK = JSON.parse(
       localStorage.getItem("TABBY_ORDER_DETAILS")
     );
-    if (!QPAY_CHECK || !TABBY_CHECK) {
-      console.log("refresh cart called")
+    if (!QPAY_CHECK && !TABBY_CHECK) {
       this.refreshCart();
     }
     setMeta({ title: __("Checkout") });
@@ -567,7 +567,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isLoading: true,
       shippingAddress: shipping_address,
     });
-    console.log("addressInformation", addressInformation);
     saveAddressInformation(addressInformation).then(({ data }) => {
       const { totals } = data;
 

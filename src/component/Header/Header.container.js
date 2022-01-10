@@ -53,9 +53,9 @@ export class HeaderContainer extends NavigationAbstractContainer {
     this.handleHeaderVisibility();
   }
 
-  componentDidUpdate(prevProps,prevState) {
+  componentDidUpdate(prevProps, prevState) {
     this.handleHeaderVisibility();
-    
+
   }
 
   handleHeaderVisibility = () => {
@@ -109,8 +109,6 @@ export class HeaderContainer extends NavigationAbstractContainer {
   }
 
   render() {
-    console.log("this.state",this.state)
-    console.log("this.props",this.props)
     return <Header {...this.containerFunctions} {...this.containerProps()} />;
   }
 }
