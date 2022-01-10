@@ -19,6 +19,7 @@ import {
 } from "Util/Breadcrumbs/Breadcrubms";
 import Event, { EVENT_GTM_PRODUCT_DETAIL, VUE_PAGE_VIEW } from "Util/Event";
 import PDP from "./PDP.component";
+import browserHistory from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -99,7 +100,7 @@ export class PDPContainer extends PureComponent {
   state = {
     productSku: null,
     prevPathname: "",
-    currentLocation: ""
+    currentLocation: "",
   };
 
   constructor(props) {
@@ -108,9 +109,30 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { location: { pathname } } = this.props
-    this.setState({ currentLocation: pathname })
+    const {
+      location: { pathname },
+    } = this.props;
+    this.setState({ currentLocation: pathname });
+    window.onpopstate = this.onBackButtonEvent;
   }
+
+  onBackButtonEvent = (e) => {
+    e.preventDefault();
+    this.goBack();
+  };
+
+  goBack = () => {
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if (url.search.includes("?q=")) {
+      url.searchParams.set("p", 0);
+      // update the URL, preserve the state
+      const { pathname, search } = url;
+      browserHistory.replace(pathname + search);
+    } else {
+      const { pathname } = url;
+      browserHistory.replace(pathname);
+    }
+  };
   componentDidUpdate(prevProps) {
     const {
       id,
@@ -121,15 +143,12 @@ export class PDPContainer extends PureComponent {
       product,
       menuCategories = [],
     } = this.props;
-    console.log("previous props", prevProps)
-    console.log("props", this.props)
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku, currentLocation } = this.state;
 
-
     // if (sku != undefined)
-    if (productSku != sku && (currentLocation === this.props.location.pathname)) {
+    if (productSku != sku && currentLocation === this.props.location.pathname) {
       this.renderVueHits();
     }
 
@@ -161,8 +180,12 @@ export class PDPContainer extends PureComponent {
       location: { state },
       product,
     } = this.props;
-    const itemPrice = price ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : null;
-    const basePrice = price ? price[0][Object.keys(price[0])[0]]["6s_base_price"] : null;
+    const itemPrice = price
+      ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+      : null;
+    const basePrice = price
+      ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+      : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -226,7 +249,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-        Object.keys(categories)[Object.keys(categories).length - 1]
+          Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
