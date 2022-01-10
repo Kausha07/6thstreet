@@ -12,6 +12,13 @@
             }
         }
     }
+    .Header {
+        z-index: unset;
+    }
+    .HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content {
+        display: none;
+    }
+
     &-MainSection{
         display: flex;
         max-width: var(--container-max-width);

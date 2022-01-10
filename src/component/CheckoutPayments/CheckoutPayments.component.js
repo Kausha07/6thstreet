@@ -11,7 +11,6 @@ import Slider from "Component/Slider";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
 import {
   TABBY_TOOLTIP_INSTALLMENTS,
-  TABBY_TOOLTIP_PAY_LATER,
 } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
@@ -23,7 +22,6 @@ import {
   CHECKOUT_APPLE_PAY,
   FREE,
   TABBY_ISTALLMENTS,
-  TABBY_PAY_LATER,
   TABBY_PAYMENT_CODES,
   CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
@@ -53,7 +51,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     [CARD]: this.renderCreditCard.bind(this),
     [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this),
     [TABBY_ISTALLMENTS]: this.renderTabbyPaymentMethods.bind(this),
-    [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this),
     [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this),
     [FREE]: this.renderFree.bind(this),
     [CHECKOUT_QPAY]: this.renderQPay.bind(this),
@@ -134,7 +131,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       selectedPaymentCode,
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable,
       isClickAndCollect
     } = this.props;
     const { m_code } = method;
@@ -149,7 +145,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       TABBY_PAYMENT_CODES.includes(m_code) &&
       tabbyPaymentMethods.length > 0
     ) {
-      if (!isTabbyInstallmentAvailable && !isTabbyPayLaterAvailable) {
+      if (!isTabbyInstallmentAvailable) {
         return null;
       }
       return (
@@ -220,7 +216,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderTabbyPaymentMethods() {
     const { tabbyPaymentMethods = [] } = this.state;
-    const { selectPaymentMethod } = this.props;
     return (
       <div block="CheckoutPayments" elem="TabbyPayments">
         <div block="CheckoutPayments" elem="TabbyPaymentsHeader">
@@ -236,7 +231,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderQPay() {
-    const { tabbyPaymentMethods = [] } = this.state;
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();
@@ -283,7 +277,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       selectPaymentMethod,
       selectedPaymentCode,
       isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable,
       setCashOnDeliveryFee,
     } = this.props;
     const { img } = PAYMENTS_DATA[m_code];
@@ -292,8 +285,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const isSelected = m_code === selectedPaymentCode;
 
     if (
-      (m_code === TABBY_ISTALLMENTS && !isTabbyInstallmentAvailable) ||
-      (m_code === TABBY_PAY_LATER && !isTabbyPayLaterAvailable)
+      (m_code === TABBY_ISTALLMENTS && !isTabbyInstallmentAvailable)
     ) {
       return null;
     }
@@ -313,15 +305,9 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         </div>
         <div block="CheckoutPayments" elem="TabbyPaymentContent">
           <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
-            {m_code === TABBY_ISTALLMENTS ? (
-              <button onClick={this.openTabbyInstallmentsTooltip}>
-                <img src={info} alt="info" />
-              </button>
-            ) : (
-                <button onClick={this.openTabbyPayLaterTooltip}>
-                  <img src={info} alt="info" />
-                </button>
-              )}
+            <button onClick={this.openTabbyInstallmentsTooltip}>
+              <img src={info} alt="info" />
+            </button>
           </div>
           <div id="tabbyCard"></div>
         </div>
@@ -434,11 +420,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     );
   }
 
-  openTabbyPayLaterTooltip = (e) => {
-    e.preventDefault();
-    this.setState({ tooltipContent: TABBY_TOOLTIP_PAY_LATER });
-  };
-
   openTabbyInstallmentsTooltip = (e) => {
     e.preventDefault();
     this.setState({ tooltipContent: TABBY_TOOLTIP_INSTALLMENTS });
@@ -451,15 +432,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderTabbyPopup = () => {
     const { tooltipContent } = this.state;
-
-    if (tooltipContent === TABBY_TOOLTIP_PAY_LATER) {
-      return (
-        <TabbyMiniPopup
-          content={TABBY_TOOLTIP_PAY_LATER}
-          closeTabbyPopup={this.closeTabbyPopup}
-        />
-      );
-    }
 
     if (tooltipContent === TABBY_TOOLTIP_INSTALLMENTS) {
       return (

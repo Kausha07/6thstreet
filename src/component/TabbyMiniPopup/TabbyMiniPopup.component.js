@@ -9,7 +9,7 @@ import {
   TABBY_ROW_DATA,
   TABBY_SUB_ROW_DATA,
   TABBY_TOOLTIP_INSTALLMENTS,
-  TABBY_TOOLTIP_PAY_LATER,
+  TABBY_TOOLTIP_PAY_LATER
 } from "./TabbyMiniPopup.config";
 
 import "./TabbyMiniPopup.style.scss";

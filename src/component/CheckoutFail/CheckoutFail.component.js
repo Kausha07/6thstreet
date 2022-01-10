@@ -32,7 +32,6 @@ export class CheckoutFail extends CheckoutSuccess {
           {this.renderDeliveryOption()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-          paymentMethod?.code === "tabby_checkout" ||
           paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}

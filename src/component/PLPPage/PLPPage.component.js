@@ -70,8 +70,16 @@ class PLPPage extends PureComponent {
     return products.map((i, index) => this.renderProduct(i, index + 1, qid));
   }
 
+
+
+
   render() {
-    return <div block="PLPPage"><ul>{this.renderProducts()}</ul></div>;
+
+    return (
+      <div block="PLPPage">
+        <ul block="ProductItems">{this.renderProducts()}</ul>
+      </div>
+    );
   }
 }
 

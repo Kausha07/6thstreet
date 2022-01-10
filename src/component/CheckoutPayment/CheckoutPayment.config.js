@@ -36,12 +36,6 @@ export const PAYMENTS_DATA = {
         paragraph:null,
         img: apple
     },
-    tabby_checkout: {
-        name: 'tabby',
-        mod: { tabby: true },
-        paragraph: null,
-        img: tabby
-    },
     tabby_installments: {
         name: 'tabby',
         mod: { tabby: true },
