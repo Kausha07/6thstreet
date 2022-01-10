@@ -47,6 +47,18 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
   }
+  componentDidUpdate(prevProps,) {
+    const { focusInput, isPDPSearchVisible } = this.props;
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    if (focusInput && isPDPSearchVisible && prevProps.isPDPSearchVisible !== isPDPSearchVisible && searchInput) {
+      searchInput.focus();
+    }
+  }
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
@@ -93,7 +105,6 @@ class HeaderSearch extends PureComponent {
   renderField() {
     const { search, onSearchChange, isVisible, onSearchClean } = this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
-
     return (
       <>
         <Form

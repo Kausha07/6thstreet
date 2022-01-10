@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getCurrency, getDiscountFromTotals } from "Util/App";
-
 import {
   CARD,
   TABBY_ISTALLMENTS,
@@ -147,38 +146,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     this.setState({ isOrderButtonVisible: true });
     this.setState({ isOrderButtonEnabled: true });
     this.setState({ binApplied: false });
-    const {
-      createTabbySession,
-      shippingAddress,
-      setTabbyWebUrl,
-    } = this.props;
-    createTabbySession(shippingAddress)
-      .then((response) => {
-        if (response && response.configuration) {
-          const {
-            configuration: {
-              available_products: { installments },
-            },
-            payment: { id },
-          } = response;
-          if (installments) {
-            if (installments) {
-              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-              this.setState({ isTabbyInstallmentAvailable: true });
-            }
-          }
-        }
-      }, this._handleError)
-      .catch(() => { });
-  }
-  componentDidUpdate(prevProps) {
+
     const {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
       totals: { total },
     } = this.props;
-    if (prevProps?.totals?.total !== total) {
+    if (total >= 150) {
       createTabbySession(shippingAddress)
         .then((response) => {
           if (response && response.configuration) {
@@ -188,19 +163,51 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
               },
               payment: { id },
             } = response;
-
             if (installments) {
               if (installments) {
                 setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-
-                // this variable actually is used in the component
-                // eslint-disable-next-line quote-props
                 this.setState({ isTabbyInstallmentAvailable: true });
               }
             }
           }
         }, this._handleError)
         .catch(() => { });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      createTabbySession,
+      shippingAddress,
+      setTabbyWebUrl,
+      totals: { total },
+    } = this.props;
+    if (prevProps?.totals?.total !== total) {
+      if (total >= 150) {
+        createTabbySession(shippingAddress)
+          .then((response) => {
+            if (response && response.configuration) {
+              const {
+                configuration: {
+                  available_products: { installments },
+                },
+                payment: { id },
+              } = response;
+
+              if (installments) {
+                if (installments) {
+                  setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+
+                  // this variable actually is used in the component
+                  // eslint-disable-next-line quote-props
+                  this.setState({ isTabbyInstallmentAvailable: true });
+                }
+              }
+            }
+          }, this._handleError)
+          .catch(() => { });
+      } else {
+        this.setState({ isTabbyInstallmentAvailable: false });
+      }
     }
   }
   setOrderButtonDisabled() {

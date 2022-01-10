@@ -391,7 +391,7 @@ class HeaderMainSection extends NavigationAbstract {
       return this.isPLP() ? null : (
         <div block="HeaderSearchSection"
           mods={{ isPDPSearchVisible }}>
-          <HeaderSearch key="search" isPDP={this.isPDP()} isPDPSearchVisible={isPDPSearchVisible} hideSearchBar={this.hidePDPSearchBar} focusInput={true} />
+          <HeaderSearch key="search" isPDP={this.isPDP()} isPDPSearchVisible={isPDPSearchVisible} hideSearchBar={this.hidePDPSearchBar} focusInput={isPDPSearchVisible ? true : false} />
         </div>
       );
     }
