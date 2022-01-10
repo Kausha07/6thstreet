@@ -1,4 +1,8 @@
+.HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content .MobileMenuSidebar, .FooterMiddle-FooterAccount, .FooterBottom {
+    display: none;
+}
 .WelcomeHomePage{
+    margin-top: 8px;
     &-Top{
         &-Logo{
             display: flex;
@@ -11,12 +15,6 @@
                 padding: 36px 0;
             }
         }
-    }
-    .Header {
-        z-index: unset;
-    }
-    .HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content {
-        display: none;
     }
 
     &-MainSection{
