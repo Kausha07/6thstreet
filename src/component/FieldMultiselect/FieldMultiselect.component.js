@@ -63,6 +63,7 @@ class FieldMultiselect extends PureComponent {
       sizeDropDownList: {},
       sizeDropDownKey: "",
       showMore: false,
+      showLess: false,
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
@@ -86,12 +87,12 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: { selected_filters_count },
     } = this.props;
-    document.addEventListener("mousedown", this.handleClickOutside);
-    if (selected_filters_count > 8) {
+    if (selected_filters_count > 6) {
       this.setState({ showMore: true });
     } else {
       this.setState({ showMore: false });
     }
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
@@ -265,7 +266,15 @@ class FieldMultiselect extends PureComponent {
             value={value.is_selected}
             onClick={(e) => thisRef.handleSizeSelection(e)}
           >
-            {value.label}
+            <div
+              block="sizesLabel"
+              id={facet_key}
+              name={facet_value}
+              value={value.is_selected}
+              onClick={(e) => thisRef.handleSizeSelection(e)}
+            >
+              {value.label}
+            </div>
             {!value.is_selected ? (
               <Image lazyLoad={false} src={selectImage} alt="fitler" />
             ) : (
@@ -426,6 +435,7 @@ class FieldMultiselect extends PureComponent {
   renderAllFilterOption(type, initialFacetKey, checked, totalCount) {
     let product_count = totalCount;
     const { isArabic } = this.state;
+    let allColor = initialFacetKey === "colorfamily" ? true : false;
     return (
       <li
         ref={this.allOptionRef}
@@ -446,7 +456,7 @@ class FieldMultiselect extends PureComponent {
           value={"all"}
           checked={checked}
         />
-        <label block="PLPFilterOption" htmlFor={"all"}>
+        <label block="PLPFilterOption" mods={{ allColor }} htmlFor={"all"}>
           All
           {!isMobile.any() && <span>{`(${product_count})`}</span>}
         </label>
@@ -466,7 +476,7 @@ class FieldMultiselect extends PureComponent {
       return null;
     }
     return (
-      <div block="Search-Container">
+      <div block="Search-Container" mods={{ isArabic }}>
         <input
           type="text"
           id={isMobile.any() ? currentActiveFilter : category}
@@ -551,7 +561,7 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: { data },
     } = this.props;
-    const { showMore } = this.state;
+    const { showMore, showLess } = this.state;
     if (this.props.isSortBy) {
       return null;
     }
@@ -607,13 +617,24 @@ class FieldMultiselect extends PureComponent {
               </div>
             </div>
           ) : null}
+          {showLess ? (
+            <div block="FieldMultiselect" elem="ShowButton">
+              <div onClick={() => this.updateShowLessState(false)}>
+                {__("Show Less")}
+              </div>
+            </div>
+          ) : null}
         </div>
       );
     }
   }
 
   updateShowMoreState = (state) => {
-    this.setState({ showMore: state });
+    this.setState({ showMore: state, showLess: !state });
+  };
+
+  updateShowLessState = (state) => {
+    this.setState({ showMore: !state, showLess: state });
   };
 
   renderMultiselectContainer() {
