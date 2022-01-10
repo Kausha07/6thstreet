@@ -41,7 +41,6 @@ import {
   DELIVERY_FAILED,
   DELIVERY_SUCCESSFUL,
   RETURN_ITEM_LABEL,
-  STATUS_CANCELLED,
   STATUS_IN_TRANSIT,
   STATUS_LABEL_MAP,
   STATUS_PROCESSING,
@@ -125,7 +124,7 @@ class MyAccountOrderView extends PureComponent {
           {__("Order #%s", increment_id)}
         </h3>
         {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
+        (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -214,11 +213,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -245,7 +244,7 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {!!statusTitle && <span>{` - ${statusTitle}`}</span>}
+          {/* {!!statusTitle && <span>{` - ${statusTitle}`}</span>} */}
         </h3>
       </div>
     );
@@ -383,8 +382,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-          ? TimerImage
-          : PackageImage;
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -396,11 +395,7 @@ class MyAccountOrderView extends PureComponent {
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(item.status)}
-          title={this.renderAccordionTitle(
-            __("%s Package", suffixNumber),
-            getIcon,
-            item.status
-          )}
+          title={this.renderAccordionTitle(item.label, getIcon, item.status)}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED &&
@@ -433,17 +428,9 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="Accordions">
-        {shipped
-          .filter(
-            (item) =>
-              item.status !== STATUS_PROCESSING &&
-              item.status !== "Processing" &&
-              item.status !== STATUS_CANCELLED &&
-              item.status !== "Cancelled"
-          )
-          .map((item, index) => this.renderAccordion(item, index))}
-        {this.renderProcessingItems()}
-        {this.renderCanceledAccordion()}
+        {shipped.map((item, index) => this.renderAccordion(item, index))}
+        {/* {this.renderProcessingItems()}
+        {this.renderCanceledAccordion()} */}
       </div>
     );
   }
@@ -679,15 +666,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
