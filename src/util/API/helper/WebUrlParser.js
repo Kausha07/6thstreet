@@ -151,6 +151,7 @@ const Parser = {
 
   setParam(key, values = []) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    url.searchParams.set("p", 0);
     // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
@@ -170,6 +171,7 @@ const Parser = {
 
     // update the URL, preserve the state
     const { pathname, search } = url;
+
     browserHistory.replace(pathname + search);
   },
 };

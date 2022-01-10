@@ -3,7 +3,7 @@ import { MyAccountTabListItem as SourceMyAccountTabListItem } from "SourceCompon
 export class MyAccountTabListItem extends SourceMyAccountTabListItem {
   render() {
     const {
-      tabEntry: [, { name, linkClassName }],
+      tabEntry: [, { name, linkClassName,className }],
       isActive,
       tabEntry,
     } = this.props;
@@ -11,7 +11,7 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
 
     return (
       <li
-        block="MyAccountTabListItem"
+        block={linkClassName ? `MyAccountTabListItem` : `MyAccountTabListItem ${className}`}
         mods={{ isActive, [linkClassName]: !!linkClassName }}
       >
         <button

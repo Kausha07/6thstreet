@@ -33,6 +33,7 @@ class Price extends PureComponent {
   }
 
   renderDiscountSpecialPrice(onSale, specialPrice) {
+    const { country } = this.props;
     const currency = getCurrency();
     return (
       <span
@@ -40,16 +41,22 @@ class Price extends PureComponent {
         elem="Discount"
         mods={{ discount: this.haveDiscount() }}
       >
-        {onSale ? (
+        {
+          onSale
+          ?
           <>
             {currency}
             <span block="Price-Discount" elem="space"></span>
             &nbsp;
             {specialPrice}
           </>
-        ) : (
-          <>{`${__("On Sale")} ${this.discountPercentage()} Off`}</>
-        )}
+          :
+          country && DISPLAY_DISCOUNT_PERCENTAGE[country]
+          ?
+          `${__("On Sale")} ${this.discountPercentage()} ${__("Off")}`
+          :
+          null
+        }
       </span>
     );
   }
@@ -85,8 +92,11 @@ class Price extends PureComponent {
   }
 
   discountPercentage() {
-    const { basePrice, specialPrice, renderSpecialPrice, cart } = this.props;
+    const { basePrice, specialPrice, renderSpecialPrice, cart, country } = this.props;
 
+    if(country && !DISPLAY_DISCOUNT_PERCENTAGE[country]){
+      return null;
+    }
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
       discountPercentage = 1;
@@ -107,8 +117,7 @@ class Price extends PureComponent {
   }
 
   renderPrice() {
-    const { basePrice, specialPrice, country, renderSpecialPrice, cart } =
-      this.props;
+    const { basePrice, specialPrice, renderSpecialPrice } = this.props;
     const { isArabic } = this.state;
 
     const currency = getCurrency();
@@ -130,7 +139,7 @@ class Price extends PureComponent {
             {this.renderBasePrice()}
           </del>
         </span>
-        {DISPLAY_DISCOUNT_PERCENTAGE[country] && !renderSpecialPrice ? (
+        {!renderSpecialPrice ? (
           <span block="SearchProduct" elem="PriceWrapper">
             {this.discountPercentage(basePrice, specialPrice)}
             {this.renderDiscountSpecialPrice(true, specialPrice)}
