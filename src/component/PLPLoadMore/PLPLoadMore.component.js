@@ -15,21 +15,14 @@ class PLPLoadMore extends PureComponent {
     constructor(props) {
         super(props);
         this.handleLoadMore = this.handleLoadMore.bind(this);
-        this.ref = React.createRef();
     }
 
     handleLoadMore(e) {
         e.preventDefault();
-        const pageIndex = parseInt(this.props.pageKey) + 1;
+        const { pageKey, setProductLoading } = this.props;
+        const pageIndex = parseInt(pageKey) + 1;
         WebUrlParser.setPage(pageIndex);
-        this.props.setProductLoading(true);
-        //this.ref.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-        // let el = document.querySelector('.PLPPages');
-        // setTimeout(() => {
-        //     el.scrollIntoView({behavior: "smooth", block: "end"});
-        //     //window.scrollBy(0, -300);
-        //   }, 1000);
-        
+        setProductLoading(true);
     }
     
     render() {

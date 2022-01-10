@@ -3,13 +3,12 @@ import { isArabic } from 'Util/App';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import StrikeThrough from "./icons/strike-through.png";
-import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { setMinicartOpen } from "Store/Cart/Cart.action";
 import { getStore } from "Store";
 import Image from "Component/Image";
-
+import { v4 } from "uuid";
 import './PLPAddToCart.style';
 
 
@@ -56,26 +55,29 @@ class PLPAddToCart extends PureComponent {
         selectedSizeType: "eu",
         selectedClickAndCollectStore: null,
         addedToCart: false,
+        isLoading: false,
         isOutOfStock: false,
     };
 
 
     componentDidMount() {
         this.setSizeData();
+        this.updateDefaultSizeType()
         const {
             product: {size_eu, size_uk, size_us, in_stock, stock_qty }
           } = this.props;
         let outOfStockStatus;
         if (size_us && size_uk && size_eu) {
         outOfStockStatus =
-            size_us.length === 0 &&
-            size_uk.length === 0 &&
-            size_eu.length === 0 &&
-            in_stock === 0
-            ? true
-            : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+            size_us.length === 0 && size_uk.length === 0 && size_eu.length === 0 && in_stock === 0
+            ?
+            true
+            :
+            in_stock === 1 && stock_qty === 0
+            ?
+            true
+            :
+            false;
         } else {
         outOfStockStatus =
             in_stock === 0
@@ -89,9 +91,22 @@ class PLPAddToCart extends PureComponent {
           });
     }
 
-    componentDidUpdate(){
+    updateDefaultSizeType() {
+      const { product } = this.props;
+      if(product?.size_eu &&  product?.size_uk && product?.size_us) {
+        const sizeTypes = ['eu', 'uk', 'us'];
+        let index = 0;
+        while(product[`size_${sizeTypes[index]}`]?.length <= 0){
+          index = index + 1;
+        }
+  
+        if(index >= sizeTypes.length) {
+          index = 0;
+        }
+        this.setState({selectedSizeType: sizeTypes[index]});
+      }
     }
-
+  
     onSizeTypeSelect = (type) => {
         this.setState({
             selectedSizeType: type.target.value,
@@ -149,20 +164,18 @@ class PLPAddToCart extends PureComponent {
             sku: configSKU,
             objectID,
             product_type_6s,
+            simple_products
           },
           addProductToCart,
           showNotification,
         //   location: { state },
         } = this.props;
-        const { selectedClickAndCollectStore } = this.state;
-        const productStock = this.props.product.simple_products
-        const { selectedSizeType, selectedSizeCode, insertedSizeStatus } = this.state;
-
+        const { selectedClickAndCollectStore, selectedSizeType, selectedSizeCode, insertedSizeStatus } = this.state;
+        const productStock = simple_products
         if (!price[0]) {
           showNotification("error", __("Unable to add product to cart."));
           return;
         }
-
         const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
         const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
@@ -180,7 +193,6 @@ class PLPAddToCart extends PureComponent {
         ) {
           showNotification("error", __("Please select a size."));
         }
-
         if (
           (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
           selectedSizeCode !== ""
@@ -218,7 +230,7 @@ class PLPAddToCart extends PureComponent {
               });
             }
           });
-
+        }
         //   Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         //     product: {
         //       brand: brand_name,
@@ -250,36 +262,35 @@ class PLPAddToCart extends PureComponent {
         //     },
         //   });
         // }
-
-        // if (!insertedSizeStatus) {
-        //   this.setState({ isLoading: true });
-        //   const code = Object.keys(productStock);
-        //   addProductToCart(
-        //     {
-        //       sku: code[0],
-        //       configSKU,
-        //       qty: 1,
-        //       optionId: "",
-        //       optionValue: "",
-        //     },
-        //     color,
-        //     null,
-        //     basePrice,
-        //     brand_name,
-        //     thumbnail_url,
-        //     url,
-        //     itemPrice,
-        //     searchQueryId
-        //   ).then((response) => {
-        //     // Response is sent only if error appear
-        //     if (response) {
-        //       showNotification("error", __(response));
-        //       this.afterAddToCart(false);
-        //     } else {
-        //       this.afterAddToCart(true);
-        //     }
-        //   });
-
+        if (!insertedSizeStatus) {
+          this.setState({ isLoading: true });
+          const code = Object.keys(productStock);
+          addProductToCart(
+            {
+              sku: code[0],
+              configSKU,
+              qty: 1,
+              optionId: "",
+              optionValue: "",
+            },
+            color,
+            null,
+            basePrice,
+            brand_name,
+            thumbnail_url,
+            url,
+            itemPrice,
+            searchQueryId
+          ).then((response) => {
+            // Response is sent only if error appear
+            if (response) {
+              showNotification("error", __(response));
+              this.afterAddToCart(false);
+            } else {
+              this.afterAddToCart(true);
+            }
+          });
+        }
         // //   Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         // //     product: {
         // //       brand: brand_name,
@@ -310,8 +321,6 @@ class PLPAddToCart extends PureComponent {
         // //       prodPrice: basePrice,
         // //     },
         // //   });
-        // }
-    }
     }
 
     afterAddToCart(isAdded = 'true') {
@@ -329,29 +338,6 @@ class PLPAddToCart extends PureComponent {
 
         setTimeout(() => this.setState({ productAdded: false, addedToCart: false }), timeout);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     onSizeSelect = ({target}) => {
         const { value } = target;
@@ -402,6 +388,7 @@ class PLPAddToCart extends PureComponent {
           <div
             block="PLPAddToCart-SizeSelector"
             elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
+            key={v4()}
             className="SizeOptionList"
             onClick={() => {this.onSizeSelect({ target: { value: code } });
             }}
@@ -418,7 +405,7 @@ class PLPAddToCart extends PureComponent {
             />
             <div>
               <label
-                for={code}
+                htmlFor={code}
                 style={isCurrentSizeSelected ? selectedLabelStyle : {}}
               >
                 {label}
@@ -476,7 +463,7 @@ class PLPAddToCart extends PureComponent {
 
       const object = {
         sizeCodes: filteredProductKeys || [],
-        sizeTypes: filteredProductSizeKeys?.length ? ["uk", "eu", "us"] : [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
       };
 
       if (
@@ -536,12 +523,12 @@ class PLPAddToCart extends PureComponent {
         let product = this.props.product
 
         if (
-          sizeObject.sizeCodes !== undefined &&
-          Object.keys(productStock).length !== 0 &&
+          sizeObject?.sizeCodes !== undefined &&
+          Object.keys(productStock || []).length !== 0 &&
           product[`size_${selectedSizeType}`].length !== 0
         ) {
           return (
-            <div block="PLPAddToCart-SizeSelector" elem="AvailableSizes">
+            <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes">
               {sizeObject.sizeCodes.reduce((acc, code) => {
                 const label = productStock[code].size[selectedSizeType];
 
@@ -557,23 +544,22 @@ class PLPAddToCart extends PureComponent {
 
         return (
           <span id="notavailable">
-            out of stock
+            { __("out of stock") }
           </span>
         );
       }
 
       renderAddToCartButton() {
-          if(!(Object.keys(this.state.sizeObject).length)){
-              return null
-          }
+        const { sizeObject = {}, isLoading, addedToCart } = this.state;
+        if(!(Object.keys(sizeObject).length)){
+            return null
+        }
         const {
-        //   isLoading,
-        //   addedToCart,
-          product: { stock_qty, highlighted_attributes },
+          product: { stock_qty, highlighted_attributes, simple_products },
           product = {},
         //   productStock = {},
         } = this.props;
-        let productStock = this.props.product.simple_products;
+        let productStock = simple_products || {};
 
 
         // const disabled = this.checkStateForButtonDisabling();
@@ -588,11 +574,14 @@ class PLPAddToCart extends PureComponent {
                   onClick={() => this.addToCart()}
                   block="PLPAddToCart"
                   elem="AddToCartButton"
-                //   mods={{ isLoading }}
+                  mods={{ isLoading }}
                   mix={{
                     block: "PLPAddToCart",
                     elem: "AddToCartButton",
-                    // mods: { addedToCart },
+                    mods: {
+                      addedToCart,
+                      isArabic: isArabic()
+                    }
                   }}
                 //   disabled={disabled}
                 >
@@ -608,17 +597,27 @@ class PLPAddToCart extends PureComponent {
 
 
     render() {
-        let k = this.state
+        const { sizeObject } = this.state
         return (
             <div block="PLPAddToCart">
                 <div block="PLPAddToCart" elem="SizeSelector">
-                    {(Object.keys(this.state.sizeObject).length)  && this.getSizeTypeSelect()}
                     {
-                        (Object.keys(this.state.sizeObject).length)  && this.getSizeSelect()
+                      sizeObject.sizeTypes !== undefined && sizeObject.sizeTypes.length !== 0
+                      ?
+                      <>
+                        <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
+                          { this.getSizeTypeSelect() }
+                        </div>
+                        <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
+                          { this.getSizeSelect() }
+                        </div>
+                      </>
+                      :
+                      null
                     }
-                    {this.renderAddToCartButton()}
-                    <a href = {this.props.url} block="PLPAddToCart-ViewDetails" >VIEW DETAILS</a>
-                </div>
+                  </div>
+                  {this.renderAddToCartButton()}
+                  <a href = {this.props.url} block="PLPAddToCart-ViewDetails">{ __("VIEW DETAILS") }</a>
             </div>
 
         );

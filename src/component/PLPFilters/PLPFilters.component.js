@@ -115,7 +115,7 @@ class PLPFilters extends PureComponent {
 
   renderFilters() {
     const { filters = {} } = this.props;
-    return Object.entries(filters).map((filter) => {
+    return Object.entries(filters).map((filter, index) => {
       // if (filter[0] === SIZES && !isMobile.any()) {
       //   const { data = {} } = filter[1];
       //   return Object.keys(data).map((size) =>
@@ -124,7 +124,7 @@ class PLPFilters extends PureComponent {
       // }
       if (filter[1]) {
         if (filter[0] === "sort" && !isMobile.any()) {
-          return this.renderSortBy([filter[0], filter[1]]);
+          return this.renderSortBy([filter[0], filter[1]], index);
         }
         return this.renderFilter([filter[0], filter[1]]);
       }
@@ -376,14 +376,10 @@ class PLPFilters extends PureComponent {
     );
   };
 
-  renderSortBy = ([key, filter]) => {
+  renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-    // return (
-
-    // );
-    // debugger
     return (
-      <div block="SortBy">
+      <div block="SortBy" key={index}>
         <PLPFilter
           key={key}
           filter={filter}
@@ -608,7 +604,7 @@ class PLPFilters extends PureComponent {
   onUnselectAllPress = (category) => {
     const { filters, initialOptions, updatePLPInitialFilters, query } =
       this.props;
-    const { activeFilters } = this.state;
+    const { activeFilters = {} } = this.state;
     let categoryLevel1 = initialOptions.q.split(" ")[1];
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
