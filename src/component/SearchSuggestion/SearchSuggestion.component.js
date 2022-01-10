@@ -51,7 +51,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   static defaultProps = {
-    hideActiveOverlay: () => {},
+    hideActiveOverlay: () => { },
   };
 
   state = {
@@ -716,8 +716,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  label
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                label
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
             state: {
               prevPath: window.location.href,
             },
@@ -824,8 +824,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  search
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                search
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
             state: { prevPath: window.location.href },
           }}
           onClick={() => this.onSearchQueryClick(search)}
@@ -897,8 +897,8 @@ class SearchSuggestion extends PureComponent {
             link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  name
-                )}&p=0&dFR[gender][0]=${genderInURL}`
+                name
+              )}&p=0&dFR[gender][0]=${genderInURL}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >
@@ -999,9 +999,10 @@ class SearchSuggestion extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isPDPSearchVisible } = this.props
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
-        <div block="SearchSuggestion" elem="Content">
+        <div block="SearchSuggestion" elem="Content" mods={{ isPDPSearchVisible }}>
           {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}
