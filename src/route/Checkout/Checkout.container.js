@@ -352,7 +352,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const TABBY_CHECK = JSON.parse(
       localStorage.getItem("TABBY_ORDER_DETAILS")
     );
-    if (!QPAY_CHECK || !TABBY_CHECK) {
+    if (!QPAY_CHECK && !TABBY_CHECK) {
       console.log("refresh cart called")
       this.refreshCart();
     }
