@@ -377,9 +377,9 @@ class PLPFilters extends PureComponent {
   };
 
   renderSortBy = ([key, filter], index) => {
-    const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
+    const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } = this.state;
     return (
-      <div block="SortBy" key={index}>
+      <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
           key={key}
           filter={filter}

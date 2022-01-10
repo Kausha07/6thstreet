@@ -221,7 +221,7 @@ class WelcomeHomePage extends PureComponent {
                                 <div block="Text-shop">{__("you are shopping in")}</div>
                             </div>
                             <div  block="WelcomeHomePage" elem="LanguageSwitcher">
-                                <LanguageSwitcher/>
+                                <LanguageSwitcher isWelcomeMobileView={true}/>
                             </div>
                             <div  block="WelcomeHomePage" elem="CountrySwitcher">
                                 <CountrySwitcher/>

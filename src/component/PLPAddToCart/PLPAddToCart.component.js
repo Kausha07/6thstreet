@@ -63,6 +63,7 @@ class PLPAddToCart extends PureComponent {
     addedToCart: false,
     isLoading: false,
     isOutOfStock: false,
+    isArabic: isArabic()
   };
 
 
@@ -199,10 +200,15 @@ class PLPAddToCart extends PureComponent {
 
   getSizeTypeSelect() {
     const { product } = this.props;
-    const { selectedSizeType, sizeObject = {} } = this.state
+    const { selectedSizeType, sizeObject = {}, isArabic } = this.state
+
+    if(this.state.isOutOfStock){
+      return null
+    }
 
     if (sizeObject.sizeTypes !== undefined) {
       return (
+        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{isArabic}}>
         <select
           key="SizeTypeSelect"
           block="PLPAddToCart"
@@ -226,6 +232,7 @@ class PLPAddToCart extends PureComponent {
             return null;
           })}
         </select>
+        </div>
       );
     }
 
@@ -237,6 +244,7 @@ class PLPAddToCart extends PureComponent {
     let selectedSizeType = this.state.selectedSizeType
     let sizeObject = this.state.sizeObject
     let product = this.props.product
+    let isArabic = this.state.isArabic
 
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -244,7 +252,7 @@ class PLPAddToCart extends PureComponent {
       product[`size_${selectedSizeType}`].length !== 0
     ) {
       return (
-        <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes">
+        <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes" mods={{isArabic}}>
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
 
@@ -534,37 +542,38 @@ class PLPAddToCart extends PureComponent {
           this.afterAddToCart(true);
         }
       });
-    }
-    //   Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
-    //     product: {
-    //       brand: brand_name,
-    //       category: "",
-    //       id: configSKU,
-    //       name,
-    //       price: itemPrice,
-    //       quantity: 1,
-    //       size: "",
-    //       variant: "",
-    //     },
-    //   });
+      Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
+        product: {
+          brand: brand_name,
+          category: "",
+          id: configSKU,
+          name,
+          price: itemPrice,
+          quantity: 1,
+          size: "",
+          variant: "",
+        },
+      });
 
       // vue analytics
-    //   const locale = VueIntegrationQueries.getLocaleFromUrl();
-    //   VueIntegrationQueries.vueAnalayticsLogger({
-    //     event_name: VUE_ADD_TO_CART,
-    //     params: {
-    //       event: VUE_ADD_TO_CART,
-    //       pageType: "plp",
-    //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //       clicked: Date.now(),
-    //       uuid: getUUID(),
-    //       referrer: state?.prevPath ? state?.prevPath : null,
-    //       url: window.location.href,
-    //       sourceProdID: configSKU,
-    //       sourceCatgID: product_type_6s, // TODO: replace with category id
-    //       prodPrice: basePrice,
-    //     },
-    //   });
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_ADD_TO_CART,
+        params: {
+          event: VUE_ADD_TO_CART,
+          pageType: "plp",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
+          sourceProdID: configSKU,
+          sourceCatgID: product_type_6s, // TODO: replace with category id
+          prodPrice: basePrice,
+        },
+      });
+    }
+
   }
 
   afterAddToCart(isAdded = 'true') {
