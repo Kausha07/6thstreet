@@ -279,7 +279,7 @@ export class MyAccount extends SourceMyAccount {
               <Image block="CardsIcon" src={box} alt={"box"} />
               <div block="CardTitle"> {__("My Orders")} </div>
               <button onClick={() => this.handleTabChange("my-orders")}>
-                {__("Track")}
+                {__("View")}
               </button>
             </div>
             <div block="CardsContainer">
