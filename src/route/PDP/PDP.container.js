@@ -129,8 +129,7 @@ export class PDPContainer extends PureComponent {
       const { pathname, search } = url;
       browserHistory.replace(pathname + search);
     } else {
-      const { pathname } = url;
-      browserHistory.replace(pathname);
+      window.location.href = location.origin;
     }
   };
   componentDidUpdate(prevProps) {
