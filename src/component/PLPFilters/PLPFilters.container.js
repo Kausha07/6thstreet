@@ -23,6 +23,7 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 import { Filters } from "Util/API/endpoint/Product/Product.type";
+import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 import PLPFilters from "./PLPFilters.component";
@@ -31,6 +32,7 @@ import { SIZES } from "./PLPFilters.config";
 export const mapStateToProps = (_state) => ({
   filters: _state.PLP.filters,
   isLoading: _state.PLP.isLoading,
+  initialOptions: _state.PLP.initialOptions,
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
 });
@@ -38,6 +40,8 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+  updatePLPInitialFilters: (filters, facet_key, facet_value) =>
+    _dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
   goToPreviousNavigationState: () =>
     _dispatch(goToPreviousNavigationState(BOTTOM_NAVIGATION_TYPE)),
   goToPreviousHeaderState: () =>
@@ -108,28 +112,29 @@ export class PLPFiltersContainer extends PureComponent {
     const { activeFilters } = this.state;
 
     const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
-      const { selected_filters_count, data = {} } = filter[1];
+      if (filter[1]) {
+        const { selected_filters_count, data = {} } = filter[1];
 
-      if (selected_filters_count !== 0) {
-        if (filter[0] === SIZES) {
-          const mappedData = Object.entries(data).reduce((acc, size) => {
-            const { subcategories } = size[1];
-            const mappedSizeData = this.mapData(subcategories);
+        if (selected_filters_count !== 0) {
+          if (filter[0] === SIZES) {
+            const mappedData = Object.entries(data).reduce((acc, size) => {
+              const { subcategories } = size[1];
+              const mappedSizeData = this.mapData(subcategories);
 
-            acc = { ...acc, [size[0]]: mappedSizeData };
+              acc = { ...acc, [size[0]]: mappedSizeData };
 
-            return acc;
-          }, []);
+              return acc;
+            }, []);
 
-          acc = { ...acc, ...mappedData };
-        } else {
-          acc = { ...acc, [filter[0]]: this.mapData(data) };
+            acc = { ...acc, ...mappedData };
+          } else {
+            acc = { ...acc, [filter[0]]: this.mapData(data) };
+          }
         }
+
+        return acc;
       }
-
-      return acc;
     }, {});
-
     if (!this.compareObjects(activeFilters, newActiveFilters)) {
       this.setActveFilters(newActiveFilters);
     }
@@ -162,7 +167,13 @@ export class PLPFiltersContainer extends PureComponent {
   };
 
   mapData(data = {}) {
-    const mappedData = Object.entries(data).reduce((acc, option) => {
+    const { initialOptions } = this.props;
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let formattedData = data;
+    if (data[categoryLevel1]) {
+      formattedData = data[categoryLevel1].subcategories;
+    }
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
       const { is_selected } = option[1];
       if (is_selected) {
         acc.push(option[0]);
@@ -170,14 +181,14 @@ export class PLPFiltersContainer extends PureComponent {
 
       return acc;
     }, []);
-
     return mappedData;
   }
 
   containerFunctions = () => {
-    const { showOverlay } = this.props;
+    const { showOverlay, updatePLPInitialFilters, updateFiltersState } =
+      this.props;
 
-    return { showOverlay };
+    return { showOverlay, updatePLPInitialFilters, updateFiltersState };
   };
 
   // eslint-disable-next-line consistent-return
@@ -186,12 +197,19 @@ export class PLPFiltersContainer extends PureComponent {
     const { query } = this.props;
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
-      WebUrlParser.setParam(Object.keys(initialFilters)[i], "",query);
+      WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
     }
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query } = this.props;
+    const {
+      filters,
+      isLoading,
+      activeOverlay,
+      query,
+      initialOptions,
+      plpPageActiveFilters,
+    } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -199,7 +217,9 @@ export class PLPFiltersContainer extends PureComponent {
       isLoading,
       activeOverlay,
       activeFilters,
+      initialOptions,
       query,
+      plpPageActiveFilters,
     };
   };
 

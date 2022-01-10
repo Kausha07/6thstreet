@@ -53,6 +53,7 @@ export class SplashContainer extends PureComponent {
     const { isCartRetrieved } = state;
 
     if (!isCartRetrieved && locale !== "") {
+      console.log("get cart called in splash")
       getCart();
 
       return { isCartRetrieved: true };

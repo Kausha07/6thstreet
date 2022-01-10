@@ -296,7 +296,6 @@ export class CheckoutSuccess extends PureComponent {
     const { paymentMethod } = this.props;
     if (
       paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_checkout" ||
       paymentMethod?.code === "tabby_installments"
     ) {
       const {
@@ -355,8 +354,7 @@ export class CheckoutSuccess extends PureComponent {
     let fullPrice;
     if (
       paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments" ||
-      paymentMethod?.code === "tabby_checkout"
+      paymentMethod?.code === "tabby_installments"
     ) {
       const {
         order: { grand_total = 0, currency_code = getCurrency() },
@@ -426,7 +424,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
@@ -736,8 +734,6 @@ export class CheckoutSuccess extends PureComponent {
 
     if (paymentMethod?.code?.match(/tabby_installments/)) {
       this.setState({ paymentTitle: __("Tabby: Pay in installments") });
-    } else if (paymentMethod?.code?.match(/tabby_checkout/)) {
-      this.setState({ paymentTitle: __("Tabby: Pay later") });
     } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple Pay") });
     } else if (paymentMethod?.code?.match(/cash/)) {
@@ -863,17 +859,17 @@ export class CheckoutSuccess extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
-                  customer_balance_amount,
-                  __("Store Credit"),
-                  { isStoreCredit: true }
-                )
+                customer_balance_amount,
+                __("Store Credit"),
+                { isStoreCredit: true }
+              )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
@@ -915,8 +911,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-          paymentMethod?.code === "tabby_checkout" ||
-          paymentMethod?.code === "tabby_installments"
+            paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}

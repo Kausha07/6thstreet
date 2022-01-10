@@ -98,6 +98,7 @@ export class PDPContainer extends PureComponent {
 
   state = {
     productSku: null,
+    prevPathname: "",
     currentLocation: ""
   };
 

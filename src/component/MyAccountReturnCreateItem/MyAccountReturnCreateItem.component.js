@@ -117,7 +117,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
             }
         } = this.props;
         const size = typeof sizeField === 'string' ? sizeField : (sizeField || {}).value;
-        console.log("muskan soni");
         return (
             <div block="MyAccountReturnCreateItem" elem="Details">
                 <h2>{ name }</h2>

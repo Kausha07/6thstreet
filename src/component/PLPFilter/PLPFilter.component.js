@@ -9,6 +9,7 @@ import FieldMultiselect from "Component/FieldMultiselect";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
+import isMobile from "Util/Mobile";
 import "./PLPFilter.style";
 
 class PLPFilter extends PureComponent {
@@ -31,22 +32,44 @@ class PLPFilter extends PureComponent {
     currentActiveFilter: "",
   };
 
+  state = {
+    currentActiveFilter: null,
+    parentActiveFilters: null,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
+    ) {
+      this.setState({
+        parentActiveFilters: this.props.parentActiveFilters,
+      });
+    }
+  }
+
   renderDropDownList() {
     const {
       filter: { label, category, is_radio },
       filter,
       activeFilter,
-      isChecked,
       currentActiveFilter,
+      isChecked,
       changeActiveFilter,
       handleCallback,
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      parentActiveFilters,
+      isSortBy,
+      initialOptions,
+      handleUnselectAllPress
     } = this.props;
+
     if (category === "categories.level1") {
       return null;
     }
+
     let placeholder =
       category === "in_stock"
         ? __("BY STOCK")
@@ -60,14 +83,18 @@ class PLPFilter extends PureComponent {
         showCheckbox
         isRadio={is_radio}
         filter={filter}
+        initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}
+        onUnselectAllPress={handleUnselectAllPress}
+        parentActiveFilters={parentActiveFilters}
         currentActiveFilter={currentActiveFilter}
         changeActiveFilter={changeActiveFilter}
         parentCallback={handleCallback}
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
+        isSortBy={isSortBy}
       />
     );
   }

@@ -86,7 +86,7 @@ class HeaderTopBar extends NavigationAbstract {
   }
 
   isHidden = () => {
-    const { pathname } = location;
+    const { location: { pathname } } = this.props;
     if( isMobile.any() &&
         !(
           pathname === "/" || pathname === "" ||
@@ -100,8 +100,6 @@ class HeaderTopBar extends NavigationAbstract {
   }
 
   render() {
-    const { location } = this.props;
-
     return (
       <div block="HeaderTopBar" mods={{ isHidden: this.isHidden() }}>
         <div block="HeaderTopBar" elem="ContentWrapper">
