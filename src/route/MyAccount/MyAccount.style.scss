@@ -383,3 +383,19 @@
     font-weight: bold;
   }
 }
+
+@include mobile {
+  .MobileHide {
+    display: none;
+  }
+}
+
+@include desktop {
+  .DesktopHide {
+    display: none;
+  }
+}
+
+.HideBoth {
+  display: none;
+}

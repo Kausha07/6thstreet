@@ -201,7 +201,7 @@
     "100% Genuine": "أصلي 100%",
     "Free Returns": "إرجاع مجاني",
     "view more details": "عرض المزيد من التفاصيل",
-    "What are you looking for?": "ما الذي تبحث عنه؟",
+    "What are you looking for?": null,
     "WishList": "قائمة الأمنيات",
     "Your WishList": "قائمة الأمنيات",
     "CATEGORIES": "الفئات",
@@ -766,7 +766,7 @@
     "& is wearing": "وترتدي مقاس, ويرتدي مقاس",
     "Delivery Failed": "لم يتم توصيل الطلب",
     "About 6THSTREET": "نبذة عن 6 ستريت",
-    "Off": "",
+    "Off": null,
     "clear": "إزالة",
     "On Sale": "خصم",
     "From": "من",
@@ -919,5 +919,6 @@
     "Available all days: ": null,
     "VIEW DETAILS": null,
     "Description": null,
-    "About ": null
+    "About ": null,
+    "View": null
 }
