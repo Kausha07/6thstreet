@@ -490,9 +490,7 @@ class PLPFilters extends PureComponent {
     }
 
     let categoryLevel1 = initialOptions.q.split(" ")[1];
-    if (isMobile.any()) {
-      this.delayFilterUpdate();
-    }
+
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -596,12 +594,11 @@ class PLPFilters extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
-    if (!isMobile.any() || isQuickFilters) {
-      Object.keys(activeFilters).map((key) => {
-        if (key !== "categories.level1")
-          WebUrlParser.setParam(key, activeFilters[key], query);
-      });
-    }
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key], query);
+      }
+    });
   };
 
   onUnselectAllPress = (category) => {
