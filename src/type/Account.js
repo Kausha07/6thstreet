@@ -31,5 +31,6 @@ export const CONTACT_HELP = "contact-help";
 export const SETTINGS_SCREEN = "settings";
 export const FAQ = "faq";
 export const RETURN_POLICY = "return-information";
+export const SHIPPING_POLICY = "shipping-policy";
 
 export const activeTabType = PropTypes.string;

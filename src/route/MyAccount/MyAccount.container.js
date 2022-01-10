@@ -84,7 +84,7 @@ export const tabMap = {
   [CONTACT_HELP]: {
     url: "/contact-help",
     name: __("Contact & Help"),
-    className: "HideBoth",
+    className: "DesktopHide",
   },
 };
 

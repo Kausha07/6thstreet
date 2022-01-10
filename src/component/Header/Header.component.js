@@ -121,7 +121,7 @@ export class Header extends PureComponent {
     if (chatElem) {
       if (
         location.pathname.match(/checkout|cart/) ||
-        (isMobile && location.pathname.match(/faq|return-information/))
+        (isMobile && location.pathname.match(/faq|shipping-policy|return-information/))
       ) {
         chatElem.classList.add("hidden");
       } else {
@@ -181,7 +181,7 @@ export class Header extends PureComponent {
     return (
       <>
         <header block="Header" mods={{ name }}>
-          {isMobile && location.pathname.match(/faq|return-information/)
+          {isMobile && location.pathname.match(/faq|shipping-policy|return-information/)
             ? null
             : this.renderHeaderSections()}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
