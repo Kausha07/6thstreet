@@ -943,6 +943,7 @@
     "SHOW MORE": null,
     "Clear": null,
     "Show More": null,
+    "Show Less": null,
     "Choose one size above your actual size": null,
     "Select a size up for the right fit": null,
     "OTP sent successfully": null,
@@ -973,6 +974,5 @@
     "Load More": null,
     "out of stck": null,
     "VIEW DETAILS": null,
-    "Off": null,
-    "View": null
+    "Off": null
 }
