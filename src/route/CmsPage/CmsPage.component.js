@@ -13,6 +13,8 @@ export class CmsPage extends SourceCmsPage {
   renderTitle() {
     if (location.pathname.match(/faq/)) {
       return "FAQ";
+    } else if (location.pathname.match(/shipping-policy/)) {
+      return "Shipping Policy";
     } else {
       return "Return Policy";
     }

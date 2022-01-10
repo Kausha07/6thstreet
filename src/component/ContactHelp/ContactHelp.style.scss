@@ -11,6 +11,9 @@
                     }
                 }
             }
+            &:first-child {
+                border-bottom: 2px solid var(--lightest-gray);
+            }
             &-Button {
                 padding-left: 16px;
                 &::before {
