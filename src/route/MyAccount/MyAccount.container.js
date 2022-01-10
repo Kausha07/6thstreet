@@ -15,15 +15,14 @@ import {
   ADDRESS_BOOK,
   CLUB_APPAREL,
   CONTACT_HELP,
-  SETTINGS_SCREEN,
   DASHBOARD,
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
+  SETTINGS_SCREEN,
   STORE_CREDIT,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
-import isMobile from "Util/Mobile";
 
 export { BreadcrumbsDispatcher, MyAccountDispatcher };
 
@@ -98,7 +97,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     updateStoreCredit: PropTypes.func.isRequired,
   };
 
-  tabMap = tabMap ;
+  tabMap = tabMap;
 
   componentDidMount() {
     const { setMeta, updateStoreCredit } = this.props;
