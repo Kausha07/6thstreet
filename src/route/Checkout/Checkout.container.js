@@ -244,7 +244,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           return;
         });
       } else if (now.getTime() >= TABBY_CHECK?.expiry) {
-        console.log("Session expired");
         localStorage.removeItem("TABBY_ORDER_DETAILS");
       }
     } catch (error) {
@@ -355,7 +354,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       localStorage.getItem("TABBY_ORDER_DETAILS")
     );
     if (!QPAY_CHECK && !TABBY_CHECK) {
-      console.log("refresh cart called")
       this.refreshCart();
     }
     setMeta({ title: __("Checkout") });
@@ -569,7 +567,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isLoading: true,
       shippingAddress: shipping_address,
     });
-    console.log("addressInformation", addressInformation);
     saveAddressInformation(addressInformation).then(({ data }) => {
       const { totals } = data;
 

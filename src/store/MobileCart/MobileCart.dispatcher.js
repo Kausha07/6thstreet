@@ -23,8 +23,6 @@ export class MobileCartDispatcher {
     async getCart(dispatch) {
         const { MobileCart: { cartId } } = getStore().getState();
         const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
-        console.log("mobile cart dispatcher get cart (store cart id )", cartId)
-        console.log("mobile cart dispatcher get cart (last cart id )", cart_id)
         if (!cartId) {
             try {
                 const { data: cartId = null } = await createCart(cart_id);
@@ -51,7 +49,6 @@ export class MobileCartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
-            console.log("mobile cart dispatcher get cart (last cart id )", cartId)
             const { data } = await getCartTotals(cartId);
 
             dispatch(setCartTotals(data));
