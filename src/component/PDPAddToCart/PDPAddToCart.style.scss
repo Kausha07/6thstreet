@@ -229,6 +229,7 @@ $select-arrow-width: 6px !default;
     margin-left: 16px;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
+    
     @include mobile {
       width: 90%;
       margin-left: 44px;
@@ -243,6 +244,7 @@ $select-arrow-width: 6px !default;
       }
       -webkit-overflow-scrolling: touch;
       -ms-overflow-style: -ms-autohiding-scrollbar;
+      
 
       .lineImg {
         top: 0;
@@ -706,4 +708,15 @@ $select-arrow-width: 6px !default;
       margin-top: 0;
     }
   }
+}
+
+/* Scrollbar styles */
+.PDPAddToCart-SizeSelector::-webkit-scrollbar {
+  height: 4px;
+  width: 8px;
+}
+
+.PDPAddToCart-SizeSelector::-webkit-scrollbar-thumb {
+  background: #585757;
+  border-radius: 3px;
 }

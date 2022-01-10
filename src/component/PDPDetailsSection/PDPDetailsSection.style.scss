@@ -610,6 +610,7 @@
   &-Slider {
     @include desktop {
       margin-bottom: 70px;
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -618,8 +619,10 @@
           display: none !important;
         }
         width: 100vw;
-        margin-left: -12vw;
-        margin-right: -12vw;
+
+        margin-left: calc((-100vw + 76.389vw) / 2);
+        margin-right: calc((-100vw + 76.389vw) / 2);
+
         background: #f9f9f9;
         overflow: hidden !important;
 
@@ -629,6 +632,12 @@
           margin-inline: auto;
           margin-left: auto;
           margin-right: auto;
+        }
+      }
+      &_largeScreen {
+        &:nth-child(odd) {
+          margin-left: calc((1100px - 100vw) / 2);
+          margin-right: calc((1100px - 100vw) / 2);
         }
       }
     }
