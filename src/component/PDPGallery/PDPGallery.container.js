@@ -51,7 +51,6 @@ export class PDPGalleryContainer extends PureComponent {
   };
 
   homeFromPDP() {
-    console.log("props in gallery", this.props)
     const { chosenGender, history } = this.props;
     window.pageType = TYPE_HOME
     switch (chosenGender) {

@@ -58,7 +58,6 @@ export class SplashContainer extends PureComponent {
         localStorage.getItem("TABBY_ORDER_DETAILS")
       );
       if (!QPAY_CHECK && !TABBY_CHECK) {
-        console.log("get cart called in splash")
         getCart();
         return { isCartRetrieved: true };
       }
