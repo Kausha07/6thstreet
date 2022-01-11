@@ -38,10 +38,13 @@
         }
         .WelcomeHomePage-GenderSelection{
             margin-left: unset;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             img{
-                width: 362px;
+                width: 98%;
                 cursor: pointer;
-                height: 535px;
+                height: 100%;
                 @include tablet{
                     width: 232px;
                     height: 345px;
@@ -55,10 +58,12 @@
             }
             &-Button{
                 position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 bottom: 30px;
-                left: 40px;
                 height: 59px;
-                width: 276px;
+                width: 80%;
                 border-radius: 6px;
                 background-color: #FFFFFF;
                 z-index: 1;
@@ -357,6 +362,7 @@
                             opacity: 0.4;
                         }
                         span{
+                            font-family: inherit;
                             &:first-child{
                                 margin-right: 14.44px;
                             }
@@ -380,7 +386,7 @@
                             left: 100%
                         }
                     }
-                    
+
                 }
                 &-ConfirmButton{
                     align-self: end;

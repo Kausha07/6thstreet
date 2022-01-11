@@ -531,7 +531,7 @@ export class MyAccountOverlay extends PureComponent {
             />
             <Field
               type="phone"
-              placeholder={"PHONE NUMBER*"}
+              placeholder={__("PHONE NUMBER*")}
               id="phone"
               name="phone"
               autocomplete="phone"
