@@ -116,7 +116,7 @@ export class ContactHelp extends PureComponent {
         <ul block="contactHelpList">
           <li block="MyAccountTabListItem">
             <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/faq">{__("FAQ")}</Link>
+              <Link to="/faq">{__("FAQs")}</Link>
             </button>
           </li>
           <li block="MyAccountTabListItem">

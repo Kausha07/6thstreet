@@ -317,7 +317,7 @@ export class SizeTable extends PureComponent {
                 {__("Chest (CM)")}
               </td>
               <td mix={{ block: "SizeTable", elem: "TableCellTop" }}>
-                {__("West (CM)")}
+                {__("Waist (CM)")}
               </td>
               <td mix={{ block: "SizeTable", elem: "TableCellTop" }}>
                 {__("Hip (CM)")}
