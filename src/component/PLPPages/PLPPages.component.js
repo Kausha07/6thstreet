@@ -43,7 +43,16 @@ class PLPPages extends PureComponent {
         activeFilters: activeFilters,
       });
     }
+    if (
+      this.props.pages.length > 0 &&
+      this.props.pages.length !== prevProps.pages.length &&
+      (prevState.pageKey !== "0" || prevState.pageKey !== 0)
+    ) {
+      const last = document.getElementById("Products-Lists")?.lastElementChild;
+      last.scrollIntoView();
+    }
   }
+
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
@@ -376,7 +385,7 @@ class PLPPages extends PureComponent {
     const { productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
-        <div block="PLPPages Products-Lists">
+        <div block="PLPPages Products-Lists" id="Products-Lists">
           {!isMobile.any() && (
             <div block="ProductToolBar">
               <div block="ProductSelectedFilters">
