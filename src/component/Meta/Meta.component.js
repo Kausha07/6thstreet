@@ -60,15 +60,48 @@ export class Meta extends SourceMeta {
     const titlePrefix = title_prefix ? `${title_prefix} | ` : "";
     const titleSuffix = title_suffix ? ` | ${title_suffix}` : "";
 
+    const metaTitle = (str) => {
+      const regularTitle = {
+        containString : /-/,
+      }
+      const expMatch ={};
+      expMatch.containString = regularTitle.containString.test(str);
+      return expMatch;
+    }
+    const validateTitle = (titleValue) =>{
+      const titleSplit = titleValue.split('-');
+      const titleJoin = titleSplit.join(' ');
+      return titleJoin;
+    }
+    const titleCase = (str) => {
+      var splitStr = str.toLowerCase().split(' ');
+      for (var i = 0; i < splitStr.length; i++) {
+          splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+      }
+      return splitStr.join(' '); 
+   }
+   
+    const pageMetaTitle = metaTitle(title);
+    const defaultMetaTitle = metaTitle(default_title);
+    const pageTitle = validateTitle(title);
+    const titleDefault = validateTitle(default_title);
+
     const oldtitleTags = document.querySelectorAll("title");
     if (oldtitleTags && oldtitleTags.length) {
       oldtitleTags.forEach((tag) => tag.remove());
     }
 
     const newTitleTag = document.createElement("title");
-    newTitleTag.innerHTML = `${titlePrefix}${
-      title || default_title
-    }${titleSuffix}`;
+    if (pageMetaTitle || defaultMetaTitle == 1){
+      newTitleTag.innerHTML = `${titlePrefix}${
+        titleCase(pageTitle) || titleCase(titleDefault)
+      }${titleSuffix}`;
+    }
+    else{
+      newTitleTag.innerHTML = `${titlePrefix}${
+        title || default_title
+      }${titleSuffix}`;
+    }
     document.head.appendChild(newTitleTag);
   }
 
