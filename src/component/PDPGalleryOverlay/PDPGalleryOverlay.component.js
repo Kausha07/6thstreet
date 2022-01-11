@@ -246,7 +246,6 @@ class PDPGalleryOverlay extends PureComponent {
     if (!gallery.length) {
       return null;
     }
-    console.log({ currentIndex }, typeof currentIndex);
 
     return (
       <Slider
