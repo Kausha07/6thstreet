@@ -48,7 +48,6 @@ export const getInitials = () => {
     }
     return data
 
-    // debugger
 }
 
 export const getInitialState = () => (
