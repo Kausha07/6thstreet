@@ -34,12 +34,16 @@ export const getInitials = () => {
 
     if(!k){
         if(langOptions.includes(window.navigator.language.slice(0,2))){
-            lang = window.navigator.language.slice(0,2)
+            lang = window.navigator.language.slice(0,2);
+            if(lang === 'ar')
+            country = 'SA'
         }
         else{
             lang = 'en'
+            country = 'AE'
         }
         country = 'AE'
+
     }
     let data = {
         language: lang,

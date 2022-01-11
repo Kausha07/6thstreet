@@ -441,6 +441,7 @@ class PLPAddToCart extends PureComponent {
       selectedSizeCode === ""
     ) {
       showNotification("error", __("Please select a size."));
+      return;
     }
     if (
       (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&

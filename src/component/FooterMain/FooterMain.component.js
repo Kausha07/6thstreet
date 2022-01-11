@@ -80,7 +80,7 @@ class FooterMain extends PureComponent {
           href: "https://track.fetchr.us/",
         },
         {
-          name: __("FAQ's"),
+          name: __("FAQs"),
           href: "/faq",
         },
         {

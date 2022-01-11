@@ -236,8 +236,8 @@ class WelcomeHomePage extends PureComponent {
                             </div>
                             <div block="WelcomeHomePage-Popup" elem="Content">
                                 <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                        <span>Welcome, </span>
-                                        <span>you are shopping in</span>
+                                        <span>{__("Welcome, ")}</span>
+                                        <span>{__("you are shopping in")}</span>
                                 </div>
                                 <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer">
                                     <LanguageSwitcher welcomePagePopup={true}/>
