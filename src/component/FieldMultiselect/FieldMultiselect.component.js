@@ -11,7 +11,7 @@ import selectedImage from "./icons/select.png";
 import selectImage from "./icons/add.png";
 import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -559,15 +559,16 @@ class FieldMultiselect extends PureComponent {
 
   renderOptionSelected() {
     const {
-      filter: { data },
+      filter: { data, selected_filters_count },
     } = this.props;
     const { showMore, showLess } = this.state;
+    let selectedItems = selected_filters_count > 0 ? true : false;
     if (this.props.isSortBy) {
       return null;
     }
     if (data) {
       return (
-        <div block="MultiSelectOption">
+        <div block="MultiSelectOption" mods={{selectedItems}}>
           <ul block="selectedOptionLists" mods={{ showMore }}>
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
@@ -642,11 +643,12 @@ class FieldMultiselect extends PureComponent {
     const {
       placeholder,
       isHidden,
-      filter: { data = {}, subcategories = {}, category, is_radio, label },
+      filter: { data = {}, subcategories = {}, category, is_radio, label,selected_filters_count },
       initialOptions,
       currentActiveFilter,
     } = this.props;
     let conditionalData = data ? data : subcategories;
+    let selectedItems = selected_filters_count > 0 ? true : false;
 
     const datakeys = [];
     if (category === "sizes") {
@@ -672,7 +674,7 @@ class FieldMultiselect extends PureComponent {
           type="button"
           block="FieldMultiselect"
           elem="FilterButton"
-          mods={{ toggleOptionsList }}
+          mods={{ toggleOptionsList,selectedItems }}
           mix={{
             block: "FieldMultiselect",
             elem: "FilterButton",

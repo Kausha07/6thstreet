@@ -78,6 +78,7 @@ $select-arrow-width: 6px !default;
       }
     }
   }
+
   &-FilterButton {
     display: inline-block;
     //height: 40px;
@@ -92,13 +93,15 @@ $select-arrow-width: 6px !default;
     font-size: 14px;
     letter-spacing: 0.5px;
     line-height: 18px;
-    padding: 15px 0;
+    padding: 15px 0px;
     text-align: left;
     transition: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-
+    &_selectedItems {
+      padding-bottom: 3px;
+    }
     @include mobile {
       // border: 1px solid var(--field-multiselect-border);
       padding: 0 15px;
@@ -148,6 +151,12 @@ $select-arrow-width: 6px !default;
   //   }
 
   .MultiSelectOption {
+    &_selectedItems{
+      @include desktop{
+        padding-bottom: 8px;
+
+      }
+    }
     .selectedOptionLists {
       &_showMore {
         -webkit-mask-image: linear-gradient(
@@ -176,7 +185,9 @@ $select-arrow-width: 6px !default;
         content: ", ";
         margin-right: 4px;
       }
-
+      &_selectedItems {
+        padding-bottom: 8px;
+      }
       // li {
       //   display: inline-flex;
       //   min-height: 27px;
@@ -190,7 +201,7 @@ $select-arrow-width: 6px !default;
       // }
       li {
         display: inline-flex;
-        min-height: 27px;
+        min-height: 26px;
         font-size: 13px;
         vertical-align: baseline;
         margin: 0 !important;
