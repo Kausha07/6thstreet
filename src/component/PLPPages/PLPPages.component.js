@@ -48,8 +48,11 @@ class PLPPages extends PureComponent {
       this.props.pages.length !== prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-      const last = document.getElementById("Products-Lists")?.lastElementChild;
-      last.scrollIntoView();
+      if (!isMobile.any()) {
+        const last =
+          document.getElementById("Products-Lists")?.lastElementChild;
+        last.scrollIntoView();
+      }
     }
   }
 
