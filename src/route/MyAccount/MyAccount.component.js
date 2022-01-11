@@ -34,7 +34,9 @@ import { deleteAuthorizationToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import box from "./icons/box.png";
+import apparel from "./icons/apparel.png";
 import contactHelp from "./icons/contact-help.png";
+// import { TIER_DATA } from "./MyAccountClubApparel.config";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -205,13 +207,13 @@ export class MyAccount extends SourceMyAccount {
         />
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-            <h1 block="MyAccount" elem="Heading">
-              {isCancel
-                ? alternateName
-                : alternativePageName || returnTitle || name}
-            </h1>
-          ) : (
+            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+              <h1 block="MyAccount" elem="Heading">
+                {isCancel
+                  ? alternateName
+                  : alternativePageName || returnTitle || name}
+              </h1>
+            ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {alternativePageName || returnTitle || name}
@@ -232,7 +234,11 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const { activeTab, tabMap, isSignedIn, mobileTabActive } = this.props;
+    const { activeTab, tabMap, isSignedIn, mobileTabActive, clubApparel: {
+      caPointsValue,
+      currency,
+      accountLinked
+    } } = this.props;
 
     const { isArabic } = this.state;
 
@@ -268,11 +274,21 @@ export class MyAccount extends SourceMyAccount {
           </div>
           <div block="MobileCards">
             <div block="CardsContainer">
-              <Image block="CardsIcon" src={box} alt={"box"} />
+              <Image block="CardsIcon" src={apparel} alt={"apparel"} />
               <div block="CardTitle"> {__("Club Apparel")} </div>
-              <button onClick={() => this.handleTabChange("club-apparel")}>
-                {__("Link Now")}
-              </button>
+              {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
+              {/* const { img } = TIER_DATA[this.props.clubApparel?.memberDetails?.memberTier]; */}
+              {accountLinked ?
+                <button block="AccountLinked" onClick={() => this.handleTabChange("club-apparel")}>
+                  <div block="AccountLinkedTextBlock">
+                    <span block="TierName"> {this.props.clubApparel?.memberDetails?.memberTier}</span>
+                    <span><span block="pointsValue">{caPointsValue}</span> {currency}</span>
+                  </div>
+                </button> :
+                <button onClick={() => this.handleTabChange("club-apparel")}>
+                  {__("Link Now")}
+                </button>
+              }
             </div>
             <div block="CardsContainer">
               <Image block="CardsIcon" src={box} alt={"box"} />
