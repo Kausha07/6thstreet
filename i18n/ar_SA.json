@@ -922,8 +922,8 @@
     "Return Information": "معلومات الإرجاع",
     "Hello, ": "مرحبًا ",
     "Show Less": null,
-    "PHONE NUMBER*": null,
-    "You’ve viewed %s of %s products": null,
-    "Welcome,": null,
-    "OK": "نعم"
+    "PHONE NUMBER*": "رقم الهاتف*",
+    "Welcome,": " اهلاً",
+    "OK": "نعم",
+    "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات"
 }
