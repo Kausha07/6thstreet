@@ -79,8 +79,8 @@ class LanguageSwitcher extends PureComponent {
         <span
           block={
             language === "en"
-              ? "Language-Active english hidden"
-              : "Language-Inactive arabic"
+              ? "Language-Active"
+              : "Language-Inactive"
           }
           onClick={() => onLanguageSelect(buttonLabelObject[0].id)}
         >
@@ -89,8 +89,8 @@ class LanguageSwitcher extends PureComponent {
         <span
           block={
             language === "ar"
-              ? "Language-Active arabic hidden"
-              : "Language-Inactive english"
+              ? "Language-Active"
+              : "Language-Inactive"
           }
           onClick={() => onLanguageSelect(buttonLabelObject[0].id)}
         >
@@ -108,7 +108,7 @@ class LanguageSwitcher extends PureComponent {
     return (
       <div block="LanguageSwitcher" mods={{ isArabic }}>
         {this.renderLanguageSelect()}
-        {(isWelcomeMobileView || welcomePagePopup) ? this.renderLanguageButtonForMobile : this.renderLanguageButton()}
+        {(isWelcomeMobileView || welcomePagePopup) ? this.renderLanguageButtonForMobile() : this.renderLanguageButton()}
       </div>
     );
   }
