@@ -242,6 +242,7 @@ class FieldMultiselect extends PureComponent {
   };
 
   handleSizeSelection = (e) => {
+    e.preventDefault();
     const { parentCallback } = this.props;
     const { id: facet_key } = e.target;
     const facet_value = e.target.getAttribute("name");
@@ -257,6 +258,9 @@ class FieldMultiselect extends PureComponent {
         const { facet_key, facet_value } = value;
         return (
           <div
+            block="FieldMultiselect"
+            elem="sizesOption"
+            mods={{ selectedSize: value.is_selected }}
             key={v4()}
             id={facet_key}
             name={facet_value}
@@ -264,24 +268,30 @@ class FieldMultiselect extends PureComponent {
             onClick={(e) => thisRef.handleSizeSelection(e)}
           >
             <div
-              block="FieldMultiselect"
-              elem="sizesOption"
-              mods={{ selectedSize: value.is_selected }}
+              block="sizesLabel"
+              id={facet_key}
+              name={facet_value}
+              value={value.is_selected}
             >
-              <div
-                block="sizesLabel"
+              {value.label}
+            </div>
+            {!value.is_selected ? (
+              <img
+                src={selectImage}
+                alt={"fitler"}
                 id={facet_key}
                 name={facet_value}
                 value={value.is_selected}
-              >
-                {value.label}
-              </div>
-              {!value.is_selected ? (
-                <Image lazyLoad={false} src={selectImage} alt="fitler" />
-              ) : (
-                <Image lazyLoad={false} src={selectedImage} alt="fitler" />
-              )}
-            </div>
+              />
+            ) : (
+              <img
+                src={selectedImage}
+                alt={"fitler"}
+                id={facet_key}
+                name={facet_value}
+                value={value.is_selected}
+              />
+            )}
           </div>
         );
       });

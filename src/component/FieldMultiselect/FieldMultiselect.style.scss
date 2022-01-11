@@ -151,10 +151,9 @@ $select-arrow-width: 6px !default;
   //   }
 
   .MultiSelectOption {
-    &_selectedItems{
-      @include desktop{
+    &_selectedItems {
+      @include desktop {
         padding-bottom: 8px;
-
       }
     }
     .selectedOptionLists {
@@ -223,12 +222,13 @@ $select-arrow-width: 6px !default;
     background-color: #ffffff;
     margin-bottom: 8px;
     margin-right: 6px;
+    cursor: pointer;
+
     .sizesLabel {
       height: 100%;
       display: flex;
       align-items: center;
       flex: 1;
-      cursor: pointer;
     }
     &::before {
       content: none;
@@ -237,7 +237,7 @@ $select-arrow-width: 6px !default;
     @include before-desktop {
       width: 86%;
     }
-    .Image {
+    img {
       height: 18px;
       width: 18px;
     }

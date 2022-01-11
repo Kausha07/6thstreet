@@ -244,19 +244,13 @@ export class PLPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
     }
-    console.log(
-      "muskan",
-      requestOptions,
-      this.state.prevRequestOptions,
-      this.compareObjects(requestOptions, this.state.prevRequestOptions)
-    );
+
     if (
       JSON.stringify(requestOptions) !==
       JSON.stringify(this.state.prevRequestOptions)
     ) {
     }
     if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
-      console.log("muskan inside");
 
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
