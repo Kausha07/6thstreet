@@ -2,6 +2,8 @@ import urlparse from "url-parse";
 
 import browserHistory from "Util/History";
 
+import isMobile from "Util/Mobile";
+
 import { clean } from "./Object";
 
 const pipe =
@@ -152,6 +154,9 @@ const Parser = {
   setParam(key, values = []) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     url.searchParams.set("p", 0);
+    if (isMobile.any()) {
+      window.scrollTo(0, 0);
+    }
     // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {

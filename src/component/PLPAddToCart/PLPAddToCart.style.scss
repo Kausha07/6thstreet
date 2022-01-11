@@ -114,18 +114,7 @@ $select-arrow-width: 6px !default;
     }
   }
 
-//   &-SizeSelect {
-//     position: relative;
-//     display: flex;
-//     width: 100%;
-//     flex-direction: row;
 
-//     @include desktop {
-//       width: 363px;
-//       padding-bottom: 19px;
-//       align-items: center;
-//     }
-//   }
 
   .PLPAddToCart-SizeTypeSelector {
     @include desktop {
@@ -233,6 +222,26 @@ $select-arrow-width: 6px !default;
         &::-webkit-scrollbar {
           display: none;
         }
+        .SizeOptionList{
+            &:first-child{
+                margin-left: auto;
+            }
+            &:last-child{
+                margin-right: auto;
+            }
+        }
+        &_isArabic{
+            .SizeOptionList{
+                &:first-child{
+                    margin-left: unset;
+                    margin-right: auto;
+                }
+                &:last-child{
+                    margin-right: unset;
+                    margin-left: auto;
+                }
+            }
+        }
       }
 
       .lineImg {
@@ -246,14 +255,7 @@ $select-arrow-width: 6px !default;
         filter: invert(100%);
         transform: rotateY(180deg);
       }
-      .SizeOptionList{
-          &:first-child{
-              margin-left: auto;
-          }
-          &:last-child{
-            margin-right: auto;
-        }
-      }
+
     }
     &-QuantityBasedMessage {
       margin-top: 8px;
@@ -292,7 +294,7 @@ $select-arrow-width: 6px !default;
     }
 
     &-SizeOptionContainerOOS {
-      padding: 0 10px 0 0;
+      padding: 0 4px 0 0;
 
       input {
         display: none;
@@ -322,20 +324,7 @@ $select-arrow-width: 6px !default;
       }
 
     }
-    &::after {
-        content: "";
-        display: block;
-        width: $select-arrow-width;
-        height: $select-arrow-height;
-        transform: translateY(-2px) rotate(44deg);
-        position: absolute;
-        bottom: 0;
-        top: 15px;
-        margin-top: 18px;
-        border: solid var(--text-color);
-        border-width: 0 1px 1px 0;
-        margin-left: 37px;
-      }
+
   }
   &-SizeTypeSelectElement {
     height: 36px;
@@ -347,6 +336,22 @@ $select-arrow-width: 6px !default;
     margin-bottom: 25px;
     padding-right: 12px;
 
+  }
+  &-SizeTypeSelect{
+    &::after {
+        content: "";
+        display: block;
+        width: $select-arrow-width;
+        height: $select-arrow-height;
+        transform: translateY(-2px) rotate(44deg);
+        position: absolute;
+        bottom: 0;
+        top: 15px;
+        margin-top: 0;
+        border: solid var(--text-color);
+        border-width: 0 1px 1px 0;
+        right: 12px;
+      }
   }
 
 
@@ -458,7 +463,6 @@ $select-arrow-width: 6px !default;
       }
 
       &:last-child {
-        left: 25%;
         margin-top: 5px;
         padding-top: 7px;
         background: url(./icons/confirm@2x.png) no-repeat;
