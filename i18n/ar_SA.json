@@ -910,7 +910,7 @@
     "100 Days Free Return": "ارجاع مجاني خلال 100 يوم",
     "Sign In / Register": "تسجيل دخول/ تسجيل",
     "Cancelled": "ملغي",
-    "Welcome, ": "اهلاً",
+    "Welcome, ": " اهلاً",
     "CoD | multiple payment options | T&Cs apply": "الدفع عند الاستلام  | خيارات دفع متعددة | تطبق الشروط والأحكام",
     "Available all days: ": " :متاح كل الأيام",
     "VIEW DETAILS": "عرض التفاصيل",
@@ -923,5 +923,7 @@
     "Hello, ": "مرحبًا ",
     "Show Less": null,
     "PHONE NUMBER*": null,
-    "You’ve viewed %s of %s products": null
+    "You’ve viewed %s of %s products": null,
+    "Welcome,": null,
+    "OK": "نعم"
 }
