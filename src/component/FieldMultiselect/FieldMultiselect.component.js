@@ -257,9 +257,6 @@ class FieldMultiselect extends PureComponent {
         const { facet_key, facet_value } = value;
         return (
           <div
-            block="FieldMultiselect"
-            elem="sizesOption"
-            mods={{ selectedSize: value.is_selected }}
             key={v4()}
             id={facet_key}
             name={facet_value}
@@ -267,19 +264,24 @@ class FieldMultiselect extends PureComponent {
             onClick={(e) => thisRef.handleSizeSelection(e)}
           >
             <div
-              block="sizesLabel"
-              id={facet_key}
-              name={facet_value}
-              value={value.is_selected}
-              onClick={(e) => thisRef.handleSizeSelection(e)}
+              block="FieldMultiselect"
+              elem="sizesOption"
+              mods={{ selectedSize: value.is_selected }}
             >
-              {value.label}
+              <div
+                block="sizesLabel"
+                id={facet_key}
+                name={facet_value}
+                value={value.is_selected}
+              >
+                {value.label}
+              </div>
+              {!value.is_selected ? (
+                <Image lazyLoad={false} src={selectImage} alt="fitler" />
+              ) : (
+                <Image lazyLoad={false} src={selectedImage} alt="fitler" />
+              )}
             </div>
-            {!value.is_selected ? (
-              <Image lazyLoad={false} src={selectImage} alt="fitler" />
-            ) : (
-              <Image lazyLoad={false} src={selectedImage} alt="fitler" />
-            )}
           </div>
         );
       });
@@ -568,7 +570,7 @@ class FieldMultiselect extends PureComponent {
     }
     if (data) {
       return (
-        <div block="MultiSelectOption" mods={{selectedItems}}>
+        <div block="MultiSelectOption" mods={{ selectedItems }}>
           <ul block="selectedOptionLists" mods={{ showMore }}>
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
@@ -643,7 +645,14 @@ class FieldMultiselect extends PureComponent {
     const {
       placeholder,
       isHidden,
-      filter: { data = {}, subcategories = {}, category, is_radio, label,selected_filters_count },
+      filter: {
+        data = {},
+        subcategories = {},
+        category,
+        is_radio,
+        label,
+        selected_filters_count,
+      },
       initialOptions,
       currentActiveFilter,
     } = this.props;
@@ -674,7 +683,7 @@ class FieldMultiselect extends PureComponent {
           type="button"
           block="FieldMultiselect"
           elem="FilterButton"
-          mods={{ toggleOptionsList,selectedItems }}
+          mods={{ toggleOptionsList, selectedItems }}
           mix={{
             block: "FieldMultiselect",
             elem: "FilterButton",
