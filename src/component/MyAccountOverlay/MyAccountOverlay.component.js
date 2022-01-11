@@ -167,7 +167,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => {},
+      render: () => { },
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -417,9 +417,8 @@ export class MyAccountOverlay extends PureComponent {
           </div>
           <div block="VerifyPhone-Text" elem="Phone">
             <button onClick={() => console.log("change mobile number")}>
-              {`${
-                customerRegisterData?.contact_no || customerLoginData?.username
-              }`}
+              {`${customerRegisterData?.contact_no || customerLoginData?.username
+                }`}
             </button>
           </div>
         </div>
@@ -716,11 +715,6 @@ export class MyAccountOverlay extends PureComponent {
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
     );
-    console.log("customer country", customerCountry);
-    console.log(
-      "maxlength",
-      COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8"
-    );
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
@@ -842,9 +836,8 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${
-                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-              }*`}
+              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+                }*`}
               id="email"
               name="email"
               value={email}

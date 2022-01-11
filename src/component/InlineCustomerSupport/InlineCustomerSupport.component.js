@@ -1,17 +1,24 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { URLS } from 'Util/Url/Url.config';
 import Link from "Component/Link";
 import ClickOutside from "Component/ClickOutside";
 import MyAccountOverlay from "Component/MyAccountOverlay";
-import { Info } from "Component/Icons";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
 import "./InlineCustomerSupport.style";
 
+export const mapStateToProps = (state) => ({
+  config: state.AppConfig.config,
+  country: state.AppState.country,
+  language: state.AppState.language,
+});
 class InlineCustomerSupport extends PureComponent {
   static propTypes = {
+    
     isEmailSupported: PropTypes.bool.isRequired,
     isPhoneSupported: PropTypes.bool.isRequired,
     openHoursLabel: PropTypes.string.isRequired,
@@ -25,6 +32,15 @@ class InlineCustomerSupport extends PureComponent {
     showPopup: false,
     isArabic: isArabic(),
   };
+
+  getRootURL = () => {
+    const { language, country } = this.props;
+    if(language && country && URLS){
+      const locale = `${language}-${country.toLowerCase()}`;
+      return URLS[locale] || "";
+    }
+    return "";
+  }
 
   onDropdownClick = () => {
     // Toggle dropdown
@@ -139,9 +155,11 @@ class InlineCustomerSupport extends PureComponent {
 
   renderDropdown() {
     const { isExpanded, isArabic } = this.state;
-    const { location } = this.props;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
+
+    const rootURL = this.getRootURL() || "";
+  
     return (
       <div>
         <button
@@ -206,7 +224,7 @@ class InlineCustomerSupport extends PureComponent {
               block="InlineCustomerSupport"
               elem="faq"
               mods={{ isArabic }}
-              to='/faq'
+              to={ `${rootURL}/faq` }
               >
                 { __("FAQs") }
               </Link>
@@ -223,7 +241,7 @@ class InlineCustomerSupport extends PureComponent {
                   block="InlineCustomerSupport"
                   elem="shippingpolicy"
                   mods={{ isArabic }}
-                  to='/shipping-policy'
+                  to={ `${rootURL}/shipping-policy` }
                 >
                   { __("Free Delivery on min. order") }
                 </Link>
@@ -240,7 +258,7 @@ class InlineCustomerSupport extends PureComponent {
                   block="InlineCustomerSupport"
                   elem="returnpolicy"
                   mods={{ isArabic }}
-                  to='/return-information'
+                  to={ `${rootURL}/return-information` }
                 >
                   { __("100 Days Free Return") }
                 </Link>
@@ -316,4 +334,4 @@ class InlineCustomerSupport extends PureComponent {
   }
 }
 
-export default InlineCustomerSupport;
+export default connect(mapStateToProps, null)(InlineCustomerSupport);

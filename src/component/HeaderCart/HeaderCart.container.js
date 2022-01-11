@@ -70,7 +70,6 @@ export class HeaderCartContainer extends PureComponent {
         const { value: appliedClubApparelCredit = 0 } = clubApparelCredits || {};
 
         if (subtotal > (Math.abs(appliedStoreCredit) + Math.abs(appliedClubApparelCredit) + Math.abs(discount))) {
-          console.log("update cart totals in header cart", id)
           updateTotals(id);
         }
       }

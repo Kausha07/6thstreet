@@ -115,13 +115,11 @@ export class RouterContainer extends SourceRouterContainer {
       const TABBY_CHECK = JSON.parse(
         localStorage.getItem("TABBY_ORDER_DETAILS")
       );
-      console.log("TABBY_CHECK found in router file", TABBY_CHECK)
       const now = new Date();
       if (
         (!QPAY_CHECK || now.getTime() >= QPAY_CHECK?.expiry) &&
         (!TABBY_CHECK || now.getTime() >= TABBY_CHECK?.expiry)
       ) {
-        console.log("getcart(true)...")
         getCart(true);
       }
     } else {

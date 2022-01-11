@@ -283,7 +283,7 @@ export class MyAccount extends SourceMyAccount {
             </div>
             <div block="CardsContainer">
               <Image block="CardsIcon" src={contactHelp} alt={"box"} />
-              <div block="CardTitle"> {__("Contact & Help")} </div>
+              <div block="CardTitle"> {__("Customer Support")} </div>
               <button onClick={this.chat}>{__("Live Chat")}</button>
             </div>
           </div>

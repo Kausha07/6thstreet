@@ -47,11 +47,28 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
   }
+  componentDidUpdate(prevProps,) {
+    const { focusInput, isPDPSearchVisible } = this.props;
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    if (focusInput && isPDPSearchVisible && prevProps.isPDPSearchVisible !== isPDPSearchVisible && searchInput) {
+      searchInput.focus();
+    }
+  }
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
-    const { search } = props;
-
+    const { search, isPDP, isPDPSearchVisible } = props;
+    if (isPDP) {
+      return {
+        isClearVisible: search !== "",
+        showSearch: isPDPSearchVisible
+      };
+    }
     return {
       isClearVisible: search !== "",
     };
@@ -88,7 +105,6 @@ class HeaderSearch extends PureComponent {
   renderField() {
     const { search, onSearchChange, isVisible, onSearchClean } = this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
-
     return (
       <>
         <Form
@@ -165,9 +181,24 @@ class HeaderSearch extends PureComponent {
   renderSuggestion() {
     const { search, renderMySignInPopup, onSearchClean } = this.props;
     const { showSearch } = this.state;
+    const { isPDPSearchVisible } = this.props
 
     if (!showSearch) {
       return null;
+    }
+    if (isMobile.any() || isMobile.tablet()) {
+      return (
+        <>
+          <SearchSuggestion
+            closeSearch={this.closeSearch}
+            cleanSearch={onSearchClean}
+            renderMySignInPopup={renderMySignInPopup}
+            search={search}
+            isPDPSearchVisible={isPDPSearchVisible}
+          />
+        </>
+      )
+
     }
 
     return (
@@ -188,8 +219,8 @@ class HeaderSearch extends PureComponent {
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
-        <ClickOutside onClick={this.closeSearch}>
-          <div block={isPDP ? "PDPHeaderSearch" : "HeaderSearch"} mods={{ isArabic, isPDPSearchVisible }}>
+        <ClickOutside onClick={() => { isPDP ? null : this.closeSearch() }}>
+          <div block="HeaderSearch" mods={{ isArabic }}>
             {this.renderField()}
             {this.renderSuggestion()}
           </div>

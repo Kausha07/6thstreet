@@ -295,7 +295,6 @@ class WelcomeHomePage extends PureComponent {
                     <Footer />
                 }
             </>
-
         );
     }
 }

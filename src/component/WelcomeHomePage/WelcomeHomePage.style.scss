@@ -1,4 +1,8 @@
 .WelcomeHomePage{
+    .HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content .MobileMenuSidebar, .FooterMiddle-FooterAccount, .FooterBottom {
+        display: none;
+    }
+    margin-top: 31px;
     &-Top{
         &-Logo{
             display: flex;
@@ -11,12 +15,6 @@
                 padding: 36px 0;
             }
         }
-    }
-    .Header {
-        z-index: unset;
-    }
-    .HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content {
-        display: none;
     }
 
     &-MainSection{
@@ -280,7 +278,7 @@
         max-width: var(--container-max-width);
         // margin: 0 auto;
         margin-bottom: 50px;
-        z-index: 3;
+        z-index: 10;
         pointer-events: all;
         @include tablet{
             width: auto;
@@ -412,7 +410,7 @@
         top: 0;
         content: "/A";
         color: transparent;
-        z-index: 2;
+        z-index: 9;
         @include mobile{
             display: none;
         }
