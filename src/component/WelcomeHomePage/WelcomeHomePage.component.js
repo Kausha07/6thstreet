@@ -201,14 +201,14 @@ class WelcomeHomePage extends PureComponent {
         const locale = `${language}-${country.toLowerCase()}`;
         return (
             <>
-                {
-                    !isMobile.any()
-                    ?
-                    <Header />
-                    :
-                    null
-                }
                 <div block="WelcomeHomePage">
+                    {
+                        !isMobile.any()
+                        ?
+                        <Header />
+                        :
+                        null
+                    }
                     <div block="WelcomeHomePage" elem="Top" >
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
@@ -295,7 +295,6 @@ class WelcomeHomePage extends PureComponent {
                     <Footer />
                 }
             </>
-
         );
     }
 }
