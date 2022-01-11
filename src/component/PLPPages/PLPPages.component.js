@@ -8,7 +8,7 @@ import { Close } from "Component/Icons";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
 import ProductLoad from "Component/PLPLoadMore";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -43,7 +43,19 @@ class PLPPages extends PureComponent {
         activeFilters: activeFilters,
       });
     }
+    if (
+      this.props.pages.length > 0 &&
+      this.props.pages.length !== prevProps.pages.length &&
+      (prevState.pageKey !== "0" || prevState.pageKey !== 0)
+    ) {
+      if (!isMobile.any()) {
+        const last =
+          document.getElementById("Products-Lists")?.lastElementChild;
+        last.scrollIntoView();
+      }
+    }
   }
+
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
@@ -57,7 +69,7 @@ class PLPPages extends PureComponent {
       filters,
       productLoading,
     } = this.props;
-    if (isMobile.any() ? isPlaceholder : isPlaceholder || productLoading) {
+    if (isMobile.any() && isPlaceholder) {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
@@ -79,6 +91,17 @@ class PLPPages extends PureComponent {
     );
   };
 
+  renderPlaceHolder() {
+    const { query } = this.props;
+    return (
+      <PLPPagePlaceholder
+        isFirst={true}
+        key={v4()}
+        pageIndex={1}
+        query={query}
+      />
+    );
+  }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
     if (pages && pages.length === 0 && productLoading) {
@@ -362,9 +385,10 @@ class PLPPages extends PureComponent {
   }
 
   render() {
+    const { productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
-        <div block="PLPPages Products-Lists">
+        <div block="PLPPages Products-Lists" id="Products-Lists">
           {!isMobile.any() && (
             <div block="ProductToolBar">
               <div block="ProductSelectedFilters">
@@ -374,6 +398,7 @@ class PLPPages extends PureComponent {
           )}
 
           {this.renderPages()}
+          {productLoading && !isMobile.any() && this.renderPlaceHolder()}
         </div>
         {!isMobile.any() && this.renderLoadMore()}
       </div>
