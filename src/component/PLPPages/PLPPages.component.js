@@ -219,11 +219,8 @@ class PLPPages extends PureComponent {
         newFilterArray.selected_filters_count -= 1;
       }
     } else {
-      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
-      if (categoryDataStatus) {
-        let categoryData = facet_key.includes("size")
-          ? data[facet_key]
-          : data[categoryLevel1];
+      if (facet_key.includes("size")) {
+        let categoryData = data[facet_key];
         if (
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]
@@ -237,6 +234,21 @@ class PLPPages extends PureComponent {
             newFilterArray.selected_filters_count -= 1;
           }
         }
+      } else if (categoryLevel1) {
+        return Object.entries(data).map((entry) => {
+          return Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0] === facet_value) {
+              subEntry[1].is_selected = checked;
+              if (checked) {
+                entry[1].selected_filters_count += 1;
+                newFilterArray.selected_filters_count += 1;
+              } else {
+                entry[1].selected_filters_count -= 1;
+                newFilterArray.selected_filters_count -= 1;
+              }
+            }
+          });
+        });
       } else {
         Object.keys(data).map((value) => {
           if (
