@@ -398,7 +398,7 @@ class PLPPages extends PureComponent {
           )}
 
           {this.renderPages()}
-          {productLoading && this.renderPlaceHolder()}
+          {productLoading && !isMobile.any() && this.renderPlaceHolder()}
         </div>
         {!isMobile.any() && this.renderLoadMore()}
       </div>
