@@ -103,13 +103,12 @@ class LanguageSwitcher extends PureComponent {
   render() {
     const { isArabic } = this.state;
     let k = this.props.welcomePagePopup;
+    const { isWelcomeMobileView, welcomePagePopup } = this.props
 
     return (
       <div block="LanguageSwitcher" mods={{ isArabic }}>
         {this.renderLanguageSelect()}
-        {this.state.isMobile || this.props.welcomePagePopup
-          ? this.renderLanguageButtonForMobile()
-          : this.renderLanguageButton()}
+        {(isWelcomeMobileView || welcomePagePopup) ? this.renderLanguageButtonForMobile : this.renderLanguageButton()}
       </div>
     );
   }
