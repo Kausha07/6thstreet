@@ -321,7 +321,6 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderContent() {
-    console.log("this.props", this.props)
     return isMobile.any() ? this.renderMobile() : this.renderDesktop();
   }
 }
