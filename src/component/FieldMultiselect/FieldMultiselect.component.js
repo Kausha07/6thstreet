@@ -487,8 +487,8 @@ class FieldMultiselect extends PureComponent {
           <button
             block="FilterSearch"
             elem="SubmitBtn"
+            type="button"
             mods={{ isArabic }}
-            type="submit"
           >
             <Image lazyLoad={false} src={searchPng} alt="search" />
           </button>
