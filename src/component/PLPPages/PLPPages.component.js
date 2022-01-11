@@ -8,7 +8,7 @@ import { Close } from "Component/Icons";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
 import ProductLoad from "Component/PLPLoadMore";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -57,7 +57,7 @@ class PLPPages extends PureComponent {
       filters,
       productLoading,
     } = this.props;
-    if (isMobile.any() ? isPlaceholder : isPlaceholder || productLoading) {
+    if (isMobile.any() && isPlaceholder) {
       return (
         <PLPPagePlaceholder
           isFirst={isFirst}
@@ -79,6 +79,17 @@ class PLPPages extends PureComponent {
     );
   };
 
+  renderPlaceHolder() {
+    const { query } = this.props;
+    return (
+      <PLPPagePlaceholder
+        isFirst={true}
+        key={v4()}
+        pageIndex={1}
+        query={query}
+      />
+    );
+  }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
     if (pages && pages.length === 0 && productLoading) {
@@ -362,6 +373,7 @@ class PLPPages extends PureComponent {
   }
 
   render() {
+    const { productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists">
@@ -374,6 +386,7 @@ class PLPPages extends PureComponent {
           )}
 
           {this.renderPages()}
+          {productLoading && this.renderPlaceHolder()}
         </div>
         {!isMobile.any() && this.renderLoadMore()}
       </div>
