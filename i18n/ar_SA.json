@@ -872,7 +872,7 @@
     "Page %s": null,
     "Error loading Stripe! No API-key specified.": "حدث خطأ أثناء التحميل",
     "Model is wearing": "مقاس العارض/ العارضة",
-    "Waist (CM)": "الخصر (سم)",
+    "Waist (CM)": null,
     "360°": null,
     "English": null,
     "Arabic": "العربية",
@@ -922,5 +922,6 @@
     "Return Information": "معلومات الإرجاع",
     "Hello, ": "مرحبًا ",
     "Show Less": null,
-    "PHONE NUMBER*": "رقم الهاتف*"
+    "PHONE NUMBER*": null,
+    "You’ve viewed %s of %s products": null
 }
