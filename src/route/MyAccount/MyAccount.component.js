@@ -234,11 +234,7 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const { activeTab, tabMap, isSignedIn, mobileTabActive, clubApparel: {
-      caPointsValue,
-      currency,
-      accountLinked
-    } } = this.props;
+    const { activeTab, tabMap, isSignedIn, mobileTabActive } = this.props;
 
     const { isArabic } = this.state;
 
@@ -278,11 +274,11 @@ export class MyAccount extends SourceMyAccount {
               <div block="CardTitle"> {__("Club Apparel")} </div>
               {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
               {/* const { img } = TIER_DATA[this.props.clubApparel?.memberDetails?.memberTier]; */}
-              {accountLinked ?
+              {this.props.clubApparel?.accountLinked ?
                 <button block="AccountLinked" onClick={() => this.handleTabChange("club-apparel")}>
                   <div block="AccountLinkedTextBlock">
                     <span block="TierName"> {this.props.clubApparel?.memberDetails?.memberTier}</span>
-                    <span><span block="pointsValue">{caPointsValue}</span> {currency}</span>
+                    <span><span block="pointsValue">{this.props.clubApparel?.caPointsValue}</span> {this.props.clubApparel?.currency}</span>
                   </div>
                 </button> :
                 <button onClick={() => this.handleTabChange("club-apparel")}>

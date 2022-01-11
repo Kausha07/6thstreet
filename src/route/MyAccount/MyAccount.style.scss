@@ -186,6 +186,12 @@
 .MyAccount {
   &-Wrapper {
     &_isArabic {
+      .MyAccountMobileHeader {
+        &-StoreCreditLink {
+          padding: 0 10px 0 10px;
+          width: auto;
+        }
+      }
       .MyAccountTabListItem {
         button {
           text-align: right;
