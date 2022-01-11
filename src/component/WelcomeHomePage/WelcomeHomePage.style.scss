@@ -2,6 +2,9 @@
     .HeaderMainSection, .HeaderBottomBar, .HeaderBottomBar-Content .MobileMenuSidebar, .FooterMiddle-FooterAccount, .FooterBottom {
         display: none;
     }
+    &_isArabic {
+        direction: rtl;
+    }
     margin-top: 31px;
     &-Top{
         &-Logo{
@@ -244,7 +247,7 @@
                     background-color: black;
                     color: white;
                 }
-                .Language-Inactive{
+                .Language-Inactive {
                     font-size: 12px;
                     font-weight: 800;
                     letter-spacing: 0;
@@ -265,6 +268,18 @@
                     }
                 }
 
+            }
+        }
+        &_isArabic {
+            @include mobile {
+                span{
+                    &:first-child{
+                        margin-right: unset;
+                    }
+                    &:nth-child(2){
+                        margin-left: 20px;
+                    }
+                }
             }
         }
     }
@@ -299,7 +314,12 @@
             position: absolute;
             top: 20px;
             right: 17px;
+            left: unset;
             cursor: pointer;
+            &_isArabic {
+                right: unset;
+                left: 17px
+            }
         }
         &-Content {
             &-Text{
@@ -370,6 +390,7 @@
                     }
                 }
                 .CountrySwitcher{
+                    margin-right: unset;
                     margin-left: 32px;
                     &-CountryBtn{
                         span{
@@ -402,6 +423,30 @@
                     margin-right: 40px;
                     padding: initial;
                     font-size: 16px;
+                }
+
+                &_isArabic {
+                    .LanguageSwitcher {
+                        margin-right: 0;
+                        margin-left: 32px;
+                        .Popup-button {
+                            span{
+                                font-family: inherit;
+                                &:first-child{
+                                    margin-right: unset;;
+                                    margin-left: 14.44px;
+                                }
+                            }
+                        }
+                    }
+                    .CountrySwitcher {
+                        margin-left: unset;
+                        margin-right: 32px;
+                        &::after{
+                            right: 100%;
+                            left: unset;
+                        }
+                    }
                 }
             }
         }
