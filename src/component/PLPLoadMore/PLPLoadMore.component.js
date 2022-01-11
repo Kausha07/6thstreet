@@ -49,8 +49,8 @@ class PLPLoadMore extends PureComponent {
                 <div block="Product-LoadMore">
                     {totalProducts && 
                         <>
-                            <div block="Product-Loaded-Info">
-                                {__(`You’ve viewed ${loadedProduct} of ${totalProducts} products`)}
+                            <div block="Product-Loaded-Info">                                
+                                {__("You’ve viewed %s of %s products", loadedProduct, totalProducts)}
                             </div>
     
                             <div block="Product-ProgressBar">
