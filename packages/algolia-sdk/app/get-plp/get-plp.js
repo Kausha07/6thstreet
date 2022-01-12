@@ -436,7 +436,7 @@ function getPLP(URL, options = {}, params = {}) {
     };
 
     let selectedFilterArr = [];
-    let exceptFilter = ["page", "q", "sort", "visibility_catalog"];
+    let exceptFilter = ["page", "q", "sort", "discount", "visibility_catalog"];
     Object.keys(params).map((option) => {
       if (!exceptFilter.includes(option)) {
         selectedFilterArr.push(option);

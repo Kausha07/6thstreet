@@ -88,9 +88,9 @@ class FieldMultiselect extends PureComponent {
       filter: { selected_filters_count },
     } = this.props;
     if (selected_filters_count > 6) {
-      this.setState({ showMore: true });
+      this.setState({ showMore: true, showLess: false });
     } else {
-      this.setState({ showMore: false });
+      this.setState({ showMore: false, showLess: false });
     }
     document.addEventListener("mousedown", this.handleClickOutside);
   }
@@ -101,22 +101,24 @@ class FieldMultiselect extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      filter: { selected_filters_count },
+      filter: { selected_filters_count, category },
+      parentActiveFilters,
     } = this.props;
-    const {
-      filter: { selected_filters_count: prevCount },
-    } = prevProps;
-    if (
-      JSON.stringify(prevProps.parentActiveFilters) !==
-      JSON.stringify(this.props.parentActiveFilters)
-    ) {
-      this.setState({
-        parentActiveFilters: this.props.parentActiveFilters,
-      });
-      if (selected_filters_count > 6) {
-        this.setState({ showMore: true });
-      } else {
-        this.setState({ showMore: false });
+    if (!category.includes("size") && parentActiveFilters) {
+      if (
+        JSON.stringify(prevProps.parentActiveFilters) !==
+          JSON.stringify(parentActiveFilters) ||
+        (parentActiveFilters[category] &&
+          parentActiveFilters[category].length === 0)
+      ) {
+        this.setState({
+          parentActiveFilters: this.props.parentActiveFilters,
+        });
+        if (selected_filters_count > 6) {
+          this.setState({ showMore: true, showLess: false });
+        } else {
+          this.setState({ showMore: false, showLess: false });
+        }
       }
     }
   }
@@ -299,10 +301,12 @@ class FieldMultiselect extends PureComponent {
   };
 
   renderUnselectButton(category) {
+    let UnSelectAll = true;
     return (
       <div
         block="FieldMultiselect"
         elem="SizeSelector"
+        mods={{ UnSelectAll }}
         onClick={() => this.onDeselectAllCategory(category)}
       >
         Unselect All
@@ -519,12 +523,13 @@ class FieldMultiselect extends PureComponent {
     let value = event.target.value;
     let finalSearchedData = {};
     if (facet_key === "categories_without_path") {
-      let categoryLevel1 = initialOptions.q.split(" ")[1];
-      let categoryData = data[categoryLevel1].subcategories;
-      Object.keys(categoryData).filter((key) => {
-        if (key.toLowerCase().includes(value.toLowerCase())) {
-          finalSearchedData[key] = categoryData[key];
-        }
+      Object.entries(allData).map((entry) => {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
+            finalSearchedData[subEntry[0]] =
+              entry[1].subcategories[subEntry[0]];
+          }
+        });
       });
     } else {
       Object.keys(allData).filter((key) => {
@@ -574,7 +579,7 @@ class FieldMultiselect extends PureComponent {
       filter: { data, selected_filters_count },
     } = this.props;
     const { showMore, showLess } = this.state;
-    let selectedItems = selected_filters_count > 0 ? true : false;
+    let selectedItems = true;
     if (this.props.isSortBy) {
       return null;
     }
@@ -582,6 +587,13 @@ class FieldMultiselect extends PureComponent {
       return (
         <div block="MultiSelectOption" mods={{ selectedItems }}>
           <ul block="selectedOptionLists" mods={{ showMore }}>
+            {selected_filters_count === 0 && (
+              <>
+                <li key={v4()} block="selectedListItem">
+                  All
+                </li>
+              </>
+            )}
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
                 return Object.values(values.subcategories).map(function (
@@ -663,11 +675,12 @@ class FieldMultiselect extends PureComponent {
         label,
         selected_filters_count,
       },
+      filter,
       initialOptions,
       currentActiveFilter,
     } = this.props;
     let conditionalData = data ? data : subcategories;
-    let selectedItems = selected_filters_count > 0 ? true : false;
+    let selectedItems = true;
 
     const datakeys = [];
     if (category === "sizes") {
@@ -677,11 +690,15 @@ class FieldMultiselect extends PureComponent {
     }
 
     if (category === "categories_without_path") {
-      let categoryLevel1 = initialOptions.q.split(" ")[1];
-      if (data[categoryLevel1]) {
-        conditionalData = data[categoryLevel1].subcategories;
-      }
+      let categoryLevelData = [];
+      Object.entries(conditionalData).map((entry) => {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      });
+      conditionalData = categoryLevelData;
     }
+
     return (
       <div
         ref={this.filterDropdownRef}

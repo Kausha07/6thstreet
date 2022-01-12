@@ -1,11 +1,12 @@
 .PLPDetails {
     display: flex;
     align-items: center;
+    margin-bottom: 15px;
     &-Wrapper {
         display: flex;
         align-items: center;
         grid-gap: 20px;
-        margin-bottom: 55px;
+        margin-bottom: 40px;
         width: 100%;
     }
     &-ShareIcon {
