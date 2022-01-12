@@ -42,6 +42,7 @@ $select-arrow-width: 6px !default;
     align-items: center;
     margin-bottom: 14px;
     text-decoration: underline;
+    cursor: pointer;
   }
   &-MobileOptionButton {
     padding: 0;
@@ -402,6 +403,9 @@ $select-arrow-width: 6px !default;
     letter-spacing: 0;
     line-height: 40px;
     text-decoration: underline;
+    &_UnSelectAll {
+      cursor: pointer;
+    }
   }
 
   &-SizeTypeSelector {

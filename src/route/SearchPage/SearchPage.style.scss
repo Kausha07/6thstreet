@@ -1,25 +1,23 @@
 .SearchPage {
-  width: var(--main-container-width-dsk);
-  max-width: var(--container-max-width);
-  margin-inline: auto;
-  margin-left: auto;
-  margin-right: auto;
-  margin: 0 auto;
-  @include mobile {
-    width: 100vw;
-    padding-top: 160px;
-  }
-  @include tablet {
-    width: 100vw;
-  }
-
-  .PLPFilters-ToolBar {
+    width: var(--main-container-width-dsk);
+    max-width: var(--container-max-width);
+    margin-inline: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto 82px;
     @include mobile {
-      top: 190px;
+        width: 100vw;
+        padding-top: 160px;
     }
-  }
-
-  .PLPFilterMobile {
-    top: 154px;
-  }
+    @include tablet {
+        width: 100vw;
+    }
+    .PLPFilters-ToolBar {
+        @include mobile {
+            top: 190px;
+        }
+    }
+    .PLPFilterMobile {
+        top: 154px;
+    }
 }
