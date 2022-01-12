@@ -55,11 +55,11 @@
       // position: absolute;
       // top: -74px;
       z-index: 2;
-      width: 80%;
+      width: 100%;
 
       .ProductSelectedFilters {
         display: flex;
-        width: 70%;
+        width: 80%;
         justify-content: center;
         align-items: center;
 
@@ -70,12 +70,12 @@
           flex-wrap: wrap;
           display: flex;
           justify-content: flex-start;
-          align-items: center;
+          align-items: end;
           min-height: 40px;
 
           li {
             display: inline-flex;
-            min-height: 42px;
+            min-height: 34px;
             font-size: 13px;
             vertical-align: baseline;
             margin: 0 !important;

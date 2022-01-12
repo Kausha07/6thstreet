@@ -240,6 +240,10 @@ $select-arrow-width: 6px !default;
                     margin-right: unset;
                     margin-left: auto;
                 }
+                &:only-child{
+                  margin-left: auto;
+                  margin-right: auto;
+                }
             }
         }
       }
@@ -338,6 +342,12 @@ $select-arrow-width: 6px !default;
 
   }
   &-SizeTypeSelect{
+    &_isArabic{
+      .PLPAddToCart-SizeTypeSelectElement{
+        padding-right: 30px;
+        text-align: right;
+      }
+    }
     &::after {
         content: "";
         display: block;
