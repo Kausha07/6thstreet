@@ -412,7 +412,6 @@ class PLPFilters extends PureComponent {
     checked,
     facet_key
   ) => {
- 
     if (data[facet_value]) {
       data[facet_value].is_selected = checked;
       if (checked) {
@@ -620,7 +619,6 @@ class PLPFilters extends PureComponent {
     const { filters, initialOptions, updatePLPInitialFilters, query } =
       this.props;
     const { activeFilters = {} } = this.state;
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
@@ -658,17 +656,21 @@ class PLPFilters extends PureComponent {
           filter[0] !== "categories.level1" &&
           filter[1].selected_filters_count > 0
         ) {
-          let categoryLevel1 = initialOptions.q.split(" ")[1];
           activeFilters[filter[0]] = [];
 
           if (filter[0] === "categories_without_path") {
-            Object.entries(filter[1].data[categoryLevel1].subcategories).map(
-              (filterData) => {
-                if (filterData[1].is_selected) {
-                  activeFilters[filter[0]].push(filterData[0]);
-                }
-              }
-            );
+            return Object.entries(filter[1].data).map((entry) => {
+              return Object.entries(entry[1].subcategories).map((subEntry) => {
+                activeFilters[filter[0]].push(filterData[0]);
+              });
+            });
+            // Object.entries(filter[1].data[categoryLevel1].subcategories).map(
+            //   (filterData) => {
+            //     if (filterData[1].is_selected) {
+            //       activeFilters[filter[0]].push(filterData[0]);
+            //     }
+            //   }
+            // );
           } else {
             Object.entries(filter[1].data).map((filterData) => {
               if (filterData[1].is_selected) {
@@ -684,7 +686,9 @@ class PLPFilters extends PureComponent {
     });
     updatePLPInitialFilters(filters, category, null);
     Object.keys(activeFilters).map((key) => {
-      WebUrlParser.setParam(key, activeFilters[key]);
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key]);
+      }
     });
   };
 
