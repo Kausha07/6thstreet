@@ -594,14 +594,6 @@ class PLPAddToCart extends PureComponent {
   }
 
 
-
-
-
-
-
-
-
-
   render() {
     const { sizeObject } = this.state
     return (
