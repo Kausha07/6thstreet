@@ -74,9 +74,6 @@ class PLPAddToCart extends PureComponent {
       product: { size_eu, size_uk, size_us, in_stock, stock_qty, simple_products = [] }
     } = this.props;
 
-
-
-
     let outOfStockStatus;
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
@@ -153,7 +150,6 @@ class PLPAddToCart extends PureComponent {
       }, []);
 
       object.sizeCodes = allSizes;
-      debugger
 
       if (
         filteredProductKeys.length <= 1 &&
