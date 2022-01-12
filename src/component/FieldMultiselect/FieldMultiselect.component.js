@@ -299,10 +299,12 @@ class FieldMultiselect extends PureComponent {
   };
 
   renderUnselectButton(category) {
+    let UnSelectAll = true;
     return (
       <div
         block="FieldMultiselect"
         elem="SizeSelector"
+        mods={{ UnSelectAll }}
         onClick={() => this.onDeselectAllCategory(category)}
       >
         Unselect All
@@ -574,7 +576,7 @@ class FieldMultiselect extends PureComponent {
       filter: { data, selected_filters_count },
     } = this.props;
     const { showMore, showLess } = this.state;
-    let selectedItems = selected_filters_count > 0 ? true : false;
+    let selectedItems = true;
     if (this.props.isSortBy) {
       return null;
     }
@@ -582,6 +584,13 @@ class FieldMultiselect extends PureComponent {
       return (
         <div block="MultiSelectOption" mods={{ selectedItems }}>
           <ul block="selectedOptionLists" mods={{ showMore }}>
+            {selected_filters_count === 0 && (
+              <>
+                <li key={v4()} block="selectedListItem">
+                  All
+                </li>
+              </>
+            )}
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
                 return Object.values(values.subcategories).map(function (
@@ -667,7 +676,7 @@ class FieldMultiselect extends PureComponent {
       currentActiveFilter,
     } = this.props;
     let conditionalData = data ? data : subcategories;
-    let selectedItems = selected_filters_count > 0 ? true : false;
+    let selectedItems = true;
 
     const datakeys = [];
     if (category === "sizes") {
