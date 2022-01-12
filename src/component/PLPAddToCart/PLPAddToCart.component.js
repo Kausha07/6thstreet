@@ -284,7 +284,7 @@ class PLPAddToCart extends PureComponent {
 
     return (
       <span id="notavailable">
-        { __("out of stock")}
+        { __("OUT OF STOCK")}
       </span>
     );
   }
