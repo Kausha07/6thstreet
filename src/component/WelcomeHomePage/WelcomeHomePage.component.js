@@ -7,7 +7,7 @@ import Link from "Component/Link";
 import { connect } from 'react-redux';
 import { LocationType } from "Type/Common";
 import Header from "Component/Header";
-import { setCountry, setLanguage, setLanguageForWelcome, setGender} from 'Store/AppState/AppState.action';
+import { setCountry, setLanguage, setLanguageForWelcome, setGender } from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { URLS } from 'Util/Url/Url.config';
@@ -52,13 +52,13 @@ class WelcomeHomePage extends PureComponent {
         super(props);
         const appStateCacheKey = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
         const PREVIOUS_USER = BrowserDatabase.getItem('PREVIOUS_USER')
-        if(PREVIOUS_USER){
+        if (PREVIOUS_USER) {
             const { country, language, gender } = this.props;
             const locale = `${language}-${country.toLowerCase()}`;
-            let url =  `${URLS[locale]}/${gender}.html`
+            let url = `${URLS[locale]}/${gender}.html`
             window.location.href = url;
         }
-        if(appStateCacheKey){
+        if (appStateCacheKey) {
             const { country, language, locale, gender } = appStateCacheKey;
         }
 
@@ -98,11 +98,11 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
-        window.pageType="welcome";
+        window.pageType = "welcome";
         this.getWelcomeImageUrl();
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         const { language, country } = this.props;
         const locale = `${language}-${country.toLowerCase()}`
         let genders = ["women", "men", "kids"]
@@ -114,11 +114,11 @@ class WelcomeHomePage extends PureComponent {
 
             try {
                 const head = document.getElementsByTagName("head");
-                if(head?.length){
+                if (head?.length) {
                     head[0].appendChild(hint);
                 }
             }
-            catch(err){
+            catch (err) {
                 console.error(err);
             }
         })
@@ -201,53 +201,53 @@ class WelcomeHomePage extends PureComponent {
         const locale = `${language}-${country.toLowerCase()}`;
         return (
             <>
-                <div block="WelcomeHomePage" mods={{isArabic: language==="ar"}}>
+                <div block="WelcomeHomePage" mods={{ isArabic: language === "ar" }}>
                     {
                         !isMobile.any()
-                        ?
-                        <Header />
-                        :
-                        null
+                            ?
+                            <Header />
+                            :
+                            null
                     }
                     <div block="WelcomeHomePage" elem="Top" >
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
                         </div>
                     </div>
-                    {   isMobile.any() &&
+                    {isMobile.any() &&
                         <div block="WelcomeHomePage" elem="StoreSwitcher">
-                            <div block="Text" mods={{isArabic: language==="ar"}}>
+                            <div block="Text" mods={{ isArabic: language === "ar" }}>
                                 <div block="Text-welcome">{__("Welcome, ")}</div>
                                 <div block="Text-shop">{__("you are shopping in")}</div>
                             </div>
-                            <div  block="WelcomeHomePage" elem="LanguageSwitcher" mods={{isArabic: language==="ar"}}>
-                                <LanguageSwitcher isWelcomeMobileView={true}/>
+                            <div block="WelcomeHomePage" elem="LanguageSwitcher" mods={{ isArabic: language === "ar" }}>
+                                <LanguageSwitcher isWelcomeMobileView={true} />
                             </div>
-                            <div  block="WelcomeHomePage" elem="CountrySwitcher" mods={{isArabic: language==="ar"}}>
-                                <CountrySwitcher/>
+                            <div block="WelcomeHomePage" elem="CountrySwitcher" mods={{ isArabic: language === "ar" }}>
+                                <CountrySwitcher />
                             </div>
                         </div>
                     }
 
-                    { isPopupOpen &&
+                    {isPopupOpen &&
                         <div block="WelcomeHomePage" elem="Popup">
-                            <div block="WelcomeHomePage-Popup" elem="Action" mods={{isArabic: language==="ar"}}>
-                                <img  block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup}/>
+                            <div block="WelcomeHomePage-Popup" elem="Action" mods={{ isArabic: language === "ar" }}>
+                                <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
                             </div>
-                            <div block="WelcomeHomePage-Popup" elem="Content" mods={{isArabic: language==="ar"}}>
+                            <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
                                 <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                        <span>{__("Welcome, ")}</span>
-                                        <span>{__("you are shopping in")}</span>
+                                    <span>{__("Welcome, ")}</span>
+                                    <span>{__("you are shopping in")}</span>
                                 </div>
-                                <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{isArabic: language==="ar"}}>
-                                    <LanguageSwitcher welcomePagePopup={true}/>
-                                    <CountrySwitcher/>
+                                <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
+                                    <LanguageSwitcher welcomePagePopup={true} />
+                                    <CountrySwitcher />
                                     <button
                                         block="WelcomeHomePage-Popup-Content-SwitcherContainer"
                                         elem="ConfirmButton"
                                         onClick={this.closePopup}
                                     >
-                                        { __("OK") }
+                                        {__("OK")}
                                     </button>
                                 </div>
                             </div>
@@ -255,7 +255,7 @@ class WelcomeHomePage extends PureComponent {
                     }
 
                     {
-                    welcomeImg &&
+                        welcomeImg &&
                         <div block="WelcomeHomePage" elem="MainSection" >
                             {
                                 Object.keys(welcomeImg).map((gender) => {
@@ -268,7 +268,7 @@ class WelcomeHomePage extends PureComponent {
                                         >
                                             <img src={welcomeImg[gender][language].img} />
                                             <button block="WelcomeHomePage-GenderSelection-Button">
-                                                { welcomeImg[gender][language].label }
+                                                {welcomeImg[gender][language].label}
                                             </button>
                                         </a>
                                     )
@@ -276,23 +276,23 @@ class WelcomeHomePage extends PureComponent {
                             }
                         </div>
                     }
-                    { isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
+                    {isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                 </div>
                 {
                     isMobile.tablet()
-                    ?
-                    <div block="WelcomeHomePage" elem="Bottom">
-                        {this.renderAppColumn()}
-                    </div>
-                    :
-                    null
+                        ?
+                        <div block="WelcomeHomePage" elem="Bottom">
+                            {this.renderAppColumn()}
+                        </div>
+                        :
+                        null
                 }
                 {
                     isMobile.any() || isMobile.tablet()
-                    ?
-                    null
-                    :
-                    <Footer />
+                        ?
+                        null
+                        :
+                        <Footer />
                 }
             </>
         );

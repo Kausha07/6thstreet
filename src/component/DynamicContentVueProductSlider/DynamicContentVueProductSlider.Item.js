@@ -16,6 +16,7 @@ import Event, {
   VUE_CAROUSEL_CLICK,
 } from "Util/Event";
 import { parseURL } from "Util/Url";
+import Price from "Component/Price";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,

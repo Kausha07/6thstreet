@@ -709,6 +709,7 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
+<<<<<<< HEAD
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
 
@@ -718,6 +719,8 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
+=======
+>>>>>>> 5714cdbd2c88ae92c3f5eb22d41566e45d946934
   // facebook login dialog
   // facebookLogin = () => {
   //   const { onSignInSuccess, onSignInAttempt } = this.props;
