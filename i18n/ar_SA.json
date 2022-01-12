@@ -925,5 +925,6 @@
     "PHONE NUMBER*": "رقم الهاتف*",
     "Welcome,": " اهلاً",
     "OK": "نعم",
-    "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات"
+    "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات",
+    "Results": null
 }
