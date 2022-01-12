@@ -521,12 +521,13 @@ class FieldMultiselect extends PureComponent {
     let value = event.target.value;
     let finalSearchedData = {};
     if (facet_key === "categories_without_path") {
-      let categoryLevel1 = initialOptions.q.split(" ")[1];
-      let categoryData = data[categoryLevel1].subcategories;
-      Object.keys(categoryData).filter((key) => {
-        if (key.toLowerCase().includes(value.toLowerCase())) {
-          finalSearchedData[key] = categoryData[key];
-        }
+      Object.entries(allData).map((entry) => {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
+            finalSearchedData[subEntry[0]] =
+              entry[1].subcategories[subEntry[0]];
+          }
+        });
       });
     } else {
       Object.keys(allData).filter((key) => {
@@ -672,6 +673,7 @@ class FieldMultiselect extends PureComponent {
         label,
         selected_filters_count,
       },
+      filter,
       initialOptions,
       currentActiveFilter,
     } = this.props;
@@ -686,11 +688,15 @@ class FieldMultiselect extends PureComponent {
     }
 
     if (category === "categories_without_path") {
-      let categoryLevel1 = initialOptions.q.split(" ")[1];
-      if (data[categoryLevel1]) {
-        conditionalData = data[categoryLevel1].subcategories;
-      }
+      let categoryLevelData = [];
+      Object.entries(conditionalData).map((entry) => {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      });
+      conditionalData = categoryLevelData;
     }
+
     return (
       <div
         ref={this.filterDropdownRef}
