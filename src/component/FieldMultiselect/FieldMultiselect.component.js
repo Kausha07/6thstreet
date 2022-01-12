@@ -88,9 +88,9 @@ class FieldMultiselect extends PureComponent {
       filter: { selected_filters_count },
     } = this.props;
     if (selected_filters_count > 6) {
-      this.setState({ showMore: true });
+      this.setState({ showMore: true, showLess: false });
     } else {
-      this.setState({ showMore: false });
+      this.setState({ showMore: false, showLess: false });
     }
     document.addEventListener("mousedown", this.handleClickOutside);
   }
@@ -101,22 +101,27 @@ class FieldMultiselect extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      filter: { selected_filters_count },
+      filter: { selected_filters_count, category },
+      parentActiveFilters,
     } = this.props;
-    const {
-      filter: { selected_filters_count: prevCount },
-    } = prevProps;
     if (
-      JSON.stringify(prevProps.parentActiveFilters) !==
-      JSON.stringify(this.props.parentActiveFilters)
+      !category.includes("size") &&
+      parentActiveFilters &&
+      parentActiveFilters[category]
     ) {
-      this.setState({
-        parentActiveFilters: this.props.parentActiveFilters,
-      });
-      if (selected_filters_count > 6) {
-        this.setState({ showMore: true });
-      } else {
-        this.setState({ showMore: false });
+      if (
+        JSON.stringify(prevProps.parentActiveFilters) !==
+          JSON.stringify(parentActiveFilters) ||
+        parentActiveFilters[category].length === 0
+      ) {
+        this.setState({
+          parentActiveFilters: this.props.parentActiveFilters,
+        });
+        if (selected_filters_count > 6) {
+          this.setState({ showMore: true, showLess: false });
+        } else {
+          this.setState({ showMore: false, showLess: false });
+        }
       }
     }
   }
