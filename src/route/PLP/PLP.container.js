@@ -97,10 +97,18 @@ export class PLPContainer extends PureComponent {
     if (Object.keys(object1).length === Object.keys(object2).length) {
       const isEqual = Object.entries(object1).reduce((acc, key) => {
         if (object2[key[0]]) {
-          if (key[1].length !== object2[key[0]].length) {
-            acc.push(0);
+          if (key[0] === "discount") {
+            if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
           } else {
-            acc.push(1);
+            if (key[1].length !== object2[key[0]].length) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
           }
         } else {
           acc.push(1);
@@ -237,7 +245,13 @@ export class PLPContainer extends PureComponent {
       this.updateHeaderState();
     }
 
+    if (
+      JSON.stringify(requestOptions) !==
+      JSON.stringify(this.state.prevRequestOptions)
+    ) {
+    }
     if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
+
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
     } else if (page !== prevPage && !pages[page]) {

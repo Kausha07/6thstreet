@@ -201,7 +201,7 @@ class WelcomeHomePage extends PureComponent {
         const locale = `${language}-${country.toLowerCase()}`;
         return (
             <>
-                <div block="WelcomeHomePage">
+                <div block="WelcomeHomePage" mods={{isArabic: language==="ar"}}>
                     {
                         !isMobile.any()
                         ?
@@ -216,14 +216,14 @@ class WelcomeHomePage extends PureComponent {
                     </div>
                     {   isMobile.any() &&
                         <div block="WelcomeHomePage" elem="StoreSwitcher">
-                            <div block="Text">
+                            <div block="Text" mods={{isArabic: language==="ar"}}>
                                 <div block="Text-welcome">{__("Welcome, ")}</div>
                                 <div block="Text-shop">{__("you are shopping in")}</div>
                             </div>
-                            <div  block="WelcomeHomePage" elem="LanguageSwitcher">
+                            <div  block="WelcomeHomePage" elem="LanguageSwitcher" mods={{isArabic: language==="ar"}}>
                                 <LanguageSwitcher isWelcomeMobileView={true}/>
                             </div>
-                            <div  block="WelcomeHomePage" elem="CountrySwitcher">
+                            <div  block="WelcomeHomePage" elem="CountrySwitcher" mods={{isArabic: language==="ar"}}>
                                 <CountrySwitcher/>
                             </div>
                         </div>
@@ -231,15 +231,15 @@ class WelcomeHomePage extends PureComponent {
 
                     { isPopupOpen &&
                         <div block="WelcomeHomePage" elem="Popup">
-                            <div block="WelcomeHomePage-Popup" elem="Action">
+                            <div block="WelcomeHomePage-Popup" elem="Action" mods={{isArabic: language==="ar"}}>
                                 <img  block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup}/>
                             </div>
-                            <div block="WelcomeHomePage-Popup" elem="Content">
+                            <div block="WelcomeHomePage-Popup" elem="Content" mods={{isArabic: language==="ar"}}>
                                 <div block="WelcomeHomePage-Popup-Content" elem="Text">
                                         <span>{__("Welcome, ")}</span>
                                         <span>{__("you are shopping in")}</span>
                                 </div>
-                                <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer">
+                                <div  block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{isArabic: language==="ar"}}>
                                     <LanguageSwitcher welcomePagePopup={true}/>
                                     <CountrySwitcher/>
                                     <button
@@ -247,7 +247,7 @@ class WelcomeHomePage extends PureComponent {
                                         elem="ConfirmButton"
                                         onClick={this.closePopup}
                                     >
-                                        OK
+                                        { __("OK") }
                                     </button>
                                 </div>
                             </div>

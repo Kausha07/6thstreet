@@ -377,7 +377,8 @@ class PLPFilters extends PureComponent {
   };
 
   renderSortBy = ([key, filter], index) => {
-    const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } = this.state;
+    const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
+      this.state;
     return (
       <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
@@ -411,6 +412,7 @@ class PLPFilters extends PureComponent {
     checked,
     facet_key
   ) => {
+ 
     if (data[facet_value]) {
       data[facet_value].is_selected = checked;
       if (checked) {
@@ -419,11 +421,8 @@ class PLPFilters extends PureComponent {
         newFilterArray.selected_filters_count -= 1;
       }
     } else {
-      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
-      if (categoryDataStatus) {
-        let categoryData = facet_key.includes("size")
-          ? data[facet_key]
-          : data[categoryLevel1];
+      if (facet_key.includes("size")) {
+        let categoryData = data[facet_key];
         if (
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]
@@ -437,6 +436,21 @@ class PLPFilters extends PureComponent {
             newFilterArray.selected_filters_count -= 1;
           }
         }
+      } else if (categoryLevel1) {
+        return Object.entries(data).map((entry) => {
+          return Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0] === facet_value) {
+              subEntry[1].is_selected = checked;
+              if (checked) {
+                entry[1].selected_filters_count += 1;
+                newFilterArray.selected_filters_count += 1;
+              } else {
+                entry[1].selected_filters_count -= 1;
+                newFilterArray.selected_filters_count -= 1;
+              }
+            }
+          });
+        });
       } else {
         Object.keys(data).map((value) => {
           if (
@@ -488,7 +502,6 @@ class PLPFilters extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-
     let categoryLevel1 = initialOptions.q.split(" ")[1];
 
     if (!isRadio) {
@@ -504,6 +517,7 @@ class PLPFilters extends PureComponent {
             initialFacetKey
           );
           updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
           this.setState(
             {
               activeFilters: {
@@ -594,6 +608,7 @@ class PLPFilters extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
+
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         WebUrlParser.setParam(key, activeFilters[key], query);
