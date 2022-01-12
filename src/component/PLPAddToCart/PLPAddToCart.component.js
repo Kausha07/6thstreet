@@ -71,8 +71,12 @@ class PLPAddToCart extends PureComponent {
     this.setSizeData();
     this.updateDefaultSizeType()
     const {
-      product: { size_eu, size_uk, size_us, in_stock, stock_qty }
+      product: { size_eu, size_uk, size_us, in_stock, stock_qty, simple_products = [] }
     } = this.props;
+
+
+
+
     let outOfStockStatus;
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
@@ -130,10 +134,26 @@ class PLPAddToCart extends PureComponent {
         product.simple_products[filteredProductKeys[0]].size || {}
       );
 
-      const object = {
+      let object = {
         sizeCodes: filteredProductKeys || [],
         sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
       };
+
+
+
+      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
+        const sizeCode = size[0];
+        const { quantity } = size[1];
+
+        if (quantity !== null && quantity !== undefined) {
+          acc.push(sizeCode);
+        }
+
+        return acc;
+      }, []);
+
+      object.sizeCodes = allSizes;
+      debugger
 
       if (
         filteredProductKeys.length <= 1 &&
