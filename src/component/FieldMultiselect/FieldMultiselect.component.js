@@ -104,7 +104,7 @@ class FieldMultiselect extends PureComponent {
       filter: { selected_filters_count, category },
       parentActiveFilters,
     } = this.props;
-    if (!category.includes("size") && parentActiveFilters) {
+    if (parentActiveFilters) {
       if (
         JSON.stringify(prevProps.parentActiveFilters) !==
           JSON.stringify(parentActiveFilters) ||
