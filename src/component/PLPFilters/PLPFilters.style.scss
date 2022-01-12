@@ -402,6 +402,7 @@
       .FieldMultiselect{
         height: 34px;
         border-bottom: unset;
+        z-index: 2;
         &-FilterButton{
           padding: 7px 0;
           font-size: 13px;
@@ -419,13 +420,21 @@
           padding-right: 10px;
           margin-top: 5px;
           &_toggleOptionsList{
-            max-height: 245px;
+            max-height: 235px;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0,  0.15);
             border-radius: 12px;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            &::-webkit-scrollbar {
+              display: none;
+            }
             .PLPFilter{
               ul{
                 li{
                   border-bottom: 1px solid #e6e6e6;
+                  &:last-child{
+                    border-bottom: none;
+                  }
                 }
               }
             }
