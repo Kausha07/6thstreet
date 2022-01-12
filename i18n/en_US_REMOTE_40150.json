@@ -769,11 +769,8 @@
     "BY AGE": null,
     "International Shipment": null,
     "Non Discountable": null,
-<<<<<<< HEAD
     "Dispatched": null,
     "In Transit": null,
-=======
->>>>>>> 5714cdbd2c88ae92c3f5eb22d41566e45d946934
     "PRODUCT DETAILS": null,
     "PRODUCT DETAILS:": null,
     "SHOW MORE DETAILS": null,
@@ -786,7 +783,6 @@
     "Customer Service available all days from: ": null,
     "Contact us": null,
     "Also available in:": null,
-<<<<<<< HEAD
     "My Orders": null,
     "My Returns": null,
     "My Address Book": null,
@@ -840,8 +836,4 @@
     "OK": null,
     "OUT OF STOCK": null,
     "Results": null
-=======
-    "Out of Stock": null,
-    "In Stock": null
->>>>>>> 5714cdbd2c88ae92c3f5eb22d41566e45d946934
 }
