@@ -22,8 +22,8 @@ import {
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
 import PLP from "./PLP.component";
-import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
+import Algolia from "Util/API/provider/Algolia";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -49,6 +49,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
     PLPDispatcher.requestProductList(options, dispatch, state),
   requestProductListPage: (options) =>
     PLPDispatcher.requestProductListPage(options, dispatch),
+  setInitialPLPFilter: (initialOptions) =>
+    PLPDispatcher.setInitialPLPFilter(initialOptions, dispatch, state),
   setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -68,6 +70,7 @@ export class PLPContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     requestProductList: PropTypes.func.isRequired,
     requestProductListPage: PropTypes.func.isRequired,
+    setInitialPLPFilter: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     requestedOptions: RequestedOptions.isRequired,
@@ -90,25 +93,34 @@ export class PLPContainer extends PureComponent {
 
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
-  static getDerivedStateFromProps(props, state) {
-    const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions();
-    const { page, ...restOptions } = requestOptions;
-    const {
-      prevRequestOptions: { page: prevPage, ...prevRestOptions },
-    } = state;
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[0] === "discount") {
+            if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
+          } else {
+            if (key[1].length !== object2[key[0]].length) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
+          }
+        } else {
+          acc.push(1);
+        }
 
-    if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
-      // if queries match (excluding pages) => not inital
-      PLPContainer.requestProductList(props);
-    } else if (page !== prevPage && !pages[page]) {
-      // if only page has changed, and it is not yet loaded => request that page
-      PLPContainer.requestProductListPage(props);
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
     }
 
-    return {
-      prevRequestOptions: requestOptions,
-    };
+    return false;
   }
 
   static getRequestOptions() {
@@ -138,15 +150,17 @@ export class PLPContainer extends PureComponent {
   state = {
     prevRequestOptions: PLPContainer.getRequestOptions(),
     brandDescription: "",
-      brandImg: "",
-      brandName: "",
-      isArabic: isArabic(),
+    brandImg: "",
+    brandName: "",
+    isArabic: isArabic(),
   };
 
   containerFunctions = {
     // getData: this.getData.bind(this)
     resetPLPData: this.resetPLPData.bind(this),
+    compareObjects: this.compareObjects.bind(this),
   };
+
   resetPLPData() {
     const { resetPLPData } = this.props;
     resetPLPData();
@@ -154,44 +168,68 @@ export class PLPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
     if (this.getIsLoading()) {
-      PLPContainer.requestProductList(props);
-    }
+      const options = PLPContainer.getRequestOptions();
+      const initialOptions = this.getInitialOptions(options);
 
+      // this.props.setInitialPLPFilter({ initialOptions });
+      PLPContainer.requestProductList(this.props);
+    }
     this.setMetaData();
   }
 
-  async componentDidMount() {
+  getInitialOptions = (options) => {
+    const optionArr = ["categories.level1", "page", "q", "visibility_catalog"];
+    let initialOptions = {};
+    Object.keys(options).map((key) => {
+      if (optionArr.includes(key)) {
+        initialOptions[key] = options[key];
+      }
+    });
+    return initialOptions;
+  };
+
+  componentDidMount() {
     const { menuCategories = [] } = this.props;
-    const {isArabic} = this.state;
+    const { isArabic } = this.state;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
+    this.getBrandDetails();
+  }
+
+  async getBrandDetails() {
     const brandName = location.pathname
-    .split(".html")[0]
-    .substring(1)
-    .split("/")?.[0];
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
     const data = await new Algolia({
       index: "brands_info",
     }).getBrandsDetails({
       query: brandName,
-      limit: 1
+      limit: 1,
     });
     this.setState({
-      brandDescription: isArabic ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
+      brandDescription: isArabic
+        ? data?.hits[0]?.description_ar
+        : data?.hits[0]?.description,
       brandImg: data?.hits[0]?.image,
-      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name
-    })
+      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+    });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { isLoading, setIsLoading, menuCategories = [] } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
-
+    const requestOptions = PLPContainer.getRequestOptions();
+    const { pages } = this.props;
+    const { page } = requestOptions;
+    const {
+      prevRequestOptions: { page: prevPage },
+    } = this.state;
     // update loading from here, validate for last
     // options recieved results from
     if (
@@ -205,6 +243,21 @@ export class PLPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
+    }
+
+    if (
+      JSON.stringify(requestOptions) !==
+      JSON.stringify(this.state.prevRequestOptions)
+    ) {
+    }
+    if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
+
+      PLPContainer.requestProductList(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
+    } else if (page !== prevPage && !pages[page]) {
+      // if only page has changed, and it is not yet loaded => request that page
+      PLPContainer.requestProductListPage(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
     }
   }
 
@@ -336,17 +389,18 @@ export class PLPContainer extends PureComponent {
 
   containerProps = () => {
     const {
-      query,
-      plpWidgetData,
-      gender,
-    } = this.props;
-    const {
       brandDescription,
       brandImg,
       brandName,
-    } = this.state;
+      query,
+      plpWidgetData,
+      gender,
+      filters,
+      pages,
+    } = this.props;
 
     // isDisabled: this._getIsDisabled()
+
     return {
       brandDescription,
       brandImg,
@@ -354,11 +408,13 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters,
+      pages,
     };
   };
 
   render() {
-    const { requestedOptions } = this.props;
+    const { requestedOptions, filters } = this.props;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     return <PLP {...this.containerFunctions} {...this.containerProps()} />;
   }

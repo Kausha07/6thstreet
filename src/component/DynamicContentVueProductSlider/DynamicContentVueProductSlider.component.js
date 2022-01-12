@@ -43,8 +43,9 @@ class DynamicContentVueProductSlider extends PureComponent {
   componentWillUnmount() {}
 
   registerViewPortEvent() {
+    const { index = 0 } = this.props;
     let observer;
-    const elem = document.querySelector("#productSlider");
+    const elem = document.querySelector(`#productSlider-${index}`);
 
     let options = {
       root: null,
@@ -53,7 +54,6 @@ class DynamicContentVueProductSlider extends PureComponent {
     };
 
     observer = new IntersectionObserver(this.handleIntersect, options);
-
     observer.observe(elem);
     this.setState({ eventRegistered: true });
   }
@@ -185,7 +185,14 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isHome } = this.props;
 
     return (
-      <div block="VueProductSlider" elem="HeaderContainer" mods={{ isHome }}>
+      <div
+        block="VueProductSlider"
+        elem="HeaderContainer"
+        mods={{
+          isHome,
+          isArabic: isArabic()
+        }}
+      >
         <h4>{heading}</h4>
         {/* {this.viewAllBtn()} */}
       </div>
@@ -256,7 +263,10 @@ class DynamicContentVueProductSlider extends PureComponent {
             elem="SliderContainer"
             id="ScrollWrapper"
             ref={this.cmpRef}
-            mods={{ isHome }}
+            mods={{
+              isHome,
+              isArabic: isArabic()
+            }}
             onScroll={(e) => {
               this.handleContainerScroll(widgetID, e);
             }}
@@ -290,15 +300,21 @@ class DynamicContentVueProductSlider extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index = null } = this.props;
     return (
-      <div
-        ref={setRef}
-        id="productSlider"
-        block="VueProductSlider"
-        elem="Container"
-      >
-        {this.renderHeader()}
-        {this.renderSliderContainer()}
+      <div id="productSlider">
+        <div
+          ref={setRef}
+          id={`productSlider-${index}`}
+          block="VueProductSlider"
+          elem="Container"
+          mods={{
+            isArabic: isArabic()
+          }}
+        >
+          {this.renderHeader()}
+          {this.renderSliderContainer()}
+        </div>
       </div>
     );
   }

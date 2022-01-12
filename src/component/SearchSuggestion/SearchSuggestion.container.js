@@ -281,8 +281,9 @@ export class SearchSuggestionContainer extends PureComponent {
       closeSearch,
       queryID,
       querySuggestions,
-      renderMySignInPopup
+      renderMySignInPopup,
       // wishlistData,
+      isPDPSearchVisible
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -304,7 +305,8 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      renderMySignInPopup
+      renderMySignInPopup,
+      isPDPSearchVisible
       // wishlistData,
     };
   };

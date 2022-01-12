@@ -39,8 +39,10 @@ class SearchPage extends PLP {
         <main block="SearchPage">
           <ContentWrapper label={__("Product List Page")}>
             {this.renderPLPDetails()}
-            {this.renderPLPFilters()}
-            {this.renderPLPPages()}
+            <div block="Products" elem="Wrapper">
+              {this.renderPLPFilters()}
+              {this.renderPLPPages()}
+            </div>
             {this.renderSearchNotFound()}
           </ContentWrapper>
         </main>

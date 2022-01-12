@@ -3,6 +3,7 @@ import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
+import { resetPLPPage } from "Store/PLP/PLP.action";
 import { LocationType } from "Type/Common";
 import history from "Util/History";
 import { fetchQuery } from "Util/Request";
@@ -19,6 +20,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (_dispatch) => ({
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+  resetPLPPage: () => _dispatch(resetPLPPage()),
 });
 
 export class UrlRewritesContainer extends PureComponent {
@@ -49,16 +51,24 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
-    this.requestUrlRewrite();
+    const possibleSku = this.getPossibleSku();
+    this.setState({
+      sku: possibleSku,
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
 
-    const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+    const { prevPathname, query, sku } = this.state;
+    const {
+      prevPathname: prevStatePathname,
+      query: prevQuery,
+      sku: prevSku,
+    } = prevState;
 
+    this.onPageReload();
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -79,8 +89,10 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
+      sku !== prevSku ||
       !prevStatePathname
     ) {
+      console.log("url rewrite");
       hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
@@ -88,6 +100,19 @@ export class UrlRewritesContainer extends PureComponent {
     }
   }
 
+  onPageReload = () => {
+    const { resetPLPPage } = this.props;
+    let previousLocation = location.href;
+    window.onload = function () {
+      const url = new URL(previousLocation.replace(/%20&%20/gi, "%20%26%20"));
+      if (url.searchParams.get("p") !== "0") {
+        resetPLPPage();
+        url.searchParams.set("p", 0);
+        const { pathname, search } = url;
+        history.push(pathname + search);
+      }
+    };
+  };
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;
@@ -97,10 +122,12 @@ export class UrlRewritesContainer extends PureComponent {
     const possibleSku = this.getPossibleSku();
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
+    this.setState({
+      prevPathname: urlParam,
+    });
     if (search.startsWith("?q=")) {
       this.setState({
         prevPathname: urlParam,

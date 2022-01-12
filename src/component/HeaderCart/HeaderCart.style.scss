@@ -4,7 +4,7 @@
 
 .HeaderCart {
   position: relative;
-
+  z-index: 96;
   &-PopUp {
     position: fixed;
     height: 100%;
@@ -16,7 +16,7 @@
     font-size: 0;
     cursor: default;
     pointer-events: all;
-    z-index: 10;
+    z-index: 96;
 
     @include desktop {
       display: block;

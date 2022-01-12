@@ -4,6 +4,7 @@ import Link from "Component/Link";
 import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
+import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
@@ -14,12 +15,15 @@ import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from 'Util/Mobile';
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
 
+//Global Variable for PLP AddToCart
+var urlWithQueryID;
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -37,6 +41,25 @@ class ProductItem extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    stockAvailibility: true,
+    selectedSizeType: "eu",
+    selectedSizeCode: "",
+  };
+
+  setSize = (sizeType, sizeCode) => {
+    // this.setState({
+    //   selectedSizeType: sizeType || "eu",
+    //   selectedSizeCode: sizeCode || "",
+    // });
+  };
+
+
+  setStockAvailability = (status) => {
+    // const {
+    //   product: { price },
+    // } = this.props;
+    // console.log("hi",status)
+    // this.setState({ stockAvailibility: !!price && status });
   };
 
   handleClick = this.handleProductClick.bind(this);
@@ -192,7 +215,18 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-    return <Price price={price} page={page} renderSpecialPrice={true}/>;
+    return <Price price={price} page={page} renderSpecialPrice={true} />;
+  }
+
+  renderAddToCartOnHover() {
+    return (
+      <div block="ProductItem" elem="AddToCart">
+        <PLPAddToCart
+          product={this.props.product}
+          url={urlWithQueryID}
+        />
+      </div>
+    )
   }
 
   renderLink() {
@@ -211,13 +245,13 @@ class ProductItem extends PureComponent {
         queryID = qid;
       }
     }
-    let urlWithQueryID;
+
     let pathname = "/";
     if (!isVueData && url) {
       try {
         pathname = new URL(url)?.pathname;
       }
-      catch(err){
+      catch (err) {
         console.error(err);
       }
       if (queryID) {
@@ -249,6 +283,7 @@ class ProductItem extends PureComponent {
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
+
       </Link>
     );
   }
@@ -266,6 +301,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {!isMobile.any() && this.renderAddToCartOnHover()}
       </li>
     );
   }

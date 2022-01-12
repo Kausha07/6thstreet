@@ -78,8 +78,8 @@ export class VueIntegrationQueries {
       {"name":"vue_compact_style_it_slider" , "value":"9a"}
     ];
     const getWidgetID = WIDGET_MAP.find(item => item.name === widgetType)?.value;
-    const widgetID = `${getWidgetID}_${pageType}`;
-    return widgetID;
+    // const widgetID = `${getWidgetID}_${pageType}`;
+    return getWidgetID;
   }
 
 }

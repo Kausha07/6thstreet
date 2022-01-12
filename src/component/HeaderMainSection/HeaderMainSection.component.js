@@ -24,10 +24,16 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import "./HeaderMainSection.style";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   chosenGender: state.AppState.gender,
+  displaySearch: state.PDP.displaySearch
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
 });
 
 class HeaderMainSection extends NavigationAbstract {
@@ -37,7 +43,7 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   static defaultProps = {
-    changeMenuGender: () => {},
+    changeMenuGender: () => { },
   };
 
   constructor(props) {
@@ -80,6 +86,9 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderLeftContainer() {
+    if (this.isPDP() && isMobile.any()) {
+      return null
+    }
     return (
       <div block="leftContainer" key="leftContainer">
         {this.renderAccount()}
@@ -107,6 +116,7 @@ class HeaderMainSection extends NavigationAbstract {
     if (!showPopup) {
       return null;
     }
+
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}
@@ -271,9 +281,8 @@ class HeaderMainSection extends NavigationAbstract {
         const pagePDPTitle = String(this.getProduct()).toUpperCase();
 
         this.setMainContentPadding("50px");
-
         return (
-          <span block="CategoryTitle" mods={{ isArabic }}>
+          <span block="CategoryTitle" mods={{ isArabic, isPDP: true }}>
             {pagePDPTitle}
           </span>
         );
@@ -298,15 +307,21 @@ class HeaderMainSection extends NavigationAbstract {
       case "kids":
         history.push("/kids.html");
         break;
+      case "home":
+        history.push("/home.html");
+        break;
       default:
         history.push("/");
     }
   };
 
   renderBack() {
-    const { history } = this.props;
+    const { history, displaySearch } = this.props;
     const { isArabic } = this.state;
-
+    const isPDPSearchVisible = this.isPDP() && displaySearch
+    if (this.isPDP() && isMobile.any()) {
+      return null
+    }
     return this.isPLP() || this.isPDP() ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button
@@ -327,6 +342,11 @@ class HeaderMainSection extends NavigationAbstract {
   hideSearchBar = () => {
     this.setState({ showSearch: false });
   };
+
+  hidePDPSearchBar = () => {
+    const { showPDPSearch } = this.props
+    showPDPSearch(false)
+  }
 
   renderSearchIcon() {
     const { isArabic } = this.state;
@@ -365,25 +385,42 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
   renderSearch() {
+    const { displaySearch } = this.props
+    const isPDPSearchVisible = this.isPDP() && displaySearch
     if (isMobile.any() || isMobile.tablet()) {
-      return this.isPLP() || this.isPDP() ? null : (
-        <HeaderSearch key="search" />
+      return this.isPLP() ? null : (
+        <div block="HeaderSearchSection"
+          mods={{ isPDPSearchVisible }}>
+          <HeaderSearch key="search" isPDP={this.isPDP()} isPDPSearchVisible={isPDPSearchVisible} hideSearchBar={this.hidePDPSearchBar} focusInput={isPDPSearchVisible ? true : false} />
+        </div>
       );
     }
 
     return null;
   }
 
+  getHeaderMainSectionVisibility = () => {
+    const { visible } = this.state;
+    const { displaySearch } = this.props;
+
+    if (this.isPDP()) {
+      if (!displaySearch) {
+        return visible;
+      }
+    }
+    return true;
+  }
+
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { signInPopUp } = this.state;
+    const { signInPopUp, showPopup } = this.state;
+    const { displaySearch } = this.props
+    const isPDPSearchVisible = this.isPDP() && displaySearch
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <div
         block="HeaderMainSection"
-        data-visible={
-          this.isPDP() && isMobile.any() ? this.state.visible : true
-        }
+        data-visible={this.getHeaderMainSectionVisibility()}
       >
         {this.renderMySignInPopup()}
         {this.renderNavigationState()}
@@ -394,4 +431,4 @@ class HeaderMainSection extends NavigationAbstract {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(HeaderMainSection));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection));

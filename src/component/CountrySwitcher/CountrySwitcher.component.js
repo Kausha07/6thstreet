@@ -7,6 +7,7 @@ import { PureComponent } from 'react';
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import StoreSwitcherPopup from 'Component/StoreSwitcherPopup';
+import { isArabic } from 'Util/App';
 import { SelectOptions } from 'Type/Field';
 
 import './CountrySwitcher.style';
@@ -22,8 +23,19 @@ class CountrySwitcher extends PureComponent {
         super(props);
 
         this.state = {
-            content: ''
+            content: '',
+            isArabic: isArabic()
+
         };
+    }
+
+    togglePopup = () => {
+        if (this.state.content === '') {
+            this.openPopup();
+        }
+        else {
+            this.closePopup();
+        }
     }
 
     openPopup = () => {
@@ -34,9 +46,9 @@ class CountrySwitcher extends PureComponent {
 
         this.setState({
             content: <StoreSwitcherPopup
-              countrySelectOptions={ countrySelectOptions }
-              country={ country }
-              closePopup={ this.closePopup }
+                countrySelectOptions={countrySelectOptions}
+                country={country}
+                closePopup={this.closePopup}
             />
         });
     };
@@ -56,13 +68,13 @@ class CountrySwitcher extends PureComponent {
 
         return (
             <Field
-              id="language-switcher-country"
-              name="country"
-              type="select"
-              placeholder={ __('Choose country') }
-              selectOptions={ countrySelectOptions }
-              value={ country }
-              onChange={ onCountrySelect }
+                id="language-switcher-country"
+                name="country"
+                type="select"
+                placeholder={__('Choose country')}
+                selectOptions={countrySelectOptions}
+                value={country}
+                onChange={onCountrySelect}
             />
         );
     }
@@ -85,18 +97,19 @@ class CountrySwitcher extends PureComponent {
         const { isArabic } = this.state;
         const country = this.getCurrentCountry();
         const id = country.id;
+        let isOpen = !(this.state.content === '')
 
         return (
             <button
-              block="CountrySwitcher"
-              elem="CountryBtn"
-              mods={ { isArabic } }
+                block={`CountrySwitcher`}
+                elem="CountryBtn"
+                mods={{ isOpen, isArabic }}
                 /* eslint-disable-next-line */
-              onClick={ this.openPopup  }
+                onClick={this.togglePopup}
             >
-                <CountryMiniFlag label={ id } />
+                <CountryMiniFlag label={id} />
                 <span>
-                    { country.label || 'SELECT COUNTRY' }
+                    {country.label || 'SELECT COUNTRY'}
                 </span>
             </button>
         );
@@ -106,8 +119,8 @@ class CountrySwitcher extends PureComponent {
         const { content } = this.state;
         return (
             <div block="CountrySwitcher">
-                { this.renderStoreButton() }
-                { content }
+                {this.renderStoreButton()}
+                {content}
             </div>
         );
     }

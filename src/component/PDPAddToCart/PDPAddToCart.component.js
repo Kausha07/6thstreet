@@ -176,8 +176,7 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
-      this.props;
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
@@ -246,7 +245,6 @@ class PDPAddToCart extends PureComponent {
       sizeObject = {},
       productStock = {},
     } = this.props;
-
     if (
       sizeObject.sizeCodes !== undefined &&
       Object.keys(productStock).length !== 0 &&
@@ -547,10 +545,29 @@ class PDPAddToCart extends PureComponent {
     }
     return null;
   }
+  renderAppParity() {
+    const {
+      product: { brand_name },
+    } = this.props;
+
+    if (
+      brand_name.toLowerCase() === "trendyol" ||
+      brand_name.toLowerCase() === "ترينديول"
+    ) {
+      return (
+        <div block="AppParity">
+          <p block="AppParity" elem="Text">
+            {__("Select a size up for the right fit")}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  }
 
   renderContent() {
     const {
-      product: { in_stock, stock_qty },
+      product: { in_stock, stock_qty, brand_name },
       isOutOfStock,
       productStock = {},
       sizeObject = {},
@@ -581,6 +598,8 @@ class PDPAddToCart extends PureComponent {
         {sizeObject.sizeTypes !== undefined &&
         sizeObject.sizeTypes.length !== 0 ? (
           <>
+            <div block="SeperatorAddtoCart" />
+            {this.renderAppParity()}
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <span block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}

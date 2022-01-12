@@ -53,9 +53,14 @@ export class SplashContainer extends PureComponent {
     const { isCartRetrieved } = state;
 
     if (!isCartRetrieved && locale !== "") {
-      getCart();
-
-      return { isCartRetrieved: true };
+      const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+      const TABBY_CHECK = JSON.parse(
+        localStorage.getItem("TABBY_ORDER_DETAILS")
+      );
+      if (!QPAY_CHECK && !TABBY_CHECK) {
+        getCart();
+        return { isCartRetrieved: true };
+      }
     }
 
     return null;

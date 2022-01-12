@@ -43,21 +43,21 @@ class Price extends PureComponent {
       >
         {
           onSale
-          ?
-          <>
-            {currency}
-            <span block="Price-Discount" elem="space"></span>
-            &nbsp;
-            {specialPrice}
-          </>
-          :
-          country && DISPLAY_DISCOUNT_PERCENTAGE[country]
-          ?
-          <>
-            {`${__("On Sale")} ${this.discountPercentage()} Off`}
-          </>
-          :
-          null
+            ?
+            <>
+              {currency}
+              <span block="Price-Discount" elem="space"></span>
+              &nbsp;
+              {specialPrice}
+            </>
+            :
+            country && DISPLAY_DISCOUNT_PERCENTAGE[country]
+              ?
+              <>
+                {`${__("On Sale")} ${this.discountPercentage()} Off`}
+              </>
+              :
+              null
         }
       </span>
     );
@@ -96,10 +96,10 @@ class Price extends PureComponent {
   discountPercentage() {
     const { basePrice, specialPrice, renderSpecialPrice, cart, country } = this.props;
 
-    if(country && !DISPLAY_DISCOUNT_PERCENTAGE[country]){
+    if (country && !DISPLAY_DISCOUNT_PERCENTAGE[country]) {
       return null
     }
-  
+
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
       discountPercentage = 1;

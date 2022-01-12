@@ -17,10 +17,10 @@ export const STATE_FORGOT_PASSWORD_SUCCESS = 'forgotPasswordSuccess';
 export const STATE_CREATE_ACCOUNT = 'createAccount';
 export const STATE_LOGGED_IN = 'loggedIn';
 export const STATE_CONFIRM_EMAIL = 'confirmEmail';
-
+export const STATE_VERIFY_NUMBER = "otpVerification";
 export const CUSTOMER_ACCOUNT_OVERLAY_KEY = 'customer_account';
 
-export const ENABLE_OTP_LOGIN = false;
+export const ENABLE_OTP_LOGIN = true;
 
 // available SSO providers 
 export const SSO_LOGIN_PROVIDERS = [];

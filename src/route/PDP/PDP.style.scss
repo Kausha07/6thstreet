@@ -2,6 +2,7 @@
   max-width: var(--container-max-width);
   margin: 0 auto;
   @include mobile() {
+    z-index: 93;
     margin-top: -64px;
   }
   @include tablet {

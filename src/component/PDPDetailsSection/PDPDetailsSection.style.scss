@@ -58,6 +58,15 @@
           font-size: 12px;
           letter-spacing: 0;
           line-height: 15px;
+          text-align: left;
+        }
+        &_isArabic {
+          #brandName {
+            text-align: right;
+          }
+          #productName {
+            text-align: right;
+          }
         }
         .WishlistIcon {
           border-radius: 50%;
@@ -99,6 +108,11 @@
           text-align: left;
           padding-left: 20px;
           padding-right: 20px;
+        }
+      }
+      &_isArabic {
+        h4 {
+          text-align: right;
         }
       }
       h1 {
@@ -259,6 +273,11 @@
     }
   }
 
+  .BottomHighlights {
+    @include mobile {
+      margin-top: 30px;
+    }
+  }
   &-Highlights {
     &-SKU {
       @include mobile {
@@ -604,8 +623,10 @@
           display: none !important;
         }
         width: 100vw;
-        margin-left: -12vw;
-        margin-right: -12vw;
+
+        margin-left: calc((-100vw + 76.389vw) / 2);
+        margin-right: calc((-100vw + 76.389vw) / 2);
+
         background: #f9f9f9;
         overflow: hidden !important;
 
@@ -615,6 +636,12 @@
           margin-inline: auto;
           margin-left: auto;
           margin-right: auto;
+        }
+      }
+      &_largeScreen {
+        &:nth-child(odd) {
+          margin-left: calc((1100px - 100vw) / 2);
+          margin-right: calc((1100px - 100vw) / 2);
         }
       }
     }

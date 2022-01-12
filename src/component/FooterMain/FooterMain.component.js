@@ -3,6 +3,8 @@ import { Fragment, PureComponent } from "react";
 import FooterCustomerSupport from "Component/FooterCustomerSupport";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
+import { connect } from "react-redux";
+import { URLS } from 'Util/Url/Url.config';
 
 import facebook from "./icons/facebook.png";
 import instagram from "./icons/instagram.png";
@@ -10,10 +12,24 @@ import Image from "Component/Image";
 
 import "./FooterMain.style";
 
+export const mapStateToProps = (state) => ({
+  config: state.AppConfig.config,
+  country: state.AppState.country,
+  language: state.AppState.language,
+});
 class FooterMain extends PureComponent {
   state = {
     isArabic: isArabic(),
   };
+
+  getRootURL = () => {
+    const { language, country } = this.props;
+    if(language && country && URLS){
+      const locale = `${language}-${country.toLowerCase()}`;
+      return URLS[locale] || "";
+    }
+    return "";
+  }
 
   linksMap = [
     {
@@ -64,7 +80,7 @@ class FooterMain extends PureComponent {
           href: "https://track.fetchr.us/",
         },
         {
-          name: __("FAQ's"),
+          name: __("FAQs"),
           href: "/faq",
         },
         {
@@ -102,6 +118,8 @@ class FooterMain extends PureComponent {
   ];
 
   renderFirstTwoCloumns() {
+    const regExp = new RegExp('^(?:[a-z]+:)?//', 'i');
+    const rootURL = this.getRootURL() || "";
     return this.linksMap
       .filter(
         (column) =>
@@ -113,13 +131,22 @@ class FooterMain extends PureComponent {
           <h4>{column.title}</h4>
           <div block="FooterMain" elem="Nav" key={column.title}>
             <ul key={column.title}>
-              {column.items.map((items) => (
-                <li key={items.name}>
-                  <Link block="FooterMain" elem="Link" to={items.href}>
-                    {items.name}
-                  </Link>
-                </li>
-              ))}
+              {
+                column.items.map((items) => {
+                  const navigateTo = regExp.test(items.href) ? items.href : `${rootURL}${items.href}`;
+                  return (
+                    <li key={items.name}>
+                      <Link
+                        block="FooterMain"
+                        elem="Link"
+                        to={navigateTo}
+                      >
+                        {items.name}
+                      </Link>
+                    </li>
+                  )
+                })
+              }
             </ul>
           </div>
         </div>
@@ -127,6 +154,7 @@ class FooterMain extends PureComponent {
   }
 
   renderAppColumn() {
+
     return this.linksMap
       .filter((column) => column.title === __("Download The App"))
       .map((column) => (
@@ -185,4 +213,4 @@ class FooterMain extends PureComponent {
   }
 }
 
-export default FooterMain;
+export default connect(mapStateToProps, null)(FooterMain);

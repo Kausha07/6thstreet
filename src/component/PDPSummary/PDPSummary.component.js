@@ -9,8 +9,6 @@ import PDPTags from "Component/PDPTags";
 import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import ShareButton from "Component/ShareButton";
-import TabbyMiniPopup from "Component/TabbyMiniPopup";
-import { TABBY_TOOLTIP_PDP } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import WishlistIcon from "Component/WishlistIcon";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
@@ -153,6 +151,18 @@ class PDPSummary extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const url = new URL(window.location.href);
+
+    if (isMobile.any()) {
+      return <div block="PDPSummary" elem="Heading">
+        <h1>{brand_name}</h1>
+        <ShareButton
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
+    }
 
     return <h1>{brand_name}</h1>;
   }
@@ -233,29 +243,6 @@ class PDPSummary extends PureComponent {
     );
   }
 
-  openTabbyPopup = () => {
-    this.setState({ showPopup: true });
-  };
-
-  closeTabbyPopup = () => {
-    this.setState({ showPopup: false });
-  };
-
-  renderTabbyPopup = () => {
-    const { showPopup } = this.state;
-
-    if (!showPopup) {
-      return null;
-    }
-
-    return (
-      <TabbyMiniPopup
-        content={TABBY_TOOLTIP_PDP}
-        closeTabbyPopup={this.closeTabbyPopup}
-      />
-    );
-  };
-
   renderColors() {
     const {
       product: { colorfamily = "", stock_qty },
@@ -310,11 +297,14 @@ class PDPSummary extends PureComponent {
       product: { simple_products },
     } = this.props;
     return (
-      <PDPAddToCart
-        simple_products={simple_products}
-        setStockAvailability={this.setStockAvailability}
-        setSize={this.setSize}
-      />
+      <>
+        {/* <div block="Seperator" /> */}
+        <PDPAddToCart
+          simple_products={simple_products}
+          setStockAvailability={this.setStockAvailability}
+          setSize={this.setSize}
+        />
+      </>
     );
   }
 
@@ -334,7 +324,7 @@ class PDPSummary extends PureComponent {
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
 
-    if (Object.keys(simple_products)?.length === 1) {
+    if (simple_products && Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
@@ -342,7 +332,7 @@ class PDPSummary extends PureComponent {
       simple_products &&
       selectedSizeCode &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-        parseInt(simple_products[selectedSizeCode]?.quantity) &&
+      parseInt(simple_products[selectedSizeCode]?.quantity) &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
     ) {
       tags.push(__("International Shipment"));
@@ -403,24 +393,6 @@ class PDPSummary extends PureComponent {
         return (
           <>
             <div id="TabbyPromo"></div>
-            {/*<button
-              block="PDPSummary"
-              elem="Tabby"
-              onClick={this.openTabbyPopup}
-            >
-              {__("From")}
-              <strong
-                block="PDPSummary"
-                elem="TabbyPrice"
-              >{`${monthPrice} ${currency}`}</strong>
-              {__(" a month with ")}
-              <Image lazyLoad={true} src={tabby} alt="tabby" />
-
-              <span block="PDPSummary" elem="LearnMore">
-                {__("Learn more")}
-              </span>
-            </button>*/}
-            <div block="Seperator" />
           </>
         );
       }
@@ -449,7 +421,6 @@ class PDPSummary extends PureComponent {
         {this.renderAddToCartSection()}
         {this.renderPDPTags()}
         {this.renderAvailableItemsSection()}
-        {this.renderTabbyPopup()}
       </div>
     );
   }

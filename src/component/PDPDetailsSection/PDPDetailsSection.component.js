@@ -549,8 +549,10 @@ class PDPDetailsSection extends PureComponent {
       >
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
-        {this.renderModelDetails(model_height, model_wearing_size)}
-        {this.renderSKU(sku)}
+        <div block="BottomHighlights">
+          {this.renderModelDetails(model_height, model_wearing_size)}
+          {this.renderSKU(sku)}
+        </div>
         {/* {this.renderMoreDetailsList()} */}
       </div>
     );
@@ -652,6 +654,7 @@ class PDPDetailsSection extends PureComponent {
       product: { sku = null, categories_without_path = [] },
     } = this.props;
     const { pdpWidgetsAPIData } = this.state;
+    const { innerWidth: width } = window;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <React.Fragment>
@@ -663,7 +666,11 @@ class PDPDetailsSection extends PureComponent {
               if (data && data.length > 0) {
                 return (
                   <>
-                    <div block="PDPWidgets" elem="Slider">
+                    <div
+                      block="PDPWidgets"
+                      elem="Slider"
+                      mods={{ largeScreen: width > 1440 }}
+                    >
                       <DynamicContentVueProductSliderContainer
                         widgetID={widgetID}
                         products={data}
@@ -674,6 +681,8 @@ class PDPDetailsSection extends PureComponent {
                         sourceCatgID={categories_without_path[0]}
                         pageType={"pdp"}
                         key={`DynamicContentVueProductSliderContainer${index}`}
+                        index={index}
+                        isArabic={isArabic()}
                       />
                     </div>
                   </>
@@ -779,15 +788,24 @@ class PDPDetailsSection extends PureComponent {
   renderAboutBrand() {
     const {
       product: { brand_name },
+      brandDescription,
+      brandImg,
+      brandName,
     } = this.props;
+    if (!(brandDescription && brandImg && brandName)) {
+      return null;
+    }
     return (
-      <Accordion
-        mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-        title={__("About ") + brand_name}
-        is_expanded={this.state.isExpanded["3"]}
-      >
-        {this.renderBrandDetail()}
-      </Accordion>
+      <>
+        <Accordion
+          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+          title={`${__("About")} ${brand_name}`}
+          is_expanded={this.state.isExpanded["3"]}
+        >
+          {this.renderBrandDetail()}
+        </Accordion>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -850,17 +868,16 @@ class PDPDetailsSection extends PureComponent {
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={ isMobile ? __("Description") : __("PRODUCT DETAILS:") }
+            title={isMobile ? __("Description") : __("PRODUCT DETAILS:")}
             is_expanded={this.state.isExpanded["0"]}
           >
             {!isMobile ? this.renderIconsSection() : ""}
             {this.renderDescription()}
           </Accordion>
           {this.renderAccordionSeperator()}
-          {this.renderShareButton()}
+          {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
-          {this.renderAccordionSeperator()}
-        </div>
+        </div >
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         {isMobile ? this.renderMoreFromTheBrand() : ""}
@@ -894,7 +911,7 @@ class PDPDetailsSection extends PureComponent {
                 </Accordion>
                 
                 */}
-      </div>
+      </div >
     );
   }
 }

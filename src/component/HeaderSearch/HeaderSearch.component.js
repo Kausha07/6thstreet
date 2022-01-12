@@ -47,11 +47,28 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
   }
+  componentDidUpdate(prevProps,) {
+    const { focusInput, isPDPSearchVisible } = this.props;
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    if (focusInput && isPDPSearchVisible && prevProps.isPDPSearchVisible !== isPDPSearchVisible && searchInput) {
+      searchInput.focus();
+    }
+  }
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
-    const { search } = props;
-
+    const { search, isPDP, isPDPSearchVisible } = props;
+    if (isPDP) {
+      return {
+        isClearVisible: search !== "",
+        showSearch: isPDPSearchVisible
+      };
+    }
     return {
       isClearVisible: search !== "",
     };
@@ -77,7 +94,7 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
-    const { hideSearchBar,onSearchClean } = this.props;
+    const { hideSearchBar, onSearchClean } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
@@ -88,7 +105,6 @@ class HeaderSearch extends PureComponent {
   renderField() {
     const { search, onSearchChange, isVisible, onSearchClean } = this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
-
     return (
       <>
         <Form
@@ -107,7 +123,7 @@ class HeaderSearch extends PureComponent {
             spellCheck="false"
             placeholder={
               isMobile.any() || isMobile.tablet()
-                ? __(" What are you looking for ?")
+                ? __("What are you looking for?")
                 : __("Search for items, brands, inspiration and styles")
             }
             onChange={onSearchChange}
@@ -163,11 +179,26 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search, renderMySignInPopup,onSearchClean } = this.props;
+    const { search, renderMySignInPopup, onSearchClean } = this.props;
     const { showSearch } = this.state;
+    const { isPDPSearchVisible } = this.props
 
     if (!showSearch) {
       return null;
+    }
+    if (isMobile.any() || isMobile.tablet()) {
+      return (
+        <>
+          <SearchSuggestion
+            closeSearch={this.closeSearch}
+            cleanSearch={onSearchClean}
+            renderMySignInPopup={renderMySignInPopup}
+            search={search}
+            isPDPSearchVisible={isPDPSearchVisible}
+          />
+        </>
+      )
+
     }
 
     return (
@@ -184,10 +215,11 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isPDP, isPDPSearchVisible } = this.props
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
-        <ClickOutside onClick={this.closeSearch}>
+        <ClickOutside onClick={() => { isPDP ? null : this.closeSearch() }}>
           <div block="HeaderSearch" mods={{ isArabic }}>
             {this.renderField()}
             {this.renderSuggestion()}

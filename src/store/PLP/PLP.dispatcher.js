@@ -6,6 +6,7 @@ import {
   setPLPLoading,
   setPLPPage,
   setPLPWidget,
+  setProductLoading,
 } from "Store/PLP/PLP.action";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -13,45 +14,36 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 export class PLPDispatcher {
-  async requestProductList(payload, dispatch, state) {
-    if (!payload?.options?.hasOwnProperty("page")) {
-      payload.options["page"] = 0;
+  async setInitialPLPFilter(payload, dispatch, state) {
+    const { initialOptions = {} } = payload;
+    try {
+      const { filters: initialFilters } = await new Algolia().getPLP(
+        initialOptions
+      );
+
+      dispatch(setPLPInitialFilters(initialFilters, initialOptions));
+    } catch (e) {
+      Logger.log(e);
     }
+  }
+
+  async requestProductList(payload, dispatch, state) {
     const { options = {} } = payload;
 
     if (Object.keys(options).length !== 0) {
       dispatch(setPLPLoading(true));
-
-      // Same as normal options without custom filters, i.e. attributes
-      const initialOptions = this._getInitalOptions(options);
-
-      // is inital - assume request is inital, if it matches inital options
-      const isInitial =
-        JSON.stringify(initialOptions) === JSON.stringify(options);
-      const { initialOptions: stateInitialOptions } = state;
-
-      // if this is inital request and the state options differ => load inital options
-      if (!isInitial && initialOptions !== stateInitialOptions) {
-        try {
-          // Load initial filters to combine them with selected filters
-          const { filters: initialFilters } = await new Algolia().getPLP(
-            initialOptions
-          );
-          dispatch(setPLPInitialFilters(initialFilters, initialOptions));
-        } catch (e) {
-          Logger.log(e);
-        }
-      }
-
       try {
         const response = await new Algolia().getPLP(options);
         localStorage.setItem("queryID", response.queryID);
-        dispatch(setPLPData(response, options, isInitial));
+        dispatch(setProductLoading(false));
+
+        dispatch(setPLPInitialFilters(response.filters, options));
+        dispatch(setPLPData(response, options, false));
       } catch (e) {
         Logger.log(e);
 
         // Needed, so PLP container sets "isLoading" to false
-        dispatch(setPLPData({}, options, isInitial));
+        dispatch(setPLPData({}, options, false));
       }
     }
   }
@@ -68,7 +60,7 @@ export class PLPDispatcher {
 
     try {
       const { data: products } = await new Algolia().getPLP(options);
-
+      dispatch(setProductLoading(false));
       dispatch(setPLPPage(products, page));
     } catch (e) {
       Logger.log(e);
