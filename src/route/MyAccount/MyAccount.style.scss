@@ -458,12 +458,16 @@
       align-items: center;
       .InfoIconBlock {
         align-self: flex-end;
+        position: absolute;
+        top: 5px;
+        right: 5px;
         img {
           height: 16px !important;
           width: 16px !important;
         }
       }
       .CardsIconBlock {
+        margin-top: 15px;
         img {
           height: 70px !important;
           width: 90px !important;
