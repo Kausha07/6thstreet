@@ -664,13 +664,6 @@ class PLPFilters extends PureComponent {
                 activeFilters[filter[0]].push(filterData[0]);
               });
             });
-            // Object.entries(filter[1].data[categoryLevel1].subcategories).map(
-            //   (filterData) => {
-            //     if (filterData[1].is_selected) {
-            //       activeFilters[filter[0]].push(filterData[0]);
-            //     }
-            //   }
-            // );
           } else {
             Object.entries(filter[1].data).map((filterData) => {
               if (filterData[1].is_selected) {

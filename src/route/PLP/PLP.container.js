@@ -246,12 +246,8 @@ export class PLPContainer extends PureComponent {
     }
 
     if (
-      JSON.stringify(requestOptions) !==
-      JSON.stringify(this.state.prevRequestOptions)
+      !this.compareObjects(requestOptions, this.state.prevRequestOptions) 
     ) {
-    }
-    if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
-
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
     } else if (page !== prevPage && !pages[page]) {
