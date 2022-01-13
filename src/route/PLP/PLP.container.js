@@ -24,6 +24,7 @@ import {
 import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
+import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -245,8 +246,26 @@ export class PLPContainer extends PureComponent {
       this.updateHeaderState();
     }
 
+    let comparableRequestOptions = deepCopy(requestOptions);
+    if (comparableRequestOptions) {
+      delete comparableRequestOptions.page;
+    }
+    let comparablePrevRequestOptions = deepCopy(this.state.prevRequestOptions);
+    if (comparablePrevRequestOptions) {
+      delete comparablePrevRequestOptions.page;
+    }
+  
     if (
-      !this.compareObjects(requestOptions, this.state.prevRequestOptions) 
+      (page === prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        )) ||
+      (page !== prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        ))
     ) {
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
