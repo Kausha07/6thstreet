@@ -926,5 +926,6 @@
     "Welcome,": " اهلاً",
     "OK": "نعم",
     "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات",
-    "Results": null
+    "Results": null,
+    "OUT OF STOCK": null
 }

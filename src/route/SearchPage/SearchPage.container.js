@@ -15,7 +15,8 @@ import { TYPE_CATEGORY } from "../../route/UrlRewrites/UrlRewrites.config";
 import browserHistory from "Util/History";
 
 export class SearchPageContainer extends PLPContainer {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     if (url.search.includes("?q=")) {
       url.searchParams.set("p", 0);
@@ -23,6 +24,8 @@ export class SearchPageContainer extends PLPContainer {
       const { pathname, search } = url;
       browserHistory.replace(pathname + search);
     }
+  }
+  componentDidMount() {
     window.pageType = TYPE_CATEGORY;
     const {
       location: { state },
