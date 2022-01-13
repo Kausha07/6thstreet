@@ -31,7 +31,13 @@ class PLPPages extends PureComponent {
       isReset: false,
       defaultFilters: false,
       pageKey: 0,
+      firstPageLoad: false,
     };
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.setState({ firstPageLoad: true });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,10 +54,14 @@ class PLPPages extends PureComponent {
       this.props.pages.length !== prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-      if (!isMobile.any()) {
+
+      if (!isMobile.any() && !this.state.firstPageLoad) {
         const last =
           document.getElementById("Products-Lists")?.lastElementChild;
         last.scrollIntoView();
+      }
+      if (this.state.firstPageLoad) {
+        this.setState({ firstPageLoad: false });
       }
     }
   }
