@@ -279,6 +279,11 @@
     }
   }
   &-Highlights {
+    &-SKU {
+      @include mobile {
+        margin-top: 30px;
+      }
+    }
     &-ModelDetails {
       font-weight: var(--fw-regular);
       margin-top: 16px;
@@ -610,7 +615,6 @@
   &-Slider {
     @include desktop {
       margin-bottom: 70px;
-
       &:last-child {
         margin-bottom: 0;
       }

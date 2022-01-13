@@ -22,23 +22,23 @@ export const getInitials = () => {
     let langOptions = ['en', 'ar']
 
     let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-    if(k && k.data.country){
+    if (k && k.data.country) {
         country = k.data.country
     }
-    if(k && k.data.language){
+    if (k && k.data.language) {
         lang = k.data.language
     }
-    if(k && k.data.locale){
+    if (k && k.data.locale) {
         locale = k.data.locale
     }
 
-    if(!k){
-        if(langOptions.includes(window.navigator.language.slice(0,2))){
-            lang = window.navigator.language.slice(0,2);
-            if(lang === 'ar')
-            country = 'SA'
+    if (!k) {
+        if (langOptions.includes(window.navigator.language.slice(0, 2))) {
+            lang = window.navigator.language.slice(0, 2);
+            if (lang === 'ar')
+                country = 'SA'
         }
-        else{
+        else {
             lang = 'en'
             country = 'AE'
         }
@@ -135,8 +135,8 @@ export const AppStateReducer = (state = getInitialState(), action) => {
                 ...state,
                 country: actionCountry
             });
-            case SET_LANGUAGE_FOR_WELCOME:
-                return updateCacheAndReturn({
+        case SET_LANGUAGE_FOR_WELCOME:
+            return updateCacheAndReturn({
                 ...state,
                 language: actionLanguage
             });

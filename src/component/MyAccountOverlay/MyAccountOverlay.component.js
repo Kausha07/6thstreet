@@ -709,6 +709,7 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
+
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
 
