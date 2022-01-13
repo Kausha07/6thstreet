@@ -25,9 +25,9 @@ class StoreSwitcherPopup extends PureComponent {
 
     return (
       <ClickOutside onClick={this.props.closePopup}>
-      <div block="StoreSwitcherPopup">
-        <div block="StoreSwitcherPopup" elem="Container" mods={{ isArabic: isArabic() }}>
-          {/* <Image lazyLoad={true}
+        <div block="StoreSwitcherPopup">
+          <div block="StoreSwitcherPopup" elem="Container" mods={{ isArabic: isArabic() }}>
+            {/* <Image lazyLoad={true}
             mix={{
               block: "StoreSwitcherPopup",
               elem: "Image",
@@ -35,13 +35,13 @@ class StoreSwitcherPopup extends PureComponent {
             src="https://static.6media.me/static/version1600395563/frontend/6SNEW/6snew/en_US/images/store-selector-background.png"
             alt="Store"
           /> */}
-          <WelcomeScreen
-            countrySelectOptions={countrySelectOptions}
-            country={country}
-            closePopup={closePopup}
-          />
+            <WelcomeScreen
+              countrySelectOptions={countrySelectOptions}
+              country={country}
+              closePopup={closePopup}
+            />
+          </div>
         </div>
-      </div>
       </ClickOutside>
     );
   }

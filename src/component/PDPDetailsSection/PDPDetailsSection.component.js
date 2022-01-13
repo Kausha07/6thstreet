@@ -877,7 +877,7 @@ class PDPDetailsSection extends PureComponent {
           {this.renderAccordionSeperator()}
           {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
-        </div>
+        </div >
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         {isMobile ? this.renderMoreFromTheBrand() : ""}
@@ -911,7 +911,7 @@ class PDPDetailsSection extends PureComponent {
                 </Accordion>
                 
                 */}
-      </div>
+      </div >
     );
   }
 }

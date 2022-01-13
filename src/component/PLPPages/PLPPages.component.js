@@ -398,20 +398,24 @@ class PLPPages extends PureComponent {
   };
 
   renderLoadMore() {
+    const { pages = {}} = this.props;
+    if (  pages[0]?.products.length == 0 ) {
+      return null;
+    }
     return (
       <ProductLoad
         pageKey={this.state.pageKey}
         productLoad={this.props.productLoading}
       />
-    );
+    )
   }
 
   render() {
-    const { productLoading } = this.props;
+    const { pages = {} , productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">
-          {!isMobile.any() && (
+          {!isMobile.any() && !(pages[0]?.products.length === 0) && (
             <div block="ProductToolBar">
               <div block="ProductSelectedFilters">
                 {this.renderSelectedFilters()}
