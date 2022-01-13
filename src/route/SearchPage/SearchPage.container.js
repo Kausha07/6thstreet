@@ -12,8 +12,17 @@ import { getUUID } from "Util/Auth";
 import { VUE_PAGE_VIEW } from "Util/Event";
 import SearchPage from "./SearchPage.component";
 import { TYPE_CATEGORY } from "../../route/UrlRewrites/UrlRewrites.config";
+import browserHistory from "Util/History";
+
 export class SearchPageContainer extends PLPContainer {
   componentDidMount() {
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if (url.search.includes("?q=")) {
+      url.searchParams.set("p", 0);
+      // update the URL, preserve the state
+      const { pathname, search } = url;
+      browserHistory.replace(pathname + search);
+    }
     window.pageType = TYPE_CATEGORY;
     const {
       location: { state },
@@ -52,9 +61,9 @@ export class SearchPageContainer extends PLPContainer {
       pages,
       isLoading,
       location: { prevPath = null },
-      filters
+      filters,
     } = this.props;
-    return { options, pages, isLoading, prevPath,filters };
+    return { options, pages, isLoading, prevPath, filters };
   };
 
   setMetaData() {
