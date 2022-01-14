@@ -357,6 +357,9 @@ class PLPFilters extends PureComponent {
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
     const { initialOptions } = this.props;
+    if (Object.keys(filter.data).length === 0) {
+      return null;
+    }
     return (
       <PLPFilter
         key={key}
@@ -426,6 +429,7 @@ class PLPFilters extends PureComponent {
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]
         ) {
+          facetFilters;
           categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
             categoryData.selected_filters_count += 1;
@@ -502,7 +506,6 @@ class PLPFilters extends PureComponent {
       newFilterArray = filters["sizes"];
     }
     let categoryLevel1 = initialOptions.q.split(" ")[1];
-
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -623,11 +626,13 @@ class PLPFilters extends PureComponent {
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
         if (category === "categories_without_path") {
+          filter[1].selected_filters_count = 0;
+          activeFilters[filter[0]] = [];
+
           return Object.entries(filter[1].data).map((filterData) => {
             filterData[1].selected_filters_count = 0;
             return Object.entries(filterData[1].subcategories).map((entry) => {
               entry[1].is_selected = false;
-              activeFilters[entry[0]] = [];
             });
           });
         } else {
@@ -677,6 +682,7 @@ class PLPFilters extends PureComponent {
     this.setState({
       activeFilters: activeFilters,
     });
+
     updatePLPInitialFilters(filters, category, null);
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {

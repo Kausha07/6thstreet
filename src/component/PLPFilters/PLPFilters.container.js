@@ -167,11 +167,41 @@ export class PLPFiltersContainer extends PureComponent {
   };
 
   mapData(data = {}, category) {
+    const { initialOptions } = this.props;
     let formattedData = data;
     if (category === "categories_without_path") {
-      Object.entries(data).map((entry) => {
-        formattedData = entry[1].subcategories;
+      let categoryLevelArray = [
+        "categories.level1",
+        "categories.level2",
+        "categories.level3",
+        "categories.level4",
+      ];
+      let categoryLevel;
+      categoryLevelArray.map((entry, index) => {
+        if (initialOptions[entry]) {
+          categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+        }
       });
+      if (categoryLevel) {
+        if (data[categoryLevel]) {
+          formattedData = data[categoryLevel].subcategories;
+        } else {
+          formattedData = data[Object.keys(data)[0]].subcategories;
+        }
+      } else {
+        Object.entries(data).map((entry) => {
+          Object.values(entry[1].subcategories).map((subEntry) => {
+            if (
+              initialOptions["categories_without_path"] &&
+              initialOptions["categories_without_path"].includes(
+                subEntry.facet_value
+              )
+            ) {
+              formattedData = entry[1].subcategories;
+            }
+          });
+        });
+      }
     }
 
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
