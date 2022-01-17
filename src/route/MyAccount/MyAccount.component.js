@@ -100,6 +100,12 @@ export class MyAccount extends SourceMyAccount {
     },
   ];
 
+  componentDidMount() {
+    if() {
+      setMobileTabActive(!mobileTabActive);
+    }
+  }
+
   renderAppColumn() {
     return this.linksMap.map((column) => (
       <div block="FooterMain" elem="LastColumn" key={column.title}>
@@ -241,6 +247,10 @@ export class MyAccount extends SourceMyAccount {
 
     const hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
     const hiddenTabList = mobileTabActive ? "Hidden" : "Active";
+
+    if(location.pathname.match(/my-account/)) {
+      
+    }
 
     if (!isSignedIn) {
       return this.renderLoginOverlay();
