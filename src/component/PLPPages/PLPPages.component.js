@@ -56,9 +56,13 @@ class PLPPages extends PureComponent {
     ) {
 
       if (!isMobile.any() && !this.state.firstPageLoad) {
-        const last =
-          document.getElementById("Products-Lists")?.lastElementChild;
-        last.scrollIntoView();
+        //const last = document.getElementById("Products-Lists")?.lastElementChild;
+        //last.scrollIntoView();
+        const scrollHeight =  window.scrollY;
+        window.scroll({
+          top: scrollHeight,
+          behavior: 'smooth'
+        });
       }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });

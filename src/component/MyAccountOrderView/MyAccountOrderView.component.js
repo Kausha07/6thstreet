@@ -578,6 +578,8 @@ class MyAccountOrderView extends PureComponent {
         status,
         payment,
         payment: { method },
+        club_apparel_amount = 0,
+        store_credit_amount = 0,
       },
     } = this.props;
 
@@ -607,6 +609,15 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("QPAY"));
         }
         return this.renderCardPaymentType();
+      case "free":
+        if (parseFloat(club_apparel_amount) !== 0) {
+          console.log("club apparel")
+          return this.renderPaymentTypeText(__("Club Apparel"));
+        } else if (store_credit_amount !== 0) {
+          console.log("Store credit")
+          return this.renderPaymentTypeText(__("Store Credit"));
+        }
+        return;
       default:
         return null;
     }

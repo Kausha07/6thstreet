@@ -677,6 +677,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       creditCardData: { number = "", expMonth, expYear, cvv },
       paymentMethod,
+      initialTotals: { total_segments = [] },
       selectedCard,
     } = this.props;
     if (
@@ -739,10 +740,12 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod?.code?.match(/cash/)) {
       this.setState({ paymentTitle: __("Cash on Delivery") });
     } else if (paymentMethod?.code?.match(/free/)) {
-      this.setState({ paymentTitle: __("Store Credit") });
+      if (getDiscountFromTotals(total_segments, "clubapparel")) {
+        this.setState({ paymentTitle: __("Club Apparel") });
+      } else if (getDiscountFromTotals(total_segments, "customerbalance")) {
+        this.setState({ paymentTitle: __("Store Credit") });
+      }
     } else if (paymentMethod?.code?.match(/qpay/)) {
-      this.setState({ paymentTitle: __("QPAY") });
-    } else if (paymentMethod.code.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
     }
 
