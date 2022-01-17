@@ -71,7 +71,6 @@ class PDPGallery extends PureComponent {
     const { location } = browserHistory;
     const prevPath = location?.state?.prevPath;
     if(prevPath){
-      window.alert(prevPath);
       browserHistory.replace(prevPath);
     }
     else {
