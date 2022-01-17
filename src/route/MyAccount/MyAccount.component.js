@@ -61,6 +61,7 @@ export class MyAccount extends SourceMyAccount {
 
   state = {
     isArabic: isArabic(),
+    isMobile: isMobile.any(),
   };
 
   renderMap = {
@@ -100,11 +101,15 @@ export class MyAccount extends SourceMyAccount {
     },
   ];
 
-  componentDidMount() {
-    if() {
-      setMobileTabActive(!mobileTabActive);
-    }
-  }
+  // componentDidMount() {
+  //   const { mobileTabActive, setMobileTabActive } = this.props;
+  //   const {isMobile} = this.state;
+  //   if(isMobile && location.pathname.match(/my-account/)) {
+  //     console.log("all well",mobileTabActive)
+  //     setMobileTabActive(true);
+  //     console.log("all well after",mobileTabActive)
+  //   }
+  // }
 
   renderAppColumn() {
     return this.linksMap.map((column) => (
@@ -161,7 +166,8 @@ export class MyAccount extends SourceMyAccount {
 
   openTabMenu() {
     const { mobileTabActive, setMobileTabActive, history } = this.props;
-    history.push("/my-account");
+    // history.push("/my-account");
+    history.goBack();
     setMobileTabActive(!mobileTabActive);
   }
 
@@ -242,26 +248,33 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const { activeTab, tabMap, isSignedIn, mobileTabActive } = this.props;
+    
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
 
-    const { isArabic } = this.state;
+    const { isArabic,isMobile } = this.state;
 
-    const hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
-    const hiddenTabList = mobileTabActive ? "Hidden" : "Active";
-
-    if(location.pathname.match(/my-account/)) {
-      
+    const showProfileMenu = location.pathname.match('\\/my-account').input === "/my-account";
+    // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
+    // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
+    let hiddenTabContent, hiddenTabList;
+    if(showProfileMenu) {
+      hiddenTabList = "Active";
+      hiddenTabContent= "Hidden"
+    } else {
+      hiddenTabList = "Hidden";
+      hiddenTabContent= "Active"
     }
-
     if (!isSignedIn) {
       return this.renderLoginOverlay();
     }
+
     const { pathname = "" } = location;
 
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
+    console.log('showProfileMenu',showProfileMenu)
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     return (
@@ -353,7 +366,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderContent() {
-    return isMobile.any() ? this.renderMobile() : this.renderDesktop();
+    const {isMobile} = this.state;
+    return isMobile ? this.renderMobile() : this.renderDesktop();
   }
 }
 
