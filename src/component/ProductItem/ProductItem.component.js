@@ -215,10 +215,10 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-    return <Price price={price} page={page} renderSpecialPrice={true}/>;
+    return <Price price={price} page={page} renderSpecialPrice={true} />;
   }
 
-  renderAddToCartOnHover(){
+  renderAddToCartOnHover() {
     return (
       <div block="ProductItem" elem="AddToCart">
         <PLPAddToCart
@@ -251,7 +251,7 @@ class ProductItem extends PureComponent {
       try {
         pathname = new URL(url)?.pathname;
       }
-      catch(err){
+      catch (err) {
         console.error(err);
       }
       if (queryID) {

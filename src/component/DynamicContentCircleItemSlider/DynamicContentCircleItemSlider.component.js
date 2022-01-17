@@ -58,7 +58,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
-    const apiUrl = "https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=true";
+    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING
+    const apiUrl = `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=${isStaging}`;
     fetch(apiUrl)
       .then((response) => response.json())
 
@@ -221,7 +222,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-            {this.state.livePartyItems && this.state.livePartyItems.map(this.renderLiveParty)}
+          {this.state.livePartyItems && this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>

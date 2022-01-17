@@ -503,7 +503,7 @@
     &::before,
     &::after {
       background-color: var(--header-color);
-      content: "";
+      content: '';
       height: 20px;
       position: absolute;
       right: 27px;
@@ -675,7 +675,7 @@
     &_isSignIn {
       &::after {
         position: absolute;
-        content: "";
+        content: '';
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -709,7 +709,7 @@
       margin-top: 24px;
       &::after {
         position: absolute;
-        content: "";
+        content: '';
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -793,7 +793,7 @@
     margin-top: 15px;
     display: flex;
 
-    .Field [type="checkbox"] {
+    .Field [type='checkbox'] {
       + label {
         margin-right: 10px;
       }
@@ -808,7 +808,7 @@
     }
 
     &_isArabic {
-      .Field [type="checkbox"] {
+      .Field [type='checkbox'] {
         + label {
           margin-left: 10px;
           margin-right: 0;
@@ -821,7 +821,7 @@
     display: flex;
     margin-top: 10px;
 
-    .Field [type="radio"] {
+    .Field [type='radio'] {
       + label {
         position: relative;
         height: 14px;

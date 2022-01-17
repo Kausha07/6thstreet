@@ -30,10 +30,10 @@ class CountrySwitcher extends PureComponent {
     }
 
     togglePopup = () => {
-        if(this.state.content === ''){
+        if (this.state.content === '') {
             this.openPopup();
         }
-        else{
+        else {
             this.closePopup();
         }
     }
@@ -46,9 +46,9 @@ class CountrySwitcher extends PureComponent {
 
         this.setState({
             content: <StoreSwitcherPopup
-              countrySelectOptions={ countrySelectOptions }
-              country={ country }
-              closePopup={ this.closePopup }
+                countrySelectOptions={countrySelectOptions}
+                country={country}
+                closePopup={this.closePopup}
             />
         });
     };
@@ -68,13 +68,13 @@ class CountrySwitcher extends PureComponent {
 
         return (
             <Field
-              id="language-switcher-country"
-              name="country"
-              type="select"
-              placeholder={ __('Choose country') }
-              selectOptions={ countrySelectOptions }
-              value={ country }
-              onChange={ onCountrySelect }
+                id="language-switcher-country"
+                name="country"
+                type="select"
+                placeholder={__('Choose country')}
+                selectOptions={countrySelectOptions}
+                value={country}
+                onChange={onCountrySelect}
             />
         );
     }
@@ -101,15 +101,15 @@ class CountrySwitcher extends PureComponent {
 
         return (
             <button
-              block={`CountrySwitcher`}
-              elem="CountryBtn"
-              mods={{isOpen,  isArabic } }
+                block={`CountrySwitcher`}
+                elem="CountryBtn"
+                mods={{ isOpen, isArabic }}
                 /* eslint-disable-next-line */
-              onClick={ this.togglePopup  }
+                onClick={this.togglePopup}
             >
-                <CountryMiniFlag label={ id } />
+                <CountryMiniFlag label={id} />
                 <span>
-                    { country.label || 'SELECT COUNTRY' }
+                    {country.label || 'SELECT COUNTRY'}
                 </span>
             </button>
         );
@@ -119,8 +119,8 @@ class CountrySwitcher extends PureComponent {
         const { content } = this.state;
         return (
             <div block="CountrySwitcher">
-                { this.renderStoreButton() }
-                { content }
+                {this.renderStoreButton()}
+                {content}
             </div>
         );
     }

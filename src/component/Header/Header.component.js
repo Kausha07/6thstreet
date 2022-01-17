@@ -103,6 +103,7 @@ export class Header extends PureComponent {
     return false;
   };
 
+
   isPDP() {
     const { type } = this.state;
     return TYPE_PRODUCT === type;

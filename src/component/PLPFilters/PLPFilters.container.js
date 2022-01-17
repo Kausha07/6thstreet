@@ -119,7 +119,7 @@ export class PLPFiltersContainer extends PureComponent {
           if (filter[0] === SIZES) {
             const mappedData = Object.entries(data).reduce((acc, size) => {
               const { subcategories } = size[1];
-              const mappedSizeData = this.mapData(subcategories);
+              const mappedSizeData = this.mapData(subcategories, filter[0]);
 
               acc = { ...acc, [size[0]]: mappedSizeData };
 
@@ -128,7 +128,7 @@ export class PLPFiltersContainer extends PureComponent {
 
             acc = { ...acc, ...mappedData };
           } else {
-            acc = { ...acc, [filter[0]]: this.mapData(data) };
+            acc = { ...acc, [filter[0]]: this.mapData(data, filter[0]) };
           }
         }
 
@@ -166,13 +166,14 @@ export class PLPFiltersContainer extends PureComponent {
     this.setState({ activeFilters });
   };
 
-  mapData(data = {}) {
-    const { initialOptions } = this.props;
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
+  mapData(data = {}, category) {
     let formattedData = data;
-    if (data[categoryLevel1]) {
-      formattedData = data[categoryLevel1].subcategories;
+    if (category === "categories_without_path") {
+      Object.entries(data).map((entry) => {
+        formattedData = entry[1].subcategories;
+      });
     }
+
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
       const { is_selected } = option[1];
       if (is_selected) {

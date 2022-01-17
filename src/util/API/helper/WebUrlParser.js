@@ -8,8 +8,8 @@ import { clean } from "./Object";
 
 const pipe =
   (...funcs) =>
-  (value) =>
-    funcs.reduce((v, f) => f(v), value);
+    (value) =>
+      funcs.reduce((v, f) => f(v), value);
 
 /*
   input:
@@ -176,7 +176,6 @@ const Parser = {
 
     // update the URL, preserve the state
     const { pathname, search } = url;
-
     browserHistory.replace(pathname + search);
   },
 };

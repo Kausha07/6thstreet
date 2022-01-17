@@ -44,9 +44,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       sourceProdID,
       sourceCatgID,
     } = this.props;
-    const { category, sku, link,price } = data;
+    const { category, sku, link, price } = data;
     let destProdID = sku;
-    console.log('data',data);
+    console.log('data', data);
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];

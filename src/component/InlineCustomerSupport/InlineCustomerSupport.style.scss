@@ -33,6 +33,21 @@
       right: 20px;
     }
   }
+  &-Overlay {
+    &_isExpanded {
+      &::before {
+        content: "";
+        position: fixed;
+        width: 100vw;
+        height: 100vw;
+        background-color: transparent;
+        // background-color: #ddd;
+        left: 0;
+        top: 0;
+        z-index: -1;
+      }
+    }
+  }
 
   &-Button {
     padding-right: 31px;
@@ -49,7 +64,7 @@
     line-height: 15px;
 
     &_isHidden {
-      display: none!important;
+      display: none !important;
     }
 
     @include mobile {
@@ -145,7 +160,7 @@
 
   &-OpenHours {
     padding-bottom: 12px;
-    font-size: 15px!important;
+    font-size: 15px !important;
     span:nth-child(2) {
       font-weight: var(--fw-bold);
     }
@@ -182,8 +197,8 @@
 
     &_isArabic {
       &::before {
-        left: unset!important;
-        right: 5px
+        left: unset !important;
+        right: 5px;
       }
       // &::after {
       //   content: "ضغط ل WHATSAPP";
@@ -236,9 +251,12 @@
     }
   }
 
-  
-
-  &-DisplayEmail, &-DisplayPhone, &-DisplayFAQ, &-DisplayReturns, &-DisplayShipping, &-DisplayAuthentication {
+  &-DisplayEmail,
+  &-DisplayPhone,
+  &-DisplayFAQ,
+  &-DisplayReturns,
+  &-DisplayShipping,
+  &-DisplayAuthentication {
     display: flex;
     padding: 8px 0;
     align-items: center;
@@ -310,7 +328,7 @@
     border-top: 1px solid #e5e5e5;
     font-size: 12px;
     text-align: center;
-    margin-top: 12px
+    margin-top: 12px;
   }
 
   &-DisplayQuickAccess {
@@ -357,15 +375,15 @@
       letter-spacing: 0;
       line-height: 18px;
 
-      @include tablet{
-      font-weight: bold;
-      color: white;
-      font-size: 10px;
-      letter-spacing: 0.91px;
-      line-height: 36px;
-      margin: 0;
+      @include tablet {
+        font-weight: bold;
+        color: white;
+        font-size: 10px;
+        letter-spacing: 0.91px;
+        line-height: 36px;
+        margin: 0;
       }
-      @include mobile{
+      @include mobile {
         font-weight: bold;
         color: white;
         font-size: 10px;
