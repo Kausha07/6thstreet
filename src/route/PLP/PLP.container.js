@@ -365,21 +365,18 @@ export class PLPContainer extends PureComponent {
 
     setMeta({
       title: __(
-        "%s for %s | 6thStreet.com %s",
+        "%s | 6thStreet.com %s",
         categoryName,
-        genderName,
         countryName
       ),
       keywords: __(
-        "%s, %s, online shopping, %s, free shipping, returns",
+        "%s, online shopping, %s, free shipping, returns",
         categoryName,
-        genderName,
         countryName
       ),
       description: __(
-        "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
-        genderName,
         countryName,
         countryName
       ),
