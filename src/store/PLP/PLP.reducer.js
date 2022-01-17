@@ -9,7 +9,6 @@ import {
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
 } from "./PLP.action";
-import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
   isLoading: true,

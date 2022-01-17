@@ -386,14 +386,14 @@ const _formatFacets = ({ facets, queryParams }) => {
       return acc;
     }
 
-    if (facetKey === "gender") {
-      acc[facetKey] = filterOutGenderValues({
-        values: { ...facetValue },
-        query: queryParams,
-      });
+    // if (facetKey === "gender") {
+    //   acc[facetKey] = filterOutGenderValues({
+    //     values: { ...facetValue },
+    //     query: queryParams,
+    //   });
 
-      return acc;
-    }
+    //   return acc;
+    // }
 
     acc[facetKey] = facetValue;
     return acc;
@@ -434,6 +434,47 @@ function getPLP(URL, options = {}, params = {}) {
         clickAnalytics: true,
       },
     };
+    let initialFacetFilter = deepCopy(facetFilters);
+    let initialFilterArg;
+    let filterOption = [];
+    initialFacetFilter.map((entry, index) => {
+      if (
+        entry[0].split(":")[0].includes("categories.level") ||
+        entry[0].split(":")[0].includes("brand_name") ||
+        entry[0].split(":")[0].includes("gender")
+      ) {
+        filterOption[index] = entry[0].split(":")[0];
+      }
+    });
+
+    if (initialFacetFilter.length === 1) {
+      initialFilterArg = initialFacetFilter[0];
+    } else if (initialFacetFilter.length > 1) {
+      if (
+        filterOption.findIndex(
+          (element) => element && element.includes("categories.level")
+        ) !== -1
+      ) {
+        initialFilterArg = initialFacetFilter[0];
+      } else if (filterOption.includes("brand_name")) {
+        initialFilterArg =
+          initialFacetFilter[filterOption.indexOf("brand_name")];
+      } else if (filterOption.includes("gender")) {
+        initialFilterArg = initialFacetFilter[filterOption.indexOf("gender")];
+      }
+    }
+    const queryCopy = {
+      params: {
+        ...defaultSearchParams,
+        facetFilters: [initialFilterArg],
+        numericFilters,
+        query: q,
+        page,
+        hitsPerPage: limit,
+        clickAnalytics: true,
+      },
+      indexName: indexName,
+    };
 
     let selectedFilterArr = [];
     let exceptFilter = ["page", "q", "sort", "discount", "visibility_catalog"];
@@ -442,6 +483,7 @@ function getPLP(URL, options = {}, params = {}) {
         selectedFilterArr.push(option);
       }
     });
+
     let queries = [];
     queries.push(query);
     if (selectedFilterArr.length > 0) {
@@ -471,7 +513,7 @@ function getPLP(URL, options = {}, params = {}) {
         });
       });
     }
-
+    queries.push(queryCopy);
     client.search(queries, (err, res = {}) => {
       if (err) {
         return reject(err);
@@ -484,14 +526,21 @@ function getPLP(URL, options = {}, params = {}) {
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 0) {
+          if (index > 0 && index < Object.values(res.results).length - 1) {
             Object.entries(result[1].facets).map((entry) => {
               finalFiltersData.facets[[entry[0]]] = entry[1];
             });
+          } else if (index === Object.values(res.results).length - 1) {
+            for (let key = 0; key <= 4; key++) {
+              if (result[1].facets[`categories.level${key}`]) {
+                finalFiltersData.facets[`categories.level${key}`] =
+                  result[1].facets[`categories.level${key}`];
+              }
+            }
           }
         });
       }
-      const facetsFilter = finalFiltersData.facets;
+      const facetsFilter = deepCopy(finalFiltersData.facets);
       const { filters, _filtersUnselected } = getFilters({
         locale,
         facets: _formatFacets({ facets: facetsFilter, queryParams }),
