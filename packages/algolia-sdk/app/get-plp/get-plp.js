@@ -386,14 +386,14 @@ const _formatFacets = ({ facets, queryParams }) => {
       return acc;
     }
 
-    if (facetKey === "gender") {
-      acc[facetKey] = filterOutGenderValues({
-        values: { ...facetValue },
-        query: queryParams,
-      });
+    // if (facetKey === "gender") {
+    //   acc[facetKey] = filterOutGenderValues({
+    //     values: { ...facetValue },
+    //     query: queryParams,
+    //   });
 
-      return acc;
-    }
+    //   return acc;
+    // }
 
     acc[facetKey] = facetValue;
     return acc;
