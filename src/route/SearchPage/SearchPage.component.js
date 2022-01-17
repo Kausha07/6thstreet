@@ -4,6 +4,7 @@ import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import EmptySearch from "Component/EmptySearch";
 import { PLP } from "Route/PLP/PLP.component";
 import "./SearchPage.style";
+import Loader from "Component/Loader";
 
 class SearchPage extends PLP {
   renderSearchNotFound() {
@@ -30,6 +31,14 @@ class SearchPage extends PLP {
       options: { q },
       pages,
     } = this.props;
+    if (isLoading) {
+      return (
+        <>
+          <div block="EmptyPage"></div>
+          <Loader isLoading={isLoading} />
+        </>
+      );
+    }
     if (
       isLoading ||
       (pages.undefined && pages.undefined.length > 0) ||

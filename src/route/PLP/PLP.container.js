@@ -24,6 +24,8 @@ import {
 import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
+import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import browserHistory from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -168,10 +170,14 @@ export class PLPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if (url.search.includes("?q=")) {
+      url.searchParams.set("p", 0);
+      // update the URL, preserve the state
+      const { pathname, search } = url;
+      browserHistory.replace(pathname + search);
+    }
     if (this.getIsLoading()) {
-      const options = PLPContainer.getRequestOptions();
-      const initialOptions = this.getInitialOptions(options);
-
       // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
     }
@@ -245,13 +251,27 @@ export class PLPContainer extends PureComponent {
       this.updateHeaderState();
     }
 
-    if (
-      JSON.stringify(requestOptions) !==
-      JSON.stringify(this.state.prevRequestOptions)
-    ) {
+    let comparableRequestOptions = deepCopy(requestOptions);
+    if (comparableRequestOptions) {
+      delete comparableRequestOptions.page;
     }
-    if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
+    let comparablePrevRequestOptions = deepCopy(this.state.prevRequestOptions);
+    if (comparablePrevRequestOptions) {
+      delete comparablePrevRequestOptions.page;
+    }
 
+    if (
+      (page === prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        )) ||
+      (page !== prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        ))
+    ) {
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
     } else if (page !== prevPage && !pages[page]) {
