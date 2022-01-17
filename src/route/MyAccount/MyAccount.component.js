@@ -101,16 +101,6 @@ export class MyAccount extends SourceMyAccount {
     },
   ];
 
-  // componentDidMount() {
-  //   const { mobileTabActive, setMobileTabActive } = this.props;
-  //   const {isMobile} = this.state;
-  //   if(isMobile && location.pathname.match(/my-account/)) {
-  //     console.log("all well",mobileTabActive)
-  //     setMobileTabActive(true);
-  //     console.log("all well after",mobileTabActive)
-  //   }
-  // }
-
   renderAppColumn() {
     return this.linksMap.map((column) => (
       <div block="FooterMain" elem="LastColumn" key={column.title}>
@@ -319,7 +309,7 @@ export class MyAccount extends SourceMyAccount {
                     </span>
                     <span block="TierName">
                       {" "}
-                      {this.props.clubApparel?.memberDetails?.memberTier}
+                      {this.props.clubApparel?.memberDetails?.memberTier} TIER
                     </span>
                     <span block="pointDetails">
                       <span block="pointsValue">

@@ -46,6 +46,10 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
+    if(location.pathname.match(/searchscreen/)) {
+      console.log("all well")
+      searchInput.focus();
+    }
   }
   componentDidUpdate(prevProps,) {
     const { focusInput, isPDPSearchVisible } = this.props;
