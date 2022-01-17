@@ -54,7 +54,6 @@
     @include mobile {
       padding: 0;
       margin-left: 0 !important;
-      max-height: calc(100vh - 230px);
       width: 100%;
       overflow-y: auto;
     }
@@ -280,10 +279,14 @@
   }
 
   &-TabbyBlock {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0 12px 8px;
+    #TabbyPromo {
+      margin-top: 0px !important;
+    }
     @include desktop {
       width: 100%;
     }
@@ -530,7 +533,7 @@
 
   &-DiscountCoupon {
     &::after {
-      content: ":";
+      content: ':';
       font-weight: var(--fw-regular);
     }
   }
@@ -594,7 +597,7 @@
       margin: 0;
 
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         right: 6px;
         top: 1px;
@@ -609,7 +612,7 @@
       }
 
       &:after {
-        content: "" !important;
+        content: '' !important;
         position: absolute;
         right: 6px;
         top: 1px;
