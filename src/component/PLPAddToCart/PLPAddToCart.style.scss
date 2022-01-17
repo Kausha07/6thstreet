@@ -114,8 +114,6 @@ $select-arrow-width: 6px !default;
     }
   }
 
-
-
   .PLPAddToCart-SizeTypeSelector {
     @include desktop {
       select {
@@ -130,10 +128,7 @@ $select-arrow-width: 6px !default;
         width: 70px;
         height: 50px;
       }
-
-
     }
-
 
     @include mobile {
       position: relative;
@@ -144,8 +139,6 @@ $select-arrow-width: 6px !default;
       width: 10%;
     }
   }
-
-
 
   .PLPAddToCart-SizeTypeOptionContainer {
     display: flex;
@@ -222,29 +215,29 @@ $select-arrow-width: 6px !default;
         &::-webkit-scrollbar {
           display: none;
         }
-        .SizeOptionList{
-            &:first-child{
-                margin-left: auto;
-            }
-            &:last-child{
-                margin-right: auto;
-            }
+        .SizeOptionList {
+          &:first-child {
+            margin-left: auto;
+          }
+          &:last-child {
+            margin-right: auto;
+          }
         }
-        &_isArabic{
-            .SizeOptionList{
-                &:first-child{
-                    margin-left: unset;
-                    margin-right: auto;
-                }
-                &:last-child{
-                    margin-right: unset;
-                    margin-left: auto;
-                }
-                &:only-child{
-                  margin-left: auto;
-                  margin-right: auto;
-                }
+        &_isArabic {
+          .SizeOptionList {
+            &:first-child {
+              margin-left: unset;
+              margin-right: auto;
             }
+            &:last-child {
+              margin-right: unset;
+              margin-left: auto;
+            }
+            &:only-child {
+              margin-left: auto;
+              margin-right: auto;
+            }
+          }
         }
       }
 
@@ -259,7 +252,6 @@ $select-arrow-width: 6px !default;
         filter: invert(100%);
         transform: rotateY(180deg);
       }
-
     }
     &-QuantityBasedMessage {
       margin-top: 8px;
@@ -294,7 +286,6 @@ $select-arrow-width: 6px !default;
         text-align: center;
         padding: 5px;
       }
-
     }
 
     &-SizeOptionContainerOOS {
@@ -326,45 +317,40 @@ $select-arrow-width: 6px !default;
         border: 1px solid #d6d6d6;
         background-color: #ffffff;
       }
-
     }
-
   }
   &-SizeTypeSelectElement {
     height: 36px;
     width: 70px;
-    border: 0.5px solid #D1D3D4;
+    border: 0.5px solid #d1d3d4;
     border-radius: 6px;
     padding: 5px;
     text-align: center;
     margin-bottom: 25px;
     padding-right: 12px;
-
   }
-  &-SizeTypeSelect{
-    &_isArabic{
-      .PLPAddToCart-SizeTypeSelectElement{
+  &-SizeTypeSelect {
+    &_isArabic {
+      .PLPAddToCart-SizeTypeSelectElement {
         padding-right: 30px;
         text-align: right;
       }
     }
     &::after {
-        content: "";
-        display: block;
-        width: $select-arrow-width;
-        height: $select-arrow-height;
-        transform: translateY(-2px) rotate(44deg);
-        position: absolute;
-        bottom: 0;
-        top: 15px;
-        margin-top: 0;
-        border: solid var(--text-color);
-        border-width: 0 1px 1px 0;
-        right: 12px;
-      }
+      content: "";
+      display: block;
+      width: $select-arrow-width;
+      height: $select-arrow-height;
+      transform: translateY(-2px) rotate(44deg);
+      position: absolute;
+      bottom: 0;
+      top: 15px;
+      margin-top: 0;
+      border: solid var(--text-color);
+      border-width: 0 1px 1px 0;
+      right: 12px;
+    }
   }
-
-
 
   &-SizeSelectElement {
     height: 50px;
@@ -452,7 +438,6 @@ $select-arrow-width: 6px !default;
     border-radius: 6px;
     color: var(--text-color-on-dark-background);
     @include desktop {
-
     }
     span {
       display: block;
@@ -479,7 +464,6 @@ $select-arrow-width: 6px !default;
         background-size: 30px 30px;
         height: 30px;
         width: 180px;
-
 
         @media (max-width: 1020px) {
           left: 40%;
@@ -681,8 +665,8 @@ $select-arrow-width: 6px !default;
     text-align: center;
   }
 
-  &-ViewDetails{
-    color: #8D8D8D;
+  &-ViewDetails {
+    color: #8d8d8d;
     font-size: 12px;
     font-weight: bold;
     letter-spacing: 0;
@@ -747,9 +731,9 @@ $select-arrow-width: 6px !default;
 
 .SeperatorAddtoCart {
   background-color: #efefef;
-  margin: 20px 0;
-  height: 1.5px;
+  margin: 20px 0 20px 0;
+  height: 1px;
   @include mobile {
-    margin: 15px 0 0 0;
+    margin: 15px 0 15px 0;
   }
 }

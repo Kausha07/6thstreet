@@ -922,9 +922,10 @@
     "Return Information": "معلومات الإرجاع",
     "Hello, ": "مرحبًا ",
     "Show Less": null,
-    "PHONE NUMBER*": "رقم الهاتف*",
+    "PHONE NUMBER*": null,
     "Welcome,": " اهلاً",
-    "OK": "نعم",
-    "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات",
-    "Results": null
+    "OK": null,
+    "You’ve viewed %s of %s products": null,
+    "Results": null,
+    "OUT OF STOCK": null
 }

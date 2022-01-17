@@ -19,10 +19,10 @@
   }
   .Seperator {
     background-color: #efefef;
-    margin: 35px 0;
-    height: 1.5px;
+    margin: 35px 0 35px 0;
+    height: 1px;
     @include mobile {
-      margin: 15px 0;
+      margin: 15px 0 15px 0;
       &_isMobile {
         display: none;
       }

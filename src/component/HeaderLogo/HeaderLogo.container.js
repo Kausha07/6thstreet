@@ -4,6 +4,9 @@ import { connect } from "react-redux";
 import { setGender } from "Store/AppState/AppState.action";
 import HeaderLogo from "./HeaderLogo.component";
 
+export const mapStateToProps = (state) => ({
+  gender: state.AppState.gender,
+});
 export const mapDispatchToProps = (dispatch) => ({
   setGender: (gender) => dispatch(setGender(gender)),
   prevPath: window.location.href,
@@ -19,9 +22,9 @@ class HeaderLogoContainer extends PureComponent {
   };
 
   setGender() {
-    const { setGender } = this.props;
+    const { setGender, gender } = this.props;
 
-    setGender("women");
+    setGender(gender);
   }
 
   render() {
@@ -29,4 +32,7 @@ class HeaderLogoContainer extends PureComponent {
   }
 }
 
-export default connect(null, mapDispatchToProps)(HeaderLogoContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HeaderLogoContainer);
