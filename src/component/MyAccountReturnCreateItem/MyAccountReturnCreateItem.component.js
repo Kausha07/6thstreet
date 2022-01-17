@@ -113,6 +113,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 discount_percent,
                 discount_amount,
                 size: sizeField,
+                qty_shipped,
                 product_options: { info_buyRequest: { qty } }
             }
         } = this.props;
@@ -127,10 +128,10 @@ export class MyAccountReturnCreateItem extends PureComponent {
                             <span>{color}</span>
                         </p>
                     )}
-                    {!!qty && (
+                    {!!qty_shipped && (
                         <p>
                             {__('Qty: ')}
-                            <span>{+qty}</span>
+                            <span>{+qty_shipped}</span>
                         </p>
                     )}
                     {!!size && (
