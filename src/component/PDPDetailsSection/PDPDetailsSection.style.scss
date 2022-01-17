@@ -265,7 +265,7 @@
   }
 
   &-Description {
-    text-align: justify;
+    // text-align: justify;
     @include mobile {
       font-size: 14px;
       letter-spacing: 0;
@@ -355,6 +355,9 @@
     list-style-type: disc;
     text-transform: capitalize;
     margin-bottom: 4px;
+    @include mobile {
+      font-size: 14px;
+    }
 
     &::before {
       display: none;
@@ -522,7 +525,7 @@
   .Seperator {
     background-color: #efefef;
     margin: 15px 0 0 0;
-    height: 1.5px;
+    height: 1px;
   }
 }
 .PDPDetailWrapper {
@@ -589,8 +592,8 @@
 @include desktop {
   .Seperator2 {
     background-color: #efefef;
-    margin: 50px 0;
-    height: 1.5px;
+    margin: 50px 0 50px 0;
+    height: 1px;
   }
   .PDPDetail-BrandImage {
     padding: 0rem 1rem 1rem 0;
@@ -697,7 +700,7 @@
 }
 .AccordionSeperator {
   @include mobile {
-    height: 2px;
+    height: 1px;
     background-color: #efefef;
   }
 }

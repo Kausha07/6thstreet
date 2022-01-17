@@ -88,7 +88,7 @@
     line-height: 30px;
     text-align: right;
   }
-    &-Heading {
+  &-Heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -233,7 +233,7 @@
   .Seperator {
     background-color: #efefef;
     margin: 26px 0 20px 0;
-    height: 1.5px;
+    height: 1px;
     &_isDesktop {
       display: none;
     }

@@ -229,7 +229,7 @@ $select-arrow-width: 6px !default;
     margin-left: 16px;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    
+
     @include mobile {
       width: 90%;
       margin-left: 44px;
@@ -244,7 +244,6 @@ $select-arrow-width: 6px !default;
       }
       -webkit-overflow-scrolling: touch;
       -ms-overflow-style: -ms-autohiding-scrollbar;
-      
 
       .lineImg {
         top: 0;
@@ -693,10 +692,10 @@ $select-arrow-width: 6px !default;
 
 .SeperatorAddtoCart {
   background-color: #efefef;
-  margin: 20px 0;
-  height: 1.5px;
+  margin: 20px 0 20px;
+  height: 1px;
   @include mobile {
-    margin: 15px 0 0 0;
+    margin: 15px 0 15px 0;
   }
 }
 .AppParity {
