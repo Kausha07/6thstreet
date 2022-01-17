@@ -67,12 +67,23 @@ class PDPGallery extends PureComponent {
   // );
   // }
 
+  onBackButtonClick = () => {
+    const { location } = browserHistory;
+    const prevPath = location?.state?.prevPath;
+    if(prevPath){
+      window.alert(prevPath);
+      browserHistory.replace(prevPath);
+    }
+    else {
+      browserHistory.goBack();
+    }
+  }
   renderBackButton() {
     const { isArabic } = this.state;
     const { homeFromPDP } = this.props
     return (
       <div block="BackArrow" mods={{ isArabic }} key="back">
-        <button block="BackArrow-Button" onClick={browserHistory.goBack} />
+        <button block="BackArrow-Button" onClick={this.onBackButtonClick} />
         <div block="BackArrow-HomeIcon" onClick={homeFromPDP}>
           <img src={HomeIcon} alt="home" />
         </div>
