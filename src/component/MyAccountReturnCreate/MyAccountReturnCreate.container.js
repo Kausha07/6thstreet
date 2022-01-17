@@ -139,16 +139,12 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             order_id: this.getOrderId(),
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionIdd }]) => {
                 const {
-                    product_options: {
-                        info_buyRequest: {
-                            qty = 1
-                        } = {}
-                    } = {}
+                    qty_shipped = 0
                 } = items.find(({ item_id }) => item_id === order_item_id) || {};
 
                 return {
                     order_item_id,
-                    qty_requested: qty,
+                    qty_requested: qty_shipped,
                     resolution: {
                         id: resolutionId,
                         data: null
@@ -160,7 +156,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
                 };
             })
         };
-
         this.setState({ isLoading: true });
 
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
