@@ -185,7 +185,8 @@ export class MyAccount extends SourceMyAccount {
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
-      return this.renderLoginOverlay();
+      const { history } = this.props;
+      return history.push("/");
     }
 
     const TabContent = this.renderMap[activeTab];
