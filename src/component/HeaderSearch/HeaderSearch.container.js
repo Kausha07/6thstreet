@@ -56,6 +56,8 @@ export class HeaderSearchContainer extends PureComponent {
   async onSearchSubmit() {
     const { history } = this.props;
     const { search } = this.state;
+    var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+    let finalSearch = search.match(invalid)? encodeURIComponent(search):search
     const filteredItem = await this.checkForSKU(search);
     if (filteredItem) {
       this.logRecentSearch(search);
@@ -108,12 +110,12 @@ export class HeaderSearchContainer extends PureComponent {
       }
       if (gender !== "home") {
         history.push({
-          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
           state: { prevPath: window.location.href },
         });
       } else {
         history.push({
-          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}`,
           state: { prevPath: window.location.href },
         });
       }
