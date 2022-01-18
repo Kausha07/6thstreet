@@ -218,11 +218,9 @@ export class PLPContainer extends PureComponent {
       limit: 1,
     });
     this.setState({
-      brandDescription: isArabic
-        ? data?.hits[0]?.description_ar
-        : data?.hits[0]?.description,
+      brandDescription: isArabic() ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
       brandImg: data?.hits[0]?.image,
-      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
     });
   }
 
@@ -405,16 +403,17 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      brandDescription,
-      brandImg,
-      brandName,
+    const {     
       query,
       plpWidgetData,
       gender,
       filters,
       pages,
     } = this.props;
+
+    const brandDescription = this.state.brandDescription;
+    const brandImg = this.state.brandImg;
+    const brandName = this.state.brandName;
 
     // isDisabled: this._getIsDisabled()
 
