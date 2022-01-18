@@ -326,7 +326,8 @@ class HeaderMainSection extends NavigationAbstract {
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button
           block="BackArrow-Button"
-          onClick={this.isPLP() ? this.backFromPLP : history.goBack}
+          //onClick={this.isPLP() ? this.backFromPLP : history.goBack}
+          onClick={ history.goBack }
         >
           <p>{__("Back")}</p>
         </button>

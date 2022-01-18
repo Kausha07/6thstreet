@@ -495,10 +495,13 @@ export class CartPage extends PureComponent {
       self.shouldMobileBottomBarHidden();
       history.push("/");
     }
+    const goBack = () => {
+      history.goBack();
+    }
 
     return (
       <div block="CartPage" elem="BackArrow">
-        <button block="BackArrow-Button" onClick={goHome}>
+        <button block="BackArrow-Button" onClick={goBack}>
           <span />
         </button>
       </div>
