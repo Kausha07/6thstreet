@@ -288,7 +288,6 @@ class ProductItem extends PureComponent {
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
-
       </Link>
     );
   }

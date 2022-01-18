@@ -143,7 +143,8 @@ class HeaderAccount extends PureComponent {
   }
 
   redirectToAccount() {
-    window.location = "/my-account/dashboard";
+    console.log("redirected")
+    window.location = "/my-account";
   }
 
   render() {
