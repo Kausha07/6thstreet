@@ -50,6 +50,12 @@ class HeaderSearch extends PureComponent {
       console.log("all well")
       searchInput.focus();
     }
+    window.onpopstate = e => {
+      if (document.body.classList.contains("isSuggestionOpen")){
+        this.closeSearch();
+        history.forward();
+      }
+    }
   }
   componentDidUpdate(prevProps,) {
     const { focusInput, isPDPSearchVisible } = this.props;
