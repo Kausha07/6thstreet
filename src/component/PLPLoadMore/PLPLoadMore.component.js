@@ -41,10 +41,10 @@ class PLPLoadMore extends PureComponent {
                 limit * (page_count - 1) + (totalProducts - (page_count - 1) * limit);
         }
         if (pageKey !== 0 && pageKey !== page_count - 1) {
-            loadedProduct = limit * pageKey + 15;
+            loadedProduct = limit * pageKey + 30;
         }
         progressWidth = (loadedProduct * 100) / totalProducts;
-        if(totalProducts  >= 15){
+        if(totalProducts  >= 30){
             return (                             
                 <div block="Product-LoadMore">
                     {totalProducts && 

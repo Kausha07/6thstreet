@@ -44,7 +44,7 @@ class HeaderBottomBar extends NavigationAbstract {
 
   renderSearch() {
     const { isArabic } = this.state;
-    if (!isMobile.any()) {
+    if (isMobile.any()) {
       return (
         <div
           key="search"
@@ -59,7 +59,8 @@ class HeaderBottomBar extends NavigationAbstract {
       );
     }
 
-    return <HeaderSearch key="search" />;
+    // return <HeaderSearch key="search" />;
+    return null;
   }
 
   render() {
