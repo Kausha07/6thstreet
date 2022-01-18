@@ -52,7 +52,7 @@ class HeaderSearch extends PureComponent {
     }
     window.onpopstate = e => {
       if (document.body.classList.contains("isSuggestionOpen")){
-        this.closeSearch();
+        onSearchClean();
         history.forward();
       }
     }
