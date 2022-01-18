@@ -31,13 +31,12 @@ class PLPPages extends PureComponent {
       isReset: false,
       defaultFilters: false,
       pageKey: 0,
-      firstPageLoad: false,
-      pageScrollHeight: 0
+      firstPageLoad: false
     };
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);    
+    window.scrollTo(0, 0);
     this.setState({ firstPageLoad: true });
   }
 
@@ -57,14 +56,9 @@ class PLPPages extends PureComponent {
     ) {
 
       if (!isMobile.any() && !this.state.firstPageLoad) {
-        //const last = document.getElementById("Products-Lists")?.lastElementChild;
-        //last.scrollIntoView();
-        // const scrollHeight =  window.scrollY;
-        const scrollHeight = this.state.pageScrollHeight + 60;
-        window.scroll({
-          top: scrollHeight,
-          behavior: 'smooth'
-        });
+        const last = document.getElementById("Products-Lists")?.lastElementChild;
+        last.style.scrollMarginTop = "180px";        
+        last.scrollIntoView({ behavior: "smooth" });
       }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
@@ -76,7 +70,7 @@ class PLPPages extends PureComponent {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
       pageKey: key,
-    });    
+    });
     const {
       impressions,
       query,
@@ -120,9 +114,7 @@ class PLPPages extends PureComponent {
   }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-    this.setState({
-      pageScrollHeight : document.getElementById("Products-Lists")?.offsetHeight
-    })    
+    
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -407,8 +399,8 @@ class PLPPages extends PureComponent {
   };
 
   renderLoadMore() {
-    const { pages = {}} = this.props;
-    if (  pages[0]?.products.length == 0 ) {
+    const { pages = {} } = this.props;
+    if (pages[0]?.products.length == 0) {
       return null;
     }
     return (
@@ -420,7 +412,7 @@ class PLPPages extends PureComponent {
   }
 
   render() {
-    const { pages = {} , productLoading } = this.props;
+    const { pages = {}, productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">
