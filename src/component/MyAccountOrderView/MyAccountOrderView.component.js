@@ -230,9 +230,6 @@ class MyAccountOrderView extends PureComponent {
   formatGroupStatus = (status) => {
     // use toLowerCase because sometimes the response from backend is not consistent
     switch (status?.toLowerCase()) {
-      case 'processing': {
-        return __("Processing");
-      }
       case 'courier_dispatched': {
         return __('Shipped');
       }
