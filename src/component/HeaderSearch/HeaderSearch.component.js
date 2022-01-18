@@ -54,7 +54,9 @@ class HeaderSearch extends PureComponent {
       if (document.body.classList.contains("isSuggestionOpen")){
         this.closeSearch();
         console.log("Search Closed");
+        
         history.forward();
+        e.preventDefault();
       }
    }
   }
