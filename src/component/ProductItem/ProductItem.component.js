@@ -219,6 +219,11 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
+    const {product} = this.props
+    let price = Object.values(product.price[0])
+    if(price[0].default === 0){
+      return null
+    }
     return (
       <div block="ProductItem" elem="AddToCart">
         <PLPAddToCart
