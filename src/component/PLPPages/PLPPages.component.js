@@ -36,7 +36,7 @@ class PLPPages extends PureComponent {
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     this.setState({ firstPageLoad: true });
   }
 
@@ -54,7 +54,6 @@ class PLPPages extends PureComponent {
       this.props.pages.length !== prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-
       if (!isMobile.any() && !this.state.firstPageLoad) {
         const last =
           document.getElementById("Products-Lists")?.lastElementChild;
@@ -389,6 +388,8 @@ class PLPPages extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query, updateFiltersState } = this.props;
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    window.scrollTo(0, 0);
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) => {
@@ -399,8 +400,8 @@ class PLPPages extends PureComponent {
   };
 
   renderLoadMore() {
-    const { pages = {}} = this.props;
-    if (  pages[0]?.products.length == 0 ) {
+    const { pages = {} } = this.props;
+    if (pages[0]?.products.length == 0) {
       return null;
     }
     return (
@@ -408,11 +409,11 @@ class PLPPages extends PureComponent {
         pageKey={this.state.pageKey}
         productLoad={this.props.productLoading}
       />
-    )
+    );
   }
 
   render() {
-    const { pages = {} , productLoading } = this.props;
+    const { pages = {}, productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">
