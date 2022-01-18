@@ -180,6 +180,10 @@
       width: 100%;
       color: $black;
       height: 30px;
+      @include mobile{
+        height: 36px;
+        border-radius: 7px;
+      }
 
       &::placeholder {
         color: $black;

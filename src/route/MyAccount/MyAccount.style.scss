@@ -584,7 +584,7 @@
           position: absolute;
           transform: translateY(-50%);
           z-index: 9999999999999999;
-          top: -9px;
+          top: -2px;
           img {
             width: 16px !important;
             height: 16px !important;
@@ -592,6 +592,9 @@
         }
       }
     }
+  }
+  .ExpandableContent.MyAccountTabList{
+    border-bottom: none;
   }
 }
 

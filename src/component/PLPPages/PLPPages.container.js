@@ -49,10 +49,10 @@ export class PLPPagesContainer extends PureComponent {
         const { selected_filters_count, data = {} } = filter[1];
 
         if (selected_filters_count !== 0) {
-          if (filter[0] === 'sizes') {
+          if (filter[0] === "sizes") {
             const mappedData = Object.entries(data).reduce((acc, size) => {
               const { subcategories } = size[1];
-              const mappedSizeData = this.mapData(subcategories);
+              const mappedSizeData = this.mapData(subcategories, filter[0]);
 
               acc = { ...acc, [size[0]]: mappedSizeData };
 
@@ -61,7 +61,7 @@ export class PLPPagesContainer extends PureComponent {
 
             acc = { ...acc, ...mappedData };
           } else {
-            acc = { ...acc, [filter[0]]: this.mapData(data) };
+            acc = { ...acc, [filter[0]]: this.mapData(data, filter[0]) };
           }
         }
 
@@ -96,12 +96,42 @@ export class PLPPagesContainer extends PureComponent {
     return false;
   }
 
-  mapData(data = {}) {
+  mapData(data = {}, category) {
     const { initialOptions } = this.props;
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
     let formattedData = data;
-    if (data[categoryLevel1]) {
-      formattedData = data[categoryLevel1].subcategories;
+    if (category === "categories_without_path") {
+      let categoryLevelArray = [
+        "categories.level1",
+        "categories.level2",
+        "categories.level3",
+        "categories.level4",
+      ];
+      let categoryLevel;
+      categoryLevelArray.map((entry, index) => {
+        if (initialOptions[entry]) {
+          categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+        }
+      });
+      if (categoryLevel) {
+        if (data[categoryLevel]) {
+          formattedData = data[categoryLevel].subcategories;
+        } else {
+          formattedData = data[Object.keys(data)[0]].subcategories;
+        }
+      } else {
+        Object.entries(data).map((entry) => {
+          Object.values(entry[1].subcategories).map((subEntry) => {
+            if (
+              initialOptions["categories_without_path"] &&
+              initialOptions["categories_without_path"].includes(
+                subEntry.facet_value
+              )
+            ) {
+              formattedData = entry[1].subcategories;
+            }
+          });
+        });
+      }
     }
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
       const { is_selected } = option[1];
@@ -118,8 +148,8 @@ export class PLPPagesContainer extends PureComponent {
     pages: this.getPages(),
     query: this.props.query,
     filters: this.props.filters,
-    activeFilters:this.state.activeFilters,
-    productLoading:this.props.productLoading,
+    activeFilters: this.state.activeFilters,
+    productLoading: this.props.productLoading,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
   });

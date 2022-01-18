@@ -1168,19 +1168,13 @@
       }
 
       .StoreSwitcherPopup {
+        position: relative !important;
         &-Image {
           display: none;
         }
 
         &-Container {
-          position: absolute;
-          top: 0;
-          left: 0;
           right: 0;
-          width: 100%;
-          max-height: 100%;
-          height: 100vh;
-          z-index: 999;
         }
       }
     }

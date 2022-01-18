@@ -34,7 +34,7 @@ export const mapStateToProps = (state) => ({
   clubApparel: state.ClubApparelReducer.clubApparel,
   mobileTabActive: state.MyAccountReducer.mobileTabActive,
   country: state.AppState.country,
-    language: state.AppState.language,
+  language: state.AppState.language,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -106,78 +106,78 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     getMember: PropTypes.func.isRequired,
     customer: customerType,
     country: PropTypes.string.isRequired,
-        language: PropTypes.string.isRequired,
+    language: PropTypes.string.isRequired,
   };
 
   tabMap = tabMap;
 
   static defaultProps = {
     customer: null,
-};
+  };
 
-state = {
+  state = {
     clubApparel: null
-};
+  };
 
-static navigateToSelectedTab(props, state = {}) {
-  const {
+  static navigateToSelectedTab(props, state = {}) {
+    const {
       match: {
-          params: {
-              tab: historyActiveTab = DASHBOARD
-          } = {}
+        params: {
+          tab: historyActiveTab = DASHBOARD
+        } = {}
       } = {}
-  } = props;
+    } = props;
 
-  const { activeTab } = state;
+    const { activeTab } = state;
 
-  if (activeTab !== historyActiveTab) {
+    if (activeTab !== historyActiveTab) {
       return { activeTab: historyActiveTab };
-  }
-
-  return null;
-}
-
-static getDerivedStateFromProps(props, state) {
-  const { clubApparel } = props;
-  const { clubApparel: currentClubApparel } = state;
-  const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(props, state);
-  if (clubApparel !== currentClubApparel) {
-    if(isNavigateToSelectedTab) {
-      return { clubApparel, ...MyAccountContainer.navigateToSelectedTab(props,state)};
     }
-      return { clubApparel};
+
+    return null;
   }
-  return { ...MyAccountContainer.navigateToSelectedTab(props,state)};
-}
+
+  static getDerivedStateFromProps(props, state) {
+    const { clubApparel } = props;
+    const { clubApparel: currentClubApparel } = state;
+    const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(props, state);
+    if (clubApparel !== currentClubApparel) {
+      if (isNavigateToSelectedTab) {
+        return { clubApparel, ...MyAccountContainer.navigateToSelectedTab(props, state) };
+      }
+      return { clubApparel };
+    }
+    return { ...MyAccountContainer.navigateToSelectedTab(props, state) };
+  }
 
   componentDidMount() {
-    const { setMeta, updateStoreCredit,customer: { id }, getMember } = this.props;
+    const { setMeta, updateStoreCredit, customer: { id }, getMember } = this.props;
 
     updateStoreCredit();
     setMeta({ title: __("My Account") });
-    if(id){
+    if (id) {
       getMember(id);
-  }
+    }
   }
 
   componentDidUpdate(prevProps) {
     const {
-        customer: { id },
-        country,
-        language,
-        getMember
+      customer: { id },
+      country,
+      language,
+      getMember
     } = this.props;
 
-    const { 
-        customer: { id: prevId },
-        country: prevCountry,
-        language: prevLanguage
+    const {
+      customer: { id: prevId },
+      country: prevCountry,
+      language: prevLanguage
     } = prevProps;
 
-    if(prevId !== id || prevCountry !== country || prevLanguage !== language){
-        getMember(id);
+    if (prevId !== id || prevCountry !== country || prevLanguage !== language) {
+      getMember(id);
     }
-}
+  }
 
   updateBreadcrumbs() {
     const { updateBreadcrumbs } = this.props;
