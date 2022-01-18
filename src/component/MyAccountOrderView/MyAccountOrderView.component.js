@@ -259,7 +259,7 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderAccordionTitle(title, image, status = null) {
-    const packageStatus = title.toLowerCase().includes('package') || title.toLowerCase().includes(__('shipment')) ? this.formatGroupStatus(status) : null
+    const packageStatus = /\d/.test(title) ? this.formatGroupStatus(status) : null
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
