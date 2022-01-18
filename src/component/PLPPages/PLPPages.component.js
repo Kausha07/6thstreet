@@ -52,7 +52,7 @@ class PLPPages extends PureComponent {
     }
     if (
       this.props.pages.length > 0 &&
-      this.props.pages.length !== prevProps.pages.length &&
+      this.props.pages.length > prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
       if (!isMobile.any() && !this.state.firstPageLoad) {
