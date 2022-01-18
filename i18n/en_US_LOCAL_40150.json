@@ -983,5 +983,11 @@
     "Welcome,": null,
     "OK": null,
     "OUT OF STOCK": null,
-    "Results": null
+    "Results": null,
+    "%s | 6thStreet.com %s": null,
+    "%s, online shopping, %s, free shipping, returns": null,
+    "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "Ready for Pick up": null,
+    "Items Picked Up": null,
+    "shipment": null
 }

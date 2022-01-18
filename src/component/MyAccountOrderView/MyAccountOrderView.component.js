@@ -43,7 +43,9 @@ import {
   RETURN_ITEM_LABEL,
   STATUS_IN_TRANSIT,
   STATUS_LABEL_MAP,
+  NEW_STATUS_LABEL_MAP,
   STATUS_PROCESSING,
+  STATUS_DISPATCHED
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 
@@ -124,7 +126,7 @@ class MyAccountOrderView extends PureComponent {
           {__("Order #%s", increment_id)}
         </h3>
         {STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable) ? (
+          (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -213,11 +215,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -225,13 +227,39 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  renderAccordionTitle(title, image, status = null) {
-    const STATUS_LABELS = Object.assign({}, STATUS_LABEL_MAP);
-    // delete STATUS_LABELS[STATUS_PROCESSING];
-    // delete STATUS_LABELS[DELIVERY_FAILED];
-    const { [status?.toLowerCase().replace(" ", "_")]: statusTitle = null } =
-      STATUS_LABELS;
+  formatGroupStatus = (status) => {
+    // use toLowerCase because sometimes the response from backend is not consistent
+    switch (status?.toLowerCase()) {
+      case 'processing': {
+        return __("Processing");
+      }
+      case 'courier_dispatched': {
+        return __('Shipped');
+      }
+      case 'courier_in_transit': {
+        return __('In Transit');
+      }
+      case 'delivery_successful': {
+        return __('Delivered');
+      }
+      case 'delivery_failed':
+      case 'cancelled': {
+        return __('Order Cancelled');
+      }
+      case 'readytopick': {
+        return __('Ready for Pick up');
+      }
+      case 'pickedup': {
+        return __('Items Picked Up');
+      }
+      default: {
+        return null;
+      }
+    }
+  };
 
+  renderAccordionTitle(title, image, status = null) {
+    const packageStatus = /\d/.test(title) ? this.formatGroupStatus(status) : null
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -244,20 +272,32 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {/* {!!statusTitle && <span>{` - ${statusTitle}`}</span>} */}
+          {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
         </h3>
       </div>
     );
   }
 
+  shouldDisplayBar = (status) => {
+    switch (status) {
+      case STATUS_DISPATCHED:
+      case STATUS_IN_TRANSIT: {
+        return true;
+      }
+
+      default: {
+        return false;
+      }
+    }
+  };
+
   renderAccordionProgress(status) {
-    if (status === STATUS_PROCESSING || status === DELIVERY_FAILED) {
+    const displayStatusBar = this.shouldDisplayBar(status)
+    if (!displayStatusBar) {
       return null;
     }
 
-    const STATUS_LABELS = Object.assign({}, STATUS_LABEL_MAP);
-    delete STATUS_LABELS[STATUS_PROCESSING];
-    delete STATUS_LABELS[DELIVERY_FAILED];
+    const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
 
     return (
       <div
@@ -270,7 +310,7 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isProcessing: status === STATUS_PROCESSING,
+              isShipped: status === STATUS_DISPATCHED,
               inTransit: status === STATUS_IN_TRANSIT,
               isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
@@ -279,7 +319,7 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isProcessing: status === STATUS_PROCESSING,
+              isShipped: status === STATUS_DISPATCHED,
               inTransit: status === STATUS_IN_TRANSIT,
               isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
@@ -382,8 +422,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-        ? TimerImage
-        : PackageImage;
+          ? TimerImage
+          : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -564,6 +604,8 @@ class MyAccountOrderView extends PureComponent {
         status,
         payment,
         payment: { method },
+        club_apparel_amount = 0,
+        store_credit_amount = 0,
       },
     } = this.props;
 
@@ -593,6 +635,15 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("QPAY"));
         }
         return this.renderCardPaymentType();
+      case "free":
+        if (parseFloat(club_apparel_amount) !== 0) {
+          console.log("club apparel")
+          return this.renderPaymentTypeText(__("Club Apparel"));
+        } else if (store_credit_amount !== 0) {
+          console.log("Store credit")
+          return this.renderPaymentTypeText(__("Store Credit"));
+        }
+        return;
       default:
         return null;
     }
@@ -666,15 +717,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                  isStoreCredit: true,
-                })
+                isStoreCredit: true,
+              })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))

@@ -61,6 +61,7 @@ export class MyAccount extends SourceMyAccount {
 
   state = {
     isArabic: isArabic(),
+    isMobile: isMobile.any(),
   };
 
   renderMap = {
@@ -155,7 +156,8 @@ export class MyAccount extends SourceMyAccount {
 
   openTabMenu() {
     const { mobileTabActive, setMobileTabActive, history } = this.props;
-    history.push("/my-account");
+    // history.push("/my-account");
+    history.goBack();
     setMobileTabActive(!mobileTabActive);
   }
 
@@ -236,16 +238,26 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const { activeTab, tabMap, isSignedIn, mobileTabActive } = this.props;
+    
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
 
-    const { isArabic } = this.state;
+    const { isArabic,isMobile } = this.state;
 
-    const hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
-    const hiddenTabList = mobileTabActive ? "Hidden" : "Active";
-
+    const showProfileMenu = location.pathname.match('\\/my-account').input === "/my-account";
+    // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
+    // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
+    let hiddenTabContent, hiddenTabList;
+    if(showProfileMenu) {
+      hiddenTabList = "Active";
+      hiddenTabContent= "Hidden"
+    } else {
+      hiddenTabList = "Hidden";
+      hiddenTabContent= "Active"
+    }
     if (!isSignedIn) {
       return this.renderLoginOverlay();
     }
+
     const { pathname = "" } = location;
 
     const TabContent = this.renderMap[activeTab];
@@ -296,7 +308,7 @@ export class MyAccount extends SourceMyAccount {
                     </span>
                     <span block="TierName">
                       {" "}
-                      {this.props.clubApparel?.memberDetails?.memberTier}
+                      {this.props.clubApparel?.memberDetails?.memberTier} TIER
                     </span>
                     <span block="pointDetails">
                       <span block="pointsValue">
@@ -343,7 +355,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderContent() {
-    return isMobile.any() ? this.renderMobile() : this.renderDesktop();
+    const {isMobile} = this.state;
+    return isMobile ? this.renderMobile() : this.renderDesktop();
   }
 }
 

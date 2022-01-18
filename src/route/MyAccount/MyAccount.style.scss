@@ -105,7 +105,7 @@
       background-size: 20px 20px;
       width: 40px;
       height: 40px;
-      content: "";
+      content: '';
       display: inline-block;
     }
 
@@ -227,7 +227,7 @@
   align-items: center;
 
   @include mobile {
-    a+a {
+    a + a {
       margin-left: 0;
     }
   }
@@ -250,6 +250,9 @@
 }
 
 @include before-desktop {
+  .ExpandableContent:last-of-type {
+    border-bottom: none;
+  }
   .MyAccountOverlay-Close {
     display: block;
   }
@@ -347,7 +350,7 @@
       display: flex;
       flex-direction: column;
       color: #000000;
-      font-family: "Avenir Next";
+      font-family: 'Avenir Next';
       font-size: 16px;
       font-weight: 600;
       letter-spacing: 0;
@@ -363,7 +366,7 @@
 
       .CardTitle {
         color: #000000;
-        font-family: "Avenir Next";
+        font-family: 'Avenir Next';
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0;
@@ -377,7 +380,7 @@
         width: 100%;
         height: 35px;
         color: white;
-        font-family: "Avenir Next";
+        font-family: 'Avenir Next';
         padding: 0 4px;
         text-transform: capitalize;
         display: flex;
@@ -406,7 +409,7 @@
           // actual style
           // color: #000000;
           color: #fff;
-          font-family: "Avenir Next";
+          font-family: 'Avenir Next';
           padding: 0 4px;
           text-transform: capitalize;
           display: flex;
@@ -456,7 +459,7 @@
       display: flex;
       flex-direction: column;
       color: #000000;
-      font-family: "Avenir Next";
+      font-family: 'Avenir Next';
       font-size: 16px;
       font-weight: 600;
       letter-spacing: 0;
@@ -488,7 +491,7 @@
 
       .CardTitle {
         color: #000000;
-        font-family: "Avenir Next";
+        font-family: 'Avenir Next';
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0;
@@ -502,7 +505,7 @@
         width: 100%;
         height: 35px;
         color: #000000;
-        font-family: "Avenir Next";
+        font-family: 'Avenir Next';
         padding: 0 4px;
         text-transform: capitalize;
         display: flex;
@@ -529,7 +532,7 @@
           // actual style
           color: #000000;
           // color: #fff;
-          font-family: "Avenir Next";
+          font-family: 'Avenir Next';
           padding: 0 4px;
           text-transform: capitalize;
           display: flex;
@@ -566,10 +569,10 @@
             }
             .pointDetails {
               font-size: 12px;
-               .pointsValue {
-                 font-weight: bold;
-               }
-             }
+              .pointsValue {
+                font-weight: bold;
+              }
+            }
           }
         }
 
@@ -581,7 +584,7 @@
           position: absolute;
           transform: translateY(-50%);
           z-index: 9999999999999999;
-          top: -9px;
+          top: -2px;
           img {
             width: 16px !important;
             height: 16px !important;
@@ -589,6 +592,9 @@
         }
       }
     }
+  }
+  .ExpandableContent.MyAccountTabList{
+    border-bottom: none;
   }
 }
 

@@ -22,3 +22,9 @@ export const STATUS_LABEL_MAP = {
   [DELIVERY_SUCCESSFUL]: __("Delivered"),
   [STATUS_CANCELLED]: __("Cancelled"),
 };
+
+export const NEW_STATUS_LABEL_MAP = {
+  [STATUS_DISPATCHED]: __("Shipped"),
+  [STATUS_IN_TRANSIT]: __("In Transit"),
+  [DELIVERY_SUCCESSFUL]: __("Delivered"),
+};
