@@ -24,13 +24,12 @@ renderer.use(express.static('build', {
 }));
 
 renderer.get('*', async (req, res, next) => {
-    let host = `${APP_HOSTNAME}:${APP_PORT}`;
+    let host = `${APP_HOSTNAME}`;
     const result = req.hostname.match(/(en|ar)-(ae|sa|kw|om|bh|qa)/);
     if (result) {
-        host = `${result[0]}.${host}`;
+        host = `${result[0]}${host}`;
     }
-
-    const url = `http://${host}${req.originalUrl}`;
+    const url = `https://${host}${req.originalUrl}`;
 
     try {
         // Try to get the rendered HTML of the requested URL from Cache
