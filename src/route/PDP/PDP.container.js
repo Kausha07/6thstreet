@@ -113,25 +113,8 @@ export class PDPContainer extends PureComponent {
       location: { pathname },
     } = this.props;
     this.setState({ currentLocation: pathname });
-    window.onpopstate = this.onBackButtonEvent;
   }
 
-  onBackButtonEvent = (e) => {
-    e.preventDefault();
-    this.goBack();
-  };
-
-  goBack = () => {
-    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    if (url.search.includes("?q=")) {
-      url.searchParams.set("p", 0);
-      // update the URL, preserve the state
-      const { pathname, search } = url;
-      browserHistory.replace(pathname + search);
-    } else {
-      window.location.href = location.origin;
-    }
-  };
   componentDidUpdate(prevProps) {
     const {
       id,

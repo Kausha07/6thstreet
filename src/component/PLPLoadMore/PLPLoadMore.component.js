@@ -14,10 +14,10 @@ export const mapDispatchToProps = (_dispatch) => ({
 class PLPLoadMore extends PureComponent {
     constructor(props) {
         super(props);
-        this.handleLoadMore = this.handleLoadMore.bind(this);
+        //this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 
-    handleLoadMore(e) {
+    handleLoadMore =  (e) => {
         e.preventDefault();
         const { pageKey, setProductLoading } = this.props;
         const pageIndex = parseInt(pageKey) + 1;
@@ -41,10 +41,10 @@ class PLPLoadMore extends PureComponent {
                 limit * (page_count - 1) + (totalProducts - (page_count - 1) * limit);
         }
         if (pageKey !== 0 && pageKey !== page_count - 1) {
-            loadedProduct = limit * pageKey + 15;
+            loadedProduct = limit * pageKey + 30;
         }
         progressWidth = (loadedProduct * 100) / totalProducts;
-        if(totalProducts  >= 15){
+        if(totalProducts  >= 30){
             return (                             
                 <div block="Product-LoadMore">
                     {totalProducts && 
@@ -69,6 +69,7 @@ class PLPLoadMore extends PureComponent {
                             block="button"
                             onClick={(e) => this.handleLoadMore(e)}
                             disabled={disablebtn || this.props.productLoad}
+                            ref={this.buttonRef}
                         >
                             {disablebtn ? __("All Products Loaded") : this.props.productLoad ? __("Loading...") : __("Load More")}
                         </button>

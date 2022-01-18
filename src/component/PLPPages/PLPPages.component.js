@@ -31,7 +31,13 @@ class PLPPages extends PureComponent {
       isReset: false,
       defaultFilters: false,
       pageKey: 0,
+      firstPageLoad: false
     };
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.setState({ firstPageLoad: true });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,10 +54,14 @@ class PLPPages extends PureComponent {
       this.props.pages.length !== prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-      if (!isMobile.any()) {
-        const last =
-          document.getElementById("Products-Lists")?.lastElementChild;
-        last.scrollIntoView();
+
+      if (!isMobile.any() && !this.state.firstPageLoad) {
+        const last = document.getElementById("Products-Lists")?.lastElementChild;
+        last.style.scrollMarginTop = "180px";        
+        last.scrollIntoView({ behavior: "smooth" });
+      }
+      if (this.state.firstPageLoad) {
+        this.setState({ firstPageLoad: false });
       }
     }
   }
@@ -104,6 +114,7 @@ class PLPPages extends PureComponent {
   }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
+    
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -388,8 +399,8 @@ class PLPPages extends PureComponent {
   };
 
   renderLoadMore() {
-    const { pages = {}} = this.props;
-    if (  pages[0]?.products.length == 0 ) {
+    const { pages = {} } = this.props;
+    if (pages[0]?.products.length == 0) {
       return null;
     }
     return (
@@ -401,7 +412,7 @@ class PLPPages extends PureComponent {
   }
 
   render() {
-    const { pages = {} , productLoading } = this.props;
+    const { pages = {}, productLoading } = this.props;
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">

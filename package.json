@@ -32,8 +32,8 @@
         "react-spinkit": "^3.0.0",
         "react-swipe-to-delete-component": "^0.5.5",
         "server-timings": "^2.0.1",
-        "tiny-slider": "^2.9.3",
-        "tiny-slider-react": "^0.5.3",
+        "tiny-slider": "2.9.3",
+        "tiny-slider-react": "0.5.3",
         "uuid": "^8.3.2",
         "workbox-webpack-plugin": "^6.0.2"
     },
@@ -42,6 +42,8 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
+        "build-ssr": "set PUBLIC_URL='' && npm run build",
+        "build-ssr-ar": "set PUBLIC_URL='' && npm run build-ar",
         "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js",
         "image-opt": "node image-opt.mjs"
     },

@@ -21,7 +21,7 @@
   &::after {
     border-bottom: 1px solid #000000;
     border-right: 1px solid #000000;
-    content: "";
+    content: '';
     height: 5px;
     position: absolute;
     right: 20px;
@@ -169,7 +169,7 @@
         right: 0;
       }
 
-      &_isProcessing {
+      &_isShipped {
         width: calc(50% - 10px);
 
         .PageWrapper_isArabic & {
@@ -177,10 +177,10 @@
         }
       }
       &_inTransit {
-        width: 50%
+        width: 50%;
       }
       &_isDelivered {
-        width: 100%
+        width: 100%;
       }
     }
 
@@ -204,7 +204,7 @@
       &::after {
         border-bottom: 3px solid var(--primary-base-color);
         border-right: 3px solid var(--primary-base-color);
-        content: "";
+        content: '';
         height: 10px;
         left: 50%;
         position: absolute;
@@ -213,7 +213,7 @@
         width: 5px;
       }
 
-      &_isProcessing {
+      &_isShipped {
         left: calc(50% - 10px);
 
         .PageWrapper_isArabic & {
@@ -222,10 +222,10 @@
         }
       }
       &_inTransit {
-        left: 50%
+        left: 50%;
       }
       &_isDelivered {
-        left: 100%
+        left: 100%;
       }
     }
   }

@@ -24,6 +24,8 @@ import {
 import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
+import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import browserHistory from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -168,10 +170,14 @@ export class PLPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if (url.search.includes("?q=")) {
+      url.searchParams.set("p", 0);
+      // update the URL, preserve the state
+      const { pathname, search } = url;
+      browserHistory.replace(pathname + search);
+    }
     if (this.getIsLoading()) {
-      const options = PLPContainer.getRequestOptions();
-      const initialOptions = this.getInitialOptions(options);
-
       // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
     }
@@ -212,11 +218,9 @@ export class PLPContainer extends PureComponent {
       limit: 1,
     });
     this.setState({
-      brandDescription: isArabic
-        ? data?.hits[0]?.description_ar
-        : data?.hits[0]?.description,
+      brandDescription: isArabic() ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
       brandImg: data?.hits[0]?.image,
-      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
     });
   }
 
@@ -245,13 +249,27 @@ export class PLPContainer extends PureComponent {
       this.updateHeaderState();
     }
 
-    if (
-      JSON.stringify(requestOptions) !==
-      JSON.stringify(this.state.prevRequestOptions)
-    ) {
+    let comparableRequestOptions = deepCopy(requestOptions);
+    if (comparableRequestOptions) {
+      delete comparableRequestOptions.page;
     }
-    if (!this.compareObjects(requestOptions, this.state.prevRequestOptions)) {
+    let comparablePrevRequestOptions = deepCopy(this.state.prevRequestOptions);
+    if (comparablePrevRequestOptions) {
+      delete comparablePrevRequestOptions.page;
+    }
 
+    if (
+      (page === prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        )) ||
+      (page !== prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        ))
+    ) {
       PLPContainer.requestProductList(this.props);
       this.setState({ prevRequestOptions: requestOptions });
     } else if (page !== prevPage && !pages[page]) {
@@ -345,21 +363,18 @@ export class PLPContainer extends PureComponent {
 
     setMeta({
       title: __(
-        "%s for %s | 6thStreet.com %s",
+        "%s | 6thStreet.com %s",
         categoryName,
-        genderName,
         countryName
       ),
       keywords: __(
-        "%s, %s, online shopping, %s, free shipping, returns",
+        "%s, online shopping, %s, free shipping, returns",
         categoryName,
-        genderName,
         countryName
       ),
       description: __(
-        "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
-        genderName,
         countryName,
         countryName
       ),
@@ -388,16 +403,17 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      brandDescription,
-      brandImg,
-      brandName,
+    const {     
       query,
       plpWidgetData,
       gender,
       filters,
       pages,
     } = this.props;
+
+    const brandDescription = this.state.brandDescription;
+    const brandImg = this.state.brandImg;
+    const brandName = this.state.brandName;
 
     // isDisabled: this._getIsDisabled()
 

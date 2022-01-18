@@ -11,4 +11,4 @@ export const CHECKOUT_QPAY = "checkout_qpay";
 export const TABBY_PAYMENT_CODES = [TABBY_ISTALLMENTS];
 export const HIDDEN_PAYMENTS = [
   "checkout",
-  APPLE_PAY, CHECKOUT_QPAY];
+  APPLE_PAY];

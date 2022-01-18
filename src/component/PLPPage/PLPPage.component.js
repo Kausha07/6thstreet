@@ -53,7 +53,7 @@ class PLPPage extends PureComponent {
         renderMySignInPopup={renderMySignInPopup}
         pageType="plp"
         qid={qid}
-        prevPath={window.location.href}
+        prevPath={`${window.location.pathname}${window.location.search}`}
         lazyLoad={false}
       />
     );

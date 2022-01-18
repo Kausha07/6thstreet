@@ -54,7 +54,6 @@
     @include mobile {
       padding: 0;
       margin-left: 0 !important;
-      max-height: calc(100vh - 230px);
       width: 100%;
       overflow-y: auto;
     }
@@ -280,10 +279,14 @@
   }
 
   &-TabbyBlock {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 12px 8px;
+    padding: 8px 12px 0;
+    #TabbyPromo {
+      margin-top: 0px !important;
+    }
     @include desktop {
       width: 100%;
     }
@@ -478,7 +481,8 @@
       width: 100%;
       left: 0;
       background-color: var(--color-white);
-      bottom: 12px;
+      bottom: 0px;
+      padding-bottom: 12px;
     }
 
     &_isArabic {
@@ -717,16 +721,16 @@
   &-SummaryItem {
     display: flex;
     justify-content: space-between;
-    padding: 5px 0;
+    padding: 0 0 5px;
 
     .CartPage {
       &-Text {
-        font-size: 15px;
+        font-size: 13px;
         font-weight: var(--fw-regular);
       }
 
       &-Price {
-        font-size: 16px;
+        font-size: 13px;
         font-weight: var(--fw-medium);
       }
     }
@@ -734,10 +738,26 @@
     &::before {
       content: none;
     }
-
+    &_divider {
+      border-top: 1px solid var(--color-soft-gray);
+      padding: 10px 0px ;
+      margin-top: 10px;
+      .CartPage {
+        &-Text {
+          font-size: 15px;
+          font-weight: var(--fw-regular);
+        }
+  
+        &-Price {
+          font-size: 15px;
+          font-weight: var(--fw-bold);
+        }
+      }
+    }
     &:last-child {
       margin-bottom: 0;
     }
+    margin-bottom: 0px;
   }
 }
 .MobileBottomBar {
