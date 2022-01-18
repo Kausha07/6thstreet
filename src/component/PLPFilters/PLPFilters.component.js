@@ -666,7 +666,7 @@ class PLPFilters extends PureComponent {
           if (filter[0] === "categories_without_path") {
             return Object.entries(filter[1].data).map((entry) => {
               return Object.entries(entry[1].subcategories).map((subEntry) => {
-                activeFilters[filter[0]].push(filterData[0]);
+                activeFilters[filter[0]].push(subEntry[0]);
               });
             });
           } else {
@@ -729,7 +729,6 @@ class PLPFilters extends PureComponent {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>

@@ -245,20 +245,20 @@ class PLPPages extends PureComponent {
           }
         }
       } else if (categoryLevel1) {
-        return Object.entries(data).map((entry) => {
-          return Object.entries(entry[1].subcategories).map((subEntry) => {
-            if (subEntry[0] === facet_value) {
-              subEntry[1].is_selected = checked;
-              if (checked) {
-                entry[1].selected_filters_count += 1;
-                newFilterArray.selected_filters_count += 1;
-              } else {
-                entry[1].selected_filters_count -= 1;
-                newFilterArray.selected_filters_count -= 1;
-              }
-            }
-          });
-        });
+        // return Object.entries(data).map((entry) => {
+        //   return Object.entries(entry[1].subcategories).map((subEntry) => {
+        //     if (subEntry[0] === facet_value) {
+        //       subEntry[1].is_selected = checked;
+        //       if (checked) {
+        //         entry[1].selected_filters_count += 1;
+        //         newFilterArray.selected_filters_count += 1;
+        //       } else {
+        //         entry[1].selected_filters_count -= 1;
+        //         newFilterArray.selected_filters_count -= 1;
+        //       }
+        //     }
+        //   });
+        // });
       } else {
         Object.keys(data).map((value) => {
           if (
@@ -323,11 +323,12 @@ class PLPPages extends PureComponent {
             initialFacetKey
           );
           updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-
           const index = filterArray.indexOf(facet_value);
+
           if (index > -1) {
             filterArray.splice(index, 1);
           }
+
           this.setState(
             {
               activeFilters: {
