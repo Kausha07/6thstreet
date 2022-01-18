@@ -52,10 +52,11 @@ class HeaderSearch extends PureComponent {
     }
     window.onpopstate = e => {
       if (document.body.classList.contains("isSuggestionOpen")){
-        onSearchClean();
+        this.closeSearch();
+        console.log("Search Closed");
         history.forward();
       }
-    }
+   }
   }
   componentDidUpdate(prevProps,) {
     const { focusInput, isPDPSearchVisible } = this.props;
@@ -68,6 +69,7 @@ class HeaderSearch extends PureComponent {
     if (focusInput && isPDPSearchVisible && prevProps.isPDPSearchVisible !== isPDPSearchVisible && searchInput) {
       searchInput.focus();
     }
+    
   }
   searchRef = createRef();
 
