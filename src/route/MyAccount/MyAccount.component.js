@@ -61,6 +61,7 @@ export class MyAccount extends SourceMyAccount {
 
   state = {
     isArabic: isArabic(),
+    isMobile: isMobile.any(),
   };
 
   renderMap = {
@@ -155,7 +156,8 @@ export class MyAccount extends SourceMyAccount {
 
   openTabMenu() {
     const { mobileTabActive, setMobileTabActive, history } = this.props;
-    history.push("/my-account");
+    // history.push("/my-account");
+    history.goBack();
     setMobileTabActive(!mobileTabActive);
   }
 
@@ -185,7 +187,8 @@ export class MyAccount extends SourceMyAccount {
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
-      return this.renderLoginOverlay();
+      const { history } = this.props;
+      return history.push("/");
     }
 
     const TabContent = this.renderMap[activeTab];
@@ -208,13 +211,13 @@ export class MyAccount extends SourceMyAccount {
         />
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-            <h1 block="MyAccount" elem="Heading">
-              {isCancel
-                ? alternateName
-                : alternativePageName || returnTitle || name}
-            </h1>
-          ) : (
+            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+              <h1 block="MyAccount" elem="Heading">
+                {isCancel
+                  ? alternateName
+                  : alternativePageName || returnTitle || name}
+              </h1>
+            ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {alternativePageName || returnTitle || name}
@@ -235,22 +238,33 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const { activeTab, tabMap, isSignedIn, mobileTabActive } = this.props;
+    
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
 
-    const { isArabic } = this.state;
+    const { isArabic,isMobile } = this.state;
 
-    const hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
-    const hiddenTabList = mobileTabActive ? "Hidden" : "Active";
-
+    const showProfileMenu = location.pathname.match('\\/my-account').input === "/my-account";
+    // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
+    // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
+    let hiddenTabContent, hiddenTabList;
+    if(showProfileMenu) {
+      hiddenTabList = "Active";
+      hiddenTabContent= "Hidden"
+    } else {
+      hiddenTabList = "Hidden";
+      hiddenTabContent= "Active"
+    }
     if (!isSignedIn) {
       return this.renderLoginOverlay();
     }
+
     const { pathname = "" } = location;
 
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
+    console.log('showProfileMenu',showProfileMenu)
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     return (
@@ -279,10 +293,8 @@ export class MyAccount extends SourceMyAccount {
               </div>
               {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
               {this.props.clubApparel?.accountLinked ? (
-                <button
-                  block="AccountLinked"
-                  onClick={() => this.handleTabChange("club-apparel")}
-                >
+                <button onClick={() => this.handleTabChange("club-apparel")}
+                  block="AccountLinked">
                   <div block="AccountLinkedTextBlock">
                     <span block="ClubApparelImgBlock">
                       <Image
@@ -297,9 +309,9 @@ export class MyAccount extends SourceMyAccount {
                     </span>
                     <span block="TierName">
                       {" "}
-                      {this.props.clubApparel?.memberDetails?.memberTier}
+                      {this.props.clubApparel?.memberDetails?.memberTier} TIER
                     </span>
-                    <span>
+                    <span block="pointDetails">
                       <span block="pointsValue">
                         {this.props.clubApparel?.caPointsValue}
                       </span>{" "}
@@ -344,7 +356,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderContent() {
-    return isMobile.any() ? this.renderMobile() : this.renderDesktop();
+    const {isMobile} = this.state;
+    return isMobile ? this.renderMobile() : this.renderDesktop();
   }
 }
 

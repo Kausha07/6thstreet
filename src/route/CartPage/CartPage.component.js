@@ -35,6 +35,12 @@ import ClubApparel from "./icons/club-apparel.png";
 import "./CartPage.style";
 
 export class CartPage extends PureComponent {
+
+  constructor(props) {
+    super(props);
+
+    this.dynamicHeight = React.createRef();
+  }
   static propTypes = {
     totals: TotalsType.isRequired,
     onCheckoutButtonClick: PropTypes.func.isRequired,
@@ -58,72 +64,72 @@ export class CartPage extends PureComponent {
   };
 
   componentDidMount() {
-    const{
-      totals:{total,currency_code}
+    const {
+      totals: { total, currency_code }
     } = this.props;
-    const {isArabic} = this.state;
+    const { isArabic } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
-    if((country === "AE" || country === "SA") && total >= 150){
+    if ((country === "AE" || country === "SA") && total >= 150) {
       const script = document.createElement("script");
-      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.src = "https://checkout.tabby.ai/tabby-promo.js";
       script.async = true;
-      script.onload =  function(){
+      script.onload = function () {
         let s = document.createElement('script');
         s.type = 'text/javascript';
-        const  code = `new TabbyPromo({
+        const code = `new TabbyPromo({
           selector: '#TabbyPromo', 
           currency: '${currency_code}', // required, currency of your product
           price: '${total}', 
           installmentsCount: 4,
-          lang: '${isArabic? "ar": "en"}', 
+          lang: '${isArabic ? "ar" : "en"}', 
           source: 'product', 
         });`;
         try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
         } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
+          s.text = code;
+          document.body.appendChild(s);
         }
-      }  
-      document.body.appendChild(script);   
+      }
+      document.body.appendChild(script);
     }
   }
   componentDidUpdate(prevProps) {
-    const{
-      totals:{total,currency_code}
+    const {
+      totals: { total, currency_code }
     } = this.props;
-    const {isArabic}= this.state
+    const { isArabic } = this.state
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
-    if(prevProps?.totals?.total !== total ){
-      if((country === "AE" || country === "SA") && total >= 150){
+    if (prevProps?.totals?.total !== total) {
+      if ((country === "AE" || country === "SA") && total >= 150) {
         const script = document.createElement("script");
-        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.src = "https://checkout.tabby.ai/tabby-promo.js";
         script.async = true;
-        script.onload =  function(){
+        script.onload = function () {
           let s = document.createElement('script');
           s.type = 'text/javascript';
-          const  code = `new TabbyPromo({
+          const code = `new TabbyPromo({
             selector: '#TabbyPromo', 
             currency: '${currency_code}', // required, currency of your product
             price: '${total}', 
             installmentsCount: 4,
-            lang: '${isArabic? "ar": "en"}', 
+            lang: '${isArabic ? "ar" : "en"}', 
             source: 'product', 
           });`;
           try {
-              s.appendChild(document.createTextNode(code));
-              document.body.appendChild(s);
+            s.appendChild(document.createTextNode(code));
+            document.body.appendChild(s);
           } catch (e) {
-              s.text = code;
-              document.body.appendChild(s);
+            s.text = code;
+            document.body.appendChild(s);
           }
-        }  
-        document.body.appendChild(script);   
+        }
+        document.body.appendChild(script);
       }
     }
   }
@@ -187,14 +193,13 @@ export class CartPage extends PureComponent {
           {name}
         </strong>
         <strong block="CartPage" elem="Price">
-          {`${
-            parseFloat(price) || price === 0 ? currency_code : ""
-          } ${finalPrice}`}
+          {`${parseFloat(price) || price === 0 ? currency_code : ""
+            } ${finalPrice}`}
         </strong>
       </li>
     );
   }
-  renderTabbyPromo(){
+  renderTabbyPromo() {
     return (
       <div block="CartPage" elem="TabbyBlock">
         <div id="TabbyPromo"></div>
@@ -219,25 +224,25 @@ export class CartPage extends PureComponent {
       <div block="CartPage" elem="OrderTotals">
         <ul>
           <div block="CartPage" elem="Subtotals">
-                        { this.renderPriceLine(subTotal, __('Subtotal')) }
-                        { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'customerbalance'),
-                            __('Store Credit')
-                        ) }
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'clubapparel'),
-                            __('Club Apparel Redemption')
-                        ) }
-                        { (couponCode || (discount && discount != 0)) ? this.renderPriceLine(
-                            discount,
-                            __('Discount')
-                        ) : null}
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'tax'),
-                            __('Tax')
-                        ) }
-                    </div>
+            {this.renderPriceLine(subTotal, __('Subtotal'))}
+            {this.renderPriceLine(shipping_fee, __('Shipping fee'))}
+            {this.renderPriceLine(
+              getDiscountFromTotals(totals, 'customerbalance'),
+              __('Store Credit')
+            )}
+            {this.renderPriceLine(
+              getDiscountFromTotals(totals, 'clubapparel'),
+              __('Club Apparel Redemption')
+            )}
+            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(
+              discount,
+              __('Discount')
+            ) : null}
+            {this.renderPriceLine(
+              getDiscountFromTotals(totals, 'tax'),
+              __('Tax')
+            )}
+          </div>
         </ul>
       </div>
     );
@@ -399,7 +404,7 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-                <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+        <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
 
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
@@ -545,12 +550,14 @@ export class CartPage extends PureComponent {
   renderDynamicContent() {
     const {
       totals = {},
-      totals: { items = [] },
+      totals: { total, items = [] },
       isLoading,
       processingRequest,
     } = this.props;
     const { isArabic } = this.state;
-
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     }
@@ -563,7 +570,7 @@ export class CartPage extends PureComponent {
         </div>
       );
     }
-
+    const additionalMargin = ((country === "AE" || country === "SA") && total >= 150) ? 100 : 5;
     return (
       <>
         {this.renderContent()}
@@ -572,14 +579,14 @@ export class CartPage extends PureComponent {
           label="Cart page details"
         >
           <Loader isLoading={processingRequest} />
-          <div block="CartPage" elem="Static" mods={{ isArabic }}>
+          <div style={{ marginBottom: `${this.dynamicHeight?.current?.clientHeight + additionalMargin}px` }} block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderHeading()}
             {this.renderCartItems()}
             {this.renderCrossSellProducts()}
             {this.renderDiscountCode()}
             {this.renderPromo()}
           </div>
-          <div block="CartPage" elem="Floating" mods={{ isArabic }}>
+          <div ref={this.dynamicHeight} block="CartPage" elem="Floating" mods={{ isArabic }}>
             {this.renderClubApparel()}
             {this.renderTotals()}
           </div>

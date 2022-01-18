@@ -12,6 +12,9 @@
     padding-left: 0;
     position: relative;
     text-align: center;
+    @include desktop {
+        min-height: 368px;
+    }
     &:last-child {
         margin-bottom: 25.7px;
     }
@@ -196,7 +199,7 @@
             }
         }
     }
-    &-AddToCart{
+    &-AddToCart {
         position: absolute;
         bottom: 0%;
         width: 100%;
@@ -205,8 +208,8 @@
         min-height: 150px;
         display: none;
     }
-    &:hover{
-        .ProductItem-AddToCart{
+    &:hover {
+        .ProductItem-AddToCart {
             display: block;
         }
     }

@@ -36,15 +36,14 @@ class HeaderBottomBar extends NavigationAbstract {
   renderMenu() {
     const { newMenuGender } = this.props;
     if (isMobile.any()) {
-      return null
-    }
+      return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
+    } 
 
     return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
   }
 
   renderSearch() {
     const { isArabic } = this.state;
-    return null;
     if (!isMobile.any()) {
       return (
         <div

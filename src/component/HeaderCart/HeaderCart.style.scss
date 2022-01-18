@@ -5,6 +5,9 @@
 .HeaderCart {
   position: relative;
   // z-index: 96;
+  @include mobile {
+    z-index: 96;
+  }
   &-PopUp {
     position: fixed;
     height: 100%;

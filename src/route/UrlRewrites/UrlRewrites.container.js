@@ -92,7 +92,6 @@ export class UrlRewritesContainer extends PureComponent {
       sku !== prevSku ||
       !prevStatePathname
     ) {
-      console.log("url rewrite");
       hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
@@ -105,7 +104,8 @@ export class UrlRewritesContainer extends PureComponent {
     let previousLocation = location.href;
     window.onload = function () {
       const url = new URL(previousLocation.replace(/%20&%20/gi, "%20%26%20"));
-      if (url.searchParams.get("p") !== "0") {
+
+      if (url.searchParams.get("p") && url.searchParams.get("p") !== "0") {
         resetPLPPage();
         url.searchParams.set("p", 0);
         const { pathname, search } = url;
