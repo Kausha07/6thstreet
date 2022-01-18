@@ -18,7 +18,7 @@ import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import { addressType, customerType } from 'Type/Account';
 import isMobile from 'Util/Mobile';
-
+import { withRouter } from "react-router";
 import './MyAccountAddressBook.style';
 
 export class MyAccountAddressBook extends PureComponent {
@@ -53,19 +53,19 @@ export class MyAccountAddressBook extends PureComponent {
     };
 
     openNewForm = () => {
-        const { showCreateNewPopup } = this.props;
+        const { showCreateNewPopup, history } = this.props;
 
         if (isMobile.any()) {
             this.hideCards();
         }
         showCreateNewPopup();
-
         if (!isMobile.any()) {
             const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress') || [];
             if (elmnts && elmnts.length > 0) {
                 elmnts[0].scrollIntoView();
             }
         }
+        history.push('/my-account/address-book#add');
     };
 
     renderPopup() {
@@ -77,30 +77,32 @@ export class MyAccountAddressBook extends PureComponent {
         } = this.props;
 
         return (
-            <MyAccountAddressPopup
-              formContent={ formContent }
-              closeForm={ closeForm }
-              openForm={ openForm }
-              showCards={ this.showCards }
-              customer={ customer }
-            />
+            <div id="add">
+                <MyAccountAddressPopup
+                    formContent={formContent}
+                    closeForm={closeForm}
+                    openForm={openForm}
+                    showCards={this.showCards}
+                    customer={customer}
+                />
+            </div>
         );
     }
 
     renderAddress = (address, index) => {
-        const { getDefaultPostfix, closeForm, openForm , hideCards} = this.props;
+        const { getDefaultPostfix, closeForm, openForm, hideCards } = this.props;
         const addressNumber = index + 1;
         const postfix = getDefaultPostfix(address);
 
         return (
             <MyAccountAddressTable
-              title={ __('Address #%s%s', addressNumber, postfix) }
-              showActions
-              hideCards={ hideCards }
-              address={ address }
-              key={ addressNumber }
-              closeForm={ closeForm }
-              openForm={ openForm }
+                title={__('Address #%s%s', addressNumber, postfix)}
+                showActions
+                hideCards={hideCards}
+                address={address}
+                key={addressNumber}
+                closeForm={closeForm}
+                openForm={openForm}
             />
         );
     };
@@ -108,7 +110,7 @@ export class MyAccountAddressBook extends PureComponent {
     renderNoAddresses() {
         return (
             <div>
-                <p>{ __('You have no configured addresses.') }</p>
+                <p>{__('You have no configured addresses.')}</p>
             </div>
         );
     }
@@ -116,11 +118,11 @@ export class MyAccountAddressBook extends PureComponent {
     renderActions() {
         return (
             <button
-              block="MyAccountAddressBook"
-              elem="NewAddress"
-              onClick={ this.openNewForm }
+                block="MyAccountAddressBook"
+                elem="NewAddress"
+                onClick={this.openNewForm}
             >
-                { __('Add new address') }
+                {__('Add new address')}
             </button>
         );
     }
@@ -146,23 +148,23 @@ export class MyAccountAddressBook extends PureComponent {
             return (
                 <div block="MyAccountAddressBook">
                     <button
-                      block="MyAccountAddressBook"
-                      elem="backBtn"
-                      onClick={ this.showCards }
+                        block="MyAccountAddressBook"
+                        elem="backBtn"
+                        onClick={this.showCards}
                     />
-                    { this.renderPopup() }
+                    {this.renderPopup()}
                 </div>
             );
         }
 
         return (
             <div block="MyAccountAddressBook">
-                { this.renderAddressList() }
-                { this.renderActions() }
-                { this.renderPopup() }
+                {this.renderAddressList()}
+                {this.renderActions()}
+                {this.renderPopup()}
             </div>
         );
     }
 }
 
-export default MyAccountAddressBook;
+export default withRouter(MyAccountAddressBook);

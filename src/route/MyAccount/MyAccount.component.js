@@ -264,7 +264,6 @@ export class MyAccount extends SourceMyAccount {
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
-    console.log('showProfileMenu',showProfileMenu)
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     return (
