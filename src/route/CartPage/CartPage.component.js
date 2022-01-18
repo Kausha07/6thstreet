@@ -579,7 +579,7 @@ export class CartPage extends PureComponent {
           label="Cart page details"
         >
           <Loader isLoading={processingRequest} />
-          <div style={{ marginBottom: `${this.dynamicHeight?.current?.clientHeight + additionalMargin}px` }} block="CartPage" elem="Static" mods={{ isArabic }}>
+          <div style={{ marginBottom: `${isMobile.any() ? this.dynamicHeight?.current?.clientHeight + additionalMargin : 0}px` }} block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderHeading()}
             {this.renderCartItems()}
             {this.renderCrossSellProducts()}
