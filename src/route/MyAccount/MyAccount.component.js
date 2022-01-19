@@ -101,6 +101,8 @@ export class MyAccount extends SourceMyAccount {
     },
   ];
 
+
+
   renderAppColumn() {
     return this.linksMap.map((column) => (
       <div block="FooterMain" elem="LastColumn" key={column.title}>

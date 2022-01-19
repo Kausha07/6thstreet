@@ -46,10 +46,6 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
-    if(location.pathname.match(/searchscreen/)) {
-      console.log("all well")
-      searchInput.focus();
-    }
     window.onpopstate = e => {
       if (document.body.classList.contains("isSuggestionOpen")){
         this.closeSearch();
