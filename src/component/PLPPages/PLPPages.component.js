@@ -9,6 +9,9 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
 import ProductLoad from "Component/PLPLoadMore";
 import { v4 } from "uuid";
+import { withRouter } from "react-router";
+import browserHistory from "Util/History";
+
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -32,18 +35,47 @@ class PLPPages extends PureComponent {
       defaultFilters: false,
       pageKey: 0,
       firstPageLoad: false,
-      pageScrollHeight: 0
+      pageScrollHeight: 0,
+      prevProductSku: "",
+      loadedLastProduct: false,
     };
   }
 
   componentDidMount() {
     // window.scrollTo(0, 0);
     this.setState({ firstPageLoad: true });
+    let prevLocation;
+    let finalPrevLocation;
+    let initialPrevProductSku;
+    browserHistory.listen((nextLocation) => {
+      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+      const { search } = nextLocation;
+      if (
+        finalPrevLocation &&
+        !locationArr.includes(finalPrevLocation.pathname) &&
+        finalPrevLocation.state &&
+        finalPrevLocation.state.product
+      ) {
+        const {
+          state: {
+            product: { sku },
+          },
+        } = finalPrevLocation;
+        initialPrevProductSku = sku;
+        this.setState({ prevProductSku: sku });
+        this.props.setPrevProductSku(sku);
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { activeFilters } = this.props;
-    const { activeFilters: prevActiveFilters } = prevProps;
+    const { activeFilters, prevProductSku } = this.props;
+    const {
+      activeFilters: prevActiveFilters,
+      prevProductSku: initialPrevProductSku,
+    } = prevProps;
 
     if (activeFilters !== prevActiveFilters) {
       this.setState({
@@ -62,11 +94,43 @@ class PLPPages extends PureComponent {
         const scrollHeight = this.state.pageScrollHeight + 60;
         window.scroll({
           top: scrollHeight,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
+      }
+    }
+
+    if (prevProductSku) {
+      let element = document.getElementById(prevProductSku);
+      if (!isMobile.any() && element && !this.state.loadedLastProduct) {
+        var headerOffset = isMobile.any() ? 0 : 200;
+        var elementPosition = element.getBoundingClientRect().top;
+        var offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+        this.setState({ loadedLastProduct: true });
+      } else if (isMobile.any() && element && !this.state.loadedLastProduct) {
+        console.log("muskan", element);
+
+        const offset = 0;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+        this.setState({ loadedLastProduct: true });
+
+        // element.scrollIntoView({behavior:'smooth'})
       }
     }
   }
@@ -75,7 +139,7 @@ class PLPPages extends PureComponent {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
       pageKey: key,
-    });    
+    });
     const {
       impressions,
       query,
@@ -120,8 +184,8 @@ class PLPPages extends PureComponent {
   renderPages() {
     const { pages = {}, productLoading } = this.props;
     this.setState({
-      pageScrollHeight : document.getElementById("Products-Lists")?.offsetHeight
-    })    
+      pageScrollHeight: document.getElementById("Products-Lists")?.offsetHeight,
+    });
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -423,6 +487,7 @@ class PLPPages extends PureComponent {
 
   render() {
     const { pages = {}, productLoading } = this.props;
+
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">
@@ -443,4 +508,4 @@ class PLPPages extends PureComponent {
   }
 }
 
-export default PLPPages;
+export default withRouter(PLPPages);

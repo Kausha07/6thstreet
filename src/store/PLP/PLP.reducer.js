@@ -8,6 +8,7 @@ import {
   SET_LOADING,
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
+  SET_PREV_PRODUCT_SKU
 } from "./PLP.action";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
@@ -22,6 +23,7 @@ export const getInitialState = () => ({
   initialFilters: {},
   initialOptions: {},
   plpWidgetData: [],
+  prevProductSku: "",
 });
 
 export const formatFilters = (filters = {}) =>
@@ -57,6 +59,13 @@ export const PLPReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         plpWidgetData,
+      };
+
+    case SET_PREV_PRODUCT_SKU:
+      const { sku } = action;
+      return {
+        ...state,
+        prevProductSku: sku,
       };
     case SET_PLP_PAGE:
       const { pageProducts, page } = action;

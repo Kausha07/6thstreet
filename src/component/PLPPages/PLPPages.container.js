@@ -3,18 +3,23 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
 import PLPPages from "./PLPPages.component";
-import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
+import {
+  updatePLPInitialFilters,
+  setPrevProductSku,
+} from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 
 export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
   initialOptions: state.PLP.initialOptions,
   productLoading: state.PLP.productLoading,
+  prevProductSku: state.PLP.prevProductSku,
   meta: state.PLP.meta,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   updatePLPInitialFilters: (filters, facet_key, facet_value) =>
     _dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
+  setPrevProductSku: (sku) => _dispatch(setPrevProductSku(sku)),
 });
 export class PLPPagesContainer extends PureComponent {
   static propTypes = {
@@ -162,14 +167,16 @@ export class PLPPagesContainer extends PureComponent {
     filters: this.props.filters,
     activeFilters: this.state.activeFilters,
     productLoading: this.props.productLoading,
+    prevProductSku:this.props.prevProductSku,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
   });
 
   containerFunctions = () => {
-    const { updatePLPInitialFilters, updateFiltersState } = this.props;
+    const { updatePLPInitialFilters, updateFiltersState, setPrevProductSku } =
+      this.props;
 
-    return { updatePLPInitialFilters, updateFiltersState };
+    return { updatePLPInitialFilters, updateFiltersState, setPrevProductSku };
   };
 
   getPages() {
