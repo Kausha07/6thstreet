@@ -155,6 +155,7 @@ export class PLPContainer extends PureComponent {
     brandImg: "",
     brandName: "",
     isArabic: isArabic(),
+    prevProductSku: "",
   };
 
   containerFunctions = {
@@ -231,7 +232,9 @@ export class PLPContainer extends PureComponent {
       limit: 1,
     });
     this.setState({
-      brandDescription: isArabic() ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
+      brandDescription: isArabic()
+        ? data?.hits[0]?.description_ar
+        : data?.hits[0]?.description,
       brandImg: data?.hits[0]?.image,
       brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
     });
@@ -375,11 +378,7 @@ export class PLPContainer extends PureComponent {
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
     setMeta({
-      title: __(
-        "%s | 6thStreet.com %s",
-        categoryName,
-        countryName
-      ),
+      title: __("%s | 6thStreet.com %s", categoryName, countryName),
       keywords: __(
         "%s, online shopping, %s, free shipping, returns",
         categoryName,
@@ -416,13 +415,7 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {     
-      query,
-      plpWidgetData,
-      gender,
-      filters,
-      pages,
-    } = this.props;
+    const { query, plpWidgetData, gender, filters, pages } = this.props;
 
     const brandDescription = this.state.brandDescription;
     const brandImg = this.state.brandImg;
