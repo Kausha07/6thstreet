@@ -927,5 +927,7 @@
     "OK": "نعم",
     "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات",
     "Results": null,
-    "OUT OF STOCK": null
+    "OUT OF STOCK": null,
+    "New address1": null,
+    "New address 1": null
 }

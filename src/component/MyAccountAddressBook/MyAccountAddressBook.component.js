@@ -65,7 +65,6 @@ export class MyAccountAddressBook extends PureComponent {
                 elmnts[0].scrollIntoView();
             }
         }
-        history.push('/my-account/address-book#add');
     };
 
     renderPopup() {
