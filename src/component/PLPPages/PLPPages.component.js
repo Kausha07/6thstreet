@@ -42,7 +42,7 @@ class PLPPages extends PureComponent {
   }
 
   componentDidMount() {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     this.setState({ firstPageLoad: true });
     let prevLocation;
     let finalPrevLocation;
@@ -66,6 +66,12 @@ class PLPPages extends PureComponent {
         initialPrevProductSku = sku;
         this.setState({ prevProductSku: sku });
         this.props.setPrevProductSku(sku);
+      } else if (
+        finalPrevLocation &&
+        locationArr.includes(finalPrevLocation.pathname)
+      ) {
+        this.props.setPrevProductSku("");
+        window.scrollTo(0, 0);
       }
     });
   }
@@ -76,7 +82,7 @@ class PLPPages extends PureComponent {
       activeFilters: prevActiveFilters,
       prevProductSku: initialPrevProductSku,
     } = prevProps;
-
+  
     if (activeFilters !== prevActiveFilters) {
       this.setState({
         activeFilters: activeFilters,
@@ -108,7 +114,7 @@ class PLPPages extends PureComponent {
         if (isMobile.any()) {
           element.parentElement.style.scrollMarginTop = "0px";
         }
-
+     
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
