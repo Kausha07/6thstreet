@@ -42,6 +42,8 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
+        "build-ssr": "set PUBLIC_URL='' && npm run build",
+        "build-ssr-ar": "set PUBLIC_URL='' && npm run build-ar",
         "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js",
         "image-opt": "node image-opt.mjs"
     },

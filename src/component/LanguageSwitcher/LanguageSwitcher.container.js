@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router';
 import { getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { setCountry, setLanguageForWelcome} from 'Store/AppState/AppState.action'
@@ -29,15 +29,21 @@ export class LanguageSwitcherContainer extends PureComponent {
     };
 
     onLanguageSelect(value) {
-        const { language = '' } = this.props;
-
-
+        const { language = '',history } = this.props;
+        console.log("all well",value)
         if(window.location.href.includes('en-') || window.location.href.includes('ar-')){
-            window.location.href = location.href.replace(
-                language.toLowerCase(),
-                value,
-                location.href
-            );
+            if(location.pathname.match(/my-account/)) {
+                window.location.href = location.href.replace(
+                    language.toLowerCase(),
+                    value,
+                    location.href).replace("/my-account","/");
+            } else {
+                window.location.href = location.href.replace(
+                    language.toLowerCase(),
+                    value,
+                    location.href
+                );
+            }
         }
         else{
             this.props.setLanguageForWelcome(value)
@@ -71,4 +77,4 @@ export class LanguageSwitcherContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer));

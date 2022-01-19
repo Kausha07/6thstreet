@@ -227,13 +227,36 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  renderAccordionTitle(title, image, status = null) {
-    const STATUS_LABELS = Object.assign({}, STATUS_LABEL_MAP);
-    // delete STATUS_LABELS[STATUS_PROCESSING];
-    // delete STATUS_LABELS[DELIVERY_FAILED];
-    const { [status?.toLowerCase().replace(" ", "_")]: statusTitle = null } =
-      STATUS_LABELS;
+  formatGroupStatus = (status) => {
+    // use toLowerCase because sometimes the response from backend is not consistent
+    switch (status?.toLowerCase()) {
+      case 'courier_dispatched': {
+        return __('Shipped');
+      }
+      case 'courier_in_transit': {
+        return __('In Transit');
+      }
+      case 'delivery_successful': {
+        return __('Delivered');
+      }
+      case 'delivery_failed':
+      case 'cancelled': {
+        return __('Order Cancelled');
+      }
+      case 'readytopick': {
+        return __('Ready for Pick up');
+      }
+      case 'pickedup': {
+        return __('Items Picked Up');
+      }
+      default: {
+        return null;
+      }
+    }
+  };
 
+  renderAccordionTitle(title, image, status = null) {
+    const packageStatus = /\d/.test(title) ? this.formatGroupStatus(status) : null
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -246,7 +269,7 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {/* {!!statusTitle && <span>{` - ${statusTitle}`}</span>} */}
+          {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
         </h3>
       </div>
     );
@@ -578,6 +601,8 @@ class MyAccountOrderView extends PureComponent {
         status,
         payment,
         payment: { method },
+        club_apparel_amount = 0,
+        store_credit_amount = 0,
       },
     } = this.props;
 
@@ -607,6 +632,15 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("QPAY"));
         }
         return this.renderCardPaymentType();
+      case "free":
+        if (parseFloat(club_apparel_amount) !== 0) {
+          console.log("club apparel")
+          return this.renderPaymentTypeText(__("Club Apparel"));
+        } else if (store_credit_amount !== 0) {
+          console.log("Store credit")
+          return this.renderPaymentTypeText(__("Store Credit"));
+        }
+        return;
       default:
         return null;
     }

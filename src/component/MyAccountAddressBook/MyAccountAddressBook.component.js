@@ -42,6 +42,7 @@ export class MyAccountAddressBook extends PureComponent {
         hideCards: false
     };
 
+
     hideCards = () => {
         this.setState({ hideCards: true });
     };
@@ -76,7 +77,7 @@ export class MyAccountAddressBook extends PureComponent {
         } = this.props;
 
         return (
-            <div id="add">
+            <div id="add" block="isNewAddressOpen">
                 <MyAccountAddressPopup
                     formContent={formContent}
                     closeForm={closeForm}

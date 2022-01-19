@@ -928,6 +928,10 @@
     "You’ve viewed %s of %s products": "لقد استعرضت %s من %s من المنتجات",
     "Results": null,
     "OUT OF STOCK": null,
-    "New address1": null,
-    "New address 1": null
+    "%s | 6thStreet.com %s": null,
+    "%s, online shopping, %s, free shipping, returns": null,
+    "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "Ready for Pick up": null,
+    "Items Picked Up": null,
+    "shipment": null
 }

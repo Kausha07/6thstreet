@@ -11,13 +11,13 @@
   @include before-desktop {
     .Checkout-StickyButtonWrapper {
       padding-top: 0.5rem;
-      padding: 1.5rem 30px calc(env(safe-area-inset-bottom) + 1rem);
+      padding: 5px 30px calc(env(safe-area-inset-bottom) + 1rem);
     }
   }
   @include mobile {
     padding-bottom: 120px;
     .Checkout-StickyButtonWrapper {
-      padding: 1.5rem 10px calc(env(safe-area-inset-bottom) + 1rem);
+      padding: 5px 10px calc(env(safe-area-inset-bottom) + 1rem);
     }
   }
 
@@ -135,7 +135,7 @@
             font-weight: var(--fw-regular);
             font-size: 13px;
             line-height: 20px;
-            &:empty{
+            &:empty {
               display: none;
             }
           }
@@ -144,7 +144,7 @@
             font-weight: var(--fw-bold);
             font-size: 13px;
             line-height: 25px;
-            &:empty{
+            &:empty {
               display: none;
             }
           }
@@ -152,19 +152,19 @@
           &-SummaryItem,
           &-DiscountOptionWrapper {
             padding: 0;
-            &:empty{
+            &:empty {
               display: none;
             }
           }
           &-PromoBlock {
             margin: 10px 0 0;
-            &:empty{
+            &:empty {
               display: none;
             }
           }
           &-DiscountOptionWrapper {
             padding: 10px 0 0;
-            &:empty{
+            &:empty {
               display: none;
             }
           }
@@ -180,7 +180,7 @@
         }
       }
       &-OrderSummaryTrigger {
-        content: "";
+        content: '';
         max-width: 30px;
         top: 47%;
         border: solid #0a0a0a;
@@ -270,7 +270,7 @@
   .CheckoutNavigation {
     padding: 16px 36px;
     display: flex;
-    margin-bottom:45px;
+    margin-bottom: 45px;
 
     @include desktop {
       display: none;
@@ -420,7 +420,7 @@
               margin: 10% 5% 10% 10%;
             }
           }
-          .Image{
+          .Image {
             float: right;
             overflow: inherit;
             .LazyLoad-wrapper {
@@ -671,7 +671,7 @@
     }
 
     ::before {
-      content: " ";
+      content: ' ';
       position: absolute;
       width: 16px;
       height: 22px;
@@ -696,7 +696,7 @@
     }
 
     ::before {
-      content: " ";
+      content: ' ';
       position: absolute;
       width: 16px;
       height: 22px;

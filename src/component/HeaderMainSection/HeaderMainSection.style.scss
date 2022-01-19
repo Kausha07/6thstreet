@@ -26,6 +26,9 @@ main {
     align-items: center;
     flex: 1;
     order: 2;
+    @include desktop{
+      z-index: 3;
+    }
   }
 
   @include mobile {
