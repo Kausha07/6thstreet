@@ -15,7 +15,7 @@ import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import isMobile from 'Util/Mobile';
+import isMobile from "Util/Mobile";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
@@ -52,7 +52,6 @@ class ProductItem extends PureComponent {
     //   selectedSizeCode: sizeCode || "",
     // });
   };
-
 
   setStockAvailability = (status) => {
     // const {
@@ -219,19 +218,16 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const {product} = this.props
-    let price = Object.values(product.price[0])
-    if(price[0].default === 0){
-      return null
+    const { product } = this.props;
+    let price = Object.values(product.price[0]);
+    if (price[0].default === 0) {
+      return null;
     }
     return (
       <div block="ProductItem" elem="AddToCart">
-        <PLPAddToCart
-          product={this.props.product}
-          url={urlWithQueryID}
-        />
+        <PLPAddToCart product={this.props.product} url={urlWithQueryID} />
       </div>
-    )
+    );
   }
 
   renderLink() {
@@ -255,8 +251,7 @@ class ProductItem extends PureComponent {
     if (!isVueData && url) {
       try {
         pathname = new URL(url)?.pathname;
-      }
-      catch (err) {
+      } catch (err) {
         console.error(err);
       }
       if (queryID) {
@@ -294,9 +289,12 @@ class ProductItem extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-
+    const {
+      product: { sku },
+    } = this.props;
     return (
       <li
+        id={sku}
         block="ProductItem"
         mods={{
           isArabic,

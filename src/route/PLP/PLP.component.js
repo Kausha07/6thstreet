@@ -35,7 +35,7 @@ export class PLP extends PureComponent {
   }
   componentWillUnmount() {
     const { resetPLPData } = this.props;
-    resetPLPData();
+    // resetPLPData();
   }
 
   showMyAccountPopup = () => {

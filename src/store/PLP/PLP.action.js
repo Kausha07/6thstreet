@@ -5,6 +5,7 @@ export const SET_PLP_PAGE = "SET_PLP_PAGE";
 export const RESET_PLP_PAGE = "RESET_PLP_PAGE";
 export const SET_LOADING = "SET_LOADING";
 export const SET_PLP_WIDGET_DATA = "SET_PLP_WIDGET_DATA";
+export const SET_PREV_PRODUCT_SKU = "SET_PREV_PRODUCT_SKU";
 export const UPDATE_PLP_INIT_FILTERS = "UPDATE_PLP_INIT_FILTERS";
 
 export const setPLPWidget = (data) => ({
@@ -15,6 +16,11 @@ export const setPLPPage = (pageProducts, page) => ({
   type: SET_PLP_PAGE,
   pageProducts,
   page,
+});
+
+export const setPrevProductSku = (sku) => ({
+  type: SET_PREV_PRODUCT_SKU,
+  sku,
 });
 
 export const resetPLPPage = () => ({
