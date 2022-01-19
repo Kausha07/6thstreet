@@ -59,6 +59,7 @@ const instance = async (url, browserWSEndpoint, options) => {
 
     // 5. Execute the following JavaScript in the opened tab and save the output in the constant'html'.
     // The output is a string which contains the rendered website's HTML code
+    await page.evaluate(()=>window.scrollTo(0, document.body.scrollHeight));
     const html = (await page.evaluate(() => document.documentElement.outerHTML));
 
     // Subtract the time noted at the beginning with the current time in order to compute the time taken to render the URL

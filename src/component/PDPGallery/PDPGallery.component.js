@@ -69,13 +69,7 @@ class PDPGallery extends PureComponent {
 
   onBackButtonClick = () => {
     const { location } = browserHistory;
-    const prevPath = location?.state?.prevPath;
-    if(prevPath){
-      browserHistory.replace(prevPath);
-    }
-    else {
       browserHistory.goBack();
-    }
   }
   renderBackButton() {
     const { isArabic } = this.state;

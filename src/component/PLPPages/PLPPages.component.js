@@ -88,14 +88,9 @@ class PLPPages extends PureComponent {
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
       if (!isMobile.any() && !this.state.firstPageLoad) {
-        //const last = document.getElementById("Products-Lists")?.lastElementChild;
-        //last.scrollIntoView();
-        // const scrollHeight =  window.scrollY;
-        const scrollHeight = this.state.pageScrollHeight + 60;
-        window.scroll({
-          top: scrollHeight,
-          behavior: "smooth",
-        });
+        const last = document.getElementById("Products-Lists")?.lastElementChild;
+        last.style.scrollMarginTop = "180px";        
+        last.scrollIntoView({ behavior: "smooth" });
       }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
@@ -183,9 +178,7 @@ class PLPPages extends PureComponent {
   }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-    this.setState({
-      pageScrollHeight: document.getElementById("Products-Lists")?.offsetHeight,
-    });
+    
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -487,7 +480,6 @@ class PLPPages extends PureComponent {
 
   render() {
     const { pages = {}, productLoading } = this.props;
-
     return (
       <div block="PLPPagesContainer">
         <div block="PLPPages Products-Lists" id="Products-Lists">
