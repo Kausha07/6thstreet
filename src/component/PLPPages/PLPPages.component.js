@@ -88,8 +88,9 @@ class PLPPages extends PureComponent {
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
       if (!isMobile.any() && !this.state.firstPageLoad) {
-        const last = document.getElementById("Products-Lists")?.lastElementChild;
-        last.style.scrollMarginTop = "180px";        
+        const last =
+          document.getElementById("Products-Lists")?.lastElementChild;
+        last.style.scrollMarginTop = "180px";
         last.scrollIntoView({ behavior: "smooth" });
       }
       if (this.state.firstPageLoad) {
@@ -99,33 +100,20 @@ class PLPPages extends PureComponent {
 
     if (prevProductSku) {
       let element = document.getElementById(prevProductSku);
-      if (!isMobile.any() && element && !this.state.loadedLastProduct) {
-        var headerOffset = isMobile.any() ? 0 : 200;
+      if (element && !this.state.loadedLastProduct) {
+        var headerOffset = isMobile.any() ? 120 : 200;
         var elementPosition = element.getBoundingClientRect().top;
         var offsetPosition =
           elementPosition + window.pageYOffset - headerOffset;
+        if (isMobile.any()) {
+          element.parentElement.style.scrollMarginTop = "0px";
+        }
 
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
         });
         this.setState({ loadedLastProduct: true });
-      } else if (isMobile.any() && element && !this.state.loadedLastProduct) {
-        console.log("muskan", element);
-
-        const offset = 0;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-        this.setState({ loadedLastProduct: true });
-
-        // element.scrollIntoView({behavior:'smooth'})
       }
     }
   }
@@ -178,7 +166,7 @@ class PLPPages extends PureComponent {
   }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-    
+
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
