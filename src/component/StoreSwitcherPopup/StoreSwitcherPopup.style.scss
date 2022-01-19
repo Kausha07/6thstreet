@@ -43,3 +43,18 @@
 
     }
 }
+
+.MyAccountOverlay {
+    &-StoreSwitcher {
+        .StoreSwitcherPopup {
+            position: absolute;
+            left: -23px;
+            &-Container {
+                &_isArabic{
+                    left: 10px;
+                    right: unset !important;
+                }
+            }
+        }
+    }
+}
