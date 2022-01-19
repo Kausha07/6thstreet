@@ -1175,6 +1175,12 @@
 
         &-Container {
           right: 0;
+          &_isArabic{
+            @include mobile{
+                right: auto;
+                left: 35px;
+            }
+        }
         }
       }
     }

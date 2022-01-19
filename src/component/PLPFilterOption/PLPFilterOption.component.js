@@ -104,11 +104,11 @@ class PLPFilterOption extends PureComponent {
     );
     const type = isRadio ? "radio" : "checkbox";
 
-    if (!defaultFilters && defaultCheck) {
-      this.handleClick();
-      updateFilters();
-      setDefaultFilters();
-    }
+    // if (!defaultFilters && defaultCheck) {
+    //   this.handleClick();
+    //   updateFilters();
+    //   setDefaultFilters();
+    // }
 
     return (
       <Field
