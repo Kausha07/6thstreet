@@ -7,6 +7,8 @@ import Close from "./Close";
 import FavouriteFilled from "./FavouriteFilled";
 import Favourite from "./Favourite";
 import Help from "./Help";
+import Plus from "./Plus";
+import Minus from "./Minus";
 import Info from "./Info";
 import Lock from "./Lock";
 import Mail from "./Mail";
@@ -37,7 +39,9 @@ export {
   Lock,
   Mail,
   Menu,
+  Minus,
   Player,
+  Plus,
   Return,
   ShareFilled,
   Search,

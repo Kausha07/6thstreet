@@ -177,7 +177,8 @@
   }
 
   &-Accordion {
-    border: 1px solid var(--color-light-grey);
+    border-top: 1px solid var(--color-light-grey);
+    border-bottom: 1px solid var(--color-light-grey);
     display: table-cell;
     // padding: 10px 20px;
 
@@ -254,6 +255,15 @@
         }
       }
     }
+    .Accordion-Heading {
+      .Accordion-Expand {
+        transform: translate(0);
+        align-items: center;
+        @include before-desktop {
+          width:50px;
+          }
+        }
+      }
   }
 
   &-Button {
@@ -328,7 +338,7 @@
   &-BackButton {
     &::before {
       position: absolute;
-      content: "";
+      content: '';
       width: 0;
       height: 0;
       border: solid #000000;

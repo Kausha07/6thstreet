@@ -354,6 +354,7 @@ class MyAccountOrderView extends PureComponent {
               TimerImage
             )}
             is_expanded
+            MyAccountSection={true}
           >
             {processingItems.map(this.renderItem)}
           </Accordion>
@@ -378,6 +379,7 @@ class MyAccountOrderView extends PureComponent {
               __("Cancelled items"),
               CancelledImage
             )}
+            MyAccountSection={true}
           >
             {allItems.map(this.renderItem)}
           </Accordion>
@@ -401,6 +403,7 @@ class MyAccountOrderView extends PureComponent {
             __("Cancelled items"),
             CancelledImage
           )}
+          MyAccountSection={true}
         >
           {canceledItems.map(this.renderItem)}
         </Accordion>
@@ -433,6 +436,7 @@ class MyAccountOrderView extends PureComponent {
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(item.status)}
           title={this.renderAccordionTitle(item.label, getIcon, item.status)}
+          MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED &&
