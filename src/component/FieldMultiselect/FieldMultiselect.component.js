@@ -208,7 +208,7 @@ class FieldMultiselect extends PureComponent {
 
   renderOption = ([key, option = {}]) => {
     const {
-      filter: { is_radio },
+      filter: { is_radio, data },
       activeFilter,
       isChecked,
       parentCallback,
@@ -220,6 +220,7 @@ class FieldMultiselect extends PureComponent {
     } = this.props;
 
     const { subcategories = {} } = option;
+
     if (Object.keys(subcategories).length !== 0) {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
@@ -379,13 +380,41 @@ class FieldMultiselect extends PureComponent {
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
     let totalCount = 0;
-
+    let formattedData = {};
     if (!is_radio) {
       if (data && category !== "categories_without_path") {
         Object.values(data).map((category) => {
           totalCount = totalCount + category.product_count;
         });
       } else {
+        // const { initialOptions } = this.props;
+        // let categoryLevelArray = [
+        //   "categories.level1",
+        //   "categories.level2",
+        //   "categories.level3",
+        //   "categories.level4",
+        // ];
+        // let categoryLevel;
+        // categoryLevelArray.map((entry, index) => {
+        //   if (initialOptions[entry]) {
+        //     categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+        //   }
+        // });
+        // if (categoryLevel) {
+        //   if (data[categoryLevel]) {
+        //     formattedData = data[categoryLevel].subcategories;
+
+        //     Object.entries(formattedData).map((entry) => {
+        //       totalCount = totalCount + entry[1].product_count;
+        //     });
+        //   }
+        // } else {
+        //   Object.entries(data).map((filterData) => {
+        //     Object.entries(filterData[1].subcategories).map((entry) => {
+        //       totalCount = totalCount + entry[1].product_count;
+        //     });
+        //   });
+        // }
         Object.entries(data).map((filterData) => {
           Object.entries(filterData[1].subcategories).map((entry) => {
             totalCount = totalCount + entry[1].product_count;
@@ -420,6 +449,7 @@ class FieldMultiselect extends PureComponent {
     }
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
+
     return (
       <>
         <ul
@@ -440,6 +470,9 @@ class FieldMultiselect extends PureComponent {
             ? Object.entries(searchData).map(this.renderOption)
             : category === "sizes" && !isMobile.any()
             ? Object.entries(sizeData).map(this.renderSizeOption)
+            // : category === "categories_without_path" &&
+            //   Object.keys(formattedData).length
+            // ? Object.entries(formattedData).map(this.renderOption)
             : Object.keys(data).length
             ? Object.entries(data).map(this.renderOption)
             : Object.entries(subcategories).map(this.renderOption)}

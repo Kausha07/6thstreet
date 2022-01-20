@@ -31,14 +31,14 @@ class SearchPage extends PLP {
       options: { q },
       pages,
     } = this.props;
-    if (isLoading) {
-      return (
-        <>
-          <div block="EmptyPage"></div>
-          <Loader isLoading={isLoading} />
-        </>
-      );
-    }
+    // if (isLoading) {
+    //   return (
+    //     <>
+    //       <div block="EmptyPage"></div>
+    //       <Loader isLoading={isLoading} />
+    //     </>
+    //   );
+    // }
     if (
       isLoading ||
       (pages.undefined && pages.undefined.length > 0) ||

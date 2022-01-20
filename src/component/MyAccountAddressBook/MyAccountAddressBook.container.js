@@ -13,7 +13,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
+import isMobile from "Util/Mobile";
 import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { customerType } from 'Type/Account';
@@ -45,7 +45,22 @@ export class MyAccountAddressBookContainer extends PureComponent {
         closeForm: this.closeForm.bind(this)
     };
 
+
+    componentDidMount() {
+        window.onpopstate = e => {
+          if (document.body.classList.contains("isNewAddressOpen")){
+            this.closeForm();
+            history.forward();
+            e.preventDefault();
+            document.body.classList.remove("isNewAddressOpen");
+          }
+       }
+      }
+
     openForm() {
+        if(isMobile.any()) {
+            document.body.classList.add("isNewAddressOpen");
+        }
         this.setState({ formContent: true });
     }
 

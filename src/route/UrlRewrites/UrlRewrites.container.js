@@ -108,6 +108,8 @@ export class UrlRewritesContainer extends PureComponent {
       if (url.searchParams.get("p") && url.searchParams.get("p") !== "0") {
         resetPLPPage();
         url.searchParams.set("p", 0);
+
+        window.scrollTo(0, 0);
         const { pathname, search } = url;
         history.push(pathname + search);
       }

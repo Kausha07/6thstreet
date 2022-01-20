@@ -17,11 +17,13 @@ const _getLevelsFromCategoryKey = ({ key }) => {
   const offset = !kidsTransaltions.includes(l0) ? 0 : 1;
   const l1 = levels[offset + 1];
   const l2 = levels[offset + 2];
+  const l3 = levels[offset + 3];
 
   return {
     l0,
     l1,
     l2,
+    l3,
   };
 };
 
@@ -62,7 +64,16 @@ const _getCategoryLevel2Data = ({
   const queryValues = getQueryValues({ query, path: facetKey });
   let data = Object.entries(categoriesMerge).reduce(
     (acc, [key, productCount]) => {
-      const { l1, l2 } = _getLevelsFromCategoryKey({ key });
+      const {
+        l1: l1Key,
+        l2: l2Key,
+        l3: l3Key,
+        l1,
+        l2,
+        l3,
+      } = _getLevelsFromCategoryKey({ key });
+      // let l2 = query["categories.level2"] ? l3Key : l2Key; code for l2 and l3 logic
+      // let l1 = query["categories.level2"] ? l2Key : l1Key;
 
       // TODO: Add proper logger
       if (l2 && !categoriesWithoutPath[l2] && __DEV__) {
@@ -94,10 +105,11 @@ const _getCategoryLevel2Data = ({
 
         // Mark selected filters, using the query params
         if (queryValues[l2]) {
-          if (acc[l1].selected_filters_count === 0) {
-            totalSelectedFiltersCount += 1;
-          }
-          acc[l1].selected_filters_count = 1;
+          // if (acc[l1].selected_filters_count === 0) {
+          //   totalSelectedFiltersCount += 1;
+          // }
+          totalSelectedFiltersCount += 1;
+          acc[l1].selected_filters_count += 1;
           acc[l1].subcategories[l2].is_selected = true;
         }
       }
@@ -113,7 +125,6 @@ const _getCategoryLevel2Data = ({
     const [, b] = obj2;
     return b.product_count - a.product_count;
   });
-
   return [data, totalSelectedFiltersCount];
 };
 
