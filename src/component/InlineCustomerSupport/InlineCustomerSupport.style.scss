@@ -42,7 +42,6 @@
         width: 100vw;
         height: 100%;
         background-color: transparent;
-        // background-color: #ddd;
         left: 0;
         top: 0;
         z-index: -1;
@@ -114,7 +113,7 @@
       text-align: right !important;
 
       &::after {
-        right: 100px;
+        right: 137px;
       }
     }
   }
@@ -436,7 +435,7 @@
 .PageWrapper {
   &_isArabic {
     .InlineCustomerSupport {
-      transform: translateX(0);
+      // transform: translateX(0);
 
       &-Button {
         padding-right: 0;
@@ -447,8 +446,8 @@
         margin-right: 0px;
         margin-left: 4px;
       }
-      @include mobile{
-        transform: unset
+      @include mobile {
+        transform: unset;
       }
     }
   }
