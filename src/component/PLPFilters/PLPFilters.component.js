@@ -429,7 +429,6 @@ class PLPFilters extends PureComponent {
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]
         ) {
-          facetFilters;
           categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
             categoryData.selected_filters_count += 1;
