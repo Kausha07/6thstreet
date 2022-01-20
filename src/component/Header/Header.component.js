@@ -176,6 +176,7 @@ export class Header extends PureComponent {
     const {
       navigationState: { name },
     } = this.props;
+    const {isMobile} = this.state;
 
     this.shouldChatBeHidden();
 

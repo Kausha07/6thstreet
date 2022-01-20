@@ -30,13 +30,12 @@ export class LanguageSwitcherContainer extends PureComponent {
 
     onLanguageSelect(value) {
         const { language = '',history } = this.props;
-        console.log("all well",value)
         if(window.location.href.includes('en-') || window.location.href.includes('ar-')){
             if(location.pathname.match(/my-account/)) {
                 window.location.href = location.href.replace(
                     language.toLowerCase(),
                     value,
-                    location.href).replace("/my-account","/");
+                    location.href).split("/my-account")[0];
             } else {
                 window.location.href = location.href.replace(
                     language.toLowerCase(),
