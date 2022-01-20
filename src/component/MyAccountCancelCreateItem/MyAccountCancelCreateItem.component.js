@@ -24,7 +24,7 @@ export class MyAccountCancelCreateItem extends SourceComponent {
         price,
         original_price,
         size: sizeField,
-        qty_ordered: qty,
+        qty_to_cancel: qty,
       },
     } = this.props;
     let currency_code = getCountryCurrencyCode();
