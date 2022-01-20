@@ -449,7 +449,9 @@ class PLPPages extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query, updateFiltersState } = this.props;
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    window.scrollTo(0, 0);
+    if(isMobile.any()){
+      window.scrollTo(0, 0);
+    }
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) => {
