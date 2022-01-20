@@ -3,18 +3,23 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
 import PLPPages from "./PLPPages.component";
-import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
+import {
+  updatePLPInitialFilters,
+  setPrevProductSku,
+} from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 
 export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
   initialOptions: state.PLP.initialOptions,
   productLoading: state.PLP.productLoading,
+  prevProductSku: state.PLP.prevProductSku,
   meta: state.PLP.meta,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   updatePLPInitialFilters: (filters, facet_key, facet_value) =>
     _dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
+  setPrevProductSku: (sku) => _dispatch(setPrevProductSku(sku)),
 });
 export class PLPPagesContainer extends PureComponent {
   static propTypes = {
@@ -99,48 +104,60 @@ export class PLPPagesContainer extends PureComponent {
   mapData(data = {}, category) {
     const { initialOptions } = this.props;
     let formattedData = data;
+    let finalData = [];
+
     if (category === "categories_without_path") {
-      let categoryLevelArray = [
-        "categories.level1",
-        "categories.level2",
-        "categories.level3",
-        "categories.level4",
-      ];
-      let categoryLevel;
-      categoryLevelArray.map((entry, index) => {
-        if (initialOptions[entry]) {
-          categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
-        }
-      });
-      if (categoryLevel) {
-        if (data[categoryLevel]) {
-          formattedData = data[categoryLevel].subcategories;
-        } else {
-          formattedData = data[Object.keys(data)[0]].subcategories;
-        }
-      } else {
-        Object.entries(data).map((entry) => {
-          Object.values(entry[1].subcategories).map((subEntry) => {
-            if (
-              initialOptions["categories_without_path"] &&
-              initialOptions["categories_without_path"].includes(
-                subEntry.facet_value
-              )
-            ) {
-              formattedData = entry[1].subcategories;
-            }
-          });
+      // let categoryLevelArray = [
+      //   "categories.level1",
+      //   "categories.level2",
+      //   "categories.level3",
+      //   "categories.level4",
+      // ];
+      // let categoryLevel;
+      // categoryLevelArray.map((entry, index) => {
+      //   if (initialOptions[entry]) {
+      //     categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+      //   }
+      // });
+      // if (categoryLevel) {
+      //   if (data[categoryLevel]) {
+      //     formattedData = data[categoryLevel].subcategories;
+      //   } else {
+      //     formattedData = data[Object.keys(data)[0]].subcategories;
+      //   }
+      // } else {
+      let categoryArray = initialOptions["categories_without_path"]
+        ? initialOptions["categories_without_path"].split(",")
+        : [];
+      Object.entries(data).map((entry) => {
+        Object.values(entry[1].subcategories).map((subEntry) => {
+          if (
+            categoryArray.length > 0 &&
+            categoryArray.includes(subEntry.facet_value)
+          ) {
+            finalData.push(subEntry);
+          }
         });
-      }
+      });
+      formattedData = finalData;
+      // }
     }
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
-      const { is_selected } = option[1];
-      if (is_selected) {
-        acc.push(option[0]);
+      if (category === "categories_without_path") {
+        const { is_selected, facet_value } = option[1];
+        if (is_selected) {
+          acc.push(facet_value);
+        }
+        return acc;
+      } else {
+        const { is_selected } = option[1];
+        if (is_selected) {
+          acc.push(option[0]);
+        }
+        return acc;
       }
-
-      return acc;
     }, []);
+
     return mappedData;
   }
 
@@ -150,14 +167,16 @@ export class PLPPagesContainer extends PureComponent {
     filters: this.props.filters,
     activeFilters: this.state.activeFilters,
     productLoading: this.props.productLoading,
+    prevProductSku:this.props.prevProductSku,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
   });
 
   containerFunctions = () => {
-    const { updatePLPInitialFilters, updateFiltersState } = this.props;
+    const { updatePLPInitialFilters, updateFiltersState, setPrevProductSku } =
+      this.props;
 
-    return { updatePLPInitialFilters, updateFiltersState };
+    return { updatePLPInitialFilters, updateFiltersState, setPrevProductSku };
   };
 
   getPages() {

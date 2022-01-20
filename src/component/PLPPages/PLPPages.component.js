@@ -9,6 +9,9 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
 import ProductLoad from "Component/PLPLoadMore";
 import { v4 } from "uuid";
+import { withRouter } from "react-router";
+import browserHistory from "Util/History";
+
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -31,19 +34,55 @@ class PLPPages extends PureComponent {
       isReset: false,
       defaultFilters: false,
       pageKey: 0,
-      firstPageLoad: false
+      firstPageLoad: false,
+      pageScrollHeight: 0,
+      prevProductSku: "",
+      loadedLastProduct: false,
     };
   }
 
   componentDidMount() {
     window.scrollTo(0, 0);
     this.setState({ firstPageLoad: true });
+    let prevLocation;
+    let finalPrevLocation;
+    let initialPrevProductSku;
+    browserHistory.listen((nextLocation) => {
+      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+      const { search } = nextLocation;
+      if (
+        finalPrevLocation &&
+        !locationArr.includes(finalPrevLocation.pathname) &&
+        finalPrevLocation.state &&
+        finalPrevLocation.state.product
+      ) {
+        const {
+          state: {
+            product: { sku },
+          },
+        } = finalPrevLocation;
+        initialPrevProductSku = sku;
+        this.setState({ prevProductSku: sku });
+        this.props.setPrevProductSku(sku);
+      } else if (
+        finalPrevLocation &&
+        locationArr.includes(finalPrevLocation.pathname)
+      ) {
+        this.props.setPrevProductSku("");
+        window.scrollTo(0, 0);
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { activeFilters } = this.props;
-    const { activeFilters: prevActiveFilters } = prevProps;
-
+    const { activeFilters, prevProductSku } = this.props;
+    const {
+      activeFilters: prevActiveFilters,
+      prevProductSku: initialPrevProductSku,
+    } = prevProps;
+  
     if (activeFilters !== prevActiveFilters) {
       this.setState({
         activeFilters: activeFilters,
@@ -51,17 +90,36 @@ class PLPPages extends PureComponent {
     }
     if (
       this.props.pages.length > 0 &&
-      this.props.pages.length !== prevProps.pages.length &&
+      this.props.pages.length > prevProps.pages.length &&
       (prevState.pageKey !== "0" || prevState.pageKey !== 0)
     ) {
-
       if (!isMobile.any() && !this.state.firstPageLoad) {
-        const last = document.getElementById("Products-Lists")?.lastElementChild;
-        last.style.scrollMarginTop = "180px";        
+        const last =
+          document.getElementById("Products-Lists")?.lastElementChild;
+        last.style.scrollMarginTop = "180px";
         last.scrollIntoView({ behavior: "smooth" });
       }
       if (this.state.firstPageLoad) {
         this.setState({ firstPageLoad: false });
+      }
+    }
+
+    if (prevProductSku) {
+      let element = document.getElementById(prevProductSku);
+      if (element && !this.state.loadedLastProduct) {
+        var headerOffset = isMobile.any() ? 120 : 200;
+        var elementPosition = element.getBoundingClientRect().top;
+        var offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+        if (isMobile.any()) {
+          element.parentElement.style.scrollMarginTop = "0px";
+        }
+     
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+        this.setState({ loadedLastProduct: true });
       }
     }
   }
@@ -114,7 +172,7 @@ class PLPPages extends PureComponent {
   }
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-    
+
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -324,11 +382,12 @@ class PLPPages extends PureComponent {
             initialFacetKey
           );
           updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-
           const index = filterArray.indexOf(facet_value);
+
           if (index > -1) {
             filterArray.splice(index, 1);
           }
+
           this.setState(
             {
               activeFilters: {
@@ -389,6 +448,10 @@ class PLPPages extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query, updateFiltersState } = this.props;
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if(isMobile.any()){
+      window.scrollTo(0, 0);
+    }
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) => {
@@ -408,7 +471,7 @@ class PLPPages extends PureComponent {
         pageKey={this.state.pageKey}
         productLoad={this.props.productLoading}
       />
-    )
+    );
   }
 
   render() {
@@ -433,4 +496,4 @@ class PLPPages extends PureComponent {
   }
 }
 
-export default PLPPages;
+export default withRouter(PLPPages);
