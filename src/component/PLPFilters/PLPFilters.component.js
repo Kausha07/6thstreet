@@ -429,7 +429,6 @@ class PLPFilters extends PureComponent {
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]
         ) {
-          facetFilters;
           categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
             categoryData.selected_filters_count += 1;
@@ -610,7 +609,9 @@ class PLPFilters extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
-
+    if (isMobile.any()) {
+      window.scrollTo(0, 0);
+    }
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         WebUrlParser.setParam(key, activeFilters[key], query);
@@ -666,7 +667,7 @@ class PLPFilters extends PureComponent {
           if (filter[0] === "categories_without_path") {
             return Object.entries(filter[1].data).map((entry) => {
               return Object.entries(entry[1].subcategories).map((subEntry) => {
-                activeFilters[filter[0]].push(filterData[0]);
+                activeFilters[filter[0]].push(subEntry[0]);
               });
             });
           } else {
@@ -729,7 +730,6 @@ class PLPFilters extends PureComponent {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>

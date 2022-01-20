@@ -4,7 +4,7 @@
   }
   &-Header {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     margin: 5px 0 0;
 
     @include desktop {
@@ -34,7 +34,7 @@
     height: auto;
     padding: 5px 10px;
     text-transform: none;
-    margin-bottom: 8px;
+    margin-bottom: 24px;
 
     @include desktop {
       display: none;

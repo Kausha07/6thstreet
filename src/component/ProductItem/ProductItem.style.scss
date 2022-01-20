@@ -15,6 +15,9 @@
     @include desktop {
         min-height: 368px;
     }
+    @include mobile {
+        min-height: 273px;
+    }
     &:last-child {
         margin-bottom: 25.7px;
     }

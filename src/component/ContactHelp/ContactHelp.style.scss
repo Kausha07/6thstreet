@@ -28,3 +28,21 @@
         }
     }
 }
+
+.ContentWrapper {
+    &.MyAccount{
+        &-Wrapper {
+            &_isArabic {
+                .ContactAndHelp {
+                    .contactHelpList {
+                        .MyAccountTabListItem {
+                            &-Button {
+                                padding-left: 16px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
