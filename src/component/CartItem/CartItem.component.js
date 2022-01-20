@@ -258,14 +258,13 @@ export class CartItem extends PureComponent {
     let price = [
       {
         [currency_code]: {
-          "6s_base_price": basePrice,
+          "6s_base_price": basePrice || row_total,
           "6s_special_price": row_total,
           default: row_total,
           default_formated: `${currency_code} ${row_total}`,
         },
       },
     ];
-  
     return (
       <div block="CartItem" elem="Price" mods={{ isArabic }}>
         <Price price={price} renderSpecialPrice={false} cart={true} />
