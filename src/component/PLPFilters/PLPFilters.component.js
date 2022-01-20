@@ -610,7 +610,9 @@ class PLPFilters extends PureComponent {
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
-    window.scrollTo(0, 0);
+    if (isMobile.any()) {
+      window.scrollTo(0, 0);
+    }
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         WebUrlParser.setParam(key, activeFilters[key], query);
