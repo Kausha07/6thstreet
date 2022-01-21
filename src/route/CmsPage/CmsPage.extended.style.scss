@@ -41,6 +41,7 @@
                     margin-bottom: 30px;
                     @include mobile {
                         font-size: 28px;
+                        display: none;
                     }
                 }
                 ul {

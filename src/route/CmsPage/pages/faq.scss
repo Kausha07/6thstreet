@@ -76,15 +76,15 @@
     .return-information,
     .shipping-policy {
         @include mobile {
-            padding: 0px 16px 0 16px;
-            margin-top: 60px;
+            padding: 0 16px 40px 16px;
+            margin-top: 70px;
         }
     }
     .privacy-policy,
     .disclaimer {
         @include mobile {
             padding: 0px 16px 100px 16px;
-            margin-top: 80px;
+            margin-top: 120px;
         }
     }
 }
@@ -99,7 +99,59 @@
         top: 0;
         left: 0;
         width: 100%;
+        justify-content: center;
         align-items: center;
+        margin-bottom: 24px;
+    }
+    &-Heading {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        line-height: 16px;
+        text-align: center;
+    }
+    &-Button {
+        position: absolute;
+        left: 0;
+        @include mobile {
+            top: 10px;
+        }
+        &:after {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 0;
+            border: solid #000000;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 2px 5px 5px 2px;
+            margin: 0 auto;
+            transform: rotate(135deg);
+            left: 20px;
+            top: 14px;
+            background: transparent;
+        }
+        &_isArabic {
+            &:after {
+                left: unset;
+                right: 20px;
+                transform: rotate(-45deg);
+            }
+            left: unset;
+            right: 0;
+        }
+        &_isClubApparel {
+            z-index: 1;
+            top: -55px;
+            &:after {
+                border: solid #ffffff;
+                display: inline-block;
+                border-width: 0 2px 2px 0;
+                padding: 2px 7px 7px 2px;
+                top: 20px;
+            }
+        }
     }
 }
 
