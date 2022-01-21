@@ -1,42 +1,33 @@
 .CmsPage {
     .faq-page {
         margin: 0 8px;
-
         @include desktop {
             margin: 0 80px;
         }
-
         .showHide {
             @include mobile {
                 margin-top: 40px;
             }
-
             input {
                 display: none;
             }
-
-            input:checked + label + .fieldsetContainer {
+            input:checked+label+.fieldsetContainer {
                 display: block;
             }
-
-            input:checked + label > .expand > .plus-sign {
+            input:checked+label>.expand>.plus-sign {
                 display: none;
             }
-
-            input:checked + label > .expand > .minus-sign {
+            input:checked+label>.expand>.minus-sign {
                 display: inline;
             }
-
             label {
                 margin-top: 12px;
                 font-weight: var(--fw-demi);
                 font-size: 14px;
                 cursor: pointer;
-
                 @include desktop {
                     font-size: 16px;
                 }
-
                 &::before {
                     content: "";
                     position: absolute;
@@ -45,52 +36,55 @@
                     border-radius: 50%;
                     left: -3px;
                     border: 1px solid $black;
-
                     @include desktop {
                         width: 20px;
                         height: 20px;
                     }
                 }
-
                 .changeArrow {
                     padding-left: 0.5px;
                 }
-
                 .minus-sign {
                     top: -1px;
                 }
             }
-
             .fieldsetContainer {
                 display: none;
                 margin: 5px 0 0 20px;
                 font-size: 14px;
             }
-
             .minus-sign {
                 display: none;
             }
-
             .open {
                 display: block;
             }
-
             .minus-sign,
             .plus-sign {
                 margin-right: 5px;
+                font-size: 14px;
+                @include mobile {
+                    font-size: 13px;
+                }
             }
         }
-
         @include mobile {
             padding-top: 0;
             padding-bottom: 0;
         }
     }
-
-    .return-information,.shipping-policy {
+    .return-information,
+    .shipping-policy {
         @include mobile {
-            padding: 0px 16px 0px 16px;
+            padding: 0px 16px 0 16px;
             margin-top: 60px;
+        }
+    }
+    .privacy-policy,
+    .disclaimer {
+        @include mobile {
+            padding: 0px 16px 100px 16px;
+            margin-top: 80px;
         }
     }
 }
@@ -120,30 +114,25 @@
                 .showHide {
                     label {
                         font-weight: var(--fw-regular);
-
                         &::before {
                             right: -3px;
                             top: 1px;
                         }
                     }
-
                     .fieldsetContainer {
                         margin: 5px 20px 0 0;
-
                         ul {
                             li:before {
                                 right: -30px;
                             }
                         }
                     }
-
                     .minus-sign,
                     .plus-sign {
                         font-weight: var(--fw-demi);
                         left: 5px;
                         top: 0;
                     }
-
                     .plus-sign {
                         top: 1px;
                     }
