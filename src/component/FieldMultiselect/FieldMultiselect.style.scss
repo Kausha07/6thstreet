@@ -61,6 +61,14 @@ $select-arrow-width: 6px !default;
         left: 0;
       }
     }
+    .selectIcon {
+      height: 16px;
+      width: 16px;
+      position: absolute;
+      right: 30px;
+      margin-top: 2px;
+      display: inline-block;
+    }
     &::before {
       position: absolute;
       content: "";
