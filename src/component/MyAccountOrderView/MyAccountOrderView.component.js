@@ -194,13 +194,20 @@ class MyAccountOrderView extends PureComponent {
 
   renderPackagesMessage() {
     const {
-      order: { status, groups: shipped = [] },
+      order: { groups: shipped = [] },
     } = this.props;
     const { isArabic } = this.state;
 
-    if (STATUS_FAILED.includes(status) || shipped.length < 1) {
-      return null;
+    const isPackageMessageVisible = shipped.some(order => {
+      return order.status === STATUS_IN_TRANSIT || order.status === STATUS_DISPATCHED
+    })
+    if (!isPackageMessageVisible) {
+      return null
     }
+
+    // if (STATUS_FAILED.includes(status) || shipped.length < 1) {
+    //   return null;
+    // }
     return (
       <div
         block="MyAccountOrderView"
