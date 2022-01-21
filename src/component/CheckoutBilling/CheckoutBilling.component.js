@@ -21,6 +21,8 @@ import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
 import Applepay from "./icons/apple.png";
 import Image from "Component/Image";
+import isMobile from "Util/Mobile";
+
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -156,9 +158,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   renderButtonLabel() {
-    const { isMobile } = this.state;
-
-    return isMobile ? __("New address") : __("Add new address");
+    return (isMobile.any() || isMobile.tablet()) ? __("New address") : __("Add new address");
   }
 
   renderOpenPopupButton = () => {
@@ -200,7 +200,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       totals: { is_virtual },
     } = this.props;
 
-    if (isSameAsShipping && !is_virtual) {
+    if (isSameAsShipping && !is_virtual || (isMobile.any() || isMobile.tablet())) {
       return null;
     }
 
@@ -480,7 +480,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       >
         {this.renderAddresses()}
         <div block="CheckoutBilling" elem="Bin"></div>
-        {isSameAsShipping ? null : (
+        {isSameAsShipping || (isMobile.any() || isMobile.tablet()) ? null : (
           <div block="CheckoutBilling" elem="Line">
             <hr />
           </div>
