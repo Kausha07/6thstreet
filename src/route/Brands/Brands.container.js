@@ -168,6 +168,16 @@ class BrandsContainer extends PureComponent {
         // eslint-disable-next-line max-len
         "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
       ),
+      twitter_title: __("Brands | 6thStreet"),
+      twitter_desc: __(
+        // eslint-disable-next-line max-len
+        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+      ),
+      og_title: __("Brands | 6thStreet"),
+      og_desc: __(
+        // eslint-disable-next-line max-len
+        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+      ),
     });
   }
 
