@@ -53,7 +53,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
-        destprodid: destProdID,
+        destProdID: destProdID,
         posofreco: posofreco,
       },
     });
