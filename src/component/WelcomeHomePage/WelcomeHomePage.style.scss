@@ -34,6 +34,7 @@
         }
         @include mobile{
             width: 100%;
+            max-width: 100%;
             margin-right: 0px;
             margin-left: 0px;
             flex-direction: column;
@@ -170,6 +171,13 @@
                 }
             }
         }
+        &_isArabic{
+            @include mobile{
+                padding-left: 0px;
+                padding-right: 30px;
+            }
+
+        }
 
     }
 
@@ -271,14 +279,18 @@
         }
         &_isArabic {
             @include mobile {
-                span{
-                    &:first-child{
-                        margin-right: unset;
+                button{
+                    span{
+                        &:first-child{
+                            margin-right: unset
+                        }
+                        &:nth-child(2){
+                            margin-right: 20px;
+                        }
                     }
-                    &:nth-child(2){
-                        margin-left: 20px;
-                    }
+
                 }
+
             }
         }
     }

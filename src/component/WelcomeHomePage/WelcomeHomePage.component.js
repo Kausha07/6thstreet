@@ -215,7 +215,7 @@ class WelcomeHomePage extends PureComponent {
                         </div>
                     </div>
                     {isMobile.any() &&
-                        <div block="WelcomeHomePage" elem="StoreSwitcher">
+                        <div block="WelcomeHomePage" elem="StoreSwitcher" mods={{ isArabic: language === "ar" }}>
                             <div block="Text" mods={{ isArabic: language === "ar" }}>
                                 <div block="Text-welcome">{__("Welcome, ")}</div>
                                 <div block="Text-shop">{__("you are shopping in")}</div>
