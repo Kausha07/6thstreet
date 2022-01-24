@@ -178,17 +178,16 @@ const _getCategoryLevel1Data = ({
 
 const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
   const facetKey = "categories_without_path";
-  let categoriesLevel2Data = query["categories.level2"]
-    ? {}
-    : facets["categories.level2"];
+  // let categoriesLevel2Data = query["categories.level2"]
+  //   ? {}
+  //   : facets["categories.level2"];
   const [data, totalSelectedFiltersCount] = _getCategoryLevel2Data({
     facetKey,
-    categoriesLevel2: categoriesLevel2Data,
+    categoriesLevel2: facets["categories.level2"],
     categoriesLevel3: facets["categories.level3"],
     categoriesWithoutPath: facets.categories_without_path,
     query,
   });
-
   return {
     label: __("Categories"),
     category: facetKey,

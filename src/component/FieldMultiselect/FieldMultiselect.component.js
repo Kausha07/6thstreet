@@ -12,6 +12,7 @@ import selectImage from "./icons/add.png";
 import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
 import { v4 } from "uuid";
+import SelectImage from "./icons/selectMob.png";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -178,7 +179,7 @@ class FieldMultiselect extends PureComponent {
 
   renderOptionMobile = (option) => {
     const { subcategoryOptions, isArabic } = this.state;
-
+    const { selected_filters_count } = option;
     const isClosed =
       !subcategoryOptions[option.label] ||
       subcategoryOptions[option.label] === undefined;
@@ -200,6 +201,9 @@ class FieldMultiselect extends PureComponent {
           onClick={() => this.handleSubcategoryClick(option)}
         >
           {option.label}
+          {selected_filters_count > 0 && (
+            <img src={SelectImage} alt="select icon" className="selectIcon" />
+          )}
         </button>
         {this.renderSubcategoryOptions(option, display)}
       </div>
@@ -470,10 +474,10 @@ class FieldMultiselect extends PureComponent {
             ? Object.entries(searchData).map(this.renderOption)
             : category === "sizes" && !isMobile.any()
             ? Object.entries(sizeData).map(this.renderSizeOption)
-            // : category === "categories_without_path" &&
+            : // : category === "categories_without_path" &&
             //   Object.keys(formattedData).length
             // ? Object.entries(formattedData).map(this.renderOption)
-            : Object.keys(data).length
+            Object.keys(data).length
             ? Object.entries(data).map(this.renderOption)
             : Object.entries(subcategories).map(this.renderOption)}
         </ul>

@@ -494,7 +494,7 @@ function getPLP(URL, options = {}, params = {}) {
             selectedFilterArr.includes(facetfilter[0].split(":")[0]) &&
             facetfilter[0].split(":")[0] !== filter
           ) {
-            finalFacetObj.push(facetfilter[0]);
+            finalFacetObj.push(facetfilter);
           }
         });
         let searchParam = JSON.parse(JSON.stringify(defaultSearchParams));
