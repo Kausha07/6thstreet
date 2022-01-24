@@ -126,16 +126,13 @@ class PDPGallery extends PureComponent {
   }
   renderShareButton() {
     const url = new URL(window.location.href);
-    if (!!!isMobile.any()) {
-      return null;
-    }
-
+    url.searchParams.append("utm_source", "pdp_share");
     return (
       <div block="ShareIcon">
         <ShareButton
           title={document.title}
           text={`Hey check this out: ${document.title}`}
-          url={url.searchParams.append("utm_source", "pdp_share")}
+          url={url}
         />
       </div>
     );
@@ -465,7 +462,7 @@ class PDPGallery extends PureComponent {
           {this.renderCartIcon()}
           {this.renderWishlistIcon()}
           {/* {this.renderShareButton()} */}
-          {this.renderSearchButton()}
+          {/* {this.renderSearchButton()} */}
         </div>
         <button
           ref={this.overlaybuttonRef}

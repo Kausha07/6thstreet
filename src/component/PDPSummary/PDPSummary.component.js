@@ -152,14 +152,14 @@ class PDPSummary extends PureComponent {
       product: { brand_name },
     } = this.props;
     const url = new URL(window.location.href);
-
+    url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
       return <div block="PDPSummary" elem="Heading">
         <h1>{brand_name}</h1>
         <ShareButton
           title={document.title}
           text={`Hey check this out: ${document.title}`}
-          url={url.searchParams.append("utm_source", "pdp_share")}
+          url={url.href}
         />
       </div>
     }
@@ -195,6 +195,7 @@ class PDPSummary extends PureComponent {
       renderMySignInPopup,
     } = this.props;
     const url = new URL(window.location.href);
+    url.searchParams.append("utm_source", "pdp_share");
 
     if (isMobile.any()) {
       return null;
@@ -207,7 +208,7 @@ class PDPSummary extends PureComponent {
           <ShareButton
             title={document.title}
             text={`Hey check this out: ${document.title}`}
-            url={url.searchParams.append("utm_source", "pdp_share")}
+            url={url.href}
           />
           <WishlistIcon
             sku={sku}

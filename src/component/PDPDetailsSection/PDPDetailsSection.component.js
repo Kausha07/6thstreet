@@ -92,10 +92,6 @@ class PDPDetailsSection extends PureComponent {
   renderShareButton() {
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
-    const isDesktop = !(isMobile.any() || isMobile.tablet());
-    if (isDesktop || !window.navigator.share) {
-      return null;
-    }
     return (
       <>
         <div block="PDPDetailsSection" elem="ShareButtonContainer">
