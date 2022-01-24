@@ -465,7 +465,7 @@ class PDPGallery extends PureComponent {
           {this.renderCartIcon()}
           {this.renderWishlistIcon()}
           {/* {this.renderShareButton()} */}
-          {this.renderSearchButton()}
+          {/* {this.renderSearchButton()} */}
         </div>
         <button
           ref={this.overlaybuttonRef}
