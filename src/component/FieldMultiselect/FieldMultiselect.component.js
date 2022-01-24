@@ -112,13 +112,18 @@ class FieldMultiselect extends PureComponent {
         (parentActiveFilters[category] &&
           parentActiveFilters[category].length === 0)
       ) {
-        this.setState({
-          parentActiveFilters: this.props.parentActiveFilters,
-        });
         if (selected_filters_count > 6) {
-          this.setState({ showMore: true, showLess: false });
+          this.setState({
+            showMore: true,
+            showLess: false,
+            parentActiveFilters: this.props.parentActiveFilters,
+          });
         } else {
-          this.setState({ showMore: false, showLess: false });
+          this.setState({
+            showMore: false,
+            showLess: false,
+            parentActiveFilters: this.props.parentActiveFilters,
+          });
         }
       }
     }

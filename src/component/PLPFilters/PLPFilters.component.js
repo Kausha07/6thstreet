@@ -357,7 +357,7 @@ class PLPFilters extends PureComponent {
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
     const { initialOptions } = this.props;
-    if (Object.keys(filter.data).length === 0) {
+    if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
     return (
@@ -755,9 +755,11 @@ class PLPFilters extends PureComponent {
         )}
 
         {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
-        <form block="PLPFilters" name="filters">
-          {this.renderFilters()}
-        </form>
+        {!isMobile.any() && (
+          <form block="PLPFilters" name="filters">
+            {this.renderFilters()}
+          </form>
+        )}
         {isMobile.any() && (
           <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
             <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
