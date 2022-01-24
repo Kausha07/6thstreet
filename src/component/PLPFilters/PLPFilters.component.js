@@ -19,6 +19,7 @@ import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
 import Refine from "../Icons/Refine/icon.png";
 import "./PLPFilters.style";
+import FieldMultiselect from "Component/FieldMultiselect";
 class PLPFilters extends PureComponent {
   static propTypes = {
     isLoading: PropTypes.bool.isRequired,
@@ -116,17 +117,12 @@ class PLPFilters extends PureComponent {
   renderFilters() {
     const { filters = {} } = this.props;
     return Object.entries(filters).map((filter, index) => {
-      // if (filter[0] === SIZES && !isMobile.any()) {
-      //   const { data = {} } = filter[1];
-      //   return Object.keys(data).map((size) =>
-      //     this.renderFilter([size, data[size]])
-      //   );
-      // }
       if (filter[1]) {
         if (filter[0] === "sort" && !isMobile.any()) {
           return this.renderSortBy([filter[0], filter[1]], index);
         }
-        return this.renderFilter([filter[0], filter[1]]);
+        // return this.renderFilter([filter[0], filter[1]]);
+        return this.renderDropDownList([filter[0], filter[1]]);
       }
     });
   }
@@ -378,7 +374,43 @@ class PLPFilters extends PureComponent {
       />
     );
   };
+  renderDropDownList([key, filter]) {
+    const { isChecked, initialOptions } = this.props;
+    const { label, category, is_radio } = filter;
+    const { activeFilter, activeFilters, defaultFilters } = this.state;
+    if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
+      return null;
+    }
+    console.log("muskan render",activeFilter);
+    let placeholder =
+      category === "in_stock"
+        ? __("BY STOCK")
+        : category === "age"
+        ? __("BY AGE")
+        : label;
 
+    return (
+      <FieldMultiselect
+        key={key}
+        placeholder={placeholder}
+        showCheckbox
+        isRadio={is_radio}
+        filter={filter}
+        initialOptions={initialOptions}
+        activeFilter={activeFilter}
+        isChecked={isChecked}
+        onUnselectAllPress={this.onUnselectAllPress}
+        parentActiveFilters={activeFilters}
+        currentActiveFilter={activeFilter}
+        changeActiveFilter={this.changeActiveFilter}
+        parentCallback={this.handleCallback}
+        updateFilters={this.updateFilters}
+        setDefaultFilters={this.setDefaultFilters}
+        defaultFilters={defaultFilters}
+        isSortBy={false}
+      />
+    );
+  }
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
@@ -730,6 +762,7 @@ class PLPFilters extends PureComponent {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
+    console.log("muskan render inside-->",this.state.activeFilter);
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
