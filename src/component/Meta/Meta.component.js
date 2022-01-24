@@ -113,15 +113,35 @@ export class Meta extends SourceMeta {
         {this.renderCanonical()}
         {this.renderHreflangs()}
         {metadata.map((tag) => {
-          const tags = document.querySelectorAll(`[name=${tag.name}]`);
+          const tags = document.querySelectorAll(`[name="${tag.name}"]` );
+          const propTags = document.querySelectorAll(`[property="${tag.name}"]`);
+          
           if (tags && tags.length) {
             tags.forEach((tag) => tag.remove());
           }
-
+          if (propTags && propTags.length) {
+            propTags.forEach((tag) => tag.remove());
+          }
           const newTag = document.createElement("meta");
           newTag.key = tag.name || tag.property;
           Object.keys(tag).map((key) => (newTag[key] = tag[key]));
           document.head.appendChild(newTag);
+          
+          const findOGTitle = document.querySelectorAll(`[name="og:title"]` );
+          const findOGDesc = document.querySelectorAll(`[name="og:description"]` );
+          if (findOGTitle && findOGTitle.length) {
+            findOGTitle.forEach((tag) => {
+              tag.setAttribute("property", "og:title");
+              tag.removeAttribute("name");
+            });
+          }
+          if (findOGDesc && findOGDesc.length) {
+            findOGDesc.forEach((tag) => {
+              tag.setAttribute("property", "og:description");
+              tag.removeAttribute("name");
+            });
+          }
+          
         })}
       </>
     );

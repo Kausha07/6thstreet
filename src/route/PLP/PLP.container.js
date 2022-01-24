@@ -376,15 +376,31 @@ export class PLPContainer extends PureComponent {
       .substring(1)
       .split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
-
+    
     setMeta({
       title: __("%s | 6thStreet.com %s", categoryName, countryName),
+
       keywords: __(
         "%s, online shopping, %s, free shipping, returns",
         categoryName,
         countryName
       ),
       description: __(
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        categoryName,
+        countryName,
+        countryName
+      ),
+      twitter_title: __("%s | 6thStreet.com %s", categoryName, countryName),
+      
+      twitter_desc:__(
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        categoryName,
+        countryName,
+        countryName
+      ),
+      og_title:  __("%s | 6thStreet.com %s", categoryName, countryName),
+      og_desc:__(
         "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
         countryName,

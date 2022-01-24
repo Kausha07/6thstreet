@@ -141,16 +141,17 @@ class InlineCustomerSupport extends PureComponent {
   isHidden = () => {
     const { pathname } = location;
     if (
-      isMobile.any() &&
-      !(
-        pathname === "/" ||
-        pathname === "" ||
-        pathname === "/women.html" ||
-        pathname === "/men.html" ||
-        pathname === "/kids.html" ||
-        pathname === "/home.html" ||
-        pathname.includes("catalogsearch")
-      )
+      isMobile.any()
+      // &&
+      // !(
+      //   pathname === "/" ||
+      //   pathname === "" ||
+      //   pathname === "/women.html" ||
+      //   pathname === "/men.html" ||
+      //   pathname === "/kids.html" ||
+      //   pathname === "/home.html" ||
+      //   pathname.includes("catalogsearch")
+      // )
     ) {
       return true;
     }

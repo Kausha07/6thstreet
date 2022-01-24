@@ -60,6 +60,17 @@ $select-arrow-width: 6px !default;
         right: unset;
         left: 0;
       }
+      .selectIcon {
+        left: 30px;
+      }
+    }
+    .selectIcon {
+      height: 16px;
+      width: 16px;
+      position: absolute;
+      right: 30px;
+      margin-top: 2px;
+      display: inline-block;
     }
     &::before {
       position: absolute;

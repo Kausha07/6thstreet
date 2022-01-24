@@ -123,16 +123,17 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       telephone = "",
       street,
       phonecode = "",
+      postcode
     } = address;
     const { validateAddress } = this.props;
 
     return validateAddress({
-      area: region ?? region_id,
+      area: region ?? postcode,
       city,
       country_code: country_id,
       phone: phonecode + telephone,
-      postcode: region ?? region_id,
-      region: region ?? region_id,
+      postcode: region ?? postcode,
+      region: region ?? postcode,
       street: Array.isArray(street) ? street[0] : street,
     });
   }
