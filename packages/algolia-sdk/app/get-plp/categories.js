@@ -105,10 +105,9 @@ const _getCategoryLevel2Data = ({
 
         // Mark selected filters, using the query params
         if (queryValues[l2]) {
-          // if (acc[l1].selected_filters_count === 0) {
-          //   totalSelectedFiltersCount += 1;
-          // }
-          totalSelectedFiltersCount += 1;
+          if (acc[l1].selected_filters_count === 0) {
+            totalSelectedFiltersCount += 1;
+          }
           acc[l1].selected_filters_count += 1;
           acc[l1].subcategories[l2].is_selected = true;
         }
