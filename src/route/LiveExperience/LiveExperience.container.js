@@ -171,6 +171,30 @@ export class LiveExperienceContainer extends PureComponent {
         genderName,
         categoryName
       ),
+      twitter_title: __(
+        "%s %s Online shopping in %s | 6thStreet",
+        genderName,
+        categoryName,
+        countryName
+      ),
+      twitter_desc: __(
+        // eslint-disable-next-line max-len
+        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        genderName,
+        categoryName
+      ),
+      og_title: __(
+        "%s %s Online shopping in %s | 6thStreet",
+        genderName,
+        categoryName,
+        countryName
+      ),
+      og_desc: __(
+        // eslint-disable-next-line max-len
+        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        genderName,
+        categoryName
+      ),
     });
   }
   containerProps = () => {

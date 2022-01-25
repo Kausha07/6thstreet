@@ -529,6 +529,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     /* eslint-disable */
     delete address.region_id;
+    if(!address?.region && address?.postcode){
+      address.region = address?.postcode;
+    }
+    if(!address?.area && address?.postcode){
+      address.area = address?.postcode;
+    }
     Checkout.setState({ isLoading: true });
     estimateShipping({
       ...address,

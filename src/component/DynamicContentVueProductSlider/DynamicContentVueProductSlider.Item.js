@@ -66,9 +66,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
-        destprodid: destProdID,
-        destcatgid: category,
-        destprodprice: itemPrice,
+        destProdID: destProdID,
+        destCategoryID: category,
+        prodPrice: itemPrice,
         posofreco: posofreco,
       },
     });

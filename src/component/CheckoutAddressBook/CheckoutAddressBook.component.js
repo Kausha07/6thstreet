@@ -90,9 +90,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     const {
       id,
       region: { region_code, region },
+      postcode
     } = address;
 
-    if (!region_code && !region) {
+    if (!postcode && !region_code && !region) {
       return null;
     }
 

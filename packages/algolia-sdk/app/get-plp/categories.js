@@ -105,10 +105,9 @@ const _getCategoryLevel2Data = ({
 
         // Mark selected filters, using the query params
         if (queryValues[l2]) {
-          // if (acc[l1].selected_filters_count === 0) {
-          //   totalSelectedFiltersCount += 1;
-          // }
-          totalSelectedFiltersCount += 1;
+          if (acc[l1].selected_filters_count === 0) {
+            totalSelectedFiltersCount += 1;
+          }
           acc[l1].selected_filters_count += 1;
           acc[l1].subcategories[l2].is_selected = true;
         }
@@ -178,17 +177,16 @@ const _getCategoryLevel1Data = ({
 
 const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
   const facetKey = "categories_without_path";
-  let categoriesLevel2Data = query["categories.level2"]
-    ? {}
-    : facets["categories.level2"];
+  // let categoriesLevel2Data = query["categories.level2"]
+  //   ? {}
+  //   : facets["categories.level2"];
   const [data, totalSelectedFiltersCount] = _getCategoryLevel2Data({
     facetKey,
-    categoriesLevel2: categoriesLevel2Data,
+    categoriesLevel2: facets["categories.level2"],
     categoriesLevel3: facets["categories.level3"],
     categoriesWithoutPath: facets.categories_without_path,
     query,
   });
-
   return {
     label: __("Categories"),
     category: facetKey,
