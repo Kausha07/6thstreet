@@ -32,7 +32,6 @@ import { SIZES } from "./PLPFilters.config";
 export const mapStateToProps = (_state) => ({
   filters: _state.PLP.filters,
   isLoading: _state.PLP.isLoading,
-  initialOptions: _state.PLP.initialOptions,
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
 });
@@ -95,7 +94,6 @@ export class PLPFiltersContainer extends PureComponent {
               },
         };
       }
-
       return {
         initialFilters: {
           ...initialFilters,
@@ -103,42 +101,47 @@ export class PLPFiltersContainer extends PureComponent {
         },
       };
     }
+    if (filters) {
+      const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
 
-    return null;
-  }
+          if (selected_filters_count !== 0) {
+            if (filter[0] === SIZES) {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPFiltersContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  props
+                );
 
-  componentDidUpdate() {
-    const { filters = {} } = this.props;
-    const { activeFilters } = this.state;
+                acc = { ...acc, [size[0]]: mappedSizeData };
 
-    const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
-      if (filter[1]) {
-        const { selected_filters_count, data = {} } = filter[1];
+                return acc;
+              }, []);
 
-        if (selected_filters_count !== 0) {
-          if (filter[0] === SIZES) {
-            const mappedData = Object.entries(data).reduce((acc, size) => {
-              const { subcategories } = size[1];
-              const mappedSizeData = this.mapData(subcategories, filter[0]);
-
-              acc = { ...acc, [size[0]]: mappedSizeData };
-
-              return acc;
-            }, []);
-
-            acc = { ...acc, ...mappedData };
-          } else {
-            acc = { ...acc, [filter[0]]: this.mapData(data, filter[0]) };
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPFiltersContainer.mapData(
+                  data,
+                  filter[0],
+                  props
+                ),
+              };
+            }
           }
+
+          return acc;
         }
-
-        return acc;
-      }
-    }, {});
-
-    if (!this.compareObjects(activeFilters, newActiveFilters)) {
-      this.setActveFilters(newActiveFilters);
+      }, {});
+      return {
+        activeFilters: newActiveFilters,
+      };
     }
+    return null;
   }
 
   compareObjects(object1 = {}, object2 = {}) {
@@ -163,12 +166,22 @@ export class PLPFiltersContainer extends PureComponent {
     return false;
   }
 
-  setActveFilters = (activeFilters) => {
-    this.setState({ activeFilters });
-  };
+  static getRequestOptions() {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
+  }
 
-  mapData(data = {}, category) {
-    const { initialOptions } = this.props;
+  static mapData(data = {}, category, props) {
+    const initialOptions = PLPFiltersContainer.getRequestOptions();
     let formattedData = data;
     let finalData = [];
     if (category === "categories_without_path") {
@@ -228,10 +241,21 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerFunctions = () => {
-    const { showOverlay, updatePLPInitialFilters, updateFiltersState } =
-      this.props;
+    const {
+      showOverlay,
+      updatePLPInitialFilters,
+      updateFiltersState,
+      handleCallback,
+      onUnselectAllPress,
+    } = this.props;
 
-    return { showOverlay, updatePLPInitialFilters, updateFiltersState };
+    return {
+      showOverlay,
+      updatePLPInitialFilters,
+      updateFiltersState,
+      handleCallback,
+      onUnselectAllPress,
+    };
   };
 
   // eslint-disable-next-line consistent-return
@@ -245,64 +269,24 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      filters,
-      isLoading,
-      activeOverlay,
-      query,
-      plpPageActiveFilters,
-
-      brandDescription,
-      brandImg,
-      brandName,
-      changeHeaderState,
-      gender,
-      goToPreviousHeaderState,
-      goToPreviousNavigationState,
-      hideActiveOverlay,
-      onReset,
-      pages,
-      plpWidgetData,
-      productsCount,
-      resetPLPData,
-      showOverlay,
-      updateFiltersState,
-      updatePLPInitialFilters,
-    } = this.props;
+    const { filters, isLoading, activeOverlay, query, plpPageActiveFilters } =
+      this.props;
     const { activeFilters } = this.state;
 
     return {
       filters,
-      // isLoading,
+      isLoading,
       activeOverlay,
       activeFilters,
-      // query,
-      // plpPageActiveFilters,
-
-      // brandDescription,
-      // brandImg,
-      // brandName,
-      // changeHeaderState,
-      // productsCount,
-
-      // gender,
-      // goToPreviousHeaderState,
-      // goToPreviousNavigationState,
-      // hideActiveOverlay,
-      // onReset,
-      // pages,
-      // plpWidgetData,
-      // resetPLPData,
-      // showOverlay,
-      // updateFiltersState,
-      // updatePLPInitialFilters,
+      query,
+      plpPageActiveFilters,
     };
   };
 
   render() {
     return (
       <PLPFilters
-        // {...this.props}
+        {...this.props}
         {...this.containerFunctions()}
         {...this.containerFunction}
         {...this.containerProps()}

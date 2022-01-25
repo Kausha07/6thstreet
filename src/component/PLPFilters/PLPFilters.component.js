@@ -10,7 +10,7 @@ import PLPFilter from "Component/PLPFilter";
 import PLPQuickFilter from "Component/PLPQuickFilter";
 import Popup from "Component/Popup";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, createRef } from "react";
 import { Filters } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
@@ -36,6 +36,9 @@ class PLPFilters extends PureComponent {
   static defaultProps = {
     productsCount: 0,
   };
+  filterDropdownRef = createRef();
+
+  filterButtonRef = createRef();
 
   constructor(props) {
     super(props);
@@ -46,6 +49,7 @@ class PLPFilters extends PureComponent {
       isArabic: isArabic(),
       activeFilters: {},
       isReset: false,
+      toggleOptionsList: false,
       defaultFilters: false,
     };
 
@@ -74,30 +78,6 @@ class PLPFilters extends PureComponent {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { activeFilters, plpPageActiveFilters } = this.props;
-    const {
-      activeFilters: prevActiveFilters,
-      plpPageActiveFilters: prevPlpPageActiveFilters,
-    } = prevProps;
-    if (plpPageActiveFilters !== prevPlpPageActiveFilters) {
-      this.setState({
-        activeFilters: plpPageActiveFilters,
-      });
-    }
-
-    if (activeFilters !== prevActiveFilters) {
-      this.setState({
-        activeFilters: activeFilters,
-      });
-    }
-  }
-  delayFilterUpdate() {
-    clearTimeout(this.timer);
-    // eslint-disable-next-line no-magic-numbers
-    this.timer = setTimeout(() => this.updateFilters(), 2000);
-  }
-
   setDefaultFilters = () => {
     this.setState({ defaultFilters: true });
   };
@@ -122,7 +102,8 @@ class PLPFilters extends PureComponent {
           return this.renderSortBy([filter[0], filter[1]], index);
         }
         // return this.renderFilter([filter[0], filter[1]]);
-        return this.renderDropDownList([filter[0], filter[1]]);
+        // return this.renderDropDownList([filter[0], filter[1]]);
+        return this.renderFilterOption([filter[0], filter[1]]);
       }
     });
   }
@@ -260,6 +241,7 @@ class PLPFilters extends PureComponent {
     return (
       <div block="Content" elem="Filters" mods={{ isArabic }}>
         {this.renderFilters()}
+        {this.renderDropDownList()}
       </div>
     );
   }
@@ -326,7 +308,6 @@ class PLPFilters extends PureComponent {
     const { isArabic } = this.state;
 
     document.body.style.overflow = "hidden";
-
     return (
       <Popup
         clickOutside={false}
@@ -350,75 +331,138 @@ class PLPFilters extends PureComponent {
     );
   }
 
-  renderFilter = ([key, filter]) => {
-    const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-    const { initialOptions } = this.props;
-    if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
-      return null;
+  renderDropDownList() {
+    const { filters } = this.props;
+    const { activeFilter, defaultFilters } = this.state;
+    return Object.entries(filters).map((filter) => {
+      if (activeFilter === filter[0]) {
+        const {
+          isChecked,
+          initialOptions,
+          handleCallback,
+          activeFilters,
+          onUnselectAllPress,
+        } = this.props;
+        const { label, category, is_radio } = filter[1];
+
+        let placeholder =
+          category === "in_stock"
+            ? __("BY STOCK")
+            : category === "age"
+            ? __("BY AGE")
+            : label;
+
+        return (
+          <FieldMultiselect
+            key={filter[0]}
+            placeholder={placeholder}
+            showCheckbox
+            isRadio={is_radio}
+            filter={filter[1]}
+            initialOptions={initialOptions}
+            activeFilter={activeFilter}
+            isChecked={isChecked}
+            onUnselectAllPress={onUnselectAllPress}
+            parentActiveFilters={activeFilters}
+            currentActiveFilter={activeFilter}
+            changeActiveFilter={this.changeActiveFilter}
+            parentCallback={handleCallback}
+            updateFilters={this.updateFilters}
+            setDefaultFilters={this.setDefaultFilters}
+            defaultFilters={defaultFilters}
+            isSortBy={false}
+          />
+        );
+      }
+    });
+  }
+
+  handleClickOutside = (event) => {
+    const { toggleOptionsList } = this.state;
+
+    if (toggleOptionsList) {
+      if (
+        this.filterDropdownRef &&
+        !this.filterDropdownRef.current.contains(event.target)
+      ) {
+        this.onBlur();
+      }
     }
-    return (
-      <PLPFilter
-        key={key}
-        filter={filter}
-        parentCallback={this.handleCallback}
-        currentActiveFilter={activeFilter}
-        changeActiveFilter={this.changeActiveFilter}
-        onDeselectAllCategory={this.onUnselectAllPress}
-        isReset={isReset}
-        initialOptions={initialOptions}
-        resetParentState={this.resetParentState}
-        parentActiveFilters={activeFilters}
-        updateFilters={this.updateFilters}
-        setDefaultFilters={this.setDefaultFilters}
-        defaultFilters={defaultFilters}
-      />
-    );
   };
-  renderDropDownList([key, filter]) {
-    const { isChecked, initialOptions } = this.props;
-    const { label, category, is_radio } = filter;
-    const { activeFilter, activeFilters, defaultFilters } = this.state;
+
+  onBlur = () => {
+    // eslint-disable-next-line no-magic-numbers
+    this.toggelOptionList();
+  };
+
+  toggelOptionList() {
+    const { toggleOptionsList } = this.state;
+
+    this.setState({
+      toggleOptionsList: !toggleOptionsList,
+    });
+  }
+
+  handleFilterChange = (filter) => {
+    this.changeActiveFilter(filter.category || filter.facet_key);
+  };
+
+  renderFilterOption([key, filter]) {
+    const { activeFilter } = this.state;
+    const { filters } = this.props;
+    const { label, category } = filter;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
+
     let placeholder =
       category === "in_stock"
         ? __("BY STOCK")
         : category === "age"
         ? __("BY AGE")
         : label;
+    let toggleOptionsList = activeFilter === category;
+    let selectedItems = true;
 
     return (
-      <FieldMultiselect
-        key={key}
-        placeholder={placeholder}
-        showCheckbox
-        isRadio={is_radio}
-        filter={filter}
-        initialOptions={initialOptions}
-        activeFilter={activeFilter}
-        isChecked={isChecked}
-        onUnselectAllPress={this.onUnselectAllPress}
-        parentActiveFilters={activeFilters}
-        currentActiveFilter={activeFilter}
-        changeActiveFilter={this.changeActiveFilter}
-        parentCallback={this.handleCallback}
-        updateFilters={this.updateFilters}
-        setDefaultFilters={this.setDefaultFilters}
-        defaultFilters={defaultFilters}
-        isSortBy={false}
-      />
+      <div
+        ref={this.filterDropdownRef}
+        block="FieldMultiselect"
+        // mods={{ isHidden }}
+      >
+        <button
+          ref={this.filterButtonRef}
+          type="button"
+          block="FieldMultiselect"
+          elem="FilterButton"
+          mods={{ toggleOptionsList, selectedItems }}
+          mix={{
+            block: "FieldMultiselect",
+            elem: "FilterButton",
+            mods: { isArabic },
+          }}
+          onClick={() =>
+            isMobile.any()
+              ? this.handleFilterChange(filter)
+              : this.toggelOptionList
+          }
+        >
+          {placeholder}
+        </button>
+      </div>
     );
   }
+
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
+    const { handleCallback } = this.props;
     return (
       <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
           key={key}
           filter={filter}
-          parentCallback={this.handleCallback}
+          parentCallback={handleCallback}
           currentActiveFilter={activeFilter}
           changeActiveFilter={this.changeActiveFilter}
           isReset={isReset}
@@ -438,311 +482,13 @@ class PLPFilters extends PureComponent {
     this.setState({ isReset: false });
   };
 
-  updateInitialFilters = (
-    data,
-    facet_value,
-    newFilterArray,
-    categoryLevel1,
-    checked,
-    facet_key
-  ) => {
-    if (data[facet_value]) {
-      data[facet_value].is_selected = checked;
-      if (checked) {
-        newFilterArray.selected_filters_count += 1;
-      } else {
-        newFilterArray.selected_filters_count -= 1;
-      }
-    } else {
-      if (facet_key.includes("size")) {
-        let categoryData = data[facet_key];
-        if (
-          categoryData.subcategories &&
-          categoryData.subcategories[facet_value]
-        ) {
-          categoryData.subcategories[facet_value].is_selected = checked;
-          if (checked) {
-            categoryData.selected_filters_count += 1;
-            newFilterArray.selected_filters_count += 1;
-          } else {
-            categoryData.selected_filters_count -= 1;
-            newFilterArray.selected_filters_count -= 1;
-          }
-        }
-      } else if (categoryLevel1) {
-        return Object.entries(data).map((entry) => {
-          return Object.entries(entry[1].subcategories).map((subEntry) => {
-            if (subEntry[0] === facet_value) {
-              subEntry[1].is_selected = checked;
-              if (checked) {
-                entry[1].selected_filters_count += 1;
-                newFilterArray.selected_filters_count += 1;
-              } else {
-                entry[1].selected_filters_count -= 1;
-                newFilterArray.selected_filters_count -= 1;
-              }
-            }
-          });
-        });
-      } else {
-        Object.keys(data).map((value) => {
-          if (
-            data[value].subcategories &&
-            data[value].subcategories[facet_value]
-          ) {
-            data[value].subcategories[facet_value].is_selected = checked;
-            if (checked) {
-              data[value].selected_filters_count += 1;
-              newFilterArray.selected_filters_count += 1;
-            } else {
-              data[value].selected_filters_count -= 1;
-              newFilterArray.selected_filters_count -= 1;
-            }
-          }
-        });
-      }
-    }
-  };
-
-  updateRadioFilters = (data, facet_value, newFilterArray) => {
-    if (data[facet_value]) {
-      Object.values(data).map((value) => {
-        if (value.facet_value === facet_value) {
-          value.is_selected = true;
-        } else {
-          value.is_selected = false;
-        }
-      });
-
-      if (newFilterArray.selected_filters_count === 0) {
-        newFilterArray.selected_filters_count += 1;
-      }
-    }
-  };
-   getRequestOptions = () => {
-    let params;
-    if (location.search && location.search.startsWith("?q")) {
-      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-      params = parsedParams;
-    } else {
-      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
-        location.href
-      );
-      params = parsedParams;
-    }
-    return params;
-  }
-
-  handleCallback = (
-    initialFacetKey,
-    facet_value,
-    checked,
-    isRadio,
-    facet_key,
-    isQuickFilters
-  ) => {
-    const { activeFilters } = this.state;
-    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
-    const filterArray = activeFilters[initialFacetKey];
-    let newFilterArray = filters[initialFacetKey];
-    if (initialFacetKey.includes("size")) {
-      newFilterArray = filters["sizes"];
-    }
-    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
-    if (!isRadio) {
-      if (checked) {
-        if (newFilterArray) {
-          const { data = {} } = newFilterArray;
-          this.updateInitialFilters(
-            data,
-            facet_value,
-            newFilterArray,
-            categoryLevel1,
-            true,
-            initialFacetKey
-          );
-          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-
-          this.setState(
-            {
-              activeFilters: {
-                ...activeFilters,
-                [initialFacetKey]: filterArray
-                  ? [...filterArray, facet_value]
-                  : [facet_value],
-              },
-            },
-            () => this.select(isQuickFilters)
-          );
-        }
-      } else if (filterArray) {
-        if (newFilterArray) {
-          const { data = {} } = newFilterArray;
-
-          this.updateInitialFilters(
-            data,
-            facet_value,
-            newFilterArray,
-            categoryLevel1,
-            false,
-            initialFacetKey
-          );
-          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-
-          const index = filterArray.indexOf(facet_value);
-          if (index > -1) {
-            filterArray.splice(index, 1);
-          }
-          this.setState(
-            {
-              activeFilters: {
-                [initialFacetKey]: filterArray,
-              },
-            },
-            () => this.select()
-          );
-        }
-      } else {
-        if (newFilterArray) {
-          const { data = {} } = newFilterArray;
-
-          this.updateInitialFilters(
-            data,
-            facet_value,
-            newFilterArray,
-            categoryLevel1,
-            false,
-            initialFacetKey
-          );
-          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-          this.setState(
-            {
-              activeFilters: {
-                [initialFacetKey]: [],
-              },
-            },
-            () => this.select()
-          );
-        }
-      }
-    } else {
-      const { data = {} } = newFilterArray;
-
-      if (newFilterArray) {
-        this.updateRadioFilters(
-          data,
-          facet_value,
-          newFilterArray,
-          categoryLevel1,
-          true
-        );
-        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
-        this.setState(
-          {
-            ...activeFilters,
-            activeFilters: {
-              [initialFacetKey]: facet_value,
-            },
-          },
-          () => this.select()
-        );
-      }
-    }
-  };
-
-  select = (isQuickFilters) => {
-    const { activeFilters = {} } = this.state;
-    const { query } = this.props;
-    if (isMobile.any()) {
-      window.scrollTo(0, 0);
-    }
-    Object.keys(activeFilters).map((key) => {
-      if (key !== "categories.level1") {
-        WebUrlParser.setParam(key, activeFilters[key], query);
-      }
-    });
-  };
-
-  onUnselectAllPress = (category) => {
-    const { filters, initialOptions, updatePLPInitialFilters, query } =
-      this.props;
-    const { activeFilters = {} } = this.state;
-    let newFilterArray = filters;
-    Object.entries(newFilterArray).map((filter) => {
-      if (filter[0] === category && filter[1].selected_filters_count > 0) {
-        if (category === "categories_without_path") {
-          filter[1].selected_filters_count = 0;
-          activeFilters[filter[0]] = [];
-
-          return Object.entries(filter[1].data).map((filterData) => {
-            filterData[1].selected_filters_count = 0;
-            return Object.entries(filterData[1].subcategories).map((entry) => {
-              entry[1].is_selected = false;
-            });
-          });
-        } else {
-          if (category === "sizes") {
-            Object.entries(filter[1].data).map((entry) => {
-              entry[1].selected_filters_count = 0;
-              Object.entries(entry[1].subcategories).map((filterData) => {
-                if (filterData[1].is_selected) {
-                  filterData[1].is_selected = false;
-                  activeFilters[entry[0]] = [];
-                }
-              });
-            });
-          } else {
-            filter[1].selected_filters_count = 0;
-            Object.entries(filter[1].data).map((filterData) => {
-              if (filterData[1].is_selected) {
-                filterData[1].is_selected = false;
-                activeFilters[filter[0]] = [];
-              }
-            });
-          }
-        }
-      } else {
-        if (
-          filter[0] !== "categories.level1" &&
-          filter[1].selected_filters_count > 0
-        ) {
-          activeFilters[filter[0]] = [];
-
-          if (filter[0] === "categories_without_path") {
-            return Object.entries(filter[1].data).map((entry) => {
-              return Object.entries(entry[1].subcategories).map((subEntry) => {
-                activeFilters[filter[0]].push(subEntry[0]);
-              });
-            });
-          } else {
-            Object.entries(filter[1].data).map((filterData) => {
-              if (filterData[1].is_selected) {
-                activeFilters[filter[0]].push(filterData[0]);
-              }
-            });
-          }
-        }
-      }
-    });
-    this.setState({
-      activeFilters: activeFilters,
-    });
-
-    updatePLPInitialFilters(filters, category, null);
-    Object.keys(activeFilters).map((key) => {
-      if (key !== "categories.level1") {
-        WebUrlParser.setParam(key, activeFilters[key]);
-      }
-    });
-  };
-
   renderQuickFilter = ([key, filter]) => {
     const genders = [__("women"), __("men"), __("kids")];
     const brandsCategoryName = "brand_name";
     const CategoryName = "categories_without_path";
     const pathname = location.pathname.split("/");
     const isBrandsFilterRequired = genders.includes(pathname[1]);
-
+    const { handleCallback } = this.props;
     if (isBrandsFilterRequired) {
       if (filter.category === brandsCategoryName) {
         return (
@@ -751,7 +497,7 @@ class PLPFilters extends PureComponent {
             filter={filter}
             updateFilters={this.updateFilters}
             onClick={this.updateFilters}
-            parentCallback={this.handleCallback}
+            parentCallback={handleCallback}
           />
         );
       }
@@ -762,7 +508,7 @@ class PLPFilters extends PureComponent {
           filter={filter}
           updateFilters={this.updateFilters}
           onClick={this.updateFilters}
-          parentCallback={this.handleCallback}
+          parentCallback={handleCallback}
         />
       );
     }

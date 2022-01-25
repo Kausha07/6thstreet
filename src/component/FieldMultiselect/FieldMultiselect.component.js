@@ -70,7 +70,7 @@ class FieldMultiselect extends PureComponent {
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
   }
 
-  static getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props, state) {
     if (isMobile.any()) {
       const {
         currentActiveFilter,
@@ -116,13 +116,11 @@ class FieldMultiselect extends PureComponent {
           this.setState({
             showMore: true,
             showLess: false,
-            parentActiveFilters: this.props.parentActiveFilters,
           });
         } else {
           this.setState({
             showMore: false,
             showLess: false,
-            parentActiveFilters: this.props.parentActiveFilters,
           });
         }
       }
@@ -747,7 +745,7 @@ class FieldMultiselect extends PureComponent {
         block="FieldMultiselect"
         mods={{ isHidden }}
       >
-        <button
+        {/* <button
           ref={this.filterButtonRef}
           type="button"
           block="FieldMultiselect"
@@ -763,7 +761,7 @@ class FieldMultiselect extends PureComponent {
           }
         >
           {placeholder}
-        </button>
+        </button> */}
         {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
