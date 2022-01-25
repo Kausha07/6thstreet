@@ -219,7 +219,9 @@ class ProductItem extends PureComponent {
 
   renderAddToCartOnHover() {
     const { product } = this.props;
-    let price = Object.values(product.price[0]);
+    let price = Array.isArray(product.price)
+      ? Object.values(product.price[0])
+      : Object.values(product.price);
     if (price[0].default === 0) {
       return null;
     }

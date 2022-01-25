@@ -120,6 +120,29 @@ export class HomePageContainer extends PureComponent {
         genderName,
         countryName
       ),
+      twitter_title: __(
+        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+        genderName,
+        countryName
+      ),
+      twitter_desc: __(
+        // eslint-disable-next-line max-len
+        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+        genderName,
+        countryName
+      ),
+      og_title: __(
+        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+        genderName,
+        countryName
+      ),
+      og_desc: __(
+        // eslint-disable-next-line max-len
+        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+        genderName,
+        countryName
+      ),
+
     });
   }
 
