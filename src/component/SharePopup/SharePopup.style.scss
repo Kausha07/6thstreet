@@ -18,6 +18,10 @@ $select-arrow-width: 6px !default;
     position: absolute;
     top: 60px;
     right: -128px;
+    &_isArabic {
+        right: -188px;
+        text-align: right!important;
+    }
     width: 427px;
     text-align: left!important;
     padding: 33px 21px!important;
