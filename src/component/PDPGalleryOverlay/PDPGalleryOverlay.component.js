@@ -14,6 +14,7 @@ import { ReactComponent as Close } from "./icons/close.svg";
 import { ReactComponent as Minus } from "./icons/minus.svg";
 import { ReactComponent as Plus } from "./icons/plus.svg";
 import { ChevronLeft, ChevronRight } from "Component/Icons";
+import PinchZoomPan from "react-responsive-pinch-zoom-pan";
 
 import "./PDPGalleryOverlay.style";
 
@@ -51,43 +52,6 @@ class PDPGalleryOverlay extends PureComponent {
     };
   }
 
-  componentDidMount() {
-    const { onSliderChange, currentIndex } = this.props;
-    const { imageRef, overlayRef } = this;
-    const { isMobile } = this.state;
-    const imgHeight =
-      imageRef.current === null ? null : imageRef.current.offsetHeight;
-    const imgWidth =
-      imageRef.current === null ? null : imageRef.current.offsetWidth;
-    const overlayHeight =
-      overlayRef.current.children[isMobile ? 6 : 5].offsetHeight;
-    const overlayWidth =
-      overlayRef.current.children[isMobile ? 6 : 5].offsetWidth;
-    const addX =
-      (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
-    const addY =
-      (overlayHeight - imgHeight) / 2 - (overlayHeight - imgHeight * 1.5) / 2;
-
-    const imageScale = overlayWidth
-      ? 1 - (overlayWidth - imgWidth) / overlayWidth
-      : 1;
-    this.setState({
-      addX,
-      addY,
-      initialScale: isMobile ? 1 : 0.5,
-      scale: Math.floor(imageScale / 0.5) * 0.5,
-    });
-    onSliderChange(currentIndex);
-
-    this.listenArrowKey();
-  }
-
-  componentWillUnmount() {
-    const { isMobile } = this.state;
-    if (!isMobile) {
-      document.removeEventListener("keydown", this.handleArrorKeySlide);
-    }
-  }
 
   renderCrumb = (index, i) => {
     const { onSliderChange } = this.props;
@@ -101,95 +65,39 @@ class PDPGalleryOverlay extends PureComponent {
     );
   };
 
-  zoomIn = () => {
-    const { scale, addX, addY } = this.state;
-    if (scale < 8) {
-      this.setState({
-        scale: scale + 0.5,
-        positionX: addX,
-        positionY: addY,
-      });
-    }
-  };
 
-  zoomOut = () => {
-    const { scale, addX, addY, initialScale } = this.state;
-    if (scale > initialScale) {
-      this.setState({
-        scale: scale - 0.5,
-        positionX: -addX,
-        positionY: -addY,
-      });
-    }
-  };
 
   renderImage(src, i) {
-    const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex } =
+    const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } =
       this.props;
-    const { scale, positionX, positionY, initialScale, isMobile } = this.state;
     return (
-      <TransformWrapper
-        key={i}
-        scale={scale}
-        onZoomChange={handleZoomChange}
-        defaultPositionY={positionY}
-        wheel={{ disabled: true, wheelEnabled: false }}
-        pan={{
-          disabled: isMobile ? !isZoomEnabled : false,
-          // disabled: false,
-          limitToWrapperBounds: true,
-          velocity: false,
-        }}
-        options={{
-          limitToBounds: true,
-          minScale: 0.5,
-          minPositionX: positionX,
-          minPositionY: positionY,
-        }}
-      >
-        {({
-          scale,
-          previousScale,
-          resetTransform,
-          setTransform,
-          positionX,
-          positionY,
-          options,
-        }) => {
-          const { minPositionY, minPositionX } = options;
-          if (scale === initialScale && previousScale !== initialScale) {
-            if (isMobile) {
-              resetTransform();
-            }
-          }
+      // <div>
+      //   <img
+      //     lazyLoad={false}
+      //     src={src}
+      //     ratio="custom"
+      //     mix={{
+      //       block: "ProductGallery",
+      //       elem: "SliderImage",
+      //       mods: { isPlaceholder: !src },
+      //     }}
+      //     // ref={imageRef}
+      //     isPlaceholder={!src}
+      //   // alt={alt}
+      //   />
+      // </div>
+      <div style={{ width: '500px', height: '500px' }} key={src}>
+        <PinchZoomPan position='center' initialScale='auto' zoomButtons={false} doubleTapBehavior='zoom' key={src}>
+          <img mix={{
+            block: "ProductGallery",
+            elem: "SliderImage",
+            mods: { isPlaceholder: !src },
+          }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} />
+        </PinchZoomPan>
+      </div>
 
-          // do not remove this code
-          // if (scale !== previousScale && scale !== 0.5) {
-          //   setTransform(
-          //     positionX - minPositionX,
-          //     positionY - minPositionY,
-          //     scale,
-          //     0
-          //   );
-          // }
+    )
 
-          return (
-            <ProductGalleryBaseImage
-              imageRef={this.imageRef}
-              currentIndex={currentIndex}
-              centerContent
-              setTransform={setTransform}
-              index={i}
-              mediaData={src}
-              scale={scale}
-              previousScale={previousScale}
-              disableZoom={disableZoom}
-              isZoomEnabled={isZoomEnabled}
-            />
-          );
-        }}
-      </TransformWrapper>
-    );
   }
 
   renderGalleryImage = (src, i) => <Image lazyLoad={false} src={src} key={i} />;
@@ -259,7 +167,11 @@ class PDPGalleryOverlay extends PureComponent {
       </Slider>
     );
   }
-  prev = () => {
+  prev = (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+
     const { currentIndex, onSliderChange, gallery = [] } = this.props;
 
     if (currentIndex === 0) {
@@ -268,7 +180,11 @@ class PDPGalleryOverlay extends PureComponent {
       onSliderChange(currentIndex - 1);
     }
   };
-  next = () => {
+  next = (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+
     const { currentIndex, onSliderChange, gallery = [] } = this.props;
     if (currentIndex + 1 === gallery.length) {
       return;
@@ -324,17 +240,18 @@ class PDPGalleryOverlay extends PureComponent {
         >
           <Close />
         </button>
-        <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={this.zoomIn}>
+        {/* <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={this.zoomIn}>
           <Plus />
         </button>
         <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={this.zoomOut}>
           <Minus />
-        </button>
+        </button> */}
         {this.renderPrevButton()}
         {this.renderNextButton()}
         {this.renderCrumbs()}
         {this.renderSlider()}
       </div>
+
     );
   }
 }
