@@ -171,7 +171,6 @@ export class PLPFiltersContainer extends PureComponent {
     const { initialOptions } = this.props;
     let formattedData = data;
     let finalData = [];
-  
     if (category === "categories_without_path") {
       //   let categoryLevelArray = [
       //     "categories.level1",
@@ -251,26 +250,59 @@ export class PLPFiltersContainer extends PureComponent {
       isLoading,
       activeOverlay,
       query,
-      initialOptions,
       plpPageActiveFilters,
+
+      brandDescription,
+      brandImg,
+      brandName,
+      changeHeaderState,
+      gender,
+      goToPreviousHeaderState,
+      goToPreviousNavigationState,
+      hideActiveOverlay,
+      onReset,
+      pages,
+      plpWidgetData,
+      productsCount,
+      resetPLPData,
+      showOverlay,
+      updateFiltersState,
+      updatePLPInitialFilters,
     } = this.props;
     const { activeFilters } = this.state;
 
     return {
       filters,
-      isLoading,
+      // isLoading,
       activeOverlay,
       activeFilters,
-      initialOptions,
-      query,
-      plpPageActiveFilters,
+      // query,
+      // plpPageActiveFilters,
+
+      // brandDescription,
+      // brandImg,
+      // brandName,
+      // changeHeaderState,
+      // productsCount,
+
+      // gender,
+      // goToPreviousHeaderState,
+      // goToPreviousNavigationState,
+      // hideActiveOverlay,
+      // onReset,
+      // pages,
+      // plpWidgetData,
+      // resetPLPData,
+      // showOverlay,
+      // updateFiltersState,
+      // updatePLPInitialFilters,
     };
   };
 
   render() {
     return (
       <PLPFilters
-        {...this.props}
+        // {...this.props}
         {...this.containerFunctions()}
         {...this.containerFunction}
         {...this.containerProps()}

@@ -381,7 +381,6 @@ class PLPFilters extends PureComponent {
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
-    console.log("muskan render",activeFilter);
     let placeholder =
       category === "in_stock"
         ? __("BY STOCK")
@@ -520,6 +519,19 @@ class PLPFilters extends PureComponent {
       }
     }
   };
+   getRequestOptions = () => {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
+  }
 
   handleCallback = (
     initialFacetKey,
@@ -536,7 +548,7 @@ class PLPFilters extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -762,7 +774,6 @@ class PLPFilters extends PureComponent {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-    console.log("muskan render inside-->",this.state.activeFilter);
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
