@@ -72,8 +72,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    const { activeFilters } = this.props;
-    return <PLPFilters {...this.props} plpPageActiveFilters={activeFilters} />;
+    return <PLPFilters {...this.props} />;
   }
 
   renderPLPPages() {

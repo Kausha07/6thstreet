@@ -76,7 +76,7 @@ export class PLPFiltersContainer extends PureComponent {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { filters = {} } = props;
+    const { filters = {}, activeFilters = {} } = props;
     const { initialFilters = {} } = state;
 
     if (Object.keys(filters).length > Object.keys(initialFilters).length) {
@@ -101,143 +101,12 @@ export class PLPFiltersContainer extends PureComponent {
         },
       };
     }
-    if (filters) {
-      const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
-        if (filter[1]) {
-          const { selected_filters_count, data = {} } = filter[1];
-
-          if (selected_filters_count !== 0) {
-            if (filter[0] === SIZES) {
-              const mappedData = Object.entries(data).reduce((acc, size) => {
-                const { subcategories } = size[1];
-                const mappedSizeData = PLPFiltersContainer.mapData(
-                  subcategories,
-                  filter[0],
-                  props
-                );
-
-                acc = { ...acc, [size[0]]: mappedSizeData };
-
-                return acc;
-              }, []);
-
-              acc = { ...acc, ...mappedData };
-            } else {
-              acc = {
-                ...acc,
-                [filter[0]]: PLPFiltersContainer.mapData(
-                  data,
-                  filter[0],
-                  props
-                ),
-              };
-            }
-          }
-
-          return acc;
-        }
-      }, {});
+    if (activeFilters) {
       return {
-        activeFilters: newActiveFilters,
+        activeFilters,
       };
     }
     return null;
-  }
-
-  compareObjects(object1 = {}, object2 = {}) {
-    if (Object.keys(object1).length === Object.keys(object2).length) {
-      const isEqual = Object.entries(object1).reduce((acc, key) => {
-        if (object2[key[0]]) {
-          if (key[1].length !== object2[key[0]].length) {
-            acc.push(0);
-          } else {
-            acc.push(1);
-          }
-        } else {
-          acc.push(1);
-        }
-
-        return acc;
-      }, []);
-
-      return !isEqual.includes(0);
-    }
-
-    return false;
-  }
-
-  static getRequestOptions() {
-    let params;
-    if (location.search && location.search.startsWith("?q")) {
-      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-      params = parsedParams;
-    } else {
-      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
-        location.href
-      );
-      params = parsedParams;
-    }
-    return params;
-  }
-
-  static mapData(data = {}, category, props) {
-    const initialOptions = PLPFiltersContainer.getRequestOptions();
-    let formattedData = data;
-    let finalData = [];
-    if (category === "categories_without_path") {
-      //   let categoryLevelArray = [
-      //     "categories.level1",
-      //     "categories.level2",
-      //     "categories.level3",
-      //     "categories.level4",
-      //   ];
-      //   let categoryLevel;
-      //   categoryLevelArray.map((entry, index) => {
-      //     if (initialOptions[entry]) {
-      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
-      //     }
-      //   });
-      //   if (categoryLevel) {
-      //     if (data[categoryLevel]) {
-      //       formattedData = data[categoryLevel].subcategories;
-      //     } else {
-      //       formattedData = data[Object.keys(data)[0]].subcategories;
-      //     }
-      //   } else {
-      let categoryArray = initialOptions["categories_without_path"]
-        ? initialOptions["categories_without_path"].split(",")
-        : [];
-      Object.entries(data).map((entry) => {
-        Object.values(entry[1].subcategories).map((subEntry) => {
-          if (
-            categoryArray.length > 0 &&
-            categoryArray.includes(subEntry.facet_value)
-          ) {
-            finalData.push(subEntry);
-          }
-        });
-      });
-      formattedData = finalData;
-      //   }
-    }
-
-    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
-      if (category === "categories_without_path") {
-        const { is_selected, facet_value } = option[1];
-        if (is_selected) {
-          acc.push(facet_value);
-        }
-        return acc;
-      } else {
-        const { is_selected } = option[1];
-        if (is_selected) {
-          acc.push(option[0]);
-        }
-        return acc;
-      }
-    }, []);
-
-    return mappedData;
   }
 
   containerFunctions = () => {
@@ -269,8 +138,7 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, plpPageActiveFilters } =
-      this.props;
+    const { filters, isLoading, activeOverlay, query } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -279,7 +147,6 @@ export class PLPFiltersContainer extends PureComponent {
       activeOverlay,
       activeFilters,
       query,
-      plpPageActiveFilters,
     };
   };
 

@@ -176,6 +176,88 @@ export class PLPContainer extends PureComponent {
     resetPLPData();
   }
 
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
+
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
+    }
+
+    return false;
+  }
+
+  static mapData(data = {}, category, props) {
+    const initialOptions = PLPContainer.getRequestOptions();
+    let formattedData = data;
+    let finalData = [];
+    if (category === "categories_without_path") {
+      //   let categoryLevelArray = [
+      //     "categories.level1",
+      //     "categories.level2",
+      //     "categories.level3",
+      //     "categories.level4",
+      //   ];
+      //   let categoryLevel;
+      //   categoryLevelArray.map((entry, index) => {
+      //     if (initialOptions[entry]) {
+      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+      //     }
+      //   });
+      //   if (categoryLevel) {
+      //     if (data[categoryLevel]) {
+      //       formattedData = data[categoryLevel].subcategories;
+      //     } else {
+      //       formattedData = data[Object.keys(data)[0]].subcategories;
+      //     }
+      //   } else {
+      let categoryArray = initialOptions["categories_without_path"]
+        ? initialOptions["categories_without_path"].split(",")
+        : [];
+      Object.entries(data).map((entry) => {
+        Object.values(entry[1].subcategories).map((subEntry) => {
+          if (
+            categoryArray.length > 0 &&
+            categoryArray.includes(subEntry.facet_value)
+          ) {
+            finalData.push(subEntry);
+          }
+        });
+      });
+      formattedData = finalData;
+      //   }
+    }
+
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
+      if (category === "categories_without_path") {
+        const { is_selected, facet_value } = option[1];
+        if (is_selected) {
+          acc.push(facet_value);
+        }
+        return acc;
+      } else {
+        const { is_selected } = option[1];
+        if (is_selected) {
+          acc.push(option[0]);
+        }
+        return acc;
+      }
+    }, []);
+
+    return mappedData;
+  }
+
   constructor(props) {
     super(props);
     let prevLocation;
@@ -309,20 +391,6 @@ export class PLPContainer extends PureComponent {
     }
   };
 
-  getRequestOptions = () => {
-    let params;
-    if (location.search && location.search.startsWith("?q")) {
-      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-      params = parsedParams;
-    } else {
-      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
-        location.href
-      );
-      params = parsedParams;
-    }
-    return params;
-  };
-
   handleCallback(
     initialFacetKey,
     facet_value,
@@ -338,7 +406,7 @@ export class PLPContainer extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
+    let categoryLevel1 = PLPContainer.getRequestOptions().q.split(" ")[1];
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -519,11 +587,11 @@ export class PLPContainer extends PureComponent {
       activeFilters,
     });
 
-    // Object.keys(activeFilters).map((key) => {
-    //   if (key !== "categories.level1") {
-    //     WebUrlParser.setParam(key, activeFilters[key]);
-    //   }
-    // });
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key]);
+      }
+    });
   }
 
   async getBrandDetails() {
@@ -602,6 +670,50 @@ export class PLPContainer extends PureComponent {
       // if only page has changed, and it is not yet loaded => request that page
       PLPContainer.requestProductListPage(this.props);
       this.setState({ prevRequestOptions: requestOptions });
+    }
+
+    if (!this.compareObjects(prevProps.filters, this.props.filters)) {
+      const newActiveFilters = Object.entries(this.props.filters).reduce(
+        (acc, filter) => {
+          if (filter[1]) {
+            const { selected_filters_count, data = {} } = filter[1];
+
+            if (selected_filters_count !== 0) {
+              if (filter[0] === "sizes") {
+                const mappedData = Object.entries(data).reduce((acc, size) => {
+                  const { subcategories } = size[1];
+                  const mappedSizeData = PLPContainer.mapData(
+                    subcategories,
+                    filter[0],
+                    this.props
+                  );
+
+                  acc = { ...acc, [size[0]]: mappedSizeData };
+
+                  return acc;
+                }, []);
+
+                acc = { ...acc, ...mappedData };
+              } else {
+                acc = {
+                  ...acc,
+                  [filter[0]]: PLPContainer.mapData(
+                    data,
+                    filter[0],
+                    this.props
+                  ),
+                };
+              }
+            }
+
+            return acc;
+          }
+        },
+        {}
+      );
+      this.setState({
+        activeFilters: newActiveFilters,
+      });
     }
   }
 
