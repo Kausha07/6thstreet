@@ -16,9 +16,16 @@ class ShareButton extends PureComponent {
     }
 
     render() {
-        const { initiateShare, children, ...rest } = this.props;
+        const { initiateShare, openShareOverlay, children, ...rest } = this.props;
         return (
-            <button onClick={ initiateShare } { ...rest }>
+            <button
+                onClick={ initiateShare }
+                { ...rest }
+                block="Share"
+                mods={{
+                    openShareOverlay: openShareOverlay
+                }}
+            >
                 <Share block="Icon" />
                 { children }
             </button>

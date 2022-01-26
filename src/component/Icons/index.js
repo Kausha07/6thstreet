@@ -9,7 +9,10 @@ import Favourite from "./Favourite";
 import Help from "./Help";
 import Info from "./Info";
 import Lock from "./Lock";
-import Mail from "./Mail";
+import Link from "./Link";
+import WhatsApp from "./WhatsApp";
+import Facebook from "./Facebook";
+import Pinterest from "./Pinterest";
 import Menu from "./Menu";
 import Player from "./Player";
 import Return from "./Return";
@@ -35,7 +38,10 @@ export {
   Help,
   Info,
   Lock,
-  Mail,
+  Link,
+  WhatsApp,
+  Facebook,
+  Pinterest,
   Menu,
   Player,
   Return,
