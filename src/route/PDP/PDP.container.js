@@ -300,6 +300,22 @@ export class PDPContainer extends PureComponent {
         countryName,
         brandName
       )}`,
+      twitter_title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
+      twitter_desc: `${description} | ${__(
+        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
+        brandName,
+        name,
+        countryName,
+        brandName
+      )}`,
+      og_title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
+      og_desc: `${description} | ${__(
+        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
+        brandName,
+        name,
+        countryName,
+        brandName
+      )}`,
     });
   }
 

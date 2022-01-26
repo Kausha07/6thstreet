@@ -12,20 +12,11 @@ function setCustomCacheControl (res, path) {
     if (serveStatic.mime.lookup(path) === 'text/html') {
       // Custom Cache-Control for HTML files
       res.setHeader('Cache-Control', 'public, max-age=0')
-      
-      CDN_URL = process.env?.PUBLIC_URL || '';
-      S3_CDN_URL = process.env?.REACT_APP_CDN_API_URL || '';
-      CONFIG_DIRECTORY = process.env?.REACT_APP_REMOTE_CONFIG_DIR || '';
-      if(CDN_URL || S3_CDN_URL){
-        res.setHeader('link', `<${CDN_URL}>; rel="preconnect", <${S3_CDN_URL}>; rel="preconnect", <${S3_CDN_URL}${CONFIG_DIRECTORY}/default.json>; rel="preload" as="fetch"`);
-      }
-    
     }
     else {
         res.append('cache-control', 'public, max-age=259200, must-revalidate');
     }
 }
-
 app.use(serverTimings);
 proxy(app);
 

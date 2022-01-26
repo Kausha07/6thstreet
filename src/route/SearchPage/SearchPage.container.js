@@ -92,6 +92,26 @@ export class SearchPageContainer extends PLPContainer {
         "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
         q
       ),
+      twitter_title: __(
+        "Search results for %s. Online shopping in %s | 6thStreet",
+        q,
+        countryName
+      ),
+      twitter_desc: __(
+        // eslint-disable-next-line max-len
+        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        q
+      ),
+      og_title: __(
+        "Search results for %s. Online shopping in %s | 6thStreet",
+        q,
+        countryName
+      ),
+      og_desc: __(
+        // eslint-disable-next-line max-len
+        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        q
+      ),
     });
   }
 

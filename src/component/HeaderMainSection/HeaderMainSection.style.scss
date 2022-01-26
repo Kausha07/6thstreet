@@ -26,7 +26,7 @@ main {
     align-items: center;
     flex: 1;
     order: 2;
-    @include desktop{
+    @include desktop {
       z-index: 3;
     }
   }
@@ -37,14 +37,14 @@ main {
     width: 100%;
     background: $white;
     top: 0;
-    &[data-visible='false'] {
+    &[data-visible="false"] {
       // display: none;
       // width:0;
       // height:0;
       visibility: hidden;
       top: -50px;
     }
-    &[data-visible='true'] {
+    &[data-visible="true"] {
       z-index: 94;
     }
   }
@@ -54,7 +54,7 @@ main {
     width: 100%;
     background: $white;
     top: 0;
-    &[data-visible='false'] {
+    &[data-visible="false"] {
       // display: none;
       // top: -50px;
       visibility: hidden;
@@ -89,7 +89,7 @@ main {
       cursor: pointer;
     }
     &-Button {
-      content: '';
+      content: "";
       background: url(./icons/search-black.svg) no-repeat;
       background-size: 24px;
       width: 24px;
@@ -158,7 +158,9 @@ main {
     height: 40px;
     width: 40px;
     border-radius: 20px;
-
+    @include mobile {
+      height: 30px;
+    }
     position: fixed;
     top: 15px;
     left: 15px;
@@ -195,7 +197,7 @@ main {
         display: none;
       }
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 10px;
         left: 5px;
@@ -247,7 +249,7 @@ main {
         right: 20px;
 
         background: $white;
-        height: 40px;
+        height: 30px;
         width: 30px;
         border-radius: 20px;
 
