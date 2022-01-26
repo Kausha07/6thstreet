@@ -35,7 +35,6 @@ class PDPGalleryOverlay extends PureComponent {
 
   overlayRef = createRef();
 
-  imageRef = createRef();
 
   constructor(props) {
     super(props);
@@ -50,6 +49,16 @@ class PDPGalleryOverlay extends PureComponent {
       initialScale: 1,
       isMobile: isMobile.any() || isMobile.tablet(),
     };
+
+  }
+
+  componentDidMount() {
+    // var el = document.getElementById("sliderImage");
+    // el.addEventListener('click', (e) => {
+    //   console.log("Button 1 was clicked")
+    //   // e.stopPropagation()
+    // }, true)
+
   }
 
 
@@ -68,35 +77,7 @@ class PDPGalleryOverlay extends PureComponent {
 
 
   renderImage(src, i) {
-    const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } =
-      this.props;
-    return (
-      // <div>
-      //   <img
-      //     lazyLoad={false}
-      //     src={src}
-      //     ratio="custom"
-      //     mix={{
-      //       block: "ProductGallery",
-      //       elem: "SliderImage",
-      //       mods: { isPlaceholder: !src },
-      //     }}
-      //     // ref={imageRef}
-      //     isPlaceholder={!src}
-      //   // alt={alt}
-      //   />
-      // </div>
-      <div style={{ width: '500px', height: '500px' }} key={src}>
-        <PinchZoomPan position='center' initialScale='auto' zoomButtons={false} doubleTapBehavior='zoom' key={src}>
-          <img mix={{
-            block: "ProductGallery",
-            elem: "SliderImage",
-            mods: { isPlaceholder: !src },
-          }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} />
-        </PinchZoomPan>
-      </div>
 
-    )
 
   }
 
@@ -137,9 +118,29 @@ class PDPGalleryOverlay extends PureComponent {
     const { gallery = [], isGalleryEmpty } = this.props;
 
     if (gallery[0] !== undefined && !isGalleryEmpty) {
-      return gallery.map(this.renderImage);
-    }
+      return gallery.map((src, i) => {
+        const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
+        return (
 
+          <div className="imageZ" style={{ textAlign: "center", zIndex: 800 }} key={i}>
+            <label for='imageZ'>
+              <input in="imageZ" type="checkbox" id="imageZoom" />
+              <PinchZoomPan position='center' initialScale='auto' doubleTapBehavior='zoom' zoomButtons={false} key={i}>
+                <img id="sliderImage" mix={{
+                  block: "ProductGallery",
+                  elem: "SliderImage",
+                  mods: { isPlaceholder: !src },
+                }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "auto" }} key={i}
+                />
+              </PinchZoomPan>
+            </label>
+          </div>
+
+        )
+
+        this.renderImage()
+      })
+    }
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -161,7 +162,7 @@ class PDPGalleryOverlay extends PureComponent {
         onActiveImageChange={onSliderChange}
         mix={{ block: "PDPGalleryOverlay", elem: "Slider" }}
         showCrumbs={isMobile.any()}
-        isInteractionDisabled={isZoomEnabled}
+        isInteractionDisabled={true}
       >
         {this.renderGallery()}
       </Slider>
@@ -232,7 +233,7 @@ class PDPGalleryOverlay extends PureComponent {
     const { rendered } = this.state;
 
     return (
-      <div block="PDPGalleryOverlay" ref={this.overlayRef}>
+      <div block="PDPGalleryOverlay">
         <button
           block="PDPGalleryOverlay"
           elem="Button"

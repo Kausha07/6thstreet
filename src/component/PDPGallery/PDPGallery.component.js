@@ -54,6 +54,7 @@ class PDPGallery extends PureComponent {
     isVideoPlaying: false,
     isArabic: isArabic(),
     listener: "",
+    isOpenGallery: false
   };
 
   videoRef = {
@@ -178,23 +179,11 @@ class PDPGallery extends PureComponent {
     />
   );
 
-  renderGalleryOverlay = () => {
-    const galleryOverlay = (
-      <PDPGalleryOverlay
-        closeGalleryOverlay={this.closeGalleryOverlay}
-        isOverlay={!!this.state.galleryOverlay}
-        {...this.props}
-      />
-    );
-    // document.body.style.overflow = "hidden";
-
-    this.setState({ galleryOverlay });
-  };
 
   closeGalleryOverlay = () => {
     document.body.style.overflow = "visible";
     this.props.setImageIndex(this.props.currentIndex)
-    this.setState({ galleryOverlay: "" });
+    this.setState({ isOpenGallery: false });
   };
 
   renderCrumbs() {
@@ -264,7 +253,7 @@ class PDPGallery extends PureComponent {
           activeImage={currentIndex}
           onActiveImageChange={this.onSlideChange}
           mix={{ block: "PDPGallery", elem: "Slider" }}
-          isInteractionDisabled={!isMobile.any()}
+          isInteractionDisabled={true}
           showCrumbs={isMobile.any()}
         >
           {this.renderGallery()}
@@ -456,15 +445,25 @@ class PDPGallery extends PureComponent {
     );
   }
 
+  handleImageClick = () => {
+    this.setState({ isOpenGallery: true })
+
+  }
+
   render() {
-    const { galleryOverlay, isArabic } = this.state;
+
+    const { galleryOverlay, isArabic, isOpenGallery } = this.state;
     const { renderMySignInPopup } = this.props;
     return (
       <div block="PDPGallery">
-        {galleryOverlay}
-        {!galleryOverlay && this.renderBackButton()}
-        {!galleryOverlay && this.renderCrumbs()}
-        {!galleryOverlay && (
+        {isOpenGallery && <PDPGalleryOverlay
+          closeGalleryOverlay={this.closeGalleryOverlay}
+          isOverlay={!!this.state.isOpenGallery}
+          {...this.props}
+        />}
+        {!isOpenGallery && this.renderBackButton()}
+        {!isOpenGallery && this.renderCrumbs()}
+        {!isOpenGallery && (
           <div block="OverlayIcons" mods={{ isArabic }}>
             {this.renderCartIcon()}
             {this.renderWishlistIcon()}
@@ -473,19 +472,20 @@ class PDPGallery extends PureComponent {
           </div>
         )}
 
-        <button
+        {!isOpenGallery && <button
           ref={this.overlaybuttonRef}
           block="PDPGallery"
           elem="OverlayButton"
           mods={{ isArabic }}
           onClick={(e) => {
-            e.stopPropagation()
-            this.renderGalleryOverlay()
+            this.handleImageClick()
           }}
         >
           {this.renderSlider()}
           {this.renderGalleryTag()}
-        </button>
+        </button>}
+
+
         {this.renderVideoButtons()}
       </div>
     );
