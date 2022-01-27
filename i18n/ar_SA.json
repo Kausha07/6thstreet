@@ -934,5 +934,6 @@
     "Ready for Pick up": null,
     "Items Picked Up": null,
     "shipment": null,
-    "SHARE": null
+    "SHARE": "مشاركة",
+    "Link copied to clipboard": "ارتباط منسوخ إلى الحافظة"
 }
