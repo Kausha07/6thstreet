@@ -26,6 +26,8 @@ import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
+import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
+import isMobile from "Util/Mobile";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -59,6 +61,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
       dispatcher.update(breadcrumbs, dispatch)
     );
   },
+  updatePLPInitialFilters: (filters, facet_key, facet_value) =>
+    dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
@@ -156,10 +160,13 @@ export class PLPContainer extends PureComponent {
     brandName: "",
     isArabic: isArabic(),
     prevProductSku: "",
+    activeFilters: {},
   };
 
   containerFunctions = {
-    // getData: this.getData.bind(this)
+    handleCallback: this.handleCallback.bind(this),
+    onUnselectAllPress: this.onUnselectAllPress.bind(this),
+    updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
   };
@@ -167,6 +174,88 @@ export class PLPContainer extends PureComponent {
   resetPLPData() {
     const { resetPLPData } = this.props;
     resetPLPData();
+  }
+
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
+
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
+    }
+
+    return false;
+  }
+
+  static mapData(data = {}, category, props) {
+    const initialOptions = PLPContainer.getRequestOptions();
+    let formattedData = data;
+    let finalData = [];
+    if (category === "categories_without_path") {
+      //   let categoryLevelArray = [
+      //     "categories.level1",
+      //     "categories.level2",
+      //     "categories.level3",
+      //     "categories.level4",
+      //   ];
+      //   let categoryLevel;
+      //   categoryLevelArray.map((entry, index) => {
+      //     if (initialOptions[entry]) {
+      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+      //     }
+      //   });
+      //   if (categoryLevel) {
+      //     if (data[categoryLevel]) {
+      //       formattedData = data[categoryLevel].subcategories;
+      //     } else {
+      //       formattedData = data[Object.keys(data)[0]].subcategories;
+      //     }
+      //   } else {
+      let categoryArray = initialOptions["categories_without_path"]
+        ? initialOptions["categories_without_path"].split(",")
+        : [];
+      Object.entries(data).map((entry) => {
+        Object.values(entry[1].subcategories).map((subEntry) => {
+          if (
+            categoryArray.length > 0 &&
+            categoryArray.includes(subEntry.facet_value)
+          ) {
+            finalData.push(subEntry);
+          }
+        });
+      });
+      formattedData = finalData;
+      //   }
+    }
+
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
+      if (category === "categories_without_path") {
+        const { is_selected, facet_value } = option[1];
+        if (is_selected) {
+          acc.push(facet_value);
+        }
+        return acc;
+      } else {
+        const { is_selected } = option[1];
+        if (is_selected) {
+          acc.push(option[0]);
+        }
+        return acc;
+      }
+    }, []);
+
+    return mappedData;
   }
 
   constructor(props) {
@@ -220,6 +309,291 @@ export class PLPContainer extends PureComponent {
     this.getBrandDetails();
   }
 
+  updateInitialFilters = (
+    data,
+    facet_value,
+    newFilterArray,
+    categoryLevel1,
+    checked,
+    facet_key
+  ) => {
+    if (data[facet_value]) {
+      data[facet_value].is_selected = checked;
+      if (checked) {
+        newFilterArray.selected_filters_count += 1;
+      } else {
+        newFilterArray.selected_filters_count -= 1;
+      }
+    } else {
+      if (facet_key.includes("size")) {
+        let categoryData = data[facet_key];
+        if (
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
+        ) {
+          categoryData.subcategories[facet_value].is_selected = checked;
+          if (checked) {
+            categoryData.selected_filters_count += 1;
+            newFilterArray.selected_filters_count += 1;
+          } else {
+            categoryData.selected_filters_count -= 1;
+            newFilterArray.selected_filters_count -= 1;
+          }
+        }
+      } else if (categoryLevel1) {
+        return Object.entries(data).map((entry) => {
+          return Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0] === facet_value) {
+              subEntry[1].is_selected = checked;
+              if (checked) {
+                entry[1].selected_filters_count += 1;
+                newFilterArray.selected_filters_count += 1;
+              } else {
+                entry[1].selected_filters_count -= 1;
+                newFilterArray.selected_filters_count -= 1;
+              }
+            }
+          });
+        });
+      } else {
+        Object.keys(data).map((value) => {
+          if (
+            data[value].subcategories &&
+            data[value].subcategories[facet_value]
+          ) {
+            data[value].subcategories[facet_value].is_selected = checked;
+            if (checked) {
+              data[value].selected_filters_count += 1;
+              newFilterArray.selected_filters_count += 1;
+            } else {
+              data[value].selected_filters_count -= 1;
+              newFilterArray.selected_filters_count -= 1;
+            }
+          }
+        });
+      }
+    }
+  };
+
+  updateRadioFilters = (data, facet_value, newFilterArray) => {
+    if (data[facet_value]) {
+      Object.values(data).map((value) => {
+        if (value.facet_value === facet_value) {
+          value.is_selected = true;
+        } else {
+          value.is_selected = false;
+        }
+      });
+
+      if (newFilterArray.selected_filters_count === 0) {
+        newFilterArray.selected_filters_count += 1;
+      }
+    }
+  };
+
+  handleCallback(
+    initialFacetKey,
+    facet_value,
+    checked,
+    isRadio,
+    facet_key,
+    isQuickFilters
+  ) {
+    const { activeFilters } = this.state;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
+    const filterArray = activeFilters[initialFacetKey];
+    let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
+    let categoryLevel1 = PLPContainer.getRequestOptions().q.split(" ")[1];
+    if (!isRadio) {
+      if (checked) {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            true,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          this.setState(
+            {
+              activeFilters: {
+                ...activeFilters,
+                [initialFacetKey]: filterArray
+                  ? [...filterArray, facet_value]
+                  : [facet_value],
+              },
+            },
+            () => this.select(isQuickFilters)
+          );
+        }
+      } else if (filterArray) {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          const index = filterArray.indexOf(facet_value);
+          if (index > -1) {
+            filterArray.splice(index, 1);
+          }
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: filterArray,
+              },
+            },
+            () => this.select()
+          );
+        }
+      } else {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: [],
+              },
+            },
+            () => this.select()
+          );
+        }
+      }
+    } else {
+      const { data = {} } = newFilterArray;
+
+      if (newFilterArray) {
+        this.updateRadioFilters(
+          data,
+          facet_value,
+          newFilterArray,
+          categoryLevel1,
+          true
+        );
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+        this.setState(
+          {
+            ...activeFilters,
+            activeFilters: {
+              [initialFacetKey]: facet_value,
+            },
+          },
+          () => this.select()
+        );
+      }
+    }
+  }
+
+  select = (isQuickFilters) => {
+    const { activeFilters = {} } = this.state;
+    const { query } = this.props;
+    if (isMobile.any()) {
+      window.scrollTo(0, 0);
+    }
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key], query);
+      }
+    });
+  };
+
+  onUnselectAllPress(category) {
+    const { filters, updatePLPInitialFilters } = this.props;
+    const { activeFilters = {} } = this.state;
+    let newFilterArray = filters;
+    Object.entries(newFilterArray).map((filter) => {
+      if (filter[0] === category && filter[1].selected_filters_count > 0) {
+        if (category === "categories_without_path") {
+          filter[1].selected_filters_count = 0;
+          activeFilters[filter[0]] = [];
+
+          return Object.entries(filter[1].data).map((filterData) => {
+            filterData[1].selected_filters_count = 0;
+            return Object.entries(filterData[1].subcategories).map((entry) => {
+              entry[1].is_selected = false;
+            });
+          });
+        } else {
+          if (category === "sizes") {
+            Object.entries(filter[1].data).map((entry) => {
+              entry[1].selected_filters_count = 0;
+              Object.entries(entry[1].subcategories).map((filterData) => {
+                if (filterData[1].is_selected) {
+                  filterData[1].is_selected = false;
+                  activeFilters[entry[0]] = [];
+                }
+              });
+            });
+          } else {
+            filter[1].selected_filters_count = 0;
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                filterData[1].is_selected = false;
+                activeFilters[filter[0]] = [];
+              }
+            });
+          }
+        }
+      } else {
+        if (
+          filter[0] !== "categories.level1" &&
+          filter[1].selected_filters_count > 0
+        ) {
+          activeFilters[filter[0]] = [];
+
+          if (filter[0] === "categories_without_path") {
+            return Object.entries(filter[1].data).map((entry) => {
+              return Object.entries(entry[1].subcategories).map((subEntry) => {
+                activeFilters[filter[0]].push(subEntry[0]);
+              });
+            });
+          } else {
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                activeFilters[filter[0]].push(filterData[0]);
+              }
+            });
+          }
+        }
+      }
+    });
+    updatePLPInitialFilters(filters, category, null);
+
+    this.setState({
+      activeFilters,
+    });
+
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key]);
+      }
+    });
+  }
+
   async getBrandDetails() {
     const brandName = location.pathname
       .split(".html")[0]
@@ -240,6 +614,10 @@ export class PLPContainer extends PureComponent {
     });
   }
 
+  updateFiltersState(activeFilters) {
+    this.setState({ activeFilters });
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { isLoading, setIsLoading, menuCategories = [] } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
@@ -256,7 +634,7 @@ export class PLPContainer extends PureComponent {
       isLoading !== currentIsLoading ||
       isCategoriesLoading !== currentIsLoading
     ) {
-      setIsLoading(currentIsLoading);
+      // setIsLoading(currentIsLoading);
     }
 
     if (menuCategories.length !== 0) {
@@ -292,6 +670,50 @@ export class PLPContainer extends PureComponent {
       // if only page has changed, and it is not yet loaded => request that page
       PLPContainer.requestProductListPage(this.props);
       this.setState({ prevRequestOptions: requestOptions });
+    }
+
+    if (!this.compareObjects(prevProps.filters, this.props.filters)) {
+      const newActiveFilters = Object.entries(this.props.filters).reduce(
+        (acc, filter) => {
+          if (filter[1]) {
+            const { selected_filters_count, data = {} } = filter[1];
+
+            if (selected_filters_count !== 0) {
+              if (filter[0] === "sizes") {
+                const mappedData = Object.entries(data).reduce((acc, size) => {
+                  const { subcategories } = size[1];
+                  const mappedSizeData = PLPContainer.mapData(
+                    subcategories,
+                    filter[0],
+                    this.props
+                  );
+
+                  acc = { ...acc, [size[0]]: mappedSizeData };
+
+                  return acc;
+                }, []);
+
+                acc = { ...acc, ...mappedData };
+              } else {
+                acc = {
+                  ...acc,
+                  [filter[0]]: PLPContainer.mapData(
+                    data,
+                    filter[0],
+                    this.props
+                  ),
+                };
+              }
+            }
+
+            return acc;
+          }
+        },
+        {}
+      );
+      this.setState({
+        activeFilters: newActiveFilters,
+      });
     }
   }
 
@@ -376,7 +798,7 @@ export class PLPContainer extends PureComponent {
       .substring(1)
       .split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
-    
+
     setMeta({
       title: __("%s | 6thStreet.com %s", categoryName, countryName),
 
@@ -392,15 +814,15 @@ export class PLPContainer extends PureComponent {
         countryName
       ),
       twitter_title: __("%s | 6thStreet.com %s", categoryName, countryName),
-      
-      twitter_desc:__(
+
+      twitter_desc: __(
         "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
         countryName,
         countryName
       ),
-      og_title:  __("%s | 6thStreet.com %s", categoryName, countryName),
-      og_desc:__(
+      og_title: __("%s | 6thStreet.com %s", categoryName, countryName),
+      og_desc: __(
         "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
         countryName,
@@ -432,10 +854,7 @@ export class PLPContainer extends PureComponent {
 
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages } = this.props;
-
-    const brandDescription = this.state.brandDescription;
-    const brandImg = this.state.brandImg;
-    const brandName = this.state.brandName;
+    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
 
     // isDisabled: this._getIsDisabled()
 
@@ -448,6 +867,7 @@ export class PLPContainer extends PureComponent {
       gender,
       filters,
       pages,
+      activeFilters,
     };
   };
 
