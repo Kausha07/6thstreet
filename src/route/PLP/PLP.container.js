@@ -26,6 +26,14 @@ import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { VUE_PAGE_VIEW } from "Util/Event";
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import {
+  updatePLPInitialFilters,
+  setPrevProductSku,setPrevPath,
+} from "Store/PLP/PLP.action";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -44,6 +52,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   menuCategories: state.MenuReducer.categories,
   plpWidgetData: state.PLP.plpWidgetData,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -64,6 +73,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
   resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -210,14 +220,47 @@ export class PLPContainer extends PureComponent {
   };
 
   componentDidMount() {
-    const { menuCategories = [] } = this.props;
+    const { menuCategories = [], prevPath = null, impressions,location: { state }, } = this.props;
     const { isArabic } = this.state;
+
+    let prevLocation;
+    let finalPrevLocation;
+    browserHistory.listen((nextLocation) => {
+      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+      const { search } = nextLocation;
+      if (
+        finalPrevLocation &&
+        locationArr.includes(finalPrevLocation.pathname)
+      ) {
+        this.props.setPrevPath(finalPrevLocation ? finalPrevLocation?.pathname : null);
+        const category = this.getCategory();
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: finalPrevLocation ? finalPrevLocation?.pathname : null,
+        url: window.location.href,
+      },
+    });
+      }
+    });
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
     this.getBrandDetails();
+  }
+
+  getCategory() {
+    return BrowserDatabase.getItem("CATEGORY_NAME") || "";
   }
 
   async getBrandDetails() {
