@@ -101,12 +101,54 @@ class PLPFilters extends PureComponent {
         if (filter[0] === "sort" && !isMobile.any()) {
           return this.renderSortBy([filter[0], filter[1]], index);
         }
-        // return this.renderFilter([filter[0], filter[1]]);
-        // return this.renderDropDownList([filter[0], filter[1]]);
-        return this.renderFilterOption([filter[0], filter[1]]);
+        if (isMobile.any()) {
+          return this.renderFilterOption([filter[0], filter[1]]);
+        } else {
+          return this.renderFilter([filter[0], filter[1]]);
+        }
       }
     });
   }
+
+  renderFilter = ([key, filter]) => {
+    const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
+    const { initialOptions, handleCallback, onUnselectAllPress, isChecked } =
+      this.props;
+    if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
+      return null;
+    }
+
+    const { label, category, is_radio } = filter;
+
+    let placeholder =
+      category === "in_stock"
+        ? __("BY STOCK")
+        : category === "age"
+        ? __("BY AGE")
+        : label;
+
+    return (
+      <FieldMultiselect
+        key={key}
+        placeholder={placeholder}
+        showCheckbox
+        isRadio={is_radio}
+        filter={filter}
+        initialOptions={initialOptions}
+        activeFilter={activeFilter}
+        isChecked={isChecked}
+        onUnselectAllPress={onUnselectAllPress}
+        parentActiveFilters={activeFilters}
+        currentActiveFilter={activeFilter}
+        changeActiveFilter={this.changeActiveFilter}
+        parentCallback={handleCallback}
+        updateFilters={this.updateFilters}
+        setDefaultFilters={this.setDefaultFilters}
+        defaultFilters={defaultFilters}
+        isSortBy={false}
+      />
+    );
+  };
 
   renderQuickFilters() {
     const { filters = {} } = this.props;
@@ -377,32 +419,6 @@ class PLPFilters extends PureComponent {
     });
   }
 
-  handleClickOutside = (event) => {
-    const { toggleOptionsList } = this.state;
-
-    if (toggleOptionsList) {
-      if (
-        this.filterDropdownRef &&
-        !this.filterDropdownRef.current.contains(event.target)
-      ) {
-        this.onBlur();
-      }
-    }
-  };
-
-  onBlur = () => {
-    // eslint-disable-next-line no-magic-numbers
-    this.toggelOptionList();
-  };
-
-  toggelOptionList() {
-    const { toggleOptionsList } = this.state;
-
-    this.setState({
-      toggleOptionsList: !toggleOptionsList,
-    });
-  }
-
   handleFilterChange = (filter) => {
     this.changeActiveFilter(filter.category || filter.facet_key);
   };
@@ -441,11 +457,7 @@ class PLPFilters extends PureComponent {
             elem: "FilterButton",
             mods: { isArabic },
           }}
-          onClick={() =>
-            isMobile.any()
-              ? this.handleFilterChange(filter)
-              : this.toggelOptionList
-          }
+          onClick={() => this.handleFilterChange(filter)}
         >
           {placeholder}
         </button>
@@ -544,7 +556,9 @@ class PLPFilters extends PureComponent {
           </div>
         )}
 
-        {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
+        {isOpen && isMobile.any()
+          ? this.renderPopupFilters()
+          : this.renderFilterButton()}
         {!isMobile.any() && (
           <form block="PLPFilters" name="filters">
             {this.renderFilters()}

@@ -745,23 +745,25 @@ class FieldMultiselect extends PureComponent {
         block="FieldMultiselect"
         mods={{ isHidden }}
       >
-        {/* <button
-          ref={this.filterButtonRef}
-          type="button"
-          block="FieldMultiselect"
-          elem="FilterButton"
-          mods={{ toggleOptionsList, selectedItems }}
-          mix={{
-            block: "FieldMultiselect",
-            elem: "FilterButton",
-            mods: { isArabic },
-          }}
-          onClick={
-            isMobile.any() ? this.handleFilterChange : this.toggelOptionList
-          }
-        >
-          {placeholder}
-        </button> */}
+        {!isMobile.any() && (
+          <button
+            ref={this.filterButtonRef}
+            type="button"
+            block="FieldMultiselect"
+            elem="FilterButton"
+            mods={{ toggleOptionsList, selectedItems }}
+            mix={{
+              block: "FieldMultiselect",
+              elem: "FilterButton",
+              mods: { isArabic },
+            }}
+            onClick={
+              isMobile.any() ? this.handleFilterChange : this.toggelOptionList
+            }
+          >
+            {placeholder}
+          </button>
+        )}
         {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
