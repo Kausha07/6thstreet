@@ -88,7 +88,7 @@ class DynamicContentBanner extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setPrevProductSku(`DynamicContentBanner${index}`);
+    this.props.setLastTapItemOnHome(`DynamicContentBanner${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);

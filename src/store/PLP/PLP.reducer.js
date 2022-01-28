@@ -9,6 +9,7 @@ import {
   SET_PLP_WIDGET_DATA,
   UPDATE_PLP_INIT_FILTERS,
   SET_PREV_PRODUCT_SKU,
+  SET_LAST_HOME_ITEM,
 } from "./PLP.action";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
@@ -24,6 +25,7 @@ export const getInitialState = () => ({
   initialOptions: {},
   plpWidgetData: [],
   prevProductSku: "",
+  lastHomeItem: "",
 });
 
 export const formatFilters = (filters = {}) =>
@@ -63,11 +65,19 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_PREV_PRODUCT_SKU:
       const { sku } = action;
-      console.log("muskan actio",action);
       return {
         ...state,
         prevProductSku: sku,
       };
+
+    case SET_LAST_HOME_ITEM:
+      const { item } = action;
+      console.log("muskan action",item);
+      return {
+        ...state,
+        lastHomeItem: item,
+      };
+
     case SET_PLP_PAGE:
       const { pageProducts, page } = action;
 

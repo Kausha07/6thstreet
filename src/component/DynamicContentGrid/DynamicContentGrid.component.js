@@ -80,7 +80,7 @@ class DynamicContentGrid extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setPrevProductSku(`DynamicContentGrid${index}`);
+    this.props.setLastTapItemOnHome(`DynamicContentGrid${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);

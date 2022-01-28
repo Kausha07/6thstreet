@@ -15,14 +15,14 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import HomePage from "./HomePage.component";
 import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
-import { setPrevProductSku } from "Store/PLP/PLP.action";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import browserHistory from "Util/History";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   country: state.AppState.country,
-  prevProductSku: state.PLP.prevProductSku,
+  lastHomeItem: state.PLP.lastHomeItem,
   config: state.AppConfig.config,
 });
 
@@ -31,7 +31,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
-  setPrevProductSku: (sku) => dispatch(setPrevProductSku(sku)),
+  setLastTapItemOnHome: (sku) => dispatch(setLastTapItemOnHome(sku)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -104,17 +104,27 @@ export class HomePageContainer extends PureComponent {
     //     finalPrevLocation.search.includes("?q=")
     //   ) {
 
-    if (this.props.prevProductSku) {
-      let element = document.getElementById(this.props.prevProductSku);
+    if (this.props.lastHomeItem) {
+      let element = document.getElementById(this.props.lastHomeItem);
       if (element && this.state.firstLoad) {
         var headerOffset = 0;
         var elementPosition = element.getBoundingClientRect().top;
         var offsetPosition =
           elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
+        console.log(
+          "muskan scrool",
+          elementPosition,
+          offsetPosition,
+          window.pageYOffset,
+          element
+        );
+        // window.scrollTo({
+        //   top: elementPosition,
+        //   behavior: "smooth",
+        // });
+        element.scrollIntoView({
           behavior: "smooth",
+          // inline: "start",
         });
       }
       this.setState({

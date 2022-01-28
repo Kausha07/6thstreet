@@ -133,7 +133,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(a);
-    this.props.setPrevProductSku(`DynamicContentCircleItemSlider${index}`);
+    this.props.setLastTapItemOnHome(`DynamicContentCircleItemSlider${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);

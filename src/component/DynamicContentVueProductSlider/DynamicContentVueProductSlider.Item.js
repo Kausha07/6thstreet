@@ -74,7 +74,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       },
     });
     Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
-    this.props.setPrevProductSku(`VeuSliderWrapper${index}`);
+    this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
     // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
