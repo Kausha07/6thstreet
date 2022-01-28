@@ -194,7 +194,8 @@ class PDPGallery extends PureComponent {
   closeGalleryOverlay = () => {
     document.body.style.overflow = "visible";
     this.props.setImageIndex(this.props.currentIndex)
-    this.setState({ galleryOverlay: "" });
+    this.props.onSliderChange(this.props.currentIndex);
+    this.setState({ galleryOverlay: "" });    
   };
 
   renderCrumbs() {
