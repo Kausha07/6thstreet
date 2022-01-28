@@ -5,6 +5,7 @@ import Price from "Component/Price";
 import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
+import Logger from "Util/Logger";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
@@ -46,33 +47,38 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     } = this.props;
     const { category, sku, link, price } = data;
     let destProdID = sku;
-    console.log('data', data);
     // vue analytics
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
-    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    console.log("itemPrice", itemPrice);
-    console.log("basePrice", basePrice);
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_CLICK,
-      params: {
-        event: VUE_CAROUSEL_CLICK,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: window.location.href,
-        url: link ? link : null,
-        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
-        sourceProdID: sourceProdID,
-        sourceCatgID: sourceCatgID,
-        destProdID: destProdID,
-        destCategoryID: category,
-        prodPrice: itemPrice,
-        posofreco: posofreco,
-      },
-    });
-    Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
+    try {
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+      const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_CAROUSEL_CLICK,
+        params: {
+          event: VUE_CAROUSEL_CLICK,
+          pageType: pageType,
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: window.location.href,
+          url: link ? link : null,
+          widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+          sourceProdID: sourceProdID,
+          sourceCatgID: sourceCatgID,
+          destProdID: destProdID,
+          destCategoryID: category,
+          prodPrice: itemPrice,
+          posofreco: posofreco,
+        },
+      });
+      Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
+
+    }
+    catch (e) {
+      Logger.log(e);
+    }
+
     // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
