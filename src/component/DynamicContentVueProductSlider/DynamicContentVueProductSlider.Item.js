@@ -43,6 +43,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       posofreco,
       sourceProdID,
       sourceCatgID,
+      index
     } = this.props;
     const { category, sku, link, price } = data;
     let destProdID = sku;
@@ -73,6 +74,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       },
     });
     Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
+    this.props.setPrevProductSku(`VeuSliderWrapper${index}`);
     // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {

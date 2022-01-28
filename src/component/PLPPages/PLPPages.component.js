@@ -70,7 +70,7 @@ class PLPPages extends PureComponent {
         finalPrevLocation &&
         locationArr.includes(finalPrevLocation.pathname)
       ) {
-        this.props.setPrevProductSku("");
+        // this.props.setPrevProductSku("");
         window.scrollTo(0, 0);
       }
     });

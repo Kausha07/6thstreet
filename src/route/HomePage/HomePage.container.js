@@ -15,11 +15,14 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import HomePage from "./HomePage.component";
 import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
+import { setPrevProductSku } from "Store/PLP/PLP.action";
+import browserHistory from "Util/History";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   country: state.AppState.country,
+  prevProductSku: state.PLP.prevProductSku,
   config: state.AppConfig.config,
 });
 
@@ -28,6 +31,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  setPrevProductSku: (sku) => dispatch(setPrevProductSku(sku)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -46,6 +50,7 @@ export class HomePageContainer extends PureComponent {
     isLoading: true,
     defaultGender: "women",
     isMobile: isMobile.any(),
+    firstLoad: true,
   };
 
   constructor(props) {
@@ -87,6 +92,37 @@ export class HomePageContainer extends PureComponent {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
     }
+    // let prevLocation;
+    // let finalPrevLocation;
+    // browserHistory.listen((nextLocation) => {
+    //   finalPrevLocation = prevLocation;
+    //   prevLocation = nextLocation;
+    //   if (
+    //     finalPrevLocation &&
+    //     finalPrevLocation.pathname !== nextLocation.pathname &&
+    //     finalPrevLocation.search &&
+    //     finalPrevLocation.search.includes("?q=")
+    //   ) {
+
+    if (this.props.prevProductSku) {
+      let element = document.getElementById(this.props.prevProductSku);
+      if (element && this.state.firstLoad) {
+        var headerOffset = 0;
+        var elementPosition = element.getBoundingClientRect().top;
+        var offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+      this.setState({
+        firstLoad: false,
+      });
+    }
+    // }
+    // });
   }
 
   setDefaultGender() {
@@ -142,7 +178,6 @@ export class HomePageContainer extends PureComponent {
         genderName,
         countryName
       ),
-
     });
   }
 
@@ -218,7 +253,7 @@ export class HomePageContainer extends PureComponent {
       <HomePage
         {...this.containerFunctions}
         {...this.containerProps()}
-        abc={this.props}
+        HomepageProps={this.props}
       />
     );
   }

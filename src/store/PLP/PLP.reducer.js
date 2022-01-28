@@ -63,6 +63,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_PREV_PRODUCT_SKU:
       const { sku } = action;
+      console.log("muskan actio",action);
       return {
         ...state,
         prevProductSku: sku,

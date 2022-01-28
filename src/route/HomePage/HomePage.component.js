@@ -13,7 +13,7 @@ class HomePage extends PureComponent {
     super(props);
     this.state = {
       signInPopUp: "",
-      showPopup:false
+      showPopup: false,
     };
   }
   static propTypes = {
@@ -26,13 +26,12 @@ class HomePage extends PureComponent {
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "",showPopup:false });
+    this.setState({ signInPopUp: "", showPopup: false });
   };
 
   onSignIn = () => {
     this.closePopup();
   };
-
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
@@ -75,11 +74,12 @@ class HomePage extends PureComponent {
   }
 
   renderDynamicContent() {
-    const { dynamicContent, gender } = this.props;
+    const { dynamicContent, gender, HomepageProps } = this.props;
 
     return (
       <DynamicContent
         gender={gender}
+        {...HomepageProps}
         content={dynamicContent}
         renderMySignInPopup={this.showMyAccountPopup}
       />

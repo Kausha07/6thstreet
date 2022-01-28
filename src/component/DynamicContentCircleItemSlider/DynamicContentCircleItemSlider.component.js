@@ -123,6 +123,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   clickLink = (a) => {
+    const {index} = this.props
     let link = "/" + a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
@@ -132,6 +133,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(a);
+    this.props.setPrevProductSku(`DynamicContentCircleItemSlider${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -235,7 +237,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
       this.viewElement = el;
     };
     return (
-      <div ref={setRef} block="DynamicContentCircleItemSlider">
+      <div ref={setRef} block="DynamicContentCircleItemSlider" id="DynamicContentCircleItemSlider">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
