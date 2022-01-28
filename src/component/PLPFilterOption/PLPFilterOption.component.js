@@ -6,7 +6,7 @@ import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 import "./PLPFilterOption.style";
 
 class PLPFilterOption extends PureComponent {
@@ -38,45 +38,27 @@ class PLPFilterOption extends PureComponent {
     filterSelected: false,
   };
 
-  componentDidMount() {
-    const {
-      option: { facet_key },
-    } = this.props;
-
-    this.setState({ initialFacetKey: facet_key });
-  }
-
   handleClick = () => {
     const {
-      option: { facet_value },
+      option: { facet_value, facet_key },
       parentCallback,
       isRadio,
     } = this.props;
-    const { initialFacetKey } = this.state;
     const inputRef = this.optionRef.current.children[0].children[0];
     const { checked } = inputRef;
 
-    parentCallback(initialFacetKey, facet_value, checked, isRadio);
+    parentCallback(facet_key, facet_value, checked, isRadio);
   };
 
   renderField() {
     const {
-      option: { facet_value, is_selected: checked },
+      option: { facet_value, is_selected: checked, facet_key },
       isRadio,
     } = this.props;
-    const { onSelectChecked, initialFacetKey } = this.state;
+    const { onSelectChecked } = this.state;
 
     // TODO: fix radio ?
     const type = isRadio ? "radio" : "checkbox";
-
-    if (isMobile.any()) {
-      return this.renderMobileField(
-        facet_value,
-        initialFacetKey,
-        checked,
-        onSelectChecked
-      );
-    }
 
     return (
       <Field
@@ -87,29 +69,27 @@ class PLPFilterOption extends PureComponent {
           elem: "Input",
         }}
         type={type}
-        id={facet_value + initialFacetKey}
-        name={initialFacetKey}
+        id={facet_value + facet_key}
+        name={facet_key}
         value={facet_value}
         checked={checked}
       />
     );
   }
 
-  renderMobileField(facet_value, initialFacetKey, checked, onSelectChecked) {
+  renderMobileField(facet_value, facet_key, checked) {
     const { isRadio, updateFilters, setDefaultFilters, defaultFilters } =
       this.props;
 
     const defaultCheck = !!(
-      facet_value === "recommended" && initialFacetKey === "sort"
+      facet_value === "recommended" && facet_key === "sort"
     );
     const type = isRadio ? "radio" : "checkbox";
 
-    // if (!defaultFilters && defaultCheck) {
-    //   this.handleClick();
-    //   updateFilters();
-    //   setDefaultFilters();
-    // }
-
+    if (!defaultFilters && defaultCheck) {
+      updateFilters();
+      setDefaultFilters();
+    }
     return (
       <Field
         formRef={this.fieldRef}
@@ -120,11 +100,11 @@ class PLPFilterOption extends PureComponent {
           mods: { isArabic: isArabic() },
         }}
         type={type}
-        id={facet_value + initialFacetKey}
-        name={initialFacetKey}
+        id={facet_value + facet_key}
+        name={facet_key}
         value={facet_value}
-        defaultCheck={defaultCheck || checked || onSelectChecked}
-        checked={defaultCheck || checked || onSelectChecked}
+        defaultCheck={defaultCheck || checked}
+        checked={defaultCheck || checked}
       />
     );
   }
@@ -179,7 +159,7 @@ class PLPFilterOption extends PureComponent {
   render() {
     const { isArabic } = this.state;
     const {
-      option: { facet_value }
+      option: { facet_value, facet_key, is_selected: checked },
     } = this.props;
     if (!facet_value) {
       return null;
@@ -192,7 +172,9 @@ class PLPFilterOption extends PureComponent {
         elem="List"
         mods={{ isArabic }}
       >
-        {this.renderField()}
+        {isMobile.any() &&
+          this.renderMobileField(facet_value, facet_key, checked)}
+        {!isMobile.any() && this.renderField()}
         {this.renderLabel()}
       </li>
     );

@@ -70,7 +70,7 @@ class FieldMultiselect extends PureComponent {
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
   }
 
-  static getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props, state) {
     if (isMobile.any()) {
       const {
         currentActiveFilter,
@@ -112,13 +112,16 @@ class FieldMultiselect extends PureComponent {
         (parentActiveFilters[category] &&
           parentActiveFilters[category].length === 0)
       ) {
-        this.setState({
-          parentActiveFilters: this.props.parentActiveFilters,
-        });
         if (selected_filters_count > 6) {
-          this.setState({ showMore: true, showLess: false });
+          this.setState({
+            showMore: true,
+            showLess: false,
+          });
         } else {
-          this.setState({ showMore: false, showLess: false });
+          this.setState({
+            showMore: false,
+            showLess: false,
+          });
         }
       }
     }
@@ -742,23 +745,25 @@ class FieldMultiselect extends PureComponent {
         block="FieldMultiselect"
         mods={{ isHidden }}
       >
-        <button
-          ref={this.filterButtonRef}
-          type="button"
-          block="FieldMultiselect"
-          elem="FilterButton"
-          mods={{ toggleOptionsList, selectedItems }}
-          mix={{
-            block: "FieldMultiselect",
-            elem: "FilterButton",
-            mods: { isArabic },
-          }}
-          onClick={
-            isMobile.any() ? this.handleFilterChange : this.toggelOptionList
-          }
-        >
-          {placeholder}
-        </button>
+        {!isMobile.any() && (
+          <button
+            ref={this.filterButtonRef}
+            type="button"
+            block="FieldMultiselect"
+            elem="FilterButton"
+            mods={{ toggleOptionsList, selectedItems }}
+            mix={{
+              block: "FieldMultiselect",
+              elem: "FilterButton",
+              mods: { isArabic },
+            }}
+            onClick={
+              isMobile.any() ? this.handleFilterChange : this.toggelOptionList
+            }
+          >
+            {placeholder}
+          </button>
+        )}
         {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
