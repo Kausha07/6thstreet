@@ -148,6 +148,28 @@
 }
 
 .PDPGallery {
+      .galleryOverlayImage{
+          transition: transform 0.25s ease !important;
+          transform: none !important;
+          width: 800px !important;
+          cursor: zoom-in !important;
+          text-align: center;
+          transform-origin: unset !important;
+        }
+ 
+        #galleryOverlayImageZoomIn{
+          transition: transform 0.25s ease;
+          cursor: zoom-in;
+        }
+        .galleryOverlayImageZoomOut{
+          transition: transform 0.25s ease !important;
+          cursor: zoom-out !important;
+          transform-origin: unset !important;
+          width: 800px;
+          transform: scale(1.3) !important;
+
+    }
+  
   .PDPGalleryOverlay {
     .Slider {
       margin: auto 10px;

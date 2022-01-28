@@ -48,17 +48,16 @@ class PDPGalleryOverlay extends PureComponent {
       addX: 0,
       initialScale: 1,
       isMobile: isMobile.any() || isMobile.tablet(),
+      isZoomIn: false
     };
 
   }
 
-  componentDidMount() {
-    // var el = document.getElementById("sliderImage");
-    // el.addEventListener('click', (e) => {
-    //   console.log("Button 1 was clicked")
-    //   // e.stopPropagation()
-    // }, true)
-
+  onImageClick = (e) => {
+    e.stopPropagation()
+    this.setState(prevState => ({
+      isZoomIn: !prevState.isZoomIn
+    }));
   }
 
 
@@ -122,19 +121,16 @@ class PDPGalleryOverlay extends PureComponent {
         const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
         return (
 
-          <div className="imageZ" style={{ textAlign: "center", zIndex: 800 }} key={i}>
-            <label for='imageZ'>
-              <input in="imageZ" type="checkbox" id="imageZoom" />
-              <PinchZoomPan position='center' initialScale='auto' doubleTapBehavior='zoom' zoomButtons={false} key={i}>
-                <img id="sliderImage" mix={{
-                  block: "ProductGallery",
-                  elem: "SliderImage",
-                  mods: { isPlaceholder: !src },
-                }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "auto" }} key={i}
-                />
-              </PinchZoomPan>
-            </label>
-          </div>
+          <div style={{ width: 800, height: "auto", textAlign: "center" }} key={i} onClick={this.onImageClick} id="galleryOverlayImage">
+            <PinchZoomPan position='center' initialScale='auto' doubleTapBehavior='reset' zoomButtons={false} key={i}>
+              <img className={this.state.isZoomIn ? "galleryOverlayImageZoomOut" : "galleryOverlayImage"} mix={{
+                block: "ProductGallery",
+                elem: "SliderImage",
+                mods: { isPlaceholder: !src },
+              }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "800px !important" }} key={i}
+              />
+            </PinchZoomPan>
+          </div >
 
         )
 
@@ -241,10 +237,10 @@ class PDPGalleryOverlay extends PureComponent {
         >
           <Close />
         </button>
-        {/* <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={this.zoomIn}>
+        {/* <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={() => this.zoomin()}>
           <Plus />
         </button>
-        <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={this.zoomOut}>
+        <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={() => this.zoomout()}>
           <Minus />
         </button> */}
         {this.renderPrevButton()}
