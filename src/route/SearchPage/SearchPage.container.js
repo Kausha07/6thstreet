@@ -27,9 +27,7 @@ export class SearchPageContainer extends PLPContainer {
   }
   componentDidMount() {
     window.pageType = TYPE_CATEGORY;
-    const {
-      location: { state },
-    } = this.props;
+    const {prevPath} = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -39,7 +37,7 @@ export class SearchPageContainer extends PLPContainer {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
       },
     });

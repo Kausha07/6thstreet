@@ -12,6 +12,7 @@ import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
 import SearchSuggestion from "./SearchSuggestion.component";
 import { getUUIDToken } from "Util/Auth";
+import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -19,6 +20,7 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
+  prevPath: state.PLP.prevPath,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -31,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatch
     );
   },
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
 });
 let sourceIndexName;
 let sourceQuerySuggestionIndex;
@@ -283,7 +286,8 @@ export class SearchSuggestionContainer extends PureComponent {
       querySuggestions,
       renderMySignInPopup,
       // wishlistData,
-      isPDPSearchVisible
+      isPDPSearchVisible,
+      prevPath
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -306,12 +310,14 @@ export class SearchSuggestionContainer extends PureComponent {
       recommendedForYou,
       trendingProducts,
       renderMySignInPopup,
-      isPDPSearchVisible
+      isPDPSearchVisible,
+      prevPath
       // wishlistData,
     };
   };
   containerFunctions = {
     hideActiveOverlay: this.props.hideActiveOverlay,
+    setPrevPath: this.props.setPrevPath,
   };
 
   getIsLoading() {

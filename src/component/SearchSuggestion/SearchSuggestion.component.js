@@ -243,8 +243,9 @@ class SearchSuggestion extends PureComponent {
 
   // common function for top search, recent search, query suggestion search.
   onSearchQueryClick = (search) => {
-    const { closeSearch } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
@@ -254,20 +255,23 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleBrandsClick = (brandItem) => {
-    const { closeSearch } = this.props;
+    const { closeSearch,setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
   handleTrendingBrandsClick = (brandName) => {
-    const { closeSearch } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
+    setPrevPath(window.location.href);
     closeSearch();
   };
 
   handleTrendingTagsClick = (label) => {
-    const { closeSearch } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
@@ -282,9 +286,6 @@ class SearchSuggestion extends PureComponent {
         <Link
           to={{
             pathname: `/${urlName}.html?q=${urlName}`,
-            state: {
-              prevPath: window.location.href,
-            },
           }}
           onClick={() => this.handleBrandsClick(urlName)}
         >
@@ -410,9 +411,6 @@ class SearchSuggestion extends PureComponent {
                 queryID,
                 !brandValue?.includes("///") ? brandValue : null
               ),
-              state: {
-                prevPath: window.location.href,
-              },
             }}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
@@ -718,9 +716,6 @@ class SearchSuggestion extends PureComponent {
               : `/catalogsearch/result/?q=${encodeURIComponent(
                 label
               )}&p=0&dFR[gender][0]=${genderInURL}`,
-            state: {
-              prevPath: window.location.href,
-            },
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -754,9 +749,6 @@ class SearchSuggestion extends PureComponent {
       <Link
         to={{
           pathname: link && link.split("#q")[0],
-          state: {
-            prevPath: window.location.href,
-          },
         }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
@@ -826,7 +818,6 @@ class SearchSuggestion extends PureComponent {
               : `/catalogsearch/result/?q=${encodeURIComponent(
                 search
               )}&p=0&dFR[gender][0]=${genderInURL}`,
-            state: { prevPath: window.location.href },
           }}
           onClick={() => this.onSearchQueryClick(search)}
         >
