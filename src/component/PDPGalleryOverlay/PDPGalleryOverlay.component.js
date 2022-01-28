@@ -121,13 +121,13 @@ class PDPGalleryOverlay extends PureComponent {
         const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
         return (
 
-          <div style={{ width: 800, height: "auto", textAlign: "center" }} key={i} onClick={this.onImageClick} id="galleryOverlayImage">
+          <div style={{ width: 500, height: "auto", textAlign: "center" }} key={i} onClick={this.onImageClick} id="galleryOverlayImage">
             <PinchZoomPan position='center' initialScale='auto' doubleTapBehavior='reset' zoomButtons={false} key={i}>
               <img className={this.state.isZoomIn ? "galleryOverlayImageZoomOut" : "galleryOverlayImage"} mix={{
                 block: "ProductGallery",
                 elem: "SliderImage",
                 mods: { isPlaceholder: !src },
-              }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "800px !important" }} key={i}
+              }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "500px !important" }} key={i}
               />
             </PinchZoomPan>
           </div >
