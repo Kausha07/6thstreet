@@ -15,6 +15,7 @@ export const mapStateToProps = (state) => ({
   productLoading: state.PLP.productLoading,
   prevProductSku: state.PLP.prevProductSku,
   meta: state.PLP.meta,
+  prevPath: state.PLP.prevPath,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   updatePLPInitialFilters: (filters, facet_key, facet_value) =>

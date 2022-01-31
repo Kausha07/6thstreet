@@ -9,6 +9,12 @@ import {
 } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
 import "./MenuGrid.style";
+import { setPrevPath } from "Store/PLP/PLP.action";
+import { connect } from "react-redux";
+
+export const mapDispatchToProps = (_dispatch) => ({
+  setPrevPath: (prevPath) => _dispatch(setPrevPath(prevPath))
+});
 
 class MenuGrid extends PureComponent {
   state = {
@@ -31,9 +37,9 @@ class MenuGrid extends PureComponent {
   }
 
   onItemClick = () => {
-    const { toggleOverlayByKey } = this.props;
-
+    const { toggleOverlayByKey, setPrevPath } = this.props;
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+    setPrevPath(window.location.href);
   };
 
   renderItem = (item, i) => {
@@ -169,4 +175,4 @@ class MenuGrid extends PureComponent {
   }
 }
 
-export default MenuGrid;
+export default connect(null, mapDispatchToProps)(MenuGrid);

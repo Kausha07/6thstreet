@@ -36,6 +36,7 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   customer: state.MyAccountReducer.customer,
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -440,6 +441,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
       location: { state },
+      prevPath
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
 
@@ -532,7 +534,7 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
@@ -597,7 +599,7 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id

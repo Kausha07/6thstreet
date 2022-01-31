@@ -37,6 +37,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -158,9 +159,9 @@ export class PDPContainer extends PureComponent {
 
   renderVueHits() {
     const {
+      prevPath = null,
       product: { product_type_6s, sku, url, price },
       location: { state },
-      product,
     } = this.props;
     const itemPrice = price
       ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
@@ -177,7 +178,7 @@ export class PDPContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id

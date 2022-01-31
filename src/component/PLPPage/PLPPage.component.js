@@ -4,7 +4,6 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-import BrowserDatabase from "Util/BrowserDatabase";
 import "./PLPPage.style";
 
 class PLPPage extends PureComponent {
@@ -26,7 +25,6 @@ class PLPPage extends PureComponent {
         renderMySignInPopup={renderMySignInPopup}
         pageType="plp"
         qid={qid}
-        prevPath={`${window.location.pathname}${window.location.search}`}
         lazyLoad={false}
       />
     );

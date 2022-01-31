@@ -311,18 +311,7 @@ export class PLPContainer extends PureComponent {
     const { menuCategories = [], prevPath = null, impressions, location: { state }, } = this.props;
     const { isArabic } = this.state;
 
-    let prevLocation;
-    let finalPrevLocation;
-    browserHistory.listen((nextLocation) => {
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
-      finalPrevLocation = prevLocation;
-      prevLocation = nextLocation;
-      const { search } = nextLocation;
-      if (
-        finalPrevLocation &&
-        locationArr.includes(finalPrevLocation.pathname)
-      ) {
-        this.props.setPrevPath(finalPrevLocation ? finalPrevLocation?.pathname : null);
+    this.props.setPrevPath(prevPath);
         const category = this.getCategory();
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         VueIntegrationQueries.vueAnalayticsLogger({
@@ -333,13 +322,12 @@ export class PLPContainer extends PureComponent {
             currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
             clicked: Date.now(),
             uuid: getUUID(),
-            referrer: finalPrevLocation ? finalPrevLocation?.pathname : null,
+            referrer: prevPath,
             url: window.location.href,
           },
         });
         Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
-      }
-    });
+
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();

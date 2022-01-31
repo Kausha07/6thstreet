@@ -10,9 +10,11 @@ import isMobile from "Util/Mobile";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import "./MenuBrands.scss";
+import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const mapDispatchToProps = (_dispatch) => ({
   toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key)),
+  setPrevPath: (prevPath) => _dispatch(setPrevPath(prevPath))
 });
 class MenuBrands extends PureComponent {
   static propTypes = {
@@ -34,9 +36,10 @@ class MenuBrands extends PureComponent {
   };
 
   onItemClick = () => {
-    const { toggleOverlayByKey } = this.props;
+    const { toggleOverlayByKey,setPrevPath } = this.props;
 
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+    setPrevPath(window.location.href);
   };
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
