@@ -39,6 +39,10 @@ export const CartDispatcher = import(
   "Store/Cart/Cart.dispatcher"
 );
 
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath
+});
+
 export const mapDispatchToProps = (dispatch) => ({
   addProduct: (options) =>
     CartDispatcher.then(({ default: dispatcher }) =>
@@ -256,6 +260,7 @@ export class CartItemContainer extends PureComponent {
           full_item_info: { config_sku, category, price },
         },
         location: { state },
+        prevPath= null,
       } = this.props;
 
       removeProduct(item_id).then(() => this.setStateNotLoading());
@@ -285,7 +290,7 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
@@ -367,4 +372,4 @@ export class CartItemContainer extends PureComponent {
   }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(CartItemContainer));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CartItemContainer));
