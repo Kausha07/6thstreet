@@ -23,6 +23,7 @@ export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
   country: state.AppState.country,
   lastHomeItem: state.PLP.lastHomeItem,
+  lastHomeItemScrollPosition: state.PLP.lastHomeItemScrollPosition,
   config: state.AppConfig.config,
 });
 
@@ -31,7 +32,8 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
-  setLastTapItemOnHome: (sku) => dispatch(setLastTapItemOnHome(sku)),
+  setLastTapItemOnHome: (item, scrollPos) =>
+    dispatch(setLastTapItemOnHome(item, scrollPos)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -55,7 +57,7 @@ export class HomePageContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
+    window.history.scrollRestoration = "manual";
     // this.requestDynamicContent();
   }
 
@@ -92,49 +94,33 @@ export class HomePageContainer extends PureComponent {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
     }
-    // let prevLocation;
-    // let finalPrevLocation;
-    // browserHistory.listen((nextLocation) => {
-    //   finalPrevLocation = prevLocation;
-    //   prevLocation = nextLocation;
-    //   if (
-    //     finalPrevLocation &&
-    //     finalPrevLocation.pathname !== nextLocation.pathname &&
-    //     finalPrevLocation.search &&
-    //     finalPrevLocation.search.includes("?q=")
-    //   ) {
-
-    if (this.props.lastHomeItem) {
-      let element = document.getElementById(this.props.lastHomeItem);
-      if (element && this.state.firstLoad) {
-        var headerOffset = 0;
-        var elementPosition = element.getBoundingClientRect().top;
-        var offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
-        console.log(
-          "muskan scrool",
-          elementPosition,
-          offsetPosition,
-          window.pageYOffset,
-          element
-        );
-        // window.scrollTo({
-        //   top: elementPosition,
-        //   behavior: "smooth",
-        // });
-        element.scrollIntoView({
-          behavior: "smooth",
-          // inline: "start",
-        });
-      }
-      this.setState({
-        firstLoad: false,
-      });
-    }
+    // if (this.props.lastHomeItem) {
+    let element = document.getElementById(this.props.lastHomeItem);
+    //   if (element && this.state.firstLoad) {
+    //     window.scrollTo(0, this.props.lastHomeItemScrollPosition);
+    //     // this.setState({
+    //     //   firstLoad: false,
+    //     // });
+    //   }
     // }
-    // });
+    // if (element) {
+      console.log("muskan",element,this.props.lastHomeItemScrollPosition);
+      window.scrollTo(0, this.props.lastHomeItemScrollPosition);
+    // }
   }
 
+  getPosition = (element) => {
+    var xPosition = 0;
+    var yPosition = 0;
+
+    while (element) {
+      xPosition += element.offsetLeft - element.scrollLeft + element.clientLeft;
+      yPosition += element.offsetTop - element.scrollTop + element.clientTop;
+      element = element.offsetParent;
+    }
+
+    return { x: xPosition, y: yPosition };
+  };
   setDefaultGender() {
     const { setGender } = this.props;
     const { defaultGender } = this.state;
@@ -258,11 +244,16 @@ export class HomePageContainer extends PureComponent {
     };
   };
 
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item, document.documentElement.scrollTop);
+  };
+
   render() {
     return (
       <HomePage
         {...this.containerFunctions}
         {...this.containerProps()}
+        setLastTapItem={this.setLastTapItem}
         HomepageProps={this.props}
       />
     );

@@ -66,7 +66,7 @@ class DynamicContentVueSlider extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { renderMySignInPopup, index } = this.props;
+    const { renderMySignInPopup, index,setLastTapItemOnHome } = this.props;
     return (
       <div
         block="VeuSliderWrapper"
@@ -76,6 +76,7 @@ class DynamicContentVueSlider extends PureComponent {
         {this.state.data?.length > 0 && (
           <DynamicContentVueProductSliderContainer
             products={this.state.data}
+            setLastTapItemOnHome={setLastTapItemOnHome}
             renderMySignInPopup={renderMySignInPopup}
             heading={this.props.layout.title}
             isHome={true}

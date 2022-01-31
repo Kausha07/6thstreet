@@ -182,7 +182,7 @@ export class Header extends PureComponent {
 
     return (
       <>
-        <header block="Header" mods={{ name }}>
+        <header block="Header" mods={{ name }} id="headerTop">
           {isMobile && location.pathname.match(/faq|shipping-policy|return-information/)
             ? null
             : this.renderHeaderSections()}

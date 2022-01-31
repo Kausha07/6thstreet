@@ -74,12 +74,13 @@ class HomePage extends PureComponent {
   }
 
   renderDynamicContent() {
-    const { dynamicContent, gender, HomepageProps } = this.props;
+    const { dynamicContent, gender, setLastTapItem } =
+      this.props;
 
     return (
       <DynamicContent
         gender={gender}
-        {...HomepageProps}
+        setLastTapItemOnHome={setLastTapItem}
         content={dynamicContent}
         renderMySignInPopup={this.showMyAccountPopup}
       />
