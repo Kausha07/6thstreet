@@ -170,6 +170,7 @@ class PLPPages extends PureComponent {
       />
     );
   }
+  
   renderPages() {
     const { pages = {}, productLoading } = this.props;
 
