@@ -34,8 +34,10 @@ import CloseImage from "./icons/close.png";
 import PackageImage from "./icons/package.png";
 import QPAY from "./icons/qpay.png";
 import TimerImage from "./icons/timer.png";
+import isMobile from "Util/Mobile";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
+import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
 import {
   CANCEL_ITEM_LABEL,
   DELIVERY_FAILED,
@@ -109,50 +111,28 @@ class MyAccountOrderView extends PureComponent {
   renderTitle() {
     const { isArabic } = this.state;
     const {
-      openOrderCancelation,
       order: {
         groups = [],
-        status,
         increment_id,
-        is_returnable,
-        is_cancelable,
       },
     } = this.props;
-    const buttonText =
-      status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
+    
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">
           {__("Order #%s", increment_id)}
         </h3>
-        {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
-          is_returnable && is_cancelable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                {RETURN_ITEM_LABEL}
-              </button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                {CANCEL_ITEM_LABEL}
-              </button>
-            </div>
-          ) : (
-            <div block="MyAccountOrderView" elem="HeadingButton">
-              <button onClick={() => openOrderCancelation(buttonText)}>
-                {buttonText}
-              </button>
-            </div>
-          )
-        ) : null}
       </div>
     );
   }
 
   renderStatus() {
     const {
-      order: { status, created_at },
+      openOrderCancelation,
+      order: { status, created_at, is_returnable, is_cancelable },
     } = this.props;
-
+    const buttonText =
+      status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
     if (STATUS_FAILED.includes(status)) {
       const title =
         status === STATUS_PAYMENT_ABORTED
@@ -174,33 +154,66 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="Status">
-        <p
-          block="MyAccountOrderView"
-          elem="StatusTitle"
-          mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
-        >
-          {__("Status: ")}
-          <span>{`${status.split("_").join(" ")}`}</span>
-        </p>
-        <p block="MyAccountOrderView" elem="StatusDate">
-          {__("Order placed: ")}
-          <span>
-            {formatDate("DD MMM YYYY", new Date(created_at.replace(/-/g, "/")))}
-          </span>
-        </p>
+        <div>
+          <p
+            block="MyAccountOrderView"
+            elem="StatusTitle"
+            mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
+          >
+            {__("Status: ")}
+            <span>{`${status.split("_").join(" ")}`}</span>
+          </p>
+          <p block="MyAccountOrderView" elem="StatusDate">
+            {__("Order placed: ")}
+            <span>
+              {formatDate(
+                "DD MMM YYYY",
+                new Date(created_at.replace(/-/g, "/"))
+              )}
+            </span>
+          </p>
+        </div>
+        {STATUS_BEING_PROCESSED.includes(status) ||
+        (status === STATUS_COMPLETE && is_returnable) ? (
+          is_returnable && is_cancelable ? (
+            <div block="MyAccountOrderView" elem="HeadingButtons">
+              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                {RETURN_ITEM_LABEL}
+              </button>
+              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                {CANCEL_ITEM_LABEL}
+              </button>
+            </div>
+          ) : (
+            <div block="MyAccountOrderView" elem="HeadingButton">
+              <button onClick={() => openOrderCancelation(buttonText)}>
+                {buttonText}
+              </button>
+            </div>
+          )
+        ) : null}
       </div>
     );
   }
 
   renderPackagesMessage() {
     const {
-      order: { status, groups: shipped = [] },
+      order: { groups: shipped = [] },
     } = this.props;
     const { isArabic } = this.state;
 
-    if (STATUS_FAILED.includes(status) || shipped.length < 1) {
+    const isPackageMessageVisible = shipped.some((order) => {
+      return (
+        order.status === STATUS_IN_TRANSIT || order.status === STATUS_DISPATCHED
+      );
+    });
+    if (!isPackageMessageVisible) {
       return null;
     }
+
+    // if (STATUS_FAILED.includes(status) || shipped.length < 1) {
+    //   return null;
+    // }
     return (
       <div
         block="MyAccountOrderView"
@@ -215,11 +228,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -230,24 +243,24 @@ class MyAccountOrderView extends PureComponent {
   formatGroupStatus = (status) => {
     // use toLowerCase because sometimes the response from backend is not consistent
     switch (status?.toLowerCase()) {
-      case 'courier_dispatched': {
-        return __('Shipped');
+      case "courier_dispatched": {
+        return __("Shipped");
       }
-      case 'courier_in_transit': {
-        return __('In Transit');
+      case "courier_in_transit": {
+        return __("In Transit");
       }
-      case 'delivery_successful': {
-        return __('Delivered');
+      case "delivery_successful": {
+        return __("Delivered");
       }
-      case 'delivery_failed':
-      case 'cancelled': {
-        return __('Order Cancelled');
+      case "delivery_failed":
+      case "cancelled": {
+        return __("Order Cancelled");
       }
-      case 'readytopick': {
-        return __('Ready for Pick up');
+      case "readytopick": {
+        return __("Ready for Pick up");
       }
-      case 'pickedup': {
-        return __('Items Picked Up');
+      case "pickedup": {
+        return __("Items Picked Up");
       }
       default: {
         return null;
@@ -256,7 +269,9 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderAccordionTitle(title, image, status = null) {
-    const packageStatus = /\d/.test(title) ? this.formatGroupStatus(status) : null
+    const packageStatus = /\d/.test(title)
+      ? this.formatGroupStatus(status)
+      : null;
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -354,6 +369,7 @@ class MyAccountOrderView extends PureComponent {
               TimerImage
             )}
             is_expanded
+            MyAccountSection={true}
           >
             {processingItems.map(this.renderItem)}
           </Accordion>
@@ -378,6 +394,7 @@ class MyAccountOrderView extends PureComponent {
               __("Cancelled items"),
               CancelledImage
             )}
+            MyAccountSection={true}
           >
             {allItems.map(this.renderItem)}
           </Accordion>
@@ -401,6 +418,7 @@ class MyAccountOrderView extends PureComponent {
             __("Cancelled items"),
             CancelledImage
           )}
+          MyAccountSection={true}
         >
           {canceledItems.map(this.renderItem)}
         </Accordion>
@@ -419,8 +437,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-          ? TimerImage
-          : PackageImage;
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -433,6 +451,7 @@ class MyAccountOrderView extends PureComponent {
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(item.status)}
           title={this.renderAccordionTitle(item.label, getIcon, item.status)}
+          MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED &&
@@ -634,10 +653,10 @@ class MyAccountOrderView extends PureComponent {
         return this.renderCardPaymentType();
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
-          console.log("club apparel")
+          console.log("club apparel");
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
-          console.log("Store credit")
+          console.log("Store credit");
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;
@@ -686,6 +705,20 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
+  renderContact() {
+    return (
+      <>
+        {isMobile.any() ? (
+          <h3 style={{ textAlign: "center", padding: "12px 0px" }}>
+            Questions about this order?
+          </h3>
+        ) : (
+          ""
+        )}
+        <ContactHelpContainer accountPage={true} />
+      </>
+    );
+  }
   renderPaymentSummary() {
     const {
       order: {
@@ -714,15 +747,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -811,6 +844,7 @@ class MyAccountOrderView extends PureComponent {
         {this.renderAddress(__("Delivering to"), shipping_address)}
         {this.renderPaymentType()}
         {this.renderPaymentSummary()}
+        {this.renderContact()}
       </div>
     );
   }
