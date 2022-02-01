@@ -83,7 +83,6 @@ class DynamicContentVueProductSlider extends PureComponent {
       sourceProdID = null,
       sourceCatgID = null,
       prevPath= null,
-      location: { state },
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
@@ -255,7 +254,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const items = this.getProducts();
-    const { isHome, renderMySignInPopup } = this.props;
+    const { isHome, renderMySignInPopup,index,setLastTapItemOnHome } = this.props;
     const {
       widgetID,
       pageType,
@@ -285,7 +284,9 @@ class DynamicContentVueProductSlider extends PureComponent {
                 <DynamicContentVueProductSliderItem
                   renderMySignInPopup={renderMySignInPopup}
                   key={sku}
+                  setLastTapItemOnHome={setLastTapItemOnHome}
                   data={item}
+                  index={index}
                   posofreco={i}
                   ref={this.itemRef}
                   widgetID={widgetID}
