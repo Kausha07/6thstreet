@@ -64,16 +64,17 @@ class DynamicContentVueSlider extends PureComponent {
         .catch((err) => {
           console.error("pdp widget vue query catch", err);
         });
-    }
-    catch (e) {
+    } catch (e) {
       Logger.log(e);
     }
-
   };
 
   render() {
     const { isArabic } = this.state;
-    const { renderMySignInPopup, index,setLastTapItemOnHome } = this.props;
+    const { renderMySignInPopup, index, setLastTapItemOnHome } = this.props;
+    if (this.state.data?.length === 0) {
+      return null;
+    }
     return (
       <div
         block="VeuSliderWrapper"
