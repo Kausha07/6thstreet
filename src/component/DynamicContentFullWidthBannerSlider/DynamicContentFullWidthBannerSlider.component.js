@@ -89,7 +89,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     this.setState({ activeSlide });
   };
   onclick = (item) => {
-    if(!!!item){
+    if (!!!item) {
       return;
     }
     let banner = {
@@ -140,8 +140,13 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentFullWidthBannerSlider">
+      <div
+        ref={setRef}
+        block="DynamicContentFullWidthBannerSlider"
+        id={`DynamicContentFullWidthBannerSlider${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

@@ -23,7 +23,6 @@ export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
   country: state.AppState.country,
   lastHomeItem: state.PLP.lastHomeItem,
-  lastHomeItemScrollPosition: state.PLP.lastHomeItemScrollPosition,
   config: state.AppConfig.config,
 });
 
@@ -32,8 +31,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
-  setLastTapItemOnHome: (item, scrollPos) =>
-    dispatch(setLastTapItemOnHome(item, scrollPos)),
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -86,7 +84,7 @@ export class HomePageContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { gender: prevGender } = prevProps;
-    const { gender, toggleBreadcrumbs } = this.props;
+    const { gender, toggleBreadcrumbs, lastHomeItem } = this.props;
 
     toggleBreadcrumbs(false);
 
@@ -94,17 +92,14 @@ export class HomePageContainer extends PureComponent {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
     }
-    // if (this.props.lastHomeItem) {
-    let element = document.getElementById(this.props.lastHomeItem);
-    //   if (element && this.state.firstLoad) {
-    //     window.scrollTo(0, this.props.lastHomeItemScrollPosition);
-    //     // this.setState({
-    //     //   firstLoad: false,
-    //     // });
-    //   }
-    // }
+    let element = document.getElementById(lastHomeItem);
+    console.log("muskan",element,lastHomeItem);
     if (element) {
-      window.scrollTo(0, this.props.lastHomeItemScrollPosition);
+      setTimeout(() => {
+        window.focus();
+        element.style.scrollMarginTop = "180px";
+        element.scrollIntoView({ behavior: "smooth" });
+      }, 10);
     }
   }
 
@@ -232,8 +227,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   setLastTapItem = (item) => {
-    sessionStorage.setItem('lastItem',window.pageYOffset)
-    this.props.setLastTapItemOnHome(item, document.documentElement.scrollTop);
+    this.props.setLastTapItemOnHome(item);
   };
 
   render() {

@@ -72,11 +72,10 @@ export const PLPReducer = (state = getInitialState(), action) => {
       };
 
     case SET_LAST_HOME_ITEM:
-      const { item, scrollPos } = action;
+      const { item } = action;
       return {
         ...state,
         lastHomeItem: item,
-        lastHomeItemScrollPosition: scrollPos,
       };
 
     case SET_PLP_PAGE:

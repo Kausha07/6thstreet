@@ -24,10 +24,9 @@ export const setPrevProductSku = (sku) => ({
   sku,
 });
 
-export const setLastTapItemOnHome = (item,scrollPos) => ({
+export const setLastTapItemOnHome = (item) => ({
   type: SET_LAST_HOME_ITEM,
   item,
-  scrollPos
 });
 
 export const resetPLPPage = () => ({
