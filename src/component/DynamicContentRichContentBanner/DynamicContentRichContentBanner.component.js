@@ -95,6 +95,8 @@ class DynamicContentRichContentBanner extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    const { index } = this.props;
+    this.props.setLastTapItemOnHome(`DynamicContentRichContentBanner${index}`);
   };
 
   sendBannerClickImpression(item) {
@@ -132,7 +134,8 @@ class DynamicContentRichContentBanner extends PureComponent {
           }}
         >
           <div block="ImageContainer">
-            <Image lazyLoad={true}
+            <Image
+              lazyLoad={true}
               src={image_url}
               alt={title}
               mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
@@ -187,8 +190,13 @@ class DynamicContentRichContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentRichContentBanner">
+      <div
+        ref={setRef}
+        block="DynamicContentRichContentBanner"
+        id={`DynamicContentRichContentBanner${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

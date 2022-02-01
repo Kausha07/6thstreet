@@ -15,11 +15,14 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import HomePage from "./HomePage.component";
 import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import browserHistory from "Util/History";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   country: state.AppState.country,
+  lastHomeItem: state.PLP.lastHomeItem,
   config: state.AppConfig.config,
   prevPath: state.PLP.prevPath,
 });
@@ -29,6 +32,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -47,11 +51,12 @@ export class HomePageContainer extends PureComponent {
     isLoading: true,
     defaultGender: "women",
     isMobile: isMobile.any(),
+    firstLoad: true,
   };
 
   constructor(props) {
     super(props);
-
+    window.history.scrollRestoration = "manual";
     // this.requestDynamicContent();
   }
 
@@ -80,13 +85,21 @@ export class HomePageContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { gender: prevGender } = prevProps;
-    const { gender, toggleBreadcrumbs } = this.props;
+    const { gender, toggleBreadcrumbs, lastHomeItem } = this.props;
 
     toggleBreadcrumbs(false);
 
     if (gender !== prevGender) {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
+    }
+    let element = document.getElementById(lastHomeItem);
+    if (element) {
+      setTimeout(() => {
+        window.focus();
+        element.style.scrollMarginTop = "180px";
+        element.scrollIntoView({ behavior: "smooth" });
+      }, 10);
     }
   }
 
@@ -143,7 +156,6 @@ export class HomePageContainer extends PureComponent {
         genderName,
         countryName
       ),
-
     });
   }
 
@@ -214,12 +226,17 @@ export class HomePageContainer extends PureComponent {
     };
   };
 
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item);
+  };
+
   render() {
     return (
       <HomePage
         {...this.containerFunctions}
         {...this.containerProps()}
-        abc={this.props}
+        setLastTapItem={this.setLastTapItem}
+        HomepageProps={this.props}
       />
     );
   }

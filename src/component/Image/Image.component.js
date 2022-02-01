@@ -15,7 +15,7 @@ import "./Image.style";
 
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
-import LazyLoad from "react-lazyload";
+import LazyLoad, { forceVisible } from "react-lazyload";
 import { MixType } from "Type/Common";
 
 import {
@@ -78,6 +78,7 @@ export class Image extends PureComponent {
   onLoad = this.onLoad.bind(this);
 
   componentDidMount() {
+    forceVisible();
     this.onImageChange();
   }
 
@@ -129,7 +130,7 @@ export class Image extends PureComponent {
 
     if (lazyLoad) {
       return (
-        <LazyLoad once classNamePrefix="LazyLoad" offset={100}>
+        <LazyLoad classNamePrefix="LazyLoad" offset={100}>
           <img
             block="Image"
             elem="Image"
@@ -185,8 +186,16 @@ export class Image extends PureComponent {
   }
 
   render() {
-    const { ratio, mix, isPlaceholder, wrapperSize, src, imageRef, className,mods } =
-      this.props;
+    const {
+      ratio,
+      mix,
+      isPlaceholder,
+      wrapperSize,
+      src,
+      imageRef,
+      className,
+      mods,
+    } = this.props;
     const { imageStatus } = this.state;
 
     return (
@@ -198,7 +207,7 @@ export class Image extends PureComponent {
           imageStatus,
           isPlaceholder,
           hasSrc: !!src,
-          ...mods
+          ...mods,
         }}
         mix={mix}
         style={wrapperSize}
