@@ -308,7 +308,7 @@ export class PLPContainer extends PureComponent {
   };
 
   componentDidMount() {
-    const { menuCategories = [], prevPath = null, impressions, location: { state }, } = this.props;
+    const { menuCategories = [], prevPath = null, impressions } = this.props;
     const { isArabic } = this.state;
 
     this.props.setPrevPath(prevPath);

@@ -61,10 +61,9 @@ export class SearchPageContainer extends PLPContainer {
       options,
       pages,
       isLoading,
-      location: { prevPath = null },
       filters,
     } = this.props;
-    return { options, pages, isLoading, prevPath, filters };
+    return { options, pages, isLoading, filters };
   };
 
   setMetaData() {

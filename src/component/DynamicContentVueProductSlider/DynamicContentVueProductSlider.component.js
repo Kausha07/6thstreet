@@ -83,7 +83,6 @@ class DynamicContentVueProductSlider extends PureComponent {
       sourceProdID = null,
       sourceCatgID = null,
       prevPath= null,
-      location: { state },
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");

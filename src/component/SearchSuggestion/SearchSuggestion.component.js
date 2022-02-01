@@ -591,7 +591,6 @@ class SearchSuggestion extends PureComponent {
     const {
       recommendedForYou,
       renderMySignInPopup,
-      location: { state },
     } = this.props;
     const sku = JSON.parse(localStorage.getItem("PRODUCT_SKU"));
     const sourceCatgID = JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"));
@@ -607,7 +606,6 @@ class SearchSuggestion extends PureComponent {
             pageType="search"
             sourceProdID={sku ? sku : null}
             sourceCatgID={sourceCatgID ? sourceCatgID : null}
-            prevPath={state?.prevPath ? state?.prevPath : null}
           />
         </div>
       );
