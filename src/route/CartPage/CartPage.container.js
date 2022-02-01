@@ -52,7 +52,8 @@ export const mapStateToProps = (state) => ({
     isSignedIn: state.MyAccountReducer.isSignedIn,
     clubApparel: state.ClubApparelReducer.clubApparel,
     isLoading: state.CartReducer.isLoading,
-    processingRequest: state.CartReducer.processingRequest
+    processingRequest: state.CartReducer.processingRequest,
+    prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -136,7 +137,7 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit, location: { state }, } = this.props;
+        const { updateMeta, updateStoreCredit, location: { state },prevPath=null } = this.props;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;
@@ -147,9 +148,10 @@ export class CartPageContainer extends PureComponent {
                 currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
                 event: VUE_PAGE_VIEW,
                 pageType: "cart",
-                referrer: state?.prevPath ? state?.prevPath : null,
+                referrer: prevPath,
                 userID: userID,
                 uuid: getUUID(),
+                url: window.location.href,
             },
         });
         updateMeta({ title: __('Cart') });

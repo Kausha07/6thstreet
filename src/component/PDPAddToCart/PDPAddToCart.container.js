@@ -441,7 +441,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
       location: { state },
-      prevPath
+      prevPath = null,
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
 
