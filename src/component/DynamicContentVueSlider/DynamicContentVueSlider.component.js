@@ -72,7 +72,7 @@ class DynamicContentVueSlider extends PureComponent {
   render() {
     const { isArabic } = this.state;
     const { renderMySignInPopup, index, setLastTapItemOnHome } = this.props;
-    if (this.state.data?.length === 0) {
+    if (this.state.data?.length === 0 || this.state.data === undefined) {
       return null;
     }
     return (
