@@ -122,7 +122,6 @@ export class PDPContainer extends PureComponent {
       isLoading,
       setIsLoading,
       product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
-      location: { state },
       product,
       menuCategories = [],
     } = this.props;
@@ -161,7 +160,6 @@ export class PDPContainer extends PureComponent {
     const {
       prevPath = null,
       product: { product_type_6s, sku, url, price },
-      location: { state },
     } = this.props;
     const itemPrice = price
       ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
