@@ -73,7 +73,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_LAST_HOME_ITEM:
       const { item, scrollPos } = action;
-      console.log("muskan action", action);
       return {
         ...state,
         lastHomeItem: item,

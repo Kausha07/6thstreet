@@ -103,24 +103,11 @@ export class HomePageContainer extends PureComponent {
     //     // });
     //   }
     // }
-    // if (element) {
-      console.log("muskan",element,this.props.lastHomeItemScrollPosition);
+    if (element) {
       window.scrollTo(0, this.props.lastHomeItemScrollPosition);
-    // }
+    }
   }
 
-  getPosition = (element) => {
-    var xPosition = 0;
-    var yPosition = 0;
-
-    while (element) {
-      xPosition += element.offsetLeft - element.scrollLeft + element.clientLeft;
-      yPosition += element.offsetTop - element.scrollTop + element.clientTop;
-      element = element.offsetParent;
-    }
-
-    return { x: xPosition, y: yPosition };
-  };
   setDefaultGender() {
     const { setGender } = this.props;
     const { defaultGender } = this.state;
@@ -245,6 +232,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   setLastTapItem = (item) => {
+    sessionStorage.setItem('lastItem',window.pageYOffset)
     this.props.setLastTapItemOnHome(item, document.documentElement.scrollTop);
   };
 
