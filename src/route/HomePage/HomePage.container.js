@@ -93,7 +93,6 @@ export class HomePageContainer extends PureComponent {
       this.requestDynamicContent(true, gender);
     }
     let element = document.getElementById(lastHomeItem);
-    console.log("muskan",element,lastHomeItem);
     if (element) {
       setTimeout(() => {
         window.focus();

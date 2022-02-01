@@ -92,12 +92,16 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     if (!!!item) {
       return;
     }
+    const { index } = this.props;
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(
+      `DynamicContentFullWidthBannerSlider${index}`
+    );
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
