@@ -21,6 +21,7 @@ export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
   country: state.AppState.country,
   config: state.AppConfig.config,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -57,6 +58,7 @@ export class HomePageContainer extends PureComponent {
   componentDidMount() {
     const {
       location: { state },
+      prevPath= null,
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -67,7 +69,7 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
       },
     });

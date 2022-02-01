@@ -31,7 +31,6 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
   VUE_REMOVE_FROM_CART,
-  VUE_PAGE_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
@@ -79,6 +78,10 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+});
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath
 });
 
 export class CartItemContainer extends PureComponent {
@@ -260,6 +263,7 @@ export class CartItemContainer extends PureComponent {
           full_item_info: { config_sku, category, price },
           full_item_info,
         },
+        prevPath= null,
       } = this.props;
       console.log("full_item_info",full_item_info);
       console.log("row_total",row_total);
@@ -289,7 +293,7 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: window.location.href,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
@@ -375,4 +379,4 @@ export class CartItemContainer extends PureComponent {
   }
 }
 
-export default connect(null, mapDispatchToProps)(CartItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CartItemContainer);

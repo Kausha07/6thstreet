@@ -10,6 +10,12 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
+import {connect} from 'react-redux'
+;
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
+
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -76,6 +82,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       pageType = "home",
       sourceProdID = null,
       sourceCatgID = null,
+      prevPath= null,
       location: { state },
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -89,7 +96,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         userID: userID,
@@ -320,4 +327,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default withRouter(DynamicContentVueProductSlider);
+export default connect(
+  mapStateToProps,
+  null
+)(DynamicContentVueProductSlider);

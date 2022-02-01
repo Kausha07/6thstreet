@@ -9,6 +9,11 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
 
 class RecommendedForYouVueSlider extends PureComponent {
   static propTypes = {
@@ -233,7 +238,6 @@ class RecommendedForYouVueSlider extends PureComponent {
       widgetID,
       pageType,
       renderMySignInPopup,
-      prevPath = null,
       sourceCatgID,
       sourceProdID,
     } = this.props;
@@ -264,7 +268,6 @@ class RecommendedForYouVueSlider extends PureComponent {
                   sourceProdID={sourceProdID}
                   sourceCatgID={sourceCatgID}
                   posofreco={i}
-                  prevPath={prevPath}
                 />
               );
             })}
@@ -294,4 +297,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   }
 }
 
-export default RecommendedForYouVueSlider;
+export default connect(
+  mapStateToProps,
+  null
+)(RecommendedForYouVueSlider);
