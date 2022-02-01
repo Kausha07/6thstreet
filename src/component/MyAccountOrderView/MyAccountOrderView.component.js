@@ -116,7 +116,7 @@ class MyAccountOrderView extends PureComponent {
         increment_id,
       },
     } = this.props;
-    
+
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">
@@ -174,7 +174,7 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable) ? (
+          (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -228,11 +228,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -437,8 +437,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-        ? TimerImage
-        : PackageImage;
+          ? TimerImage
+          : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -747,15 +747,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                  isStoreCredit: true,
-                })
+                isStoreCredit: true,
+              })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -803,9 +803,10 @@ class MyAccountOrderView extends PureComponent {
         <div block="ShipmentTracking">
           <div block="ShipmentTracking" elem="Courier">
             <div>Shipped via:</div>
-            <div block="ShipmentTracking-Courier" elem="LogoContainer">
-              <img src={logo} alt="name" />
-            </div>
+            {logo ?
+              <div block="ShipmentTracking-Courier" elem="LogoContainer">
+                <img src={logo} alt="name" />
+              </div> : null}
           </div>
           <div block="ShipmentTracking" elem="Link">
             <a href={link} rel="noopener" target="_blank">
