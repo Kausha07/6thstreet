@@ -192,9 +192,8 @@ export class CartPage extends PureComponent {
           {name}
         </strong>
         <strong block="CartPage" elem="Price">
-          {`${
-            parseFloat(price) || price === 0 ? currency_code : ""
-          } ${finalPrice}`}
+          {`${parseFloat(price) || price === 0 ? currency_code : ""
+            } ${finalPrice}`}
         </strong>
       </li>
     );
@@ -220,34 +219,41 @@ export class CartPage extends PureComponent {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-    return (
-      <div block="CartPage" elem="OrderTotals">
+    if (discount != 0) {
+
+      return (
+        <div block="CartPage" elem="OrderTotals">
+          <ul>
+            <div block="CartPage" elem="Subtotals">
+              {this.renderPriceLine(subTotal, __("Subtotal"))}
+              {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
+              {this.renderPriceLine(
+                getDiscountFromTotals(totals, "customerbalance"),
+                __("Store Credit")
+              )}
+              {this.renderPriceLine(
+                getDiscountFromTotals(totals, "clubapparel"),
+                __("Club Apparel Redemption")
+              )}
+              {couponCode || (discount && discount != 0)
+                ? this.renderPriceLine(discount, __("Discount"))
+                : null}
+              {this.renderPriceLine(grandTotal, __("Total Amount"), {
+                divider: true,
+              })}
+            </div>
+          </ul>
+        </div>
+      );
+    } else {
+      return (<div block="CartPage" elem="OrderTotals">
         <ul>
           <div block="CartPage" elem="Subtotals">
-            {this.renderPriceLine(subTotal, __("Subtotal"))}
-            {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "customerbalance"),
-              __("Store Credit")
-            )}
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "clubapparel"),
-              __("Club Apparel Redemption")
-            )}
-            {couponCode || (discount && discount != 0)
-              ? this.renderPriceLine(discount, __("Discount"))
-              : null}
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "tax"),
-              __("Tax")
-            )}
-            {this.renderPriceLine(grandTotal, __("Total Amount"), {
-              divider: true,
-            })}
+            {this.renderPriceLine(subTotal, __("Subtotal"), { subtotalOnly: true, })}
           </div>
         </ul>
-      </div>
-    );
+      </div>)
+    }
   }
 
   renderButtons() {
@@ -587,11 +593,10 @@ export class CartPage extends PureComponent {
           <Loader isLoading={processingRequest} />
           <div
             style={{
-              marginBottom: `${
-                isMobile.any()
-                  ? this.dynamicHeight?.current?.clientHeight + additionalMargin
-                  : 0
-              }px`,
+              marginBottom: `${isMobile.any()
+                ? this.dynamicHeight?.current?.clientHeight + additionalMargin
+                : 0
+                }px`,
             }}
             block="CartPage"
             elem="Static"

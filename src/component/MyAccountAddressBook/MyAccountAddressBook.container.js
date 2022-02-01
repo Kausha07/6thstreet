@@ -48,7 +48,6 @@ export class MyAccountAddressBookContainer extends PureComponent {
 
     componentDidMount() {
         window.onpopstate = e => {
-            
           if (document.body.classList.contains("isNewAddressOpen")){
             this.closeForm();
             history.forward();

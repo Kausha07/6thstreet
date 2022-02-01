@@ -27,6 +27,7 @@ const FACET_FILTERS = [
   "tommy_label",
   "in_stock",
   "age",
+  'promotion'
 ];
 
 const config = {

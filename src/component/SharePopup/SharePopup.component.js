@@ -27,27 +27,15 @@ class SharePopup extends PureComponent {
         const { showSuccessNotification, showErrorNotification } = this.props;
         try {
             await navigator.clipboard.writeText(window.location.href);
-            showSuccessNotification('Link copied to clipboard')
+            showSuccessNotification(__('Link copied to clipboard'));
         }
         catch(err) {
             console.error(err);
-            showErrorNotification('Aww Snap! Something went wrong')
+            showErrorNotification(__('Something went wrong! Please, try again!'));
         }
     };
 
     renderMap = [
-        {
-            title: "Mail",
-            icon: <Email />,
-            handleClick: () => window.open(`mailto:?&&subject=&cc=&bcc=&body=${window.location.href}`),
-            render: true,
-        },
-        {
-            title: "Copy Link",
-            icon: <Link />,
-            handleClick: this.copyToClipboard,
-            render: !!navigator?.clipboard,
-        },
         {
             title: "WhatsApp",
             icon: <WhatsApp />,
@@ -58,6 +46,18 @@ class SharePopup extends PureComponent {
             title: "Facebook",
             icon: <Facebook />,
             handleClick: () => window.open(`https://www.facebook.com/sharer/sharer.php?${window.location.href}`, '_blank'),
+            render: true,
+        },
+        {
+            title: "Copy Link",
+            icon: <Link />,
+            handleClick: this.copyToClipboard,
+            render: !!navigator?.clipboard,
+        },
+        {
+            title: "Mail",
+            icon: <Email />,
+            handleClick: () => window.open(`mailto:?&&subject=&cc=&bcc=&body=${window.location.href}`),
             render: true,
         },
         {
@@ -95,7 +95,7 @@ class SharePopup extends PureComponent {
             <Overlay
                 id={ SHARE_POPUP_ID }
                 mix={ {
-                    block: 'SharePopup',
+                    block: 'Overlay',
                     mods: {
                         isArabic: isArabic()
                     } 

@@ -1,11 +1,11 @@
 // import PropTypes from 'prop-types';
 import ProductItem from "Component/ProductItem";
-import VueIntegrationQueries from "Query/vueIntegration.query";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-import { getUUID } from "Util/Auth";
+// import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
 import "./PLPPage.style";
@@ -19,19 +19,19 @@ class PLPPage extends PureComponent {
   componentDidMount() {
     const { prevPath = null, impressions } = this.props;
     const category = this.getCategory();
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: prevPath ? prevPath : null,
-        url: window.location.href,
-      },
-    });
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_PAGE_VIEW,
+    //   params: {
+    //     event: VUE_PAGE_VIEW,
+    //     pageType: "plp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: prevPath ? prevPath : null,
+    //     url: window.location.href,
+    //   },
+    // });
 
     Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
   }

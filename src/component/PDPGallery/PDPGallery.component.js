@@ -20,12 +20,14 @@ import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from 'react-redux';
 import HomeIcon from "Component/Icons/Home/home.png"
+import { setPDPGaleryImage } from "Store/PDP/PDP.action";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  setImageIndex: (index) => dispatch(setPDPGaleryImage(index)),
 });
 
 class PDPGallery extends PureComponent {
@@ -69,7 +71,7 @@ class PDPGallery extends PureComponent {
 
   onBackButtonClick = () => {
     const { location } = browserHistory;
-      browserHistory.goBack();
+    browserHistory.goBack();
   }
   renderBackButton() {
     const { isArabic } = this.state;
@@ -171,7 +173,7 @@ class PDPGallery extends PureComponent {
     <Image
       lazyLoad={false}
       src={src}
-      key={i}
+      key={src}
       mix={{ block: "PDPGallery", elem: "sliderItem" }}
     />
   );
@@ -180,17 +182,20 @@ class PDPGallery extends PureComponent {
     const galleryOverlay = (
       <PDPGalleryOverlay
         closeGalleryOverlay={this.closeGalleryOverlay}
+        isOverlay={!!this.state.galleryOverlay}
         {...this.props}
       />
     );
-    document.body.style.overflow = "hidden";
+    // document.body.style.overflow = "hidden";
 
     this.setState({ galleryOverlay });
   };
 
   closeGalleryOverlay = () => {
     document.body.style.overflow = "visible";
-    this.setState({ galleryOverlay: "" });
+    this.props.setImageIndex(this.props.currentIndex)
+    this.props.onSliderChange(this.props.currentIndex);
+    this.setState({ galleryOverlay: "" });    
   };
 
   renderCrumbs() {
@@ -255,16 +260,18 @@ class PDPGallery extends PureComponent {
     }
 
     return (
-      <Slider
-        activeImage={currentIndex}
-        onActiveImageChange={this.onSlideChange}
-        mix={{ block: "PDPGallery", elem: "Slider" }}
-        isInteractionDisabled={!isMobile.any()}
-        showCrumbs={isMobile.any()}
-      >
-        {this.renderGallery()}
-        {this.renderVideos()}
-      </Slider>
+      <div>
+        <Slider
+          activeImage={currentIndex}
+          onActiveImageChange={this.onSlideChange}
+          mix={{ block: "PDPGallery", elem: "Slider" }}
+          isInteractionDisabled={!isMobile.any()}
+          showCrumbs={isMobile.any()}
+        >
+          {this.renderGallery()}
+          {this.renderVideos()}
+        </Slider>
+      </div>
     );
   }
 
@@ -456,20 +463,26 @@ class PDPGallery extends PureComponent {
     return (
       <div block="PDPGallery">
         {galleryOverlay}
-        {this.renderBackButton()}
-        {this.renderCrumbs()}
-        <div block="OverlayIcons" mods={{ isArabic }}>
-          {this.renderCartIcon()}
-          {this.renderWishlistIcon()}
-          {/* {this.renderShareButton()} */}
-          {/* {this.renderSearchButton()} */}
-        </div>
+        {!galleryOverlay && this.renderBackButton()}
+        {!galleryOverlay && this.renderCrumbs()}
+        {!galleryOverlay && (
+          <div block="OverlayIcons" mods={{ isArabic }}>
+            {this.renderCartIcon()}
+            {this.renderWishlistIcon()}
+            {/* {this.renderShareButton()} */}
+            {/* {this.renderSearchButton()} */}
+          </div>
+        )}
+
         <button
           ref={this.overlaybuttonRef}
           block="PDPGallery"
           elem="OverlayButton"
           mods={{ isArabic }}
-          onClick={this.renderGalleryOverlay}
+          onClick={(e) => {
+            e.stopPropagation()
+            this.renderGalleryOverlay()
+          }}
         >
           {this.renderSlider()}
           {this.renderGalleryTag()}

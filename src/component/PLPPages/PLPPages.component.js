@@ -352,6 +352,20 @@ class PLPPages extends PureComponent {
     }
   };
 
+  getRequestOptions = () => {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
+  }
+  
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -366,7 +380,8 @@ class PLPPages extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
+
 
     if (!isRadio) {
       if (filterArray) {

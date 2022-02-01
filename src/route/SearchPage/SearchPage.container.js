@@ -27,9 +27,7 @@ export class SearchPageContainer extends PLPContainer {
   }
   componentDidMount() {
     window.pageType = TYPE_CATEGORY;
-    const {
-      location: { state },
-    } = this.props;
+    const {prevPath} = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -39,7 +37,7 @@ export class SearchPageContainer extends PLPContainer {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
       },
     });
@@ -88,6 +86,26 @@ export class SearchPageContainer extends PLPContainer {
       ),
       keywords: __("%s online shopping", q),
       description: __(
+        // eslint-disable-next-line max-len
+        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        q
+      ),
+      twitter_title: __(
+        "Search results for %s. Online shopping in %s | 6thStreet",
+        q,
+        countryName
+      ),
+      twitter_desc: __(
+        // eslint-disable-next-line max-len
+        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        q
+      ),
+      og_title: __(
+        "Search results for %s. Online shopping in %s | 6thStreet",
+        q,
+        countryName
+      ),
+      og_desc: __(
         // eslint-disable-next-line max-len
         "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
         q

@@ -12,6 +12,7 @@ import selectImage from "./icons/add.png";
 import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
 import { v4 } from "uuid";
+import SelectImage from "./icons/selectMob.png";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -69,7 +70,7 @@ class FieldMultiselect extends PureComponent {
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
   }
 
-  static getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props, state) {
     if (isMobile.any()) {
       const {
         currentActiveFilter,
@@ -111,13 +112,16 @@ class FieldMultiselect extends PureComponent {
         (parentActiveFilters[category] &&
           parentActiveFilters[category].length === 0)
       ) {
-        this.setState({
-          parentActiveFilters: this.props.parentActiveFilters,
-        });
         if (selected_filters_count > 6) {
-          this.setState({ showMore: true, showLess: false });
+          this.setState({
+            showMore: true,
+            showLess: false,
+          });
         } else {
-          this.setState({ showMore: false, showLess: false });
+          this.setState({
+            showMore: false,
+            showLess: false,
+          });
         }
       }
     }
@@ -178,7 +182,7 @@ class FieldMultiselect extends PureComponent {
 
   renderOptionMobile = (option) => {
     const { subcategoryOptions, isArabic } = this.state;
-
+    const { selected_filters_count } = option;
     const isClosed =
       !subcategoryOptions[option.label] ||
       subcategoryOptions[option.label] === undefined;
@@ -200,6 +204,9 @@ class FieldMultiselect extends PureComponent {
           onClick={() => this.handleSubcategoryClick(option)}
         >
           {option.label}
+          {selected_filters_count > 0 && (
+            <img src={SelectImage} alt="select icon" className="selectIcon" />
+          )}
         </button>
         {this.renderSubcategoryOptions(option, display)}
       </div>
@@ -470,10 +477,10 @@ class FieldMultiselect extends PureComponent {
             ? Object.entries(searchData).map(this.renderOption)
             : category === "sizes" && !isMobile.any()
             ? Object.entries(sizeData).map(this.renderSizeOption)
-            // : category === "categories_without_path" &&
+            : // : category === "categories_without_path" &&
             //   Object.keys(formattedData).length
             // ? Object.entries(formattedData).map(this.renderOption)
-            : Object.keys(data).length
+            Object.keys(data).length
             ? Object.entries(data).map(this.renderOption)
             : Object.entries(subcategories).map(this.renderOption)}
         </ul>
@@ -738,23 +745,25 @@ class FieldMultiselect extends PureComponent {
         block="FieldMultiselect"
         mods={{ isHidden }}
       >
-        <button
-          ref={this.filterButtonRef}
-          type="button"
-          block="FieldMultiselect"
-          elem="FilterButton"
-          mods={{ toggleOptionsList, selectedItems }}
-          mix={{
-            block: "FieldMultiselect",
-            elem: "FilterButton",
-            mods: { isArabic },
-          }}
-          onClick={
-            isMobile.any() ? this.handleFilterChange : this.toggelOptionList
-          }
-        >
-          {placeholder}
-        </button>
+        {!isMobile.any() && (
+          <button
+            ref={this.filterButtonRef}
+            type="button"
+            block="FieldMultiselect"
+            elem="FilterButton"
+            mods={{ toggleOptionsList, selectedItems }}
+            mix={{
+              block: "FieldMultiselect",
+              elem: "FilterButton",
+              mods: { isArabic },
+            }}
+            onClick={
+              isMobile.any() ? this.handleFilterChange : this.toggelOptionList
+            }
+          >
+            {placeholder}
+          </button>
+        )}
         {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
