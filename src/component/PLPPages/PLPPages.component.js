@@ -133,7 +133,6 @@ class PLPPages extends PureComponent {
       impressions,
       query,
       renderMySignInPopup,
-      prevPath = null,
       filters,
       productLoading,
     } = this.props;
@@ -153,7 +152,6 @@ class PLPPages extends PureComponent {
         products={products}
         impressions={impressions}
         renderMySignInPopup={renderMySignInPopup}
-        prevPath={prevPath}
         filters={filters}
       />
     );
@@ -170,6 +168,7 @@ class PLPPages extends PureComponent {
       />
     );
   }
+  
   renderPages() {
     const { pages = {}, productLoading } = this.props;
 

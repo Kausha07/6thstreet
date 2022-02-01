@@ -534,7 +534,7 @@
 
   &-DiscountCoupon {
     &::after {
-      content: ":";
+      content: ':';
       font-weight: var(--fw-regular);
     }
   }
@@ -598,7 +598,7 @@
       margin: 0;
 
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         right: 6px;
         top: 1px;
@@ -613,7 +613,7 @@
       }
 
       &:after {
-        content: "" !important;
+        content: '' !important;
         position: absolute;
         right: 6px;
         top: 1px;
@@ -740,14 +740,27 @@
     }
     &_divider {
       border-top: 1px solid var(--color-soft-gray);
-      padding: 10px 0px ;
+      padding: 10px 0px;
       margin-top: 10px;
       .CartPage {
         &-Text {
           font-size: 15px;
           font-weight: var(--fw-regular);
         }
-  
+
+        &-Price {
+          font-size: 15px;
+          font-weight: var(--fw-bold);
+        }
+      }
+    }
+    &_subtotalOnly {
+      .CartPage {
+        &-Text {
+          font-size: 15px;
+          font-weight: var(--fw-regular);
+        }
+
         &-Price {
           font-size: 15px;
           font-weight: var(--fw-bold);

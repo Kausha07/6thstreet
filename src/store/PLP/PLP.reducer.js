@@ -10,6 +10,7 @@ import {
   UPDATE_PLP_INIT_FILTERS,
   SET_PREV_PRODUCT_SKU,
   SET_LAST_HOME_ITEM,
+  SET_PREV_PATH
 } from "./PLP.action";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
@@ -27,6 +28,7 @@ export const getInitialState = () => ({
   prevProductSku: "",
   lastHomeItem: "",
   lastHomeItemScrollPosition: 0,
+  prePath: "",
 });
 
 export const formatFilters = (filters = {}) =>
@@ -78,6 +80,12 @@ export const PLPReducer = (state = getInitialState(), action) => {
         lastHomeItem: item,
       };
 
+      case SET_PREV_PATH:
+      const { prevPath } = action;
+      return {
+        ...state,
+        prevPath: prevPath,
+      };
     case SET_PLP_PAGE:
       const { pageProducts, page } = action;
 
