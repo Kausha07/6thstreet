@@ -27,12 +27,12 @@ import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { VUE_PAGE_VIEW } from "Util/Event";
+import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   updatePLPInitialFilters,
-  setPrevProductSku,setPrevPath,
+  setPrevProductSku, setPrevPath,
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 
@@ -308,37 +308,26 @@ export class PLPContainer extends PureComponent {
   };
 
   componentDidMount() {
-    const { menuCategories = [], prevPath = null, impressions,location: { state }, } = this.props;
+    const { menuCategories = [], prevPath = null, impressions, location: { state }, } = this.props;
     const { isArabic } = this.state;
 
-    let prevLocation;
-    let finalPrevLocation;
-    browserHistory.listen((nextLocation) => {
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
-      finalPrevLocation = prevLocation;
-      prevLocation = nextLocation;
-      const { search } = nextLocation;
-      if (
-        finalPrevLocation &&
-        locationArr.includes(finalPrevLocation.pathname)
-      ) {
-        this.props.setPrevPath(finalPrevLocation ? finalPrevLocation?.pathname : null);
+    this.props.setPrevPath(prevPath);
         const category = this.getCategory();
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: finalPrevLocation ? finalPrevLocation?.pathname : null,
-        url: window.location.href,
-      },
-    });
-      }
-    });
+        const locale = VueIntegrationQueries.getLocaleFromUrl();
+        VueIntegrationQueries.vueAnalayticsLogger({
+          event_name: VUE_PAGE_VIEW,
+          params: {
+            event: VUE_PAGE_VIEW,
+            pageType: "plp",
+            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+            clicked: Date.now(),
+            uuid: getUUID(),
+            referrer: prevPath,
+            url: window.location.href,
+          },
+        });
+        Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
+
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
@@ -783,12 +772,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-        ? options["categories.level3"]
-        : options["categories.level2"]
-        ? options["categories.level2"]
-        : options["categories.level1"]
-        ? options["categories.level1"]
-        : options["q"];
+          ? options["categories.level3"]
+          : options["categories.level2"]
+            ? options["categories.level2"]
+            : options["categories.level1"]
+              ? options["categories.level1"]
+              : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];

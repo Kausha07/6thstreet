@@ -9,6 +9,12 @@ import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
+export const mapDispatchToProps = (_dispatch) => ({});
 
 export class PLP extends PureComponent {
   constructor(props) {
@@ -142,4 +148,4 @@ export class PLP extends PureComponent {
   }
 }
 
-export default PLP;
+export default connect(mapStateToProps, mapDispatchToProps)(PLP);

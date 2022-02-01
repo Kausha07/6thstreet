@@ -27,7 +27,7 @@ export class SearchPageContainer extends PLPContainer {
   }
   componentDidMount() {
     window.pageType = TYPE_CATEGORY;
-    const {prevPath} = this.props;
+    const {prevPath = null} = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
