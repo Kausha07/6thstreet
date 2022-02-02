@@ -184,7 +184,7 @@ class PLPFilters extends PureComponent {
       goToPreviousNavigationState();
     }
     updatePLPInitialFilters(filters, null, null);
-    this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
+    this.setState({ isReset: true, defaultFilters: false });
 
     onReset();
   };
