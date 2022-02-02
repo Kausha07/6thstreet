@@ -468,7 +468,6 @@ class PLPAddToCart extends PureComponent {
       addProductToCart,
       showNotification,
       prevPath = null,
-      location: { state },
     } = this.props;
     const { selectedClickAndCollectStore, selectedSizeType, selectedSizeCode, insertedSizeStatus } = this.state;
     const productStock = simple_products

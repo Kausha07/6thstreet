@@ -62,7 +62,6 @@ export class HomePageContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      location: { state },
       prevPath= null,
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();

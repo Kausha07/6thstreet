@@ -259,7 +259,6 @@ export class CartItemContainer extends PureComponent {
           product: { name } = {},
           full_item_info: { config_sku, category, price },
         },
-        location: { state },
         prevPath= null,
       } = this.props;
 
