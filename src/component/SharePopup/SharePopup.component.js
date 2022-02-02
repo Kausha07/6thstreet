@@ -35,17 +35,28 @@ class SharePopup extends PureComponent {
         }
     };
 
+
     renderMap = [
         {
             title: "WhatsApp",
             icon: <WhatsApp />,
-            handleClick: () => window.open(`https://api.whatsapp.com/send?text=${window.location.href}`, '_blank'),
+            handleClick: (text, title, url, image) => window.open(`https://api.whatsapp.com/send?text=${url}`, '_blank'),
             render: true,
         },
         {
             title: "Facebook",
             icon: <Facebook />,
-            handleClick: () => window.open(`https://www.facebook.com/sharer/sharer.php?${window.location.href}`, '_blank'),
+            handleClick: (text, title, url, image) => {
+                if(FB) {
+                    FB.ui({
+                        method: 'share',
+                        href: url,
+                    });
+                }
+                else {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?${url}`, '_blank');
+                }
+            },
             render: true,
         },
         {
@@ -57,21 +68,22 @@ class SharePopup extends PureComponent {
         {
             title: "Mail",
             icon: <Email />,
-            handleClick: () => window.open(`mailto:?&&subject=&cc=&bcc=&body=${window.location.href}`),
+            handleClick: (text, title, url, image) => window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`),
             render: true,
         },
         {
             title: "Pinterest",
             icon: <Pinterest />,
-            handleClick: () => window.open(`https://pinterest.com/pin/create/button/?url=${window.location.href}`, '_blank'),
+            handleClick: (text, title, url, image) => window.open(`https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${text}`, '_blank'),
             render: true,
         }
     ];
 
     renderShareButtons = () => {
+        const { text="", title="", url = window.location.href, image="" } = this.props;
         return (
             this.renderMap.filter(({render})=> render).map(({title, icon, handleClick}) => (
-                <button key={title} onClick={handleClick}>
+                <button key={title} onClick={() => handleClick(text, title, url, image)}>
                     { icon }
                 </button>
             ))

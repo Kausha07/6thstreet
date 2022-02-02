@@ -21,9 +21,19 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-
+import { setPrevPath } from "Store/PLP/PLP.action";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
+
+export const mapDispatchToProps = (dispatch, state) => ({
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+});
+
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -64,11 +74,12 @@ class ProductItem extends PureComponent {
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid, isVueData } = this.props;
+    const { product, position, qid, isVueData, setPrevPath } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
+    setPrevPath(window.location.href);
     if (!isVueData) {
       if (!qid) {
         queryID = getStore().getState().SearchSuggestions.queryID;
@@ -90,6 +101,7 @@ class ProductItem extends PureComponent {
     }
     // this.sendBannerClickImpression(product);
   }
+
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
@@ -167,6 +179,7 @@ class ProductItem extends PureComponent {
 
     return null;
   }
+
   renderImage() {
     const {
       product: { thumbnail_url },
@@ -311,4 +324,6 @@ class ProductItem extends PureComponent {
   }
 }
 
-export default ProductItem;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProductItem)
+);

@@ -156,16 +156,16 @@ export class HeaderSearchContainer extends PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      location: { pathname: prevPathname },
-    } = prevProps;
-    const { pathname } = location;
+  // componentDidUpdate(prevProps) {
+  //   const {
+  //     location: { pathname: prevPathname },
+  //   } = prevProps;
+  //   const { pathname } = location;
 
-    // if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
-    //   this.onSearchChange("");
-    // }
-  }
+  //   // if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
+  //   //   this.onSearchChange("");
+  //   // }
+  // }
 
   containerProps = () => {
     const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible } = this.props;

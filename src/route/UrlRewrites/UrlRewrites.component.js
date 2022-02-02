@@ -20,6 +20,11 @@ import {
 import "./UrlRewrites.style";
 
 class UrlRewrites extends PureComponent {
+  constructor(props) {
+    super(props);
+    window.history.scrollRestoration = "manual";
+  }
+
   static propTypes = {
     type: PropTypes.string,
     id: PropTypes.number,
@@ -42,7 +47,8 @@ class UrlRewrites extends PureComponent {
   render404;
 
   renderPDP() {
-    const { id, string_sku, brandDescription, brandImg, brandName } = this.props;
+    const { id, string_sku, brandDescription, brandImg, brandName } =
+      this.props;
     return (
       <GTMRouteWrapper route={PRODUCT_PAGE}>
         <PDP

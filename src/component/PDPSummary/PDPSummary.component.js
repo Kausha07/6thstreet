@@ -16,6 +16,7 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 
 import tabby from "./icons/tabby.svg";
+import fallbackImage from "../../style/icons/fallback.png";
 
 import "./PDPSummary.style";
 
@@ -149,7 +150,7 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: { brand_name },
+      product: { brand_name, gallery_images = [] },
     } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
@@ -160,6 +161,7 @@ class PDPSummary extends PureComponent {
           title={document.title}
           text={`Hey check this out: ${document.title}`}
           url={url.href}
+          image={gallery_images[0] || fallbackImage}
         />
       </div>
     }
@@ -190,7 +192,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPSummaryHeaderAndShareAndWishlistButton() {
     const {
-      product: { sku },
+      product: { sku, gallery_images = [] },
       product,
       renderMySignInPopup,
     } = this.props;
@@ -209,6 +211,7 @@ class PDPSummary extends PureComponent {
             title={document.title}
             text={`Hey check this out: ${document.title}`}
             url={url.href}
+            image={gallery_images[0] || fallbackImage}
           />
           <WishlistIcon
             sku={sku}

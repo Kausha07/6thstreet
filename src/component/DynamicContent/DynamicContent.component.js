@@ -109,11 +109,11 @@ class DynamicContent extends PureComponent {
       if (!Component) {
         return null;
       }
-
       return (
         <Component
           ref={this.comprefs[i]}
           {...restProps}
+          setLastTapItemOnHome={this.props.setLastTapItemOnHome}
           renderMySignInPopup={this.props.renderMySignInPopup}
           promotion_name={promotion_name}
           tag={tag}
@@ -148,6 +148,7 @@ class DynamicContent extends PureComponent {
         ref={this.comprefs[i]}
         {...restProps}
         type={type}
+        setLastTapItemOnHome={this.props.setLastTapItemOnHome}
         promotion_name={promotion_name}
         renderMySignInPopup={this.props.renderMySignInPopup}
         tag={tag}

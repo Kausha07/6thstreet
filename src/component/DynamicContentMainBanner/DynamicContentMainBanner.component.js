@@ -60,7 +60,9 @@ class DynamicContentMainBanner extends PureComponent {
     });
   };
   onclick = (item) => {
+    const { index } = this.props;
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentMainBanner${index}`);
   };
 
   sendBannerClickImpression(item) {
@@ -77,7 +79,9 @@ class DynamicContentMainBanner extends PureComponent {
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     if (!link) {
-      return <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" />;
+      return (
+        <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" />
+      );
     }
 
     return (
@@ -102,8 +106,13 @@ class DynamicContentMainBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentMainBanner">
+      <div
+        ref={setRef}
+        block="DynamicContentMainBanner"
+        id={`DynamicContentMainBanner${index}`}
+      >
         {this.renderImages()}
       </div>
     );
