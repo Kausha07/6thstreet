@@ -85,6 +85,14 @@
           // transform: none;
         }
       }
+      .StoreSwitcherPopup{
+        &-Container{
+          @include desktop{
+            bottom: 20px;
+            top: unset;
+          }
+        }
+      }
     }
 
     .CountryMiniFlag {

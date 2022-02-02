@@ -62,7 +62,9 @@ class DynamicContentTwiceBanner extends PureComponent {
     });
   };
   onclick = (item) => {
+    const { index } = this.props;
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentTwiceBanner${index}`);
   };
 
   sendBannerClickImpression(item) {
@@ -137,7 +139,7 @@ class DynamicContentTwiceBanner extends PureComponent {
     };
     const { isArabic } = this.state;
     // const { isAllShowing } = this.state;
-    const { typeOfBanner } = this.props;
+    const { typeOfBanner, index } = this.props;
     const BannerPosition = typeOfBanner === "header" ? "Right" : "Left";
     return (
       <div
@@ -145,6 +147,7 @@ class DynamicContentTwiceBanner extends PureComponent {
         block="DynamicContentTwiceBanner"
         className="row"
         elem="Content"
+        id={`DynamicContentTwiceBanner${index}`}
         mods={{ isArabic }}
       >
         {BannerPosition === "Left" ? (

@@ -3,7 +3,7 @@ import { PureComponent } from "react";
 
 import { ChildrenType, MixType } from "Type/Common";
 import { isArabic } from "Util/App";
-import { ChevronUp, ChevronRight } from "../Icons";
+import { ChevronUp, ChevronRight, Plus, Minus } from "../Icons";
 
 import "./Accordion.style";
 
@@ -38,7 +38,8 @@ export class Accordion extends PureComponent {
     this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
 
   renderHeading() {
-    const { title } = this.props;
+    const { title, MyAccountSection } = this.props;
+    console.log("props in the accordion", this.props)
     const { isExpanded } = this.state;
 
     return (
@@ -51,12 +52,12 @@ export class Accordion extends PureComponent {
           mods={{ isExpanded, isArabic: isArabic() }}
           onClick={this.toggleAccordion}
         >
-          {isExpanded ? (
-            <ChevronUp alt={`Close ${title}`} />
-          ) : (
-            // <ChevronRight alt={`Close ${title}`} />
-            <ChevronRight alt={`Expand ${title}`} />
-          )}
+          {isExpanded ? MyAccountSection ? (
+            <Minus alt={`Expand ${title}`} />) : (<ChevronUp alt={`Expand ${title}`} />
+          ) : MyAccountSection ? (
+            <Plus alt={`Close ${title}`} />) :
+            (<ChevronRight alt={`Close ${title}`} />
+            )}
         </button>
       </div>
     );

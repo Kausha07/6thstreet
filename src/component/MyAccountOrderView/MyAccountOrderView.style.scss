@@ -6,20 +6,15 @@
       word-break: break-all;
     }
   }
-  &-Heading {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 50px;
-
+  &-HeadingButton{
+    margin-top: 0px !important;
     button {
       margin: 0 5px;
       border: 1px solid var(--black);
       border-radius: 5px;
       font-family: var(--avenir-regular-font);
       font-size: 14px;
-      font-weight: var(--fw-normal);
+      font-weight: 600;
       height: auto;
       padding: 10px;
       text-transform: none;
@@ -29,9 +24,55 @@
         cursor: not-allowed;
       }
     }
+  }
+  &-HeadingButtons{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 0px !important;
+    button {
+      margin: 0 5px;
+      border: 1px solid var(--black);
+      border-radius: 5px;
+      font-family: var(--avenir-regular-font);
+      font-size: 14px;
+      font-weight: 600;
+      height: auto;
+      padding: 10px;
+      text-transform: none;
+      &:disabled {
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        color: rgba(0, 0, 0, 0.5);
+        cursor: not-allowed;
+      }
+    }
+  }
+  &-Heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+
+    // button {
+    //   margin: 0 5px;
+    //   border: 1px solid var(--black);
+    //   border-radius: 5px;
+    //   font-family: var(--avenir-regular-font);
+    //   font-size: 14px;
+    //   font-weight: var(--fw-normal);
+    //   height: auto;
+    //   padding: 10px;
+    //   text-transform: none;
+    //   &:disabled {
+    //     border: 1px solid rgba(0, 0, 0, 0.5);
+    //     color: rgba(0, 0, 0, 0.5);
+    //     cursor: not-allowed;
+    //   }
+    // }
 
     h3 {
-      margin: 0;
+      margin: 7px 0 0;
     }
     @include before-desktop {
       flex-direction: column;
@@ -41,7 +82,7 @@
       &Button {
         margin-top: 15px;
       }
-      margin-bottom: 30px;
+      // margin-bottom: 30px;
       // margin-left: -30px;
     }
     &_isArabic {
@@ -54,6 +95,9 @@
 
   &-Status {
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     &Failed {
       align-items: center;
@@ -177,7 +221,8 @@
   }
 
   &-Accordion {
-    border: 1px solid var(--color-light-grey);
+    border-top: 1px solid var(--color-light-grey);
+    border-bottom: 1px solid var(--color-light-grey);
     display: table-cell;
     // padding: 10px 20px;
 
@@ -193,6 +238,7 @@
     .ShipmentTracking {
       display: flex;
       align-items: center;
+      padding: 12px 0px;
       border-top: 2px solid var(--divider-color);
       border-bottom: 2px solid var(--divider-color);
       &-Courier {
@@ -204,6 +250,10 @@
         }
       }
       &-Link {
+        a {
+          font-weight: var(--fw-medium);
+          text-decoration: underline;
+        }
       }
     }
 
@@ -251,6 +301,15 @@
         .Image {
           margin-left: 15px;
           margin-right: 0;
+        }
+      }
+    }
+    .Accordion-Heading {
+      .Accordion-Expand {
+        transform: translate(0);
+        align-items: center;
+        @include before-desktop {
+          width: 50px;
         }
       }
     }
@@ -354,7 +413,7 @@
 
   &-Header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
   }
 
   &-CardPaymentType {

@@ -77,7 +77,7 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    const { toggleMobileMenuSideBar } = this.props;
+    const { toggleMobileMenuSideBar,index } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
@@ -88,6 +88,7 @@ class DynamicContentBanner extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentBanner${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -163,9 +164,9 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
-
+    const {index} = this.props
     return (
-      <div ref={setRef} block="DynamicContentBanner">
+      <div ref={setRef} block="DynamicContentBanner" id={`DynamicContentBanner${index}`}>
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

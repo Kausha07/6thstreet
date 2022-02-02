@@ -5,6 +5,7 @@ import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
+import Logger from "Util/Logger";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import "./DynamicContentVueSlider.style";
 import { getUUIDToken } from "Util/Auth";
@@ -53,25 +54,37 @@ class DynamicContentVueSlider extends PureComponent {
       gender,
       userID,
     });
-    fetchVueData(payload)
-      .then((resp) => {
-        this.setState({
-          data: resp.data,
+    try {
+      fetchVueData(payload)
+        .then((resp) => {
+          this.setState({
+            data: resp.data,
+          });
+        })
+        .catch((err) => {
+          console.error("pdp widget vue query catch", err);
         });
-      })
-      .catch((err) => {
-        console.error("pdp widget vue query catch", err);
-      });
+    } catch (e) {
+      Logger.log(e);
+    }
   };
 
   render() {
     const { isArabic } = this.state;
-    const { renderMySignInPopup,index } = this.props;
+    const { renderMySignInPopup, index, setLastTapItemOnHome } = this.props;
+    if (this.state.data?.length === 0 || this.state.data === undefined) {
+      return null;
+    }
     return (
-      <div block="VeuSliderWrapper" mods={{ isArabic }}>
+      <div
+        block="VeuSliderWrapper"
+        mods={{ isArabic }}
+        id={`VeuSliderWrapper${index}`}
+      >
         {this.state.data?.length > 0 && (
           <DynamicContentVueProductSliderContainer
             products={this.state.data}
+            setLastTapItemOnHome={setLastTapItemOnHome}
             renderMySignInPopup={renderMySignInPopup}
             heading={this.props.layout.title}
             isHome={true}

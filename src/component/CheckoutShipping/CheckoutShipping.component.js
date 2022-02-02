@@ -11,7 +11,7 @@ import { getFinalPrice } from "Component/Price/Price.config";
 import { SHIPPING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutShipping as SourceCheckoutShipping } from "SourceComponent/CheckoutShipping/CheckoutShipping.component";
 import { customerType } from "Type/Account";
-import { isArabic } from "Util/App";
+import { getCurrency, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
@@ -61,24 +61,50 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderTotals() {
     const {
-      totals: { total, currency_code },
+      totals: {
+        coupon_code: couponCode,
+        discount,
+        subtotal = 0,
+        total = 0,
+        currency_code = getCurrency(),
+        total_segments: totals = [],
+        shipping_fee = 0,
+      },
     } = this.props;
 
     if (total !== {}) {
-      const finalPrice = getFinalPrice(total, currency_code);
-
-      return (
-        <div block="Checkout" elem="OrderTotals">
-          {this.renderPriceLine(finalPrice, __("Subtotal"))}
-        </div>
-      );
+      const grandTotal = getFinalPrice(total, currency_code);
+      const subTotal = getFinalPrice(subtotal, currency_code);
+      if (discount != 0) {
+        return (
+          <div block="Checkout" elem="OrderTotals">
+            <ul>
+              <div block="Checkout" elem="Subtotals">
+                {this.renderPriceLine(subTotal, __("Subtotal"))}
+                {couponCode || (discount && discount != 0)
+                  ? this.renderPriceLine(discount, __("Discount"))
+                  : null}
+                {this.renderPriceLine(grandTotal, __("Total Amount"), {
+                  divider: true,
+                })}
+              </div>
+            </ul>
+          </div>
+        );
+      } else {
+        return (
+          <div block="Checkout" elem="OrderTotals">
+            {this.renderPriceLine(subTotal, __("Subtotal"), { subtotalOnly: true, })}
+          </div>
+        );
+      }
     }
 
     return null;
   }
 
   checkForDisabling() {
-    const { selectedShippingMethod ,checkClickAndCollect} = this.props;
+    const { selectedShippingMethod, checkClickAndCollect } = this.props;
     const { isMobile } = this.state;
     if (!checkClickAndCollect() && !selectedShippingMethod || !isMobile) {
       return true;
@@ -132,7 +158,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       isMobile.any() ||
       isMobile.tablet() ||
       (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
-      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect() )
+      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect())
     ) {
       return null;
     }
@@ -334,7 +360,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
               : handleClickNCollectPayment
           }
         >
-          {isSignedIn() && !checkClickAndCollect()? (
+          {isSignedIn() && !checkClickAndCollect() ? (
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">

@@ -9,6 +9,12 @@ import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
+export const mapDispatchToProps = (_dispatch) => ({});
 
 export class PLP extends PureComponent {
   constructor(props) {
@@ -67,25 +73,20 @@ export class PLP extends PureComponent {
   //     localStorage.removeItem("bannerData");
   // }
 
-  updateFiltersState = (activeFilters) => {
-    this.setState({ activeFilters });
-  }
-
   renderPLPDetails() {
     return <PLPDetails {...this.props} />;
   }
 
   renderPLPFilters() {
-    const { activeFilters } = this.state;
-    return <PLPFilters {...this.props} plpPageActiveFilters={activeFilters} />;
+    return <PLPFilters {...this.props} />;
   }
 
   renderPLPPages() {
-    const { prevPath = null } = this.props;
+    const { prevPath = null, updateFiltersState } = this.props;
     return (
       <PLPPages
         {...this.props}
-        updateFiltersState={this.updateFiltersState}
+        updateFiltersState={updateFiltersState}
         renderMySignInPopup={this.showMyAccountPopup}
         prevPath={prevPath}
       />
@@ -147,4 +148,4 @@ export class PLP extends PureComponent {
   }
 }
 
-export default PLP;
+export default connect(mapStateToProps, mapDispatchToProps)(PLP);

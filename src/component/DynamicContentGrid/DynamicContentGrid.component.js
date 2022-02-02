@@ -73,12 +73,14 @@ class DynamicContentGrid extends PureComponent {
     });
   };
   onclick = (item) => {
+    const {index} = this.props
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentGrid${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -208,8 +210,9 @@ class DynamicContentGrid extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const {index} = this.props
     return (
-      <div ref={setRef} block="DynamicContentGrid">
+      <div ref={setRef} block="DynamicContentGrid" id={`DynamicContentGrid${index}`}>
         {this.renderGrid()}
       </div>
     );

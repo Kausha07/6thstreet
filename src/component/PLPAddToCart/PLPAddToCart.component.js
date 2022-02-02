@@ -22,7 +22,8 @@ import './PLPAddToCart.style';
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
-  country: state.AppState.country
+  country: state.AppState.country,
+  prevPath: state.PLP.prevPath
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -100,9 +101,9 @@ class PLPAddToCart extends PureComponent {
 
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     const sliders = document.querySelectorAll('.PLPAddToCart-SizeSelector-SizeContainer-AvailableSizes');
-    sliders.forEach((slider)=>{
+    sliders.forEach((slider) => {
       let isDown = false;
       let startX;
       let scrollLeft;
@@ -122,7 +123,7 @@ class PLPAddToCart extends PureComponent {
         slider.classList.remove('active');
       });
       slider.addEventListener('mousemove', (e) => {
-        if(!isDown) return;
+        if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 3; //scroll-fast
@@ -251,36 +252,36 @@ class PLPAddToCart extends PureComponent {
     const { product } = this.props;
     const { selectedSizeType, sizeObject = {}, isArabic } = this.state
 
-    if(this.state.isOutOfStock){
+    if (this.state.isOutOfStock) {
       return null
     }
 
     if (sizeObject.sizeTypes !== undefined) {
       return (
-        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{isArabic}}>
-        <select
-          key="SizeTypeSelect"
-          block="PLPAddToCart"
-          elem="SizeTypeSelectElement"
-          value={selectedSizeType}
-          onChange={this.onSizeTypeSelect}
-        >
-          {sizeObject.sizeTypes.map((type = "") => {
-            if (product[`size_${type}`].length > 0) {
-              return (
-                <option
-                  key={type}
-                  block="PLPAddToCart"
-                  elem="SizeTypeOption"
-                  value={type}
-                >
-                  {type.toUpperCase()}
-                </option>
-              );
-            }
-            return null;
-          })}
-        </select>
+        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{ isArabic }}>
+          <select
+            key="SizeTypeSelect"
+            block="PLPAddToCart"
+            elem="SizeTypeSelectElement"
+            value={selectedSizeType}
+            onChange={this.onSizeTypeSelect}
+          >
+            {sizeObject.sizeTypes.map((type = "") => {
+              if (product[`size_${type}`].length > 0) {
+                return (
+                  <option
+                    key={type}
+                    block="PLPAddToCart"
+                    elem="SizeTypeOption"
+                    value={type}
+                  >
+                    {type.toUpperCase()}
+                  </option>
+                );
+              }
+              return null;
+            })}
+          </select>
         </div>
       );
     }
@@ -301,7 +302,7 @@ class PLPAddToCart extends PureComponent {
       product[`size_${selectedSizeType}`].length !== 0
     ) {
       return (
-        <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes" mods={{isArabic}}>
+        <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes" mods={{ isArabic }}>
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
 
@@ -317,7 +318,7 @@ class PLPAddToCart extends PureComponent {
 
     return (
       <span id="notavailable">
-        { __("OUT OF STOCK")}
+        {__("OUT OF STOCK")}
       </span>
     );
   }
@@ -466,7 +467,7 @@ class PLPAddToCart extends PureComponent {
       },
       addProductToCart,
       showNotification,
-        location: { state },
+      prevPath = null,
     } = this.props;
     const { selectedClickAndCollectStore, selectedSizeType, selectedSizeCode, insertedSizeStatus } = this.state;
     const productStock = simple_products
@@ -552,7 +553,7 @@ class PLPAddToCart extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
@@ -615,7 +616,7 @@ class PLPAddToCart extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id

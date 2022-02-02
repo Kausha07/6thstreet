@@ -70,7 +70,7 @@ class PLPPages extends PureComponent {
         finalPrevLocation &&
         locationArr.includes(finalPrevLocation.pathname)
       ) {
-        this.props.setPrevProductSku("");
+        // this.props.setPrevProductSku("");
         window.scrollTo(0, 0);
       }
     });
@@ -133,7 +133,6 @@ class PLPPages extends PureComponent {
       impressions,
       query,
       renderMySignInPopup,
-      prevPath = null,
       filters,
       productLoading,
     } = this.props;
@@ -153,7 +152,6 @@ class PLPPages extends PureComponent {
         products={products}
         impressions={impressions}
         renderMySignInPopup={renderMySignInPopup}
-        prevPath={prevPath}
         filters={filters}
       />
     );
@@ -170,6 +168,7 @@ class PLPPages extends PureComponent {
       />
     );
   }
+  
   renderPages() {
     const { pages = {}, productLoading } = this.props;
 
@@ -352,6 +351,20 @@ class PLPPages extends PureComponent {
     }
   };
 
+  getRequestOptions = () => {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
+  }
+  
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -366,7 +379,8 @@ class PLPPages extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = initialOptions.q.split(" ")[1];
+    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
+
 
     if (!isRadio) {
       if (filterArray) {

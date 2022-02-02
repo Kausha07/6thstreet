@@ -110,26 +110,31 @@ export class ContactHelp extends PureComponent {
 
   render() {
     const { isMobile } = this.state;
+    const { accountPage } = this.props;
     return (
       <div block="ContactAndHelp">
         {isMobile ? this.renderContactUsSection() : ""}
-        <ul block="contactHelpList">
-          <li block="MyAccountTabListItem">
-            <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/faq">{__("FAQs")}</Link>
-            </button>
-          </li>
-          <li block="MyAccountTabListItem">
-            <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/shipping-policy">{__("Shipping Policy")}</Link>
-            </button>
-          </li>
-          <li block="MyAccountTabListItem">
-            <button block="MyAccountTabListItem" elem="Button" role="link">
-              <Link to="/return-information">{__("Return Policy")}</Link>
-            </button>
-          </li>
-        </ul>
+        {!accountPage ? (
+          <ul block="contactHelpList">
+            <li block="MyAccountTabListItem">
+              <button block="MyAccountTabListItem" elem="Button" role="link">
+                <Link to="/faq">{__("FAQs")}</Link>
+              </button>
+            </li>
+            <li block="MyAccountTabListItem">
+              <button block="MyAccountTabListItem" elem="Button" role="link">
+                <Link to="/shipping-policy">{__("Shipping Policy")}</Link>
+              </button>
+            </li>
+            <li block="MyAccountTabListItem">
+              <button block="MyAccountTabListItem" elem="Button" role="link">
+                <Link to="/return-information">{__("Return Policy")}</Link>
+              </button>
+            </li>
+          </ul>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

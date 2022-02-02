@@ -32,7 +32,40 @@ const magentoRestPathRewrite = (path) => (
     path.replace(/\/rest\/[a-z]{2}-[a-z]{2}/, '/rest/V1')
 );
 
+const robotsRouter = () => {
+    const { REACT_APP_CDN_API_URL, REACT_APP_REMOTE_CONFIG_DIR } = process.env;
+    return `${REACT_APP_CDN_API_URL}${REACT_APP_REMOTE_CONFIG_DIR}/seo`;
+}
+
+const sitemapLocaleRouter = (request) => {
+    const { hostname } = request;
+    const { REACT_APP_CDN_API_URL, REACT_APP_REMOTE_CONFIG_DIR } = process.env;
+    const regex = new RegExp(/[a-z]{2}-[a-z]{2}/, 'g');
+    const match = regex.exec(hostname);
+    const locale = match ? match['0'] : "";
+    return `${REACT_APP_CDN_API_URL}${REACT_APP_REMOTE_CONFIG_DIR}/seo/${locale}`;
+}
+
 module.exports = (app) => {
+
+    app.use(
+        '/robots.txt',
+        proxy({
+            target: `https://${ process.env.REACT_APP_CDN_API_URL }/`,
+            router: robotsRouter,
+            changeOrigin: true,
+        })
+    );
+
+    app.use(
+        '/sitemap.xml',
+        proxy({
+            target: `https://${ process.env.REACT_APP_CDN_API_URL }/`,
+            router: sitemapLocaleRouter,
+            changeOrigin: true,
+        })
+    );
+
     // Proxy CDN (bypass CORS)
     app.use(
         '/cdn',
