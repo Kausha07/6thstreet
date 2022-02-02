@@ -111,8 +111,8 @@ class PLPFilters extends PureComponent {
   }
 
   renderFilter = ([key, filter]) => {
-    const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-    const { initialOptions, handleCallback, onUnselectAllPress, isChecked } =
+    const { activeFilter, isReset, defaultFilters } = this.state;
+    const { initialOptions, handleCallback, onUnselectAllPress, isChecked,activeFilters } =
       this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -126,7 +126,6 @@ class PLPFilters extends PureComponent {
         : category === "age"
         ? __("BY AGE")
         : label;
-
     return (
       <FieldMultiselect
         key={key}
