@@ -59,7 +59,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
     }
-
+    
     return executePost(prepareQuery([query])).then(
       ({ customer }) => {
         const { firstname = "", lastname } = customer;
@@ -143,7 +143,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     return await MobileAPI.post(`/register`, options);
   }
   async loginAccount(options) {
-    return await MobileAPI.post("/login", options)
+    return await MobileAPI.post("/login", options);
   }
   async signInCommonBlock(dispatch) {
     const wishlistItem = localStorage.getItem("Wishlist_Item");
@@ -220,7 +220,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   // handleMobileAuthCommonBlockOTP(){}
 
   async handleMobileAuthorizationOTP(dispatch, options) {
-    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } = options
+    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
+      options;
 
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no"
@@ -231,7 +232,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
-    setAuthorizationToken(t)
+    setAuthorizationToken(t);
     if (isPhone) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }
@@ -262,10 +263,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-            username,
-            password,
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          }
+              username,
+              password,
+              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+            }
       );
 
     const phoneAttribute = custom_attributes?.filter(
