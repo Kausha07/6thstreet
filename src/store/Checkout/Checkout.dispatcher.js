@@ -11,6 +11,7 @@ import {
   selectPaymentMethod,
   sendVerificationCode,
   validateShippingAddress,
+  addShippingAddress,
   verifyUserPhone,
   getPaymentAuthorization,
   capturePayment,
@@ -36,6 +37,11 @@ export class CheckoutDispatcher {
     return validateShippingAddress({ address });
   }
 
+  async addAddress(dispatch, address) {
+    /* eslint-disable */
+    return addShippingAddress({ address });
+  }
+  
   /* eslint-disable-next-line */
   async estimateShipping(dispatch, address, isValidated = false) {
     const {

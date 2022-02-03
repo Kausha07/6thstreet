@@ -3,6 +3,16 @@ import MobileAPI from "../../provider/MobileAPI";
 export const validateShippingAddress = ({ address }) =>
   MobileAPI.post("/validate-address", address) || {};
 
+export const addShippingAddress = ({ address }) =>
+  MobileAPI.post("/addresses", address) || {};
+
+export const updateShippingAddress = ({ address_id }) =>
+  MobileAPI.put(`addresses/${address_id}`) || {};
+
+export const removeShippingAddress = () => MobileAPI.delete("/addresses") || {};
+
+export const getShippingAddress = () => MobileAPI.get("/addresses") || {};
+
 export const getBinPromotion = ({ bin, cartId }) =>
   MobileAPI.post(`/bin-promotion`, {
     bin_number: bin,
@@ -32,10 +42,10 @@ export const getPaymentMethods = () => MobileAPI.get("/payment-methods") || {};
 
 export const getLastOrder = () => MobileAPI.get("/order/last") || {};
 
-export const getPaymentAuthorization = ({ paymentId}) =>
+export const getPaymentAuthorization = ({ paymentId }) =>
   MobileAPI.get(`/checkout/payments/${paymentId}`) || {};
 
-  export const getPaymentAuthorizationQPay = ({ paymentId }) =>
+export const getPaymentAuthorizationQPay = ({ paymentId }) =>
   MobileAPI.get(`/checkout/payments/${paymentId}?pmethod=checkout_qpay`) || {};
 
 export const capturePayment = ({ paymentId, orderId }) =>
