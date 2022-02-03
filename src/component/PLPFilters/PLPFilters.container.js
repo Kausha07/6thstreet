@@ -116,6 +116,7 @@ export class PLPFiltersContainer extends PureComponent {
       updateFiltersState,
       handleCallback,
       onUnselectAllPress,
+      handleResetFilter
     } = this.props;
 
     return {
@@ -124,13 +125,15 @@ export class PLPFiltersContainer extends PureComponent {
       updateFiltersState,
       handleCallback,
       onUnselectAllPress,
+      handleResetFilter
     };
   };
 
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query } = this.props;
+    const { query,handleResetFilter } = this.props;
+    handleResetFilter()
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
       WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);

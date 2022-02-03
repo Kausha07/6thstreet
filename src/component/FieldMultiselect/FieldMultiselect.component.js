@@ -452,7 +452,7 @@ class FieldMultiselect extends PureComponent {
 
     let searchData = data;
     if (searchKey != "" && searchFacetKey === category) {
-      searchData = searchList;
+      searchData = this.getRenderSearchData(data, searchList);
     }
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
@@ -561,6 +561,35 @@ class FieldMultiselect extends PureComponent {
     const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
+    let finalSearchedData = this.getSearchData(allData, facet_key, value);
+    if (finalSearchedData) {
+      this.setState({
+        searchList: finalSearchedData,
+        searchKey: value,
+        searchFacetKey: facet_key,
+      });
+    }
+  }
+
+  getRenderSearchData = (allData, searchData) => {
+    let finalSearchedData = {};
+    Object.keys(searchData).map((entry) => {
+      Object.keys(allData).map((subEntry) => {
+        if (subEntry === entry) {
+          finalSearchedData[subEntry] = allData[subEntry];
+        } else {
+          Object.entries(allData[subEntry].subcategories).map((data) => {
+            if (data[0] === entry) {
+              finalSearchedData[data[0]] = allData[subEntry].subcategories[data[0]];
+            }
+          });
+        }
+      });
+    });
+    return finalSearchedData;
+  };
+
+  getSearchData = (allData, facet_key, value) => {
     let finalSearchedData = {};
     if (facet_key === "categories_without_path") {
       Object.entries(allData).map((entry) => {
@@ -578,16 +607,8 @@ class FieldMultiselect extends PureComponent {
         }
       });
     }
-
-    if (finalSearchedData) {
-      this.setState({
-        searchList: finalSearchedData,
-        searchKey: value,
-        searchFacetKey: facet_key,
-      });
-    }
-  }
-
+    return finalSearchedData;
+  };
   onCheckboxOptionClick = () => {
     this.filterButtonRef.current.focus();
 

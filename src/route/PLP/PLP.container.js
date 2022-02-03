@@ -32,7 +32,8 @@ import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   updatePLPInitialFilters,
-  setPrevProductSku, setPrevPath,
+  setPrevProductSku,
+  setPrevPath,
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 
@@ -174,6 +175,7 @@ export class PLPContainer extends PureComponent {
 
   containerFunctions = {
     handleCallback: this.handleCallback.bind(this),
+    handleResetFilter:this.handleResetFilter.bind(this),
     onUnselectAllPress: this.onUnselectAllPress.bind(this),
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
@@ -312,21 +314,21 @@ export class PLPContainer extends PureComponent {
     const { isArabic } = this.state;
 
     this.props.setPrevPath(prevPath);
-        const category = this.getCategory();
-        const locale = VueIntegrationQueries.getLocaleFromUrl();
-        VueIntegrationQueries.vueAnalayticsLogger({
-          event_name: VUE_PAGE_VIEW,
-          params: {
-            event: VUE_PAGE_VIEW,
-            pageType: "plp",
-            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-            clicked: Date.now(),
-            uuid: getUUID(),
-            referrer: prevPath,
-            url: window.location.href,
-          },
-        });
-        Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
+    const category = this.getCategory();
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+      },
+    });
+    Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
 
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
@@ -648,7 +650,9 @@ export class PLPContainer extends PureComponent {
   updateFiltersState(activeFilters) {
     this.setState({ activeFilters });
   }
-
+  handleResetFilter() {
+    this.setState({ activeFilters: {} });
+  }
   componentDidUpdate(prevProps, prevState) {
     const { isLoading, setIsLoading, menuCategories = [] } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
@@ -772,12 +776,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-          ? options["categories.level3"]
-          : options["categories.level2"]
-            ? options["categories.level2"]
-            : options["categories.level1"]
-              ? options["categories.level1"]
-              : options["q"];
+        ? options["categories.level3"]
+        : options["categories.level2"]
+        ? options["categories.level2"]
+        : options["categories.level1"]
+        ? options["categories.level1"]
+        : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
