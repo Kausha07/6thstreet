@@ -175,7 +175,7 @@ export class PLPContainer extends PureComponent {
 
   containerFunctions = {
     handleCallback: this.handleCallback.bind(this),
-    handleResetFilter:this.handleResetFilter.bind(this),
+    handleResetFilter: this.handleResetFilter.bind(this),
     onUnselectAllPress: this.onUnselectAllPress.bind(this),
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
@@ -530,9 +530,9 @@ export class PLPContainer extends PureComponent {
         updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
-            ...activeFilters,
             activeFilters: {
-              [initialFacetKey]: facet_value,
+              ...activeFilters,
+              [initialFacetKey]: [facet_value],
             },
           },
           () => this.select()
