@@ -12,13 +12,16 @@ import {
   sendVerificationCode,
   validateShippingAddress,
   addShippingAddress,
+  updateShippingAddress,
+  removeShippingAddress,
+  getShippingAddresses,
   verifyUserPhone,
   getPaymentAuthorization,
   capturePayment,
   cancelOrder,
   getBinPromotion,
   removeBinPromotion,
-  getPaymentAuthorizationQPay
+  getPaymentAuthorizationQPay,
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,
@@ -41,7 +44,22 @@ export class CheckoutDispatcher {
     /* eslint-disable */
     return addShippingAddress({ address });
   }
+
+  async updateAddress(dispatch, address_id, address) {
+    /* eslint-disable */
+    return updateShippingAddress({ address_id, address });
+  }
+
+  async removeAddress(dispatch,address_id) {
+    /* eslint-disable */
+    return removeShippingAddress({address_id});
+  }
   
+  async getAddresses(dispatch) {
+    /* eslint-disable */
+    return getShippingAddresses();
+  }
+
   /* eslint-disable-next-line */
   async estimateShipping(dispatch, address, isValidated = false) {
     const {
@@ -194,9 +212,8 @@ export class CheckoutDispatcher {
   }
 
   async getPaymentAuthorization(dispatch, paymentId, qpaymethod) {
-    if(qpaymethod){
+    if (qpaymethod) {
       return getPaymentAuthorizationQPay({ paymentId });
-
     }
     return getPaymentAuthorization({ paymentId });
   }

@@ -6,12 +6,13 @@ export const validateShippingAddress = ({ address }) =>
 export const addShippingAddress = ({ address }) =>
   MobileAPI.post("/addresses", address) || {};
 
-export const updateShippingAddress = ({ address_id }) =>
-  MobileAPI.put(`addresses/${address_id}`) || {};
+export const updateShippingAddress = ({ address_id, address }) =>
+  MobileAPI.put(`/addresses/${address_id}`, address) || {};
 
-export const removeShippingAddress = () => MobileAPI.delete("/addresses") || {};
+export const removeShippingAddress = ({ address_id }) =>
+  MobileAPI.delete(`/addresses/${address_id}`) || {};
 
-export const getShippingAddress = () => MobileAPI.get("/addresses") || {};
+export const getShippingAddresses = () => MobileAPI.get("/addresses") || {};
 
 export const getBinPromotion = ({ bin, cartId }) =>
   MobileAPI.post(`/bin-promotion`, {

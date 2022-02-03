@@ -51,6 +51,10 @@ export const mapDispatchToProps = (dispatch) => ({
   validateAddress: (address) =>
     CheckoutDispatcher.validateAddress(dispatch, address),
   addAddress: (address) => CheckoutDispatcher.addAddress(dispatch, address),
+  updateAddress: (address_id, address) =>
+    CheckoutDispatcher.updateAddress(dispatch, address_id, address),
+  removeAddress: (id) => CheckoutDispatcher.removeAddress(dispatch, id),
+  getAddresses: () => CheckoutDispatcher.getAddresses(dispatch),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
 });
@@ -90,15 +94,24 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       showErrorNotification,
       goToPreviousHeaderState,
       closeForm,
+      getAddresses,
     } = this.props;
-
-    updateCustomerDetails().then(() => {
+    getAddresses().then((response) => {
+      console.log("muskan response", response);
       this.setState({ isLoading: false }, () => {
         hideActiveOverlay();
         goToPreviousHeaderState();
         closeForm();
       });
     }, showErrorNotification);
+
+    // updateCustomerDetails().then(() => {
+    //   this.setState({ isLoading: false }, () => {
+    //     hideActiveOverlay();
+    //     goToPreviousHeaderState();
+    //     closeForm();
+    //   });
+    // }, showErrorNotification);
   };
 
   handleError = (error) => {
@@ -182,11 +195,15 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       payload: {
         address: { id },
       },
+      updateAddress,
     } = this.props;
-    const query = MyAccountQuery.getUpdateAddressMutation(id, address);
-    fetchMutation(query)
-      .then(this.handleAfterAction, this.handleError)
-      .then(showCards);
+    const { newAddress } = this.getNewAddressField(address);
+    newAddress.id = id;
+    const apiResult = updateAddress(id, newAddress);
+
+    if (apiResult.data) {
+      apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
+    }
   }
 
   async handleDeleteAddress() {
@@ -207,6 +224,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
           telephone,
         },
       },
+      updateAddress,
+      removeAddress,
     } = this.props;
 
     if (default_shipping || default_billing) {
@@ -224,34 +243,43 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       };
 
       this.setState({ isLoading: true });
-      const editQuery = MyAccountQuery.getUpdateAddressMutation(
-        id,
-        clearAddress
-      );
-      await fetchMutation(editQuery);
+      // const editQuery = MyAccountQuery.getUpdateAddressMutation(
+      //   id,
+      //   clearAddress
+      // );
+      // await fetchMutation(editQuery);
+      const { newAddress } = this.getNewAddressField(address);
+      newAddress.id = id;
+      const apiResult = updateAddress(id, newAddress);
 
-      const deleteQuery = MyAccountQuery.getDeleteAddressMutation(id);
-      await fetchMutation(deleteQuery)
-        .then(this.handleAfterAction, this.handleError)
-        .then(showCards);
+      if (apiResult.data) {
+        const deleteApiResult = removeAddress(id);
+        deleteApiResult
+          .then(this.handleAfterAction, this.handleError)
+          .then(showCards);
+      }
+      // const deleteQuery = MyAccountQuery.getDeleteAddressMutation(id);
+      // await fetchMutation(deleteQuery)
+      //   .then(this.handleAfterAction, this.handleError)
+      //   .then(showCards);
 
       return;
     }
 
     this.setState({ isLoading: true });
-    const query = MyAccountQuery.getDeleteAddressMutation(id);
-    fetchMutation(query)
+    const deleteApiResult = removeAddress(id);
+    deleteApiResult
       .then(this.handleAfterAction, this.handleError)
       .then(showCards);
   }
 
   handleCreateAddress(address) {
-    const { showCards,addAddress } = this.props;
+    const { showCards, addAddress } = this.props;
     const { newAddress } = this.getNewAddressField(address);
-    // const apiResult = addAddress(newAddress);
-    // console.log("muskan",apiResult);
-    // const query = MyAccountQuery.getCreateAddressMutation(address);
-    // fetchMutation(query).then(this.handleAfterAction, this.handleError).then(showCards);
+    const apiResult = addAddress(newAddress);
+    if (apiResult.data) {
+      apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
+    }
   }
 
   getNewAddressField(address) {
