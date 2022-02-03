@@ -7,6 +7,7 @@ import {
   setCartTotals,
   updateCartItem,
   setCheckoutDetails,
+  setCartCoupon
 } from "Store/Cart/Cart.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -14,6 +15,7 @@ import {
   applyCouponCode,
   createCart,
   getCart,
+  getCoupon,
   removeCouponCode,
   removeProductFromCart,
   updateProductInCart,
@@ -107,7 +109,7 @@ export class CartDispatcher {
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
     try {
       dispatch(processingCartRequest());
-      const { data } = await getCart(cartId);
+      const { data } = await getCart(cartId);      
       const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
       if (!data) {
         try {
@@ -305,6 +307,21 @@ export class CartDispatcher {
       Logger.log(e);
     }
   }
+
+  async getCoupon(dispatch) {
+    const { Cart: { cartId },} = getStore().getState();
+    try {
+      const {avail_coupons} = await getCoupon(cartId)
+      dispatch(setCartCoupon(avail_coupons));
+      return;
+    } catch (e) {
+        dispatch(setCartCoupon());
+        Logger.log(e);
+    }
+  }
+
+
+
 }
 
 export default new CartDispatcher();

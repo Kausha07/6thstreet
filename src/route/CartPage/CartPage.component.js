@@ -9,6 +9,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
+import CartCouponList from "Component/CartCouponList";
 import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
@@ -172,6 +173,7 @@ export class CartPage extends PureComponent {
         mix={{ block: "CartPage", elem: "Discount" }}
       >
         <CartCoupon couponCode={coupon_code} />
+        <CartCouponList couponCode={coupon_code} {...this.props}/>
       </ExpandableContent>
     );
   }
