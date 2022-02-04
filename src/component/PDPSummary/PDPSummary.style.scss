@@ -360,3 +360,11 @@
 #TabbyPromo {
   margin-top: 25px;
 }
+
+// hack for tabby promo issue PWA-2182
+.tabby-promo__feature {
+  padding-left: 0 !important;
+  &::before {
+    display: none !important;
+  }
+}
