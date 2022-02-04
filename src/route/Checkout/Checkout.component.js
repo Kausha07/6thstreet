@@ -298,6 +298,7 @@ export class Checkout extends SourceCheckout {
       updateTotals,
       setBillingStep,
       isClickAndCollect,
+      addresses
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
@@ -318,6 +319,7 @@ export class Checkout extends SourceCheckout {
         <CheckoutBilling
           cashOnDeliveryFee={cashOnDeliveryFee}
           setLoading={setLoading}
+          // addresses={addresses}
           paymentMethods={paymentMethods}
           setDetailsStep={setDetailsStep}
           shippingAddress={shippingAddress}

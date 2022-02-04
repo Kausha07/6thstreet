@@ -54,7 +54,6 @@ export const mapDispatchToProps = (dispatch) => ({
   updateAddress: (address_id, address) =>
     CheckoutDispatcher.updateAddress(dispatch, address_id, address),
   removeAddress: (id) => CheckoutDispatcher.removeAddress(dispatch, id),
-  getAddresses: () => CheckoutDispatcher.getAddresses(dispatch),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
 });
@@ -94,24 +93,15 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       showErrorNotification,
       goToPreviousHeaderState,
       closeForm,
-      getAddresses,
     } = this.props;
-    getAddresses().then((response) => {
-      console.log("muskan response", response);
+
+    updateCustomerDetails().then(() => {
       this.setState({ isLoading: false }, () => {
         hideActiveOverlay();
         goToPreviousHeaderState();
         closeForm();
       });
     }, showErrorNotification);
-
-    // updateCustomerDetails().then(() => {
-    //   this.setState({ isLoading: false }, () => {
-    //     hideActiveOverlay();
-    //     goToPreviousHeaderState();
-    //     closeForm();
-    //   });
-    // }, showErrorNotification);
   };
 
   handleError = (error) => {
@@ -201,7 +191,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     newAddress.id = id;
     const apiResult = updateAddress(id, newAddress);
 
-    if (apiResult.data) {
+    if (apiResult) {
       apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
     }
   }
@@ -252,7 +242,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       newAddress.id = id;
       const apiResult = updateAddress(id, newAddress);
 
-      if (apiResult.data) {
+      if (apiResult) {
         const deleteApiResult = removeAddress(id);
         deleteApiResult
           .then(this.handleAfterAction, this.handleError)
@@ -277,7 +267,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     const { showCards, addAddress } = this.props;
     const { newAddress } = this.getNewAddressField(address);
     const apiResult = addAddress(newAddress);
-    if (apiResult.data) {
+    if (apiResult) {
       apiResult.then(this.handleAfterAction, this.handleError).then(showCards);
     }
   }

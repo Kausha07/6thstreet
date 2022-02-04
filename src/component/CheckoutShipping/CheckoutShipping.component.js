@@ -141,7 +141,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderDeliveryButton() {
     const {
-      customer: { addresses = [] },
+      addresses,
       selectedCustomerAddressId,
       checkClickAndCollect,
       isPaymentLoading,
@@ -246,7 +246,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { openFirstPopup, formContent, isArabic } = this.state;
     const {
       notSavedAddress,
-      customer: { addresses = [] },
+      addresses,
       isClickAndCollect,
       checkClickAndCollect
     } = this.props;
@@ -314,12 +314,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       shippingAddress,
       isClickAndCollect,
       checkClickAndCollect,
-      totals
+      totals,
+      addresses
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
+        addresses={addresses}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}

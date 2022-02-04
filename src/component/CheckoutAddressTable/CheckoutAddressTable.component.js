@@ -25,6 +25,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
   };
 
   renderCard() {
+
     const {
       address: {
         default_billing,
@@ -32,14 +33,14 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
         lastname,
         street,
         city,
-        country_id,
-        region: { region },
+        country_code,
+        area
       },
       isSelected,
     } = this.props;
 
     const def = default_billing === true ? __("default") : " ";
-    const countryId = `(${country_id})`;
+    const countryId = `(${country_code})`;
     const { isArabic } = this.state;
 
     return (
@@ -60,7 +61,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
               {street}
             </div>
             <div block="MyAccountAddressCard" elem="City">
-              {region}
+              {area}
               {" - "}
               {city}
               {" - "}
@@ -151,11 +152,11 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     const {
       countries = [],
       mix,
-      address: { country_id },
+      address: { country_code },
     } = this.props;
     const { isArabic } = this.state;
 
-    if (country_id !== getCountryFromUrl()) {
+    if (country_code !== getCountryFromUrl()) {
       return null;
     }
 

@@ -34,6 +34,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
+  addresses: state.MyAccountReducer.addresses,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -102,7 +103,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   notSavedAddress() {
     const {
-      customer: { addresses = [] },
+      addresses
     } = this.props;
 
     if (addresses.length === 0) {

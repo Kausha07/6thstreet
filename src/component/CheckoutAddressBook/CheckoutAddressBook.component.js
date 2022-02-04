@@ -21,7 +21,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {
@@ -59,7 +59,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       isSignedIn,
       shippingAddress,
       isClickAndCollect,
-      clickAndCollectStatus
+      clickAndCollectStatus,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -85,15 +85,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       openForm,
       closeForm,
       hideCards,
-      isBilling
+      isBilling,
     } = this.props;
-    const {
-      id,
-      region: { region_code, region },
-      postcode
-    } = address;
+    const { id, area } = address;
 
-    if (!postcode && !region_code && !region) {
+    if (!area) {
       return null;
     }
 
@@ -111,6 +107,17 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       />
     );
   };
+
+  renderAddressList() {
+    const { addresses } = this.props;
+    if (!addresses) {
+      return this.renderLoading();
+    }
+    if (!addresses.length) {
+      return this.renderNoAddresses();
+    }
+    return addresses.map(this.renderAddress);
+  }
 
   renderSignedInContent() {
     const { currentPage, isArabic, isMobile } = this.state;
@@ -147,7 +154,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   mobileSliderCallback = (newPage) => {
     this.setState({ currentPage: newPage });
   };
-
 
   renderPopup() {
     const { formContent, closeForm, openForm, customer } = this.props;

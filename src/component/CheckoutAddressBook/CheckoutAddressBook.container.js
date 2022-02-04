@@ -58,7 +58,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   estimateShipping(addressId) {
     const {
       onShippingEstimationFieldsChange,
-      customer: { addresses = [] },
+      addresses
     } = this.props;
 
     const address = addresses.find(({ id }) => id === addressId);
