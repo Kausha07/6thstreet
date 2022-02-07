@@ -10,6 +10,7 @@ import {
   UPDATE_CUSTOMER_PASSWORD_FORGOT_STATUS,
   UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
   UPDATE_CUSTOMER_SIGN_IN_STATUS,
+  SET_CUSTOMER_ADDRESS_DATA
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -19,10 +20,11 @@ export const initialState = {
   customer: {},
   mobileTabActive: true,
   guestUserEmail: "",
+  addresses:[]
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
-  const { status, customer, guestUserEmail } = action;
+  const { status, customer, guestUserEmail,addresses } = action;
 
   switch (action.type) {
     case UPDATE_CUSTOMER_SIGN_IN_STATUS:
@@ -35,7 +37,11 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         guestUserEmail,
       };
-
+    case SET_CUSTOMER_ADDRESS_DATA:
+      return {
+        ...state,
+        addresses,
+      };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
         ...state,
