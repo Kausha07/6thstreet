@@ -86,7 +86,7 @@ export class MyAccountAddressBook extends PureComponent {
   }
 
   renderAddress = (address, index) => {
-    const { getDefaultPostfix, closeForm, openForm, hideCards } = this.props;
+    const { getDefaultPostfix, closeForm, openForm } = this.props;
     const addressNumber = index + 1;
     const postfix = getDefaultPostfix(address);
 
@@ -94,7 +94,7 @@ export class MyAccountAddressBook extends PureComponent {
       <MyAccountAddressTable
         title={__("Address #%s%s", addressNumber, postfix)}
         showActions
-        hideCards={hideCards}
+        hideCards={this.hideCards}
         address={address}
         key={addressNumber}
         closeForm={closeForm}
