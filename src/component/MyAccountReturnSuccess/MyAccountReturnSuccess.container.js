@@ -8,7 +8,6 @@ import { MatchType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountReturnSuccess from './MyAccountReturnSuccess.component';
-import { DISPLAY_DISCOUNT_PERCENTAGE } from '../Price/Price.config';
 
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
@@ -51,8 +50,6 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
             isLoading
         } = this.state;
 
-
-        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
         return {
             orderId: order_id,
             orderNumber: order_increment_id,
@@ -61,7 +58,6 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
             items,
             isLoading,
             customer,
-            displayDiscountPercentage
         };
     };
 
