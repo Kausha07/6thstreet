@@ -151,6 +151,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   async loginAccount(options) {
     return await MobileAPI.post("/login", options);
   }
+
+  async resetUserPassword(options) {
+    return await MobileAPI.put("/customers/me/password", options);
+  }
+
   async signInCommonBlock(dispatch) {
     const wishlistItem = localStorage.getItem("Wishlist_Item");
     if (wishlistItem) {
