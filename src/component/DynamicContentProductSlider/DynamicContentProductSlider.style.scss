@@ -37,9 +37,7 @@
       line-height: 19px;
       text-align: start;
       text-transform: uppercase;
-      @include mobile {
-        text-align: center;
-      }
+      text-align: left;
     }
     #productName {
       color: #4a4a4a;
@@ -47,10 +45,14 @@
       font-size: 13px;
       letter-spacing: 0;
       line-height: 15px;
-      text-align: start;
-      @include mobile {
-        text-align: center;
-        width: 100%;
+      text-align: left;
+      &_isArabic {
+        text-align: right;
+      }
+    }
+    &_isArabic {
+      #brandName, #productName {
+        text-align: right;
       }
     }
     .Price > span:first-child {

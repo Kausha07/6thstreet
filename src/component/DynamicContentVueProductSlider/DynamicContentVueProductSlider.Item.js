@@ -2,7 +2,6 @@ import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/e
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
-import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import Logger from "Util/Logger";
@@ -85,43 +84,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
-  }
-
-  discountPercentage(basePrice, specialPrice, haveDiscount) {
-    const { country } = this.props;
-    if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
-      return null;
-    }
-
-    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
-
-    return (
-      <span
-        block="VueProductSlider"
-        elem="Discount"
-        mods={{ discount: haveDiscount }}
-      >
-        -{discountPercentage}%<span> </span>
-      </span>
-    );
-  }
-
-  renderSpecialPrice(specialPrice, haveDiscount) {
-    const currency = getCurrency();
-    return (
-      <span
-        block="VueProductSlider"
-        elem="SpecialPrice"
-        mods={{ discount: haveDiscount }}
-      >
-        {currency}
-        <span> </span>
-        {specialPrice}
-      </span>
-    );
   }
 
   renderPrice(price) {

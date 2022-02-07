@@ -8,11 +8,6 @@ import Price from "Component/Price";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import {
-  getFinalPrice,
-  FIXED_CURRENCIES,
-  DISPLAY_DISCOUNT_PERCENTAGE,
-} from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 
