@@ -1,5 +1,6 @@
 import { Field } from "Util/Query";
 import { LOCALES } from "Util/Url/Url.config";
+import MobileAPI from "Util/API/provider/MobileAPI";
 export class VueIntegrationQueries {
   /**
    * log vue analytics query
@@ -8,24 +9,12 @@ export class VueIntegrationQueries {
 
   async vueAnalayticsLogger(payload) {
     const locale = this.getLocaleFromUrl();
-    return new Promise((resolve, reject) => {
-      fetch(`/api/vue/analytics?locale=${locale}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-App-Version": "2.27.0",
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((response) => {
-          if (response.status !== 200) {
-            // throw Error(response.statusText);
-            console.error("Error", response.statusText);
-          }
-          return response.json();
-        })
-        .catch((error) => reject(error));
-    });
+    try {
+      await MobileAPI.post(`/vue/analytics`, payload);
+    }
+    catch(err){
+      console.error("Error", err);
+    }
   }
 
   getLocaleFromUrl() {

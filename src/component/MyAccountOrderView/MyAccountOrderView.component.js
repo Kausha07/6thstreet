@@ -265,7 +265,7 @@ class MyAccountOrderView extends PureComponent {
     }
   };
 
-  renderAccordionTitle(title, image, status = null) {
+  renderAccordionTitle(title, image, status = null, deliveryDate = null) {
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
@@ -283,6 +283,10 @@ class MyAccountOrderView extends PureComponent {
           {title}
           {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
         </h3>
+        <span>{formatDate(
+                "DD MMMM YYYY",
+                new Date(deliveryDate.replace(/-/g, "/"))
+              )}</span>
       </div>
     );
   }
@@ -290,7 +294,8 @@ class MyAccountOrderView extends PureComponent {
   shouldDisplayBar = (status) => {
     switch (status) {
       case STATUS_DISPATCHED:
-      case STATUS_IN_TRANSIT: {
+      case STATUS_IN_TRANSIT:
+      case DELIVERY_SUCCESSFUL: {
         return true;
       }
 
@@ -447,7 +452,7 @@ class MyAccountOrderView extends PureComponent {
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(item.status)}
-          title={this.renderAccordionTitle(item.label, getIcon, item.status)}
+          title={this.renderAccordionTitle(item.label, getIcon, item.status, item.courier_deliver_date)}
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
