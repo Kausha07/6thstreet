@@ -11,6 +11,7 @@ export {
 
 export const SET_IS_MOBILE_TAB_ACTIVE = "SET_IS_MOBILE_TAB_ACTIVE";
 export const SET_GUEST_USER_EMAIL = "SET_GUEST_USER_EMAIL";
+export const SET_CUSTOMER_ADDRESS_DATA = "SET_CUSTOMER_ADDRESS_DATA";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -20,4 +21,9 @@ export const setIsMobileTabActive = (isActive) => ({
 export const updateGuestUserEmail = (guestUserEmail) => ({
   type: SET_GUEST_USER_EMAIL,
   guestUserEmail,
+});
+
+export const setCustomerAddressData = (addresses) => ({
+  type: SET_CUSTOMER_ADDRESS_DATA,
+  addresses,
 });

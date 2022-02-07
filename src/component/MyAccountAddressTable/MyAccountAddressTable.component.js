@@ -85,7 +85,8 @@ export class MyAccountAddressTable extends KeyValueTable {
           elem="ActionBtn"
           onClick={this.onEdit}
         >
-          <Image lazyLoad={true}
+          <Image
+            lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",
@@ -101,7 +102,8 @@ export class MyAccountAddressTable extends KeyValueTable {
           elem="ActionBtn"
           onClick={onDeleteClick}
         >
-          <Image lazyLoad={true}
+          <Image
+            lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",
@@ -126,17 +128,17 @@ export class MyAccountAddressTable extends KeyValueTable {
 
   getPhone = () => {
     const {
-      address: { telephone = "" },
+      address: { phone = "" },
     } = this.props;
-    const numbers = telephone.slice(1);
+    const numbers = phone.slice(1);
     const code = numbers.slice(0, 3);
-    const phone = numbers.slice(3);
+    const telephone = numbers.slice(3);
 
     if (isArabic()) {
-      return `${phone} ${code}+`;
+      return `${telephone} ${code}+`;
     }
 
-    return `+${code} ${phone}`;
+    return `+${code} ${telephone}`;
   };
 
   renderCard() {
@@ -146,14 +148,14 @@ export class MyAccountAddressTable extends KeyValueTable {
         firstname,
         lastname,
         street,
+        country_code,
         city,
-        country_id,
-        region: { region },
+        area
       },
     } = this.props;
 
     const def = default_billing === true ? __("default") : " ";
-    const countryId = `(${country_id})`;
+    const countryId = `(${country_code})`;
 
     return (
       <div block="MyAccountAddressCard" onClick={this.mobileEditAddress}>
@@ -167,7 +169,7 @@ export class MyAccountAddressTable extends KeyValueTable {
           {street}
         </div>
         <div block="MyAccountAddressCard" elem="City">
-          {region}
+          {area}
           {" - "}
           {city}
           {" - "}

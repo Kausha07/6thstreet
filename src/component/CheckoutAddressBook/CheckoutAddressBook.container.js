@@ -36,7 +36,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     isBilling: PropTypes.bool,
     showPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   containerFunctions = {
@@ -56,41 +56,35 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   }
 
   estimateShipping(addressId) {
-    const {
-      onShippingEstimationFieldsChange,
-      customer: { addresses = [] },
-    } = this.props;
+    const { onShippingEstimationFieldsChange, addresses } = this.props;
 
     const address = addresses.find(({ id }) => id === addressId);
-
     if (!address) {
       return;
     }
 
     const {
       city,
-      country_id,
-      postcode,
-      telephone,
-      street: streetObj,
-      region: { region_id, region_code } = {},
+      country_code,
+      area,
+      street,
+      phone,
     } = address;
 
-    if (!country_id) {
+    if (!country_code) {
       return;
     }
 
-    const street = streetObj[0];
 
     onShippingEstimationFieldsChange({
       city,
-      country_code: country_id,
-      region_id,
-      area: region_code,
-      postcode,
-      phone: telephone,
+      country_code,
+      region_id: null,
+      area,
+      postcode: area,
+      phone,
       street,
-      telephone: telephone.substring("4"),
+      telephone: phone.substring("4"),
     });
   }
   render() {
