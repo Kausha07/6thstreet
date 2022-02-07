@@ -827,7 +827,6 @@ class MyAccountOrderView extends PureComponent {
       );
     }
     const { shipping_address } = order;
-    console.log("muskan order", order);
     return (
       <div block="MyAccountOrderView">
         <Loader isLoading={isLoading} />
