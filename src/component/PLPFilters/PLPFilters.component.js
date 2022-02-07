@@ -528,14 +528,52 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
+    const breadcrumbs = location.pathname
+    .split(".html")[0]
+    .substring(1)
+    .split("/");
+    const plpTitle = breadcrumbs.pop() || "";
+    const checkString = (str) => {
+      const regularTitle = {
+        containString : /-/,
+      }
+      const expMatch ={};
+      expMatch.containString = regularTitle.containString.test(str);
+      return expMatch;
+    }
+    
+    const removeChar = (str) =>{
+      const titleSplit = str.split('-');
+      const titleJoin = titleSplit.join(' ');
+      return titleJoin;
+    }
+    const capitalizeSentence = (str) => {
+      var splitStr = str.split(' ');
+      for (var i = 0; i < splitStr.length; i++) {
+          splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+      }
+      return splitStr.join(' '); 
+   }
+    const validateCategoryName = () => {
+      if (checkString(plpTitle).containString == 1){
+        const catTitleTemp = removeChar(plpTitle);
+        return capitalizeSentence(catTitleTemp);
+      }
+      else{
+        return capitalizeSentence(plpTitle);
+      }
+    }
+    const pageTitle = validateCategoryName();
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
+    
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
           <span>{count}</span>
-          {count ? __("Results") : null}
+          {count ? __("Results for " ) : null}
+          <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
         </div>
         {!isMobile.any() && (
           <div block="FilterHeader">
@@ -570,7 +608,8 @@ class PLPFilters extends PureComponent {
             </div>
             <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
               <span>{count}</span>
-              {count ? __("Results") : null}
+              {count ? __("Results for ") : null}
+              <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
             </div>
           </div>
         )}
