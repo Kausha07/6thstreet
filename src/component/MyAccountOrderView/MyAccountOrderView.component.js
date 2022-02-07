@@ -284,12 +284,13 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
+          {!!packageStatus && <span>{` - ${packageStatus}`}:</span>}&nbsp;
+          {status === DELIVERY_SUCCESSFUL ? 
+          <span>{formatDate(
+            "DD MMMM YYYY",
+            new Date(deliveryDate.replace(/-/g, "/"))
+          )}</span>: null }
         </h3>
-        <span>{formatDate(
-                "DD MMMM YYYY",
-                new Date(deliveryDate.replace(/-/g, "/"))
-              )}</span>
       </div>
     );
   }
@@ -308,14 +309,13 @@ class MyAccountOrderView extends PureComponent {
     }
   };
 
-  renderAccordionProgress(status) {
+  renderAccordionProgress(status, item) {
     const displayStatusBar = this.shouldDisplayBar(status)
     if (!displayStatusBar) {
       return null;
     }
 
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
-
     return (
       <div
         block="MyAccountOrderView"
@@ -344,9 +344,24 @@ class MyAccountOrderView extends PureComponent {
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
           {Object.values(STATUS_LABELS).map((label) => (
-            <p block="MyAccountOrderListItem" elem="StatusTitle">
-              {label}
-            </p>
+            <div>
+              <p block="MyAccountOrderListItem" elem="StatusTitle">
+                {label}
+              </p>
+              <p block="MyAccountOrderListItem" elem="StatusTitle">
+                {label === STATUS_DISPATCHED ? formatDate(
+                  "DD MMM",
+                  new Date(item.courier_shipped_date?.replace(/-/g, "/"))
+                )
+                  : label === STATUS_IN_TRANSIT ? formatDate(
+                    "DD MMM",
+                    new Date(item.courier_in_transit_date?.replace(/-/g, "/"))
+                  ) : formatDate(
+                    "DD MMM",
+                    new Date(item.courier_deliver_date?.replace(/-/g, "/"))
+                  )}
+              </p>
+            </div>
           ))}
         </div>
       </div>
@@ -454,7 +469,7 @@ class MyAccountOrderView extends PureComponent {
         <Accordion
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
-          shortDescription={this.renderAccordionProgress(item.status)}
+          shortDescription={this.renderAccordionProgress(item.status, item)}
           title={this.renderAccordionTitle(item.label, getIcon, item.status, item.courier_deliver_date)}
           MyAccountSection={true}
         >
