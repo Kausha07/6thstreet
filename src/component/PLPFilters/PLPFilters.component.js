@@ -12,6 +12,7 @@ import Popup from "Component/Popup";
 import PropTypes from "prop-types";
 import { PureComponent, createRef } from "react";
 import { Filters } from "Util/API/endpoint/Product/Product.type";
+import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
@@ -76,7 +77,7 @@ class PLPFilters extends PureComponent {
       isOpen: activeOverlay === "PLPFilter",
     };
   }
-  
+
   setDefaultFilters = () => {
     this.setState({ defaultFilters: true });
   };
@@ -572,7 +573,7 @@ class PLPFilters extends PureComponent {
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
           <span>{count}</span>
           {count ? __("Results for " ) : null}
-          <h1 className="categoryTitle">{__(pageTitle)}</h1>
+          <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
         </div>
         {!isMobile.any() && (
           <div block="FilterHeader">
@@ -608,7 +609,7 @@ class PLPFilters extends PureComponent {
             <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
               <span>{count}</span>
               {count ? __("Results for ") : null}
-              <h1 className="categoryTitle">{__(pageTitle)}</h1>
+              <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
             </div>
           </div>
         )}

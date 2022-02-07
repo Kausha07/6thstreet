@@ -49,6 +49,7 @@ class PLPDetails extends PureComponent {
       />
     );
   };
+
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
