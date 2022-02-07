@@ -48,6 +48,13 @@
     &-BrandDescription {
         flex: 1;
         padding-block: 1rem;
+        text-align: center;
+        max-width: 70%;
+        margin: auto;
+        .PLPDetails-BrandName{
+            line-height: 55px;
+            margin: 0 0 16px;
+        }
         &.notBrandImageVisible {
             text-align: center;
             .PLPDetails-BrandName {
