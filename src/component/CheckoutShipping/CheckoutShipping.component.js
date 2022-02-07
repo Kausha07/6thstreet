@@ -318,7 +318,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       addresses
     } = this.props;
     const { formContent } = this.state;
-    console.log("muska  shipping",addresses);
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}

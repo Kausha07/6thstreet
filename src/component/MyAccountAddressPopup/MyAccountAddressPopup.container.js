@@ -200,37 +200,17 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     const {
       showCards,
       payload: {
-        address: {
-          id,
-          default_billing,
-          default_shipping,
-          city,
-          country_id,
-          firstname,
-          lastname,
-          postcode,
-          region,
-          street,
-          telephone,
-        },
-        address
+        address: { id, default_billing, default_shipping },
       },
-      updateAddress,
       removeAddress,
     } = this.props;
 
     if (default_shipping || default_billing) {
       this.setState({ isLoading: true });
-      // const { newAddress } = this.getNewAddressField(address);
-      // newAddress.id = id;
-      // const apiResult = updateAddress(id, newAddress);
-
-      // if (apiResult) {
-        const deleteApiResult = removeAddress(id);
-        deleteApiResult
-          .then(this.handleAfterAction, this.handleError)
-          .then(showCards);
-      // }
+      const deleteApiResult = removeAddress(id);
+      deleteApiResult
+        .then(this.handleAfterAction, this.handleError)
+        .then(showCards);
       return;
     }
 
