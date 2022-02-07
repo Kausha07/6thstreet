@@ -15,7 +15,6 @@ import {
   RETURN_ITEM_LABEL,
 } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
-import { DISPLAY_DISCOUNT_PERCENTAGE } from "../Price/Price.config";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -53,12 +52,10 @@ export class MyAccountOrderViewContainer extends PureComponent {
     const { isLoading, order } = this.state;
     const { history, country } = this.props;
 
-    const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
     return {
       isLoading,
       order,
       history,
-      displayDiscountPercentage,
     };
   };
 

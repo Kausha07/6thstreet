@@ -158,7 +158,7 @@ class PDPGalleryOverlay extends PureComponent {
         onActiveImageChange={onSliderChange}
         mix={{ block: "PDPGalleryOverlay", elem: "Slider" }}
         showCrumbs={isMobile.any()}
-        isInteractionDisabled={true}
+        isInteractionDisabled={!isMobile.any()}
       >
         {this.renderGallery()}
       </Slider>

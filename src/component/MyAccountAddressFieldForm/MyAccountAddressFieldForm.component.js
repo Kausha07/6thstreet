@@ -73,7 +73,6 @@ export class MyAccountAddressFieldForm extends PureComponent {
     const { newForm } = this.props;
     const fromTitle = newForm ? __("New Address") : __("Edit Address");
     const region = region_id === undefined ? region_string : region_id;
-
     return (
       <div block="MyAccountAddressFieldForm" elem="Fields">
         <div block="MyAccountAddressFieldForm" elem="Header">
