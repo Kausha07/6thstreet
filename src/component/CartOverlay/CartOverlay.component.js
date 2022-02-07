@@ -40,7 +40,7 @@ export class CartOverlay extends PureComponent {
 
   static defaultProps = {
     isHidden: false,
-    onVisible: () => {},
+    onVisible: () => { },
   };
 
   state = {
@@ -335,9 +335,9 @@ export class CartOverlay extends PureComponent {
         >
           {this.renderItemCount()}
           {this.renderCartItems()}
-          {this.renderDiscount()}
           {this.renderShipping()}
           {this.renderTotals()}
+          {this.renderDiscount()}
           {this.renderActions()}
           {this.renderPromo()}
         </Overlay>

@@ -141,7 +141,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderDeliveryButton() {
     const {
-      customer: { addresses = [] },
+      addresses,
       selectedCustomerAddressId,
       checkClickAndCollect,
       isPaymentLoading,
@@ -150,7 +150,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const selectedAddress = addresses.filter(
       ({ id }) => id === selectedCustomerAddressId
     );
-    const { country_id: selectedAddressCountry = "" } = selectedAddress.length
+    const { country_code: selectedAddressCountry = "" } = selectedAddress.length
       ? selectedAddress[0]
       : {};
 
@@ -165,13 +165,22 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        <button
-          type="submit"
-          block="Button button primary medium"
-          disabled={isPaymentLoading}
-        >
-          {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
-        </button>
+        {addresses.length > 0 ?
+          <button
+            type="submit"
+            block="Button button primary medium"
+            disabled={isPaymentLoading}
+          >
+            {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
+          </button> :
+          <button
+            block="Button button primary medium"
+            disabled={isPaymentLoading}
+            onClick={this.openNewForm}
+          >
+            {__("Add New Address")}
+          </button>
+        }
       </div>
     );
   }
@@ -246,7 +255,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { openFirstPopup, formContent, isArabic } = this.state;
     const {
       notSavedAddress,
-      customer: { addresses = [] },
+      addresses,
       isClickAndCollect,
       checkClickAndCollect
     } = this.props;
@@ -256,7 +265,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       this.openNewForm();
     }
 
-    if (isSignedIn() && !checkClickAndCollect()) {
+    if (isSignedIn() && !checkClickAndCollect() && addresses.length > 0) {
       return (
         <div
           block="MyAccountAddressBook"
@@ -314,12 +323,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       shippingAddress,
       isClickAndCollect,
       checkClickAndCollect,
-      totals
+      totals,
+      addresses
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
+        addresses={addresses}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}

@@ -4,6 +4,7 @@ import {
   updateCustomerDetails,
   updateCustomerSignInStatus,
 } from "SourceStore/MyAccount/MyAccount.action";
+import { setCustomerAddressData } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
   MyAccountDispatcher as SourceMyAccountDispatcher,
@@ -28,6 +29,7 @@ import {
   resetPasswordWithToken,
   updateCustomerData,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import { getShippingAddresses } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -54,7 +56,11 @@ export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   requestCustomerData(dispatch) {
     const query = MyAccountQuery.getCustomerQuery();
-
+    getShippingAddresses().then((response) => {
+      if (response.data) {
+        dispatch(setCustomerAddressData(response.data));
+      }
+    });
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));

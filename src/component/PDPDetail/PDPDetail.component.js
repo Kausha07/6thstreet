@@ -28,7 +28,7 @@ class PDPDetail extends PureComponent {
 
   renderBrandName = () => {
     const { brandName } = this.props;
-    return <h1>{brandName}</h1>;
+    return <h2 className="PDP-BrandNameTag">{brandName}</h2>;
   };
 
   renderBrandHtml = () => {
@@ -73,9 +73,9 @@ class PDPDetail extends PureComponent {
     }
     return (
       <>
-        <div block="PDPDetail" elem="BrandImage">
+        {/* <div block="PDPDetail" elem="BrandImage">
           {this.renderBrandImage()}
-        </div>
+        </div> */}
         <div block="PDPDetail" elem="BrandDescription">
           {this.renderBrandName()}
           {this.renderBrandHtml()}
