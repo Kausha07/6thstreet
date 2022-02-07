@@ -213,46 +213,24 @@ export class MyAccountAddressPopupContainer extends PureComponent {
           street,
           telephone,
         },
+        address
       },
       updateAddress,
       removeAddress,
     } = this.props;
 
     if (default_shipping || default_billing) {
-      const clearAddress = {
-        city,
-        country_id,
-        default_shipping: false,
-        default_billing: false,
-        firstname,
-        lastname,
-        postcode,
-        region,
-        street,
-        telephone,
-      };
-
       this.setState({ isLoading: true });
-      // const editQuery = MyAccountQuery.getUpdateAddressMutation(
-      //   id,
-      //   clearAddress
-      // );
-      // await fetchMutation(editQuery);
-      const { newAddress } = this.getNewAddressField(address);
-      newAddress.id = id;
-      const apiResult = updateAddress(id, newAddress);
+      // const { newAddress } = this.getNewAddressField(address);
+      // newAddress.id = id;
+      // const apiResult = updateAddress(id, newAddress);
 
-      if (apiResult) {
+      // if (apiResult) {
         const deleteApiResult = removeAddress(id);
         deleteApiResult
           .then(this.handleAfterAction, this.handleError)
           .then(showCards);
-      }
-      // const deleteQuery = MyAccountQuery.getDeleteAddressMutation(id);
-      // await fetchMutation(deleteQuery)
-      //   .then(this.handleAfterAction, this.handleError)
-      //   .then(showCards);
-
+      // }
       return;
     }
 

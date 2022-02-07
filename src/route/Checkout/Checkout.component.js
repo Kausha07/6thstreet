@@ -319,7 +319,7 @@ export class Checkout extends SourceCheckout {
         <CheckoutBilling
           cashOnDeliveryFee={cashOnDeliveryFee}
           setLoading={setLoading}
-          // addresses={addresses}
+          addresses={addresses}
           paymentMethods={paymentMethods}
           setDetailsStep={setDetailsStep}
           shippingAddress={shippingAddress}

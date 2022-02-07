@@ -111,7 +111,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     }
 
     return !addresses.find(
-      ({ country_id = null }) => country_id === getCountryFromUrl()
+      ({ country_code = null }) => country_code === getCountryFromUrl()
     );
   }
 
@@ -200,7 +200,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       : trimAddressFields(fields);
     const addressForValidation = isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
     const validationResult = this.validateAddress(addressForValidation);
-
     if (!validationResult) {
       showNotification("error", __("Something went wrong."));
     }

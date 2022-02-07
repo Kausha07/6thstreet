@@ -150,7 +150,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const selectedAddress = addresses.filter(
       ({ id }) => id === selectedCustomerAddressId
     );
-    const { country_id: selectedAddressCountry = "" } = selectedAddress.length
+    const { country_code: selectedAddressCountry = "" } = selectedAddress.length
       ? selectedAddress[0]
       : {};
 
@@ -318,6 +318,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       addresses
     } = this.props;
     const { formContent } = this.state;
+    console.log("muska  shipping",addresses);
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
