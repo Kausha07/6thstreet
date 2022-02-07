@@ -326,7 +326,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect,
       totals
     } = this.props;
-    console.log("this.props", this.props);
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
