@@ -36,6 +36,7 @@ import {
   setPrevPath,
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -54,6 +55,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   menuCategories: state.MenuReducer.categories,
   plpWidgetData: state.PLP.plpWidgetData,
+  lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
 });
 
@@ -78,6 +80,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setMeta: (meta) => dispatch(updateMeta(meta)),
   resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -654,11 +657,16 @@ export class PLPContainer extends PureComponent {
     this.setState({ activeFilters: {} });
   }
   componentDidUpdate(prevProps, prevState) {
-    const { isLoading, setIsLoading, menuCategories = [] } = this.props;
+    const {
+      isLoading,
+      setIsLoading,
+      menuCategories = [],
+      lastHomeItem,
+      pages,
+    } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
     const requestOptions = PLPContainer.getRequestOptions();
-    const { pages } = this.props;
     const { page } = requestOptions;
     const {
       prevRequestOptions: { page: prevPage },
@@ -749,6 +757,12 @@ export class PLPContainer extends PureComponent {
       this.setState({
         activeFilters: newActiveFilters,
       });
+    }
+    let element = document.getElementById(lastHomeItem);
+    if (element) {
+        // window.focus();
+        element.style.scrollMarginTop = "180px";
+        element.scrollIntoView({ behavior: "smooth" });
     }
   }
 
@@ -886,6 +900,9 @@ export class PLPContainer extends PureComponent {
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
   }
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item);
+  };
 
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages } = this.props;
@@ -909,7 +926,13 @@ export class PLPContainer extends PureComponent {
   render() {
     const { requestedOptions, filters } = this.props;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
-    return <PLP {...this.containerFunctions} {...this.containerProps()} />;
+    return (
+      <PLP
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        setLastTapItem={this.setLastTapItem}
+      />
+    );
   }
 }
 
