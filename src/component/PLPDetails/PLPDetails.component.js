@@ -60,7 +60,7 @@ class PLPDetails extends PureComponent {
         />
         { brandDescription && !brandDescription.offsetHeight < 45 ? 
           <button onClick={this.handleClick}>
-            {this.state.isToggleOn ? 'View more' : 'View less'}
+            {this.state.isToggleOn ? 'Read more' : 'Read less'}
           </button>
           : ""
         }
