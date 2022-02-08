@@ -408,10 +408,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   renderActions() {
+    const { isLoading } = this.props;
+    const disabled = isLoading;
     return (
       <button
         type="submit"
         block="MyAccountBtn"
+        mods={{isLoading}}
+        disabled={disabled}
         mix={{ block: "button primary" }}
       >
         {__("Save address")}
