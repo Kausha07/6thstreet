@@ -95,6 +95,7 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   processingRequest: state.CartReducer.processingRequest,
   customer: state.MyAccountReducer.customer,
+  addresses: state.MyAccountReducer.addresses,
   guest_checkout: state.ConfigReducer.guest_checkout,
   countries: state.ConfigReducer.countries,
   isSignedIn: state.MyAccountReducer.isSignedIn,
@@ -540,6 +541,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       ...address,
       default_shipping: true,
     }).then((response) => {
+
       if (typeof response !== "undefined") {
         Checkout.setState({
           shippingMethods: response.data,
