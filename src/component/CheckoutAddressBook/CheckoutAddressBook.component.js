@@ -8,6 +8,7 @@ import { CheckoutAddressBook as SourceCheckoutAddressBook } from "SourceComponen
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 
 import "./CheckoutAddressBook.style.scss";
@@ -21,7 +22,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {
@@ -59,7 +60,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       isSignedIn,
       shippingAddress,
       isClickAndCollect,
-      clickAndCollectStatus
+      clickAndCollectStatus,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -85,15 +86,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       openForm,
       closeForm,
       hideCards,
-      isBilling
+      isBilling,
     } = this.props;
-    const {
-      id,
-      region: { region_code, region },
-      postcode
-    } = address;
-
-    if (!postcode && !region_code && !region) {
+    const { id, area } = address;
+    if (!area) {
       return null;
     }
 
@@ -111,6 +107,42 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       />
     );
   };
+
+  renderNoAddresses() {
+    const {
+      openForm,
+    } = this.props;
+    return (
+      <div block="CheckoutNoAddressBlock">
+        <p>{__('You have no configured addresses.')}</p>
+        <div block="CheckoutAddressBook" elem="NewAddressBtn">
+          <button
+            type="button"
+            block="CheckoutAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openForm}
+          >
+            {__('Add New Address')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  renderAddressList() {
+    const { addresses } = this.props;
+    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
+    if (!addresses) {
+      return this.renderLoading();
+    }
+    if (!addresses.length || isCountryNotAddressAvailable) {
+      return this.renderNoAddresses();
+    }
+    return addresses.map(this.renderAddress);
+  }
 
   renderSignedInContent() {
     const { currentPage, isArabic, isMobile } = this.state;
@@ -147,7 +179,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   mobileSliderCallback = (newPage) => {
     this.setState({ currentPage: newPage });
   };
-
 
   renderPopup() {
     const { formContent, closeForm, openForm, customer } = this.props;

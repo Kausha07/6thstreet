@@ -13,12 +13,12 @@
   &-List {
     display: flex;
     flex-direction: row;
-    overflow-x: scroll;
+    overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     margin-top: 15px;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    width: 400px;
+    // width: 400px;
   }
 
   @include mobile {

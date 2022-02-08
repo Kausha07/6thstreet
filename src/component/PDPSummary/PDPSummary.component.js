@@ -150,13 +150,14 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: { brand_name, gallery_images = [] },
+      product: {name, brand_name, gallery_images = [] },
     } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
       return <div block="PDPSummary" elem="Heading">
-        <h1>{brand_name}</h1>
+        <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>
+        
         <ShareButton
           title={document.title}
           text={`Hey check this out: ${document.title}`}
@@ -166,7 +167,7 @@ class PDPSummary extends PureComponent {
       </div>
     }
 
-    return <h1>{brand_name}</h1>;
+    return <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>;
   }
 
   renderName() {
@@ -415,7 +416,7 @@ class PDPSummary extends PureComponent {
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>
         {this.renderBrand()}
-        {this.renderName()}
+        {/* {this.renderName()} */}
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>

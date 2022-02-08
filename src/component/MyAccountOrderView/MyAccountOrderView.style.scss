@@ -244,9 +244,14 @@
       &-Courier {
         display: flex;
         padding: 0 12px 0 0;
+        align-items: center;
         &-LogoContainer {
           width: 84px;
           margin: 0 8px;
+          img {
+            width: 100%;
+            height: auto;
+          }
         }
       }
       &-Link {
@@ -456,4 +461,11 @@
   &-AccordionTitle {
     margin-left: 8px;
   }
+}
+h2.prodDetailTitle{
+  margin: 7px 0px 0px;
+  letter-spacing: -.61px;
+  font-weight: 600;
+  font-size: 17px;
+  text-transform: none;
 }

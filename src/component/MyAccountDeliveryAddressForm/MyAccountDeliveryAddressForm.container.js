@@ -9,19 +9,23 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import AppConfigDispatcher from 'Store/AppConfig/AppConfig.dispatcher';
+import AppConfigDispatcher from "Store/AppConfig/AppConfig.dispatcher";
 
-import MyAccountDeliveryAddressForm from './MyAccountDeliveryAddressForm.component';
+import MyAccountDeliveryAddressForm from "./MyAccountDeliveryAddressForm.component";
 
 export const mapStateToProps = (state) => ({
-    countries: state.ConfigReducer.countries,
-    default_country: state.ConfigReducer.default_country
+  countries: state.ConfigReducer.countries,
+  default_country: state.ConfigReducer.default_country,
+  isLoading: state.MyAccountReducer.isAddressLoading,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getCities: (locale) => AppConfigDispatcher.getCities(dispatch, locale)
+  getCities: (locale) => AppConfigDispatcher.getCities(dispatch, locale),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountDeliveryAddressForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyAccountDeliveryAddressForm);
