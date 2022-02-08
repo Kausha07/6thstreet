@@ -335,8 +335,8 @@ export class CartOverlay extends PureComponent {
         >
           {this.renderItemCount()}
           {this.renderCartItems()}
-          {this.renderShipping()}
           {this.renderTotals()}
+          {this.renderShipping()}
           {this.renderDiscount()}
           {this.renderActions()}
           {this.renderPromo()}
