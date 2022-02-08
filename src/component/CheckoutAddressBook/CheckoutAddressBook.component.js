@@ -88,7 +88,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       isBilling,
     } = this.props;
     const { id, area } = address;
-
     if (!area) {
       return null;
     }
@@ -107,6 +106,29 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       />
     );
   };
+
+  renderNoAddresses() {
+    const {
+      openForm,
+    } = this.props;
+    return (
+      <div>
+        <p>{__('You have no configured addresses.')}</p>
+        <div block="CheckoutAddressBook" elem="NewAddressBtn">
+          <button
+            block="CheckoutAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openForm}
+          >
+            {__('Add New Address')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   renderAddressList() {
     const { addresses } = this.props;

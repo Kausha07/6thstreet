@@ -15,6 +15,29 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     isArabic: isArabic(),
   };
 
+  renderNoAddresses() {
+    const {
+      openForm,
+    } = this.props;
+    return (
+      <div>
+        <p>{__('You have no configured addresses.')}</p>
+        <div block="CheckoutAddressBook" elem="NewAddressBtn">
+          <button
+            block="CheckoutAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openForm}
+          >
+            {__('Add New Address')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   mobileEditAddress = (e) => {
     const { hideCards, onEditClick } = this.props;
     if (isMobile.any()) {
@@ -157,7 +180,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     const { isArabic } = this.state;
 
     if (country_code !== getCountryFromUrl()) {
-      return null;
+      return this.renderNoAddresses();
     }
 
     return (
