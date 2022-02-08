@@ -165,23 +165,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        {addresses.length > 0 ?
           <button
             type="submit"
             block="Button button primary medium"
             disabled={isPaymentLoading}
           >
             {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
-          </button> :
-          <button
-            type="button"
-            block="Button button primary medium"
-            disabled={isPaymentLoading}
-            onClick={this.openNewForm}
-          >
-            {__("Add New Address")}
           </button>
-        }
       </div>
     );
   }
