@@ -314,7 +314,7 @@
     // margin-top: 32px;
     font-weight: var(--fw-demi);
 
-    h4 {
+    h4 ,.highlightsTag {
       font-family: "Avenir Next";
       font-size: 14px;
       font-weight: bold;
@@ -600,12 +600,14 @@
   }
   .PDPDetail-BrandDescription {
     padding: 0rem 0 1rem 1rem;
-    h1 {
+    h1,
+    .PDP-BrandNameTag {
       font-size: 40px;
       font-weight: 600;
       letter-spacing: -1px;
       line-height: 55px;
       margin: 0 0 0.8rem 0;
+      text-transform: none;
     }
     p {
       font-size: 18px;
