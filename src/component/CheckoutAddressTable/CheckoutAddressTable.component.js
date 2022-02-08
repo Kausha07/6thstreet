@@ -14,6 +14,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
   state = {
     isArabic: isArabic(),
   };
+  
 
   mobileEditAddress = (e) => {
     const { hideCards, onEditClick } = this.props;
