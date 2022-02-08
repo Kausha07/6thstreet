@@ -205,13 +205,13 @@ class PDPDetailsSection extends PureComponent {
       <div block="PDPDetailWrapper">
         <div block="PDPDetailWrapper" elem="Items" mods={{ showMore }}>
           <div block="PDPDetailWrapper" elem="LeftDescription">
-            <h2
+            <h3
               block="PDPDetailWrapper"
               elem="Title"
               mods={{ isMobile: !!isMobile }}
             >
               {__("PRODUCT DETAILS:")}
-            </h2>
+            </h3>
             <p block="PDPDetailsSection" elem="Description">
               {description}
             </p>
