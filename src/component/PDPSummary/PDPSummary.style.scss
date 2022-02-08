@@ -96,6 +96,9 @@
 
   &-Name {
     font-size: 18px;
+    display: block;
+    font-weight: 400;
+    line-height: 1.8;
 
     @include before-desktop {
       font-size: 14px;
@@ -359,4 +362,12 @@
 }
 #TabbyPromo {
   margin-top: 25px;
+}
+
+// hack for tabby promo issue PWA-2182
+.tabby-promo__feature {
+  padding-left: 0 !important;
+  &::before {
+    display: none !important;
+  }
 }

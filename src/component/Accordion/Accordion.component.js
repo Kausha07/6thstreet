@@ -44,7 +44,7 @@ export class Accordion extends PureComponent {
 
     return (
       <div block="Accordion" elem="Heading">
-        {typeof title === "string" && <h3>{title}</h3>}
+        {typeof title === "string" && <h2 className="prodDetailTitle">{title}</h2>}
         {typeof title !== "string" && title}
         <button
           block="Accordion"

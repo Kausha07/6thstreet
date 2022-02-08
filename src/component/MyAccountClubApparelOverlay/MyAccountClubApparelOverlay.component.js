@@ -191,16 +191,10 @@ class MyAccountClubApparelOverlay extends PureComponent {
       >
         <h3>{__("Linking Unsuccessful!")}</h3>
         <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
-          {__("Sorry! We were unable to find a ")}
-          <span>{__("Club Apparel")}</span>
-          {__(" Account with this number.")}
+          {__("Sorry! We were unable to find a Club Apparel Account with this number.")}
         </p>
         <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraph">
-          {__("If you are not already a ")}
-          <span>{__("Club Apparel")}</span>
-          {__(" member, download the ")}
-          <span>{__("Club Apparel App")}</span>
-          {__(" and Register prior to linking accounts.")}
+          {__("If you are not already a Club Apparel member, download the Club Apparel App and Register prior to linking accounts.")}
         </p>
         <button
           block="MyAccountClubApparelOverlay"
