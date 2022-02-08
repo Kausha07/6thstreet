@@ -26,9 +26,30 @@ Sentry.init({ dsn: process.env.REACT_APP_SENTRY_ENDPOINT });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
 if (process.env.NODE_ENV  !== "development" && "serviceWorker" in navigator) {
+  window.addEventListener("beforeinstallprompt", ev => { 
+    ev.preventDefault();
+  });
+  
   window.addEventListener("load", () => {
     const swUrl = '/service-worker.js';
-    navigator.serviceWorker.register(swUrl);
+    navigator.serviceWorker.register(swUrl).then((reg) => {
+      const newVersionPopupEvent = new Event("showNewVersionPopup");
+
+      // eslint-disable-next-line no-param-reassign
+      reg.onupdatefound = function () {
+        const installingWorker = reg.installing;
+
+        installingWorker.onstatechange = function () {
+          if (installingWorker.state === "redundant") {
+            console.error(
+              "***",
+              "The installing service worker became redundant."
+            );
+            window.dispatchEvent(newVersionPopupEvent);
+          }
+        };
+      };
+    })
   });
 }
 render(<App />, document.getElementById("root"));

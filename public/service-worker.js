@@ -1,10 +1,5 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-sw.js');
 
-workbox.setConfig({
-  debug: true,
-});
-
-
 const { routing, strategies, cacheableResponse, expiration } = workbox;
 
 // Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
@@ -31,8 +26,22 @@ routing.registerRoute(
     plugins: [
       new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
       new expiration.ExpirationPlugin({
-        maxEntries: 50,
+        maxEntries: 100,
         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+      })
+    ],
+  })
+);
+
+routing.registerRoute(
+  ({url, request}) => new RegExp(/(https?:\/\/mobilecdn.6thstreet.com\/.*\.(?:json))/i).test(url),
+  new strategies.CacheFirst({
+    cacheName: 'JSONs',
+    plugins: [
+      new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
+      new expiration.ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 60 * 10, // 10 Minutes
       })
     ],
   })
