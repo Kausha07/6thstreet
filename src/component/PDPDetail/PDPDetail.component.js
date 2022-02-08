@@ -73,9 +73,9 @@ class PDPDetail extends PureComponent {
     }
     return (
       <>
-        {/* <div block="PDPDetail" elem="BrandImage">
+        <div block="PDPDetail" elem="BrandImage">
           {this.renderBrandImage()}
-        </div> */}
+        </div>
         <div block="PDPDetail" elem="BrandDescription">
           {this.renderBrandName()}
           {this.renderBrandHtml()}

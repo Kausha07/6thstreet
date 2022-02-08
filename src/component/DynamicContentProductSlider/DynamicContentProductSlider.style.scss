@@ -10,7 +10,8 @@
     display: none;
   }
   &-HeaderContainer {
-    h4 {
+    h4,
+    .productWidgetHeading {
       color: #000000;
       font-family: "Avenir Next";
       font-size: 18px;

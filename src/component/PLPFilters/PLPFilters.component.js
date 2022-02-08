@@ -573,7 +573,10 @@ class PLPFilters extends PureComponent {
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
           <span>{count}</span>
           {count ? __("Results for " ) : null}
-          <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
+          {(count && !pageTitle)   ?
+            "Available Products" :
+            <h1 className="categoryTitle">{__(pageTitle)}</h1>
+          }
         </div>
         {!isMobile.any() && (
           <div block="FilterHeader">
@@ -609,7 +612,10 @@ class PLPFilters extends PureComponent {
             <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
               <span>{count}</span>
               {count ? __("Results for ") : null}
-              <h1 className="categoryTitle">{count ? __(pageTitle) : null}</h1>
+              {(count && !pageTitle)  ?
+                "Available Products" :
+                <h1 className="categoryTitle">{__(pageTitle)}</h1>
+              }
             </div>
           </div>
         )}
