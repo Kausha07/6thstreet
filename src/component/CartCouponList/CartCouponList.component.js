@@ -1,49 +1,59 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import "./CartCouponList.style";
-
+import { isArabic } from 'Util/App';
+import CartCouponDetail from 'Component/CartCouponDetail'
 export class CartCouponList extends PureComponent {
     constructor(props) {
         super(props);
     }
 
-    componentDidMount() {
-    }
-    handleApplyCode = (couponCode) => {
-        this.props.applyCouponToCart(couponCode)
+    handleApplyCode = async (couponCode) => {        
+        try{            
+            let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
+            if (typeof apiResponse !== "string") {
+                this.props.closePopup();
+            }
+        }
+        catch(error){
+            console.error(error);
+        }
+        
     }
     handleRemoveCode = (couponCode) => {
         this.props.removeCouponFromCart()
     }
+    
+    
     renderCouponItems() {
         const { couponLists = {} } = this.props;
         return Object.entries(couponLists).map(this.renderCouponItem);
     }
     renderCouponItem = ([key, coupon]) => {
-        const {couponCode} = this.props;
+        const { couponCode } = this.props;
+
         return (
-            <div block="coupon-list">
-                <div>
-                    <p>{coupon.code}</p>
-                    <p>{coupon.name}</p>
-                    {couponCode === coupon.code ? <button onClick={() => { this.handleRemoveCode() }}>Remove</button> : <button onClick={() => { this.handleApplyCode(coupon.code) }}>apply</button>  }
-                   
-                    
+            <li block="couponListItem" key={key}>
+                <div block="couponItemBlock">
+                    <div block="couponItemDetail">
+                        <p block="couponItemCode">{coupon.code}</p>
+                        <p block="couponItemName">{coupon.name}</p>
+                        <button block="couponItemViewBtn" onClick={(e) => { this.props.showDetail(e, coupon) }}>View Detail</button>
+                    </div>                   
+                    {couponCode === coupon.code ? <button onClick={() => { this.handleRemoveCode() }} block="couponItemBtn remove">Remove</button> : <button onClick={() => { this.handleApplyCode(coupon.code) }} block="couponItemBtn apply">Apply</button>}
                 </div>
-                <div>
-                    <p>{coupon.code}</p>
-                    <p>{coupon.name}</p>
-                    <p>{coupon.description}</p>
-                </div>
-            </div>
+            </li>
         )
     }
     render() {
+
         return (
-            <div block="CouponLists">
-                <h2>coupon list</h2>
-                {this.renderCouponItems()}
-            </div>
+            <>
+                <ul block="CouponLists">
+                    {this.renderCouponItems()}
+                </ul>
+                
+            </>
         )
 
     }

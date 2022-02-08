@@ -269,7 +269,7 @@ export class CartDispatcher {
       const response = await applyCouponCode({ cartId, couponCode });
       if (typeof response === "string") {
         dispatch(showNotification("error", response));
-        return;
+        return response;
       }
 
       await this.getCartTotals(dispatch, cartId);
