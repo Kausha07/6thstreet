@@ -50,6 +50,7 @@ import {
   STATUS_DISPATCHED,
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
+import Link from "Component/Link";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -805,12 +806,13 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
     return (
-      <button
+      <Link to="/my-account/my-orders">
+        <button
         block="MyAccountOrderView"
         elem="BackButton"
         mods={{ isArabic }}
-        onClick={this.goBack}
       />
+      </Link>
     );
   }
 
