@@ -840,7 +840,7 @@
     " account and start earning points.": null,
     "link your account": "اربط حسابك",
     "You can also view the ": " يمكنك أيضاً مراجعة",
-    "Club Apparel Privacy Policy": null,
+    "Club Apparel Privacy Policy": "كلوب أباريل سياسة الخصوصية",
     " for any additional information.": null,
     "Coupon %s:": null,
     "%s Item(s) In Cart": null,
@@ -940,5 +940,6 @@
     "Add New Address": "أضف عنوان جديد",
     "Results for ": null,
     "Sorry! We were unable to find a Club Apparel Account with this number.": "آسف! لم نتمكن من العثور على حساب بهذا الرقم.",
-    "If you are not already a Club Apparel member, download the Club Apparel App and Register prior to linking accounts.": "إذا لم تكن عضوًا بعد ، فقم بتنزيل تطبيق كلوب أباريل وقم بالتسجيل قبل ربط الحسابات."
+    "If you are not already a Club Apparel member, download the Club Apparel App and Register prior to linking accounts.": "إذا لم تكن عضوًا بعد ، فقم بتنزيل تطبيق كلوب أباريل وقم بالتسجيل قبل ربط الحسابات.",
+    "Link your Club Apparel account to earn": "اربط حساب كلوب أباريل الخاص بك لتكسب"
 }
