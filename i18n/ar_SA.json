@@ -455,7 +455,7 @@
     "Error appeared while fetching cancel request information": "حدث خطأ ما في معلومات طلب الإلغاء",
     "Something went wrong while fetching items": "حدث خطأ ما أثناء تحضير طلبك",
     "Error appeared while requesting a cancelation": "حدث خطأ ما أثناء طلب الإلغاء",
-    "Linking Successful!": null,
+    "Linking Successful!": "ربط ناجح!",
     "Now, start earning Points on every purchase!": "ابدأ في كسب النقاط على كل عملية شراء, الآن!",
     "continue": "متابعة",
     "close": "إغلاق",
@@ -545,7 +545,7 @@
     "Please enter valid phone number": "الرجاء إدخال رقم هاتف صحيح",
     "Verification code was successfully re-sent": "تم إعادة إرسال رمز التعريف بنجاح",
     "Something went wrong.": "حدث خطأ ما",
-    "Linking Unsuccessful!": null,
+    "Linking Unsuccessful!": "ربط غير ناجح!",
     "Update your Number": "قم بتحديث رقم هاتفك",
     "There was an error, please try again later.": "حدث خطأ ما، الرجاء المحاولة مرة أخرى",
     "Order confirmation has been sent to": "تم إرسال تأكيد الطلبية",
@@ -938,5 +938,7 @@
     "Link copied to clipboard": "ارتباط منسوخ إلى الحافظة",
     "LiveShopping": "تسوق عبر البث المباشر",
     "Add New Address": "أضف عنوان جديد",
-    "Results for ": null
+    "Results for ": null,
+    "Sorry! We were unable to find a Club Apparel Account with this number.": "آسف! لم نتمكن من العثور على حساب بهذا الرقم.",
+    "If you are not already a Club Apparel member, download the Club Apparel App and Register prior to linking accounts.": "إذا لم تكن عضوًا بعد ، فقم بتنزيل تطبيق كلوب أباريل وقم بالتسجيل قبل ربط الحسابات."
 }
