@@ -113,7 +113,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       openForm,
     } = this.props;
     return (
-      <div>
+      <div block="CheckoutNoAddressBlock">
         <p>{__('You have no configured addresses.')}</p>
         <div block="CheckoutAddressBook" elem="NewAddressBtn">
           <button
