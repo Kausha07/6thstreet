@@ -578,11 +578,14 @@ class FieldMultiselect extends PureComponent {
         if (subEntry === entry) {
           finalSearchedData[subEntry] = allData[subEntry];
         } else {
-          Object.entries(allData[subEntry].subcategories).map((data) => {
-            if (data[0] === entry) {
-              finalSearchedData[data[0]] = allData[subEntry].subcategories[data[0]];
-            }
-          });
+          if (allData[subEntry].subcategories) {
+            Object.entries(allData[subEntry].subcategories).map((data) => {
+              if (data[0] === entry) {
+                finalSearchedData[data[0]] =
+                  allData[subEntry].subcategories[data[0]];
+              }
+            });
+          }
         }
       });
     });
