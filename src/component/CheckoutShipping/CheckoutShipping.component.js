@@ -165,22 +165,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        {addresses.length > 0 ?
           <button
             type="submit"
             block="Button button primary medium"
             disabled={isPaymentLoading}
           >
             {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
-          </button> :
-          <button
-            block="Button button primary medium"
-            disabled={isPaymentLoading}
-            onClick={this.openNewForm}
-          >
-            {__("Add New Address")}
           </button>
-        }
       </div>
     );
   }
@@ -260,6 +251,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect
     } = this.props;
 
+    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
     if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
@@ -270,7 +262,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         <div
           block="MyAccountAddressBook"
           elem="NewAddressWrapper"
-          mods={{ formContent, isArabic }}
+          mods={{ formContent, isArabic, isCountryNotAddressAvailable }}
         >
           <button
             block="MyAccountAddressBook"

@@ -8,6 +8,7 @@ import { CheckoutAddressBook as SourceCheckoutAddressBook } from "SourceComponen
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 
 import "./CheckoutAddressBook.style.scss";
@@ -88,7 +89,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       isBilling,
     } = this.props;
     const { id, area } = address;
-
     if (!area) {
       return null;
     }
@@ -108,12 +108,37 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     );
   };
 
+  renderNoAddresses() {
+    const {
+      openForm,
+    } = this.props;
+    return (
+      <div block="CheckoutNoAddressBlock">
+        <p>{__('You have no configured addresses.')}</p>
+        <div block="CheckoutAddressBook" elem="NewAddressBtn">
+          <button
+            type="button"
+            block="CheckoutAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openForm}
+          >
+            {__('Add New Address')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   renderAddressList() {
     const { addresses } = this.props;
+    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
     if (!addresses) {
       return this.renderLoading();
     }
-    if (!addresses.length) {
+    if (!addresses.length || isCountryNotAddressAvailable) {
       return this.renderNoAddresses();
     }
     return addresses.map(this.renderAddress);

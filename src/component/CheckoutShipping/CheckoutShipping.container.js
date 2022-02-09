@@ -70,7 +70,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     } = this.props;
     let storeNo = items[0].extension_attributes.click_to_collect_store;
     const getStoreAddressResponse = await getStoreAddress(storeNo);
-    let addressField = getStoreAddressResponse.data
+    let addressField = getStoreAddressResponse.data;
     let inputFields = {
       city: addressField.city,
       country_id: addressField.country,
@@ -83,7 +83,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       street: addressField.address,
       telephone: fields.telephone,
     };
-    this.onShippingSuccess(inputFields)
+    this.onShippingSuccess(inputFields);
   }
 
   openForm() {
@@ -102,9 +102,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   }
 
   notSavedAddress() {
-    const {
-      addresses
-    } = this.props;
+    const { addresses } = this.props;
 
     if (addresses.length === 0) {
       return true;
@@ -124,7 +122,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       telephone = "",
       street,
       phonecode = "",
-      postcode
+      postcode,
     } = address;
     const { validateAddress } = this.props;
 
@@ -198,7 +196,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
-    const addressForValidation = isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
+    const addressForValidation =
+      isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
     const validationResult = this.validateAddress(addressForValidation);
     if (!validationResult) {
       showNotification("error", __("Something went wrong."));
@@ -285,21 +284,21 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       return;
     }
 
-    const shippingAddress = selectedCustomerAddressId && !this.checkClickAndCollect()
-      ? this._getAddressById(selectedCustomerAddressId)
-      : trimAddressFields(fields);
+    const shippingAddress =
+      selectedCustomerAddressId && !this.checkClickAndCollect()
+        ? this._getAddressById(selectedCustomerAddressId)
+        : trimAddressFields(fields);
 
-    const { region_id, region, street, country_id, telephone, postcode } =
+    const { city, street, country_id, telephone ,postcode} =
       shippingAddress;
-
     const shippingAddressMapped = {
       ...shippingAddress,
       street: Array.isArray(street) ? street[0] : street,
-      area: region ?? region_id ?? postcode,
+      area: postcode,
       country_code: country_id,
       phone: telephone,
       email: isSignedIn() ? email : guestEmail,
-      region: region ?? region_id ?? postcode,
+      region: city,
       region_id: 0,
     };
 
@@ -330,7 +329,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
-
+  
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;

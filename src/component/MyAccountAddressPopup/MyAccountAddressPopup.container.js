@@ -18,6 +18,7 @@ import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { goToPreviousNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
+import { setAddressLoadingStatus } from "Store/MyAccount/MyAccount.action";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
 import { addressType } from "Type/Account";
 import { capitalize } from "Util/App";
@@ -56,6 +57,8 @@ export const mapDispatchToProps = (dispatch) => ({
   removeAddress: (id) => CheckoutDispatcher.removeAddress(dispatch, id),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
+  setAddressLoadingStatus: (status) =>
+    dispatch(setAddressLoadingStatus(status)),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -93,6 +96,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       showErrorNotification,
       goToPreviousHeaderState,
       closeForm,
+      setAddressLoadingStatus
     } = this.props;
 
     updateCustomerDetails().then(() => {
@@ -100,6 +104,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         hideActiveOverlay();
         goToPreviousHeaderState();
         closeForm();
+        setAddressLoadingStatus(false);
       });
     }, showErrorNotification);
   };
@@ -150,10 +155,10 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         address: { id },
       },
     } = this.props;
-    const { showNotification } = this.props;
+    const { showNotification, setAddressLoadingStatus } = this.props;
 
     const validationResult = this.validateAddress(address);
-
+    setAddressLoadingStatus(true);
     if (!validationResult) {
       showNotification("error", __("Something went wrong."));
     }

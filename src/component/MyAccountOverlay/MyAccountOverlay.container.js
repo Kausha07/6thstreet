@@ -315,7 +315,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       this.setState({ isLoading: false });
     } catch (error) {
       this.setState({ isLoading: false });
-      console.log("error while sending OTP", error);
+      console.error("error while sending OTP", error);
     }
   }
 
@@ -373,7 +373,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       }
     } catch (err) {
       this.setState({ isLoading: false });
-      console.log("Error while creating customer", err);
+      console.error("Error while creating customer", err);
     }
   }
 
@@ -412,7 +412,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       this.setState({ isLoading: false });
     } catch (error) {
       this.setState({ isLoading: false });
-      console.log("error while resend otp", error);
+      console.error("error while resend otp", error);
     }
   }
 
@@ -444,7 +444,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       this.setState({ isLoading: false });
     } catch (error) {
       this.setState({ isLoading: false });
-      console.log("error while sending OTP", error);
+      console.error("error while sending OTP", error);
     }
   }
 

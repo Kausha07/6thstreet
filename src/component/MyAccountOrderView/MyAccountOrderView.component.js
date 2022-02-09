@@ -282,9 +282,9 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {!!packageStatus && <span>{` - ${packageStatus}`}:</span>}&nbsp;
-          {status === DELIVERY_SUCCESSFUL ? 
-          <span>{formatDate(
+          {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
+          {status === DELIVERY_SUCCESSFUL && deliveryDate ? 
+          <span>: &nbsp;{formatDate(
             "DD MMMM YYYY",
             new Date(deliveryDate.replace(/-/g, "/"))
           )}</span>: null }
@@ -347,17 +347,17 @@ class MyAccountOrderView extends PureComponent {
                 {label}
               </p>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
-                {label === STATUS_DISPATCHED ? formatDate(
+                {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
-                  new Date(item.courier_shipped_date?.replace(/-/g, "/"))
+                  new Date(item?.courier_shipped_date?.replace(/-/g, "/"))
                 )
-                  : label === STATUS_IN_TRANSIT ? formatDate(
+                  : label === STATUS_IN_TRANSIT && item?.courier_in_transit_date ? formatDate(
                     "DD MMM",
-                    new Date(item.courier_in_transit_date?.replace(/-/g, "/"))
-                  ) : formatDate(
+                    new Date(item?.courier_in_transit_date?.replace(/-/g, "/"))
+                  ) : item.courier_deliver_date ? formatDate(
                     "DD MMM",
-                    new Date(item.courier_deliver_date?.replace(/-/g, "/"))
-                  )}
+                    new Date(item?.courier_deliver_date?.replace(/-/g, "/"))
+                  ): null}
               </p>
             </div>
           ))}
@@ -671,10 +671,8 @@ class MyAccountOrderView extends PureComponent {
         return this.renderCardPaymentType();
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
-          console.log("club apparel");
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
-          console.log("Store credit");
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;
