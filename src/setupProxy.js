@@ -37,7 +37,7 @@ const robotsRouter = () => {
     return `${REACT_APP_CDN_API_URL}${REACT_APP_REMOTE_CONFIG_DIR}/seo`;
 }
 
-const sitemapLocaleRouter = (request) => {
+const sitemapAndSchemaLocaleRouter = (request) => {
     const { hostname } = request;
     const { REACT_APP_CDN_API_URL, REACT_APP_REMOTE_CONFIG_DIR } = process.env;
     const regex = new RegExp(/[a-z]{2}-[a-z]{2}/, 'g');
@@ -58,10 +58,10 @@ module.exports = (app) => {
     );
 
     app.use(
-        '/sitemap.xml',
+        '/sitemap.xml|/schema.json',
         proxy({
             target: `https://${ process.env.REACT_APP_CDN_API_URL }/`,
-            router: sitemapLocaleRouter,
+            router: sitemapAndSchemaLocaleRouter,
             changeOrigin: true,
         })
     );
