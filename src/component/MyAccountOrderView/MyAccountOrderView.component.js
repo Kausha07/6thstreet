@@ -267,8 +267,6 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderAccordionTitle(title, image, status = null, deliveryDate = null) {
-    console.log("this.props",this.props);
-    console.log("this.state",this.state);
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
@@ -673,10 +671,8 @@ class MyAccountOrderView extends PureComponent {
         return this.renderCardPaymentType();
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
-          console.log("club apparel");
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
-          console.log("Store credit");
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;
