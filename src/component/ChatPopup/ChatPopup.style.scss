@@ -1,10 +1,17 @@
 #ori-chatbot-root {
   .ori-fixed {
+    bottom: 64px!important;
+    // height: 45px!important;
+    // @include desktop {
+    //   height: 69px!important;
+    // }
+    // @include tablet {
+    //   height: 60px!important;
+    // }
     img {
       height: 45px!important;
       width: 45px!important;
       right: -10px!important;
-      bottom: 50px !important;
       @include desktop {
         height: 69px!important;
         width: 69px!important;
