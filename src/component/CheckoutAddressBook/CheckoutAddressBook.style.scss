@@ -39,6 +39,9 @@
       text-align: left;
 
       &-EditButton {
+        @include mobile {
+          display: flex;
+        }
         flex-direction: row;
         justify-content: space-between;
         &_isArabic {
@@ -221,11 +224,11 @@
       }
     }
   }
-  .CheckoutAddressForm{
-    &_isGuestForm{
-      .Field_type_select{
-        .FieldSelect-Options{
-          .FieldSelect-Option{
+  .CheckoutAddressForm {
+    &_isGuestForm {
+      .Field_type_select {
+        .FieldSelect-Options {
+          .FieldSelect-Option {
             text-transform: capitalize;
           }
         }
