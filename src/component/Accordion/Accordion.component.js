@@ -39,7 +39,7 @@ export class Accordion extends PureComponent {
 
   renderHeading() {
     const { title, MyAccountSection } = this.props;
-    console.log("props in the accordion", this.props)
+    //console.log("props in the accordion", this.props)
     const { isExpanded } = this.state;
 
     return (

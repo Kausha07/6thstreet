@@ -43,7 +43,6 @@ export class Breadcrumbs extends PureComponent {
         const { breadcrumbs = [] } = this.props;
         const { isArabic } = this.state;
         const isDisabled = !url || breadcrumbs.length - 1 === i;
-
         return (
             <Breadcrumb
               name={ name }
