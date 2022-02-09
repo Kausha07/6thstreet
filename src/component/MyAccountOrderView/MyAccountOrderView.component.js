@@ -267,6 +267,8 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderAccordionTitle(title, image, status = null, deliveryDate = null) {
+    console.log("this.props",this.props);
+    console.log("this.state",this.state);
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
@@ -283,7 +285,7 @@ class MyAccountOrderView extends PureComponent {
         <h3>
           {title}
           {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
-          {status === DELIVERY_SUCCESSFUL ? 
+          {status === DELIVERY_SUCCESSFUL && deliveryDate ? 
           <span>: &nbsp;{formatDate(
             "DD MMMM YYYY",
             new Date(deliveryDate.replace(/-/g, "/"))
