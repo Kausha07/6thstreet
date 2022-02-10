@@ -116,13 +116,14 @@ export class PLP extends PureComponent {
     if (widget && widget.length == 0) {
       return null;
     }
-    const { gender } = this.props;
+    const { gender, setLastTapItem } = this.props;
 
     // return <h1>Plp Widget</h1>;
     return (
       <DynamicContent
         gender={gender}
         content={widget}
+        setLastTapItemOnHome={setLastTapItem}
         renderMySignInPopup={this.showMyAccountPopup}
       />
     );

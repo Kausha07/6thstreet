@@ -124,7 +124,6 @@ class DynamicContentProductSlider extends PureComponent {
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
     const { title, isHomePage, products, renderMySignInPopup, index = 0 } = this.props;
-    console.log("index",index);
     if (products.length === 0) {
       return null;
     }

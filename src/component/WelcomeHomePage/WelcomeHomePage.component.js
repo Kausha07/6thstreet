@@ -18,6 +18,7 @@ import LanguageSwitcher from 'Component/LanguageSwitcher';
 import logo from './icons/6TH_Logo.svg'
 import isMobile from "Util/Mobile";
 import close from "../Icons/Close/icon.svg"
+import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import './WelcomeHomePage.style';
 
 
@@ -100,6 +101,7 @@ class WelcomeHomePage extends PureComponent {
     componentDidMount() {
         window.pageType = "welcome";
         this.getWelcomeImageUrl();
+        this.setSchemaJSON();
     }
 
     componentDidUpdate() {
@@ -126,6 +128,25 @@ class WelcomeHomePage extends PureComponent {
 
     componentWillUnmount() {
         window.pageType = undefined;
+    }
+
+    async setSchemaJSON() {
+        const { locale = "" } = this.props;
+        try {
+          const response = await getSchema(locale);
+          if(!!!response?.error) {
+            const tag = document.createElement('script');
+            if(tag) {
+              tag.type = 'application/ld+json';
+              tag.innerHTML = JSON.stringify(response);
+              document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+              document.head.appendChild(tag);
+            }
+          }
+        }
+        catch(err){
+          console.error(err);
+        }
     }
 
     closePopup = () => {

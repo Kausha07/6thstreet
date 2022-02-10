@@ -401,7 +401,6 @@ export const getCustomQuerySuggestions = (hits, sourceIndexName,query) => {
 
 export const formatQuerySuggestions = (query) => {
   const capitalizedQuery = capitalizeFirstLetters(query);
-  // console.log("format Query suggestions", query);
   let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
   if (checkForKidsFilterQuery(capitalizedQuery))
     avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";
@@ -424,10 +423,6 @@ export const getHighlightedText = (text, highlight) => {
   return (
     <span>
       {" "}
-      {/* {console.log("part",parts)}
-      {console.log("filteredHighlight",filteredHighlight)}
-      {console.log("text",text)}
-      {console.log("regex",new RegExp(`(${filteredHighlight})`, "gi"))} */}
       {parts?.map((part, i) => (
         <span
           key={i}

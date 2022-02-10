@@ -199,7 +199,7 @@ class DynamicContentVueProductSlider extends PureComponent {
           isArabic: isArabic()
         }}
       >
-        <h4>{heading}</h4>
+        <h2 className="productWidgetHeading">{heading}</h2>
         {/* {this.viewAllBtn()} */}
       </div>
     );

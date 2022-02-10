@@ -14,10 +14,21 @@ class PLPDetails extends PureComponent {
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
   };
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true};
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }));
+  }
 
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
     isArabic: isArabic(),
+    
   };
 
   renderBrandImage = () => {
@@ -40,15 +51,24 @@ class PLPDetails extends PureComponent {
 
   renderBrandHtml = () => {
     const { brandDescription } = this.props;
-
     return (
-      <p
-        block="PLPDetails"
-        elem="BrandHTML"
-        dangerouslySetInnerHTML={{ __html: brandDescription }}
-      />
+      <div className={this.state.isToggleOn ? 'PLPDetails-viewmore' : 'PLPDetails-viewless'}>
+        <p
+          block="PLPDetails"
+          elem="BrandHTML"
+          dangerouslySetInnerHTML={{ __html: brandDescription }}
+        />
+        { brandDescription && !brandDescription.offsetHeight < 45 ? 
+          <button onClick={this.handleClick}>
+            {this.state.isToggleOn ? 'Read more' : 'Read less'}
+          </button>
+          : ""
+        }
+      </div>
+      
     );
   };
+
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
@@ -72,11 +92,11 @@ class PLPDetails extends PureComponent {
     return (
       <div block="PLPDetails" elem="Wrapper">
         
-        {!brandImg ? "" :
+        {/* {!brandImg ? "" :
           <div block="PLPDetails" elem="BrandImage">
             {isMobile ? "" : this.renderBrandImage()}
           </div>
-        }
+        } */}
         <div block="PLPDetails" elem={`BrandDescription ${brandImageVisible}`}>
           {/* {this.renderActionButtons()} */}
           {isMobile ? "" : this.renderBrandName()}

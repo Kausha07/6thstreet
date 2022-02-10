@@ -601,9 +601,9 @@ class PDPAddToCart extends PureComponent {
             <div block="SeperatorAddtoCart" />
             {this.renderAppParity()}
             <div block="PDPAddToCart" elem="SizeInfoContainer">
-              <span block="PDPAddToCart-SizeInfoContainer" elem="title">
+              <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}
-              </span>
+              </h2>
               {this.renderSizeInfo()}
             </div>
             <div block="PDPAddToCart" elem="SizeSelect">

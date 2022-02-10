@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { ReturnResolutionType } from 'Type/API';
 
 import MyAccountReturnCreateItem from './MyAccountReturnCreateItem.component';
-import { DISPLAY_DISCOUNT_PERCENTAGE } from '../Price/Price.config';
 
 export const mapStateToProps = (state) => ({
     country: state.AppState.country
@@ -67,12 +66,9 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         const { item, country } = this.props;
         const { isSelected } = this.state;
 
-        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
-
         return {
             item,
             isSelected,
-            displayDiscountPercentage,
             resolutions: this.getResolutionOptions(),
             reasonOptions: this.getReasonOptions()
         };
