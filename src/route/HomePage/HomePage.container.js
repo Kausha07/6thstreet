@@ -7,6 +7,7 @@ import { setGender } from "Store/AppState/AppState.action";
 import { toggleBreadcrumbs } from "Store/Breadcrumbs/Breadcrumbs.action";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
+import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { capitalize } from "Util/App";
 import { getUUID } from "Util/Auth";
@@ -81,6 +82,7 @@ export class HomePageContainer extends PureComponent {
     toggleBreadcrumbs(false);
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
+    this.setSchemaJSON();
   }
 
   componentDidUpdate(prevProps) {
@@ -190,7 +192,6 @@ export class HomePageContainer extends PureComponent {
       const dynamicContent = await getStaticFile(
         HOME_STATIC_FILE_KEY,
         { $FILE_NAME: `${devicePrefix}${gender}.json` }
-        // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
       );
 
       this.setState({
@@ -201,18 +202,24 @@ export class HomePageContainer extends PureComponent {
       // TODO: handle error
       Logger.log(e);
     }
+  }
 
-    // // TODO remove this try catch block after development
-    // try {
-    //   const response = await (await this.fetchDataFromLocal()).json();
-    //   const dynamicContent = response.data ? response.data : [];
-    //   this.setState({
-    //     dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
-    //     isLoading: false,
-    //   });
-    // } catch (error) {
-    //   Logger.log(e);
-    // }
+  async setSchemaJSON() {
+    const { locale = "" } = this.props;
+    try {
+      const response = await getSchema(locale);
+      if(!!!response?.error){
+        const tag = document.createElement('script');
+        if(tag) {
+          tag.type = 'application/ld+json';
+          tag.innerHTML = JSON.stringify(response);
+          document.head.appendChild(tag);
+        }
+      }
+    }
+    catch(err){
+      console.error(err);
+    }
   }
 
   containerProps = () => {
