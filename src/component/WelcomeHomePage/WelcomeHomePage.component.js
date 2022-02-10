@@ -199,100 +199,108 @@ class WelcomeHomePage extends PureComponent {
         const { isPopupOpen, welcomeImg } = this.state;
         const { language, country } = this.props;
         const locale = `${language}-${country.toLowerCase()}`;
+        const PREVIOUS_USER = BrowserDatabase.getItem('PREVIOUS_USER')
         return (
+
             <>
-                <div block="WelcomeHomePage" mods={{ isArabic: language === "ar" }}>
-                    {
-                        !isMobile.any()
-                            ?
-                            <Header />
-                            :
-                            null
-                    }
-                    <div block="WelcomeHomePage" elem="Top" >
-                        <div block="WelcomeHomePage-Top-Logo" >
-                            <img src={logo} />
-                        </div>
-                    </div>
-                    {isMobile.any() &&
-                        <div block="WelcomeHomePage" elem="StoreSwitcher" mods={{ isArabic: language === "ar" }}>
-                            <div block="Text" mods={{ isArabic: language === "ar" }}>
-                                <div block="Text-welcome">{__("Welcome, ")}</div>
-                                <div block="Text-shop">{__("you are shopping in")}</div>
-                            </div>
-                            <div block="WelcomeHomePage" elem="LanguageSwitcher" mods={{ isArabic: language === "ar" }}>
-                                <LanguageSwitcher isWelcomeMobileView={true} />
-                            </div>
-                            <div block="WelcomeHomePage" elem="CountrySwitcher" mods={{ isArabic: language === "ar" }}>
-                                <CountrySwitcher />
-                            </div>
-                        </div>
-                    }
-
-                    {isPopupOpen &&
-                        <div block="WelcomeHomePage" elem="Popup">
-                            <div block="WelcomeHomePage-Popup" elem="Action" mods={{ isArabic: language === "ar" }}>
-                                <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
-                            </div>
-                            <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
-                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                    <span>{__("Welcome, ")}</span>
-                                    <span>{__("you are shopping in")}</span>
-                                </div>
-                                <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
-                                    <LanguageSwitcher welcomePagePopup={true} />
-                                    <CountrySwitcher />
-                                    <button
-                                        block="WelcomeHomePage-Popup-Content-SwitcherContainer"
-                                        elem="ConfirmButton"
-                                        onClick={this.closePopup}
-                                    >
-                                        {__("OK")}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    {
-                        welcomeImg &&
-                        <div block="WelcomeHomePage" elem="MainSection" >
+                { !PREVIOUS_USER &&
+                    <div>
+                        <div block="WelcomeHomePage" mods={{ isArabic: language === "ar" }}>
                             {
-                                Object.keys(welcomeImg).map((gender) => {
-                                    const navigateTo = `${URLS[locale]}/${gender}.html`
-                                    return (
-                                        <a
-                                            href={navigateTo}
-                                            block="WelcomeHomePage-GenderSelection"
-                                            onClick={(e) => this.onGenderSelect(e, gender)}
-                                        >
-                                            <img src={welcomeImg[gender][language].img} />
-                                            <button block="WelcomeHomePage-GenderSelection-Button">
-                                                {welcomeImg[gender][language].label}
-                                            </button>
-                                        </a>
-                                    )
-                                })
+                                !isMobile.any()
+                                    ?
+                                    <Header />
+                                    :
+                                    null
                             }
+                            <div block="WelcomeHomePage" elem="Top" >
+                                <div block="WelcomeHomePage-Top-Logo" >
+                                    <img src={logo} />
+                                </div>
+                            </div>
+                            {isMobile.any() &&
+                                <div block="WelcomeHomePage" elem="StoreSwitcher" mods={{ isArabic: language === "ar" }}>
+                                    <div block="Text" mods={{ isArabic: language === "ar" }}>
+                                        <div block="Text-welcome">{__("Welcome, ")}</div>
+                                        <div block="Text-shop">{__("you are shopping in")}</div>
+                                    </div>
+                                    <div block="WelcomeHomePage" elem="LanguageSwitcher" mods={{ isArabic: language === "ar" }}>
+                                        <LanguageSwitcher isWelcomeMobileView={true} />
+                                    </div>
+                                    <div block="WelcomeHomePage" elem="CountrySwitcher" mods={{ isArabic: language === "ar" }}>
+                                        <CountrySwitcher />
+                                    </div>
+                                </div>
+                            }
+
+                            {isPopupOpen &&
+                                <div block="WelcomeHomePage" elem="Popup">
+                                    <div block="WelcomeHomePage-Popup" elem="Action" mods={{ isArabic: language === "ar" }}>
+                                        <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
+                                    </div>
+                                    <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
+                                        <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                            <span>{__("Welcome, ")}</span>
+                                            <span>{__("you are shopping in")}</span>
+                                        </div>
+                                        <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
+                                            <LanguageSwitcher welcomePagePopup={true} />
+                                            <CountrySwitcher />
+                                            <button
+                                                block="WelcomeHomePage-Popup-Content-SwitcherContainer"
+                                                elem="ConfirmButton"
+                                                onClick={this.closePopup}
+                                            >
+                                                {__("OK")}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            {
+                                welcomeImg &&
+                                <div block="WelcomeHomePage" elem="MainSection" >
+                                    {
+                                        Object.keys(welcomeImg).map((gender) => {
+                                            const navigateTo = `${URLS[locale]}/${gender}.html`
+                                            return (
+                                                <a
+                                                    href={navigateTo}
+                                                    block="WelcomeHomePage-GenderSelection"
+                                                    onClick={(e) => this.onGenderSelect(e, gender)}
+                                                >
+                                                    <img src={welcomeImg[gender][language].img} />
+                                                    <button block="WelcomeHomePage-GenderSelection-Button">
+                                                        {welcomeImg[gender][language].label}
+                                                    </button>
+                                                </a>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            }
+                            {isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                         </div>
-                    }
-                    {isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
-                </div>
-                {
-                    isMobile.tablet()
-                        ?
-                        <div block="WelcomeHomePage" elem="Bottom">
-                            {this.renderAppColumn()}
-                        </div>
-                        :
-                        null
-                }
-                {
-                    isMobile.any() || isMobile.tablet()
-                        ?
-                        null
-                        :
-                        <Footer />
+                        {
+                            isMobile.tablet()
+                                ?
+                                <div block="WelcomeHomePage" elem="Bottom">
+                                    {this.renderAppColumn()}
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            isMobile.any() || isMobile.tablet()
+                                ?
+                                null
+                                :
+                                <Footer />
+                        }
+
+                    </div>
+
                 }
             </>
         );
