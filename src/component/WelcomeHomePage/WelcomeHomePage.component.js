@@ -139,6 +139,7 @@ class WelcomeHomePage extends PureComponent {
             if(tag) {
               tag.type = 'application/ld+json';
               tag.innerHTML = JSON.stringify(response);
+              document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
               document.head.appendChild(tag);
             }
           }
