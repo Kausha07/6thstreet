@@ -324,7 +324,7 @@ Kids /// Baby Boy /// Shoes
 */
 
         if (VISIBLE_GENDERS.KIDS[genderValue]) {
-          return key.match(`Kids /// ${genderValue}`);
+          return key.match(`Kids ///`);
         }
 
         if (VISIBLE_GENDERS.OTHER[genderValue]) {
