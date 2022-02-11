@@ -1,52 +1,48 @@
-const PRECACHE = 'precache-v1';
-const RUNTIME = 'runtime';
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-sw.js');
 
-// A list of local resources we always want to be cached.
-const PRECACHE_URLS = [
-    './static/*',
-    'index.html'
-];
+const { routing, strategies, cacheableResponse, expiration } = workbox;
 
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(PRECACHE)
-            .then((cache) => cache.addAll(PRECACHE_URLS))
-            .catch((error) => console.error('***', error))
-    );
-});
+// Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
+routing.registerRoute(
+    // Check to see if the request's destination is style for stylesheets, script for JavaScript, or worker for web worker
+    ({ url }) => new RegExp(/static/).test(url),
+    // Use a Stale While Revalidate caching strategy
+    new strategies.StaleWhileRevalidate({
+      // Put all cached files in a cache named 'assets'
+      cacheName: 'assets',
+      plugins: [
+        // Ensure that only requests that result in a 200 status are cached
+        new cacheableResponse.CacheableResponsePlugin({
+          statuses: [200],
+        }),
+      ],
+    }),
+);
 
-self.addEventListener('fetch', (event) => {
-    // Skip cross-origin requests, like those for Google Analytics.
-    if (event.request.url.startsWith(self.location.origin)) {
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
+routing.registerRoute(
+  ({url, request}) => new RegExp(/https:\/\/mobilecdn.6thstreet.com/).test(url) && request.destination === 'image',
+  new strategies.CacheFirst({
+    cacheName: 'images',
+    plugins: [
+      new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
+      new expiration.ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+      })
+    ],
+  })
+);
 
-                return caches.open(RUNTIME).then((cache) => {
-                    return fetch(event.request).then((response) => {
-                        // Put a copy of the response in the runtime cache.
-                        return cache.put(event.request, response.clone()).then(() => {
-                            return response;
-                        });
-                    });
-                });
-            })
-        );
-    }
-});
-
-// The activate handler takes care of cleaning up old caches.
-self.addEventListener('activate', (event) => {
-    const currentCaches = [PRECACHE, RUNTIME];
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return cacheNames.filter((cacheName) => !currentCaches.includes(cacheName));
-        }).then(cachesToDelete => {
-            return Promise.all(cachesToDelete.map((cacheToDelete) => {
-                return caches.delete(cacheToDelete);
-            }));
-        }).then(() => self.clients.claim())
-    );
-});
+routing.registerRoute(
+  ({url, request}) => new RegExp(/(https?:\/\/mobilecdn.6thstreet.com\/.*\.(?:json))/i).test(url),
+  new strategies.CacheFirst({
+    cacheName: 'JSONs',
+    plugins: [
+      new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
+      new expiration.ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 60 * 10, // 10 Minutes
+      })
+    ],
+  })
+);
