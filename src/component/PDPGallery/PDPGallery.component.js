@@ -168,13 +168,43 @@ class PDPGallery extends PureComponent {
       />
     );
   };
-
-  renderGalleryImage = (src, i) => (
+  renderAltTag = () =>{
+    const {
+      product: { 
+        brand_name = "",
+        color = "",
+        product_type_6s = "",
+        categories
+      },
+    } = this.props;
+    const checkCategory = () => {
+      if (categories.level4){
+        return categories.level4[0];
+      }
+      else if (categories.level3){
+        return categories.level3[0];
+      }
+      else if (categories.level2){
+        return categories.level2[0];
+      }
+      else if (categories.level1){
+        return categories.level1[0];
+      }
+      else if (categories.level0){
+        return categories.level0[0];
+      }
+      else return "";
+    }
+    const categoryLevel = checkCategory().split('///').pop();
+    return(brand_name + " " + categoryLevel + " - " + color + " " + product_type_6s);
+  }
+  renderGalleryImage = (src, i) =>  (
     <Image
       lazyLoad={false}
       src={src}
       key={src}
       mix={{ block: "PDPGallery", elem: "sliderItem" }}
+      alt={this.renderAltTag()}
     />
   );
 

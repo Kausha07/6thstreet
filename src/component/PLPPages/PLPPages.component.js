@@ -129,13 +129,8 @@ class PLPPages extends PureComponent {
     this.setState({
       pageKey: key,
     });
-    const {
-      impressions,
-      query,
-      renderMySignInPopup,
-      filters,
-      productLoading,
-    } = this.props;
+    const { impressions, query, renderMySignInPopup, filters, productLoading } =
+      this.props;
     if (isMobile.any() && isPlaceholder) {
       return (
         <PLPPagePlaceholder
@@ -405,6 +400,7 @@ class PLPPages extends PureComponent {
           this.setState(
             {
               activeFilters: {
+                ...activeFilters,
                 [initialFacetKey]: filterArray,
               },
             },
@@ -427,6 +423,7 @@ class PLPPages extends PureComponent {
           this.setState(
             {
               activeFilters: {
+                ...activeFilters,
                 [initialFacetKey]: [],
               },
             },
@@ -448,8 +445,8 @@ class PLPPages extends PureComponent {
         updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
-            ...activeFilters,
             activeFilters: {
+              ...activeFilters,
               [initialFacetKey]: [],
             },
           },
