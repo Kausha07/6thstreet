@@ -24,10 +24,13 @@ import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
+  requestedOptions: state.PLP.options,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -43,6 +46,7 @@ class ProductItem extends PureComponent {
     isVueData: PropTypes.bool,
     pageType: PropTypes.string,
     prevPath: PropTypes.string,
+    requestedOptions: RequestedOptions.isRequired,
   };
 
   static defaultProps = {
@@ -182,13 +186,33 @@ class ProductItem extends PureComponent {
 
   renderImage() {
     const {
-      product: { thumbnail_url },
+      product: { thumbnail_url, brand_name, product_type_6s, color },
       lazyLoad = true,
+      requestedOptions,
     } = this.props;
 
+    const checkCatgeroyPath = () => {
+      if (requestedOptions.hasOwnProperty("categories.level4") == 1) {
+        return requestedOptions["categories.level4"];
+      } else if (requestedOptions.hasOwnProperty("categories.level3") == 1) {
+        return requestedOptions["categories.level3"];
+      } else if (requestedOptions.hasOwnProperty("categories.level2") == 1) {
+        return requestedOptions["categories.level2"];
+      } else if (requestedOptions.hasOwnProperty("categories.level1") == 1) {
+        return requestedOptions["categories.level1"];
+      } else if (requestedOptions.hasOwnProperty("categories.level0") == 1) {
+        return requestedOptions["categories.level0"];
+      } else {
+        return "";
+      }
+    };
+    const categoryTitle = checkCatgeroyPath().split("///").pop();
+
+    const altText =
+      brand_name + " " + categoryTitle + " - " + color + " " + product_type_6s;
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} alt={altText} />
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()}
         {this.renderColors()}
@@ -200,7 +224,6 @@ class ProductItem extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
-
     return (
       <h2 block="ProductItem" elem="Brand">
         {" "}
@@ -208,7 +231,6 @@ class ProductItem extends PureComponent {
       </h2>
     );
   }
-
   renderTitle() {
     const {
       product: { name },

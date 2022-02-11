@@ -79,7 +79,6 @@ export class Breadcrumb extends PureComponent {
 
     renderName() {
         const { name } = this.props;
-
         return (
             <TextPlaceholder content={ __(name) } />
         );

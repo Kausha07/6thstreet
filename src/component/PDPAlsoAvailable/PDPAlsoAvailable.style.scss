@@ -51,6 +51,7 @@
         font-weight: 600 !important;
         letter-spacing: 0 !important;
         line-height: 27px !important;
+        margin-bottom: 1rem;
       }
       @include before-desktop {
         font-size: 15px !important;
@@ -58,6 +59,7 @@
         letter-spacing: 0 !important;
         line-height: 30px !important;
         text-align: center !important;
+        margin: 0.4px 0 0 0;
       }
     }
   }

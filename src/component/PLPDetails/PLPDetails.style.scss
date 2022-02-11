@@ -63,10 +63,12 @@
             transition: all .5s ease-in-out;
         @include mobile {
             max-width: 100%;
+            padding-block: 0 1rem;
         }
         .PLPDetails-BrandName{
             line-height: 55px;
             margin: 0 0 16px;
+            text-transform: none;
         }
         &.notBrandImageVisible {
             text-align: center;

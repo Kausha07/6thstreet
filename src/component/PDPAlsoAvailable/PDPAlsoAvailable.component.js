@@ -43,9 +43,9 @@ class PDPAlsoAvailable extends PureComponent {
       <>
         {isMobile && this.renderSeperator()}
         <div block="PDPAlsoAvailable" mods={{ isAlsoAvailable }}>
-          <h1 block="PDPAlsoAvailable" elem="Title">
+          <h2 block="PDPAlsoAvailable" elem="Title">
             {isMobile ? __("Also available in") : __("Also available in:")}
-          </h1>
+          </h2>
           <ul block="PDPAlsoAvailable" elem="List">
             {this.renderAvailableProducts()}
           </ul>
