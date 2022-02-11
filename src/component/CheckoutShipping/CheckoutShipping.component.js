@@ -251,10 +251,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect
     } = this.props;
 
-    console.log("addresses", addresses);
-
     const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
-    console.log("address available", isCountryNotAddressAvailable)
     if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();

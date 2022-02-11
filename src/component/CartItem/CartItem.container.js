@@ -265,8 +265,6 @@ export class CartItemContainer extends PureComponent {
         },
         prevPath= null,
       } = this.props;
-      console.log("full_item_info",full_item_info);
-      console.log("row_total",row_total);
       removeProduct(item_id).then(() => this.setStateNotLoading());
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {

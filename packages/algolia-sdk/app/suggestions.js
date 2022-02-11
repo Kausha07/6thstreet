@@ -10,6 +10,6 @@ export default async function getSuggestions(
     });
     return res;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
