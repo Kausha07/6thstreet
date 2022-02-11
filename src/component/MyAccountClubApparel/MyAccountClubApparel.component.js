@@ -189,9 +189,7 @@ class MyAccountClubApparel extends PureComponent {
           </div>
         </div>
         <p block="MyAccountClubApparel" elem="Number">
-          {__("Link your ")}
-          <span>{__("Club Apparel")}</span>
-          {__(" account and start earning points.")}
+          {__("Link your Club Apparel account to earn")}
         </p>
         <button
           block="MyAccountClubApparel"

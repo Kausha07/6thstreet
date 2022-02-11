@@ -100,7 +100,7 @@ export class PDPDispatcher {
         dispatch(setPdpWidgetsData(pdpWidgetData.widgets));
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

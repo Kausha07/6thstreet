@@ -101,6 +101,9 @@
             &_isArabic {
               float: left;
             }
+            &_isCountryNotAddressAvailable{
+              display: none;
+            }
           }
 
           &-NewAddress {

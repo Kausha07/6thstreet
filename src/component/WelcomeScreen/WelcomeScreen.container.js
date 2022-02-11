@@ -54,7 +54,6 @@ class WelcomeScreenContainer extends PureComponent {
                 location.href
             );
             else{
-                console.log("hi")
                 this.props.setCountryForWelcome(value)
                 this.props.closePopup();
                 // this.props.setAppConfig(value)

@@ -158,14 +158,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   renderButtonLabel() {
-    return (isMobile.any() || isMobile.tablet()) ? __("New address") : __("Add new address");
+    return isMobile.any() || isMobile.tablet()
+      ? __("New address")
+      : __("Add new address");
   }
 
   renderOpenPopupButton = () => {
     const { isSignedIn, formContent, isArabic } = this.state;
-    const {
-      customer: { addresses = [] },
-    } = this.props;
+    const { addresses } = this.props;
 
     if (addresses && isSignedIn && addresses.length === 0) {
       return this.openNewForm();
@@ -197,17 +197,26 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     const {
       onAddressSelect,
       isSameAsShipping,
+      addresses,
       totals: { is_virtual },
     } = this.props;
 
-    if (isSameAsShipping && !is_virtual || (isMobile.any() || isMobile.tablet())) {
+    if (
+      (isSameAsShipping && !is_virtual) ||
+      isMobile.any() ||
+      isMobile.tablet()
+    ) {
       return null;
     }
 
     return (
       <>
         {this.renderAddressHeading()}
-        <CheckoutAddressBook onAddressSelect={onAddressSelect} isBilling />
+        <CheckoutAddressBook
+          addresses={addresses}
+          onAddressSelect={onAddressSelect}
+          isBilling
+        />
       </>
     );
   }
@@ -233,7 +242,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       isSignedIn,
       isClickAndCollect,
       savePaymentInformationApplePay,
-      isTabbyInstallmentAvailable
+      isTabbyInstallmentAvailable,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -372,8 +381,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-    const isTabbyPay =
-      paymentMethod === "tabby_installments"
+    const isTabbyPay = paymentMethod === "tabby_installments";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -392,7 +400,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 mods={{ button_style }}
               >
                 <div>{__("Buy with ")}</div>
-                <Image lazyLoad={true}
+                <Image
+                  lazyLoad={true}
                   block="CheckoutComApplePayPayment"
                   elem="icon"
                   mix={{
@@ -421,8 +430,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                   processingRequest || processingPaymentSelectRequest
                     ? "spinningButton"
                     : isTabbyPay
-                      ? "tabbyButton"
-                      : "Button",
+                    ? "tabbyButton"
+                    : "Button",
               }}
             >
               {processingRequest || processingPaymentSelectRequest ? (
@@ -480,7 +489,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       >
         {this.renderAddresses()}
         <div block="CheckoutBilling" elem="Bin"></div>
-        {isSameAsShipping || (isMobile.any() || isMobile.tablet()) ? null : (
+        {isSameAsShipping || isMobile.any() || isMobile.tablet() ? null : (
           <div block="CheckoutBilling" elem="Line">
             <hr />
           </div>
