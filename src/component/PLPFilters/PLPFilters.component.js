@@ -20,6 +20,14 @@ import { SIZES } from "./PLPFilters.config";
 import Refine from "../Icons/Refine/icon.png";
 import "./PLPFilters.style";
 import FieldMultiselect from "Component/FieldMultiselect";
+import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+import { withRouter } from "react-router";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  requestedOptions: state.PLP.options,
+});
+
 class PLPFilters extends PureComponent {
   static propTypes = {
     isLoading: PropTypes.bool.isRequired,
@@ -31,6 +39,7 @@ class PLPFilters extends PureComponent {
     onReset: PropTypes.func.isRequired,
     productsCount: PropTypes.number,
     activeFilters: PropTypes.object.isRequired,
+    requestedOptions: RequestedOptions.isRequired,
   };
 
   static defaultProps = {
@@ -112,8 +121,13 @@ class PLPFilters extends PureComponent {
 
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, defaultFilters } = this.state;
-    const { initialOptions, handleCallback, onUnselectAllPress, isChecked,activeFilters } =
-      this.props;
+    const {
+      initialOptions,
+      handleCallback,
+      onUnselectAllPress,
+      isChecked,
+      activeFilters,
+    } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
@@ -527,56 +541,76 @@ class PLPFilters extends PureComponent {
     return null;
   };
 
-  render() {
+  renderCatPath = () => {
+    const { requestedOptions } = this.props;
     const breadcrumbs = location.pathname
-    .split(".html")[0]
-    .substring(1)
-    .split("/");
+      .split(".html")[0]
+      .substring(1)
+      .split("/");
     const plpTitle = breadcrumbs.pop() || "";
     const checkString = (str) => {
       const regularTitle = {
-        containString : /-/,
-      }
-      const expMatch ={};
+        containString: /-/,
+      };
+      const expMatch = {};
       expMatch.containString = regularTitle.containString.test(str);
       return expMatch;
-    }
-    
-    const removeChar = (str) =>{
-      const titleSplit = str.split('-');
-      const titleJoin = titleSplit.join(' ');
+    };
+
+    const removeChar = (str) => {
+      const titleSplit = str.split("-");
+      const titleJoin = titleSplit.join(" ");
       return titleJoin;
-    }
+    };
     const capitalizeSentence = (str) => {
-      var splitStr = str.split(' ');
+      var splitStr = str.split(" ");
       for (var i = 0; i < splitStr.length; i++) {
-          splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+        splitStr[i] =
+          splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
       }
-      return splitStr.join(' '); 
-   }
+      return splitStr.join(" ");
+    };
     const validateCategoryName = () => {
-      if (checkString(plpTitle).containString == 1){
+      if (checkString(plpTitle).containString == 1) {
         const catTitleTemp = removeChar(plpTitle);
         return capitalizeSentence(catTitleTemp);
-      }
-      else{
+      } else {
         return capitalizeSentence(plpTitle);
       }
-    }
+    };
     const pageTitle = validateCategoryName();
+    if (requestedOptions.hasOwnProperty("categories.level4") == 1) {
+      return requestedOptions["categories.level4"];
+    } else if (requestedOptions.hasOwnProperty("categories.level3") == 1) {
+      return requestedOptions["categories.level3"];
+    } else if (requestedOptions.hasOwnProperty("categories.level2") == 1) {
+      return requestedOptions["categories.level2"];
+    } else if (requestedOptions.hasOwnProperty("categories.level1") == 1) {
+      return requestedOptions["categories.level1"];
+    } else if (requestedOptions.hasOwnProperty("categories.level0") == 1) {
+      return requestedOptions["categories.level0"];
+    } else if (pageTitle) {
+      return pageTitle;
+    } else {
+      return "";
+    }
+  };
+
+  render() {
     const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-    
+    const category_title = this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
         <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
           <span>{count}</span>
-          {count ? __("Results for " ) : null}
-          {(count && !pageTitle)   ?
-            "Available Products" :
-            <h1 className="categoryTitle">{__(pageTitle)}</h1>
-          }
+          {count ? __("Results for ") : null}
+          {count && !category_title ? (
+            "Available Products"
+          ) : (
+            <h1 className="categoryTitle">{__(category_title)}</h1>
+          )}
         </div>
         {!isMobile.any() && (
           <div block="FilterHeader">
@@ -612,10 +646,11 @@ class PLPFilters extends PureComponent {
             <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
               <span>{count}</span>
               {count ? __("Results for ") : null}
-              {(count && !pageTitle)  ?
-                "Available Products" :
-                <h1 className="categoryTitle">{__(pageTitle)}</h1>
-              }
+              {count && !category_title ? (
+                "Available Products"
+              ) : (
+                <h1 className="categoryTitle">{__(category_title)}</h1>
+              )}
             </div>
           </div>
         )}
@@ -624,4 +659,4 @@ class PLPFilters extends PureComponent {
   }
 }
 
-export default PLPFilters;
+export default withRouter(connect(mapStateToProps, null)(PLPFilters));
