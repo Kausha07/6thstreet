@@ -67,7 +67,7 @@ class BannerImpressionEvent extends BaseEvent {
 
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id }, index) => ({
-        id: id,
+        id: promotion_name.split(" ").join("-"),
         name: label || promotion_name,
         creative: promotion_name || "",
         position: index + 1,
