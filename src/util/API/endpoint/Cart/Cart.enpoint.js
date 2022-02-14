@@ -38,6 +38,9 @@ export const updateProductInCart = ({ cartId, productId, qty }) =>
     qty,
   }) || {};
 
+export const getCoupon = (cartId) => MobileAPI.get(`/promo/info?quote_id=${cartId}`) || {};
+
+
 export const applyCouponCode = ({ cartId, couponCode }) =>
   MobileAPI.post(`/carts/${cartId}/coupons`, {
     coupon_code: couponCode,
