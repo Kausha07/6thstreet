@@ -328,7 +328,7 @@
     @include after-mobile {
         grid-auto-flow: column;
         grid-column-gap: 2rem;
-        grid-template-columns: 1fr;
+        // grid-template-columns: 1fr;
         margin-bottom: 0;
         &>div {
             margin-top: -50px;

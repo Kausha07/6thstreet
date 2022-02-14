@@ -283,11 +283,12 @@ class MyAccountOrderView extends PureComponent {
         <h3>
           {title}
           {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
-          {status === DELIVERY_SUCCESSFUL ? 
+          {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ? 
           <span>: &nbsp;{formatDate(
             "DD MMMM YYYY",
             new Date(deliveryDate.replace(/-/g, "/"))
-          )}</span>: null }
+          )}</span>: null } */}
+          
         </h3>
       </div>
     );
@@ -346,7 +347,7 @@ class MyAccountOrderView extends PureComponent {
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
-              <p block="MyAccountOrderListItem" elem="StatusTitle">
+              {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
                   new Date(item?.courier_shipped_date?.replace(/-/g, "/"))
@@ -358,7 +359,7 @@ class MyAccountOrderView extends PureComponent {
                     "DD MMM",
                     new Date(item?.courier_deliver_date?.replace(/-/g, "/"))
                   ): null}
-              </p>
+              </p> */}
             </div>
           ))}
         </div>
@@ -671,10 +672,8 @@ class MyAccountOrderView extends PureComponent {
         return this.renderCardPaymentType();
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
-          console.log("club apparel");
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
-          console.log("Store credit");
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;

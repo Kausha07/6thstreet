@@ -512,7 +512,6 @@ export class SizeTable extends PureComponent {
     );
   }
   renderInnerRows(data) {
-    // console.log(data);
     const rows = data.map(this.renderInnerRow);
     return rows;
   }
