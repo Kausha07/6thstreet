@@ -38,9 +38,12 @@ export class CartCouponList extends PureComponent {
                     <div block="couponItemDetail">
                         <p block="couponItemCode">{coupon.code}</p>
                         <p block="couponItemName">{coupon.name}</p>
-                        <button block="couponItemViewBtn" onClick={(e) => { this.props.showDetail(e, coupon) }}>View Detail</button>
+                        <button block="couponItemViewBtn" onClick={(e) => { this.props.showDetail(e, coupon) }}>{__("View Detail")}</button>
                     </div>                   
-                    {couponCode === coupon.code ? <button onClick={() => { this.handleRemoveCode() }} block="couponItemBtn remove">Remove</button> : <button onClick={() => { this.handleApplyCode(coupon.code) }} block="couponItemBtn apply">Apply</button>}
+                    {couponCode === coupon.code ? 
+                    <button onClick={() => { this.handleRemoveCode() }} block="couponItemBtn remove">{__("Remove")}</button>
+                     : 
+                    <button onClick={() => { this.handleApplyCode(coupon.code) }} block="couponItemBtn apply">{__("Apply")}</button>}
                 </div>
             </li>
         )

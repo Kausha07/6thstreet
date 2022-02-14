@@ -253,10 +253,10 @@ export class CartPage extends PureComponent {
                       <p block="appliedCouponName">{appliedCoupon?.name}</p>
                       <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
                     </div>
-                    <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>Remove</button>
+                    <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
                   </div>
                   :
-                  <button onClick={this.openCouponPopup} block="showCouponBtn">Enter coupon or promo code</button>
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
               }
             </div>
             {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
@@ -266,7 +266,7 @@ export class CartPage extends PureComponent {
             <div block="couponPopupBlock">
               <div block="couponPopupContent" ref={this.cartCouponPopup}>
                 <div block="couponPopupTop">
-                  Promo codes ({promoCount})
+                {__("Promo codes (%s)", promoCount)}
               <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
                     <span>Close</span>
                   </button>

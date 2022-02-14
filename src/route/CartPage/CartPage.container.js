@@ -48,7 +48,6 @@ export const BreadcrumbsDispatcher = import(
 );
 
 export const mapStateToProps = (state) => {
-    //console.log("cop",state);
     return({
     totals: state.CartReducer.cartTotals,
     couponsItems: state.CartReducer.cartCoupons,
