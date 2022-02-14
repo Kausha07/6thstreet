@@ -17,11 +17,17 @@ function setCustomCacheControl(res, path) {
     else {
         res.append('cache-control', 'public, max-age=259200, must-revalidate');
     }
+    // Prevent Click-Jacking
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
-    res.setHeader("X-Content-Type-Options", "nosniff")
-    res.setHeader("X-XSS-Protection", "1; mode=block;")
-    res.setHeader("Strict-Transport-Security", "max-age=15768000; includeSubDomains")
 
+    // Dont allow browser to do sniffing with MIME type
+    res.setHeader("X-Content-Type-Options", "nosniff")
+
+    // Prevent cross site scripting, 'mode=block' prevent loading the page, unlike only sanitization
+    res.setHeader("X-XSS-Protection", "1; mode=block;")
+
+    // To convert http to https 'subDomains' to include subDomains also
+    res.setHeader("Strict-Transport-Security", "max-age=15768000; includeSubDomains")
 }
 app.use(serverTimings);
 proxy(app);
