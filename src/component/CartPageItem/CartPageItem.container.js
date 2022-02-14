@@ -40,7 +40,7 @@ export const CartDispatcher = import(
 );
 
 export const mapStateToProps = (state) => ({
-  prevPath: state.PLP.prevPath
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -252,28 +252,38 @@ export class CartItemContainer extends PureComponent {
           item_id,
           brand_name,
           sku,
-          row_total,
-          optionValue,
           color,
           qty,
           product: { name } = {},
-          full_item_info: { config_sku, category, price },
+          full_item_info: {
+            config_sku,
+            category,
+            price,
+            size_option,
+            size_value,
+            itemPrice,
+            original_price,
+          },
         },
-        prevPath= null,
+        prevPath = null,
       } = this.props;
 
       removeProduct(item_id).then(() => this.setStateNotLoading());
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: sku,
           name,
-          price: row_total,
-          quantity: qty,
-          size: optionValue,
+          id: sku,
+          price: itemPrice,
+          brand: brand_name,
+          category: category,
           variant: color,
+          quantity: qty,
+          size_type: size_option,
+          size: size_value,
+          dimension9: 100 - Math.round((itemPrice / original_price) * 100),
+          dimension10: original_price,
+          dimension11: itemPrice,
         },
       });
 
@@ -371,4 +381,6 @@ export class CartItemContainer extends PureComponent {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CartItemContainer));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(CartItemContainer)
+);
