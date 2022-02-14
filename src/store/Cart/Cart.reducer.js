@@ -13,7 +13,8 @@ import {
     SET_MINICART_OPEN,
     UPDATE_CART_ITEM,
     UPDATE_TOTALS,
-    SET_DETAIL_STEP
+    SET_DETAIL_STEP,
+    SET_CART_COUPON
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
@@ -54,7 +55,7 @@ const removeCartItem = (cartItems, itemToRemove) => {
 
 export const CartReducer = (state = getInitialState(), action) => {
     const {
-        type, cartId, cartItem, cartTotals, requestStatus, checkoutDetails
+        type, cartId, cartItem, cartTotals, requestStatus, checkoutDetails, cartCoupons
     } = action;
     const { cartItems } = state;
     const ONE_DAY_IN_SECONDS = 86400;
@@ -198,6 +199,11 @@ export const CartReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             isMinicartOpen
+        };
+    case SET_CART_COUPON:
+        return {
+            ...state,
+            cartCoupons
         };
     default:
         return state;

@@ -9,6 +9,8 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
+import CartCouponList from "Component/CartCouponList";
+import CartCouponDetail from 'Component/CartCouponDetail';
 import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
@@ -37,8 +39,8 @@ import "./CartPage.style";
 export class CartPage extends PureComponent {
   constructor(props) {
     super(props);
-
     this.dynamicHeight = React.createRef();
+    this.cartCouponPopup = React.createRef();
   }
   static propTypes = {
     totals: TotalsType.isRequired,
@@ -55,11 +57,17 @@ export class CartPage extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    isCouponPopupOpen: false,
+    couponCode: "",
+    couponName: "",
+    couponDescription: "",
+    isCouponDetialPopupOpen: false
   };
+
 
   static defaultProps = {
     clubApparel: {},
-    processingRequest: false,
+    processingRequest: false
   };
 
   componentDidMount() {
@@ -95,6 +103,9 @@ export class CartPage extends PureComponent {
       };
       document.body.appendChild(script);
     }
+
+    //const bodyElt = document.querySelector("body");
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
   componentDidUpdate(prevProps) {
     const {
@@ -159,20 +170,118 @@ export class CartPage extends PureComponent {
     );
   }
 
+  outsideCouponPopupClick = e => {
+    if (this.state.isCouponPopupOpen && this.cartCouponPopup.current && !this.cartCouponPopup.current.contains(e.target)) {
+      this.setState({
+        isCouponPopupOpen: false
+      })
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
+  closeCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: false
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.removeAttribute("style");
+  }
+  openCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: true
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  }
+  showCouponDetial = (e, coupon) => {
+    e.stopPropagation()
+    this.setState({
+      couponCode: coupon.code,
+      couponName: coupon.name,
+      couponDescription: coupon.description,
+      isCouponDetialPopupOpen: true
+    })
+
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+
+  }
+  hideCouponDetial = (e) => {
+    e.stopPropagation()
+    this.setState({
+      isCouponDetialPopupOpen: false
+    })
+    if (!this.state.isCouponPopupOpen) {
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
+  handleRemoveCode = (e) => {
+    e.stopPropagation()
+    this.props.removeCouponFromCart()
+  }
   renderDiscountCode() {
     const {
       totals: { coupon_code },
+      couponsItems = []
     } = this.props;
     const isOpen = false;
-
+    const promoCount = Object.keys(couponsItems).length;
+    let appliedCoupon = {};
+    if (couponsItems) {
+      appliedCoupon = couponsItems.find(function (coupon) {
+        return coupon.code == coupon_code
+      })
+    }
     return (
-      <ExpandableContent
-        isOpen={isOpen}
-        heading={__("Have a discount code?")}
-        mix={{ block: "CartPage", elem: "Discount" }}
-      >
-        <CartCoupon couponCode={coupon_code} />
-      </ExpandableContent>
+      // <ExpandableContent
+      //   isOpen={isOpen}
+      //   heading={__("Have a discount code?")}
+      //   mix={{ block: "CartPage", elem: "Discount" }}
+      // >
+      //   <CartCoupon couponCode={coupon_code} />
+      // </ExpandableContent>
+      <>{
+        !this.state.isCouponPopupOpen ?
+          <>
+            <div block="cartCouponBlock">
+              {
+                coupon_code ?
+                  <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                    <div block="appliedCouponDetail">
+                      <p block="appliedCouponCode">{appliedCoupon?.code}</p>
+                      <p block="appliedCouponName">{appliedCoupon?.name}</p>
+                      <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
+                    </div>
+                    <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
+                  </div>
+                  :
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
+              }
+            </div>
+            {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+          </>
+          :
+          <>
+            <div block="couponPopupBlock">
+              <div block="couponPopupContent" ref={this.cartCouponPopup}>
+                <div block="couponPopupTop">
+                {__("Promo codes (%s)", promoCount)}
+              <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
+                    <span>Close</span>
+                  </button>
+                </div>
+                <CartCoupon couponCode={coupon_code} />
+                <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
+                {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+              </div>
+            </div>
+
+          </>
+      }
+
+        {/* {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail = {this.state} hideDetail = {this.hideCouponDetial}/>} */}
+      </>
     );
   }
 

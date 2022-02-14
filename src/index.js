@@ -31,7 +31,7 @@ if (process.env.NODE_ENV  !== "development" && "serviceWorker" in navigator) {
   });
   
   window.addEventListener("load", () => {
-    const swUrl = '/service-worker.js';
+    const swUrl = '/sw.js';
     navigator.serviceWorker.register(swUrl).then((reg) => {
       const newVersionPopupEvent = new Event("showNewVersionPopup");
 
