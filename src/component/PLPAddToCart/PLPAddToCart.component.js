@@ -1,7 +1,7 @@
-import { Fragment, PureComponent } from 'react';
-import { isArabic } from 'Util/App';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { Fragment, PureComponent } from "react";
+import { isArabic } from "Util/App";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import StrikeThrough from "./icons/strike-through.png";
@@ -16,19 +16,20 @@ import Event, {
   VUE_ADD_TO_CART,
 } from "Util/Event";
 import { v4 } from "uuid";
-import './PLPAddToCart.style';
-
+import "./PLPAddToCart.style";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
-  prevPath: state.PLP.prevPath
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showNotification: (type, message) => dispatch(showNotification(type, message)),
-  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
+  showNotification: (type, message) =>
+    dispatch(showNotification(type, message)),
+  setMinicartOpen: (isMinicartOpen = false) =>
+    dispatch(setMinicartOpen(isMinicartOpen)),
   addProductToCart: (
     productData,
     color,
@@ -51,7 +52,7 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice,
       searchQueryId
-    )
+    ),
 });
 
 class PLPAddToCart extends PureComponent {
@@ -64,73 +65,78 @@ class PLPAddToCart extends PureComponent {
     addedToCart: false,
     isLoading: false,
     isOutOfStock: false,
-    isArabic: isArabic()
+    isArabic: isArabic(),
   };
-
 
   componentDidMount() {
     this.setSizeData();
-    this.updateDefaultSizeType()
+    this.updateDefaultSizeType();
     const {
-      product: { size_eu, size_uk, size_us, in_stock, stock_qty, simple_products = [] }
+      product: {
+        size_eu,
+        size_uk,
+        size_us,
+        in_stock,
+        stock_qty,
+        simple_products = [],
+      },
     } = this.props;
 
     let outOfStockStatus;
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
-        size_us.length === 0 && size_uk.length === 0 && size_eu.length === 0 && in_stock === 0
-          ?
-          true
-          :
-          in_stock === 1 && stock_qty === 0
-            ?
-            true
-            :
-            false;
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
     } else {
       outOfStockStatus =
         in_stock === 0
           ? true
           : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+          ? true
+          : false;
     }
     this.setState({
       isOutOfStock: outOfStockStatus,
     });
-
   }
 
   componentDidUpdate() {
-    const sliders = document.querySelectorAll('.PLPAddToCart-SizeSelector-SizeContainer-AvailableSizes');
+    const sliders = document.querySelectorAll(
+      ".PLPAddToCart-SizeSelector-SizeContainer-AvailableSizes"
+    );
     sliders.forEach((slider) => {
       let isDown = false;
       let startX;
       let scrollLeft;
 
-      slider.addEventListener('mousedown', (e) => {
+      slider.addEventListener("mousedown", (e) => {
         isDown = true;
-        slider.classList.add('active');
+        slider.classList.add("active");
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
       });
-      slider.addEventListener('mouseleave', () => {
+      slider.addEventListener("mouseleave", () => {
         isDown = false;
-        slider.classList.remove('active');
+        slider.classList.remove("active");
       });
-      slider.addEventListener('mouseup', () => {
+      slider.addEventListener("mouseup", () => {
         isDown = false;
-        slider.classList.remove('active');
+        slider.classList.remove("active");
       });
-      slider.addEventListener('mousemove', (e) => {
+      slider.addEventListener("mousemove", (e) => {
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 3; //scroll-fast
         slider.scrollLeft = scrollLeft - walk;
       });
-    })
-
+    });
   }
 
   setSizeData = () => {
@@ -170,8 +176,6 @@ class PLPAddToCart extends PureComponent {
         sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
       };
 
-
-
       const allSizes = Object.entries(simple_products).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
@@ -191,7 +195,7 @@ class PLPAddToCart extends PureComponent {
       ) {
         this.setState({
           insertedSizeStatus: false,
-          sizeObject: object
+          sizeObject: object,
         });
         return;
       }
@@ -207,13 +211,13 @@ class PLPAddToCart extends PureComponent {
 
         this.setState({
           insertedSizeStatus: false,
-          sizeObject: object
+          sizeObject: object,
         });
         return;
       }
 
       this.setState({
-        sizeObject: object
+        sizeObject: object,
       });
       return;
     }
@@ -225,12 +229,12 @@ class PLPAddToCart extends PureComponent {
       },
     });
     return;
-  }
+  };
 
   updateDefaultSizeType() {
     const { product } = this.props;
     if (product?.size_eu && product?.size_uk && product?.size_us) {
-      const sizeTypes = ['eu', 'uk', 'us'];
+      const sizeTypes = ["eu", "uk", "us"];
       let index = 0;
       while (product[`size_${sizeTypes[index]}`]?.length <= 0) {
         index = index + 1;
@@ -246,14 +250,14 @@ class PLPAddToCart extends PureComponent {
     this.setState({
       selectedSizeType: type.target.value,
     });
-  }
+  };
 
   getSizeTypeSelect() {
     const { product } = this.props;
-    const { selectedSizeType, sizeObject = {}, isArabic } = this.state
+    const { selectedSizeType, sizeObject = {}, isArabic } = this.state;
 
     if (this.state.isOutOfStock) {
-      return null
+      return null;
     }
 
     if (sizeObject.sizeTypes !== undefined) {
@@ -290,11 +294,11 @@ class PLPAddToCart extends PureComponent {
   }
 
   getSizeSelect() {
-    let productStock = this.props.product.simple_products
-    let selectedSizeType = this.state.selectedSizeType
-    let sizeObject = this.state.sizeObject
-    let product = this.props.product
-    let isArabic = this.state.isArabic
+    let productStock = this.props.product.simple_products;
+    let selectedSizeType = this.state.selectedSizeType;
+    let sizeObject = this.state.sizeObject;
+    let product = this.props.product;
+    let isArabic = this.state.isArabic;
 
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -302,7 +306,11 @@ class PLPAddToCart extends PureComponent {
       product[`size_${selectedSizeType}`].length !== 0
     ) {
       return (
-        <div block="PLPAddToCart-SizeSelector-SizeContainer" elem="AvailableSizes" mods={{ isArabic }}>
+        <div
+          block="PLPAddToCart-SizeSelector-SizeContainer"
+          elem="AvailableSizes"
+          mods={{ isArabic }}
+        >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
 
@@ -316,15 +324,10 @@ class PLPAddToCart extends PureComponent {
       );
     }
 
-    return (
-      <span id="notavailable">
-        {__("OUT OF STOCK")}
-      </span>
-    );
+    return <span id="notavailable">{__("OUT OF STOCK")}</span>;
   }
 
   renderSizeOption(productStock, code, label) {
-
     const { selectedSizeCode } = this.state;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
@@ -401,14 +404,14 @@ class PLPAddToCart extends PureComponent {
     }
     this.setState({
       selectedSizeCode: value,
-      isOutOfStock: outOfStockVal
+      isOutOfStock: outOfStockVal,
     });
-  }
+  };
 
   renderAddToCartButton() {
     const { sizeObject = {}, isLoading, addedToCart } = this.state;
-    if (!(Object.keys(sizeObject).length)) {
-      return null
+    if (!Object.keys(sizeObject).length) {
+      return null;
     }
     const {
       product: { stock_qty, highlighted_attributes, simple_products },
@@ -434,10 +437,10 @@ class PLPAddToCart extends PureComponent {
                 elem: "AddToCartButton",
                 mods: {
                   addedToCart,
-                  isArabic: isArabic()
-                }
+                  isArabic: isArabic(),
+                },
               }}
-            //   disabled={disabled}
+              //   disabled={disabled}
             >
               <span>{__("Add to bag")}</span>
               <span>{__("Adding...")}</span>
@@ -463,14 +466,20 @@ class PLPAddToCart extends PureComponent {
         sku: configSKU,
         objectID,
         product_type_6s,
-        simple_products
+        simple_products,
       },
       addProductToCart,
       showNotification,
       prevPath = null,
+      product,
     } = this.props;
-    const { selectedClickAndCollectStore, selectedSizeType, selectedSizeCode, insertedSizeStatus } = this.state;
-    const productStock = simple_products
+    const {
+      selectedClickAndCollectStore,
+      selectedSizeType,
+      selectedSizeCode,
+      insertedSizeStatus,
+    } = this.state;
+    const productStock = simple_products;
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
       return;
@@ -523,23 +532,25 @@ class PLPAddToCart extends PureComponent {
         // Response is sent only if error appear
         if (response) {
           showNotification("error", __(response));
-          this.afterAddToCart(false, {
-          });
+          this.afterAddToCart(false, {});
         } else {
-          this.afterAddToCart(true, {
-          });
+          this.afterAddToCart(true, {});
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
-          quantity: 1,
-          size: optionValue,
+          brand: brand_name,
+          category: product_type_6s,
           variant: color,
+          quantity: 1,
+          size_type: optionId,
+          size: optionValue,
+          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
@@ -560,12 +571,7 @@ class PLPAddToCart extends PureComponent {
           prodPrice: basePrice,
         },
       });
-
-    }
-
-
-
-    else if (!insertedSizeStatus) {
+    } else if (!insertedSizeStatus) {
       this.setState({ isLoading: true });
       const code = Object.keys(productStock);
       addProductToCart(
@@ -595,14 +601,18 @@ class PLPAddToCart extends PureComponent {
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
+          brand: brand_name,
+          category: product_type_6s,
+          variant: color,
           quantity: 1,
+          size_type: "",
           size: "",
-          variant: "",
+          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
@@ -624,10 +634,9 @@ class PLPAddToCart extends PureComponent {
         },
       });
     }
-
   }
 
-  afterAddToCart(isAdded = 'true') {
+  afterAddToCart(isAdded = "true") {
     const { setMinicartOpen } = this.props;
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
@@ -640,34 +649,34 @@ class PLPAddToCart extends PureComponent {
       this.setState({ addedToCart: true });
     }
 
-    setTimeout(() => this.setState({ productAdded: false, addedToCart: false }), timeout);
+    setTimeout(
+      () => this.setState({ productAdded: false, addedToCart: false }),
+      timeout
+    );
   }
 
-
   render() {
-    const { sizeObject } = this.state
+    const { sizeObject } = this.state;
     return (
       <div block="PLPAddToCart">
         <div block="PLPAddToCart" elem="SizeSelector">
-          {
-            sizeObject.sizeTypes !== undefined && sizeObject.sizeTypes.length !== 0
-              ?
-              <>
-                <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
-                  {this.getSizeTypeSelect()}
-                </div>
-                <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
-                  {this.getSizeSelect()}
-                </div>
-              </>
-              :
-              null
-          }
+          {sizeObject.sizeTypes !== undefined &&
+          sizeObject.sizeTypes.length !== 0 ? (
+            <>
+              <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
+                {this.getSizeTypeSelect()}
+              </div>
+              <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
+                {this.getSizeSelect()}
+              </div>
+            </>
+          ) : null}
         </div>
         {this.renderAddToCartButton()}
-        <a href={this.props.url} block="PLPAddToCart-ViewDetails">{__("VIEW DETAILS")}</a>
+        <a href={this.props.url} block="PLPAddToCart-ViewDetails">
+          {__("VIEW DETAILS")}
+        </a>
       </div>
-
     );
   }
 }

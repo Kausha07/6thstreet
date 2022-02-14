@@ -441,6 +441,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
       prevPath = null,
+      product
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
 
@@ -511,14 +512,18 @@ export class PDPAddToCartContainer extends PureComponent {
 
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
-          quantity: 1,
-          size: optionValue,
+          brand: brand_name,
+          category: product_type_6s,
           variant: color,
+          quantity: 1,
+          size_type: optionId,
+          size: optionValue,
+          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
@@ -577,14 +582,18 @@ export class PDPAddToCartContainer extends PureComponent {
 
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
+          brand: brand_name,
+          category: product_type_6s,
+          variant: color,
           quantity: 1,
+          size_type: "",
           size: "",
-          variant: "",
+          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
