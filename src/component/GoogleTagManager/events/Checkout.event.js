@@ -75,7 +75,6 @@ class CheckoutEvent extends BaseEvent {
                     availability: true
                 }
             ]), []);
-            console.log("barath", products);
         const groupedProducts = this.getGroupedProducts();
         Object.values(groupedProducts || {}).forEach(({ data }) => products.push(data));
 
