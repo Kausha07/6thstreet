@@ -13,6 +13,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getQueryParam, setQueryParams } from "Util/Url";
+import { getCountryFromUrl } from "Util/Url/Url";
 import Brands from "./Brands.component";
 import { TYPES_ARRAY } from "./Brands.config";
 
@@ -164,20 +165,35 @@ class BrandsContainer extends PureComponent {
     setMeta({
       title: __("Brands | 6thStreet"),
       keywords: __("brands"),
-      description: __(
+      description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-      ),
+        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+        ),
       twitter_title: __("Brands | 6thStreet"),
-      twitter_desc: __(
+      twitter_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-      ),
+        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+        ),
       og_title: __("Brands | 6thStreet"),
-      og_desc: __(
+      og_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-      ),
+        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+        ),
     });
   }
 
