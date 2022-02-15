@@ -22,6 +22,15 @@ export class NewVersionPopupContainer extends SourceNewVersionPopupContainer {
             });
         }
     }
+    toggleNewVersion() {
+        if(window.wb) {
+            window.wb.addEventListener('controlling', () => {
+                window.location.reload();
+            });
+    
+            window.wb.messageSkipWaiting();
+        }
+    }
 }
 
 export default connect(null, mapDispatchToProps)(NewVersionPopupContainer);

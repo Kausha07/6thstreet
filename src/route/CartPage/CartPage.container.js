@@ -37,6 +37,9 @@ import { appendWithStoreCode } from 'Util/Url';
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+
+
 import CartPage from './CartPage.component';
 
 export const BreadcrumbsDispatcher = import(
@@ -44,8 +47,10 @@ export const BreadcrumbsDispatcher = import(
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
 
-export const mapStateToProps = (state) => ({
+export const mapStateToProps = (state) => {
+    return({
     totals: state.CartReducer.cartTotals,
+    couponsItems: state.CartReducer.cartCoupons,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
@@ -54,7 +59,8 @@ export const mapStateToProps = (state) => ({
     isLoading: state.CartReducer.isLoading,
     processingRequest: state.CartReducer.processingRequest,
     prevPath: state.PLP.prevPath,
-});
+    couponLists : state.CartReducer.cartCoupons
+})};
 
 export const mapDispatchToProps = (dispatch) => ({
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -64,7 +70,10 @@ export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
-    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    //getCouponList : () => CartDispatcher.getCoupon(dispatch),
+    applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
+    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
 });
 
 export class CartPageContainer extends PureComponent {
@@ -118,7 +127,7 @@ export class CartPageContainer extends PureComponent {
 
         updateMeta({ title: __('My account') });
 
-        this.onSignIn();
+        this.onSignIn();        
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -137,7 +146,7 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit, prevPath=null } = this.props;
+        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList } = this.props;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;
@@ -158,6 +167,7 @@ export class CartPageContainer extends PureComponent {
         updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
+        //getCouponList();
 
     }
 

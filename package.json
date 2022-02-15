@@ -31,12 +31,13 @@
         "react-lazyload": "^3.2.0",
         "react-responsive-pinch-zoom-pan": "^0.3.0",
         "react-spinkit": "^3.0.0",
-        "react-swipe-to-delete-component": "^0.5.5",
+        "react-swipe-to-delete-component": "0.5.5",
         "server-timings": "^2.0.1",
         "tiny-slider": "2.9.3",
         "tiny-slider-react": "0.5.3",
         "uuid": "^8.3.2",
-        "workbox-webpack-plugin": "^6.0.2"
+        "workbox-webpack-plugin": "^6.0.2",
+        "workbox-window": "^6.4.2"
     },
     "scripts": {
         "start": "scandipwa-scripts start",

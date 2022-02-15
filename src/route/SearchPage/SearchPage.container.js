@@ -13,6 +13,7 @@ import { VUE_PAGE_VIEW } from "Util/Event";
 import SearchPage from "./SearchPage.component";
 import { TYPE_CATEGORY } from "../../route/UrlRewrites/UrlRewrites.config";
 import browserHistory from "Util/History";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export class SearchPageContainer extends PLPContainer {
   constructor(props) {
@@ -27,7 +28,7 @@ export class SearchPageContainer extends PLPContainer {
   }
   componentDidMount() {
     window.pageType = TYPE_CATEGORY;
-    const {prevPath = null} = this.props;
+    const { prevPath = null } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -57,13 +58,9 @@ export class SearchPageContainer extends PLPContainer {
   }
 
   containerProps = () => {
-    const {
-      options,
-      pages,
-      isLoading,
-      filters,
-    } = this.props;
-    return { options, pages, isLoading, filters };
+    const { options, pages, isLoading, filters } = this.props;
+    const { activeFilters } = this.state;
+    return { options, pages, isLoading, filters, activeFilters };
   };
 
   setMetaData() {
@@ -84,31 +81,49 @@ export class SearchPageContainer extends PLPContainer {
         countryName
       ),
       keywords: __("%s online shopping", q),
-      description: __(
+      description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
         q
-      ),
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          q
+        ),
       twitter_title: __(
         "Search results for %s. Online shopping in %s | 6thStreet",
         q,
         countryName
       ),
-      twitter_desc: __(
+      twitter_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
         q
-      ),
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          q
+        ),
       og_title: __(
         "Search results for %s. Online shopping in %s | 6thStreet",
         q,
         countryName
       ),
-      og_desc: __(
+      og_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
         q
-      ),
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          q
+        ),
     });
   }
 

@@ -7,15 +7,27 @@ const path = require('path');
 
 const PORT = 3000;
 const app = express();
-function setCustomCacheControl (res, path) {
+function setCustomCacheControl(res, path) {
     res.append('Access-Control-Allow-Origin', ['*']);
-    if (serveStatic.mime.lookup(path) === 'text/html') {
-      // Custom Cache-Control for HTML files
-      res.setHeader('Cache-Control', 'public, max-age=0')
+    if (serveStatic.mime.lookup(path) === 'text/html' || res.req.path === '/sw.js') {
+        // Custom Cache-Control for HTML files & Service Worker File
+        res.setHeader('Cache-Control', 'public, max-age=0')
     }
+
     else {
         res.append('cache-control', 'public, max-age=259200, must-revalidate');
     }
+    // Prevent Click-Jacking
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+
+    // Dont allow browser to do sniffing with MIME type
+    res.setHeader("X-Content-Type-Options", "nosniff")
+
+    // Prevent cross site scripting, 'mode=block' prevent loading the page, unlike only sanitization
+    res.setHeader("X-XSS-Protection", "1; mode=block;")
+
+    // To convert http to https 'subDomains' to include subDomains also
+    res.setHeader("Strict-Transport-Security", "max-age=15768000; includeSubDomains")
 }
 app.use(serverTimings);
 proxy(app);
@@ -33,3 +45,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log('Application started. Press Ctrl+C to quit');
 });
+app.disable('x-powered-by');

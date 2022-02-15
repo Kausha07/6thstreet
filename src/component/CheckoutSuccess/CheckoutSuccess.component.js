@@ -15,6 +15,7 @@ import { TotalsType } from "Type/MiniCart";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getDiscountFromTotals, isArabic, getCurrency } from "Util/App";
 import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
+import { getCountryFromUrl } from "Util/Url/Url";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
 import Call from "./icons/call.svg";
@@ -425,7 +426,7 @@ export class CheckoutSuccess extends PureComponent {
         {this.renderPriceLine(
           cashOnDeliveryFee ??
           getDiscountFromTotals(total_segments, "msp_cashondelivery"),
-          __("Cash on Delivery Fee")
+          getCountryFromUrl() === 'QA' ? __("Cash on Recieving Fee") : __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
@@ -738,7 +739,7 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple Pay") });
     } else if (paymentMethod?.code?.match(/cash/)) {
-      this.setState({ paymentTitle: __("Cash on Delivery") });
+      this.setState({ paymentTitle: getCountryFromUrl() === 'QA' ? __("Cash on Recieving") : __("Cash on Delivery") });
     } else if (paymentMethod?.code?.match(/free/)) {
       if (getDiscountFromTotals(total_segments, "clubapparel")) {
         this.setState({ paymentTitle: __("Club Apparel") });
@@ -881,7 +882,7 @@ export class CheckoutSuccess extends PureComponent {
               ? this.renderPriceLineQPAY(tax_amount, __("Tax"))
               : null}
             {parseFloat(msp_cod_amount) !== 0
-              ? this.renderPriceLineQPAY(msp_cod_amount, __("Cash on Delivery"))
+              ? this.renderPriceLineQPAY(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Recieving") : __("Cash on Delivery"))
               : null}
             {this.renderPriceLineQPAY(
               grandTotal,

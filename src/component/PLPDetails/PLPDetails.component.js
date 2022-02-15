@@ -43,9 +43,9 @@ class PLPDetails extends PureComponent {
   renderBrandName = () => {
     const { brandName } = this.props;
     return (
-      <h1 block="PLPDetails" elem="BrandName">
+      <h2 block="PLPDetails" elem="BrandName">
         {brandName}
-      </h1>
+      </h2>
     );
   };
 
