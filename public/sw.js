@@ -15,23 +15,26 @@ routing.registerRoute(
         new cacheableResponse.CacheableResponsePlugin({
           statuses: [200],
         }),
+        new expiration.ExpirationPlugin({
+          maxAgeSeconds: 60 * 60 * 24 * 3, // 3 Days
+        })
       ],
     }),
 );
 
-routing.registerRoute(
-  ({url, request}) => new RegExp(/https:\/\/mobilecdn.6thstreet.com/).test(url) && request.destination === 'image',
-  new strategies.CacheFirst({
-    cacheName: 'images',
-    plugins: [
-      new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
-      new expiration.ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
-      })
-    ],
-  })
-);
+// routing.registerRoute(
+//   ({url, request}) => new RegExp(/https:\/\/mobilecdn.6thstreet.com/).test(url) && request.destination === 'image',
+//   new strategies.CacheFirst({
+//     cacheName: 'images',
+//     plugins: [
+//       new cacheableResponse.CacheableResponsePlugin({statuses: [0, 200]}),
+//       new expiration.ExpirationPlugin({
+//         maxEntries: 100,
+//         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+//       })
+//     ],
+//   })
+// );
 
 routing.registerRoute(
   ({url, request}) => new RegExp(/(https?:\/\/mobilecdn.6thstreet.com\/.*\.(?:json))/i).test(url),
