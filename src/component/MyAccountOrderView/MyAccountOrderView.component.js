@@ -19,6 +19,7 @@ import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
 import { formatDate } from "Util/Date";
+import { getCountryFromUrl } from "Util/Url/Url";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
   APPLE_PAY,
@@ -172,24 +173,24 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable) ? (
-          is_returnable && is_cancelable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                {RETURN_ITEM_LABEL}
-              </button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                {CANCEL_ITEM_LABEL}
-              </button>
-            </div>
-          ) : (
-            <div block="MyAccountOrderView" elem="HeadingButton">
-              <button onClick={() => openOrderCancelation(buttonText)}>
-                {buttonText}
-              </button>
-            </div>
-          )
-        ) : null}
+          (status === STATUS_COMPLETE && is_returnable) ? (
+            is_returnable && is_cancelable ? (
+              <div block="MyAccountOrderView" elem="HeadingButtons">
+                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                  {RETURN_ITEM_LABEL}
+                </button>
+                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                  {CANCEL_ITEM_LABEL}
+                </button>
+              </div>
+            ) : (
+                <div block="MyAccountOrderView" elem="HeadingButton">
+                  <button onClick={() => openOrderCancelation(buttonText)}>
+                    {buttonText}
+                  </button>
+                </div>
+              )
+          ) : null}
       </div>
     );
   }
@@ -226,11 +227,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -283,12 +284,12 @@ class MyAccountOrderView extends PureComponent {
         <h3>
           {title}
           {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
-          {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ? 
+          {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ?
           <span>: &nbsp;{formatDate(
             "DD MMMM YYYY",
             new Date(deliveryDate.replace(/-/g, "/"))
           )}</span>: null } */}
-          
+
         </h3>
       </div>
     );
@@ -456,8 +457,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-        ? TimerImage
-        : PackageImage;
+          ? TimerImage
+          : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -558,7 +559,7 @@ class MyAccountOrderView extends PureComponent {
         </p>
         {!!msp_cod_amount && (
           <p block="MyAccountOrderView" elem="SummaryItem">
-            <span>{__("Cash on Delivery Fee")}</span>
+            <span>{getCountryFromUrl() === 'QA' ? __("Cash on Recieving Fee") : __("Cash on Delivery Fee")}</span>
             <span>{formatPrice(+msp_cod_amount, order_currency_code)}</span>
           </p>
         )}
@@ -606,8 +607,8 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-            this.renderMiniCard(scheme?.toLowerCase())
-          )}
+                this.renderMiniCard(scheme?.toLowerCase())
+              )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
           <div block="MyAccountOrderView" elem="Number-Dots">
@@ -658,7 +659,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
       case CHECK_MONEY:
       case CASH_ON_DELIVERY:
-        return this.renderPaymentTypeText(__("Cash on Delivery"));
+        return this.renderPaymentTypeText(getCountryFromUrl() === 'QA' ? __("Cash on Recieving") : __("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
         if (!this.props?.additional_information?.source?.last4) {
@@ -730,8 +731,8 @@ class MyAccountOrderView extends PureComponent {
             Questions about this order?
           </h3>
         ) : (
-          ""
-        )}
+            ""
+          )}
         <ContactHelpContainer accountPage={true} />
       </>
     );
@@ -764,15 +765,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                  isStoreCredit: true,
-                })
+                isStoreCredit: true,
+              })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -781,7 +782,7 @@ class MyAccountOrderView extends PureComponent {
               ? this.renderPriceLine(tax_amount, __("Tax"))
               : null}
             {parseFloat(msp_cod_amount) !== 0
-              ? this.renderPriceLine(msp_cod_amount, __("Cash on Delivery"))
+              ? this.renderPriceLine(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Recieving Fee") : __("Cash on Delivery Fee"))
               : null}
             {this.renderPriceLine(
               grandTotal,
@@ -807,10 +808,10 @@ class MyAccountOrderView extends PureComponent {
     return (
       <Link to="/my-account/my-orders">
         <button
-        block="MyAccountOrderView"
-        elem="BackButton"
-        mods={{ isArabic }}
-      />
+          block="MyAccountOrderView"
+          elem="BackButton"
+          mods={{ isArabic }}
+        />
       </Link>
     );
   }
