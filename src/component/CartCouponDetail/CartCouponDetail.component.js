@@ -19,6 +19,14 @@ class CartCouponDetail extends PureComponent {
         }
     }
     
+    hideCouponDetialPopup = (e) => {
+        e.stopPropagation()
+        this.props.hideDetail(e);
+        if (!this.props.isCouponPopupOpen) {
+          const bodyElt = document.querySelector("body");
+          bodyElt.removeAttribute("style");
+        }
+      }
 
 
     render() {
@@ -26,7 +34,10 @@ class CartCouponDetail extends PureComponent {
             <div block="couponDetailPopup">
                 <div block="couponDetailOverlay">
                     <div block="couponDetialPopupBlock" ref={this.couponDetailPopup}>                    
-                        <p block="couponItemCode">{this.props.couponDetail.couponCode}</p>
+                        <p block="couponItemCode">
+                            {this.props.couponDetail.couponCode}
+                            <button onClick={(e)=>{this.hideCouponDetialPopup(e)}} block="closePopupbtn"><span>Close</span></button>
+                        </p>
                         <p block="couponItemName">{this.props.couponDetail.couponName}</p>
                         <p block="couponItemDes">{this.props.couponDetail.couponDescription}</p>
                     </div>
