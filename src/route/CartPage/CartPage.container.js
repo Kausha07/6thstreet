@@ -71,7 +71,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    getCouponList : () => CartDispatcher.getCoupon(dispatch),
+    //getCouponList : () => CartDispatcher.getCoupon(dispatch),
     applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
     removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
 });
@@ -167,7 +167,7 @@ export class CartPageContainer extends PureComponent {
         updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
-        getCouponList();
+        //getCouponList();
 
     }
 

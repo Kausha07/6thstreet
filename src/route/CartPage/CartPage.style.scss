@@ -395,6 +395,7 @@
             width: 100%;
             &:first-child {
                 padding: 0 16px;
+                padding-bottom: 280px;
             }
         }
         &_isArabic {
@@ -760,7 +761,7 @@
             margin: 115px auto 80px;
             background: #ffffff;
             overflow: hidden;
-            border-radius: 30px;
+            border-radius: 8px;
             @include mobile {
                 margin: 0;
                 padding-left: 18px;
