@@ -118,10 +118,18 @@
                 margin-right: 18px;
                 padding-left: 14px;
             }
-        }
-        .CouponLists .couponListItem .couponItemBlock .couponItemBtn {
-            margin-left: initial;
-            margin-right: auto;
+            .couponListItem {
+                .couponItemBlock {
+                    .couponItemDetail {
+                        padding-left: 10px;
+                        padding-right: 0;
+                    }
+                    .couponItemBtn {
+                        margin-left: initial;
+                        margin-right: auto;
+                    }
+                }
+            }
         }
         .couponPopupTop .closeCouponPopupBtn {
             float: left !important;
