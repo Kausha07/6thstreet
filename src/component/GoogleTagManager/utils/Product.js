@@ -238,14 +238,17 @@ class Product {
             brand_name,
             color,
             full_item_info: {
-                category = ''
+                category = '',
+                qty,
+                size_option,
+                basePrice
             } = {},
             sku: parentSku,
             name: parentName,
             optionValue,
             row_total,
             price = {},
-            product
+            product,
         } = item;
 
         const { sku = '', name = '' } = product || {};
@@ -258,8 +261,13 @@ class Product {
             price: row_total || itemPrice.toString(),
             brand: brand_name,
             category,
+            [PRODUCT_COLOR]: color,
+            quantity:qty,
+            size_type:size_option,
             size: optionValue,
-            [PRODUCT_COLOR]: color
+            dimension9:100 - Math.round((row_total / basePrice) * 100),
+            dimension10:basePrice,
+            dimension11:row_total,
         };
     }
 }
