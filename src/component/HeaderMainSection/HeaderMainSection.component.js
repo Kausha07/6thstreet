@@ -282,9 +282,9 @@ class HeaderMainSection extends NavigationAbstract {
 
         this.setMainContentPadding("50px");
         return (
-          <h1 block="CategoryTitle" mods={{ isArabic, isPDP: true }}>
+          <span block="CategoryTitle" mods={{ isArabic, isPDP: true }}>
             {pagePDPTitle}
-          </h1>
+          </span>
         );
       }
     }
