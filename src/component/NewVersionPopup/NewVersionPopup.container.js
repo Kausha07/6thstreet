@@ -23,11 +23,13 @@ export class NewVersionPopupContainer extends SourceNewVersionPopupContainer {
         }
     }
     toggleNewVersion() {
-        window.wb.addEventListener('controlling', () => {
-            window.location.reload();
-        });
-  
-        window.wb.messageSkipWaiting();
+        if(window.wb) {
+            window.wb.addEventListener('controlling', () => {
+                window.location.reload();
+            });
+    
+            window.wb.messageSkipWaiting();
+        }
     }
 }
 
