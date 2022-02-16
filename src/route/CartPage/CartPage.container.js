@@ -59,7 +59,9 @@ export const mapStateToProps = (state) => {
     isLoading: state.CartReducer.isLoading,
     processingRequest: state.CartReducer.processingRequest,
     prevPath: state.PLP.prevPath,
-    couponLists : state.CartReducer.cartCoupons
+    couponLists : state.CartReducer.cartCoupons,
+    language: state.AppState.language,
+    country: state.AppState.country
 })};
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -71,7 +73,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    //getCouponList : () => CartDispatcher.getCoupon(dispatch),
+    getCouponList : () => CartDispatcher.getCoupon(dispatch),
     applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
     removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
 });
@@ -118,7 +120,6 @@ export class CartPageContainer extends PureComponent {
             isSignedIn,
             updateMeta
         } = this.props;
-
         this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
 
         if (!isSignedIn) {
@@ -167,7 +168,7 @@ export class CartPageContainer extends PureComponent {
         updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
-        //getCouponList();
+        getCouponList();
 
     }
 
