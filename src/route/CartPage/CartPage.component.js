@@ -247,7 +247,7 @@ export class CartPage extends PureComponent {
       })
     }
     return (
-      (!this.state?.couponModuleStatus) ? 
+      (this.state?.couponModuleStatus) ? 
       <ExpandableContent
         isOpen={isOpen}
         heading={__("Have a discount code?")}
