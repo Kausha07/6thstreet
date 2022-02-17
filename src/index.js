@@ -16,6 +16,8 @@ import "SourceUtil/Polyfill";
 import "Style/main";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import {Workbox} from 'workbox-window';
+
 
 import { render } from "react-dom";
 
@@ -32,24 +34,34 @@ if (process.env.NODE_ENV  !== "development" && "serviceWorker" in navigator) {
   
   window.addEventListener("load", () => {
     const swUrl = '/sw.js';
-    navigator.serviceWorker.register(swUrl).then((reg) => {
-      const newVersionPopupEvent = new Event("showNewVersionPopup");
+    window.wb = new Workbox(swUrl);
+    const newVersionPopupEvent = new Event("showNewVersionPopup");
+  
+    const showSkipWaitingPrompt = (event) => {
+      window.dispatchEvent(newVersionPopupEvent)
+    }
+    window.wb.addEventListener('waiting', showSkipWaitingPrompt);
+    window.wb.register();
 
-      // eslint-disable-next-line no-param-reassign
-      reg.onupdatefound = function () {
-        const installingWorker = reg.installing;
 
-        installingWorker.onstatechange = function () {
-          if (installingWorker.state === "redundant") {
-            console.error(
-              "***",
-              "The installing service worker became redundant."
-            );
-            window.dispatchEvent(newVersionPopupEvent);
-          }
-        };
-      };
-    })
+    // navigator.serviceWorker.register(swUrl).then((reg) => {
+    //   const newVersionPopupEvent = new Event("showNewVersionPopup");
+
+    //   // eslint-disable-next-line no-param-reassign
+    //   reg.onupdatefound = function () {
+    //     const installingWorker = reg.installing;
+
+    //     installingWorker.onstatechange = function () {
+    //       if (installingWorker.state === "redundant") {
+    //         console.error(
+    //           "***",
+    //           "The installing service worker became redundant."
+    //         );
+    //         window.dispatchEvent(newVersionPopupEvent);
+    //       }
+    //     };
+    //   };
+    // })
   });
 }
 render(<App />, document.getElementById("root"));

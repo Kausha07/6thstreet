@@ -135,7 +135,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
             elem: "LinkAccountPhoneField",
           }}
           validation={["notEmpty"]}
-          placeholder="Phone Number"
+          placeholder={__("Phone Number")}
           maxlength={maxlength}
           pattern="[0-9]*"
           value={phoneValue}
