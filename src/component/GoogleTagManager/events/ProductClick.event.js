@@ -34,21 +34,8 @@ class ProductClickEvent extends BaseEvent {
   /**
    * Handle product click
    */
-  handler(product, isViewProduct = false) {
-    const {
-      position = 1,
-      list,
-      category,
-      price,
-      id,
-      brand,
-      name,
-      variant,
-    } = this.getProductFromImpression(product) || {};
-
-    if (!id && !isViewProduct) {
-      return;
-    }
+  handler(product) {
+    const {list} = this.getProductFromImpression(product) || {};
 
     this.pushEventData({
       ecommerce: {
@@ -57,17 +44,7 @@ class ProductClickEvent extends BaseEvent {
             list,
             action: "click",
           },
-          products: [
-            {
-              category,
-              price,
-              id,
-              brand,
-              position,
-              name,
-              variant,
-            },
-          ],
+          products: [product],
         },
       },
     });

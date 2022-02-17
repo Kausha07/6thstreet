@@ -78,7 +78,22 @@ class ProductItem extends PureComponent {
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid, isVueData, setPrevPath } = this.props;
+    const {
+      product,
+      position,
+      qid,
+      isVueData,
+      setPrevPath,
+      product: {
+        name,
+        url,
+        sku,
+        color,
+        brand_name,
+        product_type_6s,
+        price = {},
+      },
+    } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -94,15 +109,31 @@ class ProductItem extends PureComponent {
     if (userData?.data) {
       userToken = userData.data.id;
     }
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
-    if (queryID) {
-      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-        objectIDs: [product.objectID],
-        queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        position: [position],
-      });
-    }
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
+      product: {
+        name: name,
+        id: sku,
+        price: itemPrice,
+        brand: brand_name,
+        category: product_type_6s,
+        varient: color,
+        url: url,
+        position: 1,
+        dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+        dimension10: basePrice,
+        dimension11: itemPrice,
+      },
+    });
+    // if (queryID) {
+    //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+    //     objectIDs: [product.objectID],
+    //     queryID,
+    //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+    //     position: [position],
+    //   });
+    // }
     // this.sendBannerClickImpression(product);
   }
 
