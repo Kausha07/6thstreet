@@ -21,3 +21,17 @@
         top: 154px;
     }
 }
+
+
+main {
+    &.SearchPage {
+      .ContentWrapper {
+        & > .PLPDetails {
+          @include mobile() {
+            padding-top: 60px;
+          }
+        }
+      }
+    }
+  }
+  
