@@ -222,23 +222,15 @@ export class CartPage extends PureComponent {
     this.props.removeCouponFromCart()
   }
   getCouponModuleStatus = async () => {
-    const {country} = this.props;
-    const url = `default.json`;
-    
-    try {
-      const resp = await CDN.get(`config_staging/${url}`);
-      if (resp) {
-        let couponModule = resp.countries.find(function (val) {          
-          return val.value == country
-        })
-        this.setState({
-          couponModuleStatus: couponModule
-        })
-      }
-    }
-    catch (error) {
-      console.error(error);
-    }
+    const {country, config} = this.props;
+    if (config) {
+      let couponModule = Object.keys(config?.countries).find(function (val) {
+        return val == country
+      })
+      this.setState({
+        couponModuleStatus: couponModule
+      })
+    }   
     
   }
   renderDiscountCode() {
@@ -255,7 +247,7 @@ export class CartPage extends PureComponent {
       })
     }
     return (
-      (this.state.couponModuleStatus) ? 
+      (!this.state?.couponModuleStatus) ? 
       <ExpandableContent
         isOpen={isOpen}
         heading={__("Have a discount code?")}
@@ -265,7 +257,7 @@ export class CartPage extends PureComponent {
       </ExpandableContent>
       :
       <>{
-        !this.state.isCouponPopupOpen ?
+        (!this.state?.isCouponPopupOpen) ?
           <>
             <div block="cartCouponBlock">
               {
@@ -287,7 +279,7 @@ export class CartPage extends PureComponent {
                   <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
               }
             </div>
-            {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+            {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
           </>
           :
           <>
@@ -301,7 +293,7 @@ export class CartPage extends PureComponent {
                 </div>
                 <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
                 <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
-                {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+                {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
               </div>
             </div>
 

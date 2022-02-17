@@ -60,6 +60,7 @@ export const mapStateToProps = (state) => {
     processingRequest: state.CartReducer.processingRequest,
     prevPath: state.PLP.prevPath,
     couponLists : state.CartReducer.cartCoupons,
+    config: state.AppConfig.config,
     language: state.AppState.language,
     country: state.AppState.country
 })};
