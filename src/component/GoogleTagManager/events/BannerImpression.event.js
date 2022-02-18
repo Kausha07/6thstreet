@@ -41,7 +41,10 @@ class BannerImpressionEvent extends BaseEvent {
   bindEvent() {
     // Home
     Event.observer(HOME_PAGE_BANNER_IMPRESSIONS, (impression) => {
-      this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView");
+      if (document.readyState == ("complete" || "interactive"  )){
+        this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView"); 
+      }
+      
     });
     Event.observer(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, (impression) => {
       this.handle(EVENT_CLICK_PROMOTION_IMPRESSION, impression, "promoClick");
