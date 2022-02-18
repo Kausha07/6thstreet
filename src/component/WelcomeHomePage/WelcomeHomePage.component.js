@@ -159,6 +159,12 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
+    setLocalAndGenderCookies(locale, gender){
+        if(locale && gender){
+            document.cookie = `locale=${locale}; expires=Wed, 05 Aug 2022 23:00:00 UTC; path=/`;
+            document.cookie = `gender=${gender}.html; expires=Wed, 05 Aug 2022 23:00:00 UTC; path=/`;
+        }
+    }
     onGenderSelect = (event, val) => {
         event.persist();
         event.preventDefault();
@@ -170,6 +176,7 @@ class WelcomeHomePage extends PureComponent {
         }
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
+        this.setLocalAndGenderCookies(locale, val);
         let url = `${URLS[locale]}/${val}.html`
         window.location.href = url
     }

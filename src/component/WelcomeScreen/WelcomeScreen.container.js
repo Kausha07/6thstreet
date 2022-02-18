@@ -45,7 +45,6 @@ class WelcomeScreenContainer extends PureComponent {
 
     onCountrySelect(value) {
         const { country, language } = this.props;
-
         if (country) {
             if(window.location.href.includes('en-') || window.location.href.includes('ar-'))
                 window.location.href = location.origin.replace(
@@ -60,7 +59,6 @@ class WelcomeScreenContainer extends PureComponent {
             }
         } else {
             const locale = `${language}-${value.toLowerCase()}`;
-
             window.location.href = URLS[locale];
         }
     }
@@ -72,7 +70,6 @@ class WelcomeScreenContainer extends PureComponent {
             setLanguage,
             checkWizardLang
         } = this.props;
-
         if (language && country) {
             window.location.href = location.origin.replace(
                 language.toLowerCase(),
