@@ -210,7 +210,7 @@ class PDPGallery extends PureComponent {
 
   renderGalleryOverlay = () => {
     const { location } = browserHistory;
-    browserHistory.push(`${location.pathname}#gallery`);
+    browserHistory.push(`${location.pathname}`);
     window.onpopstate = () => {
       this.closeGalleryOverlay();
     }
