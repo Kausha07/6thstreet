@@ -60,7 +60,7 @@ class ProductDetailEvent extends BaseEvent {
                         list: '',
                         action: 'detail'
                     },
-                    products: [productToPass]
+                    products: [product]
                 }
             }
         });
