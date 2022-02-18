@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
-import {EVENT_PROMOTION_IMPRESSION} from "Util/Event";
+import EVENT_PROMOTION_IMPRESSION from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
