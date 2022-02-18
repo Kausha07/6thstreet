@@ -122,7 +122,7 @@ export class PDPContainer extends PureComponent {
       isLoading,
       setIsLoading,
       product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
-      product,
+      product: { highlighted_attributes = [] },
       menuCategories = [],
     } = this.props;
     const currentIsLoading = this.getIsLoading();
@@ -150,9 +150,26 @@ export class PDPContainer extends PureComponent {
       this.updateHeaderState();
       // this.fetchClickAndCollectStores(brandName, sku);
     }
-
+    const getDetails = highlighted_attributes.map((item) => ({
+      [item.key]: item.value,
+    }));
+    const productKeys = Object.assign({}, ...getDetails);
+    const specialPrice =
+      price?.[0][Object.keys(price?.[0])?.[0]]["6s_special_price"];
+    const originalPrice =
+      price?.[0][Object.keys(price?.[0])?.[0]]["6s_base_price"];
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-      product: product,
+      product: {
+        name: productKeys.name,
+        id: sku,
+        Price: originalPrice,
+        brand: productKeys?.brand_name,
+        category: product_type_6s,
+        varient: productKeys?.color,
+        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100),
+        dimension10: originalPrice,
+        dimension11: specialPrice,
+      },
     });
   }
 
@@ -299,7 +316,12 @@ export class PDPContainer extends PureComponent {
         countryName,
         brandName
       )}`,
-      twitter_title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
+      twitter_title: __(
+        "%s %s | 6thStreet.com %s",
+        brandName,
+        name,
+        countryName
+      ),
       twitter_desc: `${description} | ${__(
         "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
         brandName,
