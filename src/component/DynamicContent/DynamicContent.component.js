@@ -49,6 +49,7 @@ class DynamicContent extends PureComponent {
     bannerSliderWithLabel: DynamicContentSliderWithLabel,
     rich_content_banner: DynamicContentRichContentBanner,
     twiceBanner: DynamicContentTwiceBanner,
+    edge_to_edge_banner: DynamicContentBanner,
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
   };

@@ -95,7 +95,7 @@ class DynamicContentBanner extends PureComponent {
   }
 
   renderImage = (item, i) => {
-    const { index } = this.props;
+    const { index, type } = this.props;
     // const { height, width } = items[0];
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
@@ -108,7 +108,6 @@ class DynamicContentBanner extends PureComponent {
     // }
 
     // TODO: calculate aspect ratio to ensure images not jumping.
-
     if (!link) {
       return (
         <>
@@ -129,7 +128,7 @@ class DynamicContentBanner extends PureComponent {
       <Link
         to={formatCDNLink(link)}
         key={i}
-        data-banner-type="banner"
+        data-banner-type={type || "banner"}
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
