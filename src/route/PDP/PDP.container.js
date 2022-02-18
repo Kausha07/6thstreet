@@ -150,27 +150,6 @@ export class PDPContainer extends PureComponent {
       this.updateHeaderState();
       // this.fetchClickAndCollectStores(brandName, sku);
     }
-    const getDetails = highlighted_attributes.map((item) => ({
-      [item.key]: item.value,
-    }));
-    const productKeys = Object.assign({}, ...getDetails);
-    const specialPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_special_price"];
-    const originalPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_base_price"];
-    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-      product: {
-        name: productKeys.name,
-        id: sku,
-        Price: originalPrice,
-        brand: productKeys?.brand_name,
-        category: product_type_6s,
-        varient: productKeys?.color,
-        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100),
-        dimension10: originalPrice,
-        dimension11: specialPrice,
-      },
-    });
   }
 
   renderVueHits() {
@@ -238,7 +217,14 @@ export class PDPContainer extends PureComponent {
   updateBreadcrumbs() {
     const {
       updateBreadcrumbs,
-      product: { categories = {}, name, sku },
+      product: {
+        categories = {},
+        name,
+        sku,
+        product_type_6s,
+        price,
+        highlighted_attributes = [],
+      },
       setGender,
       nbHits,
       menuCategories,
@@ -277,6 +263,27 @@ export class PDPContainer extends PureComponent {
       updateBreadcrumbs(breadcrumbs);
       this.setState({ productSku: sku });
     }
+    const getDetails = highlighted_attributes.map((item) => ({
+      [item.key]: item.value,
+    }));
+    const productKeys = Object.assign({}, ...getDetails);
+    const specialPrice =
+      price?.[0][Object.keys(price?.[0])?.[0]]["6s_special_price"];
+    const originalPrice =
+      price?.[0][Object.keys(price?.[0])?.[0]]["6s_base_price"];
+    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+      product: {
+        name: productKeys.name,
+        id: sku,
+        Price: originalPrice,
+        brand: productKeys?.brand_name,
+        category: product_type_6s,
+        varient: productKeys?.color,
+        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100),
+        dimension10: originalPrice,
+        dimension11: specialPrice,
+      },
+    });
   }
 
   setMetaData() {
