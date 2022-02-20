@@ -44,7 +44,6 @@ export const EVENT_BANNER_CLICK = "bannerClick";
 export const EVENT_GTM_BRANDS_CLICK = "brandsClick";
 export const EVENT_GTM_TRENDING_BRANDS_CLICK = "trendingBrandsClick";
 export const EVENT_GTM_TRENDING_TAGS_CLICK = "trendingTagsClick";
-export const EVENT_GTM_PRODUCT_IMPRESSION = "productImp"
 
 /**
  * Const
