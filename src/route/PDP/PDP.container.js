@@ -279,7 +279,7 @@ export class PDPContainer extends PureComponent {
         brand: productKeys?.brand_name,
         category: product_type_6s,
         varient: productKeys?.color,
-        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100),
+        dimension9: (100 - Math.round((specialPrice / originalPrice) * 100)) || 0,
         dimension10: originalPrice,
         dimension11: specialPrice,
       },
