@@ -145,7 +145,6 @@ class ProductItem extends PureComponent {
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-      product: {
         name: name,
         id: sku,
         price: itemPrice,
@@ -157,7 +156,6 @@ class ProductItem extends PureComponent {
         dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
         dimension10: basePrice,
         dimension11: itemPrice,
-      },
     });
     // if (queryID) {
     //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {

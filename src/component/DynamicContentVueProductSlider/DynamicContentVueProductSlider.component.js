@@ -1,5 +1,6 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {EVENT_PRODUCT_LIST_IMPRESSION} from "Component/GoogleTagManager/events/ProductImpression.event"
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
@@ -65,7 +66,6 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   sendImpressions() {
     const products = this.getProducts();
-
     const items = products.map((item) => {
       const itemPrice =
         item.price[0][Object.keys(item.price[0])[0]]["6s_special_price"];
@@ -82,7 +82,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         original_price: basePrice,
       };
     });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, items);
     this.setState({ impressionSent: true });
   }
 
