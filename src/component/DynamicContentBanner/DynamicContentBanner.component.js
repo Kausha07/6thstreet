@@ -97,7 +97,7 @@ class DynamicContentBanner extends PureComponent {
   renderImage = (item, i) => {
     const { index, type } = this.props;
     // const { height, width } = items[0];
-    const { url, link, height = "", width = "" } = item;
+    const { url, image_url, link, height = "", width = "" } = item;
     let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
@@ -114,7 +114,7 @@ class DynamicContentBanner extends PureComponent {
           <Image
             lazyLoad={index === 21 || index === 35 ? false : true}
             key={i}
-            src={url}
+            src={url || image_url}
             ratio="custom"
             height={ht}
             width={wd}
@@ -137,7 +137,7 @@ class DynamicContentBanner extends PureComponent {
       >
         <Image
           lazyLoad={index === 21 || index === 35 ? false : true}
-          src={url}
+          src={url || image_url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
         />

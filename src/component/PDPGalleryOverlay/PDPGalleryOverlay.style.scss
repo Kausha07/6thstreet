@@ -121,9 +121,6 @@
             }
         }
     }
-    svg {
-        filter: invert(45%) sepia(0%) saturate(358%) hue-rotate(137deg) brightness(90%) contrast(93%);
-    }
 }
 
 .PDPGallery {
@@ -169,8 +166,8 @@
                 height: 80px;
             }
             svg {
-                height: 20px;
-                width: 20px;
+                height: 30px;
+                width: 30px;
                 @include desktop {
                     height: unset;
                     width: unset;
