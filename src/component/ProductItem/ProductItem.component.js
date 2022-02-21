@@ -79,10 +79,7 @@ class ProductItem extends PureComponent {
   }
   sendImpressions() {
     const { product = [] } = this.props;
-    //console.log("Barath", product);
-    
     Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
-    //console.log("Barath", productData);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
