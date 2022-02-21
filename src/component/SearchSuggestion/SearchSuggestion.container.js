@@ -192,7 +192,6 @@ export class SearchSuggestionContainer extends PureComponent {
     // this.getTrendingProducts();
     document.body.classList.add("isSuggestionOpen");
     const { location } = browserHistory;
-    console.log(browserHistory)
     const { closeSearch } = this.props;
     browserHistory.push(`${location.pathname}${location.search}`);
     window.onpopstate = () => {
