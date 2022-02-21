@@ -231,7 +231,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               cashOnDeliveryFee ??
               getDiscountFromTotals(totals, "msp_cashondelivery"),
 
-              getCountryFromUrl() === 'QA' ? __("Cash on Recieving") : __("Cash on Delivery")
+              getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery")
             )}
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">

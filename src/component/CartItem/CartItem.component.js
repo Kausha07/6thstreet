@@ -66,7 +66,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => {},
+    closePopup: () => { },
     isCartPage: false,
     readOnly: false,
   };
@@ -353,9 +353,9 @@ export class CartItem extends PureComponent {
           <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
             |
           </span>
-          <span> {__("Qty:")} </span>
-          {qty}
+
         </div>
+        {this.renderQuantitySelection()}
       </div>
     );
   }

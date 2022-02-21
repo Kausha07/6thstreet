@@ -168,7 +168,7 @@ export class LiveExperienceContainer extends PureComponent {
       ),
       description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
       )
@@ -187,7 +187,7 @@ export class LiveExperienceContainer extends PureComponent {
       ),
       twitter_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
       )
@@ -206,7 +206,7 @@ export class LiveExperienceContainer extends PureComponent {
       ),
       og_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
       )
