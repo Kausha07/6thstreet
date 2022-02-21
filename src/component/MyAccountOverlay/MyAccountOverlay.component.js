@@ -25,7 +25,8 @@ import { PHONE_CODES } from "Component/MyAccountAddressFieldForm/MyAccountAddres
 import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressForm/MyAccountAddressForm.config";
 import { Close } from "Component/Icons";
 import { ChevronLeft } from "Component/Icons";
-import Spinner from "react-spinkit";
+import { ThreeDots, Oval } from "react-loader-spinner";
+
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import {
@@ -167,7 +168,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -377,7 +378,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("RESET YOUR PASSWORD")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -417,8 +418,9 @@ export class MyAccountOverlay extends PureComponent {
           </div>
           <div block="VerifyPhone-Text" elem="Phone">
             <button onClick={() => console.log("change mobile number")}>
-              {`${customerRegisterData?.contact_no || customerLoginData?.username
-                }`}
+              {`${
+                customerRegisterData?.contact_no || customerLoginData?.username
+              }`}
             </button>
           </div>
         </div>
@@ -447,7 +449,14 @@ export class MyAccountOverlay extends PureComponent {
           elem="OtpLoader"
           mods={{ isSubmitted: isLoading }}
         >
-          <Spinner name="circle" noFadeIn />
+          <Oval
+            color="#333"
+            secondaryColor="#333"
+            height={38}
+            width={"100%"}
+            strokeWidth={3}
+            strokeWidthSecondary={3}
+          />
         </div>
         <div
           block="VerifyPhone"
@@ -624,7 +633,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("Create Account")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -708,7 +717,6 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
-
 
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
@@ -837,8 +845,9 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              placeholder={`${
+                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+              }*`}
               id="email"
               name="email"
               value={email}
@@ -897,7 +906,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("Sign in")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -932,7 +941,6 @@ export class MyAccountOverlay extends PureComponent {
           onVisible={onVisible}
           isStatic={!isCheckout && !!isMobile.any()}
         >
-          {/* <Loader isLoading={isLoading} /> */}
           {this.renderMyAccount()}
         </Overlay>
       </div>
