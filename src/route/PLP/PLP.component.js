@@ -78,7 +78,11 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+  }
+
+  renderPLPSortBy() {
+    return <PLPFilters {...this.props} isPLPSortBy={true} />;
   }
 
   renderPLPPages() {
@@ -139,9 +143,15 @@ export class PLP extends PureComponent {
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
-          <div block="Products" elem="Wrapper">
-            {this.renderPLPFilters()}
-            {this.renderPLPPages()}
+          <div>
+
+
+            <div block="Products" elem="Wrapper">
+              {this.renderPLPFilters()}
+              {this.renderPLPPages()}
+
+            </div>
+            <div block="SortBy">{this.renderPLPSortBy()}</div>
           </div>
         </ContentWrapper>
       </main>

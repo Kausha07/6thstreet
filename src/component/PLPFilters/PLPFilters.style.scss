@@ -460,4 +460,23 @@
       }
     }
   }
+
+
+
+}
+
+.Products{
+  &-FixScroll{
+    position: fixed;
+    width: 261px;
+    top: 153px;
+    height: 600px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+  }
 }
