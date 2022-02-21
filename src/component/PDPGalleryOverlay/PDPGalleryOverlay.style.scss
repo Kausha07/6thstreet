@@ -131,7 +131,7 @@
         transition: transform 0.25s ease !important;
         width: 500px !important;
         @include mobile {
-            width: auto !important;
+            width: 640px !important;
         }
         @include desktop {
             transform: none !important;
