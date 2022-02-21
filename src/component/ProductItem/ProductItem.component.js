@@ -1,4 +1,5 @@
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS,HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {EVENT_PRODUCT_LIST_IMPRESSION} from "Component/GoogleTagManager/events/ProductImpression.event"
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -51,6 +52,7 @@ class ProductItem extends PureComponent {
 
   static defaultProps = {
     page: "",
+    impressionSent: false,
   };
 
   state = {
@@ -59,7 +61,38 @@ class ProductItem extends PureComponent {
     selectedSizeType: "eu",
     selectedSizeCode: "",
   };
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
 
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { product = [] } = this.props;
+    Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
   setSize = (sizeType, sizeCode) => {
     // this.setState({
     //   selectedSizeType: sizeType || "eu",
@@ -121,7 +154,7 @@ class ProductItem extends PureComponent {
         varient: color,
         url: url,
         position: 1,
-        dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+        dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
         dimension10: basePrice,
         dimension11: itemPrice,
       },
@@ -360,9 +393,13 @@ class ProductItem extends PureComponent {
     const {
       product: { sku },
     } = this.props;
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
       <li
         id={sku}
+        ref={setRef}
         block="ProductItem"
         mods={{
           isArabic,

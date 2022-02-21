@@ -851,7 +851,8 @@ export class MyAccountOverlay extends PureComponent {
               id="email"
               name="email"
               value={email}
-              autocomplete="email"
+              autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
+              // autocomplete="email"
               maxLength={this.getUserIdentifierMaxLength()}
               validation={["notEmpty", this.getValidationForUserIdentifier()]}
               onChange={this.setUserIdentifierType.bind(this)}

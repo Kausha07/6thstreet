@@ -127,7 +127,7 @@ class PDPGalleryOverlay extends PureComponent {
                 block: "ProductGallery",
                 elem: "SliderImage",
                 mods: { isPlaceholder: !src },
-              }} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]} style={{ width: "500px !important" }} key={i}
+              }} ratio="custom" lazyLoad={false} alt='' src={gallery[i]} style={{ width: "500px !important" }} key={i}
               />
             </PinchZoomPan>
           </div >
