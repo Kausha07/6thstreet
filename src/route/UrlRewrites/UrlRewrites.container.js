@@ -126,7 +126,7 @@ export class UrlRewritesContainer extends PureComponent {
       prevPathname: urlParam,
       isLoading: isUpdate
     });
-    if (search.startsWith("?q=")) {
+    if (search.startsWith("?q=")) { // Normal PLP, Catalog Search
       this.setState({
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
@@ -138,7 +138,7 @@ export class UrlRewritesContainer extends PureComponent {
         brandName: "",
       });
       window.pageType = TYPE_CATEGORY;
-    }else if (search.startsWith("?p")) {
+    } else if (search.startsWith("?p")) { // URL with query params, when resolver returns null
       this.setState({
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
@@ -147,7 +147,7 @@ export class UrlRewritesContainer extends PureComponent {
         query: "",
       });
       window.pageType = TYPE_CATEGORY;
-    } else {
+    } else { // PDP & PLP w/o query params
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
@@ -192,11 +192,11 @@ export class UrlRewritesContainer extends PureComponent {
         });
       }
     }
-    // setTimeout(() => {
-    //   this.setState({
-    //     isLoading: false,
-    //   });
-    // }, 3000);
+    setTimeout(() => {
+      this.setState({
+        isLoading: false,
+      });
+    }, 3000);
     // TODO: switch to "executeGet" afterwards
   }
 
