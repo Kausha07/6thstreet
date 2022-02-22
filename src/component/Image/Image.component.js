@@ -155,7 +155,6 @@ export class Image extends PureComponent {
           style={style}
           onLoad={this.onLoad}
           onError={this.onError}
-          loading="lazy"
         />
       );
     }

@@ -97,7 +97,7 @@ class PDP extends PureComponent {
   renderPDP() {
     const { nbHits, isLoading } = this.props;
     if (!isLoading) {
-      return nbHits === 1 ? (
+      return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
           {this.renderMySignInPopup()}
           {this.renderMainSection()}
@@ -106,9 +106,7 @@ class PDP extends PureComponent {
           {this.renderDetailsSection()}
           {this.renderDetail()}
         </div>
-      ) : (
-        <NoMatch />
-      );
+      )
     }
 
     return <div>loading...</div>;
