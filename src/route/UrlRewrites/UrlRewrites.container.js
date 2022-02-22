@@ -122,11 +122,14 @@ export class UrlRewritesContainer extends PureComponent {
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
+    this.setState({
+      prevPathname: urlParam,
+      isLoading: isUpdate
+    });
     if (search.startsWith("?q=")) {
       this.setState({
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
-        isLoading: false,
         id: magentoProductId,
         sku: possibleSku,
         query: search,
@@ -135,10 +138,8 @@ export class UrlRewritesContainer extends PureComponent {
         brandName: "",
       });
       window.pageType = TYPE_CATEGORY;
-    }
-    else if (search.startsWith("?p")) {
+    }else if (search.startsWith("?p")) {
       this.setState({
-        isLoading: false,
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
         id: magentoProductId,
@@ -146,8 +147,7 @@ export class UrlRewritesContainer extends PureComponent {
         query: "",
       });
       window.pageType = TYPE_CATEGORY;
-    }
-    else {
+    } else {
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
