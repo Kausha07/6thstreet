@@ -373,7 +373,6 @@ export class PDPContainer extends PureComponent {
     if (!id) {
       if (sku) {
         requestProductBySku({ options: { sku } });
-
         setIsLoading(false);
       }
 

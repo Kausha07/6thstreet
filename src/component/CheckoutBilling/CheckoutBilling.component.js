@@ -17,12 +17,11 @@ import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutBilling as SourceCheckoutBilling } from "SourceComponent/CheckoutBilling/CheckoutBilling.component";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
-import Spinner from "react-spinkit";
+import { ThreeDots } from "react-loader-spinner";
 import "./CheckoutBilling.extended.style";
 import Applepay from "./icons/apple.png";
 import Image from "Component/Image";
 import isMobile from "Util/Mobile";
-
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -47,7 +46,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     ...SourceCheckoutBilling.defaultProps,
     processApplePay: true,
     processingPaymentSelectRequest: false,
-    placeOrder: () => { },
+    placeOrder: () => {},
     isLoading: false,
     applePayDisabled: true,
     button_style: "",
@@ -435,12 +434,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               }}
             >
               {processingRequest || processingPaymentSelectRequest ? (
-                <Spinner
-                  className="loadingSpinner"
-                  name="three-bounce"
-                  color="white"
-                  fadeIn="none"
-                />
+                <ThreeDots color="white" height={6} width={"100%"} />
               ) : isTabbyPay ? (
                 __("Place tabby order")
               ) : (

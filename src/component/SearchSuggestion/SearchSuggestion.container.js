@@ -7,6 +7,7 @@ import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import browserHistory from "Util/History";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
@@ -190,6 +191,12 @@ export class SearchSuggestionContainer extends PureComponent {
     }
     // this.getTrendingProducts();
     document.body.classList.add("isSuggestionOpen");
+    const { location } = browserHistory;
+    const { closeSearch } = this.props;
+    browserHistory.push(`${location.pathname}${location.search}`);
+    window.onpopstate = () => {
+      closeSearch();
+    }
   }
 
   componentWillUnmount() {

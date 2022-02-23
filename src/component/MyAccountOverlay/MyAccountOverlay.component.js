@@ -24,7 +24,8 @@ import { PHONE_CODES } from "Component/MyAccountAddressFieldForm/MyAccountAddres
 import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressForm/MyAccountAddressForm.config";
 import { Close } from "Component/Icons";
 import { ChevronLeft } from "Component/Icons";
-import Spinner from "react-spinkit";
+import { ThreeDots, Oval } from "react-loader-spinner";
+
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Link from "Component/Link";
@@ -399,7 +400,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("RESET YOUR PASSWORD")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -470,7 +471,14 @@ export class MyAccountOverlay extends PureComponent {
           elem="OtpLoader"
           mods={{ isSubmitted: isLoading }}
         >
-          <Spinner name="circle" noFadeIn />
+          <Oval
+            color="#333"
+            secondaryColor="#333"
+            height={38}
+            width={"100%"}
+            strokeWidth={3}
+            strokeWidthSecondary={3}
+          />
         </div>
         <div
           block="VerifyPhone"
@@ -647,7 +655,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("Create Account")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -942,7 +950,7 @@ export class MyAccountOverlay extends PureComponent {
             {!isLoading ? (
               __("Sign in")
             ) : (
-              <Spinner name="three-bounce" color="white" fadeIn="none" />
+              <ThreeDots color="white" height={6} width={"100%"} />
             )}
           </button>
         </div>
@@ -977,7 +985,6 @@ export class MyAccountOverlay extends PureComponent {
           onVisible={onVisible}
           isStatic={!isCheckout && !!isMobile.any()}
         >
-          {/* <Loader isLoading={isLoading} /> */}
           {this.renderMyAccount()}
         </Overlay>
       </div>
