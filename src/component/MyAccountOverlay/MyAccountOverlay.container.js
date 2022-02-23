@@ -31,6 +31,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import MyAccountOverlay from "./MyAccountOverlay.component";
+import browserHistory from "Util/History";
 import { sendOTP } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
@@ -41,7 +42,7 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   STATE_VERIFY_NUMBER,
-  STATE_INITIAL_LINKS
+  STATE_INITIAL_LINKS,
 } from "./MyAccountOverlay.config";
 
 export const MyAccountDispatcher = import(
@@ -106,12 +107,14 @@ export class MyAccountOverlayContainer extends PureComponent {
     isCheckout: PropTypes.bool,
     hideActiveOverlay: PropTypes.func.isRequired,
     language: PropTypes.string.isRequired,
+    closePopup: PropTypes.func,
   };
 
   static defaultProps = {
     isCheckout: false,
-    onSignIn: () => { },
-    goToPreviousHeaderState: () => { },
+    onSignIn: () => {},
+    goToPreviousHeaderState: () => {},
+    closePopup: () => {},
   };
 
   containerFunctions = {
@@ -130,7 +133,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     handleCreateAccount: this.handleCreateAccount.bind(this),
     onCreateAccountClick: this.onCreateAccountClick.bind(this),
     onVisible: this.onVisible.bind(this),
-    OtpErrorClear: this.OtpErrorClear.bind(this)
+    OtpErrorClear: this.OtpErrorClear.bind(this),
   };
 
   constructor(props) {
@@ -200,6 +203,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       hideActiveOverlay,
       isCheckout,
       goToPreviousHeaderState,
+      closePopup,
     } = this.props;
 
     if (oldMyAccountState === newMyAccountState) {
@@ -212,26 +216,42 @@ export class MyAccountOverlayContainer extends PureComponent {
         goToPreviousHeaderState();
       }
     }
-  }
+    const getCurrentState = this.state.state;
+    const { location } = browserHistory;
 
+    if (isMobile.any()) {
+      browserHistory.push(`${location.pathname}${location.search}`);
+      window.onpopstate = () => {
+        if (getCurrentState == "initialLinks") {
+          closePopup();
+        } else if (getCurrentState == "createAccount" || "signIn") {
+          this.setState({ state: "initialLinks" });
+        } else {
+          return;
+        }
+      };
+    }
+  }
   redirectOrGetState = (props) => {
     const { showOverlay, setHeaderState, isPasswordForgotSend } = props;
 
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
-    
-    const getDeviceState = (!isMobile.any() ? STATE_SIGN_IN : STATE_INITIAL_LINKS );
-      const state = {
-        state: getDeviceState,
-        // eslint-disable-next-line react/no-unused-state
-        isPasswordForgotSend,
-        isLoading: false,
-        customerRegisterData: {},
-        customerLoginData: {},
-        otpError: "",
-      };
-    
+
+    const getDeviceState = !isMobile.any()
+      ? STATE_SIGN_IN
+      : STATE_INITIAL_LINKS;
+    const state = {
+      state: getDeviceState,
+      // eslint-disable-next-line react/no-unused-state
+      isPasswordForgotSend,
+      isLoading: false,
+      customerRegisterData: {},
+      customerLoginData: {},
+      otpError: "",
+    };
+
     // if customer got here from forgot-password
     if (pathname !== "/forgot-password" && !isForgotPassword) {
       return state;
