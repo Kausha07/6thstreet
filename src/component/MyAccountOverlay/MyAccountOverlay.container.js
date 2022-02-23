@@ -530,7 +530,6 @@ export class MyAccountOverlayContainer extends PureComponent {
   render() {
     const { state } = this.state;
     const { hideActiveOverlay } = this.props;
-    this.setState({ signIn: false });
     if (state === "loggedIn") {
       hideActiveOverlay();
 
