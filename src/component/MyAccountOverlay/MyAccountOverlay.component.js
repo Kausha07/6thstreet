@@ -255,14 +255,14 @@ export class MyAccountOverlay extends PureComponent {
               mods={{ isSignIn }}
               onClick={handleSignIn}
             >
-              {__("Login")}
+              {(isMobile.any()) ? __("Login") : __("Sign in")}
             </button>
             <button
               block="signUpBtn signBtns Button"
               mods={{ isCreateAccount }}
               onClick={handleCreateAccount}
             >
-              {__("Register")}
+              {(isMobile.any()) ? __("Register") : __("Create account")}
             </button>
           </div>
           </div>

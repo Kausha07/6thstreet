@@ -1324,20 +1324,24 @@
     }
   }
 }
-.MyAccountOverlayOuter{
+.MyAccountOverlayOuter {
   position: relative;
-  .signInQuote{
-    position: absolute;
-    top: -100px;
-    z-index: 9;
-    text-align: center;
-    width: 100%;
-    h5{
-      color: #fff;
-      font-size: 20px;
-      max-width: 70%;
-      margin: auto;
-      line-height: 28px;
+  .signInQuote {
+    display: none;
+    @include mobile() {
+      display: block;
+      position: absolute;
+      top: -100px;
+      z-index: 9;
+      text-align: center;
+      width: 100%;
+      h5 {
+        color: #fff;
+        font-size: 20px;
+        max-width: 70%;
+        margin: auto;
+        line-height: 28px;
+      }
     }
   }
 }
