@@ -29,11 +29,12 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   chosenGender: state.AppState.gender,
-  displaySearch: state.PDP.displaySearch
+  displaySearch: state.PDP.displaySearch,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  showPDPSearch: (displaySearch) =>
+    PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
 });
 
 class HeaderMainSection extends NavigationAbstract {
@@ -43,7 +44,7 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   static defaultProps = {
-    changeMenuGender: () => { },
+    changeMenuGender: () => {},
   };
 
   constructor(props) {
@@ -87,7 +88,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderLeftContainer() {
     if (this.isPDP() && isMobile.any()) {
-      return null
+      return null;
     }
     return (
       <div block="leftContainer" key="leftContainer">
@@ -179,8 +180,7 @@ class HeaderMainSection extends NavigationAbstract {
     const {
       location: { search, pathname = "" },
     } = this.props;
-    const isSearch = pathname.includes("catalogsearch");
-    return TYPE_CATEGORY === type && search && !isSearch;
+    return TYPE_CATEGORY === type && search;
   }
 
   isPDP() {
@@ -244,10 +244,6 @@ class HeaderMainSection extends NavigationAbstract {
       return null;
     }
 
-    const tt =
-      (this.isPLP() || this.isPDP() || this.getPageType() === TYPE_BRAND) &&
-      isMobile.any();
-
     return (this.isPLP() ||
       this.isPDP() ||
       this.getPageType() === TYPE_BRAND) &&
@@ -265,17 +261,9 @@ class HeaderMainSection extends NavigationAbstract {
 
     if (isMobile.any()) {
       if (this.isPLP()) {
-        const pagePLPTitle = this.getCategory()
-          ? String(this.getCategory()).toUpperCase()
-          : __("AVAILABLE PRODUCTS");
+        this.setMainContentPadding("150px");
 
-        this.setMainContentPadding();
-
-        return (
-          <h1 block="CategoryTitle" mods={{ isArabic }}>
-            {pagePLPTitle}
-          </h1>
-        );
+        return <HeaderLogo key="logo" />
       }
       if (this.isPDP()) {
         const pagePDPTitle = String(this.getProduct()).toUpperCase();
@@ -318,16 +306,13 @@ class HeaderMainSection extends NavigationAbstract {
   renderBack() {
     const { history, displaySearch } = this.props;
     const { isArabic } = this.state;
-    const isPDPSearchVisible = this.isPDP() && displaySearch
+    const isPDPSearchVisible = this.isPDP() && displaySearch;
     if (this.isPDP() && isMobile.any()) {
-      return null
+      return null;
     }
     return this.isPLP() || this.isPDP() ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
-        <button
-          block="BackArrow-Button"
-          onClick={ history.goBack }
-        >
+        <button block="BackArrow-Button" onClick={history.goBack}>
           <p>{__("Back")}</p>
         </button>
       </div>
@@ -344,9 +329,9 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   hidePDPSearchBar = () => {
-    const { showPDPSearch } = this.props
-    showPDPSearch(false)
-  }
+    const { showPDPSearch } = this.props;
+    showPDPSearch(false);
+  };
 
   renderSearchIcon() {
     const { isArabic } = this.state;
@@ -385,13 +370,18 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
   renderSearch() {
-    const { displaySearch } = this.props
-    const isPDPSearchVisible = this.isPDP() && displaySearch
+    const { displaySearch } = this.props;
+    const isPDPSearchVisible = this.isPDP() && displaySearch;
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() ? null : (
-        <div block="HeaderSearchSection"
-          mods={{ isPDPSearchVisible }}>
-          <HeaderSearch key="search" isPDP={this.isPDP()} isPDPSearchVisible={isPDPSearchVisible} hideSearchBar={this.hidePDPSearchBar} focusInput={isPDPSearchVisible ? true : false} />
+        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible }}>
+          <HeaderSearch
+            key="search"
+            isPDP={this.isPDP()}
+            isPDPSearchVisible={isPDPSearchVisible}
+            hideSearchBar={this.hidePDPSearchBar}
+            focusInput={isPDPSearchVisible ? true : false}
+          />
         </div>
       );
     }
@@ -409,13 +399,13 @@ class HeaderMainSection extends NavigationAbstract {
       }
     }
     return true;
-  }
+  };
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
     const { signInPopUp, showPopup } = this.state;
-    const { displaySearch } = this.props
-    const isPDPSearchVisible = this.isPDP() && displaySearch
+    const { displaySearch } = this.props;
+    const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <div
@@ -431,4 +421,6 @@ class HeaderMainSection extends NavigationAbstract {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection)
+);
