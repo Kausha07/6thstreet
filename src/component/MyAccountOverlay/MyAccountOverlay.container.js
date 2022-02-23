@@ -41,6 +41,7 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   STATE_VERIFY_NUMBER,
+  STATE_INITIAL_LINKS
 } from "./MyAccountOverlay.config";
 
 export const MyAccountDispatcher = import(
@@ -219,17 +220,18 @@ export class MyAccountOverlayContainer extends PureComponent {
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
-
-    const state = {
-      state: STATE_SIGN_IN,
-      // eslint-disable-next-line react/no-unused-state
-      isPasswordForgotSend,
-      isLoading: false,
-      customerRegisterData: {},
-      customerLoginData: {},
-      otpError: "",
-    };
-
+    
+    const getDeviceState = (!isMobile.any() ? STATE_SIGN_IN : STATE_INITIAL_LINKS );
+      const state = {
+        state: getDeviceState,
+        // eslint-disable-next-line react/no-unused-state
+        isPasswordForgotSend,
+        isLoading: false,
+        customerRegisterData: {},
+        customerLoginData: {},
+        otpError: "",
+      };
+    
     // if customer got here from forgot-password
     if (pathname !== "/forgot-password" && !isForgotPassword) {
       return state;
@@ -528,7 +530,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   render() {
     const { state } = this.state;
     const { hideActiveOverlay } = this.props;
-
+    this.setState({ signIn: false });
     if (state === "loggedIn") {
       hideActiveOverlay();
 

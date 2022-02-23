@@ -13,7 +13,6 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
 import { getCountryFromUrl } from "Util/Url/Url";
-
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
 import Field from "SourceComponent/Field";
@@ -28,6 +27,7 @@ import { ChevronLeft } from "Component/Icons";
 import Spinner from "react-spinkit";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Link from "Component/Link";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -44,6 +44,7 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   ENABLE_OTP_LOGIN,
+  STATE_INITIAL_LINKS,
   SSO_LOGIN_PROVIDERS,
   STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
@@ -61,6 +62,7 @@ export class MyAccountOverlay extends PureComponent {
     isLoading: PropTypes.bool.isRequired,
     state: PropTypes.oneOf([
       STATE_SIGN_IN,
+      STATE_INITIAL_LINKS,
       STATE_FORGOT_PASSWORD,
       STATE_FORGOT_PASSWORD_SUCCESS,
       STATE_CREATE_ACCOUNT,
@@ -149,6 +151,9 @@ export class MyAccountOverlay extends PureComponent {
   // };
 
   renderMap = {
+    [STATE_INITIAL_LINKS]: {
+      render: () => this.renderInitialLinks(),
+    },
     [STATE_SIGN_IN]: {
       render: () => this.renderSignIn(),
       title: __("Welcome Back"),
@@ -167,7 +172,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -231,17 +236,34 @@ export class MyAccountOverlay extends PureComponent {
           )}
         </div>
         {state !== STATE_VERIFY_NUMBER && (
+          <div className="MyAccountOverlayOuter">
+          {state == STATE_INITIAL_LINKS ? (
+            <div className="signInQuote">
+              <h5>
+                Sign in for a personalised shopping experience
+              </h5>
+              </div>
+            ) : (
+              null
+            )}
+          
           <div block="MyAccountOverlay" elem="Buttons">
-            <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
-              {__("Sign in")}
+            
+            <button
+              block="signInBtn signBtns Button"
+              mods={{ isSignIn }}
+              onClick={handleSignIn}
+            >
+              {__("Login")}
             </button>
             <button
-              block="Button"
+              block="signUpBtn signBtns Button"
               mods={{ isCreateAccount }}
               onClick={handleCreateAccount}
             >
-              {__("Create account")}
+              {__("Register")}
             </button>
+          </div>
           </div>
         )}
         <p block="MyAccountOverlay" elem="Heading">
@@ -417,8 +439,9 @@ export class MyAccountOverlay extends PureComponent {
           </div>
           <div block="VerifyPhone-Text" elem="Phone">
             <button onClick={() => console.log("change mobile number")}>
-              {`${customerRegisterData?.contact_no || customerLoginData?.username
-                }`}
+              {`${
+                customerRegisterData?.contact_no || customerLoginData?.username
+              }`}
             </button>
           </div>
         </div>
@@ -709,7 +732,6 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
-
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
 
@@ -743,7 +765,7 @@ export class MyAccountOverlay extends PureComponent {
   //               onSignInAttempt();
   //               onSignInSuccess(payload);
   //             } catch (e) {
-  //               console.log("error", e);
+  //               console.log("error", eisHidden);
   //               deleteAuthorizationToken();
   //               deleteMobileAuthorizationToken();
   //             }
@@ -795,6 +817,27 @@ export class MyAccountOverlay extends PureComponent {
   //     </div>
   //   );
   // }
+  renderInitialLinks() {
+    return (
+      <ul className="logInScreenLinks">
+        <li block="MyAccountTabListItem">
+          <Link className="return_policy" to="/return-information">
+            {__("Return Policy")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="free_delivery" to="/shipping-policy">
+            {__("Free Delivery")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="faq" to="/faq">
+            {__("FAQs")}
+          </Link>
+        </li>
+      </ul>
+    );
+  }
   renderSignIn() {
     const {
       email,
@@ -837,8 +880,9 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              placeholder={`${
+                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+              }*`}
               id="email"
               name="email"
               value={email}

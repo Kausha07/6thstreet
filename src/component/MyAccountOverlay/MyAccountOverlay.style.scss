@@ -392,6 +392,61 @@
           padding: 0;
         }
       }
+      &_initialLinks {
+        .logInScreenLinks {
+          margin-top: 50px;
+          .MyAccountTabListItem {
+            padding-left: 3.5rem;
+            border-bottom: 1px solid #eaeaea;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            &::before {
+              display: none;
+            }
+            a {
+              position: static;
+              text-align: left;
+              font-size: 16px;
+              font-weight: 600;
+              text-transform: capitalize;
+              letter-spacing: 0.55px;
+              display: block;
+              height: 50px;
+              line-height: 50px;
+              padding: 0 15px;
+              &::before {
+                left: 20px;
+                top: 24px;
+                background-repeat: no-repeat;
+                position: absolute;
+                background-size: contain;
+                width: 25px;
+                height: 30px;
+                content: "";
+                content: "";
+                display: inline-block;
+              }
+              &.return_policy {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/account.png);
+                }
+              }
+              &.free_delivery {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/delivery.png);
+                }
+              }
+              &.faq {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/faq.png);
+                }
+              }
+              a {
+              }
+            }
+          }
+        }
+      }
     }
 
     h4 {
@@ -503,7 +558,7 @@
     &::before,
     &::after {
       background-color: var(--header-color);
-      content: '';
+      content: "";
       height: 20px;
       position: absolute;
       right: 27px;
@@ -606,6 +661,21 @@
         border: 2px solid var(--button-border);
         padding: 0 15px;
       }
+      @include mobile() {
+        &.signBtns {
+          height: 50px;
+          line-height: 50px;
+          border: 1px solid #000;
+          color: #000;
+          font-size: 12px;
+          font-weight: 700;
+          border-radius: 6px;
+          &.signUpBtn {
+            color: #fff;
+            background: #000;
+          }
+        }
+      }
     }
   }
 
@@ -675,7 +745,7 @@
     &_isSignIn {
       &::after {
         position: absolute;
-        content: '';
+        content: "";
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -709,7 +779,7 @@
       margin-top: 24px;
       &::after {
         position: absolute;
-        content: '';
+        content: "";
         top: 50%;
         right: 10px;
         transform: translateY(-50%);
@@ -793,7 +863,7 @@
     margin-top: 15px;
     display: flex;
 
-    .Field [type='checkbox'] {
+    .Field [type="checkbox"] {
       + label {
         margin-right: 10px;
       }
@@ -808,7 +878,7 @@
     }
 
     &_isArabic {
-      .Field [type='checkbox'] {
+      .Field [type="checkbox"] {
         + label {
           margin-left: 10px;
           margin-right: 0;
@@ -821,7 +891,7 @@
     display: flex;
     margin-top: 10px;
 
-    .Field [type='radio'] {
+    .Field [type="radio"] {
       + label {
         position: relative;
         height: 14px;
@@ -1175,12 +1245,12 @@
 
         &-Container {
           right: 0;
-          &_isArabic{
-            @include mobile{
-                right: auto;
-                left: 35px;
+          &_isArabic {
+            @include mobile {
+              right: auto;
+              left: 35px;
             }
-        }
+          }
         }
       }
     }
@@ -1255,7 +1325,23 @@
     }
   }
 }
-
+.MyAccountOverlayOuter{
+  position: relative;
+  .signInQuote{
+    position: absolute;
+    top: -100px;
+    z-index: 9;
+    text-align: center;
+    width: 100%;
+    h5{
+      color: #fff;
+      font-size: 20px;
+      max-width: 70%;
+      margin: auto;
+      line-height: 28px;
+    }
+  }
+}
 .Field_hasError + .Mask {
   bottom: 1.8rem !important;
 }
