@@ -773,7 +773,7 @@ export class MyAccountOverlay extends PureComponent {
   //               onSignInAttempt();
   //               onSignInSuccess(payload);
   //             } catch (e) {
-  //               console.log("error", eisHidden);
+  //               console.log("error", e);
   //               deleteAuthorizationToken();
   //               deleteMobileAuthorizationToken();
   //             }
