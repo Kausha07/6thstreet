@@ -239,9 +239,10 @@ class HeaderSearch extends PureComponent {
         >
           <div block="HeaderSearch" mods={{ isArabic }}>
             {this.renderField()}
-            {this.renderSuggestion()}
           </div>
         </ClickOutside>
+        {this.renderSuggestion()}
+
       </>
     );
   }

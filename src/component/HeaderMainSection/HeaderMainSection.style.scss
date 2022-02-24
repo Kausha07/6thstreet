@@ -10,7 +10,43 @@ main {
     padding-top: var(--main-content-padding);
   }
 }
-
+.HeaderSearchSection {
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: top;
+      padding-top: 5px;
+      height: 54px;
+      top: 49px;
+    }
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      padding-top: 5px;
+      justify-content: center;
+      align-items: top;
+      height: 54px;
+      top: 49px;
+    }
+    @include after-mobile {
+      // display: none;
+    }
+  }
+  .HeaderSearch {
+    @include mobile {
+      top: 49px;
+    }
+    @include tablet {
+      top: 49px;
+    }
+  }
+}
 .HeaderMainSection {
   align-items: center;
   display: flex;
@@ -32,7 +68,12 @@ main {
   }
 
   @include mobile {
-    z-index: 94;
+    &_showPLPSearch {
+      &[data-visible="true"] {
+        z-index: 9999 !important;
+      }
+    }
+    z-index: 9999;
     position: fixed;
     width: 100%;
     background: $white;
@@ -73,7 +114,7 @@ main {
     @include mobile {
       position: fixed;
       top: 15px;
-      z-index: 1
+      z-index: 1;
     }
     @include tablet {
       position: fixed;
@@ -314,42 +355,21 @@ main {
     }
   }
 
-  .HeaderSearch {
-    @include mobile {
-      background: $white;
-      position: fixed;
-      display: flex;
-      width: 100%;
-      justify-content: center;
-      align-items: top;
-      padding-top: 5px;
-      height: 54px;
-      top: 49px;
-    }
-    @include tablet {
-      background: $white;
-      position: fixed;
-      display: flex;
-      width: 100%;
-      padding-top: 5px;
-      justify-content: center;
-      align-items: top;
-      height: 54px;
-      top: 49px;
-    }
-    @include after-mobile {
-      // display: none;
+  &_showPLPSearch {
+    .HeaderGenders {
+      @include mobile {
+        &_isMobile {
+          top: 10px !important;
+          flex-direction: row;
+          justify-content: start !important;
+          width: 67% !important;
+          overflow: scroll;
+          z-index: 999;
+          padding-bottom: 13px !important;
+        }
+      }
     }
   }
-  .HeaderSearch {
-    @include mobile {
-      top: 49px;
-    }
-    @include tablet {
-      top: 49px;
-    }
-  }
-
   .HeaderGenders {
     @include mobile {
       &_isMobile {
@@ -360,7 +380,7 @@ main {
         padding-bottom: 18px;
         align-items: center;
         margin-top: 0px;
-        top: 100px !important;
+        top: 100px;
         position: fixed;
         justify-content: center;
       }
@@ -507,7 +527,7 @@ main {
 
 .SearchIcon {
   margin-right: 22px;
-  @include mobile{
+  @include mobile {
     margin-right: 56px;
     top: 2px;
 
@@ -519,5 +539,15 @@ main {
   &_isArabic {
     margin-right: 0;
     margin-left: 22px;
+  }
+}
+.HeaderSearchSection {
+  @include mobile {
+    &_isPDP {
+      .HeaderSearch {
+        display: none;
+      }
+    }
+    z-index: 99;
   }
 }

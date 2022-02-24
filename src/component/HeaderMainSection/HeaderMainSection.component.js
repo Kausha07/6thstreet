@@ -83,7 +83,7 @@ class HeaderMainSection extends NavigationAbstract {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
     leftContainer: this.renderLeftContainer.bind(this),
-    search: this.renderSearch.bind(this),
+    // search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
 
@@ -239,8 +239,7 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderGenderSwitcher() {
-    const { changeMenuGender, activeOverlay } = this.props;
-
+    const { changeMenuGender, activeOverlay, displaySearch } = this.props;
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
@@ -258,10 +257,20 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderLogo() {
-    const { isArabic } = this.state;
+    const { isArabic, showPLPSearch } = this.state;
+    const { changeMenuGender } = this.props;
 
     if (isMobile.any()) {
-      if (this.isPLP()) {
+      if (this.isPLP() && showPLPSearch) {
+        this.setMainContentPadding("150px");
+        return (
+          <HeaderGenders
+            key="genders"
+            isMobile
+            changeMenuGender={changeMenuGender}
+          />
+        );
+      } else if (this.isPLP() && !showPLPSearch) {
         this.setMainContentPadding("150px");
 
         return <HeaderLogo key="logo" />;
@@ -307,7 +316,6 @@ class HeaderMainSection extends NavigationAbstract {
   renderBack() {
     const { history, displaySearch } = this.props;
     const { isArabic } = this.state;
-    const isPDPSearchVisible = this.isPDP() && displaySearch;
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
@@ -321,13 +329,16 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   handleSearchClick = () => {
-    const { showSearch, showPLPSearch } = this.state;
-    this.setState({ showSearch: !showSearch, showPLPSearch: !showPLPSearch });
+    const { showSearch } = this.state;
+    this.setState({ showSearch: !showSearch });
   };
 
   handlePLPSearchClick = () => {
     const { showPLPSearch } = this.state;
-    this.setState({ showPLPSearch: !showPLPSearch });
+    this.setState({ showPLPSearch: !showPLPSearch }, () => {
+      document.getElementById("search-field").focus();
+      document.body.style.overflow = "hidden";
+    });
   };
 
   hideSearchBar = () => {
@@ -340,6 +351,7 @@ class HeaderMainSection extends NavigationAbstract {
     this.setState({
       showPLPSearch: false,
     });
+    document.body.style.overflow = "visible";
   };
 
   renderSearchIcon() {
@@ -352,9 +364,9 @@ class HeaderMainSection extends NavigationAbstract {
         <button
           block="SearchIcon"
           onClick={
-            // isMobile.any()
-            //   ? this.handlePLPSearchClick.bind(this)
-            this.handleSearchClick.bind(this)
+            isMobile.any()
+              ? this.handlePLPSearchClick.bind(this)
+              : this.handleSearchClick.bind(this)
           }
           elem="Button"
         ></button>
@@ -383,14 +395,14 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
 
-  renderSearch() {
+  renderSearch = () => {
     const { displaySearch } = this.props;
     const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
-
+    let isPDP = this.isPDP();
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
-        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible }}>
+        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible,isPDP }}>
           <HeaderSearch
             key="search"
             isPLP={this.isPLP()}
@@ -404,7 +416,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     return null;
-  }
+  };
 
   getHeaderMainSectionVisibility = () => {
     const { visible } = this.state;
@@ -425,15 +437,18 @@ class HeaderMainSection extends NavigationAbstract {
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
-      <div
-        block="HeaderMainSection"
-        data-visible={this.getHeaderMainSectionVisibility()}
-      >
-        {this.renderMySignInPopup()}
-        {this.renderNavigationState()}
-        {/* {this.renderSearchIcon()} */}
-        {this.renderDesktopSearch()}
-      </div>
+      <>
+        <div
+          block="HeaderMainSection"
+          mods={{ showPLPSearch }}
+          data-visible={this.getHeaderMainSectionVisibility()}
+        >
+          {this.renderMySignInPopup()}
+          {this.renderNavigationState()}
+          {this.renderDesktopSearch()}
+        </div>
+        {this.renderSearch()}
+      </>
     );
   }
 }

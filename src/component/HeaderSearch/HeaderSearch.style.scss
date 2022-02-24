@@ -14,15 +14,15 @@
   //   top: 50px;
   //   position: absolute;
   // }
-  .HeaderSearch .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     display: flex;
-    top: 50px;
-    position: absolute;
+    top: 0px;
+    position: fixed;
   }
 }
 
 @include desktop() {
-  .HeaderSearch .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     // .HeaderSearch:hover .SearchSuggestion {
     display: flex;
 
