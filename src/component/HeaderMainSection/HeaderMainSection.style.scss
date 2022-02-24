@@ -73,7 +73,7 @@ main {
     @include mobile {
       position: fixed;
       top: 15px;
-      width: 90%;
+      z-index: 1
     }
     @include tablet {
       position: fixed;
@@ -83,7 +83,7 @@ main {
   }
   .SearchIcon {
     order: 2;
-    display: none;
+    // display: none;
     // padding-right: 47px;
     img {
       cursor: pointer;
@@ -507,6 +507,15 @@ main {
 
 .SearchIcon {
   margin-right: 22px;
+  @include mobile{
+    margin-right: 56px;
+    top: 2px;
+
+    &_isArabic {
+      margin-right: 0;
+      margin-left: 56px;
+    }
+  }
   &_isArabic {
     margin-right: 0;
     margin-left: 22px;

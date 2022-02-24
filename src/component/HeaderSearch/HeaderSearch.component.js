@@ -47,7 +47,7 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
   }
-  componentDidUpdate(prevProps,) {
+  componentDidUpdate(prevProps) {
     const { focusInput, isPDPSearchVisible } = this.props;
     const {
       current: {
@@ -55,10 +55,14 @@ class HeaderSearch extends PureComponent {
       },
     } = this.searchRef;
     const searchInput = children[0].children[0];
-    if (focusInput && isPDPSearchVisible && prevProps.isPDPSearchVisible !== isPDPSearchVisible && searchInput) {
+    if (
+      focusInput &&
+      isPDPSearchVisible &&
+      prevProps.isPDPSearchVisible !== isPDPSearchVisible &&
+      searchInput
+    ) {
       searchInput.focus();
     }
-    
   }
   searchRef = createRef();
 
@@ -67,7 +71,7 @@ class HeaderSearch extends PureComponent {
     if (isPDP) {
       return {
         isClearVisible: search !== "",
-        showSearch: isPDPSearchVisible
+        showSearch: isPDPSearchVisible,
       };
     }
     return {
@@ -93,13 +97,13 @@ class HeaderSearch extends PureComponent {
   };
   onFocus = () => {
     this.setState({ showSearch: true });
-    window.onpopstate = e => {
-      if (document.body.classList.contains("isSuggestionOpen")){
+    window.onpopstate = (e) => {
+      if (document.body.classList.contains("isSuggestionOpen")) {
         this.closeSearch();
         history.forward();
         e.preventDefault();
       }
-   }
+    };
   };
   closeSearch = () => {
     const { hideSearchBar, onSearchClean } = this.props;
@@ -111,7 +115,8 @@ class HeaderSearch extends PureComponent {
   };
 
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean } = this.props;
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
+      this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
     return (
       <>
@@ -122,6 +127,7 @@ class HeaderSearch extends PureComponent {
           autocomplete="off"
         >
           <Field
+            block={isPLP ? "plpSearch" : ""}
             id="search-field"
             ref={this.inputRef}
             name="search"
@@ -189,7 +195,7 @@ class HeaderSearch extends PureComponent {
   renderSuggestion() {
     const { search, renderMySignInPopup, onSearchClean } = this.props;
     const { showSearch } = this.state;
-    const { isPDPSearchVisible } = this.props
+    const { isPDPSearchVisible } = this.props;
 
     if (!showSearch) {
       return null;
@@ -205,8 +211,7 @@ class HeaderSearch extends PureComponent {
             isPDPSearchVisible={isPDPSearchVisible}
           />
         </>
-      )
-
+      );
     }
 
     return (
@@ -223,11 +228,15 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { isPDP, isPDPSearchVisible } = this.props
+    const { isPDP, isPDPSearchVisible } = this.props;
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
-        <ClickOutside onClick={() => { isPDP ? null : this.closeSearch() }}>
+        <ClickOutside
+          onClick={() => {
+            isPDP ? null : this.closeSearch();
+          }}
+        >
           <div block="HeaderSearch" mods={{ isArabic }}>
             {this.renderField()}
             {this.renderSuggestion()}

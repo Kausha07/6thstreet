@@ -59,6 +59,7 @@ class HeaderMainSection extends NavigationAbstract {
       lastCategory: null,
       search: "",
       showSearch: false,
+      showPLPSearch: false,
       isArabic: isArabic(),
       signInPopUp: "",
       showPopup: false,
@@ -263,7 +264,7 @@ class HeaderMainSection extends NavigationAbstract {
       if (this.isPLP()) {
         this.setMainContentPadding("150px");
 
-        return <HeaderLogo key="logo" />
+        return <HeaderLogo key="logo" />;
       }
       if (this.isPDP()) {
         const pagePDPTitle = String(this.getProduct()).toUpperCase();
@@ -320,29 +321,41 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   handleSearchClick = () => {
-    const { showSearch } = this.state;
-    this.setState({ showSearch: !showSearch });
+    const { showSearch, showPLPSearch } = this.state;
+    this.setState({ showSearch: !showSearch, showPLPSearch: !showPLPSearch });
+  };
+
+  handlePLPSearchClick = () => {
+    const { showPLPSearch } = this.state;
+    this.setState({ showPLPSearch: !showPLPSearch });
   };
 
   hideSearchBar = () => {
-    this.setState({ showSearch: false });
+    this.setState({ showSearch: false, showPLPSearch: false });
   };
 
   hidePDPSearchBar = () => {
     const { showPDPSearch } = this.props;
     showPDPSearch(false);
+    this.setState({
+      showPLPSearch: false,
+    });
   };
 
   renderSearchIcon() {
-    const { isArabic } = this.state;
-    if (isMobile.any()) {
+    const { isArabic, showPLPSearch } = this.state;
+    if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
       return null;
     }
     return (
       <div block="SearchIcon" mods={{ isArabic: isArabic }}>
         <button
           block="SearchIcon"
-          onClick={this.handleSearchClick.bind(this)}
+          onClick={
+            // isMobile.any()
+            //   ? this.handlePLPSearchClick.bind(this)
+            this.handleSearchClick.bind(this)
+          }
           elem="Button"
         ></button>
       </div>
@@ -369,14 +382,18 @@ class HeaderMainSection extends NavigationAbstract {
       </div>
     );
   }
+
   renderSearch() {
     const { displaySearch } = this.props;
+    const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
+
     if (isMobile.any() || isMobile.tablet()) {
-      return this.isPLP() ? null : (
+      return this.isPLP() && !showPLPSearch ? null : (
         <div block="HeaderSearchSection" mods={{ isPDPSearchVisible }}>
           <HeaderSearch
             key="search"
+            isPLP={this.isPLP()}
             isPDP={this.isPDP()}
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
@@ -403,7 +420,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { signInPopUp, showPopup } = this.state;
+    const { signInPopUp, showPLPSearch } = this.state;
     const { displaySearch } = this.props;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
