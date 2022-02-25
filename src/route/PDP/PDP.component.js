@@ -95,7 +95,7 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-    const { nbHits, isLoading } = this.props;
+    const { isLoading } = this.props;
     if (!isLoading) {
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
@@ -106,7 +106,7 @@ class PDP extends PureComponent {
           {this.renderDetailsSection()}
           {this.renderDetail()}
         </div>
-      )
+      );
     }
 
     return <div>loading...</div>;
