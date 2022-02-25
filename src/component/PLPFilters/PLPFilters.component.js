@@ -439,7 +439,7 @@ class PLPFilters extends PureComponent {
   renderFilterOption([key, filter]) {
     const { activeFilter } = this.state;
     const { filters } = this.props;
-    const { label, category } = filter;
+    const { label, category, selected_filters_count } = filter;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
@@ -472,7 +472,10 @@ class PLPFilters extends PureComponent {
           }}
           onClick={() => this.handleFilterChange(filter)}
         >
-          {placeholder}
+          {placeholder}{" "}
+          {selected_filters_count > 0 &&
+            isMobile.any() &&
+            `(${selected_filters_count})`}
         </button>
       </div>
     );
