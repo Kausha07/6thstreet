@@ -127,7 +127,6 @@ class HeaderSearch extends PureComponent {
           autocomplete="off"
         >
           <Field
-            block={isPLP ? "plpSearch" : ""}
             id="search-field"
             ref={this.inputRef}
             name="search"
@@ -144,14 +143,17 @@ class HeaderSearch extends PureComponent {
             onFocus={this.onFocus}
             value={search}
           />
-          <button
-            block="HeaderSearch"
-            elem="SubmitBtn"
-            mods={{ isArabic }}
-            type="submit"
-          >
-            <Image lazyLoad={true} src={searchPng} alt="search" />
-          </button>
+          {!isPLP && (
+            <button
+              block="HeaderSearch"
+              elem="SubmitBtn"
+              mods={{ isArabic }}
+              type="submit"
+            >
+              <Image lazyLoad={true} src={searchPng} alt="search" />
+            </button>
+          )}
+
           <button
             block="HeaderSearch"
             elem="Clear"
@@ -228,7 +230,8 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { isPDP, isPDPSearchVisible } = this.props;
+    const { isPDP, isPDPSearchVisible, isPLP } = this.props;
+
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />
@@ -237,12 +240,11 @@ class HeaderSearch extends PureComponent {
             isPDP ? null : this.closeSearch();
           }}
         >
-          <div block="HeaderSearch" mods={{ isArabic }}>
+          <div block="HeaderSearch" mods={{ isArabic, isPLP }}>
             {this.renderField()}
           </div>
         </ClickOutside>
         {this.renderSuggestion()}
-
       </>
     );
   }
