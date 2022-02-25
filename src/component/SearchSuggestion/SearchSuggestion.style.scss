@@ -656,9 +656,7 @@
 }
 
 .isSuggestionOpen {
-  @include mobile {
     overflow: hidden !important;
-  }
 }
 
 .text-capitalize {

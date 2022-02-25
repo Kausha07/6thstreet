@@ -499,26 +499,34 @@ main {
         left: 0;
         right: 0;
       }
-      .SearchSuggestion {
+    }
+    .SearchSuggestion {
+      width: 100%;
+      left: 0;
+      right: 0;
+      &-Shade {
         width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        position: fixed;
         left: 0;
+        content: '.';
+        color: transparent;
+        z-index: -1;
+        pointer-events: none;
+      }
+      &-Content {
+        margin-left: 0;
+        opacity: 1;
+        max-height: 400px;
+        overflow-y: auto;
         right: 0;
-        &-Shade {
-          // background: transparent;
-        }
-        &-Content {
-          margin-left: 0;
-          opacity: 1;
-          max-height: 400px;
-          overflow-y: auto;
-          right: 0;
-          & > div {
-            max-width: var(--container-max-width);
-            width: var(--main-container-width-dsk);
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 35px;
-          }
+        & > div {
+          max-width: var(--container-max-width);
+          width: var(--main-container-width-dsk);
+          margin-left: auto;
+          margin-right: auto;
+          padding: 0 35px;
         }
       }
     }
