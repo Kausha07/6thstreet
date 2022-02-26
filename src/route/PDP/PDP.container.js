@@ -94,7 +94,7 @@ export class PDPContainer extends PureComponent {
   };
 
   static defaultProps = {
-    nbHits: 0,
+    nbHits: 1,
     sku: "",
   };
 
