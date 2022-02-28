@@ -547,7 +547,7 @@ class PDPAddToCart extends PureComponent {
   }
   renderAppParity() {
     const {
-      product: { brand_name },
+      product: { brand_name="" },
     } = this.props;
 
     if (
