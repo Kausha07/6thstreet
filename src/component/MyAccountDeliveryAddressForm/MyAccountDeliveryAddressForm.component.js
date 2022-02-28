@@ -117,14 +117,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       newForm,
       address: { city, area },
     } = this.props;
-    const { availableAreas = [], cities = [] } = this.state;
+    const { availableAreas = [], cities = [], city: selectedCity } = this.state;
     const clearValue = newForm ? { value: "" } : null;
 
     if (cities.length && city && !availableAreas.length) {
       this.setArea(city);
     }
 
-    if (!availableAreas.length) {
+    if (!selectedCity?.city) {
       return {
         region_string: {
           validation: ["notEmpty"],
@@ -132,6 +132,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
           placeholder: __("City area"),
           ...clearValue,
           onChange: this.copyValue,
+          disabled: true
         },
       };
     }
