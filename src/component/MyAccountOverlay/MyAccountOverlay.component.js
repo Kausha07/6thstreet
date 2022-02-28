@@ -831,7 +831,7 @@ export class MyAccountOverlay extends PureComponent {
         </li>
         <li block="MyAccountTabListItem">
           <Link className="free_delivery" to="/shipping-policy">
-            {__("Free Delivery")}
+            {__("Free delivery")}
           </Link>
         </li>
         <li block="MyAccountTabListItem">
