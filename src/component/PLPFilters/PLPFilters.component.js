@@ -127,7 +127,7 @@ class PLPFilters extends PureComponent {
       onUnselectAllPress,
       isChecked,
       activeFilters,
-      filters
+      filters,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -494,7 +494,7 @@ class PLPFilters extends PureComponent {
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
-    const { handleCallback,filters } = this.props;
+    const { handleCallback, filters } = this.props;
     return (
       <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
