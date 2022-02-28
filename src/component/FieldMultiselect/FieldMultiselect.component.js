@@ -580,7 +580,8 @@ class FieldMultiselect extends PureComponent {
         } else {
           Object.entries(allData[subEntry]?.subcategories ?? {}).map((data) => {
             if (data[0] === entry) {
-              finalSearchedData[data[0]] = allData[subEntry].subcategories[data[0]];
+              finalSearchedData[data[0]] =
+                allData[subEntry].subcategories[data[0]];
             }
           });
         }
@@ -759,7 +760,18 @@ class FieldMultiselect extends PureComponent {
       });
       conditionalData = categoryLevelData;
     }
-
+    const {
+      filters: {
+        categories_without_path: {
+          selected_filters_count: selectedCategoryCount,
+        },
+        "price.AED.default": { selected_filters_count: priceCount },
+      },
+    } = this.props;
+    let CategorySelected =
+      isMobile.any() && (selectedCategoryCount > 0 || priceCount > 0)
+        ? true
+        : false;
     return (
       <div
         ref={this.filterDropdownRef}
@@ -803,7 +815,7 @@ class FieldMultiselect extends PureComponent {
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
-          mods={{ toggleOptionsList }}
+          mods={{ toggleOptionsList, CategorySelected }}
           mix={{
             block: "FieldMultiselect",
             elem: "OptionListContainer",

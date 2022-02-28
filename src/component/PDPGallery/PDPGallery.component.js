@@ -178,6 +178,9 @@ class PDPGallery extends PureComponent {
       },
     } = this.props;
     const checkCategory = () => {
+      if(!categories){
+        return '';
+      }
       if (categories.level4){
         return categories.level4[0];
       }

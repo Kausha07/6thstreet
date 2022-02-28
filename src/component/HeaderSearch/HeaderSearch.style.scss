@@ -4,26 +4,20 @@
   --zumthor: #d1d3d4;
 }
 
-.SearchSuggestion {
-  display: none;
-}
+// .SearchSuggestion {
+//   display: none;
+// }
 
 @include before-desktop {
-  // .HeaderSearch:focus-within .SearchSuggestion {
-  //   display: flex;
-  //   top: 50px;
-  //   position: absolute;
-  // }
-  .HeaderSearch .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     display: flex;
-    top: 50px;
-    position: absolute;
+    top: 0px;
+    position: fixed;
   }
 }
 
 @include desktop() {
-  .HeaderSearch .SearchSuggestion {
-    // .HeaderSearch:hover .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     display: flex;
 
     &-Shade {
@@ -32,7 +26,7 @@
       background: rgba(0, 0, 0, 0.7);
       position: fixed;
       left: 0;
-      content: '.';
+      content: ".";
       color: transparent;
       z-index: -1;
       pointer-events: none;
@@ -165,6 +159,14 @@
     }
   }
 
+  &_isPLP {
+    @include mobile {
+      input {
+        padding-left: 13px !important;
+      }
+    }
+  }
+
   .Field {
     margin: 0;
     width: 100%;
@@ -180,7 +182,7 @@
       width: 100%;
       color: $black;
       height: 30px;
-      @include mobile{
+      @include mobile {
         height: 36px;
         border-radius: 7px;
       }
