@@ -240,7 +240,8 @@ export class MyAccountOverlay extends PureComponent {
           <div className="MyAccountOverlayOuter">
             <div className="signInQuote">
               <h5>
-                Sign in for a <span>personalised</span> shopping experience
+                { __("Sign in for a")} <span>{__("personalised")} </span>
+                {__("shopping experience")}
               </h5>
             </div>
 
