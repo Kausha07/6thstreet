@@ -63,6 +63,9 @@
     font-size: 36px;
     font-weight: 500;
     letter-spacing: 1.5px;
+    @include mobile() {
+      background-image: url(https://mobilecdn.6thstreet.com/auth_screen/login.jpg);
+    }
     span {
       font-size: 52px;
       transform: translateY(-4px);
@@ -380,6 +383,18 @@
           text-align: center;
         }
       }
+      &_initialLinks{
+        .MyAccountOverlayOuter{
+          .signInQuote{
+            @include mobile() {
+              opacity: 1;
+              visibility: visible;
+              height: auto;
+              margin: 40px 0 0;
+            }
+          }
+        }
+      }
 
       &_loggedIn {
         .MyAccountOverlay-Heading {
@@ -394,7 +409,7 @@
       }
       &_initialLinks {
         .logInScreenLinks {
-          margin-top: 50px;
+          margin-top: 40px;
           .MyAccountTabListItem {
             padding-left: 3.5rem;
             border-bottom: 1px solid #eaeaea;
@@ -616,7 +631,9 @@
   &-Buttons {
     display: flex;
     margin: 30px 90px;
-
+    @include mobile(){
+      justify-content: center;
+    }
     // @include mobile() {
     //     margin: 30px 72px 39px 72px!important
     // }
@@ -662,13 +679,14 @@
       }
       @include mobile() {
         &.signBtns {
-          height: 50px;
-          line-height: 50px;
+          height: 45px;
+          line-height: 45px;
           border: 1px solid #000;
           color: #000;
           font-size: 12px;
           font-weight: 700;
           border-radius: 6px;
+          flex: 0 0 40%;
           &.signUpBtn {
             color: #fff;
             background: #000;
@@ -776,6 +794,9 @@
 
     &_isCreateAccountButton {
       margin-top: 24px;
+      @include mobile(){
+        margin-bottom: 25px;
+      }
       &::after {
         position: absolute;
         content: "";
@@ -1330,17 +1351,23 @@
     display: none;
     @include mobile() {
       display: block;
-      position: absolute;
-      top: -100px;
-      z-index: 9;
+      height: 0;
+      opacity: 0;
+      margin: 0;
+      transition: height .4s ease-out, margin .4s ease-out; 
+      position: relative;
       text-align: center;
       width: 100%;
       h5 {
-        color: #fff;
+        color: #000;
         font-size: 20px;
         max-width: 70%;
         margin: auto;
         line-height: 28px;
+        font-weight: 600;
+        span{
+          color: #ec694f;
+        }
       }
     }
   }

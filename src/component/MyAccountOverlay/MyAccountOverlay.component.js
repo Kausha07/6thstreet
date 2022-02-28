@@ -238,33 +238,28 @@ export class MyAccountOverlay extends PureComponent {
         </div>
         {state !== STATE_VERIFY_NUMBER && (
           <div className="MyAccountOverlayOuter">
-          {state == STATE_INITIAL_LINKS ? (
             <div className="signInQuote">
               <h5>
-                Sign in for a personalised shopping experience
+                Sign in for a <span>personalised</span> shopping experience
               </h5>
-              </div>
-            ) : (
-              null
-            )}
-          
-          <div block="MyAccountOverlay" elem="Buttons">
-            
-            <button
-              block="signInBtn signBtns Button"
-              mods={{ isSignIn }}
-              onClick={handleSignIn}
-            >
-              {(isMobile.any()) ? __("Login") : __("Sign in")}
-            </button>
-            <button
-              block="signUpBtn signBtns Button"
-              mods={{ isCreateAccount }}
-              onClick={handleCreateAccount}
-            >
-              {(isMobile.any()) ? __("Register") : __("Create account")}
-            </button>
-          </div>
+            </div>
+
+            <div block="MyAccountOverlay" elem="Buttons">
+              <button
+                block="signInBtn signBtns Button"
+                mods={{ isSignIn }}
+                onClick={handleSignIn}
+              >
+                {isMobile.any() ? __("Login") : __("Sign in")}
+              </button>
+              <button
+                block="signUpBtn signBtns Button"
+                mods={{ isCreateAccount }}
+                onClick={handleCreateAccount}
+              >
+                {isMobile.any() ? __("Register") : __("Create account")}
+              </button>
+            </div>
           </div>
         )}
         <p block="MyAccountOverlay" elem="Heading">
