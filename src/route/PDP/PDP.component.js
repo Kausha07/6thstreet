@@ -11,6 +11,7 @@ import "./PDP.style";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import Loader from "Component/Loader";
 import { connect } from 'react-redux';
 
 export const mapStateToProps = (state) => ({
@@ -96,7 +97,7 @@ class PDP extends PureComponent {
 
   renderPDP() {
     const { nbHits, isLoading } = this.props;
-    if (!isLoading) {
+    if (!isLoading && nbHits === 1) {
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
           {this.renderMySignInPopup()}
@@ -108,8 +109,13 @@ class PDP extends PureComponent {
         </div>
       )
     }
+    else if (!isLoading && nbHits < 1) {
+      return (
+        <NoMatch />
+      )
+    }
 
-    return <div>loading...</div>;
+    return <Loader isLoading />;
   }
 
   render() {

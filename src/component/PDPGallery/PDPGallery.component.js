@@ -174,7 +174,7 @@ class PDPGallery extends PureComponent {
         brand_name = "",
         color = "",
         product_type_6s = "",
-        categories
+        categories={}
       },
     } = this.props;
     const checkCategory = () => {
