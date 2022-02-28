@@ -127,6 +127,7 @@ class PLPFilters extends PureComponent {
       onUnselectAllPress,
       isChecked,
       activeFilters,
+      filters
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -147,6 +148,7 @@ class PLPFilters extends PureComponent {
         showCheckbox
         isRadio={is_radio}
         filter={filter}
+        filters={filters}
         initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}
@@ -292,9 +294,16 @@ class PLPFilters extends PureComponent {
 
   renderContent() {
     const { isArabic } = this.state;
-
+    const {
+      filters: {
+        categories_without_path: { selected_filters_count },
+        "price.AED.default": { selected_filters_count: priceCount },
+      },
+    } = this.props;
+    let CategorySelected =
+      selected_filters_count > 0 || priceCount > 0 ? true : false;
     return (
-      <div block="Content" elem="Filters" mods={{ isArabic }}>
+      <div block="Content" elem="Filters" mods={{ isArabic, CategorySelected }}>
         {this.renderFilters()}
         {this.renderDropDownList()}
       </div>
@@ -414,6 +423,7 @@ class PLPFilters extends PureComponent {
             showCheckbox
             isRadio={is_radio}
             filter={filter[1]}
+            filters={filters}
             initialOptions={initialOptions}
             activeFilter={activeFilter}
             isChecked={isChecked}
@@ -484,7 +494,7 @@ class PLPFilters extends PureComponent {
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
-    const { handleCallback } = this.props;
+    const { handleCallback,filters } = this.props;
     return (
       <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
@@ -494,6 +504,7 @@ class PLPFilters extends PureComponent {
           currentActiveFilter={activeFilter}
           changeActiveFilter={this.changeActiveFilter}
           isReset={isReset}
+          filters={filters}
           resetParentState={this.resetParentState}
           parentActiveFilters={activeFilters}
           updateFilters={this.updateFilters}

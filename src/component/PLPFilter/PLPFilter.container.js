@@ -52,7 +52,7 @@ class PLPFilterContainer extends PureComponent {
       const { selected_filters_count, data = {} } = filter[1];
 
       if (selected_filters_count !== 0) {
-        if (filter[0] === SIZES) {
+        if (filter[0] === 'sizes') {
           const mappedData = Object.entries(data).reduce((acc, size) => {
             const { subcategories } = size[1];
             const mappedSizeData = this.mapData(subcategories, filter[0]);
@@ -172,6 +172,7 @@ class PLPFilterContainer extends PureComponent {
       currentActiveFilter,
       isSortBy,
       initialOptions,
+      filters
     } = this.props;
 
     const { parentActiveFilters } = this.state;
@@ -185,6 +186,7 @@ class PLPFilterContainer extends PureComponent {
       parentActiveFilters,
       isSortBy,
       initialOptions,
+      filters
     };
   };
 

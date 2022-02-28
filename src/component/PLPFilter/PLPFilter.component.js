@@ -52,6 +52,7 @@ class PLPFilter extends PureComponent {
     const {
       filter: { label, category, is_radio },
       filter,
+      filters,
       activeFilter,
       currentActiveFilter,
       isChecked,
@@ -83,6 +84,7 @@ class PLPFilter extends PureComponent {
         showCheckbox
         isRadio={is_radio}
         filter={filter}
+        filters={filters}
         initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}

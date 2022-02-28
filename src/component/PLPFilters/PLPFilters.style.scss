@@ -115,6 +115,9 @@
       padding: 0;
       border-right: 2px solid var(--light-gray);
       width: 35%;
+      &_CategorySelected{
+        width: 41%;
+      }
       &_isArabic {
         border-right: 0;
         border-left: 1px solid var(--light-gray);
