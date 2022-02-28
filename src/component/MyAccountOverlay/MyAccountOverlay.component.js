@@ -13,7 +13,6 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
 import { getCountryFromUrl } from "Util/Url/Url";
-
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
 import Field from "SourceComponent/Field";
@@ -29,6 +28,7 @@ import { ThreeDots, Oval } from "react-loader-spinner";
 
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Link from "Component/Link";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -45,6 +45,7 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   ENABLE_OTP_LOGIN,
+  STATE_INITIAL_LINKS,
   SSO_LOGIN_PROVIDERS,
   STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
@@ -62,6 +63,7 @@ export class MyAccountOverlay extends PureComponent {
     isLoading: PropTypes.bool.isRequired,
     state: PropTypes.oneOf([
       STATE_SIGN_IN,
+      STATE_INITIAL_LINKS,
       STATE_FORGOT_PASSWORD,
       STATE_FORGOT_PASSWORD_SUCCESS,
       STATE_CREATE_ACCOUNT,
@@ -150,6 +152,9 @@ export class MyAccountOverlay extends PureComponent {
   // };
 
   renderMap = {
+    [STATE_INITIAL_LINKS]: {
+      render: () => this.renderInitialLinks(),
+    },
     [STATE_SIGN_IN]: {
       render: () => this.renderSignIn(),
       title: __("Welcome Back"),
@@ -232,17 +237,30 @@ export class MyAccountOverlay extends PureComponent {
           )}
         </div>
         {state !== STATE_VERIFY_NUMBER && (
-          <div block="MyAccountOverlay" elem="Buttons">
-            <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
-              {__("Sign in")}
-            </button>
-            <button
-              block="Button"
-              mods={{ isCreateAccount }}
-              onClick={handleCreateAccount}
-            >
-              {__("Create account")}
-            </button>
+          <div className="MyAccountOverlayOuter">
+            <div className="signInQuote">
+              <h5>
+                { __("Sign in for a")} <span>{__("personalised")} </span>
+                {__("shopping experience")}
+              </h5>
+            </div>
+
+            <div block="MyAccountOverlay" elem="Buttons">
+              <button
+                block="signInBtn signBtns Button"
+                mods={{ isSignIn }}
+                onClick={handleSignIn}
+              >
+                {isMobile.any() ? __("Login") : __("Sign in")}
+              </button>
+              <button
+                block="signUpBtn signBtns Button"
+                mods={{ isCreateAccount }}
+                onClick={handleCreateAccount}
+              >
+                {isMobile.any() ? __("Register") : __("Create account")}
+              </button>
+            </div>
           </div>
         )}
         <p block="MyAccountOverlay" elem="Heading">
@@ -803,6 +821,27 @@ export class MyAccountOverlay extends PureComponent {
   //     </div>
   //   );
   // }
+  renderInitialLinks() {
+    return (
+      <ul className="logInScreenLinks">
+        <li block="MyAccountTabListItem">
+          <Link className="return_policy" to="/return-information">
+            {__("Return Policy")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="free_delivery" to="/shipping-policy">
+            {__("Free Delivery")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="faq" to="/faq">
+            {__("FAQs")}
+          </Link>
+        </li>
+      </ul>
+    );
+  }
   renderSignIn() {
     const {
       email,
