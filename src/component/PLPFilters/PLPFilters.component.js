@@ -23,6 +23,7 @@ import FieldMultiselect from "Component/FieldMultiselect";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
+import { PLPContainer } from "Route/PLP/PLP.container";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -338,8 +339,47 @@ class PLPFilters extends PureComponent {
     return `(${displayCount})`;
   }
 
+  getActiveFilter = () => {
+    const newActiveFilters = Object.entries(this.props.filters).reduce(
+      (acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
+
+          if (selected_filters_count !== 0) {
+            if (filter[0] === "sizes") {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  this.props
+                );
+
+                acc = { ...acc, [size[0]]: mappedSizeData };
+
+                return acc;
+              }, []);
+
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+              };
+            }
+          }
+
+          return acc;
+        }
+      },
+      {}
+    );
+    return newActiveFilters;
+  };
+  
   getFilterCount() {
-    const { activeFilters = {} } = this.props;
+    // const { activeFilters = {} } = this.props;
+    let activeFilters = this.getActiveFilter();
     let { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
           (prev, [_key, value]) => ({
