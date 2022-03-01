@@ -65,6 +65,7 @@
     letter-spacing: 1.5px;
     @include mobile() {
       background-image: url(https://mobilecdn.6thstreet.com/auth_screen/login.jpg);
+      background-position: top;
     }
     span {
       font-size: 52px;
