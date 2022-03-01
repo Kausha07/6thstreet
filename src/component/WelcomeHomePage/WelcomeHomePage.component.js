@@ -159,6 +159,13 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
+    setLocalAndGenderCookies(locale, gender){
+        if(locale && gender){
+            const maxAge = 86400 * 90; // 1 Day * 90
+            document.cookie = `locale=${locale}; max-age=${maxAge}; path=/`;
+            document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
+        }
+    }
     onGenderSelect = (event, val) => {
         event.persist();
         event.preventDefault();
@@ -170,6 +177,7 @@ class WelcomeHomePage extends PureComponent {
         }
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
+        this.setLocalAndGenderCookies(locale, val);
         let url = `${URLS[locale]}/${val}.html`
         window.location.href = url
     }

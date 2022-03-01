@@ -13,6 +13,8 @@ import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
 import { v4 } from "uuid";
 import SelectImage from "./icons/selectMob.png";
+import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -580,7 +582,8 @@ class FieldMultiselect extends PureComponent {
         } else {
           Object.entries(allData[subEntry]?.subcategories ?? {}).map((data) => {
             if (data[0] === entry) {
-              finalSearchedData[data[0]] = allData[subEntry].subcategories[data[0]];
+              finalSearchedData[data[0]] =
+                allData[subEntry].subcategories[data[0]];
             }
           });
         }
@@ -759,7 +762,24 @@ class FieldMultiselect extends PureComponent {
       });
       conditionalData = categoryLevelData;
     }
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale.split("-");
+    const currency = getCurrencyCode(country);
+    const priceAttribute = `price.${currency}.default`;
 
+    const {
+      filters: {
+        categories_without_path: {
+          selected_filters_count: selectedCategoryCount,
+        },
+        [priceAttribute]: { selected_filters_count: priceCount },
+      },
+    } = this.props;
+
+    let CategorySelected =
+      isMobile.any() && (selectedCategoryCount > 0 || priceCount > 0)
+        ? true
+        : false;
     return (
       <div
         ref={this.filterDropdownRef}
@@ -803,7 +823,7 @@ class FieldMultiselect extends PureComponent {
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
-          mods={{ toggleOptionsList }}
+          mods={{ toggleOptionsList, CategorySelected }}
           mix={{
             block: "FieldMultiselect",
             elem: "OptionListContainer",

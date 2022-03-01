@@ -6,6 +6,19 @@ import { isArabic } from 'Util/App';
 import './CartCoupon.extended.style';
 
 export class CartCoupon extends SourceCartCoupon {
+    handleApplyCode = async (e, couponCode) => {        
+        e.stopPropagation() 
+        try{            
+            let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
+            if (typeof apiResponse !== "string") {
+                this.props.closePopup();
+            }
+        }
+        catch(error){
+            console.error(error);
+        }
+        
+    }
     renderApplyCoupon() {
         const { enteredCouponCode } = this.state;
 
@@ -26,7 +39,7 @@ export class CartCoupon extends SourceCartCoupon {
                   type="button"
                   mix={ { block: 'Button' } }
                   disabled={ !enteredCouponCode }
-                  onClick={ this.handleApplyCoupon }
+                  onClick={(e) => {this.handleApplyCode(e, this.state.enteredCouponCode)} }
                 >
                     { __('Add') }
                 </button>
@@ -57,7 +70,6 @@ export class CartCoupon extends SourceCartCoupon {
 
     render() {
         const { isLoading, couponCode } = this.props;
-
         return (
             <form
               block="CartCoupon"

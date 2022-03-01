@@ -167,7 +167,7 @@ class BrandsContainer extends PureComponent {
       keywords: __("brands"),
       description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
       )
         :
         __(
@@ -177,7 +177,7 @@ class BrandsContainer extends PureComponent {
       twitter_title: __("Brands | 6thStreet"),
       twitter_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
       )
         :
         __(
@@ -187,7 +187,7 @@ class BrandsContainer extends PureComponent {
       og_title: __("Brands | 6thStreet"),
       og_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet."
+        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
       )
         :
         __(

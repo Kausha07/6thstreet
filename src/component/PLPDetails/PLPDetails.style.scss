@@ -63,7 +63,7 @@
             transition: all .5s ease-in-out;
         @include mobile {
             max-width: 100%;
-            padding-block: 0 1rem;
+            padding-block: 0;
         }
         .PLPDetails-BrandName{
             line-height: 55px;

@@ -125,7 +125,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 region_string: {
                     validation: ['notEmpty'],
                     placeholder: __('Area'),
-                    value: regionId
+                    value: regionId,
+                    disabled: true
                 }
             };
         }

@@ -174,10 +174,13 @@ class PDPGallery extends PureComponent {
         brand_name = "",
         color = "",
         product_type_6s = "",
-        categories
+        categories={}
       },
     } = this.props;
     const checkCategory = () => {
+      if(!categories){
+        return '';
+      }
       if (categories.level4){
         return categories.level4[0];
       }
@@ -209,6 +212,11 @@ class PDPGallery extends PureComponent {
   );
 
   renderGalleryOverlay = () => {
+    const { location } = browserHistory;
+    browserHistory.push(`${location.pathname}`);
+    window.onpopstate = () => {
+      this.closeGalleryOverlay();
+    }
     const galleryOverlay = (
       <PDPGalleryOverlay
         closeGalleryOverlay={this.closeGalleryOverlay}

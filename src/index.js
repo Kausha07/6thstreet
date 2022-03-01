@@ -17,8 +17,7 @@ import "Style/main";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import {Workbox} from 'workbox-window';
-
-
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { render } from "react-dom";
 
 import App from "Component/App";

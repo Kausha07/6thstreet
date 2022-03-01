@@ -3,12 +3,13 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
-import EVENT_PROMOTION_IMPRESSION from "Util/Event";
+import {EVENT_PROMOTION_IMPRESSION,EVENT_PRODUCT_IMPRESSION} from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
 import BannerImpressionEvent from "./events/BannerImpression.event";
+import ProductImpressionEvent from "./events/ProductImpression.event";
 import BrandsClickEvent from "./events/BrandsClick.event";
 import CheckoutEvent from "./events/Checkout.event";
 import CheckoutOptionEvent from "./events/CheckoutOption.event";
@@ -35,8 +36,8 @@ export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
 export const EVENT_ADD_TO_CART = "addToCart";
 export const EVENT_REMOVE_FROM_CART = "removeFromCart";
-export const EVENT_PRODUCT_DETAIL = "ee.detail";
-export const EVENT_PURCHASE = "ee.purchase";
+export const EVENT_PRODUCT_DETAIL = "productdetail";
+export const EVENT_PURCHASE = "checkout-complete";
 export const EVENT_CHECKOUT = "checkout";
 export const EVENT_CHECKOUT_OPTION = "checkoutOption";
 export const EVENT_BANNER_CLICK = "bannerClick";
@@ -99,6 +100,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
     [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
+    [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
   };
 
   /**
@@ -323,6 +325,7 @@ class GoogleTagManager extends PureComponent {
    * @param data
    */
   processDataPush(event, data) {
+    dataLayer.push({ ecommerce: null });
     if (this.enabled) {
       this.addDataLayer(data);
 
