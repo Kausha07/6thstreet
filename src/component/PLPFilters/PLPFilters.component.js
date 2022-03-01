@@ -24,6 +24,8 @@ import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
+import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -295,10 +297,15 @@ class PLPFilters extends PureComponent {
 
   renderContent() {
     const { isArabic } = this.state;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale.split("-");
+    const currency = getCurrencyCode(country);
+    const priceAttribute = `price.${currency}.default`;
+
     const {
       filters: {
         categories_without_path: { selected_filters_count },
-        "price.AED.default": { selected_filters_count: priceCount },
+        [priceAttribute]: { selected_filters_count: priceCount },
       },
     } = this.props;
     let CategorySelected =
@@ -376,7 +383,7 @@ class PLPFilters extends PureComponent {
     );
     return newActiveFilters;
   };
-  
+
   getFilterCount() {
     // const { activeFilters = {} } = this.props;
     let activeFilters = this.getActiveFilter();
