@@ -23,7 +23,6 @@ import { render } from "react-dom";
 import App from "Component/App";
 
 window.__DEV__ = process.env.NODE_ENV === "development";
-// Sentry.init({ dsn: process.env.REACT_APP_SENTRY_ENDPOINT });
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
   integrations: [new BrowserTracing()],
