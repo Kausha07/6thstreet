@@ -76,7 +76,6 @@ export class HomePageContainer extends PureComponent {
         url: window.location.href,
       },
     });
-    const barath = window.location.href.split("/")[3];
 
     const { gender, toggleBreadcrumbs } = this.props;
     toggleBreadcrumbs(false);
@@ -124,7 +123,6 @@ export class HomePageContainer extends PureComponent {
     if (pagePathName == "/" || pagePathName == "/home.html") {
       setMeta({
         title: __(
-          //"Barath %s Online Shopping - shoes, bags, clothing | 6thStreet %s",
           "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
           countryNameConfig
         ),
