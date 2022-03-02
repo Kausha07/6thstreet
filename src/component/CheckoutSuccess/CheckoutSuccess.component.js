@@ -148,46 +148,46 @@ export class CheckoutSuccess extends PureComponent {
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
 
-    if (!isPhoneVerified && isVerificationCodeSent) {
-      return (
-        <div
-          mix={{ block: "TrackOrder", mods: { isArabic, isPhoneVerification } }}
-        >
-          <div block="TrackOrder" elem="Text">
-            <div block="TrackOrder-Text" elem="Title">
-              {__("Please Verify your Number")}
-            </div>
-            <div block="TrackOrder-Text" elem="Message">
-              {__("Verification code has been sent to")}
-            </div>
-            <div block="TrackOrder-Text" elem="Phone">
-              <button onClick={toggleChangePhonePopup}>
-                {`${countryCode} ${phoneNumber}`}
-              </button>
-            </div>
-          </div>
-          <Form onSubmitSuccess={onVerifySuccess}>
-            <div block="TrackOrder" elem="Code" mods={{ isArabic }}>
-              <Field
-                maxlength="5"
-                type="text"
-                placeholder="_____"
-                name="otp"
-                id="otp"
-              />
-            </div>
-            <button block="primary" type="submit">
-              {__("Verify phone number")}
-            </button>
-          </Form>
-          <div block="TrackOrder" elem="ResendCode">
-            <button onClick={onResendCode}>
-              {__("Resend Verification Code")}
-            </button>
-          </div>
-        </div>
-      );
-    }
+    // if (!isPhoneVerified && isVerificationCodeSent) {
+    //   return (
+    //     <div
+    //       mix={{ block: "TrackOrder", mods: { isArabic, isPhoneVerification } }}
+    //     >
+    //       <div block="TrackOrder" elem="Text">
+    //         <div block="TrackOrder-Text" elem="Title">
+    //           {__("Please Verify your Number")}
+    //         </div>
+    //         <div block="TrackOrder-Text" elem="Message">
+    //           {__("Verification code has been sent to")}
+    //         </div>
+    //         <div block="TrackOrder-Text" elem="Phone">
+    //           <button onClick={toggleChangePhonePopup}>
+    //             {`${countryCode} ${phoneNumber}`}
+    //           </button>
+    //         </div>
+    //       </div>
+    //       <Form onSubmitSuccess={onVerifySuccess}>
+    //         <div block="TrackOrder" elem="Code" mods={{ isArabic }}>
+    //           <Field
+    //             maxlength="5"
+    //             type="text"
+    //             placeholder="_____"
+    //             name="otp"
+    //             id="otp"
+    //           />
+    //         </div>
+    //         <button block="primary" type="submit">
+    //           {__("Verify phone number")}
+    //         </button>
+    //       </Form>
+    //       <div block="TrackOrder" elem="ResendCode">
+    //         <button onClick={onResendCode}>
+    //           {__("Resend Verification Code")}
+    //         </button>
+    //       </div>
+    //     </div>
+    //   );
+    // }
 
     if (!isPhoneVerified && !isVerificationCodeSent && isSignedIn) {
       return (
