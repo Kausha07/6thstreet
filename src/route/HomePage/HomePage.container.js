@@ -119,7 +119,6 @@ export class HomePageContainer extends PureComponent {
     const genderName = capitalize(gender);
     const pagePathName = new URL(window.location.href).pathname;
     const countryNameConfig = (countryName == "Kuwait" ? "KSA" : countryName);
-    console.log("Barath", pagePathName, countryName, countryNameConfig);
     if (pagePathName == "/" || pagePathName == "/home.html") {
       setMeta({
         title: __(
