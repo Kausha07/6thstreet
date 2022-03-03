@@ -349,7 +349,7 @@ export class Router extends SourceRouter {
         {this.renderItemsOfType(BEFORE_ITEMS_TYPE)}
         <div block="PageWrapper" elem="Content">
           {this.renderMainItems()}
-          {/* <ChatPopup /> */}
+          <ChatPopup />
         </div>
         {this.renderItemsOfType(AFTER_ITEMS_TYPE)}
       </div>
