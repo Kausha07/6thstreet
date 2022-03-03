@@ -1,5 +1,6 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {EVENT_PRODUCT_LIST_IMPRESSION} from "Component/GoogleTagManager/events/ProductImpression.event"
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
@@ -10,8 +11,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
-import {connect} from 'react-redux'
-;
+import { connect } from "react-redux";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
@@ -67,12 +67,22 @@ class DynamicContentVueProductSlider extends PureComponent {
   sendImpressions() {
     const products = this.getProducts();
     const items = products.map((item) => {
+      const itemPrice =
+        item.price[0][Object.keys(item.price[0])[0]]["6s_special_price"];
+      const basePrice =
+        item.price[0][Object.keys(item.price[0])[0]]["6s_base_price"];
       return {
         id: item.sku,
         label: item.name,
+        brand_name: item.brand_name,
+        price: item.price,
+        category: item.category,
+        url: item.link,
+        special_price: itemPrice,
+        original_price: basePrice,
       };
     });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, items);
     this.setState({ impressionSent: true });
   }
 
@@ -82,7 +92,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       pageType = "home",
       sourceProdID = null,
       sourceCatgID = null,
-      prevPath= null,
+      prevPath = null,
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
@@ -196,7 +206,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         elem="HeaderContainer"
         mods={{
           isHome,
-          isArabic: isArabic()
+          isArabic: isArabic(),
         }}
       >
         <h2 className="productWidgetHeading">{heading}</h2>
@@ -254,7 +264,8 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const items = this.getProducts();
-    const { isHome, renderMySignInPopup,index,setLastTapItemOnHome } = this.props;
+    const { isHome, renderMySignInPopup, index, setLastTapItemOnHome } =
+      this.props;
     const {
       widgetID,
       pageType,
@@ -271,7 +282,7 @@ class DynamicContentVueProductSlider extends PureComponent {
             ref={this.cmpRef}
             mods={{
               isHome,
-              isArabic: isArabic()
+              isArabic: isArabic(),
             }}
             onScroll={(e) => {
               this.handleContainerScroll(widgetID, e);
@@ -317,7 +328,7 @@ class DynamicContentVueProductSlider extends PureComponent {
           block="VueProductSlider"
           elem="Container"
           mods={{
-            isArabic: isArabic()
+            isArabic: isArabic(),
           }}
         >
           {this.renderHeader()}
@@ -328,7 +339,4 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(DynamicContentVueProductSlider);
+export default connect(mapStateToProps, null)(DynamicContentVueProductSlider);

@@ -83,7 +83,7 @@ export class SearchPageContainer extends PLPContainer {
       keywords: __("%s online shopping", q),
       description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         q
       )
         :
@@ -99,7 +99,7 @@ export class SearchPageContainer extends PLPContainer {
       ),
       twitter_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         q
       )
         :
@@ -115,7 +115,7 @@ export class SearchPageContainer extends PLPContainer {
       ),
       og_desc: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Buy %s. Explore your favourite brands ✯ Free Recieving ✯ Cash On Recieving ✯ 100% original brands | 6thStreet.",
+        "Buy %s. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         q
       )
         :

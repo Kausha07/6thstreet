@@ -47,8 +47,9 @@ app.get('*', (req, res) => {
     if(locale){
         // If locale & gender are set, rediect to the regional subdomain
         const host = process.env[`REACT_APP_HOST_${locale.replace("-", "_").toUpperCase()}`];
+        const path = req.path==="/" ? `/${gender}` : req.path;
         if(host){
-            return res.redirect(302, `${host}/${gender}`);
+            return res.redirect(302, `${host}${path}`);
         }
     }
     return res.sendFile(path.join(`${__dirname}/build/index.html`));

@@ -10,7 +10,8 @@ import PDPSizeGuide from "../PDPSizeGuide";
 import Image from "Component/Image";
 
 import "./PDPAddToCart.style";
-import Spinner from "react-spinkit";
+import { Rings } from "react-loader-spinner";
+
 import NotifySuccessImg from "./icons/success-circle.png";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -371,7 +372,8 @@ class PDPAddToCart extends PureComponent {
         </div>
         {notifyMeLoading && (
           <div block="PDPAddToCart" elem="LoadingContainer">
-            <Spinner color="white" name="ball-scale-multiple" />
+            <Rings color="white" height={80} width={"100%"} />
+
           </div>
         )}
       </div>

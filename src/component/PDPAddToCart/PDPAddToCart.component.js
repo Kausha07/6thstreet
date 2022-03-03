@@ -6,7 +6,8 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
 import PDPSizeGuide from "../PDPSizeGuide";
 import "./PDPAddToCart.style";
-import Spinner from "react-spinkit";
+import { Rings } from "react-loader-spinner";
+
 import NotifySuccessImg from "./icons/success-circle.png";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -176,7 +177,8 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } = this.props;
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
+      this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
@@ -495,7 +497,7 @@ class PDPAddToCart extends PureComponent {
         </div>
         {notifyMeLoading && (
           <div block="PDPAddToCart" elem="LoadingContainer">
-            <Spinner color="white" name="ball-scale-multiple" />
+            <Rings color="white" height={80} width={"100%"} />
           </div>
         )}
       </div>
@@ -547,7 +549,7 @@ class PDPAddToCart extends PureComponent {
   }
   renderAppParity() {
     const {
-      product: { brand_name },
+      product: { brand_name="" },
     } = this.props;
 
     if (
