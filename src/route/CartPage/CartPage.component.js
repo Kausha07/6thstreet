@@ -33,6 +33,7 @@ import Image from "Component/Image";
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
+import CDN from "../../util/API/provider/CDN";
 
 import "./CartPage.style";
 
@@ -61,7 +62,8 @@ export class CartPage extends PureComponent {
     couponCode: "",
     couponName: "",
     couponDescription: "",
-    isCouponDetialPopupOpen: false
+    isCouponDetialPopupOpen: false,
+    couponModuleStatus: false
   };
 
 
@@ -103,6 +105,7 @@ export class CartPage extends PureComponent {
       };
       document.body.appendChild(script);
     }
+    this.getCouponModuleStatus();
     window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
   componentDidUpdate(prevProps) {
@@ -167,7 +170,7 @@ export class CartPage extends PureComponent {
       </ul>
     );
   }
-
+  
   outsideCouponPopupClick = e => {
     if (this.state.isCouponPopupOpen && this.cartCouponPopup.current && !this.cartCouponPopup.current.contains(e.target)) {
       this.setState({
@@ -218,6 +221,18 @@ export class CartPage extends PureComponent {
     e.stopPropagation()
     this.props.removeCouponFromCart()
   }
+  getCouponModuleStatus = async () => {
+    const {country, config} = this.props;
+    if (config) {
+      let couponModule = Object.keys(config?.countries).find(function (val) {
+        return val == country
+      })
+      this.setState({
+        couponModuleStatus: couponModule
+      })
+    }   
+    
+  }
   renderDiscountCode() {
     const {
       totals: { coupon_code },
@@ -232,6 +247,7 @@ export class CartPage extends PureComponent {
       })
     }
     return (
+      (this.state?.couponModuleStatus) ? 
       <ExpandableContent
         isOpen={isOpen}
         heading={__("Have a discount code?")}
@@ -239,45 +255,50 @@ export class CartPage extends PureComponent {
       >
         <CartCoupon couponCode={coupon_code} />
       </ExpandableContent>
-      // <>{
-      //   !this.state.isCouponPopupOpen ?
-      //     <>
-      //       <div block="cartCouponBlock">
-      //         {
-      //           coupon_code ?
-      //             <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
-      //               <div block="appliedCouponDetail">
-      //                 <p block="appliedCouponCode">{appliedCoupon?.code}</p>
-      //                 <p block="appliedCouponName">{appliedCoupon?.name}</p>
-      //                 <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
-      //               </div>
-      //               <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
-      //             </div>
-      //             :
-      //             <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
-      //         }
-      //       </div>
-      //       {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
-      //     </>
-      //     :
-      //     <>
-      //       <div block="couponPopupBlock">
-      //         <div block="couponPopupContent" ref={this.cartCouponPopup}>
-      //           <div block="couponPopupTop">
-      //           {__("Promo codes (%s)", promoCount)}
-      //           <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
-      //               <span>Close</span>
-      //           </button>
-      //           </div>
-      //           <CartCoupon couponCode={coupon_code} />
-      
-      //           <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
-      //           {this.state.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
-      //         </div>
-      //       </div>
+      :
+      <>{
+        (!this.state?.isCouponPopupOpen) ?
+          <>
+            <div block="cartCouponBlock">
+              {
+                coupon_code ?
+                  <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                    <div block="appliedCouponDetail">
+                      <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
+                      {appliedCoupon && (
+                        <>
+                          <p block="appliedCouponName">{appliedCoupon?.name}</p>
+                          <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
+                        </>
+                      )}
 
-      //     </>
-      // }</>
+                    </div>
+                    <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
+                  </div>
+                  :
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
+              }
+            </div>
+            {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+          </>
+          :
+          <>
+            <div block="couponPopupBlock">
+              <div block="couponPopupContent" ref={this.cartCouponPopup}>
+                <div block="couponPopupTop">
+                  {__("Promo codes (%s)", promoCount)}
+                  <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
+                    <span>Close</span>
+                  </button>
+                </div>
+                <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
+                <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
+                {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+              </div>
+            </div>
+
+          </>
+      }</>
     );
   }
 

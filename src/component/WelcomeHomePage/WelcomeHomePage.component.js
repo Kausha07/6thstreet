@@ -161,8 +161,9 @@ class WelcomeHomePage extends PureComponent {
 
     setLocalAndGenderCookies(locale, gender){
         if(locale && gender){
-            document.cookie = `locale=${locale}; expires=Wed, 05 Aug 2022 23:00:00 UTC; path=/`;
-            document.cookie = `gender=${gender}.html; expires=Wed, 05 Aug 2022 23:00:00 UTC; path=/`;
+            const maxAge = 86400 * 90; // 1 Day * 90
+            document.cookie = `locale=${locale}; max-age=${maxAge}; path=/`;
+            document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
         }
     }
     onGenderSelect = (event, val) => {

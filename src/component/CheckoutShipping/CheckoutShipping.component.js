@@ -15,7 +15,8 @@ import { getCurrency, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
-import Spinner from "react-spinkit";
+import { ThreeDots } from "react-loader-spinner";
+
 import "./CheckoutShipping.style";
 
 export class CheckoutShipping extends SourceCheckoutShipping {
@@ -94,7 +95,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       } else {
         return (
           <div block="Checkout" elem="OrderTotals">
-            {this.renderPriceLine(subTotal, __("Subtotal"), { subtotalOnly: true, })}
+            {this.renderPriceLine(subTotal, __("Subtotal"), {
+              subtotalOnly: true,
+            })}
           </div>
         );
       }
@@ -106,7 +109,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   checkForDisabling() {
     const { selectedShippingMethod, checkClickAndCollect } = this.props;
     const { isMobile } = this.state;
-    if (!checkClickAndCollect() && !selectedShippingMethod || !isMobile) {
+    if ((!checkClickAndCollect() && !selectedShippingMethod) || !isMobile) {
       return true;
     }
 
@@ -131,9 +134,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           {!isPaymentLoading ? (
             this.renderButtonsPlaceholder()
           ) : (
-            <Spinner name="three-bounce" color="white" fadeIn="none" />
+            <ThreeDots color="white" height={6} width={"100%"} />
           )}
-          {/* <Spinner name="three-bounce" /> */}
         </button>
       </div>
     );
@@ -158,20 +160,22 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       isMobile.any() ||
       isMobile.tablet() ||
       (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
-      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect())
+      (isSignedIn &&
+        selectedAddressCountry !== getCountryFromUrl() &&
+        !checkClickAndCollect())
     ) {
       return null;
     }
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-          <button
-            type="submit"
-            block="Button button primary medium"
-            disabled={isPaymentLoading}
-          >
-            {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
-          </button>
+        <button
+          type="submit"
+          block="Button button primary medium"
+          disabled={isPaymentLoading}
+        >
+          {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
+        </button>
       </div>
     );
   }
@@ -248,11 +252,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       notSavedAddress,
       addresses,
       isClickAndCollect,
-      checkClickAndCollect
+      checkClickAndCollect,
     } = this.props;
 
-    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
-    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
+    const isCountryNotAddressAvailable =
+      !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
+      !isMobile.any();
+    if (
+      !openFirstPopup &&
+      addresses &&
+      isSignedIn() &&
+      notSavedAddress() &&
+      !checkClickAndCollect()
+    ) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
     }
@@ -316,7 +328,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       isClickAndCollect,
       checkClickAndCollect,
       totals,
-      addresses
+      addresses,
     } = this.props;
     const { formContent } = this.state;
     return (

@@ -559,7 +559,7 @@ class MyAccountOrderView extends PureComponent {
         </p>
         {!!msp_cod_amount && (
           <p block="MyAccountOrderView" elem="SummaryItem">
-            <span>{getCountryFromUrl() === 'QA' ? __("Cash on Recieving Fee") : __("Cash on Delivery Fee")}</span>
+            <span>{getCountryFromUrl() === 'QA' ? __("Cash on Receiving Fee") : __("Cash on Delivery Fee")}</span>
             <span>{formatPrice(+msp_cod_amount, order_currency_code)}</span>
           </p>
         )}
@@ -659,7 +659,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
       case CHECK_MONEY:
       case CASH_ON_DELIVERY:
-        return this.renderPaymentTypeText(getCountryFromUrl() === 'QA' ? __("Cash on Recieving") : __("Cash on Delivery"));
+        return this.renderPaymentTypeText(getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
         if (!this.props?.additional_information?.source?.last4) {
@@ -782,7 +782,7 @@ class MyAccountOrderView extends PureComponent {
               ? this.renderPriceLine(tax_amount, __("Tax"))
               : null}
             {parseFloat(msp_cod_amount) !== 0
-              ? this.renderPriceLine(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Recieving Fee") : __("Cash on Delivery Fee"))
+              ? this.renderPriceLine(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Receiving Fee") : __("Cash on Delivery Fee"))
               : null}
             {this.renderPriceLine(
               grandTotal,
