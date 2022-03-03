@@ -813,7 +813,7 @@ class PDPDetailsSection extends PureComponent {
   }
   getBrandUrl = () => {
     const {
-      product: { brand_name },
+      product: { brand_name="" },
     } = this.props;
     const url = brand_name
       .replace(/'/g, "")

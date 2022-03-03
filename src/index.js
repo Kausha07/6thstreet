@@ -27,7 +27,7 @@ Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
   integrations: [new BrowserTracing()],
   tracesSampleRate: 1.0,
-  environment: process.env.NODE_ENV === "production" ? "production" : "staging",
+  environment: process.env.NODE_ENV,
 });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
