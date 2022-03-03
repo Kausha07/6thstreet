@@ -152,9 +152,10 @@ class MyAccountOrderListItem extends SourceComponent {
 
   renderOrderStatus() {
     const {
-      order: { status },
+      order: { status,increment_id },
     } = this.props;
-
+    console.log("status",status);
+    console.log("increment_id",increment_id);
     if (STATUS_HIDE_BAR.includes(status)) {
       return null;
     }
