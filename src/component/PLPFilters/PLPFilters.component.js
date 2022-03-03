@@ -60,7 +60,8 @@ class PLPFilters extends PureComponent {
       isReset: false,
       toggleOptionsList: false,
       defaultFilters: false,
-      fixFilter: false
+      fixFilter: false,
+      fixWindow: false
     };
 
     this.timer = null;
@@ -91,14 +92,75 @@ class PLPFilters extends PureComponent {
 
 
   componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
+    if (!isMobile.any()) {
+      window.addEventListener("scroll", this.handleScroll);
+    }
+
   }
   componentWillUnmount() {
     window.removeEventListener('scroll');
   }
 
 
+  onFilterScroll = () => {
+    if (isMobile.any()) {
+      return null
+    }
+    let myDiv = document.getElementById("productFilterScroll")
+    console.log(myDiv.offsetHeight, myDiv.scrollTop, myDiv.scrollHeight)
+    if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
+      console.log("r")
+      this.removeScrollBottom()
+    }
+  }
+  stickLeftFilter = (e) => {
+    var fixedDiv = document.querySelector('.Products-FixScroll');
+    fixedDiv.scrollTop = fixedDiv.scrollTop + e.deltaY;
+    document.body.style.overflow = 'hidden'
+  }
+
+  scrollBottom = () => {
+    window.addEventListener('mousewheel', this.stickLeftFilter);
+  }
+
+
+
+  removeScrollBottom = () => {
+    window.addEventListener('mousewheel', function (e) {
+      document.body.style.overflow = 'auto'
+    });
+  }
+
+
+
+  removeEvent = () => {
+    var fixedDiv = document.querySelector('.Products-FixScroll');
+    window.removeEventListener('mousewheel', this.stickLeftFilter);
+  }
+
+
+
   handleScroll = () => {
+    let k = document.getElementById("abcdef")
+    if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
+      if (!this.state.fixWindow) {
+        this.setState({
+          fixWindow: true
+        })
+        this.scrollBottom()
+      }
+
+    }
+    if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
+      if (this.state.fixWindow) {
+
+        this.setState({
+          fixWindow: false
+        }, () => { })
+      }
+
+    }
+
     if (window.pageYOffset > 95) {
       if (!this.state.fixFilter) {
         this.setState({
@@ -108,11 +170,13 @@ class PLPFilters extends PureComponent {
     }
     else {
       if (this.state.fixFilter) {
+        this.removeEvent()
         this.setState({
           fixFilter: false
         })
       }
     }
+
   }
 
   setDefaultFilters = () => {
@@ -135,6 +199,7 @@ class PLPFilters extends PureComponent {
     const { filters = {} } = this.props;
     const { isPLPSortBy } = this.props;
     return Object.entries(filters).map((filter, index) => {
+
       if (isPLPSortBy) {
         if (filter[1]) {
           if ((filter[0] === "sort" && !isMobile.any())) {
@@ -149,10 +214,12 @@ class PLPFilters extends PureComponent {
       }
 
       if (filter[1]) {
+
         if (filter[0] === "sort" && !isMobile.any()) {
           return
         }
         if (isMobile.any()) {
+
           return this.renderFilterOption([filter[0], filter[1]]);
         } else {
           return this.renderFilter([filter[0], filter[1]]);
@@ -517,6 +584,7 @@ class PLPFilters extends PureComponent {
           {placeholder}
         </button>
       </div>
+
     );
   }
 
@@ -644,8 +712,8 @@ class PLPFilters extends PureComponent {
     const count = productsCount ? productsCount.toLocaleString() : null;
     const category_title = this.renderCatPath().split("///").pop();
     return (
-      <div block="Products" elem="Filter">
-        <div block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
+      <div block="Products" elem="Filter" onScroll={this.onFilterScroll} >
+        <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>
             {count ? __("Results for ") : null}

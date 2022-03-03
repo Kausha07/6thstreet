@@ -12,6 +12,7 @@ import { v4 } from "uuid";
 import { withRouter } from "react-router";
 import browserHistory from "Util/History";
 
+
 class PLPPages extends PureComponent {
   static propTypes = {
     pages: PropTypes.arrayOf(
@@ -77,12 +78,13 @@ class PLPPages extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
+
     const { activeFilters, prevProductSku } = this.props;
     const {
       activeFilters: prevActiveFilters,
       prevProductSku: initialPrevProductSku,
     } = prevProps;
-  
+
     if (activeFilters !== prevActiveFilters) {
       this.setState({
         activeFilters: activeFilters,
@@ -114,7 +116,7 @@ class PLPPages extends PureComponent {
         if (isMobile.any()) {
           element.parentElement.style.scrollMarginTop = "0px";
         }
-     
+
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
@@ -163,7 +165,7 @@ class PLPPages extends PureComponent {
       />
     );
   }
-  
+
   renderPages() {
     const { pages = {}, productLoading } = this.props;
 
@@ -359,7 +361,7 @@ class PLPPages extends PureComponent {
     }
     return params;
   }
-  
+
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -460,7 +462,7 @@ class PLPPages extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query, updateFiltersState } = this.props;
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    if(isMobile.any()){
+    if (isMobile.any()) {
       window.scrollTo(0, 0);
     }
     if (!isMobile.any() || isQuickFilters) {
