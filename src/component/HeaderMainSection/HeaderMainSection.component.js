@@ -245,10 +245,11 @@ class HeaderMainSection extends NavigationAbstract {
       return null;
     }
 
-    return this.isPLP() ||
+    return (this.isPLP() ||
       this.isPDP() ||
       this.getPageType() === TYPE_BRAND ||
-      (showPLPSearch && isMobile.any()) ? null : (
+      showPLPSearch) &&
+      isMobile.any() ? null : (
       <HeaderGenders
         key="genders"
         isMobile
@@ -391,7 +392,6 @@ class HeaderMainSection extends NavigationAbstract {
       <div block="DesktopSearch">
         <HeaderSearch
           hideSearchBar={this.hideSearchBar}
-          handleHomeSearchClick={this.handleHomeSearchClick}
           renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
           key="searchDesktop"
