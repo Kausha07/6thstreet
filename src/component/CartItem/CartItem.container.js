@@ -278,7 +278,7 @@ export class CartItemContainer extends PureComponent {
           quantity: qty,
           size_type: size_option,
           size: optionValue,
-          dimension9: 100 -(Math.round((row_total/original_price)*100)) ,
+          dimension9: (100 -(Math.round((row_total/original_price)*100))) || 0 ,
           dimension10:original_price,
           dimension11:row_total,
         },

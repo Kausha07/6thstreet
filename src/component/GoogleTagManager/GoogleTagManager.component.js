@@ -3,12 +3,13 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
-import EVENT_PROMOTION_IMPRESSION from "Util/Event";
+import {EVENT_PROMOTION_IMPRESSION,EVENT_PRODUCT_IMPRESSION} from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
 import BannerImpressionEvent from "./events/BannerImpression.event";
+import ProductImpressionEvent from "./events/ProductImpression.event";
 import BrandsClickEvent from "./events/BrandsClick.event";
 import CheckoutEvent from "./events/Checkout.event";
 import CheckoutOptionEvent from "./events/CheckoutOption.event";
@@ -99,6 +100,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
     [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
+    [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
   };
 
   /**

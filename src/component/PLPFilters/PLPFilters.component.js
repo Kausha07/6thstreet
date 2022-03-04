@@ -24,6 +24,9 @@ import FieldMultiselect from "Component/FieldMultiselect";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
+import { PLPContainer } from "Route/PLP/PLP.container";
+import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -252,6 +255,7 @@ class PLPFilters extends PureComponent {
       onUnselectAllPress,
       isChecked,
       activeFilters,
+      filters,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -272,6 +276,7 @@ class PLPFilters extends PureComponent {
         showCheckbox
         isRadio={is_radio}
         filter={filter}
+        filters={filters}
         initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}
@@ -417,9 +422,21 @@ class PLPFilters extends PureComponent {
 
   renderContent() {
     const { isArabic } = this.state;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale.split("-");
+    const currency = getCurrencyCode(country);
+    const priceAttribute = `price.${currency}.default`;
 
+    const {
+      filters: {
+        categories_without_path: { selected_filters_count },
+        [priceAttribute]: { selected_filters_count: priceCount },
+      },
+    } = this.props;
+    let CategorySelected =
+      selected_filters_count > 0 || priceCount > 0 ? true : false;
     return (
-      <div block="Content" elem="Filters" mods={{ isArabic }}>
+      <div block="Content" elem="Filters" mods={{ isArabic, CategorySelected }}>
         {this.renderFilters()}
         {this.renderDropDownList()}
       </div>
@@ -454,8 +471,47 @@ class PLPFilters extends PureComponent {
     return `(${displayCount})`;
   }
 
+  getActiveFilter = () => {
+    const newActiveFilters = Object.entries(this.props.filters).reduce(
+      (acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
+
+          if (selected_filters_count !== 0) {
+            if (filter[0] === "sizes") {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  this.props
+                );
+
+                acc = { ...acc, [size[0]]: mappedSizeData };
+
+                return acc;
+              }, []);
+
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+              };
+            }
+          }
+
+          return acc;
+        }
+      },
+      {}
+    );
+    return newActiveFilters;
+  };
+
   getFilterCount() {
-    const { activeFilters = {} } = this.props;
+    // const { activeFilters = {} } = this.props;
+    let activeFilters = this.getActiveFilter();
     let { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
         (prev, [_key, value]) => ({
@@ -539,6 +595,7 @@ class PLPFilters extends PureComponent {
             showCheckbox
             isRadio={is_radio}
             filter={filter[1]}
+            filters={filters}
             initialOptions={initialOptions}
             activeFilter={activeFilter}
             isChecked={isChecked}
@@ -564,7 +621,7 @@ class PLPFilters extends PureComponent {
   renderFilterOption([key, filter]) {
     const { activeFilter } = this.state;
     const { filters } = this.props;
-    const { label, category } = filter;
+    const { label, category, selected_filters_count } = filter;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
     }
@@ -597,7 +654,10 @@ class PLPFilters extends PureComponent {
           }}
           onClick={() => this.handleFilterChange(filter)}
         >
-          {placeholder}
+          {placeholder}{" "}
+          {selected_filters_count > 0 &&
+            isMobile.any() &&
+            `(${selected_filters_count})`}
         </button>
       </div>
 
@@ -607,7 +667,7 @@ class PLPFilters extends PureComponent {
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
-    const { handleCallback } = this.props;
+    const { handleCallback, filters } = this.props;
     return (
       <div block="SortBy" key={index} mods={{ isArabic }}>
         <PLPFilter
@@ -617,6 +677,7 @@ class PLPFilters extends PureComponent {
           currentActiveFilter={activeFilter}
           changeActiveFilter={this.changeActiveFilter}
           isReset={isReset}
+          filters={filters}
           resetParentState={this.resetParentState}
           parentActiveFilters={activeFilters}
           updateFilters={this.updateFilters}

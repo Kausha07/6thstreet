@@ -374,7 +374,7 @@ export class PDPAddToCartContainer extends PureComponent {
       openClickAndCollectPopup,
     } = this.state;
     const basePrice =
-      product.price[0] &&
+      product?.price && product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
 
     return {
@@ -520,7 +520,7 @@ export class PDPAddToCartContainer extends PureComponent {
           quantity: 1,
           size_type: optionId,
           size: optionValue,
-          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
           dimension10: basePrice,
           dimension11: itemPrice,
         },
@@ -590,7 +590,7 @@ export class PDPAddToCartContainer extends PureComponent {
           quantity: 1,
           size_type: "",
           size: "",
-          dimension9: 100 - Math.round((itemPrice / basePrice) * 100),
+          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0 ,
           dimension10: basePrice,
           dimension11: itemPrice,
         },

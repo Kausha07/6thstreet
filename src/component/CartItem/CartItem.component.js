@@ -353,8 +353,6 @@ export class CartItem extends PureComponent {
           <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
             |
           </span>
-          {/* <span> {__("Qty:")} </span>
-          {qty} */}
 
         </div>
         {this.renderQuantitySelection()}

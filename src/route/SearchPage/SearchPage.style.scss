@@ -7,19 +7,12 @@
     margin: 0 auto 82px;
     @include mobile {
         width: 100vw;
-        padding-top: 160px;
+        padding-top: 60px;
     }
     @include tablet {
         width: 100vw;
     }
-    .PLPFilters-ToolBar {
-        @include mobile {
-            top: 190px;
-        }
-    }
-    .PLPFilterMobile {
-        top: 154px;
-    }
+    
 }
 
 

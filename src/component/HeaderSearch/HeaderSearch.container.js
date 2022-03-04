@@ -168,10 +168,10 @@ export class HeaderSearchContainer extends PureComponent {
   // }
 
   containerProps = () => {
-    const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible } = this.props;
+    const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible };
+    return { search, focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP };
   };
 
   onSearchChange(search) {
