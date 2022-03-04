@@ -480,4 +480,19 @@
     }
 
   }
+
+  &-UpArrow{
+    &-img{
+        width: 40px;
+        height: 40px;
+        bottom: 170px;
+        position: fixed;
+        right: 35px;
+        transform: rotate(90deg);
+        cursor: pointer;
+        box-shadow: 0 10px 16px 0 rgba(0, 0, 0, .12), 0 6px 20px 0 rgba(0 ,0, 0, .02)
+
+    }
+
+}
 }

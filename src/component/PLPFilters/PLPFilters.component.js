@@ -18,6 +18,7 @@ import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
 import Refine from "../Icons/Refine/icon.png";
+import Arrow from "./icons/long-arrow-left.svg"
 import "./PLPFilters.style";
 import FieldMultiselect from "Component/FieldMultiselect";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
@@ -61,7 +62,8 @@ class PLPFilters extends PureComponent {
       toggleOptionsList: false,
       defaultFilters: false,
       fixFilter: false,
-      fixWindow: false
+      fixWindow: false,
+      showArrow: false
     };
 
     this.timer = null;
@@ -111,6 +113,7 @@ class PLPFilters extends PureComponent {
       this.removeScrollBottom()
     }
   }
+
   stickLeftFilter = (e) => {
     var fixedDiv = document.querySelector('.Products-FixScroll');
     fixedDiv.scrollTop = fixedDiv.scrollTop + e.deltaY;
@@ -122,7 +125,6 @@ class PLPFilters extends PureComponent {
   }
 
 
-
   removeScrollBottom = () => {
     window.addEventListener('mousewheel', function (e) {
       document.body.style.overflow = 'auto'
@@ -130,15 +132,27 @@ class PLPFilters extends PureComponent {
   }
 
 
-
   removeEvent = () => {
     window.removeEventListener('mousewheel', this.stickLeftFilter);
   }
 
 
-
   handleScroll = () => {
     let k = document.getElementById("plp-main-scroll-id")
+    if (window.pageYOffset > 885) {
+      if (!this.state.showArrow) {
+        this.setState({
+          showArrow: true
+        })
+      }
+    }
+    if (window.pageYOffset < 885) {
+      if (this.state.showArrow) {
+        this.setState({
+          showArrow: false
+        })
+      }
+    }
     if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
       if (!this.state.fixWindow) {
         this.setState({
@@ -174,6 +188,11 @@ class PLPFilters extends PureComponent {
       }
     }
 
+  }
+
+
+  scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   setDefaultFilters = () => {
@@ -763,6 +782,7 @@ class PLPFilters extends PureComponent {
             </div>
           )}
         </div>
+        {this.state.showArrow && <div block="Products" elem="UpArrow" ><img block="Products" elem="UpArrow-img" src={Arrow} onClick={this.scrollToTop} /></div>}
       </div>
     );
   }
