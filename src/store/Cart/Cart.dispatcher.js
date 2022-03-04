@@ -109,7 +109,7 @@ export class CartDispatcher {
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
     try {
       dispatch(processingCartRequest());
-      const { data } = await getCart(cartId);      
+      const { data } = await getCart(cartId);    
       const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
       if (!data) {
         try {
