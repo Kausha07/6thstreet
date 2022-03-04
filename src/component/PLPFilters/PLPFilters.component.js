@@ -107,9 +107,7 @@ class PLPFilters extends PureComponent {
       return null
     }
     let myDiv = document.getElementById("productFilterScroll")
-    console.log(myDiv.offsetHeight, myDiv.scrollTop, myDiv.scrollHeight)
     if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
-      console.log("r")
       this.removeScrollBottom()
     }
   }
@@ -134,14 +132,13 @@ class PLPFilters extends PureComponent {
 
 
   removeEvent = () => {
-    var fixedDiv = document.querySelector('.Products-FixScroll');
     window.removeEventListener('mousewheel', this.stickLeftFilter);
   }
 
 
 
   handleScroll = () => {
-    let k = document.getElementById("abcdef")
+    let k = document.getElementById("plp-main-scroll-id")
     if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
       if (!this.state.fixWindow) {
         this.setState({
@@ -153,7 +150,7 @@ class PLPFilters extends PureComponent {
     }
     if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
       if (this.state.fixWindow) {
-
+        this.removeEvent()
         this.setState({
           fixWindow: false
         }, () => { })
@@ -170,7 +167,7 @@ class PLPFilters extends PureComponent {
     }
     else {
       if (this.state.fixFilter) {
-        this.removeEvent()
+
         this.setState({
           fixFilter: false
         })

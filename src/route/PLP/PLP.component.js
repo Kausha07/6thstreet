@@ -138,7 +138,7 @@ export class PLP extends PureComponent {
     const { signInPopUp } = this.state;
 
     return (
-      <main block="PLP" id="abcdef">
+      <main block="PLP" id="plp-main-scroll-id">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
