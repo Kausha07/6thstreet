@@ -10,7 +10,7 @@ const PORT = 3000;
 const app = express();
 function setCustomCacheControl(res, path) {
     res.append('Access-Control-Allow-Origin', ['*']);
-    if (serveStatic.mime.lookup(path) === 'text/html' || res.req.path === '/sw.js') {
+    if (serveStatic.mime.lookup(path) === 'text/html' || res.req.path === '/serviceworker.js') {
         // Custom Cache-Control for HTML files & Service Worker File
         res.setHeader('Cache-Control', 'public, max-age=0')
     }
