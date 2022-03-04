@@ -181,7 +181,7 @@ class HeaderMainSection extends NavigationAbstract {
     const {
       location: { search, pathname = "" },
     } = this.props;
-    return TYPE_CATEGORY === type && search;
+    return TYPE_CATEGORY === type && (search || pathname.includes("?q="));
   }
 
   isPDP() {
@@ -342,7 +342,6 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   handleHomeSearchClick = (status) => {
-    const {showPLPSearch} = this.state
     this.setState({ showPLPSearch: status });
   };
 
