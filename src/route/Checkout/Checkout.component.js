@@ -6,6 +6,8 @@ import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 import {
   TABBY_ISTALLMENTS,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
+import { connect } from "react-redux";
+import { getStore } from "Store";
 import CheckoutShipping from "Component/CheckoutShipping";
 import CheckoutSuccess from "Component/CheckoutSuccess";
 import ContentWrapper from "Component/ContentWrapper";
@@ -13,7 +15,8 @@ import CreditCardPopup from "Component/CreditCardPopup";
 import HeaderLogo from "Component/HeaderLogo";
 import PropTypes from "prop-types";
 import Popup from "SourceComponent/Popup";
-import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.component";
+import { Checkout as SourceCheckout 
+} from "SourceRoute/Checkout/Checkout.component";
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
@@ -24,9 +27,24 @@ import {
   SHIPPING_STEP,
 } from "./Checkout.config";
 import "./Checkout.style";
+import { showNotification } from "Store/Notification/Notification.action";
 import GiftIconSmall from "./icons/gift-heart.png";
 import GiftIconLarge from "./icons/gift-heart@3x.png";
 import Image from "Component/Image";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import { getCountryFromUrl } from 'Util/Url/Url';
+import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
+
+import {
+  CARD, FREE, CHECKOUT_APPLE_PAY
+} from "Component/CheckoutPayments/CheckoutPayments.config";
+export const mapDispatchToProps = (dispatch) => ({
+  selectPaymentMethod: (code) =>
+    CheckoutDispatcher.selectPaymentMethod(dispatch, code),
+  finishPaymentRequest: (status) =>
+  dispatch(processingPaymentSelectRequest(status)),
+  showError: (message) => dispatch(showNotification("error", message)),
+});
 
 export class Checkout extends SourceCheckout {
   static propTypes = {
@@ -72,7 +90,12 @@ export class Checkout extends SourceCheckout {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { paymentInformation } = this.state;
+    const { paymentInformation ,cashOnDeliveryFee} = this.state;
+    const {selectPaymentMethod,updateTotals,finishPaymentRequest} = this.props
+    const {checkoutStep } = this.props
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
     const paymentInformationUpdated = JSON.parse(
       localStorage.getItem("PAYMENT_INFO")
     );
@@ -83,6 +106,19 @@ export class Checkout extends SourceCheckout {
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
+    }
+    if(checkoutStep === SHIPPING_STEP && cashOnDeliveryFee){
+      this.setState({ cashOnDeliveryFee:  null});
+      const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
+      selectPaymentMethod(countryCode && !!!window.ApplePaySession ? CHECKOUT_APPLE_PAY : CARD ).then(() => {
+        updateTotals(cartId);
+        finishPaymentRequest();
+      })
+      .catch(() => {
+        const { showError } = this.props;
+
+        showError(__("Something went wrong"));
+      });
     }
   }
 
@@ -753,4 +789,6 @@ export class Checkout extends SourceCheckout {
   }
 }
 
-export default Checkout;
+export default connect(null,
+  mapDispatchToProps
+)(Checkout)
