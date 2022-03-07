@@ -118,8 +118,8 @@ export class HomePageContainer extends PureComponent {
       countryList.find((obj) => obj.id === country) || {};
     const genderName = capitalize(gender);
     const pagePathName = new URL(window.location.href).pathname;
-    const countryNameConfig = (countryName == "Kuwait" ? "KSA" : countryName);
-    if (pagePathName == "/" || pagePathName == "/home.html") {
+    const countryNameConfig = (countryName == "Saudi Arabia" ? "KSA" : countryName);
+    if (pagePathName == "/") {
       setMeta({
         title: __(
           "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
