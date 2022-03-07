@@ -112,9 +112,12 @@ class PLPFilters extends PureComponent {
       return null
     }
     let myDiv = document.getElementById("productFilterScroll")
-    if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
-      this.removeScrollBottom()
+    if (myDiv) {
+      if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
+        this.removeScrollBottom()
+      }
     }
+
   }
 
   stickLeftFilter = (e) => {
@@ -142,55 +145,56 @@ class PLPFilters extends PureComponent {
 
   handleScroll = () => {
     let k = document.getElementById("plp-main-scroll-id")
-    if (window.pageYOffset > 885) {
-      if (!this.state.showArrow) {
-        this.setState({
-          showArrow: true
-        })
+    if (k) {
+      if (window.pageYOffset > 885) {
+        if (!this.state.showArrow) {
+          this.setState({
+            showArrow: true
+          })
+        }
       }
-    }
-    if (window.pageYOffset < 885) {
-      if (this.state.showArrow) {
-        this.setState({
-          showArrow: false
-        })
+      if (window.pageYOffset < 885) {
+        if (this.state.showArrow) {
+          this.setState({
+            showArrow: false
+          })
+        }
       }
-    }
-    if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
-      if (!this.state.fixWindow) {
-        this.setState({
-          fixWindow: true
-        })
-        this.scrollBottom()
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
+        if (!this.state.fixWindow) {
+          this.setState({
+            fixWindow: true
+          })
+          this.scrollBottom()
+        }
+
+      }
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
+        if (this.state.fixWindow) {
+          this.removeEvent()
+          this.setState({
+            fixWindow: false
+          }, () => { })
+        }
+
       }
 
-    }
-    if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
-      if (this.state.fixWindow) {
-        this.removeEvent()
-        this.setState({
-          fixWindow: false
-        }, () => { })
+      if (window.pageYOffset > 95) {
+        if (!this.state.fixFilter) {
+          this.setState({
+            fixFilter: true
+          })
+        }
       }
+      else {
+        if (this.state.fixFilter) {
 
-    }
-
-    if (window.pageYOffset > 95) {
-      if (!this.state.fixFilter) {
-        this.setState({
-          fixFilter: true
-        })
+          this.setState({
+            fixFilter: false
+          })
+        }
       }
     }
-    else {
-      if (this.state.fixFilter) {
-
-        this.setState({
-          fixFilter: false
-        })
-      }
-    }
-
   }
 
 
