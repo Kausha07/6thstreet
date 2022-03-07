@@ -84,14 +84,14 @@ export class PLPFiltersContainer extends PureComponent {
         return {
           initialFilters: filters[SIZES].data
             ? {
-                ...initialFilters,
-                ...filters,
-                ...filters[SIZES].data,
-              }
+              ...initialFilters,
+              ...filters,
+              ...filters[SIZES].data,
+            }
             : {
-                ...initialFilters,
-                ...filters,
-              },
+              ...initialFilters,
+              ...filters,
+            },
         };
       }
       return {
@@ -132,7 +132,7 @@ export class PLPFiltersContainer extends PureComponent {
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query,handleResetFilter } = this.props;
+    const { query, handleResetFilter } = this.props;
     handleResetFilter()
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
@@ -141,7 +141,7 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query } = this.props;
+    const { filters, isLoading, activeOverlay, query, isPLPSortBy } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -150,6 +150,7 @@ export class PLPFiltersContainer extends PureComponent {
       activeOverlay,
       activeFilters,
       query,
+      isPLPSortBy
     };
   };
 
