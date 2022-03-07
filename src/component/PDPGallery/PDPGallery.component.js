@@ -18,15 +18,16 @@ import "./PDPGallery.style";
 import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import { connect } from 'react-redux';
-import HomeIcon from "Component/Icons/Home/home.png"
+import { connect } from "react-redux";
+import HomeIcon from "Component/Icons/Home/home.png";
 import { setPDPGaleryImage } from "Store/PDP/PDP.action";
 export const mapStateToProps = (state) => ({
-  displaySearch: state.PDP.displaySearch
+  displaySearch: state.PDP.displaySearch,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  showPDPSearch: (displaySearch) =>
+    PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
   setImageIndex: (index) => dispatch(setPDPGaleryImage(index)),
 });
 
@@ -72,10 +73,10 @@ class PDPGallery extends PureComponent {
   onBackButtonClick = () => {
     const { location } = browserHistory;
     browserHistory.goBack();
-  }
+  };
   renderBackButton() {
     const { isArabic } = this.state;
-    const { homeFromPDP } = this.props
+    const { homeFromPDP } = this.props;
     return (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={this.onBackButtonClick} />
@@ -168,40 +169,38 @@ class PDPGallery extends PureComponent {
       />
     );
   };
-  renderAltTag = () =>{
+  renderAltTag = () => {
     const {
-      product: { 
+      product: {
         brand_name = "",
         color = "",
         product_type_6s = "",
-        categories={}
+        categories = {},
       },
     } = this.props;
+    console.log("muskan", this.props);
     const checkCategory = () => {
-      if(!categories){
-        return '';
+      if (!categories) {
+        return "";
       }
-      if (categories.level4){
+      if (categories.level4 && categories.level4.length > 0) {
         return categories.level4[0];
-      }
-      else if (categories.level3){
+      } else if (categories.level3 && categories.level3.length > 0) {
         return categories.level3[0];
-      }
-      else if (categories.level2){
+      } else if (categories.level2 && categories.level2.length > 0) {
         return categories.level2[0];
-      }
-      else if (categories.level1){
+      } else if (categories.level1 && categories.level1.length > 0) {
         return categories.level1[0];
-      }
-      else if (categories.level0){
+      } else if (categories.level0 && categories.level0.length > 0) {
         return categories.level0[0];
-      }
-      else return "";
-    }
-    const categoryLevel = checkCategory().split('///').pop();
-    return(brand_name + " " + categoryLevel + " - " + color + " " + product_type_6s);
-  }
-  renderGalleryImage = (src, i) =>  (
+      } else return "";
+    };
+    const categoryLevel = checkCategory().split("///").pop();
+    return (
+      brand_name + " " + categoryLevel + " - " + color + " " + product_type_6s
+    );
+  };
+  renderGalleryImage = (src, i) => (
     <Image
       lazyLoad={false}
       src={src}
@@ -216,7 +215,7 @@ class PDPGallery extends PureComponent {
     browserHistory.push(`${location.pathname}`);
     window.onpopstate = () => {
       this.closeGalleryOverlay();
-    }
+    };
     const galleryOverlay = (
       <PDPGalleryOverlay
         closeGalleryOverlay={this.closeGalleryOverlay}
@@ -231,9 +230,9 @@ class PDPGallery extends PureComponent {
 
   closeGalleryOverlay = () => {
     document.body.style.overflow = "visible";
-    this.props.setImageIndex(this.props.currentIndex)
+    this.props.setImageIndex(this.props.currentIndex);
     this.props.onSliderChange(this.props.currentIndex);
-    this.setState({ galleryOverlay: "" });    
+    this.setState({ galleryOverlay: "" });
   };
 
   renderCrumbs() {
@@ -434,9 +433,9 @@ class PDPGallery extends PureComponent {
   };
   searchButtonClick = (e) => {
     e.stopPropagation();
-    const { displaySearch, showPDPSearch } = this.props
-    showPDPSearch(!displaySearch)
-  }
+    const { displaySearch, showPDPSearch } = this.props;
+    showPDPSearch(!displaySearch);
+  };
   stopVideo() {
     const { isVideoPlaying, listener } = this.state;
 
@@ -518,8 +517,8 @@ class PDPGallery extends PureComponent {
           elem="OverlayButton"
           mods={{ isArabic }}
           onClick={(e) => {
-            e.stopPropagation()
-            this.renderGalleryOverlay()
+            e.stopPropagation();
+            this.renderGalleryOverlay();
           }}
         >
           {this.renderSlider()}
