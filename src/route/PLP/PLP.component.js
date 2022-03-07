@@ -5,6 +5,7 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
+import isMobile from "Util/Mobile";
 import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
@@ -78,7 +79,11 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+  }
+
+  renderPLPSortBy() {
+    return <PLPFilters {...this.props} isPLPSortBy={true} />;
   }
 
   renderPLPPages() {
@@ -133,15 +138,24 @@ export class PLP extends PureComponent {
     const { signInPopUp } = this.state;
 
     return (
-      <main block="PLP">
+      <main block="PLP" id="plp-main-scroll-id">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
-          <div block="Products" elem="Wrapper">
-            {this.renderPLPFilters()}
-            {this.renderPLPPages()}
+          <div>
+
+
+            <div block="Products" elem="Wrapper">
+              {this.renderPLPFilters()}
+              {this.renderPLPPages()}
+
+            </div>
+            {
+              !isMobile.any() && <div block="SortBy">{this.renderPLPSortBy()}</div>
+            }
+
           </div>
         </ContentWrapper>
       </main>
