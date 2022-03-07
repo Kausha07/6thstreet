@@ -349,12 +349,6 @@ export class CartItem extends PureComponent {
           <span> {__("Color:")}</span>
           {color}
         </div>
-        <div block="CartItem" elem="Size" mods={{ isArabic }}>
-          <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
-            |
-          </span>
-
-        </div>
         {this.renderQuantitySelection()}
       </div>
     );
@@ -365,10 +359,10 @@ export class CartItem extends PureComponent {
       isLikeTable,
       item: { customizable_options, bundle_options },
     } = this.props;
-    const { isNotAvailble } = this.state;
+    const { isNotAvailble,isArabic } = this.state;
 
     return (
-      <figcaption block="CartItem" elem="Content" mods={{ isLikeTable }}>
+      <figcaption block="CartItem" elem="Content" mods={{ isLikeTable,isArabic }}>
         {this.renderBrandName()}
         {/* {this.renderProductName()} */}
         {this.renderProductOptions(customizable_options)}

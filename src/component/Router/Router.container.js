@@ -20,6 +20,7 @@ import {
   setUUID,
   getUUID,
   setUUIDToken,
+  getUUIDToken
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
@@ -75,7 +76,9 @@ export class RouterContainer extends SourceRouterContainer {
       pdpWidgetsData,
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
-    setUUIDToken(uuidv4());
+    if(!getUUIDToken()) {
+      setUUIDToken(uuidv4());
+    }
     if (!getUUID()) {
       setUUID(uuidv4());
     }
@@ -146,6 +149,9 @@ export class RouterContainer extends SourceRouterContainer {
         .replace("en-", "ar-")
         .split("?")[0];
       window.location.href = redirectPath;
+    }
+    if(!getUUIDToken()) {
+      setUUIDToken(uuidv4());
     }
   }
 

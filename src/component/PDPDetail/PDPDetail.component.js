@@ -37,7 +37,7 @@ class PDPDetail extends PureComponent {
   };
 
   getBrandUrl = () => {
-    const { brandName } = this.props;
+    const { brandName="" } = this.props;
     const url = brandName
       .replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
