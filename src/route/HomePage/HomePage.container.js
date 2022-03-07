@@ -62,9 +62,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const {
-      prevPath= null,
-    } = this.props;
+    const { prevPath = null } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -78,6 +76,7 @@ export class HomePageContainer extends PureComponent {
         url: window.location.href,
       },
     });
+
     const { gender, toggleBreadcrumbs } = this.props;
     toggleBreadcrumbs(false);
     this.setMetaData(gender);
@@ -118,47 +117,85 @@ export class HomePageContainer extends PureComponent {
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
     const genderName = capitalize(gender);
-
-    setMeta({
-      title: __(
-        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
-        genderName,
-        countryName
-      ),
-      keywords: __(
-        "online shopping for %s, %s online shopping, %s",
-        ...Array(2).fill(genderName),
-        countryName
-      ),
-      description: __(
-        // eslint-disable-next-line max-len
-        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
-        genderName,
-        countryName
-      ),
-      twitter_title: __(
-        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
-        genderName,
-        countryName
-      ),
-      twitter_desc: __(
-        // eslint-disable-next-line max-len
-        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
-        genderName,
-        countryName
-      ),
-      og_title: __(
-        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
-        genderName,
-        countryName
-      ),
-      og_desc: __(
-        // eslint-disable-next-line max-len
-        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
-        genderName,
-        countryName
-      ),
-    });
+    const pagePathName = new URL(window.location.href).pathname;
+    const countryNameConfig = (countryName == "Saudi Arabia" ? "KSA" : countryName);
+    if (pagePathName == "/") {
+      setMeta({
+        title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        keywords: __(
+          "online shopping for %s, %s online shopping, %s",
+          ...Array(2).fill(genderName),
+          countryName
+        ),
+        description: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+        twitter_title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        twitter_desc: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+        og_title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        og_desc: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+      });
+    } else {
+      setMeta({
+        title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        keywords: __(
+          "online shopping for %s, %s online shopping, %s",
+          ...Array(2).fill(genderName),
+          countryName
+        ),
+        description: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+        twitter_title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        twitter_desc: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+        og_title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        og_desc: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+      });
+    }
   }
 
   getDevicePrefix() {
@@ -189,10 +226,9 @@ export class HomePageContainer extends PureComponent {
 
     // TODO commented thiss try catch block temp uncomment after development
     try {
-      const dynamicContent = await getStaticFile(
-        HOME_STATIC_FILE_KEY,
-        { $FILE_NAME: `${devicePrefix}${gender}.json` }
-      );
+      const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
+        $FILE_NAME: `${devicePrefix}${gender}.json`,
+      });
 
       this.setState({
         dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
@@ -208,17 +244,18 @@ export class HomePageContainer extends PureComponent {
     const { locale = "" } = this.props;
     try {
       const response = await getSchema(locale);
-      if(!!!response?.error){
-        const tag = document.createElement('script');
-        if(tag) {
-          tag.type = 'application/ld+json';
+      if (!!!response?.error) {
+        const tag = document.createElement("script");
+        if (tag) {
+          tag.type = "application/ld+json";
           tag.innerHTML = JSON.stringify(response);
-          document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+          document
+            .querySelectorAll("script[type='application/ld+json']")
+            .forEach((node) => node.remove());
           document.head.appendChild(tag);
         }
       }
-    }
-    catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
