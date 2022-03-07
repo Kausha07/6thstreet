@@ -265,13 +265,9 @@ class HeaderMainSection extends NavigationAbstract {
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
-        return (
-          <HeaderGenders
-            key="genders"
-            isMobile
-            changeMenuGender={changeMenuGender}
-          />
-        );
+        
+        return <HeaderLogo key="logo" />;
+
       } else if (this.isPLP() && !showPLPSearch) {
         this.setMainContentPadding("150px");
 
@@ -407,7 +403,7 @@ class HeaderMainSection extends NavigationAbstract {
     let isPDP = this.isPDP();
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
-        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible,isPDP }}>
+        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible, isPDP }}>
           <HeaderSearch
             key="search"
             isPLP={this.isPLP() && showPLPSearch}
