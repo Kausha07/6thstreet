@@ -126,10 +126,7 @@ export class RouterContainer extends SourceRouterContainer {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
     }
-    if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
-      //request pdp widgets data only when not available in redux store.
-      requestPdpWidgetData();
-    }
+
   }
 
   componentDidUpdate() {
