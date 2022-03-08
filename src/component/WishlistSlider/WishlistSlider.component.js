@@ -54,7 +54,7 @@ class WishlistSlider extends PureComponent {
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.id == "ScrollWrapper"
     )[0];
-    prentComponent.scrollLeft = target.scrollLeft;
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
 
   renderScrollbar = () => {
@@ -64,7 +64,7 @@ class WishlistSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-        items.length +
+      items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -83,7 +83,7 @@ class WishlistSlider extends PureComponent {
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-              this.state.customScrollWidth,
+            this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >
