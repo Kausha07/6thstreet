@@ -205,7 +205,7 @@ $select-arrow-width: 6px !default;
       &-AvailableSizes {
         display: flex;
         flex-direction: row;
-        justify-content: start;
+        justify-content: flex-start;
         margin: auto;
         width: 100%;
         overflow: scroll;
