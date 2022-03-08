@@ -178,7 +178,6 @@ class PDPGallery extends PureComponent {
         categories = {},
       },
     } = this.props;
-    console.log("muskan", this.props);
     const checkCategory = () => {
       if (!categories) {
         return "";
