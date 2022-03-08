@@ -143,7 +143,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
-    const {index} = this.props
+    const { index } = this.props
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
@@ -209,17 +209,16 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.className == "SliderWithLabelWrapper"
     )[0];
-    prentComponent.scrollLeft = target.scrollLeft;
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
   renderScrollbar = () => {
     const { items = [] } = this.props;
 
-    const width = `${
-      (this.itemRef.current && this.itemRef.current.clientWidth) *
-        items.length +
+    const width = `${(this.itemRef.current && this.itemRef.current.clientWidth) *
+      items.length +
       items.length * 7 * 2 -
       690
-    }px`;
+      }px`;
     return (
       <div
         block="Outer"
@@ -239,11 +238,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabels() {
     const { items = [], title } = this.props;
 
-    const width = `${
-      items[0] && items[0].width
+    const width = `${items[0] && items[0].width
         ? items[0].width * items.length + items.length * 10 * 2 - 690
         : 0
-    }px`;
+      }px`;
 
     return (
       <DragScroll
@@ -269,7 +267,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
-    const {index} = this.props
+    const { index } = this.props
     return (
       <div ref={setRef} block="DynamicContentSliderWithLabel" id={`DynamicContentSliderWithLabel${index}`}>
         {this.props.header && (

@@ -38,9 +38,11 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   prevPath: state.PLP.prevPath,
+  pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
@@ -111,8 +113,14 @@ export class PDPContainer extends PureComponent {
 
   componentDidMount() {
     const {
+      requestPdpWidgetData,
+      pdpWidgetsData,
       location: { pathname },
     } = this.props;
+    if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
+      //request pdp widgets data only when not available in redux store.
+      requestPdpWidgetData();
+    }
     this.setState({ currentLocation: pathname });
   }
 
@@ -237,7 +245,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
