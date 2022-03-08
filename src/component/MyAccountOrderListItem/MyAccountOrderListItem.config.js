@@ -10,11 +10,14 @@ export const STATUS_PAYMENT_ABORTED = "payment_aborted";
 
 export const STATUS_PAYMENT_SUCCESS = "payment_success";
 
+export const STATUS_PAYMENT_FAILED = "payment_failed";
+
 export const STATUS_HIDE_BAR = [
   STATUS_COMPLETE,
   STATUS_CANCELED,
   STATUS_PAYMENT_ABORTED,
   STATUS_CLOSED,
+  STATUS_PAYMENT_FAILED,
 ];
 
 export const STATUS_FAILED = [STATUS_CANCELED, STATUS_PAYMENT_ABORTED];

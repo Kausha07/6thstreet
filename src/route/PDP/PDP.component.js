@@ -12,15 +12,15 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import Loader from "Component/Loader";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 export const mapStateToProps = (state) => ({
-  displaySearch: state.PDP.displaySearch
+  displaySearch: state.PDP.displaySearch,
 });
 
-
 export const mapDispatchToProps = (dispatch) => ({
-  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  showPDPSearch: (displaySearch) =>
+    PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
 });
 
 class PDP extends PureComponent {
@@ -47,11 +47,11 @@ class PDP extends PureComponent {
   };
 
   onPDPPageClicked = () => {
-    const { showPDPSearch, displaySearch } = this.props
+    const { showPDPSearch, displaySearch } = this.props;
     if (displaySearch) {
-      showPDPSearch(false)
+      showPDPSearch(false);
     }
-  }
+  };
   renderMySignInPopup() {
     const { showPopup } = this.state;
     if (!showPopup) {
@@ -66,7 +66,12 @@ class PDP extends PureComponent {
     );
   }
   renderMainSection() {
-    return <PDPMainSection renderMySignInPopup={this.showMyAccountPopup} {...this.props} />;
+    return (
+      <PDPMainSection
+        renderMySignInPopup={this.showMyAccountPopup}
+        {...this.props}
+      />
+    );
   }
 
   renderDetailsSection() {
@@ -107,15 +112,12 @@ class PDP extends PureComponent {
           {this.renderDetailsSection()}
           {this.renderDetail()}
         </div>
-      )
-    }
-    else if (!isLoading && nbHits < 1) {
-      return (
-        <NoMatch />
-      )
+      );
+    } else if (!isLoading && nbHits < 1) {
+      return <NoMatch />;
     }
 
-    return <Loader isLoading />;
+    return <Loader isLoading={isLoading} />;
   }
 
   render() {

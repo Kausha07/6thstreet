@@ -230,3 +230,20 @@
     }
   }
 }
+
+.MyAccountOrderList {
+  .MyAccountOrderListItem {
+    &-Progress {
+      &Current {
+        &_isProcessing {
+          width: 50%;
+        }
+      }
+      &Checkbox {
+        &_isProcessing {
+          left: 50%;
+        }
+      }
+    } 
+  }
+}

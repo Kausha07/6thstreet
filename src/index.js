@@ -25,9 +25,6 @@ import App from "Component/App";
 window.__DEV__ = process.env.NODE_ENV === "development";
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
-  integrations: [new BrowserTracing()],
-  tracesSampleRate: 1.0,
-  environment: process.env.NODE_ENV,
 });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
@@ -37,7 +34,7 @@ if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
   });
 
   window.addEventListener("load", () => {
-    const swUrl = "/sw.js";
+    const swUrl = '/serviceworker.js';
     window.wb = new Workbox(swUrl);
     const newVersionPopupEvent = new Event("showNewVersionPopup");
 
