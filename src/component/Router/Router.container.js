@@ -33,7 +33,6 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
-  pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -50,7 +49,6 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
-  requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
 });
 
 export class RouterContainer extends SourceRouterContainer {
