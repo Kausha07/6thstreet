@@ -99,11 +99,30 @@ class PLPFilters extends PureComponent {
   componentDidMount() {
     if (!isMobile.any()) {
       window.addEventListener("scroll", this.handleScroll);
+      window.addEventListener("scroll", this.handleGoToTop);
     }
 
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll');
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('scroll', this.handleGoToTop);
+  }
+
+  handleGoToTop = () => {
+    if (window.pageYOffset > 885) {
+      if (!this.state.showArrow) {
+        this.setState({
+          showArrow: true
+        })
+      }
+    }
+    if (window.pageYOffset < 885) {
+      if (this.state.showArrow) {
+        this.setState({
+          showArrow: false
+        })
+      }
+    }
   }
 
 
@@ -146,20 +165,6 @@ class PLPFilters extends PureComponent {
   handleScroll = () => {
     let k = document.getElementById("plp-main-scroll-id")
     if (k) {
-      if (window.pageYOffset > 885) {
-        if (!this.state.showArrow) {
-          this.setState({
-            showArrow: true
-          })
-        }
-      }
-      if (window.pageYOffset < 885) {
-        if (this.state.showArrow) {
-          this.setState({
-            showArrow: false
-          })
-        }
-      }
       if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
         if (!this.state.fixWindow) {
           this.setState({
