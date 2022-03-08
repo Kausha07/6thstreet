@@ -157,12 +157,12 @@ export class PDPContainer extends PureComponent {
       prevPath = null,
       product: { product_type_6s, sku, url, price },
     } = this.props;
-    const itemPrice = price
-      ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-      : null;
-    const basePrice = price
-      ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
-      : null;
+    const itemPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -272,9 +272,18 @@ export class PDPContainer extends PureComponent {
     }));
     const productKeys = Object.assign({}, ...getDetails);
     const specialPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_special_price"];
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const originalPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_base_price"];
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
+
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,
