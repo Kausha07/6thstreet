@@ -240,11 +240,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabels() {
     const { items = [], title } = this.props;
 
-    const width = `${items[0] && items[0].width
-        ? items[0].width * items.length + items.length * 10 * 2 - 690
-        : 0
-      }px`;
-
     return (
       <DragScroll
         data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
