@@ -98,7 +98,9 @@ class HeaderSearch extends PureComponent {
   onFocus = () => {
     const { handleHomeSearchClick } = this.props;
     this.setState({ showSearch: true });
-    handleHomeSearchClick(true);
+    if(handleHomeSearchClick){
+      handleHomeSearchClick(true);
+    }
     window.onpopstate = (e) => {
       if (document.body.classList.contains("isSuggestionOpen")) {
         this.closeSearch();
