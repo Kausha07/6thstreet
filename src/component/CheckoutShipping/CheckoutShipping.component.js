@@ -125,7 +125,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           type="submit"
           block={"Button"}
           form={SHIPPING_STEP}
-          disabled={this.checkForDisabling()}
+          // disabled={this.checkForDisabling()}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
