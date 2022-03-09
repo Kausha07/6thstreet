@@ -98,13 +98,13 @@ class PLPFilters extends PureComponent {
 
   componentDidMount() {
     if (!isMobile.any()) {
-      window.addEventListener("scroll", this.handleScroll);
+      window.addEventListener("mousewheel", this.handleScroll);
       window.addEventListener("scroll", this.handleGoToTop);
     }
 
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('mousewheel', this.handleScroll);
     window.removeEventListener('scroll', this.handleGoToTop);
   }
 
@@ -133,36 +133,76 @@ class PLPFilters extends PureComponent {
     let myDiv = document.getElementById("productFilterScroll")
     if (myDiv) {
       if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
-        this.removeScrollBottom()
+        // this.removeScrollBottom()
       }
     }
 
   }
 
-  stickLeftFilter = (e) => {
-    var fixedDiv = document.querySelector('.Products-FixScroll');
-    fixedDiv.scrollTop = fixedDiv.scrollTop + e.deltaY;
-    document.body.style.overflow = 'hidden'
+  // stickLeftFilter = (e) => {
+  //   var fixedDiv = document.querySelector('.Products-FixScroll');
+  //   fixedDiv.scrollTop = fixedDiv.scrollTop + e.deltaY;
+  //   document.body.style.overflow = 'hidden'
+  // }
+
+  // scrollBottom = () => {
+  //   window.addEventListener('mousewheel', this.stickLeftFilter);
+  // }
+
+
+  // removeScrollBottom = () => {
+  //   window.addEventListener('mousewheel', function (e) {
+  //     document.body.style.overflow = 'auto'
+  //   });
+  // }
+
+
+  // removeEvent = () => {
+  //   window.removeEventListener('mousewheel', this.stickLeftFilter);
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  onFixWindow = (e) => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: n,
+        left: 0,
+        behavior: 'smooth'
+      }
+    )
   }
 
-  scrollBottom = () => {
-    window.addEventListener('mousewheel', this.stickLeftFilter);
+  onNotFixWindow = () => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: -n,
+        left: 0,
+        behavior: 'smooth'
+      }
+    )
   }
 
 
-  removeScrollBottom = () => {
-    window.addEventListener('mousewheel', function (e) {
-      document.body.style.overflow = 'auto'
-    });
-  }
-
-
-  removeEvent = () => {
-    window.removeEventListener('mousewheel', this.stickLeftFilter);
-  }
-
-
-  handleScroll = () => {
+  handleScroll = (e) => {
     let k = document.getElementById("plp-main-scroll-id")
     if (k) {
       if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
@@ -170,16 +210,18 @@ class PLPFilters extends PureComponent {
           this.setState({
             fixWindow: true
           })
-          this.scrollBottom()
+          this.onFixWindow(e)
         }
+
 
       }
       if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
         if (this.state.fixWindow) {
-          this.removeEvent()
+
           this.setState({
             fixWindow: false
-          }, () => { })
+          })
+          this.onNotFixWindow(e)
         }
 
       }
