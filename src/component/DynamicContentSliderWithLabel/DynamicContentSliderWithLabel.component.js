@@ -201,7 +201,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    if(this.scrollerRef && this.scrollerRef.current){
+      this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    }
   };
 
   handleScroll = (event) => {

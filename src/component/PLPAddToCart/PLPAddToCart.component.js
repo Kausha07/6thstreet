@@ -134,7 +134,9 @@ class PLPAddToCart extends PureComponent {
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 3; //scroll-fast
-        slider.scrollLeft = scrollLeft - walk;
+        if(slider){
+          slider.scrollLeft = scrollLeft - walk;
+        }
       });
     });
   }

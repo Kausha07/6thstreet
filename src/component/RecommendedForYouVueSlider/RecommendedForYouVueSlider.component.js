@@ -109,9 +109,11 @@ class RecommendedForYouVueSlider extends PureComponent {
       sourceProdID,
     } = this.props;
     const target = event.nativeEvent.target;
+    if(this.scrollerRef && this.scrollerRef.current){
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
       : target.scrollLeft;
+    }
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
