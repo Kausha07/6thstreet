@@ -712,7 +712,9 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
+    if(document.querySelector(".ori-cursor-ptr")){
     document.querySelector(".ori-cursor-ptr").click();
+    }
   }
   renderContactUs() {
     const { config } = this.props;
