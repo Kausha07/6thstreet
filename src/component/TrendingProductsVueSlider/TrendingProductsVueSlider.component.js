@@ -53,7 +53,9 @@ class TrendingProductsVueSlider extends PureComponent {
   }
   async handleContainerScroll(widgetID, event) {
     const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    if(this.scrollerRef && this.scrollerRef.current){
+      this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    }
     let width = 0;
     if (screen.width > 1024) {
       width = 245;

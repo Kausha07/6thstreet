@@ -201,7 +201,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    if(this.scrollerRef && this.scrollerRef.current){
+      this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    }
   };
 
   handleScroll = (event) => {
@@ -237,11 +239,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   renderSliderWithLabels() {
     const { items = [], title } = this.props;
-
-    const width = `${items[0] && items[0].width
-        ? items[0].width * items.length + items.length * 10 * 2 - 690
-        : 0
-      }px`;
 
     return (
       <DragScroll
