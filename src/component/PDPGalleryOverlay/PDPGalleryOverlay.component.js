@@ -138,9 +138,9 @@ class PDPGalleryOverlay extends PureComponent {
       return gallery.map((src, i) => {
         const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
         return (
-        <div style={{ width: 500, height: "auto", textAlign: "center"}} key={i}   id="galleryOverlayImage">
+        <div style={{ width: "500px", height: "auto", textAlign: "center"}} key={i}   id="galleryOverlayImage">
         <DragAndZoom>
-          <img onClick={this.onImageClick} onDragStart={(e)=>{e.stopPropagation()}} onDragStop={()=>{{document.body.clientWidth="100%"}}} mix={{
+          <img onClick={this.onImageClick} onDragStart={(e)=>{e.stopPropagation()}} mix={{
             block: "ProductGallery",
             elem: "SliderImage",
             mods: { isPlaceholder: !src },
