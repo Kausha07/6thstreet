@@ -38,7 +38,7 @@ export class PLP extends PureComponent {
       let banner = JSON.parse(bannerData);
       this.setState({
         bannerData: banner,
-        circleBannerUrl: bannerUrl,
+        circleBannerUrl: bannerUrl
       });
     }
   }
@@ -101,8 +101,10 @@ export class PLP extends PureComponent {
   }
 
   renderBanner() {
-    let urlPath = window.location.pathname;
+    let urlPath = window.location.pathname + window.location.search;
     let bannerUrl = localStorage.getItem("CircleBannerUrl");
+    console.log(bannerUrl)
+    console.log(urlPath)
     if (this.state.bannerData && bannerUrl === urlPath)
       return (
         <div>

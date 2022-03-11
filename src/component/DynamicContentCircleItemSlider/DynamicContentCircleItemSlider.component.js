@@ -123,8 +123,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   clickLink = (a) => {
-    const {index} = this.props
-    let link = "/" + a.link;
+    const { index } = this.props
+    let link = a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
     let banner = {
