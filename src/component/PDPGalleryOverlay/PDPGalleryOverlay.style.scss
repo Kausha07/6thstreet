@@ -126,13 +126,14 @@
 .PDPGallery {
     .galleryOverlayImage {
         transition: transform 0.25s ease !important;
-        width: 500px !important;
+        width: 500px;
         @include mobile {
-            width: 640px !important;
+            width: 76% !important;
         }
         @include desktop {
             transform: none !important;
             transform-origin: unset !important;
+            transform: scale(1.3) !important;
         }
         cursor: -webkit-grabbing !important;
         cursor: -moz-grabbing !important;
@@ -150,9 +151,31 @@
         transform-origin: unset !important;
         width: 500px;
         @include mobile {
-            width: auto;
+            width: 76% !important;
         }
-        transform: scale(1.2) !important;
+        transform: scale(1.3) !important;
+    }
+    .galleryOverlayImageZoomLevel0 {
+        @include mobile {
+            transform: scale(1.1) !important;
+            cursor: zoom-in !important;
+        }
+        transform: scale(1.6) !important;
+        cursor: zoom-in !important;
+    }
+    .galleryOverlayImageZoomLevel1 {
+        @include mobile {
+            transform: scale(1.2) !important;
+            cursor: zoom-in !important;
+        }
+        transform: scale(1.9) !important;
+        cursor: zoom-in !important;
+    }
+    .galleryOverlayImageZoomLevel2 {
+        @include mobile {
+            transform: scale(1.3) !important;
+        }
+        transform: scale(2.2) !important;
     }
     .PDPGalleryOverlay {
         .Slider {

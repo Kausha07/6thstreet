@@ -18,6 +18,7 @@ import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
 import Refine from "../Icons/Refine/icon.png";
+import Arrow from "./icons/long-arrow-left.svg"
 import "./PLPFilters.style";
 import FieldMultiselect from "Component/FieldMultiselect";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
@@ -63,6 +64,9 @@ class PLPFilters extends PureComponent {
       isReset: false,
       toggleOptionsList: false,
       defaultFilters: false,
+      fixFilter: false,
+      fixWindow: false,
+      showArrow: false
     };
 
     this.timer = null;
@@ -90,6 +94,41 @@ class PLPFilters extends PureComponent {
     };
   }
 
+
+
+  componentDidMount() {
+    if (!isMobile.any()) {
+      window.addEventListener("scroll", this.handleGoToTop);
+    }
+
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleGoToTop);
+  }
+
+  handleGoToTop = () => {
+    if (window.pageYOffset > 885) {
+      if (!this.state.showArrow) {
+        this.setState({
+          showArrow: true
+        })
+      }
+    }
+    if (window.pageYOffset < 885) {
+      if (this.state.showArrow) {
+        this.setState({
+          showArrow: false
+        })
+      }
+    }
+  }
+
+
+
+  scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   setDefaultFilters = () => {
     this.setState({ defaultFilters: true });
   };
@@ -108,12 +147,29 @@ class PLPFilters extends PureComponent {
 
   renderFilters() {
     const { filters = {} } = this.props;
+    const { isPLPSortBy } = this.props;
     return Object.entries(filters).map((filter, index) => {
+
+      if (isPLPSortBy) {
+        if (filter[1]) {
+          if ((filter[0] === "sort" && !isMobile.any())) {
+            return this.renderSortBy([filter[0], filter[1]], index);
+          }
+          else {
+            return
+          }
+        }
+
+
+      }
+
       if (filter[1]) {
+
         if (filter[0] === "sort" && !isMobile.any()) {
-          return this.renderSortBy([filter[0], filter[1]], index);
+          return
         }
         if (isMobile.any()) {
+
           return this.renderFilterOption([filter[0], filter[1]]);
         } else {
           return this.renderFilter([filter[0], filter[1]]);
@@ -142,8 +198,8 @@ class PLPFilters extends PureComponent {
       category === "in_stock"
         ? __("BY STOCK")
         : category === "age"
-        ? __("BY AGE")
-        : label;
+          ? __("BY AGE")
+          : label;
     return (
       <FieldMultiselect
         key={key}
@@ -389,11 +445,11 @@ class PLPFilters extends PureComponent {
     let activeFilters = this.getActiveFilter();
     let { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
-          (prev, [_key, value]) => ({
-            count: prev.count + value.length,
-          }),
-          { count: 0 }
-        )
+        (prev, [_key, value]) => ({
+          count: prev.count + value.length,
+        }),
+        { count: 0 }
+      )
       : { count: 0 };
     Object.keys(activeFilters).length > 0 &&
       Object.keys(activeFilters).map((key) => {
@@ -460,8 +516,8 @@ class PLPFilters extends PureComponent {
           category === "in_stock"
             ? __("BY STOCK")
             : category === "age"
-            ? __("BY AGE")
-            : label;
+              ? __("BY AGE")
+              : label;
 
         return (
           <FieldMultiselect
@@ -505,8 +561,8 @@ class PLPFilters extends PureComponent {
       category === "in_stock"
         ? __("BY STOCK")
         : category === "age"
-        ? __("BY AGE")
-        : label;
+          ? __("BY AGE")
+          : label;
     let toggleOptionsList = activeFilter === category;
     let selectedItems = true;
 
@@ -514,7 +570,7 @@ class PLPFilters extends PureComponent {
       <div
         ref={this.filterDropdownRef}
         block="FieldMultiselect"
-        // mods={{ isHidden }}
+      // mods={{ isHidden }}
       >
         <button
           ref={this.filterButtonRef}
@@ -535,6 +591,7 @@ class PLPFilters extends PureComponent {
             `(${selected_filters_count})`}
         </button>
       </div>
+
     );
   }
 
@@ -664,57 +721,60 @@ class PLPFilters extends PureComponent {
     const category_title = this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
-        <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
-          <span>{count}</span>
-          {count ? __("Results for ") : null}
-          {count && !category_title ? (
-            "Available Products"
-          ) : (
-            <h1 className="categoryTitle">{__(category_title)}</h1>
-          )}
-        </div>
-        {!isMobile.any() && (
-          <div block="FilterHeader">
-            <h2>{__("Filters")}</h2>
-            <div
-              block="PLPFilters"
-              elem="Reset"
-              mix={{
-                block: "Reset",
-                mods: {
-                  isArabic,
-                },
-              }}
-            >
-              {this.renderResetFilterButton()}
-            </div>
-          </div>
-        )}
-
-        {isOpen && isMobile.any()
-          ? this.renderPopupFilters()
-          : this.renderFilterButton()}
-        {!isMobile.any() && (
-          <form block="PLPFilters" name="filters">
-            {this.renderFilters()}
-          </form>
-        )}
-        {isMobile.any() && (
-          <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
-            <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
-              {this.renderQuickFilters()}
-            </div>
-            <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
-              <span>{count}</span>
-              {count ? __("Results for ") : null}
-              {count && !category_title ? (
-                "Available Products"
-              ) : (
+        <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
+          <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
+            <span>{count}</span>
+            {count ? __("Results for ") : null}
+            {count && !category_title ? (
+              "Available Products"
+            ) : (
                 <h1 className="categoryTitle">{__(category_title)}</h1>
               )}
-            </div>
           </div>
-        )}
+          {!isMobile.any() && (
+            <div block="FilterHeader">
+              <h2>{__("Filters")}</h2>
+              <div
+                block="PLPFilters"
+                elem="Reset"
+                mix={{
+                  block: "Reset",
+                  mods: {
+                    isArabic,
+                  },
+                }}
+              >
+                {this.renderResetFilterButton()}
+              </div>
+            </div>
+          )}
+
+          {isOpen && isMobile.any()
+            ? this.renderPopupFilters()
+            : this.renderFilterButton()}
+          {!isMobile.any() && (
+            <form block="PLPFilters" name="filters">
+              {this.renderFilters()}
+            </form>
+          )}
+          {isMobile.any() && (
+            <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
+              <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
+                {this.renderQuickFilters()}
+              </div>
+              <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
+                <span>{count}</span>
+                {count ? __("Results for ") : null}
+                {count && !category_title ? (
+                  "Available Products"
+                ) : (
+                    <h1 className="categoryTitle">{__(category_title)}</h1>
+                  )}
+              </div>
+            </div>
+          )}
+        </div>
+        {this.state.showArrow && <div block="Products" elem="UpArrow" ><img block="Products" elem="UpArrow-img" src={Arrow} onClick={this.scrollToTop} /></div>}
       </div>
     );
   }

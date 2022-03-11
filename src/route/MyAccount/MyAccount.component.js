@@ -146,7 +146,9 @@ export class MyAccount extends SourceMyAccount {
   }
 
   chat() {
+    if(document.querySelector(".ori-cursor-ptr")){
     document.querySelector(".ori-cursor-ptr").click();
+    }
   }
 
   handleTabChange(key) {

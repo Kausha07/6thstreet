@@ -264,7 +264,7 @@ class PDPDetailsSection extends PureComponent {
 
   getCategoryByLevel(categories = {}, level = 0) {
     try {
-      return categories.level2[0].split(" /// ")[level];
+      return categories.level2 && categories.level2[0].split(" /// ")[level];
     } catch (err) {
       console.error(err);
       return undefined;
@@ -712,7 +712,9 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
+    if(document.querySelector(".ori-cursor-ptr")){
     document.querySelector(".ori-cursor-ptr").click();
+    }
   }
   renderContactUs() {
     const { config } = this.props;

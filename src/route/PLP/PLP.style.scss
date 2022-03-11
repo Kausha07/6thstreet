@@ -58,6 +58,24 @@
             }
         }
     }
+
+    .SortBy{
+        position: absolute;
+        right: 0;
+        top: -30px;
+        .PLPFilters-ProductsCount{
+            display: none;
+        }
+        .FilterHeader{
+            display: none;
+        }
+        &_isArabic{
+            right: unset;
+            left: 0;
+        }
+    }
+
+
 }
 
 .Products-Wrapper {

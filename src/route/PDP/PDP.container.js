@@ -38,9 +38,11 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   prevPath: state.PLP.prevPath,
+  pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
@@ -111,8 +113,14 @@ export class PDPContainer extends PureComponent {
 
   componentDidMount() {
     const {
+      requestPdpWidgetData,
+      pdpWidgetsData,
       location: { pathname },
     } = this.props;
+    if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
+      //request pdp widgets data only when not available in redux store.
+      requestPdpWidgetData();
+    }
     this.setState({ currentLocation: pathname });
   }
 
@@ -157,12 +165,12 @@ export class PDPContainer extends PureComponent {
       prevPath = null,
       product: { product_type_6s, sku, url, price },
     } = this.props;
-    const itemPrice = price
-      ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-      : null;
-    const basePrice = price
-      ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
-      : null;
+    const itemPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -237,7 +245,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -272,9 +280,18 @@ export class PDPContainer extends PureComponent {
     }));
     const productKeys = Object.assign({}, ...getDetails);
     const specialPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_special_price"];
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const originalPrice =
-      price?.[0][Object.keys(price?.[0])?.[0]]["6s_base_price"];
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
+
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,

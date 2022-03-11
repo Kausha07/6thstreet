@@ -38,10 +38,10 @@ class FieldMultiselect extends PureComponent {
     currentActiveFilter: "",
     isHidden: false,
     defaultFilters: false,
-    parentCallback: () => {},
-    changeActiveFilter: () => {},
-    updateFilters: () => {},
-    setDefaultFilters: () => {},
+    parentCallback: () => { },
+    changeActiveFilter: () => { },
+    updateFilters: () => { },
+    setDefaultFilters: () => { },
   };
 
   filterDropdownRef = createRef();
@@ -110,7 +110,7 @@ class FieldMultiselect extends PureComponent {
     if (parentActiveFilters) {
       if (
         JSON.stringify(prevProps.parentActiveFilters) !==
-          JSON.stringify(parentActiveFilters) ||
+        JSON.stringify(parentActiveFilters) ||
         (parentActiveFilters[category] &&
           parentActiveFilters[category].length === 0)
       ) {
@@ -137,7 +137,7 @@ class FieldMultiselect extends PureComponent {
         this.filterDropdownRef &&
         !this.filterDropdownRef.current.contains(event.target)
       ) {
-        this.onBlur();
+        // this.onBlur();
       }
     }
   };
@@ -296,14 +296,14 @@ class FieldMultiselect extends PureComponent {
                 value={value.is_selected}
               />
             ) : (
-              <img
-                src={selectedImage}
-                alt={"fitler"}
-                id={facet_key}
-                name={facet_value}
-                value={value.is_selected}
-              />
-            )}
+                <img
+                  src={selectedImage}
+                  alt={"fitler"}
+                  id={facet_key}
+                  name={facet_value}
+                  value={value.is_selected}
+                />
+              )}
           </div>
         );
       });
@@ -476,15 +476,15 @@ class FieldMultiselect extends PureComponent {
           {category === "in_stock"
             ? Object.entries(finalData).map(this.renderOption)
             : category === searchFacetKey
-            ? Object.entries(searchData).map(this.renderOption)
-            : category === "sizes" && !isMobile.any()
-            ? Object.entries(sizeData).map(this.renderSizeOption)
-            : // : category === "categories_without_path" &&
-            //   Object.keys(formattedData).length
-            // ? Object.entries(formattedData).map(this.renderOption)
-            Object.keys(data).length
-            ? Object.entries(data).map(this.renderOption)
-            : Object.entries(subcategories).map(this.renderOption)}
+              ? Object.entries(searchData).map(this.renderOption)
+              : category === "sizes" && !isMobile.any()
+                ? Object.entries(sizeData).map(this.renderSizeOption)
+                : // : category === "categories_without_path" &&
+                //   Object.keys(formattedData).length
+                // ? Object.entries(formattedData).map(this.renderOption)
+                Object.keys(data).length
+                  ? Object.entries(data).map(this.renderOption)
+                  : Object.entries(subcategories).map(this.renderOption)}
         </ul>
       </>
     );
@@ -525,9 +525,8 @@ class FieldMultiselect extends PureComponent {
   renderFilterSearchbox(label, category) {
     let placeholder = label
       ? label
-      : `${category.charAt(0).toUpperCase()}${
-          category.split(category.charAt(0))[1]
-        }`;
+      : `${category.charAt(0).toUpperCase()}${category.split(category.charAt(0))[1]
+      }`;
     const { currentActiveFilter } = this.props;
     const { isArabic } = this.state;
     if (isMobile.any() && currentActiveFilter !== category) {
@@ -669,8 +668,8 @@ class FieldMultiselect extends PureComponent {
                       val.facet_key === "in_stock" && val.label === 1
                         ? "In Stock"
                         : val.facet_key === "in_stock" && val.label === 0
-                        ? "Out of Stock"
-                        : val.label;
+                          ? "Out of Stock"
+                          : val.label;
                     return (
                       <>
                         <li key={v4()} block="selectedListItem">
@@ -686,8 +685,8 @@ class FieldMultiselect extends PureComponent {
                     values.facet_key === "in_stock" && values.label === "1"
                       ? "In Stock"
                       : values.facet_key === "in_stock" && values.label === "0"
-                      ? "Out of Stock"
-                      : values.label;
+                        ? "Out of Stock"
+                        : values.label;
                   return (
                     <>
                       <li key={v4()} block="selectedListItem">

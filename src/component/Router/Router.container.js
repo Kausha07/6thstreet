@@ -20,6 +20,7 @@ import {
   setUUID,
   getUUID,
   setUUIDToken,
+  getUUIDToken
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
@@ -33,7 +34,6 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
-  pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -50,7 +50,6 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
-  requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -75,7 +74,9 @@ export class RouterContainer extends SourceRouterContainer {
       pdpWidgetsData,
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
-    setUUIDToken(uuidv4());
+    if(!getUUIDToken()) {
+      setUUIDToken(uuidv4());
+    }
     if (!getUUID()) {
       setUUID(uuidv4());
     }
@@ -126,10 +127,7 @@ export class RouterContainer extends SourceRouterContainer {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
     }
-    if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
-      //request pdp widgets data only when not available in redux store.
-      requestPdpWidgetData();
-    }
+
   }
 
   componentDidUpdate() {
@@ -146,6 +144,9 @@ export class RouterContainer extends SourceRouterContainer {
         .replace("en-", "ar-")
         .split("?")[0];
       window.location.href = redirectPath;
+    }
+    if(!getUUIDToken()) {
+      setUUIDToken(uuidv4());
     }
   }
 

@@ -96,7 +96,11 @@ class HeaderSearch extends PureComponent {
     this.closeSearch();
   };
   onFocus = () => {
+    const { handleHomeSearchClick } = this.props;
     this.setState({ showSearch: true });
+    if(handleHomeSearchClick){
+      handleHomeSearchClick(true);
+    }
     window.onpopstate = (e) => {
       if (document.body.classList.contains("isSuggestionOpen")) {
         this.closeSearch();
@@ -106,12 +110,15 @@ class HeaderSearch extends PureComponent {
     };
   };
   closeSearch = () => {
-    const { hideSearchBar, onSearchClean } = this.props;
+    const { hideSearchBar, onSearchClean,handleHomeSearchClick } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
     onSearchClean();
     this.setState({ showSearch: false });
+    if(handleHomeSearchClick){
+      handleHomeSearchClick(false)
+    }
   };
 
   renderField() {
