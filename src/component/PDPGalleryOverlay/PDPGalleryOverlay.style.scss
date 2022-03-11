@@ -124,59 +124,6 @@
 }
 
 .PDPGallery {
-    .galleryOverlayImage {
-        transition: transform 0.25s ease !important;
-        width: 500px;
-        @include mobile {
-            width: 76% !important;
-        }
-        @include desktop {
-            transform: none !important;
-            transform-origin: unset !important;
-            transform: scale(1.3) !important;
-        }
-        cursor: -webkit-grabbing !important;
-        cursor: -moz-grabbing !important;
-        cursor: grabbing !important;
-        cursor: zoom-in !important;
-        text-align: center;
-    }
-    #galleryOverlayImageZoomIn {
-        transition: transform 0.25s ease;
-        cursor: zoom-in;
-    }
-    .galleryOverlayImageZoomOut {
-        transition: transform 0.25s ease !important;
-        cursor: zoom-out !important;
-        transform-origin: unset !important;
-        width: 500px;
-        @include mobile {
-            width: 76% !important;
-        }
-        transform: scale(1.3) !important;
-    }
-    .galleryOverlayImageZoomLevel0 {
-        @include mobile {
-            transform: scale(1.1) !important;
-            cursor: zoom-in !important;
-        }
-        transform: scale(1.6) !important;
-        cursor: zoom-in !important;
-    }
-    .galleryOverlayImageZoomLevel1 {
-        @include mobile {
-            transform: scale(1.2) !important;
-            cursor: zoom-in !important;
-        }
-        transform: scale(1.9) !important;
-        cursor: zoom-in !important;
-    }
-    .galleryOverlayImageZoomLevel2 {
-        @include mobile {
-            transform: scale(1.3) !important;
-        }
-        transform: scale(2.2) !important;
-    }
     .PDPGalleryOverlay {
         .Slider {
             margin: auto 10px;
@@ -247,5 +194,21 @@
                 height: 30px;
             }
         }
+    }
+}
+
+.react-transform-wrapper {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.CurrentImage {
+    pointer-events: unset!important;
+    cursor: -moz-zoom-in!important; 
+    cursor: -webkit-zoom-in!important;
+    cursor: zoom-in!important;
+    &_isMaxZoomedIn {
+        cursor: -moz-zoom-out!important;
+        cursor: -webkit-zoom-out!important;
+        cursor: zoom-out!important
     }
 }
