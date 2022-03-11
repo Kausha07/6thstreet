@@ -112,7 +112,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     };
 
     let ht, wd;
-    if (screen.width > 900) {
+    if (screen.width > 900 && item) {
       let ht1 = (item.height / item.width) * 600;
       ht = ht1.toString() + "px";
       wd = "600px";

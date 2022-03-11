@@ -2,14 +2,18 @@
 <html lang="en">
 
 <head>
-  <link rel="preconnect" href="%PUBLIC_URL%" crossorigin="anonymous"/>
-  <link rel="prefetch" href="%REACT_APP_CDN_API_URL%%REACT_APP_REMOTE_CONFIG_DIR%/default.json" as="fetch" crossorigin="anonymous"/>
-  <link rel="preconnect" href="https://%REACT_APP_ALGOLIA_APP_ID%-dsn.algolia.net/"  crossorigin="anonymous" />
+  <link rel="preconnect" href="%PUBLIC_URL%" crossorigin="anonymous" />
+  <link rel="prefetch" href="%REACT_APP_CDN_API_URL%%REACT_APP_REMOTE_CONFIG_DIR%/default.json" as="fetch"
+    crossorigin="anonymous" />
+  <link rel="preconnect" href="https://%REACT_APP_ALGOLIA_APP_ID%-dsn.algolia.net/" crossorigin="anonymous" />
   <script>
-    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="%REACT_APP_SEGMENT_KEY%";;analytics.SNIPPET_VERSION="4.15.3";
-    analytics.load("%REACT_APP_SEGMENT_KEY%");
-    analytics.page();
-    }}();
+    !function () {
+      var analytics = window.analytics = window.analytics || []; if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
+        analytics.invoked = !0; analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on", "addSourceMiddleware", "addIntegrationMiddleware", "setAnonymousId", "addDestinationMiddleware"]; analytics.factory = function (e) { return function () { var t = Array.prototype.slice.call(arguments); t.unshift(e); analytics.push(t); return analytics } }; for (var e = 0; e < analytics.methods.length; e++) { var key = analytics.methods[e]; analytics[key] = analytics.factory(key) } analytics.load = function (key, e) { var t = document.createElement("script"); t.type = "text/javascript"; t.async = !0; t.src = "https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js"; var n = document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(t, n); analytics._loadOptions = e }; analytics._writeKey = "%REACT_APP_SEGMENT_KEY%";; analytics.SNIPPET_VERSION = "4.15.3";
+        analytics.load("%REACT_APP_SEGMENT_KEY%");
+        analytics.page();
+      }
+    }();
   </script>
   <script>
     (function (w, d, s, l, i) {
@@ -45,10 +49,14 @@
     ></script> -->
 
   <style>
-    body { -webkit-appearance: none; }
+    body {
+      -webkit-appearance: none;
+    }
+
     input[type='password'] {
       text-transform: none !important;
     }
+
     button {
       color: black;
     }
@@ -2141,12 +2149,12 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <script>
-    window.fbAsyncInit = function() {
+    window.fbAsyncInit = function () {
       FB.init({
-        appId            : '%REACT_APP_FACEBOOK_CLIENT_ID%',
-        autoLogAppEvents : false,
-        xfbml            : true,
-        version          : 'v12.0'
+        appId: '%REACT_APP_FACEBOOK_CLIENT_ID%',
+        autoLogAppEvents: false,
+        xfbml: true,
+        version: 'v12.0'
       });
     };
   </script>

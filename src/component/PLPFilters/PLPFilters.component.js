@@ -126,18 +126,18 @@ class PLPFilters extends PureComponent {
   }
 
 
-  onFilterScroll = () => {
-    if (isMobile.any()) {
-      return null
-    }
-    let myDiv = document.getElementById("productFilterScroll")
-    if (myDiv) {
-      if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
-        // this.removeScrollBottom()
-      }
-    }
+  // onFilterScroll = () => {
+  //   if (isMobile.any()) {
+  //     return null
+  //   }
+  //   let myDiv = document.getElementById("productFilterScroll")
+  //   if (myDiv) {
+  //     if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
+  //       // this.removeScrollBottom()
+  //     }
+  //   }
 
-  }
+  // }
 
   // stickLeftFilter = (e) => {
   //   var fixedDiv = document.querySelector('.Products-FixScroll');
@@ -840,7 +840,7 @@ class PLPFilters extends PureComponent {
     const count = productsCount ? productsCount.toLocaleString() : null;
     const category_title = this.renderCatPath().split("///").pop();
     return (
-      <div block="Products" elem="Filter" onScroll={this.onFilterScroll} >
+      <div block="Products" elem="Filter">
         <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>

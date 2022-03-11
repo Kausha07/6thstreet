@@ -70,7 +70,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
     this.registerViewPortEvent();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
   registerViewPortEvent() {
     let observer;
@@ -109,9 +109,11 @@ class RecommendedForYouVueSlider extends PureComponent {
       sourceProdID,
     } = this.props;
     const target = event.nativeEvent.target;
+    if(this.scrollerRef && this.scrollerRef.current){
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
       : target.scrollLeft;
+    }
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
@@ -178,7 +180,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.id == "ScrollWrapper"
     )[0];
-    prentComponent.scrollLeft = target.scrollLeft;
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
 
   renderScrollbar = () => {
@@ -188,7 +190,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-        items.length +
+      items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -207,7 +209,7 @@ class RecommendedForYouVueSlider extends PureComponent {
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-              this.state.customScrollWidth,
+            this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >

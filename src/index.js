@@ -14,9 +14,9 @@
 /* eslint-disable no-console */
 import "SourceUtil/Polyfill";
 import "Style/main";
-import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
-import {Workbox} from 'workbox-window';
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
+import { Workbox } from "workbox-window";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { render } from "react-dom";
 
@@ -28,22 +28,21 @@ Sentry.init({
 });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
-if (process.env.NODE_ENV  !== "development" && "serviceWorker" in navigator) {
-  window.addEventListener("beforeinstallprompt", ev => { 
+if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
+  window.addEventListener("beforeinstallprompt", (ev) => {
     ev.preventDefault();
   });
-  
+
   window.addEventListener("load", () => {
     const swUrl = '/serviceworker.js';
     window.wb = new Workbox(swUrl);
     const newVersionPopupEvent = new Event("showNewVersionPopup");
-  
-    const showSkipWaitingPrompt = (event) => {
-      window.dispatchEvent(newVersionPopupEvent)
-    }
-    window.wb.addEventListener('waiting', showSkipWaitingPrompt);
-    window.wb.register();
 
+    const showSkipWaitingPrompt = (event) => {
+      window.dispatchEvent(newVersionPopupEvent);
+    };
+    window.wb.addEventListener("waiting", showSkipWaitingPrompt);
+    window.wb.register();
 
     // navigator.serviceWorker.register(swUrl).then((reg) => {
     //   const newVersionPopupEvent = new Event("showNewVersionPopup");

@@ -45,7 +45,9 @@ export class PDPGalleryCrumbContainer extends PureComponent {
   };
 
   onClick() {
-    const { index, onSlideChange } = this.props;
+    const { index, onSlideChange, ResetTheZoomInValue,isZoomIn } = this.props;
+
+    if(isZoomIn) ResetTheZoomInValue();
 
     return onSlideChange(index);
   }

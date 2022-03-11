@@ -205,7 +205,7 @@ $select-arrow-width: 6px !default;
       &-AvailableSizes {
         display: flex;
         flex-direction: row;
-        justify-content: start;
+        justify-content: flex-start;
         margin: auto;
         width: 100%;
         overflow: scroll;
@@ -293,6 +293,8 @@ $select-arrow-width: 6px !default;
 
     &-SizeOptionContainerOOS {
       padding: 0 4px 0 0;
+      pointer-events: none;
+
 
       input {
         display: none;

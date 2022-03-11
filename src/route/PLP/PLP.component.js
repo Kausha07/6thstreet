@@ -6,6 +6,7 @@ import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
@@ -26,6 +27,7 @@ export class PLP extends PureComponent {
       showPopup: false,
       circleBannerUrl: null,
       activeFilters: {},
+      isArabic: isArabic(),
     };
   }
 
@@ -136,6 +138,7 @@ export class PLP extends PureComponent {
 
   render() {
     const { signInPopUp } = this.state;
+    const { isArabic } = this.state;
 
     return (
       <main block="PLP" id="plp-main-scroll-id">
@@ -153,7 +156,7 @@ export class PLP extends PureComponent {
 
             </div>
             {
-              !isMobile.any() && <div block="SortBy">{this.renderPLPSortBy()}</div>
+              !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
             }
 
           </div>

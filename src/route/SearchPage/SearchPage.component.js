@@ -2,6 +2,7 @@
 // import { PureComponent } from 'react';
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import EmptySearch from "Component/EmptySearch";
+import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
 import "./SearchPage.style";
 
@@ -31,6 +32,7 @@ class SearchPage extends PLP {
       options: { q },
       pages,
     } = this.props;
+    const { isArabic } = this.state;
     // if (isLoading) {
     //   return (
     //     <>
@@ -48,9 +50,14 @@ class SearchPage extends PLP {
         <main block="SearchPage">
           <ContentWrapper label={__("Product List Page")}>
             {this.renderPLPDetails()}
-            <div block="Products" elem="Wrapper">
-              {this.renderPLPFilters()}
-              {this.renderPLPPages()}
+            <div>
+              <div block="Products" elem="Wrapper">
+                {this.renderPLPFilters()}
+                {this.renderPLPPages()}
+              </div>
+              {
+                !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
+              }
             </div>
             {this.renderSearchNotFound()}
           </ContentWrapper>

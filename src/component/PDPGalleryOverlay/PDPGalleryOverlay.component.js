@@ -15,6 +15,7 @@ import { ReactComponent as Minus } from "./icons/minus.svg";
 import { ReactComponent as Plus } from "./icons/plus.svg";
 import { ChevronLeft, ChevronRight } from "Component/Icons";
 import PinchZoomPan from "react-responsive-pinch-zoom-pan";
+import DragAndZoom from "react-drag-and-zoom"
 
 import "./PDPGalleryOverlay.style";
 
@@ -39,6 +40,7 @@ class PDPGalleryOverlay extends PureComponent {
   constructor(props) {
     super(props);
     this.renderImage = this.renderImage.bind(this);
+    this.ResetTheZoomInValue = this.ResetTheZoomInValue.bind(this);
 
     this.state = {
       scale: 1,
@@ -48,27 +50,43 @@ class PDPGalleryOverlay extends PureComponent {
       addX: 0,
       initialScale: 1,
       isMobile: isMobile.any() || isMobile.tablet(),
-      isZoomIn: false
+      isZoomIn: false,
+      ZoomLevel:0
     };
 
   }
 
+  ResetTheZoomInValue() {
+    this.setState({isZoomIn:false});
+  }
+
   onImageClick = (e) => {
     e.stopPropagation()
-    this.setState(prevState => ({
-      isZoomIn: !prevState.isZoomIn
-    }));
+
+    const {ZoomLevel,isZoomIn}  = this.state;
+
+    if(ZoomLevel < 2 && isZoomIn)
+    {
+        this.setState(prevState => ({ZoomLevel: prevState.ZoomLevel + 1}));
+    }
+    else
+    {
+      this.setState(prevState => ({isZoomIn: !prevState.isZoomIn,ZoomLevel: 0}))
+    }
   }
 
 
   renderCrumb = (index, i) => {
     const { onSliderChange } = this.props;
+    const {isZoomIn} = this.state;
     return (
       <PDPGalleryCrumb
         onSlideChange={onSliderChange}
         key={i}
         // prefer numerical index
         index={+index}
+        isZoomIn={isZoomIn}
+        ResetTheZoomInValue={this.ResetTheZoomInValue}
       />
     );
   };
@@ -120,20 +138,15 @@ class PDPGalleryOverlay extends PureComponent {
       return gallery.map((src, i) => {
         const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
         return (
-
-          <div style={{ width: 500, height: "auto", textAlign: "center" }} key={i} onClick={this.onImageClick} id="galleryOverlayImage">
-            <PinchZoomPan position='center' initialScale='auto' doubleTapBehavior='reset' zoomButtons={false} key={i}>
-              <img className={this.state.isZoomIn ? "galleryOverlayImageZoomOut" : "galleryOverlayImage"} mix={{
-                block: "ProductGallery",
-                elem: "SliderImage",
-                mods: { isPlaceholder: !src },
-              }} ratio="custom" lazyLoad={false} alt='' src={gallery[i]} style={{ width: "500px !important" }} key={i}
-              />
-            </PinchZoomPan>
-          </div >
-
-        )
-
+        <div style={{ width: 500, height: "auto", textAlign: "center"}} key={i}   id="galleryOverlayImage">
+        <DragAndZoom>
+          <img onClick={this.onImageClick} onDragStart={(e)=>{e.stopPropagation()}} onDragStop={()=>{{document.body.clientWidth="100%"}}} mix={{
+            block: "ProductGallery",
+            elem: "SliderImage",
+            mods: { isPlaceholder: !src },
+          }} className={this.state.isZoomIn ? `galleryOverlayImageZoomOut galleryOverlayImageZoomLevel${this.state.ZoomLevel}` : "galleryOverlayImage"} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]}  key={i}          />
+        </DragAndZoom>
+        </div >)
         this.renderImage()
       })
     }
@@ -176,6 +189,11 @@ class PDPGalleryOverlay extends PureComponent {
     } else {
       onSliderChange(currentIndex - 1);
     }
+    // Extracting the isZoomIn state
+    const {isZoomIn} = this.state
+
+    // Extracting the isZoomIn state
+    if(isZoomIn) this.setState({isZoomIn:false,ZoomLevel:0});
   };
   next = (e) => {
     e.preventDefault();
@@ -188,6 +206,11 @@ class PDPGalleryOverlay extends PureComponent {
     } else {
       onSliderChange(currentIndex + 1);
     }
+    // Extracting the isZoomIn state
+    const {isZoomIn} = this.state
+
+    // Extracting the isZoomIn state
+    if(isZoomIn) this.setState({isZoomIn:false,ZoomLevel:0});
   };
 
   handleArrorKeySlide = (e) => {

@@ -1,6 +1,7 @@
 import { getStore } from "Store";
 // import CDN from "../../provider/CDN";
 import ThirdPartyAPI from "../../provider/ThirdPartyAPI";
+import { getLocaleFromUrl } from "Util/Url/Url";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
@@ -14,10 +15,11 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
     },
     AppState: { locale, gender },
   } = getStore().getState();
+  const customLocale = getLocaleFromUrl();
 
   const templateParams =
     {
-      $LOCALE: locale,
+      $LOCALE: locale ? locale : customLocale,
       $GENDER: gender,
       ...TemplateParamsOverride,
     } || {};

@@ -50,7 +50,9 @@ export class ContactHelp extends PureComponent {
     };
   }
   chat() {
-    document.querySelector(".ori-cursor-ptr").click();
+    if(document.querySelector(".ori-cursor-ptr")){
+      document.querySelector(".ori-cursor-ptr").click();
+    }
   }
 
   renderContactUs() {
