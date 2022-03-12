@@ -1,21 +1,17 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import Image from "Component/Image";
 import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
-import ProductGalleryBaseImage from "Component/ProductGalleryBaseImage";
 import Slider from "Component/Slider";
 import SliderHorizontal from "Component/SliderHorizontal";
 import isMobile from "Util/Mobile";
 
 import { ReactComponent as Close } from "./icons/close.svg";
-import { ReactComponent as Minus } from "./icons/minus.svg";
-import { ReactComponent as Plus } from "./icons/plus.svg";
 import { ChevronLeft, ChevronRight } from "Component/Icons";
-import PinchZoomPan from "react-responsive-pinch-zoom-pan";
-import DragAndZoom from "react-drag-and-zoom"
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { MIN_ZOOM_SCALE, MAX_ZOOM_SCALE } from "./PDPGalleryOverlay.config"
 
 import "./PDPGalleryOverlay.style";
 
@@ -41,7 +37,7 @@ class PDPGalleryOverlay extends PureComponent {
     super(props);
     this.renderImage = this.renderImage.bind(this);
     this.ResetTheZoomInValue = this.ResetTheZoomInValue.bind(this);
-
+    this.transformWrapperRef = React.createRef();
     this.state = {
       scale: 1,
       positionY: 0,
@@ -53,7 +49,13 @@ class PDPGalleryOverlay extends PureComponent {
       isZoomIn: false,
       ZoomLevel:0
     };
+  }
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleArrowKeySlide);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleArrowKeySlide);
   }
 
   ResetTheZoomInValue() {
@@ -62,9 +64,7 @@ class PDPGalleryOverlay extends PureComponent {
 
   onImageClick = (e) => {
     e.stopPropagation()
-
     const {ZoomLevel,isZoomIn}  = this.state;
-
     if(ZoomLevel < 2 && isZoomIn)
     {
         this.setState(prevState => ({ZoomLevel: prevState.ZoomLevel + 1}));
@@ -131,23 +131,46 @@ class PDPGalleryOverlay extends PureComponent {
     );
   }
 
+  onZoomStop({state}) {
+    if(state?.scale){
+      this.setState({
+        scale: state.scale
+      });
+    }
+  }
+
   renderGallery() {
     const { gallery = [], isGalleryEmpty } = this.props;
-
+    const { scale } = this.state;
     if (gallery[0] !== undefined && !isGalleryEmpty) {
       return gallery.map((src, i) => {
-        const { isZoomEnabled, handleZoomChange, disableZoom, currentIndex, gallery } = this.props;
+        const { currentIndex, gallery } = this.props;
         return (
-        <div style={{ width: 500, height: "auto", textAlign: "center"}} key={i}   id="galleryOverlayImage">
-        <DragAndZoom>
-          <img onClick={this.onImageClick} onDragStart={(e)=>{e.stopPropagation()}} onDragStop={()=>{{document.body.clientWidth="100%"}}} mix={{
-            block: "ProductGallery",
-            elem: "SliderImage",
-            mods: { isPlaceholder: !src },
-          }} className={this.state.isZoomIn ? `galleryOverlayImageZoomOut galleryOverlayImageZoomLevel${this.state.ZoomLevel}` : "galleryOverlayImage"} ratio="custom" lazyLoad={false} alt='' src={gallery[currentIndex]}  key={i}          />
-        </DragAndZoom>
-        </div >)
-        this.renderImage()
+        <div key={i}>
+          <TransformWrapper
+            ref={this.transformWrapperRef}
+            centerOnInit={true}
+            centerZoomedOut
+            minScale={MIN_ZOOM_SCALE || 1}
+            maxScale={MAX_ZOOM_SCALE || 8}
+            onClick={this.onClick}
+            panning={{
+              disabled: scale <= MIN_ZOOM_SCALE
+            }}
+            onZoomStop={this.onZoomStop.bind(this)}
+          >
+            <TransformComponent>
+              <img
+                src={gallery[currentIndex]}
+                block="CurrentImage"
+                mods={{
+                  isMaxZoomedIn: scale>=MAX_ZOOM_SCALE
+                }}
+              />
+            </TransformComponent>
+          </TransformWrapper>
+        </div >
+        )
       })
     }
     return gallery.map(this.renderGalleryImage);
@@ -213,24 +236,26 @@ class PDPGalleryOverlay extends PureComponent {
     if(isZoomIn) this.setState({isZoomIn:false,ZoomLevel:0});
   };
 
-  handleArrorKeySlide = (e) => {
+  handleArrowKeySlide = (e) => {
+    const { isMobile } = this.state;
+    const { closeGalleryOverlay } = this.props;
+    if(isMobile) {
+      return;
+    }
     switch (e.keyCode) {
+      case 27:
+        closeGalleryOverlay()
+        break;
       case 37:
-        this.prev();
-
+        this.prev(e);
         break;
 
       case 39:
-        this.next();
+        this.next(e);
         break;
     }
   };
-  listenArrowKey = () => {
-    const { isMobile } = this.state;
-    if (!isMobile) {
-      document.addEventListener("keydown", this.handleArrorKeySlide);
-    }
-  };
+
   renderPrevButton = () => {
     return (
       <button block="PDPGalleryOverlay" elem="Prev" onClick={this.prev}>
@@ -260,12 +285,6 @@ class PDPGalleryOverlay extends PureComponent {
         >
           <Close />
         </button>
-        {/* <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={() => this.zoomin()}>
-          <Plus />
-        </button>
-        <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={() => this.zoomout()}>
-          <Minus />
-        </button> */}
         {this.renderPrevButton()}
         {this.renderNextButton()}
         {this.renderCrumbs()}

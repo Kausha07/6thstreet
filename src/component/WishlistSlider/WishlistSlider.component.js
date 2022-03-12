@@ -37,7 +37,9 @@ class WishlistSlider extends PureComponent {
 
   async handleContainerScroll(event) {
     const target = event.nativeEvent.target;
+    if(this.scrollerRef && this.scrollerRef.current){
     this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    }
   }
 
   renderHeader() {
