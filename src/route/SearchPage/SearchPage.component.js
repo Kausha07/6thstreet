@@ -50,6 +50,7 @@ class SearchPage extends PLP {
         <main block="SearchPage">
           <ContentWrapper label={__("Product List Page")}>
             {this.renderPLPDetails()}
+            {this.state.bannerData && this.renderBanner()}
             <div>
               <div block="Products" elem="Wrapper">
                 {this.renderPLPFilters()}
