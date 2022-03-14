@@ -142,13 +142,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
+    let newLink = formatCDNLink(link) + "&plp_config=true"
 
     // TODO: move to new component
 
     return (
       <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
-          to={formatCDNLink(link)}
+          to={newLink}
           key={i}
           data-banner-type="circleItemSlider"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}

@@ -101,11 +101,9 @@ export class PLP extends PureComponent {
   }
 
   renderBanner() {
-    let urlPath = window.location.pathname + window.location.search;
-    let bannerUrl = localStorage.getItem("CircleBannerUrl");
-    console.log(bannerUrl)
-    console.log(urlPath)
-    if (this.state.bannerData && bannerUrl === urlPath)
+    let isFromCircleItemSlider = window.location.href.includes('plp_config');
+
+    if (this.state.bannerData && isFromCircleItemSlider)
       return (
         <div>
           <CircleItemSliderSubPage bannerData={this.state.bannerData} />
@@ -141,6 +139,7 @@ export class PLP extends PureComponent {
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
+    console.log(this.state)
 
     return (
       <main block="PLP" id="plp-main-scroll-id">

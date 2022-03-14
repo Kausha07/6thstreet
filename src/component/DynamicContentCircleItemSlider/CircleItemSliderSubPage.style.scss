@@ -1,5 +1,10 @@
 .CircleItemSliderSubPage{
     margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    @include mobile{
+        display: block;
+    }
     video{
         margin: 0 auto;
     }
@@ -7,12 +12,32 @@
         display: flex;
     }
     h2{
-        font-size: 18px;
-        text-align: center;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -1px;
+        line-height: 55px;
+        text-transform: capitalize;
+        margin-left: 30px;
+        @include mobile{
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            line-height: unset;
+            text-transform: uppercase;
+            margin-left: 0px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
     }
     p{
-        text-align: center;
-        font-size: 15px;
+        font-size: 18px;
+        margin-left: 30px;
+        letter-spacing: 0;
+        line-height: 25px;
+        @include mobile{
+            margin-right: 30px;
+            text-align: center;
+        }
     }
 
 }
