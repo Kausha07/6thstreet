@@ -47,7 +47,7 @@ class SearchPage extends PLP {
       (pages["0"] && pages["0"].length > 0)
     ) {
       return (
-        <main block="SearchPage">
+        <main block="SearchPage" id="plp-main-scroll-id">
           <ContentWrapper label={__("Product List Page")}>
             {this.renderPLPDetails()}
             {this.state.bannerData && this.renderBanner()}
@@ -67,7 +67,7 @@ class SearchPage extends PLP {
     }
 
     return (
-      <main block="SearchPage">
+      <main block="SearchPage" >
         <ContentWrapper label={__("Product List Page")}>
           {this.renderPLPDetails()}
           {this.renderPLPPages()}
