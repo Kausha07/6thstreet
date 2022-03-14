@@ -139,7 +139,6 @@ export class PLP extends PureComponent {
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
-    console.log(this.state)
 
     return (
       <main block="PLP" id="plp-main-scroll-id">
