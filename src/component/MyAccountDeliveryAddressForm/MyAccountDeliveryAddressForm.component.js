@@ -124,7 +124,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       this.setArea(city);
     }
 
-    if (!selectedCity?.city) {
+    if (!(selectedCity?.city?.length || selectedCity?.length)) {
       return {
         region_string: {
           validation: ["notEmpty"],

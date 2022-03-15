@@ -760,9 +760,9 @@ export class PLPContainer extends PureComponent {
     }
     let element = document.getElementById(lastHomeItem);
     if (element) {
-        // window.focus();
-        element.style.scrollMarginTop = "180px";
-        element.scrollIntoView({ behavior: "smooth" });
+      // window.focus();
+      element.style.scrollMarginTop = "180px";
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
 
@@ -790,12 +790,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-        ? options["categories.level3"]
-        : options["categories.level2"]
-        ? options["categories.level2"]
-        : options["categories.level1"]
-        ? options["categories.level1"]
-        : options["q"];
+          ? options["categories.level3"]
+          : options["categories.level2"]
+            ? options["categories.level2"]
+            : options["categories.level1"]
+              ? options["categories.level1"]
+              : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
