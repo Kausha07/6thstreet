@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import isMobile from "Util/Mobile";
-
+import { isArabic } from "Util/App";
 import './CircleItemSliderSubPage.style';
 import Image from "Component/Image";
 
@@ -45,8 +45,8 @@ class CircleItemSliderSubPage extends PureComponent {
                     }
                 </div>
                 <div block="CircleItemSliderSubPage-Discription">
-                    <h2>{banner.title}</h2>
-                    <p>{banner.description}</p>
+                    <h2 block="CircleItemSliderSubPage-Discription" elem="Title" mods={{ isArabic: isArabic() }}>{banner.title}</h2>
+                    <p block="CircleItemSliderSubPage-Discription" elem="Desc" mods={{ isArabic: isArabic() }}>{banner.description}</p>
                 </div>
 
             </div>

@@ -6,6 +6,7 @@ import Image from "Component/Image";
 import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import Slider from "Component/Slider";
 import SliderHorizontal from "Component/SliderHorizontal";
+import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
 import { ReactComponent as Close } from "./icons/close.svg";
@@ -35,8 +36,8 @@ class PDPGalleryOverlay extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.renderImage = this.renderImage.bind(this);
     this.ResetTheZoomInValue = this.ResetTheZoomInValue.bind(this);
+    this.hideZoomingGuide = this.hideZoomingGuide.bind(this);
     this.transformWrapperRef = React.createRef();
     this.state = {
       scale: 1,
@@ -47,12 +48,13 @@ class PDPGalleryOverlay extends PureComponent {
       initialScale: 1,
       isMobile: isMobile.any() || isMobile.tablet(),
       isZoomIn: false,
-      ZoomLevel:0
+      showZoomingGuide: true
     };
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleArrowKeySlide);
+    setTimeout(this.hideZoomingGuide, 1800);
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleArrowKeySlide);
@@ -61,20 +63,6 @@ class PDPGalleryOverlay extends PureComponent {
   ResetTheZoomInValue() {
     this.setState({isZoomIn:false});
   }
-
-  onImageClick = (e) => {
-    e.stopPropagation()
-    const {ZoomLevel,isZoomIn}  = this.state;
-    if(ZoomLevel < 2 && isZoomIn)
-    {
-        this.setState(prevState => ({ZoomLevel: prevState.ZoomLevel + 1}));
-    }
-    else
-    {
-      this.setState(prevState => ({isZoomIn: !prevState.isZoomIn,ZoomLevel: 0}))
-    }
-  }
-
 
   renderCrumb = (index, i) => {
     const { onSliderChange } = this.props;
@@ -86,17 +74,14 @@ class PDPGalleryOverlay extends PureComponent {
         // prefer numerical index
         index={+index}
         isZoomIn={isZoomIn}
+        block="PDPGalleryCrumb"
+        mods={{
+          isArabic: isArabic()
+        }}
         ResetTheZoomInValue={this.ResetTheZoomInValue}
       />
     );
   };
-
-
-
-  renderImage(src, i) {
-
-
-  }
 
   renderGalleryImage = (src, i) => <Image lazyLoad={false} src={src} key={i} />;
 
@@ -113,7 +98,10 @@ class PDPGalleryOverlay extends PureComponent {
         <SliderHorizontal
           mix={{
             block: "Slider",
-            mods: { isCrumbs: true },
+            mods: {
+              isCrumbs: true,
+              isArabic: isArabic()
+            },
             mix: {
               block: "Slider",
               elem: "Wrapper",
@@ -139,9 +127,13 @@ class PDPGalleryOverlay extends PureComponent {
     }
   }
 
+  hideZoomingGuide() {
+    this.setState({showZoomingGuide: false});
+  }
+
   renderGallery() {
     const { gallery = [], isGalleryEmpty } = this.props;
-    const { scale } = this.state;
+    const { scale, showZoomingGuide} = this.state;
     if (gallery[0] !== undefined && !isGalleryEmpty) {
       return gallery.map((src, i) => {
         const { currentIndex, gallery } = this.props;
@@ -153,21 +145,38 @@ class PDPGalleryOverlay extends PureComponent {
             centerZoomedOut
             minScale={MIN_ZOOM_SCALE || 1}
             maxScale={MAX_ZOOM_SCALE || 8}
-            onClick={this.onClick}
+            doubleClick={{
+              mode: scale>=MAX_ZOOM_SCALE?'zoomOut':'zoomIn',
+            }}
             panning={{
-              disabled: scale <= MIN_ZOOM_SCALE
+              disabled: isMobile.any()?scale <= MIN_ZOOM_SCALE:false
             }}
             onZoomStop={this.onZoomStop.bind(this)}
           >
-            <TransformComponent>
-              <img
-                src={gallery[currentIndex]}
-                block="CurrentImage"
-                mods={{
-                  isMaxZoomedIn: scale>=MAX_ZOOM_SCALE
-                }}
-              />
-            </TransformComponent>
+            {
+              () => (
+                <React.Fragment>
+                  {
+                    showZoomingGuide && scale<=MIN_ZOOM_SCALE && !isMobile.any()
+                    ?
+                    <div block="ZoomGuide" onClick={this.hideZoomingGuide}>
+                      { __("Double Click to Zoom In") }
+                    </div>
+                    :
+                    null
+                  }
+                  <TransformComponent>
+                    <img
+                      src={gallery[currentIndex]}
+                      block="CurrentImage"
+                      mods={{
+                        isMaxZoomedIn: scale>=MAX_ZOOM_SCALE
+                      }}
+                    />
+                  </TransformComponent>
+                </React.Fragment>
+              )
+            }
           </TransformWrapper>
         </div >
         )
@@ -193,7 +202,7 @@ class PDPGalleryOverlay extends PureComponent {
         activeImage={currentIndex}
         onActiveImageChange={onSliderChange}
         mix={{ block: "PDPGalleryOverlay", elem: "Slider" }}
-        showCrumbs={isMobile.any()}
+        showCrumbs={false}
         isInteractionDisabled={!isMobile.any()}
       >
         {this.renderGallery()}
@@ -212,11 +221,6 @@ class PDPGalleryOverlay extends PureComponent {
     } else {
       onSliderChange(currentIndex - 1);
     }
-    // Extracting the isZoomIn state
-    const {isZoomIn} = this.state
-
-    // Extracting the isZoomIn state
-    if(isZoomIn) this.setState({isZoomIn:false,ZoomLevel:0});
   };
   next = (e) => {
     e.preventDefault();
@@ -229,11 +233,6 @@ class PDPGalleryOverlay extends PureComponent {
     } else {
       onSliderChange(currentIndex + 1);
     }
-    // Extracting the isZoomIn state
-    const {isZoomIn} = this.state
-
-    // Extracting the isZoomIn state
-    if(isZoomIn) this.setState({isZoomIn:false,ZoomLevel:0});
   };
 
   handleArrowKeySlide = (e) => {
@@ -249,7 +248,6 @@ class PDPGalleryOverlay extends PureComponent {
       case 37:
         this.prev(e);
         break;
-
       case 39:
         this.next(e);
         break;
@@ -274,7 +272,6 @@ class PDPGalleryOverlay extends PureComponent {
 
   render() {
     const { closeGalleryOverlay } = this.props;
-    const { rendered } = this.state;
 
     return (
       <div block="PDPGalleryOverlay">
