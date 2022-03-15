@@ -8,6 +8,13 @@
     video{
         margin: 0 auto;
     }
+    img{
+        margin: 0 auto;
+        @include mobile{
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+    }
     &-Video{
         display: flex;
     }
