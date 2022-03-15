@@ -13,7 +13,7 @@ class CircleItemSliderSubPage extends PureComponent {
     componentDidMount() {
         let ele = document.getElementById("CircleItemSliderSubPage-Video")
         if (ele) {
-            ele.controls = false,
+            ele.controls = true,
                 ele.playsinline = false,
                 ele.muted = true,
                 ele.loop = true,
