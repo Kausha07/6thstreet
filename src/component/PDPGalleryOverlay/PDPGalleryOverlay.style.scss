@@ -23,6 +23,22 @@
         background: var(--white-color);
         .SliderHorizontal {
             height: auto !important;
+            &-ButtonRight, &-ButtonLeft {
+                @include mobile {
+                    display: flex;
+                    height: 100%!important;
+                    margin: 0px!important;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 0;
+                }
+                &_isArrowDownHidden {
+                    display: none;
+                }
+                &_isArrowUpHidden {
+                    display: none;
+                }
+            }
         }
         .PDPGalleryCrumb {
             margin-right: 1px;
@@ -55,8 +71,14 @@
         position: relative;
         min-width: 0;
         order: 1;
+        &_isArabic {
+            direction: rtl!important;
+        }
         &_isCrumbs {
             width: 85px;
+            @include mobile {
+                margin: 0!important;
+            }
         }
         &-Wrapper {
             &_isCrumbs {
@@ -128,6 +150,26 @@
         .Slider {
             margin: auto 10px;
         }
+        .ZoomGuide {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 901;
+            font-size: 16px;
+            background: grey;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0px;
+            line-height: 30px;
+            transform: translate(-50%, -50%);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            justify-content: center;
+            text-align: center;
+            white-space: nowrap;
+        }
+
         &-Button {
             height: 50px;
             width: 50px;
@@ -177,10 +219,7 @@
             }
         }
         &-Crumbs {
-            display: none;
-            @include desktop {
-                display: flex;
-            }
+            display: flex;
         }
     }
     .Slider-Wrapper>* {
