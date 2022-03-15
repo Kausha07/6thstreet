@@ -10,6 +10,23 @@ class CircleItemSliderSubPage extends PureComponent {
         url: PropTypes.string.isRequired
     };
 
+    componentDidMount() {
+        let ele = document.getElementById("CircleItemSliderSubPage-Video")
+        if (ele) {
+            ele.controls = true,
+                ele.playsinline = false,
+                ele.muted = true,
+                ele.loop = true,
+                ele.autoplay = true,
+                ele.setAttribute("muted", "")
+
+            setTimeout(() => {
+                const promise = ele.play();
+            }, 0)
+
+        }
+    }
+
     render() {
         let banner = this.props.bannerData.plp_config && this.props.bannerData.plp_config.banner
         let url = banner.url
@@ -22,7 +39,7 @@ class CircleItemSliderSubPage extends PureComponent {
                         banner.type === "image" ?
                             <img src={url} />
                             :
-                            <video controls autoplay="true" loop muted>
+                            <video id="CircleItemSliderSubPage-Video" >
                                 <source src={url} type="video/mp4" />
                             </video>
                     }
