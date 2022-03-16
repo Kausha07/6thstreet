@@ -27,6 +27,7 @@ import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "./icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import Image from "Component/Image";
+import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {
@@ -90,6 +91,12 @@ export class CheckoutSuccess extends PureComponent {
 
   renderSuccessMessage = (email) => {
     const { isArabic } = this.state;
+    const {incrementID,initialTotals} = this.props;
+    console.log("Barath", incrementID, initialTotals);
+    Event.dispatch(EVENT_GTM_PURCHASE, {
+      orderID: incrementID,
+      totals: initialTotals,
+    });
 
     return (
       <div block="SuccessMessage" mods={{ isArabic }}>
