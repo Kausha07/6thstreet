@@ -477,11 +477,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         totals,
         step: this.getCheckoutStepNumber(),
       });
-    } else {
-      Event.dispatch(EVENT_GTM_PURCHASE, {
-        orderID: incrementID,
-        totals: initialTotals,
-      });
     }
 
     if (isInitial) {

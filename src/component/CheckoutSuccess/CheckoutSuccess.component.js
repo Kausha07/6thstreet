@@ -92,7 +92,6 @@ export class CheckoutSuccess extends PureComponent {
   renderSuccessMessage = (email) => {
     const { isArabic } = this.state;
     const {incrementID,initialTotals} = this.props;
-    console.log("Barath", incrementID, initialTotals);
     Event.dispatch(EVENT_GTM_PURCHASE, {
       orderID: incrementID,
       totals: initialTotals,
