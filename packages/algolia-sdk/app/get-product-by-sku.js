@@ -22,7 +22,7 @@ function getAvailableProduct(sku, highlights, options) {
 
                 return resolve({
                     ...result,
-                    data: formatData(result.data)
+                    data: result.data ? formatData(result.data) : {}
                 });
             }
         );
