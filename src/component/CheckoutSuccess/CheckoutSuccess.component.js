@@ -91,7 +91,7 @@ export class CheckoutSuccess extends PureComponent {
 
   renderSuccessMessage = (email) => {
     const { isArabic } = this.state;
-    const {incrementID,initialTotals} = this.props;
+    const { incrementID, initialTotals } = this.props;
     Event.dispatch(EVENT_GTM_PURCHASE, {
       orderID: incrementID,
       totals: initialTotals,
@@ -431,8 +431,10 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
-          getCountryFromUrl() === 'QA' ? __("Cash on Receiving Fee") : __("Cash on Delivery Fee")
+            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getCountryFromUrl() === "QA"
+            ? __("Cash on Receiving Fee")
+            : __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
@@ -745,7 +747,12 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple Pay") });
     } else if (paymentMethod?.code?.match(/cash/)) {
-      this.setState({ paymentTitle: getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery") });
+      this.setState({
+        paymentTitle:
+          getCountryFromUrl() === "QA"
+            ? __("Cash on Receiving")
+            : __("Cash on Delivery"),
+      });
     } else if (paymentMethod?.code?.match(/free/)) {
       if (getDiscountFromTotals(total_segments, "clubapparel")) {
         this.setState({ paymentTitle: __("Club Apparel") });
@@ -869,17 +876,17 @@ export class CheckoutSuccess extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
-                customer_balance_amount,
-                __("Store Credit"),
-                { isStoreCredit: true }
-              )
+                  customer_balance_amount,
+                  __("Store Credit"),
+                  { isStoreCredit: true }
+                )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
@@ -888,7 +895,12 @@ export class CheckoutSuccess extends PureComponent {
               ? this.renderPriceLineQPAY(tax_amount, __("Tax"))
               : null}
             {parseFloat(msp_cod_amount) !== 0
-              ? this.renderPriceLineQPAY(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery"))
+              ? this.renderPriceLineQPAY(
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving")
+                    : __("Cash on Delivery")
+                )
               : null}
             {this.renderPriceLineQPAY(
               grandTotal,
@@ -921,7 +933,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-            paymentMethod?.code === "tabby_installments"
+          paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}
