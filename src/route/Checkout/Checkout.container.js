@@ -39,7 +39,7 @@ import {
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
-import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from "Util/Event";
+import Event, { EVENT_GTM_CHECKOUT } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";

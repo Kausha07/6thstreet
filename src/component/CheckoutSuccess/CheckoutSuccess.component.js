@@ -918,19 +918,22 @@ export class CheckoutSuccess extends PureComponent {
       initialTotals,
     } = this.props;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
-    if (
-      paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments"
-    ) { 
-      Event.dispatch(EVENT_GTM_PURCHASE, {
-        orderID: incrementID,
-        totals: dispatchedObj,
-      });
-    } else {
-      Event.dispatch(EVENT_GTM_PURCHASE, {
-        orderID: incrementID,
-        totals: initialTotals,
-      });
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName !== "/checkout/error"){
+      if (
+        paymentMethod?.code === "checkout_qpay" ||
+        paymentMethod?.code === "tabby_installments"
+      ) { 
+        Event.dispatch(EVENT_GTM_PURCHASE, {
+          orderID: incrementID,
+          totals: dispatchedObj,
+        });
+      } else {
+        Event.dispatch(EVENT_GTM_PURCHASE, {
+          orderID: incrementID,
+          totals: initialTotals,
+        });
+      }
     }
     localStorage.removeItem("cartProducts");
     return (
