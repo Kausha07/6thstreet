@@ -77,7 +77,7 @@ export class PLPDispatcher {
   async requestPLPWidgetData(dispatch) {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "women";
 
     const devicePrefix = this.getDevicePrefix();
     try {
