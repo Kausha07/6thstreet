@@ -147,7 +147,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     } = this.props;
 
     setCheckoutDetails(true);
-
+    
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;

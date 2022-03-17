@@ -91,11 +91,6 @@ export class CheckoutSuccess extends PureComponent {
 
   renderSuccessMessage = (email) => {
     const { isArabic } = this.state;
-    const { incrementID, initialTotals } = this.props;
-    Event.dispatch(EVENT_GTM_PURCHASE, {
-      orderID: incrementID,
-      totals: initialTotals,
-    });
 
     return (
       <div block="SuccessMessage" mods={{ isArabic }}>
@@ -919,7 +914,25 @@ export class CheckoutSuccess extends PureComponent {
       customer,
       billingAddress: { guest_email },
       paymentMethod,
+      incrementID,
+      initialTotals,
     } = this.props;
+    let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
+    if (
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments"
+    ) { 
+      Event.dispatch(EVENT_GTM_PURCHASE, {
+        orderID: incrementID,
+        totals: dispatchedObj,
+      });
+    } else {
+      Event.dispatch(EVENT_GTM_PURCHASE, {
+        orderID: incrementID,
+        totals: initialTotals,
+      });
+    }
+    localStorage.removeItem("cartProducts");
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}

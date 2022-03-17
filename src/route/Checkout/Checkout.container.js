@@ -248,7 +248,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         localStorage.removeItem("TABBY_ORDER_DETAILS");
       }
     } catch (error) {
-      localStorage.getItem("TABBY_ORDER_DETAILS")
+      localStorage.getItem("TABBY_ORDER_DETAILS");
       this.setState({ PaymentRedirect: false });
       console.error("error while auth in tabby pay case", error);
     }
@@ -262,7 +262,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         const { getPaymentAuthorizationQPay, capturePayment, cancelOrder } =
           this.props;
-
 
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")
@@ -351,9 +350,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { setMeta } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    const TABBY_CHECK = JSON.parse(
-      localStorage.getItem("TABBY_ORDER_DETAILS")
-    );
+    const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
     if (!QPAY_CHECK && !TABBY_CHECK) {
       this.refreshCart();
     }
@@ -375,10 +372,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = this.props;
 
     const { checkoutStep, initialGTMSent, PaymentRedirect } = this.state;
-
     const { checkoutStep: prevCheckoutStep } = prevState;
     const { total: { items: prevItems } = {} } = prevProps;
-
     if (PaymentRedirect) {
       if (checkoutStep !== prevCheckoutStep) {
         updateStoreCredit();
@@ -464,7 +459,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.updateTotals();
     });
   }
-
   componentWillUnmount() {
     this.removeBinPromotion();
   }
@@ -472,13 +466,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   handleCheckoutGTM(isInitial = false) {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
+    const tempObj = JSON.stringify(initialTotals);
+    
+    if (checkoutStep == BILLING_STEP) {
+      localStorage.setItem("cartProducts", tempObj);
+    }
     if (checkoutStep !== DETAILS_STEP) {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
         step: this.getCheckoutStepNumber(),
       });
     }
-
     if (isInitial) {
       this.setState({ initialGTMSent: true });
     }
@@ -525,10 +523,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     /* eslint-disable */
     delete address.region_id;
-    if(!address?.region && address?.postcode){
+    if (!address?.region && address?.postcode) {
       address.region = address?.postcode;
     }
-    if(!address?.area && address?.postcode){
+    if (!address?.area && address?.postcode) {
       address.area = address?.postcode;
     }
     Checkout.setState({ isLoading: true });
@@ -536,7 +534,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       ...address,
       default_shipping: true,
     }).then((response) => {
-
       if (typeof response !== "undefined") {
         Checkout.setState({
           shippingMethods: response.data,
@@ -659,10 +656,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (
-      code === TABBY_ISTALLMENTS ||
-      code === CHECKOUT_QPAY
-    ) {
+    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
       this.placeOrder(code, data, paymentInformation);
     } else {
       this.placeOrder(code, data, null);
@@ -790,7 +784,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => { })
+                    .then(() => {})
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -940,7 +934,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => { })
+              .then(() => {})
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
