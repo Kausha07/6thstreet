@@ -407,7 +407,13 @@ class CreditCard extends PureComponent {
             <div block="CreditCard">
                 {this.renderValidatorInfo()}
                 {this.renderCardsBlock()}
-                {newCardVisible && isSignedIn && this.renderSaveCardToggle('save_card_info')}
+                {
+                    newCardVisible && isSignedIn
+                    ?
+                    this.renderSaveCardToggle('save_card_info')
+                    :
+                    null
+                }
                 {this.renderAcceptedCardsInfo()}
             </div>
         );
