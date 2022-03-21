@@ -36,8 +36,7 @@ export class PDPSummaryContainer extends PureComponent {
         super(props);
         this.getBrandDetails = this.getBrandDetails.bind(this);
         this.state = {
-            url_path : "",
-            brand:""
+            url_path : ""
         }
     }
 
