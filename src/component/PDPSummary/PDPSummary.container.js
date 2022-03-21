@@ -6,6 +6,8 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPSummary from './PDPSummary.component';
 
+import Algolia from "Util/API/provider/Algolia"; 
+
 export const mapStateToProps = (state) => ({
     product: state.PDP.product,
     isLoading: state.PDP.isLoading
@@ -30,11 +32,37 @@ export class PDPSummaryContainer extends PureComponent {
         return { product, isLoading,renderMySignInPopup };
     };
 
+    constructor(props) {
+        super(props);
+        this.getBrandDetails = this.getBrandDetails.bind(this);
+        this.state = {
+            url_path : "",
+            brand:""
+        }
+    }
+
+    componentDidMount() {
+        this.getBrandDetails();
+    }
+    async getBrandDetails() {
+        const {product:{brand_name}} = this.props
+        const data = await new Algolia({
+          index: "brands_info",
+        }).getBrandsDetails({
+          query: brand_name,
+          limit: 1,
+        });
+        this.setState({
+          url_path: data?.hits[0]?.url_path
+        });
+      }
     render() {
+        const {url_path} = this.state;
         return (
             <PDPSummary
               { ...this.containerFunctions }
               { ...this.containerProps() }
+              url_path={url_path}
             />
         );
     }

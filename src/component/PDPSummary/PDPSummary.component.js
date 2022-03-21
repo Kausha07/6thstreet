@@ -147,16 +147,17 @@ class PDPSummary extends PureComponent {
     } = this.props;
     this.setState({ stockAvailibility: !!price && status });
   };
-
+  
   renderBrand() {
     const {
       product: {name, brand_name, gallery_images = [] },
     } = this.props;
+    const {url_path} = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
       return <div block="PDPSummary" elem="Heading">
-        <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>
+        <h1><a style={{textDecoration : "none"}} href={`/${url_path}.html`}>{brand_name}</a> <span block="PDPSummary" elem="Name">{name}</span></h1>
         
         <ShareButton
           title={document.title}
@@ -167,7 +168,7 @@ class PDPSummary extends PureComponent {
       </div>
     }
 
-    return <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>;
+    return <h1><a style={{textDecoration : "none"}} href={`/${url_path}.html`}>{brand_name}</a> <span block="PDPSummary" elem="Name">{name}</span></h1>;
   }
 
   renderName() {
