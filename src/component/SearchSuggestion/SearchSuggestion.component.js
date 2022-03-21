@@ -418,7 +418,6 @@ class SearchSuggestion extends PureComponent {
           >
             <div className="suggestion-details-box">
               {getHighlightedText(formatQuerySuggestions(query), searchString)}
-              <div>{count}</div>
             </div>
           </Link>
         </li>
