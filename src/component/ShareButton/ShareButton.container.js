@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import isMobile from "Util/Mobile";
-import { getCountryFromUrl } from "Util/Url/Url";
 
 import {
   hideActiveOverlay,
@@ -52,9 +51,8 @@ class ShareButtonContainer extends PureComponent {
 
 
   async _initiateShare() {
-    const country = getCountryFromUrl();
     const isDesktop = !(isMobile.any() || isMobile.tablet());
-    if(isDesktop && ('bh'===country?.toLowerCase())) {
+    if(isDesktop) {
       this.showShareOverlay();
     }
     else if(window.navigator.share){
@@ -72,11 +70,10 @@ class ShareButtonContainer extends PureComponent {
     const { openShareOverlay } = this.state;
     const { children, ...rest } = this.props;
     const isDesktop = !(isMobile.any() || isMobile.tablet());
-    const country = getCountryFromUrl();
     return (
       <>
         {
-          isDesktop && ('bh'===country?.toLowerCase())
+          isDesktop
           ?       
           <SharePopup
             showShareOverlay={this.showShareOverlay}
@@ -88,7 +85,7 @@ class ShareButtonContainer extends PureComponent {
           null
         }
         {
-          window.navigator?.share || ('bh'===country?.toLowerCase())
+          window.navigator.share || isDesktop
           ?
           <ShareButton
             initiateShare={this._initiateShare.bind(this)}

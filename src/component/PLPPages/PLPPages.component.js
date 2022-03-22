@@ -376,8 +376,10 @@ class PLPPages extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = this.getRequestOptions().q.split(" ")[1];
-
+    let categoryLevel1 =
+      this.getRequestOptions() && this.getRequestOptions().q
+        ? this.getRequestOptions().q.split(" ")[1]
+        : null;
 
     if (!isRadio) {
       if (filterArray) {

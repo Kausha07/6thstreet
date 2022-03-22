@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 import './CircleItemSliderSubPage.style';
 import Image from "Component/Image";
 
@@ -9,22 +10,46 @@ class CircleItemSliderSubPage extends PureComponent {
         url: PropTypes.string.isRequired
     };
 
+    componentDidMount() {
+        let ele = document.getElementById("CircleItemSliderSubPage-Video")
+        if (ele) {
+            ele.controls = false,
+                ele.playsinline = true,
+                ele.muted = true,
+                ele.loop = true,
+                ele.autoplay = true,
+                ele.setAttribute("muted", ""),
+                ele.setAttribute("playsinline", "")
+
+            setTimeout(() => {
+                const promise = ele.play();
+            }, 0)
+
+        }
+    }
+
     render() {
-        let url = this.props.bannerData.plp_config.banner.url
+        let banner = this.props.bannerData.plp_config && this.props.bannerData.plp_config.banner
+        let url = banner.url
+        let mWidth = (screen.width - 50).toString() + "px"
+        let mHeight = ((screen.width - 50) / banner.aspect_ratio).toString() + "px"
+        let isMobileWithImage = isMobile.any() && (banner.type === "image")
         return (
             <div block="CircleItemSliderSubPage">
-                <div block="CircleItemSliderSubPage-Video">
+                <div block="CircleItemSliderSubPage-Video" >
                     {
-                    this.props.bannerData.plp_config.banner.type === "image" ?
-                    <img src={url}/>
-                    :
-                    <video controls autoplay="true" loop muted>
-                        <source src={ url } type="video/mp4" />
-                    </video>
+                        banner.type === "image" ?
+                            <img src={url} style={isMobile.any() && { height: mHeight, width: mWidth }} />
+                            :
+                            <video id="CircleItemSliderSubPage-Video" style={isMobile.any() && { height: mHeight, width: mWidth }}>
+                                <source src={url} type="video/mp4" />
+                            </video>
                     }
                 </div>
-                <h2>{this.props.bannerData.plp_config.banner.title}</h2>
-                <p>{this.props.bannerData.plp_config.banner.description}</p>
+                <div block="CircleItemSliderSubPage-Discription">
+                    <h2 block="CircleItemSliderSubPage-Discription" elem="Title" mods={{ isArabic: isArabic() }}>{banner.title}</h2>
+                    <p block="CircleItemSliderSubPage-Discription" elem="Desc" mods={{ isArabic: isArabic() }}>{banner.description}</p>
+                </div>
 
             </div>
         );

@@ -29,13 +29,10 @@ class PDPAlsoAvailableProduct extends PureComponent {
 
   renderNew() {
     const {
-      product: { news_from_date, news_to_date },
+      product: { is_new_in },
     } = this.props;
     const { date } = this.state;
-    if (
-      Date.parse(date) <= Date.parse(news_to_date) &&
-      Date.parse(date) >= Date.parse(news_from_date)
-    ) {
+    if (is_new_in) {
       return <div block="ProductLabel">{__("New")}</div>;
     }
 

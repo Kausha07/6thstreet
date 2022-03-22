@@ -23,6 +23,7 @@ export class CheckoutFail extends CheckoutSuccess {
 
   renderDetails() {
     const { paymentMethod } = this.props;
+    localStorage.removeItem("cartProducts");
     return (
       <div block="CheckoutSuccess">
         <div block="CheckoutSuccess" elem="Details">

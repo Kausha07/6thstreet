@@ -442,7 +442,10 @@ export class PLPContainer extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = PLPContainer.getRequestOptions().q.split(" ")[1];
+    let categoryLevel1 =
+      PLPContainer.getRequestOptions() && PLPContainer.getRequestOptions().q
+        ? PLPContainer.getRequestOptions().q.split(" ")[1]
+        : null;
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -760,9 +763,9 @@ export class PLPContainer extends PureComponent {
     }
     let element = document.getElementById(lastHomeItem);
     if (element) {
-        // window.focus();
-        element.style.scrollMarginTop = "180px";
-        element.scrollIntoView({ behavior: "smooth" });
+      // window.focus();
+      element.style.scrollMarginTop = "180px";
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
 

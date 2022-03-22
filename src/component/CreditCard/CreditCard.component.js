@@ -167,11 +167,18 @@ class CreditCard extends PureComponent {
         this.props.removePromotionSavedCard();
     }
 
+    handleMyCardsClick = () => {
+        this.props.toggleNewCardVisible(false);
+    }
+
     renderCreditCardForm() {
-        const { isAmex } = this.props;
+        const { isAmex, isSignedIn } = this.props;
         const { cvv, cardLogo, isArabic } = this.state;
 
         return (
+            <React.Fragment>               
+                {isSignedIn ? <label block="MyCards" elem="Link" onClick={this.handleMyCardsClick}>{__("My Cards")}</label> : null}
+            
             <div block="CreditCard" elem="Card" dir={isArabic ? "rtl" : "ltr"}>
                 <p>{__("card number")}</p>
                 <input
@@ -237,6 +244,7 @@ class CreditCard extends PureComponent {
                     </div>
                 </div>
             </div>
+            </React.Fragment>
         );
     }
 
@@ -407,7 +415,13 @@ class CreditCard extends PureComponent {
             <div block="CreditCard">
                 {this.renderValidatorInfo()}
                 {this.renderCardsBlock()}
-                {newCardVisible && isSignedIn && this.renderSaveCardToggle('save_card_info')}
+                {
+                    newCardVisible && isSignedIn
+                    ?
+                    this.renderSaveCardToggle('save_card_info')
+                    :
+                    null
+                }
                 {this.renderAcceptedCardsInfo()}
             </div>
         );
