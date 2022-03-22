@@ -87,8 +87,10 @@
     }
   }
   .Slider-Wrapper > * {
-    width: 100% !important;
-    height: auto !important;
+    @include desktop {
+      width: 100% !important;
+      height: auto !important;
+    }
   }
   .Slider-Wrapper {
     align-items: unset;

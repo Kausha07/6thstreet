@@ -37,7 +37,9 @@ class MyAccountOrderListItem extends SourceComponent {
     };
     const finalStatus = isArabic()
       ? translateArabicStatus(status)
-      : status.split("_").join(" ");
+      : status
+      ? status.split("_").join(" ")
+      : "";
 
     return (
       <p

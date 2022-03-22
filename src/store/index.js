@@ -1,6 +1,7 @@
 import {
     combineReducers,
-    createStore
+    createStore,
+    applyMiddleware
 } from 'redux';
 
 import {
@@ -10,6 +11,7 @@ import ClubApparelReducer from 'Store/ClubApparel/ClubApparel.reducer';
 import MenuReducer from 'Store/Menu/Menu.reducer';
 import StoreCreditReducer from 'Store/StoreCredit/StoreCredit.reducer';
 import CreditCardReducer from 'Store/CreditCard/CreditCard.reducer';
+import logger from "redux-logger";
 
 export const staticReducers = {
     ...sourceStaticReducers,
@@ -18,6 +20,8 @@ export const staticReducers = {
     MenuReducer,
     CreditCardReducer
 };
+
+const middlewares = [logger];
 
 export function createReducer(asyncReducers) {
     return combineReducers({
@@ -28,12 +32,13 @@ export function createReducer(asyncReducers) {
 
 export const store = createStore(
     createReducer(),
-    ( // enable Redux dev-tools only in development
-        process.env.NODE_ENV === 'development'
-        && window.__REDUX_DEVTOOLS_EXTENSION__
-    ) && window.__REDUX_DEVTOOLS_EXTENSION__({
-        trace: true
-    })
+    (process.env.NODE_ENV === 'development' && applyMiddleware(...middlewares))
+    // ( // enable Redux dev-tools only in development
+    //     process.env.NODE_ENV === 'development'
+    //     && window.__REDUX_DEVTOOLS_EXTENSION__
+    // ) && window.__REDUX_DEVTOOLS_EXTENSION__({
+    //     trace: true
+    // })
 );
 
 // Configure the store

@@ -193,32 +193,10 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     return Object.keys(stateToBeUpdated).length ? stateToBeUpdated : null;
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { isSignedIn: prevIsSignedIn } = prevProps;
-    const { state: oldMyAccountState } = prevState;
-    const { state: newMyAccountState } = this.state;
-    const {
-      isSignedIn,
-      hideActiveOverlay,
-      isCheckout,
-      goToPreviousHeaderState,
-      closePopup,
-    } = this.props;
-
-    if (oldMyAccountState === newMyAccountState) {
-      return;
-    }
-
-    if (isSignedIn !== prevIsSignedIn) {
-      hideActiveOverlay();
-      if (isCheckout) {
-        goToPreviousHeaderState();
-      }
-    }
+  handleBackBtn() {
+    const { closePopup } = this.props;
     const getCurrentState = this.state.state;
     const { location } = browserHistory;
-
     if (isMobile.any()) {
       browserHistory.push(`${location.pathname}${location.search}`);
       window.onpopstate = () => {
@@ -230,6 +208,29 @@ export class MyAccountOverlayContainer extends PureComponent {
           return;
         }
       };
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { isSignedIn: prevIsSignedIn } = prevProps;
+    const { state: oldMyAccountState } = prevState;
+    const { state: newMyAccountState } = this.state;
+    const {
+      isSignedIn,
+      hideActiveOverlay,
+      isCheckout,
+      goToPreviousHeaderState,
+    } = this.props;
+
+    if (oldMyAccountState === newMyAccountState) {
+      return;
+    }
+
+    if (isSignedIn !== prevIsSignedIn) {
+      hideActiveOverlay();
+      if (isCheckout) {
+        goToPreviousHeaderState();
+      }
     }
   }
   redirectOrGetState = (props) => {
@@ -548,6 +549,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     this.setState({ otpError: "" });
   }
   render() {
+    this.handleBackBtn();
     const { state } = this.state;
     const { hideActiveOverlay } = this.props;
     if (state === "loggedIn") {

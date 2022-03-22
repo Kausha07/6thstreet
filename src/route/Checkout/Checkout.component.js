@@ -600,7 +600,7 @@ export class Checkout extends SourceCheckout {
 
       if (path) {
         if (checkoutStep === "SHIPPING_STEP") {
-          return history.push("/cart");
+          return history.goBack();
         }
         if (continueAsGuest) {
           this.continueAsGuest();
