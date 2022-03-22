@@ -202,9 +202,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           generateCustomerToken: { token },
         } = result;
         setAuthorizationToken(token);
-        dispatch(updateCustomerSignInStatus(true));
+
 
         await this.handleMobileAuthorization(dispatch, options);
+        dispatch(updateCustomerSignInStatus(true));
         this.signInCommonBlock(dispatch);
         return true;
       } catch ([e]) {
@@ -274,10 +275,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-              username,
-              password,
-              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            }
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
       );
 
     const phoneAttribute = custom_attributes?.filter(
