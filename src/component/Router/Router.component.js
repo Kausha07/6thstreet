@@ -31,6 +31,7 @@ import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
 import LiveExperience from "Route/LiveExperience";
 import WelcomeHomePage from "Component/WelcomeHomePage";
+import * as Sentry from '@sentry/react';
 
 import {
   CartPage,
@@ -56,6 +57,8 @@ import { isArabic } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./Router.style";
+
+const SentryRoute = Sentry.withSentryRouting(Route);
 
 export const BrandsPage = lazy(() =>
   import(/* webpackMode: "lazy", webpackChunkName: "brands" */ "Route/Brands")
@@ -126,7 +129,7 @@ export class Router extends SourceRouter {
   [SWITCH_ITEMS_TYPE] = [
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex(this.state.homepageUrl)}
           exact
           render={(props) => (
@@ -140,7 +143,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/page")}
           render={(props) => (
             <GTMRouteWrapper route={CMS_PAGE}>
@@ -153,7 +156,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/cart")}
           exact
           render={(props) => (
@@ -167,7 +170,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/checkout/:step?")}
           render={(props) => (
             <GTMRouteWrapper route={CHECKOUT}>
@@ -180,7 +183,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/:account*/createPassword/")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -193,7 +196,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/:account*/confirm")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -206,7 +209,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/my-account/:tab?")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -219,7 +222,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/forgot-password")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -232,7 +235,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/brands")}
           render={(props) => (
             <GTMRouteWrapper route={BRANDS}>
@@ -245,7 +248,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/catalogsearch/result")}
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
@@ -258,7 +261,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("feedback")}
           render={(props) => (
             <GTMRouteWrapper route={FEEDBACK}>
@@ -271,7 +274,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           render={(props) => (
             <GTMRouteWrapper route={URL_REWRITES}>
               <UrlRewrites {...props} />
@@ -283,7 +286,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("live-party")}
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
