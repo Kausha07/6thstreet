@@ -17,7 +17,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   getConfig: () => AppConfigDispatcher.getAppConfig(dispatch),
-  getCart: () => CartDispatcher.getCart(dispatch),
+  getCart: () => CartDispatcher.getCart(dispatch,false,false),
   requestPLPWidgetData: () => PLPDispatcher.requestPLPWidgetData(dispatch),
 });
 
@@ -59,6 +59,7 @@ export class SplashContainer extends PureComponent {
       );
       if (!QPAY_CHECK && !TABBY_CHECK) {
         getCart();
+        console.log("all well in splash")
         return { isCartRetrieved: true };
       }
     }
