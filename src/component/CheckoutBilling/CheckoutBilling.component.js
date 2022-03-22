@@ -91,7 +91,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     } = this.props;
 
     return (
-      <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
+      <li block="CheckoutBillingTotal CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
         <strong block="CheckoutOrderSummary" elem="Text">
           {name}
         </strong>

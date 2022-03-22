@@ -46,8 +46,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
-  addNewCreditCard: (cardData) =>
-    CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
+  addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
   getCardType: (bin) => CreditCardDispatcher.getCardType(dispatch, bin),
   showSuccessMessage: (message) =>
     dispatch(showNotification("success", message)),
@@ -264,10 +263,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     if (cvv) {
       this.setState({ cvv });
     }
-    if (newCardVisible && discount !== 0) {
-      this.removeBinPromotion();
-    }
     if (binApplied) {
+      if (newCardVisible && !number) {
+        this.removeBinPromotion();
+      }
       this.setState({ binApplied: false });
     }
     if (saveCard !== undefined && saveCard !== null) {
@@ -365,38 +364,39 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         });
 
         addNewCreditCard({ number, expMonth, expYear, cvv })
-          .then((response) => {
-            const { id, token } = response;
-
-            if (id || token) {
-              BrowserDatabase.setItem(
-                id ?? token,
-                "CREDIT_CART_TOKEN",
-                FIVE_MINUTES_IN_SECONDS
-              );
+        .then((response) => {
+          const { id, token } = response;
+          if (id || token) {
+            BrowserDatabase.setItem(
+              id ?? token,
+              "CREDIT_CART_TOKEN",
+              FIVE_MINUTES_IN_SECONDS
+            );
+            if(isSignedIn()) {
               showSuccessMessage(__("Credit card successfully added"));
-
-              savePaymentInformation({
-                billing_address: address,
-                paymentMethod,
-              });
-            } else if (Array.isArray(response)) {
-              const message = response[0];
-
-              if (typeof message === "string") {
-                showErrorNotification(this.getCartError(message));
-              } else {
-                showErrorNotification(__("Something went wrong"));
-              }
-            } else if (typeof response === "string") {
-              showErrorNotification(response);
             }
-          }, this._handleError)
-          .catch(() => {
-            const { showErrorNotification } = this.props;
 
-            showErrorNotification(__("Something went wrong"));
-          });
+            savePaymentInformation({
+              billing_address: address,
+              paymentMethod,
+            });
+          } else if (Array.isArray(response)) {
+            const message = response[0];
+
+            if (typeof message === "string") {
+              showErrorNotification(this.getCartError(message));
+            } else {
+              showErrorNotification(__("Something went wrong"));
+            }
+          } else if (typeof response === "string") {
+            showErrorNotification(response);
+          }
+        }, this._handleError)
+        .catch(() => {
+          const { showErrorNotification } = this.props;
+
+          showErrorNotification(__("Something went wrong"));
+        });
       } else {
         //if payment is via saved card.
         let selectedCard = savedCards.find((a) => a.selected === true);

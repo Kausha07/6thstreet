@@ -442,7 +442,10 @@ export class PLPContainer extends PureComponent {
     if (initialFacetKey.includes("size")) {
       newFilterArray = filters["sizes"];
     }
-    let categoryLevel1 = PLPContainer.getRequestOptions().q.split(" ")[1];
+    let categoryLevel1 =
+      PLPContainer.getRequestOptions() && PLPContainer.getRequestOptions().q
+        ? PLPContainer.getRequestOptions().q.split(" ")[1]
+        : null;
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
@@ -790,12 +793,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-          ? options["categories.level3"]
-          : options["categories.level2"]
-            ? options["categories.level2"]
-            : options["categories.level1"]
-              ? options["categories.level1"]
-              : options["q"];
+        ? options["categories.level3"]
+        : options["categories.level2"]
+        ? options["categories.level2"]
+        : options["categories.level1"]
+        ? options["categories.level1"]
+        : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
