@@ -141,6 +141,15 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     if (!addresses.length || isCountryNotAddressAvailable) {
       return this.renderNoAddresses();
     }
+    
+    for(let i=1; i<addresses.length; i++){
+      if(addresses[i].default_shipping){
+        let temp = addresses[i];
+        addresses[i]= addresses[0];
+        addresses[0] = temp; 
+      }
+    }
+
     return addresses.map(this.renderAddress);
   }
 
