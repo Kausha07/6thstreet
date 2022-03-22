@@ -196,9 +196,6 @@ export class CartDispatcher {
         cartId: cartId || newCartId,
         searchQueryId,
       });
-      console.log("carID", cartId);
-      console.log("newCartId", newCartId);
-      console.log("addProductToCart called")
       const { data } = response;
       dispatch(
         updateCartItem(

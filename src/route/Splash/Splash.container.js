@@ -59,7 +59,6 @@ export class SplashContainer extends PureComponent {
       );
       if (!QPAY_CHECK && !TABBY_CHECK) {
         getCart();
-        console.log("all well in splash")
         return { isCartRetrieved: true };
       }
     }
