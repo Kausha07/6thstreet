@@ -263,10 +263,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     if (cvv) {
       this.setState({ cvv });
     }
-    if (newCardVisible && discount !== 0) {
-      this.removeBinPromotion();
-    }
     if (binApplied) {
+      if (newCardVisible && !number) {
+        this.removeBinPromotion();
+      }
       this.setState({ binApplied: false });
     }
     if (saveCard !== undefined && saveCard !== null) {
