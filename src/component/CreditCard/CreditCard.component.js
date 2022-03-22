@@ -169,6 +169,7 @@ class CreditCard extends PureComponent {
 
     handleMyCardsClick = () => {
         this.props.toggleNewCardVisible(false);
+        this.setState({validatorMessage :null})
     }
 
     renderCreditCardForm() {
