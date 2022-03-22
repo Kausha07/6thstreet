@@ -13,19 +13,14 @@ export const mapStateToProps = (state) => ({
     isLoading: state.PDP.isLoading
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
-
+export const mapDispatchToProps = (_dispatch) => ({});
 export class PDPSummaryContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
+    containerFunctions = {};
 
     containerProps = () => {
         const { product, isLoading,renderMySignInPopup } = this.props;
@@ -39,22 +34,32 @@ export class PDPSummaryContainer extends PureComponent {
             url_path : ""
         }
     }
-
     componentDidMount() {
-        this.getBrandDetails();
+        const { product: { brand_name } } = this.props;
+        if(brand_name) {
+            this.getBrandDetails();
+        }
     }
+
     async getBrandDetails() {
-        const {product:{brand_name}} = this.props
-        const data = await new Algolia({
-          index: "brands_info",
-        }).getBrandsDetails({
-          query: brand_name,
-          limit: 1,
-        });
-        this.setState({
-          url_path: data?.hits[0]?.url_path
-        });
-      }
+        const { product: { brand_name } } = this.props;
+        try {
+            const data = await new Algolia({
+                index: "brands_info",
+            })
+            .getBrandsDetails({
+                query: brand_name,
+                limit: 1,
+            });
+            this.setState({
+                url_path: `${data?.hits[0]?.url_path}.html`
+            });
+        }
+        catch(err) {
+            console.error(err);
+        }
+    }
+
     render() {
         const {url_path} = this.state;
         return (
