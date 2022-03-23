@@ -38,7 +38,7 @@ class ProductImpressionEvent extends BaseEvent {
     // Home
     Event.observer(EVENT_PRODUCT_LIST_IMPRESSION, (impression) => {
       //if (document.readyState == ("complete" || "interactive"  )){
-      this.handle(EVENT_PRODUCT_IMPRESSION, impression, "promoView");
+      this.handle(EVENT_PRODUCT_IMPRESSION, impression);
       //}
     });
   }
@@ -65,7 +65,7 @@ class ProductImpressionEvent extends BaseEvent {
         category: product_type_6s || category,
         url: url,
         //list: "",
-        position: 1,
+        position: index + 1,
         dimension9:
           (100 -
           Math.round(

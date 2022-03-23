@@ -1,5 +1,8 @@
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS,HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import {EVENT_PRODUCT_LIST_IMPRESSION} from "Component/GoogleTagManager/events/ProductImpression.event"
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -78,9 +81,12 @@ class ProductItem extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { product = [],sendProductImpression } = this.props;
-    sendProductImpression([product]);
-    Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+    const { product = [], sendProductImpression, page } = this.props;
+    if (page == "plp") {
+      sendProductImpression([product]);
+    } else {
+      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+    }
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -146,17 +152,17 @@ class ProductItem extends PureComponent {
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-        name: name,
-        id: sku,
-        price: itemPrice,
-        brand: brand_name,
-        category: product_type_6s,
-        varient: color,
-        url: url,
-        position: 1,
-        dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
-        dimension10: basePrice,
-        dimension11: itemPrice,
+      name: name,
+      id: sku,
+      price: itemPrice,
+      brand: brand_name,
+      category: product_type_6s,
+      varient: color,
+      url: url,
+      position: 1,
+      dimension9: 100 - Math.round((itemPrice / basePrice) * 100) || 0,
+      dimension10: basePrice,
+      dimension11: itemPrice,
     });
     // if (queryID) {
     //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
