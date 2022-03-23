@@ -17,6 +17,10 @@
     font-size: 18px;
     text-transform: none;
     line-height: 25px;
+    @include mobile{
+      margin-top:12px;
+      margin-bottom:12px;
+    }
   }
 
   &-Heading {
@@ -66,6 +70,9 @@
   }
 
   &-TabbyPayments {
+    @include mobile{
+      padding-bottom: 182px;
+    }
     &Promo {
       color: var(--charcoal);
       font-size: 15px;

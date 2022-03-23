@@ -14,17 +14,32 @@
 /* eslint-disable no-console */
 import "SourceUtil/Polyfill";
 import "Style/main";
-import * as Sentry from "@sentry/browser";
+// import * as Sentry from "@sentry/browser";
 import { BrowserTracing } from "@sentry/tracing";
 import { Workbox } from "workbox-window";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { render } from "react-dom";
+import { createBrowserHistory } from 'history';
+import * as Sentry from '@sentry/react';
 
 import App from "Component/App";
 
+const history = createBrowserHistory();
+
 window.__DEV__ = process.env.NODE_ENV === "development";
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,
+  integrations: [
+    new BrowserTracing({
+      tracingOrigins: ["localhost", "6thstreet.com", /^\//],
+      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
+      routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
+    }),
+  ],
+
+  //send only 20% of transactions
+  tracesSampleRate: 0.2,
 });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX

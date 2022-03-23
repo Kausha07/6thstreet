@@ -581,7 +581,6 @@ class PDPAddToCart extends PureComponent {
       return <div block="PDPAddToCart" elem="Placeholder" />;
     }
 
-    //console.log(sizeObject)
     // check for sizes availability in configurable products
     if (
       sizeObject.sizeCodes !== undefined &&

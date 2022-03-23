@@ -10,19 +10,38 @@ class CircleItemSliderSubPage extends PureComponent {
         url: PropTypes.string.isRequired
     };
 
+    componentDidMount() {
+        let ele = document.getElementById("CircleItemSliderSubPage-Video")
+        if (ele) {
+            ele.controls = false,
+                ele.playsinline = true,
+                ele.muted = true,
+                ele.loop = true,
+                ele.autoplay = true,
+                ele.setAttribute("muted", ""),
+                ele.setAttribute("playsinline", "")
+
+            setTimeout(() => {
+                const promise = ele.play();
+            }, 0)
+
+        }
+    }
+
     render() {
         let banner = this.props.bannerData.plp_config && this.props.bannerData.plp_config.banner
         let url = banner.url
-        let mWidth = (screen.width - 20).toString() + "px"
-        let mHeight = ((screen.width - 20) / banner.aspect_ratio).toString() + "px"
+        let mWidth = (screen.width - 50).toString() + "px"
+        let mHeight = ((screen.width - 50) / banner.aspect_ratio).toString() + "px"
+        let isMobileWithImage = isMobile.any() && (banner.type === "image")
         return (
             <div block="CircleItemSliderSubPage">
-                <div block="CircleItemSliderSubPage-Video" style={isMobile.any() && { height: mHeight, width: mWidth }}>
+                <div block="CircleItemSliderSubPage-Video" >
                     {
                         banner.type === "image" ?
-                            <img src={url} />
+                            <img src={url} style={isMobile.any() && { height: mHeight, width: mWidth }} />
                             :
-                            <video controls autoplay="true" loop muted>
+                            <video id="CircleItemSliderSubPage-Video" style={isMobile.any() && { height: mHeight, width: mWidth }}>
                                 <source src={url} type="video/mp4" />
                             </video>
                     }

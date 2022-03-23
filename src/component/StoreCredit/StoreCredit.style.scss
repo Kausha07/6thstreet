@@ -15,6 +15,9 @@
 
   &_canApply {
     padding: 11px 0;
+    @include mobile{
+      padding: 2px 0;
+    }
 
     .Field {
       margin: 0;
