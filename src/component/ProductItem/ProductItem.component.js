@@ -78,7 +78,8 @@ class ProductItem extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { product = [] } = this.props;
+    const { product = [],sendProductImpression } = this.props;
+    sendProductImpression([product]);
     Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
     this.setState({ impressionSent: true });
   }

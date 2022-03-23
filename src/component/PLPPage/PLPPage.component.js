@@ -1,4 +1,3 @@
-
 import ProductItem from "Component/ProductItem";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
@@ -11,10 +10,12 @@ class PLPPage extends PureComponent {
     products: Products.isRequired,
     impressions: Products.isRequired,
   };
-
+  sendProductImpression = (product) => {
+    console.log("MY PRODUCT", product);
+  };
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup } = this.props;
+    const { renderMySignInPopup, sendProductImpression } = this.props;
     return (
       <ProductItem
         position={index}
@@ -26,6 +27,7 @@ class PLPPage extends PureComponent {
         pageType="plp"
         qid={qid}
         lazyLoad={false}
+        sendProductImpression={sendProductImpression}
       />
     );
   };
@@ -41,11 +43,7 @@ class PLPPage extends PureComponent {
     return products.map((i, index) => this.renderProduct(i, index + 1, qid));
   }
 
-
-
-
   render() {
-
     return (
       <div block="PLPPage">
         <ul block="ProductItems">{this.renderProducts()}</ul>
