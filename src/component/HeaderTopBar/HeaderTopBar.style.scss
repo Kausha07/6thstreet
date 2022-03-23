@@ -62,6 +62,20 @@
       margin: 0;
       width: 100%;
     }
+    .tns-outer{
+      .tns-controls{
+        display: none;
+      }
+      .tns-nav{
+        display: none;
+      }
+      button[data-action="stop"] {
+        display: none;
+      }
+      button[data-action="start"] {
+        display: none;
+      }
+    }
   }
 
   &-CmsBlock {
@@ -83,6 +97,8 @@
 
     @include desktop {
       display: block;
+      height: 30px;
+      margin: 0;
     }
   }
 

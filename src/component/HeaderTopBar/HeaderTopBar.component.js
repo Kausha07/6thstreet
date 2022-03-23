@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { withRouter } from "react-router";
 import TinySlider from "tiny-slider-react";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import InlineCustomerSupport from "Component/InlineCustomerSupport";
@@ -16,7 +17,11 @@ import "./HeaderTopBar.style";
 const settings = {
   loop: true,
   autoplay: true,
-  axis: "vertical"
+  axis: "vertical",
+  items: 1,
+  edgePadding: 10,
+  autoHeight: true,
+  autoplayTimeout: 2000
 };
 class HeaderTopBar extends NavigationAbstract {
   static propTypes = {
@@ -57,6 +62,7 @@ class HeaderTopBar extends NavigationAbstract {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
+
   }
 
   handleScroll = () => {
@@ -70,19 +76,32 @@ class HeaderTopBar extends NavigationAbstract {
 
   renderCmsBlock() {
     // TODO: find out what is this, render here
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("FREE SHIPPING OVER AED99"),
+      SA: __("FREE SHIPPING OVER SAR199"),
+      KW: __("FREE SHIPPING OVER KWD16.5"),
+      QA: __("FREE SHIPPING OVER QAR199"),
+      OM: __("FREE SHIPPING OVER OMR20"),
+      BH: __("FREE SHIPPING OVER BHD20.5")
+    }
+
     return (
-      <TinySlider settings={settings} block="">
+      <TinySlider settings={settings} block="HeaderTopBar" ele="TinySlider">
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-          {__("ALL PRICES ARE INCLUSIVE OF VAT")}
+          {__("800+ GLOBAL BRANDS")}
         </div>
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-          {__("ALL PRICES ARE INCLUSIVE OF VAT")}
+          {__("100-DAY FREE RETURNS")}
         </div>
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-          {__("ALL PRICES ARE INCLUSIVE OF VAT")}
+          {__("CLUB APPAREL REWARDS")}
         </div>
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-          {__("ALL PRICES ARE INCLUSIVE OF VAT")}
+          {txt[country]}
+        </div>
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {__("CASH ON DELIVERY")}
         </div>
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
           {__("ALL PRICES ARE INCLUSIVE OF VAT")}
