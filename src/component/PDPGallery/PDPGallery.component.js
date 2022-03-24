@@ -331,6 +331,7 @@ class PDPGallery extends PureComponent {
     var counter = 1;
     if (video?.current) {
       this.setState({ isVideoPlaying: video }, () => {
+        const innerThisRef = this;
         onSliderChange(
           gallery.length + parseInt(video?.current.dataset["index"])
         );
@@ -359,7 +360,7 @@ class PDPGallery extends PureComponent {
           } else {
             onSliderChange(0);
             video.current.removeEventListener("ended", listener);
-            this.setState({ isVideoPlaying: false }, () => {
+            innerThisRef.setState({ isVideoPlaying: false }, () => {
               counter = 1;
             });
           }
