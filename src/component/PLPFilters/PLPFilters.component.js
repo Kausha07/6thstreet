@@ -64,8 +64,9 @@ class PLPFilters extends PureComponent {
       isReset: false,
       toggleOptionsList: false,
       defaultFilters: false,
-      showArrow: false,
-      conditionRender: "boundaryTop"
+      fixFilter: false,
+      fixWindow: false,
+      showArrow: false
     };
 
     this.timer = null;
@@ -124,36 +125,122 @@ class PLPFilters extends PureComponent {
     }
   }
 
-  // (document.body.offsetHeight - 155) means screen height without header
-  // (eleFilter.offsetHeight + 110) means filters container with breadscrum
+
+  // onFilterScroll = () => {
+  //   if (isMobile.any()) {
+  //     return null
+  //   }
+  //   let myDiv = document.getElementById("productFilterScroll")
+  //   if (myDiv) {
+  //     if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {
+  //       // this.removeScrollBottom()
+  //     }
+  //   }
+
+  // }
+
+  // stickLeftFilter = (e) => {
+  //   var fixedDiv = document.querySelector('.Products-FixScroll');
+  //   fixedDiv.scrollTop = fixedDiv.scrollTop + e.deltaY;
+  //   document.body.style.overflow = 'hidden'
+  // }
+
+  // scrollBottom = () => {
+  //   window.addEventListener('mousewheel', this.stickLeftFilter);
+  // }
+
+
+  // removeScrollBottom = () => {
+  //   window.addEventListener('mousewheel', function (e) {
+  //     document.body.style.overflow = 'auto'
+  //   });
+  // }
+
+
+  // removeEvent = () => {
+  //   window.removeEventListener('mousewheel', this.stickLeftFilter);
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  onFixWindow = (e) => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: n,
+        left: 0,
+        behavior: 'smooth'
+      }
+    )
+  }
+
+  onNotFixWindow = () => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: -n,
+        left: 0,
+        behavior: 'smooth'
+      }
+    )
+  }
 
 
   handleScroll = (e) => {
     let k = document.getElementById("plp-main-scroll-id")
-    let eleFilter = document.getElementById("productFilterScroll")
-    // let n = myDiv.scrollHeight - myDiv.offsetHeight
     if (k) {
-      console.log((k.offsetHeight - (document.body.offsetHeight - 155) + 50), window.pageYOffset)
-      if (this.state.conditionRender === "boundaryTop") {
-        if (window.pageYOffset > (eleFilter.offsetHeight + 110 - (document.body.offsetHeight - 155))) {
-          console.log("fixBottom")
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
+        if (!this.state.fixWindow) {
+          this.setState({
+            fixWindow: true
+          })
+          this.onFixWindow(e)
+        }
 
+
+      }
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
+        if (this.state.fixWindow) {
+
+          this.setState({
+            fixWindow: false
+          })
+          // this.onNotFixWindow(e)
         }
 
       }
 
+      if (window.pageYOffset > 95) {
+        if (!this.state.fixFilter) {
+          this.setState({
+            fixFilter: true
+          })
+        }
+      }
+      else {
+        if (this.state.fixFilter) {
 
-      // else if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
-
-
-      // }
-
-      // else if (window.pageYOffset > 95) {
-
-      // }
-      // else if(window.pageYOffset < 95){
-
-      // }
+          this.setState({
+            fixFilter: false
+          })
+        }
+      }
     }
   }
 
@@ -814,3 +901,4 @@ class PLPFilters extends PureComponent {
 }
 
 export default withRouter(connect(mapStateToProps, null)(PLPFilters));
+
