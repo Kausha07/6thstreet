@@ -30,12 +30,12 @@ export class CartDispatcher {
     dispatch(setCheckoutDetails(checkoutDetails));
   }
 
-  async getCart(dispatch, isNewCart = false) {
+  async getCart(dispatch, isNewCart = false, createNewCart = true) {
     const {
       Cart: { cartId },
     } = getStore().getState();
     const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
-    if (!cartId || isNewCart) {
+    if ((!cartId || isNewCart) && createNewCart) {
       try {
         const { data: requestedCartId = null } = await createCart(cart_id);
 
@@ -58,7 +58,9 @@ export class CartDispatcher {
         Logger.log(e);
       }
     } else {
-      await this.getCartTotals(dispatch, cartId);
+      if(createNewCart) {
+        await this.getCartTotals(dispatch, cartId);
+      }
     }
   }
 
@@ -161,11 +163,37 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
+    let newCartId;
+    if(!cartId) {
+      try {
+        const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+        const { data: requestedCartId = null } = await createCart(cart_id);
+        newCartId = requestedCartId;
+        if (!requestedCartId) {
+          dispatch(
+            showNotification(
+              "error",
+              __(
+                "There was an error creating your cart, please refresh the page in a little while"
+              )
+            )
+          );
+
+          return;
+        }
+        BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+        dispatch(setCartId(requestedCartId));
+        await this.getCartTotals(dispatch, requestedCartId);
+        console.log("all well")
+      } catch (e) {
+        Logger.log(e);
+      }
+    }
     try {
       dispatch(processingCartRequest());
       const response = await addProductToCart({
         ...productData,
-        cartId,
+        cartId: cartId || newCartId,
         searchQueryId,
       });
       const { data } = response;
@@ -181,7 +209,8 @@ export class CartDispatcher {
           itemPrice
         )
       );
-      await this.getCartTotals(dispatch, cartId);
+      let updateCartID = cartId || newCartId;
+      await this.getCartTotals(dispatch, updateCartID);
 
       return !data ? response : null;
     } catch (e) {
