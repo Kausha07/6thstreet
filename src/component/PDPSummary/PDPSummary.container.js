@@ -10,7 +10,8 @@ import Algolia from "Util/API/provider/Algolia";
 
 export const mapStateToProps = (state) => ({
     product: state.PDP.product,
-    isLoading: state.PDP.isLoading
+    isLoading: state.PDP.isLoading,
+    brand_url : state.PLP.brand_url
 });
 
 export const mapDispatchToProps = (_dispatch) => ({});
@@ -34,10 +35,17 @@ export class PDPSummaryContainer extends PureComponent {
             url_path : ""
         }
     }
-    componentDidMount() {
-        const { product: { brand_name } } = this.props;
-        if(brand_name) {
-            this.getBrandDetails();
+    
+    componentDidUpdate() {
+        const { brand_url} = this.props;
+        if(!brand_url) {
+            this.getBrandDetails(); 
+        }
+        else
+        {
+            this.setState({
+                url_path: brand_url
+            })
         }
     }
 
@@ -45,14 +53,14 @@ export class PDPSummaryContainer extends PureComponent {
         const { product: { brand_name } } = this.props;
         try {
             const data = await new Algolia({
-                index: "brands_info",
+              index: "brands_info",
             })
             .getBrandsDetails({
-                query: brand_name,
-                limit: 1,
+              query: brand_name,
+              limit: 1,
             });
             this.setState({
-                url_path: `${data?.hits[0]?.url_path}.html`
+              url_path: data?.hits[0]?.url_path
             });
         }
         catch(err) {

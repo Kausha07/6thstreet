@@ -34,6 +34,7 @@ import {
   updatePLPInitialFilters,
   setPrevProductSku,
   setPrevPath,
+  setBrandurl
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
@@ -81,6 +82,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
   resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
+  setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -312,7 +314,7 @@ export class PLPContainer extends PureComponent {
     return initialOptions;
   };
 
-  componentDidMount() {
+  componentDidUpdate() {
     const { menuCategories = [], prevPath = null, impressions } = this.props;
     const { isArabic } = this.state;
 
@@ -651,6 +653,7 @@ export class PLPContainer extends PureComponent {
       brandImg: data?.hits[0]?.image,
       brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
     });
+    this.props.setBrandurl(data?.hits[0]?.url_path);
   }
 
   updateFiltersState(activeFilters) {
