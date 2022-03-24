@@ -15,6 +15,7 @@ import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
+import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -99,7 +100,10 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-  
+    const countryCodeFromUrl = getLocaleFromUrl();
+    const storeCode = countryCodeFromUrl
+      ? countryCodeFromUrl.toUpperCase() + "-"
+      : "";
     return (
       <div
         block="CategoryItem"
@@ -112,7 +116,9 @@ class DynamicContentGrid extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            storeCode + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
@@ -148,14 +154,19 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-   
+    const countryCodeFromUrl = getLocaleFromUrl();
+    const storeCode = countryCodeFromUrl
+      ? countryCodeFromUrl.toUpperCase() + "-"
+      : "";
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            storeCode + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);

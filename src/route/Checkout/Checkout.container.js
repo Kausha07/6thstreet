@@ -850,7 +850,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const mobile = phone.slice(4);
 
         sendVerificationCode({ mobile, code }).then((response) => {
-          this.setState({ isVerificationCodeSent: response.success });
+          if(response.success) {
+            this.setState({ isVerificationCodeSent: response.success });
+          } else 
+          {
+            console.log("response.error",response.error);
+            showErrorNotification(response.error);
+          }
         }, this._handleError);
       }
     } else {
