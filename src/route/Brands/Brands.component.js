@@ -5,6 +5,7 @@ import { PureComponent } from "react";
 import { KIDS_TYPE, MEN_TYPE, WOMEN_TYPE } from "./Brands.config";
 import "./Brands.style";
 
+import DynamicContent from "Component/DynamicContent";
 class Brands extends PureComponent {
   static propTypes = {
     changeBrandType: PropTypes.func.isRequired,
@@ -37,7 +38,7 @@ class Brands extends PureComponent {
     let { type } = this.props;
     if (type) {
       type = decodeURIComponent(type);
-    }
+    }    
     return (
       <div block="Brands" elem="Categories">
         <button
@@ -134,8 +135,38 @@ class Brands extends PureComponent {
         .filter(([key]) => key === filteredLetter)
         .map(this.renderBrandGroup);
     }
-
     return brands.map(this.renderBrandGroup);
+  }
+
+  renderDynamicBanners(){
+    const {type, brandWidgetData = [], setLastTapItem} = this.props;
+    return(
+     (brandWidgetData.length) ? 
+      <DynamicContent
+        gender={type}
+        content={brandWidgetData}        
+        setLastTapItemOnHome={setLastTapItem}
+      />
+      : null
+    )
+  }
+  renderDynamicTextContent(){
+    const {brandWidgetData = [] } = this.props;
+    let contentWidget;
+    if(brandWidgetData?.length){
+      contentWidget = brandWidgetData?.find(function (content) {
+        return content.type == "text"
+      })
+    }
+    
+    
+    return(
+     <div block="brands-bottom-content">
+       <h3>{contentWidget?.header?.text}</h3>
+       <p>{contentWidget?.content?.text}</p>
+       <p>{contentWidget?.footer?.text}</p>
+     </div>
+    )
   }
 
   render() {
@@ -145,9 +176,13 @@ class Brands extends PureComponent {
     return (
       <div block="Brands">
         <Loader isLoading={isLoading} />
+        <h1 block="Brands" elem="Title">
+          {__("Shop by Brands")}
+        </h1>
+        {this.renderDynamicBanners()}
         <h2 block="Brands" elem="Heading">
           {__("Brands A-Z")}
-        </h2>
+        </h2>        
         {this.renderCategorySelector()}
         {this.renderLetterSelector()}
         <div
@@ -157,6 +192,7 @@ class Brands extends PureComponent {
         >
           {this.renderBrandGroups()}
         </div>
+        {this.renderDynamicTextContent()}
       </div>
     );
   }
