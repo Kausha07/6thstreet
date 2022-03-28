@@ -77,7 +77,7 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    const { toggleMobileMenuSideBar,index } = this.props;
+    const { toggleMobileMenuSideBar, index } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
@@ -98,6 +98,10 @@ class DynamicContentBanner extends PureComponent {
     const { index, type } = this.props;
     // const { height, width } = items[0];
     const { url, image_url, link, height = "", width = "" } = item;
+
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
+      : "";
     let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
@@ -129,7 +133,9 @@ class DynamicContentBanner extends PureComponent {
         to={formatCDNLink(link)}
         key={i}
         data-banner-type={type || "banner"}
-        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+        data-promotion-name={
+          getStoreName + (item.promotion_name ? item.promotion_name : "")
+        }
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);
@@ -163,9 +169,13 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const {index} = this.props
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentBanner" id={`DynamicContentBanner${index}`}>
+      <div
+        ref={setRef}
+        block="DynamicContentBanner"
+        id={`DynamicContentBanner${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

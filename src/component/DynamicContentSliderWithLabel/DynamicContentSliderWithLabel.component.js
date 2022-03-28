@@ -162,6 +162,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
+      : "";
     return (
       <div
         block="SliderWithLabel"
@@ -175,7 +178,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
           block="SliderWithLabel"
           elem="Link"
           data-banner-type="sliderWithLabel"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
