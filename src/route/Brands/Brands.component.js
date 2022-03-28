@@ -141,12 +141,17 @@ class Brands extends PureComponent {
   renderDynamicBanners(){
     const {type, brandWidgetData = [], setLastTapItem} = this.props;
     return(
-     (brandWidgetData.length) ? 
+     (brandWidgetData.length) ?
+      <>
+      <h2 block="Brands" elem="Title">
+        {__("Top brands on 6thstreet")}
+      </h2>
       <DynamicContent
         gender={type}
         content={brandWidgetData}        
         setLastTapItemOnHome={setLastTapItem}
       />
+      </>
       : null
     )
   }

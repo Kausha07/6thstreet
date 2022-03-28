@@ -67,7 +67,7 @@ class BrandsContainer extends PureComponent {
   containerFunctions = {
     changeBrandType: this.changeBrandType.bind(this),
   };
-  
+
   getGenderInAR = (gender) => {
     switch (gender) {
       case "men":
@@ -89,29 +89,25 @@ class BrandsContainer extends PureComponent {
     }
   };
 
-  componentDidMount() {    
+  componentDidMount() {
     //const brandUrlParam = getQueryParam("type", location);
     //const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
     const { isArabic } = this.state;
     const { location, history } = this.props;
     let brandType = "";
-    (location.pathname == "/shop-by-brands") ?
-      (
-        brandType = ""
-      ) :
-      (
-        brandType = location.pathname.split("/")[1]
-      )    
-    const genderTab = isArabic ? this.getGenderInAR(brandType) : brandType;    
-    
+    location.pathname == "/shop-by-brands"
+      ? (brandType = "")
+      : (brandType = location.pathname.split("/")[1]);
+    const genderTab = isArabic ? this.getGenderInAR(brandType) : brandType;
+
     //this.requestBrandMapping();
     //this.requestBrands(brandType);
     this.setState({ type: genderTab });
     this.requestShopByBrandWidgetData(brandType);
-    this.requestShopbyBrands(brandType)
+    this.requestShopbyBrands(brandType);
     this.updateBreadcrumbs();
     this.updateHeaderState();
-    this.setMetaData();    
+    this.setMetaData();
   }
 
   requestBrandMapping = () => {
@@ -126,7 +122,7 @@ class BrandsContainer extends PureComponent {
 
   async requestShopByBrandWidgetData(brandType = "") {
     const { isArabic } = this.state;
-    let gender = isArabic ? this.getGenderInEn(brandType) : brandType;    
+    let gender = isArabic ? this.getGenderInEn(brandType) : brandType;
     if (brandType == "") {
       gender = "all"
     }
@@ -141,11 +137,11 @@ class BrandsContainer extends PureComponent {
         } else {
           this.setState({ brandWidgetData: [] });
         }
-      } catch (e) {        
+      } catch (e) {
         this.setState({ brandWidgetData: [] });
         console.error(e);
       }
-    } else {      
+    } else {
       this.setState({ brandWidgetData: [] });
     }
   }
@@ -197,49 +193,55 @@ class BrandsContainer extends PureComponent {
     // setQueryParams({ type: brandType }, location, history);
     // this.requestBrands(genderType);
 
-    
+
     let gender = isArabic ? this.getGenderInEn(brandType) : brandType;
-    (gender) ? history.push(`/${gender}/shop-by-brands`) : history.push(`/shop-by-brands`)
-    this.requestShopByBrandWidgetData(brandType);    
-    this.requestShopbyBrands(gender)
+    gender
+      ? history.push(`/${gender}/shop-by-brands`)
+      : history.push(`/shop-by-brands`);
+    this.requestShopByBrandWidgetData(brandType);
+    this.requestShopbyBrands(gender);
     this.setState({ type: brandType });
   }
 
-  async requestShopbyBrands(brandType = ""){
-    const brandResponse = await new Algolia({
-      index: "brands_info",
-    }).getShopByBrands({
-      query: "",
-      limit: 800,
-      gender:brandType
-    });
-    let totalBrands = [];
-    brandResponse.map((brand)=>{
-      totalBrands = [...totalBrands, ...brand.hits]
-    })
-    console.log("brandResponse", brandResponse)
-    const groupedBrands = groupByName(totalBrands) || {};
-        // This sort places numeric brands to the end of the list
-        const sortedBrands = Object.entries(groupedBrands).sort(
-          ([letter1], [letter2]) => {
-            if (letter1 === "0-9") {
-              return 1;
-            }
-            if (letter2 === "0-9") {
+  async requestShopbyBrands(brandType = "") {
+    try {
+      const brandResponse = await new Algolia({
+        index: "brands_info",
+      }).getShopByBrands({
+        query: "",
+        limit: 800,
+        gender: brandType
+      });
+      let totalBrands = [];
+      brandResponse.map((brand) => {
+        totalBrands = [...totalBrands, ...brand.hits];
+      });
+      const groupedBrands = groupByName(totalBrands) || {};
+      // This sort places numeric brands to the end of the list
+      const sortedBrands = Object.entries(groupedBrands).sort(
+        ([letter1], [letter2]) => {
+          if (letter1 === "0-9") {
+            return 1;
+          }
+          if (letter2 === "0-9") {
+            return -1;
+          }
+          if (letter1 !== letter2) {
+            if (letter1 < letter2) {
               return -1;
             }
-            if(letter1 !== letter2) {
-              if(letter1 < letter2) {
-                return -1;
-              }
-              return 1;
-            }
+            return 1;
           }
-        );
-        this.setState({
-          brands: sortedBrands,
-          isLoading: false,
-        });
+        }
+      );
+      this.setState({
+        brands: sortedBrands,
+        isLoading: false,
+      });
+    } catch (e) {
+      this.setState({ brands: [] });
+      console.error(e);
+    }
   }
 
   requestBrands(brandType = "") {
@@ -272,7 +274,13 @@ class BrandsContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brands, isLoading, brandMapping, type, brandWidgetData = [] } = this.state;
+    const {
+      brands,
+      isLoading,
+      brandMapping,
+      type,
+      brandWidgetData = [],
+    } = this.state;
     return {
       brands,
       isLoading,
@@ -320,8 +328,13 @@ class BrandsContainer extends PureComponent {
   }
 
   render() {
-    return <Brands {...this.containerFunctions} {...this.containerProps()}
-      setLastTapItem={this.setLastTapItem} />;
+    return (
+      <Brands
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        setLastTapItem={this.setLastTapItem}
+      />
+    );
   }
 }
 
