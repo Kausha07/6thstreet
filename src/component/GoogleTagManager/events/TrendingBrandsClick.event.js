@@ -29,9 +29,6 @@ class TrendingBrandsClickEvent extends BaseEvent {
     this.pushEventData({
       ecommerce: {
         click: {
-          actionField: {
-            action: "click",
-          },
           trendingBrands: trendingBrands,
         },
       },
