@@ -57,8 +57,7 @@ class ProductDetailEvent extends BaseEvent {
             ecommerce: {
                 detail: {
                     actionField: {
-                        list: '',
-                        action: 'detail'
+                        list: "Category page",
                     },
                     products: [product]
                 }

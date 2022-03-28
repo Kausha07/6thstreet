@@ -14,16 +14,28 @@ class PLPPage extends PureComponent {
     products: Products.isRequired,
     impressions: Products.isRequired,
   };
+
   sendProductImpression = (product) => {
     gtmProdArr.push([product]);
     const product_numbers = isMobile.any() ? 4 : 6;
-    if (gtmProdArr.length > (product_numbers -1)) {
+    const pagePathName = new URL(window.location.href).pathname;
+    const getPageName =
+      pagePathName == "/catalogsearch/result/"
+        ? "Search Results"
+        : "Category Results";
+
+    if (gtmProdArr.length > product_numbers - 1) {
       let clubbedProducts = gtmProdArr.slice(0, product_numbers);
       gtmProdArr.splice(0, product_numbers);
       let prodImpression = [];
       for (var i = 0; i < clubbedProducts.length; i++) {
         for (var j = 0; j < clubbedProducts[i].length; j++) {
-          prodImpression.push(clubbedProducts[i][j][0]);
+          let categorylistName = { list: getPageName };
+          let clubbedData = {
+            ...clubbedProducts[i][j][0],
+            ...categorylistName,
+          };
+          prodImpression.push(clubbedData);
         }
       }
       Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, prodImpression);
