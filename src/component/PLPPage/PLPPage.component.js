@@ -7,14 +7,12 @@ import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events
 import Event from "Util/Event";
 import "./PLPPage.style";
 import isMobile from "Util/Mobile";
-import PropTypes from "prop-types";
 
 let gtmProdArr = [];
 class PLPPage extends PureComponent {
   static propTypes = {
     products: Products.isRequired,
     impressions: Products.isRequired,
-    pageType: PropTypes.string.isRequired,
   };
 
   sendProductImpression = (product) => {
