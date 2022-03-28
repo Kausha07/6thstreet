@@ -29,8 +29,6 @@ class BrandsClickEvent extends BaseEvent {
     this.pushEventData({
       ecommerce: {
         click: {
-          actionField: {
-          },
           brands: brands,
         },
       },
