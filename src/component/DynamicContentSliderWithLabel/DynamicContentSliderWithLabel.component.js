@@ -162,7 +162,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
-    const countryCodeFromUrl = getLocaleFromUrl();
     return (
       <div
         block="SliderWithLabel"
