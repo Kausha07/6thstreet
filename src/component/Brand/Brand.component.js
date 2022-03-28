@@ -29,12 +29,13 @@ class Brand extends PureComponent {
 
   render() {
     const {
-      brand: { name = "", url = "" },
+      brand: { name = "", name_ar = "", url_path: url = "" },
       type,
     } = this.props;
     const { isArabic } = this.state;
     let finalURL;
     let requestedGender;
+    let brandName = isArabic ? name_ar : name;
     if (type) {
       if (type === "kids") {
         requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
@@ -42,29 +43,30 @@ class Brand extends PureComponent {
         requestedGender = isArabic ? getGenderInArabic(type) : type;
       }
       finalURL = url
-        ? `${url}.html?q=${encodeURIComponent(
-            name
+        ? `/${url}.html?q=${encodeURIComponent(
+            brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
-            name
+            brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
-            name
+            brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
-            name
+            brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
-        ? `${url}.html?q=${encodeURIComponent(
-            name
+        ? `/${url}.html?q=${encodeURIComponent(
+            brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
-            name
+            brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`;
     }
     return (
       <div block="Brand">
         <Link to={finalURL} block="BrandLink">
-          {this.renderName()}
+          {/* {this.renderName()} */}
+          {brandName}
         </Link>
       </div>
     );

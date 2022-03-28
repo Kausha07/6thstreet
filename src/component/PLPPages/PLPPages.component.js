@@ -113,7 +113,7 @@ class PLPPages extends PureComponent {
         var elementPosition = element.getBoundingClientRect().top;
         var offsetPosition =
           elementPosition + window.pageYOffset - headerOffset;
-        if (isMobile.any()) {
+        if (isMobile.any() && element) {
           element.parentElement.style.scrollMarginTop = "0px";
         }
 

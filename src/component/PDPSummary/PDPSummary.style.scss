@@ -50,6 +50,10 @@
     }
   }
 
+  .pdpsummarylinkTagStyle {
+    text-decoration: none;
+  }
+  
   @include desktop {
     min-width: 40%;
     padding-left: 34px;
@@ -63,6 +67,7 @@
   h1 {
     font-size: 24px;
     margin: 0.4px 0 0 0;
+    text-decoration: none;
     @include before-desktop {
       font-size: 16px;
       font-weight: 500;

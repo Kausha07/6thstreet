@@ -151,11 +151,17 @@ export class UrlRewritesContainer extends PureComponent {
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
+      let UpdatedURL;
+      if(urlResolver && urlResolver.data.url)
+      {
+        UpdatedURL = urlResolver.data.url.split("&p=")[0]+'&p=0'+urlResolver.data.url.split("&p=")[1].substring(1)
+      }
       const {
         type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
         id,
+        query=UpdatedURL,
         data: {
-          url: query,
+          //url: query,
           brand_html: brandDescription,
           brand_logo: brandImg,
           brand_name: brandName,

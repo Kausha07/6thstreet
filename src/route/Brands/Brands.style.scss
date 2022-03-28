@@ -7,6 +7,13 @@
         margin: 0 auto 110px;
     }
 
+    &-Title {
+        font-size: 18px;
+        text-align: center;
+        text-transform: uppercase;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
     &-Heading {
         font-size: 29px;
         text-align: center;
@@ -24,13 +31,16 @@
     &-LetterFilter {
         border-bottom: 5px solid var(--color-gainsboro);
         text-align: center;
-        display: none;
+        @include mobile {
+            display: none;
+        }
     }
 
     &-CategoryButton,
     &-LetterButton {
         color: var(--color-medium-grey);
-
+        padding-left: 14px;
+        padding-right: 14px;
         &:hover {
             color: #000000;
         }
@@ -82,5 +92,20 @@
         &_isFiltered {
             grid-template-columns: 100%;
         }
+    }
+    .DynamicContentSliderWithLabel {
+        margin-bottom: 40px !important;
+        .Outer {
+            margin-top: 24px;
+        }
+        
+        img {
+            min-width: 180px
+        }
+    }
+    .brands-bottom-content {
+        border-top: 1px solid var(--color-dusty-gray);
+        margin-top: 10px;
+        padding: 20px 20px;
     }
 }
