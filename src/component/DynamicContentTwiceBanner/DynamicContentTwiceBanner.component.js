@@ -12,7 +12,6 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentTwiceBanner extends PureComponent {
   state = {
@@ -77,10 +76,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     const { title, subtitle, button_label, button_link } =
       typeOfBanner && this.props[typeOfBanner];
     const { url, link, height = "", width = "" } = item;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
     // TODO: calculate aspect ratio to ensure images not jumping.
     // if (!link) {
     //     return (
@@ -117,9 +112,7 @@ class DynamicContentTwiceBanner extends PureComponent {
       <Link
         to={formatCDNLink(link)}
         data-banner-type="banner"
-        data-promotion-name={
-          storeCode + (item.promotion_name ? item.promotion_name : "")
-        }
+        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);

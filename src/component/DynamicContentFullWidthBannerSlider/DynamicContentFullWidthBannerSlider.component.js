@@ -14,7 +14,6 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 const settings = {
   lazyload: true,
@@ -110,18 +109,12 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
     return (
       <Link
         to={formatCDNLink(link)}
         key={i}
         data-banner-type="fullWidthBanner"
-        data-promotion-name={
-          storeCode + (item.promotion_name ? item.promotion_name : "")
-        }
+        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);

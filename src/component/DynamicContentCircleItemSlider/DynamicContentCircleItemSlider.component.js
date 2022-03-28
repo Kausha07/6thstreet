@@ -14,7 +14,6 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 const settings = {
   lazyload: true,
@@ -144,10 +143,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
     let newLink = formatCDNLink(link) + "&plp_config=true"
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
+
     // TODO: move to new component
 
     return (
@@ -156,9 +152,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           to={newLink}
           key={i}
           data-banner-type="circleItemSlider"
-          data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
-          }
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.clickLink(item);
@@ -186,10 +180,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     let label = item.name;
     let image_url = item.mainImageURI
     const { isArabic } = this.state;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
+
     // TODO: move to new component
 
     return (
@@ -198,9 +189,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
-          data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
-          }
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.clickLink(item);

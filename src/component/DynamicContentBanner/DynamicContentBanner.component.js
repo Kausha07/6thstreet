@@ -12,7 +12,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -78,7 +77,7 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    const { toggleMobileMenuSideBar, index } = this.props;
+    const { toggleMobileMenuSideBar,index } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
@@ -100,10 +99,6 @@ class DynamicContentBanner extends PureComponent {
     // const { height, width } = items[0];
     const { url, image_url, link, height = "", width = "" } = item;
     let ht, wd;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
     //   ht = (height / width) * screen.width;
@@ -134,9 +129,7 @@ class DynamicContentBanner extends PureComponent {
         to={formatCDNLink(link)}
         key={i}
         data-banner-type={type || "banner"}
-        data-promotion-name={
-          storeCode + (item.promotion_name ? item.promotion_name : "")
-        }
+        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);
@@ -170,13 +163,9 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const { index } = this.props;
+    const {index} = this.props
     return (
-      <div
-        ref={setRef}
-        block="DynamicContentBanner"
-        id={`DynamicContentBanner${index}`}
-      >
+      <div ref={setRef} block="DynamicContentBanner" id={`DynamicContentBanner${index}`}>
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

@@ -16,7 +16,6 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 const settings = {
   lazyload: true,
@@ -111,10 +110,7 @@ class DynamicContentRichContentBanner extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
-      : "";
+
     let ht, wd;
     if (screen.width > 900 && item) {
       let ht1 = (item.height / item.width) * 600;
@@ -131,9 +127,7 @@ class DynamicContentRichContentBanner extends PureComponent {
           to={formatCDNLink(item.button.link)}
           key={i}
           data-banner-type="richContentBanner"
-          data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
-          }
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
