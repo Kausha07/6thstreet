@@ -46,7 +46,7 @@ class PLPPage extends PureComponent {
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup, pageType } = this.props;
+    const { renderMySignInPopup } = this.props;
     return (
       <ProductItem
         position={index}
