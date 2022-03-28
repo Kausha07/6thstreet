@@ -30,7 +30,6 @@ class BrandsClickEvent extends BaseEvent {
       ecommerce: {
         click: {
           actionField: {
-            action: "click",
           },
           brands: brands,
         },
