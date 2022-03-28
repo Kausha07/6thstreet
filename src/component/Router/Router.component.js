@@ -236,7 +236,7 @@ export class Router extends SourceRouter {
     {
       component: (
         <SentryRoute
-          path={withStoreRegex("/brands")}
+          path={withStoreRegex("/:gender?/shop-by-brands")}
           render={(props) => (
             <GTMRouteWrapper route={BRANDS}>
               <BrandsPage {...props} />
