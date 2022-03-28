@@ -122,7 +122,7 @@ class BrandsContainer extends PureComponent {
 
   async requestShopByBrandWidgetData(brandType = "") {
     const { isArabic } = this.state;
-    let gender = isArabic ? this.getGenderInEn(brandType) : brandType;
+    let gender = brandType;
     if (brandType == "") {
       gender = "all"
     }
@@ -198,7 +198,7 @@ class BrandsContainer extends PureComponent {
     gender
       ? history.push(`/${gender}/shop-by-brands`)
       : history.push(`/shop-by-brands`);
-    this.requestShopByBrandWidgetData(brandType);
+    this.requestShopByBrandWidgetData(gender);
     this.requestShopbyBrands(gender);
     this.setState({ type: brandType });
   }
