@@ -145,35 +145,45 @@ class PDPSummary extends PureComponent {
     } = this.props;
     this.setState({ stockAvailibility: !!price && status });
   };
-  
+
   renderBrand() {
     const {
-      product: {name, brand_name, gallery_images = [] },
+      product: { name, brand_name, gallery_images = [] },
     } = this.props;
     const { url_path } = this.props;
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
+    if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            <Link to={`/${url_path}`}>
+            <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html`}>
               {brand_name}
-            </Link>
-            <span block="PDPSummary" elem="Name">{name}</span>
+            </Link>{" "}
+            <span block="PDPSummary" elem="Name">
+              {name}
+            </span>
           </h1>
-          {
-            isMobile.any()
-            ?
-            <ShareButton
-              title={document.title}
-              text={`Hey check this out: ${document.title}`}
-              url={url.href}
-              image={gallery_images[0] || fallbackImage}
-            />
-            :
-            null
-          }
+
+          <ShareButton
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.href}
+            image={gallery_images[0] || fallbackImage}
+          />
         </div>
+      );
+    }
+
+    return (
+      <h1>
+        <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html`}>
+          {brand_name}
+        </Link>{" "}
+        <span block="PDPSummary" elem="Name">
+          {name}
+        </span>
+      </h1>
     );
   }
 
@@ -344,7 +354,7 @@ class PDPSummary extends PureComponent {
       simple_products &&
       selectedSizeCode &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-      parseInt(simple_products[selectedSizeCode]?.quantity) &&
+        parseInt(simple_products[selectedSizeCode]?.quantity) &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
     ) {
       tags.push(__("International Shipment"));

@@ -50,6 +50,10 @@
     }
   }
 
+  .pdpsummarylinkTagStyle {
+    text-decoration: none;
+  }
+  
   @include desktop {
     min-width: 40%;
     padding-left: 34px;
