@@ -161,12 +161,14 @@ class PDPSummary extends PureComponent {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            {(url_path) ? (
-              <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html
-              &dFR[gender][0]=${gender.replace(
-                      gender.charAt(0),
-                      gender.charAt(0).toUpperCase()
-                    )}`}>
+            {url_path ? (
+              <Link
+                className="pdpsummarylinkTagStyle"
+                to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
+                  gender.charAt(0),
+                  gender.charAt(0).toUpperCase()
+                )}`}
+              >
                 {brand_name}
               </Link>
             ) : (
@@ -189,11 +191,14 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1>
-        {(url_path) ? (
-          <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html&dFR[gender][0]=${gender.replace(
-            gender.charAt(0),
-            gender.charAt(0).toUpperCase()
-          )}`}>
+        {url_path ? (
+          <Link
+            className="pdpsummarylinkTagStyle"
+            to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
+              gender.charAt(0),
+              gender.charAt(0).toUpperCase()
+            )}`}
+          >
             {brand_name}
           </Link>
         ) : (
