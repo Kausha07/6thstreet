@@ -849,6 +849,59 @@ class PDPDetailsSection extends PureComponent {
       </div>
     );
   }
+
+  renderShipping(){
+    return(
+      <div>
+        <p>Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100.
+          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
+          {" "} More info
+          </Link>
+        </p>
+      </div>
+    )
+  }
+
+  renderShippingAndFreeReturns(){
+
+    if(this.props.product.is_returnable === 1){
+      return(
+        <div>
+          <p>100 days free return available. Shop freely.</p>
+        </div>
+      )
+    }
+
+    if(this.props.product.is_returnable === 0){
+      return(
+        <div>
+          <p>Not eligible for return.
+          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
+          {" "} More info
+          </Link>
+          </p>
+        </div>
+      )
+    }
+
+    // if(this.props.product.is_returnable === "NO"){
+    //   return(
+    //     <div>check check check</div>
+    //   )
+    // }
+
+    return(
+      <div>
+        <p>
+          Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.
+          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
+          {" "} More info
+          </Link>
+        </p>
+      </div>
+    )
+  }
+  
   render() {
     const {
       product: { brand_name },
@@ -875,6 +928,20 @@ class PDPDetailsSection extends PureComponent {
           {this.renderAccordionSeperator()}
           {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
+        </div >
+
+        <div block="AccordionWrapper">
+          <Accordion
+            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+            title={isMobile ? __("Shipping and Free Returns") : __("SHIPPING AND FREE RETURNS")}
+            is_expanded={this.state.isExpanded["3"]}
+          >
+            {this.renderShipping()}
+            <br />
+            {this.renderShippingAndFreeReturns()}
+
+          </Accordion>
+          {this.renderAccordionSeperator()}
         </div >
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
