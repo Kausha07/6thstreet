@@ -48,7 +48,6 @@ class WishlistClickEvent extends BaseEvent {
         click: {
           actionField: {
             list,
-            action: "click",
           },
           products: [
             {

@@ -99,6 +99,9 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
+      : "";
   
     return (
       <div
@@ -112,7 +115,9 @@ class DynamicContentGrid extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
@@ -148,6 +153,9 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
+      : "";
    
     return (
       <div block="CategoryItem" elem="Content" key={i}>
@@ -155,7 +163,9 @@ class DynamicContentGrid extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);

@@ -120,14 +120,18 @@ class DynamicContentRichContentBanner extends PureComponent {
       ht = screen.width.toString() + "px";
       wd = screen.width.toString() + "px";
     }
-
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
+      : "";
     return (
       <div block="CircleSlider" key={i}>
         <Link
           to={formatCDNLink(item.button.link)}
           key={i}
           data-banner-type="richContentBanner"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
+          }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);

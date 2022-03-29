@@ -8,6 +8,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import HeaderSearch from "./HeaderSearch.component";
+import Event, { EVENT_GTM_CLEAR_SEARCH } from "Util/Event";
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
 });
@@ -175,6 +176,9 @@ export class HeaderSearchContainer extends PureComponent {
   };
 
   onSearchChange(search) {
+    if(search?.length === 0) {
+      Event.dispatch(EVENT_GTM_CLEAR_SEARCH);
+    }
     this.setState({ search });
   }
 

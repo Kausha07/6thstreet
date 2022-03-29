@@ -20,6 +20,9 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_CLICK_TOP_SEARCHES_CLICK
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
@@ -242,9 +245,12 @@ class SearchSuggestion extends PureComponent {
   };
 
   // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search) => {
+  onSearchQueryClick = (search, eventType) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
+    if(eventType) {
+      Event.dispatch(eventType);
+    }
     setPrevPath(window.location.href)
     closeSearch();
   };
@@ -392,7 +398,7 @@ class SearchSuggestion extends PureComponent {
         <li>
           <Link
             to={fetchSKU?.url}
-            onClick={() => this.onSearchQueryClick(query)}
+            onClick={() => this.onSearchQueryClick(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)}
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
@@ -413,7 +419,7 @@ class SearchSuggestion extends PureComponent {
               ),
             }}
             onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query))
+              this.onSearchQueryClick(formatQuerySuggestions(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK))
             }
           >
             <div className="suggestion-details-box">
@@ -816,7 +822,7 @@ class SearchSuggestion extends PureComponent {
                 search
               )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() => this.onSearchQueryClick(search)}
+          onClick={() => this.onSearchQueryClick(search, EVENT_CLICK_TOP_SEARCHES_CLICK)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {search}
@@ -888,7 +894,7 @@ class SearchSuggestion extends PureComponent {
                 name
               )}&p=0&dFR[gender][0]=${genderInURL}`
           }
-          onClick={() => this.onSearchQueryClick(name)}
+          onClick={() => this.onSearchQueryClick(name, EVENT_CLICK_RECENT_SEARCHES_CLICK)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {name}

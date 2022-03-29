@@ -76,11 +76,11 @@ const _getCategoryLevel2Data = ({
       // let l1 = query["categories.level2"] ? l2Key : l1Key;
 
       // TODO: Add proper logger
-      if (l2 && !categoriesWithoutPath[l2] && __DEV__) {
+      if (l2 && categoriesWithoutPath && !categoriesWithoutPath[l2] && __DEV__) {
         console.warn("No categories_without_path for", l2);
       }
 
-      if (l2 && categoriesWithoutPath[l2]) {
+      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2]) {
         if (!acc[l1]) {
           acc[l1] = {
             label: l1,

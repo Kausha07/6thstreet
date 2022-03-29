@@ -18,18 +18,17 @@ export const EVENT_GTM_PRODUCT_CLICK = "gtm_product_click";
 export const EVENT_GTM_VUE_PRODUCT_CLICK = "gtm_vue_product_click";
 export const EVENT_GTM_WISHLIST_PRODUCT_CLICK = "gtm_wishlist_product_click";
 export const EVENT_GTM_PRODUCT_DETAIL = "gtm_product_detail";
-export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
-  "gtm_product_remove_from_cart";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART = "gtm_product_remove_from_cart";
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
+
 // new events
 export const EVENT_GTM_TRENDING_BRANDS_CLICK = "gtm_trending_brands_click";
 export const EVENT_GTM_TRENDING_TAGS_CLICK = "gtm_trending_tags_click";
 export const EVENT_GTM_BRANDS_CLICK = "gtm_brands_click";
 export const EVENT_GTM_RECOMMENDED_CLICK = "gtm_recommended_click";
 export const EVENT_GTM_PRODUCT_ADD_TO_WISHLIST = "gtm_product_add_to_wishlist";
-export const EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST =
-  "gtm_product_remove_from_wishlist";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST = "gtm_product_remove_from_wishlist";
 
 export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";
 export const SELECT_ITEM_ALGOLIA = "select_item_algolia";
@@ -47,3 +46,16 @@ export const VUE_PLACE_ORDER = "placeOrder";
 export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
 export const EVENT_CLICK_PROMOTION_IMPRESSION = "promotionClick";
 export const EVENT_PRODUCT_IMPRESSION = "productImpression";
+
+export const EVENT_GTM_CANCEL_SEARCH = "cancel_search";
+export const EVENT_GTM_CLEAR_SEARCH = "clear_search";
+export const EVENT_GTM_GO_TO_SEARCH = "go_to_search";
+export const EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK = "search_query_suggestion_click";
+export const EVENT_CLICK_SEARCH_WISH_LIST_CLICK = "search_wish_list_click";
+export const EVENT_GTM_VIEW_SEARCH_RESULTS = "view_search_results";
+export const EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
+export const EVENT_CLICK_RECENT_SEARCHES_CLICK = "recent_searches_click";
+export const EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW = "search_logs_screen_view";
+export const EVENT_GTM_SEARCH_SCREEN_VIEW = "search_screen_view";
+export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
+export const EVENT_CLICK_RECOMMENDATION_CLICK = "Recommendation_clicked";

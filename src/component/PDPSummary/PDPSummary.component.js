@@ -1,8 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
-import Image from "Component/Image";
+import Link from "Component/Link";
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 import PDPTags from "Component/PDPTags";
@@ -14,9 +13,9 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
-
-import tabby from "./icons/tabby.svg";
+import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import "./PDPSummary.style";
 
@@ -150,24 +149,66 @@ class PDPSummary extends PureComponent {
 
   renderBrand() {
     const {
-      product: {name, brand_name, gallery_images = [] },
+      product: { name, brand_name, gallery_images = [] },
     } = this.props;
+    const { url_path } = this.props;
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
-      return <div block="PDPSummary" elem="Heading">
-        <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>
-        
-        <ShareButton
-          title={document.title}
-          text={`Hey check this out: ${document.title}`}
-          url={url.href}
-          image={gallery_images[0] || fallbackImage}
-        />
-      </div>
+      return (
+        <div block="PDPSummary" elem="Heading">
+          <h1>
+            {url_path ? (
+              <Link
+                className="pdpsummarylinkTagStyle"
+                to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
+                  gender.charAt(0),
+                  gender.charAt(0).toUpperCase()
+                )}`}
+              >
+                {brand_name}
+              </Link>
+            ) : (
+              brand_name
+            )}{" "}
+            <span block="PDPSummary" elem="Name">
+              {name}
+            </span>
+          </h1>
+
+          <ShareButton
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.href}
+            image={gallery_images[0] || fallbackImage}
+          />
+        </div>
+      );
     }
 
-    return <h1>{brand_name} <span block="PDPSummary" elem="Name">{name}</span></h1>;
+    return (
+      <h1>
+        {url_path ? (
+          <Link
+            className="pdpsummarylinkTagStyle"
+            to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
+              gender.charAt(0),
+              gender.charAt(0).toUpperCase()
+            )}`}
+          >
+            {brand_name}
+          </Link>
+        ) : (
+          brand_name
+        )}{" "}
+        <span block="PDPSummary" elem="Name">
+          {name}
+        </span>
+      </h1>
+    );
   }
 
   renderName() {
@@ -337,7 +378,7 @@ class PDPSummary extends PureComponent {
       simple_products &&
       selectedSizeCode &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-      parseInt(simple_products[selectedSizeCode]?.quantity) &&
+        parseInt(simple_products[selectedSizeCode]?.quantity) &&
       parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
     ) {
       tags.push(__("International Shipment"));

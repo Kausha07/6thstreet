@@ -32,9 +32,6 @@ class BannerClickEvent extends BaseEvent {
         this.pushEventData({
             ecommerce: {
                 click: {
-                    actionField: {
-                        action: 'click'
-                    },
                     banners: banner
                 }
             }
