@@ -21,7 +21,8 @@ const settings = {
   items: 1,
   edgePadding: 10,
   autoHeight: true,
-  autoplayTimeout: 2000
+  autoplayTimeout: 3000,
+  speed: 1000
 };
 class HeaderTopBar extends NavigationAbstract {
   static propTypes = {
@@ -100,9 +101,17 @@ class HeaderTopBar extends NavigationAbstract {
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
           {txt[country]}
         </div>
-        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-          {__("CASH ON DELIVERY")}
-        </div>
+        {
+          (getCountryFromUrl() === "QA") ?
+            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+              {__("CASH ON RECEIVING")}
+            </div>
+            :
+            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+              {__("CASH ON DELIVERY")}
+            </div>
+        }
+
         <div key="cms" block="HeaderTopBar" elem="CmsBlock">
           {__("ALL PRICES ARE INCLUSIVE OF VAT")}
         </div>
