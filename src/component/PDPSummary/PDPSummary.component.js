@@ -13,8 +13,9 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
-
+import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import "./PDPSummary.style";
 
@@ -151,15 +152,26 @@ class PDPSummary extends PureComponent {
       product: { name, brand_name, gallery_images = [] },
     } = this.props;
     const { url_path } = this.props;
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html`}>
-              {brand_name}
-            </Link>{" "}
+            {(url_path) ? (
+              <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html
+              &dFR[gender][0]=${gender.replace(
+                      gender.charAt(0),
+                      gender.charAt(0).toUpperCase()
+                    )}`}>
+                {brand_name}
+              </Link>
+            ) : (
+              brand_name
+            )}{" "}
             <span block="PDPSummary" elem="Name">
               {name}
             </span>
@@ -177,9 +189,16 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1>
-        <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html`}>
-          {brand_name}
-        </Link>{" "}
+        {(url_path) ? (
+          <Link className="pdpsummarylinkTagStyle" to={`/${url_path}.html&dFR[gender][0]=${gender.replace(
+            gender.charAt(0),
+            gender.charAt(0).toUpperCase()
+          )}`}>
+            {brand_name}
+          </Link>
+        ) : (
+          brand_name
+        )}{" "}
         <span block="PDPSummary" elem="Name">
           {name}
         </span>
