@@ -39,11 +39,8 @@ class ProductClickEvent extends BaseEvent {
 
     this.pushEventData({
       ecommerce: {
+        currencyCode: this.getCurrencyCode(),
         click: {
-          actionField: {
-            list,
-            action: "click",
-          },
           products: [product],
         },
       },

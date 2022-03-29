@@ -41,7 +41,6 @@ class CheckoutOptionEvent extends BaseEvent {
                     actionField: {
                         step,
                         option,
-                        action: 'checkout'
                     }
                 }
             }

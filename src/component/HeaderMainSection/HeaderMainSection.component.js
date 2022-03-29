@@ -343,7 +343,10 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   hideSearchBar = () => {
-    this.setState({ showSearch: false, showPLPSearch: false });
+    this.setState({
+      showSearch: false,
+      showPLPSearch: false
+    });
   };
 
   hidePDPSearchBar = () => {

@@ -165,6 +165,7 @@ class CreditCard extends PureComponent {
     handleNewCardClick = () => {
         this.props.toggleNewCardVisible(true);
         this.props.removePromotionSavedCard();
+        this.setState({ cvv: '' });
     }
 
     handleMyCardsClick = () => {

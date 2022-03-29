@@ -2,7 +2,7 @@ require('dotenv-flow').config();
 const express = require('express');
 var serveStatic = require('serve-static')
 const serverTimings = require('server-timings');
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const proxy = require('./src/setupProxy');
 const path = require('path');
 
@@ -43,15 +43,22 @@ app.use(serveStatic(path.join(__dirname, 'build'), {
 // app.use(express.static(path.join(__dirname, 'build')));
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    const { locale, gender="" } = req.cookies
-    if(locale){
-        // If locale & gender are set, rediect to the regional subdomain
-        const host = process.env[`REACT_APP_HOST_${locale.replace("-", "_").toUpperCase()}`];
-        const path = req.path==="/" ? `/${gender}` : req.path;
-        if(host){
-            return res.redirect(302, `${host}${path}`);
-        }
+    const { locale, gender="" } = req.cookies;
+    const host =  !locale?"":process.env[`REACT_APP_HOST_${locale.replace("-", "_").toUpperCase()}`];
+    if(gender && req.path==="/"){
+        return res.redirect(302, `${host}/${gender}`);
     }
+    if(locale){
+        let queryString = "";
+        for(key in req.query) {
+            queryString = queryString + `${key}=${req.query[key]}`
+        }
+        queryString = `?${queryString}`;
+        // If locale & gender are set, rediect to the regional subdomain
+        const path = req.path==="/" ? `/${gender}` : `${req.path}${queryString}`;
+        return res.redirect(302, `${host}${path}`);
+    }
+
     return res.sendFile(path.join(`${__dirname}/build/index.html`));
 });
 

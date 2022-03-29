@@ -10,6 +10,7 @@ import Clear from "./icons/close-black.png";
 import searchPng from "./icons/search.svg";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
+import Event, { EVENT_GTM_CANCEL_SEARCH, EVENT_GTM_GO_TO_SEARCH } from "Util/Event";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -47,8 +48,10 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { focusInput, isPDPSearchVisible } = this.props;
+    const { showSearch: prevShowSearch } = prevState;
+    const { showSearch } = this.state;
     const {
       current: {
         form: { children },
@@ -62,6 +65,14 @@ class HeaderSearch extends PureComponent {
       searchInput
     ) {
       searchInput.focus();
+    }
+
+    if(!showSearch && prevShowSearch){
+      Event.dispatch(EVENT_GTM_CANCEL_SEARCH);
+    }
+
+    if(showSearch && !prevShowSearch){
+      Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
     }
   }
   searchRef = createRef();

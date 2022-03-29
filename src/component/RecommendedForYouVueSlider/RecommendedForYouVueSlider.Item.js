@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, { VUE_CAROUSEL_CLICK, EVENT_CLICK_RECOMMENDATION_CLICK } from "Util/Event";
 import { Price as PriceType } from "Util/API/endpoint/Product/Product.type";
 
 export const mapStateToProps = (state) => ({
@@ -59,6 +59,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
+    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK);
     this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
