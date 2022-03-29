@@ -72,6 +72,7 @@ class Brand extends PureComponent {
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
+          
     }
     return (
       <div block="Brand">
