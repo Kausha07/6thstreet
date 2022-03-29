@@ -58,7 +58,7 @@ export class CartDispatcher {
         Logger.log(e);
       }
     } else {
-      if(createNewCart) {
+      if(cartId) {
         await this.getCartTotals(dispatch, cartId);
       }
     }
@@ -184,7 +184,6 @@ export class CartDispatcher {
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
         dispatch(setCartId(requestedCartId));
         await this.getCartTotals(dispatch, requestedCartId);
-        console.log("all well")
       } catch (e) {
         Logger.log(e);
       }

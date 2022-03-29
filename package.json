@@ -37,7 +37,7 @@
         "redux-logger": "^3.0.6",
         "server-timings": "^2.0.1",
         "tiny-slider": "2.9.3",
-        "tiny-slider-react": "^0.5.3",
+        "tiny-slider-react": "0.5.3",
         "uuid": "^8.3.2",
         "workbox-webpack-plugin": "^6.0.2",
         "workbox-window": "^6.4.2"
