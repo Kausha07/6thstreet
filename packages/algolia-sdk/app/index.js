@@ -1,5 +1,6 @@
 import autocompleteSearch from "./autocompleteSearch";
 import getBrandsDetails from "./get-brands-details";
+import getShopByBrands from "./get-shop-by-brands";
 import getBrands from "./get-brands";
 import getPDP from "./get-pdp";
 import getPLP from "./get-plp";
@@ -25,5 +26,6 @@ export {
   getTopSearches,
   autocompleteSearch,
   getWishlistProduct,
-  getBrandsDetails
+  getBrandsDetails,
+  getShopByBrands
 };

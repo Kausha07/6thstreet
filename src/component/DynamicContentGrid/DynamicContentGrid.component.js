@@ -15,7 +15,6 @@ import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -100,10 +99,10 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
       : "";
+  
     return (
       <div
         block="CategoryItem"
@@ -117,7 +116,7 @@ class DynamicContentGrid extends PureComponent {
           key={i}
           data-banner-type="grid"
           data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
           }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
@@ -154,10 +153,10 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
       : "";
+   
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
@@ -165,7 +164,7 @@ class DynamicContentGrid extends PureComponent {
           key={i}
           data-banner-type="grid"
           data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
           }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {

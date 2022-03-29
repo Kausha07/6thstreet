@@ -159,7 +159,12 @@ export class Algolia {
   async getBrandsDetails(query, limit) {
     const data = (await AlgoliaSDK.getBrandsDetails(query, limit)) || {};
     return data;
-  }  
+  }
+
+  async getShopByBrands(query, limit) {
+    const data = (await AlgoliaSDK.getShopByBrands(query, limit)) || {};
+    return data;
+  }
 
   async getTopSearches() {
     const data = (await AlgoliaSDK.getTopSearches()) || [];

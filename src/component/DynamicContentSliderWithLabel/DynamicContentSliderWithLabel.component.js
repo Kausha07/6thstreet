@@ -15,7 +15,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -163,9 +162,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
       : "";
     return (
       <div
@@ -181,7 +179,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           elem="Link"
           data-banner-type="sliderWithLabel"
           data-promotion-name={
-            storeCode + (item.promotion_name ? item.promotion_name : "")
+            getStoreName + (item.promotion_name ? item.promotion_name : "")
           }
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {

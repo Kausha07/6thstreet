@@ -203,8 +203,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         } = result;
         setAuthorizationToken(token);
 
-        dispatch(updateCustomerSignInStatus(true));
+
         await this.handleMobileAuthorization(dispatch, options);
+        dispatch(updateCustomerSignInStatus(true));
 
         this.signInCommonBlock(dispatch);
         return true;

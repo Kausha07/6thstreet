@@ -12,7 +12,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-import { getLocaleFromUrl } from "Util/Url/Url";
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -99,11 +98,11 @@ class DynamicContentBanner extends PureComponent {
     const { index, type } = this.props;
     // const { height, width } = items[0];
     const { url, image_url, link, height = "", width = "" } = item;
-    let ht, wd;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const storeCode = countryCodeFromUrl
-      ? countryCodeFromUrl.toUpperCase() + "-"
+
+    const getStoreName = this.props.promotion_name
+      ? this.props.promotion_name + "-"
       : "";
+    let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
     //   ht = (height / width) * screen.width;
@@ -135,7 +134,7 @@ class DynamicContentBanner extends PureComponent {
         key={i}
         data-banner-type={type || "banner"}
         data-promotion-name={
-          storeCode + (item.promotion_name ? item.promotion_name : "")
+          getStoreName + (item.promotion_name ? item.promotion_name : "")
         }
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
