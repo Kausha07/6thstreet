@@ -774,11 +774,11 @@ export class CheckoutSuccess extends PureComponent {
 
     switch (formatedString) {
       case "Tabby":
-        if (!isArabic) {
-          return <img src={Tabby} alt={paymentTitle} />;
-        }
-
-        return <img src={TabbyAR} alt={paymentTitle} />;
+        // if (!isArabic) {
+        //   return <img src={Tabby} alt={paymentTitle} />;
+        // }
+        // return <img src={TabbyAR} alt={paymentTitle} />;
+        return <img src={Tabby} alt={paymentTitle} />;
       case "Apple":
         return <img src={Apple} alt={paymentTitle} />;
       case "Cash":
