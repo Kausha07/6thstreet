@@ -36,11 +36,22 @@ class Brand extends PureComponent {
     let finalURL;
     let requestedGender;
     let brandName = isArabic ? name_ar : name;
+
     if (type) {
       if (type === "kids") {
         requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
-      } else {
-        requestedGender = isArabic ? getGenderInArabic(type) : type;
+      } 
+      else if(type=== "النساء"){
+        requestedGender = "نساء"
+      }
+      else if(type=== "الرجال"){
+        requestedGender = "رجال"
+      }
+      else if(type=== "الأطفال"){
+        requestedGender = "صبي,فتاة,أطفال"
+      }      
+      else {
+        requestedGender =  type;
       }
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
@@ -57,10 +68,11 @@ class Brand extends PureComponent {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
+          
     }
     return (
       <div block="Brand">
