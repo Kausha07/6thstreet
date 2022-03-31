@@ -156,7 +156,7 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      this.fetchClickAndCollectStores(brandName, sku);
+      //this.fetchClickAndCollectStores(brandName, sku);
     }
   }
 
@@ -245,7 +245,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -324,7 +324,7 @@ export class PDPContainer extends PureComponent {
         categories_without_path = [],
         color,
         categories,
-      },
+      } = {},
     } = this.props;
     if (!name) {
       return;
