@@ -156,7 +156,7 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      //this.fetchClickAndCollectStores(brandName, sku);
+      // this.fetchClickAndCollectStores(brandName, sku);
     }
   }
 
