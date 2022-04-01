@@ -174,12 +174,12 @@ class CreditCard extends PureComponent {
     }
 
     renderCreditCardForm() {
-        const { isAmex, isSignedIn } = this.props;
+        const { isAmex, isSignedIn, savedCards } = this.props;
         const { cvv, cardLogo, isArabic } = this.state;
-
+        
         return (
             <React.Fragment>               
-                {isSignedIn ? <label block="MyCards" elem="Link" onClick={this.handleMyCardsClick}>{__("My Cards")}</label> : null}
+                {(isSignedIn && savedCards.length > 0)  ? <label block="MyCards" elem="Link" onClick={this.handleMyCardsClick}>{__("My Cards")}</label> : null}
             
             <div block="CreditCard" elem="Card" dir={isArabic ? "rtl" : "ltr"}>
                 <p>{__("card number")}</p>
