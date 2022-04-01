@@ -301,7 +301,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
             onClick={selectPaymentMethod}
             setCashOnDeliveryFee={setCashOnDeliveryFee}
           />
-          <img src={isArabic ? tabbyAr : img} alt={m_code} />
+          {/* <img src={isArabic ? tabbyAr : img} alt={m_code} /> */}
+          <img src={img} alt={m_code} />
         </div>
         <div block="CheckoutPayments" elem="TabbyPaymentContent">
           <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">

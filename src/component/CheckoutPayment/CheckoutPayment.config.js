@@ -1,8 +1,8 @@
-/* eslint-disable import/prefer-default-export */
+//* eslint-disable import/prefer-default-export */
 import apple from './icons/apple.png';
 import card from './icons/card.png';
 import cash from './icons/cash.png';
-import tabby from './icons/tabby.png';
+import tabby from '../../style/icons/tabby.png';
 import qpay from './icons/qpay.png';
 
 export const PAYMENTS_DATA = {
