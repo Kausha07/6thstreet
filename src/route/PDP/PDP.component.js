@@ -149,6 +149,7 @@ class PDP extends PureComponent {
 
   closeAreaOverlay = () => {
     const { showCityDropdown } = this.state;
+    document.body.style.overflow = "visible";
     this.setState({
       showCityDropdown: !showCityDropdown,
       showAreaDropDown: false,
@@ -167,6 +168,17 @@ class PDP extends PureComponent {
     });
   };
 
+  handleAreaSelection = (area) => {
+    this.setState({
+      selectedAreaId: area.area_id,
+      selectedArea: isArabic() ? area.area_name_ar : area.area_name_en,
+      showCityDropdown: false,
+      showPopupField: "",
+    });
+    this.handleAreaDropDownClick();
+    document.body.style.overflow = "visible";
+  };
+
   renderSelectAreaItem() {
     const { selectedCityArea } = this.state;
     const isArea =
@@ -178,17 +190,7 @@ class PDP extends PureComponent {
             return (
               <li
                 id={area.area_id}
-                onClick={() => {
-                  this.setState({
-                    selectedAreaId: area.area_id,
-                    selectedArea: isArabic()
-                      ? area.area_name_ar
-                      : area.area_name_en,
-                    showCityDropdown: false,
-                    showPopupField: "",
-                  });
-                  this.handleAreaDropDownClick();
-                }}
+                onClick={() => this.handleAreaSelection(area)}
               >
                 <button block={`CountrySwitcher`} elem="CountryBtn">
                   <span>
