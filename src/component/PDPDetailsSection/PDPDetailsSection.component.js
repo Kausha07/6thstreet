@@ -17,9 +17,7 @@ import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
-import address from "./icons/address.png";
-import addressBlack from "./icons/address_black.png";
-import Image from "Component/Image";
+
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -34,47 +32,6 @@ class PDPDetailsSection extends PureComponent {
       3: false,
       4: true,
       5: true,
-    },
-    showCityDropdown: false,
-    showAreaDropDown: false,
-    selectedCityId: null,
-    selectedAreaId: null,
-    selectedArea: null,
-    selectedCityArea: null,
-    Countryresponse: {
-      responseCode: "OK",
-      success: true,
-      errorMessage: null,
-      result: [
-        {
-          city_id: 1,
-          city_name_en: "Dubai",
-          city_name_ar: "",
-          area_list: null,
-        },
-        {
-          city_id: 2,
-          city_name_en: "Abu Dhabi",
-          city_name_ar: "",
-          area_list: [
-            {
-              area_id: 1,
-              area_name_en: "Abu Dhabi Golf Club",
-              area_name_ar: "",
-            },
-            {
-              area_id: 2,
-              area_name_en: "Abu Dhabi International Airport",
-              area_name_ar: "",
-            },
-            {
-              area_id: 3,
-              area_name_en: "Abu Dhabi Mall",
-              area_name_ar: "",
-            },
-          ],
-        },
-      ],
     },
     pdpWidgetsAPIData: [],
     isArabic: isArabic(),
@@ -951,137 +908,6 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  handleAreaDropDownClick = () => {
-    const { showCityDropdown } = this.state;
-    this.setState({
-      showCityDropdown: !showCityDropdown,
-      showAreaDropDown: false,
-    });
-  };
-
-  renderSelectAreaItem() {
-    const { selectedCityArea } = this.state;
-    const isArea =
-      selectedCityArea && Object.values(selectedCityArea).length > 0;
-    return (
-      <ul>
-        {isArea ? (
-          Object.values(selectedCityArea).map((area) => {
-            return (
-              <li>
-                <button
-                  block={`CountrySwitcher`}
-                  elem="CountryBtn"
-                  id={area.area_id}
-                  onClick={() => {
-                    this.setState({
-                      selectedAreaId: area.area_id,
-                      selectedArea: isArabic()
-                        ? area.area_name_ar
-                        : area.area_name_en,
-                    });
-                    this.handleAreaDropDownClick();
-                  }}
-                >
-                  <span>
-                    {isArabic() ? area.area_name_ar : area.area_name_en}
-                  </span>
-                </button>
-              </li>
-            );
-          })
-        ) : (
-          <span block="NoAreaFound">No Area Found</span>
-        )}
-      </ul>
-    );
-  }
-  renderSelectCityItem() {
-    const { Countryresponse } = this.state;
-    return (
-      <ul>
-        {Object.values(Countryresponse.result).map((city) => {
-          return (
-            <li>
-              <button
-                block={`CountrySwitcher`}
-                elem="CountryBtn"
-                id={city.city_id}
-                onClick={() =>
-                  this.setState({
-                    selectedCityId: city.city_id,
-                    selectedCityArea: city.area_list,
-                    showAreaDropDown: true,
-                  })
-                }
-              >
-                <span>
-                  {isArabic() ? city.city_name_ar : city.city_name_en}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-  renderSelectCity() {
-    const {
-      showCityDropdown,
-      showAreaDropDown,
-      selectedCityArea,
-      selectedAreaId,
-      selectedArea,
-    } = this.state;
-    const isArea = !(
-      selectedCityArea && Object.values(selectedCityArea).length > 0
-    );
-    return (
-      <div block="EDDWrapper">
-        {selectedAreaId ? (
-          <div
-          // mix={{ block: "EDDWrapper", elem: "AreaButton" }}
-            onClick={() => this.handleAreaDropDownClick()}
-          >
-            <Image lazyLoad={false} src={addressBlack} alt="" />
-            <div block="SelectAreaText">{selectedArea}</div>
-          </div>
-        ) : (
-          <div
-            mix={{ block: "EDDWrapper", elem: "AreaButton" }}
-            onClick={() => this.handleAreaDropDownClick()}
-          >
-            <Image lazyLoad={false} src={address} alt="" />
-            <div block="SelectAreaText">Select Area</div>
-          </div>
-        )}
-
-        <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
-          Select to check delivery date
-        </div>
-        <div block="DropDownWrapper">
-          {showCityDropdown && (
-            <div mix={{ block: "EDDWrapper", elem: "CountryDrop" }}>
-              {this.renderSelectCityItem()}
-            </div>
-          )}
-          {showCityDropdown && showAreaDropDown && (
-            <div
-              block="AreaDropdown"
-              mix={{
-                block: "EDDWrapper",
-                elem: "CountryDrop",
-                mods: { isArea },
-              }}
-            >
-              {this.renderSelectAreaItem()}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       product: { brand_name },
@@ -1096,7 +922,6 @@ class PDPDetailsSection extends PureComponent {
         ) : (
           ""
         )}
-        {this.renderSelectCity()}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
