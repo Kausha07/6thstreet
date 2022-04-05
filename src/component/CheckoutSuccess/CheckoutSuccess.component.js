@@ -24,7 +24,7 @@ import Confirm from "./icons/confirm.png";
 import Mail from "./icons/mail.svg";
 import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
-import Tabby from "./icons/tabby.png";
+import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import Image from "Component/Image";
 import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
@@ -774,11 +774,11 @@ export class CheckoutSuccess extends PureComponent {
 
     switch (formatedString) {
       case "Tabby":
-        if (!isArabic) {
-          return <img src={Tabby} alt={paymentTitle} />;
-        }
-
-        return <img src={TabbyAR} alt={paymentTitle} />;
+        // if (!isArabic) {
+        //   return <img src={Tabby} alt={paymentTitle} />;
+        // }
+        // return <img src={TabbyAR} alt={paymentTitle} />;
+        return <img src={Tabby} alt={paymentTitle} />;
       case "Apple":
         return <img src={Apple} alt={paymentTitle} />;
       case "Cash":

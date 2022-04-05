@@ -468,7 +468,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       onBillingError,
       isSameAsShipping,
       setOrderButtonDisabled,
+      isTabbyInstallmentAvailable
     } = this.props;
+
     const { formContent } = this.state;
 
     return formContent ? (

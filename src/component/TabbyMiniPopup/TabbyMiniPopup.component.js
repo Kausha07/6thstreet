@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import Image from "Component/Image";
 
-import tabby from "./icons/tabby.png";
+import tabby from "../../style/icons/tabby.png";
 import {
   TABBY_ROW_DATA,
   TABBY_SUB_ROW_DATA,

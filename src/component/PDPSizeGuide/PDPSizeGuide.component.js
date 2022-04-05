@@ -133,6 +133,7 @@ class PDPSizeGuide extends PureComponent {
           {this.isBrandPro() ? (
             ""
           ) : (
+            <>
             <h1
               mix={{
                 block: "PDPSizeGuide",
@@ -144,10 +145,12 @@ class PDPSizeGuide extends PureComponent {
                 ? __("SIZE GUIDE")
                 : __("SIZE GUIDE")}
             </h1>
-          )}
-          <hr
+            <hr
             mix={{ block: "PDPSizeGuide", elem: "Line", mods: { isArabic } }}
           />
+          </>
+          )}
+          
         </div>
         {/* <span
                   mix={ { block: 'PDPSizeGuide', elem: 'SubHeader', mods: { isArabic } } }
