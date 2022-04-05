@@ -202,8 +202,8 @@ class PDPGallery extends PureComponent {
 
   showGalleryOverlay = () => {
     const { location } = browserHistory;
-    document.body.style.overflow = "hidden";
     this.setState({openGalleryOverlay: true}, () => {
+      document.body.style.overflow = "hidden";
       browserHistory.push(`${location.pathname}`);
     });
   }
