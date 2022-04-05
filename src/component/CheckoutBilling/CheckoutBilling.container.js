@@ -31,6 +31,7 @@ import { isSignedIn } from "Util/Auth";
 import Logger from "Util/Logger";
 import { fetchMutation, fetchQuery } from "Util/Request";
 import * as Sentry from "@sentry/react";
+import { getCountryFromUrl } from 'Util/Url/Url';
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   processingRequest: state.CartReducer.processingRequest,
@@ -53,6 +54,8 @@ export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   createTabbySession: (code) =>
     CheckoutDispatcher.createTabbySession(dispatch, code),
+  getTabbyInstallment: (price) =>
+    CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   showError: (message) => dispatch(showNotification("error", message)),
 });
@@ -150,39 +153,46 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
+      getTabbyInstallment,
       totals: { total },
     } = this.props;
-    if (total >= 150) {
-      createTabbySession(shippingAddress)
-        .then((response) => {
-          if (response && response.configuration) {
-            const {
-              configuration: {
-                available_products: { installments },
-              },
-              payment: { id },
-            } = response;
-            if (installments) {
+    // const countryCode = ['AE', 'SA', 'KW'].includes(getCountryFromUrl());
+    const getCountryCode = getCountryFromUrl();
+    getTabbyInstallment(total).then((response) => {
+      if (response?.value) {
+        createTabbySession(shippingAddress)
+          .then((response) => {
+            if (response && response.configuration) {
+              const {
+                configuration: {
+                  available_products: { installments },
+                },
+                payment: { id },
+              } = response;
               if (installments) {
-                setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-                this.setState({ isTabbyInstallmentAvailable: true });
+                if (installments) {
+                  setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+                  this.setState({ isTabbyInstallmentAvailable: true });
+                }
               }
             }
-          }
-        }, this._handleError)
-        .catch(() => { });
-    }
+          }, this._handleError)
+          .catch(() => { });
+      }
+    }, this._handleError).catch(() => { });
   }
   componentDidUpdate(prevProps) {
     const {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
+      getTabbyInstallment,
       totals: { total },
     } = this.props;
     if (prevProps?.totals?.total !== total) {
-      if (total >= 150) {
-        createTabbySession(shippingAddress)
+      getTabbyInstallment(total).then((response) => {
+        if (response?.value) {
+          createTabbySession(shippingAddress)
           .then((response) => {
             if (response && response.configuration) {
               const {
@@ -204,9 +214,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             }
           }, this._handleError)
           .catch(() => { });
-      } else {
-        this.setState({ isTabbyInstallmentAvailable: false });
-      }
+        }
+        else {
+          this.setState({ isTabbyInstallmentAvailable: false });
+        }
+      }, this._handleError).catch(() => { });
     }
   }
   setOrderButtonDisabled() {
@@ -364,39 +376,39 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         });
 
         addNewCreditCard({ number, expMonth, expYear, cvv })
-        .then((response) => {
-          const { id, token } = response;
-          if (id || token) {
-            BrowserDatabase.setItem(
-              id ?? token,
-              "CREDIT_CART_TOKEN",
-              FIVE_MINUTES_IN_SECONDS
-            );
-            if(isSignedIn()) {
-              showSuccessMessage(__("Credit card successfully added"));
+          .then((response) => {
+            const { id, token } = response;
+            if (id || token) {
+              BrowserDatabase.setItem(
+                id ?? token,
+                "CREDIT_CART_TOKEN",
+                FIVE_MINUTES_IN_SECONDS
+              );
+              if (isSignedIn()) {
+                showSuccessMessage(__("Credit card successfully added"));
+              }
+
+              savePaymentInformation({
+                billing_address: address,
+                paymentMethod,
+              });
+            } else if (Array.isArray(response)) {
+              const message = response[0];
+
+              if (typeof message === "string") {
+                showErrorNotification(this.getCartError(message));
+              } else {
+                showErrorNotification(__("Something went wrong"));
+              }
+            } else if (typeof response === "string") {
+              showErrorNotification(response);
             }
+          }, this._handleError)
+          .catch(() => {
+            const { showErrorNotification } = this.props;
 
-            savePaymentInformation({
-              billing_address: address,
-              paymentMethod,
-            });
-          } else if (Array.isArray(response)) {
-            const message = response[0];
-
-            if (typeof message === "string") {
-              showErrorNotification(this.getCartError(message));
-            } else {
-              showErrorNotification(__("Something went wrong"));
-            }
-          } else if (typeof response === "string") {
-            showErrorNotification(response);
-          }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-
-          showErrorNotification(__("Something went wrong"));
-        });
+            showErrorNotification(__("Something went wrong"));
+          });
       } else {
         //if payment is via saved card.
         let selectedCard = savedCards.find((a) => a.selected === true);

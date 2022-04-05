@@ -37,6 +37,7 @@ class PDPSummary extends PureComponent {
   componentDidMount() {
     const {
       product: { price },
+      getTabbyInstallment,
     } = this.props;
     const { isArabic } = this.state;
     if (price) {
@@ -47,49 +48,8 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const script = document.createElement("script");
-        script.src = "https://checkout.tabby.ai/tabby-promo.js";
-        script.async = true;
-        script.onload = function () {
-          let s = document.createElement("script");
-          s.type = "text/javascript";
-          const code = `new TabbyPromo({
-        selector: '#TabbyPromo',
-        currency: '${currency}',
-        price: '${defPrice}',
-        installmentsCount: 4,
-        lang: '${isArabic ? "ar" : "en"}',
-        source: 'product',
-      });`;
-          try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
-          } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
-          }
-        };
-        document.body.appendChild(script);
-      }
-    }
-  }
-  componentDidUpdate(prevProps) {
-    const {
-      product: { price },
-    } = this.props;
-    const { isArabic } = this.state;
-
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        if (prevProps.product.price !== price) {
+      getTabbyInstallment(defPrice).then((response) => {
+        if (response?.value) {
           const script = document.createElement("script");
           script.src = "https://checkout.tabby.ai/tabby-promo.js";
           script.async = true;
@@ -114,7 +74,52 @@ class PDPSummary extends PureComponent {
           };
           document.body.appendChild(script);
         }
-      }
+      }, this._handleError).catch(() => { });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      product: { price },
+      getTabbyInstallment
+    } = this.props;
+    const { isArabic } = this.state;
+
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+      getTabbyInstallment(defPrice).then((response) => {
+        if (response?.value) {
+          if (prevProps.product.price !== price) {
+            const script = document.createElement("script");
+            script.src = "https://checkout.tabby.ai/tabby-promo.js";
+            script.async = true;
+            script.onload = function () {
+              let s = document.createElement("script");
+              s.type = "text/javascript";
+              const code = `new TabbyPromo({
+            selector: '#TabbyPromo',
+            currency: '${currency}',
+            price: '${defPrice}',
+            installmentsCount: 4,
+            lang: '${isArabic ? "ar" : "en"}',
+            source: 'product',
+          });`;
+              try {
+                s.appendChild(document.createTextNode(code));
+                document.body.appendChild(s);
+              } catch (e) {
+                s.text = code;
+                document.body.appendChild(s);
+              }
+            };
+            document.body.appendChild(script);
+          }
+        }
+      }, this._handleError).catch(() => { });
     }
   }
   static getDerivedStateFromProps(props, state) {
@@ -423,30 +428,11 @@ class PDPSummary extends PureComponent {
   }
 
   renderTabby() {
-    const {
-      product: { price },
-    } = this.props;
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const monthPrice = (defPrice / 4).toFixed(2);
-        return (
-          <>
-            <div id="TabbyPromo"></div>
-          </>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
+    return (
+      <>
+        <div id="TabbyPromo"></div>
+      </>
+    );
   }
 
   render() {

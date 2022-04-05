@@ -38,6 +38,7 @@ import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 
 import CartPage from './CartPage.component';
@@ -76,7 +77,9 @@ export const mapDispatchToProps = (dispatch) => ({
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     getCouponList : () => CartDispatcher.getCoupon(dispatch),
     applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
-    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
+    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
+    getTabbyInstallment: (price) =>
+        CheckoutDispatcher.getTabbyInstallment(dispatch, price),
 });
 
 export class CartPageContainer extends PureComponent {
