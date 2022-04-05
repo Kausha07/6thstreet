@@ -16,6 +16,7 @@ import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 
 import "./PDPSummary.style";
 
@@ -157,26 +158,64 @@ class PDPSummary extends PureComponent {
       product: { name, brand_name, gallery_images = [] },
     } = this.props;
     const { url_path } = this.props;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const { isArabic } = this.state;
+    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
+    if (isArabic) {
+      if (gender === "kids") {
+        gender = "أولاد,بنات";
+      } else {
+        if (gender !== "home") {
+          gender = getGenderInArabic(gender);
+          gender = gender?.replace(
+            gender?.charAt(0),
+            gender?.charAt(0).toUpperCase()
+          );
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        gender = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          gender = gender?.replace(
+            gender?.charAt(0),
+            gender?.charAt(0).toUpperCase()
+          );
+        }
+      }
+    }
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            {url_path ? (
-              <Link
-                className="pdpsummarylinkTagStyle"
-                to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
-                  gender.charAt(0),
-                  gender.charAt(0).toUpperCase()
-                )}`}
-              >
-                {brand_name}
-              </Link>
-            ) : (
+            {url_path ?
+              gender !== "home" ? (
+                <Link
+                  className="pdpsummarylinkTagStyle"
+                  to={`/${url_path}.html?q=${encodeURIComponent(
+                    brand_name
+                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                    brand_name
+                  )}&dFR[gender][0]=${gender}`}
+                >
+                  {brand_name}
+                </Link>
+              ) : (
+                <Link
+                  className="pdpsummarylinkTagStyle"
+                  to={`/${url_path}.html?q=${encodeURIComponent(
+                    brand_name
+                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                    brand_name
+                  )}`}
+                >
+                  {brand_name}
+                </Link>
+              ) : (
               brand_name
             )}{" "}
             <span block="PDPSummary" elem="Name">
@@ -196,17 +235,30 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1>
-        {url_path ? (
-          <Link
-            className="pdpsummarylinkTagStyle"
-            to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
-              gender.charAt(0),
-              gender.charAt(0).toUpperCase()
-            )}`}
-          >
-            {brand_name}
-          </Link>
-        ) : (
+        {url_path ? 
+          gender !== "home" ? (
+            <Link
+              className="pdpsummarylinkTagStyle"
+              to={`/${url_path}.html?q=${encodeURIComponent(
+                brand_name
+              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                brand_name
+              )}&dFR[gender][0]=${gender}`}
+            >
+              {brand_name}
+            </Link>
+          ) : (
+            <Link
+              className="pdpsummarylinkTagStyle"
+              to={`/${url_path}.html?q=${encodeURIComponent(
+                brand_name
+              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                brand_name
+              )}`}
+            >
+              {brand_name}
+            </Link>
+          ) : (
           brand_name
         )}{" "}
         <span block="PDPSummary" elem="Name">

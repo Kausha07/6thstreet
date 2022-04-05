@@ -47,6 +47,12 @@ class DynamicContentTwiceBanner extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -76,9 +82,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     const { title, subtitle, button_label, button_link } =
       typeOfBanner && this.props[typeOfBanner];
     const { url, link, height = "", width = "" } = item;
-    const getStoreName = this.props.promotion_name
-      ? this.props.promotion_name + "-"
-      : "";
     // TODO: calculate aspect ratio to ensure images not jumping.
     // if (!link) {
     //     return (
@@ -115,9 +118,7 @@ class DynamicContentTwiceBanner extends PureComponent {
       <Link
         to={formatCDNLink(link)}
         data-banner-type="banner"
-        data-promotion-name={
-          getStoreName + (item.promotion_name ? item.promotion_name : "")
-        }
+        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);
