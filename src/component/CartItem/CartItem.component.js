@@ -66,7 +66,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => { },
+    closePopup: () => {},
     isCartPage: false,
     readOnly: false,
   };
@@ -354,15 +354,45 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderEDD = () => {
+    const { EDDResponse } = this.props;
+    const { isArabic } = this.state;
+    let ActualEDDMess = "";
+    let ActualEDD = "";
+    if (EDDResponse) {
+      Object.values(EDDResponse).filter((entry) => {
+        if (entry.source === "cart" && entry.featute_flag_status === 1) {
+          ActualEDDMess = isArabic
+            ? entry.edd_message_ar
+            : entry.edd_message_en;
+          ActualEDD = entry.edd_date;
+        }
+      });
+    }
+
+    if (!ActualEDDMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{ActualEDDMess.split("by")[0]} by</span>
+        <span>{ActualEDDMess.split("by")[1]}</span>
+      </div>
+    );
+  };
   renderContent() {
     const {
       isLikeTable,
       item: { customizable_options, bundle_options },
     } = this.props;
-    const { isNotAvailble,isArabic } = this.state;
+    const { isNotAvailble, isArabic } = this.state;
 
     return (
-      <figcaption block="CartItem" elem="Content" mods={{ isLikeTable,isArabic }}>
+      <figcaption
+        block="CartItem"
+        elem="Content"
+        mods={{ isLikeTable, isArabic }}
+      >
         {this.renderBrandName()}
         {/* {this.renderProductName()} */}
         {this.renderProductOptions(customizable_options)}
@@ -370,6 +400,7 @@ export class CartItem extends PureComponent {
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
         {isNotAvailble ? null : this.renderProductPrice()}
+        {this.renderEDD()}
         {this.renderActions()}
       </figcaption>
     );

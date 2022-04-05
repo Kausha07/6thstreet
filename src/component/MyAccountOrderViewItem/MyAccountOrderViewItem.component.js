@@ -1,8 +1,7 @@
 import { MyAccountReturnSuccessItem as SourceComponent } from "Component/MyAccountReturnSuccessItem/MyAccountReturnSuccessItem.component";
 
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
-import Price from "Component/Price";
-
+import {  isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 
 export class MyAccountOrderViewItem extends SourceComponent {
@@ -52,10 +51,35 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {this.renderEDD()}
       </div>
     );
   }
+  renderEDD = () => {
+    const { EDDResponse } = this.props;
+    let ActualEDDMess = "";
+    let ActualEDD = "";
+    if (EDDResponse) {
+      Object.values(EDDResponse).filter((entry) => {
+        if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+          ActualEDDMess = isArabic()
+            ? entry.edd_message_ar
+            : entry.edd_message_en;
+          ActualEDD = entry.edd_date;
+        }
+      });
+    }
 
+    if (!ActualEDDMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{ActualEDDMess.split("by")[0]} by</span>
+        <span>{ActualEDDMess.split("by")[1]}</span>
+      </div>
+    );
+  };
   render() {
     return (
       <div block="MyAccountOrderViewItem" mix={{ block: 'MyAccountReturnSuccessItem' }}>

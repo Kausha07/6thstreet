@@ -20,6 +20,8 @@ import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  EDDResponse: state.MyAccountReducer.EDDResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -44,42 +46,52 @@ class PDP extends PureComponent {
     selectedArea: null,
     selectedCityArea: null,
     showPopupField: "",
-    Countryresponse: {
-      responseCode: "OK",
-      success: true,
-      errorMessage: null,
-      result: [
-        {
-          city_id: 1,
-          city_name_en: "Dubai",
-          city_name_ar: "",
-          area_list: null,
-        },
-        {
-          city_id: 2,
-          city_name_en: "Abu Dhabi",
-          city_name_ar: "",
-          area_list: [
-            {
-              area_id: 1,
-              area_name_en: "Abu Dhabi Golf Club",
-              area_name_ar: "",
-            },
-            {
-              area_id: 2,
-              area_name_en: "Abu Dhabi International Airport",
-              area_name_ar: "",
-            },
-            {
-              area_id: 3,
-              area_name_en: "Abu Dhabi Mall",
-              area_name_ar: "",
-            },
-          ],
-        },
-      ],
-    },
+    CountryEDDEnable: true,
+    PDPEDDEnable: true,
+    CrossBorderEDDEnable: false,
+    Countryresponse: [
+      {
+        city_id: 1,
+        city_name_en: "Dubai",
+        city_name_ar: "",
+        area_list: null,
+      },
+      {
+        city_id: 2,
+        city_name_en: "Abu Dhabi",
+        city_name_ar: "",
+        area_list: [
+          {
+            area_id: 1,
+            area_name_en: "Abu Dhabi Golf Club",
+            area_name_ar: "",
+          },
+          {
+            area_id: 2,
+            area_name_en: "Abu Dhabi International Airport",
+            area_name_ar: "",
+          },
+          {
+            area_id: 3,
+            area_name_en: "Abu Dhabi Mall",
+            area_name_ar: "",
+          },
+        ],
+      },
+    ],
   };
+
+  componentDidMount() {
+    const { defaultShippingAddress } = this.props;
+    //   fetch('https://stage-edd-service.6tst.com/eddservice/edd/v1/cityList/AE', {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //     },
+    //   }).then((response) => {
+    //     console.log("muskan", response);
+    //   });
+  }
 
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
@@ -176,6 +188,23 @@ class PDP extends PureComponent {
       showPopupField: "",
     });
     this.handleAreaDropDownClick();
+    // let request = {
+    //   country: "AE",
+    //   city_id: 2,
+    //   area_id: 1,
+    //   courier: null,
+    //   source: "pdp",
+    // };
+    // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //   },
+    //   body: JSON.stringify(request),
+    // }).then((response) => {
+    //   console.log("muskan", response);
+    // });
     document.body.style.overflow = "visible";
   };
 
@@ -210,7 +239,7 @@ class PDP extends PureComponent {
     const { Countryresponse } = this.state;
     return (
       <ul>
-        {Object.values(Countryresponse.result).map((city) => {
+        {Object.values(Countryresponse).map((city) => {
           return (
             <li
               id={city.city_id}
@@ -288,8 +317,21 @@ class PDP extends PureComponent {
       selectedAreaId,
       selectedArea,
       isMobile,
+      isArabic,
     } = this.state;
-
+    const { EDDResponse } = this.props;
+    let ActualEDDMess = "";
+    let ActualEDD = "";
+    if (EDDResponse) {
+      Object.values(EDDResponse).filter((entry) => {
+        if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+          ActualEDDMess = isArabic
+            ? entry.edd_message_ar
+            : entry.edd_message_en;
+          ActualEDD = entry.edd_date;
+        }
+      });
+    }
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
@@ -315,10 +357,17 @@ class PDP extends PureComponent {
             <div block="SelectAreaText">Select Area</div>
           </div>
         )}
+        {selectedAreaId && ActualEDDMess ? (
+          <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
+            <span>{ActualEDDMess.split('by')[0]} by</span>
+            <span>{ActualEDDMess.split('by')[1]}</span>
+          </div>
+        ) : (
+          <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
+            Select to check delivery date
+          </div>
+        )}
 
-        <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
-          Select to check delivery date
-        </div>
         <div block="DropDownWrapper">
           {showCityDropdown && !isMobile && (
             <div mix={{ block: "EDDWrapper", elem: "CountryDrop" }}>
@@ -344,7 +393,6 @@ class PDP extends PureComponent {
 
   renderPDP() {
     const { nbHits, isLoading } = this.props;
-    const { isMobile } = this.state;
     if (!isLoading && nbHits === 1) {
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>

@@ -100,10 +100,12 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { order_currency_code: currency },
       displayDiscountPercentage,
+      EDDResponse
     } = this.props;
     return (
       <MyAccountOrderViewItem
         item={item}
+        EDDResponse={EDDResponse}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
       />

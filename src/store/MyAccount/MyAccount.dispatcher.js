@@ -4,7 +4,7 @@ import {
   updateCustomerDetails,
   updateCustomerSignInStatus,
 } from "SourceStore/MyAccount/MyAccount.action";
-import { setCustomerAddressData } from "Store/MyAccount/MyAccount.action";
+import { setCustomerAddressData,setCustomerDefaultShippingAddress } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
   MyAccountDispatcher as SourceMyAccountDispatcher,
@@ -46,6 +46,7 @@ import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 export {
   CUSTOMER,
@@ -64,6 +65,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
+      // const customerID = stateCustomer.id;
+      // MagentoAPI.get(`customers/${customerID}/shippingAddress`).then((response)=>{
+      //   dispatch(setCustomerDefaultShippingAddress(response))
+      // })
     }
 
     return executePost(prepareQuery([query])).then(

@@ -37,6 +37,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   config: state.AppConfig.config,
+  EDDResponse: state.MyAccountReducer.EDDResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

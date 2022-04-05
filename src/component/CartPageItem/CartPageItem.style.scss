@@ -70,7 +70,17 @@
   &-Content {
     height: auto;
     width: 50%;
-
+    .AreaText {
+      color: #9b9b9b;
+      font-family: "Avenir Next";
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 16px;
+      top: 11px;
+      span:nth-child(2) {
+        color: #28d9aa;
+      }
+    }
     @include desktop() {
       height: 130px;
       width: 100%;

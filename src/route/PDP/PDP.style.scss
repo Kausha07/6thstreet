@@ -35,6 +35,14 @@
             min-height: 42px;
             width: 100%;
             border-bottom: 1px solid #e6e6e6;
+            button{
+              display: flex;
+              margin-top: 0;
+              margin-left: 0px;
+              font-size: 13px;
+              width: 100%;
+              padding: 0;
+            }
             button::after {
               content: none;
             }
@@ -219,7 +227,15 @@
       font-size: 12px;
       letter-spacing: 0;
       line-height: 16px;
-      top: 2px;
+      top: 1px;
+      span:first-child {
+        font-size: 15px;
+      }
+      span:nth-child(2) {
+        color: #28d9aa;
+        font-size: 15px;
+        line-height: 20px;
+      }
     }
   }
   @include mobile() {

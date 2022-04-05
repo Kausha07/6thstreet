@@ -11,7 +11,8 @@ import {
   UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
   UPDATE_CUSTOMER_SIGN_IN_STATUS,
   SET_CUSTOMER_ADDRESS_DATA,
-  SET_ADDRESS_LOADING_STATUS
+  SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
+  SET_ADDRESS_LOADING_STATUS,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -23,10 +24,65 @@ export const initialState = {
   guestUserEmail: "",
   addresses: [],
   isAddressLoading: false,
+  defaultShippingAddress: {
+    id: 1,
+    customer_id: 1,
+    region: {
+      region_code: null,
+      region: null,
+      region_id: 0,
+    },
+    country_id: "AE",
+    street: ["Test street"],
+    telephone: "1234567890",
+    postcode: "Dubai",
+    city: "Dubai",
+    firstname: "Jalpa",
+    lastname: "Patel",
+    default_shipping: true,
+    default_billing: true,
+  },
+  EDDResponse: [
+    {
+      source: "thankyou",
+      edd_message_en: "Arriving by 06 Apr, Wednesday",
+      edd_message_ar: null,
+      edd_date: "2022-04-06",
+      featute_flag_status: 1,
+    },
+    {
+      source: "pdp",
+      edd_message_en: "Delivery by 06 Apr, Wednesday",
+      edd_message_ar: null,
+      edd_date: "2022-04-06",
+      featute_flag_status: 1,
+    },
+    {
+      source: "cart",
+      edd_message_en: "Delivery by 06 Apr, Wednesday",
+      edd_message_ar: null,
+      edd_date: "2022-04-06",
+      featute_flag_status: 1,
+    },
+    {
+      source: "myorder",
+      edd_message_en: "Arriving by 06 Apr, Wednesday",
+      edd_message_ar: null,
+      edd_date: "2022-04-06",
+      featute_flag_status: 0,
+    },
+  ],
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
-  const { status, customer, guestUserEmail, addresses, isLoading } = action;
+  const {
+    status,
+    customer,
+    guestUserEmail,
+    addresses,
+    isLoading,
+    defaultaddress,
+  } = action;
 
   switch (action.type) {
     case UPDATE_CUSTOMER_SIGN_IN_STATUS:
@@ -49,6 +105,11 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         addresses,
+      };
+    case SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS:
+      return {
+        ...state,
+        defaultShippingAddress: defaultaddress,
       };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {

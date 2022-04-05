@@ -44,6 +44,28 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
   };
 
+  onAddressSelect(address) {
+    const { id = 0 } = address;
+    this.setState({ selectedAddressId: id });
+    // let request = {
+    //   country: address.country_code,
+    //   city_id: 2,
+    //   area_id: 1,
+    //   courier: null,
+    //   source: "cart",
+    // };
+    // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //   },
+    //   body: JSON.stringify(request),
+    // }).then((response) => {
+    //   console.log("muskan", response);
+    // });
+  }
+
   showCreateNewPopup() {
     const { showPopup } = this.props;
 
@@ -63,18 +85,11 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       return;
     }
 
-    const {
-      city,
-      country_code,
-      area,
-      street,
-      phone,
-    } = address;
+    const { city, country_code, area, street, phone } = address;
 
     if (!country_code) {
       return;
     }
-
 
     onShippingEstimationFieldsChange({
       city,
