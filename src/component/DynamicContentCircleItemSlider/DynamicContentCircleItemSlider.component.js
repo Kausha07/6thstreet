@@ -139,9 +139,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
     let newLink = formatCDNLink(link) + "&plp_config=true";
-    const getStoreName = this.props.promotion_name
-      ? this.props.promotion_name + "-"
-      : "";
 
     // TODO: move to new component
 
@@ -151,9 +148,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           to={newLink}
           key={i}
           data-banner-type="circleItemSlider"
-          data-promotion-name={
-            getStoreName + (item.promotion_name ? item.promotion_name : "")
-          }
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.clickLink(item);
@@ -181,9 +176,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
     let label = item.name;
     let image_url = item.mainImageURI;
     const { isArabic } = this.state;
-    const getStoreName = this.props.promotion_name
-      ? this.props.promotion_name + "-"
-      : "";
 
     // TODO: move to new component
 
@@ -193,9 +185,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
-          data-promotion-name={
-            getStoreName + (item.promotion_name ? item.promotion_name : "")
-          }
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.clickLink(item);
