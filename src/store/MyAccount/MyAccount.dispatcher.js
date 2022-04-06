@@ -4,7 +4,10 @@ import {
   updateCustomerDetails,
   updateCustomerSignInStatus,
 } from "SourceStore/MyAccount/MyAccount.action";
-import { setCustomerAddressData,setCustomerDefaultShippingAddress } from "Store/MyAccount/MyAccount.action";
+import {
+  setCustomerAddressData,
+  setCustomerDefaultShippingAddress,
+} from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
   MyAccountDispatcher as SourceMyAccountDispatcher,
@@ -46,7 +49,7 @@ import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
-import MagentoAPI from 'Util/API/provider/MagentoAPI';
+import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 export {
   CUSTOMER,
@@ -65,10 +68,33 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
-      // const customerID = stateCustomer.id;
-      // MagentoAPI.get(`customers/${customerID}/shippingAddress`).then((response)=>{
-      //   dispatch(setCustomerDefaultShippingAddress(response))
-      // })
+      const defaultShippingId = parseInt(stateCustomer.default_shipping);
+      const defaultShippingAddress = Object.values(stateCustomer.addresses).filter((address)=>{
+        return address.id === defaultShippingId
+
+      })
+      // MagentoAPI.get(`customers/${customerID}/shippingAddress`).then(
+      //   (response) => {
+          // let request = {
+          //   country: response.country_id,
+          //   city_id: 2,
+          //   area_id: response.region.region_id,
+          //   courier: null,
+          //   source: "cart",
+          // };
+          // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //     Accept: "application/json",
+          //   },
+          //   body: JSON.stringify(request),
+          // }).then((response) => {
+          //   console.log("muskan", response);
+          // });
+          dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      //   }
+      // );
     }
 
     return executePost(prepareQuery([query])).then(
@@ -208,7 +234,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         } = result;
         setAuthorizationToken(token);
 
-
         await this.handleMobileAuthorization(dispatch, options);
         dispatch(updateCustomerSignInStatus(true));
 
@@ -281,10 +306,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-            username,
-            password,
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          }
+              username,
+              password,
+              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+            }
       );
 
     const phoneAttribute = custom_attributes?.filter(

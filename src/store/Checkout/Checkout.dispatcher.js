@@ -50,11 +50,11 @@ export class CheckoutDispatcher {
     return updateShippingAddress({ address_id, address });
   }
 
-  async removeAddress(dispatch,address_id) {
+  async removeAddress(dispatch, address_id) {
     /* eslint-disable */
-    return removeShippingAddress({address_id});
+    return removeShippingAddress({ address_id });
   }
-  
+
   async getAddresses(dispatch) {
     /* eslint-disable */
     return getShippingAddresses();
@@ -167,7 +167,7 @@ export class CheckoutDispatcher {
     return removeBinPromotion({ cartId });
   }
 
-  async createOrder(dispatch, code, additional_data) {
+  async createOrder(dispatch, code, additional_data, finalEDD) {
     const {
       Cart: { cartId },
     } = getStore().getState();
@@ -175,6 +175,7 @@ export class CheckoutDispatcher {
     return createOrder({
       data: {
         cart_id: cartId,
+        edd_date: finalEDD,
         payment: {
           method: code,
           data: additional_data,

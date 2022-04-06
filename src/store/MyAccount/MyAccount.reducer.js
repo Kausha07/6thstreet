@@ -24,24 +24,7 @@ export const initialState = {
   guestUserEmail: "",
   addresses: [],
   isAddressLoading: false,
-  defaultShippingAddress: {
-    id: 1,
-    customer_id: 1,
-    region: {
-      region_code: null,
-      region: null,
-      region_id: 0,
-    },
-    country_id: "AE",
-    street: ["Test street"],
-    telephone: "1234567890",
-    postcode: "Dubai",
-    city: "Dubai",
-    firstname: "Jalpa",
-    lastname: "Patel",
-    default_shipping: true,
-    default_billing: true,
-  },
+  defaultShippingAddress: null,
   EDDResponse: [
     {
       source: "thankyou",

@@ -61,7 +61,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     let ActualEDD = "";
     if (EDDResponse) {
       Object.values(EDDResponse).filter((entry) => {
-        if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+        if (entry.source === "myorder" && entry.featute_flag_status === 1) {
           ActualEDDMess = isArabic()
             ? entry.edd_message_ar
             : entry.edd_message_en;

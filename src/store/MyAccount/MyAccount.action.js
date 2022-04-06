@@ -35,7 +35,7 @@ export const setCustomerAddressData = (addresses) => ({
   addresses,
 });
 
-export const setCustomerDefaultShippingAddress = (addresses) => ({
+export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
   type: SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
-  addresses,
+  defaultaddress,
 });

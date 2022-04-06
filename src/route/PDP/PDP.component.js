@@ -17,6 +17,7 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import { isArabic } from "Util/App";
+import MobileAPI from "Util/API/provider/MobileAPI";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -81,16 +82,34 @@ class PDP extends PureComponent {
     ],
   };
 
-  componentDidMount() {
+  componentDidMount(){
+    // MobileAPI.get(`eddservice/edd/v1/cityList/AE`).then((response)=>{
+    //   console.log("muskan",response);
+    //         })
+  }
+  componentDidUpdate(prevProps, prevState) {
     const { defaultShippingAddress } = this.props;
-    //   fetch('https://stage-edd-service.6tst.com/eddservice/edd/v1/cityList/AE', {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //     },
-    //   }).then((response) => {
-    //     console.log("muskan", response);
-    //   });
+    const { defaultShippingAddress: prevdefaultShippingAddress } = prevProps;
+    if (
+      JSON.stringify(prevdefaultShippingAddress) !==
+      JSON.stringify(defaultShippingAddress)
+    ) {
+      const {country_id} = defaultShippingAddress
+      // fetch(
+      //   `https://stage-edd-service.6tst.com/eddservice/edd/v1/cityList/${country_id}`,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Accept: "application/json",
+      //     },
+      //   }
+      // ).then((response) => {
+      //   console.log("muskan", response);
+      // });
+//       MobileAPI.get(`eddservice/edd/v1/cityList/AE`).then((response)=>{
+// console.log("muskan",response);
+//       })
+    }
   }
 
   showMyAccountPopup = () => {
@@ -359,8 +378,8 @@ class PDP extends PureComponent {
         )}
         {selectedAreaId && ActualEDDMess ? (
           <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
-            <span>{ActualEDDMess.split('by')[0]} by</span>
-            <span>{ActualEDDMess.split('by')[1]}</span>
+            <span>{ActualEDDMess.split("by")[0]} by</span>
+            <span>{ActualEDDMess.split("by")[1]}</span>
           </div>
         ) : (
           <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>

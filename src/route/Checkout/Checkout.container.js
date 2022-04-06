@@ -57,8 +57,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+  createOrder: (code, additional_data,FinalEDD) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data,FinalEDD),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -605,7 +605,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
+      FinalEDD
     } = paymentInformation;
+
     const {
       savedCards,
       newCardVisible,
@@ -615,6 +617,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       shippingAddress: { email },
     } = this.state;
     let data = {};
+
     if (code === CARD) {
       data = {
         ...additional_data,
@@ -657,13 +660,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
     } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation);
+      this.placeOrder(code, data, paymentInformation,FinalEDD);
     } else {
-      this.placeOrder(code, data, null);
+      this.placeOrder(code, data, null,FinalEDD);
     }
   }
 
-  async placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation,FinalEDD) {
+
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
@@ -675,7 +679,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data);
+      const response = await createOrder(code, data,FinalEDD);
       if (response && response.data) {
         const { data } = response;
         if (typeof data === "object") {
