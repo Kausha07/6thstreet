@@ -173,7 +173,8 @@ const config = {
       "product_type_6s",
       "color",
       "stock_qty",
-      "highlighted_attributes"
+      "highlighted_attributes",
+      "product_tag"
     ],
     facets: FACET_FILTERS,
     facetFilters: [],

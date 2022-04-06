@@ -213,6 +213,25 @@
     }
   }
 
+  &-VueProductTag {
+    width: 90px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #99cc99;
+    border-radius: 0 10px 10px 0;
+    left: 0;
+    top: 12px;
+    position: absolute;
+    span {
+      font-size: 11px;
+      color: #ffffff;
+      line-height: 13px;
+      font-weight: var(--fw-medium);
+    }
+  }
+
   &-SpecialPriceCon {
     display: block;
   }
