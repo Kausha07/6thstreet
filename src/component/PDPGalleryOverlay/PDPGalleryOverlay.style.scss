@@ -20,6 +20,7 @@
         // height: 150px;
         order: 2;
         display: flex;
+        bottom: 0;
         background: var(--white-color);
         .SliderHorizontal {
             height: auto !important;
@@ -149,6 +150,7 @@
     .PDPGalleryOverlay {
         .Slider {
             margin: auto 10px;
+            bottom: 0;
         }
         .ZoomGuide {
             position: absolute;

@@ -3,7 +3,22 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
-import {EVENT_PROMOTION_IMPRESSION,EVENT_PRODUCT_IMPRESSION} from "Util/Event";
+import {
+  EVENT_PROMOTION_IMPRESSION,
+  EVENT_PRODUCT_IMPRESSION,
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_CLEAR_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
+  EVENT_GTM_VIEW_SEARCH_RESULTS,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
+  EVENT_GTM_SEARCH_SCREEN_VIEW,
+  EVENT_CLICK_TOP_SEARCHES_CLICK,
+  EVENT_CLICK_RECOMMENDATION_CLICK
+} from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
@@ -23,6 +38,7 @@ import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
 import WishlistClickEvent from "./events/WishlistClick.event";
+import SearchEvent from "./events/Search.event";
 import Scripts from "./Scripts";
 
 /**
@@ -101,6 +117,18 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
     [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
     [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
+    [EVENT_GTM_CANCEL_SEARCH]: SearchEvent,
+    [EVENT_GTM_CLEAR_SEARCH]: SearchEvent,
+    [EVENT_GTM_GO_TO_SEARCH]: SearchEvent,
+    [EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK]: SearchEvent,
+    [EVENT_CLICK_SEARCH_WISH_LIST_CLICK]: SearchEvent,
+    [EVENT_GTM_VIEW_SEARCH_RESULTS]: SearchEvent,
+    [EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW]: SearchEvent,
+    [EVENT_CLICK_RECENT_SEARCHES_CLICK]: SearchEvent,
+    [EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW]: SearchEvent,
+    [EVENT_GTM_SEARCH_SCREEN_VIEW]: SearchEvent,
+    [EVENT_CLICK_TOP_SEARCHES_CLICK]: SearchEvent,
+    [EVENT_CLICK_RECOMMENDATION_CLICK]: SearchEvent
   };
 
   /**

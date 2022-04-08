@@ -193,7 +193,7 @@ class HeaderMainSection extends NavigationAbstract {
     if (location.pathname === "/" || location.pathname === "") {
       return TYPE_HOME;
     }
-    if (matchPath(location.pathname, "/brands")) {
+    if (matchPath(location.pathname, "/shop-by-brands")) {
       return TYPE_BRAND;
     }
     if (matchPath(location.pathname, "/my-account")) {
@@ -343,7 +343,10 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   hideSearchBar = () => {
-    this.setState({ showSearch: false, showPLPSearch: false });
+    this.setState({
+      showSearch: false,
+      showPLPSearch: false
+    });
   };
 
   hidePDPSearchBar = () => {

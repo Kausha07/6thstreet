@@ -61,6 +61,12 @@ class DynamicContentBanner extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -77,7 +83,7 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    const { toggleMobileMenuSideBar,index } = this.props;
+    const { toggleMobileMenuSideBar, index } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
@@ -163,9 +169,13 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const {index} = this.props
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentBanner" id={`DynamicContentBanner${index}`}>
+      <div
+        ref={setRef}
+        block="DynamicContentBanner"
+        id={`DynamicContentBanner${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

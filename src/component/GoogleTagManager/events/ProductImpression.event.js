@@ -38,7 +38,7 @@ class ProductImpressionEvent extends BaseEvent {
     // Home
     Event.observer(EVENT_PRODUCT_LIST_IMPRESSION, (impression) => {
       //if (document.readyState == ("complete" || "interactive"  )){
-      this.handle(EVENT_PRODUCT_IMPRESSION, impression, "promoView");
+      this.handle(EVENT_PRODUCT_IMPRESSION, impression);
       //}
     });
   }
@@ -54,7 +54,7 @@ class ProductImpressionEvent extends BaseEvent {
 
     const formattedImpressions = impressions.map(
       (
-        { name,label, id, brand_name, color, sku, url, product_type_6s,category, price },
+        { name,label, id, brand_name, color, sku, url, product_type_6s,category, price,list },
         index
       ) => ({
         name: name || label,
@@ -64,18 +64,8 @@ class ProductImpressionEvent extends BaseEvent {
         variant: color,
         category: product_type_6s || category,
         url: url,
-        //list: "",
-        position: 1,
-        dimension9:
-          (100 -
-          Math.round(
-            (price[0][Object.keys(price[0])[0]]["6s_special_price"] /
-              price[0][Object.keys(price[0])[0]]["6s_base_price"]) *
-              100
-          )) || 0 ,
-        dimension10: price[0][Object.keys(price[0])[0]]["6s_base_price"] || "",
-        dimension11:
-          price[0][Object.keys(price[0])[0]]["6s_special_price"] || " ",
+        list: list || "Recommendations",
+        position: index + 1,
       })
     );
 

@@ -42,6 +42,14 @@
                 margin: 0 auto !important;
             }
         }
+        .CartPage-BackArrow {            
+            &::before {
+                right: 5px;
+                left: unset;
+                transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+            }
+        }
     }
     &-Wrapper {
         width: 640px;
@@ -251,9 +259,9 @@
         @include desktop {
             width: 100%;
         }
-        @include mobile {
-            display: none;
-        }
+        // @include mobile {
+        //     display: none;
+        // }
     }
     &-Promo {
         order: 2;
@@ -577,14 +585,27 @@
         }
     }
     &-BackArrow {
-        background-image: url(../../component/Icons/Close/icon.svg);
-        background-size: cover;
+        // background-image: url(../../component/Icons/Close/icon.svg);
+        // background-size: cover;
         height: 19px;
         position: absolute;
         width: 19px;
         z-index: 10;
+        &::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 4px;
+            transform: rotate( 135deg);
+            -webkit-transform: rotate( 135deg);
+            z-index: -9;
+        }
         button {
             height: 14px;
+            display: block;
         }
         @include after-mobile {
             display: none;
@@ -615,7 +636,10 @@
     &-SummaryItem {
         display: flex;
         justify-content: space-between;
-        padding: 0 0 5px;
+        padding: 5px 0 5px;
+        @include mobile {
+            padding: 3px 0 3px;
+        }
         .CartPage {
             &-Text {
                 font-size: 13px;
@@ -743,6 +767,7 @@
             margin-left: initial;
             margin-right: auto;
         }
+        
     }
     .couponPopupBlock {
         top: 0;

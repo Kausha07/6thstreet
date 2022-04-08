@@ -98,6 +98,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -127,6 +133,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -143,7 +155,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
-    const { index } = this.props
+    const { index } = this.props;
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
@@ -162,7 +174,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
-
     return (
       <div
         block="SliderWithLabel"
@@ -201,7 +212,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
-    if(this.scrollerRef && this.scrollerRef.current){
+    if (this.scrollerRef && this.scrollerRef.current) {
       this.scrollerRef.current.scrollLeft = target.scrollLeft;
     }
   };
@@ -216,11 +227,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderScrollbar = () => {
     const { items = [] } = this.props;
 
-    const width = `${(this.itemRef.current && this.itemRef.current.clientWidth) *
-      items.length +
+    const width = `${
+      (this.itemRef.current && this.itemRef.current.clientWidth) *
+        items.length +
       items.length * 7 * 2 -
       690
-      }px`;
+    }px`;
     return (
       <div
         block="Outer"
@@ -264,9 +276,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
-    const { index } = this.props
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentSliderWithLabel" id={`DynamicContentSliderWithLabel${index}`}>
+      <div
+        ref={setRef}
+        block="DynamicContentSliderWithLabel"
+        id={`DynamicContentSliderWithLabel${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

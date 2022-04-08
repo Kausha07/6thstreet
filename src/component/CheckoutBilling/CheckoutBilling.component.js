@@ -91,7 +91,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     } = this.props;
 
     return (
-      <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
+      <li block="CheckoutBillingTotal CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
         <strong block="CheckoutOrderSummary" elem="Text">
           {name}
         </strong>
@@ -468,7 +468,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       onBillingError,
       isSameAsShipping,
       setOrderButtonDisabled,
+      isTabbyInstallmentAvailable
     } = this.props;
+
     const { formContent } = this.state;
 
     return formContent ? (

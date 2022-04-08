@@ -627,6 +627,11 @@
     }
   }
 }
+.MoreDetailsLinkStyle {
+  font-size:bold;
+  color : blue;
+  text-decoration: none !important;
+}
 .PDPWidgets {
   &-Slider {
     @include desktop {

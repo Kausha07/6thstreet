@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, { VUE_CAROUSEL_CLICK, EVENT_CLICK_RECOMMENDATION_CLICK } from "Util/Event";
 import { Price as PriceType } from "Util/API/endpoint/Product/Product.type";
 
 export const mapStateToProps = (state) => ({
@@ -59,6 +59,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
+    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK);
     this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
@@ -163,6 +164,14 @@ class RecommendedForYouVueSliderItem extends PureComponent {
     return null;
   }
 
+  renderProductTag(productTag) {
+    return (
+      <div block="VueProductSlider" elem="VueProductTag">
+        <span>{__(productTag)}</span>
+      </div>
+    );
+  }
+
   render() {
     const {
       data: {
@@ -180,6 +189,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       pageType,
       renderMySignInPopup,
     } = this.props;
+    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
     const { isArabic } = this.state;
     let newLink = link;
     if (this.props.data.url) {
@@ -227,7 +237,13 @@ class RecommendedForYouVueSliderItem extends PureComponent {
           {name}
         </span>
         {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
+        {
+          productTag ?
+            this.renderProductTag(productTag)
+            :
+            this.renderIsNew(is_new_in)
+        }
+
         <WishlistIcon
           sku={sku}
           data={data}

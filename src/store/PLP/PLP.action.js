@@ -9,7 +9,7 @@ export const SET_PLP_WIDGET_DATA = "SET_PLP_WIDGET_DATA";
 export const SET_PREV_PRODUCT_SKU = "SET_PREV_PRODUCT_SKU";
 export const SET_PREV_PATH = "SET_PREV_PATH";
 export const UPDATE_PLP_INIT_FILTERS = "UPDATE_PLP_INIT_FILTERS";
-
+export const SET_BRAND_URL = "SET_BRAND_URL";
 export const setPLPWidget = (data) => ({
   type: SET_PLP_WIDGET_DATA,
   plpWidgetData: data,
@@ -33,6 +33,11 @@ export const setLastTapItemOnHome = (item) => ({
 export const setPrevPath = (prevPath) => ({
   type: SET_PREV_PATH,
   prevPath,
+});
+
+export const setBrandurl = (brand_url) => ({
+  type: SET_BRAND_URL,
+  brand_url,
 });
 
 export const resetPLPPage = () => ({

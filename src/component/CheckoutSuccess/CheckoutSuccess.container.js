@@ -144,10 +144,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       isSignedIn,
       totals,
       setCheckoutDetails,
+      orderID
     } = this.props;
-
     setCheckoutDetails(true);
-
+    
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -177,6 +177,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         event_name: VUE_BUY,
         params: {
           event: VUE_BUY,
+          order_id:orderID,
           pageType: "checkout_payment",
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),

@@ -156,7 +156,7 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      // this.fetchClickAndCollectStores(brandName, sku);
+      this.fetchClickAndCollectStores(brandName, sku);
     }
   }
 
@@ -322,19 +322,65 @@ export class PDPContainer extends PureComponent {
         name,
         description,
         categories_without_path = [],
+        color,
+        categories,
       } = {},
     } = this.props;
-
     if (!name) {
       return;
     }
-
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
 
+    const checkCategory = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "this category";
+    };
+    const categoryLevel = checkCategory().split("///").pop();
+    const getTitle = () => {
+      if (!color) {
+        return __("Buy %s %s | 6thStreet %s", brandName, name, countryName);
+      } else if (color == "Multi") {
+        return __(
+          "Buy %s %s in Multiple colors | 6thStreet %s",
+          brandName,
+          name,
+          countryName
+        );
+      } else {
+        return __(
+          "Buy %s %s in %s | 6thStreet %s",
+          brandName,
+          name,
+          color,
+          countryName
+        );
+      }
+    };
+
+    const pdpMetaTitle = getTitle();
+    const pdpMetaDescription = __(
+      "Shop %s %s at best prices & deals on 6thStreet.com %s. Get top collection in %s with free delivery on minimum order & 100 days free return.",
+      brandName,
+      name,
+      countryName,
+      categoryLevel
+    );
     setMeta({
-      title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
+      title: pdpMetaTitle,
       keywords: __(
         "%s, %s, %s, Online Shopping %s",
         brandName,
@@ -342,34 +388,11 @@ export class PDPContainer extends PureComponent {
         categories_without_path.join(" "),
         countryName
       ),
-      description: `${description} | ${__(
-        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
-        brandName,
-        name,
-        countryName,
-        brandName
-      )}`,
-      twitter_title: __(
-        "%s %s | 6thStreet.com %s",
-        brandName,
-        name,
-        countryName
-      ),
-      twitter_desc: `${description} | ${__(
-        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
-        brandName,
-        name,
-        countryName,
-        brandName
-      )}`,
-      og_title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
-      og_desc: `${description} | ${__(
-        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
-        brandName,
-        name,
-        countryName,
-        brandName
-      )}`,
+      description: pdpMetaDescription,
+      twitter_title: pdpMetaTitle,
+      twitter_desc: pdpMetaDescription,
+      og_title: pdpMetaTitle,
+      og_desc: pdpMetaDescription,
     });
   }
 

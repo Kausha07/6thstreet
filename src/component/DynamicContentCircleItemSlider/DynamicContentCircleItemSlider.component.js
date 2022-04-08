@@ -50,7 +50,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   state = {
     isArabic: isArabic(),
     impressionSent: false,
-    livePartyItems: null
+    livePartyItems: null,
   };
   componentDidMount() {
     this.registerViewPortEvent();
@@ -58,23 +58,19 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
-    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING
+    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING;
     const apiUrl = `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=${isStaging}`;
     fetch(apiUrl)
       .then((response) => response.json())
 
       .then((data) => {
-        let newData = data.filter(val => (!val.m3u8URI))
-        this.setState(
-          {
-            livePartyItems: newData,
-          }
-        );
+        let newData = data.filter((val) => !val.m3u8URI);
+        this.setState({
+          livePartyItems: newData,
+        });
       })
-      .catch((error) => console.error(error))
-      ;
-  }
-
+      .catch((error) => console.error(error));
+  };
 
   registerViewPortEvent() {
     let observer;
@@ -90,6 +86,12 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -107,6 +109,12 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -123,7 +131,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   clickLink = (a) => {
-    const { index } = this.props
+    const { index } = this.props;
     let link = a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
@@ -142,7 +150,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
-    let newLink = formatCDNLink(link) + "&plp_config=true"
+    let newLink = formatCDNLink(link) + "&plp_config=true";
 
     // TODO: move to new component
 
@@ -176,9 +184,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   renderLiveParty = (item, i) => {
     // const { link, label, image_url, plp_config } = item;
-    let link = `/live-party?broadcastId=${item.id}`
+    let link = `/live-party?broadcastId=${item.id}`;
     let label = item.name;
-    let image_url = item.mainImageURI
+    let image_url = item.mainImageURI;
     const { isArabic } = this.state;
 
     // TODO: move to new component
@@ -198,7 +206,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
           <div block="OuterCircle OuterLiveParty">
             <div block="OuterCircle" elem="LiveParty"></div>
             <div block="OuterCircle" elem="LivePartyBackground"></div>
-            <div block="OuterCircle" elem="LivePartyText">LIVE</div>
+            <div block="OuterCircle" elem="LivePartyText">
+              LIVE
+            </div>
             <img
               src={image_url}
               alt={label}
@@ -209,11 +219,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
           </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
-
       </div>
     );
   };
-
 
   renderCircles() {
     const { items = [] } = this.props;
@@ -225,7 +233,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems && this.state.livePartyItems.map(this.renderLiveParty)}
+          {this.state.livePartyItems &&
+            this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>
@@ -238,7 +247,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
       this.viewElement = el;
     };
     return (
-      <div ref={setRef} block="DynamicContentCircleItemSlider" id="DynamicContentCircleItemSlider">
+      <div
+        ref={setRef}
+        block="DynamicContentCircleItemSlider"
+        id="DynamicContentCircleItemSlider"
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

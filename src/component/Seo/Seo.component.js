@@ -47,9 +47,9 @@ export class Seo extends PureComponent {
         const domain = hostParts.join('.');
 
         return LOCALES.map((locale) => {
-            if (locale === currentLocale) {
-                return null;
-            }
+            // if (locale === currentLocale) {
+            //     return null;
+            // }
 
             return {
                 href: `${ protocol }//${ locale }.${ domain }${ pathname }`,
