@@ -7,7 +7,7 @@ import {
 import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
-  setEDDResponse,
+  setEddResponse,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -403,9 +403,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateGuestUserEmail(email));
   }
 
-  estimateEDDResponse(dispatch, request) {
+  estimateEddResponse(dispatch, request) {
     MobileAPI.post(`eddservice/estimate`, request).then((response) => {
-      dispatch(setEDDResponse(response.result));
+      dispatch(setEddResponse(response.result));
     });
   }
 

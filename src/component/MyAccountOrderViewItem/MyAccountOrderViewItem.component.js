@@ -51,32 +51,32 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
-        {this.renderEDD()}
+        {this.renderEdd()}
       </div>
     );
   }
-  renderEDD = () => {
-    const { EDDResponse } = this.props;
-    let ActualEDDMess = "";
-    let ActualEDD = "";
-    if (EDDResponse) {
-      Object.values(EDDResponse).filter((entry) => {
+  renderEdd = () => {
+    const { EddResponse } = this.props;
+    let ActualEddMess = "";
+    let ActualEdd = "";
+    if (EddResponse) {
+      Object.values(EddResponse).filter((entry) => {
         if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-          ActualEDDMess = isArabic()
+          ActualEddMess = isArabic()
             ? entry.edd_message_ar
             : entry.edd_message_en;
-          ActualEDD = entry.edd_date;
+          ActualEdd = entry.edd_date;
         }
       });
     }
 
-    if (!ActualEDDMess) {
+    if (!ActualEddMess) {
       return null;
     }
     return (
       <div block="AreaText">
-        <span>{ActualEDDMess.split("by")[0]} by</span>
-        <span>{ActualEDDMess.split("by")[1]}</span>
+        <span>{ActualEddMess.split("by")[0]} by</span>
+        <span>{ActualEddMess.split("by")[1]}</span>
       </div>
     );
   };

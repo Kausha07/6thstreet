@@ -57,8 +57,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data,FinalEDD) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data,FinalEDD),
+  createOrder: (code, additional_data,FinalEdd) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data,FinalEdd),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -605,7 +605,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
-      FinalEDD
+      FinalEdd
     } = paymentInformation;
 
     const {
@@ -660,13 +660,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
     } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation,FinalEDD);
+      this.placeOrder(code, data, paymentInformation,FinalEdd);
     } else {
-      this.placeOrder(code, data, null,FinalEDD);
+      this.placeOrder(code, data, null,FinalEdd);
     }
   }
 
-  async placeOrder(code, data, paymentInformation,FinalEDD) {
+  async placeOrder(code, data, paymentInformation,FinalEdd) {
 
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
@@ -679,7 +679,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data,FinalEDD);
+      const response = await createOrder(code, data,FinalEdd);
       if (response && response.data) {
         const { data } = response;
         if (typeof data === "object") {

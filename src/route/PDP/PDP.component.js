@@ -24,14 +24,14 @@ import { getCountryFromUrl } from "Util/Url/Url";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
-  EDDResponse: state.MyAccountReducer.EDDResponse,
+  EddResponse: state.MyAccountReducer.EddResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
-  estimateEDDResponse: (request) =>
-    MyAccountDispatcher.estimateEDDResponse(dispatch, request),
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request),
 });
 
 class PDP extends PureComponent {
@@ -53,9 +53,9 @@ class PDP extends PureComponent {
     selectedCity: null,
     showPopupField: "",
     countryCode: null,
-    CountryEDDEnable: true,
-    PDPEDDEnable: true,
-    CrossBorderEDDEnable: false,
+    CountryEddEnable: true,
+    PDPEddEnable: true,
+    CrossBorderEddEnable: false,
     Cityresponse: null,
   };
 
@@ -70,7 +70,7 @@ class PDP extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { defaultShippingAddress, estimateEDDResponse } = this.props;
+    const { defaultShippingAddress, estimateEddResponse } = this.props;
     const { defaultShippingAddress: prevdefaultShippingAddress } = prevProps;
     const { countryCode } = this.state;
     if (
@@ -94,7 +94,7 @@ class PDP extends PureComponent {
       //             courier: null,
       //             source: "pdp",
       //           };
-      //           estimateEDDResponse(request);
+      //           estimateEddResponse(request);
       //         }
       //       });
       //     });
@@ -192,7 +192,7 @@ class PDP extends PureComponent {
 
   handleAreaSelection = (area) => {
     const { selectedCityId, countryCode } = this.state;
-    const { estimateEDDResponse } = this.props;
+    const { estimateEddResponse } = this.props;
     this.setState({
       selectedAreaId: area.area_id,
       selectedArea: isArabic() ? area.area_name_ar : area.area_name_en,
@@ -207,7 +207,7 @@ class PDP extends PureComponent {
       courier: null,
       source: "pdp",
     };
-    estimateEDDResponse(request);
+    estimateEddResponse(request);
     document.body.style.overflow = "visible";
   };
 
@@ -277,10 +277,10 @@ class PDP extends PureComponent {
   renderMobileSelectCity() {
     const { isArabic, showPopupField } = this.state;
     return (
-      <div block="EDDMobileWrapper">
-        <div mix={{ block: "EDDMobileWrapper", elem: "Content" }}>
+      <div block="EddMobileWrapper">
+        <div mix={{ block: "EddMobileWrapper", elem: "Content" }}>
           <div
-            mix={{ block: "EDDMobileWrapper-Content", elem: "EDDBackHeader" }}
+            mix={{ block: "EddMobileWrapper-Content", elem: "EddBackHeader" }}
           >
             <button
               elem="Button"
@@ -291,8 +291,8 @@ class PDP extends PureComponent {
           </div>
           <div
             mix={{
-              block: "EDDMobileWrapper-Content",
-              elem: "EDDContentHeader",
+              block: "EddMobileWrapper-Content",
+              elem: "EddContentHeader",
             }}
           >
             <div
@@ -330,16 +330,16 @@ class PDP extends PureComponent {
       isMobile,
       isArabic,
     } = this.state;
-    const { EDDResponse } = this.props;
-    let ActualEDDMess = "";
-    let ActualEDD = "";
-    if (EDDResponse) {
-      Object.values(EDDResponse).filter((entry) => {
+    const { EddResponse } = this.props;
+    let ActualEddMess = "";
+    let ActualEdd = "";
+    if (EddResponse) {
+      Object.values(EddResponse).filter((entry) => {
         if (entry.source === "pdp" && entry.featute_flag_status === 1) {
-          ActualEDDMess = isArabic
+          ActualEddMess = isArabic
             ? entry.edd_message_ar
             : entry.edd_message_en;
-          ActualEDD = entry.edd_date;
+          ActualEdd = entry.edd_date;
         }
       });
     }
@@ -350,10 +350,10 @@ class PDP extends PureComponent {
       return this.renderMobileSelectCity();
     }
     return (
-      <div block="EDDWrapper">
+      <div block="EddWrapper Wrapper">
         {selectedAreaId ? (
           <div
-            block="EDDWrapper SelectedAreaWrapper"
+            block="EddWrapper SelectedAreaWrapper"
             onClick={() => this.handleAreaDropDownClick()}
           >
             <Image lazyLoad={false} src={addressBlack} alt="" />
@@ -361,27 +361,27 @@ class PDP extends PureComponent {
           </div>
         ) : (
           <div
-            mix={{ block: "EDDWrapper", elem: "AreaButton" }}
+            mix={{ block: "EddWrapper", elem: "AreaButton" }}
             onClick={() => this.handleAreaDropDownClick()}
           >
             <Image lazyLoad={false} src={address} alt="" />
             <div block="SelectAreaText">Select Area</div>
           </div>
         )}
-        {selectedAreaId && ActualEDDMess ? (
-          <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
-            <span>{ActualEDDMess.split("by")[0]} by</span>
-            <span>{ActualEDDMess.split("by")[1]}</span>
+        {selectedAreaId && ActualEddMess ? (
+          <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
+            <span>{ActualEddMess.split("by")[0]} by</span>
+            <span>{ActualEddMess.split("by")[1]}</span>
           </div>
         ) : (
-          <div mix={{ block: "EDDWrapper", elem: "AreaText" }}>
+          <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
             Select to check delivery date
           </div>
         )}
 
         <div block="DropDownWrapper">
           {showCityDropdown && !isMobile && (
-            <div mix={{ block: "EDDWrapper", elem: "CountryDrop" }}>
+            <div mix={{ block: "EddWrapper", elem: "CountryDrop" }}>
               {this.renderSelectCityItem()}
             </div>
           )}
@@ -389,7 +389,7 @@ class PDP extends PureComponent {
             <div
               block="AreaDropdown"
               mix={{
-                block: "EDDWrapper",
+                block: "EddWrapper",
                 elem: "CountryDrop",
                 mods: { isArea },
               }}

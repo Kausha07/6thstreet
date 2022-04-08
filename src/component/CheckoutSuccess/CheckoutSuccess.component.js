@@ -283,13 +283,13 @@ export class CheckoutSuccess extends PureComponent {
   renderItem = (item) => {
     const {
       order: { base_currency_code: currency },
-      EDDResponse
+      EddResponse
     } = this.props;
 
     return (
       <MyAccountOrderViewItem
         item={item}
-        EDDResponse={EDDResponse}
+        EddResponse={EddResponse}
         currency={currency}
         displayDiscountPercentage={true}
       />

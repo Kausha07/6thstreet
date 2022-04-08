@@ -167,7 +167,7 @@ export class CheckoutDispatcher {
     return removeBinPromotion({ cartId });
   }
 
-  async createOrder(dispatch, code, additional_data, finalEDD) {
+  async createOrder(dispatch, code, additional_data, finalEdd) {
     const {
       Cart: { cartId },
     } = getStore().getState();
@@ -175,7 +175,7 @@ export class CheckoutDispatcher {
     return createOrder({
       data: {
         cart_id: cartId,
-        edd_date: finalEDD,
+        edd_date: finalEdd,
         payment: {
           method: code,
           data: additional_data,

@@ -42,7 +42,7 @@ export const mapStateToProps = (state) => ({
   newCardVisible: state.CreditCardReducer.newCardVisible,
   default_title: state.ConfigReducer.default_title,
   customer: state.MyAccountReducer.customer,
-  EDDResponse: state.MyAccountReducer.EDDResponse,
+  EddResponse: state.MyAccountReducer.EddResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -324,14 +324,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async onBillingSuccess(fields, asyncData) {
     const paymentMethod = this._getPaymentData(asyncData);
-    const { savePaymentInformation, savedCards, newCardVisible, showErrorNotification ,EDDResponse} = this.props;
+    const { savePaymentInformation, savedCards, newCardVisible, showErrorNotification ,EddResponse} = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
-    let FinalEDD = null;
-    if (EDDResponse) {
-      Object.values(EDDResponse).filter((entry) => {
+    let FinalEdd = null;
+    if (EddResponse) {
+      Object.values(EddResponse).filter((entry) => {
         if (entry.source === "cart" && entry.featute_flag_status === 1) {
-          FinalEDD = entry.edd_date;
+          FinalEdd = entry.edd_date;
         }
       });
     }
@@ -387,7 +387,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             savePaymentInformation({
               billing_address: address,
               paymentMethod,
-              FinalEDD
+              FinalEdd
             });
           } else if (Array.isArray(response)) {
             const message = response[0];
@@ -416,7 +416,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             billing_address: address,
             paymentMethod,
             selectedCard,
-            FinalEDD
+            FinalEdd
           });
         } else {
           //if saved card is not selected
@@ -429,7 +429,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       savePaymentInformation({
         billing_address: address,
         paymentMethod,
-        FinalEDD
+        FinalEdd
       });
     }
   }
@@ -442,13 +442,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
-      EDDResponse
+      EddResponse
     } = this.props;
-    let FinalEDD = null;
-    if (EDDResponse) {
-      Object.values(EDDResponse).filter((entry) => {
+    let FinalEdd = null;
+    if (EddResponse) {
+      Object.values(EddResponse).filter((entry) => {
         if (entry.source === "cart" && entry.featute_flag_status === 1) {
-          FinalEDD = entry.edd_date;
+          FinalEdd = entry.edd_date;
         }
       });
     }
@@ -468,7 +468,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             savePaymentInformation({
               billing_address: address,
               paymentMethod,
-              FinalEDD
+              FinalEdd
             });
           }
         }

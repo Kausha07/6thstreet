@@ -26,7 +26,7 @@ export const initialState = {
   addresses: [],
   isAddressLoading: false,
   defaultShippingAddress: null,
-  EDDResponse: null
+  EddResponse: null
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -37,7 +37,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     addresses,
     isLoading,
     defaultaddress,
-    EDDResponse
+    EddResponse
   } = action;
 
   switch (action.type) {
@@ -70,7 +70,7 @@ export const MyAccountReducer = (state = initialState, action) => {
       case SET_EDD_RESPONSE:
         return {
           ...state,
-          EDDResponse: EDDResponse,
+          EddResponse: EddResponse,
         };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {

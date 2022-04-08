@@ -40,7 +40,7 @@ export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
   defaultaddress,
 });
 
-export const setEDDResponse = (EDDResponse) => ({
+export const setEddResponse = (EddResponse) => ({
   type: SET_EDD_RESPONSE,
-  EDDResponse,
+  EddResponse,
 });

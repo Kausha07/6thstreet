@@ -16,7 +16,7 @@ import "./SuccessCheckoutItem.extended.style";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
-  EDDResponse: state.MyAccountReducer.EDDResponse,
+  EddResponse: state.MyAccountReducer.EddResponse,
 });
 
 export class SuccessCheckoutItem extends PureComponent {
@@ -223,33 +223,33 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
-        {this.renderEDD()}
+        {this.renderEdd()}
       </figcaption>
     );
   }
-  renderEDD = () => {
-    const { EDDResponse } = this.props;
+  renderEdd = () => {
+    const { EddResponse } = this.props;
     const {isArabic} = this.state
-    let ActualEDDMess = "";
-    let ActualEDD = "";
-    if (EDDResponse) {
-      Object.values(EDDResponse).filter((entry) => {
+    let ActualEddMess = "";
+    let ActualEdd = "";
+    if (EddResponse) {
+      Object.values(EddResponse).filter((entry) => {
         if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-          ActualEDDMess = isArabic
+          ActualEddMess = isArabic
             ? entry.edd_message_ar
             : entry.edd_message_en;
-          ActualEDD = entry.edd_date;
+          ActualEdd = entry.edd_date;
         }
       });
     }
 
-    if (!ActualEDDMess) {
+    if (!ActualEddMess) {
       return null;
     }
     return (
       <div block="AreaText">
-        <span>{ActualEDDMess.split("by")[0]} by</span>
-        <span>{ActualEDDMess.split("by")[1]}</span>
+        <span>{ActualEddMess.split("by")[0]} by</span>
+        <span>{ActualEddMess.split("by")[1]}</span>
       </div>
     );
   };

@@ -1,7 +1,7 @@
 .PDP {
   max-width: var(--container-max-width);
   margin: 0 auto;
-  .EDDMobileWrapper {
+  .EddMobileWrapper {
     height: 100%;
     width: 100%;
     min-height: 100vh;
@@ -49,7 +49,7 @@
           }
         }
       }
-      &-EDDBackHeader {
+      &-EddBackHeader {
         display: flex;
         background: #fff;
         height: 60px;
@@ -60,7 +60,7 @@
         align-items: center;
         z-index: 1;
       }
-      &-EDDContentHeader {
+      &-EddContentHeader {
         width: 100%;
         display: flex;
         justify-content: space-around;
@@ -93,7 +93,7 @@
       }
     }
   }
-  .EDDWrapper {
+  .EddWrapper {
     display: flex;
     justify-content: flex-start;
     align-items: center;
