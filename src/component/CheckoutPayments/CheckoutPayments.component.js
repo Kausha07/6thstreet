@@ -305,7 +305,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           <img src={img} alt={m_code} />
         </div>
         <div block="CheckoutPayments" elem="TabbyPaymentContent">
-          <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
+          <div block="CheckoutPayments" elem="TabbyPaymentContentTitle" mods={ { isArabic } }>
             <button onClick={this.openTabbyInstallmentsTooltip}>
               <img src={info} alt="info" />
             </button>
