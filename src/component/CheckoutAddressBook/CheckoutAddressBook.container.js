@@ -24,6 +24,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.estimateEddResponse(dispatch, request)
+    ),
 });
 
 export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookContainer {
@@ -45,25 +49,17 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   };
 
   onAddressSelect(address) {
-    const { id = 0 } = address;
+    const { id = 0, city, area, country_code } = address;
+    const { estimateEddResponse } = this.props;
     this.setState({ selectedAddressId: id });
-    // let request = {
-    //   country: address.country_code,
-    //   city_id: 2,
-    //   area_id: 1,
-    //   courier: null,
-    //   source: "cart",
-    // };
-    // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //   },
-    //   body: JSON.stringify(request),
-    // }).then((response) => {
-    //   console.log("muskan", response);
-    // });
+    let request = {
+      country: country_code,
+      city: city,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request);
   }
 
   showCreateNewPopup() {

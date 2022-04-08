@@ -8,13 +8,11 @@ import {
   sendNotifyMeEmail,
   isClickAndCollectAvailable,
   getClickAndCollectStores,
-  getDefaultAddress,
 } from "Util/API/endpoint/Product/Product.enpoint";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import Logger from "Util/Logger";
 import { setPdpWidgetsData } from "../AppState/AppState.action";
-import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 export class PDPDispatcher {
   async requestProduct(payload, dispatch) {
@@ -35,13 +33,6 @@ export class PDPDispatcher {
   async resetProduct(payload, dispatch) {
     // remove product from state if not pdp
     dispatch(setPDPData({}, {}));
-  }
-
-  async getDefaultAddress(payload, dispatch) {
-    const { customerID } = payload;
-    const response = await MagentoAPI.get(`customers/${customerID}/shippingAddress`)
-    // const default_address = await getDefaultAddress(customerID);
-    // console.log("muskan",response)
   }
 
   async requestProductBySku(payload, dispatch) {

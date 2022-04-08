@@ -22,6 +22,3 @@ export const getClickAndCollectStores = ({
 
 export const getStoreAddress = (storeNo) =>
   MobileAPI.get(`/clicktocollect/stores/${storeNo}/address`) || {};
-
-export const getDefaultAddress = (customerID) =>
-  MobileAPI.get(`/customers/${customerID}/shippingAddress`) || {};

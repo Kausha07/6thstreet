@@ -62,39 +62,32 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     getShippingAddresses().then((response) => {
       if (response.data) {
         dispatch(setCustomerAddressData(response.data));
+        if (Object.values(response.data).length > 0) {
+          const defaultShippingAddress = Object.values(response.data).filter(
+            (address) => {
+              return address.default_shipping === true;
+            }
+          );
+          if (Object.values(defaultShippingAddress).length > 0) {
+            const { country_code, city, area } = defaultShippingAddress[0];
+            let request = {
+              country: country_code,
+              city: city,
+              area: area,
+              courier: null,
+              source: null,
+            };
+            this.estimateEddResponse(request);
+            dispatch(
+              setCustomerDefaultShippingAddress(defaultShippingAddress[0])
+            );
+          }
+        }
       }
     });
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
-      const defaultShippingId = parseInt(stateCustomer.default_shipping);
-      const defaultShippingAddress = Object.values(
-        stateCustomer.addresses
-      ).filter((address) => {
-        return address.id === defaultShippingId;
-      });
-      // MagentoAPI.get(`customers/${customerID}/shippingAddress`).then(
-      //   (response) => {
-      // let request = {
-      //   country: response.country_id,
-      //   city_id: 2,
-      //   area_id: response.region.region_id,
-      //   courier: null,
-      //   source: "cart",
-      // };
-      // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "application/json",
-      //   },
-      //   body: JSON.stringify(request),
-      // }).then((response) => {
-      //   console.log("muskan", response);
-      // });
-      dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
-      //   }
-      // );
     }
 
     return executePost(prepareQuery([query])).then(

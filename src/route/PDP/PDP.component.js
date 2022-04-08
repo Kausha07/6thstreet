@@ -72,32 +72,26 @@ class PDP extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     const { defaultShippingAddress, estimateEddResponse } = this.props;
     const { defaultShippingAddress: prevdefaultShippingAddress } = prevProps;
-    const { countryCode } = this.state;
+
     if (
       JSON.stringify(prevdefaultShippingAddress) !==
       JSON.stringify(defaultShippingAddress)
     ) {
-      const { country_id } = defaultShippingAddress;
-      // this.setState(
-      //   {
-      //     selectedCityId,
-      //     areaId,
-      //   },
-      //   () => {
-      //     MobileAPI.get(`eddservice/cities`).then((response) => {
-      //       this.setState({ Cityresponse: response.result }, () => {
-      //         if (response.result) {
-      //           let request = {
-      //             country: countryCode,
-      //             city_id: selectedCityId,
-      //             area_id: area.area_id,
-      //             courier: null,
-      //             source: "pdp",
-      //           };
-      //           estimateEddResponse(request);
-      //         }
-      //       });
-      //     });
+      const { country_code, area, city } = defaultShippingAddress;
+      MobileAPI.get(`eddservice/cities`).then((response) => {
+        this.setState({ Cityresponse: response.result }, () => {
+          if (response.result) {
+            let request = {
+              country: country_code,
+              city: city,
+              area: area,
+              courier: null,
+              source: null,
+            };
+            estimateEddResponse(request);
+          }
+        });
+      });
       //   }
       // );
     }
@@ -191,7 +185,7 @@ class PDP extends PureComponent {
   };
 
   handleAreaSelection = (area) => {
-    const { selectedCityId, countryCode } = this.state;
+    const { selectedCity, countryCode } = this.state;
     const { estimateEddResponse } = this.props;
     this.setState({
       selectedAreaId: area.area_id,
@@ -202,10 +196,10 @@ class PDP extends PureComponent {
     this.handleAreaDropDownClick();
     let request = {
       country: countryCode,
-      city_id: selectedCityId,
-      area_id: area.area_id,
+      city: selectedCity,
+      area: area.area_name_en,
       courier: null,
-      source: "pdp",
+      source: null,
     };
     estimateEddResponse(request);
     document.body.style.overflow = "visible";
@@ -350,7 +344,7 @@ class PDP extends PureComponent {
       return this.renderMobileSelectCity();
     }
     return (
-      <div block="EddWrapper Wrapper">
+      <div block="EddWrapper">
         {selectedAreaId ? (
           <div
             block="EddWrapper SelectedAreaWrapper"
