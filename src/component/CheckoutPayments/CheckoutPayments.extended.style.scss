@@ -17,9 +17,10 @@
     font-size: 18px;
     text-transform: none;
     line-height: 25px;
-    @include mobile{
-      margin-top:12px;
-      margin-bottom:12px;
+
+    @include mobile {
+      margin-top: 12px;
+      margin-bottom: 12px;
     }
   }
 
@@ -34,6 +35,7 @@
 
   &-Methods {
     margin-bottom: 10px;
+
     .Slider {
       overflow-x: auto;
     }
@@ -47,10 +49,11 @@
   &-MethodImage {
     padding: 15px 12px 10px;
     width: 100px;
-    margin: 50px auto 0 ;
+    margin: 50px auto 0;
     border: 3px solid black;
     border-radius: 10px;
   }
+
   &-DiscountOptionWrapper {
     padding: 20px 0 0;
 
@@ -70,9 +73,10 @@
   }
 
   &-TabbyPayments {
-    @include mobile{
+    @include mobile {
       padding-bottom: 182px;
     }
+
     &Promo {
       color: var(--charcoal);
       font-size: 15px;
@@ -89,10 +93,14 @@
     max-width: 500px;
 
     &Content {
-      padding: 17px 20px;
+      padding: 40px;
       width: 100%;
+      position: relative;
+      @include mobile {
+        position: relative;
+      }
 
-      #tabbyCard{
+      #tabbyCard {
         margin-bottom: -28px;
       }
 
@@ -105,6 +113,13 @@
         font-weight: var(--fw-bold);
         margin-bottom: 8px;
         margin-top: -5px;
+        // @include mobile {
+
+        // }
+        right: 0;
+        position: absolute;
+        z-index: 999;
+        // margin-top: 0;
 
         button {
           height: 16px;
@@ -158,14 +173,16 @@
           display: none;
         }
       }
+
       &_check {
         width: 100%;
         justify-content: center;
         height: 40px;
+      }
     }
-    }
+
     &_check {
       flex-direction: column;
-  }
+    }
   }
 }
