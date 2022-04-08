@@ -96,9 +96,6 @@
       padding: 40px;
       width: 100%;
       position: relative;
-      @include mobile {
-        position: relative;
-      }
 
       #tabbyCard {
         margin-bottom: -28px;
@@ -113,9 +110,6 @@
         font-weight: var(--fw-bold);
         margin-bottom: 8px;
         margin-top: -5px;
-        // @include mobile {
-
-        // }
         right: 0;
         position: absolute;
         z-index: 999;
