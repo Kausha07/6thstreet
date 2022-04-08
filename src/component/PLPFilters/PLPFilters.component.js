@@ -184,7 +184,7 @@ class PLPFilters extends PureComponent {
       {
         top: n,
         left: 0,
-        behavior: 'smooth'
+        behavior: 'instant'
       }
     )
   }
@@ -196,7 +196,7 @@ class PLPFilters extends PureComponent {
       {
         top: -n,
         left: 0,
-        behavior: 'smooth'
+        behavior: 'instant'
       }
     )
   }
@@ -221,7 +221,7 @@ class PLPFilters extends PureComponent {
           this.setState({
             fixWindow: false
           })
-          // this.onNotFixWindow(e)
+          this.onNotFixWindow(e)
         }
 
       }
