@@ -14,7 +14,7 @@ export const SET_GUEST_USER_EMAIL = "SET_GUEST_USER_EMAIL";
 export const SET_CUSTOMER_ADDRESS_DATA = "SET_CUSTOMER_ADDRESS_DATA";
 export const SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS = "SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS";
 export const SET_ADDRESS_LOADING_STATUS = "SET_ADDRESS_LOADING_STATUS";
-
+export const SET_EDD_RESPONSE = "SET_EDD_RESPONSE"
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
   isActive,
@@ -38,4 +38,9 @@ export const setCustomerAddressData = (addresses) => ({
 export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
   type: SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
   defaultaddress,
+});
+
+export const setEDDResponse = (EDDResponse) => ({
+  type: SET_EDD_RESPONSE,
+  EDDResponse,
 });

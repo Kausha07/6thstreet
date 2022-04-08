@@ -11,6 +11,7 @@ import "./PDP.style";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import address from "./icons/address.png";
@@ -18,6 +19,7 @@ import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import { isArabic } from "Util/App";
 import MobileAPI from "Util/API/provider/MobileAPI";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -28,6 +30,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  estimateEDDResponse: (request) =>
+    MyAccountDispatcher.estimateEDDResponse(dispatch, request),
 });
 
 class PDP extends PureComponent {
@@ -46,69 +50,56 @@ class PDP extends PureComponent {
     selectedAreaId: null,
     selectedArea: null,
     selectedCityArea: null,
+    selectedCity: null,
     showPopupField: "",
+    countryCode: null,
     CountryEDDEnable: true,
     PDPEDDEnable: true,
     CrossBorderEDDEnable: false,
-    Countryresponse: [
-      {
-        city_id: 1,
-        city_name_en: "Dubai",
-        city_name_ar: "",
-        area_list: null,
-      },
-      {
-        city_id: 2,
-        city_name_en: "Abu Dhabi",
-        city_name_ar: "",
-        area_list: [
-          {
-            area_id: 1,
-            area_name_en: "Abu Dhabi Golf Club",
-            area_name_ar: "",
-          },
-          {
-            area_id: 2,
-            area_name_en: "Abu Dhabi International Airport",
-            area_name_ar: "",
-          },
-          {
-            area_id: 3,
-            area_name_en: "Abu Dhabi Mall",
-            area_name_ar: "",
-          },
-        ],
-      },
-    ],
+    Cityresponse: null,
   };
 
-  componentDidMount(){
-    // MobileAPI.get(`eddservice/edd/v1/cityList/AE`).then((response)=>{
-    //   console.log("muskan",response);
-    //         })
+  componentDidMount() {
+    const countryCode = getCountryFromUrl();
+    this.setState({
+      countryCode,
+    });
+    MobileAPI.get(`eddservice/cities`).then((response) => {
+      this.setState({ Cityresponse: response.result });
+    });
   }
+
   componentDidUpdate(prevProps, prevState) {
-    const { defaultShippingAddress } = this.props;
+    const { defaultShippingAddress, estimateEDDResponse } = this.props;
     const { defaultShippingAddress: prevdefaultShippingAddress } = prevProps;
+    const { countryCode } = this.state;
     if (
       JSON.stringify(prevdefaultShippingAddress) !==
       JSON.stringify(defaultShippingAddress)
     ) {
-      const {country_id} = defaultShippingAddress
-      // fetch(
-      //   `https://stage-edd-service.6tst.com/eddservice/edd/v1/cityList/${country_id}`,
+      const { country_id } = defaultShippingAddress;
+      // this.setState(
       //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Accept: "application/json",
-      //     },
+      //     selectedCityId,
+      //     areaId,
+      //   },
+      //   () => {
+      //     MobileAPI.get(`eddservice/cities`).then((response) => {
+      //       this.setState({ Cityresponse: response.result }, () => {
+      //         if (response.result) {
+      //           let request = {
+      //             country: countryCode,
+      //             city_id: selectedCityId,
+      //             area_id: area.area_id,
+      //             courier: null,
+      //             source: "pdp",
+      //           };
+      //           estimateEDDResponse(request);
+      //         }
+      //       });
+      //     });
       //   }
-      // ).then((response) => {
-      //   console.log("muskan", response);
-      // });
-//       MobileAPI.get(`eddservice/edd/v1/cityList/AE`).then((response)=>{
-// console.log("muskan",response);
-//       })
+      // );
     }
   }
 
@@ -200,6 +191,8 @@ class PDP extends PureComponent {
   };
 
   handleAreaSelection = (area) => {
+    const { selectedCityId, countryCode } = this.state;
+    const { estimateEDDResponse } = this.props;
     this.setState({
       selectedAreaId: area.area_id,
       selectedArea: isArabic() ? area.area_name_ar : area.area_name_en,
@@ -207,23 +200,14 @@ class PDP extends PureComponent {
       showPopupField: "",
     });
     this.handleAreaDropDownClick();
-    // let request = {
-    //   country: "AE",
-    //   city_id: 2,
-    //   area_id: 1,
-    //   courier: null,
-    //   source: "pdp",
-    // };
-    // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //   },
-    //   body: JSON.stringify(request),
-    // }).then((response) => {
-    //   console.log("muskan", response);
-    // });
+    let request = {
+      country: countryCode,
+      city_id: selectedCityId,
+      area_id: area.area_id,
+      courier: null,
+      source: "pdp",
+    };
+    estimateEDDResponse(request);
     document.body.style.overflow = "visible";
   };
 
@@ -255,10 +239,17 @@ class PDP extends PureComponent {
     );
   }
   renderSelectCityItem() {
-    const { Countryresponse } = this.state;
+    const { Cityresponse } = this.state;
+    if (!Cityresponse) {
+      return (
+        <ul>
+          <span block="NoAreaFound">No City Found</span>
+        </ul>
+      );
+    }
     return (
       <ul>
-        {Object.values(Countryresponse).map((city) => {
+        {Object.values(Cityresponse).map((city) => {
           return (
             <li
               id={city.city_id}
@@ -266,6 +257,7 @@ class PDP extends PureComponent {
                 this.setState({
                   showPopupField: "area",
                   selectedCityId: city.city_id,
+                  selectedCity: city.city_name_en,
                   selectedCityArea: city.area_list,
                   showAreaDropDown: true,
                 })
@@ -412,12 +404,13 @@ class PDP extends PureComponent {
 
   renderPDP() {
     const { nbHits, isLoading } = this.props;
+    const { Cityresponse } = this.state;
     if (!isLoading && nbHits === 1) {
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
           {this.renderMySignInPopup()}
           {this.renderMainSection()}
-          {this.renderSelectCity()}
+          {Cityresponse && this.renderSelectCity()}
           {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}

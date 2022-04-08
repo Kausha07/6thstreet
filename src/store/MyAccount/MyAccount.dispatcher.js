@@ -7,6 +7,7 @@ import {
 import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
+  setEDDResponse,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -18,7 +19,6 @@ import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { setClubApparel } from "Store/ClubApparel/ClubApparel.action";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
 import { getInitialState as getClubApparelInitialState } from "Store/ClubApparel/ClubApparel.reducer";
-import { showNotification } from "Store/Notification/Notification.action";
 import { ORDERS } from "Store/Order/Order.reducer";
 import { setStoreCredit } from "Store/StoreCredit/StoreCredit.action";
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
@@ -49,7 +49,6 @@ import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 export {
   CUSTOMER,
@@ -69,30 +68,31 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
       const defaultShippingId = parseInt(stateCustomer.default_shipping);
-      const defaultShippingAddress = Object.values(stateCustomer.addresses).filter((address)=>{
-        return address.id === defaultShippingId
-
-      })
+      const defaultShippingAddress = Object.values(
+        stateCustomer.addresses
+      ).filter((address) => {
+        return address.id === defaultShippingId;
+      });
       // MagentoAPI.get(`customers/${customerID}/shippingAddress`).then(
       //   (response) => {
-          // let request = {
-          //   country: response.country_id,
-          //   city_id: 2,
-          //   area_id: response.region.region_id,
-          //   courier: null,
-          //   source: "cart",
-          // };
-          // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //     Accept: "application/json",
-          //   },
-          //   body: JSON.stringify(request),
-          // }).then((response) => {
-          //   console.log("muskan", response);
-          // });
-          dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      // let request = {
+      //   country: response.country_id,
+      //   city_id: 2,
+      //   area_id: response.region.region_id,
+      //   courier: null,
+      //   source: "cart",
+      // };
+      // fetch("https://stage-edd-service.6tst.com/eddservice/edd/v1/estimate", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json",
+      //   },
+      //   body: JSON.stringify(request),
+      // }).then((response) => {
+      //   console.log("muskan", response);
+      // });
+      dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
       //   }
       // );
     }
@@ -401,6 +401,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   setGuestUserEmail(dispatch, email) {
     dispatch(updateGuestUserEmail(email));
+  }
+
+  estimateEDDResponse(dispatch, request) {
+    MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+      dispatch(setEDDResponse(response.result));
+    });
   }
 
   forgotPassword(dispatch, options = {}) {

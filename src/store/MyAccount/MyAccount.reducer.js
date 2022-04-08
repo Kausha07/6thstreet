@@ -13,6 +13,7 @@ import {
   SET_CUSTOMER_ADDRESS_DATA,
   SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
   SET_ADDRESS_LOADING_STATUS,
+  SET_EDD_RESPONSE
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -25,36 +26,7 @@ export const initialState = {
   addresses: [],
   isAddressLoading: false,
   defaultShippingAddress: null,
-  EDDResponse: [
-    {
-      source: "thankyou",
-      edd_message_en: "Arriving by 06 Apr, Wednesday",
-      edd_message_ar: null,
-      edd_date: "2022-04-06",
-      featute_flag_status: 1,
-    },
-    {
-      source: "pdp",
-      edd_message_en: "Delivery by 06 Apr, Wednesday",
-      edd_message_ar: null,
-      edd_date: "2022-04-06",
-      featute_flag_status: 1,
-    },
-    {
-      source: "cart",
-      edd_message_en: "Delivery by 06 Apr, Wednesday",
-      edd_message_ar: null,
-      edd_date: "2022-04-06",
-      featute_flag_status: 1,
-    },
-    {
-      source: "myorder",
-      edd_message_en: "Arriving by 06 Apr, Wednesday",
-      edd_message_ar: null,
-      edd_date: "2022-04-06",
-      featute_flag_status: 0,
-    },
-  ],
+  EDDResponse: null
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -65,6 +37,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     addresses,
     isLoading,
     defaultaddress,
+    EDDResponse
   } = action;
 
   switch (action.type) {
@@ -94,6 +67,11 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         defaultShippingAddress: defaultaddress,
       };
+      case SET_EDD_RESPONSE:
+        return {
+          ...state,
+          EDDResponse: EDDResponse,
+        };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
         ...state,
