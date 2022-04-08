@@ -370,9 +370,11 @@
 }
 
 // hack for tabby promo issue PWA-2182
-.tabby-promo__feature {
-  padding-left: 0 !important;
-  &::before {
-    display: none !important;
-  }
+ul {
+  li[class^='styles__tabby-promo__feature'] {
+    padding-left: 0 !important;
+    &::before {
+      display: none !important;
+    }
+  } 
 }
