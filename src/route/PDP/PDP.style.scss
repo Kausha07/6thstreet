@@ -35,13 +35,17 @@
             min-height: 42px;
             width: 100%;
             border-bottom: 1px solid #e6e6e6;
-            button{
+            padding: 0 40px;
+            button {
               display: flex;
               margin-top: 0;
               margin-left: 0px;
               font-size: 13px;
               width: 100%;
               padding: 0;
+            }
+            button::before {
+              content: none;
             }
             button::after {
               content: none;
@@ -99,8 +103,13 @@
     align-items: center;
     margin: 29px 0px;
     .SelectedAreaWrapper {
-      margin: 0px 8px 0px 0px !important;
-
+      margin: 0px 10px 0px 0px !important;
+      &_isArabic {
+        margin: 0px 0px 0px 10px !important;
+        .SelectAreaText {
+          margin-right: 5px;
+        }
+      }
       .SelectAreaText {
         color: #000000;
         font-family: "Avenir Next";
@@ -147,6 +156,15 @@
       border-radius: 12px;
       background-color: #ffffff;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+      &_isArabic {
+        ul {
+          li {
+            button::before {
+              content: none;
+            }
+          }
+        }
+      }
       &_isArea {
         height: 100px !important;
       }
@@ -174,18 +192,34 @@
             font-size: 13px;
             width: 100%;
             padding: 0;
+            &_isArabic {
+              margin-right: 0px;
+            }
             &_isArea::after {
               content: "";
             }
           }
-          .CountrySwitcher-CountryBtn::after {
-            right: 0px;
-            align-self: center;
-            top: 15px;
-            background: url(../../component/Icons/ChevronRight/icon.svg)
-              no-repeat;
-            background-size: 12px;
+          .CountrySwitcher-CountryBtn {
+            &::after {
+              right: 0px;
+              align-self: center;
+              top: 15px;
+              background: url(../../component/Icons/ChevronRight/icon.svg)
+                no-repeat;
+              background-size: 12px;
+            }
+            &_isArabic {
+              &::before {
+                left: 0px;
+                align-self: center;
+                top: 15px;
+                background: url(../../component/Icons/ChevronLeft/icon.svg)
+                  no-repeat;
+                background-size: 12px;
+              }
+            }
           }
+
           &:last-child {
             border-bottom: none;
           }
@@ -215,7 +249,10 @@
       align-items: center;
       padding: 0px 8px;
       cursor: pointer;
-
+      &_isArabic {
+        margin-right: 0px;
+        margin-left: 10px;
+      }
       .SelectAreaText {
         color: #28d9aa;
         font-family: "Avenir Next";

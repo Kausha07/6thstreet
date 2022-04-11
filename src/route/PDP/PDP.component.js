@@ -185,11 +185,12 @@ class PDP extends PureComponent {
   };
 
   handleAreaSelection = (area) => {
-    const { selectedCity, countryCode } = this.state;
+    const { selectedCity, countryCode, isArabic } = this.state;
     const { estimateEddResponse } = this.props;
     this.setState({
       selectedAreaId: area.area_id,
-      selectedArea: isArabic() ? area.area_name_ar : area.area_name_en,
+      // selectedArea: isArabic ? area.area_name_ar : area.area_name_en,
+      selectedArea: area.area_name_en,
       showCityDropdown: false,
       showPopupField: "",
     });
@@ -206,7 +207,7 @@ class PDP extends PureComponent {
   };
 
   renderSelectAreaItem() {
-    const { selectedCityArea } = this.state;
+    const { selectedCityArea, isArabic } = this.state;
     const isArea =
       selectedCityArea && Object.values(selectedCityArea).length > 0;
     return (
@@ -218,9 +219,14 @@ class PDP extends PureComponent {
                 id={area.area_id}
                 onClick={() => this.handleAreaSelection(area)}
               >
-                <button block={`CountrySwitcher`} elem="CountryBtn">
+                <button
+                  block={`CountrySwitcher`}
+                  elem="CountryBtn"
+                  mods={{ isArabic, isArea }}
+                >
                   <span>
-                    {isArabic() ? area.area_name_ar : area.area_name_en}
+                    {/* {isArabic ? area.area_name_ar : area.area_name_en} */}
+                    {area.area_name_en}
                   </span>
                 </button>
               </li>
@@ -233,7 +239,7 @@ class PDP extends PureComponent {
     );
   }
   renderSelectCityItem() {
-    const { Cityresponse } = this.state;
+    const { Cityresponse, isArabic } = this.state;
     if (!Cityresponse) {
       return (
         <ul>
@@ -257,9 +263,14 @@ class PDP extends PureComponent {
                 })
               }
             >
-              <button block={`CountrySwitcher`} elem="CountryBtn">
+              <button
+                block={`CountrySwitcher`}
+                elem="CountryBtn"
+                mods={{ isArabic }}
+              >
                 <span>
-                  {isArabic() ? city.city_name_ar : city.city_name_en}
+                  {/* {isArabic ? city.city_name_ar : city.city_name_en} */}
+                  {city.city_name_en}
                 </span>
               </button>
             </li>
@@ -348,6 +359,7 @@ class PDP extends PureComponent {
         {selectedAreaId ? (
           <div
             block="EddWrapper SelectedAreaWrapper"
+            mods={{isArabic}}
             onClick={() => this.handleAreaDropDownClick()}
           >
             <Image lazyLoad={false} src={addressBlack} alt="" />
@@ -355,7 +367,9 @@ class PDP extends PureComponent {
           </div>
         ) : (
           <div
-            mix={{ block: "EddWrapper", elem: "AreaButton" }}
+            block="EddWrapper"
+            elem="AreaButton"
+            mods={{ isArabic }}
             onClick={() => this.handleAreaDropDownClick()}
           >
             <Image lazyLoad={false} src={address} alt="" />
@@ -369,7 +383,9 @@ class PDP extends PureComponent {
           </div>
         ) : (
           <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
-            Select to check delivery date
+            {isArabic
+              ? "حدد للتحقق من تاريخ التسليم"
+              : "Select to check delivery date"}
           </div>
         )}
 
@@ -385,7 +401,7 @@ class PDP extends PureComponent {
               mix={{
                 block: "EddWrapper",
                 elem: "CountryDrop",
-                mods: { isArea },
+                mods: { isArea, isArabic },
               }}
             >
               {this.renderSelectAreaItem()}
