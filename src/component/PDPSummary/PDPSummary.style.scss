@@ -378,3 +378,7 @@ ul {
     }
   } 
 }
+
+div[class^='styles__body'] {
+  height: auto !important;
+}
