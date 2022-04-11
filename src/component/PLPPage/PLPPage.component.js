@@ -4,9 +4,10 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
-import Event from "Util/Event";
+import Event, { EVENT_GTM_IMPRESSIONS_PLP } from "Util/Event";
 import "./PLPPage.style";
 import isMobile from "Util/Mobile";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 let gtmProdArr = [];
 class PLPPage extends PureComponent {
@@ -14,6 +15,16 @@ class PLPPage extends PureComponent {
     products: Products.isRequired,
     impressions: Products.isRequired,
   };
+
+  componentDidMount() {
+    const {  impressions } = this.props;
+    const category = this.getCategory();
+    Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
+  }
+
+  getCategory() {
+    return BrowserDatabase.getItem("CATEGORY_NAME") || "";
+  }
 
   sendProductImpression = (product) => {
     gtmProdArr.push([product]);
