@@ -272,7 +272,7 @@ export class CheckoutSuccess extends PureComponent {
   onSignIn = () => {
     const { requestCustomerData } = this.props;
 
-    requestCustomerData();
+    // requestCustomerData();
     this.closePopup();
   };
 
