@@ -8,6 +8,7 @@ import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
   setEddResponse,
+  setDefaultEddAddress,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -77,7 +78,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               courier: null,
               source: null,
             };
-            this.estimateEddResponse(dispatch,request);
+            this.estimateDefaultEddResponse(dispatch, request);
             dispatch(
               setCustomerDefaultShippingAddress(defaultShippingAddress[0])
             );
@@ -397,9 +398,34 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   estimateEddResponse(dispatch, request) {
-    MobileAPI.post(`eddservice/estimate`, request).then((response) => {
-      dispatch(setEddResponse(response.result));
-    });
+    try {
+      MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+        if (response.success) {
+          dispatch(setEddResponse(response.result, request));
+        } else {
+          dispatch(setEddResponse(response.errorMessage, request));
+        }
+      });
+    } catch (error) {
+      dispatch(setEddResponse(null, request));
+    }
+  }
+
+  estimateDefaultEddResponse(dispatch, request) {
+    try {
+      MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+        if (response.success) {
+          dispatch(setEddResponse(response.result, request));
+          dispatch(setDefaultEddAddress(response.result, request));
+        } else {
+          dispatch(setEddResponse(response.errorMessage, request));
+          dispatch(setDefaultEddAddress(response.errorMessage, request));
+        }
+      });
+    } catch (error) {
+      dispatch(setEddResponse(null, request));
+      dispatch(setDefaultEddAddress(null, request));
+    }
   }
 
   forgotPassword(dispatch, options = {}) {

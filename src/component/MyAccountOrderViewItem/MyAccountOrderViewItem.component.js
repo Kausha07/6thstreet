@@ -3,6 +3,8 @@ import { MyAccountReturnSuccessItem as SourceComponent } from "Component/MyAccou
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {  isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
 
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
@@ -60,14 +62,25 @@ export class MyAccountOrderViewItem extends SourceComponent {
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-          ActualEddMess = isArabic()
-            ? entry.edd_message_ar
-            : entry.edd_message_en;
-          ActualEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+            ActualEddMess = isArabic()
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            ActualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(2);
+        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEdd = defaultEddDateString;
+      }
     }
 
     if (!ActualEddMess) {

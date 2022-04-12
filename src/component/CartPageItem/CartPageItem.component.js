@@ -14,7 +14,9 @@
 import Field from "Component/Field";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
+
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
@@ -337,14 +339,25 @@ export class CartItem extends PureComponent {
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "cart" && entry.featute_flag_status === 1) {
-          ActualEddMess = isArabic
-            ? entry.edd_message_ar
-            : entry.edd_message_en;
-          ActualEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+            ActualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            ActualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(2);
+        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEdd = defaultEddDateString;
+      }
     }
 
     if (!ActualEddMess) {

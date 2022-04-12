@@ -18,7 +18,7 @@ import { ExtendedOrderType } from "Type/API";
 import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
-import { formatDate } from "Util/Date";
+import { formatDate, getDefaultEddDate } from "Util/Date";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
@@ -196,7 +196,43 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
+  // renderEdd = () => {
+  //   const { EddResponse } = this.props;
+  //   const {isArabic} = this.state
+  //   let ActualEddMess = "";
+  //   let ActualEdd = "";
+  //   if (EddResponse) {
+  //     if (isObject(EddResponse)) {
+  //       Object.values(EddResponse).filter((entry) => {
+  //         if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+  //           ActualEddMess = isArabic
+  //             ? entry.edd_message_ar
+  //             : entry.edd_message_en;
+  //           ActualEdd = entry.edd_date;
+  //         }
+  //       });
+  //     } else {
+  //       const {
+  //         defaultEddDateString,
+  //         defaultEddDay,
+  //         defaultEddMonth,
+  //         defaultEddDat,
+  //       } = getDefaultEddDate(2);
+  //       ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+  //       ActualEdd = defaultEddDateString;
+  //     }
+  //   }
 
+  //   if (!ActualEddMess) {
+  //     return null;
+  //   }
+  //   return (
+  //     <div block="AreaText">
+  //       <span>{ActualEddMess.split("by")[0]} by</span>
+  //       <span>{ActualEddMess.split("by")[1]}</span>
+  //     </div>
+  //   );
+  // };
   renderPackagesMessage() {
     const {
       order: { groups: shipped = [] },

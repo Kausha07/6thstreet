@@ -20,6 +20,8 @@ import { showPopup } from "Store/Popup/Popup.action";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { FIVE_MINUTES_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
 
 import { CHECKOUT_APPLE_PAY } from "Component/CheckoutPayments/CheckoutPayments.config";
 import CheckoutComQuery from "Query/CheckoutCom.query";
@@ -47,7 +49,8 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
-  addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
+  addNewCreditCard: (cardData) =>
+    CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
   getCardType: (bin) => CreditCardDispatcher.getCardType(dispatch, bin),
   showSuccessMessage: (message) =>
     dispatch(showNotification("success", message)),
@@ -82,7 +85,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     customer: null,
     default_title: "6th Street",
     merchant_id: process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID,
-    placeOrder: () => { },
+    placeOrder: () => {},
   };
 
   containerFunctions = {
@@ -106,10 +109,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   };
 
   /**
-  * Constructor
-  * @param props
-  * @param context
-  */
+   * Constructor
+   * @param props
+   * @param context
+   */
   constructor(props, context) {
     super(props, context);
     const { paymentMethods, customer } = props;
@@ -135,10 +138,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       isOrderButtonEnabled,
       isOrderButtonVisible,
       binApplied,
-      isTabbyInstallmentAvailable
+      isTabbyInstallmentAvailable,
     } = this.state;
     return {
-      binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied, isTabbyInstallmentAvailable,
+      binModal,
+      isOrderButtonEnabled,
+      isOrderButtonVisible,
+      binApplied,
+      isTabbyInstallmentAvailable,
     };
   };
 
@@ -171,7 +178,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             }
           }
         }, this._handleError)
-        .catch(() => { });
+        .catch(() => {});
     }
   }
   componentDidUpdate(prevProps) {
@@ -195,7 +202,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
               if (installments) {
                 if (installments) {
-                  setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+                  setTabbyWebUrl(
+                    installments[0].web_url,
+                    id,
+                    TABBY_ISTALLMENTS
+                  );
 
                   // this variable actually is used in the component
                   // eslint-disable-next-line quote-props
@@ -204,7 +215,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
               }
             }
           }, this._handleError)
-          .catch(() => { });
+          .catch(() => {});
       } else {
         this.setState({ isTabbyInstallmentAvailable: false });
       }
@@ -297,9 +308,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async applyBinPromotionOnSavedCard() {
     const { getBinPromotion, updateTotals, binModal, savedCards } = this.props;
-    let selectedCard = savedCards.find(a => a.selected === true);
-    if (selectedCard && selectedCard.details) {//if saved card is selected
-      const { details: { bin } } = selectedCard;
+    let selectedCard = savedCards.find((a) => a.selected === true);
+    if (selectedCard && selectedCard.details) {
+      //if saved card is selected
+      const {
+        details: { bin },
+      } = selectedCard;
       const response = await getBinPromotion(bin);
       binModal(response);
       await updateTotals();
@@ -324,16 +338,28 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async onBillingSuccess(fields, asyncData) {
     const paymentMethod = this._getPaymentData(asyncData);
-    const { savePaymentInformation, savedCards, newCardVisible, showErrorNotification ,EddResponse} = this.props;
+    const {
+      savePaymentInformation,
+      savedCards,
+      newCardVisible,
+      showErrorNotification,
+      EddResponse,
+    } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
     let FinalEdd = null;
+
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "cart" && entry.featute_flag_status === 1) {
-          FinalEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+            FinalEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const { defaultEddDateString } = getDefaultEddDate(2);
+        FinalEdd = defaultEddDateString;
+      }
     }
     if (code === CARD) {
       if (newCardVisible) {
@@ -346,13 +372,27 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           setCheckoutCreditCardData,
         } = this.props;
 
-        const { number = "", expYear, expMonth, cvv, binApplied, saveCard } = this.state;
+        const {
+          number = "",
+          expYear,
+          expMonth,
+          cvv,
+          binApplied,
+          saveCard,
+        } = this.state;
         if (!binApplied) {
           await this.applyBinPromotion();
           return;
         }
 
-        setCheckoutCreditCardData(number, expMonth, expYear, cvv, saveCard, address.email);
+        setCheckoutCreditCardData(
+          number,
+          expMonth,
+          expYear,
+          cvv,
+          saveCard,
+          address.email
+        );
 
         getCardType(number.substr("0", "6")).then((response) => {
           if (response) {
@@ -372,40 +412,40 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         });
 
         addNewCreditCard({ number, expMonth, expYear, cvv })
-        .then((response) => {
-          const { id, token } = response;
-          if (id || token) {
-            BrowserDatabase.setItem(
-              id ?? token,
-              "CREDIT_CART_TOKEN",
-              FIVE_MINUTES_IN_SECONDS
-            );
-            if(isSignedIn()) {
-              showSuccessMessage(__("Credit card successfully added"));
+          .then((response) => {
+            const { id, token } = response;
+            if (id || token) {
+              BrowserDatabase.setItem(
+                id ?? token,
+                "CREDIT_CART_TOKEN",
+                FIVE_MINUTES_IN_SECONDS
+              );
+              if (isSignedIn()) {
+                showSuccessMessage(__("Credit card successfully added"));
+              }
+
+              savePaymentInformation({
+                billing_address: address,
+                paymentMethod,
+                FinalEdd,
+              });
+            } else if (Array.isArray(response)) {
+              const message = response[0];
+
+              if (typeof message === "string") {
+                showErrorNotification(this.getCartError(message));
+              } else {
+                showErrorNotification(__("Something went wrong"));
+              }
+            } else if (typeof response === "string") {
+              showErrorNotification(response);
             }
+          }, this._handleError)
+          .catch(() => {
+            const { showErrorNotification } = this.props;
 
-            savePaymentInformation({
-              billing_address: address,
-              paymentMethod,
-              FinalEdd
-            });
-          } else if (Array.isArray(response)) {
-            const message = response[0];
-
-            if (typeof message === "string") {
-              showErrorNotification(this.getCartError(message));
-            } else {
-              showErrorNotification(__("Something went wrong"));
-            }
-          } else if (typeof response === "string") {
-            showErrorNotification(response);
-          }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-
-          showErrorNotification(__("Something went wrong"));
-        });
+            showErrorNotification(__("Something went wrong"));
+          });
       } else {
         //if payment is via saved card.
         let selectedCard = savedCards.find((a) => a.selected === true);
@@ -416,7 +456,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             billing_address: address,
             paymentMethod,
             selectedCard,
-            FinalEdd
+            FinalEdd,
           });
         } else {
           //if saved card is not selected
@@ -429,7 +469,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       savePaymentInformation({
         billing_address: address,
         paymentMethod,
-        FinalEdd
+        FinalEdd,
       });
     }
   }
@@ -442,15 +482,20 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
-      EddResponse
+      EddResponse,
     } = this.props;
     let FinalEdd = null;
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "cart" && entry.featute_flag_status === 1) {
-          FinalEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+            FinalEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const { defaultEddDateString } = getDefaultEddDate(2);
+        FinalEdd = defaultEddDateString;
+      }
     }
     createTabbySession(shippingAddress)
       .then((response) => {
@@ -468,12 +513,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             savePaymentInformation({
               billing_address: address,
               paymentMethod,
-              FinalEdd
+              FinalEdd,
             });
           }
         }
       }, this._handleError)
-      .catch(() => { });
+      .catch(() => {});
   }
 
   getCartError(message) {
@@ -571,7 +616,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    * Handle apple pay click
    */
   handleApplePayButtonClick() {
-    const { savePaymentInformationApplePay } = this.props
+    const { savePaymentInformationApplePay } = this.props;
     const {
       totals: {
         discount,
@@ -581,14 +626,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         currency_code = getCurrency(),
         total_segments: totals = [],
         quote_currency_code,
-        items
+        items,
       },
       default_title,
       shippingAddress: { country_id: countryCode },
-      shippingAddress
+      shippingAddress,
     } = this.props;
 
-    const LineItems = this._getLineItems()
+    const LineItems = this._getLineItems();
 
     const paymentRequest = {
       countryCode,
@@ -596,9 +641,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       supportedNetworks: this._getSupportedNetworks(),
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
-      lineItems: LineItems
+      lineItems: LineItems,
     };
-    savePaymentInformationApplePay({ billing_address: shippingAddress, paymentMethod: { code: "checkout_apple_pay" } })
+    savePaymentInformationApplePay({
+      billing_address: shippingAddress,
+      paymentMethod: { code: "checkout_apple_pay" },
+    });
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
     try {
@@ -647,7 +695,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             applePaySession.completeMerchantValidation(merchantSession);
             Logger.log("Completed merchant validation", merchantSession);
           } catch (error) {
-            console.error("error on validation complete", error)
+            console.error("error on validation complete", error);
           }
         })
         .catch((error) => Logger.log(error));
@@ -668,7 +716,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           this._getLineItems()
         );
       } catch (error) {
-        Logger.log("error on shipping contact selected", error)
+        Logger.log("error on shipping contact selected", error);
       }
     };
 
@@ -687,7 +735,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           this._getLineItems()
         );
       } catch (error) {
-        Logger.log("error on shipping methiod selected", error)
+        Logger.log("error on shipping methiod selected", error);
       }
     };
 
@@ -703,7 +751,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           this._getLineItems()
         );
       } catch (error) {
-        Logger.log("payment method selected error", error)
+        Logger.log("payment method selected error", error);
       }
     };
 
@@ -711,30 +759,36 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       tokenize({
         type: "applepay",
         token_data: event.payment.token.paymentData,
-      }).then((response) => {
-        if (response && response.token) {
-          const data = {
-            source: {
-              type: "token",
-              token: response.token,
-            },
-            customer: {
-              email: customerEmail ?? email,
-            },
-            "3ds": {
-              enabled: false,
-            },
-            metadata: {
-              udf1: null,
-            },
-          };
-          applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)
+      })
+        .then((response) => {
+          if (response && response.token) {
+            const data = {
+              source: {
+                type: "token",
+                token: response.token,
+              },
+              customer: {
+                email: customerEmail ?? email,
+              },
+              "3ds": {
+                enabled: false,
+              },
+              metadata: {
+                udf1: null,
+              },
+            };
+            applePaySession.completePayment(
+              window.ApplePaySession.STATUS_SUCCESS
+            );
 
-          placeOrder(CHECKOUT_APPLE_PAY, data)
-        }
-      }).catch(err => {
-        applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
-      });
+            placeOrder(CHECKOUT_APPLE_PAY, data);
+          }
+        })
+        .catch((err) => {
+          applePaySession.completePayment(
+            window.ApplePaySession.STATUS_FAILURE
+          );
+        });
     };
 
     applePaySession.oncancel = () =>
@@ -773,45 +827,45 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         discount,
         shipping_fee = 0,
         total_segments: totals = [],
-        items
+        items,
       },
     } = this.props;
     const LineItems = items.map((item) => ({
       label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: item?.full_item_info?.price * item?.qty
-    }))
+      amount: item?.full_item_info?.price * item?.qty,
+    }));
     if (discount) {
       LineItems.push({
         label: __("Discount"),
-        amount: discount
+        amount: discount,
       });
     }
 
     if (shipping_fee) {
       LineItems.push({
         label: __("Shipping Charges"),
-        amount: shipping_fee
+        amount: shipping_fee,
       });
     }
 
-    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
+    const storeCredit = getDiscountFromTotals(totals, "customerbalance");
 
-    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
+    const clubApparel = getDiscountFromTotals(totals, "clubapparel");
 
     if (storeCredit) {
       LineItems.push({
         label: __("Store Credit"),
-        amount: storeCredit
+        amount: storeCredit,
       });
     }
 
     if (clubApparel) {
       LineItems.push({
         label: __("Club Apparel Redemption"),
-        amount: clubApparel
+        amount: clubApparel,
       });
     }
-    return LineItems
+    return LineItems;
   };
 
   /**
@@ -821,15 +875,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    */
   _performValidation = (validationUrl) => {
     this.setState({ isLoading: true });
-    const mutation = CheckoutComQuery.getVerifyCheckoutComApplePayQuery(
-      validationUrl
-    );
+    const mutation =
+      CheckoutComQuery.getVerifyCheckoutComApplePayQuery(validationUrl);
 
     return fetchMutation(mutation).finally(() =>
       this.setState({ isLoading: false })
     );
   };
-
 }
 
 export default connect(

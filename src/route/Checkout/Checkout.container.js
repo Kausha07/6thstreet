@@ -105,6 +105,7 @@ export const mapStateToProps = (state) => ({
   cartId: state.CartReducer.cartId,
   savedCards: state.CreditCardReducer.savedCards,
   newCardVisible: state.CreditCardReducer.newCardVisible,
+  pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {

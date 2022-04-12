@@ -13,7 +13,8 @@ import {
   SET_CUSTOMER_ADDRESS_DATA,
   SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
   SET_ADDRESS_LOADING_STATUS,
-  SET_EDD_RESPONSE
+  SET_EDD_RESPONSE,
+  SET_PDP_EDD_ADDRESS
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -26,7 +27,9 @@ export const initialState = {
   addresses: [],
   isAddressLoading: false,
   defaultShippingAddress: null,
-  EddResponse: null
+  pdpEddAddressSelected: null,
+  EddResponse: null,
+  EddAddress:null
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -37,7 +40,10 @@ export const MyAccountReducer = (state = initialState, action) => {
     addresses,
     isLoading,
     defaultaddress,
-    EddResponse
+    EddResponse,
+    EddAddress,
+    PdpEddAddress,
+    defaultEddResponse
   } = action;
 
   switch (action.type) {
@@ -67,11 +73,18 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         defaultShippingAddress: defaultaddress,
       };
-      case SET_EDD_RESPONSE:
-        return {
-          ...state,
-          EddResponse: EddResponse,
-        };
+    case SET_EDD_RESPONSE:
+      return {
+        ...state,
+        EddResponse: EddResponse,
+        EddAddress:EddAddress
+      };
+    case SET_PDP_EDD_ADDRESS:
+      return {
+        ...state,
+        pdpEddAddressSelected: PdpEddAddress,
+        defaultEddResponse:defaultEddResponse
+      };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
         ...state,

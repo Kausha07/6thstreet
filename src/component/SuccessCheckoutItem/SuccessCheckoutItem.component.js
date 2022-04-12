@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Store } from "../Icons";
 import Price from "Component/Price";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
@@ -229,18 +231,29 @@ export class SuccessCheckoutItem extends PureComponent {
   }
   renderEdd = () => {
     const { EddResponse } = this.props;
-    const {isArabic} = this.state
+    const { isArabic } = this.state;
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-          ActualEddMess = isArabic
-            ? entry.edd_message_ar
-            : entry.edd_message_en;
-          ActualEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+            ActualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            ActualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(2);
+        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEdd = defaultEddDateString;
+      }
     }
 
     if (!ActualEddMess) {

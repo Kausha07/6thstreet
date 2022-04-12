@@ -20,6 +20,8 @@ import Image from "Component/Image";
 import { isArabic } from "Util/App";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import { getCountryFromUrl } from "Util/Url/Url";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -61,11 +63,39 @@ class PDP extends PureComponent {
 
   componentDidMount() {
     const countryCode = getCountryFromUrl();
-    this.setState({
-      countryCode,
-    });
+    const { defaultShippingAddress } = this.props;
+
     MobileAPI.get(`eddservice/cities`).then((response) => {
-      this.setState({ Cityresponse: response.result });
+      if (response.result) {
+        if (defaultShippingAddress) {
+          const { area, city } = defaultShippingAddress;
+          let cityEntry;
+          let areaEntry;
+          Object.values(response.result).filter((entry) => {
+            if (entry.city_name_en === city) {
+              cityEntry = entry.city_id;
+              Object.values(entry.area_list).filter((subEntry) => {
+                if (subEntry.area_name_en === area) {
+                  areaEntry = subEntry.area_id;
+                }
+              });
+            }
+          });
+          this.setState({
+            Cityresponse: response.result,
+            selectedCity: city,
+            selectedCityId: cityEntry,
+            selectedAreaId: areaEntry,
+            selectedArea: area,
+            countryCode: countryCode,
+          });
+        } else {
+          this.setState({
+            Cityresponse: response.result,
+            countryCode: countryCode,
+          });
+        }
+      }
     });
   }
 
@@ -79,21 +109,40 @@ class PDP extends PureComponent {
     ) {
       const { country_code, area, city } = defaultShippingAddress;
       MobileAPI.get(`eddservice/cities`).then((response) => {
-        this.setState({ Cityresponse: response.result }, () => {
-          if (response.result) {
-            let request = {
-              country: country_code,
-              city: city,
-              area: area,
-              courier: null,
-              source: null,
-            };
-            estimateEddResponse(request);
-          }
-        });
+        if (response.result) {
+          let cityEntry;
+          let areaEntry;
+          Object.values(response.result).filter((entry) => {
+            if (entry.city_name_en === city) {
+              cityEntry = entry.city_id;
+              Object.values(entry.area_list).filter((subEntry) => {
+                if (subEntry.area_name_en === area) {
+                  areaEntry = subEntry.area_id;
+                }
+              });
+            }
+          });
+          this.setState(
+            {
+              Cityresponse: response.result,
+              selectedCity: city,
+              selectedCityId: cityEntry,
+              selectedAreaId: areaEntry,
+              selectedArea: area,
+            },
+            () => {
+              let request = {
+                country: country_code,
+                city: city,
+                area: area,
+                courier: null,
+                source: null,
+              };
+              estimateEddResponse(request);
+            }
+          );
+        }
       });
-      //   }
-      // );
     }
   }
 
@@ -339,14 +388,25 @@ class PDP extends PureComponent {
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
-      Object.values(EddResponse).filter((entry) => {
-        if (entry.source === "pdp" && entry.featute_flag_status === 1) {
-          ActualEddMess = isArabic
-            ? entry.edd_message_ar
-            : entry.edd_message_en;
-          ActualEdd = entry.edd_date;
-        }
-      });
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+            ActualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            ActualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(2);
+        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEdd = defaultEddDateString;
+      }
     }
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
@@ -359,7 +419,7 @@ class PDP extends PureComponent {
         {selectedAreaId ? (
           <div
             block="EddWrapper SelectedAreaWrapper"
-            mods={{isArabic}}
+            mods={{ isArabic }}
             onClick={() => this.handleAreaDropDownClick()}
           >
             <Image lazyLoad={false} src={addressBlack} alt="" />
