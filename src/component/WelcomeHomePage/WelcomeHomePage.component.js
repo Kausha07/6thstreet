@@ -20,6 +20,7 @@ import isMobile from "Util/Mobile";
 import close from "../Icons/Close/icon.svg"
 import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import './WelcomeHomePage.style';
+import { updateMeta } from "Store/Meta/Meta.action";
 
 
 
@@ -36,7 +37,8 @@ export const mapDispatchToProps = (dispatch) => ({
     setGender: (value) => dispatch(setGender(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),
+    setMeta: (meta) => dispatch(updateMeta(meta)),
 
 });
 
@@ -45,7 +47,8 @@ export const PREVIOUS_USER = 'PREVIOUS_USER';
 
 class WelcomeHomePage extends PureComponent {
     static propTypes = {
-        location: LocationType.isRequired
+        location: LocationType.isRequired,
+        setMeta: PropTypes.func.isRequired,
     };
 
 
@@ -99,6 +102,8 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
+        const { setMeta } = this.props;
+        setMeta({ title: __("Shop Online @ 6thStreet.com for Men, Women & Kids across GCC") });
         window.pageType = "welcome";
         this.getWelcomeImageUrl();
         this.setSchemaJSON();
