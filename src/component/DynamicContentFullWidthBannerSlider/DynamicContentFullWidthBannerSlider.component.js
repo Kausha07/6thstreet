@@ -71,6 +71,12 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -109,17 +115,12 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-    const getStoreName = this.props.promotion_name
-      ? this.props.promotion_name + "-"
-      : "";
     return (
       <Link
         to={formatCDNLink(link)}
         key={i}
         data-banner-type="fullWidthBanner"
-        data-promotion-name={
-          getStoreName + (item.promotion_name ? item.promotion_name : "")
-        }
+        data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);
