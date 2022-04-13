@@ -1,7 +1,7 @@
 import { MyAccountReturnSuccessItem as SourceComponent } from "Component/MyAccountReturnSuccessItem/MyAccountReturnSuccessItem.component";
 
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
-import {  isArabic } from "Util/App";
+import { isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
@@ -16,40 +16,39 @@ export class MyAccountOrderViewItem extends SourceComponent {
         name,
         color,
         price,
-        size: { value: size = '' } = {},
-        qty
-      } = {}
+        size: { value: size = "" } = {},
+        qty,
+      } = {},
     } = this.props;
 
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
-        <div block="MyAccountOrderViewItem" elem="Name">{name}</div>
+        <div block="MyAccountOrderViewItem" elem="Name">
+          {name}
+        </div>
         <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
           {!!color && (
             <p>
-              {__('Color: ')}
+              {__("Color: ")}
               <span>{color}</span>
             </p>
           )}
           {!!qty && (
             <p>
-              {__('Qty: ')}
+              {__("Qty: ")}
               <span>{+qty}</span>
             </p>
           )}
           {!!size && (
             <p>
-              {__('Size: ')}
+              {__("Size: ")}
               <span>{size}</span>
             </p>
           )}
         </div>
         <p block="MyAccountReturnSuccessItem" elem="Price">
-          <span
-            block="MyAccountReturnSuccessItem"
-            elem="PriceRegular"
-          >
+          <span block="MyAccountReturnSuccessItem" elem="PriceRegular">
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
@@ -58,29 +57,34 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse } = this.props;
+    const { EddResponse, compRef, myOrderEdd } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
-          if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-            ActualEddMess = isArabic()
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
-          }
-        });
-      } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        ActualEdd = defaultEddDateString;
+    if (compRef === "checkout") {
+      if (EddResponse) {
+        if (isObject(EddResponse)) {
+          Object.values(EddResponse).filter((entry) => {
+            if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+              ActualEddMess = isArabic()
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              ActualEdd = entry.edd_date;
+            }
+          });
+        } else {
+          const {
+            defaultEddDateString,
+            defaultEddDay,
+            defaultEddMonth,
+            defaultEddDat,
+          } = getDefaultEddDate(2);
+          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEdd = defaultEddDateString;
+        }
       }
+    } else {
+      ActualEddMess = myOrderEdd;
+      ActualEdd = myOrderEdd;
     }
 
     if (!ActualEddMess) {
@@ -95,7 +99,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
   };
   render() {
     return (
-      <div block="MyAccountOrderViewItem" mix={{ block: 'MyAccountReturnSuccessItem' }}>
+      <div
+        block="MyAccountOrderViewItem"
+        mix={{ block: "MyAccountReturnSuccessItem" }}
+      >
         <div block="MyAccountReturnSuccessItem" elem="Content">
           {this.renderImage()}
           {this.renderDetails()}

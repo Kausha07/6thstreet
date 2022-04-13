@@ -289,6 +289,7 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <MyAccountOrderViewItem
         item={item}
+        compRef={'checkout'}
         EddResponse={EddResponse}
         currency={currency}
         displayDiscountPercentage={true}

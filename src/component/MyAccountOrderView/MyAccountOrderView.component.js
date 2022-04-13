@@ -52,6 +52,7 @@ import {
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
+import { isObject } from "Util/API/helper/Object";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -96,15 +97,22 @@ class MyAccountOrderView extends PureComponent {
     );
   };
 
-  renderItem = (item) => {
+  renderItem = (item, eddItem) => {
     const {
       order: { order_currency_code: currency },
       displayDiscountPercentage,
-      EddResponse
+      EddResponse,
     } = this.props;
+    let finalEdd =
+      item.status === "Processing" || item.status === "processing"
+        ? eddItem.edd
+        : item.edd;
+    console.log("muskan edd", finalEdd);
     return (
       <MyAccountOrderViewItem
         item={item}
+        myOrderEdd={finalEdd}
+        compRef={"myOrder"}
         EddResponse={EddResponse}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
@@ -175,64 +183,28 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
-            is_returnable && is_cancelable ? (
-              <div block="MyAccountOrderView" elem="HeadingButtons">
-                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                  {RETURN_ITEM_LABEL}
-                </button>
-                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                  {CANCEL_ITEM_LABEL}
-                </button>
-              </div>
-            ) : (
-                <div block="MyAccountOrderView" elem="HeadingButton">
-                  <button onClick={() => openOrderCancelation(buttonText)}>
-                    {buttonText}
-                  </button>
-                </div>
-              )
-          ) : null}
+        (status === STATUS_COMPLETE && is_returnable) ? (
+          is_returnable && is_cancelable ? (
+            <div block="MyAccountOrderView" elem="HeadingButtons">
+              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                {RETURN_ITEM_LABEL}
+              </button>
+              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                {CANCEL_ITEM_LABEL}
+              </button>
+            </div>
+          ) : (
+            <div block="MyAccountOrderView" elem="HeadingButton">
+              <button onClick={() => openOrderCancelation(buttonText)}>
+                {buttonText}
+              </button>
+            </div>
+          )
+        ) : null}
       </div>
     );
   }
-  // renderEdd = () => {
-  //   const { EddResponse } = this.props;
-  //   const {isArabic} = this.state
-  //   let ActualEddMess = "";
-  //   let ActualEdd = "";
-  //   if (EddResponse) {
-  //     if (isObject(EddResponse)) {
-  //       Object.values(EddResponse).filter((entry) => {
-  //         if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-  //           ActualEddMess = isArabic
-  //             ? entry.edd_message_ar
-  //             : entry.edd_message_en;
-  //           ActualEdd = entry.edd_date;
-  //         }
-  //       });
-  //     } else {
-  //       const {
-  //         defaultEddDateString,
-  //         defaultEddDay,
-  //         defaultEddMonth,
-  //         defaultEddDat,
-  //       } = getDefaultEddDate(2);
-  //       ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-  //       ActualEdd = defaultEddDateString;
-  //     }
-  //   }
 
-  //   if (!ActualEddMess) {
-  //     return null;
-  //   }
-  //   return (
-  //     <div block="AreaText">
-  //       <span>{ActualEddMess.split("by")[0]} by</span>
-  //       <span>{ActualEddMess.split("by")[1]}</span>
-  //     </div>
-  //   );
-  // };
   renderPackagesMessage() {
     const {
       order: { groups: shipped = [] },
@@ -265,11 +237,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -327,7 +299,6 @@ class MyAccountOrderView extends PureComponent {
             "DD MMMM YYYY",
             new Date(deliveryDate.replace(/-/g, "/"))
           )}</span>: null } */}
-
         </h3>
       </div>
     );
@@ -348,11 +319,15 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderAccordionProgress(status, item) {
-    const displayStatusBar = this.shouldDisplayBar(status)
+    const displayStatusBar = this.shouldDisplayBar(status);
     if (!displayStatusBar) {
       return null;
     }
-
+    let finalEdd =
+      item.status !== "Cancelled" ||
+      (item.status !== "cancelled" && item.status !== "Processing") ||
+      (item.status !== "processing" && item.edd);
+    console.log("muskan edd2", finalEdd);
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -381,11 +356,12 @@ class MyAccountOrderView extends PureComponent {
           />
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
-          {Object.values(STATUS_LABELS).map((label) => (
+          {Object.values(STATUS_LABELS).map((label, index) => (
             <div>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
+              {index === 2 && this.renderEdd()}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
@@ -405,12 +381,46 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
+  renderEdd = () => {
+    const { EddResponse } = this.props;
+    let ActualEddMess = "";
+    let ActualEdd = "";
+    if (EddResponse) {
+      if (isObject(EddResponse)) {
+        Object.values(EddResponse).filter((entry) => {
+          if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+            ActualEddMess = isArabic()
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            ActualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(2);
+        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEdd = defaultEddDateString;
+      }
+    }
 
+    if (!ActualEddMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{ActualEddMess.split("by")[0]} by</span>
+        <span>{ActualEddMess.split("by")[1]}</span>
+      </div>
+    );
+  };
   renderProcessingItems() {
     const {
       order: { status, groups: unship = [] },
     } = this.props;
-
     if (STATUS_FAILED.includes(status) || !unship.length) {
       return null;
     }
@@ -429,7 +439,7 @@ class MyAccountOrderView extends PureComponent {
             is_expanded
             MyAccountSection={true}
           >
-            {processingItems.map(this.renderItem)}
+            {processingItems.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
@@ -454,7 +464,7 @@ class MyAccountOrderView extends PureComponent {
             )}
             MyAccountSection={true}
           >
-            {allItems.map(this.renderItem)}
+            {allItems.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
@@ -478,13 +488,14 @@ class MyAccountOrderView extends PureComponent {
           )}
           MyAccountSection={true}
         >
-          {canceledItems.map(this.renderItem)}
+          {canceledItems.map((item) => this.renderItem(item, ""))}
         </Accordion>
       </div>
     );
   }
 
   renderAccordion(item, index) {
+    console.log("muskan ro", item);
     const {
       order: { groups: shipped = [] },
     } = this.props;
@@ -495,8 +506,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-          ? TimerImage
-          : PackageImage;
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -508,7 +519,12 @@ class MyAccountOrderView extends PureComponent {
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(item.status, item)}
-          title={this.renderAccordionTitle(item.label, getIcon, item.status, item.courier_deliver_date)}
+          title={this.renderAccordionTitle(
+            item.label,
+            getIcon,
+            item.status,
+            item.courier_deliver_date
+          )}
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
@@ -525,17 +541,195 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
-          {item.items.map(this.renderItem)}
+          {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
     );
   }
 
   renderAccordions() {
-    const {
-      order: { status, groups: shipped = [] },
-    } = this.props;
+    const order = {
+      order_id: "1",
+      increment_id: "500216651",
+      status: "complete",
+      subtotal: "100.0000",
+      store_credit_amount: null,
+      club_apparel_amount: "0.0000",
+      discount_amount: "0.0000",
+      msp_cod_amount: "20.0000",
+      shipping_amount: "0.0000",
+      tax_amount: "0.0000",
+      grand_total: "120.0000",
+      order_currency_code: "AED",
+      created_at: "2022-03-10 10:42:04",
+      hide_delivery_address: false,
+      is_cancelable: false,
+      is_returnable: false,
+      shipping_address: {
+        firstname: "Test",
+        middlename: null,
+        lastname: "Test",
+        street: "Test",
+        postcode: "Dubai",
+        city: "Test",
+        country_id: "AE",
+        telephone: "1234567890",
+      },
+      payment: {
+        cc_type: null,
+        method: "msp_cashondelivery",
+        cc_last_4: null,
+        additional_information: {
+          method_title: "Cash on delivery",
+        },
+      },
+      multiple_shipment_message:
+        "Your order has been shipped in multiple packages, please find the package details below.",
+      groups: [
+        {
+          status: "delivery_successful",
+          label: "3rd Package",
+          package_number: 3,
+          shipment_number: "500172600",
+          courier_logo:
+            "http://local.en-ae.6thstreet.com/static/courier_partners/6thstreet.png",
+          courier_name: "6THSTREET.COM",
+          courier_number: "SAP032227249",
+          courier_tracking_link:
+            "https://6thstreet.clickpost.in/?waybill=SAP032227249",
+          courier_shipped_date: "2022-03-11",
+          courier_in_transit_date: "",
+          courier_deliver_date: "2022-04-08",
+          edd: null,
+          items: [
+            {
+              qty_canceled: null,
+              qty_ordered: null,
+              name: "Test",
+              price: "100.0000",
+              color: "",
+              size: [],
+              thumbnail:
+                "http://local.en-ae.6thstreet.com/static/catalog/product",
+              brand_name: "Aeris Comfortn",
+              return_date: "",
+            },
+          ],
+          amount_to_be_collected: 0,
+        },
+        {
+          status: "courier_dispatched",
+          label: "2nd Package",
+          package_number: 2,
+          shipment_number: "500172603",
+          courier_logo:
+            "http://local.en-ae.6thstreet.com/static/courier_partners/6thstreet.png",
+          courier_name: "6THSTREET.COM",
+          courier_number: "AEC022200094",
+          courier_tracking_link:
+            "https://6thstreet.clickpost.in/?waybill=AEC022200094",
+          courier_shipped_date: "2022-03-11",
+          courier_in_transit_date: "",
+          courier_deliver_date: "",
+          edd: "Unexpected Delay",
+          items: [
+            {
+              qty_canceled: null,
+              qty_ordered: null,
+              name: "Test",
+              price: "100.0000",
+              color: "",
+              size: [],
+              thumbnail:
+                "http://local.en-ae.6thstreet.com/static/catalog/product",
+              brand_name: "Aeris Comfortn",
+              return_date: "",
+            },
+          ],
+          amount_to_be_collected: 0,
+        },
+        {
+          status: "courier_dispatched",
+          label: "1st Package",
+          package_number: 1,
+          shipment_number: "500172606",
+          courier_logo:
+            "http://local.en-ae.6thstreet.com/static/courier_partners/fareye.png",
+          courier_name: "FAREYE",
+          courier_number: "AEC022200088",
+          courier_tracking_link:
+            "https://6thstreet.clickpost.in/?waybill=AEC022200088",
+          courier_shipped_date: "2022-04-07",
+          courier_in_transit_date: "",
+          courier_deliver_date: "",
+          edd: "Arriving Today",
+          items: [
+            {
+              qty_canceled: null,
+              qty_ordered: null,
+              name: "Test",
+              price: "100.0000",
+              color: "",
+              size: [],
+              thumbnail:
+                "http://local.en-ae.6thstreet.com/static/catalog/product",
+              brand_name: "Aeris Comfortn",
+              return_date: "",
+            },
+          ],
+          amount_to_be_collected: 0,
+        },
+        {
+          status: "Processing",
+          label: "Items under processing",
+          items: [
+            {
+              original_price: 100,
+              qty_canceled: "1.0000",
+              qty_ordered: "3.0000",
+              name: "Test",
+              price: "100.0000",
+              qty: 0,
+              color: "",
+              size: [],
+              is_returnable: false,
+              return_date: "",
+              edd: "Arriving by 2nd May, Monday",
+              thumbnail:
+                "http://local.en-ae.6thstreet.com/static/catalog/product",
+              brand_name: "Aeris Comfortn",
+            },
+          ],
+        },
+        {
+          status: "Cancelled",
+          label: "Cancelled Item",
+          items: [
+            {
+              original_price: 100,
+              qty_canceled: "1.0000",
+              qty_ordered: "3.0000",
+              name: "Test",
+              price: "100.0000",
+              qty: "1.0000",
+              color: "",
+              size: [],
+              is_returnable: false,
+              return_date: "",
+              thumbnail:
+                "http://local.en-ae.6thstreet.com/static/catalog/product",
+              brand_name: "Aeris Comfortn",
+            },
+          ],
+        },
+      ],
+    };
 
+    const { status, groups: shipped = [] } = order;
+    // const {
+    //   order: { status, groups: shipped = [] },
+    // } = this.props;
+    console.log("muskan order", shipped, status, order);
     if (STATUS_FAILED.includes(status)) {
       return null;
     }
@@ -569,7 +763,7 @@ class MyAccountOrderView extends PureComponent {
         mods={{ failed: true }}
       >
         <h3>{__("Order detail")}</h3>
-        {itemsArray.map(this.renderItem)}
+        {itemsArray.map((item) => this.renderItem(item, ""))}
       </div>
     );
   }
@@ -597,7 +791,11 @@ class MyAccountOrderView extends PureComponent {
         </p>
         {!!msp_cod_amount && (
           <p block="MyAccountOrderView" elem="SummaryItem">
-            <span>{getCountryFromUrl() === 'QA' ? __("Cash on Receiving Fee") : __("Cash on Delivery Fee")}</span>
+            <span>
+              {getCountryFromUrl() === "QA"
+                ? __("Cash on Receiving Fee")
+                : __("Cash on Delivery Fee")}
+            </span>
             <span>{formatPrice(+msp_cod_amount, order_currency_code)}</span>
           </p>
         )}
@@ -645,8 +843,8 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-                this.renderMiniCard(scheme?.toLowerCase())
-              )}
+            this.renderMiniCard(scheme?.toLowerCase())
+          )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
           <div block="MyAccountOrderView" elem="Number-Dots">
@@ -697,7 +895,11 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
       case CHECK_MONEY:
       case CASH_ON_DELIVERY:
-        return this.renderPaymentTypeText(getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery"));
+        return this.renderPaymentTypeText(
+          getCountryFromUrl() === "QA"
+            ? __("Cash on Receiving")
+            : __("Cash on Delivery")
+        );
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
         if (!this.props?.additional_information?.source?.last4) {
@@ -769,8 +971,8 @@ class MyAccountOrderView extends PureComponent {
             Questions about this order?
           </h3>
         ) : (
-            ""
-          )}
+          ""
+        )}
         <ContactHelpContainer accountPage={true} />
       </>
     );
@@ -803,15 +1005,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -820,7 +1022,12 @@ class MyAccountOrderView extends PureComponent {
               ? this.renderPriceLine(tax_amount, __("Tax"))
               : null}
             {parseFloat(msp_cod_amount) !== 0
-              ? this.renderPriceLine(msp_cod_amount, getCountryFromUrl() === 'QA' ? __("Cash on Receiving Fee") : __("Cash on Delivery Fee"))
+              ? this.renderPriceLine(
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving Fee")
+                    : __("Cash on Delivery Fee")
+                )
               : null}
             {this.renderPriceLine(
               grandTotal,

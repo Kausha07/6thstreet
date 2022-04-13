@@ -14,8 +14,6 @@ import {
   STATUS_SUCCESS,
   translateArabicStatus,
 } from "./MyAccountOrderListItem.config";
-import { isObject } from "Util/API/helper/Object";
-import { getDefaultEddDate } from "Util/Date/index";
 
 import "./MyAccountOrderListItem.style";
 
@@ -185,48 +183,12 @@ class MyAccountOrderListItem extends SourceComponent {
           </p>
           <p block="MyAccountOrderListItem" elem="StatusTitle">
             {__("Completed")}
-            {this.renderEdd()}
           </p>
         </div>
       </div>
     );
   }
-  renderEdd = () => {
-    const { EddResponse } = this.props;
-    let ActualEddMess = "";
-    let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
-          if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-            ActualEddMess = isArabic()
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
-          }
-        });
-      } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        ActualEdd = defaultEddDateString;
-      }
-    }
 
-    if (!ActualEddMess) {
-      return null;
-    }
-    return (
-      <div block="AreaText">
-        <span>{ActualEddMess.split("by")[0]} by</span>
-        <span>{ActualEddMess.split("by")[1]}</span>
-      </div>
-    );
-  };
   render() {
     const { order } = this.props;
 
