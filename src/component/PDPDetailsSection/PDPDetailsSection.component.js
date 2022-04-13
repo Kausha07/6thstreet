@@ -17,6 +17,7 @@ import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -854,9 +855,36 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShipping(){
+
+    // let country = getCountryFromUrl()
+    // let txt = {
+    //   AE: __("Orders of less than AED 100 will be charged AED 10 shipping fee(non-refundable). Orders of AED 100 or more will be delivered free."),
+    //   SA: __("Orders of less than SAR 200 will be charged SAR 20 shipping fee(non-refundable). Orders of SAR 200 or more will be delivered free."),
+    //   KW: __("Orders of less than KWD 20 will be charged KWD 2.75 shipping fee(non-refundable). Orders of KWD 20 or more will be delivered free."),
+    //   QA: __("Orders of less than QAR 200 will be charged QAR 20 shipping fee(non-refundable). Orders of QAR 200 or more will be delivered free."),
+    //   OM: __("Orders of less than OMR 20 will be charged OMR 3.5 shipping fee(non-refundable). Orders of OMR 20 or more will be delivered free."),
+    //   BH: __("Orders of less than BHD 20 will be charged BHD 3 shipping fee(non-refundable). Orders of BHD 20 or more will be delivered free.")
+    // }
+
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
+      SA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above SAR 200."),
+      KW: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above KWD 20."),
+      QA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above QAR 200."),
+      OM: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above OMR 20."),
+      BH: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above BHD 20.")
+    }
+
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
+
     return(
       <div>
-        <p>{__("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100.")}
+        <p>{txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
           {" "} { __("More info") }
           </Link>
