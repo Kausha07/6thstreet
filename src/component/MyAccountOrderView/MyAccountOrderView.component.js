@@ -107,7 +107,6 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Processing" || item.status === "processing"
         ? eddItem.edd
         : item.edd;
-    console.log("muskan edd", finalEdd);
     return (
       <MyAccountOrderViewItem
         item={item}
@@ -324,10 +323,9 @@ class MyAccountOrderView extends PureComponent {
       return null;
     }
     let finalEdd =
-      item.status !== "Cancelled" ||
-      (item.status !== "cancelled" && item.status !== "Processing") ||
-      (item.status !== "processing" && item.edd);
-    console.log("muskan edd2", finalEdd);
+      item.status === "Processing" || item.status === "processing"
+        ? item.items[0].edd
+        : item.edd;
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -357,11 +355,11 @@ class MyAccountOrderView extends PureComponent {
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
           {Object.values(STATUS_LABELS).map((label, index) => (
-            <div>
+            <div block={index === 2 ? "EddDiv" : ""}>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
-              {index === 2 && this.renderEdd()}
+              {index === 2 && this.renderEdd(finalEdd)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
@@ -381,39 +379,25 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
-  renderEdd = () => {
-    const { EddResponse } = this.props;
-    let ActualEddMess = "";
-    let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
-          if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-            ActualEddMess = isArabic()
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
-          }
-        });
-      } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        ActualEdd = defaultEddDateString;
-      }
-    }
+  renderEdd = (finalEdd) => {
+    let ActualEddMess = finalEdd;
 
     if (!ActualEddMess) {
       return null;
     }
+    const idealFormat = ActualEddMess.includes("by") ? true : false;
     return (
       <div block="AreaText">
-        <span>{ActualEddMess.split("by")[0]} by</span>
-        <span>{ActualEddMess.split("by")[1]}</span>
+        <span>
+          {idealFormat
+            ? `${ActualEddMess.split("by")[0]} by`
+            : ActualEddMess.split(" ")[0]}{" "}
+        </span>
+        <span>
+          {idealFormat
+            ? `${ActualEddMess.split("by")[1]}`
+            : ActualEddMess.split(" ")[1]}
+        </span>
       </div>
     );
   };
@@ -495,7 +479,6 @@ class MyAccountOrderView extends PureComponent {
   }
 
   renderAccordion(item, index) {
-    console.log("muskan ro", item);
     const {
       order: { groups: shipped = [] },
     } = this.props;
@@ -548,188 +531,9 @@ class MyAccountOrderView extends PureComponent {
   }
 
   renderAccordions() {
-    const order = {
-      order_id: "1",
-      increment_id: "500216651",
-      status: "complete",
-      subtotal: "100.0000",
-      store_credit_amount: null,
-      club_apparel_amount: "0.0000",
-      discount_amount: "0.0000",
-      msp_cod_amount: "20.0000",
-      shipping_amount: "0.0000",
-      tax_amount: "0.0000",
-      grand_total: "120.0000",
-      order_currency_code: "AED",
-      created_at: "2022-03-10 10:42:04",
-      hide_delivery_address: false,
-      is_cancelable: false,
-      is_returnable: false,
-      shipping_address: {
-        firstname: "Test",
-        middlename: null,
-        lastname: "Test",
-        street: "Test",
-        postcode: "Dubai",
-        city: "Test",
-        country_id: "AE",
-        telephone: "1234567890",
-      },
-      payment: {
-        cc_type: null,
-        method: "msp_cashondelivery",
-        cc_last_4: null,
-        additional_information: {
-          method_title: "Cash on delivery",
-        },
-      },
-      multiple_shipment_message:
-        "Your order has been shipped in multiple packages, please find the package details below.",
-      groups: [
-        {
-          status: "delivery_successful",
-          label: "3rd Package",
-          package_number: 3,
-          shipment_number: "500172600",
-          courier_logo:
-            "http://local.en-ae.6thstreet.com/static/courier_partners/6thstreet.png",
-          courier_name: "6THSTREET.COM",
-          courier_number: "SAP032227249",
-          courier_tracking_link:
-            "https://6thstreet.clickpost.in/?waybill=SAP032227249",
-          courier_shipped_date: "2022-03-11",
-          courier_in_transit_date: "",
-          courier_deliver_date: "2022-04-08",
-          edd: null,
-          items: [
-            {
-              qty_canceled: null,
-              qty_ordered: null,
-              name: "Test",
-              price: "100.0000",
-              color: "",
-              size: [],
-              thumbnail:
-                "http://local.en-ae.6thstreet.com/static/catalog/product",
-              brand_name: "Aeris Comfortn",
-              return_date: "",
-            },
-          ],
-          amount_to_be_collected: 0,
-        },
-        {
-          status: "courier_dispatched",
-          label: "2nd Package",
-          package_number: 2,
-          shipment_number: "500172603",
-          courier_logo:
-            "http://local.en-ae.6thstreet.com/static/courier_partners/6thstreet.png",
-          courier_name: "6THSTREET.COM",
-          courier_number: "AEC022200094",
-          courier_tracking_link:
-            "https://6thstreet.clickpost.in/?waybill=AEC022200094",
-          courier_shipped_date: "2022-03-11",
-          courier_in_transit_date: "",
-          courier_deliver_date: "",
-          edd: "Unexpected Delay",
-          items: [
-            {
-              qty_canceled: null,
-              qty_ordered: null,
-              name: "Test",
-              price: "100.0000",
-              color: "",
-              size: [],
-              thumbnail:
-                "http://local.en-ae.6thstreet.com/static/catalog/product",
-              brand_name: "Aeris Comfortn",
-              return_date: "",
-            },
-          ],
-          amount_to_be_collected: 0,
-        },
-        {
-          status: "courier_dispatched",
-          label: "1st Package",
-          package_number: 1,
-          shipment_number: "500172606",
-          courier_logo:
-            "http://local.en-ae.6thstreet.com/static/courier_partners/fareye.png",
-          courier_name: "FAREYE",
-          courier_number: "AEC022200088",
-          courier_tracking_link:
-            "https://6thstreet.clickpost.in/?waybill=AEC022200088",
-          courier_shipped_date: "2022-04-07",
-          courier_in_transit_date: "",
-          courier_deliver_date: "",
-          edd: "Arriving Today",
-          items: [
-            {
-              qty_canceled: null,
-              qty_ordered: null,
-              name: "Test",
-              price: "100.0000",
-              color: "",
-              size: [],
-              thumbnail:
-                "http://local.en-ae.6thstreet.com/static/catalog/product",
-              brand_name: "Aeris Comfortn",
-              return_date: "",
-            },
-          ],
-          amount_to_be_collected: 0,
-        },
-        {
-          status: "Processing",
-          label: "Items under processing",
-          items: [
-            {
-              original_price: 100,
-              qty_canceled: "1.0000",
-              qty_ordered: "3.0000",
-              name: "Test",
-              price: "100.0000",
-              qty: 0,
-              color: "",
-              size: [],
-              is_returnable: false,
-              return_date: "",
-              edd: "Arriving by 2nd May, Monday",
-              thumbnail:
-                "http://local.en-ae.6thstreet.com/static/catalog/product",
-              brand_name: "Aeris Comfortn",
-            },
-          ],
-        },
-        {
-          status: "Cancelled",
-          label: "Cancelled Item",
-          items: [
-            {
-              original_price: 100,
-              qty_canceled: "1.0000",
-              qty_ordered: "3.0000",
-              name: "Test",
-              price: "100.0000",
-              qty: "1.0000",
-              color: "",
-              size: [],
-              is_returnable: false,
-              return_date: "",
-              thumbnail:
-                "http://local.en-ae.6thstreet.com/static/catalog/product",
-              brand_name: "Aeris Comfortn",
-            },
-          ],
-        },
-      ],
-    };
-
-    const { status, groups: shipped = [] } = order;
-    // const {
-    //   order: { status, groups: shipped = [] },
-    // } = this.props;
-    console.log("muskan order", shipped, status, order);
+    const {
+      order: { status, groups: shipped = [] },
+    } = this.props;
     if (STATUS_FAILED.includes(status)) {
       return null;
     }

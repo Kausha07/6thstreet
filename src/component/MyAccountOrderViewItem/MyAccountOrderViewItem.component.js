@@ -90,10 +90,19 @@ export class MyAccountOrderViewItem extends SourceComponent {
     if (!ActualEddMess) {
       return null;
     }
+    const idealFormat = ActualEddMess.includes("by") ? true : false;
     return (
       <div block="AreaText">
-        <span>{ActualEddMess.split("by")[0]} by</span>
-        <span>{ActualEddMess.split("by")[1]}</span>
+        <span>
+          {idealFormat
+            ? `${ActualEddMess.split("by")[0]} by`
+            : ActualEddMess.split(" ")[0]}{" "}
+        </span>
+        <span>
+          {idealFormat
+            ? `${ActualEddMess.split("by")[1]}`
+            : ActualEddMess.split(" ")[1]}
+        </span>
       </div>
     );
   };
