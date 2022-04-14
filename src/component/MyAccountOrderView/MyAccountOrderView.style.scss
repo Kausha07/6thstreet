@@ -4,8 +4,8 @@
   .MyAccountOrderListItem {
     &-Status {
       &List {
-        color: red;
         .EddDiv {
+          text-align: right;
           .AreaText {
             color: #9b9b9b;
             font-family: "Avenir Next";
