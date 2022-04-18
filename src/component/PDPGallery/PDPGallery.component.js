@@ -202,6 +202,7 @@ class PDPGallery extends PureComponent {
 
   showGalleryOverlay = () => {
     const { location } = browserHistory;
+    document.body.style.position="fixed";
     this.setState({openGalleryOverlay: true}, () => {
       browserHistory.push(`${location.pathname}`);
     });
@@ -223,6 +224,7 @@ class PDPGallery extends PureComponent {
   };
 
   closeGalleryOverlay = () => {
+    document.body.style.position="static";
     this.setState({ openGalleryOverlay: false }, () => {
       document.body.style.overflow = "visible";
       this.props.setImageIndex(this.props.currentIndex);

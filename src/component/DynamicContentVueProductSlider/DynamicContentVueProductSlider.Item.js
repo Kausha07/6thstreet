@@ -15,12 +15,16 @@ import Event, {
   EVENT_GTM_VUE_PRODUCT_CLICK,
   VUE_CAROUSEL_CLICK,
 } from "Util/Event";
+import {setPrevPath} from "Store/PLP/PLP.action";
 import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
 });
 
+export const mapDispatchToProps = (dispatch, state) => ({
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+});
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     country: PropTypes.string.isRequired,
@@ -72,6 +76,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           posofreco: posofreco,
         },
       });
+      this.props.setPrevPath(window.location.href);
       Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
       this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
 
@@ -112,6 +117,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     }
     return null;
   }
+  renderProductTag(productTag) {
+    return (
+      <div block="VueProductSlider" elem="VueProductTag">
+        <span>{__(productTag)}</span>
+      </div>
+    );
+  }
 
   render() {
     const {
@@ -135,6 +147,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (data?.url) {
       newLink = data.url;
     }
+    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
 
     return (
       <div
@@ -164,7 +177,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           <h6 id="brandName">{brand_name}</h6>
           <span id="productName">{name}</span>
           {this.renderPrice(price)}
-          {this.renderIsNew(is_new_in)}
+          {
+            productTag ?
+              this.renderProductTag(productTag)
+              :
+              this.renderIsNew(is_new_in)
+          }
+          { }
         </Link>
         <WishlistIcon
           renderMySignInPopup={renderMySignInPopup}
@@ -179,5 +198,5 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(DynamicContentVueProductSliderItem);

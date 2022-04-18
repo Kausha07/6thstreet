@@ -652,6 +652,8 @@ class PDPDetailsSection extends PureComponent {
     const { innerWidth: width } = window;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
+        <>
+        <div block="Seperator2" />
         <React.Fragment>
           {pdpWidgetsAPIData.map((item, index) => {
             if (typeof item === "object" && Object.keys(item).length > 0) {
@@ -688,6 +690,7 @@ class PDPDetailsSection extends PureComponent {
             return null;
           })}
         </React.Fragment>
+        </>
       );
     }
     return null;
@@ -852,12 +855,9 @@ class PDPDetailsSection extends PureComponent {
   renderShipping() {
     return (
       <div>
-        <p>
-          Shipments will be delivered within 3-5 days for most of the areas.
-          Free delivery for orders above AED 100.
+        <p>{__("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100.")}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-            {" "}
-            More info
+          {" "} { __("More info") }
           </Link>
         </p>
       </div>
@@ -868,7 +868,11 @@ class PDPDetailsSection extends PureComponent {
     if (this.props.product.is_returnable === 1) {
       return (
         <div>
-          <p>100 days free return available. Shop freely.</p>
+          <p>{ __("100 days free return available. Shop freely.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+          </p>
         </div>
       );
     }
@@ -876,12 +880,10 @@ class PDPDetailsSection extends PureComponent {
     if (this.props.product.is_returnable === 0) {
       return (
         <div>
-          <p>
-            Not eligible for return.
-            <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-              {" "}
-              More info
-            </Link>
+          <p>{ __("Not eligible for return.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
           </p>
         </div>
       );
@@ -896,12 +898,9 @@ class PDPDetailsSection extends PureComponent {
     return (
       <div>
         <p>
-          Returns available through customer care for unused product only if the
-          product is defective, damaged or wrong item is delivered within 15
-          days of delivery.
-          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-            {" "}
-            More info
+          { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
           </Link>
         </p>
       </div>
@@ -934,21 +933,18 @@ class PDPDetailsSection extends PureComponent {
           {this.renderAccordionSeperator()}
           {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
-        </div>
-
+        </div >
+        {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={
-              isMobile
-                ? __("Shipping and Free Returns")
-                : __("SHIPPING AND FREE RETURNS")
-            }
+            title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
           >
             {this.renderShipping()}
             <br />
             {this.renderShippingAndFreeReturns()}
+            {isMobile ? <br /> : null}
           </Accordion>
           {this.renderAccordionSeperator()}
         </div>

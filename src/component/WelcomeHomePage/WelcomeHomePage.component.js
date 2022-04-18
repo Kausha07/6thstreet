@@ -20,6 +20,7 @@ import isMobile from "Util/Mobile";
 import close from "../Icons/Close/icon.svg"
 import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import './WelcomeHomePage.style';
+import { updateMeta } from "Store/Meta/Meta.action";
 
 
 
@@ -36,7 +37,8 @@ export const mapDispatchToProps = (dispatch) => ({
     setGender: (value) => dispatch(setGender(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),
+    setMeta: (meta) => dispatch(updateMeta(meta)),
 
 });
 
@@ -45,7 +47,8 @@ export const PREVIOUS_USER = 'PREVIOUS_USER';
 
 class WelcomeHomePage extends PureComponent {
     static propTypes = {
-        location: LocationType.isRequired
+        location: LocationType.isRequired,
+        setMeta: PropTypes.func.isRequired,
     };
 
 
@@ -99,6 +102,8 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
+        const { setMeta } = this.props;
+        setMeta({ title: __("Shop Online @ 6thStreet.com for Men, Women & Kids across GCC") });
         window.pageType = "welcome";
         this.getWelcomeImageUrl();
         this.setSchemaJSON();
@@ -133,19 +138,19 @@ class WelcomeHomePage extends PureComponent {
     async setSchemaJSON() {
         const { locale = "" } = this.props;
         try {
-          const response = await getSchema(locale);
-          if(!!!response?.error) {
-            const tag = document.createElement('script');
-            if(tag) {
-              tag.type = 'application/ld+json';
-              tag.innerHTML = JSON.stringify(response);
-              document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
-              document.head.appendChild(tag);
+            const response = await getSchema(locale);
+            if (!!!response?.error) {
+                const tag = document.createElement('script');
+                if (tag) {
+                    tag.type = 'application/ld+json';
+                    tag.innerHTML = JSON.stringify(response);
+                    document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+                    document.head.appendChild(tag);
+                }
             }
-          }
         }
-        catch(err){
-          console.error(err);
+        catch (err) {
+            console.error(err);
         }
     }
 
@@ -159,8 +164,8 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
-    setLocalAndGenderCookies(locale, gender){
-        if(locale && gender){
+    setLocalAndGenderCookies(locale, gender) {
+        if (locale && gender) {
             const maxAge = 86400 * 90; // 1 Day * 90
             document.cookie = `locale=${locale}; max-age=${maxAge}; path=/`;
             document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
@@ -250,8 +255,18 @@ class WelcomeHomePage extends PureComponent {
                             {isMobile.any() &&
                                 <div block="WelcomeHomePage" elem="StoreSwitcher" mods={{ isArabic: language === "ar" }}>
                                     <div block="Text" mods={{ isArabic: language === "ar" }}>
-                                        <div block="Text-welcome">{__("Welcome, ")}</div>
-                                        <div block="Text-shop">{__("you are shopping in")}</div>
+                                        {
+                                            language === "en" ?
+                                                <div>
+                                                    <div block="Text-welcome">Welcome, </div>
+                                                    <       div block="Text-shop">you are shopping in</div>
+                                                </div>
+                                                :
+                                                <div>
+                                                    <div block="Text-welcome">اهلاً ,</div>
+                                                    <div block="Text-shop">كنت تسوق في</div>
+                                                </div>
+                                        }
                                     </div>
                                     <div block="WelcomeHomePage" elem="LanguageSwitcher" mods={{ isArabic: language === "ar" }}>
                                         <LanguageSwitcher isWelcomeMobileView={true} />
@@ -268,10 +283,18 @@ class WelcomeHomePage extends PureComponent {
                                         <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
-                                        <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                            <span>{__("Welcome, ")}</span>
-                                            <span>{__("you are shopping in")}</span>
-                                        </div>
+                                        {
+                                            language === "en" ?
+                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                    <span>Welcome,</span>
+                                                    <span>you are shopping in</span>
+                                                </div>
+                                                :
+                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                    <span>اهلاً,</span>
+                                                    <span>كنت تسوق في</span>
+                                                </div>
+                                        }
                                         <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
                                             <LanguageSwitcher welcomePagePopup={true} />
                                             <CountrySwitcher />
