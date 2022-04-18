@@ -164,14 +164,14 @@ class ProductItem extends PureComponent {
       dimension10: basePrice,
       dimension11: itemPrice,
     });
-    if (queryID) {
-      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-        objectIDs: [product.objectID],
-        queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        position: [position],
-      });
-    }
+    // if (queryID) {
+    //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+    //     objectIDs: [product.objectID],
+    //     queryID,
+    //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+    //     position: [position],
+    //   });
+    // }
     // this.sendBannerClickImpression(product);
   }
 

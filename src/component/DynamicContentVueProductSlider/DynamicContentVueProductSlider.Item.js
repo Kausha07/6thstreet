@@ -15,16 +15,12 @@ import Event, {
   EVENT_GTM_VUE_PRODUCT_CLICK,
   VUE_CAROUSEL_CLICK,
 } from "Util/Event";
-import {setPrevPath} from "Store/PLP/PLP.action";
 import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
 });
 
-export const mapDispatchToProps = (dispatch, state) => ({
-  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
-});
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     country: PropTypes.string.isRequired,
@@ -76,7 +72,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           posofreco: posofreco,
         },
       });
-      this.props.setPrevPath(window.location.href);
       Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
       this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
 
@@ -198,5 +193,5 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(DynamicContentVueProductSliderItem);
