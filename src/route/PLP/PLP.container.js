@@ -314,7 +314,7 @@ export class PLPContainer extends PureComponent {
     return initialOptions;
   };
 
-  componentDidUpdate() {
+  componentDidMount() {
     const { menuCategories = [], prevPath = null, impressions } = this.props;
     const { isArabic } = this.state;
 
