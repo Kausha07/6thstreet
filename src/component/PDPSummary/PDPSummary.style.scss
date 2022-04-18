@@ -382,5 +382,9 @@ ul {
     &::before {
       display: none !important;
     }
-  }
+  } 
+}
+
+div[class^='styles__body'] {
+  height: auto !important;
 }
