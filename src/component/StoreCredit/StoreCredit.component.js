@@ -30,12 +30,14 @@ export class StoreCredit extends PureComponent {
   hasCredit() {
     const { storeCreditBalance } = this.props;
     if (storeCreditBalance && storeCreditBalance.length) {
+      // old logic
       // const formattedStoreCreditBalance = storeCreditBalance.replace("  ", " ");
+      //   const [, amount] = formattedStoreCreditBalance.split(" ");
+      //   since we are getting Store Credit Balance in two different format ie., AED 50 and KWD16 (ie., with and without space) therefore we need to workaround using regex to split alphabet and numbers.
       const getCharacters = storeCreditBalance.slice(
         0,
         storeCreditBalance.search(/\d/)
       );
-      //   const [, amount] = formattedStoreCreditBalance.split(" ");
       const amount = storeCreditBalance.replace(getCharacters, "");
       return parseFloat(amount.trim()) > 0;
     }
