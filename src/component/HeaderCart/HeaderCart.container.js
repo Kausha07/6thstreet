@@ -74,12 +74,12 @@ export class HeaderCartContainer extends PureComponent {
         }
       }
 
-      if (mappedItems.length !== 0) {
+      {/*if (mappedItems.length !== 0) {
         showNotification(
           "error",
           __("Some products or selected quantities are no longer available")
         );
-      }
+      }*/}
 
       return {
         isCheckoutAvailable: mappedItems.length === 0,
