@@ -238,8 +238,7 @@ class PDP extends PureComponent {
     const { estimateEddResponse } = this.props;
     this.setState({
       selectedAreaId: area.area_id,
-      // selectedArea: isArabic ? area.area_name_ar : area.area_name_en,
-      selectedArea: area.area_name_en,
+      selectedArea: isArabic ? area.area_name_ar : area.area_name_en,
       showCityDropdown: false,
       showPopupField: "",
     });
@@ -274,8 +273,7 @@ class PDP extends PureComponent {
                   mods={{ isArabic, isArea }}
                 >
                   <span>
-                    {/* {isArabic ? area.area_name_ar : area.area_name_en} */}
-                    {area.area_name_en}
+                    {isArabic ? area.area_name_ar : area.area_name_en}
                   </span>
                 </button>
               </li>
@@ -306,7 +304,7 @@ class PDP extends PureComponent {
                 this.setState({
                   showPopupField: "area",
                   selectedCityId: city.city_id,
-                  selectedCity: city.city_name_en,
+                  selectedCity: isArabic ? city.city_name_ar : city.city_name_en,
                   selectedCityArea: city.area_list,
                   showAreaDropDown: true,
                 })
@@ -318,8 +316,7 @@ class PDP extends PureComponent {
                 mods={{ isArabic }}
               >
                 <span>
-                  {/* {isArabic ? city.city_name_ar : city.city_name_en} */}
-                  {city.city_name_en}
+                  {isArabic ? city.city_name_ar : city.city_name_en}
                 </span>
               </button>
             </li>
@@ -438,8 +435,7 @@ class PDP extends PureComponent {
         )}
         {selectedAreaId && ActualEddMess ? (
           <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
-            <span>{ActualEddMess.split("by")[0]} by</span>
-            <span>{ActualEddMess.split("by")[1]}</span>
+            <span>{ActualEddMess}</span>
           </div>
         ) : (
           <div mix={{ block: "EddWrapper", elem: "AreaText" }}>

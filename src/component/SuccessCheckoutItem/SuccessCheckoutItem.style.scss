@@ -52,7 +52,7 @@
     flex-direction: column;
     .AreaText {
       display: flex;
-      color: #9b9b9b;
+      color: #28d9aa;
       top: 4px;
       padding-bottom: 10px;
       font-family: "Avenir Next";
@@ -61,10 +61,10 @@
       align-items: center;
       letter-spacing: 0;
       line-height: 12px;
-      span:nth-child(2) {
-        margin-left: 4px;
-        color: #28d9aa;
-      }
+      // span:nth-child(2) {
+      //   margin-left: 4px;
+      //   color: #28d9aa;
+      // }
     }
     &_isLikeTable {
       @include after-mobile {

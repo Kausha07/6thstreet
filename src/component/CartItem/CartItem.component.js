@@ -68,7 +68,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => {},
+    closePopup: () => { },
     isCartPage: false,
     readOnly: false,
   };
@@ -388,8 +388,7 @@ export class CartItem extends PureComponent {
     }
     return (
       <div block="AreaText">
-        <span>{ActualEddMess.split("by")[0]} by</span>
-        <span>{ActualEddMess.split("by")[1]}</span>
+        <span>{ActualEddMess}</span>
       </div>
     );
   };
