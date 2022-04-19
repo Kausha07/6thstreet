@@ -437,7 +437,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       checkoutStep !== DETAILS_STEP
     ) {
       const totalSum = total_segments.reduce(
-        (acc, item) => acc + item.value,
+        (acc, item) => {
+          if (item.code === "msp_cashondelivery") {
+            return acc + 0;
+          } else {
+            return acc + item.value;
+          }
+
+        },
         0
       );
 
@@ -467,7 +474,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
-    
+
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
@@ -784,7 +791,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -850,11 +857,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const mobile = phone.slice(4);
 
         sendVerificationCode({ mobile, code }).then((response) => {
-          if(response.success) {
+          if (response.success) {
             this.setState({ isVerificationCodeSent: response.success });
-          } else 
-          {
-            console.log("response.error",response.error);
+          } else {
+            console.log("response.error", response.error);
             showErrorNotification(response.error);
           }
         }, this._handleError);
@@ -940,7 +946,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
