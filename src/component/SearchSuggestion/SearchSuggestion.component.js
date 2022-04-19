@@ -248,7 +248,7 @@ class SearchSuggestion extends PureComponent {
   onSearchQueryClick = (search, eventType) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
-    if(eventType) {
+    if (eventType) {
       Event.dispatch(eventType);
     }
     setPrevPath(window.location.href)
@@ -261,7 +261,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleBrandsClick = (brandItem) => {
-    const { closeSearch,setPrevPath } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
     setPrevPath(window.location.href)
     closeSearch();
@@ -896,8 +896,8 @@ class SearchSuggestion extends PureComponent {
           }
           onClick={() => this.onSearchQueryClick(name, EVENT_CLICK_RECENT_SEARCHES_CLICK)}
         >
-          <div block="SearchSuggestion" elem="TopSearches">
-            {name}
+          <div block="SearchSuggestion" elem="TrandingTag">
+            #{name}
           </div>
         </Link>
       </li>
