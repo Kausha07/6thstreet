@@ -113,7 +113,7 @@ export class MyAccountReturnCreate extends PureComponent {
             elem="ButtonSubmit"
             type="submit"
             mix={{ block: "Button" }}
-            disabled={selectedNumber <= 0 || resolutionId == null}
+            disabled={selectedNumber <= 0 || !resolutionId}
           >
             {submitText}
           </button>

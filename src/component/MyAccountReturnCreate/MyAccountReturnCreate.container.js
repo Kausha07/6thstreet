@@ -128,6 +128,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         this.setState(({ selectedItems }) => ({
             selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } }
         }));
+        this.onResolutionChangeValue({resolutionId:false});
     }
     onResolutionChangeValue(value) {
         this.setState({ resolutionId: value })

@@ -77,6 +77,13 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         );
     }
 
+    isDisabled() {
+        const { selectedNumber, resolutionId} = this.props;
+        if(selectedNumber < 0 || !resolutionId) {
+        return true;
+        }
+        return false;
+    }
     renderActions() {
         const { handleDiscardClick, selectedNumber, resolutions, resolutionId} = this.props;
         const itemString = selectedNumber === 1 ? __('item') : __('items');
@@ -102,7 +109,7 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
                     type="submit"
                     mix={ { block: 'Button' } }
                     disabled={
-                        selectedNumber <= 0  || (!!resolutions?.length && resolutionId === null)
+                        this.isDisabled()
                     }
                     >
                         { submitText }
