@@ -467,7 +467,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
-
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
@@ -852,7 +851,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         sendVerificationCode({ mobile, code }).then((response) => {
           if(response.success) {
             this.setState({ isVerificationCodeSent: response.success });
-          } else
+          } else 
           {
             console.log("response.error",response.error);
             showErrorNotification(response.error);
