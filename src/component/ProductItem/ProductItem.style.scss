@@ -120,6 +120,22 @@
         line-height: 13px;
         font-weight: var(--fw-medium);
     }
+
+    .ProductTag{
+        width: 90px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #99cc99;
+        border-radius: 0 10px 10px 0;
+        position: absolute;
+        font-size: 11px;
+        color: #ffffff;
+        line-height: 13px;
+        font-weight: var(--fw-medium);
+    }
+
     .ProductContainer {
         display: flex;
         align-items: center;
@@ -131,6 +147,19 @@
         width: 35px;
         height: 20px;
     }
+
+    .ProductTagContainer{
+        display: flex;
+        align-items: center;
+        position: absolute;
+        justify-content: center;
+        top: 12px;
+        z-index: 1;
+        opacity: 0.7;
+        width: 90px;
+        height: 20px;
+    }
+
     .WishlistIcon {
         width: 28px;
         height: 28px;
@@ -152,6 +181,10 @@
     // }
     &_isArabic {
         .ProductLabel {
+            border-radius: 10px 0 0 10px;
+            right: 0;
+        }
+        .ProductTag {
             border-radius: 10px 0 0 10px;
             right: 0;
         }
