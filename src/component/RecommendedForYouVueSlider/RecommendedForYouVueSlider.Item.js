@@ -164,6 +164,14 @@ class RecommendedForYouVueSliderItem extends PureComponent {
     return null;
   }
 
+  renderProductTag(productTag) {
+    return (
+      <div block="VueProductSlider" elem="VueProductTag">
+        <span>{__(productTag)}</span>
+      </div>
+    );
+  }
+
   render() {
     const {
       data: {
@@ -182,6 +190,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       renderMySignInPopup,
     } = this.props;
     const { isArabic } = this.state;
+    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
     let newLink = link;
     if (this.props.data.url) {
       newLink = this.props.data.url;
@@ -228,7 +237,12 @@ class RecommendedForYouVueSliderItem extends PureComponent {
           {name}
         </span>
         {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
+        {
+          productTag ?
+            this.renderProductTag(productTag)
+            :
+            this.renderIsNew(is_new_in)
+        }
         <WishlistIcon
           sku={sku}
           data={data}
