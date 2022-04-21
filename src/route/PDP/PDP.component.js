@@ -12,7 +12,6 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
-import { setDefaultEddResponse } from "Store/MyAccount/MyAccount.action";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import address from "./icons/address.png";
@@ -33,8 +32,7 @@ export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
   estimateEddResponse: (request) =>
-    MyAccountDispatcher.estimateEddResponse(dispatch, request),
-  setDefaultEddResponse: (response) => dispatch(setDefaultEddResponse(response))
+    MyAccountDispatcher.estimateEddResponse(dispatch, request)
 });
 
 class PDP extends PureComponent {
@@ -391,7 +389,7 @@ class PDP extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(2);
-    const { EddResponse, setDefaultEddResponse } = this.props;
+    const { EddResponse } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
@@ -411,11 +409,6 @@ class PDP extends PureComponent {
     } else {
       ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       ActualEdd = defaultEddDateString;
-      let response = {
-        edd_date: ActualEdd,
-        edd_message_en: ActualEddMess,
-      }
-      setDefaultEddResponse(response)
     }
 
     const isArea = !(

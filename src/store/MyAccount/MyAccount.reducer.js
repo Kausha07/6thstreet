@@ -15,7 +15,6 @@ import {
   SET_ADDRESS_LOADING_STATUS,
   SET_EDD_RESPONSE,
   SET_PDP_EDD_ADDRESS,
-  SET_DEFAULT_EDD_RESPONSE
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -31,7 +30,6 @@ export const initialState = {
   pdpEddAddressSelected: null,
   EddResponse: null,
   EddAddress: null,
-  defaultEddData: null
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -80,11 +78,6 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         EddResponse: EddResponse,
         EddAddress: EddAddress
-      };
-    case SET_DEFAULT_EDD_RESPONSE:
-      return {
-        ...state,
-        defaultEddData: EddResponse,
       };
     case SET_PDP_EDD_ADDRESS:
       return {

@@ -15,7 +15,6 @@ export const SET_CUSTOMER_ADDRESS_DATA = "SET_CUSTOMER_ADDRESS_DATA";
 export const SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS = "SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS";
 export const SET_ADDRESS_LOADING_STATUS = "SET_ADDRESS_LOADING_STATUS";
 export const SET_EDD_RESPONSE = "SET_EDD_RESPONSE";
-export const SET_DEFAULT_EDD_RESPONSE = "SET_DEFAULT_EDD_RESPONSE";
 export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS"
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -46,11 +45,6 @@ export const setEddResponse = (EddResponse, EddAddress) => ({
   type: SET_EDD_RESPONSE,
   EddResponse,
   EddAddress
-});
-
-export const setDefaultEddResponse = (EddResponse) => ({
-  type: SET_DEFAULT_EDD_RESPONSE,
-  EddResponse
 });
 
 

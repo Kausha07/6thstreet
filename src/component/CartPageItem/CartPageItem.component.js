@@ -62,7 +62,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => {},
+    closePopup: () => { },
     isCartPage: false,
   };
 
@@ -334,8 +334,14 @@ export class CartItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse ,defaultEddData} = this.props;
+    const { EddResponse } = this.props;
     const { isArabic } = this.state;
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(2);
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
@@ -349,21 +355,13 @@ export class CartItem extends PureComponent {
           }
         });
       } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
+
         ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
-    }else {
-      if (defaultEddData) {
-        const { edd_date, edd_message_en } = defaultEddData
-        ActualEddMess = edd_message_en;
-        ActualEdd = edd_date;
-      }
+    } else {
+      ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      ActualEdd = defaultEddDateString;
     }
 
     if (!ActualEddMess) {
