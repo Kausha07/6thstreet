@@ -357,7 +357,7 @@ export class CartItem extends PureComponent {
   }
 
   renderEdd = () => {
-    const { EddResponse } = this.props;
+    const { EddResponse, defaultEddData } = this.props;
     const { isArabic } = this.state;
     let ActualEddMess = "";
     let ActualEdd = "";
@@ -380,6 +380,12 @@ export class CartItem extends PureComponent {
         } = getDefaultEddDate(2);
         ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
+      }
+    } else {
+      if (defaultEddData) {
+        const { edd_date, edd_message_en } = defaultEddData
+        ActualEddMess = edd_message_en;
+        ActualEdd = edd_date;
       }
     }
 

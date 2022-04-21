@@ -14,7 +14,8 @@ import {
   SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
   SET_ADDRESS_LOADING_STATUS,
   SET_EDD_RESPONSE,
-  SET_PDP_EDD_ADDRESS
+  SET_PDP_EDD_ADDRESS,
+  SET_DEFAULT_EDD_RESPONSE
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -29,7 +30,8 @@ export const initialState = {
   defaultShippingAddress: null,
   pdpEddAddressSelected: null,
   EddResponse: null,
-  EddAddress:null
+  EddAddress: null,
+  defaultEddData: null
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -77,13 +79,18 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         EddResponse: EddResponse,
-        EddAddress:EddAddress
+        EddAddress: EddAddress
+      };
+    case SET_DEFAULT_EDD_RESPONSE:
+      return {
+        ...state,
+        defaultEddData: EddResponse,
       };
     case SET_PDP_EDD_ADDRESS:
       return {
         ...state,
         pdpEddAddressSelected: PdpEddAddress,
-        defaultEddResponse:defaultEddResponse
+        defaultEddResponse: defaultEddResponse
       };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
@@ -102,16 +109,16 @@ export const MyAccountReducer = (state = initialState, action) => {
       const data =
         firstname || lastname
           ? {
-              ...customer,
-              firstname:
-                firstname.indexOf(" ") > 0
-                  ? firstname.substr(0, firstname.indexOf(" "))
-                  : firstname,
-              lastname:
-                firstname.indexOf(" ") > 0
-                  ? firstname.substr(firstname.indexOf(" ") + 1)
-                  : lastname,
-            }
+            ...customer,
+            firstname:
+              firstname.indexOf(" ") > 0
+                ? firstname.substr(0, firstname.indexOf(" "))
+                : firstname,
+            lastname:
+              firstname.indexOf(" ") > 0
+                ? firstname.substr(firstname.indexOf(" ") + 1)
+                : lastname,
+          }
           : customer;
 
       BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);

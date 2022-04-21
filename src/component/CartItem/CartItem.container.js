@@ -83,6 +83,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   EddResponse: state.MyAccountReducer.EddResponse,
+  defaultEddData:state.MyAccountReducer.defaultEddData,
   defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
 });
 

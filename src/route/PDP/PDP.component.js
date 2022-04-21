@@ -12,6 +12,7 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { setDefaultEddResponse } from "Store/MyAccount/MyAccount.action";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import address from "./icons/address.png";
@@ -22,7 +23,6 @@ import MobileAPI from "Util/API/provider/MobileAPI";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
-
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
@@ -34,6 +34,7 @@ export const mapDispatchToProps = (dispatch) => ({
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
   estimateEddResponse: (request) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, request),
+  setDefaultEddResponse: (response) => dispatch(setDefaultEddResponse(response))
 });
 
 class PDP extends PureComponent {
@@ -55,9 +56,6 @@ class PDP extends PureComponent {
     selectedCity: null,
     showPopupField: "",
     countryCode: null,
-    CountryEddEnable: true,
-    PDPEddEnable: true,
-    CrossBorderEddEnable: false,
     Cityresponse: null,
   };
 
@@ -74,11 +72,14 @@ class PDP extends PureComponent {
           Object.values(response.result).filter((entry) => {
             if (entry.city_name_en === city) {
               cityEntry = entry.city_id;
-              Object.values(entry.area_list).filter((subEntry) => {
-                if (subEntry.area_name_en === area) {
-                  areaEntry = subEntry.area_id;
-                }
-              });
+              if (entry.area_list) {
+                Object.values(entry.area_list).filter((subEntry) => {
+                  if (subEntry.area_name_en === area) {
+                    areaEntry = subEntry.area_id;
+                  }
+                });
+              }
+
             }
           });
           this.setState({
@@ -115,11 +116,14 @@ class PDP extends PureComponent {
           Object.values(response.result).filter((entry) => {
             if (entry.city_name_en === city) {
               cityEntry = entry.city_id;
-              Object.values(entry.area_list).filter((subEntry) => {
-                if (subEntry.area_name_en === area) {
-                  areaEntry = subEntry.area_id;
-                }
-              });
+              if (entry.area_list) {
+                Object.values(entry.area_list).filter((subEntry) => {
+                  if (subEntry.area_name_en === area) {
+                    areaEntry = subEntry.area_id;
+                  }
+                });
+              }
+
             }
           });
           this.setState(
@@ -246,7 +250,7 @@ class PDP extends PureComponent {
     let request = {
       country: countryCode,
       city: selectedCity,
-      area: area.area_name_en,
+      area: isArabic ? area.area_name_ar : area.area_name_en,
       courier: null,
       source: null,
     };
@@ -381,7 +385,13 @@ class PDP extends PureComponent {
       isMobile,
       isArabic,
     } = this.state;
-    const { EddResponse } = this.props;
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(2);
+    const { EddResponse, setDefaultEddResponse } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
     if (EddResponse) {
@@ -395,16 +405,19 @@ class PDP extends PureComponent {
           }
         });
       } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
         ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
+    } else {
+      ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      ActualEdd = defaultEddDateString;
+      let response = {
+        edd_date: ActualEdd,
+        edd_message_en: ActualEddMess,
+      }
+      setDefaultEddResponse(response)
     }
+
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
@@ -433,17 +446,17 @@ class PDP extends PureComponent {
             <div block="SelectAreaText">Select Area</div>
           </div>
         )}
-        {selectedAreaId && ActualEddMess ? (
+        {ActualEddMess &&
           <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
             <span>{ActualEddMess}</span>
           </div>
-        ) : (
-          <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
-            {isArabic
-              ? "حدد للتحقق من تاريخ التسليم"
-              : "Select to check delivery date"}
-          </div>
-        )}
+
+          // <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
+          //   {isArabic
+          //     ? "حدد للتحقق من تاريخ التسليم"
+          //     : "Select to check delivery date"}
+          // </div>
+        }
 
         <div block="DropDownWrapper">
           {showCityDropdown && !isMobile && (
@@ -469,14 +482,14 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-    const { nbHits, isLoading } = this.props;
+    const { nbHits, isLoading, product: { cross_border = 0 } } = this.props;
     const { Cityresponse } = this.state;
     if (!isLoading && nbHits === 1) {
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
           {this.renderMySignInPopup()}
           {this.renderMainSection()}
-          {Cityresponse && this.renderSelectCity()}
+          {Cityresponse && cross_border === 0 && this.renderSelectCity()}
           {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}

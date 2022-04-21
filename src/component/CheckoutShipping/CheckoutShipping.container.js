@@ -10,6 +10,7 @@ import { CheckoutShippingContainer as SourceCheckoutShippingContainer } from "So
 import { resetCart } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
@@ -30,11 +31,14 @@ export const mapDispatchToProps = (dispatch) => ({
   estimateShipping: (address, isValidted = false) =>
     CheckoutDispatcher.estimateShipping(dispatch, address, isValidted),
   dispatch,
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request),
 });
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   addresses: state.MyAccountReducer.addresses,
+  EddResponse: state.MyAccountReducer.EddResponse,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -191,7 +195,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onShippingSuccess(fields) {
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
-    const { setLoading, showNotification, dispatch } = this.props;
+    const { setLoading, showNotification, dispatch, estimateEddResponse ,EddResponse} = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
@@ -205,6 +209,17 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
     validationResult.then((response) => {
       const { success } = response;
+      if (!isSignedIn() || (isSignedIn() && !EddResponse)) {
+        const { country_id, city, postcode } = addressForValidation
+        let request = {
+          country: country_id,
+          city: city,
+          area: postcode,
+          courier: null,
+          source: null,
+        };
+        estimateEddResponse(request);
+      }
 
       if (success && !selectedShippingMethod) {
         const estimationResult = this.estimateShipping(
@@ -289,7 +304,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         ? this._getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
 
-    const { city, street, country_id, telephone ,postcode} =
+    const { city, street, country_id, telephone, postcode } =
       shippingAddress;
     const shippingAddressMapped = {
       ...shippingAddress,
@@ -329,7 +344,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
-  
+
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;
