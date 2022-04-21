@@ -417,7 +417,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const mappedItems = checkProducts(items) || [];
 
       if (mappedItems.length !== 0) {
-        history.push("/cart");
+        history.push("/cart", { errorState: false });
       }
     }
 
