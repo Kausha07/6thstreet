@@ -17,13 +17,13 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         } = this.props;
 
         return (
-            <li block="MyAccountReturnCreate" elem="Item" key={ item_id }>
+            <li block="MyAccountReturnCreate" elem="Item" key={item_id}>
                 <MyAccountCancelCreateItem
-                  item={ item }
-                  onClick={ onItemClick }
-                  onResolutionChange={ onResolutionChange }
-                  onReasonChange={ onReasonChange }
-                  resolutions={ resolutions }
+                    item={item}
+                    onClick={onItemClick}
+                    onResolutionChange={onResolutionChange}
+                    onReasonChange={onReasonChange}
+                    resolutions={resolutions}
                 />
             </li>
         );
@@ -32,7 +32,7 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
     renderHeading() {
         return (
             <h2 block="MyAccountReturnCreate" elem="Heading">
-                { __('Select 1 or more items you wish to cancel.') }
+                {__('Select 1 or more items you wish to cancel.')}
             </h2>
         );
     }
@@ -41,12 +41,12 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         const { items = [], onFormSubmit } = this.props;
 
         return (
-            <Form id="create-cancel" onSubmitSuccess={ onFormSubmit }>
+            <Form id="create-cancel" onSubmitSuccess={onFormSubmit}>
                 <ul>
-                    { items.filter(({ qty_canceled, qty_to_cancel }) => +qty_canceled < +qty_to_cancel)
-                        .map(this.renderOrderItem) }
+                    {items.filter(({ qty_canceled, qty_to_cancel }) => +qty_canceled < +qty_to_cancel)
+                        .map(this.renderOrderItem)}
                 </ul>
-                { this.renderActions() }
+                {this.renderActions()}
             </Form>
         );
     }
@@ -56,63 +56,68 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
             onResolutionChangeValue,
             resolutions,
         } = this.props;
-        if(!!!resolutions?.length){
+        if (!!!resolutions?.length) {
             return null;
         }
-        const resolutionValue =  resolutions.map(({ id, label }) => ({
+        const resolutionValue = resolutions.map(({ id, label }) => ({
             id,
             label,
-            value: id +1 
+            value: id + 1
         }));
         return (
             <Field
-              type="select"
-              id={ `cancel_resolution` }
-              name={ `cancel_resolution` }
-              placeholder={ __('Select a resolution') }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
-              onChange={ onResolutionChangeValue }
-              selectOptions={ resolutionValue }
+                type="select"
+                id={`cancel_resolution`}
+                name={`cancel_resolution`}
+                placeholder={__('Select a resolution')}
+                mix={{ block: 'MyAccountReturnCreateItem', elem: 'Resolutions' }}
+                onChange={onResolutionChangeValue}
+                selectOptions={resolutionValue}
             />
         );
     }
 
     isDisabled() {
-        const { selectedNumber, resolutionId} = this.props;
-        if(selectedNumber < 0 || !resolutionId) {
-        return true;
+        const { selectedNumber, reasonId } = this.props;
+        if (selectedNumber !== 0) {
+            if (reasonId) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true
         }
-        return false;
     }
     renderActions() {
-        const { handleDiscardClick, selectedNumber, resolutions, resolutionId} = this.props;
+        const { handleDiscardClick, selectedNumber, resolutions, resolutionId, reasonId } = this.props;
         const itemString = selectedNumber === 1 ? __('item') : __('items');
         const submitText = selectedNumber <= 0
             ? __('Cancel') : `${__('Cancel')} ${selectedNumber} ${itemString}`;
-
+        console.log("reasonId", reasonId)
         return (
             <div>
-                { this.renderResolutions() }
+                {this.renderResolutions()}
                 <div block="MyAccountReturnCreate" elem="Actions">
                     <button
-                    block="MyAccountReturnCreate"
-                    elem="ButtonDiscard"
-                    type="button"
-                    mix={ { block: 'Button' } }
-                    onClick={ handleDiscardClick }
+                        block="MyAccountReturnCreate"
+                        elem="ButtonDiscard"
+                        type="button"
+                        mix={{ block: 'Button' }}
+                        onClick={handleDiscardClick}
                     >
-                        { __('Discard') }
+                        {__('Discard')}
                     </button>
                     <button
-                    block="MyAccountReturnCreate"
-                    elem="ButtonSubmit"
-                    type="submit"
-                    mix={ { block: 'Button' } }
-                    disabled={
-                        this.isDisabled()
-                    }
+                        block="MyAccountReturnCreate"
+                        elem="ButtonSubmit"
+                        type="submit"
+                        mix={{ block: 'Button' }}
+                        disabled={
+                            this.isDisabled()
+                        }
                     >
-                        { submitText }
+                        {submitText}
                     </button>
                 </div>
             </div>
