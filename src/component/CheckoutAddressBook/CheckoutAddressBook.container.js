@@ -50,16 +50,18 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
 
   onAddressSelect(address) {
     const { id = 0, city, area, country_code } = address;
-    const { estimateEddResponse } = this.props;
+    const { estimateEddResponse, citiesData } = this.props;
     this.setState({ selectedAddressId: id });
-    let request = {
-      country: country_code,
-      city: city,
-      area: area,
-      courier: null,
-      source: null,
-    };
-    estimateEddResponse(request);
+    if (citiesData) {
+      let request = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      estimateEddResponse(request);
+    }
   }
 
   showCreateNewPopup() {

@@ -361,7 +361,6 @@ export class Router extends SourceRouter {
 
   renderDefaultRouterContent() {
     const { isAppReady } = this.props;
-
     if (isAppReady) {
       return this.renderContent();
     }

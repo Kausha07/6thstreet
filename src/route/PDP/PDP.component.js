@@ -26,6 +26,7 @@ export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   EddResponse: state.MyAccountReducer.EddResponse,
+  citiesData: state.MyAccountReducer.citiesData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -57,94 +58,108 @@ class PDP extends PureComponent {
     Cityresponse: null,
   };
 
-  componentDidMount() {
-    const countryCode = getCountryFromUrl();
-    const { defaultShippingAddress } = this.props;
-
-    MobileAPI.get(`eddservice/cities`).then((response) => {
-      if (response.result) {
-        if (defaultShippingAddress) {
-          const { area, city } = defaultShippingAddress;
-          let cityEntry;
-          let areaEntry;
-          Object.values(response.result).filter((entry) => {
-            if (entry.city_name_en === city) {
-              cityEntry = entry.city_id;
-              if (entry.area_list) {
-                Object.values(entry.area_list).filter((subEntry) => {
-                  if (subEntry.area_name_en === area) {
-                    areaEntry = subEntry.area_id;
-                  }
-                });
-              }
-
+  getIdFromCityArea = (citiesData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    Object.values(citiesData).filter((entry) => {
+      if (entry.city_name_en === city) {
+        cityEntry = entry.city_id;
+        if (entry.area_list) {
+          Object.values(entry.area_list).filter((subEntry) => {
+            if (subEntry.area_name_en === area) {
+              areaEntry = subEntry.area_id;
             }
-          });
-          this.setState({
-            Cityresponse: response.result,
-            selectedCity: city,
-            selectedCityId: cityEntry,
-            selectedAreaId: areaEntry,
-            selectedArea: area,
-            countryCode: countryCode,
-          });
-        } else {
-          this.setState({
-            Cityresponse: response.result,
-            countryCode: countryCode,
           });
         }
       }
     });
+    return { cityEntry, areaEntry }
+  }
+
+  validateEddStatus = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress, citiesData } = this.props;
+    if (sessionStorage.getItem('EddAddressReq')) {
+      const sessionData = JSON.parse(sessionStorage.getItem('EddAddressReq'))
+      const { city, area } = sessionData
+      const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+
+      this.setState({
+        Cityresponse: citiesData,
+        selectedCity: city,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: area,
+        countryCode: countryCode,
+      });
+    } else if (defaultShippingAddress) {
+      const { area, city } = defaultShippingAddress;
+      const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+      this.setState({
+        Cityresponse: citiesData,
+        selectedCity: city,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: area,
+        countryCode: countryCode,
+      });
+    }
+    else {
+      this.setState({
+        Cityresponse: citiesData,
+        countryCode: countryCode,
+      });
+    }
+  }
+  componentDidMount() {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress, citiesData } = this.props;
+    if (citiesData.length > 0) {
+      this.validateEddStatus(countryCode)
+    } else {
+      this.setState({
+        countryCode: countryCode,
+      })
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { defaultShippingAddress, estimateEddResponse } = this.props;
-    const { defaultShippingAddress: prevdefaultShippingAddress } = prevProps;
-
+    const { defaultShippingAddress, estimateEddResponse, citiesData } = this.props;
+    const { defaultShippingAddress: prevdefaultShippingAddress, citiesData: prevCitiesData } = prevProps;
+    if (prevCitiesData && citiesData && prevCitiesData.length !== citiesData.length) {
+      this.setState({
+        Cityresponse: citiesData,
+      })
+      this.validateEddStatus()
+    }
     if (
       JSON.stringify(prevdefaultShippingAddress) !==
       JSON.stringify(defaultShippingAddress)
     ) {
       const { country_code, area, city } = defaultShippingAddress;
-      MobileAPI.get(`eddservice/cities`).then((response) => {
-        if (response.result) {
-          let cityEntry;
-          let areaEntry;
-          Object.values(response.result).filter((entry) => {
-            if (entry.city_name_en === city) {
-              cityEntry = entry.city_id;
-              if (entry.area_list) {
-                Object.values(entry.area_list).filter((subEntry) => {
-                  if (subEntry.area_name_en === area) {
-                    areaEntry = subEntry.area_id;
-                  }
-                });
-              }
 
-            }
-          });
-          this.setState(
-            {
-              Cityresponse: response.result,
-              selectedCity: city,
-              selectedCityId: cityEntry,
-              selectedAreaId: areaEntry,
-              selectedArea: area,
-            },
-            () => {
-              let request = {
-                country: country_code,
-                city: city,
-                area: area,
-                courier: null,
-                source: null,
-              };
-              estimateEddResponse(request);
-            }
-          );
-        }
-      });
+      if (citiesData.length > 0) {
+        const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+        this.setState(
+          {
+            Cityresponse: citiesData,
+            selectedCity: city,
+            selectedCityId: cityEntry,
+            selectedAreaId: areaEntry,
+            selectedArea: area,
+          },
+          () => {
+            let request = {
+              country: country_code,
+              city: city,
+              area: area,
+              courier: null,
+              source: null,
+            };
+            estimateEddResponse(request);
+          }
+        );
+      }
     }
   }
 
@@ -256,6 +271,17 @@ class PDP extends PureComponent {
     document.body.style.overflow = "visible";
   };
 
+  handleCitySelection = (city) => {
+    const { isArabic } = this.state;
+    this.setState({
+      showPopupField: "area",
+      selectedCityId: city.city_id,
+      selectedCity: isArabic ? city.city_name_ar : city.city_name_en,
+      selectedCityArea: city.area_list,
+      showAreaDropDown: true,
+    })
+  }
+
   renderSelectAreaItem() {
     const { selectedCityArea, isArabic } = this.state;
     const isArea =
@@ -302,14 +328,8 @@ class PDP extends PureComponent {
           return (
             <li
               id={city.city_id}
-              onClick={() =>
-                this.setState({
-                  showPopupField: "area",
-                  selectedCityId: city.city_id,
-                  selectedCity: isArabic ? city.city_name_ar : city.city_name_en,
-                  selectedCityArea: city.area_list,
-                  showAreaDropDown: true,
-                })
+              onClick={
+                () => this.handleCitySelection(city)
               }
             >
               <button

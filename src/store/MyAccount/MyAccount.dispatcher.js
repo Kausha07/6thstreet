@@ -9,6 +9,7 @@ import {
   setCustomerDefaultShippingAddress,
   setEddResponse,
   setDefaultEddAddress,
+  setCitiesData
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -149,7 +150,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
-
+    sessionStorage.removeItem('EddAddressReq')
+    sessionStorage.removeItem('EddAddressRes')
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
 
@@ -175,6 +177,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
   async loginAccount(options) {
     return await MobileAPI.post("/login", options);
+  }
+
+  getCitiesData(dispatch) {
+    MobileAPI.get("eddservice/cities").then((response) => {
+      let finalRes = response.result === null ? [] : response.result
+      dispatch(setCitiesData(finalRes));
+    })
   }
 
   async resetUserPassword(options) {
@@ -300,10 +309,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-              username,
-              password,
-              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            }
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
       );
 
     const phoneAttribute = custom_attributes?.filter(
@@ -402,6 +411,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
           dispatch(setEddResponse(response.result, request));
+          sessionStorage.setItem('EddAddressReq', JSON.stringify(request))
+          sessionStorage.setItem('EddAddressRes', JSON.stringify(response.result))
         } else {
           dispatch(setEddResponse(response.errorMessage, request));
         }

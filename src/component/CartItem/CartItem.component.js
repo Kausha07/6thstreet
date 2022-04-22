@@ -357,7 +357,7 @@ export class CartItem extends PureComponent {
   }
 
   renderEdd = () => {
-    const { EddResponse } = this.props;
+    const { EddResponse, citiesData } = this.props;
     const { isArabic } = this.state;
     const {
       defaultEddDateString,
@@ -367,25 +367,27 @@ export class CartItem extends PureComponent {
     } = getDefaultEddDate(2);
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
-          if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            ActualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
-          }
-        });
+    if (citiesData.length > 0) {
+      if (EddResponse) {
+        if (isObject(EddResponse)) {
+          Object.values(EddResponse).filter((entry) => {
+            if (entry.source === "cart" && entry.featute_flag_status === 1) {
+              ActualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              ActualEdd = entry.edd_date;
+            }
+          });
+        } else {
+          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEdd = defaultEddDateString;
+        }
       } else {
         ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
-    } else {
-      ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-      ActualEdd = defaultEddDateString;
     }
-
+    
     if (!ActualEddMess) {
       return null;
     }

@@ -19,6 +19,7 @@ import "./SuccessCheckoutItem.extended.style";
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   EddResponse: state.MyAccountReducer.EddResponse,
+  citiesData: state.MyAccountReducer.citiesData
 });
 
 export class SuccessCheckoutItem extends PureComponent {
@@ -230,29 +231,31 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse } = this.props;
+    const { EddResponse, citiesData } = this.props;
     const { isArabic } = this.state;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
-          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-            ActualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
-          }
-        });
-      } else {
-        const {
-          defaultEddDateString,
-          defaultEddDay,
-          defaultEddMonth,
-          defaultEddDat,
-        } = getDefaultEddDate(2);
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        ActualEdd = defaultEddDateString;
+    if (citiesData.length > 0) {
+      if (EddResponse) {
+        if (isObject(EddResponse)) {
+          Object.values(EddResponse).filter((entry) => {
+            if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+              ActualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              ActualEdd = entry.edd_date;
+            }
+          });
+        } else {
+          const {
+            defaultEddDateString,
+            defaultEddDay,
+            defaultEddMonth,
+            defaultEddDat,
+          } = getDefaultEddDate(2);
+          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEdd = defaultEddDateString;
+        }
       }
     }
 

@@ -39,6 +39,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   addresses: state.MyAccountReducer.addresses,
   EddResponse: state.MyAccountReducer.EddResponse,
+  citiesData: state.MyAccountReducer.citiesData,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -195,7 +196,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onShippingSuccess(fields) {
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
-    const { setLoading, showNotification, dispatch, estimateEddResponse ,EddResponse} = this.props;
+    const { setLoading, showNotification, dispatch, estimateEddResponse, EddResponse,citiesData } = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
@@ -209,16 +210,18 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
     validationResult.then((response) => {
       const { success } = response;
-      if (!isSignedIn() || (isSignedIn() && !EddResponse)) {
-        const { country_id, city, postcode } = addressForValidation
-        let request = {
-          country: country_id,
-          city: city,
-          area: postcode,
-          courier: null,
-          source: null,
-        };
-        estimateEddResponse(request);
+      if (citiesData.length > 0) {
+        if (!isSignedIn() || (isSignedIn() && !EddResponse)) {
+          const { country_id, city, postcode } = addressForValidation
+          let request = {
+            country: country_id,
+            city: city,
+            area: postcode,
+            courier: null,
+            source: null,
+          };
+          estimateEddResponse(request);
+        }
       }
 
       if (success && !selectedShippingMethod) {

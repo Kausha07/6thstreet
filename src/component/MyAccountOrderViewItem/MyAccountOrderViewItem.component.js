@@ -57,34 +57,36 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, compRef, myOrderEdd } = this.props;
+    const { EddResponse, compRef, myOrderEdd, citiesData } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (compRef === "checkout") {
-      if (EddResponse) {
-        if (isObject(EddResponse)) {
-          Object.values(EddResponse).filter((entry) => {
-            if (entry.source === "myorder" && entry.featute_flag_status === 0) {
-              ActualEddMess = isArabic()
-                ? entry.edd_message_ar
-                : entry.edd_message_en;
-              ActualEdd = entry.edd_date;
-            }
-          });
-        } else {
-          const {
-            defaultEddDateString,
-            defaultEddDay,
-            defaultEddMonth,
-            defaultEddDat,
-          } = getDefaultEddDate(2);
-          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-          ActualEdd = defaultEddDateString;
+    if (citiesData.length > 0) {
+      if (compRef === "checkout") {
+        if (EddResponse) {
+          if (isObject(EddResponse)) {
+            Object.values(EddResponse).filter((entry) => {
+              if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+                ActualEddMess = isArabic()
+                  ? entry.edd_message_ar
+                  : entry.edd_message_en;
+                ActualEdd = entry.edd_date;
+              }
+            });
+          } else {
+            const {
+              defaultEddDateString,
+              defaultEddDay,
+              defaultEddMonth,
+              defaultEddDat,
+            } = getDefaultEddDate(2);
+            ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            ActualEdd = defaultEddDateString;
+          }
         }
+      } else {
+        ActualEddMess = myOrderEdd;
+        ActualEdd = myOrderEdd;
       }
-    } else {
-      ActualEddMess = myOrderEdd;
-      ActualEdd = myOrderEdd;
     }
 
     if (!ActualEddMess) {

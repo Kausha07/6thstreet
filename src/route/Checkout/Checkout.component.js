@@ -45,7 +45,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(processingPaymentSelectRequest(status)),
   showError: (message) => dispatch(showNotification("error", message)),
   estimateEddResponse: (code) =>
-  MyAccountDispatcher.estimateEddResponse(dispatch, code),
+    MyAccountDispatcher.estimateEddResponse(dispatch, code),
 });
 
 export class Checkout extends SourceCheckout {
@@ -89,11 +89,12 @@ export class Checkout extends SourceCheckout {
     if (paymentInformation) {
       this.setState({ paymentInformation });
     }
-    const { estimateEddResponse, pdpEddAddressSelected } = this.props;
-    if (pdpEddAddressSelected) {
-      const { city, area, country } = pdpEddAddressSelected;
+    const { estimateEddResponse, pdpEddAddressSelected, citiesData, addresses } = this.props;
+    if (citiesData.length > 0 && addresses && addresses.length > 0) {
+      const defaultAddress = addresses.find(({ default_shipping }) => default_shipping === true);
+      const { city, area, country_code } = defaultAddress;
       let request = {
-        country: country,
+        country: country_code,
         city: city,
         area: area,
         courier: null,
@@ -117,7 +118,7 @@ export class Checkout extends SourceCheckout {
 
     if (
       prevState?.paymentInformation?.paymentMethod?.code !==
-        paymentInformation?.paymentMethod?.code &&
+      paymentInformation?.paymentMethod?.code &&
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });

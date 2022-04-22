@@ -330,12 +330,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect,
       totals,
       addresses,
+      citiesData
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
         addresses={addresses}
+        citiesData={citiesData}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}
