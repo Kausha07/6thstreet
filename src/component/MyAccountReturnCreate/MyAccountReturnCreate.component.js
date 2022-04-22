@@ -34,6 +34,7 @@ export class MyAccountReturnCreate extends PureComponent {
     resolutions: [],
   };
 
+  
   renderOrderItem = (item) => {
     const { item_id } = item;
     const { onItemClick, onResolutionChange, onReasonChange, resolutions } =
@@ -90,7 +91,7 @@ export class MyAccountReturnCreate extends PureComponent {
   }
 
   renderActions() {
-    const { handleDiscardClick, selectedNumber, resolutionId } = this.props;
+    const { handleDiscardClick, selectedNumber, reasonId } = this.props;
     const submitText =
       selectedNumber !== 1
         ? __("Return %s items", selectedNumber)
@@ -113,7 +114,6 @@ export class MyAccountReturnCreate extends PureComponent {
             elem="ButtonSubmit"
             type="submit"
             mix={{ block: "Button" }}
-            disabled={selectedNumber <= 0 || !resolutionId}
           >
             {submitText}
           </button>
