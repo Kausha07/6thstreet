@@ -36,7 +36,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         isLoading: true,
         incrementId: '',
         items: [],
-        resolutionId: null
+        resolutionId: null,
+        reasonId:0,
     };
 
     componentDidMount() {
@@ -51,7 +52,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             items,
             selectedItems = {},
             resolutions,
-            resolutionId
+            resolutionId,
+            reasonId
         } = this.state;
 
         return {
@@ -61,7 +63,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             selectedNumber: Object.keys(selectedItems).length,
             history,
             resolutions,
-            resolutionId
+            resolutionId,
+            reasonId
         };
     };
     onDiscardClick() {
@@ -115,7 +118,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
 
     onResolutionChange(itemId, resolutionId) {
-        const { selectedItems: { [itemId]: item } } = this.state;
+        const { selectedItems: { [itemId]: item }, } = this.state;
 
         this.setState(({ selectedItems }) => ({
             selectedItems: { ...selectedItems, [itemId]: { ...item, resolutionId } }
@@ -124,10 +127,13 @@ export class MyAccountReturnCreateContainer extends PureComponent {
 
     onReasonChange(itemId, reasonId) {
         const { selectedItems: { [itemId]: item } } = this.state;
-
+        
         this.setState(({ selectedItems }) => ({
             selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } }
         }));
+
+        this.setState({reasonId: reasonId})
+
         this.onResolutionChangeValue({resolutionId:false});
     }
     onResolutionChangeValue(value) {
