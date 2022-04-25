@@ -18,7 +18,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
         onClick: PropTypes.func.isRequired,
         resolutions: PropTypes.arrayOf(ReturnResolutionType).isRequired,
         item: ReturnItemType.isRequired,
-        displayDiscountPercentage: PropTypes.bool.isRequired
+        displayDiscountPercentage: PropTypes.bool.isRequired,
+        reasonId: PropTypes.string
     };
 
     static defaultProps = {
