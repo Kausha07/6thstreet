@@ -279,11 +279,6 @@ export class CartItemContainer extends PureComponent {
           category: category,
           variant: color,
           quantity: qty,
-          size_type: size_option,
-          size: size_value,
-          dimension9: (100 - Math.round((itemPrice / original_price) * 100)) || 0,
-          dimension10: original_price,
-          dimension11: itemPrice,
         },
       });
 

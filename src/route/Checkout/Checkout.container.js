@@ -474,7 +474,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
-
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }

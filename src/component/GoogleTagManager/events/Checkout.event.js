@@ -72,7 +72,6 @@ class CheckoutEvent extends BaseEvent {
                 {
                     ...ProductHelper.getItemData(item),
                     quantity: ProductHelper.getQuantity(item),
-                    availability: true
                 }
             ]), []);
         const groupedProducts = this.getGroupedProducts();
