@@ -18,10 +18,12 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import { isArabic } from "Util/App";
-import MobileAPI from "Util/API/provider/MobileAPI";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
+import { isSignedIn } from "Util/Auth";
+
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
@@ -61,48 +63,74 @@ class PDP extends PureComponent {
   getIdFromCityArea = (citiesData, city, area) => {
     let cityEntry;
     let areaEntry;
+    const { isArabic } = this.state
     Object.values(citiesData).filter((entry) => {
-      if (entry.city_name_en === city) {
-        cityEntry = entry.city_id;
-        if (entry.area_list) {
-          Object.values(entry.area_list).filter((subEntry) => {
-            if (subEntry.area_name_en === area) {
-              areaEntry = subEntry.area_id;
-            }
-          });
+      if (isArabic) {
+        if (entry.city_name_ar === city) {
+          cityEntry = entry.city_id;
+          if (entry.area_list) {
+            Object.values(entry.area_list).filter((subEntry) => {
+              if (subEntry.area_name_ar === area) {
+                areaEntry = subEntry.area_id;
+              }
+            });
+          }
+        }
+      } else {
+        if (entry.city_name_en === city) {
+          cityEntry = entry.city_id;
+          if (entry.area_list) {
+            Object.values(entry.area_list).filter((subEntry) => {
+              if (subEntry.area_name_en === area) {
+                areaEntry = subEntry.area_id;
+              }
+            });
+          }
         }
       }
+
     });
     return { cityEntry, areaEntry }
   }
 
+  getCityAreaFromStorage = (citiesData,countryCode) => {
+    const sessionData = JSON.parse(sessionStorage.getItem('EddAddressReq'))
+    const { city, area } = sessionData
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+    this.setState({
+      Cityresponse: citiesData,
+      selectedCity: city,
+      selectedCityId: cityEntry,
+      selectedAreaId: areaEntry,
+      selectedArea: area,
+      countryCode: countryCode,
+    });
+    return { cityEntry, areaEntry }
+  }
+  getCityAreaFromDefault = (citiesData,countryCode) => {
+    const { defaultShippingAddress } = this.props;
+    const { area, city } = defaultShippingAddress;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+    this.setState({
+      Cityresponse: citiesData,
+      selectedCity: city,
+      selectedCityId: cityEntry,
+      selectedAreaId: areaEntry,
+      selectedArea: area,
+      countryCode: countryCode,
+    });
+    return { cityEntry, areaEntry }
+
+  }
   validateEddStatus = () => {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress, citiesData } = this.props;
-    if (sessionStorage.getItem('EddAddressReq')) {
-      const sessionData = JSON.parse(sessionStorage.getItem('EddAddressReq'))
-      const { city, area } = sessionData
-      const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
-
-      this.setState({
-        Cityresponse: citiesData,
-        selectedCity: city,
-        selectedCityId: cityEntry,
-        selectedAreaId: areaEntry,
-        selectedArea: area,
-        countryCode: countryCode,
-      });
-    } else if (defaultShippingAddress) {
-      const { area, city } = defaultShippingAddress;
-      const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
-      this.setState({
-        Cityresponse: citiesData,
-        selectedCity: city,
-        selectedCityId: cityEntry,
-        selectedAreaId: areaEntry,
-        selectedArea: area,
-        countryCode: countryCode,
-      });
+    if (isSignedIn() && defaultShippingAddress) {
+      this.getCityAreaFromDefault(citiesData,countryCode)
+    } else if (isSignedIn() && !defaultShippingAddress && sessionStorage.getItem('EddAddressReq')) {
+      this.getCityAreaFromStorage(citiesData,countryCode)
+    } else if (!isSignedIn() && sessionStorage.getItem('EddAddressReq')) {
+      this.getCityAreaFromStorage(citiesData,countryCode)
     }
     else {
       this.setState({
@@ -423,11 +451,11 @@ class PDP extends PureComponent {
           }
         });
       } else {
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
     } else {
-      ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       ActualEdd = defaultEddDateString;
     }
 

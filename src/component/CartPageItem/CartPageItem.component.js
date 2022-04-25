@@ -16,6 +16,7 @@ import Image from "Component/Image";
 import Loader from "Component/Loader";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -357,11 +358,11 @@ export class CartItem extends PureComponent {
           });
         } else {
 
-          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
           ActualEdd = defaultEddDateString;
         }
       } else {
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
     }

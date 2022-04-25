@@ -14,7 +14,7 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
-import { capitalize } from "Util/App";
+import { capitalize, isArabic } from "Util/App";
 import { getUUID, isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_PLACE_ORDER } from "Util/Event";
@@ -40,6 +40,7 @@ export const mapStateToProps = (state) => ({
   addresses: state.MyAccountReducer.addresses,
   EddResponse: state.MyAccountReducer.EddResponse,
   citiesData: state.MyAccountReducer.citiesData,
+  addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -196,7 +197,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onShippingSuccess(fields) {
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
-    const { setLoading, showNotification, dispatch, estimateEddResponse, EddResponse,citiesData } = this.props;
+    const { setLoading, showNotification, dispatch, estimateEddResponse, EddResponse, citiesData, addressCityData } = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
@@ -215,11 +216,32 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           const { country_id, city, postcode } = addressForValidation
           let request = {
             country: country_id,
-            city: city,
-            area: postcode,
             courier: null,
             source: null,
           };
+          if (isArabic()) {
+            let finalResp = Object.values(addressCityData).filter((cityData) => {
+              return cityData.city === city
+            })
+
+            let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+              if(finalResp[0].areas[key] === postcode){
+                return key;
+              }
+            });
+            let arabicArea = Object.values(finalResp[0].areas_ar).filter((area, index) => {
+              if(index === parseInt(engAreaIndex[0])){
+                return area
+              } 
+            })
+            request['area'] = arabicArea[0]
+            request['city'] = finalResp[0].city_ar
+
+          } else {
+            request['area'] = postcode
+            request['city'] = city
+          }
+
           estimateEddResponse(request);
         }
       }

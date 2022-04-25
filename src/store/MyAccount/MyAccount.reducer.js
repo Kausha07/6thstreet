@@ -31,7 +31,8 @@ export const initialState = {
   pdpEddAddressSelected: null,
   EddResponse: null,
   EddAddress: null,
-  citiesData: []
+  citiesData: [],
+  addressCityData: []
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -46,7 +47,8 @@ export const MyAccountReducer = (state = initialState, action) => {
     EddAddress,
     PdpEddAddress,
     defaultEddResponse,
-    citiesData
+    citiesData,
+    innerCityData
   } = action;
 
   switch (action.type) {
@@ -75,6 +77,7 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         citiesData: citiesData,
+        addressCityData: innerCityData
       };
     case SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS:
       return {

@@ -5,6 +5,7 @@ import { isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
@@ -65,7 +66,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         if (EddResponse) {
           if (isObject(EddResponse)) {
             Object.values(EddResponse).filter((entry) => {
-              if (entry.source === "myorder" && entry.featute_flag_status === 0) {
+              if (entry.source === "checkout" && entry.featute_flag_status === 1) {
                 ActualEddMess = isArabic()
                   ? entry.edd_message_ar
                   : entry.edd_message_en;
@@ -79,7 +80,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
               defaultEddMonth,
               defaultEddDat,
             } = getDefaultEddDate(2);
-            ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
             ActualEdd = defaultEddDateString;
           }
         }

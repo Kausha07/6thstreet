@@ -15,6 +15,7 @@ import { isArabic } from "Util/App";
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -253,7 +254,7 @@ export class SuccessCheckoutItem extends PureComponent {
             defaultEddMonth,
             defaultEddDat,
           } = getDefaultEddDate(2);
-          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
           ActualEdd = defaultEddDateString;
         }
       }

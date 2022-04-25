@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
@@ -379,11 +380,11 @@ export class CartItem extends PureComponent {
             }
           });
         } else {
-          ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
           ActualEdd = defaultEddDateString;
         }
       } else {
-        ActualEddMess = `Delivery by ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         ActualEdd = defaultEddDateString;
       }
     }

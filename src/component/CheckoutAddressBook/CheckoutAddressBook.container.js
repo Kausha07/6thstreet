@@ -52,7 +52,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     const { id = 0, city, area, country_code } = address;
     const { estimateEddResponse, citiesData } = this.props;
     this.setState({ selectedAddressId: id });
-    if (citiesData) {
+    if (citiesData.length > 0) {
       let request = {
         country: country_code,
         city: city,

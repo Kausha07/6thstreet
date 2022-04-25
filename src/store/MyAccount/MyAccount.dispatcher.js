@@ -26,6 +26,7 @@ import { setStoreCredit } from "Store/StoreCredit/StoreCredit.action";
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import { getInitialState as getStoreCreditInitialState } from "Store/StoreCredit/StoreCredit.reducer";
 import WishlistDispatcher from "Store/Wishlist/Wishlist.dispatcher";
+import AppConfigDispatcher from "Store/AppConfig/AppConfig.dispatcher";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import {
   getMobileApiAuthorizationToken,
@@ -182,7 +183,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getCitiesData(dispatch) {
     MobileAPI.get("eddservice/cities").then((response) => {
       let finalRes = response.result === null ? [] : response.result
-      dispatch(setCitiesData(finalRes));
+      AppConfigDispatcher.getCities().then((innerCityResp) => {
+        dispatch(setCitiesData(finalRes, innerCityResp.data));
+      });
     })
   }
 
@@ -415,10 +418,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           sessionStorage.setItem('EddAddressRes', JSON.stringify(response.result))
         } else {
           dispatch(setEddResponse(response.errorMessage, request));
+          sessionStorage.setItem('EddAddressReq', '')
+          sessionStorage.setItem('EddAddressRes', '')
         }
       });
     } catch (error) {
       dispatch(setEddResponse(null, request));
+      sessionStorage.setItem('EddAddressReq', '')
+      sessionStorage.setItem('EddAddressRes', '')
     }
   }
 
