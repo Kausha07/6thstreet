@@ -313,7 +313,7 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///") == 1
         ? checkCategoryLevel().split("///").pop()
         : "";
-    console.log("Product", categoryLevel);
+        
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,
