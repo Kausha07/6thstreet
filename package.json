@@ -44,7 +44,7 @@
     "scripts": {
         "start": "scandipwa-scripts start",
         "start-ar": "scandipwa-scripts start --locale ar_SA",
-        "pre": "sed -i '' 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' /app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
+        "pre": "sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' /app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
         "build-ssr": "set PUBLIC_URL='' && npm run build",
