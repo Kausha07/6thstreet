@@ -335,7 +335,7 @@ export class CartItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, citiesData } = this.props;
+    const { EddResponse, edd_info } = this.props;
     const { isArabic } = this.state;
     const {
       defaultEddDateString,
@@ -345,7 +345,7 @@ export class CartItem extends PureComponent {
     } = getDefaultEddDate(2);
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (citiesData.length > 0) {
+    if (edd_info && edd_info.is_enable) {
       if (EddResponse) {
         if (isObject(EddResponse)) {
           Object.values(EddResponse).filter((entry) => {

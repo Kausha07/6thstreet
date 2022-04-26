@@ -83,7 +83,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   EddResponse: state.MyAccountReducer.EddResponse,
-  citiesData: state.MyAccountReducer.citiesData,
+  edd_info: state.AppConfig.edd_info,
   defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
 });
 
@@ -156,7 +156,7 @@ export class CartItemContainer extends PureComponent {
     minSaleQuantity: this.getMinQuantity(),
     maxSaleQuantity: this.getMaxQuantity(),
     EddResponse:this.props.EddResponse,
-    citiesData:this.props.citiesData,
+    edd_info:this.props.edd_info,
     defaultEddResponse:this.props.defaultEddResponse,
   });
   

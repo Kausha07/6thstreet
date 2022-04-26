@@ -102,7 +102,7 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency },
       displayDiscountPercentage,
       EddResponse,
-      citiesData
+      edd_info
     } = this.props;
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
@@ -114,7 +114,7 @@ class MyAccountOrderView extends PureComponent {
         myOrderEdd={finalEdd}
         compRef={"myOrder"}
         EddResponse={EddResponse}
-        citiesData={citiesData}
+        edd_info={edd_info}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
       />

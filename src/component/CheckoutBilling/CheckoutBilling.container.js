@@ -46,7 +46,7 @@ export const mapStateToProps = (state) => ({
   default_title: state.ConfigReducer.default_title,
   customer: state.MyAccountReducer.customer,
   EddResponse: state.MyAccountReducer.EddResponse,
-  citiesData:state.MyAccountReducer.citiesData
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -357,13 +357,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       newCardVisible,
       showErrorNotification,
       EddResponse,
-      citiesData
+      edd_info
     } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
     let FinalEdd = null;
 
-    if (citiesData && EddResponse) {
+    if (edd_info && edd_info.is_enable && EddResponse) {
       if (isObject(EddResponse)) {
         Object.values(EddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
@@ -497,10 +497,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress,
       setTabbyWebUrl,
       EddResponse,
-      citiesData
+      edd_info
     } = this.props;
     let FinalEdd = null;
-    if (citiesData && EddResponse) {
+    if (edd_info && edd_info.is_enable && EddResponse) {
       if (isObject(EddResponse)) {
         Object.values(EddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {

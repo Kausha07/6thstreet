@@ -89,8 +89,8 @@ export class Checkout extends SourceCheckout {
     if (paymentInformation) {
       this.setState({ paymentInformation });
     }
-    const { estimateEddResponse, pdpEddAddressSelected, citiesData, addresses } = this.props;
-    if (citiesData.length > 0 && addresses && addresses.length > 0) {
+    const { estimateEddResponse, edd_info, addresses } = this.props;
+    if (edd_info && edd_info.is_enable && addresses && addresses.length > 0) {
       const defaultAddress = addresses.find(({ default_shipping }) => default_shipping === true);
       const { city, area, country_code } = defaultAddress;
       let request = {

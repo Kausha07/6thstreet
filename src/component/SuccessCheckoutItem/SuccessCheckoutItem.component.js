@@ -20,7 +20,7 @@ import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   EddResponse: state.MyAccountReducer.EddResponse,
-  citiesData: state.MyAccountReducer.citiesData
+  edd_info: state.AppConfig.edd_info,
 });
 
 export class SuccessCheckoutItem extends PureComponent {
@@ -232,11 +232,11 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, citiesData } = this.props;
+    const { EddResponse, edd_info } = this.props;
     const { isArabic } = this.state;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (citiesData.length > 0) {
+    if (edd_info && edd_info.is_enable) {
       if (EddResponse) {
         if (isObject(EddResponse)) {
           Object.values(EddResponse).filter((entry) => {

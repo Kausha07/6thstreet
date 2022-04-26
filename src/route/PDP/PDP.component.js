@@ -29,6 +29,7 @@ export const mapStateToProps = (state) => ({
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   EddResponse: state.MyAccountReducer.EddResponse,
   citiesData: state.MyAccountReducer.citiesData,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -93,7 +94,7 @@ class PDP extends PureComponent {
     return { cityEntry, areaEntry }
   }
 
-  getCityAreaFromStorage = (citiesData,countryCode) => {
+  getCityAreaFromStorage = (citiesData, countryCode) => {
     const sessionData = JSON.parse(sessionStorage.getItem('EddAddressReq'))
     const { city, area } = sessionData
     const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
@@ -107,7 +108,7 @@ class PDP extends PureComponent {
     });
     return { cityEntry, areaEntry }
   }
-  getCityAreaFromDefault = (citiesData,countryCode) => {
+  getCityAreaFromDefault = (citiesData, countryCode) => {
     const { defaultShippingAddress } = this.props;
     const { area, city } = defaultShippingAddress;
     const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
@@ -126,11 +127,11 @@ class PDP extends PureComponent {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress, citiesData } = this.props;
     if (isSignedIn() && defaultShippingAddress) {
-      this.getCityAreaFromDefault(citiesData,countryCode)
+      this.getCityAreaFromDefault(citiesData, countryCode)
     } else if (isSignedIn() && !defaultShippingAddress && sessionStorage.getItem('EddAddressReq')) {
-      this.getCityAreaFromStorage(citiesData,countryCode)
+      this.getCityAreaFromStorage(citiesData, countryCode)
     } else if (!isSignedIn() && sessionStorage.getItem('EddAddressReq')) {
-      this.getCityAreaFromStorage(citiesData,countryCode)
+      this.getCityAreaFromStorage(citiesData, countryCode)
     }
     else {
       this.setState({
@@ -141,8 +142,8 @@ class PDP extends PureComponent {
   }
   componentDidMount() {
     const countryCode = getCountryFromUrl();
-    const { defaultShippingAddress, citiesData } = this.props;
-    if (citiesData.length > 0) {
+    const { edd_info } = this.props;
+    if (edd_info && edd_info.is_enable) {
       this.validateEddStatus(countryCode)
     } else {
       this.setState({
@@ -152,7 +153,7 @@ class PDP extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { defaultShippingAddress, estimateEddResponse, citiesData } = this.props;
+    const { defaultShippingAddress, estimateEddResponse, citiesData, edd_info } = this.props;
     const { defaultShippingAddress: prevdefaultShippingAddress, citiesData: prevCitiesData } = prevProps;
     if (prevCitiesData && citiesData && prevCitiesData.length !== citiesData.length) {
       this.setState({
@@ -166,7 +167,7 @@ class PDP extends PureComponent {
     ) {
       const { country_code, area, city } = defaultShippingAddress;
 
-      if (citiesData.length > 0) {
+      if (edd_info && edd_info.is_enable) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
         this.setState(
           {

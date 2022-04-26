@@ -58,10 +58,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, compRef, myOrderEdd, citiesData } = this.props;
+    const { EddResponse, compRef, myOrderEdd, edd_info } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (citiesData.length > 0) {
+    if (edd_info && edd_info.is_enable) {
       if (compRef === "checkout") {
         if (EddResponse) {
           if (isObject(EddResponse)) {

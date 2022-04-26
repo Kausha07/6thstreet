@@ -197,7 +197,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       onAddressSelect,
       isSameAsShipping,
       addresses,
-      citiesData,
+      edd_info,
       totals: { is_virtual },
     } = this.props;
 
@@ -213,7 +213,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       <>
         {this.renderAddressHeading()}
         <CheckoutAddressBook
-          citiesData={citiesData}
+          edd_info={edd_info}
           addresses={addresses}
           onAddressSelect={onAddressSelect}
           isBilling
