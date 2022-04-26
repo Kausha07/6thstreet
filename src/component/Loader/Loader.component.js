@@ -30,6 +30,9 @@ export class Loader extends PureComponent {
   renderMain() {
     return <img block="Loader" elem="Main" src={LoaderImg} alt="Loader" />;
   }
+  renderCSSLoader() {
+    return <div block="Loader" elem="SpinningLoader"></div>;
+  }
 
   render() {
     const { isLoading } = this.props;
@@ -40,7 +43,8 @@ export class Loader extends PureComponent {
     return (
       <div block="Loader">
         <div block="Loader" elem="Scale">
-          {this.renderMain()}
+          {/* {this.renderMain()} */}
+          {this.renderCSSLoader()}
         </div>
       </div>
     );

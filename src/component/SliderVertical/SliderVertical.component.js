@@ -74,7 +74,7 @@ export class SliderVertical extends PureComponent {
       draggableRef: null,
       prevActiveImage: activeImage,
       height: 0,
-      sliderChildren: null,
+      sliderChildren: [],
       sliderHeightChildren: null,
       sliderHeight: null,
       count: 0,
@@ -118,12 +118,12 @@ export class SliderVertical extends PureComponent {
     let timer = children.length > 4 ? 2000 : 0;
     setTimeout(() => {
       const { draggableRef, sliderRef } = this;
-      const sliderChildren = draggableRef.current.children;
+      const sliderChildren = draggableRef?.current?.children;
       const sliderHeightChildren =
-        draggableRef.current.children[0].offsetHeight;
-      const sliderHeight = sliderRef.current.offsetHeight;
+        draggableRef?.current?.children[0]?.offsetHeight;
+      const sliderHeight = sliderRef?.current?.offsetHeight;
       // eslint-disable-next-line no-magic-numbers
-      const countPerPage = Math.floor(sliderHeight / sliderHeightChildren);
+      const countPerPage = Math.floor(sliderHeight / sliderHeightChildren) || 3;
 
       this.setState({
         draggableRef,
@@ -162,7 +162,7 @@ export class SliderVertical extends PureComponent {
 
     const {
       draggableRef,
-      sliderChildren,
+      sliderChildren = [],
       sliderHeightChildren,
       count,
       countPerPage,
@@ -204,7 +204,7 @@ export class SliderVertical extends PureComponent {
     draggableRef,
     prevActiveImage
   ) => {
-    if (activeImage >= count) {
+    if (activeImage >= count && draggableRef) {
       const { oldTranslate } = this.state;
       const newTranslate =
         sliderChildren.length - count < countPerPage

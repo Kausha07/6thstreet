@@ -11,6 +11,13 @@ import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
+import { getUUIDToken } from "Util/Auth";
+import isMobile from "Util/Mobile";
+import { Phone, Chat, Email } from "Component/Icons";
+import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import Link from "Component/Link";
+import PDPDetail from "Component/PDPDetail";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -24,12 +31,14 @@ class PDPDetailsSection extends PureComponent {
       0: true,
       1: true,
       2: true,
-      3: true,
+      3: false,
       4: true,
       5: true,
     },
     pdpWidgetsAPIData: [],
     isArabic: isArabic(),
+    showMore: isMobile.any() || isMobile.tablet() ? false : true,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   componentDidMount() {
@@ -53,31 +62,31 @@ class PDPDetailsSection extends PureComponent {
     const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
-        const customer = BrowserDatabase.getItem("customer");
-        const userID = customer && customer.id ? customer.id : null;
-        const query = {
-          filters: [],
-          num_results: 10,
-          mad_uuid: userData?.USER_DATA?.deviceUuid || null,
-        };
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      const query = {
+        filters: [],
+        num_results: 10,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      };
 
-        let promisesArray = [];
-        pdpWidgetsData.forEach((element) => {
-          const { type } = element;
-          const payload = VueQuery.buildQuery(type, query, {
-            gender,
-            userID,
-            sourceProduct,
-          });
-          promisesArray.push(fetchVueData(payload));
+      let promisesArray = [];
+      pdpWidgetsData.forEach((element) => {
+        const { type } = element;
+        const payload = VueQuery.buildQuery(type, query, {
+          gender,
+          userID,
+          sourceProduct,
         });
-        Promise.all(promisesArray)
-          .then((resp) => {
-            this.setState({ pdpWidgetsAPIData: resp });
-          })
-          .catch((err) => {
-            console.err(err);
-          });
+        promisesArray.push(fetchVueData(payload));
+      });
+      Promise.all(promisesArray)
+        .then((resp) => {
+          this.setState({ pdpWidgetsAPIData: resp });
+        })
+        .catch((err) => {
+          console.err(err);
+        });
     }
   }
 
@@ -85,18 +94,21 @@ class PDPDetailsSection extends PureComponent {
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     return (
-      <div block="PDPDetailsSection" elem="ShareButtonContainer">
-        <ShareButton
-          block="PDPDetailsSection-ShareButtonContainer"
-          elem="ShareButton"
-          title={document.title}
-          text={`Hey check this out: ${document.title}`}
-          url={url.toString()}
-          mods={{ isArabic: isArabic() }}
-        >
-          <span>{__("Share")}</span>
-        </ShareButton>
-      </div>
+      <>
+        <div block="PDPDetailsSection" elem="ShareButtonContainer">
+          <ShareButton
+            block="PDPDetailsSection-ShareButtonContainer"
+            elem="ShareButton"
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.toString()}
+            mods={{ isArabic: isArabic() }}
+          >
+            <span>{__("Share")}</span>
+          </ShareButton>
+        </div>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -145,10 +157,15 @@ class PDPDetailsSection extends PureComponent {
 
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
+    const { isArabic } = this.state;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
-          <div block="PDPDetailsSection" elem="IconContainer">
+          <div
+            block="PDPDetailsSection"
+            elem="IconContainer"
+            mods={{ isArabic }}
+          >
             <div
               block="PDPDetailsSection"
               elem="Icon"
@@ -160,7 +177,7 @@ class PDPDetailsSection extends PureComponent {
             </div>
           </div>
         ) : null}
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -168,7 +185,7 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -184,14 +201,36 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { description },
     } = this.props;
+    const { showMore, isMobile } = this.state;
     return (
-      <>
-        <p block="PDPDetailsSection" elem="Description">
-          {description}
-        </p>
-        {this.renderHighlights()}
-      </>
+      <div block="PDPDetailWrapper">
+        <div block="PDPDetailWrapper" elem="Items" mods={{ showMore }}>
+          <div block="PDPDetailWrapper" elem="LeftDescription">
+            <h3
+              block="PDPDetailWrapper"
+              elem="Title"
+              mods={{ isMobile: !!isMobile }}
+            >
+              {__("PRODUCT DETAILS:")}
+            </h3>
+            <p block="PDPDetailsSection" elem="Description">
+              {description}
+            </p>
+          </div>
+          {this.renderHighlights()}
+        </div>
+        {showMore ? (
+          <div block="PDPDetailWrapper" elem="Button">
+            <button onClick={() => this.updateShowMoreState(false)}>
+              {__("SHOW MORE DETAILS")}
+            </button>
+          </div>
+        ) : null}
+      </div>
     );
+  }
+  updateShowMoreState(state) {
+    this.setState({ showMore: state });
   }
 
   listTitle(str) {
@@ -226,7 +265,7 @@ class PDPDetailsSection extends PureComponent {
 
   getCategoryByLevel(categories = {}, level = 0) {
     try {
-      return categories.level2[0].split(" /// ")[level];
+      return categories.level2 && categories.level2[0].split(" /// ")[level];
     } catch (err) {
       console.error(err);
       return undefined;
@@ -505,10 +544,12 @@ class PDPDetailsSection extends PureComponent {
         elem="Highlights"
         mods={{ isArabic: isArabic() }}
       >
-        <h4>{__("Highlights")}</h4>
+        <h3 className="highlightsTag">{__("Highlights")}</h3>
         <ul>{this.renderListItems(highlights)}</ul>
-        {this.renderModelDetails(model_height, model_wearing_size)}
-        {this.renderSKU(sku)}
+        <div block="BottomHighlights">
+          {this.renderModelDetails(model_height, model_wearing_size)}
+          {this.renderSKU(sku)}
+        </div>
         {/* {this.renderMoreDetailsList()} */}
       </div>
     );
@@ -610,8 +651,11 @@ class PDPDetailsSection extends PureComponent {
       product: { sku = null, categories_without_path = [] },
     } = this.props;
     const { pdpWidgetsAPIData } = this.state;
+    const { innerWidth: width } = window;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
+        <>
+        <div block="Seperator2" />
         <React.Fragment>
           {pdpWidgetsAPIData.map((item, index) => {
             if (typeof item === "object" && Object.keys(item).length > 0) {
@@ -620,17 +664,27 @@ class PDPDetailsSection extends PureComponent {
               const { data } = item;
               if (data && data.length > 0) {
                 return (
-                  <DynamicContentVueProductSliderContainer
-                    widgetID={widgetID}
-                    products={data}
-                    heading={heading}
-                    isHome={true}
-                    renderMySignInPopup={renderMySignInPopup}
-                    sourceProdID={sku}
-                    sourceCatgID={categories_without_path[0]}
-                    pageType={"pdp"}
-                    key={`DynamicContentVueProductSliderContainer${index}`}
-                  />
+                  <>
+                    <div
+                      block="PDPWidgets"
+                      elem="Slider"
+                      mods={{ largeScreen: width > 1440 }}
+                    >
+                      <DynamicContentVueProductSliderContainer
+                        widgetID={widgetID}
+                        products={data}
+                        heading={heading}
+                        isHome={true}
+                        renderMySignInPopup={renderMySignInPopup}
+                        sourceProdID={sku}
+                        sourceCatgID={categories_without_path[0]}
+                        pageType={"pdp"}
+                        key={`DynamicContentVueProductSliderContainer${index}`}
+                        index={index}
+                        isArabic={isArabic()}
+                      />
+                    </div>
+                  </>
                 );
               }
               return null;
@@ -638,28 +692,298 @@ class PDPDetailsSection extends PureComponent {
             return null;
           })}
         </React.Fragment>
+        </>
       );
     }
     return null;
   }
 
+  getCountryConfigs() {
+    const {
+      config: { countries },
+      country,
+      language,
+    } = this.props;
+
+    const {
+      opening_hours: { [language]: openHoursLabel },
+      // toll_free: phone,
+    } = countries[country];
+
+    return {
+      openHoursLabel,
+      // toll_free,
+    };
+  }
+  chat() {
+    if(document.querySelector(".ori-cursor-ptr")){
+    document.querySelector(".ori-cursor-ptr").click();
+    }
+  }
+  renderContactUs() {
+    const { config } = this.props;
+    const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    return (
+      <div block="ContactUs">
+        <div block="ContactUs" elem="Icons">
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+                <Phone />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Phone")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon" onClick={this.chat}>
+              <Chat />
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Live Chat")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+                <Email />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Email")}
+            </p>
+          </div>
+        </div>
+        <p block="ContactUs" elem="Message">
+          {__("Customer Service available all days from: ")}
+          {openHoursLabel}
+        </p>
+      </div>
+    );
+  }
+  renderContactAccordion() {
+    const { isMobile } = this.state;
+    if (!isMobile) {
+      return null;
+    }
+    return (
+      <Accordion
+        mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+        title={__("Contact us")}
+        is_expanded={this.state.isExpanded["5"]}
+      >
+        {this.renderContactUs()}
+      </Accordion>
+    );
+  }
+
+  renderBrandDetail() {
+    const { isMobile } = this.state;
+    // if (isMobile) {
+    //   return null;
+    // }
+    return <PDPDetail {...this.props} />;
+  }
+  renderAboutBrand() {
+    const {
+      product: { brand_name },
+      brandDescription,
+      brandImg,
+      brandName,
+    } = this.props;
+    if (!(brandDescription && brandImg && brandName)) {
+      return null;
+    }
+    return (
+      <>
+        <Accordion
+          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+          title={`${__("About")} ${brand_name}`}
+          is_expanded={this.state.isExpanded["3"]}
+        >
+          {this.renderBrandDetail()}
+        </Accordion>
+        {this.renderAccordionSeperator()}
+      </>
+    );
+  }
+
+  renderSeperator() {
+    return <div block="Seperator"></div>;
+  }
+  renderAccordionSeperator() {
+    return <div block="AccordionSeperator"></div>;
+  }
+  getBrandUrl = () => {
+    const {
+      product: { brand_name="" },
+    } = this.props;
+    const url = brand_name
+      .replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
+    return `${url}.html`;
+  };
+  renderMoreFromTheBrand = () => {
+    const url = this.getBrandUrl();
+    // const url = "https://www.google.com";
+    return (
+      <div block="FromBrand">
+        <Link block="FromBrand" elem="MoreButton" to={url}>
+          <span block="FromBrand" elem="ButtonText">
+            {__("More from this brand")}
+          </span>
+        </Link>
+      </div>
+    );
+  };
+  renderContactUsSection() {
+    return (
+      <div block="ContactUsWrapper">
+        <div block="ContactUsWrapper" elem="Detail">
+          {this.renderAccordionSeperator()}
+          {this.renderContactUs()}
+        </div>
+      </div>
+    );
+  }
+
+  renderShipping(){
+
+    // let country = getCountryFromUrl()
+    // let txt = {
+    //   AE: __("Orders of less than AED 100 will be charged AED 10 shipping fee(non-refundable). Orders of AED 100 or more will be delivered free."),
+    //   SA: __("Orders of less than SAR 200 will be charged SAR 20 shipping fee(non-refundable). Orders of SAR 200 or more will be delivered free."),
+    //   KW: __("Orders of less than KWD 20 will be charged KWD 2.75 shipping fee(non-refundable). Orders of KWD 20 or more will be delivered free."),
+    //   QA: __("Orders of less than QAR 200 will be charged QAR 20 shipping fee(non-refundable). Orders of QAR 200 or more will be delivered free."),
+    //   OM: __("Orders of less than OMR 20 will be charged OMR 3.5 shipping fee(non-refundable). Orders of OMR 20 or more will be delivered free."),
+    //   BH: __("Orders of less than BHD 20 will be charged BHD 3 shipping fee(non-refundable). Orders of BHD 20 or more will be delivered free.")
+    // }
+
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
+      SA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above SAR 200."),
+      KW: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above KWD 20."),
+      QA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above QAR 200."),
+      OM: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above OMR 20."),
+      BH: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above BHD 20.")
+    }
+
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 ريال إماراتي ",
+    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
+
+    return(
+      <div>
+        <p>{txt[country]}
+          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+        </p>
+      </div>
+    )
+  }
+
+  renderShippingAndFreeReturns(){
+
+    if(this.props.product.is_returnable === 1){
+      return(
+        <div>
+          <p>{__("100 days free return available. Shop freely.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+          </p>
+        </div>
+      )
+    }
+
+    if(this.props.product.is_returnable === 0){
+      return(
+        <div>
+          <p>{ __("Not eligible for return.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+          </p>
+        </div>
+      )
+    }
+
+    // if(this.props.product.is_returnable === "NO"){
+    //   return(
+    //     <div>check check check</div>
+    //   )
+    // }
+
+    return(
+      <div>
+        <p>
+        { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+        </p>
+      </div>
+    )
+  }
+  
   render() {
     const {
       product: { brand_name },
     } = this.props;
+    const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
-        <Accordion
-          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-          title={__("Description")}
-          is_expanded={this.state.isExpanded["0"]}
-        >
-          {this.renderIconsSection()}
-          {this.renderDescription()}
-        </Accordion>
-        <div block="Seperator" />
-        {this.renderShareButton()}
-        {this.renderPdpWidgets()}
+        {isMobile ? (
+          <div block="MobileIcons">
+            {this.renderSeperator()} {this.renderIconsSection()}
+          </div>
+        ) : (
+          ""
+        )}
+        <div block="AccordionWrapper">
+          <Accordion
+            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+            title={isMobile ? __("Description") : __("PRODUCT DETAILS:")}
+            is_expanded={this.state.isExpanded["0"]}
+          >
+            {!isMobile ? this.renderIconsSection() : ""}
+            {this.renderDescription()}
+          </Accordion>
+          {this.renderAccordionSeperator()}
+          {/* {this.renderShareButton()} */}
+          {isMobile ? this.renderAboutBrand() : ""}
+        </div >
+        {isMobile ? null : this.renderSeperator()}
+        <div block="AccordionWrapper">
+          <Accordion
+            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+            title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
+            is_expanded={this.state.isExpanded["3"]}
+          >
+            {this.renderShipping()}
+            <br />
+            {this.renderShippingAndFreeReturns()}
+            {isMobile ? <br /> : null}
+          </Accordion>
+          {this.renderAccordionSeperator()}
+        </div >
+
+        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        {isMobile ? this.renderMoreFromTheBrand() : ""}
+        {isMobile ? this.renderContactUsSection() : ""}
+        <div block="Seperator2" />
+
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
             title={ __('Size & Fit') }
@@ -685,13 +1009,9 @@ class PDPDetailsSection extends PureComponent {
                   is_expanded={this.state.isExpanded["4"]}
                 >
                 </Accordion>
-                <Accordion
-                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
-                  title={ __('Contact Us') }
-                  is_expanded={this.state.isExpanded["5"]}
-                >
-                </Accordion> */}
-      </div>
+                
+                */}
+      </div >
     );
   }
 }

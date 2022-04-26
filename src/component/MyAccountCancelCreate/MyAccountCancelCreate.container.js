@@ -95,8 +95,19 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         };
         this.setState({ isLoading: true });
 
-        MagentoAPI.post('recan/commitRecan', payload).then(() => {
-            history.push(`/my-account/my-orders/${ orderId }`);
+        MagentoAPI.post('recan/commitRecan', payload).then((response) => {
+            if (!!!response?.success) {
+                if(typeof response === "string"){
+                    this.setState({ isLoading: false });
+                    showErrorMessage(response);
+                }
+                else {
+                    showErrorMessage(__('Error appeared while requesting a cancelation'));
+                }
+            }
+            else{
+                history.push(`/my-account/my-orders/${ orderId }`);
+            }
         }).catch(() => {
             showErrorMessage(__('Error appeared while requesting a cancelation'));
             this.setState({ isLoading: false });

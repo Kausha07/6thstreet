@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { VUE_PAGE_VIEW } from "Util/Event";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
     CART, CART_EDITING, CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
@@ -32,6 +34,11 @@ import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 import { appendWithStoreCode } from 'Util/Url';
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+
 
 import CartPage from './CartPage.component';
 
@@ -40,16 +47,23 @@ export const BreadcrumbsDispatcher = import(
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
 
-export const mapStateToProps = (state) => ({
+export const mapStateToProps = (state) => {
+    return({
     totals: state.CartReducer.cartTotals,
+    couponsItems: state.CartReducer.cartCoupons,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
     isSignedIn: state.MyAccountReducer.isSignedIn,
     clubApparel: state.ClubApparelReducer.clubApparel,
     isLoading: state.CartReducer.isLoading,
-    processingRequest: state.CartReducer.processingRequest
-});
+    processingRequest: state.CartReducer.processingRequest,
+    prevPath: state.PLP.prevPath,
+    couponLists : state.CartReducer.cartCoupons,
+    config: state.AppConfig.config,
+    language: state.AppState.language,
+    country: state.AppState.country
+})};
 
 export const mapDispatchToProps = (dispatch) => ({
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -59,7 +73,10 @@ export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
-    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    getCouponList : () => CartDispatcher.getCoupon(dispatch),
+    applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
+    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
 });
 
 export class CartPageContainer extends PureComponent {
@@ -104,7 +121,6 @@ export class CartPageContainer extends PureComponent {
             isSignedIn,
             updateMeta
         } = this.props;
-
         this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
 
         if (!isSignedIn) {
@@ -113,7 +129,7 @@ export class CartPageContainer extends PureComponent {
 
         updateMeta({ title: __('My account') });
 
-        this.onSignIn();
+        this.onSignIn();        
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -132,12 +148,29 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit } = this.props;
-
+        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList } = this.props;
+        const locale = VueIntegrationQueries.getLocaleFromUrl();
+        const customer = BrowserDatabase.getItem("customer");
+        const userID = customer && customer.id ? customer.id : null;
+        VueIntegrationQueries.vueAnalayticsLogger({
+            event_name: VUE_PAGE_VIEW,
+            params: {
+                clicked: Date.now(),
+                currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+                event: VUE_PAGE_VIEW,
+                pageType: "cart",
+                referrer: prevPath,
+                userID: userID,
+                uuid: getUUID(),
+                url: window.location.href,
+            },
+        });
         updateMeta({ title: __('Cart') });
         updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
+        getCouponList();
+
     }
 
     componentDidUpdate(prevProps) {
@@ -160,7 +193,7 @@ export class CartPageContainer extends PureComponent {
         }
 
         if (items_qty !== prevItemsQty) {
-            const title = `${ items_qty || '0' } Items`;
+            const title = `${items_qty || '0'} Items`;
             changeHeaderState({
                 ...headerState,
                 title
@@ -171,7 +204,7 @@ export class CartPageContainer extends PureComponent {
     changeActiveTab(activeTab) {
         const { history } = this.props;
         const { [activeTab]: { url } } = tabMap;
-        history.push(`${ MY_ACCOUNT_URL }${ url }`);
+        history.push(`${MY_ACCOUNT_URL}${url}`);
     }
 
     onCheckoutButtonClick(e) {
@@ -183,7 +216,7 @@ export class CartPageContainer extends PureComponent {
         } = this.props;
         const { isCheckoutAvailable } = this.state;
         if (isCheckoutAvailable) {
-        // to prevent outside-click handler trigger
+            // to prevent outside-click handler trigger
             e.nativeEvent.stopImmediatePropagation();
 
             if (guest_checkout) {
@@ -265,10 +298,10 @@ export class CartPageContainer extends PureComponent {
     render() {
         return (
             <CartPage
-              { ...this.props }
-              { ...this.state }
-              { ...this.containerFunctions }
-              tabMap={ tabMap }
+                {...this.props}
+                {...this.state}
+                {...this.containerFunctions}
+                tabMap={tabMap}
             />
         );
     }

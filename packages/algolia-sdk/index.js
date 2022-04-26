@@ -11,6 +11,8 @@ import {
   init,
   logAlgoliaAnalytics,
   searchBy,
+  getBrandsDetails,
+  getShopByBrands
 } from "./app";
 import { getIndex } from "./app/utils";
 
@@ -29,14 +31,18 @@ const AlgoliaSDK = {
     AlgoliaSDK.env = env;
   },
 
-  getPLP: (URL) =>
-    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }),
+  getPLP: (URL,params) =>
+    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env },params),
   getPDP: (params) => getPDP(params, { index: AlgoliaSDK.index }),
   searchBy: (params) => searchBy(params, { index: AlgoliaSDK.index }),
   getSuggestions: (params) =>
     getSuggestions(params, { index: AlgoliaSDK.index }),
   autocompleteSearch: (params) =>
     autocompleteSearch(params, { index: AlgoliaSDK.index }),
+  getBrandsDetails: (params) =>
+    getBrandsDetails(params, { index: AlgoliaSDK.index }),
+  getShopByBrands: (params) =>
+    getShopByBrands(params, { client: AlgoliaSDK.client, index: AlgoliaSDK.index }),
   getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),

@@ -9,6 +9,10 @@ import { setMinicartOpen } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { customerType } from "Type/Account";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -20,12 +24,10 @@ import Event, {
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
+import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
+import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
-
-import { PDP_CLICK_AND_COLLECT_POPUP_ID } from '../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config';
-import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -34,6 +36,7 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   customer: state.MyAccountReducer.customer,
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -67,10 +70,9 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   setMinicartOpen: (isMinicartOpen = false) =>
     dispatch(setMinicartOpen(isMinicartOpen)),
-  getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay())
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -84,12 +86,12 @@ export class PDPAddToCartContainer extends PureComponent {
     total: PropTypes.number,
     productAdded: PropTypes.bool,
     setMinicartOpen: PropTypes.func.isRequired,
-    getProductStock: PropTypes.func.isRequired,
     setStockAvailability: PropTypes.func.isRequired,
     customer: customerType,
     guestUserEmail: PropTypes.string,
     showOverlay: PropTypes.func.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired
+    hideActiveOverlay: PropTypes.func.isRequired,
+    setSize: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -108,9 +110,10 @@ export class PDPAddToCartContainer extends PureComponent {
     showAlertNotification: this.showAlertNotification.bind(this),
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     setGuestUserEmail: this.setGuestUserEmail.bind(this),
-    togglePDPClickAndCollectPopup: this.togglePDPClickAndCollectPopup.bind(this),
+    togglePDPClickAndCollectPopup:
+      this.togglePDPClickAndCollectPopup.bind(this),
     selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this),
-    confirmClickAndCollect: this.confirmClickAndCollect.bind(this)
+    confirmClickAndCollect: this.confirmClickAndCollect.bind(this),
   };
 
   constructor(props) {
@@ -134,16 +137,32 @@ export class PDPAddToCartContainer extends PureComponent {
       notifyMeLoading: false,
       notifyMeSuccess: false,
       openClickAndCollectPopup: false,
-      selectedClickAndCollectStore: null
+      selectedClickAndCollectStore: null,
     };
 
     this.fullCheckoutHide = null;
     this.startCheckoutHide = null;
   }
 
+  updateDefaultSizeType() {
+    const { product } = this.props;
+    if(product?.size_eu &&  product?.size_uk && product?.size_us) {
+      const sizeTypes = ['eu', 'uk', 'us'];
+      let index = 0;
+      while(product[`size_${sizeTypes[index]}`]?.length <= 0){
+        index = index + 1;
+      }
+
+      if(index >= sizeTypes.length) {
+        index = 0;
+      }
+      this.setState({selectedSizeType: sizeTypes[index]});
+    }
+  }
+
+
   static getDerivedStateFromProps(props) {
     const { product } = props;
-
     if (product.simple_products !== undefined) {
       const { simple_products, size_eu } = product;
 
@@ -217,9 +236,10 @@ export class PDPAddToCartContainer extends PureComponent {
   componentDidMount() {
     const {
       product: { sku, size_eu, size_uk, size_us, in_stock, stock_qty },
-      getProductStock,
       setGuestUserEmail,
+      simple_products = [],
     } = this.props;
+    this.updateDefaultSizeType();
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
     if (email) {
       setGuestUserEmail(email);
@@ -227,48 +247,44 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       sizeObject: { sizeTypes },
     } = this.state;
-    this.setState({ processingRequest: true });
-    getProductStock(sku).then((response) => {
-      const allSizes = Object.entries(response).reduce((acc, size) => {
-        const sizeCode = size[0];
-        const { quantity } = size[1];
+    const allSizes = Object.entries(simple_products).reduce((acc, size) => {
+      const sizeCode = size[0];
+      const { quantity } = size[1];
 
-        if (quantity !== null && quantity !== undefined) {
-          acc.push(sizeCode);
-        }
-
-        return acc;
-      }, []);
-      const object = {
-        sizeTypes,
-        sizeCodes: allSizes,
-      };
-      let outOfStockStatus;
-      if (size_us && size_uk && size_eu) {
-        outOfStockStatus =
-          size_us.length === 0 &&
-          size_uk.length === 0 &&
-          size_eu.length === 0 &&
-          in_stock === 0
-            ? true
-            : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
-      } else {
-        outOfStockStatus =
-          in_stock === 0
-            ? true
-            : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+      if (quantity !== null && quantity !== undefined) {
+        acc.push(sizeCode);
       }
 
-      this.setState({
-        processingRequest: false,
-        mappedSizeObject: object,
-        productStock: response,
-        isOutOfStock: outOfStockStatus,
-      });
+      return acc;
+    }, []);
+    const object = {
+      sizeTypes,
+      sizeCodes: allSizes,
+    };
+    let outOfStockStatus;
+    if (size_us && size_uk && size_eu) {
+      outOfStockStatus =
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    } else {
+      outOfStockStatus =
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    }
+
+    this.setState({
+      mappedSizeObject: object,
+      productStock: simple_products,
+      isOutOfStock: outOfStockStatus,
     });
   }
 
@@ -299,16 +315,16 @@ export class PDPAddToCartContainer extends PureComponent {
         //if success
         if (response.message) {
           showNotification("error", response.message);
-          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: false, isOutOfStock: true });
         } else {
-          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: true, isOutOfStock: true });
           if (customer && customer.id) {
             //if user is logged in then change email
             const loginEvent = new CustomEvent("userLogin");
             window.dispatchEvent(loginEvent);
           }
           setTimeout(() => {
-            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+            this.setState({ notifyMeSuccess: false, isOutOfStock: true });
           }, 4000);
         }
       } else {
@@ -319,26 +335,46 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps, _) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       totals: { total: PrevTotal = null },
     } = prevProps;
     const {
       totals: { total = null },
     } = this.props;
-    const { productAdded } = this.state;
+
+    const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
 
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
     }
+
+    const { setSize } = this.props;
+    const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
+    if (
+      selectedSizeType !== prevSelectedSizeType ||
+      selectedSizeCode !== prevSelectedSizeCode
+    ) {
+      setSize(selectedSizeType, selectedSizeCode);
+    }
   }
 
   containerProps = () => {
-    const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores } = this.props;
-    const { mappedSizeObject, selectedClickAndCollectStore, openClickAndCollectPopup } = this.state;
+    const {
+      product,
+      setStockAvailability,
+      customer,
+      guestUserEmail,
+      clickAndCollectStores,
+    } = this.props;
+    const {
+      mappedSizeObject,
+      selectedClickAndCollectStore,
+      openClickAndCollectPopup,
+    } = this.state;
     const basePrice =
-      product.price[0] &&
+      product?.price && product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
 
     return {
@@ -351,7 +387,7 @@ export class PDPAddToCartContainer extends PureComponent {
       guestUserEmail,
       stores: clickAndCollectStores,
       selectedClickAndCollectStore,
-      openClickAndCollectPopup
+      openClickAndCollectPopup,
     };
   };
 
@@ -386,7 +422,7 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  addToCart(isClickAndCollect =  false) {
+  addToCart(isClickAndCollect = false) {
     const {
       product: {
         thumbnail_url,
@@ -404,7 +440,7 @@ export class PDPAddToCartContainer extends PureComponent {
       },
       addProductToCart,
       showNotification,
-      location: { state },
+      prevPath = null,
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
 
@@ -448,7 +484,8 @@ export class PDPAddToCartContainer extends PureComponent {
           qty: 1,
           optionId,
           optionValue,
-          selectedClickAndCollectStore: selectedClickAndCollectStore?.value || ""
+          selectedClickAndCollectStore:
+            selectedClickAndCollectStore?.value || "",
         },
         color,
         optionValue,
@@ -463,30 +500,35 @@ export class PDPAddToCartContainer extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         } else {
           this.afterAddToCart(true, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         }
       });
 
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
-          quantity: 1,
-          size: optionValue,
+          brand: brand_name,
+          category: product_type_6s,
           variant: color,
+          quantity: 1,
+          size_type: optionId,
+          size: optionValue,
+          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
+
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
@@ -495,11 +537,11 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }
@@ -528,25 +570,29 @@ export class PDPAddToCartContainer extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         } else {
           this.afterAddToCart(true, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         }
       });
 
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: configSKU,
           name,
+          id: configSKU,
           price: itemPrice,
+          brand: brand_name,
+          category: product_type_6s,
+          variant: color,
           quantity: 1,
+          size_type: "",
           size: "",
-          variant: "",
+          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0 ,
+          dimension10: basePrice,
+          dimension11: itemPrice,
         },
       });
 
@@ -560,11 +606,11 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }
@@ -572,7 +618,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   afterAddToCart(isAdded = "true", options) {
     const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
-    if(openClickAndCollectPopup) {
+    if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
     }
     const { setMinicartOpen } = this.props;
@@ -581,14 +627,13 @@ export class PDPAddToCartContainer extends PureComponent {
     // TODO props for addedToCart
     const timeout = 1250;
 
-
     if (isAdded) {
-      if(!!!options?.isClickAndCollect) {
+      if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
       }
       this.setState(
         { addedToCart: true },
-        () => options?.isClickAndCollect && history.push('/cart')
+        () => options?.isClickAndCollect && history.push("/cart")
       );
     }
 
@@ -631,12 +676,12 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   confirmClickAndCollect() {
-    this.addToCart(true)
+    this.addToCart(true);
   }
 
   selectClickAndCollectStore(value) {
     this.setState({
-      selectedClickAndCollectStore : value
+      selectedClickAndCollectStore: value,
     });
   }
 
@@ -653,22 +698,22 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       showOverlay,
       hideActiveOverlay,
-      product: {
-        price = {},
-        size_uk = [],
-        size_eu = [],
-        size_us = []
-      },
-      showNotification
+      product: { price = {}, size_uk = [], size_eu = [], size_us = [] },
+      showNotification,
     } = this.props;
 
-    if(!openClickAndCollectPopup) {
+    if (!openClickAndCollectPopup) {
       if (!price[0]) {
         showNotification("error", __("Unable to add product to cart."));
         return;
       }
 
-      if ( (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) && selectedSizeCode === "") {
+      if (
+        (size_uk.length !== 0 ||
+          size_eu.length !== 0 ||
+          size_us.length !== 0) &&
+        selectedSizeCode === ""
+      ) {
         showNotification("error", __("Please select a size."));
         return;
       }
@@ -676,15 +721,17 @@ export class PDPAddToCartContainer extends PureComponent {
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
-    if(openClickAndCollectPopup) {
+    if (openClickAndCollectPopup) {
       hideActiveOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
-    this.setState({
-      openClickAndCollectPopup: !openClickAndCollectPopup
-    },
-    () => {
-      this.toggleRootElementsOpacity();
-    })
+    this.setState(
+      {
+        openClickAndCollectPopup: !openClickAndCollectPopup,
+      },
+      () => {
+        this.toggleRootElementsOpacity();
+      }
+    );
   }
 
   render() {
@@ -692,12 +739,12 @@ export class PDPAddToCartContainer extends PureComponent {
     return (
       <>
         <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
-        {
-          openClickAndCollectPopup && <PDPClickAndCollectPopup
+        {openClickAndCollectPopup && (
+          <PDPClickAndCollectPopup
             {...this.containerFunctions}
             {...this.containerProps()}
           />
-        }
+        )}
       </>
     );
   }

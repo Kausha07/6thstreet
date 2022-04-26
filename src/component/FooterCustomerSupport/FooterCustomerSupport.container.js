@@ -30,6 +30,7 @@ export class FooterCustomerSupportContainer extends PureComponent {
             openHoursLabel,
             phone
         } = this.getCountryConfigs();
+        // let k = this.getCountryConfigs()
 
         return {
             email,

@@ -8,6 +8,7 @@ import { CheckoutAddressBook as SourceCheckoutAddressBook } from "SourceComponen
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 
 import "./CheckoutAddressBook.style.scss";
@@ -21,7 +22,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {
@@ -59,17 +60,17 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       isSignedIn,
       shippingAddress,
       isClickAndCollect,
-      clickAndCollectStatus
+      clickAndCollectStatus,
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
-    
+
     return (
       <CheckoutAddressForm
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         address={{}}
         // If Click And Collect is selected, treat it as guest form
         isSignedIn={isSignedIn && !clickAndCollectStatus}
-        showCountry ={isSignedIn}
+        showCountry={isSignedIn}
         id={formPortalId}
         shippingAddress={shippingAddress}
         clickAndCollectStatus={clickAndCollectStatus}
@@ -84,14 +85,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       selectedAddressId,
       openForm,
       closeForm,
-      hideCards
+      hideCards,
+      isBilling,
     } = this.props;
-    const {
-      id,
-      region: { region_code, region },
-    } = address;
-
-    if (!region_code && !region) {
+    const { id, area } = address;
+    if (!area) {
       return null;
     }
 
@@ -102,13 +100,58 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         title={__("Address #%s", id)}
         address={address}
         key={id}
-        showActions
+        showActions={!!!isBilling}
         hideCards={hideCards}
         openForm={openForm}
         closeForm={closeForm}
       />
     );
   };
+
+  renderNoAddresses() {
+    const {
+      openForm,
+    } = this.props;
+    return (
+      <div block="CheckoutNoAddressBlock">
+        <p>{__('You have no configured addresses.')}</p>
+        <div block="CheckoutAddressBook" elem="NewAddressBtn">
+          <button
+            type="button"
+            block="CheckoutAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openForm}
+          >
+            {__('Add New Address')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  renderAddressList() {
+    const { addresses } = this.props;
+    const isCountryNotAddressAvailable = !addresses.some(add => add.country_code === getCountryFromUrl()) && !isMobile.any()
+    if (!addresses) {
+      return this.renderLoading();
+    }
+    if (!addresses.length || isCountryNotAddressAvailable) {
+      return this.renderNoAddresses();
+    }
+    
+    for(let i=1; i<addresses.length; i++){
+      if(addresses[i].default_shipping){
+        let temp = addresses[i];
+        addresses[i]= addresses[0];
+        addresses[0] = temp; 
+      }
+    }
+
+    return addresses.map(this.renderAddress);
+  }
 
   renderSignedInContent() {
     const { currentPage, isArabic, isMobile } = this.state;
@@ -146,7 +189,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     this.setState({ currentPage: newPage });
   };
 
-
   renderPopup() {
     const { formContent, closeForm, openForm, customer } = this.props;
 
@@ -167,11 +209,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       </div>
     );
   }
-  
+
   renderContent() {
-    const { isSignedIn, isClickAndCollect,clickAndCollectStatus } = this.props;
+    const { isSignedIn, isClickAndCollect, clickAndCollectStatus } = this.props;
     if (isSignedIn && !clickAndCollectStatus) {
-        return this.renderSignedInContent();
+      return this.renderSignedInContent();
     }
 
     return this.renderGuestContent();

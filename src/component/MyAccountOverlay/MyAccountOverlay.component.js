@@ -12,7 +12,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-
+import { getCountryFromUrl } from "Util/Url/Url";
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
 import Field from "SourceComponent/Field";
@@ -23,10 +23,19 @@ import PhoneCountryCodeField from "Component/PhoneCountryCodeField";
 import { PHONE_CODES } from "Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config";
 import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressForm/MyAccountAddressForm.config";
 import { Close } from "Component/Icons";
+import { ChevronLeft } from "Component/Icons";
+import { ThreeDots, Oval } from "react-loader-spinner";
+
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Link from "Component/Link";
+import {
+  deleteAuthorizationToken,
+  deleteMobileAuthorizationToken,
+} from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Image from "Component/Image";
-
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -36,23 +45,31 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   ENABLE_OTP_LOGIN,
+  STATE_INITIAL_LINKS,
   SSO_LOGIN_PROVIDERS,
+  STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
 
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.authRef = React.createRef();
+  }
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     state: PropTypes.oneOf([
       STATE_SIGN_IN,
+      STATE_INITIAL_LINKS,
       STATE_FORGOT_PASSWORD,
       STATE_FORGOT_PASSWORD_SUCCESS,
       STATE_CREATE_ACCOUNT,
       STATE_LOGGED_IN,
       STATE_CONFIRM_EMAIL,
+      STATE_VERIFY_NUMBER,
     ]).isRequired,
     onVisible: PropTypes.func.isRequired,
     onSignInSuccess: PropTypes.func.isRequired,
@@ -91,13 +108,59 @@ export class MyAccountOverlay extends PureComponent {
     isCreateValidated: false,
     isForgotValidated: false,
     isOTP: ENABLE_OTP_LOGIN,
-    countryCode: "",
+    countryCode: PHONE_CODES[getCountryFromUrl()],
   };
 
+  componentDidMount() {
+    // gapi.load("auth2", () => {
+    //   this.authRef.current = gapi.auth2.init();
+    //   this.attachSigninFunction(document.getElementById("g-signin2"));
+    // });
+  }
+  // attachSigninFunction = (element) => {
+  //   this.authRef.current.attachClickHandler(
+  //     element,
+  //     {},
+  //     async (googleUser) => {
+  //       const { onSignInSuccess, onSignInAttempt } = this.props;
+  //       const profile = googleUser?.getBasicProfile();
+  //       const social_token = googleUser?.getAuthResponse()?.id_token;
+  //       const fullName = profile?.getName()?.split(" ");
+  //       const email = profile?.getEmail();
+  //       const payload = {
+  //         social_token,
+  //         firstname: fullName[0],
+  //         lastname: fullName[1],
+  //         email,
+  //         customer_telephone: null,
+  //         type: "google",
+  //         cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+  //       };
+  //       try {
+  //         onSignInAttempt();
+  //         onSignInSuccess(payload);
+  //       } catch (e) {
+  //         console.log("error", e);
+  //         deleteAuthorizationToken();
+  //         deleteMobileAuthorizationToken();
+  //       }
+  //     },
+  //     function (error) {
+  //       console.log(JSON.stringify(error, undefined, 2));
+  //     }
+  //   );
+  // };
+
   renderMap = {
+    [STATE_INITIAL_LINKS]: {
+      render: () => this.renderInitialLinks(),
+    },
     [STATE_SIGN_IN]: {
       render: () => this.renderSignIn(),
       title: __("Welcome Back"),
+    },
+    [STATE_VERIFY_NUMBER]: {
+      render: () => this.renderVerifyNumber(),
     },
     [STATE_FORGOT_PASSWORD]: {
       render: () => this.renderForgotPassword(),
@@ -110,7 +173,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => {},
+      render: () => { },
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -173,22 +236,42 @@ export class MyAccountOverlay extends PureComponent {
             </>
           )}
         </div>
-        <div block="MyAccountOverlay" elem="Buttons">
-          <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
-            {__("Sign in")}
-          </button>
-          <button
-            block="Button"
-            mods={{ isCreateAccount }}
-            onClick={handleCreateAccount}
-          >
-            {__("Create account")}
-          </button>
-        </div>
+        {state !== STATE_VERIFY_NUMBER && (
+          <div className="MyAccountOverlayOuter">
+            <div className="signInQuote">
+              <h5>
+                {__("Sign in for a")} <span>{__("personalised")} </span>
+                {__("shopping experience")}
+              </h5>
+            </div>
+
+            <div block="MyAccountOverlay" elem="Buttons">
+              <button
+                block="signInBtn signBtns Button"
+                mods={{ isSignIn }}
+                onClick={handleSignIn}
+              >
+                {isMobile.any() ? __("Login") : __("Sign in")}
+              </button>
+              <button
+                block="signUpBtn signBtns Button"
+                mods={{ isCreateAccount }}
+                onClick={handleCreateAccount}
+              >
+                {isMobile.any() ? __("Register") : __("Create account")}
+              </button>
+            </div>
+          </div>
+        )}
         <p block="MyAccountOverlay" elem="Heading">
           {title}
         </p>
         {render()}
+        {/* {isSignIn
+           ? this.renderSocials("SignIn")
+           : isCreateAccount
+           ? this.renderSocials("Create")
+           : null} */}
         {this.renderCloseBtn()}
       </div>
     );
@@ -202,12 +285,16 @@ export class MyAccountOverlay extends PureComponent {
     const { state, handleSignIn, closePopup } = this.props;
     if (state === STATE_FORGOT_PASSWORD) {
       handleSignIn(e);
+    } else if (state === STATE_VERIFY_NUMBER) {
+      this.setState({ isCreateValidated: false, isSignInValidated: false });
+      handleSignIn(e);
     } else {
       closePopup();
     }
   }
   renderCloseBtn() {
     const { isArabic } = this.state;
+    const { state } = this.props;
 
     return (
       <button
@@ -216,7 +303,7 @@ export class MyAccountOverlay extends PureComponent {
         mods={{ isArabic }}
         onClick={this.closePopup.bind(this)}
       >
-        <Close />
+        {state === STATE_VERIFY_NUMBER ? <ChevronLeft /> : <Close />}
       </button>
     );
   }
@@ -249,10 +336,14 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   renderForgotPassword() {
-    const { onForgotPasswordAttempt, onForgotPasswordSuccess, onFormError } =
-      this.props;
+    const {
+      onForgotPasswordAttempt,
+      onForgotPasswordSuccess,
+      onFormError,
+      isLoading,
+    } = this.props;
     const { isForgotValidated } = this.state;
-
+    this.setState({ isSignInValidated: false });
     return (
       <Form
         key="forgot-password"
@@ -262,7 +353,8 @@ export class MyAccountOverlay extends PureComponent {
         parentCallback={this.onForgotChange}
         isValidateOnChange
       >
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           mix={{
             block: "MyAccountOverlay",
             elem: "LockImg",
@@ -292,17 +384,111 @@ export class MyAccountOverlay extends PureComponent {
           elem="Button"
           mods={{ isMargin: true, isForgotValidated }}
         >
-          <button block="Button" type="submit" disabled={!isForgotValidated}>
-            {__("RESET YOUR PASSWORD")}
+          <button
+            block="Button"
+            type="submit"
+            disabled={!isForgotValidated || isLoading}
+            mix={{
+              block: "MyAccountOverlay",
+              elem: isLoading ? "LoadingButton" : "",
+            }}
+          >
+            {!isLoading ? (
+              __("RESET YOUR PASSWORD")
+            ) : (
+              <ThreeDots color="white" height={6} width={"100%"} />
+            )}
           </button>
         </div>
       </Form>
     );
   }
 
+  renderVerifyNumber() {
+    const {
+      customerRegisterData,
+      OTPFieldChange,
+      resendOTP,
+      customerLoginData,
+      isLoading,
+      otpError,
+    } = this.props;
+    const { isArabic } = this.state;
+    const isNumber = (evt) => {
+      const invalidChars = ["-", "+", "e", "E", "."];
+      const abc = evt.target.value;
+      if (invalidChars.includes(evt.key)) {
+        evt.preventDefault();
+        return false;
+      }
+      if (abc.length > 4) {
+        return evt.preventDefault();
+      }
+    };
+    return (
+      <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
+        <div block="VerifyPhone" elem="Text">
+          <div block="VerifyPhone-Text" elem="Title">
+            {__("Please Verify your Number")}
+          </div>
+          <div block="VerifyPhone-Text" elem="Message">
+            {__("Verification code has been sent to")}
+          </div>
+          <div block="VerifyPhone-Text" elem="Phone">
+            <button onClick={() => console.log("change mobile number")}>
+              {`${customerRegisterData?.contact_no || customerLoginData?.username
+                }`}
+            </button>
+          </div>
+        </div>
+        {/* <Form onSubmitSuccess={(e) => console.log("hello")}> */}
+        <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
+          <input
+            type="number"
+            placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
+            name="otp"
+            disabled={isLoading}
+            id="otp"
+            onChange={OTPFieldChange}
+            onKeyPress={(e) => isNumber(e)}
+          />
+        </div>
+        {/* </Form> */}
+        <div
+          block="VerifyPhone"
+          elem="ErrMessage"
+          mods={{ isValidated: otpError.length !== 0 }}
+        >
+          {__(otpError)}
+        </div>
+        <div
+          block="VerifyPhone"
+          elem="OtpLoader"
+          mods={{ isSubmitted: isLoading }}
+        >
+          <Oval
+            color="#333"
+            secondaryColor="#333"
+            height={38}
+            width={"100%"}
+            strokeWidth={3}
+            strokeWidthSecondary={3}
+          />
+        </div>
+        <div
+          block="VerifyPhone"
+          elem="ResendCode"
+          mods={{ isVerifying: !isLoading }}
+        >
+          <button onClick={resendOTP}>{__("Resend Verification Code")}</button>
+        </div>
+      </div>
+    );
+  }
+
   renderForgotPasswordSuccess() {
     const { state, handleSignIn } = this.props;
-
+    this.setState({ isForgotValidated: false });
     return (
       <article
         aria-labelledby="forgot-password-success"
@@ -336,36 +522,53 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   renderCreateAccount() {
-    const { onCreateAccountAttempt, onCreateAccountSuccess } = this.props;
+    const {
+      onCreateAccountAttempt,
+      onCreateAccountSuccess,
+      isLoading,
+      OtpErrorClear,
+    } = this.props;
 
-    const { gender, isChecked, isArabic, isCreateValidated } = this.state;
-
+    const { gender, isChecked, isArabic, isCreateValidated, countryCode } =
+      this.state;
+    this.setState({ isSignInValidated: false });
+    OtpErrorClear();
+    const countryLabel = getCountryFromUrl();
     return (
       <Form
         key="create-account"
         onSubmit={onCreateAccountAttempt}
-        onSubmitSuccess={onCreateAccountSuccess}
+        onSubmitSuccess={(fields) =>
+          onCreateAccountSuccess(fields, countryCode)
+        }
         onSubmitError={onCreateAccountAttempt}
         isValidateOnChange
         parentCallback={this.onCreateChange}
       >
-        {/* <fieldset block="MyAccountOverlay" elem="PhoneNumber">
-                    <PhoneCountryCodeField
-                        onSelect={(value) => this.setState({
-                            countryCode: value
-                        })}
-                    />
-                    <Field
-                        type="text"
-                        placeholder={ ('PHONE NUMBER*') }
-                        id="email"
-                        name="email"
-                        autocomplete="email"
-                        maxLength={ this.getUserIdentifierMaxLength() }
-                        validation={ ['notEmpty', this.getValidationForUserIdentifier()] }
-                        onChange={ this.setUserIdentifierType.bind(this) }
-                    />
-                </fieldset> */}
+        <fieldset block="MyAccountOverlay" elem="PhoneNumber">
+          <div block="UserIdentifierFieldsContainerCreate">
+            <PhoneCountryCodeField
+              label={countryLabel}
+              onSelect={(value) =>
+                this.setState({
+                  countryCode: value,
+                })
+              }
+            />
+            <Field
+              type="phone"
+              placeholder={__("PHONE NUMBER*")}
+              id="phone"
+              name="phone"
+              autocomplete="phone"
+              maxLength={this.getUserIdentifierCreateMaxLength()}
+              validation={[
+                "notEmpty",
+                this.getValidationForUserIdentifierCreate(),
+              ]}
+            />
+          </div>
+        </fieldset>
         <fieldset block="MyAccountOverlay" elem="FullName">
           <Field
             type="text"
@@ -435,8 +638,20 @@ export class MyAccountOverlay extends PureComponent {
           elem="Button"
           mods={{ isCreateAccountButton: true, isCreateValidated }}
         >
-          <button block="Button" type="submit" disabled={!isCreateValidated}>
-            {__("Create Account")}
+          <button
+            block="Button"
+            type="submit"
+            disabled={!isCreateValidated || isLoading}
+            mix={{
+              block: "MyAccountOverlay",
+              elem: isLoading ? "LoadingButton" : "",
+            }}
+          >
+            {!isLoading ? (
+              __("Create Account")
+            ) : (
+              <ThreeDots color="white" height={6} width={"100%"} />
+            )}
           </button>
         </div>
       </Form>
@@ -470,6 +685,17 @@ export class MyAccountOverlay extends PureComponent {
         isOTP: true,
       });
     }
+  }
+
+  getValidationForUserIdentifierCreate() {
+    const { countryCode } = this.state;
+    const customerCountry = Object.keys(PHONE_CODES).find(
+      (key) => PHONE_CODES[key] === countryCode
+    );
+
+    return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+      ? "telephoneAE"
+      : "telephone";
   }
 
   getValidationForUserIdentifier() {
@@ -509,21 +735,131 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
+  getUserIdentifierCreateMaxLength() {
+    const { countryCode } = this.state;
+
+    const customerCountry = Object.keys(PHONE_CODES).find(
+      (key) => PHONE_CODES[key] === countryCode
+    );
+    return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
+  }
+
+  // facebook login dialog
+  // facebookLogin = () => {
+  //   const { onSignInSuccess, onSignInAttempt } = this.props;
+  //   window.FB.login(
+  //     function (response) {
+  //       if (response.authResponse) {
+  //         const authToken = response.authResponse.accessToken;
+  //         window.FB.api(
+  //           "/me?fields=first_name,last_name,email",
+  //           function (response) {
+  //             const social_token = authToken;
+  //             const payload = {
+  //               social_token,
+  //               firstname: response.first_name,
+  //               lastname: response.last_name,
+  //               email: response.email,
+  //               customer_telephone: null,
+  //               type: "facebook",
+  //               cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+  //             };
+  //             try {
+  //               onSignInAttempt();
+  //               onSignInSuccess(payload);
+  //             } catch (e) {
+  //               console.log("error", e);
+  //               deleteAuthorizationToken();
+  //               deleteMobileAuthorizationToken();
+  //             }
+  //           }
+  //         );
+  //       } else {
+  //         console.log("User cancelled login or did not fully authorize.");
+  //       }
+  //     },
+  //     {
+  //       scope: "email",
+  //       return_scopes: true,
+  //     }
+  //   );
+  // };
+
+  //Social logins rendering
+  // renderSocials(renderer) {
+  //   // change mods after api integration
+  //   return (
+  //     <div
+  //       block="MyAccountOverlay"
+  //       elem="SSO"
+  //       mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+  //     >
+  //       <div block="MyAccountOverlay-SSO" elem="title">
+  //         {renderer === "SignIn"
+  //           ? __("OR SIGN IN WITH")
+  //           : __("OR REGISTER IN WITH")}
+  //       </div>
+  //       <div block="MyAccountOverlay-SSO" elem="Buttons">
+  //         <button
+  //           block="MyAccountOverlay-SSO-Buttons"
+  //           elem="Facebook"
+  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+  //           onClick={this.facebookLogin}
+  //         >
+  //           {__("FACEBOOK")}
+  //         </button>
+  //         <button
+  //           id="g-signin2"
+  //           block="MyAccountOverlay-SSO-Buttons"
+  //           elem="Google"
+  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+  //         >
+  //           {__("GOOGLE")}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  renderInitialLinks() {
+    return (
+      <ul className="logInScreenLinks">
+        <li block="MyAccountTabListItem">
+          <Link className="return_policy" to="/return-information">
+            {__("Return Policy")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="free_delivery" to="/shipping-policy">
+            {__("Free delivery")}
+          </Link>
+        </li>
+        <li block="MyAccountTabListItem">
+          <Link className="faq" to="/faq">
+            {__("FAQs")}
+          </Link>
+        </li>
+      </ul>
+    );
+  }
   renderSignIn() {
     const {
       email,
       onSignInAttempt,
       onSignInSuccess,
+      onSignInOption,
+      isLoading,
       onFormError,
       handleForgotPassword,
     } = this.props;
 
-    const { isArabic, isSignInValidated, isOTP } = this.state;
+    const { isArabic, isSignInValidated, isOTP, countryCode } = this.state;
+    this.setState({ isCreateValidated: false, isForgotValidated: false });
+    const countryLabel = getCountryFromUrl();
     return (
       <Form
         key="sign-in"
         onSubmit={onSignInAttempt}
-        onSubmitSuccess={onSignInSuccess}
+        onSubmitSuccess={(fields) => onSignInOption(isOTP, fields, countryCode)}
         onSubmitError={onFormError}
         isValidateOnChange
         parentCallback={this.onSignInChange}
@@ -537,6 +873,7 @@ export class MyAccountOverlay extends PureComponent {
           >
             {isOTP && ENABLE_OTP_LOGIN && (
               <PhoneCountryCodeField
+                label={countryLabel}
                 onSelect={(value) =>
                   this.setState({
                     countryCode: value,
@@ -546,13 +883,13 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${
-                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-              }*`}
+              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+                }*`}
               id="email"
               name="email"
-              value={email}
-              autocomplete="email"
+              value={!ENABLE_OTP_LOGIN && !isOTP ? email : null}
+              autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
+              // autocomplete="email"
               maxLength={this.getUserIdentifierMaxLength()}
               validation={["notEmpty", this.getValidationForUserIdentifier()]}
               onChange={this.setUserIdentifierType.bind(this)}
@@ -596,34 +933,20 @@ export class MyAccountOverlay extends PureComponent {
           elem="Button"
           mods={{ isSignIn: true, isSignInValidated }}
         >
-          <button block="Button" disabled={!isSignInValidated}>
-            {__("Sign in")}
+          <button
+            block="Button"
+            disabled={!isSignInValidated || isLoading}
+            mix={{
+              block: "MyAccountOverlay",
+              elem: isLoading ? "LoadingButton" : "",
+            }}
+          >
+            {!isLoading ? (
+              __("Sign in")
+            ) : (
+              <ThreeDots color="white" height={6} width={"100%"} />
+            )}
           </button>
-        </div>
-        <div
-          block="MyAccountOverlay"
-          elem="SSO"
-          mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
-        >
-          <div block="MyAccountOverlay-SSO" elem="title">
-            {__("OR SIGN IN WITH")}
-          </div>
-          <div block="MyAccountOverlay-SSO" elem="Buttons">
-            <button
-              block="MyAccountOverlay-SSO-Buttons"
-              elem="Facebook"
-              mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
-            >
-              {__("FACEBOOK")}
-            </button>
-            <button
-              block="MyAccountOverlay-SSO-Buttons"
-              elem="Google"
-              mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-            >
-              {__("GOOGLE")}
-            </button>
-          </div>
         </div>
       </Form>
     );
@@ -643,9 +966,8 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   render() {
-    const { isLoading, onVisible, isCheckout, isHidden } = this.props;
+    const { isLoading, onVisible, state, isCheckout, isHidden } = this.props;
     const { isPopup, isArabic } = this.state;
-
     return (
       <div block="HeaderAccount" elem="PopUp" mods={{ isHidden }}>
         <Overlay
@@ -657,7 +979,6 @@ export class MyAccountOverlay extends PureComponent {
           onVisible={onVisible}
           isStatic={!isCheckout && !!isMobile.any()}
         >
-          <Loader isLoading={isLoading} />
           {this.renderMyAccount()}
         </Overlay>
       </div>

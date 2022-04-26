@@ -96,7 +96,7 @@ class Menu extends PureComponent {
         </div>
         <div
           mix={{
-            block: "Menu",
+            block: `Menu ${this.props.gender}-menu`,
             mods: { isArabic },
           }}
         >

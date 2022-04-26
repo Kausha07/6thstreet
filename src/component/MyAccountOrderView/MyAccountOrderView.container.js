@@ -10,10 +10,11 @@ import {
 import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Config } from "Util/API/endpoint/Config/Config.type";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
-
+import MobileAPI from "Util/API/provider/MobileAPI";
+import {
+  RETURN_ITEM_LABEL,
+} from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
-import { DISPLAY_DISCOUNT_PERCENTAGE } from "../Price/Price.config";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -38,6 +39,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
   state = {
     isLoading: true,
     order: null,
+    entity_id: null,
   };
 
   constructor(props) {
@@ -50,12 +52,10 @@ export class MyAccountOrderViewContainer extends PureComponent {
     const { isLoading, order } = this.state;
     const { history, country } = this.props;
 
-    const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
     return {
       isLoading,
       order,
       history,
-      displayDiscountPercentage,
     };
   };
 
@@ -71,9 +71,9 @@ export class MyAccountOrderViewContainer extends PureComponent {
     return order;
   }
 
-  openOrderCancelation() {
+  openOrderCancelation(itemStatus = '') {
     const { history } = this.props;
-    const { order: { entity_id, status, is_returnable } = {} } = this.state;
+    const { order: { status, is_returnable } = {}, entity_id } = this.state;
 
     if (
       !entity_id ||
@@ -86,7 +86,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
     }
 
     const url =
-      status === STATUS_COMPLETE
+      status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
         ? `/my-account/return-item/create/${entity_id}`
         : `/my-account/return-item/cancel/${entity_id}`;
 
@@ -96,8 +96,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
   async getOrder() {
     try {
       const orderId = this.getOrderId();
-      const { data: order } = await MagentoAPI.get(`orders/${orderId}`);
-      this.setState({ order, isLoading: false });
+      const { data: order } = await MobileAPI.get(`orders/${orderId}`);
+      this.setState({ order, isLoading: false, entity_id: orderId });
     } catch (e) {
       this.setState({ isLoading: false });
     }

@@ -11,11 +11,12 @@ import { getFinalPrice } from "Component/Price/Price.config";
 import { SHIPPING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutShipping as SourceCheckoutShipping } from "SourceComponent/CheckoutShipping/CheckoutShipping.component";
 import { customerType } from "Type/Account";
-import { isArabic } from "Util/App";
+import { getCurrency, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
-import Spinner from "react-spinkit";
+import { ThreeDots } from "react-loader-spinner";
+
 import "./CheckoutShipping.style";
 
 export class CheckoutShipping extends SourceCheckoutShipping {
@@ -61,26 +62,54 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderTotals() {
     const {
-      totals: { total, currency_code },
+      totals: {
+        coupon_code: couponCode,
+        discount,
+        subtotal = 0,
+        total = 0,
+        currency_code = getCurrency(),
+        total_segments: totals = [],
+        shipping_fee = 0,
+      },
     } = this.props;
 
     if (total !== {}) {
-      const finalPrice = getFinalPrice(total, currency_code);
-
-      return (
-        <div block="Checkout" elem="OrderTotals">
-          {this.renderPriceLine(finalPrice, __("Subtotal"))}
-        </div>
-      );
+      const grandTotal = getFinalPrice(total, currency_code);
+      const subTotal = getFinalPrice(subtotal, currency_code);
+      if (discount != 0) {
+        return (
+          <div block="Checkout" elem="OrderTotals">
+            <ul>
+              <div block="Checkout" elem="Subtotals">
+                {this.renderPriceLine(subTotal, __("Subtotal"))}
+                {couponCode || (discount && discount != 0)
+                  ? this.renderPriceLine(discount, __("Discount"))
+                  : null}
+                {this.renderPriceLine(grandTotal, __("Total Amount"), {
+                  divider: true,
+                })}
+              </div>
+            </ul>
+          </div>
+        );
+      } else {
+        return (
+          <div block="Checkout" elem="OrderTotals">
+            {this.renderPriceLine(subTotal, __("Subtotal"), {
+              subtotalOnly: true,
+            })}
+          </div>
+        );
+      }
     }
 
     return null;
   }
 
   checkForDisabling() {
-    const { selectedShippingMethod ,checkClickAndCollect} = this.props;
+    const { selectedShippingMethod, checkClickAndCollect } = this.props;
     const { isMobile } = this.state;
-    if (!checkClickAndCollect() && !selectedShippingMethod || !isMobile) {
+    if ((!checkClickAndCollect() && !selectedShippingMethod) || !isMobile) {
       return true;
     }
 
@@ -96,7 +125,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           type="submit"
           block={"Button"}
           form={SHIPPING_STEP}
-          disabled={this.checkForDisabling()}
+          // disabled={this.checkForDisabling()}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
@@ -105,9 +134,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           {!isPaymentLoading ? (
             this.renderButtonsPlaceholder()
           ) : (
-            <Spinner name="three-bounce" color="white" fadeIn="none" />
+            <ThreeDots color="white" height={6} width={"100%"} />
           )}
-          {/* <Spinner name="three-bounce" /> */}
         </button>
       </div>
     );
@@ -115,7 +143,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderDeliveryButton() {
     const {
-      customer: { addresses = [] },
+      addresses,
       selectedCustomerAddressId,
       checkClickAndCollect,
       isPaymentLoading,
@@ -124,7 +152,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const selectedAddress = addresses.filter(
       ({ id }) => id === selectedCustomerAddressId
     );
-    const { country_id: selectedAddressCountry = "" } = selectedAddress.length
+    const { country_code: selectedAddressCountry = "" } = selectedAddress.length
       ? selectedAddress[0]
       : {};
 
@@ -132,7 +160,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       isMobile.any() ||
       isMobile.tablet() ||
       (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
-      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect() )
+      (isSignedIn &&
+        selectedAddressCountry !== getCountryFromUrl() &&
+        !checkClickAndCollect())
     ) {
       return null;
     }
@@ -220,22 +250,31 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { openFirstPopup, formContent, isArabic } = this.state;
     const {
       notSavedAddress,
-      customer: { addresses = [] },
+      addresses,
       isClickAndCollect,
-      checkClickAndCollect
+      checkClickAndCollect,
     } = this.props;
 
-    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
+    const isCountryNotAddressAvailable =
+      !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
+      !isMobile.any();
+    if (
+      !openFirstPopup &&
+      addresses &&
+      isSignedIn() &&
+      notSavedAddress() &&
+      !checkClickAndCollect()
+    ) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
     }
 
-    if (isSignedIn() && !checkClickAndCollect()) {
+    if (isSignedIn() && !checkClickAndCollect() && addresses.length > 0) {
       return (
         <div
           block="MyAccountAddressBook"
           elem="NewAddressWrapper"
-          mods={{ formContent, isArabic }}
+          mods={{ formContent, isArabic, isCountryNotAddressAvailable }}
         >
           <button
             block="MyAccountAddressBook"
@@ -288,12 +327,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       shippingAddress,
       isClickAndCollect,
       checkClickAndCollect,
-      totals
+      totals,
+      addresses,
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
+        addresses={addresses}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}
@@ -334,7 +375,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
               : handleClickNCollectPayment
           }
         >
-          {isSignedIn() && !checkClickAndCollect()? (
+          {isSignedIn() && !checkClickAndCollect() ? (
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">

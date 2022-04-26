@@ -2,8 +2,8 @@ $select-arrow-height: 6px !default;
 $select-arrow-width: 6px !default;
 
 :root {
-    --text-color: #000;
-    --text-color-on-dark-background: #fff;
+    --text-color: #000000;
+    --text-color-on-dark-background: #ffffff;
     --loading-button-background-color: #808080;
     --success-color: #00f0a5;
     --checkout-border-gray: #d6d6d6;
@@ -14,13 +14,17 @@ $select-arrow-width: 6px !default;
     display: flex;
     height: 100%;
     @include desktop {
+        height: 264px;
+        width: 400px;
         min-height: 264px;
+        min-width:400px;
     }
     // width: 120px;
 
     &-ImageContainer{
-        width: 50%;
+        // width: 50%;
         @include mobile {
+            width: 186px;
             min-width: 186px;
         }
         padding: 0 16px 0 0;
@@ -107,7 +111,7 @@ $select-arrow-width: 6px !default;
             }
         }
         @include desktop {
-            width: 40%
+            width: 40% !important;
         }
     }
 
@@ -131,12 +135,15 @@ $select-arrow-width: 6px !default;
                 height: $select-arrow-height;
                 transform: translateY(-2px) rotate(44deg);
                 position: absolute;
-                right: calc(50% - 25px);
+                right: calc(60% - 25px);
                 bottom: 0;
                 top: 0;
                 margin-top: 22px;
                 border: solid var(--text-color);
                 border-width: 0 1px 1px 0;
+                @include desktop {
+                    right: calc(65% - 25px);
+                }
             }
 
             h3 {
@@ -153,12 +160,15 @@ $select-arrow-width: 6px !default;
                 line-height: 30px;
                 text-align: center;
                 height: 38px;
-                width: 50%;
+                width: 40%;
                 padding: 0;
                 border: 1px solid #000000;
                 border-radius: 6px;
                 margin-left: 8px;
                 padding: 0 10px 0 0;
+                @include desktop {
+                    width: 35%;
+                }
             }
         }
 
@@ -177,7 +187,7 @@ $select-arrow-width: 6px !default;
             @include desktop {
                 border-radius: 0;
                 font-size: 13px;
-                width: 363px;
+                width: 200px;
             }
 
             span {

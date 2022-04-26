@@ -2,6 +2,7 @@
   max-width: var(--container-max-width);
   margin: 0 auto;
   @include mobile() {
+    z-index: 93;
     margin-top: -64px;
   }
   @include tablet {
@@ -13,6 +14,17 @@
         padding: 0;
         margin: 0;
         width: 100%;
+      }
+    }
+  }
+  .Seperator {
+    background-color: #efefef;
+    margin: 35px 0 35px 0;
+    height: 1px;
+    @include mobile {
+      margin: 15px 0 15px 0;
+      &_isMobile {
+        display: none;
       }
     }
   }

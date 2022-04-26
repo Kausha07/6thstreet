@@ -8,6 +8,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import HeaderSearch from "./HeaderSearch.component";
+import Event, { EVENT_GTM_CLEAR_SEARCH } from "Util/Event";
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
 });
@@ -56,6 +57,8 @@ export class HeaderSearchContainer extends PureComponent {
   async onSearchSubmit() {
     const { history } = this.props;
     const { search } = this.state;
+    var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+    let finalSearch = search.match(invalid)? encodeURIComponent(search):search
     const filteredItem = await this.checkForSKU(search);
     if (filteredItem) {
       this.logRecentSearch(search);
@@ -68,17 +71,17 @@ export class HeaderSearchContainer extends PureComponent {
       const productData = await new Algolia().searchBy(
         isArabic()
           ? {
-              query: search,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: getGenderInArabic(gender),
-              addAnalytics: true,
-            }
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: getGenderInArabic(gender),
+            addAnalytics: true,
+          }
           : {
-              query: search,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: gender,
-              addAnalytics: true,
-            }
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: gender,
+            addAnalytics: true,
+          }
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
@@ -108,12 +111,12 @@ export class HeaderSearchContainer extends PureComponent {
       }
       if (gender !== "home") {
         history.push({
-          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
           state: { prevPath: window.location.href },
         });
       } else {
         history.push({
-          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}`,
           state: { prevPath: window.location.href },
         });
       }
@@ -154,25 +157,28 @@ export class HeaderSearchContainer extends PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      location: { pathname: prevPathname },
-    } = prevProps;
-    const { pathname } = location;
+  // componentDidUpdate(prevProps) {
+  //   const {
+  //     location: { pathname: prevPathname },
+  //   } = prevProps;
+  //   const { pathname } = location;
 
-    // if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
-    //   this.onSearchChange("");
-    // }
-  }
+  //   // if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
+  //   //   this.onSearchChange("");
+  //   // }
+  // }
 
   containerProps = () => {
-    const { focusInput, renderMySignInPopup } = this.props;
+    const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP,handleHomeSearchClick } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput, renderMySignInPopup };
+    return { search, focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP,handleHomeSearchClick };
   };
 
   onSearchChange(search) {
+    if(search?.length === 0) {
+      Event.dispatch(EVENT_GTM_CLEAR_SEARCH);
+    }
     this.setState({ search });
   }
 

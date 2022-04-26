@@ -1,9 +1,14 @@
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
+import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
@@ -14,11 +19,27 @@ import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from "Util/Mobile";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
+import { setPrevPath } from "Store/PLP/PLP.action";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+
+//Global Variable for PLP AddToCart
+var urlWithQueryID;
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+  requestedOptions: state.PLP.options,
+});
+
+export const mapDispatchToProps = (dispatch, state) => ({
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+});
 
 class ProductItem extends PureComponent {
   static propTypes = {
@@ -29,24 +50,95 @@ class ProductItem extends PureComponent {
     isVueData: PropTypes.bool,
     pageType: PropTypes.string,
     prevPath: PropTypes.string,
+    requestedOptions: RequestedOptions.isRequired,
   };
 
   static defaultProps = {
     page: "",
+    impressionSent: false,
   };
 
   state = {
     isArabic: isArabic(),
+    stockAvailibility: true,
+    selectedSizeType: "eu",
+    selectedSizeCode: "",
+  };
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { product = [], sendProductImpression, page } = this.props;
+    if (page == "plp") {
+      sendProductImpression([product]);
+    } else {
+      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+    }
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
+  setSize = (sizeType, sizeCode) => {
+    // this.setState({
+    //   selectedSizeType: sizeType || "eu",
+    //   selectedSizeCode: sizeCode || "",
+    // });
+  };
+
+  setStockAvailability = (status) => {
+    // const {
+    //   product: { price },
+    // } = this.props;
+    // console.log("hi",status)
+    // this.setState({ stockAvailibility: !!price && status });
   };
 
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid, isVueData } = this.props;
+    const {
+      product,
+      position,
+      qid,
+      isVueData,
+      setPrevPath,
+      product: {
+        name,
+        url,
+        sku,
+        color,
+        brand_name,
+        product_type_6s,
+        price = {},
+      },
+    } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
+    setPrevPath(window.location.href);
     if (!isVueData) {
       if (!qid) {
         queryID = getStore().getState().SearchSuggestions.queryID;
@@ -57,17 +149,32 @@ class ProductItem extends PureComponent {
     if (userData?.data) {
       userToken = userData.data.id;
     }
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
-    if (queryID) {
-      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-        objectIDs: [product.objectID],
-        queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        position: [position],
-      });
-    }
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
+      name: name,
+      id: sku,
+      price: itemPrice,
+      brand: brand_name,
+      category: product_type_6s,
+      varient: color,
+      url: url,
+      position: 1,
+      dimension9: 100 - Math.round((itemPrice / basePrice) * 100) || 0,
+      dimension10: basePrice,
+      dimension11: itemPrice,
+    });
+    // if (queryID) {
+    //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+    //     objectIDs: [product.objectID],
+    //     queryID,
+    //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+    //     position: [position],
+    //   });
+    // }
     // this.sendBannerClickImpression(product);
   }
+
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
@@ -99,7 +206,7 @@ class ProductItem extends PureComponent {
       product: { also_available_color, promotion },
     } = this.props;
 
-    if (also_available_color !== undefined && !promotion) {
+    if (also_available_color && !promotion) {
       const count = also_available_color.split(",").length - 2;
 
       return count > 0 ? (
@@ -145,15 +252,36 @@ class ProductItem extends PureComponent {
 
     return null;
   }
+
   renderImage() {
     const {
-      product: { thumbnail_url },
+      product: { thumbnail_url, brand_name, product_type_6s, color },
       lazyLoad = true,
+      requestedOptions,
     } = this.props;
 
+    const checkCatgeroyPath = () => {
+      if (requestedOptions.hasOwnProperty("categories.level4") == 1) {
+        return requestedOptions["categories.level4"];
+      } else if (requestedOptions.hasOwnProperty("categories.level3") == 1) {
+        return requestedOptions["categories.level3"];
+      } else if (requestedOptions.hasOwnProperty("categories.level2") == 1) {
+        return requestedOptions["categories.level2"];
+      } else if (requestedOptions.hasOwnProperty("categories.level1") == 1) {
+        return requestedOptions["categories.level1"];
+      } else if (requestedOptions.hasOwnProperty("categories.level0") == 1) {
+        return requestedOptions["categories.level0"];
+      } else {
+        return "";
+      }
+    };
+    const categoryTitle = checkCatgeroyPath().split("///").pop();
+
+    const altText =
+      brand_name + " " + categoryTitle + " - " + color + " " + product_type_6s;
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} alt={altText} />
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()}
         {this.renderColors()}
@@ -165,7 +293,6 @@ class ProductItem extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
-
     return (
       <h2 block="ProductItem" elem="Brand">
         {" "}
@@ -173,7 +300,6 @@ class ProductItem extends PureComponent {
       </h2>
     );
   }
-
   renderTitle() {
     const {
       product: { name },
@@ -192,7 +318,22 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-    return <Price price={price} page={page} />;
+    return <Price price={price} page={page} renderSpecialPrice={true} />;
+  }
+
+  renderAddToCartOnHover() {
+    const { product } = this.props;
+    let price = Array.isArray(product.price)
+      ? Object.values(product.price[0])
+      : Object.values(product.price);
+    if (price[0].default === 0) {
+      return null;
+    }
+    return (
+      <div block="ProductItem" elem="AddToCart">
+        <PLPAddToCart product={this.props.product} url={urlWithQueryID} />
+      </div>
+    );
   }
 
   renderLink() {
@@ -211,9 +352,14 @@ class ProductItem extends PureComponent {
         queryID = qid;
       }
     }
-    let urlWithQueryID;
-    if (!isVueData) {
-      const { pathname } = new URL(url);
+
+    let pathname = "/";
+    if (!isVueData && url) {
+      try {
+        pathname = new URL(url)?.pathname;
+      } catch (err) {
+        console.error(err);
+      }
       if (queryID) {
         urlWithQueryID = `${pathname}?qid=${queryID}`;
       } else {
@@ -249,9 +395,16 @@ class ProductItem extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-
+    const {
+      product: { sku },
+    } = this.props;
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
       <li
+        id={sku}
+        ref={setRef}
         block="ProductItem"
         mods={{
           isArabic,
@@ -260,9 +413,12 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {!isMobile.any() && this.renderAddToCartOnHover()}
       </li>
     );
   }
 }
 
-export default ProductItem;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProductItem)
+);

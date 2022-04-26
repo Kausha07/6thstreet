@@ -6,6 +6,9 @@ import PDPDetailsSection from "./PDPDetailsSection.component";
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
   gender: state.AppState.gender,
+  config: state.AppConfig.config,
+  country: state.AppState.country,
+  language: state.AppState.language,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
@@ -15,8 +18,32 @@ export class PDPDetailsSectionContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { product, pdpWidgetsData, gender, renderMySignInPopup, clickAndCollectStores } = this.props;
-    return { product, pdpWidgetsData, gender, renderMySignInPopup, clickAndCollectStores };
+    const {
+      product,
+      pdpWidgetsData,
+      gender,
+      renderMySignInPopup,
+      clickAndCollectStores,
+      config,
+      country,
+      language,
+      brandDescription,
+      brandImg,
+      brandName,
+    } = this.props;
+    return {
+      product,
+      pdpWidgetsData,
+      gender,
+      renderMySignInPopup,
+      clickAndCollectStores,
+      config,
+      country,
+      language,
+      brandDescription,
+      brandImg,
+      brandName,
+    };
   };
 
   render() {

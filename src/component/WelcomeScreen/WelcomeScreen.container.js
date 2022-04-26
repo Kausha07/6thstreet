@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
-import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import { setCountry, setLanguage, setCountryForWelcome } from 'Store/AppState/AppState.action';
+import { setAppConfig } from 'Store/AppConfig/AppConfig.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
-
 import WelcomeScreen from './WelcomeScreen.component';
 
 export const mapStateToProps = (state) => ({
@@ -18,6 +17,8 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
+    setAppConfig: (value) => dispatch(setAppConfig(value)),
+    setCountryForWelcome: (value) => dispatch(setCountryForWelcome(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
@@ -44,16 +45,20 @@ class WelcomeScreenContainer extends PureComponent {
 
     onCountrySelect(value) {
         const { country, language } = this.props;
-
         if (country) {
-            window.location.href = location.origin.replace(
+            if(window.location.href.includes('en-') || window.location.href.includes('ar-'))
+                window.location.href = location.origin.replace(
                 country.toLowerCase(),
                 value,
                 location.href
             );
+            else{
+                this.props.setCountryForWelcome(value)
+                this.props.closePopup();
+                // this.props.setAppConfig(value)
+            }
         } else {
             const locale = `${language}-${value.toLowerCase()}`;
-
             window.location.href = URLS[locale];
         }
     }
@@ -65,7 +70,6 @@ class WelcomeScreenContainer extends PureComponent {
             setLanguage,
             checkWizardLang
         } = this.props;
-
         if (language && country) {
             window.location.href = location.origin.replace(
                 language.toLowerCase(),

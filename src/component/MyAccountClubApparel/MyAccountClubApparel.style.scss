@@ -67,7 +67,7 @@
     }
 
     p {
-      color: var(--white);
+      color: #ffffff;
       font-size: 12px;
     }
 
@@ -76,9 +76,9 @@
     }
 
     &_countrySpecific {
-      position: absolute;
-      bottom: 8%;
-      left: 7%;
+      // position: absolute;
+      // bottom: 8%;
+      // left: 7%;
       padding: 0;
       width: fit-content;
       opacity: 0.8;
@@ -137,10 +137,10 @@
 
     @include before-desktop {
       display: none;
-      color: var(--white);
+      color: #ffffff;
 
       a {
-        color: var(--white);
+        color: #ffffff;
       }
 
       &_isAboutExpanded,
@@ -155,7 +155,7 @@
         text-align: left;
 
         h3 {
-          color: var(--white);
+          color: #ffffff;
         }
 
         padding: 0 10%;
@@ -210,14 +210,14 @@
       }
 
       @include before-desktop {
-        color: var(--white);
+        color: #ffffff;
 
         &:after {
           position: absolute;
           content: "";
           width: 0;
           height: 0;
-          border: solid var(--white);
+          border: solid #ffffff;
           border-width: 0 2px 2px 0;
           display: inline-block;
           padding: 2px 5px 5px 2px;
@@ -240,7 +240,7 @@
         }
 
         @include before-desktop {
-          color: var(--white);
+          color: #ffffff;
 
           &:after {
             transform: rotate(135deg);
@@ -408,7 +408,7 @@
     padding-bottom: 38px;
     border-bottom: 2px solid var(--ca-redemption-border-color);
     opacity: 0.7;
-    color: var(--white);
+    color: #ffffff;
 
     span {
       font-weight: var(--fw-demi);
@@ -418,7 +418,7 @@
   &-Number {
     font-size: 14px;
     padding-top: 37px;
-    color: var(--white);
+    color: #ffffff;
 
     span {
       font-weight: var(--fw-demi);
@@ -439,7 +439,7 @@
   &-ChangeButton {
     height: 40px;
     margin: 20px auto 0;
-    background-color: var(--white);
+    background-color: #ffffff;
     font-size: 12px;
     border-radius: 5px;
 

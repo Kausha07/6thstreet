@@ -20,12 +20,16 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_CLICK_TOP_SEARCHES_CLICK
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+import Price from "Component/Price";
 
 var ESCAPE_KEY = 27;
 
@@ -50,7 +54,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   static defaultProps = {
-    hideActiveOverlay: () => {},
+    hideActiveOverlay: () => { },
   };
 
   state = {
@@ -182,13 +186,13 @@ class SearchSuggestion extends PureComponent {
     if (brandValue) {
       catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
         formatQuerySuggestions(query)
-      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
+      )}&p=0&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
         brandValue
       )}`;
     } else {
       catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
         formatQuerySuggestions(query)
-      )}&dFR[gender][0]=${genderInURL}`;
+      )}&p=0&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -241,9 +245,13 @@ class SearchSuggestion extends PureComponent {
   };
 
   // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search) => {
-    const { closeSearch } = this.props;
+  onSearchQueryClick = (search, eventType) => {
+    const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
+    if(eventType) {
+      Event.dispatch(eventType);
+    }
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
@@ -253,20 +261,23 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleBrandsClick = (brandItem) => {
-    const { closeSearch } = this.props;
+    const { closeSearch,setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
   handleTrendingBrandsClick = (brandName) => {
-    const { closeSearch } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
+    setPrevPath(window.location.href);
     closeSearch();
   };
 
   handleTrendingTagsClick = (label) => {
-    const { closeSearch } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
+    setPrevPath(window.location.href)
     closeSearch();
   };
 
@@ -281,9 +292,6 @@ class SearchSuggestion extends PureComponent {
         <Link
           to={{
             pathname: `/${urlName}.html?q=${urlName}`,
-            state: {
-              prevPath: window.location.href,
-            },
           }}
           onClick={() => this.handleBrandsClick(urlName)}
         >
@@ -390,7 +398,7 @@ class SearchSuggestion extends PureComponent {
         <li>
           <Link
             to={fetchSKU?.url}
-            onClick={() => this.onSearchQueryClick(query)}
+            onClick={() => this.onSearchQueryClick(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)}
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
@@ -409,17 +417,13 @@ class SearchSuggestion extends PureComponent {
                 queryID,
                 !brandValue?.includes("///") ? brandValue : null
               ),
-              state: {
-                prevPath: window.location.href,
-              },
             }}
             onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query))
+              this.onSearchQueryClick(formatQuerySuggestions(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK))
             }
           >
             <div className="suggestion-details-box">
               {getHighlightedText(formatQuerySuggestions(query), searchString)}
-              <div>{count}</div>
             </div>
           </Link>
         </li>
@@ -452,19 +456,6 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderPrice = (price) => {
-    // if (price && price.length > 0) {
-    //   const priceObj = price[0],
-    //     currency = getCurrency();
-    //   const priceToShow = priceObj[currency]["6s_base_price"];
-    //   return (
-    //     <span
-    //       block="SearchProduct"
-    //       elem="Price"
-    //     >{`${currency} ${priceToShow}`}</span>
-    //   );
-    // }
-    // return null;
-
     if (price && price.length > 0) {
       const priceObj = price?.[0],
         currency = getCurrency();
@@ -475,19 +466,9 @@ class SearchSuggestion extends PureComponent {
         specialPrice &&
         basePrice !== specialPrice;
 
-      if (basePrice === specialPrice || !specialPrice) {
-        return <span id="price">{`${currency} ${basePrice}`}</span>;
-      }
-
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
-          <del block="SearchProduct" elem="Del">
-            <span id="price">{`${currency} ${basePrice}`}</span>
-          </del>
-          <span block="SearchProduct" elem="PriceWrapper">
-            {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
-            {this.renderSpecialPrice(specialPrice, haveDiscount)}
-          </span>
+          <Price price={price} renderSpecialPrice={false} />
         </div>
       );
     }
@@ -533,7 +514,7 @@ class SearchSuggestion extends PureComponent {
       }
     }
     let parseLink = url?.includes("catalogsearch/result")
-      ? url?.split("&")[0] + `&dFR[gender][0]=${genderInURL}`
+      ? url?.split("&")[0] + `&p=0&dFR[gender][0]=${genderInURL}`
       : url;
 
     return (
@@ -615,7 +596,6 @@ class SearchSuggestion extends PureComponent {
     const {
       recommendedForYou,
       renderMySignInPopup,
-      location: { state },
     } = this.props;
     const sku = JSON.parse(localStorage.getItem("PRODUCT_SKU"));
     const sourceCatgID = JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"));
@@ -631,7 +611,6 @@ class SearchSuggestion extends PureComponent {
             pageType="search"
             sourceProdID={sku ? sku : null}
             sourceCatgID={sourceCatgID ? sourceCatgID : null}
-            prevPath={state?.prevPath ? state?.prevPath : null}
           />
         </div>
       );
@@ -687,25 +666,61 @@ class SearchSuggestion extends PureComponent {
   // };
 
   renderTrendingBrand = (brand, i) => {
-    const { label = "", image_url } = brand;
+    const { label = "", image_url, link = "" } = brand;
     const { isArabic } = this.state;
-    const urlName = label
-      .replace("&", "")
-      .replace(/'/g, "")
-      .replace(/(\s+)|--/g, "-")
-      .replace("@", "at")
-      .toLowerCase();
+    // const urlName = label
+    //   .replace("&", "")
+    //   .replace(/'/g, "")
+    //   .replace(/(\s+)|--/g, "-")
+    //   .replace("@", "at")
+    //   .toLowerCase();
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    }
 
     return (
       <li key={i}>
         <Link
           to={{
-            pathname: `/${urlName}.html?q=${urlName}`,
-            state: {
-              prevPath: window.location.href,
-            },
+            pathname: link
+              ? `${link}`
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                label
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() => this.handleTrendingBrandsClick(urlName)}
+          onClick={() => this.handleTrendingBrandsClick(label)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
             <Image lazyLoad={true} src={image_url} alt="Trending" />
@@ -737,9 +752,6 @@ class SearchSuggestion extends PureComponent {
       <Link
         to={{
           pathname: link && link.split("#q")[0],
-          state: {
-            prevPath: window.location.href,
-          },
         }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
@@ -807,11 +819,10 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  search
-                )}&dFR[gender][0]=${genderInURL}`,
-            state: { prevPath: window.location.href },
+                search
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() => this.onSearchQueryClick(search)}
+          onClick={() => this.onSearchQueryClick(search, EVENT_CLICK_TOP_SEARCHES_CLICK)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {search}
@@ -880,10 +891,10 @@ class SearchSuggestion extends PureComponent {
             link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  name
-                )}&dFR[gender][0]=${genderInURL}`
+                name
+              )}&p=0&dFR[gender][0]=${genderInURL}`
           }
-          onClick={() => this.onSearchQueryClick(name)}
+          onClick={() => this.onSearchQueryClick(name, EVENT_CLICK_RECENT_SEARCHES_CLICK)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {name}
@@ -982,9 +993,10 @@ class SearchSuggestion extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isPDPSearchVisible } = this.props
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
-        <div block="SearchSuggestion" elem="Content">
+        <div block="SearchSuggestion" elem="Content" mods={{ isPDPSearchVisible }}>
           {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}

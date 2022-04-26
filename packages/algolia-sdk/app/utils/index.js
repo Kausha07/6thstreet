@@ -1,21 +1,21 @@
-import { INDICES, FACET_FILTERS, NUMERIC_FILTERS } from '../config';
-import { translate } from '../config/translations';
+import { INDICES, FACET_FILTERS, NUMERIC_FILTERS } from "../config";
+import { translate } from "../config/translations";
 
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
-const getIndex = (locale, env = 'production', type = 'default') => {
+const getIndex = (locale, env = "production", type = "default") => {
   try {
-    let prefix = 'enterprise_';
+    let prefix = "enterprise_";
 
-    if (env === 'staging') {
-      prefix = 'stage_';
+    if (env === "staging") {
+      prefix = "stage_";
     }
 
     const index = INDICES[locale][type];
 
     return `${prefix}${index}`;
   } catch (err) {
-    console.error('Index not found', err);
+    console.error("Index not found", err);
   }
 };
 
@@ -30,7 +30,7 @@ const formatResult = (result = {}) => {
   }
 };
 
-const capitalizeFirstLetter = (str = '') => {
+const capitalizeFirstLetter = (str = "") => {
   try {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   } catch (error) {
@@ -38,17 +38,17 @@ const capitalizeFirstLetter = (str = '') => {
   }
 };
 
-const capitalizeFirstLetters = (str = '') => {
+const capitalizeFirstLetters = (str = "") => {
   try {
-    const words = str.split(' ');
-    let newStr = '';
+    const words = str.split(" ");
+    let newStr = "";
     words.forEach((word) => {
       const newWord = capitalizeFirstLetter(word);
       if (!newWord) {
-        throw new Error('Error');
+        throw new Error("Error");
       }
       newStr += newWord;
-      newStr += ' ';
+      newStr += " ";
     });
     newStr = newStr.substring(0, newStr.length - 1);
     return newStr;
@@ -57,20 +57,20 @@ const capitalizeFirstLetters = (str = '') => {
   }
 };
 
-const _replaceOperator = (str = '') => {
+const _replaceOperator = (str = "") => {
   switch (true) {
     case /lte/.test(str):
-      return str.replace('lte', '<=');
+      return str.replace("lte", "<=");
     case /lt/.test(str):
-      return str.replace('lt', '<');
+      return str.replace("lt", "<");
     case /gte/.test(str):
-      return str.replace('gte', '>=');
+      return str.replace("gte", ">=");
     case /gt/.test(str):
-      return str.replace('gt', '>');
+      return str.replace("gt", ">");
     case /eq/.test(str):
-      return str.replace('eq', '=');
+      return str.replace("eq", "=");
     default:
-      return str.replace('', '=');
+      return str.replace("", "=");
   }
 };
 
@@ -82,8 +82,8 @@ const getAlgoliaFilters = (paramsObj = {}) => {
     Object.keys(paramsObj).forEach((key) => {
       if (FACET_FILTERS.includes(key)) {
         const valuesArr = paramsObj[key]
-          .split(',')
-          .filter((value) => value !== 'undefined' && value !== undefined)
+          .split(",")
+          .filter((value) => value !== "undefined" && value !== undefined)
           .map((value) => {
             return `${key}:${value}`;
           });
@@ -94,10 +94,10 @@ const getAlgoliaFilters = (paramsObj = {}) => {
       }
 
       if (NUMERIC_FILTERS.includes(key)) {
-        paramsObj[key].split(',').forEach((value) => {
+        paramsObj[key].split(",").forEach((value) => {
           numericFilters = [
             ...numericFilters,
-            `${key}${_replaceOperator(value)}`
+            `${key}${_replaceOperator(value)}`,
           ];
         });
       }
@@ -105,7 +105,7 @@ const getAlgoliaFilters = (paramsObj = {}) => {
 
     return {
       facetFilters,
-      numericFilters
+      numericFilters,
     };
   } catch (err) {
     console.error(err);
@@ -114,20 +114,20 @@ const getAlgoliaFilters = (paramsObj = {}) => {
 
 const getCurrencyCode = (country) => {
   switch (country) {
-    case 'ae':
-      return 'AED';
-    case 'sa':
-      return 'SAR';
-    case 'kw':
-      return 'KWD';
-    case 'om':
-      return 'OMR';
-    case 'bh':
-      return 'BHD';
-    case 'qa':
-      return 'QAR';
+    case "ae":
+      return "AED";
+    case "sa":
+      return "SAR";
+    case "kw":
+      return "KWD";
+    case "om":
+      return "OMR";
+    case "bh":
+      return "BHD";
+    case "qa":
+      return "QAR";
     default:
-      return 'AED';
+      return "AED";
   }
 };
 
@@ -138,8 +138,8 @@ const isNewIn = (productData = {}) => {
     if (categories && categories.level1) {
       return categories.level1.some((category) => {
         return (
-          category.includes(translate('new_in', 'en')) ||
-          category.includes(translate('new_in', 'ar'))
+          category.includes(translate("new_in", "en")) ||
+          category.includes(translate("new_in", "ar"))
         );
       });
     }
@@ -150,9 +150,10 @@ const isNewIn = (productData = {}) => {
 };
 
 const formatNewInTag = (productData = {}) => {
+  const { is_new_in } = productData;
   return {
     ...productData,
-    is_new_in: isNewIn(productData)
+    is_new_in: is_new_in === 1 ? true : false,
   };
 };
 
@@ -165,5 +166,5 @@ export {
   getAlgoliaFilters,
   getCurrencyCode,
   isNewIn,
-  formatNewInTag
+  formatNewInTag,
 };

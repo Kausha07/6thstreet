@@ -19,6 +19,15 @@
   --btn-bg-lite-gray-color: #d1d3d4;
   --likelink-button-color: #4a4a4a;
 }
+.sk-three-bounce > div {
+  height: 6px;
+  width: 6px;
+  margin-right: 5px;
+}
+.sk-circle {
+  width: 10px;
+  height: 30px;
+}
 
 .MyAccountOverlay {
   --overlay-background: var(--overlay-content-background);
@@ -36,7 +45,10 @@
     opacity: 0;
     overflow: hidden;
   }
-
+  &-LoadingButton {
+    background-color: #a9a9a9 !important;
+    border: #a9a9a9 !important;
+  }
   &-Image {
     display: flex;
     justify-content: center;
@@ -51,6 +63,10 @@
     font-size: 36px;
     font-weight: 500;
     letter-spacing: 1.5px;
+    @include mobile() {
+      background-image: url(https://mobilecdn.6thstreet.com/auth_screen/login.jpg);
+      background-position: top;
+    }
     span {
       font-size: 52px;
       transform: translateY(-4px);
@@ -115,6 +131,114 @@
       font-weight: var(--fw-medium);
       letter-spacing: 0.5px;
       line-height: 16px;
+    }
+  }
+  .VerifyPhone {
+    height: auto;
+    text-align: center;
+    margin: 30px 0;
+
+    &-Text {
+      font-family: var(--avenir-demi-font);
+      margin: 0 60px;
+      display: grid;
+
+      &-Title {
+        font-size: 18px;
+        font-weight: var(--fw-demi);
+        text-transform: capitalize;
+        margin: 0px 0 10px;
+      }
+
+      &-Message {
+        color: #4a4a4a;
+        font-size: 14px;
+      }
+
+      &-SubTitle {
+        margin: 16px 0;
+        margin: 6px auto;
+        font-size: 14px;
+      }
+
+      &-Phone {
+        width: 100%;
+        button {
+          text-decoration: underline;
+          margin-top: -7px;
+          font-weight: var(--fw-demi);
+        }
+      }
+    }
+    &-Code {
+      input {
+        text-align: center;
+        // width: 50%;
+        margin: auto;
+        background-color: transparent;
+        border: 0;
+        letter-spacing: 15px;
+        font-size: 27px;
+        // margin-left: 15px;
+        // caret-color: transparent;
+      }
+    }
+    &-ErrMessage {
+      display: none;
+      &_isValidated {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        color: #f01136;
+        font-size: 13px;
+        margin-top: 11px;
+      }
+    }
+    &-OtpLoader {
+      display: none;
+      &_isSubmitted {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0px 40px 0px;
+      }
+    }
+    &-ResendCode {
+      display: none;
+      &_isVerifying {
+        display: block;
+        margin: 40px 0px 40px 0px;
+      }
+      button {
+        font-weight: var(--fw-regular);
+        font-size: 14px;
+        margin-top: 0;
+        text-transform: capitalize;
+        text-decoration: underline;
+        color: #4a4a4a;
+      }
+    }
+
+    @include before-desktop() {
+      background-color: #ffffff;
+    }
+
+    & form {
+      padding: 15px 60px 0px 60px;
+    }
+    @include after-mobile() {
+      margin-left: 0;
+      width: 100%;
+
+      button {
+        width: unset;
+      }
+    }
+
+    @include mobile() {
+      width: auto;
+      margin-inline: 0;
+      margin-left: 0;
+      margin-right: 0;
     }
   }
 
@@ -188,7 +312,7 @@
 
   &-Action form,
   &-Additional {
-    padding: 0 60px 60px;
+    padding: 0 60px 60px 60px;
 
     @include before-desktop() {
       max-width: 100vw;
@@ -197,14 +321,17 @@
   }
 
   &-Action {
-    display: grid;
-    grid-template-rows: max-content 1fr;
+    display: block;
+    // display: grid;
+    // grid-template-rows: max-content 1fr;
     overflow-y: auto;
 
     &_state {
       &_createAccount {
         height: 100vh;
-        max-height: 700px;
+        @include desktop() {
+          max-height: 91vh;
+        }
 
         h4 {
           padding-right: 1rem;
@@ -240,9 +367,33 @@
 
       &_signIn {
         height: 100vh;
-        max-height: 672px;
+        @include desktop() {
+          max-height: 88vh;
+        }
         h4 {
           text-align: center;
+        }
+      }
+      &_otpVerification {
+        height: 100vh;
+        @include desktop() {
+          height: 642px;
+          max-height: 88vh;
+        }
+        h4 {
+          text-align: center;
+        }
+      }
+      &_initialLinks{
+        .MyAccountOverlayOuter{
+          .signInQuote{
+            @include mobile() {
+              opacity: 1;
+              visibility: visible;
+              height: auto;
+              margin: 40px 0 0;
+            }
+          }
         }
       }
 
@@ -255,6 +406,60 @@
         @include desktop {
           width: 180px;
           padding: 0;
+        }
+      }
+      &_initialLinks {
+        .logInScreenLinks {
+          margin-top: 40px;
+          .MyAccountTabListItem {
+            padding-left: 3.5rem;
+            border-bottom: 1px solid #eaeaea;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            &::before {
+              display: none;
+            }
+            a {
+              position: static;
+              text-align: left;
+              font-size: 16px;
+              font-weight: 600;
+              text-transform: capitalize;
+              letter-spacing: 0.55px;
+              display: block;
+              height: 50px;
+              line-height: 50px;
+              padding: 0 15px;
+              &::before {
+                left: 20px;
+                top: 24px;
+                background-repeat: no-repeat;
+                position: absolute;
+                background-size: contain;
+                width: 25px;
+                height: 30px;
+                content: "";
+                display: inline-block;
+              }
+              &.return_policy {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/account.png);
+                }
+              }
+              &.free_delivery {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/delivery.png);
+                }
+              }
+              &.faq {
+                &::before {
+                  background-image: url(../../route/MyAccount/icons/faq.png);
+                }
+              }
+              a {
+              }
+            }
+          }
         }
       }
     }
@@ -427,7 +632,9 @@
   &-Buttons {
     display: flex;
     margin: 30px 90px;
-
+    @include mobile(){
+      justify-content: center;
+    }
     // @include mobile() {
     //     margin: 30px 72px 39px 72px!important
     // }
@@ -470,6 +677,22 @@
         --button-color: var(--black-color);
         border: 2px solid var(--button-border);
         padding: 0 15px;
+      }
+      @include mobile() {
+        &.signBtns {
+          height: 45px;
+          line-height: 45px;
+          border: 1px solid #000;
+          color: #000;
+          font-size: 12px;
+          font-weight: 700;
+          border-radius: 6px;
+          flex: 0 0 40%;
+          &.signUpBtn {
+            color: #fff;
+            background: #000;
+          }
+        }
       }
     }
   }
@@ -572,6 +795,9 @@
 
     &_isCreateAccountButton {
       margin-top: 24px;
+      @include mobile(){
+        margin-bottom: 25px;
+      }
       &::after {
         position: absolute;
         content: "";
@@ -599,8 +825,13 @@
     }
     display: flex;
     justify-content: center;
-    margin-top: 56px;
+    margin: 40px 60px 0;
     border-top: 1.5px solid #efefef;
+
+    @include before-desktop() {
+      margin: 40px 20px;
+    }
+
     &-title {
       background-color: #ffffff;
       position: absolute;
@@ -615,9 +846,13 @@
     }
     &-Buttons {
       display: flex;
-      margin-top: 48px;
+      margin: 42px 0;
       width: 100%;
-      justify-content: space-around;
+      align-items: center;
+      justify-content: space-between;
+      @include mobile() {
+        margin-bottom: 24px;
+      }
       &-Facebook,
       &-Google {
         color: #ffffff;
@@ -627,7 +862,8 @@
         line-height: 16px;
         text-align: center;
         border-radius: 6px;
-        width: 160px !important;
+        margin: 5px 0px;
+        width: 47% !important;
       }
       &-Facebook {
         &_disabled {
@@ -768,6 +1004,12 @@
         border-bottom: 0.5px solid #d1d3d4;
         border-left: 0.5px solid #d1d3d4;
         border-radius: 6px;
+        margin-bottom: 16px;
+        .Field-Message {
+          margin: 5px 0 0;
+          font-size: 12px;
+          line-height: 14px;
+        }
       }
       .PhoneCountryCodeField {
         height: 40px;
@@ -845,41 +1087,110 @@
   }
 
   &-PhoneNumber {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 40px;
     margin-top: 10px;
-    .PhoneCountryCodeField {
-      height: 40px;
-      margin-bottom: 32px;
-      margin-top: 0px;
-      width: 104px;
-      .CountryMiniFlag {
-        &-Container {
-          margin-bottom: -36px;
-        }
+    .UserIdentifierFieldsContainerCreate {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 48px;
+      border-top: 0.5px solid #d1d3d4;
+      border-right: 0.5px solid #d1d3d4;
+      border-bottom: 0.5px solid #d1d3d4;
+      border-left: 0.5px solid #d1d3d4;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      .Field-Message {
+        margin: 5px 0 0;
+        font-size: 12px;
+        line-height: 12px;
       }
-      select {
+      .PhoneCountryCodeField {
         height: 40px;
-        border: 0.5px solid #d1d3d4;
-        border-radius: 6px;
+        margin-bottom: 32px;
+        margin-top: 0px;
+        width: 104px;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        .CountryMiniFlag {
+          &-Container {
+            margin-bottom: -36px;
+          }
+        }
+        .Field {
+          border-top: none;
+          border-right: none;
+          border-bottom: none;
+          border-left: none;
+          &_type_select {
+            height: 40px;
+            .FieldSelect-Select {
+              border-top: none;
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+              height: 40px;
+            }
+          }
+        }
       }
-    }
-    .Field {
-      height: 40px;
-      margin-top: 0;
-      &_type_text {
-        width: calc(100% - 112px);
-        margin-left: 8px;
-        input {
+      .Field {
+        min-height: 40px;
+        margin-top: 0;
+        width: 100%;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        &_type_phone {
           height: 40px;
-          border: 0.5px solid #d1d3d4;
-          border-radius: 6px;
+          width: calc(100% - 104px);
+          input {
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            border-left: none;
+            height: 40px;
+          }
         }
       }
     }
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    // width: 100%;
+    // height: 40px;
+    // margin-top: 10px;
+    // .PhoneCountryCodeField {
+    //   height: 40px;
+    //   margin-bottom: 32px;
+    //   margin-top: 0px;
+    //   width: 104px;
+    //   .CountryMiniFlag {
+    //     &-Container {
+    //       margin-bottom: -36px;
+    //     }
+    //   }
+    //   select {
+    //     height: 40px;
+    //     border: 0.5px solid #d1d3d4;
+    //     border-radius: 6px;
+    //   }
+    // }
+    // .Field {
+    //   height: 40px;
+    //   margin-top: 0;
+    //   &_type_text {
+    //     width: calc(100% - 112px);
+    //     margin-left: 8px;
+    //     input {
+    //       height: 40px;
+    //       border: 0.5px solid #d1d3d4;
+    //       border-radius: 6px;
+    //     }
+    //   }
+    // }
   }
 
   &-LockImg {
@@ -948,19 +1259,19 @@
       }
 
       .StoreSwitcherPopup {
+        position: relative !important;
         &-Image {
           display: none;
         }
 
         &-Container {
-          position: absolute;
-          top: 0;
-          left: 0;
           right: 0;
-          width: 100%;
-          max-height: 100%;
-          height: 100vh;
-          z-index: 999;
+          &_isArabic {
+            @include mobile {
+              right: auto;
+              left: 35px;
+            }
+          }
         }
       }
     }
@@ -1035,7 +1346,33 @@
     }
   }
 }
-
+.MyAccountOverlayOuter {
+  position: relative;
+  .signInQuote {
+    display: none;
+    @include mobile() {
+      display: block;
+      height: 0;
+      opacity: 0;
+      margin: 0;
+      transition: height .4s ease-out, margin .4s ease-out; 
+      position: relative;
+      text-align: center;
+      width: 100%;
+      h5 {
+        color: #000;
+        font-size: 20px;
+        max-width: 70%;
+        margin: auto;
+        line-height: 28px;
+        font-weight: 600;
+        span{
+          color: #ec694f;
+        }
+      }
+    }
+  }
+}
 .Field_hasError + .Mask {
   bottom: 1.8rem !important;
 }

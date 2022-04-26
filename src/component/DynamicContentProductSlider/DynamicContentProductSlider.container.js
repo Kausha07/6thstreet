@@ -5,6 +5,7 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 import Algolia from "Util/API/provider/Algolia";
 import Logger from "Util/Logger";
 import DynamicContentProductSlider from "./DynamicContentProductSlider.component";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (_state) => ({
   language: _state.AppState.language,
@@ -41,6 +42,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       language,
       renderMySignInPopup,
       isHomePage = false,
+      index= 0,
     } = this.props;
 
     const { products, isLoading } = this.state;
@@ -53,6 +55,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       products,
       renderMySignInPopup,
       isHomePage,
+      index
     };
   };
   async requestItems() {

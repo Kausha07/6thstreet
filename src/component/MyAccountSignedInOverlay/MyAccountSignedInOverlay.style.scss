@@ -12,7 +12,7 @@
     transform: translateX(-50%);
 
     &::before {
-        background: var(--white);
+        background: #ffffff;
         border-top: 1px solid var(--color-gainsboro);
         border-right: 1px solid var(--color-gainsboro);
         content: '';
@@ -29,7 +29,7 @@
             font-size: 13px;
             vertical-align: middle;
             font-weight: var(--fw-medium);
-        
+
             &:hover{
                 font-weight: var(--fw-demi);
             }
@@ -82,7 +82,7 @@
     }
 
     button {
-        color: var(--black);
+        color: #000000;
         display: block;
         font-weight: var(--fw-bold);
         height: auto;

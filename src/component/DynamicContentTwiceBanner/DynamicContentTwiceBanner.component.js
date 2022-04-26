@@ -47,6 +47,12 @@ class DynamicContentTwiceBanner extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -62,7 +68,9 @@ class DynamicContentTwiceBanner extends PureComponent {
     });
   };
   onclick = (item) => {
+    const { index } = this.props;
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentTwiceBanner${index}`);
   };
 
   sendBannerClickImpression(item) {
@@ -116,7 +124,8 @@ class DynamicContentTwiceBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           src={url}
           className="BannerImage"
           // style={{ maxWidth: width, maxHeight: height }}
@@ -136,7 +145,7 @@ class DynamicContentTwiceBanner extends PureComponent {
     };
     const { isArabic } = this.state;
     // const { isAllShowing } = this.state;
-    const { typeOfBanner } = this.props;
+    const { typeOfBanner, index } = this.props;
     const BannerPosition = typeOfBanner === "header" ? "Right" : "Left";
     return (
       <div
@@ -144,6 +153,7 @@ class DynamicContentTwiceBanner extends PureComponent {
         block="DynamicContentTwiceBanner"
         className="row"
         elem="Content"
+        id={`DynamicContentTwiceBanner${index}`}
         mods={{ isArabic }}
       >
         {BannerPosition === "Left" ? (
@@ -151,14 +161,14 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div
               block="DynamicContentTwiceBanner"
               elem="BannerImg"
-              class="banner1"
+              className="banner1"
             >
               {this.renderImages()}
             </div>
             <div
               block="DynamicContentTwiceBanner"
               elem="Figure"
-              class="banner2"
+              className="banner2"
             >
               {this.renderImages(true)}
             </div>
@@ -168,14 +178,14 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div
               block="DynamicContentTwiceBanner"
               elem="FigureRight"
-              class="banner1"
+              className="banner1"
             >
               {this.renderImages(true)}
             </div>
             <div
               block="DynamicContentTwiceBanner"
               elem="BannerImgRight"
-              class="banner2"
+              className="banner2"
             >
               {this.renderImages()}
             </div>

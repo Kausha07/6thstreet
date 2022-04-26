@@ -1,7 +1,7 @@
-import { getQueryValues } from '../utils/query';
-import { sum } from '../utils/num';
-import { sortKeys } from '../utils/obj';
-import { translate } from '../config/translations';
+import { getQueryValues } from "../utils/query";
+import { sum } from "../utils/num";
+import { sortKeys } from "../utils/obj";
+import { translate } from "../config/translations";
 
 /*
   Note
@@ -10,18 +10,20 @@ import { translate } from '../config/translations';
 */
 
 const _getLevelsFromCategoryKey = ({ key }) => {
-  const levels = key.split(' /// ');
-  const kidsTransaltions = [translate('kids', 'en'), translate('kids', 'ar')];
+  const levels = key.split(" /// ");
+  const kidsTransaltions = [translate("kids", "en"), translate("kids", "ar")];
 
   const l0 = levels[0];
   const offset = !kidsTransaltions.includes(l0) ? 0 : 1;
   const l1 = levels[offset + 1];
   const l2 = levels[offset + 2];
+  const l3 = levels[offset + 3];
 
   return {
     l0,
     l1,
-    l2
+    l2,
+    l3,
   };
 };
 
@@ -30,7 +32,7 @@ const _getCategoryLevel2Data = ({
   categoriesLevel2,
   categoriesLevel3,
   categoriesWithoutPath,
-  query
+  query,
 }) => {
   let totalSelectedFiltersCount = 0;
 
@@ -56,21 +58,29 @@ const _getCategoryLevel2Data = ({
   */
   const categoriesMerge = {
     ...categoriesLevel2,
-    ...categoriesLevel3
+    ...categoriesLevel3,
   };
 
   const queryValues = getQueryValues({ query, path: facetKey });
-
   let data = Object.entries(categoriesMerge).reduce(
     (acc, [key, productCount]) => {
-      const { l1, l2 } = _getLevelsFromCategoryKey({ key });
+      const {
+        l1: l1Key,
+        l2: l2Key,
+        l3: l3Key,
+        l1,
+        l2,
+        l3,
+      } = _getLevelsFromCategoryKey({ key });
+      // let l2 = query["categories.level2"] ? l3Key : l2Key; code for l2 and l3 logic
+      // let l1 = query["categories.level2"] ? l2Key : l1Key;
 
       // TODO: Add proper logger
-      if (l2 && !categoriesWithoutPath[l2] && __DEV__) {
-        console.warn('No categories_without_path for', l2);
+      if (l2 && categoriesWithoutPath && !categoriesWithoutPath[l2] && __DEV__) {
+        console.warn("No categories_without_path for", l2);
       }
 
-      if (l2 && categoriesWithoutPath[l2]) {
+      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2]) {
         if (!acc[l1]) {
           acc[l1] = {
             label: l1,
@@ -78,7 +88,7 @@ const _getCategoryLevel2Data = ({
             facet_value: l1,
             selected_filters_count: 0,
             product_count: 0,
-            subcategories: {}
+            subcategories: {},
           };
         }
 
@@ -98,7 +108,7 @@ const _getCategoryLevel2Data = ({
           if (acc[l1].selected_filters_count === 0) {
             totalSelectedFiltersCount += 1;
           }
-          acc[l1].selected_filters_count = 1;
+          acc[l1].selected_filters_count += 1;
           acc[l1].subcategories[l2].is_selected = true;
         }
       }
@@ -114,7 +124,6 @@ const _getCategoryLevel2Data = ({
     const [, b] = obj2;
     return b.product_count - a.product_count;
   });
-
   return [data, totalSelectedFiltersCount];
 };
 
@@ -122,7 +131,7 @@ const _getCategoryLevel1Data = ({
   facetKey,
   categoriesLevel1,
   categoriesLevel2,
-  query
+  query,
 }) => {
   let totalSelectedFiltersCount = 0;
 
@@ -134,7 +143,7 @@ const _getCategoryLevel1Data = ({
   */
   const categoriesMerge = {
     ...categoriesLevel1,
-    ...categoriesLevel2
+    ...categoriesLevel2,
   };
 
   let data = Object.entries(categoriesMerge).reduce(
@@ -148,7 +157,7 @@ const _getCategoryLevel1Data = ({
           facet_key: facetKey,
           facet_value: key,
           is_selected: false,
-          product_count: sum(acc[key]?.product_count, productCount)
+          product_count: sum(acc[key]?.product_count, productCount),
         };
 
         // Mark selected filters, using the query params
@@ -167,41 +176,42 @@ const _getCategoryLevel1Data = ({
 };
 
 const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
-  const facetKey = 'categories_without_path';
-
+  const facetKey = "categories_without_path";
+  // let categoriesLevel2Data = query["categories.level2"]
+  //   ? {}
+  //   : facets["categories.level2"];
   const [data, totalSelectedFiltersCount] = _getCategoryLevel2Data({
     facetKey,
-    categoriesLevel2: facets['categories.level2'],
-    categoriesLevel3: facets['categories.level3'],
+    categoriesLevel2: facets["categories.level2"],
+    categoriesLevel3: facets["categories.level3"],
     categoriesWithoutPath: facets.categories_without_path,
-    query
+    query,
   });
-
   return {
-    label: __('Categories'),
+    label: __("Categories"),
     category: facetKey,
     is_radio: false,
     is_nested: true,
     selected_filters_count: totalSelectedFiltersCount,
-    data
+    data,
   };
 };
 
 const makeCategoriesLevel1Filter = ({ facets, query }) => {
-  const facetKey = 'categories.level1';
+  const facetKey = "categories.level1";
   const [data, totalSelectedFiltersCount] = _getCategoryLevel1Data({
     facetKey,
-    categoriesLevel1: facets['categories.level1'],
-    categoriesLevel2: facets['categories.level2'],
-    query
+    categoriesLevel1: facets["categories.level1"],
+    categoriesLevel2: facets["categories.level2"],
+    query,
   });
 
   return {
-    label: 'Categories Level 1',
+    label: "Categories Level 1",
     category: facetKey,
     is_radio: false,
     selected_filters_count: totalSelectedFiltersCount,
-    data
+    data,
   };
 };
 

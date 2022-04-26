@@ -12,12 +12,13 @@ class DragScroll extends PureComponent {
       scrollLeft: 0,
     };
   }
-  propTypes = {
+  static propTypes = {
     ref: PropTypes.object,
     rootClass: PropTypes.string,
-    children: PropTypes.string,
+    children: PropTypes.any,
+    isHomePage: PropTypes.bool,
   };
-  defaultProps = {
+  static defaultProps = {
     ref: { current: {} },
     rootClass: "",
   };
@@ -63,7 +64,9 @@ class DragScroll extends PureComponent {
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
       const walk = (x - this.state.startX) * 3; //scroll-fast
-      slider.scrollLeft = this.state.scrollLeft - walk;
+      if(slider){
+        slider.scrollLeft = this.state.scrollLeft - walk;
+      }
     });
   };
   render() {

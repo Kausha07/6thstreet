@@ -3,6 +3,7 @@ import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
+import { resetPLPPage } from "Store/PLP/PLP.action";
 import { LocationType } from "Type/Common";
 import history from "Util/History";
 import { fetchQuery } from "Util/Request";
@@ -19,6 +20,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (_dispatch) => ({
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+  resetPLPPage: () => _dispatch(resetPLPPage()),
 });
 
 export class UrlRewritesContainer extends PureComponent {
@@ -49,16 +51,24 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
-    this.requestUrlRewrite();
+    const possibleSku = this.getPossibleSku();
+    this.setState({
+      sku: possibleSku,
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
 
-    const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+    const { prevPathname, query, sku } = this.state;
+    const {
+      prevPathname: prevStatePathname,
+      query: prevQuery,
+      sku: prevSku,
+    } = prevState;
 
+    this.onPageReload();
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -79,6 +89,7 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
+      sku !== prevSku ||
       !prevStatePathname
     ) {
       hideActiveOverlay();
@@ -88,6 +99,22 @@ export class UrlRewritesContainer extends PureComponent {
     }
   }
 
+  onPageReload = () => {
+    const { resetPLPPage } = this.props;
+    let previousLocation = location.href;
+    window.onload = function () {
+      const url = new URL(previousLocation.replace(/%20&%20/gi, "%20%26%20"));
+
+      if (url.searchParams.get("p") && url.searchParams.get("p") !== "0") {
+        resetPLPPage();
+        url.searchParams.set("p", 0);
+
+        window.scrollTo(0, 0);
+        const { pathname, search } = url;
+        history.push(pathname + search);
+      }
+    };
+  };
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;
@@ -95,13 +122,11 @@ export class UrlRewritesContainer extends PureComponent {
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
-    if (isUpdate) {
-      this.setState({
-        prevPathname: urlParam,
-        isLoading: true,
-      });
-    }
-    if (search.startsWith("?q=")) {
+    this.setState({
+      prevPathname: urlParam,
+      isLoading: isUpdate
+    });
+    if (search.startsWith("?q=")) { // Normal PLP, Catalog Search
       this.setState({
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
@@ -113,7 +138,7 @@ export class UrlRewritesContainer extends PureComponent {
         brandName: "",
       });
       window.pageType = TYPE_CATEGORY;
-    } else if (search.startsWith("?p")) {
+    } else if (search.startsWith("?p")) { // URL with query params, when resolver returns null
       this.setState({
         prevPathname: urlParam,
         type: TYPE_CATEGORY,
@@ -122,15 +147,21 @@ export class UrlRewritesContainer extends PureComponent {
         query: "",
       });
       window.pageType = TYPE_CATEGORY;
-    } else {
+    } else { // PDP & PLP w/o query params
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
+      let UpdatedURL;
+      if(urlResolver && urlResolver.data.url)
+      {
+        UpdatedURL = urlResolver.data.url.split("&p=")[0]+'&p=0'+urlResolver.data.url.split("&p=")[1].substring(1)
+      }
       const {
         type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
         id,
+        query=UpdatedURL,
         data: {
-          url: query,
+          //url: query,
           brand_html: brandDescription,
           brand_logo: brandImg,
           brand_name: brandName,
@@ -199,11 +230,12 @@ export class UrlRewritesContainer extends PureComponent {
   containerProps = () => {
     const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
+    const string_sku = sku.toString();
     return {
       isLoading,
       type,
       id,
-      sku,
+      string_sku,
       brandDescription,
       brandImg,
       brandName,

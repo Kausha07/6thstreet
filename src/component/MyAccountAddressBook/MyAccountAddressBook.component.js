@@ -11,158 +11,158 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
-import MyAccountAddressTable from 'Component/MyAccountAddressTable';
-import { addressType, customerType } from 'Type/Account';
-import isMobile from 'Util/Mobile';
-
-import './MyAccountAddressBook.style';
+import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
+import MyAccountAddressTable from "Component/MyAccountAddressTable";
+import { addressType, customerType } from "Type/Account";
+import isMobile from "Util/Mobile";
+import { withRouter } from "react-router";
+import "./MyAccountAddressBook.style";
 
 export class MyAccountAddressBook extends PureComponent {
-    static propTypes = {
-        customer: customerType.isRequired,
-        formContent: PropTypes.bool.isRequired,
-        getDefaultPostfix: PropTypes.func.isRequired,
-        closeForm: PropTypes.func.isRequired,
-        openForm: PropTypes.func.isRequired,
-        showCreateNewPopup: PropTypes.func.isRequired,
-        payload: PropTypes.shape({
-            address: addressType
-        })
-    };
+  static propTypes = {
+    customer: customerType.isRequired,
+    formContent: PropTypes.bool.isRequired,
+    getDefaultPostfix: PropTypes.func.isRequired,
+    closeForm: PropTypes.func.isRequired,
+    openForm: PropTypes.func.isRequired,
+    showCreateNewPopup: PropTypes.func.isRequired,
+    payload: PropTypes.shape({
+      address: addressType,
+    }),
+  };
 
-    static defaultProps = {
-        payload: {}
-    };
+  static defaultProps = {
+    payload: {},
+  };
 
-    state = {
-        hideCards: false
-    };
+  state = {
+    hideCards: false,
+  };
 
-    hideCards = () => {
-        this.setState({ hideCards: true });
-    };
+  hideCards = () => {
+    this.setState({ hideCards: true });
+  };
 
-    showCards = () => {
-        const { closeForm } = this.props;
-        closeForm();
-        this.setState({ hideCards: false });
-    };
+  showCards = () => {
+    const { closeForm } = this.props;
+    closeForm();
+    this.setState({ hideCards: false });
+  };
 
-    openNewForm = () => {
-        const { showCreateNewPopup } = this.props;
+  openNewForm = () => {
+    const { showCreateNewPopup, history } = this.props;
 
-        if (isMobile.any()) {
-            this.hideCards();
-        }
-        showCreateNewPopup();
+    if (isMobile.any()) {
+      this.hideCards();
+    }
+    showCreateNewPopup();
+    if (!isMobile.any()) {
+      const elmnts =
+        document.getElementsByClassName("MyAccountAddressBook-NewAddress") ||
+        [];
+      if (elmnts && elmnts.length > 0) {
+        elmnts[0].scrollIntoView();
+      }
+    }
+  };
 
-        if (!isMobile.any()) {
-            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress') || [];
-            if (elmnts && elmnts.length > 0) {
-                elmnts[0].scrollIntoView();
-            }
-        }
-    };
+  renderPopup() {
+    const { formContent, closeForm, openForm, customer } = this.props;
 
-    renderPopup() {
-        const {
-            formContent,
-            closeForm,
-            openForm,
-            customer
-        } = this.props;
+    return (
+      <div id="add" block="isNewAddressOpen">
+        <MyAccountAddressPopup
+          formContent={formContent}
+          closeForm={closeForm}
+          openForm={openForm}
+          showCards={this.showCards}
+          customer={customer}
+        />
+      </div>
+    );
+  }
 
-        return (
-            <MyAccountAddressPopup
-              formContent={ formContent }
-              closeForm={ closeForm }
-              openForm={ openForm }
-              showCards={ this.showCards }
-              customer={ customer }
-            />
-        );
+  renderAddress = (address, index) => {
+    const { getDefaultPostfix, closeForm, openForm } = this.props;
+    const addressNumber = index + 1;
+    const postfix = getDefaultPostfix(address);
+
+    return (
+      <MyAccountAddressTable
+        title={__("Address #%s%s", addressNumber, postfix)}
+        showActions
+        hideCards={this.hideCards}
+        address={address}
+        key={addressNumber}
+        closeForm={closeForm}
+        openForm={openForm}
+      />
+    );
+  };
+
+  renderNoAddresses() {
+    return (
+      <div>
+        <p>{__("You have no configured addresses.")}</p>
+      </div>
+    );
+  }
+
+  renderActions() {
+    return (
+      <button
+        block="MyAccountAddressBook"
+        elem="NewAddress"
+        onClick={this.openNewForm}
+      >
+        {__("Add new address")}
+      </button>
+    );
+  }
+
+  renderAddressList() {
+    const { addresses } = this.props;
+    if (!addresses.length) {
+      return this.renderNoAddresses();
+    }
+    const defaultAddress = addresses.filter(
+      ({ default_billing }) => default_billing
+    );
+    const simpleAddresses = addresses.filter(
+      ({ default_billing }) => !default_billing
+    );
+    const sortedAddresses = [...defaultAddress, ...simpleAddresses];
+
+    return sortedAddresses.map(this.renderAddress);
+  }
+
+  render() {
+    const { hideCards } = this.state;
+
+    if (hideCards) {
+      return (
+        <div block="MyAccountAddressBook">
+          <button
+            block="MyAccountAddressBook"
+            elem="backBtn"
+            onClick={this.showCards}
+          />
+          {this.renderPopup()}
+        </div>
+      );
     }
 
-    renderAddress = (address, index) => {
-        const { getDefaultPostfix, closeForm, openForm , hideCards} = this.props;
-        const addressNumber = index + 1;
-        const postfix = getDefaultPostfix(address);
-
-        return (
-            <MyAccountAddressTable
-              title={ __('Address #%s%s', addressNumber, postfix) }
-              showActions
-              hideCards={ hideCards }
-              address={ address }
-              key={ addressNumber }
-              closeForm={ closeForm }
-              openForm={ openForm }
-            />
-        );
-    };
-
-    renderNoAddresses() {
-        return (
-            <div>
-                <p>{ __('You have no configured addresses.') }</p>
-            </div>
-        );
-    }
-
-    renderActions() {
-        return (
-            <button
-              block="MyAccountAddressBook"
-              elem="NewAddress"
-              onClick={ this.openNewForm }
-            >
-                { __('Add new address') }
-            </button>
-        );
-    }
-
-    renderAddressList() {
-        const { customer: { addresses = [] } } = this.props;
-
-        if (!addresses.length) {
-            return this.renderNoAddresses();
-        }
-
-        const defaultAddress = addresses.filter(({ default_billing }) => default_billing);
-        const simpleAddresses = addresses.filter(({ default_billing }) => !default_billing);
-        const sortedAddresses = [...defaultAddress, ...simpleAddresses];
-
-        return sortedAddresses.map(this.renderAddress);
-    }
-
-    render() {
-        const { hideCards } = this.state;
-
-        if (hideCards) {
-            return (
-                <div block="MyAccountAddressBook">
-                    <button
-                      block="MyAccountAddressBook"
-                      elem="backBtn"
-                      onClick={ this.showCards }
-                    />
-                    { this.renderPopup() }
-                </div>
-            );
-        }
-
-        return (
-            <div block="MyAccountAddressBook">
-                { this.renderAddressList() }
-                { this.renderActions() }
-                { this.renderPopup() }
-            </div>
-        );
-    }
+    return (
+      <div block="MyAccountAddressBook">
+        {this.renderAddressList()}
+        {this.renderActions()}
+        {this.renderPopup()}
+      </div>
+    );
+  }
 }
 
-export default MyAccountAddressBook;
+export default withRouter(MyAccountAddressBook);

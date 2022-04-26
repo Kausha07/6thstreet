@@ -11,7 +11,7 @@
   box-shadow: none;
   width: 100%;
   position: fixed;
-  bottom: 80px;
+  bottom: 70px;
   z-index: 4;
   background: $black;
   transition: 0.5s ease-in-out;
@@ -28,8 +28,24 @@
     padding: 0;
   }
 
-  @include mobile{
-    bottom: 70px;
+  @include mobile {
+    position: fixed;
+    top: 15.5px;
+    height: 31px;
+    z-index: 95;
+    width: fit-content;
+    background-color: transparent;
+  }
+
+  @include tablet {
+    width: 100%;
+    position: relative;
+    top: 0;
+    z-index: 91;
+    box-shadow: unset;
+    background: none;
+    height: 31px;
+    padding: 0;
   }
 
   &-ContentWrapper {
@@ -38,11 +54,33 @@
     margin: 0 auto;
     width: var(--main-container-width-dsk);
     justify-content: space-between;
-    @include tablet {
-      justify-content: center;
-    }
     @include mobile {
-      justify-content: center;
+      margin: 0;
+      width: 100%;
+    }
+    @include tablet {
+      margin: 0;
+      width: 100%;
+    }
+    .tns-outer{
+      .tns-controls{
+        display: none;
+      }
+      .tns-nav{
+        display: none;
+      }
+      button[data-action="stop"] {
+        display: none;
+      }
+      button[data-action="start"] {
+        display: none;
+      }
+      .tns-liveregion{
+        display: none;
+      }
+      .tns-ovh{
+        overflow: hidden;
+      }
     }
   }
 
@@ -65,18 +103,20 @@
 
     @include desktop {
       display: block;
+      height: 30px;
+      margin: 0;
     }
-  }
-
-  &_isOnMobile {
-    display: none;
   }
 
   &_isHidden {
-    @include mobile {
-      bottom: 0;
-    }
+    display: none;
   }
+
+  // &_isHidden {
+  //   @include mobile {
+  //     bottom: 0;
+  //   }
+  // }
   .Switcher {
     display: flex;
     align-items: center;

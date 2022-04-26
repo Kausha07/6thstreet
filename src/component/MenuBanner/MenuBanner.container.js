@@ -34,6 +34,7 @@ class MenuBannerContainer extends PureComponent {
     return (
       <DynamicContentBanner
         doNotTrackImpression={true}
+        setLastTapItemOnHome={this.props.setLastTapItemOnHome}
         {...this.containerProps()}
       />
     );

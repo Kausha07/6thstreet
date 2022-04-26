@@ -7,8 +7,16 @@
   }
   &-Wrapper {
     @include desktop {
-      background: var(--white);
+      background: #ffffff;
       padding-top: 20px;
+    }
+  }
+  &-NewAddressBtn {
+    padding: 30px;
+    background: #fff;
+    text-align: center;
+    @include mobile {
+      width: 100%;
     }
   }
 
@@ -31,7 +39,9 @@
       text-align: left;
 
       &-EditButton {
-        display: flex;
+        @include mobile {
+          display: flex;
+        }
         flex-direction: row;
         justify-content: space-between;
         &_isArabic {
@@ -53,7 +63,7 @@
         height: 18px;
         border-radius: 50%;
         border: 1px solid var(--border-color);
-        background: var(--white);
+        background: #ffffff;
       }
 
       &::after {
@@ -62,7 +72,7 @@
 
       &_isSelected {
         border: 1px solid var(--selected-step-color);
-        background: var(--white);
+        background: #ffffff;
 
         &::after {
           opacity: 1;
@@ -107,12 +117,13 @@
   }
 
   &-CustomAddressWrapper {
-    background: var(--white);
+    background: #ffffff;
 
     .FieldForm {
       margin-top: 20px;
 
       .Field {
+        -webkit-appearance: none;
         &:first-child {
           display: none;
         }
@@ -133,7 +144,7 @@
         border: none;
         border-radius: 7px;
         background: var(--my-acc-background);
-        color: var(--black);
+        color: #000000;
         font-weight: var(--fw-regular);
         text-transform: capitalize;
         min-width: 140px;
@@ -172,7 +183,7 @@
     }
 
     &-MobileSlider {
-      width: 90%;
+      width: 100%;
       overflow: visible;
 
       &_isArabic {
@@ -213,6 +224,17 @@
       }
     }
   }
+  .CheckoutAddressForm {
+    &_isGuestForm {
+      .Field_type_select {
+        .FieldSelect-Options {
+          .FieldSelect-Option {
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
 }
 .EditAddress {
   &-PopUp {
@@ -223,6 +245,14 @@
       width: 95vw;
       max-width: 100vw !important;
       z-index: 20000;
+    }
+  }
+}
+
+.CheckoutNoAddressBlock {
+  @include mobile {
+    p {
+      text-align: center;
     }
   }
 }

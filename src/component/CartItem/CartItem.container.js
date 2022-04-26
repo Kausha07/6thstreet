@@ -80,6 +80,10 @@ export const mapDispatchToProps = (dispatch) => ({
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath
+});
+
 export class CartItemContainer extends PureComponent {
   static propTypes = {
     item: CartItemType.isRequired,
@@ -149,7 +153,7 @@ export class CartItemContainer extends PureComponent {
     minSaleQuantity: this.getMinQuantity(),
     maxSaleQuantity: this.getMaxQuantity(),
   });
-
+  
   /**
    * Handle item quantity change. Check that value is <1
    * @param {Number} quantity new quantity
@@ -256,22 +260,27 @@ export class CartItemContainer extends PureComponent {
           color,
           qty,
           product: { name } = {},
-          full_item_info: { config_sku, category, price },
+          full_item_info: { config_sku, category, price, original_price,size_option },
           full_item_info,
         },
+        prevPath= null,
       } = this.props;
       removeProduct(item_id).then(() => this.setStateNotLoading());
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
-          brand: brand_name,
-          category: "",
-          id: sku,
           name,
+          id: sku,
           price: row_total,
-          quantity: qty,
-          size: optionValue,
+          brand: brand_name,
+          category: category,
           variant: color,
+          quantity: qty,
+          size_type: size_option,
+          size: optionValue,
+          dimension9: (100 -(Math.round((row_total/original_price)*100))) || 0 ,
+          dimension10:original_price,
+          dimension11:row_total,
         },
       });
       // vue analytics
@@ -286,7 +295,7 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: window.location.href,
+          referrer: prevPath,
           url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
@@ -372,4 +381,4 @@ export class CartItemContainer extends PureComponent {
   }
 }
 
-export default connect(null, mapDispatchToProps)(CartItemContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CartItemContainer);

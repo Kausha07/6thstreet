@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { withRouter } from "react-router";
+import TinySlider from "tiny-slider-react";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import InlineCustomerSupport from "Component/InlineCustomerSupport";
@@ -11,6 +13,17 @@ import isMobile from "Util/Mobile";
 
 import "./HeaderTopBar.style";
 
+
+const settings = {
+  loop: true,
+  autoplay: true,
+  axis: "vertical",
+  items: 1,
+  edgePadding: 10,
+  autoHeight: true,
+  autoplayTimeout: 3000,
+  speed: 1000
+};
 class HeaderTopBar extends NavigationAbstract {
   static propTypes = {
     location: PropTypes.object.isRequired,
@@ -41,15 +54,16 @@ class HeaderTopBar extends NavigationAbstract {
 
     return location.pathname !== "/" && isMobile.any()
       ? {
-          isOnMobile: true,
-        }
+        isOnMobile: true,
+      }
       : {
-          isOnMobile: false,
-        };
+        isOnMobile: false,
+      };
   }
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
+
   }
 
   handleScroll = () => {
@@ -63,15 +77,51 @@ class HeaderTopBar extends NavigationAbstract {
 
   renderCmsBlock() {
     // TODO: find out what is this, render here
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("FREE SHIPPING OVER AED99"),
+      SA: __("FREE SHIPPING OVER SAR199"),
+      KW: __("FREE SHIPPING OVER KWD16.5"),
+      QA: __("FREE SHIPPING OVER QAR199"),
+      OM: __("FREE SHIPPING OVER OMR20"),
+      BH: __("FREE SHIPPING OVER BHD20.5")
+    }
+
     return (
-      <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-        {__("ALL PRICES ARE INCLUSIVE OF VAT")}
-      </div>
+      <TinySlider settings={settings} block="HeaderTopBar" ele="TinySlider">
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {__("800+ GLOBAL BRANDS")}
+        </div>
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {__("100-DAY FREE RETURNS")}
+        </div>
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {__("CLUB APPAREL REWARDS")}
+        </div>
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {txt[country]}
+        </div>
+        {
+          (getCountryFromUrl() === "QA") ?
+            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+              {__("CASH ON RECEIVING")}
+            </div>
+            :
+            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+              {__("CASH ON DELIVERY")}
+            </div>
+        }
+
+        <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          {__("ALL PRICES ARE INCLUSIVE OF VAT")}
+        </div>
+      </TinySlider>
+
     );
   }
 
   renderCustomerSupport() {
-    return <InlineCustomerSupport key="support" />;
+    return <InlineCustomerSupport key="support" {...this.props} />;
   }
 
   renderStoreSwitcher() {
@@ -85,12 +135,23 @@ class HeaderTopBar extends NavigationAbstract {
     );
   }
 
-  render() {
-    const { isHidden, isOnMobile } = this.state;
-    const offset = window.pageYOffset;
+  isHidden = () => {
+    const { location: { pathname } } = this.props;
+    if (isMobile.any() &&
+      !(
+        pathname === "/" || pathname === "" ||
+        pathname === "/women.html" || pathname === "/men.html" || pathname === "/kids.html" || pathname === "/home.html" ||
+        pathname.includes("catalogsearch")
+      )
+    ) {
+      return true;
+    }
+    return false
+  }
 
+  render() {
     return (
-      <div block="HeaderTopBar" mods={{ isOnMobile }}>
+      <div block="HeaderTopBar" mods={{ isHidden: this.isHidden() }}>
         <div block="HeaderTopBar" elem="ContentWrapper">
           {this.renderNavigationState()}
         </div>

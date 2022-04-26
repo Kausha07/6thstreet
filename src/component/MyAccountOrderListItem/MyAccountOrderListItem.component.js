@@ -37,7 +37,9 @@ class MyAccountOrderListItem extends SourceComponent {
     };
     const finalStatus = isArabic()
       ? translateArabicStatus(status)
-      : status.split("_").join(" ");
+      : status
+      ? status.split("_").join(" ")
+      : "";
 
     return (
       <p
@@ -154,7 +156,6 @@ class MyAccountOrderListItem extends SourceComponent {
     const {
       order: { status },
     } = this.props;
-
     if (STATUS_HIDE_BAR.includes(status)) {
       return null;
     }

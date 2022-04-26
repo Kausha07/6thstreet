@@ -215,7 +215,13 @@ class MobileBottomBar extends NavigationAbstract {
   renderMenu() {
     const { newMenuGender } = this.props;
 
-    return <HeaderMenu key="menu" newMenuGender={newMenuGender} isMobileBottomBar={true}/>;
+    return (
+      <HeaderMenu
+        key="menu"
+        newMenuGender={newMenuGender}
+        isMobileBottomBar={true}
+      />
+    );
   }
 
   renderWishlist() {
@@ -234,7 +240,7 @@ class MobileBottomBar extends NavigationAbstract {
 
     return (
       <div key="wishlist">
-        <button
+        <div
           onClick={onClickHandle}
           key="wishlistButton"
           block="MobileBottomBar"
@@ -246,7 +252,7 @@ class MobileBottomBar extends NavigationAbstract {
             isBottomBar={isBottomBar}
             key="wishlist"
           />
-        </button>
+        </div>
       </div>
     );
   }
@@ -288,7 +294,10 @@ class MobileBottomBar extends NavigationAbstract {
     // if(this.isPDP()){
     //     return null;
     // }
-
+    
+    if(!isMobile.any()){
+      return null
+    }
     return (
       <div
         block="MobileBottomBar"

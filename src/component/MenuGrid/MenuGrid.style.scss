@@ -2,11 +2,11 @@
     width: 23%;
     &-ItemLabel {}
     &-Content {
-        background-color: var(--white);
+        background-color: #ffffff;
         pointer-events: all;
         span,
         a {
-            color: var(--black);
+            color: #000000;
         }
     }
     &-Columns {
@@ -108,7 +108,7 @@
                 }
             }
             &_isAllShow {
-                background-color: var(--white);
+                background-color: #ffffff;
                 left: 0;
                 position: absolute;
                 top: 0;
@@ -137,7 +137,7 @@
                         border-left: solid 1px var(--grey);
                         border-right: 0;
                         margin-left: 0;
-                        margin-right: 35px;
+                        margin-right: 0;
                         &:nth-last-child(1) {
                             border-left: 0;
                         }
@@ -203,6 +203,14 @@
                 a {
                     div:not(.MenuGrid-ItemLabel) {
                         display: none;
+                    }
+                }
+                &_isArabic {
+                    padding-right: 0;
+                    padding-left: 17px;
+                    a {
+                        padding-right: 0;
+                        padding-left: 10px;
                     }
                 }
             }

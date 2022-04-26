@@ -2,8 +2,8 @@ $select-arrow-height: 6px !default;
 $select-arrow-width: 6px !default;
 
 :root {
-  --text-color: #000;
-  --text-color-on-dark-background: #fff;
+  --text-color: #000000;
+  --text-color-on-dark-background: #ffffff;
   --loading-button-background-color: #808080;
   --success-color: #00f0a5;
   --checkout-border-gray: #d6d6d6;
@@ -13,7 +13,7 @@ $select-arrow-width: 6px !default;
 .PDPAddToCart {
   display: flex;
   flex-direction: column;
-  padding: 12px 0 12px 0;
+  // padding: 12px 0 12px 0;
   &-Checkout {
     position: fixed;
     overflow: hidden;
@@ -100,10 +100,13 @@ $select-arrow-width: 6px !default;
       @include mobile {
         display: none;
       }
-      font-size: 14px;
+      font-family: "Avenir Next";
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: 0;
       line-height: 22px;
+      margin: 0;
+      text-transform: none;
     }
     &-SizeInfo {
       margin-bottom: 5px;
@@ -121,7 +124,7 @@ $select-arrow-width: 6px !default;
 
     @include desktop {
       width: 363px;
-      padding-bottom: 16px;
+      padding-bottom: 19px;
       align-items: center;
     }
   }
@@ -138,6 +141,7 @@ $select-arrow-width: 6px !default;
         border: 0.5px solid #d1d3d4;
         border-radius: 6px;
         width: 70px;
+        height: 50px;
       }
 
       &-SizeTypeSelectElement {
@@ -155,7 +159,7 @@ $select-arrow-width: 6px !default;
         right: 14px;
         bottom: 0;
         top: 0;
-        margin-top: 18px;
+        margin-top: 22px;
         border: solid var(--text-color);
         border-width: 0 1px 1px 0;
       }
@@ -167,7 +171,7 @@ $select-arrow-width: 6px !default;
       justify-content: center;
       flex-direction: column;
       margin: -20px;
-      width: 15%;
+      width: 10%;
     }
   }
 
@@ -177,6 +181,12 @@ $select-arrow-width: 6px !default;
     width: 100%;
     padding: 0 12px;
     will-change: transform;
+    @include mobile {
+      padding: 0 0 0 6px;
+      &_isArabic {
+        padding: 0 6px 0 0;
+      }
+    }
     input {
       display: none;
       &:checked + label {
@@ -203,7 +213,7 @@ $select-arrow-width: 6px !default;
   }
   &-SizeSelector {
     @include desktop {
-      margin-left: 20px;
+      margin-left: 43px;
       scrollbar-width: none;
       // width: calc(100% - 150px);
     }
@@ -214,16 +224,18 @@ $select-arrow-width: 6px !default;
     flex-direction: column;
     align-items: center;
     align-self: center;
-    padding: 16px 0 16px 0;
+    padding: 18px 0 14px 0;
     overflow: scroll;
     white-space: nowrap;
-    @include mobile {
-      width: 85%;
-    }
+
     margin-left: 16px;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 
+    @include mobile {
+      width: 90%;
+      margin-left: 44px;
+    }
     &-AvailableSizes {
       display: flex;
       flex-direction: row;
@@ -253,7 +265,7 @@ $select-arrow-width: 6px !default;
 
     &-SizeOptionContainer {
       margin: auto;
-      padding: 0 6px 0 0;
+      padding: 0 10px 0 0;
 
       input {
         display: none;
@@ -323,6 +335,8 @@ $select-arrow-width: 6px !default;
 
   &-Bottom {
     display: flex;
+    margin-top: 20px;
+
     @include mobile {
       height: 85px;
       bottom: 0;
@@ -676,4 +690,34 @@ $select-arrow-width: 6px !default;
 }
 .PDPAddToCart-AddToCartButton[disabled] {
   opacity: 0.3 !important;
+}
+
+.SeperatorAddtoCart {
+  background-color: #efefef;
+  margin: 20px 0 20px;
+  height: 1px;
+  @include mobile {
+    margin: 15px 0 15px 0;
+  }
+}
+.AppParity {
+  &-Text {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 10px !important;
+    @include mobile {
+      margin-top: 0;
+    }
+  }
+}
+
+/* Scrollbar styles */
+.PDPAddToCart-SizeSelector::-webkit-scrollbar {
+  height: 4px;
+  width: 8px;
+}
+
+.PDPAddToCart-SizeSelector::-webkit-scrollbar-thumb {
+  background: #585757;
+  border-radius: 3px;
 }

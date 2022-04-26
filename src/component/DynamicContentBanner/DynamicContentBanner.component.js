@@ -19,8 +19,8 @@ class DynamicContentBanner extends PureComponent {
       PropTypes.shape({
         url: PropTypes.string,
         link: PropTypes.string,
-        height: PropTypes.string,
-        width: PropTypes.string,
+        height: PropTypes.any,
+        width: PropTypes.any,
       })
     ).isRequired,
     isMenu: PropTypes.bool,
@@ -61,6 +61,12 @@ class DynamicContentBanner extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -77,7 +83,7 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    const { toggleMobileMenuSideBar } = this.props;
+    const { toggleMobileMenuSideBar, index } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
@@ -88,15 +94,16 @@ class DynamicContentBanner extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentBanner${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderImage = (item, i) => {
-    // const { items } = this.props;
+    const { index, type } = this.props;
     // const { height, width } = items[0];
-    const { url, link, height = "", width = "" } = item;
+    const { url, image_url, link, height = "", width = "" } = item;
     let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
@@ -107,11 +114,17 @@ class DynamicContentBanner extends PureComponent {
     // }
 
     // TODO: calculate aspect ratio to ensure images not jumping.
-
     if (!link) {
       return (
         <>
-          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image
+            lazyLoad={index === 21 || index === 35 ? false : true}
+            key={i}
+            src={url || image_url}
+            ratio="custom"
+            height={ht}
+            width={wd}
+          />
           {this.renderButton()}
         </>
       );
@@ -121,15 +134,16 @@ class DynamicContentBanner extends PureComponent {
       <Link
         to={formatCDNLink(link)}
         key={i}
-        data-banner-type="banner"
+        data-banner-type={type || "banner"}
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}
         data-tag={item.tag ? item.tag : ""}
         onClick={() => {
           this.onclick(item);
         }}
       >
-        <Image lazyLoad={true}
-          src={url}
+        <Image
+          lazyLoad={index === 21 || index === 35 ? false : true}
+          src={url || image_url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
         />
@@ -155,9 +169,13 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
-
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentBanner">
+      <div
+        ref={setRef}
+        block="DynamicContentBanner"
+        id={`DynamicContentBanner${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

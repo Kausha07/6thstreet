@@ -37,6 +37,7 @@ class CheckoutEvent extends BaseEvent {
 
         this.pushEventData({
             ecommerce: {
+                currencyCode: this.getCurrencyCode(),
                 checkout: {
                     actionField: this.getActionFields(step),
                     products: this.getProducts(totals)
@@ -54,7 +55,6 @@ class CheckoutEvent extends BaseEvent {
     getActionFields(step) {
         return {
             step,
-            action: 'checkout'
         };
     }
 
@@ -75,7 +75,6 @@ class CheckoutEvent extends BaseEvent {
                     availability: true
                 }
             ]), []);
-
         const groupedProducts = this.getGroupedProducts();
         Object.values(groupedProducts || {}).forEach(({ data }) => products.push(data));
 

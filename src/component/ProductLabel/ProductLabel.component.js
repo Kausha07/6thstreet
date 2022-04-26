@@ -33,14 +33,15 @@ class ProductLabel extends PureComponent {
 
   renderNew() {
     const {
-      product: { news_from_date, news_to_date },
+      product: { is_new_in },
     } = this.props;
+    let productTag = this.props.product.product_tag ? this.props.product.product_tag : ""
     const { date } = this.state;
     try {
-      if (
-        Date.parse(date) <= Date.parse(news_to_date.replaceAll("-", "/")) &&
-        Date.parse(date) >= Date.parse(news_from_date.replaceAll("-", "/"))
-      ) {
+      if (productTag) {
+        return <span block="ProductTag">{__(productTag)}</span>;
+      }
+      else if (is_new_in) {
         return <span block="ProductLabel">{__("New")}</span>;
       }
     } catch (error) {
@@ -80,8 +81,9 @@ class ProductLabel extends PureComponent {
 
   render() {
     const { section } = this.props;
+    let productTag = this.props.product.product_tag ? this.props.product.product_tag : ""
     return (
-      <div block="ProductContainer">
+      <div block={productTag ? "ProductTagContainer" : "ProductContainer"}>
         {this.renderNew()}
         {/* { this.renderDash() } */}
         {section === "PDPSummary" && this.renderExclusive()}

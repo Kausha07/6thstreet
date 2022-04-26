@@ -2,6 +2,8 @@ import urlparse from "url-parse";
 
 import browserHistory from "Util/History";
 
+import isMobile from "Util/Mobile";
+
 import { clean } from "./Object";
 
 const pipe =
@@ -115,8 +117,12 @@ const Parser = {
     const queryParams = buildQuery(query);
     let page = query.p ? dataPage : 0;
 
+    let prodQuery =
+      pathname.split("/").length > 2
+        ? pathname.split(".html").join(" ").split("/").join(" ")
+        : pathname.split("/")[1].split(".html")[0];
     const params = clean({
-      q: pathname.split("/")[1].split(".html")[0],
+      q: prodQuery,
       page,
       ...queryParams,
     });
@@ -146,11 +152,14 @@ const Parser = {
     url.searchParams.set("p", number);
     // update the URL, preserve the state
     const { pathname, search } = url;
-    browserHistory.push(pathname + search);
+    browserHistory.replace(pathname + search);
   },
 
   setParam(key, values = []) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    if (!isMobile.any()) {
+      url.searchParams.set("p", 0);
+    }
     // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
@@ -170,7 +179,7 @@ const Parser = {
 
     // update the URL, preserve the state
     const { pathname, search } = url;
-    browserHistory.push(pathname + search);
+    browserHistory.replace(pathname + search);
   },
 };
 

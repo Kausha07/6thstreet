@@ -10,24 +10,26 @@
     max-width: 85px;
     height: 55px;
     margin: 0 2px;
-
+    &:first-child {
+        margin-left: 0;
+    }
+    &:last-child {
+        margin-bottom: 12px;
+    }
     &::before {
         content: none;
     }
-
     &-Method {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-
         p {
             margin-top: 5px;
             font-size: 10px;
             line-height: 14px;
             color: var(--checkout-payment-standart);
         }
-
         &_card,
         &_cash,
         &_free {
@@ -35,7 +37,6 @@
                 width: 22px !important;
             }
         }
-
         &_apple,
         &_tabby,
         &_qpay {
@@ -45,7 +46,6 @@
             }
         }
     }
-
     &-Button {
         display: flex;
         justify-content: center;
@@ -55,18 +55,14 @@
         width: 100%;
         padding: 0;
         height: 100%;
-
         &_isSelected {
             background: $black;
-
             img {
                 filter: invert(100%) brightness(20);
             }
-            
             p {
                 color: $white;
             }
         }
-
     }
 }

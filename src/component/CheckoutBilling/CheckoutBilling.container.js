@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getCurrency , getDiscountFromTotals} from "Util/App";
-
+import { getCurrency, getDiscountFromTotals } from "Util/App";
 import {
   CARD,
   TABBY_ISTALLMENTS,
-  TABBY_PAY_LATER,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import {
   ADD_ADDRESS,
@@ -48,8 +46,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
-  addNewCreditCard: (cardData) =>
-    CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
+  addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
   getCardType: (bin) => CreditCardDispatcher.getCardType(dispatch, bin),
   showSuccessMessage: (message) =>
     dispatch(showNotification("success", message)),
@@ -84,7 +81,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     customer: null,
     default_title: "6th Street",
     merchant_id: process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   containerFunctions = {
@@ -107,11 +104,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     handleApplePayButtonClick: this.handleApplePayButtonClick.bind(this),
   };
 
-   /**
-   * Constructor
-   * @param props
-   * @param context
-   */
+  /**
+  * Constructor
+  * @param props
+  * @param context
+  */
   constructor(props, context) {
     super(props, context);
     const { paymentMethods, customer } = props;
@@ -127,8 +124,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       selectedCustomerAddressId: 0,
       prevPaymentMethods: paymentMethods,
       paymentMethod,
-      isTabbyInstallmentAvailable:false,
-      isTabbyPayLaterAvailable:false
+      isTabbyInstallmentAvailable: false,
     };
   }
 
@@ -138,45 +134,44 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       isOrderButtonEnabled,
       isOrderButtonVisible,
       binApplied,
-      isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable
+      isTabbyInstallmentAvailable
     } = this.state;
-    return { binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied ,isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable};
+    return {
+      binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied, isTabbyInstallmentAvailable,
+    };
   };
 
   componentDidMount() {
     this.setState({ isOrderButtonVisible: true });
     this.setState({ isOrderButtonEnabled: true });
     this.setState({ binApplied: false });
+
     const {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
+      totals: { total },
     } = this.props;
-    createTabbySession(shippingAddress)
-      .then((response) => {
-        if (response && response.configuration) {
-          const {
-            configuration: {
-              available_products: { installments, pay_later },
-            },
-            payment: { id },
-          } = response;
-          if (installments || pay_later) {
+    if (total >= 150) {
+      createTabbySession(shippingAddress)
+        .then((response) => {
+          if (response && response.configuration) {
+            const {
+              configuration: {
+                available_products: { installments },
+              },
+              payment: { id },
+            } = response;
             if (installments) {
-              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-              this.setState({ isTabbyInstallmentAvailable: true });
-            }
-
-            if (pay_later) {
-              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
-              this.setState({ isTabbyPayLaterAvailable: true });
+              if (installments) {
+                setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+                this.setState({ isTabbyInstallmentAvailable: true });
+              }
             }
           }
-        }
-      }, this._handleError)
-      .catch(() => {});
+        }, this._handleError)
+        .catch(() => { });
+    }
   }
   componentDidUpdate(prevProps) {
     const {
@@ -185,37 +180,33 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       setTabbyWebUrl,
       totals: { total },
     } = this.props;
-    if(prevProps?.totals?.total !== total){
-      createTabbySession(shippingAddress)
-      .then((response) => {
-        if (response && response.configuration) {
-          const {
-            configuration: {
-              available_products: { installments, pay_later },
-            },
-            payment: { id },
-          } = response;
+    if (prevProps?.totals?.total !== total) {
+      if (total >= 150) {
+        createTabbySession(shippingAddress)
+          .then((response) => {
+            if (response && response.configuration) {
+              const {
+                configuration: {
+                  available_products: { installments },
+                },
+                payment: { id },
+              } = response;
 
-          if (installments || pay_later) {
-            if (installments) {
-              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+              if (installments) {
+                if (installments) {
+                  setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
 
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyInstallmentAvailable: true });
+                  // this variable actually is used in the component
+                  // eslint-disable-next-line quote-props
+                  this.setState({ isTabbyInstallmentAvailable: true });
+                }
+              }
             }
-
-            if (pay_later) {
-              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
-
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyPayLaterAvailable: true });
-            }
-          }
-        }
-      }, this._handleError)
-      .catch(() => {});
+          }, this._handleError)
+          .catch(() => { });
+      } else {
+        this.setState({ isTabbyInstallmentAvailable: false });
+      }
     }
   }
   setOrderButtonDisabled() {
@@ -272,10 +263,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     if (cvv) {
       this.setState({ cvv });
     }
-    if (newCardVisible && discount !== 0) {
-      this.removeBinPromotion();
-    }
     if (binApplied) {
+      if (newCardVisible && !number) {
+        this.removeBinPromotion();
+      }
       this.setState({ binApplied: false });
     }
     if (saveCard !== undefined && saveCard !== null) {
@@ -332,7 +323,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async onBillingSuccess(fields, asyncData) {
     const paymentMethod = this._getPaymentData(asyncData);
-    const { savePaymentInformation, savedCards, newCardVisible ,showErrorNotification} = this.props;
+    const { savePaymentInformation, savedCards, newCardVisible, showErrorNotification } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
 
@@ -373,38 +364,39 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         });
 
         addNewCreditCard({ number, expMonth, expYear, cvv })
-          .then((response) => {
-            const { id, token } = response;
-
-            if (id || token) {
-              BrowserDatabase.setItem(
-                id ?? token,
-                "CREDIT_CART_TOKEN",
-                FIVE_MINUTES_IN_SECONDS
-              );
+        .then((response) => {
+          const { id, token } = response;
+          if (id || token) {
+            BrowserDatabase.setItem(
+              id ?? token,
+              "CREDIT_CART_TOKEN",
+              FIVE_MINUTES_IN_SECONDS
+            );
+            if(isSignedIn()) {
               showSuccessMessage(__("Credit card successfully added"));
-
-              savePaymentInformation({
-                billing_address: address,
-                paymentMethod,
-              });
-            } else if (Array.isArray(response)) {
-              const message = response[0];
-
-              if (typeof message === "string") {
-                showErrorNotification(this.getCartError(message));
-              } else {
-                showErrorNotification(__("Something went wrong"));
-              }
-            } else if (typeof response === "string") {
-              showErrorNotification(response);
             }
-          }, this._handleError)
-          .catch(() => {
-            const { showErrorNotification } = this.props;
 
-            showErrorNotification(__("Something went wrong"));
-          });
+            savePaymentInformation({
+              billing_address: address,
+              paymentMethod,
+            });
+          } else if (Array.isArray(response)) {
+            const message = response[0];
+
+            if (typeof message === "string") {
+              showErrorNotification(this.getCartError(message));
+            } else {
+              showErrorNotification(__("Something went wrong"));
+            }
+          } else if (typeof response === "string") {
+            showErrorNotification(response);
+          }
+        }, this._handleError)
+        .catch(() => {
+          const { showErrorNotification } = this.props;
+
+          showErrorNotification(__("Something went wrong"));
+        });
       } else {
         //if payment is via saved card.
         let selectedCard = savedCards.find((a) => a.selected === true);
@@ -421,7 +413,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           showErrorNotification("Please select an card first.");
         }
       }
-    } else if (code === TABBY_PAY_LATER || code === TABBY_ISTALLMENTS) {
+    } else if (code === TABBY_ISTALLMENTS) {
       this.createTabbySessionAndSavePaymentInformation(asyncData, fields);
     } else {
       savePaymentInformation({
@@ -445,17 +437,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         if (response && response.configuration) {
           const {
             configuration: {
-              available_products: { installments, pay_later },
+              available_products: { installments },
             },
             payment: { id },
           } = response;
-          if (installments || pay_later) {
+          if (installments) {
             if (installments) {
               setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-            }
-
-            if (pay_later) {
-              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
             }
             savePaymentInformation({
               billing_address: address,
@@ -464,7 +452,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         }
       }, this._handleError)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   getCartError(message) {
@@ -562,16 +550,16 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    * Handle apple pay click
    */
   handleApplePayButtonClick() {
-    const {savePaymentInformationApplePay} = this.props
+    const { savePaymentInformationApplePay } = this.props
     const {
-      totals: { 
+      totals: {
         discount,
         subtotal = 0,
         total = 0,
         shipping_fee = 0,
         currency_code = getCurrency(),
         total_segments: totals = [],
-        quote_currency_code ,
+        quote_currency_code,
         items
       },
       default_title,
@@ -580,7 +568,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
 
     const LineItems = this._getLineItems()
-    
+
     const paymentRequest = {
       countryCode,
       currencyCode: quote_currency_code,
@@ -589,7 +577,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       total: { label: default_title, amount: total },
       lineItems: LineItems
     };
-    savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
+    savePaymentInformationApplePay({ billing_address: shippingAddress, paymentMethod: { code: "checkout_apple_pay" } })
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
     try {
@@ -651,7 +639,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
-      try {      
+      try {
         applePaySession.completeShippingContactSelection(
           status,
           [],
@@ -665,7 +653,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     applePaySession.onshippingmethodselected = () => {
       const status = window.ApplePaySession.STATUS_SUCCESS;
-      
+
       const newTotal = {
         type: "final",
         label: default_title,
@@ -721,10 +709,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           };
           applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)
 
-        placeOrder(CHECKOUT_APPLE_PAY, data)
+          placeOrder(CHECKOUT_APPLE_PAY, data)
         }
       }).catch(err => {
-            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+        applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
       });
     };
 
@@ -760,7 +748,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    */
   _getLineItems = () => {
     const {
-      totals: { 
+      totals: {
         discount,
         shipping_fee = 0,
         total_segments: totals = [],
@@ -769,37 +757,37 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     const LineItems = items.map((item) => ({
       label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: item?.full_item_info?.price * item?.qty 
+      amount: item?.full_item_info?.price * item?.qty
     }))
-    if(discount){
+    if (discount) {
       LineItems.push({
         label: __("Discount"),
         amount: discount
       });
     }
 
-    if(shipping_fee){
+    if (shipping_fee) {
       LineItems.push({
         label: __("Shipping Charges"),
-        amount: shipping_fee 
+        amount: shipping_fee
       });
     }
-    
+
     const storeCredit = getDiscountFromTotals(totals, "customerbalance")
-    
+
     const clubApparel = getDiscountFromTotals(totals, "clubapparel")
 
-    if(storeCredit){
+    if (storeCredit) {
       LineItems.push({
         label: __("Store Credit"),
-        amount: storeCredit 
+        amount: storeCredit
       });
     }
 
-    if(clubApparel){
+    if (clubApparel) {
       LineItems.push({
         label: __("Club Apparel Redemption"),
-        amount: clubApparel 
+        amount: clubApparel
       });
     }
     return LineItems

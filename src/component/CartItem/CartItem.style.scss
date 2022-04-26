@@ -10,11 +10,11 @@
  */
 
 :root {
-  --cart-item-heading-color: #000;
+  --cart-item-heading-color: #000000;
   --cart-item-subheading-color: #888;
   --cart-item-option-color: #adadad;
-  --cart-item-background: #fff;
-  --cart-item-actions-color: #000;
+  --cart-item-background: #ffffff;
+  --cart-item-actions-color: #000000;
   --cart-item-divider-color: var(--expandable-content-divider-color);
 
   --Gallery: #efefef;
@@ -125,10 +125,13 @@
   &-Content {
     height: auto;
     width: 60%;
-
     @include desktop() {
       height: 130px;
       width: 100%;
+      margin-left: 6px;
+      &_isArabic {
+        margin-left: 0px;
+      }
     }
     @include tablet {
       width: 100%;
@@ -148,10 +151,12 @@
 
   &-Wrapper {
     width: 100%;
-    // display: flex;
-    display: grid;
-    grid-gap: 3px;
-    grid-template-columns: auto auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // display: grid;
+    // grid-gap: 3px;
+    // grid-template-columns: auto auto;
     background: var(--cart-item-background);
     padding-top: 15px;
     height: auto;
@@ -217,7 +222,7 @@
   }
 
   &-Picture {
-    img{
+    img {
       height: 121px !important;
       width: 90px !important;
       object-fit: cover;
@@ -226,7 +231,7 @@
     // margin-right: 18px;
 
     &_isArabic {
-      margin: 0 0 0 24px;
+      margin: 0 0 0 6px;
     }
 
     &_isCartPage {
@@ -239,7 +244,7 @@
     line-height: 30px;
     font-size: 13px;
     text-align: left;
-    color: var(--Black);
+    color: #000000;
     letter-spacing: 0.75px;
     margin-right: 0;
     display: flex;
@@ -274,31 +279,51 @@
       display: flex;
     }
   }
+  .discount {
+    .SearchProduct-PriceWrapper {
+      color: var(--Cardinal);
+    }
+  }
 
-  &-DiscountPrice {
+  .Price > span:first-child {
+    color: #000000;
+  }
+
+  .Price {
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
-
-    &_isArabic {
-      div {
-        text-align: left;
-        direction: ltr;
-        padding-right: 0;
-        padding-left: 5px;
+    font-size: 13px;
+    &_isArabic > span:nth-child(1) {
+      text-align: left;
+      direction: ltr;
+      padding-right: 0;
+      padding-left: 5px;
+    }
+    &_isArabic span:nth-child(2) {
+      text-align: left;
+      direction: ltr;
+      padding-right: 0;
+      padding-left: 5px;
+    }
+    &-Discount {
+      margin-left: 4px !important;
+    }
+    span {
+      del {
+        color: #000000;
+        text-decoration: line-through;
+        padding-right: 5px;
+        font-weight: var(--fw-regular);
       }
     }
-
-    &-BasePrice {
-      color: var(--Black);
-      text-decoration: line-through;
-      padding-right: 5px;
-      font-weight: var(--fw-regular);
+    .Price-Discount-space {
+      margin-right: 5px;
     }
   }
 
   &-ColSizeQty {
-    // color: var(--Tundora);
+    // color: #4a4a4a;
     font-weight: var(--fw-regular);
     margin-right: 0;
     display: flex;

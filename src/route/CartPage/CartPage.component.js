@@ -9,6 +9,8 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
+import CartCouponList from "Component/CartCouponList";
+import CartCouponDetail from 'Component/CartCouponDetail';
 import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
@@ -31,10 +33,16 @@ import Image from "Component/Image";
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
+import CDN from "../../util/API/provider/CDN";
 
 import "./CartPage.style";
 
 export class CartPage extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.dynamicHeight = React.createRef();
+    this.cartCouponPopup = React.createRef();
+  }
   static propTypes = {
     totals: TotalsType.isRequired,
     onCheckoutButtonClick: PropTypes.func.isRequired,
@@ -50,13 +58,92 @@ export class CartPage extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    isCouponPopupOpen: false,
+    couponCode: "",
+    couponName: "",
+    couponDescription: "",
+    isCouponDetialPopupOpen: false,
+    couponModuleStatus: false
   };
+
 
   static defaultProps = {
     clubApparel: {},
-    processingRequest: false,
+    processingRequest: false
   };
 
+  componentDidMount() {
+    const {
+      totals: { total, currency_code },
+    } = this.props;
+    const { isArabic } = this.state;
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if ((country === "AE" || country === "SA") && total >= 150) {
+      const script = document.createElement("script");
+      script.src = "https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload = function () {
+        let s = document.createElement("script");
+        s.type = "text/javascript";
+        const code = `new TabbyPromo({
+          selector: '#TabbyPromo', 
+          currency: '${currency_code}', // required, currency of your product
+          price: '${total}', 
+          installmentsCount: 4,
+          lang: '${isArabic ? "ar" : "en"}', 
+          source: 'product', 
+        });`;
+        try {
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
+        } catch (e) {
+          s.text = code;
+          document.body.appendChild(s);
+        }
+      };
+      document.body.appendChild(script);
+    }
+    this.getCouponModuleStatus();
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      totals: { total, currency_code },
+    } = this.props;
+    const { isArabic } = this.state;
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if (prevProps?.totals?.total !== total) {
+      if ((country === "AE" || country === "SA") && total >= 150) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload = function () {
+          let s = document.createElement("script");
+          s.type = "text/javascript";
+          const code = `new TabbyPromo({
+            selector: '#TabbyPromo', 
+            currency: '${currency_code}', // required, currency of your product
+            price: '${total}', 
+            installmentsCount: 4,
+            lang: '${isArabic ? "ar" : "en"}', 
+            source: 'product', 
+          });`;
+          try {
+            s.appendChild(document.createTextNode(code));
+            document.body.appendChild(s);
+          } catch (e) {
+            s.text = code;
+            document.body.appendChild(s);
+          }
+        };
+        document.body.appendChild(script);
+      }
+    }
+  }
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -83,14 +170,84 @@ export class CartPage extends PureComponent {
       </ul>
     );
   }
+  
+  outsideCouponPopupClick = e => {
+    if (this.state.isCouponPopupOpen && this.cartCouponPopup.current && !this.cartCouponPopup.current.contains(e.target)) {
+      this.setState({
+        isCouponPopupOpen: false
+      })
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
+  closeCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: false
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.removeAttribute("style");
+  }
+  openCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: true
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  }
+  showCouponDetial = (e, coupon) => {
+    e.stopPropagation()
+    this.setState({
+      couponCode: coupon.code,
+      couponName: coupon.name,
+      couponDescription: coupon.description,
+      isCouponDetialPopupOpen: true
+    })
 
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+
+  }
+  hideCouponDetial = (e) => {
+    e.stopPropagation()
+    this.setState({
+      isCouponDetialPopupOpen: false
+    })
+    if (!this.state.isCouponPopupOpen) {
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
+  handleRemoveCode = (e) => {
+    e.stopPropagation()
+    this.props.removeCouponFromCart()
+  }
+  getCouponModuleStatus = async () => {
+    const {country, config} = this.props;
+    if (config) {
+      let couponModule = Object.keys(config?.countries).find(function (val) {
+        return val == country
+      })
+      this.setState({
+        couponModuleStatus: couponModule
+      })
+    }   
+    
+  }
   renderDiscountCode() {
     const {
       totals: { coupon_code },
+      couponsItems = []
     } = this.props;
     const isOpen = false;
-
+    const promoCount = Object.keys(couponsItems).length;
+    let appliedCoupon = {};
+    if (couponsItems) {
+      appliedCoupon = couponsItems.find(function (coupon) {
+        return coupon.code == coupon_code
+      })
+    }
     return (
+      (this.state?.couponModuleStatus) ? 
       <ExpandableContent
         isOpen={isOpen}
         heading={__("Have a discount code?")}
@@ -98,6 +255,50 @@ export class CartPage extends PureComponent {
       >
         <CartCoupon couponCode={coupon_code} />
       </ExpandableContent>
+      :
+      <>{
+        (!this.state?.isCouponPopupOpen) ?
+          <>
+            <div block="cartCouponBlock">
+              {
+                coupon_code ?
+                  <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                    <div block="appliedCouponDetail">
+                      <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
+                      {appliedCoupon && (
+                        <>
+                          <p block="appliedCouponName">{appliedCoupon?.name}</p>
+                          <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
+                        </>
+                      )}
+
+                    </div>
+                    <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
+                  </div>
+                  :
+                  <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
+              }
+            </div>
+            {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+          </>
+          :
+          <>
+            <div block="couponPopupBlock">
+              <div block="couponPopupContent" ref={this.cartCouponPopup}>
+                <div block="couponPopupTop">
+                  {__("Promo codes (%s)", promoCount)}
+                  <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
+                    <span>Close</span>
+                  </button>
+                </div>
+                <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
+                <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
+                {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+              </div>
+            </div>
+
+          </>
+      }</>
     );
   }
 
@@ -117,14 +318,19 @@ export class CartPage extends PureComponent {
           {name}
         </strong>
         <strong block="CartPage" elem="Price">
-          {`${
-            parseFloat(price) || price === 0 ? currency_code : ""
-          } ${finalPrice}`}
+          {`${parseFloat(price) || price === 0 ? currency_code : ""
+            } ${finalPrice}`}
         </strong>
       </li>
     );
   }
-
+  renderTabbyPromo() {
+    return (
+      <div block="CartPage" elem="TabbyBlock">
+        <div id="TabbyPromo"></div>
+      </div>
+    );
+  }
   renderTotal() {
     const {
       totals: {
@@ -139,32 +345,41 @@ export class CartPage extends PureComponent {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-    return (
-      <div block="CartPage" elem="OrderTotals">
+    if (discount != 0) {
+
+      return (
+        <div block="CartPage" elem="OrderTotals">
+          <ul>
+            <div block="CartPage" elem="Subtotals">
+              {this.renderPriceLine(subTotal, __("Subtotal"))}
+              {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
+              {this.renderPriceLine(
+                getDiscountFromTotals(totals, "customerbalance"),
+                __("Store Credit")
+              )}
+              {this.renderPriceLine(
+                getDiscountFromTotals(totals, "clubapparel"),
+                __("Club Apparel Redemption")
+              )}
+              {couponCode || (discount && discount != 0)
+                ? this.renderPriceLine(discount, __("Discount"))
+                : null}
+              {this.renderPriceLine(grandTotal, __("Total Amount"), {
+                divider: true,
+              })}
+            </div>
+          </ul>
+        </div>
+      );
+    } else {
+      return (<div block="CartPage" elem="OrderTotals">
         <ul>
           <div block="CartPage" elem="Subtotals">
-                        { this.renderPriceLine(subTotal, __('Subtotal')) }
-                        { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'customerbalance'),
-                            __('Store Credit')
-                        ) }
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'clubapparel'),
-                            __('Club Apparel Redemption')
-                        ) }
-                        { (couponCode || (discount && discount != 0)) ? this.renderPriceLine(
-                            discount,
-                            __('Discount')
-                        ) : null}
-                        { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'tax'),
-                            __('Tax')
-                        ) }
-                    </div>
+            {this.renderPriceLine(subTotal, __("Subtotal"), { subtotalOnly: true, })}
+          </div>
         </ul>
-      </div>
-    );
+      </div>)
+    }
   }
 
   renderButtons() {
@@ -198,6 +413,7 @@ export class CartPage extends PureComponent {
   renderTotals() {
     return (
       <article block="CartPage" elem="Summary">
+        {this.renderTabbyPromo()}
         {this.renderTotal()}
         {this.renderButtons()}
       </article>
@@ -322,7 +538,7 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-                <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+        <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
 
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
@@ -411,10 +627,13 @@ export class CartPage extends PureComponent {
       self.shouldMobileBottomBarHidden();
       history.push("/");
     }
+    const goBack = () => {
+      history.goBack();
+    }
 
     return (
       <div block="CartPage" elem="BackArrow">
-        <button block="BackArrow-Button" onClick={goHome}>
+        <button block="BackArrow-Button" onClick={goBack}>
           <span />
         </button>
       </div>
@@ -468,12 +687,14 @@ export class CartPage extends PureComponent {
   renderDynamicContent() {
     const {
       totals = {},
-      totals: { items = [] },
+      totals: { total, items = [] },
       isLoading,
       processingRequest,
     } = this.props;
     const { isArabic } = this.state;
-
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     }
@@ -486,7 +707,8 @@ export class CartPage extends PureComponent {
         </div>
       );
     }
-
+    const additionalMargin =
+      (country === "AE" || country === "SA") && total >= 150 ? 100 : 5;
     return (
       <>
         {this.renderContent()}
@@ -495,14 +717,29 @@ export class CartPage extends PureComponent {
           label="Cart page details"
         >
           <Loader isLoading={processingRequest} />
-          <div block="CartPage" elem="Static" mods={{ isArabic }}>
+          <div
+            style={{
+              marginBottom: `${isMobile.any()
+                ? this.dynamicHeight?.current?.clientHeight + additionalMargin
+                : 0
+                }px`,
+            }}
+            block="CartPage"
+            elem="Static"
+            mods={{ isArabic }}
+          >
             {this.renderHeading()}
             {this.renderCartItems()}
             {this.renderCrossSellProducts()}
             {this.renderDiscountCode()}
             {this.renderPromo()}
           </div>
-          <div block="CartPage" elem="Floating" mods={{ isArabic }}>
+          <div
+            ref={this.dynamicHeight}
+            block="CartPage"
+            elem="Floating"
+            mods={{ isArabic }}
+          >
             {this.renderClubApparel()}
             {this.renderTotals()}
           </div>

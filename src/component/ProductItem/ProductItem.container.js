@@ -6,6 +6,7 @@ import ProductItem from "./ProductItem.component";
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
+  prevPath: _state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -35,9 +36,20 @@ export class ProductItemContainer extends PureComponent {
       isVueData = false,
       pageType,
       prevPath = null,
-      renderMySignInPopup
+      renderMySignInPopup,
+      sendProductImpression,
     } = this.props;
-    return { product, page, position, qid, isVueData, pageType,renderMySignInPopup, prevPath };
+    return {
+      product,
+      page,
+      position,
+      qid,
+      isVueData,
+      pageType,
+      renderMySignInPopup,
+      prevPath,
+      sendProductImpression,
+    };
   };
 
   render() {

@@ -7,10 +7,13 @@ import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import browserHistory from "Util/History";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
 import SearchSuggestion from "./SearchSuggestion.component";
+import { getUUIDToken } from "Util/Auth";
+import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -18,6 +21,7 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
+  prevPath: state.PLP.prevPath,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -30,6 +34,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatch
     );
   },
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
 });
 let sourceIndexName;
 let sourceQuerySuggestionIndex;
@@ -135,7 +140,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -158,7 +163,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {
@@ -186,6 +191,12 @@ export class SearchSuggestionContainer extends PureComponent {
     }
     // this.getTrendingProducts();
     document.body.classList.add("isSuggestionOpen");
+    const { location } = browserHistory;
+    const { closeSearch } = this.props;
+    browserHistory.push(`${location.pathname}${location.search}`);
+    window.onpopstate = () => {
+      closeSearch();
+    }
   }
 
   componentWillUnmount() {
@@ -280,8 +291,10 @@ export class SearchSuggestionContainer extends PureComponent {
       closeSearch,
       queryID,
       querySuggestions,
-      renderMySignInPopup
+      renderMySignInPopup,
       // wishlistData,
+      isPDPSearchVisible,
+      prevPath
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -303,12 +316,15 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      renderMySignInPopup
+      renderMySignInPopup,
+      isPDPSearchVisible,
+      prevPath
       // wishlistData,
     };
   };
   containerFunctions = {
     hideActiveOverlay: this.props.hideActiveOverlay,
+    setPrevPath: this.props.setPrevPath,
   };
 
   getIsLoading() {

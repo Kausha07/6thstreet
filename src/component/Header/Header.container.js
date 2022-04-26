@@ -14,6 +14,7 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 import { appendWithStoreCode } from "Util/Url";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 import Header from "./Header.component";
 
@@ -52,8 +53,9 @@ export class HeaderContainer extends NavigationAbstractContainer {
     this.handleHeaderVisibility();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     this.handleHeaderVisibility();
+
   }
 
   handleHeaderVisibility = () => {

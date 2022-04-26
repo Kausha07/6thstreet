@@ -10,6 +10,7 @@ import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -165,12 +166,57 @@ export class LiveExperienceContainer extends PureComponent {
         categoryName,
         countryName
       ),
-      description: __(
+      description: getCountryFromUrl() === 'QA' ? __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          genderName,
+          categoryName
+        ),
+      twitter_title: __(
+        "%s %s Online shopping in %s | 6thStreet",
+        genderName,
+        categoryName,
+        countryName
       ),
+      twitter_desc: getCountryFromUrl() === 'QA' ? __(
+        // eslint-disable-next-line max-len
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
+        genderName,
+        categoryName
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          genderName,
+          categoryName
+        ),
+      og_title: __(
+        "%s %s Online shopping in %s | 6thStreet",
+        genderName,
+        categoryName,
+        countryName
+      ),
+      og_desc: getCountryFromUrl() === 'QA' ? __(
+        // eslint-disable-next-line max-len
+        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
+        genderName,
+        categoryName
+      )
+        :
+        __(
+          // eslint-disable-next-line max-len
+          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+          genderName,
+          categoryName
+        ),
     });
   }
   containerProps = () => {
@@ -178,10 +224,10 @@ export class LiveExperienceContainer extends PureComponent {
     let { live, upcoming, archived } = this.props;
     // Updating upcoming data to remove current broadCastId from it.
     let updatedUpcoming = upcoming.filter((val) => {
-      return ( val.id.toString() !== broadcastId)
+      return (val.id.toString() !== broadcastId)
     })
     let updatedArchived = archived.filter((val) => {
-      return ( val.id.toString() !== broadcastId)
+      return (val.id.toString() !== broadcastId)
     })
     return {
       broadcastId

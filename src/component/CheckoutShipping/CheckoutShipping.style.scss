@@ -101,6 +101,9 @@
             &_isArabic {
               float: left;
             }
+            &_isCountryNotAddressAvailable{
+              display: none;
+            }
           }
 
           &-NewAddress {
@@ -108,7 +111,7 @@
             font-size: 13px;
             line-height: 18px;
             background: transparent;
-            color: var(--black);
+            color: #000000;
             border: none;
             margin: 0 5px;
             // padding-inline: 20px;
@@ -134,7 +137,7 @@
 
         .MyAccountAddressPopup {
           margin: 0 auto 20px auto;
-          background: var(--white);
+          background: #ffffff;
           height: 100% !important;
           position: absolute;
           width: 100%;
@@ -142,7 +145,7 @@
             @include desktop {
               top: 0;
               padding: 20px 30px 30px 30px;
-              background: var(--white);
+              background: #ffffff;
             }
 
             .MyAccountAddressFieldForm {
@@ -162,7 +165,7 @@
             .Form {
               @include desktop {
                 padding: 20px 30px 30px 30px;
-                background: var(--white);
+                background: #ffffff;
               }
 
               .MyAccountAddressFieldForm {
@@ -224,7 +227,7 @@
   }
 
   h3 {
-    background: var(--white);
+    background: #ffffff;
     font-size: 21px;
     margin: 0;
     padding: 30px 20px 3px;
@@ -260,11 +263,11 @@
 }
 
 .CheckoutShippingStep {
-  background: var(--white);
+  background: #ffffff;
 
   &-DeliveryButton {
     padding: 30px;
-    background: var(--white);
+    background: #ffffff;
     text-align: center;
 
     button.primary {
@@ -277,7 +280,7 @@
       text-align: center;
 
       &:hover {
-        border: 2px solid var(--black);
+        border: 2px solid #000000;
       }
     }
 

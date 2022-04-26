@@ -6,7 +6,8 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
 import PDPSizeGuide from "../PDPSizeGuide";
 import "./PDPAddToCart.style";
-import Spinner from "react-spinkit";
+import { Rings } from "react-loader-spinner";
+
 import NotifySuccessImg from "./icons/success-circle.png";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -105,7 +106,13 @@ class PDPAddToCart extends PureComponent {
       const listItems = sizeObject.sizeTypes.map((type = "") => {
         if (product[`size_${type}`].length > 0) {
           return (
-            <div block="PDPAddToCart" elem="SizeTypeOptionContainer">
+            <div
+              block="PDPAddToCart"
+              elem="SizeTypeOptionContainer"
+              mods={{
+                isArabic: isArabic(),
+              }}
+            >
               <input
                 type="radio"
                 key={type}
@@ -216,7 +223,8 @@ class PDPAddToCart extends PureComponent {
             {label}
           </label>
           {isNotAvailable && (
-            <Image lazyLoad={false}
+            <Image
+              lazyLoad={false}
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
@@ -239,7 +247,6 @@ class PDPAddToCart extends PureComponent {
       sizeObject = {},
       productStock = {},
     } = this.props;
-
     if (
       sizeObject.sizeCodes !== undefined &&
       Object.keys(productStock).length !== 0 &&
@@ -490,7 +497,7 @@ class PDPAddToCart extends PureComponent {
         </div>
         {notifyMeLoading && (
           <div block="PDPAddToCart" elem="LoadingContainer">
-            <Spinner color="white" name="ball-scale-multiple" />
+            <Rings color="white" height={80} width={"100%"} />
           </div>
         )}
       </div>
@@ -540,10 +547,29 @@ class PDPAddToCart extends PureComponent {
     }
     return null;
   }
+  renderAppParity() {
+    const {
+      product: { brand_name="" },
+    } = this.props;
+
+    if (
+      brand_name.toLowerCase() === "trendyol" ||
+      brand_name.toLowerCase() === "ترينديول"
+    ) {
+      return (
+        <div block="AppParity">
+          <p block="AppParity" elem="Text">
+            {__("Select a size up for the right fit")}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  }
 
   renderContent() {
     const {
-      product: { in_stock, stock_qty },
+      product: { in_stock, stock_qty, brand_name },
       isOutOfStock,
       productStock = {},
       sizeObject = {},
@@ -555,7 +581,6 @@ class PDPAddToCart extends PureComponent {
       return <div block="PDPAddToCart" elem="Placeholder" />;
     }
 
-    //console.log(sizeObject)
     // check for sizes availability in configurable products
     if (
       sizeObject.sizeCodes !== undefined &&
@@ -574,17 +599,19 @@ class PDPAddToCart extends PureComponent {
         {sizeObject.sizeTypes !== undefined &&
         sizeObject.sizeTypes.length !== 0 ? (
           <>
+            <div block="SeperatorAddtoCart" />
+            {this.renderAppParity()}
             <div block="PDPAddToCart" elem="SizeInfoContainer">
-              <span block="PDPAddToCart-SizeInfoContainer" elem="title">
+              <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}
-              </span>
+              </h2>
               {this.renderSizeInfo()}
             </div>
             <div block="PDPAddToCart" elem="SizeSelect">
               {this.renderSizeTypeSelect()}
               {this.renderSizeSelect()}
             </div>
-            {isMobile.any() && <div block="Seperator" />}
+            {/* {isMobile.any() && <div block="Seperator" />} */}
           </>
         ) : null}
         <div

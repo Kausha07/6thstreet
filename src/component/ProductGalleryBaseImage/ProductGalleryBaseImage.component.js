@@ -40,7 +40,8 @@ export class ProductGalleryBaseImage extends PureComponent {
     return (
       <TransformComponent>
         <div ref={containerRef}>
-          <Image lazyLoad={true}
+          <img
+            lazyLoad={false}
             src={src}
             ratio="custom"
             mix={{
@@ -48,11 +49,11 @@ export class ProductGalleryBaseImage extends PureComponent {
               elem: "SliderImage",
               mods: { isPlaceholder: !src },
             }}
+            ref={imageRef}
             isPlaceholder={!src}
             alt={alt}
           />
-          <Image lazyLoad={true} ref={imageRef} alt={alt} src={src} itemProp="image" />
-
+          {/* <Image lazyLoad={true} ref={imageRef} alt={alt} src={src} itemProp="image" /> */}
         </div>
       </TransformComponent>
     );

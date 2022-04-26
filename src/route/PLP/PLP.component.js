@@ -5,10 +5,18 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
+import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
+export const mapDispatchToProps = (_dispatch) => ({});
 
 export class PLP extends PureComponent {
   constructor(props) {
@@ -18,6 +26,8 @@ export class PLP extends PureComponent {
       signInPopUp: "",
       showPopup: false,
       circleBannerUrl: null,
+      activeFilters: {},
+      isArabic: isArabic(),
     };
   }
 
@@ -28,13 +38,13 @@ export class PLP extends PureComponent {
       let banner = JSON.parse(bannerData);
       this.setState({
         bannerData: banner,
-        circleBannerUrl: bannerUrl,
+        circleBannerUrl: bannerUrl
       });
     }
   }
   componentWillUnmount() {
     const { resetPLPData } = this.props;
-    resetPLPData();
+    // resetPLPData();
   }
 
   showMyAccountPopup = () => {
@@ -71,14 +81,19 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+  }
+
+  renderPLPSortBy() {
+    return <PLPFilters {...this.props} isPLPSortBy={true} />;
   }
 
   renderPLPPages() {
-    const { prevPath = null } = this.props;
+    const { prevPath = null, updateFiltersState } = this.props;
     return (
       <PLPPages
         {...this.props}
+        updateFiltersState={updateFiltersState}
         renderMySignInPopup={this.showMyAccountPopup}
         prevPath={prevPath}
       />
@@ -86,9 +101,9 @@ export class PLP extends PureComponent {
   }
 
   renderBanner() {
-    let urlPath = window.location.pathname;
-    let bannerUrl = localStorage.getItem("CircleBannerUrl");
-    if (this.state.bannerData && bannerUrl === urlPath)
+    let isFromCircleItemSlider = window.location.href.includes('plp_config');
+
+    if (this.state.bannerData && isFromCircleItemSlider)
       return (
         <div>
           <CircleItemSliderSubPage bannerData={this.state.bannerData} />
@@ -108,13 +123,14 @@ export class PLP extends PureComponent {
     if (widget && widget.length == 0) {
       return null;
     }
-    const { gender } = this.props;
+    const { gender, setLastTapItem } = this.props;
 
     // return <h1>Plp Widget</h1>;
     return (
       <DynamicContent
         gender={gender}
         content={widget}
+        setLastTapItemOnHome={setLastTapItem}
         renderMySignInPopup={this.showMyAccountPopup}
       />
     );
@@ -122,20 +138,32 @@ export class PLP extends PureComponent {
 
   render() {
     const { signInPopUp } = this.state;
+    const { isArabic } = this.state;
 
     return (
-      <main block="PLP">
+      <main block="PLP" id="plp-main-scroll-id">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
-          {this.renderPLPFilters()}
-          {this.renderPLPPages()}
+          <div>
+
+
+            <div block="Products" elem="Wrapper">
+              {this.renderPLPFilters()}
+              {this.renderPLPPages()}
+
+            </div>
+            {
+              !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
+            }
+
+          </div>
         </ContentWrapper>
       </main>
     );
   }
 }
 
-export default PLP;
+export default connect(mapStateToProps, mapDispatchToProps)(PLP);

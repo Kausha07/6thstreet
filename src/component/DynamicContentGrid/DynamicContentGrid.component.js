@@ -58,6 +58,12 @@ class DynamicContentGrid extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -73,12 +79,14 @@ class DynamicContentGrid extends PureComponent {
     });
   };
   onclick = (item) => {
+    const { index } = this.props;
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentGrid${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -87,7 +95,7 @@ class DynamicContentGrid extends PureComponent {
   renderItem = (item, i) => {
     const { link, url } = item;
     const { isArabic } = this.state;
-    const { items_per_row, item_height } = this.props;
+    const { items_per_row, item_height, index } = this.props;
     let ht = item_height.toString() + "px";
     let contentClass = "contentAll";
     if (item_height >= 500 && items_per_row === 2) {
@@ -97,7 +105,7 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-  
+
     return (
       <div
         block="CategoryItem"
@@ -116,8 +124,11 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-
-          <Image lazyLoad={true} src={url} className="GridImage" />
+          <Image
+            lazyLoad={index === 34 ? false : true}
+            src={url}
+            className="GridImage"
+          />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -140,12 +151,13 @@ class DynamicContentGrid extends PureComponent {
 
   renderItemMobile = (item, i) => {
     const { link, url } = item;
+    const { index } = this.props;
     let ht = this.props.item_height.toString() + "px";
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-   
+
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
@@ -158,7 +170,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={true} src={url} />
+          <Image lazyLoad={index === 34 ? false : true} src={url} />
 
           {item.footer && (
             <div block="Footer">
@@ -207,8 +219,13 @@ class DynamicContentGrid extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentGrid">
+      <div
+        ref={setRef}
+        block="DynamicContentGrid"
+        id={`DynamicContentGrid${index}`}
+      >
         {this.renderGrid()}
       </div>
     );

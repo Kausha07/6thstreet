@@ -1,6 +1,5 @@
 import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Link from "Component/Link";
-import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -9,14 +8,17 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, { VUE_CAROUSEL_CLICK, EVENT_CLICK_RECOMMENDATION_CLICK } from "Util/Event";
+import { Price as PriceType } from "Util/API/endpoint/Product/Product.type";
 
 export const mapStateToProps = (state) => ({
+  config: state.AppConfig.config,
   country: state.AppState.country,
 });
 
 class RecommendedForYouVueSliderItem extends PureComponent {
   static propTypes = {
+    price: PriceType.isRequired,
     country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     pageType: PropTypes.string.isRequired,
@@ -53,10 +55,11 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
-        destprodid: destProdID,
+        destProdID: destProdID,
         posofreco: posofreco,
       },
     });
+    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK);
     this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
@@ -64,8 +67,9 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   }
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
-    const { country } = this.props;
-    if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
+    const { country, config } = this.props;
+    const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true
+    if (!showDiscountPercentage) {
       return null;
     }
 
@@ -160,6 +164,14 @@ class RecommendedForYouVueSliderItem extends PureComponent {
     return null;
   }
 
+  renderProductTag(productTag) {
+    return (
+      <div block="VueProductSlider" elem="VueProductTag">
+        <span>{__(productTag)}</span>
+      </div>
+    );
+  }
+
   render() {
     const {
       data: {
@@ -178,6 +190,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       renderMySignInPopup,
     } = this.props;
     const { isArabic } = this.state;
+    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
     let newLink = link;
     if (this.props.data.url) {
       newLink = this.props.data.url;
@@ -224,7 +237,12 @@ class RecommendedForYouVueSliderItem extends PureComponent {
           {name}
         </span>
         {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
+        {
+          productTag ?
+            this.renderProductTag(productTag)
+            :
+            this.renderIsNew(is_new_in)
+        }
         <WishlistIcon
           sku={sku}
           data={data}

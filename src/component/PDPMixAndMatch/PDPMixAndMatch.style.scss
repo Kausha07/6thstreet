@@ -9,13 +9,21 @@
     li {
         // flex: 0 0 auto;
         padding-left: 0;
+        margin-right:48px;
         @include mobile {
             margin-bottom: 12px;
             padding-bottom: 12px;
             border-bottom: solid 1.5px #EFEFEF;
+            margin-right:0;
+
         }    
         &:before {
             content: none;
+        }
+        &:last-child{
+            @include desktop {
+                margin-right:20px;
+            }
         }
     }
 
@@ -24,7 +32,7 @@
         flex-direction: column;
         @include desktop {
             flex-direction: row;
-            justify-content: space-between;
+            justify-content: flex-start;
         }
     }
 

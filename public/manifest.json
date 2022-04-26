@@ -3,6 +3,7 @@
     "short_name": "6thStreet",
     "description": "6thStreet delivers High Street fashion brands for Women, Men & Kids. Your one stop destination to online shopping for trending Shoes, Bags & Clothing ✯Authentic brands ✯ *Free Delivery ✯ COD ✯ Free Returns",
     "start_url": "/",
+    "gcm_sender_id": "540868316921",
     "icons": [
         {
             "src": "/assets/icons/android-chrome-regular-48x48.png",
@@ -91,5 +92,6 @@
     ],
     "theme_color": "#000000",
     "background_color": "#000000",
-    "display": "standalone"
+    "display": "standalone",
+    "categories": ["lifestyle", "shopping"]
 }

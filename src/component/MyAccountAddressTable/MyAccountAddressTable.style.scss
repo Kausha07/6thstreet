@@ -87,10 +87,12 @@
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     line-height: 16px;
+    word-break: break-all;
   }
 
   &-Street {
     color: var(--my-acc-street);
+    word-break: break-all;
   }
 
   &-City {
@@ -114,18 +116,19 @@
       &::after {
         content: none;
       }
-
-      &::before {
-        content: "";
-        position: absolute;
-        left: 15px;
-        top: 47%;
-        border: solid $black;
-        border-width: 0 2px 2px 0;
-        display: inline-block;
-        padding: 4px;
-        transform: rotate(135deg);
-        -webkit-transform: rotate(135deg);
+      @include mobile {
+        &::before {
+          content: "";
+          position: absolute;
+          left: 15px;
+          top: 47%;
+          border: solid $black;
+          border-width: 0 2px 2px 0;
+          display: inline-block;
+          padding: 4px;
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
+        }
       }
     }
   }

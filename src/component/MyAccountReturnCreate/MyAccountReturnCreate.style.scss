@@ -55,11 +55,11 @@
 
   &-Button {
     &Discard {
-      --button-background: var(--white);
-      --button-border: var(--black);
+      --button-background: #ffffff;
+      --button-border: #000000;
       --button-border-width: 2px;
-      --button-color: var(--black);
-      --button-hover-background: var(--black);
+      --button-color: #000000;
+      --button-hover-background: #000000;
       --button-hover-color: var(--button-color);
 
       @include desktop {
@@ -76,8 +76,8 @@
       &:hover,
       &:focus,
       &:active {
-        background: var(--black);
-        color: var(--white);
+        background: #000000;
+        color: #ffffff;
 
         @include desktop {
           text-decoration: underline;
@@ -86,11 +86,11 @@
     }
 
     &Submit {
-      --button-background: var(--black);
-      --button-border: var(--black);
+      --button-background: #000000;
+      --button-border: #000000;
       --button-border-width: 2px;
-      --button-color: var(--white);
-      --button-hover-border: var(--black);
+      --button-color: #ffffff;
+      --button-hover-border: #000000;
 
       min-width: 175px;
 
@@ -98,8 +98,8 @@
         &:hover,
         &:focus,
         &:active {
-          background: var(--white);
-          color: var(--black);
+          background: #ffffff;
+          color: #000000;
         }
       }
     }

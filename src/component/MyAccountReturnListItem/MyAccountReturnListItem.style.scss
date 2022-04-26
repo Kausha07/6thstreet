@@ -23,8 +23,8 @@
         width: calc(100% / 4);
 
         &::after {
-            border-bottom: 1px solid var(--black);
-            border-right: 1px solid var(--black);
+            border-bottom: 1px solid #000000;
+            border-right: 1px solid #000000;
             content: '';
             height: 5px;
             position: absolute;

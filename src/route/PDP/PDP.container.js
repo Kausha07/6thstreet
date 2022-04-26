@@ -19,6 +19,7 @@ import {
 } from "Util/Breadcrumbs/Breadcrubms";
 import Event, { EVENT_GTM_PRODUCT_DETAIL, VUE_PAGE_VIEW } from "Util/Event";
 import PDP from "./PDP.component";
+import browserHistory from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -36,9 +37,12 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
+  prevPath: state.PLP.prevPath,
+  pdpWidgetsData: state.AppState.pdpWidgetsData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
@@ -92,12 +96,14 @@ export class PDPContainer extends PureComponent {
   };
 
   static defaultProps = {
-    nbHits: 0,
+    nbHits: 1,
     sku: "",
   };
 
   state = {
     productSku: null,
+    prevPathname: "",
+    currentLocation: "",
   };
 
   constructor(props) {
@@ -107,25 +113,15 @@ export class PDPContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { product_type_6s, sku, url },
-      location: { state },
-      product,
+      requestPdpWidgetData,
+      pdpWidgetsData,
+      location: { pathname },
     } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
-        url: window.location.href,
-        sourceProdID: sku,
-        sourceCatgID: product_type_6s, // TODO: replace with category id
-      },
-    });
+    if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
+      //request pdp widgets data only when not available in redux store.
+      requestPdpWidgetData();
+    }
+    this.setState({ currentLocation: pathname });
   }
 
   componentDidUpdate(prevProps) {
@@ -133,13 +129,18 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName } = {},
-      product,
+      product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
+      product: { highlighted_attributes = [] },
       menuCategories = [],
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
-    const { productSku } = this.state;
+    const { productSku, currentLocation } = this.state;
+
+    // if (sku != undefined)
+    if (productSku != sku && currentLocation === this.props.location.pathname) {
+      this.renderVueHits();
+    }
 
     // Request product, if URL rewrite has changed
     if (id !== prevId) {
@@ -155,11 +156,36 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      this.fetchClickAndCollectStores(brandName, sku);
+      // this.fetchClickAndCollectStores(brandName, sku);
     }
+  }
 
-    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-      product: product,
+  renderVueHits() {
+    const {
+      prevPath = null,
+      product: { product_type_6s, sku, url, price },
+    } = this.props;
+    const itemPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+        sourceProdID: sku,
+        sourceCatgID: product_type_6s, // TODO: replace with category id
+        prodPrice: itemPrice,
+      },
     });
   }
 
@@ -199,7 +225,18 @@ export class PDPContainer extends PureComponent {
   updateBreadcrumbs() {
     const {
       updateBreadcrumbs,
-      product: { categories = {}, name, sku },
+      product: {
+        categories = {},
+        name,
+        sku,
+        product_type_6s,
+        price,
+        highlighted_attributes = [],
+        size_eu = [],
+        size_uk = [],
+        size_us = [],
+      },
+      product,
       setGender,
       nbHits,
       menuCategories,
@@ -208,7 +245,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -238,6 +275,41 @@ export class PDPContainer extends PureComponent {
       updateBreadcrumbs(breadcrumbs);
       this.setState({ productSku: sku });
     }
+    const getDetails = highlighted_attributes.map((item) => ({
+      [item.key]: item.value,
+    }));
+    const productKeys = Object.assign({}, ...getDetails);
+    const specialPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
+    const originalPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
+
+    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+      product: {
+        name: productKeys.name,
+        id: sku,
+        Price: originalPrice,
+        brand: productKeys?.brand_name,
+        category: product_type_6s,
+        size_no: {
+          size_eu,
+          size_uk,
+          size_us,
+        },
+        varient: productKeys?.color,
+        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100) || 0,
+        dimension10: originalPrice,
+        dimension11: specialPrice,
+      },
+    });
   }
 
   setMetaData() {
@@ -277,6 +349,27 @@ export class PDPContainer extends PureComponent {
         countryName,
         brandName
       )}`,
+      twitter_title: __(
+        "%s %s | 6thStreet.com %s",
+        brandName,
+        name,
+        countryName
+      ),
+      twitter_desc: `${description} | ${__(
+        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
+        brandName,
+        name,
+        countryName,
+        brandName
+      )}`,
+      og_title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
+      og_desc: `${description} | ${__(
+        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
+        brandName,
+        name,
+        countryName,
+        brandName
+      )}`,
     });
   }
 
@@ -297,7 +390,6 @@ export class PDPContainer extends PureComponent {
     if (!id) {
       if (sku) {
         requestProductBySku({ options: { sku } });
-
         setIsLoading(false);
       }
 
@@ -333,7 +425,7 @@ export class PDPContainer extends PureComponent {
   render() {
     const { product } = this.props;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    return <PDP {...this.containerProps()} />;
+    return <PDP {...this.containerProps()} {...this.props} />;
   }
 }
 

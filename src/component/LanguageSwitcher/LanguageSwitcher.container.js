@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router';
 import { getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
-
+import { setCountry, setLanguageForWelcome} from 'Store/AppState/AppState.action'
 import LanguageSwitcher from './LanguageSwitcher.component';
 
 export const mapStateToProps = (state) => ({
@@ -12,6 +12,10 @@ export const mapStateToProps = (state) => ({
     language: state.AppState.language,
     country: state.AppState.country
 });
+
+export const mapDispatchToProps = (dispatch) => ({
+    setCountry: (value) => dispatch(setCountry(value)),
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),});
 
 export class LanguageSwitcherContainer extends PureComponent {
     static propTypes = {
@@ -25,26 +29,40 @@ export class LanguageSwitcherContainer extends PureComponent {
     };
 
     onLanguageSelect(value) {
-        const { language = '' } = this.props;
-
-
-        window.location.href = location.href.replace(
-            language.toLowerCase(),
-            value,
-            location.href
-        );
+        const { language = '',history } = this.props;
+        if(window.location.href.includes('en-') || window.location.href.includes('ar-')){
+            if(location.pathname.match(/my-account/)) {
+                window.location.href = location.href.replace(
+                    language.toLowerCase(),
+                    value,
+                    location.href).split("/my-account")[0];
+            } else {
+                window.location.href = location.href.replace(
+                    language.toLowerCase(),
+                    value,
+                    location.href
+                );
+            }
+        }
+        else{
+            this.props.setLanguageForWelcome(value)
+        }
     }
 
     containerProps = () => {
         const {
             language,
             config,
-            country
+            country,
+            welcomePagePopup,
+            isWelcomeMobileView
         } = this.props;
 
         return {
             languageSelectOptions: getCountryLocaleForSelect(config, country),
-            language
+            language,
+            welcomePagePopup,
+            isWelcomeMobileView
         };
     };
 
@@ -58,4 +76,4 @@ export class LanguageSwitcherContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, null)(LanguageSwitcherContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer));

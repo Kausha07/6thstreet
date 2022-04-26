@@ -12,6 +12,7 @@ import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import Delivery from "./icons/delivery-truck.png";
 
@@ -79,7 +80,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       <div block="CheckoutOrderSummary" elem="OrderItems">
         <ul block="CheckoutOrderSummary" elem="CartItemList">
           {
-            items.map((item)=>(
+            items.map((item) => (
               React.cloneElement(this.renderItem(item), {
                 readOnly: true
               })
@@ -140,10 +141,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     return !avail_free_shipping_amount ||
       avail_free_shipping_amount === 0 ? null : (
-      <div block="CheckoutOrderSummary" elem="Promo">
-        {this.renderPromoContent()}
-      </div>
-    );
+        <div block="CheckoutOrderSummary" elem="Promo">
+          {this.renderPromoContent()}
+        </div>
+      );
   }
 
   renderToggleableDiscountOptions() {
@@ -175,9 +176,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           {name}
         </strong>
         <strong block="CheckoutOrderSummary" elem="Price">
-          {`${
-            parseFloat(price) || price === 0 ? currency_code : ""
-          } ${finalPrice}`}
+          {`${parseFloat(price) || price === 0 ? currency_code : ""
+            } ${finalPrice}`}
         </strong>
       </li>
     );
@@ -229,8 +229,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             )}
             {this.renderPriceLine(
               cashOnDeliveryFee ??
-                getDiscountFromTotals(totals, "msp_cashondelivery"),
-              __("Cash on Delivery")
+              getDiscountFromTotals(totals, "msp_cashondelivery"),
+
+              getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery")
             )}
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">

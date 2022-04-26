@@ -4,6 +4,7 @@ import {
   updateCustomerDetails,
   updateCustomerSignInStatus,
 } from "SourceStore/MyAccount/MyAccount.action";
+import { setCustomerAddressData } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
   MyAccountDispatcher as SourceMyAccountDispatcher,
@@ -20,6 +21,7 @@ import { setStoreCredit } from "Store/StoreCredit/StoreCredit.action";
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import { getInitialState as getStoreCreditInitialState } from "Store/StoreCredit/StoreCredit.reducer";
 import WishlistDispatcher from "Store/Wishlist/Wishlist.dispatcher";
+import MobileAPI from "Util/API/provider/MobileAPI";
 import {
   getMobileApiAuthorizationToken,
   getOrders,
@@ -27,6 +29,7 @@ import {
   resetPasswordWithToken,
   updateCustomerData,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import { getShippingAddresses } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -53,7 +56,11 @@ export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   requestCustomerData(dispatch) {
     const query = MyAccountQuery.getCustomerQuery();
-
+    getShippingAddresses().then((response) => {
+      if (response.data) {
+        dispatch(setCustomerAddressData(response.data));
+      }
+    });
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
     if (stateCustomer.id) {
       dispatch(updateCustomerDetails(stateCustomer));
@@ -137,61 +144,77 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
    * @param {{customer: Object, password: String}} [options={}]
    * @memberof MyAccountDispatcher
    */
-  createAccount(options = {}, dispatch) {
-    const mutation = MyAccountQuery.getCreateAccountMutation(options);
 
-    return fetchMutation(mutation).then(
-      (data) => {
-        const {
-          createCustomer: { customer },
-        } = data;
-        const { confirmation_required } = customer;
-
-        if (confirmation_required) {
-          return 2;
-        }
-
-        return 1;
-      },
-      (error) => {
-        dispatch(showNotification("error", error[0].message));
-        Promise.reject();
-
-        return false;
-      }
-    );
+  async createAccountNew(options) {
+    return await MobileAPI.post(`/register`, options);
+  }
+  async loginAccount(options) {
+    return await MobileAPI.post("/login", options);
   }
 
-  async signIn(options = {}, dispatch) {
-    const mutation = MyAccountQuery.getSignInMutation(options);
+  async resetUserPassword(options) {
+    return await MobileAPI.put("/customers/me/password", options);
+  }
 
+  async signInCommonBlock(dispatch) {
+    const wishlistItem = localStorage.getItem("Wishlist_Item");
+    if (wishlistItem) {
+      await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
+      localStorage.removeItem("Wishlist_Item");
+    }
+    await WishlistDispatcher.updateInitialWishlistData(dispatch);
+    await StoreCreditDispatcher.getStoreCredit(dispatch);
+    setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
+    this.requestCustomerData(dispatch);
+
+    Event.dispatch(EVENT_GTM_GENERAL_INIT);
+  }
+
+  async signInOTP(options = {}, dispatch) {
     try {
-      const result = await fetchMutation(mutation);
-      const {
-        generateCustomerToken: { token },
-      } = result;
-      setAuthorizationToken(token);
+      await this.handleMobileAuthorizationOTP(dispatch, options);
       dispatch(updateCustomerSignInStatus(true));
-
-      await this.handleMobileAuthorization(dispatch, options);
-      const wishlistItem = localStorage.getItem("Wishlist_Item");
-      if (wishlistItem) {
-        await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
-        localStorage.removeItem("Wishlist_Item");
-      }
-      await WishlistDispatcher.updateInitialWishlistData(dispatch);
-      await StoreCreditDispatcher.getStoreCredit(dispatch);
-      setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
-      this.requestCustomerData(dispatch);
-
-      Event.dispatch(EVENT_GTM_GENERAL_INIT);
-
+      this.signInCommonBlock(dispatch);
       return true;
     } catch ([e]) {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
-
       throw e;
+    }
+  }
+  async signIn(options = {}, dispatch) {
+    if (options.hasOwnProperty("type")) {
+      try {
+        await this.handleMobileAuthorization(dispatch, options);
+        dispatch(updateCustomerSignInStatus(true));
+        this.signInCommonBlock(dispatch);
+        return true;
+      } catch ([e]) {
+        deleteAuthorizationToken();
+        deleteMobileAuthorizationToken();
+        throw e;
+      }
+    } else {
+      const mutation = MyAccountQuery.getSignInMutation(options);
+      try {
+        const result = await fetchMutation(mutation);
+        const {
+          generateCustomerToken: { token },
+        } = result;
+        setAuthorizationToken(token);
+
+
+        await this.handleMobileAuthorization(dispatch, options);
+        dispatch(updateCustomerSignInStatus(true));
+
+        this.signInCommonBlock(dispatch);
+        return true;
+      } catch ([e]) {
+        deleteAuthorizationToken();
+        deleteMobileAuthorizationToken();
+
+        throw e;
+      }
     }
   }
 
@@ -207,25 +230,68 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     return "";
   }
+  // handleMobileAuthCommonBlockOTP(){}
 
-  async handleMobileAuthorization(dispatch, options) {
-    const { email: username, password } = options;
-    const { data: { token, user: { custom_attributes, gender, id } } = {} } =
-      await getMobileApiAuthorizationToken({
-        username,
-        password,
-        cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-      });
-    const phoneAttribute = custom_attributes.filter(
+  async handleMobileAuthorizationOTP(dispatch, options) {
+    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
+      options;
+
+    const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no"
     );
-    const isPhone = phoneAttribute[0].value
+    const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
 
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
+    setAuthorizationToken(t);
+    if (isPhone) {
+      this.setCustomAttributes(dispatch, custom_attributes);
+    }
 
+    this.setGender(dispatch, gender);
+
+    // Run async as Club Apparel is not visible anywhere after login
+    ClubApparelDispatcher.getMember(dispatch, id);
+
+    // Temporarily disabled art merge logic
+    // const { Cart: { cartItems: oldCartItems = [] } } = getStore().getState();
+    // if (oldCartItems.length !== 0) {
+    //     await CartDispatcher.getCart(dispatch);
+    //     this._addProductsFromGuest(dispatch, oldCartItems);
+    //     return;
+    // }
+    dispatch(removeCartItems());
+
+    // Run async otherwise login gets slow
+    CartDispatcher.getCart(dispatch);
+  }
+
+  // handleMobileAuthCommonBlock(){}
+  async handleMobileAuthorization(dispatch, options) {
+    const { email: username, password } = options;
+    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
+      await getMobileApiAuthorizationToken(
+        options.hasOwnProperty("type")
+          ? options
+          : {
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
+      );
+
+    const phoneAttribute = custom_attributes?.filter(
+      ({ attribute_code }) => attribute_code === "contact_no"
+    );
+    const isPhone = phoneAttribute[0]?.value
+      ? phoneAttribute[0].value.search("undefined") < 0
+      : false;
+
+    dispatch(setCartId(null));
+    setMobileAuthorizationToken(token);
+    options.hasOwnProperty("type") ? setAuthorizationToken(t) : null;
     if (isPhone) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }

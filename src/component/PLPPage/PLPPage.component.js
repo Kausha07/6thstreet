@@ -1,44 +1,46 @@
-// import PropTypes from 'prop-types';
 import ProductItem from "Component/ProductItem";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-import { getUUID } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
+import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
+import Event from "Util/Event";
 import "./PLPPage.style";
+import isMobile from "Util/Mobile";
 
+let gtmProdArr = [];
 class PLPPage extends PureComponent {
   static propTypes = {
     products: Products.isRequired,
     impressions: Products.isRequired,
   };
 
-  componentDidMount() {
-    const { prevPath = null, impressions } = this.props;
-    const category = this.getCategory();
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: prevPath ? prevPath : null,
-        url: window.location.href,
-      },
-    });
+  sendProductImpression = (product) => {
+    gtmProdArr.push([product]);
+    const product_numbers = isMobile.any() ? 4 : 6;
+    const pagePathName = new URL(window.location.href).pathname;
+    const getPageName =
+      pagePathName == "/catalogsearch/result/"
+        ? "Search Results"
+        : "Category Results";
 
-    Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
-  }
-
-  getCategory() {
-    return BrowserDatabase.getItem("CATEGORY_NAME") || "";
-  }
+    if (gtmProdArr.length > product_numbers - 1) {
+      let clubbedProducts = gtmProdArr.slice(0, product_numbers);
+      gtmProdArr.splice(0, product_numbers);
+      let prodImpression = [];
+      for (var i = 0; i < clubbedProducts.length; i++) {
+        for (var j = 0; j < clubbedProducts[i].length; j++) {
+          let categorylistName = { list: getPageName };
+          let clubbedData = {
+            ...clubbedProducts[i][j][0],
+            ...categorylistName,
+          };
+          prodImpression.push(clubbedData);
+        }
+      }
+      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, prodImpression);
+    }
+  };
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
@@ -51,10 +53,9 @@ class PLPPage extends PureComponent {
         pageType="plp"
         page="plp"
         renderMySignInPopup={renderMySignInPopup}
-        pageType="plp"
         qid={qid}
-        prevPath={window.location.href}
         lazyLoad={false}
+        sendProductImpression={this.sendProductImpression}
       />
     );
   };
@@ -71,7 +72,11 @@ class PLPPage extends PureComponent {
   }
 
   render() {
-    return <div block="PLPPage"><ul>{this.renderProducts()}</ul></div>;
+    return (
+      <div block="PLPPage">
+        <ul block="ProductItems">{this.renderProducts()}</ul>
+      </div>
+    );
   }
 }
 

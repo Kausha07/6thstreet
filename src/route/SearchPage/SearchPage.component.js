@@ -2,8 +2,10 @@
 // import { PureComponent } from 'react';
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import EmptySearch from "Component/EmptySearch";
+import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
 import "./SearchPage.style";
+
 
 class SearchPage extends PLP {
   renderSearchNotFound() {
@@ -30,17 +32,34 @@ class SearchPage extends PLP {
       options: { q },
       pages,
     } = this.props;
+    const { isArabic } = this.state;
+    // if (isLoading) {
+    //   return (
+    //     <>
+    //       <div block="EmptyPage"></div>
+    //       <Loader isLoading={isLoading} />
+    //     </>
+    //   );
+    // }
     if (
       isLoading ||
       (pages.undefined && pages.undefined.length > 0) ||
       (pages["0"] && pages["0"].length > 0)
     ) {
       return (
-        <main block="SearchPage">
+        <main block="SearchPage" id="plp-main-scroll-id">
           <ContentWrapper label={__("Product List Page")}>
             {this.renderPLPDetails()}
-            {this.renderPLPFilters()}
-            {this.renderPLPPages()}
+            {this.state.bannerData && this.renderBanner()}
+            <div>
+              <div block="Products" elem="Wrapper">
+                {this.renderPLPFilters()}
+                {this.renderPLPPages()}
+              </div>
+              {
+                !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
+              }
+            </div>
             {this.renderSearchNotFound()}
           </ContentWrapper>
         </main>
@@ -48,7 +67,7 @@ class SearchPage extends PLP {
     }
 
     return (
-      <main block="SearchPage">
+      <main block="SearchPage" >
         <ContentWrapper label={__("Product List Page")}>
           {this.renderPLPDetails()}
           {this.renderPLPPages()}

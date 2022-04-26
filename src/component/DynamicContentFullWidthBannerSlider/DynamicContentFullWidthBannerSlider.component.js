@@ -71,6 +71,12 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -89,15 +95,19 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     this.setState({ activeSlide });
   };
   onclick = (item) => {
-    if(!!!item){
+    if (!!!item) {
       return;
     }
+    const { index } = this.props;
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(
+      `DynamicContentFullWidthBannerSlider${index}`
+    );
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -140,8 +150,13 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentFullWidthBannerSlider">
+      <div
+        ref={setRef}
+        block="DynamicContentFullWidthBannerSlider"
+        id={`DynamicContentFullWidthBannerSlider${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

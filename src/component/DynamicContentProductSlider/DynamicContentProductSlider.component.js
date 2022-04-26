@@ -33,7 +33,7 @@ class DynamicContentProductSlider extends PureComponent {
 
   registerViewPortEvent() {
     let observer;
-    const elem = document.querySelector("#productSlider");
+    const elem = document.querySelector(`#productSlider-${index}`);
 
     let options = {
       root: null,
@@ -66,7 +66,12 @@ class DynamicContentProductSlider extends PureComponent {
         label: item.name,
       };
     });
-
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -123,7 +128,7 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
-    const { products, renderMySignInPopup } = this.props;
+    const { title, isHomePage, products, renderMySignInPopup, index = 0 } = this.props;
     if (products.length === 0) {
       return null;
     }
@@ -134,7 +139,6 @@ class DynamicContentProductSlider extends PureComponent {
       }, 3000);
     }
 
-    const { title, isHomePage } = this.props;
     let finalTitle;
     if (isHomePage) {
       finalTitle = title;
@@ -152,6 +156,7 @@ class DynamicContentProductSlider extends PureComponent {
           isHome={true}
           pageType={"home"}
           widgetID={"vue_top_picks_slider"}
+          index={index}
         />
       </React.Fragment>
     );

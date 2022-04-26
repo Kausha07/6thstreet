@@ -10,6 +10,7 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+
 import {
   BRANDS,
   CART,
@@ -29,6 +30,9 @@ import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
 import LiveExperience from "Route/LiveExperience";
+import WelcomeHomePage from "Component/WelcomeHomePage";
+import * as Sentry from '@sentry/react';
+
 import {
   CartPage,
   Checkout,
@@ -54,6 +58,8 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./Router.style";
 
+const SentryRoute = Sentry.withSentryRouting(Route);
+
 export const BrandsPage = lazy(() =>
   import(/* webpackMode: "lazy", webpackChunkName: "brands" */ "Route/Brands")
 );
@@ -73,7 +79,7 @@ export {
 };
 
 export class Router extends SourceRouter {
-  
+
   static propTypes = {
     ...SourceRouter.propTypes,
     isAppReady: PropTypes.bool.isRequired,
@@ -87,7 +93,7 @@ export class Router extends SourceRouter {
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
   };
 
- 
+
 
   [BEFORE_ITEMS_TYPE] = [
     {
@@ -123,7 +129,7 @@ export class Router extends SourceRouter {
   [SWITCH_ITEMS_TYPE] = [
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex(this.state.homepageUrl)}
           exact
           render={(props) => (
@@ -137,7 +143,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/page")}
           render={(props) => (
             <GTMRouteWrapper route={CMS_PAGE}>
@@ -150,7 +156,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/cart")}
           exact
           render={(props) => (
@@ -164,7 +170,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/checkout/:step?")}
           render={(props) => (
             <GTMRouteWrapper route={CHECKOUT}>
@@ -177,7 +183,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/:account*/createPassword/")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -190,7 +196,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/:account*/confirm")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -203,7 +209,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/my-account/:tab?")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -216,7 +222,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/forgot-password")}
           render={(props) => (
             <GTMRouteWrapper route={CUSTOMER_ACCOUNT}>
@@ -229,8 +235,8 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
-          path={withStoreRegex("/brands")}
+        <SentryRoute
+          path={withStoreRegex("/:gender?/shop-by-brands")}
           render={(props) => (
             <GTMRouteWrapper route={BRANDS}>
               <BrandsPage {...props} />
@@ -242,7 +248,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("/catalogsearch/result")}
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
@@ -255,7 +261,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("feedback")}
           render={(props) => (
             <GTMRouteWrapper route={FEEDBACK}>
@@ -268,7 +274,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           render={(props) => (
             <GTMRouteWrapper route={URL_REWRITES}>
               <UrlRewrites {...props} />
@@ -280,7 +286,7 @@ export class Router extends SourceRouter {
     },
     {
       component: (
-        <Route
+        <SentryRoute
           path={withStoreRegex("live-party")}
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
@@ -332,6 +338,13 @@ export class Router extends SourceRouter {
     return <LocaleWizard />;
   }
 
+
+  renderWelcomeHomePage() {
+    return (
+      <WelcomeHomePage />
+    );
+  }
+
   renderContent() {
     const { isArabic } = this.state;
     return (
@@ -353,7 +366,8 @@ export class Router extends SourceRouter {
       return this.renderContent();
     }
 
-    return this.renderLocaleWizard();
+    return this.renderWelcomeHomePage();
+
   }
 }
 

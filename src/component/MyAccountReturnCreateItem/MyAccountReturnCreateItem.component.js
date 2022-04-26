@@ -39,13 +39,13 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
         return (
             <Field
-              type="select"
-              id={ `${item_id}_resolution` }
-              name={ `${item_id}_resolution` }
-              placeholder={ __('Select a resolution') }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
-              onChange={ onResolutionChange }
-              selectOptions={ resolutions }
+                type="select"
+                id={`${item_id}_resolution`}
+                name={`${item_id}_resolution`}
+                placeholder={__('Select a resolution')}
+                mix={{ block: 'MyAccountReturnCreateItem', elem: 'Resolutions' }}
+                onChange={onResolutionChange}
+                selectOptions={resolutions}
             />
         );
     }
@@ -64,13 +64,13 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
         return (
             <Field
-              type="select"
-              id={ `${item_id}_reason` }
-              name={ `${item_id}_reason` }
-              placeholder={ __('Select a reason') }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Reasons' } }
-              onChange={ onReasonChange }
-              selectOptions={ reasonOptions }
+                type="select"
+                id={`${item_id}_reason`}
+                name={`${item_id}_reason`}
+                placeholder={__('Select a reason')}
+                mix={{ block: 'MyAccountReturnCreateItem', elem: 'Reasons' }}
+                onChange={onReasonChange}
+                selectOptions={reasonOptions}
             />
         );
     }
@@ -80,8 +80,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
         return (
             <Image lazyLoad={true}
-              src={ thumbnail }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Image' } }
+                src={thumbnail}
+                mix={{ block: 'MyAccountReturnCreateItem', elem: 'Image' }}
             />
         );
     }
@@ -91,14 +91,14 @@ export class MyAccountReturnCreateItem extends PureComponent {
         const { onClick } = this.props;
         return (
             <Field
-              id={ item_id }
-              name={ item_id }
-              value={ item_id }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Checkbox' } }
-              type="checkbox"
-              onClick={ onClick }
-              defaultChecked={ false }
-              disabled={ type==="RETURN" && !is_returnable }
+                id={item_id}
+                name={item_id}
+                value={item_id}
+                mix={{ block: 'MyAccountReturnCreateItem', elem: 'Checkbox' }}
+                type="checkbox"
+                onClick={onClick}
+                defaultChecked={false}
+                disabled={type === "RETURN" && !is_returnable}
             />
         );
     }
@@ -113,55 +113,55 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 discount_percent,
                 discount_amount,
                 size: sizeField,
+                qty_shipped,
                 product_options: { info_buyRequest: { qty } }
             }
         } = this.props;
         const size = typeof sizeField === 'string' ? sizeField : (sizeField || {}).value;
-
         return (
             <div block="MyAccountReturnCreateItem" elem="Details">
-                <h2>{ name }</h2>
+                <h2>{name}</h2>
                 <div block="MyAccountReturnCreateItem" elem="DetailsOptions">
-                    { !!color && (
+                    {!!color && (
                         <p>
-                            { __('Color: ') }
-                            <span>{ color }</span>
+                            {__('Color: ')}
+                            <span>{color}</span>
                         </p>
-                    ) }
-                    { !!qty && (
+                    )}
+                    {!!qty_shipped && (
                         <p>
-                            { __('Qty: ') }
-                            <span>{ +qty }</span>
+                            {__('Qty: ')}
+                            <span>{+qty_shipped}</span>
                         </p>
-                    ) }
-                    { !!size && (
+                    )}
+                    {!!size && (
                         <p>
-                            { __('Size: ') }
-                            <span>{ size }</span>
+                            {__('Size: ')}
+                            <span>{size}</span>
                         </p>
-                    ) }
+                    )}
                 </div>
                 <p block="MyAccountReturnCreateItem" elem="Price">
                     <span
-                      block="MyAccountReturnCreateItem"
-                      elem="PriceRegular"
-                      mods={ { isDiscount: (!!(+discount_amount) && !!(+discount_percent)) } }
+                        block="MyAccountReturnCreateItem"
+                        elem="PriceRegular"
+                        mods={{ isDiscount: (!!(+discount_amount) && !!(+discount_percent)) }}
                     >
-                        { `${ formatPrice(+row_total) }` }
+                        {`${formatPrice(+row_total)}`}
                     </span>
-                    { (!!(+discount_amount) && !!(+discount_percent)) && (
+                    {(!!(+discount_amount) && !!(+discount_percent)) && (
                         <>
                             {
-                                displayDiscountPercentage && 
+                                displayDiscountPercentage &&
                                 <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
-                                    { `(-${ +discount_percent }%)` }
+                                    {`(-${+discount_percent}%)`}
                                 </span>
                             }
                             <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
-                                { `${ formatPrice(+row_total - +discount_amount) }` }
+                                {`${formatPrice(+row_total - +discount_amount)}`}
                             </span>
                         </>
-                    ) }
+                    )}
                 </p>
             </div>
         );
@@ -172,18 +172,18 @@ export class MyAccountReturnCreateItem extends PureComponent {
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">
-                    { this.renderField({
+                    {this.renderField({
                         type: 'RETURN'
-                    }) }
-                    { this.renderImage() }
-                    { this.renderDetails() }
+                    })}
+                    {this.renderImage()}
+                    {this.renderDetails()}
                 </div>
-                { isSelected && (
+                {isSelected && (
                     <div block="MyAccountReturnCreateItem" elem="Resolution">
                         {/* { this.renderResolutions() } */}
-                        { this.renderReasons() }
+                        {this.renderReasons()}
                     </div>
-                ) }
+                )}
             </div>
         );
     }

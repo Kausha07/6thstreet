@@ -923,7 +923,7 @@
     },
     {
         "type": "grid",
-        "background_color": "#FFF",
+        "background_color": "#ffffff",
         "items_per_row": 2,
         "item_height": 122,
         "items": [

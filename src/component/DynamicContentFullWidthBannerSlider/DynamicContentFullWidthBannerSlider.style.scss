@@ -52,6 +52,9 @@
     button[data-action="start"] {
       display: none;
     }
+    .tns-liveregion{
+      display: none;
+    }
   }
   .tns-controls {
     display: none;
@@ -66,7 +69,7 @@
       height: 100%;
       margin-left: 15px;
       &:hover {
-        color: #000;
+        color: #000000;
       }
       z-index: 2;
     }
@@ -81,7 +84,7 @@
       margin-right: 15px;
       z-index: 2;
       &:hover {
-        color: #000;
+        color: #000000;
       }
     }
   }

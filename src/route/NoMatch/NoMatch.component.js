@@ -10,6 +10,7 @@ import { PureComponent } from "react";
 import Image from "Component/Image";
 
 import ContentWrapper from "Component/ContentWrapper";
+import { TYPE_NOTFOUND } from "../UrlRewrites/UrlRewrites.config";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 
 import pageNotFound from "./images/pagenotfound.png";
@@ -27,6 +28,11 @@ export class NoMatch extends PureComponent {
     this.updateBreadcrumbs();
     this.updateHeaderState();
     this.cleanUpTransition();
+    window.pageType = TYPE_NOTFOUND;
+  }
+
+  componentWillUnmount() {
+    window.pageType=undefined;
   }
 
   cleanUpTransition() {

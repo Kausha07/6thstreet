@@ -10,7 +10,8 @@
     display: none;
   }
   &-HeaderContainer {
-    h4 {
+    h4,
+    .productWidgetHeading {
       color: #000000;
       font-family: "Avenir Next";
       font-size: 18px;
@@ -37,9 +38,7 @@
       line-height: 19px;
       text-align: start;
       text-transform: uppercase;
-      @include mobile {
-        text-align: center;
-      }
+      text-align: left;
     }
     #productName {
       color: #4a4a4a;
@@ -47,13 +46,17 @@
       font-size: 13px;
       letter-spacing: 0;
       line-height: 15px;
-      text-align: start;
-      @include mobile {
-        text-align: center;
-        width: 100%;
+      text-align: left;
+      &_isArabic {
+        text-align: right;
       }
     }
-    #price {
+    &_isArabic {
+      #brandName, #productName {
+        text-align: right;
+      }
+    }
+    .Price > span:first-child {
       color: #000000;
       font-family: "Avenir Next";
       font-size: 14px;
@@ -63,19 +66,21 @@
       text-align: start;
       @include mobile {
         text-align: center;
+        font-size: 12px;
       }
     }
   }
 }
 .DynamicContentProductSliderHomePage {
-    &_isArabic {
-      left: 0;
-      right: 0 !important;
-      text-align: right;
-      transform: translateX(0%) !important;
-    }
+  &_isArabic {
+    left: 0;
+    right: 0 !important;
+    text-align: right;
+    transform: translateX(0%) !important;
   }
-.DynamicContentProductSlider, .DynamicContentProductSliderHomePage  {
+}
+.DynamicContentProductSlider,
+.DynamicContentProductSliderHomePage {
   text-align: left;
   .VueProductSlider {
     &-VueProductContainer {

@@ -41,7 +41,9 @@ class BannerImpressionEvent extends BaseEvent {
   bindEvent() {
     // Home
     Event.observer(HOME_PAGE_BANNER_IMPRESSIONS, (impression) => {
-      this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView");
+      if (document.readyState == ("complete" || "interactive")) {
+        this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView");
+      }
     });
     Event.observer(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, (impression) => {
       this.handle(EVENT_CLICK_PROMOTION_IMPRESSION, impression, "promoClick");
@@ -64,12 +66,13 @@ class BannerImpressionEvent extends BaseEvent {
     //   console.log("impression not recorded", EVENT_TYPE, impressions);
     //   return;
     // }
-
     const formattedImpressions = impressions.map(
-      ({ label, promotion_name, id }, index) => ({
-        id: id,
-        name: label || promotion_name,
-        creative: promotion_name || "",
+      ({ label, promotion_name, id, store_code }, index) => ({
+        id:
+          (store_code ? store_code + "-" : "") +
+          (id ? id : promotion_name ? promotion_name.split(" ").join("-") : ""),
+        name: (store_code ? store_code + "-" : "") + (label || promotion_name),
+        creative: (store_code ? store_code + "-" : "") + promotion_name || "",
         position: index + 1,
       })
     );

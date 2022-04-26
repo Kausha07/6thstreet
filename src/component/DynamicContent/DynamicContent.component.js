@@ -19,6 +19,7 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import VueQuery from "../../query/Vue.query";
 import "./DynamicContent.style";
+import { getUUIDToken } from "Util/Auth";
 
 class DynamicContent extends PureComponent {
   static propTypes = {
@@ -48,6 +49,7 @@ class DynamicContent extends PureComponent {
     bannerSliderWithLabel: DynamicContentSliderWithLabel,
     rich_content_banner: DynamicContentRichContentBanner,
     twiceBanner: DynamicContentTwiceBanner,
+    edge_to_edge_banner: DynamicContentBanner,
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
   };
@@ -59,7 +61,7 @@ class DynamicContent extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     const payload = VueQuery.buildQuery(type, query, {
       gender,
@@ -108,17 +110,18 @@ class DynamicContent extends PureComponent {
       if (!Component) {
         return null;
       }
-
       return (
         <Component
           ref={this.comprefs[i]}
           {...restProps}
+          setLastTapItemOnHome={this.props.setLastTapItemOnHome}
           renderMySignInPopup={this.props.renderMySignInPopup}
           promotion_name={promotion_name}
           tag={tag}
           type={type}
           key={i}
           isHomePage={true}
+          index={i}
         />
       );
     } else {
@@ -128,7 +131,7 @@ class DynamicContent extends PureComponent {
 
     if (!Component) {
       // TODO: implement all types
-      Logger.log(type, restProps);
+      // Logger.log(type, restProps);
       return null;
     }
 
@@ -141,17 +144,18 @@ class DynamicContent extends PureComponent {
         }));
       };
     }
-
     return (
       <Component
         ref={this.comprefs[i]}
         {...restProps}
         type={type}
+        setLastTapItemOnHome={this.props.setLastTapItemOnHome}
         promotion_name={promotion_name}
         renderMySignInPopup={this.props.renderMySignInPopup}
         tag={tag}
         key={i}
         isHomePage={true}
+        index={i}
       />
     );
   };

@@ -6,7 +6,7 @@
 
 .PDPSummary {
   font-weight: var(--fw-regular);
-  margin-top: 6px;
+  margin-top: -6px;
   padding: 0 20px;
   overflow-x: visible;
 
@@ -28,6 +28,7 @@
       border-radius: 50%;
       border: solid transparent;
       background-color: #f6f6f6;
+      border-width: 0;
     }
     .WishlistIcon {
       position: relative;
@@ -36,31 +37,42 @@
       width: 50px;
       height: 50px;
       background-color: transparent;
-      margin-left: 8px;
+      margin-left: 16px;
+      right: unset;
+      left: unset;
+      &-Icon {
+        left: unset;
+        border-width: 0;
+      }
       button {
         top: 0;
       }
     }
   }
 
+  .pdpsummarylinkTagStyle {
+    text-decoration: none;
+  }
+
   @include desktop {
     min-width: 40%;
-    padding-left: 40px;
+    padding-left: 34px;
     padding-right: 0px;
     &_isArabic {
       padding-left: 0;
-      padding-right: 40px;
+      padding-right: 34px;
     }
   }
 
   h1 {
     font-size: 24px;
     margin: 0.4px 0 0 0;
+    text-decoration: none;
     @include before-desktop {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0;
-      line-height: 32px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 40px;
       text-transform: uppercase;
       margin: 0.4px 0 0 0;
     }
@@ -72,7 +84,12 @@
     margin-right: 4px;
     text-transform: uppercase;
   }
-
+  .ProductTag {
+    color: #99cc99;
+    font-size: 16px;
+    margin-right: 4px;
+    text-transform: uppercase;
+  }
   &-Header {
     display: flex;
     justify-content: space-between;
@@ -81,13 +98,20 @@
     line-height: 30px;
     text-align: right;
   }
+  &-Heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   &-Name {
     font-size: 18px;
+    display: block;
+    font-weight: 400;
+    line-height: 1.8;
 
     @include before-desktop {
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 14px;
       letter-spacing: 0;
       line-height: 19px;
       margin-bottom: 0;
@@ -164,10 +188,12 @@
     @include mobile {
       justify-content: space-between;
     }
-
+    .discount {
+      justify-content: space-between !important;
+    }
     .Price {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       font-weight: var(--fw-bold);
       font-size: 20px;
       margin: 0.36rem 0 0 0;
@@ -199,6 +225,7 @@
         font-size: 16px;
         letter-spacing: 0;
         line-height: 30px;
+        font-weight: var(--fw-medium);
       }
       &-Discount {
         color: #d12228;
@@ -209,12 +236,20 @@
         text-align: right;
       }
     }
+    .AdditionShippingInformation {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 30px;
+    }
   }
 
   .Seperator {
     background-color: #efefef;
-    margin: 15px 0 0 0;
-    height: 1.5px;
+    margin: 26px 0 20px 0;
+    height: 1px;
+    &_isDesktop {
+      display: none;
+    }
   }
 
   .Seperatortop {
@@ -324,11 +359,25 @@
         }
       }
       .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
+        button {
+          border-width: 0;
+        }
         .WishlistIcon {
           margin-right: 8px !important;
           margin-left: unset !important;
         }
       }
     }
+  }
+}
+#TabbyPromo {
+  margin-top: 25px;
+}
+
+// hack for tabby promo issue PWA-2182
+.tabby-promo__feature {
+  padding-left: 0 !important;
+  &::before {
+    display: none !important;
   }
 }

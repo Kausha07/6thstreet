@@ -37,20 +37,20 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       this.onChange("street", streetValue);
     }
 
-    if (
-      (countryId !== prevCountryId ||
-        streetValue !== street ||
-        regionId !== prevRegionId ||
-        city !== prevCity ||
-        region !== prevRegion ||
-        postcode !== prevpostcode ||
-        street !== prevStreet ||
-        telephone !== prevTelephone) &&
-      (city, regionId, telephone) &&
-      telephone.length > 7
-    ) {
-      this.estimateShipping();
-    }
+    // if (
+    //   (countryId !== prevCountryId ||
+    //     streetValue !== street ||
+    //     regionId !== prevRegionId ||
+    //     city !== prevCity ||
+    //     region !== prevRegion ||
+    //     postcode !== prevpostcode ||
+    //     street !== prevStreet ||
+    //     telephone !== prevTelephone) &&
+    //   (city, regionId, telephone) &&
+    //   telephone.length > 7
+    // ) {
+    //   this.estimateShipping();
+    // }
   }
   getFilteredFields(result) {
     let filterResult = Object.keys(result).filter((data) => {

@@ -22,6 +22,22 @@ import {
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
 import PLP from "./PLP.component";
+import { isArabic } from "Util/App";
+import Algolia from "Util/API/provider/Algolia";
+import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import browserHistory from "Util/History";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import {
+  updatePLPInitialFilters,
+  setPrevProductSku,
+  setPrevPath,
+  setBrandurl
+} from "Store/PLP/PLP.action";
+import isMobile from "Util/Mobile";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -40,6 +56,8 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   menuCategories: state.MenuReducer.categories,
   plpWidgetData: state.PLP.plpWidgetData,
+  lastHomeItem: state.PLP.lastHomeItem,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -47,17 +65,24 @@ export const mapDispatchToProps = (dispatch, state) => ({
     PLPDispatcher.requestProductList(options, dispatch, state),
   requestProductListPage: (options) =>
     PLPDispatcher.requestProductListPage(options, dispatch),
+  setInitialPLPFilter: (initialOptions) =>
+    PLPDispatcher.setInitialPLPFilter(initialOptions, dispatch, state),
   setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update(breadcrumbs, dispatch)
     );
   },
+  updatePLPInitialFilters: (filters, facet_key, facet_value) =>
+    dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
   resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
+  setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -66,6 +91,7 @@ export class PLPContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     requestProductList: PropTypes.func.isRequired,
     requestProductListPage: PropTypes.func.isRequired,
+    setInitialPLPFilter: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     requestedOptions: RequestedOptions.isRequired,
@@ -88,25 +114,34 @@ export class PLPContainer extends PureComponent {
 
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
-  static getDerivedStateFromProps(props, state) {
-    const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions();
-    const { page, ...restOptions } = requestOptions;
-    const {
-      prevRequestOptions: { page: prevPage, ...prevRestOptions },
-    } = state;
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[0] === "discount") {
+            if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
+          } else {
+            if (key[1].length !== object2[key[0]].length) {
+              acc.push(0);
+            } else {
+              acc.push(1);
+            }
+          }
+        } else {
+          acc.push(1);
+        }
 
-    if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
-      // if queries match (excluding pages) => not inital
-      PLPContainer.requestProductList(props);
-    } else if (page !== prevPage && !pages[page]) {
-      // if only page has changed, and it is not yet loaded => request that page
-      PLPContainer.requestProductListPage(props);
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
     }
 
-    return {
-      prevRequestOptions: requestOptions,
-    };
+    return false;
   }
 
   static getRequestOptions() {
@@ -135,54 +170,605 @@ export class PLPContainer extends PureComponent {
 
   state = {
     prevRequestOptions: PLPContainer.getRequestOptions(),
+    brandDescription: "",
+    brandImg: "",
+    brandName: "",
+    isArabic: isArabic(),
+    prevProductSku: "",
+    activeFilters: {},
   };
 
   containerFunctions = {
-    // getData: this.getData.bind(this)
+    handleCallback: this.handleCallback.bind(this),
+    handleResetFilter: this.handleResetFilter.bind(this),
+    onUnselectAllPress: this.onUnselectAllPress.bind(this),
+    updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
+    compareObjects: this.compareObjects.bind(this),
   };
+
   resetPLPData() {
     const { resetPLPData } = this.props;
     resetPLPData();
   }
 
-  constructor(props) {
-    super(props);
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
 
-    if (this.getIsLoading()) {
-      PLPContainer.requestProductList(props);
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
     }
 
+    return false;
+  }
+
+  static mapData(data = {}, category, props) {
+    const initialOptions = PLPContainer.getRequestOptions();
+    let formattedData = data;
+    let finalData = [];
+    if (category === "categories_without_path") {
+      //   let categoryLevelArray = [
+      //     "categories.level1",
+      //     "categories.level2",
+      //     "categories.level3",
+      //     "categories.level4",
+      //   ];
+      //   let categoryLevel;
+      //   categoryLevelArray.map((entry, index) => {
+      //     if (initialOptions[entry]) {
+      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+      //     }
+      //   });
+      //   if (categoryLevel) {
+      //     if (data[categoryLevel]) {
+      //       formattedData = data[categoryLevel].subcategories;
+      //     } else {
+      //       formattedData = data[Object.keys(data)[0]].subcategories;
+      //     }
+      //   } else {
+      let categoryArray = initialOptions["categories_without_path"]
+        ? initialOptions["categories_without_path"].split(",")
+        : [];
+      Object.entries(data).map((entry) => {
+        Object.values(entry[1].subcategories).map((subEntry) => {
+          if (
+            categoryArray.length > 0 &&
+            categoryArray.includes(subEntry.facet_value)
+          ) {
+            finalData.push(subEntry);
+          }
+        });
+      });
+      formattedData = finalData;
+      //   }
+    }
+
+    const mappedData = Object.entries(formattedData).reduce((acc, option) => {
+      if (category === "categories_without_path") {
+        const { is_selected, facet_value } = option[1];
+        if (is_selected) {
+          acc.push(facet_value);
+        }
+        return acc;
+      } else {
+        const { is_selected } = option[1];
+        if (is_selected) {
+          acc.push(option[0]);
+        }
+        return acc;
+      }
+    }, []);
+
+    return mappedData;
+  }
+
+  constructor(props) {
+    super(props);
+    let prevLocation;
+    let finalPrevLocation;
+    browserHistory.listen((nextLocation) => {
+      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+      const { search } = nextLocation;
+      if (
+        finalPrevLocation &&
+        locationArr.includes(finalPrevLocation.pathname)
+      ) {
+        if (search.includes("?q=")) {
+          const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+          url.searchParams.set("p", 0);
+          // update the URL, preserve the state
+          const { pathname, search } = url;
+          browserHistory.replace(pathname + search);
+        }
+      }
+    });
+    if (this.getIsLoading()) {
+      // this.props.setInitialPLPFilter({ initialOptions });
+      PLPContainer.requestProductList(this.props);
+    }
     this.setMetaData();
   }
 
-  componentDidMount() {
-    const { menuCategories = [] } = this.props;
+  getInitialOptions = (options) => {
+    const optionArr = ["categories.level1", "page", "q", "visibility_catalog"];
+    let initialOptions = {};
+    Object.keys(options).map((key) => {
+      if (optionArr.includes(key)) {
+        initialOptions[key] = options[key];
+      }
+    });
+    return initialOptions;
+  };
+
+  componentDidUpdate() {
+    const { menuCategories = [], prevPath = null, impressions } = this.props;
+    const { isArabic } = this.state;
+
+    this.props.setPrevPath(prevPath);
+    const category = this.getCategory();
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+      },
+    });
+    Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
+
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
+    this.getBrandDetails();
   }
 
-  componentDidUpdate() {
-    const { isLoading, setIsLoading, menuCategories = [] } = this.props;
+  getCategory() {
+    return BrowserDatabase.getItem("CATEGORY_NAME") || "";
+  }
+
+  updateInitialFilters = (
+    data,
+    facet_value,
+    newFilterArray,
+    categoryLevel1,
+    checked,
+    facet_key
+  ) => {
+    if (data[facet_value]) {
+      data[facet_value].is_selected = checked;
+      if (checked) {
+        newFilterArray.selected_filters_count += 1;
+      } else {
+        newFilterArray.selected_filters_count -= 1;
+      }
+    } else {
+      if (facet_key.includes("size")) {
+        let categoryData = data[facet_key];
+        if (
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
+        ) {
+          categoryData.subcategories[facet_value].is_selected = checked;
+          if (checked) {
+            categoryData.selected_filters_count += 1;
+            newFilterArray.selected_filters_count += 1;
+          } else {
+            categoryData.selected_filters_count -= 1;
+            newFilterArray.selected_filters_count -= 1;
+          }
+        }
+      } else if (categoryLevel1) {
+        return Object.entries(data).map((entry) => {
+          return Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0] === facet_value) {
+              subEntry[1].is_selected = checked;
+              if (checked) {
+                entry[1].selected_filters_count += 1;
+                newFilterArray.selected_filters_count += 1;
+              } else {
+                entry[1].selected_filters_count -= 1;
+                newFilterArray.selected_filters_count -= 1;
+              }
+            }
+          });
+        });
+      } else {
+        Object.keys(data).map((value) => {
+          if (
+            data[value].subcategories &&
+            data[value].subcategories[facet_value]
+          ) {
+            data[value].subcategories[facet_value].is_selected = checked;
+            if (checked) {
+              data[value].selected_filters_count += 1;
+              newFilterArray.selected_filters_count += 1;
+            } else {
+              data[value].selected_filters_count -= 1;
+              newFilterArray.selected_filters_count -= 1;
+            }
+          }
+        });
+      }
+    }
+  };
+
+  updateRadioFilters = (data, facet_value, newFilterArray) => {
+    if (data[facet_value]) {
+      Object.values(data).map((value) => {
+        if (value.facet_value === facet_value) {
+          value.is_selected = true;
+        } else {
+          value.is_selected = false;
+        }
+      });
+
+      if (newFilterArray.selected_filters_count === 0) {
+        newFilterArray.selected_filters_count += 1;
+      }
+    }
+  };
+
+  handleCallback(
+    initialFacetKey,
+    facet_value,
+    checked,
+    isRadio,
+    facet_key,
+    isQuickFilters
+  ) {
+    const { activeFilters } = this.state;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
+    const filterArray = activeFilters[initialFacetKey];
+    let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
+    let categoryLevel1 =
+      PLPContainer.getRequestOptions() && PLPContainer.getRequestOptions().q
+        ? PLPContainer.getRequestOptions().q.split(" ")[1]
+        : null;
+    if (!isRadio) {
+      if (checked) {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            true,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          this.setState(
+            {
+              activeFilters: {
+                ...activeFilters,
+                [initialFacetKey]: filterArray
+                  ? [...filterArray, facet_value]
+                  : [facet_value],
+              },
+            },
+            () => this.select(isQuickFilters)
+          );
+        }
+      } else if (filterArray) {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          const index = filterArray.indexOf(facet_value);
+          if (index > -1) {
+            filterArray.splice(index, 1);
+          }
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: filterArray,
+              },
+            },
+            () => this.select()
+          );
+        }
+      } else {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: [],
+              },
+            },
+            () => this.select()
+          );
+        }
+      }
+    } else {
+      const { data = {} } = newFilterArray;
+
+      if (newFilterArray) {
+        this.updateRadioFilters(
+          data,
+          facet_value,
+          newFilterArray,
+          categoryLevel1,
+          true
+        );
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+        this.setState(
+          {
+            activeFilters: {
+              ...activeFilters,
+              [initialFacetKey]: [facet_value],
+            },
+          },
+          () => this.select()
+        );
+      }
+    }
+  }
+
+  select = (isQuickFilters) => {
+    const { activeFilters = {} } = this.state;
+    const { query } = this.props;
+    if (isMobile.any()) {
+      window.scrollTo(0, 0);
+    }
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key], query);
+      }
+    });
+  };
+
+  onUnselectAllPress(category) {
+    const { filters, updatePLPInitialFilters } = this.props;
+    const { activeFilters = {} } = this.state;
+    let newFilterArray = filters;
+    Object.entries(newFilterArray).map((filter) => {
+      if (filter[0] === category && filter[1].selected_filters_count > 0) {
+        if (category === "categories_without_path") {
+          filter[1].selected_filters_count = 0;
+          activeFilters[filter[0]] = [];
+
+          return Object.entries(filter[1].data).map((filterData) => {
+            filterData[1].selected_filters_count = 0;
+            return Object.entries(filterData[1].subcategories).map((entry) => {
+              entry[1].is_selected = false;
+            });
+          });
+        } else {
+          if (category === "sizes") {
+            Object.entries(filter[1].data).map((entry) => {
+              entry[1].selected_filters_count = 0;
+              Object.entries(entry[1].subcategories).map((filterData) => {
+                if (filterData[1].is_selected) {
+                  filterData[1].is_selected = false;
+                  activeFilters[entry[0]] = [];
+                }
+              });
+            });
+          } else {
+            filter[1].selected_filters_count = 0;
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                filterData[1].is_selected = false;
+                activeFilters[filter[0]] = [];
+              }
+            });
+          }
+        }
+      } else {
+        if (
+          filter[0] !== "categories.level1" &&
+          filter[1].selected_filters_count > 0
+        ) {
+          activeFilters[filter[0]] = [];
+
+          if (filter[0] === "categories_without_path") {
+            return Object.entries(filter[1].data).map((entry) => {
+              return Object.entries(entry[1].subcategories).map((subEntry) => {
+                activeFilters[filter[0]].push(subEntry[0]);
+              });
+            });
+          } else {
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                activeFilters[filter[0]].push(filterData[0]);
+              }
+            });
+          }
+        }
+      }
+    });
+    updatePLPInitialFilters(filters, category, null);
+
+    this.setState({
+      activeFilters,
+    });
+
+    Object.keys(activeFilters).map((key) => {
+      if (key !== "categories.level1") {
+        WebUrlParser.setParam(key, activeFilters[key]);
+      }
+    });
+  }
+
+  async getBrandDetails() {
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    const data = await new Algolia({
+      index: "brands_info",
+    }).getBrandsDetails({
+      query: brandName,
+      limit: 1,
+    });
+    this.setState({
+      brandDescription: isArabic()
+        ? data?.hits[0]?.description_ar
+        : data?.hits[0]?.description,
+      brandImg: data?.hits[0]?.image,
+      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+    });
+    this.props.setBrandurl(data?.hits[0]?.url_path);
+  }
+
+  updateFiltersState(activeFilters) {
+    this.setState({ activeFilters });
+  }
+  handleResetFilter() {
+    this.setState({ activeFilters: {} });
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      isLoading,
+      setIsLoading,
+      menuCategories = [],
+      lastHomeItem,
+      pages,
+    } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
-
+    const requestOptions = PLPContainer.getRequestOptions();
+    const { page } = requestOptions;
+    const {
+      prevRequestOptions: { page: prevPage },
+    } = this.state;
     // update loading from here, validate for last
     // options recieved results from
     if (
       isLoading !== currentIsLoading ||
       isCategoriesLoading !== currentIsLoading
     ) {
-      setIsLoading(currentIsLoading);
+      // setIsLoading(currentIsLoading);
     }
 
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
+    }
+
+    let comparableRequestOptions = deepCopy(requestOptions);
+    if (comparableRequestOptions) {
+      delete comparableRequestOptions.page;
+    }
+    let comparablePrevRequestOptions = deepCopy(this.state.prevRequestOptions);
+    if (comparablePrevRequestOptions) {
+      delete comparablePrevRequestOptions.page;
+    }
+
+    if (
+      (page === prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        )) ||
+      (page !== prevPage &&
+        !this.compareObjects(
+          comparableRequestOptions,
+          comparablePrevRequestOptions
+        ))
+    ) {
+      PLPContainer.requestProductList(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
+    } else if (page !== prevPage && !pages[page]) {
+      // if only page has changed, and it is not yet loaded => request that page
+      PLPContainer.requestProductListPage(this.props);
+      this.setState({ prevRequestOptions: requestOptions });
+    }
+
+    if (!this.compareObjects(prevProps.filters, this.props.filters)) {
+      const newActiveFilters = Object.entries(this.props.filters).reduce(
+        (acc, filter) => {
+          if (filter[1]) {
+            const { selected_filters_count, data = {} } = filter[1];
+
+            if (selected_filters_count !== 0) {
+              if (filter[0] === "sizes") {
+                const mappedData = Object.entries(data).reduce((acc, size) => {
+                  const { subcategories } = size[1];
+                  const mappedSizeData = PLPContainer.mapData(
+                    subcategories,
+                    filter[0],
+                    this.props
+                  );
+
+                  acc = { ...acc, [size[0]]: mappedSizeData };
+
+                  return acc;
+                }, []);
+
+                acc = { ...acc, ...mappedData };
+              } else {
+                acc = {
+                  ...acc,
+                  [filter[0]]: PLPContainer.mapData(
+                    data,
+                    filter[0],
+                    this.props
+                  ),
+                };
+              }
+            }
+
+            return acc;
+          }
+        },
+        {}
+      );
+      this.setState({
+        activeFilters: newActiveFilters,
+      });
+    }
+    let element = document.getElementById(lastHomeItem);
+    if (element) {
+      // window.focus();
+      element.style.scrollMarginTop = "180px";
+      element.scrollIntoView({ behavior: "smooth" });
     }
   }
 
@@ -269,22 +855,31 @@ export class PLPContainer extends PureComponent {
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
     setMeta({
-      title: __(
-        "%s for %s | 6thStreet.com %s",
-        categoryName,
-        genderName,
-        countryName
-      ),
+      title: __("%s | 6thStreet.com %s", categoryName, countryName),
+
       keywords: __(
-        "%s, %s, online shopping, %s, free shipping, returns",
+        "%s, online shopping, %s, free shipping, returns",
         categoryName,
-        genderName,
         countryName
       ),
       description: __(
-        "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
         categoryName,
-        genderName,
+        countryName,
+        countryName
+      ),
+      twitter_title: __("%s | 6thStreet.com %s", categoryName, countryName),
+
+      twitter_desc: __(
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        categoryName,
+        countryName,
+        countryName
+      ),
+      og_title: __("%s | 6thStreet.com %s", categoryName, countryName),
+      og_desc: __(
+        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        categoryName,
         countryName,
         countryName
       ),
@@ -311,18 +906,16 @@ export class PLPContainer extends PureComponent {
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
   }
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item);
+  };
 
   containerProps = () => {
-    const {
-      brandDescription,
-      brandImg,
-      brandName,
-      query,
-      plpWidgetData,
-      gender,
-    } = this.props;
+    const { query, plpWidgetData, gender, filters, pages } = this.props;
+    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
 
     // isDisabled: this._getIsDisabled()
+
     return {
       brandDescription,
       brandImg,
@@ -330,13 +923,22 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters,
+      pages,
+      activeFilters,
     };
   };
 
   render() {
-    const { requestedOptions } = this.props;
+    const { requestedOptions, filters } = this.props;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
-    return <PLP {...this.containerFunctions} {...this.containerProps()} />;
+    return (
+      <PLP
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        setLastTapItem={this.setLastTapItem}
+      />
+    );
   }
 }
 

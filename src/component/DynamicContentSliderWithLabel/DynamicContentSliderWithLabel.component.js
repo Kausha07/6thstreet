@@ -98,6 +98,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -127,6 +133,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -143,12 +155,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
+    const { index } = this.props;
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    this.props.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -160,7 +174,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
-
     return (
       <div
         block="SliderWithLabel"
@@ -199,7 +212,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    if (this.scrollerRef && this.scrollerRef.current) {
+      this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    }
   };
 
   handleScroll = (event) => {
@@ -207,7 +222,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.className == "SliderWithLabelWrapper"
     )[0];
-    prentComponent.scrollLeft = target.scrollLeft;
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
   renderScrollbar = () => {
     const { items = [] } = this.props;
@@ -237,12 +252,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabels() {
     const { items = [], title } = this.props;
 
-    const width = `${
-      items[0] && items[0].width
-        ? items[0].width * items.length + items.length * 10 * 2 - 690
-        : 0
-    }px`;
-
     return (
       <DragScroll
         data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
@@ -267,8 +276,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentSliderWithLabel">
+      <div
+        ref={setRef}
+        block="DynamicContentSliderWithLabel"
+        id={`DynamicContentSliderWithLabel${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

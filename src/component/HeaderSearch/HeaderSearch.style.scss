@@ -4,26 +4,20 @@
   --zumthor: #d1d3d4;
 }
 
-.SearchSuggestion {
-  display: none;
-}
+// .SearchSuggestion {
+//   display: none;
+// }
 
 @include before-desktop {
-  // .HeaderSearch:focus-within .SearchSuggestion {
-  //   display: flex;
-  //   top: 50px;
-  //   position: absolute;
-  // }
-  .HeaderSearch .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     display: flex;
-    top: 50px;
-    position: absolute;
+    top: 0px;
+    position: fixed;
   }
 }
 
 @include desktop() {
-  .HeaderSearch .SearchSuggestion {
-    // .HeaderSearch:hover .SearchSuggestion {
+  .HeaderSearchSection .SearchSuggestion {
     display: flex;
 
     &-Shade {
@@ -48,7 +42,7 @@
   top: 3px;
   right: 0;
   border-radius: 5px;
-  background: var(--white);
+  background: #ffffff;
 
   @include desktop {
     max-width: 320px;
@@ -88,7 +82,7 @@
 
     .SearchBackground {
       width: 100vw;
-      background-color: var(--black);
+      background-color: #000000;
       transform: skew(-15deg, 0deg);
       position: absolute;
       left: -6px;
@@ -165,6 +159,14 @@
     }
   }
 
+  &_isPLP {
+    @include mobile {
+      input {
+        padding-left: 13px !important;
+      }
+    }
+  }
+
   .Field {
     margin: 0;
     width: 100%;
@@ -180,6 +182,10 @@
       width: 100%;
       color: $black;
       height: 30px;
+      @include mobile {
+        height: 36px;
+        border-radius: 7px;
+      }
 
       &::placeholder {
         color: $black;

@@ -1,247 +1,295 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from 'prop-types';
-import { createRef, PureComponent } from 'react';
-import { TransformWrapper } from 'react-zoom-pan-pinch';
+import PropTypes from "prop-types";
+import { createRef, PureComponent } from "react";
 
-import Image from 'Component/Image';
-import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
-import ProductGalleryBaseImage from 'Component/ProductGalleryBaseImage';
-import Slider from 'Component/Slider';
-import SliderHorizontal from 'Component/SliderHorizontal';
-import isMobile from 'Util/Mobile';
+import Image from "Component/Image";
+import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
+import Slider from "Component/Slider";
+import SliderHorizontal from "Component/SliderHorizontal";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 
-import { ReactComponent as Close } from './icons/close.svg';
-import { ReactComponent as Minus } from './icons/minus.svg';
-import { ReactComponent as Plus } from './icons/plus.svg';
+import { ReactComponent as Close } from "./icons/close.svg";
+import { ChevronLeft, ChevronRight } from "Component/Icons";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { MIN_ZOOM_SCALE, MAX_ZOOM_SCALE } from "./PDPGalleryOverlay.config"
 
-import './PDPGalleryOverlay.style';
+import "./PDPGalleryOverlay.style";
 
 class PDPGalleryOverlay extends PureComponent {
-    static propTypes = {
-        currentIndex: PropTypes.number.isRequired,
-        gallery: PropTypes.arrayOf(PropTypes.string).isRequired,
-        crumbs: PropTypes.arrayOf(PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ])).isRequired,
-        onSliderChange: PropTypes.func.isRequired,
-        closeGalleryOverlay: PropTypes.func.isRequired,
-        isZoomEnabled: PropTypes.bool.isRequired,
-        handleZoomChange: PropTypes.func.isRequired,
-        disableZoom: PropTypes.func.isRequired,
-        isGalleryEmpty: PropTypes.bool.isRequired
+  static propTypes = {
+    currentIndex: PropTypes.number.isRequired,
+    gallery: PropTypes.arrayOf(PropTypes.string).isRequired,
+    crumbs: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ).isRequired,
+    onSliderChange: PropTypes.func.isRequired,
+    closeGalleryOverlay: PropTypes.func.isRequired,
+    isZoomEnabled: PropTypes.bool.isRequired,
+    handleZoomChange: PropTypes.func.isRequired,
+    disableZoom: PropTypes.func.isRequired,
+    isGalleryEmpty: PropTypes.bool.isRequired,
+  };
+
+  overlayRef = createRef();
+
+
+  constructor(props) {
+    super(props);
+    this.ResetTheZoomInValue = this.ResetTheZoomInValue.bind(this);
+    this.hideZoomingGuide = this.hideZoomingGuide.bind(this);
+    this.transformWrapperRef = React.createRef();
+    this.state = {
+      scale: 1,
+      positionY: 0,
+      positionX: 0,
+      addY: 0,
+      addX: 0,
+      initialScale: 1,
+      isMobile: isMobile.any() || isMobile.tablet(),
+      isZoomIn: false,
+      showZoomingGuide: true
     };
+  }
 
-    overlayRef = createRef();
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleArrowKeySlide);
+    setTimeout(this.hideZoomingGuide, 1800);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleArrowKeySlide);
+  }
 
-    imageRef = createRef();
+  ResetTheZoomInValue() {
+    this.setState({isZoomIn:false});
+  }
 
-    constructor(props) {
-        super(props);
-        this.renderImage = this.renderImage.bind(this);
-
-        this.state = {
-            scale: 1,
-            positionY: 0,
-            positionX: 0,
-            addY: 0,
-            addX: 0
-        };
-    }
-
-    componentDidMount() {
-        const { onSliderChange } = this.props;
-        const { imageRef, overlayRef } = this;
-        const imgHeight = imageRef.current === null ? null : imageRef.current.offsetHeight;
-        const imgWidth = imageRef.current === null ? null : imageRef.current.offsetWidth;
-        const overlayHeight = overlayRef.current.children[3].offsetHeight;
-        const overlayWidth = overlayRef.current.children[3].offsetWidth;
-        const addX = (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
-        const addY = (overlayHeight - imgHeight) / 2 - (overlayHeight - imgHeight * 1.5) / 2;
-
-        this.setState({ addX, addY });
-
-        onSliderChange(0);
-    }
-
-    renderCrumb = (index, i) => (
-        <PDPGalleryCrumb
-          key={ i }
-          // prefer numerical index
-          index={ +index }
-        />
+  renderCrumb = (index, i) => {
+    const { onSliderChange } = this.props;
+    const {isZoomIn} = this.state;
+    return (
+      <PDPGalleryCrumb
+        onSlideChange={onSliderChange}
+        key={i}
+        // prefer numerical index
+        index={+index}
+        isZoomIn={isZoomIn}
+        block="PDPGalleryCrumb"
+        mods={{
+          isArabic: isArabic()
+        }}
+        ResetTheZoomInValue={this.ResetTheZoomInValue}
+      />
     );
+  };
 
-    zoomIn = () => {
-        const { scale, addX, addY } = this.state;
+  renderGalleryImage = (src, i) => <Image lazyLoad={false} src={src} key={i} />;
 
-        if (scale < 8) {
-            this.setState({
-                scale: scale + 0.5,
-                positionX: addX,
-                positionY: addY
-            });
-        }
-    };
+  renderCrumbs() {
+    const {
+      crumbs = [],
+      currentIndex,
+      onSliderChange,
+      isZoomEnabled,
+    } = this.props;
 
-    zoomOut = () => {
-        const { scale, addX, addY } = this.state;
-        if (scale !== 1) {
-            this.setState({
-                scale: scale - 0.5,
-                positionX: -addX,
-                positionY: -addY
-            });
-        }
-    };
-
-    renderImage(src, i) {
-        const { isZoomEnabled, handleZoomChange, disableZoom } = this.props;
-        const { scale, positionX, positionY } = this.state;
-
-        return (
-            <TransformWrapper
-              key={ i }
-              scale={ scale }
-              onZoomChange={ handleZoomChange }
-              wheel={ { disabled: true, wheelEnabled: false } }
-              pan={ {
-                  disabled: !isZoomEnabled,
-                  limitToWrapperBounds: true,
-                  velocity: false
-              } }
-              options={ {
-                  limitToBounds: true,
-                  minScale: 1,
-                  minPositionX: positionX,
-                  minPositionY: positionY
-              } }
-            >
-                { ({
-                    scale,
-                    previousScale,
-                    resetTransform,
-                    setTransform,
-                    positionX,
-                    positionY,
-                    options
-                }) => {
-                    const { minPositionY, minPositionX } = options;
-                    if (scale === 1 && previousScale !== 1) {
-                        resetTransform();
-                    }
-
-                    if (scale !== previousScale && scale !== 1) {
-                        setTransform(positionX - minPositionX, positionY - minPositionY, scale, 0);
-                    }
-
-                    return (
-                        <ProductGalleryBaseImage
-                          imageRef={ this.imageRef }
-                          centerContent
-                          setTransform={ setTransform }
-                          index={ i }
-                          mediaData={ src }
-                          scale={ scale }
-                          previousScale={ previousScale }
-                          disableZoom={ disableZoom }
-                          isZoomEnabled={ isZoomEnabled }
-                        />
-                    );
-                } }
-            </TransformWrapper>
-        );
-    }
-
-    renderGalleryImage = (src, i) => (
-        <Image lazyLoad={false} src={ src } key={ i } />
+    return (
+      <div block="PDPGalleryOverlay" elem="Crumbs">
+        <SliderHorizontal
+          mix={{
+            block: "Slider",
+            mods: {
+              isCrumbs: true,
+              isArabic: isArabic()
+            },
+            mix: {
+              block: "Slider",
+              elem: "Wrapper",
+              mods: { isCrumbs: true },
+            },
+          }}
+          activeImage={currentIndex}
+          onActiveImageChange={onSliderChange}
+          isInteractionDisabled
+          isZoomEnabled={isZoomEnabled}
+        >
+          {crumbs.map(this.renderCrumb)}
+        </SliderHorizontal>
+      </div>
     );
+  }
 
-    renderCrumbs() {
-        const {
-            crumbs = [],
-            currentIndex, onSliderChange,
-            isZoomEnabled
-        } = this.props;
+  onZoomStop({state}) {
+    if(state?.scale){
+      this.setState({
+        scale: state.scale
+      });
+    }
+  }
 
+  hideZoomingGuide() {
+    this.setState({showZoomingGuide: false});
+  }
+
+  renderGallery() {
+    const { gallery = [], isGalleryEmpty } = this.props;
+    const { scale, showZoomingGuide} = this.state;
+    if (gallery[0] !== undefined && !isGalleryEmpty) {
+      return gallery.map((src, i) => {
+        const { currentIndex, gallery } = this.props;
         return (
-            <div block="PDPGalleryOverlay" elem="Crumbs">
-                <SliderHorizontal
-                  mix={ {
-                      block: 'Slider',
-                      mods: { isCrumbs: true },
-                      mix: {
-                          block: 'Slider',
-                          elem: 'Wrapper',
-                          mods: { isCrumbs: true }
-                      }
-                  } }
-                  activeImage={ currentIndex }
-                  onActiveImageChange={ onSliderChange }
-                  isInteractionDisabled
-                  isZoomEnabled={ isZoomEnabled }
-                >
-                { crumbs.map(this.renderCrumb) }
-                </SliderHorizontal>
-            </div>
+        <div key={i}>
+          <TransformWrapper
+            ref={this.transformWrapperRef}
+            centerOnInit={true}
+            centerZoomedOut
+            minScale={MIN_ZOOM_SCALE || 1}
+            maxScale={MAX_ZOOM_SCALE || 8}
+            doubleClick={{
+              mode: scale>=MAX_ZOOM_SCALE?'zoomOut':'zoomIn',
+            }}
+            panning={{
+              disabled: isMobile.any()?scale <= MIN_ZOOM_SCALE:false
+            }}
+            onZoomStop={this.onZoomStop.bind(this)}
+          >
+            {
+              () => (
+                <React.Fragment>
+                  {
+                    showZoomingGuide && scale<=MIN_ZOOM_SCALE && !isMobile.any()
+                    ?
+                    <div block="ZoomGuide" onClick={this.hideZoomingGuide}>
+                      { __("Double Click to Zoom In") }
+                    </div>
+                    :
+                    null
+                  }
+                  <TransformComponent>
+                    <img
+                      src={gallery[currentIndex]}
+                      block="CurrentImage"
+                      mods={{
+                        isMaxZoomedIn: scale>=MAX_ZOOM_SCALE
+                      }}
+                    />
+                  </TransformComponent>
+                </React.Fragment>
+              )
+            }
+          </TransformWrapper>
+        </div >
+        )
+      })
+    }
+    return gallery.map(this.renderGalleryImage);
+  }
 
-        );
+  renderSlider() {
+    const {
+      gallery = [],
+      currentIndex,
+      onSliderChange,
+      isZoomEnabled,
+    } = this.props;
+
+    if (!gallery.length) {
+      return null;
     }
 
-    renderGallery() {
-        const { gallery = [], isGalleryEmpty } = this.props;
+    return (
+      <Slider
+        activeImage={currentIndex}
+        onActiveImageChange={onSliderChange}
+        mix={{ block: "PDPGalleryOverlay", elem: "Slider" }}
+        showCrumbs={false}
+        isInteractionDisabled={!isMobile.any()}
+      >
+        {this.renderGallery()}
+      </Slider>
+    );
+  }
+  prev = (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
 
-        if (gallery[0] !== undefined && !isGalleryEmpty) {
-            return gallery.map(this.renderImage);
-        }
+    const { currentIndex, onSliderChange, gallery = [] } = this.props;
 
-        return gallery.map(this.renderGalleryImage);
+    if (currentIndex === 0) {
+      return;
+    } else {
+      onSliderChange(currentIndex - 1);
     }
+  };
+  next = (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
 
-    renderSlider() {
-        const {
-            gallery = [],
-            currentIndex,
-            onSliderChange,
-            isZoomEnabled
-        } = this.props;
-
-        if (!gallery.length) {
-            return null;
-        }
-
-        return (
-            <Slider
-              activeImage={ currentIndex }
-              onActiveImageChange={ onSliderChange }
-              mix={ { block: 'PDPGalleryOverlay', elem: 'Slider' } }
-              showCrumbs={ isMobile.any() }
-              isInteractionDisabled={ isZoomEnabled }
-            >
-                { this.renderGallery() }
-            </Slider>
-        );
+    const { currentIndex, onSliderChange, gallery = [] } = this.props;
+    if (currentIndex + 1 === gallery.length) {
+      return;
+    } else {
+      onSliderChange(currentIndex + 1);
     }
+  };
 
-    render() {
-        const { closeGalleryOverlay } = this.props;
-
-        return (
-            <div block="PDPGalleryOverlay" ref={ this.overlayRef }>
-                <button block="PDPGalleryOverlay" elem="Button" onClick={ closeGalleryOverlay }>
-                    <Close />
-                </button>
-                <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={ this.zoomIn }>
-                    <Plus />
-                </button>
-                <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={ this.zoomOut }>
-                    <Minus />
-                </button>
-                { this.renderCrumbs() }
-                { this.renderSlider() }
-            </div>
-        );
+  handleArrowKeySlide = (e) => {
+    const { isMobile } = this.state;
+    const { closeGalleryOverlay } = this.props;
+    if(isMobile) {
+      return;
     }
+    switch (e.keyCode) {
+      case 27:
+        closeGalleryOverlay()
+        break;
+      case 37:
+        this.prev(e);
+        break;
+      case 39:
+        this.next(e);
+        break;
+    }
+  };
+
+  renderPrevButton = () => {
+    return (
+      <button block="PDPGalleryOverlay" elem="Prev" onClick={this.prev}>
+        <ChevronLeft />
+      </button>
+    );
+  };
+
+  renderNextButton = () => {
+    return (
+      <button block="PDPGalleryOverlay" elem="Next" onClick={this.next}>
+        <ChevronRight />
+      </button>
+    );
+  };
+
+  render() {
+    const { closeGalleryOverlay } = this.props;
+
+    return (
+      <div block="PDPGalleryOverlay">
+        <button
+          block="PDPGalleryOverlay"
+          elem="Button"
+          onClick={closeGalleryOverlay}
+        >
+          <Close />
+        </button>
+        {this.renderPrevButton()}
+        {this.renderNextButton()}
+        {this.renderCrumbs()}
+        {this.renderSlider()}
+      </div>
+
+    );
+  }
 }
 
 export default PDPGalleryOverlay;

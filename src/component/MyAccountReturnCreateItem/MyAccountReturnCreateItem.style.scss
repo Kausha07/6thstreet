@@ -133,21 +133,24 @@
     }
   }
 
-  &-Price {
-    &Regular {
-      &_isDiscount {
+
+  .Price {
+    span {
+      del {
         text-decoration: line-through;
       }
     }
 
-    &Discount {
-      color: var(--red);
-      margin-left: 10px;
+    .SearchProduct {
+      &-Discount {
+        color: #d12229;
+        margin-left: 10px;
+      }
     }
 
-    &DiscountPercent {
-      color: var(--red);
-      margin-left: 15px;
+    &-Discount {
+      color: #d12229;
+      margin-left: 10px;
     }
   }
 

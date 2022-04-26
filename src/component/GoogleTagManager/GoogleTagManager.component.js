@@ -3,12 +3,28 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
-import EVENT_PROMOTION_IMPRESSION from "Util/Event";
+import {
+  EVENT_PROMOTION_IMPRESSION,
+  EVENT_PRODUCT_IMPRESSION,
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_CLEAR_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
+  EVENT_GTM_VIEW_SEARCH_RESULTS,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
+  EVENT_GTM_SEARCH_SCREEN_VIEW,
+  EVENT_CLICK_TOP_SEARCHES_CLICK,
+  EVENT_CLICK_RECOMMENDATION_CLICK
+} from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
 import BannerImpressionEvent from "./events/BannerImpression.event";
+import ProductImpressionEvent from "./events/ProductImpression.event";
 import BrandsClickEvent from "./events/BrandsClick.event";
 import CheckoutEvent from "./events/Checkout.event";
 import CheckoutOptionEvent from "./events/CheckoutOption.event";
@@ -22,6 +38,7 @@ import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
 import WishlistClickEvent from "./events/WishlistClick.event";
+import SearchEvent from "./events/Search.event";
 import Scripts from "./Scripts";
 
 /**
@@ -30,13 +47,13 @@ import Scripts from "./Scripts";
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
 export const EVENT_PRODUCT_CLICK = "productClick";
-export const EVENT_WISHLIST_PRODUCT_CLICK = "productClick";
+export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
 export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
 export const EVENT_ADD_TO_CART = "addToCart";
 export const EVENT_REMOVE_FROM_CART = "removeFromCart";
-export const EVENT_PRODUCT_DETAIL = "ee.detail";
-export const EVENT_PURCHASE = "ee.purchase";
+export const EVENT_PRODUCT_DETAIL = "productdetail";
+export const EVENT_PURCHASE = "checkout-complete";
 export const EVENT_CHECKOUT = "checkout";
 export const EVENT_CHECKOUT_OPTION = "checkoutOption";
 export const EVENT_BANNER_CLICK = "bannerClick";
@@ -99,6 +116,19 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
     [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
+    [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
+    [EVENT_GTM_CANCEL_SEARCH]: SearchEvent,
+    [EVENT_GTM_CLEAR_SEARCH]: SearchEvent,
+    [EVENT_GTM_GO_TO_SEARCH]: SearchEvent,
+    [EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK]: SearchEvent,
+    [EVENT_CLICK_SEARCH_WISH_LIST_CLICK]: SearchEvent,
+    [EVENT_GTM_VIEW_SEARCH_RESULTS]: SearchEvent,
+    [EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW]: SearchEvent,
+    [EVENT_CLICK_RECENT_SEARCHES_CLICK]: SearchEvent,
+    [EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW]: SearchEvent,
+    [EVENT_GTM_SEARCH_SCREEN_VIEW]: SearchEvent,
+    [EVENT_CLICK_TOP_SEARCHES_CLICK]: SearchEvent,
+    [EVENT_CLICK_RECOMMENDATION_CLICK]: SearchEvent
   };
 
   /**
@@ -323,12 +353,12 @@ class GoogleTagManager extends PureComponent {
    * @param data
    */
   processDataPush(event, data) {
+    dataLayer.push({ ecommerce: null });
     if (this.enabled) {
       this.addDataLayer(data);
 
       if (this.debug) {
         // eslint-disable-next-line no-console
-        console.log(event, data);
       }
 
       window[this.currentDataLayerName].push({

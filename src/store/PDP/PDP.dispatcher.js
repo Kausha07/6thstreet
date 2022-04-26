@@ -2,9 +2,9 @@ import {
   setPDPData,
   setPDPClickAndCollect,
   setPDPLoading,
+  setPDPShowSearch
 } from "Store/PDP/PDP.action";
 import {
-  getProductStock,
   sendNotifyMeEmail,
   isClickAndCollectAvailable,
   getClickAndCollectStores,
@@ -27,8 +27,12 @@ export class PDPDispatcher {
       Logger.log(e);
 
       // Needed, so PDP container sets "isLoading" to false
-      dispatch(setPDPData({}, options));
+      dispatch(setPDPData({}, {}));
     }
+  }
+  async resetProduct(payload, dispatch) {
+    // remove product from state if not pdp
+    dispatch(setPDPData({}, {}));
   }
 
   async requestProductBySku(payload, dispatch) {
@@ -49,10 +53,6 @@ export class PDPDispatcher {
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, options));
     }
-  }
-
-  async getProductStock(dispatch, sku) {
-    return getProductStock(sku);
   }
 
   async getClickAndCollectStores(
@@ -100,12 +100,17 @@ export class PDPDispatcher {
         dispatch(setPdpWidgetsData(pdpWidgetData.widgets));
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
   async sendNotifyMeEmail(data) {
     return sendNotifyMeEmail(data);
+  }
+
+  async setPDPShowSearch(payload, dispatch) {
+    const { displaySearch } = payload
+    dispatch(setPDPShowSearch(displaySearch));
   }
 }
 

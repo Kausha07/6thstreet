@@ -14,37 +14,61 @@ class PLPDetails extends PureComponent {
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
   };
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true};
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }));
+  }
 
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
     isArabic: isArabic(),
+    
   };
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <Image lazyLoad={true} src={brandImg} />
+    return (
+      <div block="PLPDetails" elem="BrandImage">
+        <Image lazyLoad={true} src={brandImg} />
+      </div>
+    )
   };
 
   renderBrandName = () => {
     const { brandName } = this.props;
     return (
-      <h1 block="PLPDetails" elem="BrandName">
+      <h2 block="PLPDetails" elem="BrandName">
         {brandName}
-      </h1>
+      </h2>
     );
   };
 
   renderBrandHtml = () => {
     const { brandDescription } = this.props;
-
     return (
-      <p
-        block="PLPDetails"
-        elem="BrandHTML"
-        dangerouslySetInnerHTML={{ __html: brandDescription }}
-      />
+      <div className={this.state.isToggleOn ? 'PLPDetails-viewmore' : 'PLPDetails-viewless'}>
+        <p
+          block="PLPDetails"
+          elem="BrandHTML"
+          dangerouslySetInnerHTML={{ __html: brandDescription }}
+        />
+        { brandDescription && !brandDescription.offsetHeight < 45 ? 
+          <button onClick={this.handleClick}>
+            {this.state.isToggleOn ? 'Read more' : 'Read less'}
+          </button>
+          : ""
+        }
+      </div>
+      
     );
   };
+
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
@@ -63,17 +87,26 @@ class PLPDetails extends PureComponent {
     if (isMobile) {
       return null;
     }
+    const brandImageVisible = brandImg ? "brandImageVisible" : "notBrandImageVisible";
+
     return (
-      <>
-        <div block="PLPDetails" elem="BrandImage">
-          {isMobile ? "" : this.renderBrandImage()}
-        </div>
-        <div block="PLPDetails" elem="BrandDescription">
+      <div block="PLPDetails" elem="Wrapper">
+        
+        {/* {!brandImg ? "" :
+          <div block="PLPDetails" elem="BrandImage">
+            {isMobile ? "" : this.renderBrandImage()}
+          </div>
+        } */}
+        <div block="PLPDetails" elem={`BrandDescription ${brandImageVisible}`}>
           {/* {this.renderActionButtons()} */}
           {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>
-      </>
+
+
+
+
+      </div>
     );
   };
 

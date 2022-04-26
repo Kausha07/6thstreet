@@ -7,6 +7,7 @@ import { setGender } from "Store/AppState/AppState.action";
 import { toggleBreadcrumbs } from "Store/Breadcrumbs/Breadcrumbs.action";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
+import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { capitalize } from "Util/App";
 import { getUUID } from "Util/Auth";
@@ -15,12 +16,16 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import HomePage from "./HomePage.component";
 import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import browserHistory from "Util/History";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   country: state.AppState.country,
+  lastHomeItem: state.PLP.lastHomeItem,
   config: state.AppConfig.config,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -28,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -46,18 +52,17 @@ export class HomePageContainer extends PureComponent {
     isLoading: true,
     defaultGender: "women",
     isMobile: isMobile.any(),
+    firstLoad: true,
   };
 
   constructor(props) {
     super(props);
-
-    this.requestDynamicContent();
+    window.history.scrollRestoration = "manual";
+    // this.requestDynamicContent();
   }
 
   componentDidMount() {
-    const {
-      location: { state },
-    } = this.props;
+    const { prevPath = null } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -67,25 +72,35 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
+        referrer: prevPath,
         url: window.location.href,
       },
     });
+
     const { gender, toggleBreadcrumbs } = this.props;
     toggleBreadcrumbs(false);
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
+    this.setSchemaJSON();
   }
 
   componentDidUpdate(prevProps) {
     const { gender: prevGender } = prevProps;
-    const { gender, toggleBreadcrumbs } = this.props;
+    const { gender, toggleBreadcrumbs, lastHomeItem } = this.props;
 
     toggleBreadcrumbs(false);
 
     if (gender !== prevGender) {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
+    }
+    let element = document.getElementById(lastHomeItem);
+    if (element) {
+      setTimeout(() => {
+        window.focus();
+        element.style.scrollMarginTop = "180px";
+        element.scrollIntoView({ behavior: "smooth" });
+      }, 10);
     }
   }
 
@@ -102,25 +117,85 @@ export class HomePageContainer extends PureComponent {
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
     const genderName = capitalize(gender);
-
-    setMeta({
-      title: __(
-        "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
-        genderName,
-        countryName
-      ),
-      keywords: __(
-        "online shopping for %s, %s online shopping, %s",
-        ...Array(2).fill(genderName),
-        countryName
-      ),
-      description: __(
-        // eslint-disable-next-line max-len
-        "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
-        genderName,
-        countryName
-      ),
-    });
+    const pagePathName = new URL(window.location.href).pathname;
+    const countryNameConfig = (countryName == "Saudi Arabia" ? "KSA" : countryName);
+    if (pagePathName == "/") {
+      setMeta({
+        title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        keywords: __(
+          "online shopping for %s, %s online shopping, %s",
+          ...Array(2).fill(genderName),
+          countryName
+        ),
+        description: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+        twitter_title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        twitter_desc: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+        og_title: __(
+          "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+          countryNameConfig
+        ),
+        og_desc: __(
+          // eslint-disable-next-line max-len
+          "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+          countryName
+        ),
+      });
+    } else {
+      setMeta({
+        title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        keywords: __(
+          "online shopping for %s, %s online shopping, %s",
+          ...Array(2).fill(genderName),
+          countryName
+        ),
+        description: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+        twitter_title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        twitter_desc: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+        og_title: __(
+          "%s Online Shopping - shoes, bags, clothing | 6thStreet %s",
+          genderName,
+          countryName
+        ),
+        og_desc: __(
+          // eslint-disable-next-line max-len
+          "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+          genderName,
+          countryName
+        ),
+      });
+    }
   }
 
   getDevicePrefix() {
@@ -151,11 +226,9 @@ export class HomePageContainer extends PureComponent {
 
     // TODO commented thiss try catch block temp uncomment after development
     try {
-      const dynamicContent = await getStaticFile(
-        HOME_STATIC_FILE_KEY,
-        { $FILE_NAME: `${devicePrefix}${gender}.json` }
-        // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
-      );
+      const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
+        $FILE_NAME: `${devicePrefix}${gender}.json`,
+      });
 
       this.setState({
         dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
@@ -165,18 +238,26 @@ export class HomePageContainer extends PureComponent {
       // TODO: handle error
       Logger.log(e);
     }
+  }
 
-    // // TODO remove this try catch block after development
-    // try {
-    //   const response = await (await this.fetchDataFromLocal()).json();
-    //   const dynamicContent = response.data ? response.data : [];
-    //   this.setState({
-    //     dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
-    //     isLoading: false,
-    //   });
-    // } catch (error) {
-    //   Logger.log(e);
-    // }
+  async setSchemaJSON() {
+    const { locale = "" } = this.props;
+    try {
+      const response = await getSchema(locale);
+      if (!!!response?.error) {
+        const tag = document.createElement("script");
+        if (tag) {
+          tag.type = "application/ld+json";
+          tag.innerHTML = JSON.stringify(response);
+          document
+            .querySelectorAll("script[type='application/ld+json']")
+            .forEach((node) => node.remove());
+          document.head.appendChild(tag);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   containerProps = () => {
@@ -190,12 +271,17 @@ export class HomePageContainer extends PureComponent {
     };
   };
 
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item);
+  };
+
   render() {
     return (
       <HomePage
         {...this.containerFunctions}
         {...this.containerProps()}
-        abc={this.props}
+        setLastTapItem={this.setLastTapItem}
+        HomepageProps={this.props}
       />
     );
   }

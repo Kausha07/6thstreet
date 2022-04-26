@@ -4,15 +4,29 @@ import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
+import ShareButton from "Component/ShareButton";
+import SearchIcon from "Component/Icons/Search";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
 import { isArabic } from "Util/App";
-import CSS from "Util/CSS";
 import browserHistory from "Util/History";
 import isMobile from "Util/Mobile";
-import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
 import "./PDPGallery.style";
+import videoIcon from "./icons/video.svg";
+import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { connect } from "react-redux";
+import HomeIcon from "Component/Icons/Home/home.png";
+import { setPDPGaleryImage } from "Store/PDP/PDP.action";
+export const mapStateToProps = (state) => ({
+  displaySearch: state.PDP.displaySearch,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  setImageIndex: (index) => dispatch(setPDPGaleryImage(index)),
+});
 
 class PDPGallery extends PureComponent {
   static propTypes = {
@@ -27,37 +41,37 @@ class PDPGallery extends PureComponent {
     sku: PropTypes.string.isRequired,
   };
 
-  overlaybuttonRef = createRef();
+  constructor(props) {
+    super(props);
+    this.overlaybuttonRef = createRef();
+    this.crumbsRef = createRef();
+    this.state = {
+      openGalleryOverlay: false,
+      isVideoPlaying: false,
+      isArabic: isArabic(),
+      listener: "",
+      isFirstTimeZoomedIn: true
+    };
+    this.videoRef = {
+      prod_style_video: React.createRef(),
+      prod_360_video: React.createRef(),
+    };
+  }
 
-  crumbsRef = createRef();
-
-  maxScale = MAX_ZOOM_SCALE;
-
-  state = {
-    galleryOverlay: "",
-    isVideoPlaying: false,
-    isArabic: isArabic(),
-    listener: "",
+  onBackButtonClick = () => {
+    const { location } = browserHistory;
+    browserHistory.goBack();
   };
-
-  videoRef = {
-    prod_style_video: React.createRef(),
-    prod_360_video: React.createRef(),
-  };
-
-  // componentDidMount() {
-  //   CSS.setVariable(
-  //     this.crumbsRef,
-  //     "gallery-crumbs-height",
-  //     `${this.overlaybuttonRef.current.offsetHeight}px`
-  //   );
-  // }
 
   renderBackButton() {
     const { isArabic } = this.state;
+    const { homeFromPDP } = this.props;
     return (
       <div block="BackArrow" mods={{ isArabic }} key="back">
-        <button block="BackArrow-Button" onClick={browserHistory.goBack} />
+        <button block="BackArrow-Button" onClick={this.onBackButtonClick} />
+        <div block="BackArrow-HomeIcon" onClick={homeFromPDP}>
+          <img src={HomeIcon} alt="home" />
+        </div>
       </div>
     );
   }
@@ -88,6 +102,7 @@ class PDPGallery extends PureComponent {
     const { isArabic } = this.state;
     return <HeaderCart showCartPopUp={false} mods={{ isArabic }} />;
   }
+
   renderWishlistIcon() {
     const { isArabic } = this.state;
     const { sku, product, renderMySignInPopup } = this.props;
@@ -101,39 +116,140 @@ class PDPGallery extends PureComponent {
       />
     );
   }
+  renderShareButton() {
+    const url = new URL(window.location.href);
+    url.searchParams.append("utm_source", "pdp_share");
+    return (
+      <div block="ShareIcon">
+        <ShareButton
+          title={document.title}
+          text={`Hey! check this out: ${document.title}`}
+          url={url}
+        />
+      </div>
+    );
+  }
 
-  renderCrumb = (index, i) => (
-    <PDPGalleryCrumb
-      key={i}
-      // prefer numerical index
-      index={i}
-    />
-  );
+  renderSearchButton() {
+    const url = new URL(window.location.href);
+    if (!!!isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <div block="SearchIcon" onClick={this.searchButtonClick}>
+        <SearchIcon
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.searchParams.append("utm_source", "pdp_share")}
+        />
+      </div>
+    );
+  }
+
+  renderCrumb = (index, i) => {
+    return (
+      <PDPGalleryCrumb
+        key={i}
+        onSlideChange={this.onSlideChange}
+        src={index}
+        // prefer numerical index
+        index={i}
+      />
+    );
+  };
+  renderAltTag = () => {
+    const {
+      product: {
+        brand_name = "",
+        color = "",
+        product_type_6s = "",
+        categories = {},
+      },
+    } = this.props;
+
+    const checkCategory = () => {
+      if (!categories) {
+        return "";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel = checkCategory().split("///").pop();
+    return (
+      brand_name + " " + categoryLevel + " - " + color + " " + product_type_6s
+    );
+  };
 
   renderGalleryImage = (src, i) => (
-    <Image lazyLoad={false}
+    <Image
+      lazyLoad={false}
       src={src}
-      key={i}
+      key={src}
       mix={{ block: "PDPGallery", elem: "sliderItem" }}
+      alt={this.renderAltTag()}
     />
   );
 
-  renderGalleryOverlay = () => {
-    const galleryOverlay = (
-      <PDPGalleryOverlay closeGalleryOverlay={this.closeGalleryOverlay} />
-    );
-    document.body.style.overflow = "hidden";
+  showGalleryOverlay = () => {
+    const { location } = browserHistory;
+    this.setState({openGalleryOverlay: true}, () => {
+      browserHistory.push(`${location.pathname}`);
+    });
+  }
 
-    this.setState({ galleryOverlay });
+  renderGalleryOverlay = () => {
+    window.onpopstate = () => {
+      this.closeGalleryOverlay();
+    };
+    const { isFirstTimeZoomedIn } = this.state;
+    return (
+      <PDPGalleryOverlay
+        closeGalleryOverlay={this.closeGalleryOverlay.bind(this)}
+        isOverlay={true}
+        isFirstTimeZoomedIn={isFirstTimeZoomedIn}
+        {...this.props}
+      />
+    );
   };
 
   closeGalleryOverlay = () => {
-    document.body.style.overflow = "visible";
-    this.setState({ galleryOverlay: "" });
+    this.setState({ openGalleryOverlay: false }, () => {
+      document.body.style.overflow = "visible";
+      this.props.setImageIndex(this.props.currentIndex);
+      this.props.onSliderChange(this.props.currentIndex);
+    });
   };
 
   renderCrumbs() {
-    const { crumbs = [], currentIndex, onSliderChange } = this.props;
+    const {
+      crumbs = [],
+      currentIndex,
+      onSliderChange,
+      prod_style_video,
+      prod_360_video,
+    } = this.props;
+
+    let filterCrumb = crumbs.filter((item) => {
+      return item?.includes("http");
+    });
+
+    if (prod_style_video && prod_360_video) {
+      // filterCrumb.push(videoIcon);
+      // filterCrumb.push(videoIcon);
+    } else if (prod_style_video || prod_360_video) {
+      // filterCrumb.push(videoIcon);
+    }
+
     return (
       <div ref={this.crumbsRef} block="PDPGallery" elem="Crumbs">
         <SliderVertical
@@ -147,10 +263,10 @@ class PDPGallery extends PureComponent {
             },
           }}
           activeImage={currentIndex}
-          onActiveImageChange={onSliderChange}
+          onActiveImageChange={this.onSlideChange}
           isInteractionDisabled
         >
-          {crumbs.map(this.renderCrumb)}
+          {filterCrumb.map(this.renderCrumb)}
         </SliderVertical>
       </div>
     );
@@ -158,10 +274,15 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
-
     return gallery.map(this.renderGalleryImage);
   }
 
+  renderGalleryTag() {
+    const {
+      product: { prod_tag_2 },
+    } = this.props;
+    return <PDPGalleryTag tag={prod_tag_2} />;
+  }
   renderSlider() {
     const { gallery, currentIndex, onSliderChange } = this.props;
 
@@ -210,6 +331,7 @@ class PDPGallery extends PureComponent {
     var counter = 1;
     if (video?.current) {
       this.setState({ isVideoPlaying: video }, () => {
+        const innerThisRef = this;
         onSliderChange(
           gallery.length + parseInt(video?.current.dataset["index"])
         );
@@ -219,17 +341,17 @@ class PDPGallery extends PureComponent {
         // after issue fix can be removed below commented code
 
         // video.current.addEventListener("ended", () => {
-        //   console.log({ counter });
-        //   counter = counter + 1;
-        //   if (counter <= 2) {
-        //     video.current.play();
-        //   } else {
-        //     onSliderChange(0);
-        //     video.current.removeEventListener("ended");
-        //     this.setState({ isVideoPlaying: false }, () => {
-        //       counter = 1;
-        //     });
-        //   }
+        // console.log({ counter });
+        // counter = counter + 1;
+        // if (counter <= 2) {
+        // video.current.play();
+        // } else {
+        // onSliderChange(0);
+        // video.current.removeEventListener("ended");
+        // this.setState({ isVideoPlaying: false }, () => {
+        // counter = 1;
+        // });
+        // }
         // });
         function listener(event) {
           counter = counter + 1;
@@ -238,7 +360,7 @@ class PDPGallery extends PureComponent {
           } else {
             onSliderChange(0);
             video.current.removeEventListener("ended", listener);
-            this.setState({ isVideoPlaying: false }, () => {
+            innerThisRef.setState({ isVideoPlaying: false }, () => {
               counter = 1;
             });
           }
@@ -251,6 +373,7 @@ class PDPGallery extends PureComponent {
     const { gallery, onSliderChange, prod_360_video, prod_style_video } =
       this.props;
     const { isVideoPlaying, listener } = this.state;
+
     if (activeSlide <= gallery.length - 1) {
       // stop the video
       if (isVideoPlaying?.current) {
@@ -262,19 +385,50 @@ class PDPGallery extends PureComponent {
       onSliderChange(activeSlide);
     } else if (activeSlide > gallery.length - 1) {
       // play the video
-      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+      if (!(prod_360_video || prod_style_video)) {
         return null;
       }
-      if (prod_360_video) {
-        this.playVideo("prod_360_video");
-      } else if (prod_style_video) {
-        this.playVideo("prod_style_video");
-      } else {
-        onSliderChange(activeSlide);
+      onSliderChange(activeSlide);
+      if (activeSlide >= gallery.length) {
+        if (activeSlide === gallery.length) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_style_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        } else if (activeSlide === gallery.length + 1) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_360_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        }
       }
     }
   };
-
+  searchButtonClick = (e) => {
+    e.stopPropagation();
+    const { displaySearch, showPDPSearch } = this.props;
+    showPDPSearch(!displaySearch);
+  };
   stopVideo() {
     const { isVideoPlaying, listener } = this.state;
 
@@ -304,7 +458,7 @@ class PDPGallery extends PureComponent {
             elem="ViewGallery"
             onClick={() => this.stopVideo()}
           >
-            { __("View Gallery") }
+            {__("View Gallery")}
           </button>
         ) : (
           <div block="PDPGallery-VideoButtonsContainer" elem="VideoButtons">
@@ -314,7 +468,7 @@ class PDPGallery extends PureComponent {
                 elem="StyleVideo"
                 onClick={() => this.playVideo("prod_style_video")}
               >
-                { __("Video") }
+                {__("Video")}
               </button>
             )}
             {prod_360_video && (
@@ -323,7 +477,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => this.playVideo("prod_360_video")}
               >
-                { __("360°")}
+                {__("360°")}
               </button>
             )}
           </div>
@@ -334,24 +488,33 @@ class PDPGallery extends PureComponent {
   }
 
   render() {
-    const { galleryOverlay, isArabic } = this.state;
+    const { openGalleryOverlay, isArabic } = this.state;
     const { renderMySignInPopup } = this.props;
     return (
       <div block="PDPGallery">
-        {galleryOverlay}
-        {this.renderBackButton()}
-        {this.renderCrumbs()}
-        <div block="OverlayIcons" mods={{ isArabic }}>
-          {this.renderCartIcon()}
-          {this.renderWishlistIcon()}
-        </div>
+        {
+          openGalleryOverlay
+          ?
+          this.renderGalleryOverlay()
+          :
+          <>
+            {this.renderBackButton()}
+            {this.renderCrumbs()}
+            <div block="OverlayIcons" mods={{ isArabic }}>
+              {this.renderCartIcon()}
+              {this.renderWishlistIcon()}
+            </div>
+          </>
+        }
         <button
           ref={this.overlaybuttonRef}
           block="PDPGallery"
           elem="OverlayButton"
-          onClick={this.renderGalleryOverlay}
+          mods={{ isArabic }}
+          onClick={this.showGalleryOverlay}
         >
           {this.renderSlider()}
+          {this.renderGalleryTag()}
         </button>
         {this.renderVideoButtons()}
       </div>
@@ -359,4 +522,4 @@ class PDPGallery extends PureComponent {
   }
 }
 
-export default PDPGallery;
+export default connect(mapStateToProps, mapDispatchToProps)(PDPGallery);

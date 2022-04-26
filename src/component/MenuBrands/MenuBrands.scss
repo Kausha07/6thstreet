@@ -129,6 +129,14 @@
                     margin-bottom: 20px;
                     padding-right: 10px;
                 }
+                &_isArabic {
+                    padding-right: 0;
+                    padding-left: 17px;
+                    a {
+                        padding-right: 0px;
+                        padding-left: 10px;
+                    }
+                }
             }
         }
     }

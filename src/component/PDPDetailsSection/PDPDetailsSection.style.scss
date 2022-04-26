@@ -8,8 +8,113 @@
   // padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  .Accordion-Expand {
+    &_isArabic {
+      // transform: rotate(180deg);
+    }
+    @include mobile {
+      align-items: center;
+      // transform: none;
+      padding-right: 0;
+    }
+  }
+  .PDPDetail {
+    @include mobile {
+      flex-wrap: wrap;
+      &-BrandImage {
+        padding: 0;
+        flex: auto;
+        text-align: center;
+      }
+      &-BrandDescription {
+        h1 {
+          text-align: center;
+        }
+        padding: 0;
+        flex: auto;
+      }
+      .BrandDescription {
+        display: none;
+      }
+    }
+  }
+
   .VueProductSlider {
+    @include mobile {
+      &-VueProductContainer {
+        &:nth-last-child(2) {
+          margin-right: 0;
+        }
+        #brandName {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.18px;
+          line-height: 15px;
+          margin-top: 4px;
+          margin-bottom: 0;
+          text-align: left;
+        }
+        #productName {
+          font-size: 12px;
+          letter-spacing: 0;
+          line-height: 15px;
+          text-align: left;
+        }
+        &_isArabic {
+          #brandName {
+            text-align: right;
+          }
+          #productName {
+            text-align: right;
+          }
+        }
+        .WishlistIcon {
+          border-radius: 50%;
+          width: 28px;
+          height: 28px;
+          align-items: center;
+          right: 8px;
+          top: 7px;
+          &_isArabic {
+            left: 8px !important;
+            right: unset !important;
+          }
+          &-Icon {
+            display: flex;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            align-items: center;
+            // left: 0;
+            // top: 0;
+            @include desktop {
+              position: revert;
+            }
+          }
+        }
+        @include mobile {
+          #button {
+            white-space: pre-wrap;
+          }
+        }
+      }
+    }
     &-HeaderContainer {
+      @include desktop {
+        margin-top: 30px;
+      }
+      h4 {
+        @include mobile {
+          text-align: left;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+      &_isArabic {
+        h4 {
+          text-align: right;
+        }
+      }
       h1 {
         @include tablet {
           padding-left: 30px;
@@ -23,20 +128,34 @@
     }
     &-SliderContainer {
       @include mobile {
+        .SliderHelper {
+          width: 20px;
+        }
         width: 100vw;
       }
     }
-    // &-Container {
-    //   padding: 0;
-    //   margin: 0;
-    //   width: 100%;
-    // }
+    &-Container {
+      @include desktop {
+        margin-top: 0px;
+      }
+    }
+  }
+  .AccordionWrapper {
+    @include mobile {
+      // border-top: 1px solid #ddd;
+      margin-left: 20px;
+      margin-right: 20px;
+      // &:last-child {
+      //   border-bottom: 1px solid #ddd;
+      // }
+    }
   }
   &-Accordion {
     @include mobile() {
-      padding-bottom: 16px;
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-bottom: 4px;
+      padding-top: 4px;
+      // padding-left: 10px;
+      // padding-right: 10px;
     }
     @include tablet {
       padding-left: 30px;
@@ -47,14 +166,37 @@
     // padding: 0 20px;
   }
 
-  h3 {
+  h3,.prodDetailTitle {
     text-transform: none;
+    // font-size: 18px;
+    // font-weight: 700;
+    // letter-spacing: 0;
+    // line-height: 50px;
+    font-family: "Avenir Next";
     font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0;
-    line-height: 50px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 25px;
     // border-top: 1px solid var(--pdp-split-line);
     margin-top: 0;
+    @include mobile {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 50px;
+      margin-bottom: 0;
+    }
+    &.PDPDetailWrapper-Title{
+      font-family: "Avenir Next";
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1.75px;
+      line-height: 19px;
+      margin-bottom: 14px;
+      &_isMobile {
+        display: none;
+      }
+    }
   }
 
   &-IconsSection,
@@ -69,6 +211,9 @@
       justify-content: normal;
       margin-right: 60px;
     }
+    @include mobile {
+      margin-right: 25px;
+    }
   }
 
   &-IconsSection {
@@ -77,9 +222,9 @@
 
   &-IconContainer {
     margin-top: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
-    line-height: 15px;
+    line-height: 20px;
     max-width: 33.333%;
     .ClickAndCollect {
       margin-right: 16px;
@@ -131,10 +276,25 @@
   }
 
   &-Description {
-    text-align: justify;
+    // text-align: justify;
+    @include mobile {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
   }
 
+  .BottomHighlights {
+    @include mobile {
+      margin-top: 30px;
+    }
+  }
   &-Highlights {
+    &-SKU {
+      @include mobile {
+        margin-top: 30px;
+      }
+    }
     &-ModelDetails {
       font-weight: var(--fw-regular);
       margin-top: 16px;
@@ -162,13 +322,24 @@
   &-Highlights,
   &-ModelMeasurements {
     font-size: 16px;
-    margin-top: 32px;
+    // margin-top: 32px;
     font-weight: var(--fw-demi);
 
-    h4 {
-      font-weight: 600;
-      font-size: 16px;
-      margin-bottom: 1rem;
+    h4 ,.highlightsTag {
+      font-family: "Avenir Next";
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1.75px;
+      line-height: 19px;
+      margin-bottom: 14px;
+      @include desktop {
+        text-transform: uppercase;
+      }
+      @include mobile {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
     }
 
     ul {
@@ -195,6 +366,9 @@
     list-style-type: disc;
     text-transform: capitalize;
     margin-bottom: 4px;
+    @include mobile {
+      font-size: 14px;
+    }
 
     &::before {
       display: none;
@@ -235,23 +409,29 @@
       border: 1px solid #000000;
       border-radius: 8px;
       background-color: #ffffff;
-      padding: 0 20px;
+      padding: 0;
+      height: 34px;
+      width: 87px;
+      justify-content: center;
       svg {
         transform: rotateY(0deg);
-        margin: 0 8px 0 0;
+        margin: 0 5px 0 0;
+        height: 17.5px;
+        width: 15.83px;
       }
       &_isArabic {
         svg {
           transform: rotateY(180deg);
-          margin: 0 0 0 8px;
+          margin: 0 0 0 5px;
+          // margin: 0 0 0 8px;
         }
       }
       span {
         text-transform: none;
-        font-size: 17px;
+        font-size: 13px;
         font-weight: 600;
         letter-spacing: 0;
-        line-height: 20px;
+        line-height: 18px;
         text-align: right;
       }
     }
@@ -344,7 +524,7 @@
       &-IconsSection,
       &-IconContainer {
         margin-right: 0;
-        margin-left: 32px;
+        margin-left: 25px;
       }
 
       &-Icon {
@@ -356,6 +536,217 @@
   .Seperator {
     background-color: #efefef;
     margin: 15px 0 0 0;
-    height: 1.5px;
+    height: 1px;
+  }
+}
+.PDPDetailWrapper {
+  margin-bottom: 50px;
+  @include mobile {
+    margin-bottom: 26px;
+  }
+  &-Title {
+    font-family: "Avenir Next";
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1.75px;
+    line-height: 19px;
+    margin-bottom: 14px;
+    &_isMobile {
+      display: none;
+    }
+  }
+  &-Items {
+    display: grid;
+    grid-template-columns: 560px 258px; //repeat(2, 1fr);
+    grid-gap: 119px;
+    height: 100%;
+    transition: height 2s ease;
+    @include mobile {
+      grid-template-columns: repeat(1, 1fr);
+      grid-gap: 30px;
+    }
+    &_showMore {
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        rgb(247, 247, 247) 50%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        rgb(224, 221, 221) 50%,
+        transparent 100%
+      );
+      height: 115px;
+      overflow: hidden;
+    }
+  }
+  &-Button {
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    height: 50px;
+    width: 200px;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: "Avenir Next";
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 12px;
+    text-align: center;
+    margin-top: 50px;
+    // margin-bottom: 50px;
+  }
+}
+@include desktop {
+  .Seperator2 {
+    background-color: #efefef;
+    margin: 50px 0 50px 0;
+    height: 1px;
+  }
+  .PDPDetail-BrandImage {
+    padding: 0rem 1rem 1rem 0;
+  }
+  .PDPDetail-BrandDescription {
+    padding: 0rem 0 1rem 1rem;
+    h1,
+    .PDP-BrandNameTag {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      line-height: 55px;
+      margin: 0 0 0.8rem 0;
+      text-transform: none;
+    }
+    p {
+      font-size: 18px;
+      letter-spacing: 0;
+      line-height: 25px;
+    }
+  }
+}
+.MoreDetailsLinkStyle {
+  font-size:bold;
+  color : blue;
+  text-decoration: none !important;
+}
+.PDPWidgets {
+  &-Slider {
+    @include desktop {
+      margin-bottom: 70px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &:nth-child(odd) {
+        &::-webkit-scrollbar {
+          display: none !important;
+        }
+        width: 100vw;
+
+        margin-left: calc((-100vw + 76.389vw) / 2);
+        margin-right: calc((-100vw + 76.389vw) / 2);
+
+        background: #f9f9f9;
+        overflow: hidden !important;
+
+        #productSlider {
+          width: var(--main-container-width-dsk);
+          max-width: var(--container-max-width);
+          margin-inline: auto;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+      &_largeScreen {
+        &:nth-child(odd) {
+          margin-left: calc((1100px - 100vw) / 2);
+          margin-right: calc((1100px - 100vw) / 2);
+        }
+      }
+    }
+    @include mobile {
+      margin-bottom: 20px;
+    }
+  }
+}
+.ContactUs {
+  font-weight: 400;
+  @include mobile {
+    margin-bottom: 26px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  &-Message {
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 18px;
+    text-align: center;
+    margin-top: 30px;
+    padding: 0 60px;
+  }
+  &-Icons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    .divider {
+      width: 2px;
+      background: #ececec;
+    }
+  }
+  .IconWrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    &-Icon {
+      height: 24px;
+      width: 24px;
+    }
+    &-IconTitle {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 19px;
+      margin-top: 6px;
+    }
+  }
+}
+.MobileIcons {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.AccordionSeperator {
+  @include mobile {
+    height: 1px;
+    background-color: #efefef;
+  }
+}
+.ContactUsWrapper {
+  padding-bottom: 85px;
+}
+.FromBrand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+  // padding-bottom: 100px;
+  &-MoreButton {
+    height: 40px;
+    width: 175px;
+    border-radius: 6px;
+    background-color: #000000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &-ButtonText {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 16px;
+    text-align: center;
+    text-transform: uppercase;
   }
 }

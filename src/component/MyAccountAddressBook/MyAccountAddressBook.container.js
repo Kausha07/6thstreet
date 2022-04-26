@@ -10,84 +10,105 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import isMobile from "Util/Mobile";
+import {
+  ADD_ADDRESS,
+  ADDRESS_POPUP_ID,
+} from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import { showPopup } from "Store/Popup/Popup.action";
+import { customerType } from "Type/Account";
 
-import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
-import { showPopup } from 'Store/Popup/Popup.action';
-import { customerType } from 'Type/Account';
-
-import MyAccountAddressBook from './MyAccountAddressBook.component';
+import MyAccountAddressBook from "./MyAccountAddressBook.component";
 
 export const mapStateToProps = (state) => ({
-    customer: state.MyAccountReducer.customer
+  customer: state.MyAccountReducer.customer,
+  addresses: state.MyAccountReducer.addresses,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
+  showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
 });
 
 export class MyAccountAddressBookContainer extends PureComponent {
-    static propTypes = {
-        customer: customerType.isRequired,
-        showPopup: PropTypes.func.isRequired
+  static propTypes = {
+    customer: customerType.isRequired,
+    showPopup: PropTypes.func.isRequired,
+  };
+
+  state = {
+    formContent: false,
+  };
+
+  containerFunctions = {
+    getDefaultPostfix: this.getDefaultPostfix.bind(this),
+    showCreateNewPopup: this.showCreateNewPopup.bind(this),
+    openForm: this.openForm.bind(this),
+    closeForm: this.closeForm.bind(this),
+  };
+
+  componentDidMount() {
+    window.onpopstate = (e) => {
+      if (document.body.classList.contains("isNewAddressOpen")) {
+        this.closeForm();
+        history.forward();
+        e.preventDefault();
+        document.body.classList.remove("isNewAddressOpen");
+      }
     };
+  }
 
-    state = {
-        formContent: false
-    };
+  openForm() {
+    if (isMobile.any()) {
+      document.body.classList.add("isNewAddressOpen");
+    }
+    this.setState({ formContent: true });
+  }
 
-    containerFunctions = {
-        getDefaultPostfix: this.getDefaultPostfix.bind(this),
-        showCreateNewPopup: this.showCreateNewPopup.bind(this),
-        openForm: this.openForm.bind(this),
-        closeForm: this.closeForm.bind(this)
-    };
+  closeForm() {
+    this.setState({ formContent: false });
+  }
 
-    openForm() {
-        this.setState({ formContent: true });
+  getDefaultPostfix(address) {
+    const { default_billing, default_shipping } = address;
+    if (!default_billing && !default_shipping) {
+      return "";
+    }
+    if (default_billing && default_shipping) {
+      return __(" - default shipping, billing address");
+    }
+    if (default_billing) {
+      return __(" - default billing address");
     }
 
-    closeForm() {
-        this.setState({ formContent: false });
-    }
+    return __(" - default shipping address");
+  }
 
-    getDefaultPostfix(address) {
-        const { default_billing, default_shipping } = address;
-        if (!default_billing && !default_shipping) {
-            return '';
-        }
-        if (default_billing && default_shipping) {
-            return __(' - default shipping, billing address');
-        }
-        if (default_billing) {
-            return __(' - default billing address');
-        }
+  showCreateNewPopup() {
+    const { showPopup } = this.props;
 
-        return __(' - default shipping address');
-    }
+    this.openForm();
+    showPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+    });
+  }
 
-    showCreateNewPopup() {
-        const { showPopup } = this.props;
-
-        this.openForm();
-        showPopup({
-            action: ADD_ADDRESS,
-            title: __('Add new address'),
-            address: {}
-        });
-    }
-
-    render() {
-        return (
-            <MyAccountAddressBook
-              { ...this.props }
-              { ...this.state }
-              { ...this.containerFunctions }
-            />
-        );
-    }
+  render() {
+    return (
+      <MyAccountAddressBook
+        {...this.props}
+        {...this.state}
+        {...this.containerFunctions}
+      />
+    );
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountAddressBookContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyAccountAddressBookContainer);

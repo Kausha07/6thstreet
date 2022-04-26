@@ -158,7 +158,7 @@ class PDPMixAndMatchProduct extends PureComponent {
       product: { price },
     } = this.props;
 
-    return <Price price={price} />;
+    return <Price price={price} renderSpecialPrice={true} />;
   }
 
   renderAddToCartButton() {

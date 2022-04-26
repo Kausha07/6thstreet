@@ -53,9 +53,9 @@
         }
     }
     .Button {
-        background: var(--black);
-        border: 2px solid var(--black);
-        color: var(--white);
+        background: #000000;
+        border: 2px solid #000000;
+        color: #ffffff;
         font-weight: var(--fw-bold);
         height: 50px;
         margin-top: 9px;
@@ -66,8 +66,8 @@
         transition-timing-function: ease-out;
         &:hover {
             background: transparent;
-            border-color: var(--black);
-            color: var(--black);
+            border-color: #000000;
+            color: #000000;
         }
     }
     &-Gender {
@@ -239,7 +239,7 @@
     &-BirthDay {
         margin-top: 1rem;
         &:after {
-            background-color: var(--white);
+            background-color: #ffffff;
             content: "";
             height: 58px;
             margin-bottom: 2px;
@@ -328,7 +328,7 @@
     @include after-mobile {
         grid-auto-flow: column;
         grid-column-gap: 2rem;
-        grid-template-columns: 1fr;
+        // grid-template-columns: 1fr;
         margin-bottom: 0;
         &>div {
             margin-top: -50px;

@@ -4,7 +4,10 @@
 
 .HeaderCart {
   position: relative;
-
+  // z-index: 96;
+  @include mobile {
+    z-index: 96;
+  }
   &-PopUp {
     position: fixed;
     height: 100%;
@@ -16,7 +19,7 @@
     font-size: 0;
     cursor: default;
     pointer-events: all;
-    z-index: 10;
+    z-index: 96;
 
     @include desktop {
       display: block;
@@ -47,7 +50,7 @@
     border-radius: 50%;
     height: 14px;
     width: 14px;
-    color: var(--White);
+    color: #ffffff;
     text-align: center;
     font-size: 8px;
     font-weight: var(--fw-demi);

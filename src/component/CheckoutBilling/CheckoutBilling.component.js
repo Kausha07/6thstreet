@@ -17,10 +17,11 @@ import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutBilling as SourceCheckoutBilling } from "SourceComponent/CheckoutBilling/CheckoutBilling.component";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
-import Spinner from "react-spinkit";
+import { ThreeDots } from "react-loader-spinner";
 import "./CheckoutBilling.extended.style";
 import Applepay from "./icons/apple.png";
 import Image from "Component/Image";
+import isMobile from "Util/Mobile";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -52,9 +53,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   componentDidMount() {
-    const { termsAreEnabled } = this.props;
+    const { termsAreEnabled, paymentMethod, isApplePayAvailable } = this.props;
     if (!termsAreEnabled) {
       this.setState({ isOrderButtonEnabled: true });
+    }
+    if (paymentMethod === CHECKOUT_APPLE_PAY && isApplePayAvailable) {
+      const { requestConfig, launchPaymentMethod } = this.props;
+      requestConfig().then(launchPaymentMethod);
     }
   }
   componentDidUpdate(prevProps) {
@@ -86,7 +91,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     } = this.props;
 
     return (
-      <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
+      <li block="CheckoutBillingTotal CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
         <strong block="CheckoutOrderSummary" elem="Text">
           {name}
         </strong>
@@ -152,16 +157,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   renderButtonLabel() {
-    const { isMobile } = this.state;
-
-    return isMobile ? __("New address") : __("Add new address");
+    return isMobile.any() || isMobile.tablet()
+      ? __("New address")
+      : __("Add new address");
   }
 
   renderOpenPopupButton = () => {
     const { isSignedIn, formContent, isArabic } = this.state;
-    const {
-      customer: { addresses = [] },
-    } = this.props;
+    const { addresses } = this.props;
 
     if (addresses && isSignedIn && addresses.length === 0) {
       return this.openNewForm();
@@ -193,17 +196,26 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     const {
       onAddressSelect,
       isSameAsShipping,
+      addresses,
       totals: { is_virtual },
     } = this.props;
 
-    if (isSameAsShipping && !is_virtual) {
+    if (
+      (isSameAsShipping && !is_virtual) ||
+      isMobile.any() ||
+      isMobile.tablet()
+    ) {
       return null;
     }
 
     return (
       <>
         {this.renderAddressHeading()}
-        <CheckoutAddressBook onAddressSelect={onAddressSelect} isBilling />
+        <CheckoutAddressBook
+          addresses={addresses}
+          onAddressSelect={onAddressSelect}
+          isBilling
+        />
       </>
     );
   }
@@ -230,7 +242,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       isClickAndCollect,
       savePaymentInformationApplePay,
       isTabbyInstallmentAvailable,
-      isTabbyPayLaterAvailable
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -259,8 +270,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
-        isTabbyInstallmentAvailable = {isTabbyInstallmentAvailable}
-        isTabbyPayLaterAvailable={isTabbyPayLaterAvailable}
+        isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
       />
     );
   }
@@ -370,9 +380,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-    const isTabbyPay =
-      paymentMethod === "tabby_installments" ||
-      paymentMethod === "tabby_checkout";
+    const isTabbyPay = paymentMethod === "tabby_installments";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -391,7 +399,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 mods={{ button_style }}
               >
                 <div>{__("Buy with ")}</div>
-                <Image lazyLoad={true}
+                <Image
+                  lazyLoad={true}
                   block="CheckoutComApplePayPayment"
                   elem="icon"
                   mix={{
@@ -425,12 +434,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               }}
             >
               {processingRequest || processingPaymentSelectRequest ? (
-                <Spinner
-                  className="loadingSpinner"
-                  name="three-bounce"
-                  color="white"
-                  fadeIn="none"
-                />
+                <ThreeDots color="white" height={6} width={"100%"} />
               ) : isTabbyPay ? (
                 __("Place tabby order")
               ) : (
@@ -479,7 +483,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       >
         {this.renderAddresses()}
         <div block="CheckoutBilling" elem="Bin"></div>
-        {isSameAsShipping ? null : (
+        {isSameAsShipping || isMobile.any() || isMobile.tablet() ? null : (
           <div block="CheckoutBilling" elem="Line">
             <hr />
           </div>

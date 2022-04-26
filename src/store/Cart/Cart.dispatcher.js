@@ -6,7 +6,8 @@ import {
   setCartId,
   setCartTotals,
   updateCartItem,
-  setCheckoutDetails
+  setCheckoutDetails,
+  setCartCoupon
 } from "Store/Cart/Cart.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -14,6 +15,7 @@ import {
   applyCouponCode,
   createCart,
   getCart,
+  getCoupon,
   removeCouponCode,
   removeProductFromCart,
   updateProductInCart,
@@ -24,17 +26,16 @@ import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 
 export class CartDispatcher {
-
-  async setCheckoutStep(dispatch, checkoutDetails = false){
-    dispatch(setCheckoutDetails(checkoutDetails))
+  async setCheckoutStep(dispatch, checkoutDetails = false) {
+    dispatch(setCheckoutDetails(checkoutDetails));
   }
 
-  async getCart(dispatch, isNewCart = false) {
+  async getCart(dispatch, isNewCart = false, createNewCart = true) {
     const {
       Cart: { cartId },
     } = getStore().getState();
     const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
-    if (!cartId || isNewCart) {
+    if ((!cartId || isNewCart) && createNewCart) {
       try {
         const { data: requestedCartId = null } = await createCart(cart_id);
 
@@ -57,7 +58,9 @@ export class CartDispatcher {
         Logger.log(e);
       }
     } else {
-      await this.getCartTotals(dispatch, cartId);
+      if(cartId) {
+        await this.getCartTotals(dispatch, cartId);
+      }
     }
   }
 
@@ -80,7 +83,7 @@ export class CartDispatcher {
             id,
             availability,
             available_qty,
-            extension_attributes
+            extension_attributes,
           } = item;
 
           return dispatch(
@@ -108,7 +111,7 @@ export class CartDispatcher {
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
     try {
       dispatch(processingCartRequest());
-      const { data } = await getCart(cartId);
+      const { data } = await getCart(cartId);    
       const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
       if (!data) {
         try {
@@ -160,13 +163,36 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
-    console.log("cart id", cartId)
-    console.log("store state", getStore().getState())
+    let newCartId;
+    if(!cartId) {
+      try {
+        const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+        const { data: requestedCartId = null } = await createCart(cart_id);
+        newCartId = requestedCartId;
+        if (!requestedCartId) {
+          dispatch(
+            showNotification(
+              "error",
+              __(
+                "There was an error creating your cart, please refresh the page in a little while"
+              )
+            )
+          );
+
+          return;
+        }
+        BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+        dispatch(setCartId(requestedCartId));
+        await this.getCartTotals(dispatch, requestedCartId);
+      } catch (e) {
+        Logger.log(e);
+      }
+    }
     try {
       dispatch(processingCartRequest());
       const response = await addProductToCart({
         ...productData,
-        cartId,
+        cartId: cartId || newCartId,
         searchQueryId,
       });
       const { data } = response;
@@ -182,7 +208,8 @@ export class CartDispatcher {
           itemPrice
         )
       );
-      await this.getCartTotals(dispatch, cartId);
+      let updateCartID = cartId || newCartId;
+      await this.getCartTotals(dispatch, updateCartID);
 
       return !data ? response : null;
     } catch (e) {
@@ -270,7 +297,7 @@ export class CartDispatcher {
       const response = await applyCouponCode({ cartId, couponCode });
       if (typeof response === "string") {
         dispatch(showNotification("error", response));
-        return;
+        return response;
       }
 
       await this.getCartTotals(dispatch, cartId);
@@ -308,6 +335,21 @@ export class CartDispatcher {
       Logger.log(e);
     }
   }
+
+  async getCoupon(dispatch) {
+    const { Cart: { cartId },} = getStore().getState();
+    try {
+      const {avail_coupons} = await getCoupon(cartId)
+      dispatch(setCartCoupon(avail_coupons));
+      return;
+    } catch (e) {
+        dispatch(setCartCoupon());
+        Logger.log(e);
+    }
+  }
+
+
+
 }
 
 export default new CartDispatcher();

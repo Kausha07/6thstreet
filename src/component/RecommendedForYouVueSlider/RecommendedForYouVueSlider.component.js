@@ -9,6 +9,11 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  prevPath: state.PLP.prevPath,
+});
 
 class RecommendedForYouVueSlider extends PureComponent {
   static propTypes = {
@@ -65,7 +70,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
     this.registerViewPortEvent();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
   registerViewPortEvent() {
     let observer;
@@ -104,9 +109,11 @@ class RecommendedForYouVueSlider extends PureComponent {
       sourceProdID,
     } = this.props;
     const target = event.nativeEvent.target;
+    if(this.scrollerRef && this.scrollerRef.current){
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
       : target.scrollLeft;
+    }
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
@@ -173,7 +180,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.id == "ScrollWrapper"
     )[0];
-    prentComponent.scrollLeft = target.scrollLeft;
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
 
   renderScrollbar = () => {
@@ -183,7 +190,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-        items.length +
+      items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -202,7 +209,7 @@ class RecommendedForYouVueSlider extends PureComponent {
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-              this.state.customScrollWidth,
+            this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >
@@ -222,6 +229,12 @@ class RecommendedForYouVueSlider extends PureComponent {
         label: item.name,
       };
     });
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -233,7 +246,6 @@ class RecommendedForYouVueSlider extends PureComponent {
       widgetID,
       pageType,
       renderMySignInPopup,
-      prevPath = null,
       sourceCatgID,
       sourceProdID,
     } = this.props;
@@ -264,7 +276,6 @@ class RecommendedForYouVueSlider extends PureComponent {
                   sourceProdID={sourceProdID}
                   sourceCatgID={sourceCatgID}
                   posofreco={i}
-                  prevPath={prevPath}
                 />
               );
             })}
@@ -294,4 +305,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   }
 }
 
-export default RecommendedForYouVueSlider;
+export default connect(
+  mapStateToProps,
+  null
+)(RecommendedForYouVueSlider);

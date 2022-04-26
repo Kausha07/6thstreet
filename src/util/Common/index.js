@@ -26,10 +26,10 @@ export const appendOrdinalSuffix = (number) => {
 
 export const SPECIAL_COLORS = {
     beige: '#f5f5dc',
-    clear: '#fff',
+    clear: '#ffffff',
     cream: '#ffe4b5',
     metallic: '#cdb5cd',
-    multi: '#000',
+    multi: '#000000',
     nude: '#faebd7',
     opaque_color: '#FBFBFB',
     gray400: '#222222',
@@ -79,8 +79,8 @@ export const SPECIAL_COLORS = {
     white_smoke: '#EFEFEF',
     snow: '#F9F9F9',
     alto: '#D6D6D6',
-    white: '#FFF',
-    black: '#000',
+    white: '#ffffff',
+    black: '#000000',
     black2: '#4A4A4A',
     black3: '#555',
     black4: '#282828',

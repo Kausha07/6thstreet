@@ -1,5 +1,5 @@
 :root {
-  --black: #000;
+  --black: #000000;
   --gray: #f0f0f0;
   --link-dark-gray: #4a4a4a;
 }
@@ -32,7 +32,7 @@
   }
 
   &-Content {
-    background-color: var(--white);
+    background-color: #ffffff;
     display: block;
     flex-direction: column;
     font-weight: var(--fw-regular);
@@ -45,7 +45,9 @@
     width: inherit;
     vertical-align: middle;
     scrollbar-width: none;
-
+    @include mobile {
+      top: 103px;
+    }
     @include before-desktop {
       height: 100%;
       margin-left: 0;
@@ -59,6 +61,11 @@
 
     @include desktop {
       right: 4px;
+    }
+    &_isPDPSearchVisible {
+      @include before-desktop {
+        min-height: calc(100vh - 80px);
+      }
     }
   }
 
@@ -441,15 +448,12 @@
       line-height: 19px;
     }
 
-    &-Del {
-      display: inline-block;
-
-      span {
-        position: relative;
-        right: unset;
-      }
-      #price {
+    .Price {
+      &-Del {
+        display: inline-block;
         margin-right: 10px;
+      }
+      &-Currency {
         font-weight: var(--fw-demi);
       }
     }
@@ -652,7 +656,7 @@
 }
 
 .isSuggestionOpen {
-  overflow: hidden;
+    overflow: hidden !important;
 }
 
 .text-capitalize {

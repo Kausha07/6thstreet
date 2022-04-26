@@ -74,6 +74,12 @@ class DynamicContentRichContentBanner extends PureComponent {
   }
   sendImpressions() {
     const { items = [] } = this.props;
+    const getStoreName = this.props?.promotion_name
+      ? this.props?.promotion_name
+      : "";
+    items.forEach((item) => {
+      Object.assign(item, { store_code: getStoreName });
+    });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
@@ -95,6 +101,8 @@ class DynamicContentRichContentBanner extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    const { index } = this.props;
+    this.props.setLastTapItemOnHome(`DynamicContentRichContentBanner${index}`);
   };
 
   sendBannerClickImpression(item) {
@@ -110,7 +118,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     };
 
     let ht, wd;
-    if (screen.width > 900) {
+    if (screen.width > 900 && item) {
       let ht1 = (item.height / item.width) * 600;
       ht = ht1.toString() + "px";
       wd = "600px";
@@ -118,7 +126,6 @@ class DynamicContentRichContentBanner extends PureComponent {
       ht = screen.width.toString() + "px";
       wd = screen.width.toString() + "px";
     }
-
     return (
       <div block="CircleSlider" key={i}>
         <Link
@@ -132,7 +139,8 @@ class DynamicContentRichContentBanner extends PureComponent {
           }}
         >
           <div block="ImageContainer">
-            <Image lazyLoad={true}
+            <Image
+              lazyLoad={true}
               src={image_url}
               alt={title}
               mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
@@ -187,8 +195,13 @@ class DynamicContentRichContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { index } = this.props;
     return (
-      <div ref={setRef} block="DynamicContentRichContentBanner">
+      <div
+        ref={setRef}
+        block="DynamicContentRichContentBanner"
+        id={`DynamicContentRichContentBanner${index}`}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

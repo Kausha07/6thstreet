@@ -37,15 +37,14 @@ class HeaderBottomBar extends NavigationAbstract {
     const { newMenuGender } = this.props;
     if (isMobile.any()) {
       return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
-    }
+    } 
 
     return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
   }
 
   renderSearch() {
     const { isArabic } = this.state;
-    return null;
-    if (!isMobile.any()) {
+    if (isMobile.any()) {
       return (
         <div
           key="search"
@@ -60,7 +59,8 @@ class HeaderBottomBar extends NavigationAbstract {
       );
     }
 
-    return <HeaderSearch key="search" />;
+    // return <HeaderSearch key="search" />;
+    return null;
   }
 
   render() {

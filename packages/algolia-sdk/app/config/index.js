@@ -26,7 +26,8 @@ const FACET_FILTERS = [
   "toe_shape",
   "tommy_label",
   "in_stock",
-  "age"
+  "age",
+  'promotion'
 ];
 
 const config = {
@@ -165,6 +166,15 @@ const config = {
       "in_stock",
       "also_available_color",
       "age",
+      "simple_products",
+      "size_eu",
+      "size_us",
+      "size_uk",
+      "product_type_6s",
+      "color",
+      "stock_qty",
+      "highlighted_attributes",
+      "product_tag"
     ],
     facets: FACET_FILTERS,
     facetFilters: [],
