@@ -58,7 +58,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, compRef, myOrderEdd, edd_info } = this.props;
+    const { EddResponse, compRef, myOrderEdd, edd_info, item: { edd_msg_color } } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";
     if (edd_info && edd_info.is_enable) {
@@ -93,9 +93,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
     if (!ActualEddMess) {
       return null;
     }
-    const idealFormat = ActualEddMess.includes("by") ? true : false;
+
+    let colorCode = compRef === 'checkout' ? '28d9aa' : edd_msg_color
     return (
-      <div block="AreaText">
+      <div block="AreaText" style={{ color: colorCode }}>
         <span>{ActualEddMess}</span>
       </div>
     );

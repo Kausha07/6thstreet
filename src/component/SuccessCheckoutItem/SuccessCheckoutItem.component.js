@@ -232,11 +232,12 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { EddResponse, edd_info } = this.props;
+    const { EddResponse, edd_info, item: {
+      full_item_info: { cross_border } } } = this.props;
     const { isArabic } = this.state;
     let ActualEddMess = "";
     let ActualEdd = "";
-    if (edd_info && edd_info.is_enable) {
+    if (edd_info && edd_info.is_enable && cross_border === 0) {
       if (EddResponse) {
         if (isObject(EddResponse)) {
           Object.values(EddResponse).filter((entry) => {
