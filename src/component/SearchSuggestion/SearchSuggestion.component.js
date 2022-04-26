@@ -433,6 +433,10 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestions() {
     const { querySuggestions = [] } = this.props;
+    if (querySuggestions.length == 1) {
+
+      console.log("inside querySuggestions.length == 1", querySuggestions)
+    }
     return (
       <div block="SearchSuggestion" elem="Item">
         <ul>{querySuggestions.slice(0, 5).map(this.renderQuerySuggestion)}</ul>
@@ -549,7 +553,7 @@ class SearchSuggestion extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
-
+    console.log("inside product recommendation", products)
     return (
       <div block="SearchSuggestion" elem="Recommended">
         {/* <h2>{__("Trending Products")}</h2> */}
@@ -559,12 +563,17 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderSuggestions() {
+    const { products = [] } = this.props;
+    const { querySuggestions = [] } = this.props;
+    let isRecommended = (products.length === 0) && (querySuggestions.length === 1)
     return (
       <>
         {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
+        {isRecommended && this.renderRecommendedForYou()}
+
       </>
     );
   }
@@ -938,6 +947,7 @@ class SearchSuggestion extends PureComponent {
       inNothingFound,
       querySuggestions = [],
     } = this.props;
+
     if (!isActive) {
       return null;
     }
@@ -949,9 +959,10 @@ class SearchSuggestion extends PureComponent {
       return this.renderEmptySearch();
     }
 
-    // if (inNothingFound && querySuggestions.length === 0) {
-    //   return this.renderNothingFound();
-    // }
+    if (inNothingFound && querySuggestions.length === 0) {
+      // debugger
+      return this.renderNothingFound();
+    }
 
     return this.renderSuggestions();
   }
