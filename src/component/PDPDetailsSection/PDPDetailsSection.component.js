@@ -869,11 +869,11 @@ class PDPDetailsSection extends PureComponent {
     let country = getCountryFromUrl()
     let txt = {
       AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
-      SA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above SAR 200."),
-      KW: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above KWD 20."),
-      QA: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above QAR 200."),
-      OM: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above OMR 20."),
-      BH: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above BHD 20.")
+      SA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200."),
+      KW: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20."),
+      QA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200."),
+      OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
+      BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
     }
 
     // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
