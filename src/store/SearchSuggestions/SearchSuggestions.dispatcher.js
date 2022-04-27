@@ -82,6 +82,10 @@ export class SearchSuggestionsDispatcher {
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
       var searchQuery = search;
+      if(searchQuery.match(new RegExp(gender, "i")) === null) {
+        searchQuery = `${search} ${gender} `;
+      }
+
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).autocompleteSearch(
@@ -99,10 +103,8 @@ export class SearchSuggestionsDispatcher {
         query: search,
         count: "",
       };
-      const querySuggestions =
-        data?.hits?.length > 0
-          ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
-          : [defaultHit];
+      const querySuggestions = data?.hits || [defaultHit];
+      
       if (data && data.queryID) {
         queryID = data.queryID;
       } else {
