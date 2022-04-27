@@ -187,11 +187,11 @@ class MobileBottomBar extends NavigationAbstract {
 
     if (redirectBrand) {
       this.setState({ redirectBrand: false });
-      return history.push("/brands");
+      return history.push("/shop-by-brands");
     }
 
     this.setState({
-      isBrand: window.location.pathname === "/brands" && !isCategoryMenu,
+      isBrand: window.location.pathname === "/shop-by-brands" && !isCategoryMenu,
     });
 
     return (
