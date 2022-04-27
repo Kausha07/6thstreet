@@ -62,6 +62,12 @@ export class MyAccountOrderViewItem extends SourceComponent {
     let ActualEddMess = "";
     let ActualEdd = "";
     if (edd_info && edd_info.is_enable) {
+      const {
+        defaultEddDateString,
+        defaultEddDay,
+        defaultEddMonth,
+        defaultEddDat,
+      } = getDefaultEddDate(edd_info.default_message);
       if (compRef === "checkout") {
         if (EddResponse) {
           if (isObject(EddResponse)) {
@@ -74,12 +80,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
               }
             });
           } else {
-            const {
-              defaultEddDateString,
-              defaultEddDay,
-              defaultEddMonth,
-              defaultEddDat,
-            } = getDefaultEddDate(2);
             ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
             ActualEdd = defaultEddDateString;
           }

@@ -238,6 +238,12 @@ export class SuccessCheckoutItem extends PureComponent {
     let ActualEddMess = "";
     let ActualEdd = "";
     if (edd_info && edd_info.is_enable && cross_border === 0) {
+      const {
+        defaultEddDateString,
+        defaultEddDay,
+        defaultEddMonth,
+        defaultEddDat,
+      } = getDefaultEddDate(edd_info.default_message);
       if (EddResponse) {
         if (isObject(EddResponse)) {
           Object.values(EddResponse).filter((entry) => {
@@ -249,12 +255,6 @@ export class SuccessCheckoutItem extends PureComponent {
             }
           });
         } else {
-          const {
-            defaultEddDateString,
-            defaultEddDay,
-            defaultEddMonth,
-            defaultEddDat,
-          } = getDefaultEddDate(2);
           ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
           ActualEdd = defaultEddDateString;
         }

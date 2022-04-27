@@ -338,15 +338,15 @@ export class CartItem extends PureComponent {
     const { EddResponse, edd_info, item: {
       full_item_info: { cross_border } } } = this.props;
     const { isArabic } = this.state;
-       const {
-      defaultEddDateString,
-      defaultEddDay,
-      defaultEddMonth,
-      defaultEddDat,
-    } = getDefaultEddDate(2);
     let ActualEddMess = "";
     let ActualEdd = "";
     if (edd_info && edd_info.is_enable && cross_border === 0) {
+      const {
+        defaultEddDateString,
+        defaultEddDay,
+        defaultEddMonth,
+        defaultEddDat,
+      } = getDefaultEddDate(edd_info.default_message);
       if (EddResponse) {
         if (isObject(EddResponse)) {
           Object.values(EddResponse).filter((entry) => {

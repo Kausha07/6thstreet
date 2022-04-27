@@ -415,6 +415,7 @@ class PDP extends PureComponent {
     );
   }
   renderSelectCity() {
+    const { edd_info } = this.props;
     const {
       showCityDropdown,
       showAreaDropDown,
@@ -429,7 +430,8 @@ class PDP extends PureComponent {
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
-    } = getDefaultEddDate(2);
+    } = getDefaultEddDate(edd_info.default_message);
+
     const { EddResponse } = this.props;
     let ActualEddMess = "";
     let ActualEdd = "";

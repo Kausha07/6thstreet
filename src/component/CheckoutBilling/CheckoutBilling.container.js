@@ -89,7 +89,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     customer: null,
     default_title: "6th Street",
     merchant_id: process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   containerFunctions = {
@@ -202,31 +202,31 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       getTabbyInstallment(total).then((response) => {
         if (response?.value) {
           createTabbySession(shippingAddress)
-          .then((response) => {
-            if (response && response.configuration) {
-              const {
-                configuration: {
-                  available_products: { installments },
-                },
-                payment: { id },
-              } = response;
+            .then((response) => {
+              if (response && response.configuration) {
+                const {
+                  configuration: {
+                    available_products: { installments },
+                  },
+                  payment: { id },
+                } = response;
 
-              if (installments) {
                 if (installments) {
-                  setTabbyWebUrl(
-                    installments[0].web_url,
-                    id,
-                    TABBY_ISTALLMENTS
-                  );
+                  if (installments) {
+                    setTabbyWebUrl(
+                      installments[0].web_url,
+                      id,
+                      TABBY_ISTALLMENTS
+                    );
 
-                  // this variable actually is used in the component
-                  // eslint-disable-next-line quote-props
-                  this.setState({ isTabbyInstallmentAvailable: true });
+                    // this variable actually is used in the component
+                    // eslint-disable-next-line quote-props
+                    this.setState({ isTabbyInstallmentAvailable: true });
+                  }
                 }
               }
-            }
-          }, this._handleError)
-          .catch(() => { });
+            }, this._handleError)
+            .catch(() => { });
         }
         else {
           this.setState({ isTabbyInstallmentAvailable: false });
@@ -364,6 +364,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     let FinalEdd = null;
 
     if (edd_info && edd_info.is_enable && EddResponse) {
+      const {
+        defaultEddDateString,
+      } = getDefaultEddDate(edd_info.default_message);
       if (isObject(EddResponse)) {
         Object.values(EddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
@@ -371,7 +374,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         });
       } else {
-        const { defaultEddDateString } = getDefaultEddDate(2);
         FinalEdd = defaultEddDateString;
       }
     }
@@ -501,6 +503,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     let FinalEdd = null;
     if (edd_info && edd_info.is_enable && EddResponse) {
+      const {
+        defaultEddDateString,
+      } = getDefaultEddDate(edd_info.default_message);
       if (isObject(EddResponse)) {
         Object.values(EddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
@@ -508,7 +513,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         });
       } else {
-        const { defaultEddDateString } = getDefaultEddDate(2);
         FinalEdd = defaultEddDateString;
       }
     }
@@ -533,7 +537,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         }
       }, this._handleError)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   getCartError(message) {
