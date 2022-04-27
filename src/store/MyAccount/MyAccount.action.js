@@ -38,10 +38,9 @@ export const setCustomerAddressData = (addresses) => ({
   addresses,
 });
 
-export const setCitiesData = (citiesData,innerCityData) => ({
+export const setCitiesData = (citiesData) => ({
   type: SET_CITIES_DATA,
-  citiesData,
-  innerCityData
+  citiesData
 });
 
 export const setCustomerDefaultShippingAddress = (defaultaddress) => ({

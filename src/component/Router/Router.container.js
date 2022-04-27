@@ -24,7 +24,6 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -34,7 +33,7 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
-  citiesData: state.MyAccountReducer.citiesData,
+  addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
 });
 
@@ -81,7 +80,7 @@ export class RouterContainer extends SourceRouterContainer {
       pdpWidgetsData,
       setEddResponse,
       eddResponse,
-      citiesData,
+      addressCityData,
       getCitiesData
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
@@ -138,7 +137,7 @@ export class RouterContainer extends SourceRouterContainer {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
     }
-    if (citiesData.length === 0) {
+    if (addressCityData.length === 0) {
       getCitiesData()
     }
     if (!eddResponse && sessionStorage.getItem('EddAddressReq')) {

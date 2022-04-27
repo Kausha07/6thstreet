@@ -180,17 +180,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     return await MobileAPI.post("/login", options);
   }
 
-  getCitiesData(dispatch) {
-    MobileAPI.get("eddservice/cities").then((response) => {
-      let finalRes = response.result === null ? [] : response.result
-      AppConfigDispatcher.getCities().then((innerCityResp) => {
-        dispatch(setCitiesData(finalRes, innerCityResp.data));
-      }).catch(() => {
-        dispatch(setCitiesData(finalRes, []));
-      });
-    }).catch((error) => {
-      dispatch(setCitiesData([], []));
-    })
+  async getCitiesData(dispatch) {
+    try {
+      let finalRes = await AppConfigDispatcher.getCities()
+      dispatch(setCitiesData(finalRes?.data));
+
+    } catch (error) {
+      dispatch(setCitiesData([]));
+    }
+
   }
 
   async resetUserPassword(options) {
