@@ -28,7 +28,7 @@ export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   EddResponse: state.MyAccountReducer.EddResponse,
-  citiesData: state.MyAccountReducer.citiesData,
+  addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
 });
 
@@ -61,63 +61,55 @@ class PDP extends PureComponent {
     Cityresponse: null,
   };
 
-  getIdFromCityArea = (citiesData, city, area) => {
+  getIdFromCityArea = (addressCityData, city, area) => {
     let cityEntry;
     let areaEntry;
     const { isArabic } = this.state
-    Object.values(citiesData).filter((entry) => {
-      if (isArabic) {
-        if (entry.city_name_ar === city) {
-          cityEntry = entry.city_id;
-          if (entry.area_list) {
-            Object.values(entry.area_list).filter((subEntry) => {
-              if (subEntry.area_name_ar === area) {
-                areaEntry = subEntry.area_id;
-              }
-            });
-          }
-        }
-      } else {
-        if (entry.city_name_en === city) {
-          cityEntry = entry.city_id;
-          if (entry.area_list) {
-            Object.values(entry.area_list).filter((subEntry) => {
-              if (subEntry.area_name_en === area) {
-                areaEntry = subEntry.area_id;
-              }
-            });
-          }
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
+            }
+          });
         }
       }
-
     });
     return { cityEntry, areaEntry }
   }
 
-  getCityAreaFromStorage = (citiesData, countryCode) => {
+  getCityAreaFromStorage = (addressCityData, countryCode) => {
     const sessionData = JSON.parse(sessionStorage.getItem('EddAddressReq'))
     const { city, area } = sessionData
-    const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(addressCityData, city, area)
     this.setState({
-      Cityresponse: citiesData,
-      selectedCity: city,
+      Cityresponse: addressCityData,
+      selectedCity: cityEntry,
       selectedCityId: cityEntry,
       selectedAreaId: areaEntry,
-      selectedArea: area,
+      selectedArea: areaEntry,
       countryCode: countryCode,
     });
     return { cityEntry, areaEntry }
   }
-  getCityAreaFromDefault = (citiesData, countryCode) => {
+  getCityAreaFromDefault = (addressCityData, countryCode) => {
     const { defaultShippingAddress } = this.props;
     const { area, city } = defaultShippingAddress;
-    const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(addressCityData, city, area)
     this.setState({
-      Cityresponse: citiesData,
-      selectedCity: city,
+      Cityresponse: addressCityData,
+      selectedCity: cityEntry,
       selectedCityId: cityEntry,
       selectedAreaId: areaEntry,
-      selectedArea: area,
+      selectedArea: areaEntry,
       countryCode: countryCode,
     });
     return { cityEntry, areaEntry }
@@ -125,17 +117,17 @@ class PDP extends PureComponent {
   }
   validateEddStatus = () => {
     const countryCode = getCountryFromUrl();
-    const { defaultShippingAddress, citiesData } = this.props;
+    const { defaultShippingAddress, addressCityData } = this.props;
     if (isSignedIn() && defaultShippingAddress) {
-      this.getCityAreaFromDefault(citiesData, countryCode)
+      this.getCityAreaFromDefault(addressCityData, countryCode)
     } else if (isSignedIn() && !defaultShippingAddress && sessionStorage.getItem('EddAddressReq')) {
-      this.getCityAreaFromStorage(citiesData, countryCode)
+      this.getCityAreaFromStorage(addressCityData, countryCode)
     } else if (!isSignedIn() && sessionStorage.getItem('EddAddressReq')) {
-      this.getCityAreaFromStorage(citiesData, countryCode)
+      this.getCityAreaFromStorage(addressCityData, countryCode)
     }
     else {
       this.setState({
-        Cityresponse: citiesData,
+        Cityresponse: addressCityData,
         countryCode: countryCode,
       });
     }
@@ -153,11 +145,11 @@ class PDP extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { defaultShippingAddress, estimateEddResponse, citiesData, edd_info } = this.props;
-    const { defaultShippingAddress: prevdefaultShippingAddress, citiesData: prevCitiesData } = prevProps;
-    if (prevCitiesData && citiesData && prevCitiesData.length !== citiesData.length) {
+    const { defaultShippingAddress, estimateEddResponse, addressCityData, edd_info } = this.props;
+    const { defaultShippingAddress: prevdefaultShippingAddress, addressCityData: prevCitiesData } = prevProps;
+    if (prevCitiesData && addressCityData && prevCitiesData.length !== addressCityData.length) {
       this.setState({
-        Cityresponse: citiesData,
+        Cityresponse: addressCityData,
       })
       this.validateEddStatus()
     }
@@ -168,14 +160,14 @@ class PDP extends PureComponent {
       const { country_code, area, city } = defaultShippingAddress;
 
       if (edd_info && edd_info.is_enable) {
-        const { cityEntry, areaEntry } = this.getIdFromCityArea(citiesData, city, area)
+        const { cityEntry, areaEntry } = this.getIdFromCityArea(addressCityData, city, area)
         this.setState(
           {
-            Cityresponse: citiesData,
-            selectedCity: city,
+            Cityresponse: addressCityData,
+            selectedCity: cityEntry,
             selectedCityId: cityEntry,
             selectedAreaId: areaEntry,
-            selectedArea: area,
+            selectedArea: areaEntry,
           },
           () => {
             let request = {
@@ -283,8 +275,8 @@ class PDP extends PureComponent {
     const { selectedCity, countryCode, isArabic } = this.state;
     const { estimateEddResponse } = this.props;
     this.setState({
-      selectedAreaId: area.area_id,
-      selectedArea: isArabic ? area.area_name_ar : area.area_name_en,
+      selectedAreaId: area,
+      selectedArea: area,
       showCityDropdown: false,
       showPopupField: "",
     });
@@ -292,7 +284,7 @@ class PDP extends PureComponent {
     let request = {
       country: countryCode,
       city: selectedCity,
-      area: isArabic ? area.area_name_ar : area.area_name_en,
+      area: area,
       courier: null,
       source: null,
     };
@@ -304,9 +296,9 @@ class PDP extends PureComponent {
     const { isArabic } = this.state;
     this.setState({
       showPopupField: "area",
-      selectedCityId: city.city_id,
-      selectedCity: isArabic ? city.city_name_ar : city.city_name_en,
-      selectedCityArea: city.area_list,
+      selectedCityId: isArabic ? city.city_ar : city.city,
+      selectedCity: isArabic ? city.city_ar : city.city,
+      selectedCityArea: isArabic ? city.areas_ar : city.areas,
       showAreaDropDown: true,
     })
   }
@@ -314,14 +306,14 @@ class PDP extends PureComponent {
   renderSelectAreaItem() {
     const { selectedCityArea, isArabic } = this.state;
     const isArea =
-      selectedCityArea && Object.values(selectedCityArea).length > 0;
+      selectedCityArea && selectedCityArea.length > 0;
     return (
       <ul>
         {isArea ? (
-          Object.values(selectedCityArea).map((area) => {
+          selectedCityArea.map((area) => {
             return (
               <li
-                id={area.area_id}
+                id={area}
                 onClick={() => this.handleAreaSelection(area)}
               >
                 <button
@@ -330,7 +322,7 @@ class PDP extends PureComponent {
                   mods={{ isArabic, isArea }}
                 >
                   <span>
-                    {isArabic ? area.area_name_ar : area.area_name_en}
+                    {area}
                   </span>
                 </button>
               </li>
@@ -367,7 +359,7 @@ class PDP extends PureComponent {
                 mods={{ isArabic }}
               >
                 <span>
-                  {isArabic ? city.city_name_ar : city.city_name_en}
+                  {isArabic ? city.city_ar : city.city}
                 </span>
               </button>
             </li>
