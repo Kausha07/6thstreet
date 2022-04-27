@@ -13,6 +13,7 @@ RUN npm i npm -g; \
     npm install --g lerna; \
     lerna bootstrap; \
     npm rebuild node-sass; \
+    npm run pre; \
     npm run build; \
     npm run image-opt
 
