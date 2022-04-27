@@ -116,10 +116,7 @@ class ImpressionEvent extends BaseEvent {
             list: categoryName,
             name,
             position: index + 1,
-            price:
-                price[Object.keys(price)[0]].default ||
-                price[0][Object.keys(price[0])[0]]["6s_special_price"] ||
-                0,
+            price: price[Object.keys(price)[0]].default || 0,
             url,
             variant: colorfamily
         }));

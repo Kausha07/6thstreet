@@ -17,7 +17,7 @@ import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
-
+import { getCountryFromUrl } from "Util/Url/Url";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -852,10 +852,19 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping() {
-    return (
+  renderShipping(){
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
+      SA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200."),
+      KW: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20."),
+      QA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200."),
+      OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
+      BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
+    }
+    return(
       <div>
-        <p>{__("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100.")}
+        <p> {txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
           {" "} { __("More info") }
           </Link>

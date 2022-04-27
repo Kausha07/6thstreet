@@ -314,7 +314,7 @@ export class PLPContainer extends PureComponent {
     return initialOptions;
   };
 
-  componentDidUpdate() {
+  componentDidMount() {
     const { menuCategories = [], prevPath = null, impressions } = this.props;
     const { isArabic } = this.state;
 
@@ -333,6 +333,7 @@ export class PLPContainer extends PureComponent {
         url: window.location.href,
       },
     });
+    Event.dispatch(EVENT_GTM_IMPRESSIONS_PLP, { impressions, category });
 
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();

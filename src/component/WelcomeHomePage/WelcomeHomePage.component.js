@@ -20,7 +20,6 @@ import isMobile from "Util/Mobile";
 import close from "../Icons/Close/icon.svg"
 import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
 import './WelcomeHomePage.style';
-import { updateMeta } from "Store/Meta/Meta.action";
 
 
 
@@ -37,8 +36,7 @@ export const mapDispatchToProps = (dispatch) => ({
     setGender: (value) => dispatch(setGender(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),
-    setMeta: (meta) => dispatch(updateMeta(meta)),
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
 
 });
 
@@ -47,8 +45,7 @@ export const PREVIOUS_USER = 'PREVIOUS_USER';
 
 class WelcomeHomePage extends PureComponent {
     static propTypes = {
-        location: LocationType.isRequired,
-        setMeta: PropTypes.func.isRequired,
+        location: LocationType.isRequired
     };
 
 
@@ -102,8 +99,6 @@ class WelcomeHomePage extends PureComponent {
 
 
     componentDidMount() {
-        const { setMeta } = this.props;
-        setMeta({ title: __("Shop Online @ 6thStreet.com for Men, Women & Kids across GCC") });
         window.pageType = "welcome";
         this.getWelcomeImageUrl();
         this.setSchemaJSON();
@@ -263,7 +258,7 @@ class WelcomeHomePage extends PureComponent {
                                                 </div>
                                                 :
                                                 <div>
-                                                    <div block="Text-welcome">اهلاً ,</div>
+                                                    <div block="Text-welcome">اهلاً  ,</div>
                                                     <div block="Text-shop">كنت تسوق في</div>
                                                 </div>
                                         }
@@ -283,18 +278,10 @@ class WelcomeHomePage extends PureComponent {
                                         <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
-                                        {
-                                            language === "en" ?
-                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                                    <span>Welcome,</span>
-                                                    <span>you are shopping in</span>
-                                                </div>
-                                                :
-                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                                    <span>اهلاً,</span>
-                                                    <span>كنت تسوق في</span>
-                                                </div>
-                                        }
+                                        <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                            <span>{__("Welcome, ")}</span>
+                                            <span>{__("you are shopping in")}</span>
+                                        </div>
                                         <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
                                             <LanguageSwitcher welcomePagePopup={true} />
                                             <CountrySwitcher />
