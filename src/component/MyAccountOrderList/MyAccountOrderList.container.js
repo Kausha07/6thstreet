@@ -9,7 +9,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import MyAccountOrderList from "./MyAccountOrderList.component";
 
 export const mapStateToProps = (state) => ({
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -72,8 +72,8 @@ export class MyAccountOrderListContainer extends SourceComponent {
 
   containerProps = () => {
     const { orders, isLoading, requestInProgress } = this.state;
-    const { EddResponse } = this.props;
-    return { orders, isLoading, requestInProgress, EddResponse };
+    const { eddResponse } = this.props;
+    return { orders, isLoading, requestInProgress, eddResponse };
   };
 
   getOrderList(limit = 15) {

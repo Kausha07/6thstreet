@@ -7,11 +7,11 @@ import "./MyAccountOrderList.style";
 class MyAccountOrderList extends SourceComponent {
   renderOrder = (order) => {
     const { increment_id } = order;
-    const { EddResponse } = this.props;
+    const { eddResponse } = this.props;
     return (
       <MyAccountOrderListItem
         order={order}
-        EddResponse={EddResponse}
+        eddResponse={eddResponse}
         key={increment_id}
       />
     );

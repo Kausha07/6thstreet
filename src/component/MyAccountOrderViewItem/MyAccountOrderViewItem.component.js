@@ -11,6 +11,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
       currency,
+      edd_info,
       displayDiscountPercentage,
       item: {
         brand_name,
@@ -53,15 +54,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
-        {this.renderEdd()}
+        {edd_info && edd_info.is_enable && this.renderEdd()}
       </div>
     );
   }
   renderEdd = () => {
-    const { EddResponse, compRef, myOrderEdd, edd_info, item: { edd_msg_color } } = this.props;
-    let ActualEddMess = "";
-    let ActualEdd = "";
-    if (edd_info && edd_info.is_enable) {
+    const { eddResponse, compRef, myOrderEdd, edd_info, item: { edd_msg_color } } = this.props;
+    let actualEddMess = "";
+    let actualEdd = "";
+
       const {
         defaultEddDateString,
         defaultEddDay,
@@ -69,35 +70,34 @@ export class MyAccountOrderViewItem extends SourceComponent {
         defaultEddDat,
       } = getDefaultEddDate(edd_info.default_message);
       if (compRef === "checkout") {
-        if (EddResponse) {
-          if (isObject(EddResponse)) {
-            Object.values(EddResponse).filter((entry) => {
+        if (eddResponse) {
+          if (isObject(eddResponse)) {
+            Object.values(eddResponse).filter((entry) => {
               if (entry.source === "checkout" && entry.featute_flag_status === 1) {
-                ActualEddMess = isArabic()
+                actualEddMess = isArabic()
                   ? entry.edd_message_ar
                   : entry.edd_message_en;
-                ActualEdd = entry.edd_date;
+                actualEdd = entry.edd_date;
               }
             });
           } else {
-            ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-            ActualEdd = defaultEddDateString;
+            actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            actualEdd = defaultEddDateString;
           }
         }
       } else {
-        ActualEddMess = myOrderEdd;
-        ActualEdd = myOrderEdd;
+        actualEddMess = myOrderEdd;
+        actualEdd = myOrderEdd;
       }
-    }
 
-    if (!ActualEddMess) {
+    if (!actualEddMess) {
       return null;
     }
 
     let colorCode = compRef === 'checkout' ? '28d9aa' : edd_msg_color
     return (
       <div block="AreaText" style={{ color: colorCode }}>
-        <span>{ActualEddMess}</span>
+        <span>{actualEddMess}</span>
       </div>
     );
   };

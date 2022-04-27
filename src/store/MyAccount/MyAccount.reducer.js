@@ -29,7 +29,7 @@ export const initialState = {
   isAddressLoading: false,
   defaultShippingAddress: null,
   pdpEddAddressSelected: null,
-  EddResponse: null,
+  eddResponse: null,
   EddAddress: null,
   citiesData: [],
   addressCityData: []
@@ -43,7 +43,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     addresses,
     isLoading,
     defaultaddress,
-    EddResponse,
+    eddResponse,
     EddAddress,
     PdpEddAddress,
     defaultEddResponse,
@@ -87,7 +87,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     case SET_EDD_RESPONSE:
       return {
         ...state,
-        EddResponse: EddResponse,
+        eddResponse: eddResponse,
         EddAddress: EddAddress
       };
     case SET_PDP_EDD_ADDRESS:

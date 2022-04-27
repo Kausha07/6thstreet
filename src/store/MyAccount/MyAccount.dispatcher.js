@@ -185,7 +185,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       let finalRes = response.result === null ? [] : response.result
       AppConfigDispatcher.getCities().then((innerCityResp) => {
         dispatch(setCitiesData(finalRes, innerCityResp.data));
+      }).catch(() => {
+        dispatch(setCitiesData(finalRes, []));
       });
+    }).catch((error) => {
+      dispatch(setCitiesData([], []));
     })
   }
 
@@ -413,11 +417,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
-          dispatch(setEddResponse(response.result, request));
+          dispatch(setEddResponse(response?.result, request));
           sessionStorage.setItem('EddAddressReq', JSON.stringify(request))
           sessionStorage.setItem('EddAddressRes', JSON.stringify(response.result))
         } else {
-          dispatch(setEddResponse(response.errorMessage, request));
+          dispatch(setEddResponse(response?.errorMessage, request));
           sessionStorage.setItem('EddAddressReq', '')
           sessionStorage.setItem('EddAddressRes', '')
         }

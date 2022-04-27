@@ -45,7 +45,7 @@ export const mapStateToProps = (state) => ({
   newCardVisible: state.CreditCardReducer.newCardVisible,
   default_title: state.ConfigReducer.default_title,
   customer: state.MyAccountReducer.customer,
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
 });
 
@@ -356,25 +356,25 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       savedCards,
       newCardVisible,
       showErrorNotification,
-      EddResponse,
+      eddResponse,
       edd_info
     } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
-    let FinalEdd = null;
+    let finalEdd = null;
 
-    if (edd_info && edd_info.is_enable && EddResponse) {
+    if (edd_info && edd_info.is_enable && eddResponse) {
       const {
         defaultEddDateString,
       } = getDefaultEddDate(edd_info.default_message);
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            FinalEdd = entry.edd_date;
+            finalEdd = entry.edd_date;
           }
         });
       } else {
-        FinalEdd = defaultEddDateString;
+        finalEdd = defaultEddDateString;
       }
     }
     if (code === CARD) {
@@ -407,7 +407,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           expYear,
           cvv,
           saveCard,
-          address.email
+          address?.email
         );
 
         getCardType(number.substr("0", "6")).then((response) => {
@@ -443,7 +443,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
               savePaymentInformation({
                 billing_address: address,
                 paymentMethod,
-                FinalEdd,
+                finalEdd,
               });
             } else if (Array.isArray(response)) {
               const message = response[0];
@@ -472,7 +472,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             billing_address: address,
             paymentMethod,
             selectedCard,
-            FinalEdd,
+            finalEdd,
           });
         } else {
           //if saved card is not selected
@@ -485,7 +485,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       savePaymentInformation({
         billing_address: address,
         paymentMethod,
-        FinalEdd,
+        finalEdd,
       });
     }
   }
@@ -498,22 +498,22 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       createTabbySession,
       shippingAddress,
       setTabbyWebUrl,
-      EddResponse,
+      eddResponse,
       edd_info
     } = this.props;
-    let FinalEdd = null;
-    if (edd_info && edd_info.is_enable && EddResponse) {
+    let finalEdd = null;
+    if (edd_info && edd_info.is_enable && eddResponse) {
       const {
         defaultEddDateString,
       } = getDefaultEddDate(edd_info.default_message);
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            FinalEdd = entry.edd_date;
+            finalEdd = entry.edd_date;
           }
         });
       } else {
-        FinalEdd = defaultEddDateString;
+        finalEdd = defaultEddDateString;
       }
     }
     createTabbySession(shippingAddress)
@@ -532,7 +532,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             savePaymentInformation({
               billing_address: address,
               paymentMethod,
-              FinalEdd,
+              finalEdd,
             });
           }
         }

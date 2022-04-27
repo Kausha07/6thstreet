@@ -27,7 +27,7 @@ import { isSignedIn } from "Util/Auth";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
 });
@@ -146,8 +146,8 @@ class PDP extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { defaultShippingAddress, estimateEddResponse, addressCityData, edd_info } = this.props;
-    const { defaultShippingAddress: prevdefaultShippingAddress, addressCityData: prevCitiesData } = prevProps;
-    if (prevCitiesData && addressCityData && prevCitiesData.length !== addressCityData.length) {
+    const { defaultShippingAddress: prevdefaultShippingAddress, addressCityData: prevAddressCitiesData } = prevProps;
+    if (prevAddressCitiesData && addressCityData && prevAddressCitiesData.length !== addressCityData.length) {
       this.setState({
         Cityresponse: addressCityData,
       })
@@ -432,26 +432,26 @@ class PDP extends PureComponent {
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
 
-    const { EddResponse } = this.props;
-    let ActualEddMess = "";
-    let ActualEdd = "";
-    if (EddResponse) {
-      if (isObject(EddResponse)) {
-        Object.values(EddResponse).filter((entry) => {
+    const { eddResponse } = this.props;
+    let actualEddMess = "";
+    let actualEdd = "";
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
           if (entry.source === "pdp" && entry.featute_flag_status === 1) {
-            ActualEddMess = isArabic
+            actualEddMess = isArabic
               ? entry.edd_message_ar
               : entry.edd_message_en;
-            ActualEdd = entry.edd_date;
+            actualEdd = entry.edd_date;
           }
         });
       } else {
-        ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        ActualEdd = defaultEddDateString;
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
       }
     } else {
-      ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-      ActualEdd = defaultEddDateString;
+      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEdd = defaultEddDateString;
     }
 
     const isArea = !(
@@ -482,9 +482,9 @@ class PDP extends PureComponent {
             <div block="SelectAreaText">Select Area</div>
           </div>
         )}
-        {ActualEddMess &&
+        {actualEddMess &&
           <div mix={{ block: "EddWrapper", elem: "AreaText" }}>
-            <span>{ActualEddMess}</span>
+            <span>{actualEddMess}</span>
           </div>
 
           // <div mix={{ block: "EddWrapper", elem: "AreaText" }}>

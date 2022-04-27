@@ -38,7 +38,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   addresses: state.MyAccountReducer.addresses,
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
@@ -197,7 +197,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onShippingSuccess(fields) {
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
-    const { setLoading, showNotification, dispatch, estimateEddResponse, EddResponse, edd_info, addressCityData } = this.props;
+    const { setLoading, showNotification, dispatch, estimateEddResponse, eddResponse, edd_info, addressCityData } = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
@@ -212,7 +212,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     validationResult.then((response) => {
       const { success } = response;
       if (edd_info && edd_info.is_enable) {
-        if (!isSignedIn() || (isSignedIn() && !EddResponse)) {
+        if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
           const { country_id, city, postcode } = addressForValidation
           let request = {
             country: country_id,

@@ -19,7 +19,7 @@ import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
 });
 
@@ -211,7 +211,8 @@ export class SuccessCheckoutItem extends PureComponent {
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options },
+      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
+      edd_info
     } = this.props;
 
     return (
@@ -227,46 +228,43 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
-        {this.renderEdd()}
+        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
       </figcaption>
     );
   }
   renderEdd = () => {
-    const { EddResponse, edd_info, item: {
-      full_item_info: { cross_border } } } = this.props;
+    const { eddResponse, edd_info } = this.props;
     const { isArabic } = this.state;
-    let ActualEddMess = "";
-    let ActualEdd = "";
-    if (edd_info && edd_info.is_enable && cross_border === 0) {
-      const {
-        defaultEddDateString,
-        defaultEddDay,
-        defaultEddMonth,
-        defaultEddDat,
-      } = getDefaultEddDate(edd_info.default_message);
-      if (EddResponse) {
-        if (isObject(EddResponse)) {
-          Object.values(EddResponse).filter((entry) => {
-            if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-              ActualEddMess = isArabic
-                ? entry.edd_message_ar
-                : entry.edd_message_en;
-              ActualEdd = entry.edd_date;
-            }
-          });
-        } else {
-          ActualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-          ActualEdd = defaultEddDateString;
-        }
+    let actualEddMess = "";
+    let actualEdd = "";
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
       }
     }
 
-    if (!ActualEddMess) {
+    if (!actualEddMess) {
       return null;
     }
     return (
       <div block="AreaText">
-        <span>{ActualEddMess}</span>
+        <span>{actualEddMess}</span>
       </div>
     );
   };

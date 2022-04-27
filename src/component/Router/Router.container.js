@@ -35,7 +35,7 @@ export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
   citiesData: state.MyAccountReducer.citiesData,
-  EddResponse: state.MyAccountReducer.EddResponse,
+  eddResponse: state.MyAccountReducer.eddResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -80,7 +80,7 @@ export class RouterContainer extends SourceRouterContainer {
       requestPdpWidgetData,
       pdpWidgetsData,
       setEddResponse,
-      EddResponse,
+      eddResponse,
       citiesData,
       getCitiesData
     } = this.props;
@@ -141,7 +141,7 @@ export class RouterContainer extends SourceRouterContainer {
     if (citiesData.length === 0) {
       getCitiesData()
     }
-    if (!EddResponse && sessionStorage.getItem('EddAddressReq')) {
+    if (!eddResponse && sessionStorage.getItem('EddAddressReq')) {
       const response = sessionStorage.getItem('EddAddressRes') ? JSON.parse(sessionStorage.getItem('EddAddressRes')) : null
       const request = JSON.parse(sessionStorage.getItem('EddAddressReq'))
       setEddResponse(response, request)
