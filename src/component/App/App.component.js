@@ -13,6 +13,7 @@ import PDP from "Store/PDP/PDP.reducer";
 import PLP from "Store/PLP/PLP.reducer";
 import LiveParty from "Store/LiveParty/LiveParty.reducer";
 import SearchSuggestions from "Store/SearchSuggestions/SearchSuggestions.reducer";
+import * as Sentry from "@sentry/react";
 
 class App extends SourceApp {
   rootComponents = [this.renderSplash.bind(this)];
@@ -44,4 +45,4 @@ class App extends SourceApp {
   }
 }
 
-export default App;
+export default Sentry.withProfiler(App);
