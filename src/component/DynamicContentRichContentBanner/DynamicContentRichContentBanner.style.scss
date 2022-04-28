@@ -204,11 +204,15 @@
   }
 
   .Title {
-    font-size: 15px;
-    text-align: center;
-    text-transform: uppercase;
-    margin-bottom: 0px;
-    margin-top: 30px;
+    height: 40px;
+    width: 335px;
+    color: #000000;
+    font-family: "Avenir Next";
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 40px;
+    text-align: left;
   }
 
   .tns-item {

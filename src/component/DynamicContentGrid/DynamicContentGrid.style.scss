@@ -13,6 +13,10 @@
     margin-bottom: 40px !important;
     margin-top: 40px !important;
   }
+  @include mobile{
+    margin-bottom: 22px !important;
+    margin-top: 22px !important;
+  }
   &-Grid {
     display: grid;
     grid-gap: 0 0;
