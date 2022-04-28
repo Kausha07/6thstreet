@@ -15,6 +15,9 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
@@ -354,15 +357,59 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderEdd = () => {
+    const { eddResponse, edd_info } = this.props;
+    const { isArabic } = this.state;
+    let actualEddMess = "";
+    let actualEdd = "";
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
+      }
+    } else {
+      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEdd = defaultEddDateString;
+    }
+
+    if (!actualEddMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{actualEddMess}</span>
+      </div>
+    );
+  };
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options },
+      edd_info,
+      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
     } = this.props;
-    const { isNotAvailble,isArabic } = this.state;
+    const { isNotAvailble, isArabic } = this.state;
 
     return (
-      <figcaption block="CartItem" elem="Content" mods={{ isLikeTable,isArabic }}>
+      <figcaption
+        block="CartItem"
+        elem="Content"
+        mods={{ isLikeTable, isArabic }}
+      >
         {this.renderBrandName()}
         {/* {this.renderProductName()} */}
         {this.renderProductOptions(customizable_options)}
@@ -370,6 +417,7 @@ export class CartItem extends PureComponent {
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
         {isNotAvailble ? null : this.renderProductPrice()}
+        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
         {this.renderActions()}
       </figcaption>
     );

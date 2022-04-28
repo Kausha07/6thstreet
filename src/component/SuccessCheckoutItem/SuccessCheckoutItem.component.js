@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Store } from "../Icons";
 import Price from "Component/Price";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
@@ -13,9 +15,12 @@ import { isArabic } from "Util/App";
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export class SuccessCheckoutItem extends PureComponent {
@@ -206,7 +211,8 @@ export class SuccessCheckoutItem extends PureComponent {
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options },
+      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
+      edd_info
     } = this.props;
 
     return (
@@ -222,10 +228,46 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
+        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
       </figcaption>
     );
   }
+  renderEdd = () => {
+    const { eddResponse, edd_info } = this.props;
+    const { isArabic } = this.state;
+    let actualEddMess = "";
+    let actualEdd = "";
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
+      }
+    }
 
+    if (!actualEddMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{actualEddMess}</span>
+      </div>
+    );
+  };
   renderImage() {
     const {
       item: {

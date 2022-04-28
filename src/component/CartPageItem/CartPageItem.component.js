@@ -14,7 +14,10 @@
 import Field from "Component/Field";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
+
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
@@ -60,7 +63,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => {},
+    closePopup: () => { },
     isCartPage: false,
   };
 
@@ -331,11 +334,53 @@ export class CartItem extends PureComponent {
       </div>
     );
   }
+  renderEdd = () => {
+    const { eddResponse, edd_info } = this.props;
+    const { isArabic } = this.state;
+    let actualEddMess = "";
+    let actualEdd = "";
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
+      }
+    } else {
+      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEdd = defaultEddDateString;
+    }
+
+
+    if (!actualEddMess) {
+      return null;
+    }
+    return (
+      <div block="AreaText">
+        <span>{actualEddMess}</span>
+      </div>
+    );
+  };
 
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options },
+      edd_info,
+      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
     } = this.props;
     const { isNotAvailble } = this.state;
 
@@ -354,6 +399,7 @@ export class CartItem extends PureComponent {
           </>
         )}
         {this.renderActions()}
+        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
       </figcaption>
     );
   }

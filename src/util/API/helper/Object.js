@@ -1,4 +1,4 @@
-export const isObject = (item) => item && typeof item === 'object' && !Array.isArray(item);
+export const isObject = (item) => item && typeof item === 'object';
 
 export const queryString = (obj = {}) => Object.keys(obj)
     .map((key) => `${key}=${encodeURIComponent(obj[key])}`)
