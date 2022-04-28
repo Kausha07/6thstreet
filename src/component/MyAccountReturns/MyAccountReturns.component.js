@@ -13,95 +13,100 @@ import { withStoreRegex } from 'Component/Router/Router.component';
 import './MyAccountReturns.style';
 
 class MyAccountReturns extends PureComponent {
-    renderCreateCancel({ match }) {
-        return (
-            <MyAccountCancelCreate
-              match={ match }
-            />
-        );
-    }
+  renderCreateCancel({ match }) {
+    return (
+      <MyAccountCancelCreate
+        match={match}
+      />
+    );
+  }
 
-    renderCreateReturnList() {
-        return <MyAccountReturnCreateList />;
-    }
+  renderCreateReturnList() {
+    return <MyAccountReturnCreateList />;
+  }
 
-    renderCreateReturn({ match }) {
-        return (
-            <MyAccountReturnCreate
-              match={ match }
-            />
-        );
-    }
+  renderCreateReturn({ match }) {
+    return (
+      <MyAccountReturnCreate
+        match={match}
+      />
+    );
+  }
 
-    renderOrderList() {
-        return <MyAccountReturnList />;
-    }
+  renderOrderList(type) {
+    return <MyAccountReturnList type={type} />;
+  }
 
-    renderOrderView({ match }) {
-        return (
-            <MyAccountReturnView
-              match={ match }
-            />
-        );
-    }
+  renderOrderView({ match }) {
+    return (
+      <MyAccountReturnView
+        match={match}
+      />
+    );
+  }
 
-    renderCreateReturnSuccess({ match }) {
-        return (
-            <MyAccountReturnSuccess
-              match={ match }
-            />
-        );
-    }
+  renderCreateReturnSuccess({ match }) {
+    return (
+      <MyAccountReturnSuccess
+        match={match}
+      />
+    );
+  }
 
-    renderCreateCancelSuccess({ match }) {
-        return (
-            <MyAccountCancelCreateSuccess
-              match={ match }
-            />
-        );
-    }
+  renderCreateCancelSuccess({ match }) {
+    return (
+      <MyAccountCancelCreateSuccess
+        match={match}
+      />
+    );
+  }
 
-    render() {
-        return (
-            <Switch>
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/create/success/:returnId') }
-                  render={ this.renderCreateReturnSuccess }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/create/') }
-                  render={ this.renderCreateReturnList }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/create/:order') }
-                  render={ this.renderCreateReturn }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item') }
-                  render={ this.renderOrderList }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/cancel/success/:cancelId') }
-                  render={ this.renderCreateCancelSuccess }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/cancel/:order') }
-                  render={ this.renderCreateCancel }
-                  exact
-                />
-                <Route
-                  path={ withStoreRegex('/my-account/return-item/:return') }
-                  render={ this.renderOrderView }
-                  exact
-                />
-            </Switch>
-        );
-    }
+  render() {
+    return (
+      <Switch>
+        <Route
+          path={withStoreRegex('/my-account/return-item/create/success/:returnId')}
+          render={this.renderCreateReturnSuccess}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item/create/')}
+          render={this.renderCreateReturnList}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item/create/:order')}
+          render={this.renderCreateReturn}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item')}
+          render={() => this.renderOrderList('return')}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-exchange-item')}
+          render={() => this.renderOrderList('exchange')}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item/cancel/success/:cancelId')}
+          render={this.renderCreateCancelSuccess}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item/cancel/:order')}
+          render={this.renderCreateCancel}
+          exact
+        />
+        <Route
+          path={withStoreRegex('/my-account/return-item/:return')}
+          render={this.renderOrderView}
+          exact
+        />
+      </Switch>
+    );
+  }
 }
 
 export default MyAccountReturns;

@@ -140,6 +140,12 @@
         }
       }
 
+      &_return-exchange-item {
+        &:before {
+          background-image: url(./icons/return-exchange.png);
+        }
+      }
+
       &_address-book {
         &:before {
           background-image: url(./icons/address.png);
