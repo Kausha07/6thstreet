@@ -15,7 +15,7 @@ import Footer from "Component/Footer";
 import Image from "Component/Image";
 import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
-import logo from './icons/6TH_Logo.svg'
+import { English as EnglishLogo } from 'Component/Logo';
 import isMobile from "Util/Mobile";
 import close from "../Icons/Close/icon.svg"
 import { getSchema } from "Util/API/endpoint/Config/Config.endpoint";
@@ -244,7 +244,7 @@ class WelcomeHomePage extends PureComponent {
                             }
                             <div block="WelcomeHomePage" elem="Top" >
                                 <div block="WelcomeHomePage-Top-Logo" >
-                                    <img src={logo} />
+                                    {/* <EnglishLogo /> */}
                                 </div>
                             </div>
                             {isMobile.any() &&
@@ -253,8 +253,11 @@ class WelcomeHomePage extends PureComponent {
                                         {
                                             language === "en" ?
                                                 <div>
-                                                    <div block="Text-welcome">Welcome, </div>
-                                                    <       div block="Text-shop">you are shopping in</div>
+                                                    <div block="Text-welcome">
+                                                        <span>Welcome,</span>
+                                                        &nbsp;
+                                                        <span>you are shopping in</span>
+                                                    </div>
                                                 </div>
                                                 :
                                                 <div>
