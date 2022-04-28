@@ -89,9 +89,10 @@ class HeaderCart extends PureComponent {
       hideActiveOverlay,
       isCheckoutAvailable,
       showNotification,
+      totals: { items = [] }
     } = this.props;
 
-    if (!isCheckoutAvailable) {
+    if (!isCheckoutAvailable && items.length !== 0) {
       showNotification(
         "error",
         __("Some products or selected quantities are no longer available")

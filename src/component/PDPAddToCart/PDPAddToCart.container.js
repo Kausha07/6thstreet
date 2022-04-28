@@ -668,7 +668,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   routeChangeToCart() {
-    history.push("/cart");
+    history.push("/cart",{errorState: false});
   }
 
   showAlertNotification(message) {
