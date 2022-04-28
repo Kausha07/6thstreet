@@ -53,7 +53,7 @@
   .pdpsummarylinkTagStyle {
     text-decoration: none;
   }
-  
+
   @include desktop {
     min-width: 40%;
     padding-left: 34px;
@@ -80,6 +80,12 @@
 
   .ProductLabel {
     color: var(--pdp-new-text-color);
+    font-size: 16px;
+    margin-right: 4px;
+    text-transform: uppercase;
+  }
+  .ProductTag {
+    color: #99cc99;
     font-size: 16px;
     margin-right: 4px;
     text-transform: uppercase;
@@ -370,9 +376,15 @@
 }
 
 // hack for tabby promo issue PWA-2182
-.tabby-promo__feature {
-  padding-left: 0 !important;
-  &::before {
-    display: none !important;
-  }
+ul {
+  li[class^='styles__tabby-promo__feature'] {
+    padding-left: 0 !important;
+    &::before {
+      display: none !important;
+    }
+  } 
+}
+
+div[class^='styles__body'] {
+  height: auto !important;
 }

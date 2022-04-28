@@ -125,6 +125,14 @@
   &-Content {
     height: auto;
     width: 60%;
+    .AreaText {
+      color: #28d9aa;
+      font-family: "Avenir Next";
+      font-size: 12px;
+      letter-spacing: 0;
+      line-height: 16px;
+      top: 1px;
+    }
     @include desktop() {
       height: 130px;
       width: 100%;

@@ -1,12 +1,28 @@
 .MyAccountOrderView {
   padding-bottom: 40px;
   width: 100%;
+  .MyAccountOrderListItem {
+    &-Status {
+      &List {
+        .EddDiv {
+          text-align: right;
+          .AreaText {
+            color: #28d9aa;
+            font-family: "Avenir Next";
+            font-size: 13px;
+            letter-spacing: 0;
+            line-height: 16px;
+          }
+        }
+      }
+    }
+  }
   .Address {
     &-Street {
       word-break: break-all;
     }
   }
-  &-HeadingButton{
+  &-HeadingButton {
     margin-top: 0px !important;
     button {
       margin: 0 5px;
@@ -25,7 +41,7 @@
       }
     }
   }
-  &-HeadingButtons{
+  &-HeadingButtons {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -98,7 +114,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     &Failed {
       align-items: center;
       background: var(--color-failed);
@@ -462,9 +477,9 @@
     margin-left: 8px;
   }
 }
-h2.prodDetailTitle{
+h2.prodDetailTitle {
   margin: 7px 0px 0px;
-  letter-spacing: -.61px;
+  letter-spacing: -0.61px;
   font-weight: 600;
   font-size: 17px;
   text-transform: none;

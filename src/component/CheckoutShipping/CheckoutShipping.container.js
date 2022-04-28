@@ -10,10 +10,11 @@ import { CheckoutShippingContainer as SourceCheckoutShippingContainer } from "So
 import { resetCart } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
-import { capitalize } from "Util/App";
+import { capitalize, isArabic } from "Util/App";
 import { getUUID, isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_PLACE_ORDER } from "Util/Event";
@@ -30,11 +31,16 @@ export const mapDispatchToProps = (dispatch) => ({
   estimateShipping: (address, isValidted = false) =>
     CheckoutDispatcher.estimateShipping(dispatch, address, isValidted),
   dispatch,
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request),
 });
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   addresses: state.MyAccountReducer.addresses,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -191,7 +197,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
   onShippingSuccess(fields) {
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
-    const { setLoading, showNotification, dispatch } = this.props;
+    const { setLoading, showNotification, dispatch, estimateEddResponse, eddResponse, edd_info, addressCityData } = this.props;
     setLoading(true);
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
@@ -205,6 +211,40 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
     validationResult.then((response) => {
       const { success } = response;
+      if (edd_info && edd_info.is_enable) {
+        if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
+          const { country_id, city, postcode } = addressForValidation
+          let request = {
+            country: country_id,
+            courier: null,
+            source: null,
+          };
+          if (isArabic()) {
+            let finalResp = Object.values(addressCityData).filter((cityData) => {
+              return cityData.city === city
+            })
+
+            let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+              if(finalResp[0].areas[key] === postcode){
+                return key;
+              }
+            });
+            let arabicArea = Object.values(finalResp[0].areas_ar).filter((area, index) => {
+              if(index === parseInt(engAreaIndex[0])){
+                return area
+              } 
+            })
+            request['area'] = arabicArea[0]
+            request['city'] = finalResp[0].city_ar
+
+          } else {
+            request['area'] = postcode
+            request['city'] = city
+          }
+
+          estimateEddResponse(request);
+        }
+      }
 
       if (success && !selectedShippingMethod) {
         const estimationResult = this.estimateShipping(
@@ -289,7 +329,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         ? this._getAddressById(selectedCustomerAddressId)
         : trimAddressFields(fields);
 
-    const { city, street, country_id, telephone ,postcode} =
+    const { city, street, country_id, telephone, postcode } =
       shippingAddress;
     const shippingAddressMapped = {
       ...shippingAddress,
@@ -329,7 +369,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
-  
+
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;

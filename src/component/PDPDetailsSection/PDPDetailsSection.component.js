@@ -17,13 +17,12 @@ import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
-
+import { getCountryFromUrl } from "Util/Url/Url";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     clickAndCollectStores: PropTypes.object.isRequired,
   };
-
   state = {
     isHidden: true,
     isExpanded: {
@@ -653,6 +652,8 @@ class PDPDetailsSection extends PureComponent {
     const { innerWidth: width } = window;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
+        <>
+        <div block="Seperator2" />
         <React.Fragment>
           {pdpWidgetsAPIData.map((item, index) => {
             if (typeof item === "object" && Object.keys(item).length > 0) {
@@ -689,6 +690,7 @@ class PDPDetailsSection extends PureComponent {
             return null;
           })}
         </React.Fragment>
+        </>
       );
     }
     return null;
@@ -712,8 +714,8 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
-    if(document.querySelector(".ori-cursor-ptr")){
-    document.querySelector(".ori-cursor-ptr").click();
+    if (document.querySelector(".ori-cursor-ptr")) {
+      document.querySelector(".ori-cursor-ptr").click();
     }
   }
   renderContactUs() {
@@ -815,7 +817,7 @@ class PDPDetailsSection extends PureComponent {
   }
   getBrandUrl = () => {
     const {
-      product: { brand_name="" },
+      product: { brand_name = "" },
     } = this.props;
     const url = brand_name
       .replace(/'/g, "")
@@ -851,37 +853,49 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShipping(){
+    let country = getCountryFromUrl()
+    let txt = {
+      AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
+      SA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200."),
+      KW: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20."),
+      QA: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200."),
+      OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
+      BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
+    }
     return(
       <div>
-        <p>Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100.
+        <p> {txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} More info
+          {" "} { __("More info") }
           </Link>
         </p>
       </div>
-    )
+    );
   }
 
-  renderShippingAndFreeReturns(){
-
-    if(this.props.product.is_returnable === 1){
-      return(
+  renderShippingAndFreeReturns() {
+    if (this.props.product.is_returnable === 1) {
+      return (
         <div>
-          <p>100 days free return available. Shop freely.</p>
-        </div>
-      )
-    }
-
-    if(this.props.product.is_returnable === 0){
-      return(
-        <div>
-          <p>Not eligible for return.
-          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} More info
+          <p>{ __("100 days free return available. Shop freely.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
           </Link>
           </p>
         </div>
-      )
+      );
+    }
+
+    if (this.props.product.is_returnable === 0) {
+      return (
+        <div>
+          <p>{ __("Not eligible for return.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
+          </Link>
+          </p>
+        </div>
+      );
     }
 
     // if(this.props.product.is_returnable === "NO"){
@@ -890,18 +904,18 @@ class PDPDetailsSection extends PureComponent {
     //   )
     // }
 
-    return(
+    return (
       <div>
         <p>
-          Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.
-          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} More info
+          { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+          {" "} { __("More info") }
           </Link>
         </p>
       </div>
-    )
+    );
   }
-  
+
   render() {
     const {
       product: { brand_name },
@@ -929,20 +943,20 @@ class PDPDetailsSection extends PureComponent {
           {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
         </div >
-
+        {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={isMobile ? __("Shipping and Free Returns") : __("SHIPPING AND FREE RETURNS")}
+            title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
           >
             {this.renderShipping()}
             <br />
             {this.renderShippingAndFreeReturns()}
-
+            {isMobile ? <br /> : null}
           </Accordion>
           {this.renderAccordionSeperator()}
-        </div >
+        </div>
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         {isMobile ? this.renderMoreFromTheBrand() : ""}
@@ -976,7 +990,7 @@ class PDPDetailsSection extends PureComponent {
                 </Accordion>
                 
                 */}
-      </div >
+      </div>
     );
   }
 }

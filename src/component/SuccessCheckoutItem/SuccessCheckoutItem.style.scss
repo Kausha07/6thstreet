@@ -22,7 +22,7 @@
   &-Link {
     color: inherit;
     padding: 0;
-
+    height: auto;
     &:hover {
       text-decoration: none;
     }
@@ -50,7 +50,22 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-
+    .AreaText {
+      display: flex;
+      color: #28d9aa;
+      top: 4px;
+      padding-bottom: 10px;
+      font-family: "Avenir Next";
+      font-size: 12px;
+      font-weight:var(--fw-medium) ;
+      align-items: center;
+      letter-spacing: 0;
+      line-height: 12px;
+      // span:nth-child(2) {
+      //   margin-left: 4px;
+      //   color: #28d9aa;
+      // }
+    }
     &_isLikeTable {
       @include after-mobile {
         padding-bottom: 0;

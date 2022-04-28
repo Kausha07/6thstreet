@@ -57,8 +57,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+  createOrder: (code, additional_data,finalEdd) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data,finalEdd),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -105,6 +105,8 @@ export const mapStateToProps = (state) => ({
   cartId: state.CartReducer.cartId,
   savedCards: state.CreditCardReducer.savedCards,
   newCardVisible: state.CreditCardReducer.newCardVisible,
+  pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -417,7 +419,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const mappedItems = checkProducts(items) || [];
 
       if (mappedItems.length !== 0) {
-        history.push("/cart");
+        history.push("/cart", { errorState: false });
       }
     }
 
@@ -437,7 +439,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       checkoutStep !== DETAILS_STEP
     ) {
       const totalSum = total_segments.reduce(
-        (acc, item) => acc + item.value,
+        (acc, item) => {
+          if (item.code === "msp_cashondelivery") {
+            return acc + 0;
+          } else {
+            return acc + item.value;
+          }
+
+        },
         0
       );
 
@@ -467,7 +476,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
-    
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
@@ -605,7 +613,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
+      finalEdd
     } = paymentInformation;
+
     const {
       savedCards,
       newCardVisible,
@@ -615,6 +625,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       shippingAddress: { email },
     } = this.state;
     let data = {};
+
     if (code === CARD) {
       data = {
         ...additional_data,
@@ -657,13 +668,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
     } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation);
+      this.placeOrder(code, data, paymentInformation,finalEdd);
     } else {
-      this.placeOrder(code, data, null);
+      this.placeOrder(code, data, null,finalEdd);
     }
   }
 
-  async placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation,finalEdd) {
+
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
@@ -675,7 +687,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data);
+      const response = await createOrder(code, data,finalEdd);
       if (response && response.data) {
         const { data } = response;
         if (typeof data === "object") {
@@ -784,7 +796,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -850,11 +862,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const mobile = phone.slice(4);
 
         sendVerificationCode({ mobile, code }).then((response) => {
-          if(response.success) {
+          if (response.success) {
             this.setState({ isVerificationCodeSent: response.success });
-          } else 
-          {
-            console.log("response.error",response.error);
+          } else {
+            console.log("response.error", response.error);
             showErrorNotification(response.error);
           }
         }, this._handleError);
@@ -940,7 +951,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")

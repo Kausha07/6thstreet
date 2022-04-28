@@ -6,15 +6,20 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPSummary from './PDPSummary.component';
 
-import Algolia from "Util/API/provider/Algolia"; 
+import Algolia from "Util/API/provider/Algolia";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+
 
 export const mapStateToProps = (state) => ({
     product: state.PDP.product,
     isLoading: state.PDP.isLoading,
-    brand_url : state.PLP.brand_url
+    brand_url: state.PLP.brand_url
 });
 
-export const mapDispatchToProps = (_dispatch) => ({});
+export const mapDispatchToProps = (_dispatch) => ({
+    getTabbyInstallment: (price) =>
+        CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
+});
 export class PDPSummaryContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
@@ -24,25 +29,24 @@ export class PDPSummaryContainer extends PureComponent {
     containerFunctions = {};
 
     containerProps = () => {
-        const { product, isLoading,renderMySignInPopup } = this.props;
-        return { product, isLoading,renderMySignInPopup };
+        const { product, isLoading, renderMySignInPopup, getTabbyInstallment } = this.props;
+        return { product, isLoading, renderMySignInPopup, getTabbyInstallment };
     };
 
     constructor(props) {
         super(props);
         this.getBrandDetails = this.getBrandDetails.bind(this);
         this.state = {
-            url_path : ""
+            url_path: ""
         }
     }
-    
+
     componentDidUpdate() {
-        const { brand_url} = this.props;
-        if(!brand_url) {
-            this.getBrandDetails(); 
+        const { brand_url } = this.props;
+        if (!brand_url) {
+            this.getBrandDetails();
         }
-        else
-        {
+        else {
             this.setState({
                 url_path: brand_url
             })
@@ -53,28 +57,28 @@ export class PDPSummaryContainer extends PureComponent {
         const { product: { brand_name } } = this.props;
         try {
             const data = await new Algolia({
-              index: "brands_info",
+                index: "brands_info",
             })
-            .getBrandsDetails({
-              query: brand_name,
-              limit: 1,
-            });
+                .getBrandsDetails({
+                    query: brand_name,
+                    limit: 1,
+                });
             this.setState({
-              url_path: data?.hits[0]?.url_path
+                url_path: data?.hits[0]?.url_path
             });
         }
-        catch(err) {
+        catch (err) {
             console.error(err);
         }
     }
 
     render() {
-        const {url_path} = this.state;
+        const { url_path } = this.state;
         return (
             <PDPSummary
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-              url_path={url_path}
+                {...this.containerFunctions}
+                {...this.containerProps()}
+                url_path={url_path}
             />
         );
     }

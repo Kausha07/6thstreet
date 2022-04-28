@@ -259,9 +259,9 @@
         @include desktop {
             width: 100%;
         }
-        @include mobile {
-            display: none;
-        }
+        // @include mobile {
+        //     display: none;
+        // }
     }
     &-Promo {
         order: 2;

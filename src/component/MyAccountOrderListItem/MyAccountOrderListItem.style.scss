@@ -9,7 +9,14 @@
   height: auto;
   padding: 20px;
   width: 100%;
-
+  .AreaText {
+    color: #28d9aa;
+    font-family: "Avenir Next";
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 16px;
+    top: 1px;
+  }
   @include desktop {
     padding: 30px;
   }

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import Image from "Component/Image";
 
-import tabby from "./icons/tabby.png";
+import tabby from "../../style/icons/tabby.png";
 import {
   TABBY_ROW_DATA,
   TABBY_SUB_ROW_DATA,
@@ -13,6 +13,7 @@ import {
 } from "./TabbyMiniPopup.config";
 
 import "./TabbyMiniPopup.style.scss";
+import { isArabic } from "Util/App";
 
 class TabbyMiniPopup extends PureComponent {
   static propTypes = {
@@ -24,9 +25,13 @@ class TabbyMiniPopup extends PureComponent {
     content: "",
   };
 
+  state = {
+    isArabic: isArabic(),
+  };
+
   renderPopup() {
     const { closeTabbyPopup, content } = this.props;
-
+    const { isArabic } = this.state;
     return (
       <div
         block="TabbyMiniPopup"
@@ -39,10 +44,11 @@ class TabbyMiniPopup extends PureComponent {
             payments:
               content === TABBY_TOOLTIP_PAY_LATER ||
               content === TABBY_TOOLTIP_INSTALLMENTS,
+              isArabic
           },
         }}
       >
-        <div block="TabbyMiniPopup" elem="Content">
+        <div block="TabbyMiniPopup" elem="Content" mods={{isArabic}}>
           <button
             block="TabbyMiniPopup"
             elem="CloseBtn"

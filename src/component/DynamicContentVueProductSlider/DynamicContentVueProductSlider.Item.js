@@ -112,6 +112,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     }
     return null;
   }
+  renderProductTag(productTag) {
+    return (
+      <div block="VueProductSlider" elem="VueProductTag">
+        <span>{__(productTag)}</span>
+      </div>
+    );
+  }
 
   render() {
     const {
@@ -135,6 +142,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (data?.url) {
       newLink = data.url;
     }
+    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
 
     return (
       <div
@@ -164,7 +172,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           <h6 id="brandName">{brand_name}</h6>
           <span id="productName">{name}</span>
           {this.renderPrice(price)}
-          {this.renderIsNew(is_new_in)}
+          {
+            productTag ?
+              this.renderProductTag(productTag)
+              :
+              this.renderIsNew(is_new_in)
+          }
+          { }
         </Link>
         <WishlistIcon
           renderMySignInPopup={renderMySignInPopup}

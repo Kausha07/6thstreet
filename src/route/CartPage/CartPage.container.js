@@ -38,6 +38,7 @@ import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 
 import CartPage from './CartPage.component';
@@ -76,7 +77,9 @@ export const mapDispatchToProps = (dispatch) => ({
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     getCouponList : () => CartDispatcher.getCoupon(dispatch),
     applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
-    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch)
+    removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
+    getTabbyInstallment: (price) =>
+        CheckoutDispatcher.getTabbyInstallment(dispatch, price),
 });
 
 export class CartPageContainer extends PureComponent {
@@ -105,7 +108,8 @@ export class CartPageContainer extends PureComponent {
 
     state = {
         isEditing: false,
-        clubApparelMember: null
+        clubApparelMember: null,
+        errorState:false,
     };
 
     containerFunctions = {
@@ -148,7 +152,7 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList } = this.props;
+        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList, totals: { items = []},showNotification, location:{state:{errorState:propErrorState}} } = this.props;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;
@@ -170,6 +174,15 @@ export class CartPageContainer extends PureComponent {
         this._updateBreadcrumbs();
         this._changeHeaderState();
         getCouponList();
+        
+        const mappedItems = checkProducts(items) || [];
+        if (mappedItems.length !== 0 && (this.state.errorState === false || propErrorState === false)) {
+            showNotification(
+                "error",
+                __("Some products or selected quantities are no longer available")
+            );
+            this.setState({errorState:true});
+        }
 
     }
 
@@ -198,6 +211,25 @@ export class CartPageContainer extends PureComponent {
                 ...headerState,
                 title
             });
+        }
+
+        const {
+            totals: { items = []},
+            totals,
+            showNotification,
+        } = this.props;
+        const {
+            totals: { items: prevItems = []},
+            totals:prevtotals
+        } = prevProps;
+        if ( JSON.stringify(prevtotals) !== JSON.stringify(totals)) {
+            const mappedItems = checkProducts(items) || [];
+            if (mappedItems.length !== 0) {
+              showNotification(
+                "error",
+                __("Some products or selected quantities are no longer available")
+              );
+            }
         }
     }
 
