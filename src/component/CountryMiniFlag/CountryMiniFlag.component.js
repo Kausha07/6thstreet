@@ -44,10 +44,7 @@ class CountryMiniFlag extends PureComponent {
                 elem="Container"
                 mods={ mods }
                 style={ { backgroundImage: `url(${flagValue})` } }
-            >
-                <span block="CountryMiniFlag" elem="top" />
-                <span block="CountryMiniFlag" elem="bottom" />
-            </div>
+            />
         );
     }
 

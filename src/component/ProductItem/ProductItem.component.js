@@ -131,9 +131,11 @@ class ProductItem extends PureComponent {
         color,
         brand_name,
         product_type_6s,
+        categories,
         price = {},
       },
     } = this.props;
+
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -149,6 +151,27 @@ class ProductItem extends PureComponent {
     if (userData?.data) {
       userToken = userData.data.id;
     }
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      checkCategoryLevel().includes("///") == 1
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
@@ -156,13 +179,9 @@ class ProductItem extends PureComponent {
       id: sku,
       price: itemPrice,
       brand: brand_name,
-      category: product_type_6s,
+      category: product_type_6s || categoryLevel,
       varient: color,
-      url: url,
       position: 1,
-      dimension9: 100 - Math.round((itemPrice / basePrice) * 100) || 0,
-      dimension10: basePrice,
-      dimension11: itemPrice,
     });
     // if (queryID) {
     //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {

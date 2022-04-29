@@ -23,7 +23,11 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             const ONE_YEAR_IN_SECONDS = 31536000;
             const getCountryCode = getCountryFromUrl();
 
-            const newState = { ...state, config, edd_info: config && config.countries[getCountryCode] ? config.countries[getCountryCode].edd_info : null };
+            const newState = {
+                ...state,
+                config,
+                edd_info: config.countries[getCountryCode]?.edd_info
+            };
 
             // this will invalidate config after one year
             BrowserDatabase.setItem(

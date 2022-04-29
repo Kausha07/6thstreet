@@ -117,8 +117,12 @@ const Parser = {
     const queryParams = buildQuery(query);
     let page = query.p ? dataPage : 0;
 
+    let prodQuery =
+      pathname.split("/").length > 2
+        ? pathname.split(".html").join(" ").split("/").join(" ")
+        : pathname.split("/")[1].split(".html")[0];
     const params = clean({
-      q: pathname.split("/")[1].split(".html")[0],
+      q: prodQuery,
       page,
       ...queryParams,
     });
