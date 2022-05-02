@@ -78,6 +78,9 @@
       letter-spacing: 0;
       line-height: 16px;
       top: 11px;
+      @include mobile{
+        top: 0;
+      }
     }
     @include desktop() {
       height: 130px;
