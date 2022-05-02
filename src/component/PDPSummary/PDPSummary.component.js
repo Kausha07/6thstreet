@@ -17,7 +17,10 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
@@ -485,6 +488,9 @@ class PDPSummary extends PureComponent {
     const { eddResponse } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
+    let customDefaultMess = isArabic
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+      : DEFAULT_MESSAGE;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
@@ -496,20 +502,20 @@ class PDPSummary extends PureComponent {
           }
         });
       } else {
-        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         actualEdd = defaultEddDateString;
       }
     } else {
-      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       actualEdd = defaultEddDateString;
     }
-
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
     if (isMobile && showCityDropdown) {
       return this.renderMobileSelectCity();
     }
+    let splitKey = isArabic ? "بواسطه" : "by";
 
     return (
       <div block="EddParentWrapper">
@@ -522,8 +528,11 @@ class PDPSummary extends PureComponent {
               }}
               block={`${selectedAreaId ? "EddMessMargin" : ""}`}
             >
-              <span>{actualEddMess.split("by")[0]} by</span>
-              <span>{actualEddMess.split("by")[1]}</span>
+              <span>
+                {actualEddMess.split(splitKey)[0]}
+                {splitKey}
+              </span>
+              <span>{actualEddMess.split(splitKey)[1]}</span>
             </div>
           )}
           {selectedAreaId ? (
@@ -539,7 +548,7 @@ class PDPSummary extends PureComponent {
             <div
               block="EddWrapper"
               elem="AreaButton"
-              mods={{ isArabic}}
+              mods={{ isArabic }}
               onClick={() => this.handleAreaDropDownClick()}
             >
               <Image lazyLoad={false} src={address} alt="" />

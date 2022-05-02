@@ -10,6 +10,11 @@
  * @param {string} locale - Locale
  * @param {string} hourCycle - h12 or h24 hour cycle
  */
+import { isArabic } from "Util/App";
+import {
+  WEEK_ARABIC_TRANSLATION,
+  MONTHS_ARABIC_TRANSLATION,
+} from "../Common/index";
 export const formatDate = (
   template,
   dateObject,
@@ -80,10 +85,21 @@ export const getDefaultEddDate = (days) => {
     month: "short",
   });
   const defaultEddDat = defaultEddDate.getDate();
-  return {
-    defaultEddDateString,
+  console.log(
+    "muskan",
     defaultEddDay,
     defaultEddMonth,
+    WEEK_ARABIC_TRANSLATION[defaultEddDay],
+    MONTHS_ARABIC_TRANSLATION[defaultEddMonth]
+  );
+  return {
+    defaultEddDateString,
+    defaultEddDay: isArabic()
+      ? WEEK_ARABIC_TRANSLATION[defaultEddDay]
+      : defaultEddDay,
+    defaultEddMonth: isArabic()
+      ? MONTHS_ARABIC_TRANSLATION[defaultEddMonth]
+      : defaultEddMonth,
     defaultEddDat,
   };
 };

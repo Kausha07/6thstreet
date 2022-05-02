@@ -5,8 +5,11 @@ import { isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
-import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
-
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
+import { SPECIAL_COLORS } from "../../util/Common";
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -75,6 +78,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
+    let customDefaultMess = isArabic()
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+      : DEFAULT_MESSAGE;
     if (compRef === "checkout") {
       if (eddResponse) {
         if (isObject(eddResponse)) {
@@ -90,7 +96,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
             }
           });
         } else {
-          actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
           actualEdd = defaultEddDateString;
         }
       }
@@ -103,18 +109,23 @@ export class MyAccountOrderViewItem extends SourceComponent {
       return null;
     }
 
-    let colorCode = compRef === "checkout" ? "#28d9aa" : edd_msg_color;
-    const idealFormat = actualEddMess.includes("by") ? true : false;
+    let splitKey = isArabic ? "بواسطه" : "by";
+
+    let colorCode =
+      compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
       <div block="AreaText">
-        <span style={{ color: !idealFormat ? colorCode : "#9b9b9b" }}>
+        <span
+          style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
+        >
           {idealFormat
-            ? `${actualEddMess.split("by")[0]} by`
+            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
             : actualEddMess.split(" ")[0]}{" "}
         </span>
-        <span style={{color:colorCode}}>
+        <span style={{ color: colorCode }}>
           {idealFormat
-            ? `${actualEddMess.split("by")[1]}`
+            ? `${actualEddMess.split(splitKey)[1]}`
             : actualEddMess.split(" ")[1]}
         </span>
       </div>

@@ -15,7 +15,7 @@ import { isArabic } from "Util/App";
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
-import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
+import { DEFAULT_ARRIVING_MESSAGE } from "../../util/Common/index";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -211,8 +211,12 @@ export class SuccessCheckoutItem extends PureComponent {
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
-      edd_info
+      item: {
+        customizable_options,
+        bundle_options,
+        full_item_info: { cross_border },
+      },
+      edd_info,
     } = this.props;
 
     return (
@@ -228,7 +232,10 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
-        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
+        {edd_info &&
+          edd_info.is_enable &&
+          cross_border === 0 &&
+          this.renderEdd()}
       </figcaption>
     );
   }
@@ -254,7 +261,7 @@ export class SuccessCheckoutItem extends PureComponent {
           }
         });
       } else {
-        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = `${DEFAULT_ARRIVING_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         actualEdd = defaultEddDateString;
       }
     }
@@ -262,10 +269,14 @@ export class SuccessCheckoutItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
+    let splitKey = isArabic ? "بواسطه" : "by";
     return (
       <div block="AreaText">
-        <span>{actualEddMess.split("by")[0]} by</span>
-        <span>{actualEddMess.split("by")[1]}</span>
+        <span>
+          {actualEddMess.split(splitKey)[0]}
+          {splitKey}
+        </span>
+        <span>{actualEddMess.split(splitKey)[1]}</span>
       </div>
     );
   };
