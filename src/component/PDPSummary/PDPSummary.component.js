@@ -516,7 +516,7 @@ class PDPSummary extends PureComponent {
       return this.renderMobileSelectCity();
     }
     let splitKey = isArabic ? "بواسطه" : "by";
-
+    let EddMessMargin = selectedAreaId ? true : false;
     return (
       <div block="EddParentWrapper">
         <div block="EddWrapper">
@@ -525,8 +525,8 @@ class PDPSummary extends PureComponent {
               mix={{
                 block: "EddWrapper",
                 elem: `AreaText`,
+                mods: { EddMessMargin, isArabic },
               }}
-              block={`${selectedAreaId ? "EddMessMargin" : ""}`}
             >
               <span>
                 {actualEddMess.split(splitKey)[0]}

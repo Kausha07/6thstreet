@@ -297,9 +297,7 @@
         text-align: center;
       }
     }
-    .EddMessMargin {
-      margin-left: 28px;
-    }
+   
     &-AreaText {
       color: #9b9b9b;
       font-family: "Avenir Next";
@@ -315,6 +313,13 @@
       span:nth-child(2) {
         color: #28d9aa;
         line-height: 20px;
+      }
+      &_EddMessMargin {
+        margin-left: 28px;
+      }
+      &_isArabic {
+        margin-left: 0px;
+        margin-right: 28px;
       }
     }
   }
