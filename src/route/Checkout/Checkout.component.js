@@ -499,6 +499,7 @@ export class Checkout extends SourceCheckout {
         <CheckoutSuccess
           orderID={orderID}
           incrementID={incrementID}
+          isFailed={isFailed}
           shippingAddress={shippingAddress}
           billingAddress={billing_address}
           paymentMethod={paymentMethod}
@@ -516,6 +517,7 @@ export class Checkout extends SourceCheckout {
       <CheckoutFail
         orderID={orderID}
         incrementID={incrementID}
+        isFailed={isFailed}
         shippingAddress={shippingAddress}
         billingAddress={billing_address}
         paymentMethod={paymentMethod}
