@@ -71,14 +71,24 @@
     height: auto;
     width: 50%;
     .AreaText {
+      color: #9b9b9b;
       text-transform: none !important;
-      color: #28d9aa;
       font-family: "Avenir Next";
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 0;
       line-height: 16px;
       top: 11px;
+      @include mobile {
+        top: 0px;
+      }
+
+      span:nth-child(2) {
+        color: #28d9aa;
+        font-size: 12px;
+        line-height: 20px;
+      }
     }
+
     @include desktop() {
       height: 130px;
       width: 100%;
@@ -253,7 +263,7 @@
     color: #000000;
   }
 
-  
+
   &-ColSizeQty {
     color: #4a4a4a;
     font-weight: var(--fw-regular);

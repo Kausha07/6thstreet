@@ -371,7 +371,8 @@ export class CartItem extends PureComponent {
     }
     return (
       <div block="AreaText">
-        <span>{actualEddMess}</span>
+        <span>{actualEddMess.split("by")[0]} by</span>
+        <span>{actualEddMess.split("by")[1]}</span>
       </div>
     );
   };

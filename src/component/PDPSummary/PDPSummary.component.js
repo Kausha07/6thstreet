@@ -17,7 +17,14 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-
+import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
+import { getCountryFromUrl } from "Util/Url/Url";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
+import { isSignedIn } from "Util/Auth";
+import address from "./icons/address.png";
+import addressBlack from "./icons/address_black.png";
+import Image from "Component/Image";
 import "./PDPSummary.style";
 
 class PDPSummary extends PureComponent {
@@ -34,7 +41,103 @@ class PDPSummary extends PureComponent {
     isArabic: isArabic(),
     selectedSizeType: "eu",
     selectedSizeCode: "",
+    showCityDropdown: false,
+    showAreaDropDown: false,
+    selectedCityId: null,
+    selectedAreaId: null,
+    selectedArea: null,
+    selectedCityArea: null,
+    selectedCity: null,
+    showPopupField: "",
+    countryCode: null,
+    Cityresponse: null,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
+
+  getIdFromCityArea = (addressCityData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    const { isArabic } = this.state;
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
+            }
+          });
+        }
+      }
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  getCityAreaFromStorage = (addressCityData, countryCode) => {
+    const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+    const { city, area } = sessionData;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    this.setState({
+      Cityresponse: addressCityData,
+      selectedCity: cityEntry,
+      selectedCityId: cityEntry,
+      selectedAreaId: areaEntry,
+      selectedArea: areaEntry,
+      countryCode: countryCode,
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  getCityAreaFromDefault = (addressCityData, countryCode) => {
+    const { defaultShippingAddress } = this.props;
+    const { area, city } = defaultShippingAddress;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    this.setState({
+      Cityresponse: addressCityData,
+      selectedCity: cityEntry,
+      selectedCityId: cityEntry,
+      selectedAreaId: areaEntry,
+      selectedArea: areaEntry,
+      countryCode: countryCode,
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  validateEddStatus = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress, addressCityData } = this.props;
+    if (isSignedIn() && defaultShippingAddress) {
+      this.getCityAreaFromDefault(addressCityData, countryCode);
+    } else if (
+      isSignedIn() &&
+      !defaultShippingAddress &&
+      sessionStorage.getItem("EddAddressReq")
+    ) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else if (!isSignedIn() && sessionStorage.getItem("EddAddressReq")) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else {
+      this.setState({
+        Cityresponse: addressCityData,
+        countryCode: countryCode,
+      });
+    }
+  };
+
   componentDidMount() {
     const {
       product: { price },
@@ -49,52 +152,9 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          const script = document.createElement("script");
-          script.src = "https://checkout.tabby.ai/tabby-promo.js";
-          script.async = true;
-          script.onload = function () {
-            let s = document.createElement("script");
-            s.type = "text/javascript";
-            const code = `new TabbyPromo({
-          selector: '#TabbyPromo',
-          currency: '${currency}',
-          price: '${defPrice}',
-          installmentsCount: 4,
-          lang: '${isArabic ? "ar" : "en"}',
-          source: 'product',
-        });`;
-            try {
-              s.appendChild(document.createTextNode(code));
-              document.body.appendChild(s);
-            } catch (e) {
-              s.text = code;
-              document.body.appendChild(s);
-            }
-          };
-          document.body.appendChild(script);
-        }
-      }, this._handleError).catch(() => { });
-    }
-  }
-  componentDidUpdate(prevProps) {
-    const {
-      product: { price },
-      getTabbyInstallment
-    } = this.props;
-    const { isArabic } = this.state;
-
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          if (prevProps.product.price !== price) {
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
             const script = document.createElement("script");
             script.src = "https://checkout.tabby.ai/tabby-promo.js";
             script.async = true;
@@ -102,13 +162,13 @@ class PDPSummary extends PureComponent {
               let s = document.createElement("script");
               s.type = "text/javascript";
               const code = `new TabbyPromo({
-            selector: '#TabbyPromo',
-            currency: '${currency}',
-            price: '${defPrice}',
-            installmentsCount: 4,
-            lang: '${isArabic ? "ar" : "en"}',
-            source: 'product',
-          });`;
+          selector: '#TabbyPromo',
+          currency: '${currency}',
+          price: '${defPrice}',
+          installmentsCount: 4,
+          lang: '${isArabic ? "ar" : "en"}',
+          source: 'product',
+        });`;
               try {
                 s.appendChild(document.createTextNode(code));
                 document.body.appendChild(s);
@@ -119,8 +179,119 @@ class PDPSummary extends PureComponent {
             };
             document.body.appendChild(script);
           }
-        }
-      }, this._handleError).catch(() => { });
+        }, this._handleError)
+        .catch(() => {});
+    }
+
+    const countryCode = getCountryFromUrl();
+    const { edd_info } = this.props;
+    if (edd_info && edd_info.is_enable) {
+      this.validateEddStatus(countryCode);
+    } else {
+      this.setState({
+        countryCode: countryCode,
+      });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      product: { price },
+      getTabbyInstallment,
+    } = this.props;
+    const { isArabic } = this.state;
+
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            if (prevProps.product.price !== price) {
+              const script = document.createElement("script");
+              script.src = "https://checkout.tabby.ai/tabby-promo.js";
+              script.async = true;
+              script.onload = function () {
+                let s = document.createElement("script");
+                s.type = "text/javascript";
+                const code = `new TabbyPromo({
+            selector: '#TabbyPromo',
+            currency: '${currency}',
+            price: '${defPrice}',
+            installmentsCount: 4,
+            lang: '${isArabic ? "ar" : "en"}',
+            source: 'product',
+          });`;
+                try {
+                  s.appendChild(document.createTextNode(code));
+                  document.body.appendChild(s);
+                } catch (e) {
+                  s.text = code;
+                  document.body.appendChild(s);
+                }
+              };
+              document.body.appendChild(script);
+            }
+          }
+        }, this._handleError)
+        .catch(() => {});
+    }
+
+    const {
+      defaultShippingAddress,
+      estimateEddResponse,
+      addressCityData,
+      edd_info,
+    } = this.props;
+    const {
+      defaultShippingAddress: prevdefaultShippingAddress,
+      addressCityData: prevAddressCitiesData,
+    } = prevProps;
+    if (
+      prevAddressCitiesData &&
+      addressCityData &&
+      prevAddressCitiesData.length !== addressCityData.length
+    ) {
+      this.setState({
+        Cityresponse: addressCityData,
+      });
+      this.validateEddStatus();
+    }
+    if (
+      JSON.stringify(prevdefaultShippingAddress) !==
+      JSON.stringify(defaultShippingAddress)
+    ) {
+      const { country_code, area, city } = defaultShippingAddress;
+
+      if (edd_info && edd_info.is_enable) {
+        const { cityEntry, areaEntry } = this.getIdFromCityArea(
+          addressCityData,
+          city,
+          area
+        );
+        this.setState(
+          {
+            Cityresponse: addressCityData,
+            selectedCity: cityEntry,
+            selectedCityId: cityEntry,
+            selectedAreaId: areaEntry,
+            selectedArea: areaEntry,
+          },
+          () => {
+            let request = {
+              country: country_code,
+              city: city,
+              area: area,
+              courier: null,
+              source: null,
+            };
+            estimateEddResponse(request);
+          }
+        );
+      }
     }
   }
   static getDerivedStateFromProps(props, state) {
@@ -137,6 +308,266 @@ class PDPSummary extends PureComponent {
       });
     }
     return Object.keys(derivedState).length ? derivedState : null;
+  }
+
+  closeAreaOverlay = () => {
+    const { showCityDropdown } = this.state;
+    document.body.style.overflow = "visible";
+    this.setState({
+      showCityDropdown: !showCityDropdown,
+      showAreaDropDown: false,
+    });
+  };
+
+  handleAreaDropDownClick = () => {
+    const { showCityDropdown, isMobile } = this.state;
+    if (isMobile) {
+      document.body.style.overflow = "hidden";
+    }
+    this.setState({
+      showCityDropdown: !showCityDropdown,
+      showAreaDropDown: false,
+      showPopupField: "city",
+    });
+  };
+
+  handleAreaSelection = (area) => {
+    const { selectedCity, countryCode, isArabic } = this.state;
+    const { estimateEddResponse } = this.props;
+    this.setState({
+      selectedAreaId: area,
+      selectedArea: area,
+      showCityDropdown: false,
+      showPopupField: "",
+    });
+    this.handleAreaDropDownClick();
+    let request = {
+      country: countryCode,
+      city: selectedCity,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request);
+    document.body.style.overflow = "visible";
+  };
+
+  handleCitySelection = (city) => {
+    const { isArabic } = this.state;
+    this.setState({
+      showPopupField: "area",
+      selectedCityId: isArabic ? city.city_ar : city.city,
+      selectedCity: isArabic ? city.city_ar : city.city,
+      selectedCityArea: isArabic ? city.areas_ar : city.areas,
+      showAreaDropDown: true,
+    });
+  };
+
+  renderSelectAreaItem() {
+    const { selectedCityArea, isArabic } = this.state;
+    const isArea = selectedCityArea && selectedCityArea.length > 0;
+    return (
+      <ul>
+        {isArea ? (
+          selectedCityArea.map((area) => {
+            return (
+              <li id={area} onClick={() => this.handleAreaSelection(area)}>
+                <button
+                  block={`CountrySwitcher`}
+                  elem="CountryBtn"
+                  mods={{ isArabic, isArea }}
+                >
+                  <span>{area}</span>
+                </button>
+              </li>
+            );
+          })
+        ) : (
+          <span block="NoAreaFound">No Area Found</span>
+        )}
+      </ul>
+    );
+  }
+  renderSelectCityItem() {
+    const { Cityresponse, isArabic } = this.state;
+    if (!Cityresponse) {
+      return (
+        <ul>
+          <span block="NoAreaFound">No City Found</span>
+        </ul>
+      );
+    }
+    return (
+      <ul>
+        {Object.values(Cityresponse).map((city) => {
+          return (
+            <li
+              id={city.city_id}
+              onClick={() => this.handleCitySelection(city)}
+            >
+              <button
+                block={`CountrySwitcher`}
+                elem="CountryBtn"
+                mods={{ isArabic }}
+              >
+                <span>{isArabic ? city.city_ar : city.city}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+  renderMobileSelectCity() {
+    const { isArabic, showPopupField } = this.state;
+    return (
+      <div block="EddMobileWrapper">
+        <div mix={{ block: "EddMobileWrapper", elem: "Content" }}>
+          <div
+            mix={{ block: "EddMobileWrapper-Content", elem: "EddBackHeader" }}
+          >
+            <button
+              elem="Button"
+              block="MyAccountMobileHeader"
+              onClick={this.closeAreaOverlay}
+              mods={{ isArabic }}
+            />
+          </div>
+          <div
+            mix={{
+              block: "EddMobileWrapper-Content",
+              elem: "EddContentHeader",
+            }}
+          >
+            <div
+              block="CityText ContentText"
+              mods={{ isShown: showPopupField === "city" ? true : false }}
+              onClick={() => this.setState({ showPopupField: "city" })}
+            >
+              <span>Select City</span>
+            </div>
+            <div
+              block="ContentText"
+              mods={{ isShown: showPopupField === "area" ? true : false }}
+            >
+              <span>Select Area</span>
+            </div>
+          </div>
+
+          {showPopupField === "city" && (
+            <div block="CityDrop">{this.renderSelectCityItem()}</div>
+          )}
+          {showPopupField === "area" && (
+            <div block="CityDrop">{this.renderSelectAreaItem()}</div>
+          )}
+        </div>
+      </div>
+    );
+  }
+  renderSelectCity() {
+    const { edd_info } = this.props;
+    const {
+      showCityDropdown,
+      showAreaDropDown,
+      selectedCityArea,
+      selectedAreaId,
+      selectedArea,
+      isMobile,
+      isArabic,
+    } = this.state;
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+
+    const { eddResponse } = this.props;
+    let actualEddMess = "";
+    let actualEdd = "";
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
+      }
+    } else {
+      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEdd = defaultEddDateString;
+    }
+
+    const isArea = !(
+      selectedCityArea && Object.values(selectedCityArea).length > 0
+    );
+    if (isMobile && showCityDropdown) {
+      return this.renderMobileSelectCity();
+    }
+
+    return (
+      <div block="EddParentWrapper">
+        <div block="EddWrapper">
+          {actualEddMess && (
+            <div
+              mix={{
+                block: "EddWrapper",
+                elem: `AreaText`,
+              }}
+              block={`${selectedAreaId ? "EddMessMargin" : ""}`}
+            >
+              <span>{actualEddMess.split("by")[0]} by</span>
+              <span>{actualEddMess.split("by")[1]}</span>
+            </div>
+          )}
+          {selectedAreaId ? (
+            <div
+              block={`EddWrapper SelectedAreaWrapper `}
+              mods={{ isArabic }}
+              onClick={() => this.handleAreaDropDownClick()}
+            >
+              <Image lazyLoad={false} src={addressBlack} alt="" />
+              <div block={`SelectAreaText `}>{selectedArea}</div>
+            </div>
+          ) : (
+            <div
+              block="EddWrapper"
+              elem="AreaButton"
+              mods={{ isArabic}}
+              onClick={() => this.handleAreaDropDownClick()}
+            >
+              <Image lazyLoad={false} src={address} alt="" />
+              <div block="SelectAreaText">Select Area</div>
+            </div>
+          )}
+          <div block="DropDownWrapper">
+            {showCityDropdown && !isMobile && (
+              <div mix={{ block: "EddWrapper", elem: "CountryDrop" }}>
+                {this.renderSelectCityItem()}
+              </div>
+            )}
+            {showCityDropdown && showAreaDropDown && !isMobile && (
+              <div
+                block="AreaDropdown"
+                mix={{
+                  block: "EddWrapper",
+                  elem: "CountryDrop",
+                  mods: { isArea, isArabic },
+                }}
+              >
+                {this.renderSelectAreaItem()}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   setSize = (sizeType, sizeCode) => {
@@ -192,7 +623,7 @@ class PDPSummary extends PureComponent {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            {url_path ?
+            {url_path ? (
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
@@ -215,7 +646,8 @@ class PDPSummary extends PureComponent {
                 >
                   {brand_name}
                 </Link>
-              ) : (
+              )
+            ) : (
               brand_name
             )}{" "}
             <span block="PDPSummary" elem="Name">
@@ -235,7 +667,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1>
-        {url_path ? 
+        {url_path ? (
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
@@ -258,7 +690,8 @@ class PDPSummary extends PureComponent {
             >
               {brand_name}
             </Link>
-          ) : (
+          )
+        ) : (
           brand_name
         )}{" "}
         <span block="PDPSummary" elem="Name">
@@ -422,7 +855,6 @@ class PDPSummary extends PureComponent {
         discountable,
       },
     } = this.props;
-
     let { selectedSizeCode } = this.state;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
@@ -488,9 +920,13 @@ class PDPSummary extends PureComponent {
   }
 
   render() {
-    const { isArabic } = this.state;
+    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
+    const {
+      product: { cross_border = 0 },
+    } = this.props;
+    const AreaOverlay = isMobile && showCityDropdown ? true : false;
     return (
-      <div block="PDPSummary" mods={{ isArabic }}>
+      <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>
@@ -499,6 +935,7 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
+        {Cityresponse && cross_border === 0 && this.renderSelectCity()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
