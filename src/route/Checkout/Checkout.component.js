@@ -94,7 +94,7 @@ export class Checkout extends SourceCheckout {
       const defaultAddress = addresses.find(
         ({ default_shipping }) => default_shipping === true
       );
-      if (defaultAddress && defaultAddress.length > 0) {
+      if (defaultAddress) {
         const { city, area, country_code } = defaultAddress;
         let request = {
           country: country_code,
