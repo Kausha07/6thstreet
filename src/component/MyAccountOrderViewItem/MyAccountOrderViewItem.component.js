@@ -94,7 +94,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       return null;
     }
 
-    let colorCode = compRef === 'checkout' ? '28d9aa' : edd_msg_color
+    let colorCode = compRef === 'checkout' ? '#28d9aa' : edd_msg_color
     return (
       <div block="AreaText" style={{ color: colorCode }}>
         <span>{actualEddMess}</span>
