@@ -283,13 +283,17 @@ export class CheckoutSuccess extends PureComponent {
   renderItem = (item) => {
     const {
       order: { base_currency_code: currency },
-      eddResponse
+      eddResponse,
+      isFailed,
+      edd_info
     } = this.props;
 
     return (
       <MyAccountOrderViewItem
         item={item}
-        compRef={'checkout'}
+        isFailed={isFailed}
+        compRef={"checkout"}
+        edd_info={edd_info}
         eddResponse={eddResponse}
         currency={currency}
         displayDiscountPercentage={true}
@@ -327,6 +331,7 @@ export class CheckoutSuccess extends PureComponent {
       const {
         initialTotals: { items = [], quote_currency_code },
         incrementID,
+        isFailed
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -345,6 +350,7 @@ export class CheckoutSuccess extends PureComponent {
                 item={item}
                 currency_code={quote_currency_code}
                 isEditing
+                isFailed={isFailed}
                 isLikeTable
               />
             ))}
@@ -922,11 +928,11 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
     const pagePathName = new URL(window.location.href).pathname;
-    if (pagePathName !== "/checkout/error"){
+    if (pagePathName !== "/checkout/error") {
       if (
         paymentMethod?.code === "checkout_qpay" ||
         paymentMethod?.code === "tabby_installments"
-      ) { 
+      ) {
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,

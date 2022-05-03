@@ -16,6 +16,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       currency,
       edd_info,
       displayDiscountPercentage,
+      isFailed,
       item: {
         brand_name,
         name,
@@ -25,7 +26,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
         qty,
       } = {},
     } = this.props;
-
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -57,7 +57,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
-        {edd_info && edd_info.is_enable && this.renderEdd()}
+        {edd_info && edd_info.is_enable && !isFailed && this.renderEdd()}
       </div>
     );
   }

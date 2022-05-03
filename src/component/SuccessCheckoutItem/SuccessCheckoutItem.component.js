@@ -217,6 +217,7 @@ export class SuccessCheckoutItem extends PureComponent {
         full_item_info: { cross_border },
       },
       edd_info,
+      isFailed,
     } = this.props;
 
     return (
@@ -235,6 +236,7 @@ export class SuccessCheckoutItem extends PureComponent {
         {edd_info &&
           edd_info.is_enable &&
           cross_border === 0 &&
+          !isFailed &&
           this.renderEdd()}
       </figcaption>
     );

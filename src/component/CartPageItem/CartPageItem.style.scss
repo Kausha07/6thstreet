@@ -240,7 +240,7 @@
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
-    &-Discount{
+    &-Discount {
       margin-left: 4px;
     }
     &_isArabic {
@@ -249,7 +249,7 @@
         direction: ltr;
       }
     }
-    span{
+    span {
       del {
         color: #000000;
         text-decoration: line-through;
@@ -262,7 +262,6 @@
   .Price > span:first-child {
     color: #000000;
   }
-
 
   &-ColSizeQty {
     color: #4a4a4a;
