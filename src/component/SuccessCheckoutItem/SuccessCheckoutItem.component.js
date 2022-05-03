@@ -212,7 +212,8 @@ export class SuccessCheckoutItem extends PureComponent {
     const {
       isLikeTable,
       item: { customizable_options, bundle_options, full_item_info: { cross_border } },
-      edd_info
+      edd_info,
+      isFailed
     } = this.props;
 
     return (
@@ -228,7 +229,7 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
-        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
+        {edd_info && edd_info.is_enable && cross_border === 0 && !isFailed && this.renderEdd()}
       </figcaption>
     );
   }

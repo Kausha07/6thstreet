@@ -71,7 +71,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               return address.default_shipping === true;
             }
           );
-          if (Object.values(defaultShippingAddress).length > 0) {
+          if (defaultShippingAddress && Object.values(defaultShippingAddress).length > 0) {
             const { country_code, city, area } = defaultShippingAddress[0];
             let request = {
               country: country_code,

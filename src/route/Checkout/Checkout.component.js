@@ -91,16 +91,20 @@ export class Checkout extends SourceCheckout {
     }
     const { estimateEddResponse, edd_info, addresses } = this.props;
     if (edd_info && edd_info.is_enable && addresses && addresses.length > 0) {
-      const defaultAddress = addresses.find(({ default_shipping }) => default_shipping === true);
-      const { city, area, country_code } = defaultAddress;
-      let request = {
-        country: country_code,
-        city: city,
-        area: area,
-        courier: null,
-        source: null,
-      };
-      estimateEddResponse(request);
+      const defaultAddress = addresses.find(
+        ({ default_shipping }) => default_shipping === true
+      );
+      if (defaultAddress && defaultAddress.length > 0) {
+        const { city, area, country_code } = defaultAddress;
+        let request = {
+          country: country_code,
+          city: city,
+          area: area,
+          courier: null,
+          source: null,
+        };
+        estimateEddResponse(request);
+      }
     }
   }
 
@@ -118,7 +122,7 @@ export class Checkout extends SourceCheckout {
 
     if (
       prevState?.paymentInformation?.paymentMethod?.code !==
-      paymentInformation?.paymentMethod?.code &&
+        paymentInformation?.paymentMethod?.code &&
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
@@ -495,6 +499,7 @@ export class Checkout extends SourceCheckout {
         <CheckoutSuccess
           orderID={orderID}
           incrementID={incrementID}
+          isFailed={isFailed}
           shippingAddress={shippingAddress}
           billingAddress={billing_address}
           paymentMethod={paymentMethod}
@@ -512,6 +517,7 @@ export class Checkout extends SourceCheckout {
       <CheckoutFail
         orderID={orderID}
         incrementID={incrementID}
+        isFailed={isFailed}
         shippingAddress={shippingAddress}
         billingAddress={billing_address}
         paymentMethod={paymentMethod}
