@@ -15,7 +15,10 @@ import { isArabic } from "Util/App";
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
-import { DEFAULT_ARRIVING_MESSAGE } from "../../util/Common/index";
+import {
+  DEFAULT_ARRIVING_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -252,6 +255,9 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
+    let customDefaultMess = isArabic
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_ARRIVING_MESSAGE]
+      : DEFAULT_ARRIVING_MESSAGE;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
@@ -263,7 +269,7 @@ export class SuccessCheckoutItem extends PureComponent {
           }
         });
       } else {
-        actualEddMess = `${DEFAULT_ARRIVING_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         actualEdd = defaultEddDateString;
       }
     }

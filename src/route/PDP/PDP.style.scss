@@ -297,7 +297,7 @@
         text-align: center;
       }
     }
-   
+
     &-AreaText {
       color: #9b9b9b;
       font-family: "Avenir Next";
@@ -314,13 +314,13 @@
         color: #28d9aa;
         line-height: 20px;
       }
-      &_EddMessMargin {
-        margin-left: 28px;
-      }
-      &_isArabic {
-        margin-left: 0px;
-        margin-right: 28px;
-      }
+    }
+    .EddMessMargin {
+      margin-left: 28px;
+    }
+    .isArabic {
+      margin-left: 0px;
+      margin-right: 28px;
     }
   }
   @include mobile() {

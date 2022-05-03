@@ -525,8 +525,13 @@ class PDPSummary extends PureComponent {
               mix={{
                 block: "EddWrapper",
                 elem: `AreaText`,
-                mods: { EddMessMargin, isArabic },
+                mods: { isArabic },
               }}
+              block={
+                EddMessMargin
+                  ? `EddMessMargin ${isArabic ? "isArabic" : ""}`
+                  : ""
+              }
             >
               <span>
                 {actualEddMess.split(splitKey)[0]}
@@ -537,7 +542,7 @@ class PDPSummary extends PureComponent {
           )}
           {selectedAreaId ? (
             <div
-              block={`EddWrapper SelectedAreaWrapper `}
+              block={`EddWrapper SelectedAreaWrapper`}
               mods={{ isArabic }}
               onClick={() => this.handleAreaDropDownClick()}
             >

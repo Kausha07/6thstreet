@@ -30,7 +30,7 @@ export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
 
 export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Delivery by": "التوصيل بواسطه",
-  "Arriving by": "الوصول عن طريق",
+  "Arriving by": "الوصول بواسطه",
 };
 
 export const SPECIAL_COLORS = {
