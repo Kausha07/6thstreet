@@ -285,6 +285,7 @@ export class CheckoutSuccess extends PureComponent {
       order: { base_currency_code: currency },
       eddResponse,
       isFailed,
+      edd_info
     } = this.props;
 
     return (
@@ -292,6 +293,7 @@ export class CheckoutSuccess extends PureComponent {
         item={item}
         isFailed={isFailed}
         compRef={"checkout"}
+        edd_info={edd_info}
         eddResponse={eddResponse}
         currency={currency}
         displayDiscountPercentage={true}
