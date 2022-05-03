@@ -85,13 +85,7 @@ export const getDefaultEddDate = (days) => {
     month: "short",
   });
   const defaultEddDat = defaultEddDate.getDate();
-  console.log(
-    "muskan",
-    defaultEddDay,
-    defaultEddMonth,
-    WEEK_ARABIC_TRANSLATION[defaultEddDay],
-    MONTHS_ARABIC_TRANSLATION[defaultEddMonth]
-  );
+
   return {
     defaultEddDateString,
     defaultEddDay: isArabic()

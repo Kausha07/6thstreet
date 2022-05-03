@@ -109,7 +109,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       return null;
     }
 
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = isArabic() ? "بواسطه" : "by";
 
     let colorCode =
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
