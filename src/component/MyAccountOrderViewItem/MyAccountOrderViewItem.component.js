@@ -25,6 +25,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         size: { value: size = "" } = {},
         qty,
       } = {},
+      status
     } = this.props;
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
@@ -57,7 +58,12 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
-        {edd_info && edd_info.is_enable && !isFailed && this.renderEdd()}
+        {edd_info &&
+          edd_info.is_enable &&
+          !isFailed &&
+          status !== "payment_failed" &&
+          status !== "payment_aborted" &&
+          this.renderEdd()}
       </div>
     );
   }
