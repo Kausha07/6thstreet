@@ -211,11 +211,8 @@ class PDPSummary extends PureComponent {
     }
 
     const countryCode = getCountryFromUrl();
-    const {
-      edd_info,
-      edd_info: { has_pdp },
-    } = this.props;
-    if (edd_info && edd_info.is_enable && has_pdp) {
+    const { edd_info } = this.props;
+    if (edd_info && edd_info.is_enable && edd_info.has_pdp) {
       this.validateEddStatus(countryCode);
     } else {
       this.setState({
@@ -959,7 +956,8 @@ class PDPSummary extends PureComponent {
   }
 
   render() {
-    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
+    const { isArabic, Cityresponse, showCityDropdown, isMobile, edd_info } =
+      this.state;
     const {
       product: { cross_border = 0 },
     } = this.props;
@@ -974,7 +972,12 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
-        {Cityresponse && cross_border === 0 && this.renderSelectCity()}
+        {Cityresponse &&
+          edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_pdp &&
+          cross_border === 0 &&
+          this.renderSelectCity()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
