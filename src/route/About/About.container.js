@@ -52,37 +52,11 @@ export class AboutContainer extends PureComponent {
         this.scrollerRef = React.createRef();
         this.itemRef = React.createRef();
         this.state = {
-          activeClass: false,
-          isDown: false,
-          startX: 0,
-          scrollLeft: 0,
           isArabic: isArabic(),
           isMobile: isMobile.any() || isMobile.tablet(),
           isTablet: isMobile.tablet(),
           prevPathname: "",
           currentLocation: "",
-          settings: {
-            lazyload: true,
-            nav: false,
-            mouseDrag: true,
-            touch: true,
-            controlsText: ["&#x27E8", "&#x27E9"],
-            gutter: 8,
-            loop: false,
-            responsive: {
-              1024: {
-                items: 5,
-                gutter: 25,
-              },
-              420: {
-                items: 5,
-              },
-              300: {
-                items: 2.3,
-              },
-            },
-          },
-          impressionSent: false,
         };
     }
 

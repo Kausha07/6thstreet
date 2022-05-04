@@ -9,9 +9,7 @@ import { isArabic } from "Util/App";
 import SliderAboutPage from "Component/SliderAboutPage";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
-
-import { datasintests } from "./datasintest";
-
+import datasintests from "./datas.json";
 export class About extends PureComponent {
 
     constructor(props) {
@@ -20,54 +18,11 @@ export class About extends PureComponent {
         this.scrollerRef = React.createRef();
         this.itemRef = React.createRef();
         this.state = {
-          activeClass: false,
-          isDown: false,
-          startX: 0,
-          scrollLeft: 0,
           isArabic: isArabic(),
           isMobile: isMobile.any() || isMobile.tablet(),
           isTablet: isMobile.tablet(),
-          settings: {
-            lazyload: true,
-            nav: false,
-            mouseDrag: true,
-            touch: true,
-            controlsText: ["&#x27E8", "&#x27E9"],
-            gutter: 8,
-            loop: false,
-            responsive: {
-              1024: {
-                items: 5,
-                gutter: 25,
-              },
-              420: {
-                items: 5,
-              },
-              300: {
-                items: 2.3,
-              },
-            },
-          },
-          impressionSent: false,
         };
       }
-
-  updateBreadcrumbs() {
-    const { updateBreadcrumbs } = this.props;
-    
-    const breadcrumbs = [
-      {
-        url: "/",
-        name: "About us",
-      },
-      {
-        url: "/",
-        name: __("Home"),
-      },
-    ];
-
-    updateBreadcrumbs(breadcrumbs);
-  }
 
     renderDescription() {
       const { isArabic } = this.state;
@@ -182,8 +137,6 @@ export class About extends PureComponent {
         
     }
 
-datasintest = datasintests;
-
 handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
     if (this.scrollerRef && this.scrollerRef.current) {
@@ -234,7 +187,8 @@ renderSliderWithLabel = (item, i) => {
 };
 
 renderScrollbar = () => {
-    const items = this.datasintest.items;
+    const datasintest = datasintests;
+    const items = datasintest.items;
 
     // const width = `${
     //   (this.itemRef.current && this.itemRef.current.clientWidth) *
@@ -243,8 +197,6 @@ renderScrollbar = () => {
     //   690
     // }px`;
     const width = `${900}px`;
-
-    const aaa = `${(this.itemRef)}`
 
     return (
       <div
@@ -271,7 +223,8 @@ renderScrollbar = () => {
   };
 
   renderScrollbarExp = () => {
-    const items = this.datasintest.items;
+    const datasintest = datasintests;
+    const items = datasintest.items;
 
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
@@ -280,8 +233,6 @@ renderScrollbar = () => {
       690
     }px`;
     // const width = `${960}px`;
-
-    const aaa = `${(this.itemRef)}`
 
     return (
       <div
@@ -310,8 +261,8 @@ renderScrollbar = () => {
 renderSliderWithLabels() {
 
     let country = getCountryFromUrl()
-
-    const items = this.datasintest[country];
+    const datasintest = datasintests;
+    const items = datasintest[country];
 
     return (
       <DragScroll

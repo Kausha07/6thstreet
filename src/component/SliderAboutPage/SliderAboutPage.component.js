@@ -126,9 +126,6 @@ renderScrollbar = () => {
     // }px`;
     const width = `${900}px`;
 
-    const aaa = `${(this.itemRef)}`
-
-    console.log("aaa", aaa);
     return (
       <div
         block="Outer"
@@ -156,7 +153,6 @@ handleScroll = (event) => {
 //   for experience section cards  //
 
 renderSliderForCards = (item, i) => {
-    console.log("ckckck", item, i);
   const { link, text, url, plp_config, height, width, text_align, textDescription, imglink } = item;
   const { isArabic } = this.state;
   let parseLink = link;
@@ -222,7 +218,6 @@ renderSliderForCards = (item, i) => {
 
 renderSliderExperience() {
     const cardsData = this.experienceData.Datas;
-    console.log("ckckck", cardsData);
 
     return (
         <DragScroll
