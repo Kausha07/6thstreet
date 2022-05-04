@@ -1,87 +1,115 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
 
-import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { Product } from "Util/API/endpoint/Product/Product.type";
 
-import PDPSummary from './PDPSummary.component';
+import PDPSummary from "./PDPSummary.component";
 
 import Algolia from "Util/API/provider/Algolia";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
-
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 
 export const mapStateToProps = (state) => ({
-    product: state.PDP.product,
-    isLoading: state.PDP.isLoading,
-    brand_url: state.PLP.brand_url
+  product: state.PDP.product,
+  isLoading: state.PDP.isLoading,
+  brand_url: state.PLP.brand_url,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  addressCityData: state.MyAccountReducer.addressCityData,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    getTabbyInstallment: (price) =>
-        CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
+  getTabbyInstallment: (price) =>
+    CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.estimateEddResponse(_dispatch, request),
 });
 export class PDPSummaryContainer extends PureComponent {
-    static propTypes = {
-        product: Product.isRequired,
-        isLoading: PropTypes.bool.isRequired
+  static propTypes = {
+    product: Product.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+  };
+
+  containerFunctions = {};
+
+  containerProps = () => {
+    const {
+      product,
+      isLoading,
+      renderMySignInPopup,
+      getTabbyInstallment,
+      defaultShippingAddress,
+      eddResponse,
+      edd_info,
+      addressCityData,
+      estimateEddResponse,
+    } = this.props;
+    return {
+      product,
+      isLoading,
+      renderMySignInPopup,
+      getTabbyInstallment,
+      defaultShippingAddress,
+      eddResponse,
+      edd_info,
+      addressCityData,
+      estimateEddResponse,
     };
+  };
 
-    containerFunctions = {};
-
-    containerProps = () => {
-        const { product, isLoading, renderMySignInPopup, getTabbyInstallment } = this.props;
-        return { product, isLoading, renderMySignInPopup, getTabbyInstallment };
+  constructor(props) {
+    super(props);
+    this.getBrandDetails = this.getBrandDetails.bind(this);
+    this.state = {
+      url_path: "",
     };
+  }
 
-    constructor(props) {
-        super(props);
-        this.getBrandDetails = this.getBrandDetails.bind(this);
-        this.state = {
-            url_path: ""
-        }
+  componentDidUpdate() {
+    const { brand_url } = this.props;
+    if (!brand_url) {
+      this.getBrandDetails();
+    } else {
+      this.setState({
+        url_path: brand_url,
+      });
     }
+  }
 
-    componentDidUpdate() {
-        const { brand_url } = this.props;
-        if (!brand_url) {
-            this.getBrandDetails();
-        }
-        else {
-            this.setState({
-                url_path: brand_url
-            })
-        }
+  async getBrandDetails() {
+    const {
+      product: { brand_name },
+    } = this.props;
+    try {
+      const data = await new Algolia({
+        index: "brands_info",
+      }).getBrandsDetails({
+        query: brand_name,
+        limit: 1,
+      });
+      this.setState({
+        url_path: data?.hits[0]?.url_path,
+      });
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-    async getBrandDetails() {
-        const { product: { brand_name } } = this.props;
-        try {
-            const data = await new Algolia({
-                index: "brands_info",
-            })
-                .getBrandsDetails({
-                    query: brand_name,
-                    limit: 1,
-                });
-            this.setState({
-                url_path: data?.hits[0]?.url_path
-            });
-        }
-        catch (err) {
-            console.error(err);
-        }
-    }
-
-    render() {
-        const { url_path } = this.state;
-        return (
-            <PDPSummary
-                {...this.containerFunctions}
-                {...this.containerProps()}
-                url_path={url_path}
-            />
-        );
-    }
+  render() {
+    const { url_path } = this.state;
+    return (
+      <PDPSummary
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        url_path={url_path}
+      />
+    );
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPSummaryContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PDPSummaryContainer);

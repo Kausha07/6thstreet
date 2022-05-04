@@ -16,7 +16,10 @@ import Image from "Component/Image";
 import Loader from "Component/Loader";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
-import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
 
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -63,7 +66,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => { },
+    closePopup: () => {},
     isCartPage: false,
   };
 
@@ -345,6 +348,9 @@ export class CartItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
+    let customDefaultMess = isArabic
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+      : DEFAULT_MESSAGE;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
@@ -356,22 +362,26 @@ export class CartItem extends PureComponent {
           }
         });
       } else {
-
-        actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         actualEdd = defaultEddDateString;
       }
     } else {
-      actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       actualEdd = defaultEddDateString;
     }
-
 
     if (!actualEddMess) {
       return null;
     }
+    let splitKey = isArabic ? "بواسطه" : "by";
+
     return (
       <div block="AreaText">
-        <span>{actualEddMess}</span>
+        <span>
+          {actualEddMess.split(splitKey)[0]}
+          {splitKey}
+        </span>
+        <span>{actualEddMess.split(splitKey)[1]}</span>
       </div>
     );
   };
@@ -380,7 +390,11 @@ export class CartItem extends PureComponent {
     const {
       isLikeTable,
       edd_info,
-      item: { customizable_options, bundle_options, full_item_info: { cross_border } },
+      item: {
+        customizable_options,
+        bundle_options,
+        full_item_info: { cross_border },
+      },
     } = this.props;
     const { isNotAvailble } = this.state;
 
@@ -399,7 +413,10 @@ export class CartItem extends PureComponent {
           </>
         )}
         {this.renderActions()}
-        {edd_info && edd_info.is_enable && cross_border === 0 && this.renderEdd()}
+        {edd_info &&
+          edd_info.is_enable &&
+          cross_border === 0 &&
+          this.renderEdd()}
       </figcaption>
     );
   }

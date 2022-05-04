@@ -102,7 +102,7 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency },
       displayDiscountPercentage,
       eddResponse,
-      edd_info
+      edd_info,
     } = this.props;
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
@@ -184,7 +184,7 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
+        (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -238,11 +238,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -387,10 +387,15 @@ class MyAccountOrderView extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
+    let splitKey = isArabic() ? "بواسطه" : "by";
 
     return (
       <div block="AreaText">
-        <span>{actualEddMess}</span>
+        <span>
+          {actualEddMess.split(splitKey)[0]}
+          {splitKey}
+        </span>
+        <span>{actualEddMess.split(splitKey)[1]}</span>
       </div>
     );
   };
@@ -482,8 +487,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-          ? TimerImage
-          : PackageImage;
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -802,15 +807,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -820,11 +825,11 @@ class MyAccountOrderView extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLine(
-                msp_cod_amount,
-                getCountryFromUrl() === "QA"
-                  ? __("Cash on Receiving Fee")
-                  : __("Cash on Delivery Fee")
-              )
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving Fee")
+                    : __("Cash on Delivery Fee")
+                )
               : null}
             {this.renderPriceLine(
               grandTotal,

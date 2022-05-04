@@ -65,7 +65,7 @@
         z-index: 1;
       }
       &-EddContentHeader {
-        width: 100%;
+        width: 100% !important;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -97,19 +97,28 @@
       }
     }
   }
+  .EddParentWrapper {
+    margin: 10px 0px 34px 0px;
+  }
+
   .EddWrapper {
+    @include mobile {
+      width: 100%;
+    }
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-    margin: 29px 0px;
+    flex-direction: column;
+    align-items: flex-start;
+
     .SelectedAreaWrapper {
-      margin: 0px 10px 0px 0px !important;
+      flex-direction: row !important;
+
       &_isArabic {
-        margin: 0px 0px 0px 10px !important;
         .SelectAreaText {
-          margin-right: 5px;
+          margin-right: 8px;
         }
       }
+
       .SelectAreaText {
         color: #000000;
         font-family: "Avenir Next";
@@ -117,7 +126,7 @@
         font-weight: 500;
         letter-spacing: 0;
         line-height: 17px;
-        margin-left: 5px;
+        margin-left: 8px;
         word-wrap: break-word;
         text-decoration: underline;
         cursor: pointer;
@@ -229,30 +238,51 @@
         }
       }
     }
-    @include mobile {
-      margin: 29px 20px;
-    }
 
     .Image {
-      height: 20px;
-      width: 20px;
+      bottom: 10px;
+      height: 22px;
+      width: 22px;
+      @include mobile {
+        height: 20px;
+        width: 20px;
+      }
     }
+
     &-AreaButton {
       height: 36px;
       width: 120px;
+      margin-top: 4px;
+      @include mobile {
+        width: 110px !important;
+      }
       border: 1px solid #28d9aa;
       border-radius: 8px;
       background-color: #ffffff;
       margin-right: 10px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       padding: 0px 8px;
       cursor: pointer;
+      .Image {
+        bottom: 0px;
+      }
       &_isArabic {
         margin-right: 0px;
         margin-left: 10px;
+
+        .SelectAreaText {
+          margin-left: 0px !important;
+          margin-right: 8px;
+
+          @include mobile {
+            margin-left: 0px !important;
+            margin-right: 4px;
+          }
+        }
       }
+
       .SelectAreaText {
         color: #28d9aa;
         font-family: "Avenir Next";
@@ -260,24 +290,37 @@
         font-weight: 600;
         letter-spacing: 0;
         line-height: 18px;
+        margin-left: 8px;
+        @include mobile {
+          margin-left: 4px;
+        }
         text-align: center;
       }
     }
+
     &-AreaText {
-      color: #28d9aa;
+      color: #9b9b9b;
       font-family: "Avenir Next";
-      font-size: 12px;
       letter-spacing: 0;
       line-height: 16px;
-      top: 1px;
-      span:first-child {
-        font-size: 15px;
+      margin-bottom: 3px;
+      font-size: 15px;
+
+      @include mobile {
+        width: auto;
+        margin-bottom: 4px;
       }
       span:nth-child(2) {
         color: #28d9aa;
-        font-size: 15px;
         line-height: 20px;
       }
+    }
+    .EddMessMargin {
+      margin-left: 28px;
+    }
+    .isArabic {
+      margin-left: 0px;
+      margin-right: 28px;
     }
   }
   @include mobile() {

@@ -19,4 +19,3 @@ export const MY_ACCOUNT = "my_account";
 export const POPUP = "popup";
 export const FEEDBACK = "feedback";
 export const LIVE_PARTY = "live-party";
-export const DEFAULT_MESSAGE = 'Delivery by'

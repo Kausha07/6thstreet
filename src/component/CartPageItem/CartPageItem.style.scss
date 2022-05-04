@@ -71,17 +71,24 @@
     height: auto;
     width: 50%;
     .AreaText {
-      color: #28d9aa;
-      font-family: "Avenir Next";
+      color: #9b9b9b;
       text-transform: none !important;
-      font-size: 13px;
+      font-family: "Avenir Next";
+      font-size: 12px;
       letter-spacing: 0;
       line-height: 16px;
       top: 11px;
-      @include mobile{
-        top: 0;
+      @include mobile {
+        top: 0px;
+      }
+
+      span:nth-child(2) {
+        color: #28d9aa;
+        font-size: 12px;
+        line-height: 20px;
       }
     }
+
     @include desktop() {
       height: 130px;
       width: 100%;
@@ -233,7 +240,7 @@
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
-    &-Discount{
+    &-Discount {
       margin-left: 4px;
     }
     &_isArabic {
@@ -242,7 +249,7 @@
         direction: ltr;
       }
     }
-    span{
+    span {
       del {
         color: #000000;
         text-decoration: line-through;
@@ -256,7 +263,6 @@
     color: #000000;
   }
 
-  
   &-ColSizeQty {
     color: #4a4a4a;
     font-weight: var(--fw-regular);

@@ -5,8 +5,11 @@ import { isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
-import { DEFAULT_MESSAGE } from "../../component/Header/Header.config";
-
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
+import { SPECIAL_COLORS } from "../../util/Common";
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -59,45 +62,72 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderEdd = () => {
-    const { eddResponse, compRef, myOrderEdd, edd_info, item: { edd_msg_color } } = this.props;
+    const {
+      eddResponse,
+      compRef,
+      myOrderEdd,
+      edd_info,
+      item: { edd_msg_color },
+    } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
 
-      const {
-        defaultEddDateString,
-        defaultEddDay,
-        defaultEddMonth,
-        defaultEddDat,
-      } = getDefaultEddDate(edd_info.default_message);
-      if (compRef === "checkout") {
-        if (eddResponse) {
-          if (isObject(eddResponse)) {
-            Object.values(eddResponse).filter((entry) => {
-              if (entry.source === "checkout" && entry.featute_flag_status === 1) {
-                actualEddMess = isArabic()
-                  ? entry.edd_message_ar
-                  : entry.edd_message_en;
-                actualEdd = entry.edd_date;
-              }
-            });
-          } else {
-            actualEddMess = `${DEFAULT_MESSAGE} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-            actualEdd = defaultEddDateString;
-          }
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+    let customDefaultMess = isArabic()
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+      : DEFAULT_MESSAGE;
+    if (compRef === "checkout") {
+      if (eddResponse) {
+        if (isObject(eddResponse)) {
+          Object.values(eddResponse).filter((entry) => {
+            if (
+              entry.source === "checkout" &&
+              entry.featute_flag_status === 1
+            ) {
+              actualEddMess = isArabic()
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              actualEdd = entry.edd_date;
+            }
+          });
+        } else {
+          actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          actualEdd = defaultEddDateString;
         }
-      } else {
-        actualEddMess = myOrderEdd;
-        actualEdd = myOrderEdd;
       }
+    } else {
+      actualEddMess = myOrderEdd;
+      actualEdd = myOrderEdd;
+    }
 
     if (!actualEddMess) {
       return null;
     }
 
-    let colorCode = compRef === 'checkout' ? '#28d9aa' : edd_msg_color
+    let splitKey = isArabic() ? "بواسطه" : "by";
+
+    let colorCode =
+      compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
-      <div block="AreaText" style={{ color: colorCode }}>
-        <span>{actualEddMess}</span>
+      <div block="AreaText">
+        <span
+          style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
+        >
+          {idealFormat
+            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            : actualEddMess.split(" ")[0]}{" "}
+        </span>
+        <span style={{ color: colorCode }}>
+          {idealFormat
+            ? `${actualEddMess.split(splitKey)[1]}`
+            : actualEddMess.split(" ")[1]}
+        </span>
       </div>
     );
   };
