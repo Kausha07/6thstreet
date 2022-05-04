@@ -99,7 +99,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderItem = (item, eddItem) => {
     const {
-      order: { order_currency_code: currency },
+      order: { order_currency_code: currency,status },
       displayDiscountPercentage,
       eddResponse,
       edd_info,
@@ -111,6 +111,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <MyAccountOrderViewItem
         item={item}
+        status={status}
         myOrderEdd={finalEdd}
         compRef={"myOrder"}
         eddResponse={eddResponse}
