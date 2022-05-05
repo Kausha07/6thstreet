@@ -90,15 +90,20 @@ class PDPSummary extends PureComponent {
       city,
       area
     );
-    this.setState({
-      Cityresponse: addressCityData,
-      selectedCity: cityEntry,
-      selectedCityId: cityEntry,
-      selectedAreaId: areaEntry,
-      selectedArea: areaEntry,
-      countryCode: countryCode,
-    });
-    return { cityEntry, areaEntry };
+    this.setState(
+      {
+        Cityresponse: addressCityData,
+        selectedCity: cityEntry,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: areaEntry,
+        countryCode: countryCode,
+      },
+      () => {
+        let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        this.getEddResponse(data);
+      }
+    );
   };
 
   getCityAreaFromDefault = (addressCityData, countryCode) => {
@@ -109,15 +114,34 @@ class PDPSummary extends PureComponent {
       city,
       area
     );
-    this.setState({
-      Cityresponse: addressCityData,
-      selectedCity: cityEntry,
-      selectedCityId: cityEntry,
-      selectedAreaId: areaEntry,
-      selectedArea: areaEntry,
-      countryCode: countryCode,
-    });
-    return { cityEntry, areaEntry };
+    this.setState(
+      {
+        Cityresponse: addressCityData,
+        selectedCity: cityEntry,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: areaEntry,
+        countryCode: countryCode,
+      },
+      () => {
+        let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        this.getEddResponse(data);
+      }
+    );
+  };
+
+  getEddResponse = (data) => {
+    const { estimateEddResponse } = this.props;
+    const { area, city, country } = data;
+
+    let request = {
+      country: country,
+      city: city,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request);
   };
 
   validateEddStatus = () => {
@@ -188,7 +212,7 @@ class PDPSummary extends PureComponent {
 
     const countryCode = getCountryFromUrl();
     const { edd_info } = this.props;
-    if (edd_info && edd_info.is_enable) {
+    if (edd_info && edd_info.is_enable && edd_info.has_pdp) {
       this.validateEddStatus(countryCode);
     } else {
       this.setState({
@@ -284,14 +308,12 @@ class PDPSummary extends PureComponent {
             selectedArea: areaEntry,
           },
           () => {
-            let request = {
+            let data = {
+              area: areaEntry,
+              city: cityEntry,
               country: country_code,
-              city: city,
-              area: area,
-              courier: null,
-              source: null,
             };
-            estimateEddResponse(request);
+            this.getEddResponse(data);
           }
         );
       }
@@ -934,7 +956,8 @@ class PDPSummary extends PureComponent {
   }
 
   render() {
-    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
+    const { isArabic, Cityresponse, showCityDropdown, isMobile, edd_info } =
+      this.state;
     const {
       product: { cross_border = 0 },
     } = this.props;
@@ -949,7 +972,12 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
-        {Cityresponse && cross_border === 0 && this.renderSelectCity()}
+        {Cityresponse &&
+          edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_pdp &&
+          cross_border === 0 &&
+          this.renderSelectCity()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
