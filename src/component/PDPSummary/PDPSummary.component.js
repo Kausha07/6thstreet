@@ -956,10 +956,11 @@ class PDPSummary extends PureComponent {
   }
 
   render() {
-    const { isArabic, Cityresponse, showCityDropdown, isMobile, edd_info } =
+    const { isArabic, Cityresponse, showCityDropdown, isMobile } =
       this.state;
     const {
       product: { cross_border = 0 },
+      edd_info
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     return (
