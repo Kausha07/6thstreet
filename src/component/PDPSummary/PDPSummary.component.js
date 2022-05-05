@@ -146,7 +146,8 @@ class PDPSummary extends PureComponent {
 
   validateEddStatus = () => {
     const countryCode = getCountryFromUrl();
-    const { defaultShippingAddress, addressCityData } = this.props;
+    const { defaultShippingAddress, addressCityData, setEddResponse } =
+      this.props;
     if (isSignedIn() && defaultShippingAddress) {
       this.getCityAreaFromDefault(addressCityData, countryCode);
     } else if (
@@ -162,6 +163,7 @@ class PDPSummary extends PureComponent {
         Cityresponse: addressCityData,
         countryCode: countryCode,
       });
+      setEddResponse(null, null);
     }
   };
 
@@ -956,11 +958,10 @@ class PDPSummary extends PureComponent {
   }
 
   render() {
-    const { isArabic, Cityresponse, showCityDropdown, isMobile } =
-      this.state;
+    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
     const {
       product: { cross_border = 0 },
-      edd_info
+      edd_info,
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     return (
