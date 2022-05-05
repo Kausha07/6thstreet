@@ -53,6 +53,7 @@ import {
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
 import { isObject } from "Util/API/helper/Object";
+import { SPECIAL_COLORS } from "../../util/Common";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -389,14 +390,22 @@ class MyAccountOrderView extends PureComponent {
       return null;
     }
     let splitKey = isArabic() ? "بواسطه" : "by";
-
+    let colorCode = SPECIAL_COLORS["shamrock"];
+    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
       <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
+        <span
+          style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
+        >
+          {idealFormat
+            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            : actualEddMess.split(" ")[0]}{" "}
         </span>
-        <span>{actualEddMess.split(splitKey)[1]}</span>
+        <span style={{ color: colorCode }}>
+          {idealFormat
+            ? `${actualEddMess.split(splitKey)[1]}`
+            : actualEddMess.split(" ")[1]}
+        </span>
       </div>
     );
   };
