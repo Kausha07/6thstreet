@@ -84,7 +84,7 @@ export const getDefaultEddDate = (days) => {
   const defaultEddMonth = defaultEddDate.toLocaleString("en-US", {
     month: "short",
   });
-  const defaultEddDat = defaultEddDate.getDate();
+  const defaultEddDat = ("0" + defaultEddDate.getDate()).slice(-2);
 
   return {
     defaultEddDateString,
