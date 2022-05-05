@@ -1,4 +1,4 @@
-import { PureComponent, Fragment } from 'react';
+import { PureComponent } from 'react';
 import "./About.style"
 
 import Link from "Component/Link";
@@ -51,7 +51,8 @@ export class About extends PureComponent {
           <>
             <div className="VideoOuterDiv">
               <video width="100%" controls autoPlay muted loop>                
-                <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdesk.webm" type="video/mp4"/>
+                <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdesk.webm" type="video/webm"/>
+                <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdesk.mp4" type="video/mp4"/>
               </video>
             </div>
           </>
@@ -62,11 +63,13 @@ export class About extends PureComponent {
                 <div className="VideoOuterDiv">
                   { isMobileDev ? (
                     <video width="100%" controls autoPlay muted loop>                
-                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosmobi.webm" type="video/mp4"/>
+                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosmobi.webm" type="video/webm"/>
+                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosmobi.mp4" type="video/mp4"/>
                     </video>
                   ) : (
                     <video width="100%" controls autoPlay muted loop>                
-                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdec.webm" type="video/mp4"/>
+                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdec.webm" type="video/webm"/>
+                      <source src="https://mobilecdn.6thstreet.com/landing_media_assets/About/videosdec.mp4" type="video/mp4"/>
                     </video>
                   ) }
                 </div>

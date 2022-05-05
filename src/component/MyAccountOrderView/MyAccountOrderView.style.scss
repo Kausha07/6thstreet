@@ -12,6 +12,12 @@
             font-size: 13px;
             letter-spacing: 0;
             line-height: 16px;
+            
+            span:nth-child(2) {
+              color: #28d9aa;
+              font-size: 12px;
+              line-height: 20px;
+            }
           }
         }
       }
