@@ -62,11 +62,11 @@
       margin: 0;
       width: 100%;
     }
-    .tns-outer{
-      .tns-controls{
+    .tns-outer {
+      .tns-controls {
         display: none;
       }
-      .tns-nav{
+      .tns-nav {
         display: none;
       }
       button[data-action="stop"] {
@@ -75,10 +75,10 @@
       button[data-action="start"] {
         display: none;
       }
-      .tns-liveregion{
+      .tns-liveregion {
         display: none;
       }
-      .tns-ovh{
+      .tns-ovh {
         overflow: hidden;
       }
     }
@@ -105,6 +105,10 @@
       display: block;
       height: 30px;
       margin: 0;
+      position: relative;
+      top: 0px;
+      animation: verticalscroll 7s infinite 2s;
+      padding: 7px 0;
     }
   }
 
@@ -121,14 +125,13 @@
     display: flex;
     align-items: center;
     flex: 1;
-    @include tablet{
+    @include tablet {
       display: none;
     }
-    @include mobile{
+    @include mobile {
       display: none;
     }
   }
-
 
   .LanguageSwitcher {
     @include before-desktop() {
@@ -140,5 +143,41 @@
     @include before-desktop() {
       display: none;
     }
+  }
+}
+.customVerticalSlider {
+  @include desktop {
+    position: relative;
+    width: 100%;
+    .carouselItemInner {
+      position: absolute;
+      width: 100%;
+      height: 30px;
+      max-height: 30px;
+      overflow: hidden;
+    }
+  }
+}
+@keyframes verticalscroll {
+  0% {
+    top: 0px;
+  }
+  16% {
+    top: 0px;
+  }
+  32% {
+    top: -30px;
+  }
+  48% {
+    top: -58px;
+  }
+  64% {
+    top: -88px;
+  }
+  82% {
+    top: -118px;
+  }
+  100% {
+    top: -150px;
   }
 }
