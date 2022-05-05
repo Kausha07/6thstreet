@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 
 import PDPSummary from "./PDPSummary.component";
+import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 
 import Algolia from "Util/API/provider/Algolia";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -25,6 +26,7 @@ export const mapDispatchToProps = (_dispatch) => ({
     CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
   estimateEddResponse: (request) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request),
+  setEddResponse: (gender) => _dispatch(setEddResponse(gender)),
 });
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
@@ -45,6 +47,7 @@ export class PDPSummaryContainer extends PureComponent {
       edd_info,
       addressCityData,
       estimateEddResponse,
+      setEddResponse,
     } = this.props;
     return {
       product,
@@ -56,6 +59,7 @@ export class PDPSummaryContainer extends PureComponent {
       edd_info,
       addressCityData,
       estimateEddResponse,
+      setEddResponse,
     };
   };
 
