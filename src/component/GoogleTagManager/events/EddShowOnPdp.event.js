@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_EDD_SHOW_ON_PDP } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY_ON_PDP } from "Util/Event";
 
 import BaseEvent from "./Base.event";
 
@@ -8,12 +8,12 @@ export const SPAM_PROTECTION_DELAY = 200;
 /**
  * Product add to cart event
  */
-class EddShowOnPdpEvent extends BaseEvent {
+class EddVisibilityOnPdpEvent extends BaseEvent {
   /**
    * Bind add to cart
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_EDD_SHOW_ON_PDP, ({ edd_status }) => {
+    Event.observer(EVENT_GTM_EDD_VISIBILITY_ON_PDP, ({ edd_status }) => {
         console.log("muskan",edd_status);
       this.handle(edd_status);
     });
@@ -35,4 +35,4 @@ class EddShowOnPdpEvent extends BaseEvent {
   }
 }
 
-export default EddShowOnPdpEvent;
+export default EddVisibilityOnPdpEvent;

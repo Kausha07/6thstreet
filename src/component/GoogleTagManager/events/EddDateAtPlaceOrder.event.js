@@ -8,7 +8,7 @@ export const SPAM_PROTECTION_DELAY = 200;
 /**
  * Product add to cart event
  */
-class EddShowOnPdpEvent extends BaseEvent {
+class EddVisibilityOnPdpEvent extends BaseEvent {
   /**
    * Bind add to cart
    */
@@ -34,4 +34,4 @@ class EddShowOnPdpEvent extends BaseEvent {
   }
 }
 
-export default EddShowOnPdpEvent;
+export default EddVisibilityOnPdpEvent;
