@@ -152,7 +152,21 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList, totals: { items = []},showNotification, location:{state:{errorState:propErrorState}} } = this.props;
+        const {
+            updateMeta,
+            updateStoreCredit,
+            prevPath=null,
+            getCouponList,
+            totals: {
+                items = []
+            },
+            showNotification,
+            location:{
+                state:{
+                    errorState: propErrorState
+                } = {}
+            }
+        } = this.props;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;

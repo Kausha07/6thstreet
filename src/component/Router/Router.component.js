@@ -22,6 +22,7 @@ import {
   FEEDBACK,
   URL_REWRITES,
   LIVE_PARTY,
+  ABOUT,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -30,6 +31,7 @@ import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
 import LiveExperience from "Route/LiveExperience";
+import About from "Route/About";
 import WelcomeHomePage from "Component/WelcomeHomePage";
 import * as Sentry from '@sentry/react';
 
@@ -297,6 +299,19 @@ export class Router extends SourceRouter {
       ),
       position: 95,
     },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("about")}
+          render={(props) => (
+            <GTMRouteWrapper route={ABOUT}>
+              <About {...props} /> 
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
   ];
 
   [AFTER_ITEMS_TYPE] = [
@@ -361,7 +376,6 @@ export class Router extends SourceRouter {
 
   renderDefaultRouterContent() {
     const { isAppReady } = this.props;
-
     if (isAppReady) {
       return this.renderContent();
     }

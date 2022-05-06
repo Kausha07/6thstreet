@@ -263,11 +263,6 @@ class Product {
             category,
             [PRODUCT_COLOR]: color,
             quantity:qty,
-            size_type:size_option,
-            size: optionValue,
-            dimension9: (100 - Math.round((row_total / basePrice) * 100) || 0),
-            dimension10:basePrice,
-            dimension11:row_total,
         };
     }
 }

@@ -24,6 +24,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  estimateEddResponse: (request) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.estimateEddResponse(dispatch, request)
+    ),
 });
 
 export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookContainer {
@@ -44,6 +48,22 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
   };
 
+  onAddressSelect(address) {
+    const { id = 0, city, area, country_code } = address;
+    const { estimateEddResponse, edd_info } = this.props;
+    this.setState({ selectedAddressId: id });
+    if (edd_info && edd_info.is_enable) {
+      let request = {
+        country: country_code,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      estimateEddResponse(request);
+    }
+  }
+
   showCreateNewPopup() {
     const { showPopup } = this.props;
 
@@ -63,18 +83,11 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       return;
     }
 
-    const {
-      city,
-      country_code,
-      area,
-      street,
-      phone,
-    } = address;
+    const { city, country_code, area, street, phone } = address;
 
     if (!country_code) {
       return;
     }
-
 
     onShippingEstimationFieldsChange({
       city,

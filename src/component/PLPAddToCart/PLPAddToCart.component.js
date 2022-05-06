@@ -548,11 +548,6 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
-          size_type: optionId,
-          size: optionValue,
-          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
-          dimension10: basePrice,
-          dimension11: itemPrice,
         },
       });
 
@@ -610,11 +605,6 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
-          size_type: "",
-          size: "",
-          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
-          dimension10: basePrice,
-          dimension11: itemPrice,
         },
       });
 

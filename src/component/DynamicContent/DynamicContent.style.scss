@@ -1,5 +1,8 @@
 .DynamicContent {
   text-indent: 0;
+  @include mobile {
+    padding: 0 10px;
+  }
   hr {
     border-top: 1px solid #efefef;
     margin-top: 60px;

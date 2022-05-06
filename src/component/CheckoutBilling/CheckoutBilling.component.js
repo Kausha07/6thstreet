@@ -46,7 +46,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     ...SourceCheckoutBilling.defaultProps,
     processApplePay: true,
     processingPaymentSelectRequest: false,
-    placeOrder: () => {},
+    placeOrder: () => { },
     isLoading: false,
     applePayDisabled: true,
     button_style: "",
@@ -197,6 +197,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       onAddressSelect,
       isSameAsShipping,
       addresses,
+      edd_info,
       totals: { is_virtual },
     } = this.props;
 
@@ -212,6 +213,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       <>
         {this.renderAddressHeading()}
         <CheckoutAddressBook
+          edd_info={edd_info}
           addresses={addresses}
           onAddressSelect={onAddressSelect}
           isBilling
@@ -429,8 +431,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                   processingRequest || processingPaymentSelectRequest
                     ? "spinningButton"
                     : isTabbyPay
-                    ? "tabbyButton"
-                    : "Button",
+                      ? "tabbyButton"
+                      : "Button",
               }}
             >
               {processingRequest || processingPaymentSelectRequest ? (
