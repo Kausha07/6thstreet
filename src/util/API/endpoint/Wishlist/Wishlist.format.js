@@ -15,7 +15,6 @@ export const formatProduct = (product) => {
     const productUrl = request_path
         ? `${window.location.origin}/${request_path}`
         : `${window.location.origin}/catalog/product/view/id/${entity_id}/s/${url_key}/`;
-console.log("muskan---->",product);
     return {
         sku,
         name,
