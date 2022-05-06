@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_EDD_DATE_AT_PLACE_ORDER } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 
 import BaseEvent from "./Base.event";
 
@@ -8,20 +8,20 @@ export const SPAM_PROTECTION_DELAY = 200;
 /**
  * Product add to cart event
  */
-class EddVisibilityOnPdpEvent extends BaseEvent {
+class EddVisibilityEvent extends BaseEvent {
   /**
    * Bind add to cart
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_EDD_DATE_AT_PLACE_ORDER, ({ edd_status }) => {
-      this.handle(edd_status);
+    Event.observer(EVENT_GTM_EDD_VISIBILITY, ({ edd_status, page }) => {
+      this.handle(edd_status, page);
     });
   }
 
   /**
    * Handle product add to cart
    */
-  handler(edd_status) {
+  handler(edd_status, page) {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
@@ -29,9 +29,10 @@ class EddVisibilityOnPdpEvent extends BaseEvent {
     this.pushEventData({
       ecommerce: {
         edd_status: edd_status,
+        page: page,
       },
     });
   }
 }
 
-export default EddVisibilityOnPdpEvent;
+export default EddVisibilityEvent;

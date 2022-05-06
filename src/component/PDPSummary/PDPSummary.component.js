@@ -29,7 +29,7 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import "./PDPSummary.style";
-import Event, { EVENT_GTM_EDD_VISIBILITY_ON_PDP } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -224,8 +224,9 @@ class PDPSummary extends PureComponent {
       cross_border === 0
     ) {
       this.validateEddStatus(countryCode);
-      Event.dispatch(EVENT_GTM_EDD_VISIBILITY_ON_PDP, {
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
         edd_status: edd_info.has_pdp,
+        page: "pdp",
       });
     } else {
       this.setState({
