@@ -377,7 +377,6 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
-    sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
     estimateEddResponse(request, true);
     document.body.style.overflow = "visible";
   };
