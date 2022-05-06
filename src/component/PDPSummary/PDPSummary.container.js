@@ -24,8 +24,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   getTabbyInstallment: (price) =>
     CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
-  estimateEddResponse: (request) =>
-    MyAccountDispatcher.estimateEddResponse(_dispatch, request),
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
   setEddResponse: (gender) => _dispatch(setEddResponse(gender)),
 });
 export class PDPSummaryContainer extends PureComponent {
