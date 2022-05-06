@@ -151,6 +151,25 @@ export class MyAccountSignedInOverlay extends PureComponent {
     );
   }
 
+  renderWalletPayment() {
+    return (
+      <Link
+        block="MyAccountSignedInOverlay"
+        elem="LinkDelivery"
+        to="/my-account/wallet-payments"
+      >
+        <Image
+          lazyLoad={true}
+          src={AddressIcon}
+          mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+        />
+        <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+          {__("Wallet & Payments")}
+        </span>
+      </Link>
+    );
+  }
+
   renderLogoutButton() {
     const { signOut } = this.props;
 
@@ -181,6 +200,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         {this.renderReturnAnItemLink()}
         {this.renderWishlistLink()}
         {this.renderDeliveryLink()}
+        {this.renderWalletPayment()}
         {this.renderLogoutButton()}
       </div>
     );
