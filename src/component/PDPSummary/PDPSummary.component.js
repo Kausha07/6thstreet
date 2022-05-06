@@ -101,7 +101,7 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
-        this.getEddResponse(data);
+        this.getEddResponse(data, false);
       }
     );
   };
@@ -125,12 +125,12 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
-        this.getEddResponse(data);
+        this.getEddResponse(data, false);
       }
     );
   };
 
-  getEddResponse = (data) => {
+  getEddResponse = (data, type) => {
     const { estimateEddResponse } = this.props;
     const { area, city, country } = data;
 
@@ -141,7 +141,7 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
-    estimateEddResponse(request);
+    estimateEddResponse(request, type);
   };
 
   validateEddStatus = () => {
@@ -213,9 +213,11 @@ class PDPSummary extends PureComponent {
     }
 
     const countryCode = getCountryFromUrl();
-    const { edd_info } = this.props;
+    const { edd_info, addressCityData } = this.props;
     if (edd_info && edd_info.is_enable && edd_info.has_pdp) {
-      this.validateEddStatus(countryCode);
+      if (addressCityData.length > 0) {
+        this.validateEddStatus(countryCode);
+      }
     } else {
       this.setState({
         countryCode: countryCode,
@@ -315,7 +317,7 @@ class PDPSummary extends PureComponent {
               city: cityEntry,
               country: country_code,
             };
-            this.getEddResponse(data);
+            this.getEddResponse(data, false);
           }
         );
       }
@@ -375,7 +377,7 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
-    estimateEddResponse(request);
+    estimateEddResponse(request, true);
     document.body.style.overflow = "visible";
   };
 
