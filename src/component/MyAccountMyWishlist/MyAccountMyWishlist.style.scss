@@ -4,6 +4,11 @@
     margin-top: 594px;
     padding-bottom: 130px;
   }
+  .Price {
+    justify-content: center;
+    display: block;
+    text-align: left;
+  }
   .ProductItem {
     &-ImageBox {
       margin-bottom: 40px;
@@ -63,10 +68,10 @@
   &_isArabic {
     .MyAccountMyWishlist {
       .Price {
+        text-align: right;
         flex-direction: row-reverse;
-
         &-Wrapper {
-          display: flex;
+          // display: flex;
           flex-direction: row-reverse;
           margin: 0;
         }

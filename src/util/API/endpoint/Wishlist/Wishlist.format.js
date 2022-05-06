@@ -15,7 +15,7 @@ export const formatProduct = (product) => {
     const productUrl = request_path
         ? `${window.location.origin}/${request_path}`
         : `${window.location.origin}/catalog/product/view/id/${entity_id}/s/${url_key}/`;
-
+console.log("muskan---->",product);
     return {
         sku,
         name,
@@ -25,8 +25,8 @@ export const formatProduct = (product) => {
         price: [
             {
                 [currency_code]: {
-                    '6s_base_price': parseFloat(price) || parseFloat(special_price),
-                    '6s_special_price': null
+                    '6s_base_price': parseFloat(special_price),
+                    '6s_special_price': parseFloat(price)
                 }
             }
         ]
