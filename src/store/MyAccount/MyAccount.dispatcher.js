@@ -9,7 +9,7 @@ import {
   setCustomerDefaultShippingAddress,
   setEddResponse,
   setDefaultEddAddress,
-  setCitiesData
+  setCitiesData,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -71,7 +71,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               return address.default_shipping === true;
             }
           );
-          if (defaultShippingAddress && Object.values(defaultShippingAddress).length > 0) {
+          if (
+            defaultShippingAddress &&
+            Object.values(defaultShippingAddress).length > 0
+          ) {
             const { country_code, city, area } = defaultShippingAddress[0];
             let request = {
               country: country_code,
@@ -84,6 +87,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             dispatch(
               setCustomerDefaultShippingAddress(defaultShippingAddress[0])
             );
+          } else {
+            dispatch(setCustomerDefaultShippingAddress(null));
           }
         }
       }
@@ -151,8 +156,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
-    sessionStorage.removeItem('EddAddressReq')
-    sessionStorage.removeItem('EddAddressRes')
+    sessionStorage.removeItem("EddAddressReq");
+    sessionStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
 
@@ -182,13 +187,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   async getCitiesData(dispatch) {
     try {
-      let finalRes = await AppConfigDispatcher.getCities()
+      let finalRes = await AppConfigDispatcher.getCities();
       dispatch(setCitiesData(finalRes?.data));
-
     } catch (error) {
       dispatch(setCitiesData([]));
     }
-
   }
 
   async resetUserPassword(options) {
@@ -314,10 +317,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-            username,
-            password,
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          }
+              username,
+              password,
+              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+            }
       );
 
     const phoneAttribute = custom_attributes?.filter(
@@ -416,18 +419,21 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
           dispatch(setEddResponse(response?.result, request));
-          sessionStorage.setItem('EddAddressReq', JSON.stringify(request))
-          sessionStorage.setItem('EddAddressRes', JSON.stringify(response.result))
+          sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+          sessionStorage.setItem(
+            "EddAddressRes",
+            JSON.stringify(response.result)
+          );
         } else {
           dispatch(setEddResponse(response?.errorMessage, request));
-          sessionStorage.setItem('EddAddressReq', '')
-          sessionStorage.setItem('EddAddressRes', '')
+          sessionStorage.setItem("EddAddressReq", "");
+          sessionStorage.setItem("EddAddressRes", "");
         }
       });
     } catch (error) {
       dispatch(setEddResponse(null, request));
-      sessionStorage.setItem('EddAddressReq', '')
-      sessionStorage.setItem('EddAddressRes', '')
+      sessionStorage.setItem("EddAddressReq", "");
+      sessionStorage.setItem("EddAddressRes", "");
     }
   }
 
