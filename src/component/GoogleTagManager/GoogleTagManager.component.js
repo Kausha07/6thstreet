@@ -21,7 +21,7 @@ import {
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
-import EddVisibilityEvent from "./events/EddVisibilityOnPdp.event";
+import EddVisibilityEvent from "./events/EddVisibility.event";
 import EddTrackOnOrderEvent from "./events/EddDateOnOrder.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";

@@ -22,7 +22,6 @@ class EddVisibilityEvent extends BaseEvent {
    * Handle product add to cart
    */
   handler(edd_details, page) {
-    console.log("muskan",edd_details,page);
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }

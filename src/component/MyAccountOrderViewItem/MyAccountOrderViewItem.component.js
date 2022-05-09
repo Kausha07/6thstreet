@@ -114,7 +114,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       if(myOrderEdd){
       Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
         edd_details: {
-          edd_status: edd_info.has_pdp,
+          edd_status: edd_info.has_order_detail,
           default_edd_status: null,
           edd_updated: null,
         },
