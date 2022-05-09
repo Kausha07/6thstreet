@@ -238,6 +238,7 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductPrice()}
         {edd_info &&
           edd_info.is_enable &&
+          edd_info.has_thank_you && 
           cross_border === 0 &&
           !isFailed &&
           this.renderEdd()}
