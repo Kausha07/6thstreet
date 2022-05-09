@@ -26,12 +26,56 @@ import Event, {
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
+import ExploreMore from "../ExploreMore"
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import Price from "Component/Price";
 
 var ESCAPE_KEY = 27;
+
+var data = {
+  "type": "grid",
+  "index": 19,
+  "promotion_name": "Women-EN",
+  "tag": "Home-Explore more-Mar",
+  "background_color": "#000000",
+  "items_per_row": 4,
+  "item_height": 240,
+  "header": {
+    "title": "EXPLORE MORE"
+  },
+  "items": [
+    {
+      "promotion_name": "Home-Explore more-Shop Men",
+      "link": "/catalogsearch/result/?q=+&qid=3562bc1a9801c6b286473ea0941eb786&p=0&dFR%5Bgender%5D%5B0%5D=Men&idx=enterprise_magento_english_products",
+      "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/29-03-2022/Explore+more+women/Men.jpg",
+      "tag": "Shop Men"
+    },
+    {
+      "promotion_name": "Home-Explore more-Shop Kids",
+      "link": "/catalogsearch/result/?q=+&qid=012347b7495fb45edc7583e7457f22a8&p=0&dFR%5Bgender%5D%5B0%5D=Baby+Boy%2CBaby+Girl%2CBoy%2CGirl&idx=enterprise_magento_english_products",
+      "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/29-03-2022/Explore+more+women/Kids.jpg",
+      "tag": "Shop Kids"
+    },
+    {
+      "promotion_name": "Home-Explore more-Shop Beauty",
+      "link": "/women/beauty.html?q=Women+Beauty&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Beauty&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+      "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/29-03-2022/Explore+more+women/Beauty.jpg",
+      "tag": "Shop Beauty"
+    },
+    {
+      "promotion_name": "Home-Explore more-Shop Home",
+      "link": "/catalogsearch/result/?q=home&qid=4291de849c0a934ab4689abb53becf1d&p=0&dFR%5Bcategories_without_path%5D%5B0%5D=Home%2CCookware+%2F+Ovenware+%2F+Roastware%2CCooking+Electricals%2CCoffee+Machine&dFR%5Bgender%5D%5B0%5D=Women%2CMen%2CGirl%2CBoy%2CUnisex&idx=enterprise_magento_english_products",
+      "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/29-03-2022/Explore+more+women/Home.jpg",
+      "tag": "Shop Home"
+    }
+  ],
+  "image_size": {
+    "height": 157,
+    "width": 375
+  }
+}
 
 class SearchSuggestion extends PureComponent {
   static propTypes = {
@@ -926,6 +970,10 @@ class SearchSuggestion extends PureComponent {
     ) : null;
   }
 
+  renderExploreMore = () => {
+    return <ExploreMore data={data} />
+  }
+
   renderEmptySearch() {
     return (
       <>
@@ -936,6 +984,7 @@ class SearchSuggestion extends PureComponent {
         {/* {this.renderTrendingProducts()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderTrendingTags()}
+        {this.renderExploreMore()}
       </>
     );
   }

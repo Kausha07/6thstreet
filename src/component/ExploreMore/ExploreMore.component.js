@@ -14,9 +14,9 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import "./TrendingOn6thstreet.style";
+import "./ExploreMore.style";
 
-class TrendingOn6thstreet extends PureComponent {
+class ExploreMore extends PureComponent {
     static propTypes = {
         items: PropTypes.arrayOf(
             PropTypes.shape({
@@ -65,24 +65,24 @@ class TrendingOn6thstreet extends PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.items.length < 8) {
-            let setting = JSON.parse(JSON.stringify(this.state.settings));
-            setting.responsive[1024].items = this.props.items.length;
-            this.setState((prevState) => ({
-                ...prevState,
-                settings: {
-                    ...prevState.settings,
-                    responsive: {
-                        ...prevState.settings.responsive,
-                        1024: {
-                            ...prevState.settings.responsive[1024],
-                            items: this.props.items.length,
-                        },
-                    },
-                },
-            }));
-        }
-        this.registerViewPortEvent();
+        // if (this.props.items.length < 8) {
+        //     let setting = JSON.parse(JSON.stringify(this.state.settings));
+        //     setting.responsive[1024].items = this.props.items.length;
+        //     this.setState((prevState) => ({
+        //         ...prevState,
+        //         settings: {
+        //             ...prevState.settings,
+        //             responsive: {
+        //                 ...prevState.settings.responsive,
+        //                 1024: {
+        //                     ...prevState.settings.responsive[1024],
+        //                     items: this.props.items.length,
+        //                 },
+        //             },
+        //         },
+        //     }));
+        // }
+        // this.registerViewPortEvent();
     }
     registerViewPortEvent() {
         let observer;
@@ -169,7 +169,9 @@ class TrendingOn6thstreet extends PureComponent {
     }
 
     renderSliderWithLabel = (item, i) => {
-        const { link, text, url, plp_config, height, width, text_align } = item;
+        let height = this.props.data.image_size.height
+        let width = this.props.data.image_size.width
+        const { link, text, url, plp_config, text_align } = item;
         const { isArabic } = this.state;
         let parseLink = link;
         const wd = `${width.toString()}px`;
@@ -249,7 +251,7 @@ class TrendingOn6thstreet extends PureComponent {
     };
 
     renderSliderWithLabels() {
-        const { items = [], title } = this.props;
+        let items = this.props.data.items
 
         return (
             <DragScroll
@@ -282,9 +284,9 @@ class TrendingOn6thstreet extends PureComponent {
                 block="DynamicContentSliderWithLabel"
                 id={`DynamicContentSliderWithLabel${index}`}
             >
-                {/* {this.props.header && (
-                    <DynamicContentHeader header={this.props.header} />
-                )} */}
+                {this.props.data.header && (
+                    <DynamicContentHeader header={this.props.data.header} />
+                )}
                 {this.props.title && (
                     <h1 block="Title" mods={{ isArabic }}>
                         {this.props.title}
@@ -297,6 +299,7 @@ class TrendingOn6thstreet extends PureComponent {
             </div>
         );
     }
+
 }
 
-export default TrendingOn6thstreet;
+export default ExploreMore;

@@ -157,6 +157,38 @@ class PDPDetailsSection extends PureComponent {
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
     const { isArabic } = this.state;
+    const {
+      product: {
+        sku,
+        highlighted_attributes,
+        categories,
+        model_height,
+        product_height,
+        product_length,
+        product_width,
+        bag_dimension,
+        model_wearing_size,
+      },
+      product,
+    } = this.props;
+    const highlights = this.getHighlights(
+      highlighted_attributes,
+      categories,
+      product_height,
+      product_length,
+      product_width,
+      bag_dimension,
+      product
+    );
+    let isReturnable = true
+    highlights.forEach((val) => {
+      if (val.key === "returnable") {
+        if (val.value === "No") {
+          isReturnable = false;
+        }
+      }
+    })
+
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
@@ -184,14 +216,17 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
-          <div
-            block="PDPDetailsSection"
-            elem="Icon"
-            mods={{ freeReturn: true }}
-          />
-          <div>{__("Free Returns")}</div>
-        </div>
+        { isReturnable &&
+          <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
+            <div
+              block="PDPDetailsSection"
+              elem="Icon"
+              mods={{ freeReturn: true }}
+            />
+            <div>{__("Free Returns")}</div>
+          </div>
+        }
+
       </div>
     );
   }
@@ -654,43 +689,43 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-        <div block="Seperator2" />
-        <React.Fragment>
-          {pdpWidgetsAPIData.map((item, index) => {
-            if (typeof item === "object" && Object.keys(item).length > 0) {
-              const { title: heading } = pdpWidgetsData[index]["layout"];
-              const widgetID = pdpWidgetsData[index]["type"];
-              const { data } = item;
-              if (data && data.length > 0) {
-                return (
-                  <>
-                    <div
-                      block="PDPWidgets"
-                      elem="Slider"
-                      mods={{ largeScreen: width > 1440 }}
-                    >
-                      <DynamicContentVueProductSliderContainer
-                        widgetID={widgetID}
-                        products={data}
-                        heading={heading}
-                        isHome={true}
-                        renderMySignInPopup={renderMySignInPopup}
-                        sourceProdID={sku}
-                        sourceCatgID={categories_without_path[0]}
-                        pageType={"pdp"}
-                        key={`DynamicContentVueProductSliderContainer${index}`}
-                        index={index}
-                        isArabic={isArabic()}
-                      />
-                    </div>
-                  </>
-                );
+          <div block="Seperator2" />
+          <React.Fragment>
+            {pdpWidgetsAPIData.map((item, index) => {
+              if (typeof item === "object" && Object.keys(item).length > 0) {
+                const { title: heading } = pdpWidgetsData[index]["layout"];
+                const widgetID = pdpWidgetsData[index]["type"];
+                const { data } = item;
+                if (data && data.length > 0) {
+                  return (
+                    <>
+                      <div
+                        block="PDPWidgets"
+                        elem="Slider"
+                        mods={{ largeScreen: width > 1440 }}
+                      >
+                        <DynamicContentVueProductSliderContainer
+                          widgetID={widgetID}
+                          products={data}
+                          heading={heading}
+                          isHome={true}
+                          renderMySignInPopup={renderMySignInPopup}
+                          sourceProdID={sku}
+                          sourceCatgID={categories_without_path[0]}
+                          pageType={"pdp"}
+                          key={`DynamicContentVueProductSliderContainer${index}`}
+                          index={index}
+                          isArabic={isArabic()}
+                        />
+                      </div>
+                    </>
+                  );
+                }
+                return null;
               }
               return null;
-            }
-            return null;
-          })}
-        </React.Fragment>
+            })}
+          </React.Fragment>
         </>
       );
     }
@@ -715,8 +750,8 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
-    if(document.querySelector(".ori-cursor-ptr")){
-    document.querySelector(".ori-cursor-ptr").click();
+    if (document.querySelector(".ori-cursor-ptr")) {
+      document.querySelector(".ori-cursor-ptr").click();
     }
   }
   renderContactUs() {
@@ -818,7 +853,7 @@ class PDPDetailsSection extends PureComponent {
   }
   getBrandUrl = () => {
     const {
-      product: { brand_name="" },
+      product: { brand_name = "" },
     } = this.props;
     const url = brand_name
       .replace(/'/g, "")
@@ -853,7 +888,7 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping(){
+  renderShipping() {
     let country = getCountryFromUrl()
     let txt = {
       AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
@@ -863,38 +898,38 @@ class PDPDetailsSection extends PureComponent {
       OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
       BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
     }
-    return(
+    return (
       <div>
         <p> {txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
         </p>
       </div>
     )
   }
 
-  renderShippingAndFreeReturns(){
+  renderShippingAndFreeReturns() {
 
-    if(this.props.product.is_returnable === 1){
-      return(
+    if (this.props.product.is_returnable === 1) {
+      return (
         <div>
-          <p>{ __("100 days free return available. Shop freely.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("100 days free return available. Shop freely.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
       )
     }
 
-    if(this.props.product.is_returnable === 0){
-      return(
+    if (this.props.product.is_returnable === 0) {
+      return (
         <div>
-          <p>{ __("Not eligible for return.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("Not eligible for return.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
       )
@@ -906,18 +941,18 @@ class PDPDetailsSection extends PureComponent {
     //   )
     // }
 
-    return(
+    return (
       <div>
         <p>
-          { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          {__("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.")}
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
         </p>
       </div>
     )
   }
-  
+
   render() {
     const {
       product: { brand_name },
@@ -930,8 +965,8 @@ class PDPDetailsSection extends PureComponent {
             {this.renderSeperator()} {this.renderIconsSection()}
           </div>
         ) : (
-          ""
-        )}
+            ""
+          )}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
@@ -990,7 +1025,7 @@ class PDPDetailsSection extends PureComponent {
                   is_expanded={this.state.isExpanded["4"]}
                 >
                 </Accordion>
-                
+
                 */}
       </div >
     );
