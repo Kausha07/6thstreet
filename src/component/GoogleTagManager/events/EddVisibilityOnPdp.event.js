@@ -13,23 +13,24 @@ class EddVisibilityEvent extends BaseEvent {
    * Bind add to cart
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_EDD_VISIBILITY, ({ edd_status, page }) => {
-      this.handle(edd_status, page);
+    Event.observer(EVENT_GTM_EDD_VISIBILITY, ({ edd_details, page }) => {
+      this.handle(edd_details, page);
     });
   }
 
   /**
    * Handle product add to cart
    */
-  handler(edd_status, page) {
+  handler(edd_details, page) {
+    console.log("muskan",edd_details,page);
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
 
     this.pushEventData({
       ecommerce: {
-        edd_status: edd_status,
-        page: page,
+        edd_details,
+        page,
       },
     });
   }

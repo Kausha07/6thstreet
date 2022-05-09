@@ -41,7 +41,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
 import Event, {
   EVENT_GTM_CHECKOUT,
-  EVENT_GTM_EDD_DATE_AT_PLACE_ORDER,
+  EVENT_GTM_EDD_TRACK_ON_ORDER,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -688,7 +688,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const response = await createOrder(code, data, finalEdd);
       if (response && response.data) {
         if (finalEdd) {
-          Event.dispatch(EVENT_GTM_EDD_DATE_AT_PLACE_ORDER, {
+          Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
             edd_date: finalEdd,
           });
         }
