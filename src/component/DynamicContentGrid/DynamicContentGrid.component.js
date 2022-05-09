@@ -61,8 +61,13 @@ class DynamicContentGrid extends PureComponent {
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
-    items.forEach((item) => {
-      Object.assign(item, { store_code: getStoreName });
+    const getIndexId = this.props?.index ? this.props.index : "";
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        store_code: getStoreName,
+        indexValue: index + 1,
+        default_Index: getIndexId,
+      });
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });

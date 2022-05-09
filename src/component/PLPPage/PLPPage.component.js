@@ -15,7 +15,7 @@ class PLPPage extends PureComponent {
     impressions: Products.isRequired,
   };
 
-  sendProductImpression = (product) => {
+  sendProductImpression = (product) => {    
     gtmProdArr.push([product]);
     const product_numbers = isMobile.any() ? 4 : 6;
     const pagePathName = new URL(window.location.href).pathname;
@@ -62,6 +62,11 @@ class PLPPage extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
+    products.forEach((item, index) => {
+      Object.assign(item, {
+        product_Position: index + 1,
+      });
+    });
     var qid = null;
     if (new URLSearchParams(window.location.search).get("qid")) {
       qid = new URLSearchParams(window.location.search).get("qid");
