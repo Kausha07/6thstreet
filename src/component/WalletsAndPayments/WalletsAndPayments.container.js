@@ -13,7 +13,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import isMobile from "Util/Mobile";
 import { customerType } from "Type/Account";
 import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 import WalletsAndPayments from "./WalletsAndPayments.component";

@@ -15,11 +15,9 @@
 import PropTypes from "prop-types";
 
 import KeyValueTable from "Component/KeyValueTable";
-import Loader from "Component/Loader";
 import { addressType } from "Type/Account";
 import { MixType } from "Type/Common";
 import { isArabic } from "Util/App";
-import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import BrowserDatabase from "Util/BrowserDatabase";
 import "./MyAccountWalletPaymentList.style";
@@ -34,6 +32,9 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
     showAdditionalFields: PropTypes.bool,
   };
 
+  state = {
+    isArabic: isArabic(),
+  }
   static defaultProps = {
     showAdditionalFields: false,
     showActions: false,
@@ -42,17 +43,9 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
 
   renderCard() {
     const {
-      // address: {
-      //   default_billing,
-      //   firstname,
-      //   lastname,
-      //   street,
-      //   country_code,
-      //   city,
-      //   area
-      // },
       savedCard,
     } = this.props;
+    const {isArabic} = this.state;
     const customer = BrowserDatabase.getItem("customer");
     const { details } = savedCard;
     const { maskedCC, expirationDate, scheme = "" } = details;
@@ -116,11 +109,10 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
   }
 
   render() {
-    const { countries = [], mix } = this.props;
+    const { savedCard = {}, mix } = this.props;
 
     return (
       <div block="MyAccountWalletPaymentList" mix={mix}>
-        <Loader isLoading={!countries.length} />
         {this.renderCard()}
       </div>
     );

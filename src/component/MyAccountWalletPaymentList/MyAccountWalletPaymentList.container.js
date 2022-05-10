@@ -12,15 +12,9 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import {  ADDRESS_POPUP_ID} from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
-import { showPopup } from "Store/Popup/Popup.action";
-import { countriesType } from "Type/Config";
-
 import MyAccountWalletPaymentList from "./MyAccountWalletPaymentList.component";
 
-export const mapStateToProps = (state) => ({
-  countries: state.ConfigReducer.countries,
-});
+export const mapStateToProps = (state) => ({});
 
 export const mapDispatchToProps = (dispatch) => ({});
 

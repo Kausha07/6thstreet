@@ -11,7 +11,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import MyAccountWalletPaymentList from "Component/MyAccountWalletPaymentList";
 import { customerType } from "Type/Account";
@@ -29,13 +28,13 @@ export class WalletAndPayments extends PureComponent {
   };
 
   renderSavedCard = (savedCard, index) => {
-    const addressNumber = index + 1;
+    const savedCardIndex = index + 1;
     return (
       <MyAccountWalletPaymentList
         title={null}
         showActions
         savedCard={savedCard}
-        key={addressNumber}
+        key={savedCardIndex}
       />
     );
   };
