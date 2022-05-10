@@ -153,7 +153,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     deleteMobileAuthorizationToken();
     dispatch(setCartId(null));
     dispatch(removeCartItems());
-
+    dispatch(setCustomerDefaultShippingAddress(null))
+    dispatch(setEddResponse(null,null))
+    dispatch(setDefaultEddAddress(null,null))
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     sessionStorage.removeItem("EddAddressReq");
@@ -414,26 +416,28 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateGuestUserEmail(email));
   }
 
-  estimateEddResponse(dispatch, request) {
+  estimateEddResponse(dispatch, request, type) {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
           dispatch(setEddResponse(response?.result, request));
-          sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
-          sessionStorage.setItem(
-            "EddAddressRes",
-            JSON.stringify(response.result)
-          );
+          if (type) {
+            sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+            sessionStorage.setItem(
+              "EddAddressRes",
+              JSON.stringify(response.result)
+            );
+          }
         } else {
           dispatch(setEddResponse(response?.errorMessage, request));
-          sessionStorage.setItem("EddAddressReq", "");
-          sessionStorage.setItem("EddAddressRes", "");
+          sessionStorage.removeItem("EddAddressReq");
+          sessionStorage.removeItem("EddAddressRes");
         }
       });
     } catch (error) {
       dispatch(setEddResponse(null, request));
-      sessionStorage.setItem("EddAddressReq", "");
-      sessionStorage.setItem("EddAddressRes", "");
+      sessionStorage.removeItem("EddAddressReq");
+      sessionStorage.removeItem("EddAddressRes");
     }
   }
 

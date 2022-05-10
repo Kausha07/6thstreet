@@ -415,6 +415,7 @@ export class CartItem extends PureComponent {
         {this.renderActions()}
         {edd_info &&
           edd_info.is_enable &&
+          edd_info.has_cart && 
           cross_border === 0 &&
           this.renderEdd()}
       </figcaption>

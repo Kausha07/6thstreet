@@ -24,9 +24,9 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
-  estimateEddResponse: (request) =>
+  estimateEddResponse: (request, type) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.estimateEddResponse(dispatch, request)
+      dispatcher.estimateEddResponse(dispatch, request, type)
     ),
 });
 
@@ -60,7 +60,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
         courier: null,
         source: null,
       };
-      estimateEddResponse(request);
+      estimateEddResponse(request,false);
     }
   }
 
