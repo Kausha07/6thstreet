@@ -30,7 +30,6 @@ export class WalletAndPayments extends PureComponent {
 
   renderSavedCard = (savedCard, index) => {
     const addressNumber = index + 1;
-    console.log("address",savedCard)
     return (
       <MyAccountWalletPaymentList
         title={null}
@@ -58,7 +57,6 @@ export class WalletAndPayments extends PureComponent {
   }
 
   render() {
-    console.log("this.props",this.props)
     return (
       <div block="MyAccountAddressBook">
         {this.renderSavedCardsList()}

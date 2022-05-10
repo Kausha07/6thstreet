@@ -53,11 +53,8 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
       // },
       savedCard,
     } = this.props;
-    console.log("this.props", this.props);
-    console.log("savedCard", savedCard)
     const customer = BrowserDatabase.getItem("customer");
-    console.log("customer", customer)
-    const { entity_id, selected, details } = savedCard;
+    const { details } = savedCard;
     const { maskedCC, expirationDate, scheme = "" } = details;
     const { visa, mastercard, amex } = MINI_CARDS;
     let cardNum = `**** **** **** ${maskedCC}`;
