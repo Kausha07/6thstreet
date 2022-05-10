@@ -6,6 +6,7 @@ import { PureComponent } from "react";
 import { ReactComponent as AccountIcon } from "Style/account.svg";
 import { isArabic } from "Util/App";
 import AddressIcon from "./icons/address.svg";
+import WalletIcon from '../../style/icons/payment.png';
 import OrdersIcon from "./icons/cat-menu.svg";
 import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
@@ -160,7 +161,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       >
         <Image
           lazyLoad={true}
-          src={AddressIcon}
+          src={WalletIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">

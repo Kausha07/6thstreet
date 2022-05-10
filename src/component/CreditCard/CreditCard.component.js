@@ -251,6 +251,7 @@ class CreditCard extends PureComponent {
     }
 
     renderMiniCard(miniCard) {
+        console.log("all well",miniCard)
         const img = MINI_CARDS[miniCard];
         const isAmex = miniCard === AMEX;
         if (img) {

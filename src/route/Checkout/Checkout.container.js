@@ -904,6 +904,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { getPaymentMethods } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
+      console.log("data",data);
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
         const { is_enabled } = paymentMethod;
 
@@ -915,6 +916,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       }, []);
 
       if (data) {
+        console.log("availablePaymentMethods",availablePaymentMethods)
         this.setState({
           isLoading: false,
           paymentMethods: availablePaymentMethods,

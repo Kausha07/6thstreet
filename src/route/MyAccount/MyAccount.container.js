@@ -86,7 +86,7 @@ export const tabMap = {
   },
   [WALLET_PAYMENTS]: {
     url: "/wallet-payments",
-    name: __("Wallet & Payments"),
+    name: __("Payment Methods"),
     className: "",
   },
   [SETTINGS_SCREEN]: {
