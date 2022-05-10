@@ -18,6 +18,8 @@ import pageNotFoundSVG from "./images/No_Results.svg";
 
 import "./NoMatch.style.override";
 
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -26,6 +28,11 @@ import isMobile from "Util/Mobile";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { setLastTapItemOnHome} from "Store/PLP/PLP.action";
 import DynamicContent from "Component/DynamicContent";
+
+export const mapStateToProps = () => ({});
+export const mapDispatchToProps = (dispatch) => ({
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item))
+});
 
 export class NoMatch extends PureComponent {
   static propTypes = {
@@ -39,6 +46,12 @@ export class NoMatch extends PureComponent {
     notFoundWidgetData :[]
     
   };
+
+  setLastTapItem = (item) => {
+    this.props.setLastTapItemOnHome(item);
+  };
+
+  
 
   componentDidMount() {
     this.addTag();
@@ -150,6 +163,7 @@ export class NoMatch extends PureComponent {
       <DynamicContent
         gender={gender}
         content={notFoundWidgetData}
+        setLastTapItemOnHome={this.setLastTapItem}
       />
       </>
       : null
@@ -204,4 +218,8 @@ export class NoMatch extends PureComponent {
   }
 }
 
-export default NoMatch;
+//export default NoMatch;
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NoMatch)
+);
