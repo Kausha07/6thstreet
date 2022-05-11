@@ -202,6 +202,7 @@ export class MyAccount extends SourceMyAccount {
       activeTab === RETURN_ITEM ? __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
+    console.log("muskan2",this.props);
     return (
       <ContentWrapper
         label={__("My Account page")}

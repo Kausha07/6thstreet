@@ -11,9 +11,7 @@ import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Config } from "Util/API/endpoint/Config/Config.type";
 import MobileAPI from "Util/API/provider/MobileAPI";
-import {
-  RETURN_ITEM_LABEL,
-} from "./MyAccountOrderView.config";
+import { RETURN_ITEM_LABEL } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
 
 export const mapStateToProps = (state) => ({
@@ -71,22 +69,26 @@ export class MyAccountOrderViewContainer extends PureComponent {
     return order;
   }
 
-  openOrderCancelation(itemStatus = '') {
+  openOrderCancelation(itemStatus = "") {
     const { history } = this.props;
-    const { order: { status, is_returnable } = {}, entity_id } = this.state;
-
+    const { order: { status, is_returnable, is_exchangable } = {}, entity_id } =
+      this.state;
     if (
       !entity_id ||
       !(
         STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable)
+        (status === STATUS_COMPLETE && is_returnable) ||
+        (status === STATUS_COMPLETE && !is_exchangable)
       )
     ) {
       return;
     }
+    console.log("muskan3", this.state.order);
 
     const url =
-      status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
+      status === STATUS_COMPLETE && itemStatus === EXCHANGE_ITEM_LABEL
+        ? `/my-account/exchange-item/create/${entity_id}`
+        : status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
         ? `/my-account/return-item/create/${entity_id}`
         : `/my-account/return-item/cancel/${entity_id}`;
 
