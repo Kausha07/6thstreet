@@ -245,7 +245,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-        Object.keys(categories)[Object.keys(categories).length - 1]
+          Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -291,23 +291,37 @@ export class PDPContainer extends PureComponent {
         : price && Object.keys(price)[0] !== "0"
         ? price[Object.keys(price)[0]]["6s_base_price"]
         : null;
-
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///") == 1
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+        
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,
         id: sku,
-        Price: originalPrice,
+        price: originalPrice,
         brand: productKeys?.brand_name,
-        category: product_type_6s,
-        size_no: {
-          size_eu,
-          size_uk,
-          size_us,
-        },
-        varient: productKeys?.color,
-        dimension9: 100 - Math.round((specialPrice / originalPrice) * 100) || 0,
-        dimension10: originalPrice,
-        dimension11: specialPrice,
+        category: categoryLevel,
+        varient: productKeys?.color || "",
       },
     });
   }

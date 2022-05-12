@@ -176,14 +176,14 @@
       text-align: right;
     }
     @include mobile {
-      margin-left: 10px;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      font-size: 15px;
-      text-align: center;
-      letter-spacing: 0;
-      font-weight: 600;
-      line-height: 18px;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 40px;
+      text-align: left;
+      margin: 9px 10px;
 
     }
     @include tablet {

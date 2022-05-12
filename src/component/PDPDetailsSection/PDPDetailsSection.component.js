@@ -23,7 +23,6 @@ class PDPDetailsSection extends PureComponent {
     product: Product.isRequired,
     clickAndCollectStores: PropTypes.object.isRequired,
   };
-
   state = {
     isHidden: true,
     isExpanded: {
@@ -715,8 +714,8 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
-    if(document.querySelector(".ori-cursor-ptr")){
-    document.querySelector(".ori-cursor-ptr").click();
+    if (document.querySelector(".ori-cursor-ptr")) {
+      document.querySelector(".ori-cursor-ptr").click();
     }
   }
   renderContactUs() {
@@ -818,7 +817,7 @@ class PDPDetailsSection extends PureComponent {
   }
   getBrandUrl = () => {
     const {
-      product: { brand_name="" },
+      product: { brand_name = "" },
     } = this.props;
     const url = brand_name
       .replace(/'/g, "")
@@ -871,13 +870,12 @@ class PDPDetailsSection extends PureComponent {
           </Link>
         </p>
       </div>
-    )
+    );
   }
 
-  renderShippingAndFreeReturns(){
-
-    if(this.props.product.is_returnable === 1){
-      return(
+  renderShippingAndFreeReturns() {
+    if (this.props.product.is_returnable === 1) {
+      return (
         <div>
           <p>{ __("100 days free return available. Shop freely.") }
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
@@ -885,11 +883,11 @@ class PDPDetailsSection extends PureComponent {
           </Link>
           </p>
         </div>
-      )
+      );
     }
 
-    if(this.props.product.is_returnable === 0){
-      return(
+    if (this.props.product.is_returnable === 0) {
+      return (
         <div>
           <p>{ __("Not eligible for return.") }
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
@@ -897,7 +895,7 @@ class PDPDetailsSection extends PureComponent {
           </Link>
           </p>
         </div>
-      )
+      );
     }
 
     // if(this.props.product.is_returnable === "NO"){
@@ -906,7 +904,7 @@ class PDPDetailsSection extends PureComponent {
     //   )
     // }
 
-    return(
+    return (
       <div>
         <p>
           { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
@@ -915,9 +913,9 @@ class PDPDetailsSection extends PureComponent {
           </Link>
         </p>
       </div>
-    )
+    );
   }
-  
+
   render() {
     const {
       product: { brand_name },
@@ -958,7 +956,7 @@ class PDPDetailsSection extends PureComponent {
             {isMobile ? <br /> : null}
           </Accordion>
           {this.renderAccordionSeperator()}
-        </div >
+        </div>
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         {isMobile ? this.renderMoreFromTheBrand() : ""}
@@ -992,7 +990,7 @@ class PDPDetailsSection extends PureComponent {
                 </Accordion>
                 
                 */}
-      </div >
+      </div>
     );
   }
 }

@@ -54,18 +54,29 @@ class ProductImpressionEvent extends BaseEvent {
 
     const formattedImpressions = impressions.map(
       (
-        { name,label, id, brand_name, color, sku, url, product_type_6s,category, price,list },
+        {
+          name,
+          label,
+          id,
+          brand_name,
+          color,
+          sku,
+          product_type_6s,
+          category,
+          price,
+          list,
+          product_Position
+        },
         index
       ) => ({
         name: name || label,
         id: sku || id,
         price: price[0][Object.keys(price[0])[0]]["6s_special_price"],
         brand: brand_name,
-        variant: color,
         category: product_type_6s || category,
-        url: url,
+        variant: color,
         list: list || "Recommendations",
-        position: index + 1,
+        position: product_Position ? product_Position : (index + 1),
       })
     );
 

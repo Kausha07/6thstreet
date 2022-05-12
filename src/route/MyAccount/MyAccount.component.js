@@ -3,6 +3,7 @@ import ContentWrapper from "Component/ContentWrapper";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import MyAccountAddressBook from "Component/MyAccountAddressBook";
+import WalletAndPayments from "Component/WalletsAndPayments";
 import MyAccountClubApparel from "Component/MyAccountClubApparel";
 import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
@@ -27,6 +28,7 @@ import {
   RETURN_ITEM,
   SETTINGS_SCREEN,
   STORE_CREDIT,
+  WALLET_PAYMENTS,
   tabMapType,
 } from "Type/Account";
 import { isArabic } from "Util/App";
@@ -72,6 +74,7 @@ export class MyAccount extends SourceMyAccount {
     [RETURN_ITEM]: MyAccountReturns,
     [MY_WISHLIST]: MyAccountMyWishlist,
     [ADDRESS_BOOK]: MyAccountAddressBook,
+    [WALLET_PAYMENTS]: WalletAndPayments,
     [CONTACT_HELP]: ContactHelp,
     [SETTINGS_SCREEN]: SettingsScreen,
   };

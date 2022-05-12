@@ -1,14 +1,11 @@
 .CountryMiniFlag {
     &-Container {
-        width: 28px;
-        height: 23px;
+        height: 19px;
+        width: 31px;
         background-size: contain;
         background-repeat: no-repeat;
         position: relative;
         display: inline-block;
-        margin-right: 8px;
-        // margin-left: 8px;
-        padding-top: 1px;
 
         span {
             position: absolute;

@@ -38,6 +38,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderButtonsPlaceholder() {
+    const {isMobile} = this.state
     return isMobile ? __("Proceed to secure payment") : __("Place order");
   }
 
@@ -329,12 +330,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect,
       totals,
       addresses,
+      edd_info
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
         addresses={addresses}
+        edd_info={edd_info}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}

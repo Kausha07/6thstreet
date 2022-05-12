@@ -8,7 +8,6 @@ import { MINI_CARDS } from './CreditCard.config';
 import secure from './icons/secure.png';
 import Field from 'Component/Field';
 import { isArabic } from "Util/App";
-import Image from "Component/Image";
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";

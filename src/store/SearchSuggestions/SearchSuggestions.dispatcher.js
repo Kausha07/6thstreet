@@ -16,7 +16,7 @@ export class SearchSuggestionsDispatcher {
     dispatch
   ) {
     const {
-      AppState: { gender },
+      AppState: { gender, country },
     } = getStore().getState();
     let queryID = null;
 
@@ -82,6 +82,11 @@ export class SearchSuggestionsDispatcher {
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
       var searchQuery = search;
+      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
+      if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
+        searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
+      }
+
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).autocompleteSearch(
@@ -99,10 +104,21 @@ export class SearchSuggestionsDispatcher {
         query: search,
         count: "",
       };
-      const querySuggestions =
+
+      var querySuggestions = [defaultHit];
+      if(country.match(/bh|om|qa/i)){
+        querySuggestions = data?.hits || [defaultHit];
+      }
+      
+      else {
+        querySuggestions =
         data?.hits?.length > 0
-          ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
-          : [defaultHit];
+        ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
+        : [defaultHit];
+      }
+
+
+      
       if (data && data.queryID) {
         queryID = data.queryID;
       } else {

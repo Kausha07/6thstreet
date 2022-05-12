@@ -166,7 +166,8 @@
     // padding: 0 20px;
   }
 
-  h3,.prodDetailTitle {
+  h3,
+  .prodDetailTitle {
     text-transform: none;
     // font-size: 18px;
     // font-weight: 700;
@@ -186,7 +187,7 @@
       line-height: 50px;
       margin-bottom: 0;
     }
-    &.PDPDetailWrapper-Title{
+    &.PDPDetailWrapper-Title {
       font-family: "Avenir Next";
       font-size: 14px;
       font-weight: bold;
@@ -325,7 +326,8 @@
     // margin-top: 32px;
     font-weight: var(--fw-demi);
 
-    h4 ,.highlightsTag {
+    h4,
+    .highlightsTag {
       font-family: "Avenir Next";
       font-size: 14px;
       font-weight: bold;
@@ -628,8 +630,8 @@
   }
 }
 .MoreDetailsLinkStyle {
-  font-size:bold;
-  color : blue;
+  font-size: bold;
+  color: blue;
   text-decoration: none !important;
 }
 .PDPWidgets {

@@ -41,6 +41,8 @@ export const CartDispatcher = import(
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -279,11 +281,6 @@ export class CartItemContainer extends PureComponent {
           category: category,
           variant: color,
           quantity: qty,
-          size_type: size_option,
-          size: size_value,
-          dimension9: (100 - Math.round((itemPrice / original_price) * 100)) || 0,
-          dimension10: original_price,
-          dimension11: itemPrice,
         },
       });
 

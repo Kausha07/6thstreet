@@ -18,7 +18,7 @@ import { ExtendedOrderType } from "Type/API";
 import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
-import { formatDate } from "Util/Date";
+import { formatDate, getDefaultEddDate } from "Util/Date";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
@@ -53,6 +53,8 @@ import {
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
+import { isObject } from "Util/API/helper/Object";
+import { SPECIAL_COLORS } from "../../util/Common";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -97,14 +99,25 @@ class MyAccountOrderView extends PureComponent {
     );
   };
 
-  renderItem = (item) => {
+  renderItem = (item, eddItem) => {
     const {
-      order: { order_currency_code: currency },
+      order: { order_currency_code: currency, status },
       displayDiscountPercentage,
+      eddResponse,
+      edd_info,
     } = this.props;
+    let finalEdd =
+      item.status === "Processing" || item.status === "processing"
+        ? eddItem?.edd
+        : item?.edd;
     return (
       <MyAccountOrderViewItem
         item={item}
+        status={status}
+        myOrderEdd={finalEdd}
+        compRef={"myOrder"}
+        eddResponse={eddResponse}
+        edd_info={edd_info}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
       />
@@ -330,7 +343,14 @@ class MyAccountOrderView extends PureComponent {
     if (!displayStatusBar) {
       return null;
     }
-
+    let finalEdd =
+      item.status === "Processing" || item.status === "processing"
+        ? item.items[0]?.edd
+        : item?.edd;
+    let colorCode =
+      item.status === "Processing" || item.status === "processing"
+        ? item.items[0]?.edd_msg_color
+        : item?.edd_msg_color;
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -359,11 +379,12 @@ class MyAccountOrderView extends PureComponent {
           />
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
-          {Object.values(STATUS_LABELS).map((label) => (
-            <div>
+          {Object.values(STATUS_LABELS).map((label, index) => (
+            <div block={index === 2 ? "EddDiv" : ""}>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
+              {index === 2 && this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
@@ -383,12 +404,36 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
+  renderEdd = (finalEdd, colorCode) => {
+    let actualEddMess = finalEdd;
 
+    if (!actualEddMess) {
+      return null;
+    }
+    let splitKey = isArabic() ? "بواسطه" : "by";
+    let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
+    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
+    return (
+      <div block="AreaText">
+        <span
+          style={{
+            color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"],
+          }}
+        >
+          {idealFormat
+            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            : null}{" "}
+        </span>
+        <span style={{ color: finalColorCode }}>
+          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
+        </span>
+      </div>
+    );
+  };
   renderProcessingItems() {
     const {
       order: { status, groups: unship = [] },
     } = this.props;
-
     if (STATUS_FAILED.includes(status) || !unship.length) {
       return null;
     }
@@ -407,7 +452,7 @@ class MyAccountOrderView extends PureComponent {
             is_expanded
             MyAccountSection={true}
           >
-            {processingItems.map(this.renderItem)}
+            {processingItems.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
@@ -432,7 +477,7 @@ class MyAccountOrderView extends PureComponent {
             )}
             MyAccountSection={true}
           >
-            {allItems.map(this.renderItem)}
+            {allItems.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
@@ -456,7 +501,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           MyAccountSection={true}
         >
-          {canceledItems.map(this.renderItem)}
+          {canceledItems.map((item) => this.renderItem(item, ""))}
         </Accordion>
       </div>
     );
@@ -508,7 +553,7 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
-          {item.items.map(this.renderItem)}
+          {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
     );
@@ -518,7 +563,6 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { status, groups: shipped = [] },
     } = this.props;
-
     if (STATUS_FAILED.includes(status)) {
       return null;
     }
@@ -552,7 +596,7 @@ class MyAccountOrderView extends PureComponent {
         mods={{ failed: true }}
       >
         <h3>{__("Order detail")}</h3>
-        {itemsArray.map(this.renderItem)}
+        {itemsArray.map((item) => this.renderItem(item, ""))}
       </div>
     );
   }

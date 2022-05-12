@@ -57,5 +57,5 @@ export {
   Store,
   Phone,
   Chat,
-  Email,
+  Email
 };

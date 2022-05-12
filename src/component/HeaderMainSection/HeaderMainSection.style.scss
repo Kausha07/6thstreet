@@ -362,7 +362,7 @@ main {
           top: 7px !important;
           flex-direction: row;
           justify-content: start !important;
-          width: 67% !important;
+          width: 65% !important;
           overflow: scroll;
           z-index: 999;
           padding-bottom: 13px !important;
@@ -376,13 +376,15 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        padding-top: 9px;
+        padding-top: 10px;
         padding-bottom: 18px;
         align-items: center;
         margin-top: 0px;
         top: 100px;
         position: fixed;
         justify-content: center;
+        padding-left: 17.5%;
+        padding-right: 17.5%;
       }
 
       .GenderButton-Container {
@@ -392,7 +394,6 @@ main {
 
         .GenderButton-Button {
           padding: 0 0px;
-          height: 20px;
         }
       }
     }
@@ -401,7 +402,7 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        padding-top: 9px;
+        padding-top: 10px;
         padding-bottom: 18px;
         align-items: center;
         margin-top: 0px;

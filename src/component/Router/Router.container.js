@@ -8,7 +8,7 @@ import {
 } from "SourceComponent/Router/Router.container";
 import { setCountry, setLanguage } from "Store/AppState/AppState.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
-import { updateCustomerDetails } from "Store/MyAccount/MyAccount.action";
+import { updateCustomerDetails, setEddResponse } from "Store/MyAccount/MyAccount.action";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -24,7 +24,6 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -34,6 +33,8 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
+  addressCityData: state.MyAccountReducer.addressCityData,
+  eddResponse: state.MyAccountReducer.eddResponse,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -43,10 +44,15 @@ export const mapDispatchToProps = (dispatch) => ({
     wishlistDisp.syncWishlist(dispatch);
   },
   setCountry: (value) => dispatch(setCountry(value)),
+  setEddResponse: (response, request) => dispatch(setEddResponse(response, request)),
   setLanguage: (value) => dispatch(setLanguage(value)),
   requestCustomerData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
+    ),
+  getCitiesData: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.getCitiesData(dispatch)
     ),
   updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
@@ -72,9 +78,13 @@ export class RouterContainer extends SourceRouterContainer {
       updateCustomerDetails,
       requestPdpWidgetData,
       pdpWidgetsData,
+      setEddResponse,
+      eddResponse,
+      addressCityData,
+      getCitiesData
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
-    if(!getUUIDToken()) {
+    if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
     if (!getUUID()) {
@@ -127,7 +137,14 @@ export class RouterContainer extends SourceRouterContainer {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
     }
-
+    if (addressCityData.length === 0) {
+      getCitiesData()
+    }
+    if (!eddResponse && sessionStorage.getItem('EddAddressReq')) {
+      const response = sessionStorage.getItem('EddAddressRes') ? JSON.parse(sessionStorage.getItem('EddAddressRes')) : null
+      const request = JSON.parse(sessionStorage.getItem('EddAddressReq'))
+      setEddResponse(response, request)
+    }
   }
 
   componentDidUpdate() {
@@ -145,7 +162,7 @@ export class RouterContainer extends SourceRouterContainer {
         .split("?")[0];
       window.location.href = redirectPath;
     }
-    if(!getUUIDToken()) {
+    if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
   }
