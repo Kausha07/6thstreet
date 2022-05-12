@@ -334,6 +334,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Processing" || item.status === "processing"
         ? item.items[0]?.edd_msg_color
         : item?.edd_msg_color;
+    let crossBorder =
+      item.cross_border && item.cross_border === 1 ? true : false;
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -367,7 +369,9 @@ class MyAccountOrderView extends PureComponent {
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
-              {index === 2 && item.items[0].cross_border && this.renderEdd(finalEdd, colorCode)}
+              {index === 2 &&
+                !crossBorder &&
+                this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
