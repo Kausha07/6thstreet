@@ -60,7 +60,7 @@ export {
 export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
-  requestCustomerData(dispatch) {
+  requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     getShippingAddresses().then((response) => {
       if (response.data) {
@@ -88,8 +88,24 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               setCustomerDefaultShippingAddress(defaultShippingAddress[0])
             );
           } else {
-            dispatch(setCustomerDefaultShippingAddress(null));
+            if (!login) {
+              const { country_code, city, area } = response.data[0];
+              let request = {
+                country: country_code,
+                city: city,
+                area: area,
+                courier: null,
+                source: null,
+              };
+              this.estimateDefaultEddResponse(dispatch, request);
+            } else {
+              dispatch(setEddResponse(null, null));
+              dispatch(setCustomerDefaultShippingAddress(null));
+            }
           }
+        } else {
+          dispatch(setEddResponse(null, null));
+          dispatch(setCustomerDefaultShippingAddress(null));
         }
       }
     });
@@ -153,9 +169,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     deleteMobileAuthorizationToken();
     dispatch(setCartId(null));
     dispatch(removeCartItems());
-    dispatch(setCustomerDefaultShippingAddress(null))
-    dispatch(setEddResponse(null,null))
-    dispatch(setDefaultEddAddress(null,null))
+    dispatch(setCustomerDefaultShippingAddress(null));
+    dispatch(setEddResponse(null, null));
+    dispatch(setDefaultEddAddress(null, null));
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     sessionStorage.removeItem("EddAddressReq");
@@ -209,7 +225,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     await WishlistDispatcher.updateInitialWishlistData(dispatch);
     await StoreCreditDispatcher.getStoreCredit(dispatch);
     setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
-    this.requestCustomerData(dispatch);
+    this.requestCustomerData(dispatch, true);
 
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
   }
