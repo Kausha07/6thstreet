@@ -26,6 +26,24 @@ export class About extends PureComponent {
 
     renderDescription() {
       const { isArabic } = this.state;
+
+      if(isArabic){
+        return (
+          <>
+              <h2 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}> {__("Who we are")} </h2>
+              <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
+
+                { __("We are an elevated fashion and lifestyle e-store committed to styling GEN NOW to WOW. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices.") } <br /> <br />
+
+                  {__("Wide range of international brands such as:")} <u><Link to={`/calvin-klein.html`} >{__("Calvin Klein")}</Link></u>, <u><Link to={`/beverly-hills-polo-club.html`} >{__("BHPC")}</Link></u>, <u><Link to={`/adidas.html`} >{__("Adidas")}</Link></u>, <u><Link to={`/nike.html`} >{__("Nike")}</Link></u>, <u><Link to={`/skechers.html`} >{__("Skechers")}</Link></u>, <u><Link to={`/puma.html`} >{__("Puma")}</Link></u> {__("And many others. Either in")} {__("If you are looking for a luxurious look for an important occasion you have, a sporty look for the gym or for casual daily outings, you can choose from")}<br /><br />
+
+                  {__("Shopping from the most famous brands such as:")} <u><Link to={`/charles-keith.html`} >{__("Charles & Keith")}</Link></u>, <u><Link to={`/dune-london.html`} >{__("Dune London")}</Link></u>, <u><Link to={`/aldo.html`} >{__("Aldo")}</Link></u>, <u><Link to={`/.maybelline.html`} >{__("Maybelline")}</Link></u>, <u><Link to={`/bourjois.html`} >{__("Bourjois")}</Link></u>, <u><Link to={`/versace.html`} >{__("Versace")}</Link></u> {__("And others on 6th Street")} {__("With regard to completing the finishing touches to your looks, whether you choose a bag, shoes, accessories or even beauty products and perfumes, you can")}<br /><br />
+
+                  {/* At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />  */}
+              </p>
+          </>
+        )
+      }
         return (
             <>
                 <h2 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}>Who we are</h2>
@@ -295,13 +313,13 @@ renderSliderWithLabels() {
                 {isMobile ? (
                   <>
                     <br />
-                    <h1 block="aboutuswrapper" elem="heading" className='headingAbout' mods={{ isArabic }}>About <b>6thStreet</b> </h1>
+                    <h1 block="aboutuswrapper" elem="heading" className='headingAbout' mods={{ isArabic }}>{__("About")} <b>{__("6thStreet")}</b> </h1>
                   </>
                 ) : null}
                 <div block="aboutuswrapper" elem="flexdiv">
                     <div block="aboutuswrapper" elem="description">
                       {isMobile ? null
-                       : (<h1 block="aboutuswrapper" elem="heading">About <b>6thStreet</b> </h1>)}
+                       : (<h1 block="aboutuswrapper" elem="heading">{__("About")} <b>{__("6thStreet")}</b> </h1>)}
                         {this.renderDescription()}
                         {this.renderAppRow()}
                     </div>
@@ -309,9 +327,24 @@ renderSliderWithLabels() {
                         {this.renderVideo()}
                     </div>
                 </div>
-                <h1 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>The <b>6thStreet.com</b> experience</h1>
+                {
+                  isArabic ? (
+                    <h1 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}><b>{__("The 6thStreet.com experience")}</b></h1>
+                  ) : (
+                    <h1 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>The <b>6thStreet.com</b> experience</h1>
+                  )
+                }
+
                 <SliderAboutPage />
-                <h1 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>Brands <b>we love</b> </h1>
+
+                {
+                  isArabic ? (
+                    <h1 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}><b>{__("Brands We love")}</b> </h1>
+                  ) : (
+                    <h1 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>Brands <b>We love</b> </h1>
+                  )
+                }
+                
                 <div
                     // ref={setRef}
                     block="DynamicContentSliderWithLabel"
