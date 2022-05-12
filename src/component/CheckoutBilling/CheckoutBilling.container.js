@@ -364,17 +364,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     let finalEdd = null;
 
     if (edd_info && edd_info.is_enable && eddResponse) {
-      const {
-        defaultEddDateString,
-      } = getDefaultEddDate(edd_info.default_message);
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
             finalEdd = entry.edd_date;
           }
         });
-      } else {
-        finalEdd = defaultEddDateString;
       }
     }
     if (code === CARD) {

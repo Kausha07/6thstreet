@@ -24,6 +24,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         price,
         size: { value: size = "" } = {},
         qty,
+        cross_border = 0,
       } = {},
       status,
     } = this.props;
@@ -60,6 +61,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         </p>
         {edd_info &&
           edd_info.is_enable &&
+          cross_border === 0 &&
           !isFailed &&
           status !== "payment_failed" &&
           status !== "payment_aborted" &&

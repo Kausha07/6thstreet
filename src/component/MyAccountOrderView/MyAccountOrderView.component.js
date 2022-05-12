@@ -367,7 +367,7 @@ class MyAccountOrderView extends PureComponent {
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
-              {index === 2 && this.renderEdd(finalEdd, colorCode)}
+              {index === 2 && item.items[0].cross_border && this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
