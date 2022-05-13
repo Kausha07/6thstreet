@@ -10,6 +10,7 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -109,6 +110,16 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
+      if(myOrderEdd){
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+    }
     }
 
     if (!actualEddMess) {

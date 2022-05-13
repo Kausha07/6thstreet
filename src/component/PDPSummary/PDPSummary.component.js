@@ -29,7 +29,7 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import "./PDPSummary.style";
-
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -213,10 +213,29 @@ class PDPSummary extends PureComponent {
     }
 
     const countryCode = getCountryFromUrl();
-    const { edd_info, addressCityData } = this.props;
-    if (edd_info && edd_info.is_enable && edd_info.has_pdp) {
+    const {
+      product: { cross_border = 0 },
+      edd_info,
+      defaultShippingAddress,
+      addressCityData,
+    } = this.props;
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp &&
+      cross_border === 0
+    ) {
       if (addressCityData.length > 0) {
         this.validateEddStatus(countryCode);
+        let default_edd = defaultShippingAddress ? true : false;
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_pdp,
+            default_edd_status: default_edd,
+            edd_updated: false,
+          },
+          page: "pdp",
+        });
       }
     } else {
       this.setState({
@@ -361,8 +380,9 @@ class PDPSummary extends PureComponent {
   };
 
   handleAreaSelection = (area) => {
-    const { selectedCity, countryCode, isArabic } = this.state;
-    const { estimateEddResponse } = this.props;
+    const { selectedCity, countryCode } = this.state;
+    const { estimateEddResponse, defaultShippingAddress, edd_info } =
+      this.props;
     this.setState({
       selectedAreaId: area,
       selectedArea: area,
@@ -370,6 +390,15 @@ class PDPSummary extends PureComponent {
       showPopupField: "",
     });
     this.handleAreaDropDownClick();
+    let default_edd = defaultShippingAddress ? true : false;
+    Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+      edd_details: {
+        edd_status: edd_info.has_pdp,
+        default_edd_status: default_edd,
+        edd_updated: true,
+      },
+      page: "pdp",
+    });
     let request = {
       country: countryCode,
       city: selectedCity,
