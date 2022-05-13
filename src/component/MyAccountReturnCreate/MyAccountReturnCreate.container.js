@@ -41,7 +41,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     };
 
     componentDidMount() {
-        console.log("muskan",this.props);
         this.getReturnableItems();
     }
 
@@ -175,7 +174,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
 
     render() {
-        console.log("muskan props",this.props);
         return (
             <MyAccountReturnCreate
                 {...this.containerFunctions}

@@ -27,6 +27,7 @@ class MyAccountReturns extends PureComponent {
   }
 
   renderCreateExchange({ match }) {
+    console.log("muskan return,match");
     return <MyAccountExchangeCreate match={match} />;
   }
 
@@ -73,7 +74,7 @@ class MyAccountReturns extends PureComponent {
         />
         <Route
           path={withStoreRegex("/my-account/exchange-item/create/:order")}
-          render={() => this.renderCreateExchange}
+          render={this.renderCreateExchange}
           exact
         />
         <Route

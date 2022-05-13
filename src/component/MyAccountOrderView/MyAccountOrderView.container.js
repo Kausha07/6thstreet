@@ -87,7 +87,6 @@ export class MyAccountOrderViewContainer extends PureComponent {
     ) {
       return;
     }
-    console.log("muskan3", this.state.order);
 
     const url =
       status === STATUS_COMPLETE && itemStatus === EXCHANGE_ITEM_LABEL

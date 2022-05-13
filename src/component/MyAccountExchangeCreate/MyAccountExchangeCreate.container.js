@@ -41,8 +41,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     };
 
     componentDidMount() {
-        console.log("muskan",this.props);
-        this.getReturnableItems();
+        this.getExchangableItems();
     }
 
     containerProps = () => {
@@ -86,13 +85,13 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         return order;
     }
 
-    getReturnableItems() {
+    getExchangableItems() {
         const { showErrorMessage } = this.props;
         const orderId = this.getOrderId();
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.get(`orders/${orderId}/returnable-items`)
+        MagentoAPI.get(`orders/${orderId}/exchangable-items`)
             .then(({ data: { items, order_increment_id, resolution_options } }) => {
                 this.setState({
                     items,
@@ -101,7 +100,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                     resolutions: resolution_options
                 });
             }).catch(() => {
-                showErrorMessage(__('Error appeared while fetching returnable items'));
+                showErrorMessage(__('Error appeared while fetching exchangable items'));
                 this.setState({ isLoading: false });
             });
     }
@@ -166,16 +165,15 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         };
         this.setState({ isLoading: true });
 
-        MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
-            history.push(`/my-account/return-item/create/success/${id}`);
+        MagentoAPI.post('exchange/request', payload).then(({ data: { id } }) => {
+            history.push(`/my-account/exchange-item/create/success/${id}`);
         }).catch(() => {
-            showErrorMessage(__('Error appeared while requesting a return'));
+            showErrorMessage(__('Error appeared while requesting a exchange'));
             this.setState({ isLoading: false });
         });
     }
 
     render() {
-        console.log("muskan props",this.props);
         return (
             <MyAccountExchangeCreate
                 {...this.containerFunctions}

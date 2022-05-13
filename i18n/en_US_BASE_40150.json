@@ -1067,5 +1067,8 @@
     "Exchange %s item": null,
     "Select 1 or more items you wish to exchange.": null,
     "Exchange is not possible at the time": null,
-    "Exchange an item": null
+    "Exchange an item": null,
+    "Exchange Statement": null,
+    "Error appeared while fetching exchangable items": null,
+    "Error appeared while requesting a exchange": null
 }

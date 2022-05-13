@@ -73,7 +73,7 @@ export class MyAccount extends SourceMyAccount {
     [DASHBOARD]: MyAccountDashboard,
     [MY_ORDERS]: MyAccountMyOrders,
     [RETURN_ITEM]: MyAccountReturns,
-    [EXCHANGE_ITEM]:MyAccountReturns,
+    [EXCHANGE_ITEM]: MyAccountReturns,
     [MY_WISHLIST]: MyAccountMyWishlist,
     [ADDRESS_BOOK]: MyAccountAddressBook,
     [WALLET_PAYMENTS]: WalletAndPayments,
@@ -188,7 +188,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderDesktop() {
-    const { activeTab, tabMap, changeActiveTab, isSignedIn } = this.props;
+    const { activeTab, tabMap, changeActiveTab, isSignedIn, exchangeTabMap } =
+      this.props;
     const { pathname = "" } = location;
 
     const { isArabic } = this.state;
@@ -197,15 +198,23 @@ export class MyAccount extends SourceMyAccount {
       const { history } = this.props;
       return history.push("/");
     }
-    console.log("muskan data=====>",activeTab,tabMap);
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
-    const { name, alternativePageName, alternateName, alternateSecondName } =
-      tabMap[activeTab];
+    let finalTab;
+    if (tabMap[activeTab]) {
+      finalTab = tabMap[activeTab];
+    } else if (exchangeTabMap[activeTab]) {
+      finalTab = exchangeTabMap[activeTab];
+    }
+    console.log("muskan------->",TabContent,this.renderMap,this.renderMap[activeTab]);
+    const { name, alternativePageName, alternateName } = finalTab;
     const returnTitle =
-      activeTab === RETURN_ITEM ? __("Return Statement") : null;
+      activeTab === RETURN_ITEM
+        ? __("Return Statement")
+        : activeTab === EXCHANGE_ITEM
+        ? __("Exchange Statement")
+        : null;
     const isCancel = pathname.includes("/return-item/cancel");
-    const isExchange = pathname.includes("/exchange-item/create");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
       <ContentWrapper
@@ -214,7 +223,7 @@ export class MyAccount extends SourceMyAccount {
       >
         <MyAccountTabList
           tabMap={tabMap}
-          activeTab={activeTab}
+          activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
           changeActiveTab={changeActiveTab}
           onSignOut={this.handleSignOut}
         />
@@ -224,8 +233,6 @@ export class MyAccount extends SourceMyAccount {
             <h1 block="MyAccount" elem="Heading">
               {isCancel
                 ? alternateName
-                : isExchange
-                ? alternateSecondName
                 : alternativePageName || returnTitle || name}
             </h1>
           ) : (
