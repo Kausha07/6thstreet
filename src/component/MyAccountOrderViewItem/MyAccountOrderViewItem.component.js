@@ -121,7 +121,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
     const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
-      <div block="AreaText">
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
