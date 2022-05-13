@@ -846,5 +846,10 @@
     "Oops! Nothing here.": null,
     "Here are some products you may like.": null,
     "Wallet & Payments": null,
-    "You have no saved cards.": null
+    "You have no saved cards.": null,
+    "Exchange %s items": null,
+    "Exchange %s item": null,
+    "Select 1 or more items you wish to exchange.": null,
+    "Exchange is not possible at the time": null,
+    "Exchange an item": null
 }

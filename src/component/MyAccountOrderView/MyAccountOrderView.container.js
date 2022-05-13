@@ -11,7 +11,7 @@ import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Config } from "Util/API/endpoint/Config/Config.type";
 import MobileAPI from "Util/API/provider/MobileAPI";
-import { RETURN_ITEM_LABEL } from "./MyAccountOrderView.config";
+import { RETURN_ITEM_LABEL,EXCHANGE_ITEM_LABEL } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
 
 export const mapStateToProps = (state) => ({
@@ -82,7 +82,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       !(
         STATUS_BEING_PROCESSED.includes(status) ||
         (status === STATUS_COMPLETE && is_returnable) ||
-        (status === STATUS_COMPLETE && !is_exchangable)
+        (status === STATUS_COMPLETE && is_exchangable)
       )
     ) {
       return;

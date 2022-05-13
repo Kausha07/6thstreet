@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import MyAccountCancelCreate from "Component/MyAccountCancelCreate";
 import MyAccountCancelCreateSuccess from "Component/MyAccountCancelCreateSuccess";
 import MyAccountReturnCreate from "Component/MyAccountReturnCreate";
+import MyAccountExchangeCreate from "Component/MyAccountExchangeCreate";
 import MyAccountReturnCreateList from "Component/MyAccountReturnCreateList";
 import MyAccountReturnList from "Component/MyAccountReturnList";
 import MyAccountReturnSuccess from "Component/MyAccountReturnSuccess";
@@ -22,11 +23,11 @@ class MyAccountReturns extends PureComponent {
   }
 
   renderCreateReturn({ match }) {
-    return <MyAccountReturnCreate match={match} actionType={"return"} />;
+    return <MyAccountReturnCreate match={match} />;
   }
 
   renderCreateExchange({ match }) {
-    return <MyAccountReturnCreate match={match} actionType={"exchange"} />;
+    return <MyAccountExchangeCreate match={match} />;
   }
 
   renderOrderList(type) {

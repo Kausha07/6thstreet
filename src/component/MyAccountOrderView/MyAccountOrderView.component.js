@@ -214,7 +214,7 @@ class MyAccountOrderView extends PureComponent {
               </button>
             </div>
           )
-        ) : status === STATUS_COMPLETE && !is_exchangable ? (
+        ) : status === STATUS_COMPLETE && is_exchangable ? (
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
               {buttonText}
