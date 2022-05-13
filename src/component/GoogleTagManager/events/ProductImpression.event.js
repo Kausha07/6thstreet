@@ -65,6 +65,7 @@ class ProductImpressionEvent extends BaseEvent {
           category,
           price,
           list,
+          product_Position
         },
         index
       ) => ({
@@ -75,7 +76,7 @@ class ProductImpressionEvent extends BaseEvent {
         category: product_type_6s || category,
         variant: color,
         list: list || "Recommendations",
-        position: index + 1,
+        position: product_Position ? product_Position : (index + 1),
       })
     );
 

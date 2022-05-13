@@ -13,7 +13,6 @@ import {
   AUTHORIZED_STATUS,
   CAPTURED_STATUS,
   DETAILS_STEP,
-  CREATED_STATUS,
   SHIPPING_STEP,
 } from "Route/Checkout/Checkout.config";
 import {
@@ -907,6 +906,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { getPaymentMethods } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
+      console.log("data",data);
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
         const { is_enabled } = paymentMethod;
 

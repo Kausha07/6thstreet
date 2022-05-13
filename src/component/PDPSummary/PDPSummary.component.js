@@ -101,7 +101,7 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
-        this.getEddResponse(data);
+        this.getEddResponse(data, false);
       }
     );
   };
@@ -125,12 +125,12 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
-        this.getEddResponse(data);
+        this.getEddResponse(data, false);
       }
     );
   };
 
-  getEddResponse = (data) => {
+  getEddResponse = (data, type) => {
     const { estimateEddResponse } = this.props;
     const { area, city, country } = data;
 
@@ -141,7 +141,7 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
-    estimateEddResponse(request);
+    estimateEddResponse(request, type);
   };
 
   validateEddStatus = () => {
@@ -217,6 +217,7 @@ class PDPSummary extends PureComponent {
       product: { cross_border = 0 },
       edd_info,
       defaultShippingAddress,
+      addressCityData,
     } = this.props;
     if (
       edd_info &&
@@ -224,16 +225,18 @@ class PDPSummary extends PureComponent {
       edd_info.has_pdp &&
       cross_border === 0
     ) {
-      this.validateEddStatus(countryCode);
-      let default_edd = defaultShippingAddress ? true : false;
-      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
-        edd_details: {
-          edd_status: edd_info.has_pdp,
-          default_edd_status: default_edd,
-          edd_updated: false,
-        },
-        page: "pdp",
-      });
+      if (addressCityData.length > 0) {
+        this.validateEddStatus(countryCode);
+        let default_edd = defaultShippingAddress ? true : false;
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_pdp,
+            default_edd_status: default_edd,
+            edd_updated: false,
+          },
+          page: "pdp",
+        });
+      }
     } else {
       this.setState({
         countryCode: countryCode,
@@ -333,7 +336,7 @@ class PDPSummary extends PureComponent {
               city: cityEntry,
               country: country_code,
             };
-            this.getEddResponse(data);
+            this.getEddResponse(data, false);
           }
         );
       }
@@ -378,7 +381,8 @@ class PDPSummary extends PureComponent {
 
   handleAreaSelection = (area) => {
     const { selectedCity, countryCode } = this.state;
-    const { estimateEddResponse, defaultShippingAddress ,edd_info} = this.props;
+    const { estimateEddResponse, defaultShippingAddress, edd_info } =
+      this.props;
     this.setState({
       selectedAreaId: area,
       selectedArea: area,
@@ -402,7 +406,7 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
-    estimateEddResponse(request);
+    estimateEddResponse(request, true);
     document.body.style.overflow = "visible";
   };
 

@@ -435,6 +435,7 @@ export class CartItem extends PureComponent {
         {isNotAvailble ? null : this.renderProductPrice()}
         {edd_info &&
           edd_info.is_enable &&
+          edd_info.has_cart && 
           cross_border === 0 &&
           this.renderEdd()}
         {this.renderActions()}

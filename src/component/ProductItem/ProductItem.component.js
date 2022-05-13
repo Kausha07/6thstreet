@@ -133,9 +133,9 @@ class ProductItem extends PureComponent {
         product_type_6s,
         categories,
         price = {},
+        product_Position,
       },
     } = this.props;
-
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -181,7 +181,7 @@ class ProductItem extends PureComponent {
       brand: brand_name,
       category: product_type_6s || categoryLevel,
       varient: color,
-      position: 1,
+      position: product_Position || "" ,
     });
     // if (queryID) {
     //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {

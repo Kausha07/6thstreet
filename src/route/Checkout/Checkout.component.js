@@ -103,7 +103,17 @@ export class Checkout extends SourceCheckout {
           courier: null,
           source: null,
         };
-        estimateEddResponse(request);
+        estimateEddResponse(request,false);
+      }else{
+        const { city, area, country_code } = addresses[0];
+        let request = {
+          country: country_code,
+          city: city,
+          area: area,
+          courier: null,
+          source: null,
+        };
+        estimateEddResponse(request,false);
       }
     }
   }

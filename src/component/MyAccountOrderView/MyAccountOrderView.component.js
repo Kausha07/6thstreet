@@ -100,7 +100,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderItem = (item, eddItem) => {
     const {
-      order: { order_currency_code: currency,status },
+      order: { order_currency_code: currency, status },
       displayDiscountPercentage,
       eddResponse,
       edd_info,
@@ -328,8 +328,12 @@ class MyAccountOrderView extends PureComponent {
     }
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
-        ? item.items[0].edd
-        : item.edd;
+        ? item.items[0]?.edd
+        : item?.edd;
+    let colorCode =
+      item.status === "Processing" || item.status === "processing"
+        ? item.items[0]?.edd_msg_color
+        : item?.edd_msg_color;
     const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -363,7 +367,7 @@ class MyAccountOrderView extends PureComponent {
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>
-              {index === 2 && this.renderEdd(finalEdd)}
+              {index === 2 && this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(
                   "DD MMM",
@@ -383,28 +387,28 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
-  renderEdd = (finalEdd) => {
+  renderEdd = (finalEdd, colorCode) => {
     let actualEddMess = finalEdd;
 
     if (!actualEddMess) {
       return null;
     }
     let splitKey = isArabic() ? "بواسطه" : "by";
-    let colorCode = SPECIAL_COLORS["shamrock"];
+    let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
     const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
       <div block="AreaText">
         <span
-          style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
+          style={{
+            color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"],
+          }}
         >
           {idealFormat
             ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-            : actualEddMess.split(" ")[0]}{" "}
+            : null}{" "}
         </span>
-        <span style={{ color: colorCode }}>
-          {idealFormat
-            ? `${actualEddMess.split(splitKey)[1]}`
-            : actualEddMess.split(" ")[1]}
+        <span style={{ color: finalColorCode }}>
+          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
         </span>
       </div>
     );

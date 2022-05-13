@@ -170,15 +170,17 @@ export class UrlRewritesContainer extends PureComponent {
       if (!urlResolver) {
         this.setState({
           prevPathname: urlParam,
-          type: search.startsWith("?qid") ? TYPE_PRODUCT : TYPE_CATEGORY,
+          // type: search.startsWith("?qid") ? TYPE_PRODUCT : TYPE_NOTFOUND,
+          type: TYPE_NOTFOUND,
           id: magentoProductId,
           sku: possibleSku,
           isLoading: false,
           query: search,
         });
-        window.pageType = search.startsWith("?qid")
-          ? TYPE_PRODUCT
-          : TYPE_CATEGORY;
+        // window.pageType = search.startsWith("?qid")
+        //   ? TYPE_PRODUCT
+        //   : TYPE_NOTFOUND;
+        window.pageType = TYPE_NOTFOUND;
       } else {
         const finalType =
           type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
