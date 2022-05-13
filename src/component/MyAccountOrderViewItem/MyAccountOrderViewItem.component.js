@@ -25,7 +25,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         size: { value: size = "" } = {},
         qty,
       } = {},
-      status
+      status,
     } = this.props;
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
@@ -121,18 +121,16 @@ export class MyAccountOrderViewItem extends SourceComponent {
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
     const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
-      <div block="AreaText">
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
           {idealFormat
             ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-            : actualEddMess.split(" ")[0]}{" "}
+            : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
-          {idealFormat
-            ? `${actualEddMess.split(splitKey)[1]}`
-            : actualEddMess.split(" ")[1]}
+          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
         </span>
       </div>
     );

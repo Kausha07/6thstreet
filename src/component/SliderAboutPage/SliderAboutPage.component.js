@@ -36,7 +36,9 @@ experienceData = {
             imglink: globe,
             url: "https://i.postimg.cc/Vrbszcbd/globe.png",
             text: "Trends from around the world",
+            ArabicText: "أحدث صيحات الموضة",
             textDescription: "800+ international brands to browse",
+            textDescriptionArabic: "أكثر من 800 ماركة عالمية",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
@@ -45,7 +47,9 @@ experienceData = {
             imglink: returns,
             url: "https://i.postimg.cc/5Qd40kwp/return.png",
             text: "Not feeling your purchase?",
+            ArabicText: "- إرجاع المُنتج",
             textDescription: "Return it within 100 days. No-questions-asked.",
+            textDescriptionArabic: "تمتع بخدمة إرجاع مجانية لمدة 100 يوم.",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
@@ -54,7 +58,9 @@ experienceData = {
             imglink: store,
             url: "https://i.postimg.cc/LqW6ds5c/store.png",
             text: "In-store experience without the hassle?",
+            ArabicText: "تسوق واستلم",
             textDescription: "Buy online, pick-up in store with Click & Collect",
+            textDescriptionArabic: "تسوق أونلاين واستلم من المتجر ",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
@@ -63,7 +69,9 @@ experienceData = {
             imglink: CA,
             url: "https://i.postimg.cc/McHKrB60/CA.png",
             text: "Spend more & redeem!",
+            ArabicText: "تسوق أكثر لتربح أكثر !",
             textDescription: "Earn Club Apparel points and shop till you drop",
+            textDescriptionArabic: "تسوق أكثر لتربح أكثر !",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
@@ -72,7 +80,9 @@ experienceData = {
             imglink: tabby,
             url: "https://i.postimg.cc/Vrbszcbd/globe.png",
             text: "Can’t pay it all right now?",
+            ArabicText: "تقسيط المبلغ",
             textDescription: "Shop now & pay later in 4 easy monthly installments",
+            textDescriptionArabic: "تسوق الآن وادفع لاحقاً على 4 دفعات شهرياً",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
@@ -90,14 +100,13 @@ handleContainerScroll = (event) => {
 
 renderScrollbar = () => {
     const items = this.experienceData.Datas;
-
-    // const width = `${
-    //   (this.itemRef.current && this.itemRef.current.clientWidth) *
-    //     items.length +
-    //   items.length * 7 * 2 -
-    //   690
-    // }px`;
-    const width = `${900}px`;
+    const width = `${
+      (this.itemRef.current && this.itemRef.current.clientWidth) *
+        items.length +
+      items.length * 7 * 2 -
+      690
+    }px`;
+    // const width = `${900}px`;
 
     return (
       <div
@@ -126,7 +135,7 @@ handleScroll = (event) => {
 //   for experience section cards  //
 
 renderSliderForCards = (item, i) => {
-  const { link, text, url, plp_config, height, width, text_align, textDescription, imglink } = item;
+  const { link, text, url, plp_config, height, width, text_align, textDescription, imglink, ArabicText, textDescriptionArabic } = item;
   const { isArabic } = this.state;
   let parseLink = link;
   const wd = `${width.toString()}px`;
@@ -173,17 +182,25 @@ renderSliderForCards = (item, i) => {
           )}
 
         </Link>
-          {text ? (
+          {isArabic ? (
+            <div block="SliderText" style={{ textAlign: text_align }}>
+              {ArabicText}
+            </div>
+          ) : (
             <div block="SliderText" style={{ textAlign: text_align }}>
               {text}
             </div>
-          ) : null}
+          )}
 
-          {text ? (
+          {isArabic ? (
+            <div block="SliderTextDescri" style={{ textAlign: text_align }}>
+              {textDescriptionArabic}
+            </div>
+          ) : (
             <div block="SliderTextDescri" style={{ textAlign: text_align }}>
               {textDescription}
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     );

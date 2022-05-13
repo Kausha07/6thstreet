@@ -26,7 +26,7 @@ export const mapDispatchToProps = (_dispatch) => ({
     CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
-  setEddResponse: (gender) => _dispatch(setEddResponse(gender)),
+  setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
 });
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
