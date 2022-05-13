@@ -1,7 +1,7 @@
 :root {
   --my-acc-default: rgb(216, 0, 0);
   --my-acc-background: #f9f9f9;
-  --fw-expDate: #ACACAC;
+  --fw-expDate: #acacac;
 }
 
 .MyAccountWalletPaymentList {
@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+
   &-DetailWrapper {
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@
   &-DetailBlock {
     padding: 0 8px;
   }
-  
+
   &:hover {
     cursor: pointer;
   }
@@ -93,10 +93,12 @@
     }
 
     .MyAccountPaymentCard {
-      &::after {
-        content: none;
+      @include desktop {
+        &::after {
+          right: 100%;
+          transform: rotate(135deg);
+        }
       }
-
       @include mobile {
         &::before {
           content: "";
@@ -109,6 +111,9 @@
           padding: 4px;
           transform: rotate(135deg);
           -webkit-transform: rotate(135deg);
+        }
+        &::after {
+          display: none !important;
         }
       }
     }

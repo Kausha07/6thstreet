@@ -25,7 +25,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         size: { value: size = "" } = {},
         qty,
       } = {},
-      status
+      status,
     } = this.props;
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
@@ -127,12 +127,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
         >
           {idealFormat
             ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-            : actualEddMess.split(" ")[0]}{" "}
+            : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
-          {idealFormat
-            ? `${actualEddMess.split(splitKey)[1]}`
-            : actualEddMess.split(" ")[1]}
+          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
         </span>
       </div>
     );
