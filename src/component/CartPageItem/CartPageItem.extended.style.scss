@@ -88,40 +88,46 @@
       }
     }
 
-    .swipeableItem{
-      display:flex;
+    .swipeableItem {
+      display: flex;
       flex-wrap: nowrap;
       justify-content: flex-start;
       overflow: hidden;
       width: 100%;
       transition: all 2s;
-      .swipeableItemContent{
+      //position: relative;
+
+      .swipeableItemContent {
         width: 100%;
         transition: all 800ms;
 
         //transform: translateX(-98px);
       }
-      .swipeableItemLeftAction{
-        overflow: hidden;
-        display:flex;
-      justify-content: center;
-      align-items: self-start;
-      text-align: center;
-      color: #FFFFFF;
-      font-family: "Avenir Next";
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0;
-      line-height: 16px;
-      text-align: center;
-      max-height: 165px;
-        background:#28D9AA;
-        width: 98px;
-        height: 100%;    
-        transition: all 800ms;  
 
+      .swipeableItemLeftAction {
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: self-start;
+        text-align: center;
+        color: #FFFFFF;
+        font-family: "Avenir Next";
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 16px;
+        text-align: center;
+        max-height: 165px;
+        background: #28D9AA;
+        width: 98px;
+        height: 100%;
+        transition: all 800ms;
+        // position: absolute;
+        // left: 0;
+        // top:0;
       }
-      .swipeableItemRightAction{
+
+      .swipeableItemRightAction {
         overflow: hidden;
         justify-content: center;
         align-items: self-start;
@@ -134,10 +140,13 @@
         line-height: 16px;
         text-align: center;
         max-height: 165px;
-        background:#F01136;
+        background: #F01136;
         width: 98px;
-        height: 100%;  
+        height: 100%;
         transition: all 800ms;
+        // position: absolute;
+        // right: 0;
+        // top:0;
       }
     }
   }
