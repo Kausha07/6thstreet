@@ -941,6 +941,9 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const {
+      pdpWidgetsAPIData,
+    } = this.state;
     const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
@@ -979,7 +982,7 @@ class PDPDetailsSection extends PureComponent {
           {this.renderAccordionSeperator()}
         </div >
 
-        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
         <div block="Seperator2" />
