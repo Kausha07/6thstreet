@@ -71,11 +71,15 @@ class PDPDetailsSection extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
-        const payload = VueQuery.buildQuery(type, query, {
+        const queryPaylod = type === "vue_visually_similar_slider" ? {
+          userID,
+          sourceProduct,
+        } : {
           gender,
           userID,
           sourceProduct,
-        });
+        }
+        const payload = VueQuery.buildQuery(type, query,queryPaylod );
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
