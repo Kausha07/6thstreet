@@ -30,7 +30,7 @@ export class About extends PureComponent {
       if(isArabic){
         return (
           <>
-              <h2 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}> {__("Who we are")} </h2>
+              <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}> {__("Who we are")} </h3>
               <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
 
                 { __("We are an elevated fashion and lifestyle e-store committed to styling GEN NOW to WOW. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices.") } <br /> <br />
@@ -46,7 +46,7 @@ export class About extends PureComponent {
       }
         return (
             <>
-                <h2 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}>Who we are</h2>
+                <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}>Who we are</h3>
                 <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
 
                   We are an elevated fashion and lifestyle e-store committed to styling  <b>GEN NOW</b> to <b>WOW</b>. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices. <br /> <br />
@@ -193,7 +193,7 @@ renderSliderWithLabel = (item, i) => {
           <Image
             lazyLoad={true}
             src={url}
-            alt={text}
+            alt={text || "Brand Image"}
             block="Image"
             style={{ maxWidth: wd }}
           />
@@ -329,9 +329,9 @@ renderSliderWithLabels() {
                 </div>
                 {
                   isArabic ? (
-                    <h1 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}><b>{__("The 6thStreet.com experience")}</b></h1>
+                    <h2 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>{__("The 6thStreet.com experience")} <b>{__("6thStreet")}</b></h2>
                   ) : (
-                    <h1 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>The <b>6thStreet.com</b> experience</h1>
+                    <h2 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>The <b>6thStreet.com</b> experience</h2>
                   )
                 }
 
@@ -339,9 +339,9 @@ renderSliderWithLabels() {
 
                 {
                   isArabic ? (
-                    <h1 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}><b>{__("Brands We love")}</b> </h1>
+                    <h2 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>{__("Brands")} <b>{__("We love")}</b> </h2>
                   ) : (
-                    <h1 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>Brands <b>We love</b> </h1>
+                    <h2 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>Brands <b>We love</b> </h2>
                   )
                 }
                 
