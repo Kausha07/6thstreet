@@ -30,6 +30,9 @@ import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 
+import BrowserDatabase from "Util/BrowserDatabase";
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
+
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
@@ -702,6 +705,20 @@ export class CartPage extends PureComponent {
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
+    
+    // if cart is not created and user goes to cart page in mobile view.
+
+    const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
+
+    if(!cart_id){
+      return (
+        <div block="CartPage" elem="Static" mods={{ isArabic }}>
+          {this.renderHeading()}
+          {this.renderEmptyCartPage()}
+        </div>
+      );
+    }
+    
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     }

@@ -146,6 +146,12 @@
         }
       }
 
+      &_wallet-payments {
+        &:before {
+          background-image: url(../../style/icons/payment.png);
+        }
+      }
+
       &_contact-help {
         &:before {
           background-image: url(./icons/contact-help.png);
@@ -156,6 +162,27 @@
         &:before {
           background-image: url(./icons/settings.png);
         }
+      }
+    }
+  }
+
+  &-nameElem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &_isArabic {
+      .StoreCredit {
+        margin-left: 24px;
+        margin-right: 0 !important;
+      }
+    }
+    .StoreCredit {
+      margin-right: 24px;
+      label {
+        font-weight: normal;
+      }
+      &-Amount {
+        display: block;
       }
     }
   }

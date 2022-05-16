@@ -399,16 +399,16 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="AreaText">
         <span
-          style={{ color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"] }}
+          style={{
+            color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"],
+          }}
         >
           {idealFormat
             ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-            : actualEddMess.split(" ")[0]}{" "}
+            : null}{" "}
         </span>
         <span style={{ color: finalColorCode }}>
-          {idealFormat
-            ? `${actualEddMess.split(splitKey)[1]}`
-            : actualEddMess.split(" ")[1]}
+          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
         </span>
       </div>
     );
