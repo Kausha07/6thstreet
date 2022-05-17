@@ -199,7 +199,6 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
-        mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
         mods={{ isArabic }}
@@ -243,7 +242,6 @@ class RecommendedForYouVueSliderItem extends PureComponent {
             :
             this.renderIsNew(is_new_in)
         }
-
         <WishlistIcon
           sku={sku}
           data={data}
