@@ -710,15 +710,15 @@ export class CartPage extends PureComponent {
           />
         </div>
         <p block="CartPage" elem="EmptyCartText">
-          Your bag is empty!
+          {__("Your bag is empty!")}
         </p>
         <p block="CartPage" elem="EmptyCartTextDec">
-          Time to add some awesome stuff to your shopping bag
+          {__("Time to add some awesome stuff to your shopping bag")}
         </p>
         <div block="ExploreNowBtn">
             <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
               <span block="ExploreNowBtn" elem="ExploreButtonText">
-                Explore now
+                {__("Explore now")}
               </span>
             </Link>
         </div>
