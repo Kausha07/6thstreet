@@ -38,8 +38,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderButtonsPlaceholder() {
-    const {isMobile} = this.state
-    return isMobile ? __("Proceed to secure payment") : __("Place order");
+    return __("Proceed to secure payment")
   }
 
   renderPriceLine(price, name, mods) {
