@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { setGender } from "Store/AppState/AppState.action";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import GenderButton from "./GenderButton.component";
-
+import { getLocaleFromUrl } from "Util/Url/Url";
 export const mapStateToProps = (state) => ({
   currentContentGender: state.AppState.gender,
 });
@@ -32,8 +32,8 @@ export class GenderButtonContainer extends PureComponent {
   };
 
   static defaultProps = {
-    onClick: () => {},
-    changeMenuGender: () => {},
+    onClick: () => { },
+    changeMenuGender: () => { },
   };
 
   containerFunctions = {
@@ -67,7 +67,10 @@ export class GenderButtonContainer extends PureComponent {
 
     setGender(key);
     onClick(key);
-    requestPLPWidgetData();
+    const locale = getLocaleFromUrl();
+    if (locale) {
+      requestPLPWidgetData();
+    }
   }
 
   onGenderEnter() {

@@ -83,6 +83,32 @@ export class Checkout extends SourceCheckout {
     isMobile: isMobile.any() || isMobile.tablet(),
     binInfo: {},
   };
+  getArabicCityArea = (city, area) => {
+    const { addressCityData } = this.props;
+    let finalArea = area;
+    let finalCity = city;
+    if (isArabic()) {
+      let finalResp = Object.values(addressCityData).filter((cityData) => {
+        return cityData.city === city;
+      });
+
+      let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+        if (finalResp[0].areas[key] === area) {
+          return key;
+        }
+      });
+      let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+        (area, index) => {
+          if (index === parseInt(engAreaIndex[0])) {
+            return area;
+          }
+        }
+      );
+      finalArea = arabicArea[0];
+      finalCity = finalResp[0].city_ar;
+    }
+    return { finalArea, finalCity };
+  };
 
   componentDidMount() {
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
@@ -96,24 +122,26 @@ export class Checkout extends SourceCheckout {
       );
       if (defaultAddress) {
         const { city, area, country_code } = defaultAddress;
+        const { finalCity, finalArea } = this.getArabicCityArea(city, area);
         let request = {
           country: country_code,
-          city: city,
-          area: area,
+          city: isArabic() ? finalCity : city,
+          area: isArabic() ? finalArea : area,
           courier: null,
           source: null,
         };
-        estimateEddResponse(request,false);
-      }else{
+        estimateEddResponse(request, false);
+      } else {
         const { city, area, country_code } = addresses[0];
+        const { finalCity, finalArea } = this.getArabicCityArea(city, area);
         let request = {
           country: country_code,
-          city: city,
-          area: area,
+          city: isArabic() ? finalCity : city,
+          area: isArabic() ? finalArea : area,
           courier: null,
           source: null,
         };
-        estimateEddResponse(request,false);
+        estimateEddResponse(request, false);
       }
     }
   }

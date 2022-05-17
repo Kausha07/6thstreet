@@ -109,6 +109,7 @@ export const mapStateToProps = (state) => ({
   newCardVisible: state.CreditCardReducer.newCardVisible,
   pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
   edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
