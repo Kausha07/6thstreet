@@ -38,6 +38,8 @@ import { Shipping } from "Component/Icons";
 import ClubApparel from "./icons/club-apparel.png";
 import CDN from "../../util/API/provider/CDN";
 
+import EmptyCardIcon from "./icons/cart.svg";
+
 import "./CartPage.style";
 
 export class CartPage extends PureComponent {
@@ -66,7 +68,8 @@ export class CartPage extends PureComponent {
     couponName: "",
     couponDescription: "",
     isCouponDetialPopupOpen: false,
-    couponModuleStatus: false
+    couponModuleStatus: false,
+    isMobile: isMobile.any()
   };
 
 
@@ -694,6 +697,35 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderEmptyCartPageForMobile() {
+    const { isArabic } = this.state;
+
+    return (
+      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
+        {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
+        <div block="CartPage" elem="EmptyCartImg">
+          {/* <image src={EmptyCardIcon}/> */}
+          <Image 
+          src={EmptyCardIcon}
+          />
+        </div>
+        <p block="CartPage" elem="EmptyCartText">
+          Your bag is empty!
+        </p>
+        <p block="CartPage" elem="EmptyCartTextDec">
+          Time to add some awesome stuff to your shopping bag
+        </p>
+        <div block="ExploreNowBtn">
+            <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
+              <span block="ExploreNowBtn" elem="ExploreButtonText">
+                Explore now
+              </span>
+            </Link>
+        </div>
+      </div>
+    );
+  }
+
   renderDynamicContent() {
     const {
       totals = {},
@@ -701,7 +733,7 @@ export class CartPage extends PureComponent {
       isLoading,
       processingRequest,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, isMobile } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
@@ -709,6 +741,15 @@ export class CartPage extends PureComponent {
     // if cart is not created and user goes to cart page in mobile view.
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
+
+    if(isMobile && !cart_id){
+      return (
+        <div block="CartPage" elem="Static" mods={{ isArabic }}>
+          {this.renderHeading()}
+          {this.renderEmptyCartPageForMobile()}
+        </div>
+      );
+    }
 
     if(!cart_id){
       return (
