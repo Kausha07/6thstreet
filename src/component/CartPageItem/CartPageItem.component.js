@@ -503,9 +503,9 @@ export class CartItem extends PureComponent {
         //document.getElementById("myDIV").style.transform = "translateX(16px)";
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
+          console.log("aaasddddd")
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(16px)";
-          el2.style.transform = `translateX(0})`;
+          el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
@@ -520,6 +520,13 @@ export class CartItem extends PureComponent {
           });
         }
       }
+      console.log(
+        "drag fix",
+        this.state.isArabic,
+        this.state.dragDirection,
+        this.state.dragged,
+        this.state.dragOpenEl
+      );
 
       ////
     } else {
@@ -559,13 +566,13 @@ export class CartItem extends PureComponent {
       }
     }
 
-    console.log(
-      "drag fix",
-      this.state.isArabic,
-      this.state.dragDirection,
-      this.state.dragged,
-      this.state.dragOpenEl
-    );
+    // console.log(
+    //   "drag fix",
+    //   this.state.isArabic,
+    //   this.state.dragDirection,
+    //   this.state.dragged,
+    //   this.state.dragOpenEl
+    // );
 
     // if (left < 0) {
     //   this.setState({
@@ -625,7 +632,18 @@ export class CartItem extends PureComponent {
       }
     }
   }
-
+  handleSwipe = () =>{
+    return(
+      // <button
+      //     block="CartPageItem"          
+      //     elem="Delete"
+      //     onClick={this.clickMove}          
+      //   >
+      //     <span />
+      // </button>
+      <button block="SwipeActionBtn" onClick={this.clickMove}><span /></button>
+    )
+  }
   handleSwipeRemoveItem = () => {
     const {      
       handleRemoveItem,
@@ -652,7 +670,6 @@ export class CartItem extends PureComponent {
   handleSwipeWishlistItem = ()=>{
     const { isArabic } = this.state;
     const { item: { sku, full_item_info,full_item_info: { config_sku }, }, item } = this.props;
-    console.log(this.props)
     this.setState({isSwipe : false})
     return(
       <div block="actionItem">
@@ -925,6 +942,7 @@ export class CartItem extends PureComponent {
 
     return (
       <figcaption block="CartPageItem" elem="Content" mods={{ isLikeTable }}>
+        {this.handleSwipe()}
         {this.renderBrandName()}
         {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
@@ -971,8 +989,8 @@ export class CartItem extends PureComponent {
           name="RemoveItem"
           elem="Delete"
           aria-label="Remove item from cart"
-          // onClick={handleRemoveItem}
-          onClick={this.clickMove}
+          onClick={handleRemoveItem}
+          
         >
           <span />
         </button>

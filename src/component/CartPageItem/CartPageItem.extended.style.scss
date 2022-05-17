@@ -111,8 +111,20 @@
         transition: all 800ms;
         .CartPageItem-Wrapper{
           padding-top:0;
-          .CartPageItem-Actions{
+          position: relative;
+          .SwipeActionBtn{
+            background: url(../Icons/Close/icon.svg) no-repeat center;
+            background-size: 16px;
+            width: 16px;
+            height: 16px;
+            padding: 0px;
+            top: 0;
             right: 0;
+            z-index: 9;
+            position: absolute;
+          }
+          .CartPageItem-Actions{
+            display:none;
           }
         }
 
@@ -205,6 +217,17 @@
   &_isArabic {
     .CartPageItem{
       .swipeableItem {
+        .swipeableItemContent {
+          
+          .CartPageItem-Wrapper{
+           
+            .SwipeActionBtn{
+              left: 0;
+              right: initial;
+            }
+            
+          }
+        }
         .swipeableItemLeftAction {
           left:initial;
           right: 0;
