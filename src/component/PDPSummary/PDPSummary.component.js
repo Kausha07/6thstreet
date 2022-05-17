@@ -508,7 +508,7 @@ class PDPSummary extends PureComponent {
               block="ContentText"
               mods={{ isShown: showPopupField === "area" ? true : false }}
             >
-              <span>Select Area</span>
+              <span>{isArabic ? "حدد المنطقة" : "Select Area"}</span>
             </div>
           </div>
 
@@ -612,7 +612,7 @@ class PDPSummary extends PureComponent {
               onClick={() => this.handleAreaDropDownClick()}
             >
               <Image lazyLoad={false} src={address} alt="" />
-              <div block="SelectAreaText">Select Area</div>
+              <div block="SelectAreaText">{isArabic ? "حدد المنطقة" : "Select Area"}</div>
             </div>
           )}
           <div block="DropDownWrapper">
