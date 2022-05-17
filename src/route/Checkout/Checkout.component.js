@@ -136,7 +136,7 @@ export class Checkout extends SourceCheckout {
         const { finalCity, finalArea } = this.getArabicCityArea(city, area);
         let request = {
           country: country_code,
-          ty: isArabic() ? finalCity : city,
+          city: isArabic() ? finalCity : city,
           area: isArabic() ? finalArea : area,
           courier: null,
           source: null,
