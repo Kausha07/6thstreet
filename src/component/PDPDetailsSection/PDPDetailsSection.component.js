@@ -657,7 +657,7 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-          <div block="Seperator2" />
+          {/* <div block="Seperator2" /> */}
           <React.Fragment>
             {pdpWidgetsAPIData.map((item, index) => {
               if (typeof item === "object" && Object.keys(item).length > 0) {
@@ -952,7 +952,7 @@ class PDPDetailsSection extends PureComponent {
         </div >
         {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
-          <Accordion
+          {/* <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
@@ -961,13 +961,13 @@ class PDPDetailsSection extends PureComponent {
             <br />
             {this.renderShippingAndFreeReturns()}
             {isMobile ? <br /> : null}
-          </Accordion>
-          {this.renderAccordionSeperator()}
+          </Accordion> */}
+          {/* {this.renderAccordionSeperator()} */}
         </div >
         {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
-        <div block="Seperator2" />
+        {/* <div block="Seperator2" /> */}
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
