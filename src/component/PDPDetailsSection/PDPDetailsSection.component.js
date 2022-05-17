@@ -71,11 +71,15 @@ class PDPDetailsSection extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
-        const payload = VueQuery.buildQuery(type, query, {
+        const queryPaylod = type === "vue_visually_similar_slider" ? {
+          userID,
+          sourceProduct,
+        } : {
           gender,
           userID,
           sourceProduct,
-        });
+        }
+        const payload = VueQuery.buildQuery(type, query,queryPaylod );
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
@@ -920,6 +924,9 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const {
+      pdpWidgetsAPIData,
+    } = this.state;
     const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
@@ -957,8 +964,7 @@ class PDPDetailsSection extends PureComponent {
           </Accordion>
           {this.renderAccordionSeperator()}
         </div>
-
-        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
         <div block="Seperator2" />
