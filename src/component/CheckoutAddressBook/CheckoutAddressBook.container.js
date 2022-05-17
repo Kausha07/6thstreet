@@ -12,6 +12,7 @@ import {
 import { showPopup } from "Store/Popup/Popup.action";
 import { customerType } from "Type/Account";
 import CheckoutAddressBook from "./CheckoutAddressBook.component";
+import { isArabic } from "Util/App";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -50,17 +51,39 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
 
   onAddressSelect(address) {
     const { id = 0, city, area, country_code } = address;
-    const { estimateEddResponse, edd_info } = this.props;
+    const { estimateEddResponse, edd_info, addressCityData } = this.props;
+    let finalArea = area;
+    let finalCity = city;
     this.setState({ selectedAddressId: id });
+    if (isArabic()) {
+      let finalResp = Object.values(addressCityData).filter((cityData) => {
+        return cityData.city === city;
+      });
+
+      let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+        if (finalResp[0].areas[key] === area) {
+          return key;
+        }
+      });
+      let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+        (area, index) => {
+          if (index === parseInt(engAreaIndex[0])) {
+            return area;
+          }
+        }
+      );
+      finalArea = arabicArea[0];
+      finalCity = finalResp[0].city_ar;
+    }
     if (edd_info && edd_info.is_enable) {
       let request = {
         country: country_code,
-        city: city,
-        area: area,
+        city: finalCity,
+        area: finalArea,
         courier: null,
         source: null,
       };
-      estimateEddResponse(request,false);
+      estimateEddResponse(request, false);
     }
   }
 

@@ -47,6 +47,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
