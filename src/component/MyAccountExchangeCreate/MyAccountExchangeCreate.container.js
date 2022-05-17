@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { isArabic } from "Util/App";
 
 import { showNotification } from "Store/Notification/Notification.action";
 import { HistoryType, MatchType } from "Type/Common";
@@ -24,6 +25,8 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
 
   containerFunctions = {
     onFormSubmit: this.onFormSubmit.bind(this),
+    onSizeSelect: this.onSizeSelect.bind(this),
+    onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     onResolutionChange: this.onResolutionChange.bind(this),
@@ -48,11 +51,28 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   };
 
   componentDidMount() {
+    this.setSizeData();
     this.getExchangableItems();
   }
 
+  static getDerivedStateFromProps(props, state) {
+    const { product } = props;
+
+    const { alsoAvailable, prevAlsoAvailable } = state;
+
+    const derivedState = {};
+
+    if (prevAlsoAvailable !== product["6s_also_available"]) {
+      Object.assign(derivedState, {
+        alsoAvailable: product["6s_also_available"],
+        prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
+      });
+    }
+    return Object.keys(derivedState).length ? derivedState : null;
+  }
+
   containerProps = () => {
-    const { history } = this.props;
+    const { history, product } = this.props;
     const {
       isLoading,
       incrementId,
@@ -72,8 +92,135 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       resolutions,
       resolutionId,
       reasonId,
+      product,
     };
   };
+
+  setSizeData = () => {
+    const { product } = this.props;
+
+    if (product.simple_products !== undefined) {
+      const { simple_products, size_eu } = product;
+
+      const filteredProductKeys = Object.keys(simple_products)
+        .reduce((acc, key) => {
+          const {
+            size: { eu: productSize },
+          } = simple_products[key];
+          acc.push([size_eu.indexOf(productSize), key]);
+          return acc;
+        }, [])
+        .sort((a, b) => {
+          if (a[0] < b[0]) {
+            return -1;
+          }
+          if (a[0] > b[0]) {
+            return 1;
+          }
+          return 0;
+        })
+        .reduce((acc, item) => {
+          acc.push(item[1]);
+          return acc;
+        }, []);
+
+      const filteredProductSizeKeys = Object.keys(
+        product.simple_products[filteredProductKeys[0]].size || {}
+      );
+
+      let object = {
+        sizeCodes: filteredProductKeys || [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
+      };
+
+      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
+        const sizeCode = size[0];
+        const { quantity } = size[1];
+
+        if (quantity !== null && quantity !== undefined) {
+          acc.push(sizeCode);
+        }
+
+        return acc;
+      }, []);
+
+      object.sizeCodes = allSizes;
+
+      if (
+        filteredProductKeys.length <= 1 &&
+        filteredProductSizeKeys.length === 0
+      ) {
+        this.setState({
+          insertedSizeStatus: false,
+          sizeObject: object,
+        });
+        return;
+      }
+
+      if (
+        filteredProductKeys.length > 1 &&
+        filteredProductSizeKeys.length === 0
+      ) {
+        const object = {
+          sizeCodes: [filteredProductKeys[1]],
+          sizeTypes: filteredProductSizeKeys,
+        };
+
+        this.setState({
+          insertedSizeStatus: false,
+          sizeObject: object,
+        });
+        return;
+      }
+
+      this.setState({
+        sizeObject: object,
+      });
+      return;
+    }
+    this.setState({
+      insertedSizeStatus: false,
+      sizeObject: {
+        sizeCodes: [],
+        sizeTypes: [],
+      },
+    });
+    return;
+  };
+
+  onSizeSelect({ target }) {
+    const { value } = target;
+    const {
+      product: { simple_products: productStock },
+    } = this.props;
+    const { isOutOfStock } = this.state;
+    let outOfStockVal = isOutOfStock;
+    if (productStock && productStock[value]) {
+      const selectedSize = productStock[value];
+      if (
+        selectedSize["quantity"] !== undefined &&
+        selectedSize["quantity"] !== null &&
+        (typeof selectedSize["quantity"] === "string"
+          ? parseInt(selectedSize["quantity"], 0) === 0
+          : selectedSize["quantity"] === 0)
+      ) {
+        outOfStockVal = true;
+      } else {
+        outOfStockVal = false;
+      }
+    }
+    this.setState({
+      selectedSizeCode: value,
+      isOutOfStock: outOfStockVal,
+    });
+  }
+
+  onSizeTypeSelect(type) {
+    this.setState({
+      selectedSizeType: type.target.value,
+    });
+  }
+
   onDiscardClick() {
     const { history } = this.props;
     const orderId = this.getOrderId();
@@ -92,7 +239,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
 
     this.setState({ isLoading: true });
 
-    MagentoAPI.get(`orders/${orderId}/exchangable-items`)
+    MagentoAPI.get(`orders/${orderId}/returnable-items`)
       .then(({ data: { items, order_increment_id, resolution_options } }) => {
         this.setState({
           items,

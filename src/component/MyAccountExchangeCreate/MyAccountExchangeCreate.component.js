@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import Field from "Component/Field";
+import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 
 import Form from "Component/Form";
 import Loader from "Component/Loader";
 import MyAccountReturnCreateItem from "Component/MyAccountReturnCreateItem";
 import { ReturnReasonType, ReturnResolutionType } from "Type/API";
+import { v4 } from "uuid";
 
 import "./MyAccountExchangeCreate.style";
 
@@ -32,173 +34,6 @@ export class MyAccountExchangeCreate extends PureComponent {
     items: [],
     incrementId: "",
     resolutions: [],
-  };
-  
-  static getDerivedStateFromProps(props, state) {
-    const { product } = props;
-
-    const { alsoAvailable, prevAlsoAvailable } = state;
-
-    const derivedState = {};
-
-    if (prevAlsoAvailable !== product["6s_also_available"]) {
-      Object.assign(derivedState, {
-        alsoAvailable: product["6s_also_available"],
-        prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
-      });
-    }
-    return Object.keys(derivedState).length ? derivedState : null;
-  }
-
-  getSizeSelect = () => {
-    const { product, productStock, isArabic, sizeObject, selectedSizeType } =
-      this.props;
-    if (
-      sizeObject?.sizeCodes !== undefined &&
-      Object.keys(productStock || []).length !== 0 &&
-      product[`size_${selectedSizeType}`].length !== 0
-    ) {
-      return (
-        <div
-          block="PLPAddToCart-SizeSelector-SizeContainer"
-          elem="AvailableSizes"
-          mods={{ isArabic }}
-        >
-          {sizeObject.sizeCodes.reduce((acc, code) => {
-            const label = productStock[code].size[selectedSizeType];
-
-            if (label) {
-              acc.push(this.renderSizeOption(productStock, code, label));
-            }
-
-            return acc;
-          }, [])}
-        </div>
-      );
-    }
-
-    return <span id="notavailable">{__("OUT OF STOCK")}</span>;
-  };
-
-  getSizeTypeSelect() {
-    const { selectedSizeType, sizeObject = {}, isArabic, product } = this.props;
-
-    if (this.state.isOutOfStock) {
-      return null;
-    }
-
-    if (sizeObject.sizeTypes !== undefined) {
-      return (
-        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{ isArabic }}>
-          <select
-            key="SizeTypeSelect"
-            block="PLPAddToCart"
-            elem="SizeTypeSelectElement"
-            value={selectedSizeType}
-            onChange={this.onSizeTypeSelect}
-          >
-            {sizeObject.sizeTypes.map((type = "") => {
-              if (product[`size_${type}`].length > 0) {
-                return (
-                  <option
-                    key={type}
-                    block="PLPAddToCart"
-                    elem="SizeTypeOption"
-                    value={type}
-                  >
-                    {type.toUpperCase()}
-                  </option>
-                );
-              }
-              return null;
-            })}
-          </select>
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode } = this.props;
-    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
-    const selectedLabelStyle = {
-      fontSize: "14px",
-      color: "#ffffff",
-      fontWeight: 600,
-      letterSpacing: 0,
-      backgroundColor: "#000000",
-    };
-    const selectedStrikeThruLineStyle = {
-      opacity: 0.6,
-      filter: "none",
-    };
-    const isCurrentSizeSelected = selectedSizeCode === code;
-
-    return (
-      <div
-        block="PLPAddToCart-SizeSelector"
-        elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
-        key={v4()}
-        className="SizeOptionList"
-        onClick={() => {
-          this.onSizeSelect({ target: { value: code } });
-        }}
-      >
-        <input
-          id={code}
-          key={code}
-          type="radio"
-          elem="SizeOption"
-          name="size"
-          block="PLPAddToCart"
-          value={code}
-          checked={isCurrentSizeSelected}
-        />
-        <div>
-          <label
-            htmlFor={code}
-            style={isCurrentSizeSelected ? selectedLabelStyle : {}}
-          >
-            {label}
-          </label>
-          {isNotAvailable && (
-            <Image
-              lazyLoad={false}
-              src={StrikeThrough}
-              className="lineImg"
-              style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
-            />
-          )}
-        </div>
-        <div />
-      </div>
-    );
-  }
-
-  onSizeSelect = ({ target }) => {
-    const { value } = target;
-    const { productStock, isOutOfStock } = this.props;
-    let outOfStockVal = isOutOfStock;
-    if (productStock && productStock[value]) {
-      const selectedSize = productStock[value];
-      if (
-        selectedSize["quantity"] !== undefined &&
-        selectedSize["quantity"] !== null &&
-        (typeof selectedSize["quantity"] === "string"
-          ? parseInt(selectedSize["quantity"], 0) === 0
-          : selectedSize["quantity"] === 0)
-      ) {
-        outOfStockVal = true;
-      } else {
-        outOfStockVal = false;
-      }
-    }
-    this.setState({
-      selectedSizeCode: value,
-      isOutOfStock: outOfStockVal,
-    });
   };
 
   renderOrderItem = (item) => {
@@ -314,6 +149,106 @@ export class MyAccountExchangeCreate extends PureComponent {
   renderExchangeNotPossible() {
     return __("Exchange is not possible at the time");
   }
+  getSizeTypeSelect() {
+    const {
+      selectedSizeType,
+      onSizeTypeSelect,
+      sizeObject = {},
+      isArabic,
+      isOutOfStock,
+      product,
+    } = this.props;
+    if (isOutOfStock) {
+      return null;
+    }
+
+    if (sizeObject.sizeTypes !== undefined) {
+      return (
+        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{ isArabic }}>
+          <select
+            key="SizeTypeSelect"
+            block="PLPAddToCart"
+            elem="SizeTypeSelectElement"
+            value={selectedSizeType}
+            onChange={onSizeTypeSelect}
+          >
+            {sizeObject.sizeTypes.map((type = "") => {
+              if (product[`size_${type}`].length > 0) {
+                return (
+                  <option
+                    key={type}
+                    block="PLPAddToCart"
+                    elem="SizeTypeOption"
+                    value={type}
+                  >
+                    {type.toUpperCase()}
+                  </option>
+                );
+              }
+              return null;
+            })}
+          </select>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  renderSizeOption(productStock, code, label) {
+    const { selectedSizeCode, onSizeSelect } = this.props;
+    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
+    const selectedLabelStyle = {
+      fontSize: "14px",
+      color: "#ffffff",
+      fontWeight: 600,
+      letterSpacing: 0,
+      backgroundColor: "#000000",
+    };
+    const isCurrentSizeSelected = selectedSizeCode === code;
+    if (isNotAvailable) {
+      return null;
+    }
+    return (
+      <div
+        block="PLPAddToCart-SizeSelector"
+        elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
+        key={v4()}
+        className="SizeOptionList"
+        onClick={() => {
+          onSizeSelect({ target: { value: code } });
+        }}
+      >
+        <input
+          id={code}
+          key={code}
+          type="radio"
+          elem="SizeOption"
+          name="size"
+          block="PLPAddToCart"
+          value={code}
+          checked={isCurrentSizeSelected}
+        />
+        <div>
+          <label
+            htmlFor={code}
+            style={isCurrentSizeSelected ? selectedLabelStyle : {}}
+          >
+            {label}
+          </label>
+          {/* {isNotAvailable && (
+            <Image
+              lazyLoad={false}
+              src={StrikeThrough}
+              className="lineImg"
+              style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+            />
+          )} */}
+        </div>
+        <div />
+      </div>
+    );
+  }
 
   renderContent() {
     const { isLoading, incrementId } = this.props;
@@ -333,7 +268,40 @@ export class MyAccountExchangeCreate extends PureComponent {
       </>
     );
   }
+  getSizeSelect = () => {
+    const {
+      product: { simple_products: productStock },
+      product,
+      isArabic,
+      sizeObject,
+      selectedSizeType,
+    } = this.props;
+    if (
+      sizeObject?.sizeCodes !== undefined &&
+      Object.keys(productStock || []).length !== 0 &&
+      product[`size_${selectedSizeType}`].length !== 0
+    ) {
+      return (
+        <div
+          block="PLPAddToCart-SizeSelector-SizeContainer"
+          elem="AvailableSizes"
+          mods={{ isArabic }}
+        >
+          {sizeObject.sizeCodes.reduce((acc, code) => {
+            const label = productStock[code].size[selectedSizeType];
 
+            if (label) {
+              acc.push(this.renderSizeOption(productStock, code, label));
+            }
+
+            return acc;
+          }, [])}
+        </div>
+      );
+    }
+
+    return <span id="notavailable">{__("OUT OF STOCK")}</span>;
+  };
   renderSizeContent = () => {
     const { sizeObject } = this.props;
     return (
@@ -357,12 +325,12 @@ export class MyAccountExchangeCreate extends PureComponent {
       </div>
     );
   };
-  
+
   renderAvailableItemsSection() {
     const {
       product: { sku },
       isLoading,
-      alsoAvailable
+      alsoAvailable,
     } = this.props;
 
     if (alsoAvailable) {
@@ -370,7 +338,7 @@ export class MyAccountExchangeCreate extends PureComponent {
         return (
           <PDPAlsoAvailable
             productsAvailable={alsoAvailable}
-            renderMySignInPopup={renderMySignInPopup}
+            renderMySignInPopup={() => {}}
             productSku={sku}
           />
         );
@@ -380,10 +348,13 @@ export class MyAccountExchangeCreate extends PureComponent {
     return null;
   }
   render() {
+    console.log("muskna------>", this.props, this);
     return (
       <div block="MyAccountExchangeCreate">
         {this.renderLoader()}
         {this.renderContent()}
+        {this.renderAvailableItemsSection()}
+        {this.renderSizeContent()}
       </div>
     );
   }
