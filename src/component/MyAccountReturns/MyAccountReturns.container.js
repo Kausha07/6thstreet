@@ -26,7 +26,6 @@ export class MyAccountReturnsContainer extends PureComponent {
     };
 
     render() {
-        console.log("muskan inside",this.props);
         return (
             <MyAccountReturns
               { ...this.containerFunctions }

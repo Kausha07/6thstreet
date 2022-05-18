@@ -238,7 +238,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     const orderId = this.getOrderId();
 
     this.setState({ isLoading: true });
-
+    MagentoAPI.get(`exchange/reasons`).then((response)=>{
+      console.log("muskan resp-->",response)
+    })
     MagentoAPI.get(`orders/${orderId}/returnable-items`)
       .then(({ data: { items, order_increment_id, resolution_options } }) => {
         this.setState({

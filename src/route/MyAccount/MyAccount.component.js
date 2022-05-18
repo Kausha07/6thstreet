@@ -206,7 +206,6 @@ export class MyAccount extends SourceMyAccount {
     } else if (exchangeTabMap[activeTab]) {
       finalTab = exchangeTabMap[activeTab];
     }
-    console.log("muskan------->",TabContent,this.renderMap,this.renderMap[activeTab]);
     const { name, alternativePageName, alternateName } = finalTab;
     const returnTitle =
       activeTab === RETURN_ITEM
