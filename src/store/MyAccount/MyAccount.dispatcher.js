@@ -64,7 +64,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
     let finalCity = city;
-    if (isArabic() && Object.values(addressCityData).length > 0) {
+    if (isArabic() && addressCityData && Object.values(addressCityData).length > 0) {
       let finalResp = Object.values(addressCityData).filter((cityData) => {
         return cityData.city === city;
       });
