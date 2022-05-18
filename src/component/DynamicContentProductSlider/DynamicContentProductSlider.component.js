@@ -29,7 +29,7 @@ class DynamicContentProductSlider extends PureComponent {
     eventRegistered: false,
   };
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   registerViewPortEvent() {
     let observer;
@@ -101,7 +101,7 @@ class DynamicContentProductSlider extends PureComponent {
     );
   };
 
-  renderProductsDesktop() {}
+  renderProductsDesktop() { }
 
   renderTitle() {
     const { title, isHomePage } = this.props;

@@ -34,7 +34,7 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
             mods={{ isArabic }}
             >
               <div>
-                {__("Wallet & Payments")}
+                {__("Payments")}
               </div>
               {isMobile.any() ? <StoreCredit /> : null}
             </div> 

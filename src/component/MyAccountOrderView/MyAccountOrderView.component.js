@@ -280,7 +280,9 @@ class MyAccountOrderView extends PureComponent {
       case "delivery_successful": {
         return __("Delivered");
       }
-      case "delivery_failed":
+      case "delivery_failed": {
+        return __("Delivery Failed");
+      }
       case "cancelled": {
         return __("Order Cancelled");
       }
