@@ -87,25 +87,26 @@ export class Checkout extends SourceCheckout {
     const { addressCityData } = this.props;
     let finalArea = area;
     let finalCity = city;
-    if (isArabic()) {
+    if (isArabic() && Object.values(addressCityData).length > 0) {
       let finalResp = Object.values(addressCityData).filter((cityData) => {
         return cityData.city === city;
       });
-
-      let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
-        if (finalResp[0].areas[key] === area) {
-          return key;
-        }
-      });
-      let arabicArea = Object.values(finalResp[0].areas_ar).filter(
-        (area, index) => {
-          if (index === parseInt(engAreaIndex[0])) {
-            return area;
+      if (finalResp.length > 0) {
+        let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+          if (finalResp[0].areas[key] === area) {
+            return key;
           }
-        }
-      );
-      finalArea = arabicArea[0];
-      finalCity = finalResp[0].city_ar;
+        });
+        let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+          (area, index) => {
+            if (index === parseInt(engAreaIndex[0])) {
+              return area;
+            }
+          }
+        );
+        finalArea = arabicArea[0];
+        finalCity = finalResp[0].city_ar;
+      }
     }
     return { finalArea, finalCity };
   };
