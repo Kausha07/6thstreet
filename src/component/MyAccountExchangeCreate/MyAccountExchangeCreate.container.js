@@ -48,6 +48,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     isArabic: isArabic(),
     alsoAvailable: [],
     prevAlsoAvailable: [],
+    exchangeReason: [],
   };
 
   componentDidMount() {
@@ -238,20 +239,33 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     const orderId = this.getOrderId();
 
     this.setState({ isLoading: true });
-    MagentoAPI.get(`exchange/reasons`).then((response)=>{
-      console.log("muskan resp-->",response)
-    })
-    MagentoAPI.get(`orders/${orderId}/returnable-items`)
-      .then(({ data: { items, order_increment_id, resolution_options } }) => {
-        this.setState({
-          items,
-          incrementId: order_increment_id,
-          isLoading: false,
-          resolutions: resolution_options,
-        });
+    MagentoAPI.get(`exchange/reasons`)
+      .then((response) => {
+        if (response && Object.values(response).length > 0) {
+          MagentoAPI.get(`orders/${orderId}/returnable-items`)
+            .then(
+              ({ data: { items, order_increment_id, resolution_options } }) => {
+                this.setState({
+                  items,
+                  incrementId: order_increment_id,
+                  isLoading: false,
+                  resolutions: resolution_options,
+                  exchangeReason: response,
+                });
+              }
+            )
+            .catch(() => {
+              showErrorMessage(
+                __("Error appeared while fetching exchangable items")
+              );
+              this.setState({ isLoading: false });
+            });
+        }
       })
       .catch(() => {
-        showErrorMessage(__("Error appeared while fetching exchangable items"));
+        showErrorMessage(
+          __("Error appeared while fetching exchangable reasons")
+        );
         this.setState({ isLoading: false });
       });
   }
@@ -335,6 +349,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     return (
       <MyAccountExchangeCreate
         {...this.state}
+        {...this.props}
         {...this.containerFunctions}
         {...this.containerProps()}
       />

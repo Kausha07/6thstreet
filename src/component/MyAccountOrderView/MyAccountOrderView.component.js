@@ -147,12 +147,12 @@ class MyAccountOrderView extends PureComponent {
         created_at,
         is_returnable,
         is_cancelable,
-        is_exchangable,
+        is_exchangeable,
       },
     } = this.props;
     const buttonText =
       status === STATUS_COMPLETE
-        ? is_exchangable
+        ? is_exchangeable
           ? EXCHANGE_ITEM_LABEL
           : RETURN_ITEM_LABEL
         : CANCEL_ITEM_LABEL;
@@ -163,7 +163,6 @@ class MyAccountOrderView extends PureComponent {
           : __("Order Cancelled");
       const StatusImage =
         status === STATUS_PAYMENT_ABORTED ? WarningImage : CloseImage;
-      console.log("muskan123", this.props);
       return (
         <div block="MyAccountOrderView" elem="StatusFailed">
           <Image
@@ -174,6 +173,8 @@ class MyAccountOrderView extends PureComponent {
         </div>
       );
     }
+    console.log("muskan123", this.props);
+
     return (
       <div block="MyAccountOrderView" elem="Status">
         <div>
@@ -206,7 +207,7 @@ class MyAccountOrderView extends PureComponent {
                 {CANCEL_ITEM_LABEL}
               </button>
             </div>
-          ) : is_returnable && is_exchangable ? (
+          ) : is_returnable && is_exchangeable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
                 {RETURN_ITEM_LABEL}
@@ -222,7 +223,7 @@ class MyAccountOrderView extends PureComponent {
               </button>
             </div>
           )
-        ) : status === STATUS_COMPLETE && is_exchangable ? (
+        ) : status === STATUS_COMPLETE && is_exchangeable ? (
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
               {buttonText}

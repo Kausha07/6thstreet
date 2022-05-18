@@ -1,6 +1,33 @@
 .MyAccountReturnCreateItem {
   margin-bottom: 30px;
-
+  .PLPAddToCart {
+    &-SizeSelector {
+      align-items: flex-start;
+      margin-left: 40px;
+      padding: 0px 0 25px 0;
+      border-bottom: 2px solid var(--color-gainsboro);
+    }
+  }
+  .SizeParentWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 14px;
+    width: 40%;
+    .PLPAddToCart {
+      &-SizeTypeSelectElement {
+        margin-bottom: 0px;
+      }
+      &-SizeSelector {
+        &-SizeContainer {
+          &-AvailableSizes {
+            margin-bottom: 0px;
+          }
+        }
+      }
+    }
+  }
   &-Content {
     display: flex;
     margin-bottom: 15px;
@@ -95,7 +122,6 @@
   }
 
   &-Resolutions {
-
     @include desktop {
       margin: 10px 0 0 40px;
     }
@@ -132,7 +158,6 @@
       width: calc(50% - 10px);
     }
   }
-
 
   .Price {
     span {

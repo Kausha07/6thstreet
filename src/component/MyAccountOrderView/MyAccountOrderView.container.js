@@ -75,14 +75,14 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   openOrderCancelation(itemStatus = "") {
     const { history } = this.props;
-    const { order: { status, is_returnable, is_exchangable } = {}, entity_id } =
+    const { order: { status, is_returnable, is_exchangeable } = {}, entity_id } =
       this.state;
     if (
       !entity_id ||
       !(
         STATUS_BEING_PROCESSED.includes(status) ||
         (status === STATUS_COMPLETE && is_returnable) ||
-        (status === STATUS_COMPLETE && is_exchangable)
+        (status === STATUS_COMPLETE && is_exchangeable)
       )
     ) {
       return;
