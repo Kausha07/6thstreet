@@ -1,45 +1,49 @@
-/* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_TRENDING_TAGS_CLICK } from "Util/Event";
-import BaseEvent from "./Base.event";
+import Event, {
+  EVENT_GTM_GO_TO_SEARCH, // Done
+} from "Util/Event";
+
+import BaseEvent from "../Base.event";
+export const URL_REWRITE = "url-rewrite";
 
 /**
- * Trending brands click event
+ * Constants
+ *
+ * @type {number}
  */
-export const URL_REWRITE = "url-rewrite";
-class TrendingTagsClickEvent extends BaseEvent {
+export const SPAM_PROTECTION_DELAY = 200;
+export const EVENT_HANDLE_DELAY = 700;
+
+/**
+ * GTM PWA Impression Event
+ *
+ * Called when customer see banners on home page
+ */
+class GoToSearchEvent extends BaseEvent {
   /**
-   * Set delay
+   * Set base event call delay
    *
    * @type {number}
    */
-  eventHandleDelay = 0;
+  eventHandleDelay = EVENT_HANDLE_DELAY;
 
   /**
-   * Bind click events
+   * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_TRENDING_TAGS_CLICK, (trendingTags) => {
-      this.handle(trendingTags);
+    Event.observer(EVENT_GTM_GO_TO_SEARCH, () => {
+      this.handle(EVENT_GTM_GO_TO_SEARCH);
     });
   }
 
-  /**
-   * Handle trending brands click
-   */
-  handler(trendingTags) {
+  handler(EVENT_TYPE) {
     this.pushEventData({
-      event: "trending_tag_click",
+      event: EVENT_TYPE,
       eventCategory: "search",
-      eventAction: "trending_tag_click",
+      eventAction: "go_to_search",
       UserType: this.getCustomerId() > 1 ? "Logged In" : "Guest User",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: trendingTags || "",
-      ecommerce: {
-        click: {
-          trendingTags: trendingTags,
-        },
-      },
+      SearchTerm: "",
     });
   }
   getCustomerId() {
@@ -66,4 +70,4 @@ class TrendingTagsClickEvent extends BaseEvent {
   }
 }
 
-export default TrendingTagsClickEvent;
+export default GoToSearchEvent;

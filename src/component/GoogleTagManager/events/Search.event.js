@@ -10,11 +10,10 @@ import Event, {
   EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
   EVENT_GTM_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_TOP_SEARCHES_CLICK, // Done
-  EVENT_CLICK_RECOMMENDATION_CLICK // Done
+  EVENT_CLICK_RECOMMENDATION_CLICK, // Done
 } from "Util/Event";
 
 import BaseEvent from "./Base.event";
-
 
 /**
  * Constants
@@ -78,10 +77,16 @@ class SearchEvent extends BaseEvent {
       this.handle(EVENT_CLICK_RECOMMENDATION_CLICK);
     });
   }
-  
+
   handler(EVENT_TYPE) {
     this.pushEventData({
       event: EVENT_TYPE,
+      eventCategory: "search",
+      eventAction: "go_to_search",
+      UserType: "{{UserType}}",
+      CustomerID: "{{CustomerID}}",
+      PageType: "{{PageType}}",
+      SearchTerm: "{{SearchTerm}}",
     });
   }
 }

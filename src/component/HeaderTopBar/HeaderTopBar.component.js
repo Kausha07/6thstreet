@@ -83,7 +83,6 @@ class HeaderTopBar extends NavigationAbstract {
       OM: __("FREE SHIPPING OVER OMR20"),
       BH: __("FREE SHIPPING OVER BHD20.5"),
     };
-
     return (
       <div className="customVerticalSlider">
         <div className="carouselItemInner">
@@ -96,9 +95,13 @@ class HeaderTopBar extends NavigationAbstract {
           <div key="cms" block="HeaderTopBar" elem="CmsBlock">
             {__("CLUB APPAREL REWARDS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-            {txt[country]}
-          </div>
+          {country ? (
+            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+              {txt[country]}
+            </div>
+          ) : (
+            " "
+          )}
           {getCountryFromUrl() === "QA" ? (
             <div key="cms" block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON RECEIVING")}
