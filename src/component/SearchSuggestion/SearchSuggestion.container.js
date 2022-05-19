@@ -91,7 +91,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
 
-    SearchSuggestionContainer.requestSearchSuggestions(props);
+    this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
     this.requestTopSearches();
     this.requestRecentSearches();
