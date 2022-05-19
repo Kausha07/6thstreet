@@ -68,10 +68,10 @@ experienceData = {
             height: 475,
             imglink: CA,
             url: "https://i.postimg.cc/McHKrB60/CA.png",
-            text: "Spend more & redeem!",
+            text: "Spend more, Earn more!",
             ArabicText: "تسوق أكثر لتربح أكثر !",
-            textDescription: "Earn Club Apparel points and shop till you drop",
-            textDescriptionArabic: "تسوق أكثر لتربح أكثر !",
+            textDescription: "Earn points by linking your Club Apparel account",
+            textDescriptionArabic: "- اربط حسابك مع كلوب أباريل لتربح نقاط",
             link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
             width: 84
         },
