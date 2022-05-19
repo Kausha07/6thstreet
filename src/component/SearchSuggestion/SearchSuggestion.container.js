@@ -59,7 +59,6 @@ export class SearchSuggestionContainer extends PureComponent {
     const { prevSearch } = state;
 
     if (search !== prevSearch) {
-      SearchSuggestionContainer.requestSearchSuggestions(props);
       return { prevSearch: search };
     }
 
@@ -87,6 +86,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches: [],
       recommendedForYou: [],
       trendingProducts: [],
+      typingTimeout: 0,
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -180,6 +180,21 @@ export class SearchSuggestionContainer extends PureComponent {
       });
   }
 
+  requestSearchSuggestions(props) {
+    const { search, requestSearchSuggestions } = props;
+    if (!search || search.length < 3) {
+      return;
+    }
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+    this.setState({
+      typingTimeout: setTimeout(() => {
+        requestSearchSuggestions(search);
+      }, [300]),
+    });
+  }
+
   componentDidMount() {
     sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
@@ -196,6 +211,15 @@ export class SearchSuggestionContainer extends PureComponent {
     browserHistory.push(`${location.pathname}${location.search}`);
     window.onpopstate = () => {
       closeSearch();
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props?.search !== this.props.prevSearch &&
+      prevProps?.search !== this.props?.search
+    ) {
+      this.requestSearchSuggestions(this.props);
     }
   }
 
@@ -294,7 +318,7 @@ export class SearchSuggestionContainer extends PureComponent {
       renderMySignInPopup,
       // wishlistData,
       isPDPSearchVisible,
-      prevPath
+      prevPath,
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -318,7 +342,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingProducts,
       renderMySignInPopup,
       isPDPSearchVisible,
-      prevPath
+      prevPath,
       // wishlistData,
     };
   };
