@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-
+import { getLocaleFromUrl } from "Util/Url/Url";
 import AppConfigDispatcher from "Store/AppConfig/AppConfig.dispatcher";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
@@ -17,7 +17,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   getConfig: () => AppConfigDispatcher.getAppConfig(dispatch),
-  getCart: () => CartDispatcher.getCart(dispatch,false,false),
+  getCart: () => CartDispatcher.getCart(dispatch, false, false),
   requestPLPWidgetData: () => PLPDispatcher.requestPLPWidgetData(dispatch),
 });
 
@@ -46,7 +46,10 @@ export class SplashContainer extends PureComponent {
 
   async fetchPLPWidgets() {
     const { requestPLPWidgetData } = this.props;
-    requestPLPWidgetData();
+    const locale = getLocaleFromUrl();
+    if (locale) {
+      requestPLPWidgetData();
+    }
   }
   static getDerivedStateFromProps(props, state) {
     const { locale, getCart } = props;

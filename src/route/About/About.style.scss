@@ -797,13 +797,14 @@
 
 .brandsWeLove {
     margin-top: 95px;
-
+    text-transform: none;
     @include mobile {
         margin-top: 50px;
     }
 }
 
 .experience6thStreet{
+    text-transform: none;
     @include mobile {
         margin-top: 40px;
     }

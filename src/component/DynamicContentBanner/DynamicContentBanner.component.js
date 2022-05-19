@@ -92,7 +92,7 @@ class DynamicContentBanner extends PureComponent {
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();
     }
-    setTimeout(() => {});
+    setTimeout(() => { });
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,

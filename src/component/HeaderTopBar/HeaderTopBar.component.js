@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { withRouter } from "react-router";
 import { getCountryFromUrl } from "Util/Url/Url";
-
 import CountrySwitcher from "Component/CountrySwitcher";
 import InlineCustomerSupport from "Component/InlineCustomerSupport";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -52,11 +51,11 @@ class HeaderTopBar extends NavigationAbstract {
 
     return location.pathname !== "/" && isMobile.any()
       ? {
-          isOnMobile: true,
-        }
+        isOnMobile: true,
+      }
       : {
-          isOnMobile: false,
-        };
+        isOnMobile: false,
+      };
   }
 
   componentDidMount() {

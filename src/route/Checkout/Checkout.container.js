@@ -38,7 +38,10 @@ import {
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
-import Event, { EVENT_GTM_CHECKOUT } from "Util/Event";
+import Event, {
+  EVENT_GTM_CHECKOUT,
+  EVENT_GTM_EDD_TRACK_ON_ORDER,
+} from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -56,8 +59,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data,finalEdd) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data,finalEdd),
+  createOrder: (code, additional_data, finalEdd) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, finalEdd),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -106,6 +109,7 @@ export const mapStateToProps = (state) => ({
   newCardVisible: state.CreditCardReducer.newCardVisible,
   pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
   edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -437,17 +441,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       total === 0 &&
       checkoutStep !== DETAILS_STEP
     ) {
-      const totalSum = total_segments.reduce(
-        (acc, item) => {
-          if (item.code === "msp_cashondelivery") {
-            return acc + 0;
-          } else {
-            return acc + item.value;
-          }
-
-        },
-        0
-      );
+      const totalSum = total_segments.reduce((acc, item) => {
+        if (item.code === "msp_cashondelivery") {
+          return acc + 0;
+        } else {
+          return acc + item.value;
+        }
+      }, 0);
 
       if (totalSum + discount !== 0) {
         showErrorNotification(__("Your cart is invalid"));
@@ -612,7 +612,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
-      finalEdd
+      finalEdd,
     } = paymentInformation;
 
     const {
@@ -667,14 +667,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
     } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation,finalEdd);
+      this.placeOrder(code, data, paymentInformation, finalEdd);
     } else {
-      this.placeOrder(code, data, null,finalEdd);
+      this.placeOrder(code, data, null, finalEdd);
     }
   }
 
-  async placeOrder(code, data, paymentInformation,finalEdd) {
-
+  async placeOrder(code, data, paymentInformation, finalEdd) {
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
@@ -686,8 +685,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data,finalEdd);
+      const response = await createOrder(code, data, finalEdd);
       if (response && response.data) {
+        if (finalEdd) {
+          Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
+            edd_date: finalEdd,
+          });
+        }
         const { data } = response;
         if (typeof data === "object") {
           const {
@@ -795,7 +799,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => { })
+                    .then(() => {})
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -951,7 +955,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => { })
+              .then(() => {})
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")

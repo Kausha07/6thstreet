@@ -522,7 +522,7 @@
     "Careers": "وظائف",
     "Press": "صحافة",
     "About": "عن",
-    "6thStreet": " 6th ستريت",
+    "6thStreet": "6ᵗʰستريت",
     "Customer Service": "خدمة العملاء",
     "Download The App": "حمل التطبيق",
     "CUSTOMER SUPPORT": "خدمة العملاء",
@@ -1001,7 +1001,7 @@
     "Here are some products you may like.": "مُنتجات قد تعجبك",
     "About us": "عن 6thستريت",
     "Who we are": "من نحن؟",
-    "We are an elevated fashion and lifestyle e-store committed to styling GEN NOW to WOW. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices.": " 6thستريت هو موقع تسوق إلكتروني رائد في منطقة الخليج، حيث يُقدم أرقى تصاميم الملابس، الأحذية والإكسسوارات للنساء، الرجال والأطفال في السعودية، الإمارات، عمان، الكويت، قطر والبحرين .و يحرص 6th ستريت على توفير ما يلائم مختلف الأذواق من أفضل الماركات بأسعار تناسب الجميع.",
+    "We are an elevated fashion and lifestyle e-store committed to styling GEN NOW to WOW. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices.": "6ᵗʰستريت هو موقع تسوق إلكتروني رائد في منطقة الخليج، حيث يُقدم أرقى تصاميم الملابس، الأحذية والإكسسوارات للنساء، الرجال والأطفال في السعودية، الإمارات، عمان، الكويت، قطر والبحرين .و يحرص 6ᵗʰ ستريت على توفير ما يلائم مختلف الأذواق من أفضل الماركات بأسعار تناسب الجميع.",
     "Wide range of international brands such as:": "تشكيلة الماركات العالمية الواسعة مثل:",
     "Calvin Klein": "كالفن كلاين",
     "BHPC": "بيفرلي هيلز بولو كلوب",
@@ -1018,8 +1018,12 @@
     "Maybelline": "ميبيلين",
     "Bourjois": "بورجوا",
     "Versace": "فيرساتشي",
-    "And others on 6th Street": "وغيرهم على 6th ستريت",
+    "And others on 6th Street": "وغيرهم على 6ᵗʰ ستريت",
     "With regard to completing the finishing touches to your looks, whether you choose a bag, shoes, accessories or even beauty products and perfumes, you can": "ما يتعلق بإكمال اللمسات الأخيرة لإطلالاتكم سواءاً اختيار شنطة، حذاء، إكسسوارات أو حتى مُنتجات الجمال والعطور بإمكانكم",
-    "The 6thStreet.com experience": "تجربة التسوق من 6th ستريت",
-    "Brands We love": "ماركات الكل يحبها"
+    "Payment Methods": null,
+    "Payments": null,
+    "You have no saved cards.": null,
+    "The 6thStreet.com experience": "تجربة التسوق من",
+    "Brands We love": "ماركات الكل يحبها",
+    "We love": null
 }

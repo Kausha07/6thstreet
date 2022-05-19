@@ -3,6 +3,7 @@ import {
   getBrands,
   getPDP,
   getPLP,
+  getSearchPLP,
   getPopularBrands,
   getProductBySku,
   getSuggestions,
@@ -12,7 +13,7 @@ import {
   logAlgoliaAnalytics,
   searchBy,
   getBrandsDetails,
-  getShopByBrands
+  getShopByBrands,
 } from "./app";
 import { getIndex } from "./app/utils";
 
@@ -31,8 +32,10 @@ const AlgoliaSDK = {
     AlgoliaSDK.env = env;
   },
 
-  getPLP: (URL,params) =>
-    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env },params),
+  getPLP: (URL, params) =>
+    getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params),
+  getSearchPLP: (URL, params) =>
+    getSearchPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params),
   getPDP: (params) => getPDP(params, { index: AlgoliaSDK.index }),
   searchBy: (params) => searchBy(params, { index: AlgoliaSDK.index }),
   getSuggestions: (params) =>
@@ -42,12 +45,16 @@ const AlgoliaSDK = {
   getBrandsDetails: (params) =>
     getBrandsDetails(params, { index: AlgoliaSDK.index }),
   getShopByBrands: (params) =>
-    getShopByBrands(params, { client: AlgoliaSDK.client, index: AlgoliaSDK.index }),
+    getShopByBrands(params, {
+      client: AlgoliaSDK.client,
+      index: AlgoliaSDK.index,
+    }),
   getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
-  getWishlistProduct: (idsArray) => getWishlistProduct(idsArray, { index: AlgoliaSDK.index }),
+  getWishlistProduct: (idsArray) =>
+    getWishlistProduct(idsArray, { index: AlgoliaSDK.index }),
   getProductBySku: (params) =>
     getProductBySku(params, { index: AlgoliaSDK.index }),
   logAlgoliaAnalytics: (
