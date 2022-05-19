@@ -48,10 +48,6 @@ export class PDPSummaryContainer extends PureComponent {
     }
   }
 
-  componentDidUpdate() {
-    // 
-  }
-
   async getBrandDetails() {
     const { product: { brand_name } } = this.props;
     if(brand_name) {
