@@ -217,7 +217,7 @@ export class SuccessCheckoutItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border },
+        full_item_info: { cross_border = 0 },
       },
       edd_info,
       isFailed,
