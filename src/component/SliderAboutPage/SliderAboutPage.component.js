@@ -149,15 +149,6 @@ renderSliderForCards = (item, i) => {
         key={i * 11}
       >
         <div className="sliderwithexpclass">
-        <Link
-          to={`/about`}
-          key={i * 11}
-          block="SliderWithExperiences"
-          elem="Link"
-          data-banner-type="SliderWithExperiences"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
-          data-tag={item.tag ? item.tag : ""}
-        >
           
           { isMobile ? (
             <div className='imgwrapperdiv'>            
@@ -181,7 +172,6 @@ renderSliderForCards = (item, i) => {
             </div>
           )}
 
-        </Link>
           {isArabic ? (
             <div block="SliderText" style={{ textAlign: text_align }}>
               {ArabicText}
