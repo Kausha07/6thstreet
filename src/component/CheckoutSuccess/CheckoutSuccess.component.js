@@ -24,7 +24,7 @@ import Confirm from "./icons/confirm.png";
 import Mail from "./icons/mail.svg";
 import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
-import Tabby from "./icons/tabby.png";
+import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import Image from "Component/Image";
 import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
@@ -272,7 +272,7 @@ export class CheckoutSuccess extends PureComponent {
   onSignIn = () => {
     const { requestCustomerData } = this.props;
 
-    requestCustomerData();
+    // requestCustomerData();
     this.closePopup();
   };
 
@@ -283,11 +283,18 @@ export class CheckoutSuccess extends PureComponent {
   renderItem = (item) => {
     const {
       order: { base_currency_code: currency },
+      eddResponse,
+      isFailed,
+      edd_info
     } = this.props;
 
     return (
       <MyAccountOrderViewItem
         item={item}
+        isFailed={isFailed}
+        compRef={"checkout"}
+        edd_info={edd_info}
+        eddResponse={eddResponse}
         currency={currency}
         displayDiscountPercentage={true}
       />
@@ -324,6 +331,7 @@ export class CheckoutSuccess extends PureComponent {
       const {
         initialTotals: { items = [], quote_currency_code },
         incrementID,
+        isFailed
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -342,6 +350,7 @@ export class CheckoutSuccess extends PureComponent {
                 item={item}
                 currency_code={quote_currency_code}
                 isEditing
+                isFailed={isFailed}
                 isLikeTable
               />
             ))}
@@ -774,11 +783,11 @@ export class CheckoutSuccess extends PureComponent {
 
     switch (formatedString) {
       case "Tabby":
-        if (!isArabic) {
-          return <img src={Tabby} alt={paymentTitle} />;
-        }
-
-        return <img src={TabbyAR} alt={paymentTitle} />;
+        // if (!isArabic) {
+        //   return <img src={Tabby} alt={paymentTitle} />;
+        // }
+        // return <img src={TabbyAR} alt={paymentTitle} />;
+        return <img src={Tabby} alt={paymentTitle} />;
       case "Apple":
         return <img src={Apple} alt={paymentTitle} />;
       case "Cash":
@@ -919,11 +928,11 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
     const pagePathName = new URL(window.location.href).pathname;
-    if (pagePathName !== "/checkout/error"){
+    if (pagePathName !== "/checkout/error") {
       if (
         paymentMethod?.code === "checkout_qpay" ||
         paymentMethod?.code === "tabby_installments"
-      ) { 
+      ) {
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,

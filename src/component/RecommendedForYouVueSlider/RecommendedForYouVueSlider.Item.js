@@ -189,8 +189,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       pageType,
       renderMySignInPopup,
     } = this.props;
-    const { isArabic } = this.state;
     let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
+    const { isArabic } = this.state;
     let newLink = link;
     if (this.props.data.url) {
       newLink = this.props.data.url;
@@ -199,7 +199,6 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
-        mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
         mods={{ isArabic }}

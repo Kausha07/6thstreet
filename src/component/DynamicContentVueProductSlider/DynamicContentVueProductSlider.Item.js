@@ -179,14 +179,14 @@ class DynamicContentVueProductSliderItem extends PureComponent {
               :
               this.renderIsNew(is_new_in)
           }
-        </Link>
+        </Link >
         <WishlistIcon
           renderMySignInPopup={renderMySignInPopup}
           sku={sku}
           data={data}
           pageType={pageType}
         />
-      </div>
+      </div >
     );
   }
 }

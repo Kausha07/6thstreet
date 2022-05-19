@@ -16,9 +16,20 @@ import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
+import { getCountryFromUrl } from "Util/Url/Url";
+import { isObject } from "Util/API/helper/Object";
+import { getDefaultEddDate } from "Util/Date/index";
+import { isSignedIn } from "Util/Auth";
+import address from "./icons/address.png";
+import addressBlack from "./icons/address_black.png";
+import Image from "Component/Image";
 import "./PDPSummary.style";
-
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -33,10 +44,133 @@ class PDPSummary extends PureComponent {
     isArabic: isArabic(),
     selectedSizeType: "eu",
     selectedSizeCode: "",
+    showCityDropdown: false,
+    showAreaDropDown: false,
+    selectedCityId: null,
+    selectedAreaId: null,
+    selectedArea: null,
+    selectedCityArea: null,
+    selectedCity: null,
+    showPopupField: "",
+    countryCode: null,
+    Cityresponse: null,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
+
+  getIdFromCityArea = (addressCityData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    const { isArabic } = this.state;
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
+            }
+          });
+        }
+      }
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  getCityAreaFromStorage = (addressCityData, countryCode) => {
+    const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+    const { city, area } = sessionData;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    this.setState(
+      {
+        Cityresponse: addressCityData,
+        selectedCity: cityEntry,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: areaEntry,
+        countryCode: countryCode,
+      },
+      () => {
+        let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        this.getEddResponse(data, false);
+      }
+    );
+  };
+
+  getCityAreaFromDefault = (addressCityData, countryCode) => {
+    const { defaultShippingAddress } = this.props;
+    const { area, city } = defaultShippingAddress;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    this.setState(
+      {
+        Cityresponse: addressCityData,
+        selectedCity: cityEntry,
+        selectedCityId: cityEntry,
+        selectedAreaId: areaEntry,
+        selectedArea: areaEntry,
+        countryCode: countryCode,
+      },
+      () => {
+        let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        this.getEddResponse(data, false);
+      }
+    );
+  };
+
+  getEddResponse = (data, type) => {
+    const { estimateEddResponse } = this.props;
+    const { area, city, country } = data;
+
+    let request = {
+      country: country,
+      city: city,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request, type);
+  };
+
+  validateEddStatus = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress, addressCityData, setEddResponse } =
+      this.props;
+    if (isSignedIn() && defaultShippingAddress) {
+      this.getCityAreaFromDefault(addressCityData, countryCode);
+    } else if (
+      isSignedIn() &&
+      !defaultShippingAddress &&
+      sessionStorage.getItem("EddAddressReq")
+    ) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else if (!isSignedIn() && sessionStorage.getItem("EddAddressReq")) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else {
+      this.setState({
+        Cityresponse: addressCityData,
+        countryCode: countryCode,
+      });
+      setEddResponse(null, null);
+    }
+  };
+
   componentDidMount() {
     const {
       product: { price },
+      getTabbyInstallment,
     } = this.props;
     const { isArabic } = this.state;
     if (price) {
@@ -47,56 +181,16 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const script = document.createElement("script");
-        script.src = "https://checkout.tabby.ai/tabby-promo.js";
-        script.async = true;
-        script.onload = function () {
-          let s = document.createElement("script");
-          s.type = "text/javascript";
-          const code = `new TabbyPromo({
-        selector: '#TabbyPromo',
-        currency: '${currency}',
-        price: '${defPrice}',
-        installmentsCount: 4,
-        lang: '${isArabic ? "ar" : "en"}',
-        source: 'product',
-      });`;
-          try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
-          } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
-          }
-        };
-        document.body.appendChild(script);
-      }
-    }
-  }
-  componentDidUpdate(prevProps) {
-    const {
-      product: { price },
-    } = this.props;
-    const { isArabic } = this.state;
-
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        if (prevProps.product.price !== price) {
-          const script = document.createElement("script");
-          script.src = "https://checkout.tabby.ai/tabby-promo.js";
-          script.async = true;
-          script.onload = function () {
-            let s = document.createElement("script");
-            s.type = "text/javascript";
-            const code = `new TabbyPromo({
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            const script = document.createElement("script");
+            script.src = "https://checkout.tabby.ai/tabby-promo.js";
+            script.async = true;
+            script.onload = function () {
+              let s = document.createElement("script");
+              s.type = "text/javascript";
+              const code = `new TabbyPromo({
           selector: '#TabbyPromo',
           currency: '${currency}',
           price: '${defPrice}',
@@ -104,16 +198,147 @@ class PDPSummary extends PureComponent {
           lang: '${isArabic ? "ar" : "en"}',
           source: 'product',
         });`;
-            try {
-              s.appendChild(document.createTextNode(code));
-              document.body.appendChild(s);
-            } catch (e) {
-              s.text = code;
-              document.body.appendChild(s);
+              try {
+                s.appendChild(document.createTextNode(code));
+                document.body.appendChild(s);
+              } catch (e) {
+                s.text = code;
+                document.body.appendChild(s);
+              }
+            };
+            document.body.appendChild(script);
+          }
+        }, this._handleError)
+        .catch(() => {});
+    }
+
+    const countryCode = getCountryFromUrl();
+    const {
+      product: { cross_border = 0 },
+      edd_info,
+      defaultShippingAddress,
+      addressCityData,
+    } = this.props;
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp &&
+      cross_border === 0
+    ) {
+      if (addressCityData.length > 0) {
+        this.validateEddStatus(countryCode);
+        let default_edd = defaultShippingAddress ? true : false;
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_pdp,
+            default_edd_status: default_edd,
+            edd_updated: false,
+          },
+          page: "pdp",
+        });
+      }
+    } else {
+      this.setState({
+        countryCode: countryCode,
+      });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      product: { price },
+      getTabbyInstallment,
+    } = this.props;
+    const { isArabic } = this.state;
+
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            if (prevProps.product.price !== price) {
+              const script = document.createElement("script");
+              script.src = "https://checkout.tabby.ai/tabby-promo.js";
+              script.async = true;
+              script.onload = function () {
+                let s = document.createElement("script");
+                s.type = "text/javascript";
+                const code = `new TabbyPromo({
+            selector: '#TabbyPromo',
+            currency: '${currency}',
+            price: '${defPrice}',
+            installmentsCount: 4,
+            lang: '${isArabic ? "ar" : "en"}',
+            source: 'product',
+          });`;
+                try {
+                  s.appendChild(document.createTextNode(code));
+                  document.body.appendChild(s);
+                } catch (e) {
+                  s.text = code;
+                  document.body.appendChild(s);
+                }
+              };
+              document.body.appendChild(script);
             }
-          };
-          document.body.appendChild(script);
-        }
+          }
+        }, this._handleError)
+        .catch(() => {});
+    }
+
+    const {
+      defaultShippingAddress,
+      estimateEddResponse,
+      addressCityData,
+      edd_info,
+    } = this.props;
+    const {
+      defaultShippingAddress: prevdefaultShippingAddress,
+      addressCityData: prevAddressCitiesData,
+    } = prevProps;
+    if (
+      prevAddressCitiesData &&
+      addressCityData &&
+      prevAddressCitiesData.length !== addressCityData.length
+    ) {
+      this.setState({
+        Cityresponse: addressCityData,
+      });
+      this.validateEddStatus();
+    }
+    if (
+      JSON.stringify(prevdefaultShippingAddress) !==
+      JSON.stringify(defaultShippingAddress)
+    ) {
+      const { country_code, area, city } = defaultShippingAddress;
+
+      if (edd_info && edd_info.is_enable) {
+        const { cityEntry, areaEntry } = this.getIdFromCityArea(
+          addressCityData,
+          city,
+          area
+        );
+        this.setState(
+          {
+            Cityresponse: addressCityData,
+            selectedCity: cityEntry,
+            selectedCityId: cityEntry,
+            selectedAreaId: areaEntry,
+            selectedArea: areaEntry,
+          },
+          () => {
+            let data = {
+              area: areaEntry,
+              city: cityEntry,
+              country: country_code,
+            };
+            this.getEddResponse(data, false);
+          }
+        );
       }
     }
   }
@@ -131,6 +356,287 @@ class PDPSummary extends PureComponent {
       });
     }
     return Object.keys(derivedState).length ? derivedState : null;
+  }
+
+  closeAreaOverlay = () => {
+    const { showCityDropdown } = this.state;
+    document.body.style.overflow = "visible";
+    this.setState({
+      showCityDropdown: !showCityDropdown,
+      showAreaDropDown: false,
+    });
+  };
+
+  handleAreaDropDownClick = () => {
+    const { showCityDropdown, isMobile } = this.state;
+    if (isMobile) {
+      document.body.style.overflow = "hidden";
+    }
+    this.setState({
+      showCityDropdown: !showCityDropdown,
+      showAreaDropDown: false,
+      showPopupField: "city",
+    });
+  };
+
+  handleAreaSelection = (area) => {
+    const { selectedCity, countryCode } = this.state;
+    const { estimateEddResponse, defaultShippingAddress, edd_info } =
+      this.props;
+    this.setState({
+      selectedAreaId: area,
+      selectedArea: area,
+      showCityDropdown: false,
+      showPopupField: "",
+    });
+    this.handleAreaDropDownClick();
+    let default_edd = defaultShippingAddress ? true : false;
+    Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+      edd_details: {
+        edd_status: edd_info.has_pdp,
+        default_edd_status: default_edd,
+        edd_updated: true,
+      },
+      page: "pdp",
+    });
+    let request = {
+      country: countryCode,
+      city: selectedCity,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request, true);
+    document.body.style.overflow = "visible";
+  };
+
+  handleCitySelection = (city) => {
+    const { isArabic } = this.state;
+    this.setState({
+      showPopupField: "area",
+      selectedCityId: isArabic ? city.city_ar : city.city,
+      selectedCity: isArabic ? city.city_ar : city.city,
+      selectedCityArea: isArabic ? city.areas_ar : city.areas,
+      showAreaDropDown: true,
+    });
+  };
+
+  renderSelectAreaItem() {
+    const { selectedCityArea, isArabic } = this.state;
+    const isArea = selectedCityArea && selectedCityArea.length > 0;
+    return (
+      <ul>
+        {isArea ? (
+          selectedCityArea.map((area) => {
+            return (
+              <li id={area} onClick={() => this.handleAreaSelection(area)}>
+                <button
+                  block={`CountrySwitcher`}
+                  elem="CountryBtn"
+                  mods={{ isArabic, isArea }}
+                >
+                  <span>{area}</span>
+                </button>
+              </li>
+            );
+          })
+        ) : (
+          <span block="NoAreaFound">No Area Found</span>
+        )}
+      </ul>
+    );
+  }
+  renderSelectCityItem() {
+    const { Cityresponse, isArabic } = this.state;
+    if (!Cityresponse) {
+      return (
+        <ul>
+          <span block="NoAreaFound">No City Found</span>
+        </ul>
+      );
+    }
+    return (
+      <ul>
+        {Object.values(Cityresponse).map((city) => {
+          return (
+            <li
+              id={city.city_id}
+              onClick={() => this.handleCitySelection(city)}
+            >
+              <button
+                block={`CountrySwitcher`}
+                elem="CountryBtn"
+                mods={{ isArabic }}
+              >
+                <span>{isArabic ? city.city_ar : city.city}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+  renderMobileSelectCity() {
+    const { isArabic, showPopupField } = this.state;
+    return (
+      <div block="EddMobileWrapper">
+        <div mix={{ block: "EddMobileWrapper", elem: "Content" }}>
+          <div
+            mix={{ block: "EddMobileWrapper-Content", elem: "EddBackHeader" }}
+          >
+            <button
+              elem="Button"
+              block="MyAccountMobileHeader"
+              onClick={this.closeAreaOverlay}
+              mods={{ isArabic }}
+            />
+          </div>
+          <div
+            mix={{
+              block: "EddMobileWrapper-Content",
+              elem: "EddContentHeader",
+            }}
+          >
+            <div
+              block="CityText ContentText"
+              mods={{ isShown: showPopupField === "city" ? true : false }}
+              onClick={() => this.setState({ showPopupField: "city" })}
+            >
+              <span>Select City</span>
+            </div>
+            <div
+              block="ContentText"
+              mods={{ isShown: showPopupField === "area" ? true : false }}
+            >
+              <span>{isArabic ? "حدد المنطقة" : "Select Area"}</span>
+            </div>
+          </div>
+
+          {showPopupField === "city" && (
+            <div block="CityDrop">{this.renderSelectCityItem()}</div>
+          )}
+          {showPopupField === "area" && (
+            <div block="CityDrop">{this.renderSelectAreaItem()}</div>
+          )}
+        </div>
+      </div>
+    );
+  }
+  renderSelectCity() {
+    const { edd_info } = this.props;
+    const {
+      showCityDropdown,
+      showAreaDropDown,
+      selectedCityArea,
+      selectedAreaId,
+      selectedArea,
+      isMobile,
+      isArabic,
+    } = this.state;
+    const {
+      defaultEddDateString,
+      defaultEddDay,
+      defaultEddMonth,
+      defaultEddDat,
+    } = getDefaultEddDate(edd_info.default_message);
+
+    const { eddResponse } = this.props;
+    let actualEddMess = "";
+    let actualEdd = "";
+    let customDefaultMess = isArabic
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+      : DEFAULT_MESSAGE;
+    if (eddResponse) {
+      if (isObject(eddResponse)) {
+        Object.values(eddResponse).filter((entry) => {
+          if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+            actualEddMess = isArabic
+              ? entry.edd_message_ar
+              : entry.edd_message_en;
+            actualEdd = entry.edd_date;
+          }
+        });
+      } else {
+        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEdd = defaultEddDateString;
+      }
+    } else {
+      actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+      actualEdd = defaultEddDateString;
+    }
+    const isArea = !(
+      selectedCityArea && Object.values(selectedCityArea).length > 0
+    );
+    if (isMobile && showCityDropdown) {
+      return this.renderMobileSelectCity();
+    }
+    let splitKey = isArabic ? "بواسطه" : "by";
+    let EddMessMargin = selectedAreaId ? true : false;
+    return (
+      <div block="EddParentWrapper">
+        <div block="EddWrapper">
+          {actualEddMess && (
+            <div
+              mix={{
+                block: "EddWrapper",
+                elem: `AreaText`,
+                mods: { isArabic },
+              }}
+              block={
+                EddMessMargin
+                  ? `EddMessMargin ${isArabic ? "isArabic" : ""}`
+                  : ""
+              }
+            >
+              <span>
+                {actualEddMess.split(splitKey)[0]}
+                {splitKey}
+              </span>
+              <span>{actualEddMess.split(splitKey)[1]}</span>
+            </div>
+          )}
+          {selectedAreaId ? (
+            <div
+              block={`EddWrapper SelectedAreaWrapper`}
+              mods={{ isArabic }}
+              onClick={() => this.handleAreaDropDownClick()}
+            >
+              <Image lazyLoad={false} src={addressBlack} alt="" />
+              <div block={`SelectAreaText `}>{selectedArea}</div>
+            </div>
+          ) : (
+            <div
+              block="EddWrapper"
+              elem="AreaButton"
+              mods={{ isArabic }}
+              onClick={() => this.handleAreaDropDownClick()}
+            >
+              <Image lazyLoad={false} src={address} alt="" />
+              <div block="SelectAreaText">{isArabic ? "حدد المنطقة" : "Select Area"}</div>
+            </div>
+          )}
+          <div block="DropDownWrapper">
+            {showCityDropdown && !isMobile && (
+              <div mix={{ block: "EddWrapper", elem: "CountryDrop" }}>
+                {this.renderSelectCityItem()}
+              </div>
+            )}
+            {showCityDropdown && showAreaDropDown && !isMobile && (
+              <div
+                block="AreaDropdown"
+                mix={{
+                  block: "EddWrapper",
+                  elem: "CountryDrop",
+                  mods: { isArea, isArabic },
+                }}
+              >
+                {this.renderSelectAreaItem()}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   setSize = (sizeType, sizeCode) => {
@@ -152,9 +658,34 @@ class PDPSummary extends PureComponent {
       product: { name, brand_name, gallery_images = [] },
     } = this.props;
     const { url_path } = this.props;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const { isArabic } = this.state;
+    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
+    if (isArabic) {
+      if (gender === "kids") {
+        gender = "أولاد,بنات";
+      } else {
+        if (gender !== "home") {
+          gender = getGenderInArabic(gender);
+          gender = gender?.replace(
+            gender?.charAt(0),
+            gender?.charAt(0).toUpperCase()
+          );
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        gender = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          gender = gender?.replace(
+            gender?.charAt(0),
+            gender?.charAt(0).toUpperCase()
+          );
+        }
+      }
+    }
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
     if (isMobile.any()) {
@@ -162,15 +693,29 @@ class PDPSummary extends PureComponent {
         <div block="PDPSummary" elem="Heading">
           <h1>
             {url_path ? (
-              <Link
-                className="pdpsummarylinkTagStyle"
-                to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
-                  gender.charAt(0),
-                  gender.charAt(0).toUpperCase()
-                )}`}
-              >
-                {brand_name}
-              </Link>
+              gender !== "home" ? (
+                <Link
+                  className="pdpsummarylinkTagStyle"
+                  to={`/${url_path}.html?q=${encodeURIComponent(
+                    brand_name
+                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                    brand_name
+                  )}&dFR[gender][0]=${gender}`}
+                >
+                  {brand_name}
+                </Link>
+              ) : (
+                <Link
+                  className="pdpsummarylinkTagStyle"
+                  to={`/${url_path}.html?q=${encodeURIComponent(
+                    brand_name
+                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                    brand_name
+                  )}`}
+                >
+                  {brand_name}
+                </Link>
+              )
             ) : (
               brand_name
             )}{" "}
@@ -192,15 +737,29 @@ class PDPSummary extends PureComponent {
     return (
       <h1>
         {url_path ? (
-          <Link
-            className="pdpsummarylinkTagStyle"
-            to={`/${url_path}.html?q=${brand_name}&p=0&dFR[gender][0]=${gender.replace(
-              gender.charAt(0),
-              gender.charAt(0).toUpperCase()
-            )}`}
-          >
-            {brand_name}
-          </Link>
+          gender !== "home" ? (
+            <Link
+              className="pdpsummarylinkTagStyle"
+              to={`/${url_path}.html?q=${encodeURIComponent(
+                brand_name
+              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                brand_name
+              )}&dFR[gender][0]=${gender}`}
+            >
+              {brand_name}
+            </Link>
+          ) : (
+            <Link
+              className="pdpsummarylinkTagStyle"
+              to={`/${url_path}.html?q=${encodeURIComponent(
+                brand_name
+              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+                brand_name
+              )}`}
+            >
+              {brand_name}
+            </Link>
+          )
         ) : (
           brand_name
         )}{" "}
@@ -365,7 +924,6 @@ class PDPSummary extends PureComponent {
         discountable,
       },
     } = this.props;
-
     let { selectedSizeCode } = this.state;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
@@ -423,36 +981,22 @@ class PDPSummary extends PureComponent {
   }
 
   renderTabby() {
-    const {
-      product: { price },
-    } = this.props;
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const monthPrice = (defPrice / 4).toFixed(2);
-        return (
-          <>
-            <div id="TabbyPromo"></div>
-          </>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
+    return (
+      <>
+        <div id="TabbyPromo"></div>
+      </>
+    );
   }
 
   render() {
-    const { isArabic } = this.state;
+    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
+    const {
+      product: { cross_border = 0 },
+      edd_info,
+    } = this.props;
+    const AreaOverlay = isMobile && showCityDropdown ? true : false;
     return (
-      <div block="PDPSummary" mods={{ isArabic }}>
+      <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>
@@ -461,6 +1005,12 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
+        {Cityresponse &&
+          edd_info &&
+          edd_info.is_enable &&
+          edd_info.has_pdp &&
+          cross_border === 0 &&
+          this.renderSelectCity()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}

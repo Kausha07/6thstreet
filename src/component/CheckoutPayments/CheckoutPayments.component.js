@@ -1,34 +1,26 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import PropTypes from "prop-types";
-import isMobile from "Util/Mobile";
-
 import CheckoutPayment from "Component/CheckoutPayment";
 import { PAYMENTS_DATA } from "Component/CheckoutPayment/CheckoutPayment.config";
-import tabbyAr from "Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png";
 import CreditCard from "Component/CreditCard";
 import Slider from "Component/Slider";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
-import {
-  TABBY_TOOLTIP_INSTALLMENTS,
-} from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
+import { TABBY_TOOLTIP_INSTALLMENTS } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
+import PropTypes from "prop-types";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
-import Applepay from "./icons/apple-pay@3x.png";
-
+import isMobile from "Util/Mobile";
 import {
   CARD,
   CASH_ON_DELIVERY,
   CHECKOUT_APPLE_PAY,
+  CHECKOUT_QPAY,
   FREE,
   TABBY_ISTALLMENTS,
   TABBY_PAYMENT_CODES,
-  CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
-import info from "./icons/info.png";
-import Image from "Component/Image";
-
 import "./CheckoutPayments.extended.style";
+import Applepay from "./icons/apple-pay@3x.png";
 
 export class CheckoutPayments extends SourceCheckoutPayments {
   static propTypes = {
@@ -36,14 +28,14 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     selectedPaymentCode: PropTypes.string,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.string.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
     processApplePay: true,
-    placeOrder: () => { },
+    placeOrder: () => {},
   };
 
   paymentRenderMap = {
@@ -70,8 +62,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     script.src = "https://checkout.tabby.ai/tabby-card.js";
     script.async = true;
     script.onload = function () {
-      let s = document.createElement('script');
-      s.type = 'text/javascript';
+      let s = document.createElement("script");
+      s.type = "text/javascript";
       const code = `new TabbyCard({
         selector: '#tabbyCard', // empty div for TabbyCard
         currency: 'AED', // or SAR, BHD, KWD; required, currency for your product
@@ -86,7 +78,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         s.text = code;
         document.body.appendChild(s);
       }
-    }
+    };
     document.body.appendChild(script);
   }
   componentDidUpdate(prevProps) {
@@ -101,13 +93,15 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       script.src = "https://checkout.tabby.ai/tabby-card.js";
       script.async = true;
       script.onload = function () {
-        let s = document.createElement('script');
-        s.type = 'text/javascript';
+        let s = document.createElement("script");
+        s.type = "text/javascript";
         const code = `new TabbyCard({
         selector: '#tabbyCard', // empty div for TabbyCard
         currency: '${currency_code}', // or SAR, BHD, KWD; required, currency for your product
         price: '${total}', // required, price or your product
-        lang: '${isArabic ? `ar` : `en`}', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
+        lang: '${
+          isArabic ? `ar` : `en`
+        }', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
         size: 'wide' // or wide
         });`;
         try {
@@ -117,7 +111,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           s.text = code;
           document.body.appendChild(s);
         }
-      }
+      };
       document.body.appendChild(script);
     }
   }
@@ -131,7 +125,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       selectedPaymentCode,
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
-      isClickAndCollect
+      isClickAndCollect,
     } = this.props;
     const { m_code } = method;
     if (m_code === "msp_cashondelivery" && isClickAndCollect) {
@@ -284,16 +278,23 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     const isSelected = m_code === selectedPaymentCode;
 
-    if (
-      (m_code === TABBY_ISTALLMENTS && !isTabbyInstallmentAvailable)
-    ) {
+    if (m_code === TABBY_ISTALLMENTS && !isTabbyInstallmentAvailable) {
       return null;
     }
     const check = isMobile ? true : false;
 
     return (
-      <div block="CheckoutPayments" elem="TabbyPayment" key={m_code} mods={{ check }}>
-        <div block="CheckoutPayments" elem="TabbyPaymentSelect" mods={{ check }}>
+      <div
+        block="CheckoutPayments"
+        elem="TabbyPayment"
+        key={m_code}
+        mods={{ check }}
+      >
+        <div
+          block="CheckoutPayments"
+          elem="TabbyPaymentSelect"
+          mods={{ check }}
+        >
           <CheckoutPayment
             key={m_code}
             isSelected={isSelected}
@@ -301,12 +302,20 @@ export class CheckoutPayments extends SourceCheckoutPayments {
             onClick={selectPaymentMethod}
             setCashOnDeliveryFee={setCashOnDeliveryFee}
           />
-          <img src={isArabic ? tabbyAr : img} alt={m_code} />
+          {/* <img src={isArabic ? tabbyAr : img} alt={m_code} /> */}
+          <img src={img} alt={m_code} />
         </div>
         <div block="CheckoutPayments" elem="TabbyPaymentContent">
-          <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
-            <button onClick={this.openTabbyInstallmentsTooltip}>
+          <div
+            block="CheckoutPayments"
+            elem="TabbyPaymentContentTitle"
+            mods={{ isArabic }}
+          >
+            {/* <button onClick={this.openTabbyInstallmentsTooltip}>
               <img src={info} alt="info" />
+            </button> */}
+            <button type="button" data-tabby-info="installments">
+              ⓘ
             </button>
           </div>
           <div id="tabbyCard"></div>

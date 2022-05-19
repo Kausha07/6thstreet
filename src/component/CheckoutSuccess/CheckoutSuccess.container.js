@@ -37,6 +37,8 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   config: state.AppConfig.config,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -144,10 +146,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       isSignedIn,
       totals,
       setCheckoutDetails,
+      orderID,
     } = this.props;
-
     setCheckoutDetails(true);
-    
+
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -177,6 +179,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         event_name: VUE_BUY,
         params: {
           event: VUE_BUY,
+          order_id: orderID,
           pageType: "checkout_payment",
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
@@ -216,12 +219,13 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-
+    const { isFailed } = this.props;
     return {
       clubApparelMember,
       isPhoneVerified,
       isChangePhonePopupOpen,
       phone,
+      isFailed,
       isMobileVerification,
     };
   };

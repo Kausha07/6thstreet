@@ -1,6 +1,7 @@
 html {
   scroll-behavior: smooth !important;
 }
+
 .recommendedForYouSliderBox {
   .VueProductSlider {
     padding: 0 20px;
@@ -18,10 +19,12 @@ html {
         margin-bottom: 0;
         margin-top: 0;
       }
+
       @media (max-width: 1024px) and (min-width: 768px) {
         padding-left: 30px;
       }
     }
+
     @include desktop {
       &-Link {
         height: 278px;
@@ -33,9 +36,11 @@ html {
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
+
       h1 {
         text-transform: uppercase;
       }
+
       @media (min-width: 1025px) {
         h1 {
           font-size: 18px;
@@ -44,9 +49,11 @@ html {
           line-height: 25px;
         }
       }
+
       @media (max-width: 760px) {
         display: block;
         text-align: center;
+
         h1 {
           font-size: 15px;
           margin-bottom: 0px;
@@ -86,12 +93,15 @@ html {
       overflow-x: auto;
       overflow-y: hidden;
       white-space: nowrap;
+
       &_isHome {
         &::-webkit-scrollbar {
           display: none;
         }
       }
+
       padding-bottom: 0 !important;
+
       @include before-desktop {
         padding-bottom: 0 !important;
       }
@@ -99,12 +109,14 @@ html {
       @media (max-width: 1024px) {
         width: 99vw;
       }
+
       a {
         display: block;
         overflow: hidden;
         position: relative;
         padding-top: 100%;
         display: block;
+
         img {
           position: absolute;
           height: 100%;
@@ -138,14 +150,17 @@ html {
       display: inline-block;
       vertical-align: top;
       overflow-y: hidden;
+
       &:nth-last-child(2) {
         margin-right: 0;
       }
+
       @include before-desktop {
         &:first-child {
           margin-left: 20px;
         }
       }
+
       &_isArabic {
         &:nth-child(2) {
           margin-right: 0;
@@ -177,6 +192,7 @@ html {
         white-space: nowrap;
         overflow: hidden;
       }
+
       .isArabic {
         text-align: right !important;
       }
@@ -199,6 +215,7 @@ html {
         font-size: 14px;
         font-weight: var(--fw-bold);
       }
+
       .WishlistIcon {
         &-Icon {
           width: 2rem;
@@ -211,6 +228,7 @@ html {
         @include tablet {
           width: 28px;
           height: 28px;
+
           &-Icon {
             width: 20px;
             height: 20px;
@@ -219,9 +237,11 @@ html {
             top: 5px;
           }
         }
+
         @include mobile {
           width: 28px;
           height: 28px;
+
           &-Icon {
             width: 20px;
             height: 20px;
@@ -236,13 +256,16 @@ html {
     &-VueProductImage {
       width: 100%;
       overflow: hidden;
+
       @include mobile {
         height: 100%;
         object-fit: cover;
       }
+
       @include desktop {
         min-height: 168px;
       }
+
       @include tablet {
         min-height: 168px;
       }
@@ -259,6 +282,7 @@ html {
       left: 0;
       top: 12px;
       position: absolute;
+
       &_isArabic {
         right: 0;
         border-radius: 10px 0 0 10px;
@@ -283,10 +307,7 @@ html {
       left: 0;
       top: 12px;
       position: absolute;
-      &_isArabic {
-        right: 0;
-        border-radius: 10px 0 0 10px;
-      }
+
       span {
         font-size: 11px;
         color: #ffffff;
@@ -298,20 +319,24 @@ html {
     &-SpecialPriceCon {
       display: block;
       text-align: left !important;
+
       &_isArabic {
         text-align: right !important;
       }
     }
+
     &-brandName {
       &_isArabic {
         text-align: right !important;
       }
     }
+
     &-productName {
       &_isArabic {
         text-align: right !important;
       }
     }
+
     &-Del {
       display: inline-block;
 
@@ -328,26 +353,32 @@ html {
       span {
         color: #D12228;
         font-weight: var(--fw-bold);
+
         @media (max-width: 411px) {
           font-size: 12px;
         }
       }
     }
   }
+
   #ScrollWrapper.active {
     cursor: grabbing;
     cursor: -webkit-grabbing;
+
     .VueProductSlider {
       cursor: grabbing;
       cursor: -webkit-grabbing;
+
       &-VueProductContainer {
         cursor: grabbing;
         cursor: -webkit-grabbing;
+
         &-a {
           cursor: grabbing;
           cursor: -webkit-grabbing;
         }
       }
+
       &-VueProductImage {
         cursor: grabbing;
         cursor: -webkit-grabbing;
@@ -362,29 +393,36 @@ html {
     margin: 60px auto 0 auto;
     cursor: grabbing;
     cursor: -webkit-grabbing;
+
     @include mobile {
       display: none;
     }
+
     &_Hidden {
       display: none;
     }
+
     &::-webkit-scrollbar {
       height: 3px;
 
       &:hover {
         cursor: pointer;
       }
+
       // @include mobile {
       //   display: none;
       // }
     }
+
     &::-webkit-scrollbar-thumb {
       background: #000000;
       border-radius: 3px;
     }
+
     &::-webkit-scrollbar-track {
       background: #e9e9e9;
     }
+
     &-Inner {
       height: 1px;
     }
@@ -393,10 +431,12 @@ html {
   .SliderHelper {
     &_isHome {
       display: none;
+
       @include tablet {
         width: 30px;
         display: inline-block;
       }
+
       @include mobile {
         width: 10px;
         display: inline-block;

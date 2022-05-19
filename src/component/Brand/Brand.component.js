@@ -48,7 +48,7 @@ class Brand extends PureComponent {
         requestedGender = "رجال"
       }
       else if(type=== "الأطفال"){
-        requestedGender = "صبي,فتاة,أطفال"
+        requestedGender = "أولاد,بنات"
       }      
       else {
         requestedGender =  type;
@@ -56,22 +56,22 @@ class Brand extends PureComponent {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`
+          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
+          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`;
           
     }
     return (

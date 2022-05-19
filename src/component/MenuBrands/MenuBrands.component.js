@@ -4,6 +4,7 @@ import Image from "Component/Image";
 import Link from "Component/Link";
 import { connect } from "react-redux";
 import MobileMenuSlider from "Component/MobileMenuSlider";
+import Slider from "Component/Slider";
 import { CategorySliderItems } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
@@ -79,7 +80,8 @@ class MenuBrands extends PureComponent {
           mods: { isArabic },
         }}
       >
-        <MobileMenuSlider
+        {/* <MobileMenuSlider */}
+        <Slider
           mix={{
             block: "MenuBrands",
             elem: "MobileSlider",
@@ -89,7 +91,8 @@ class MenuBrands extends PureComponent {
           onActiveImageChange={this.handleChange}
         >
           {this.renderItems()}
-        </MobileMenuSlider>
+        </Slider>
+        {/* </MobileMenuSlider> */}
       </div>
     );
   }

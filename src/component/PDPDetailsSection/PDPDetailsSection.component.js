@@ -18,13 +18,11 @@ import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
 import { getCountryFromUrl } from "Util/Url/Url";
-
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     clickAndCollectStores: PropTypes.object.isRequired,
   };
-
   state = {
     isHidden: true,
     isExpanded: {
@@ -81,7 +79,7 @@ class PDPDetailsSection extends PureComponent {
           userID,
           sourceProduct,
         }
-        const payload = VueQuery.buildQuery(type, query,queryPaylod );
+        const payload = VueQuery.buildQuery(type, query, queryPaylod);
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
@@ -659,43 +657,43 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-        <div block="Seperator2" />
-        <React.Fragment>
-          {pdpWidgetsAPIData.map((item, index) => {
-            if (typeof item === "object" && Object.keys(item).length > 0) {
-              const { title: heading } = pdpWidgetsData[index]["layout"];
-              const widgetID = pdpWidgetsData[index]["type"];
-              const { data } = item;
-              if (data && data.length > 0) {
-                return (
-                  <>
-                    <div
-                      block="PDPWidgets"
-                      elem="Slider"
-                      mods={{ largeScreen: width > 1440 }}
-                    >
-                      <DynamicContentVueProductSliderContainer
-                        widgetID={widgetID}
-                        products={data}
-                        heading={heading}
-                        isHome={true}
-                        renderMySignInPopup={renderMySignInPopup}
-                        sourceProdID={sku}
-                        sourceCatgID={categories_without_path[0]}
-                        pageType={"pdp"}
-                        key={`DynamicContentVueProductSliderContainer${index}`}
-                        index={index}
-                        isArabic={isArabic()}
-                      />
-                    </div>
-                  </>
-                );
+          {/* <div block="Seperator2" /> */}
+          <React.Fragment>
+            {pdpWidgetsAPIData.map((item, index) => {
+              if (typeof item === "object" && Object.keys(item).length > 0) {
+                const { title: heading } = pdpWidgetsData[index]["layout"];
+                const widgetID = pdpWidgetsData[index]["type"];
+                const { data } = item;
+                if (data && data.length > 0) {
+                  return (
+                    <>
+                      <div
+                        block="PDPWidgets"
+                        elem="Slider"
+                        mods={{ largeScreen: width > 1440 }}
+                      >
+                        <DynamicContentVueProductSliderContainer
+                          widgetID={widgetID}
+                          products={data}
+                          heading={heading}
+                          isHome={true}
+                          renderMySignInPopup={renderMySignInPopup}
+                          sourceProdID={sku}
+                          sourceCatgID={categories_without_path[0]}
+                          pageType={"pdp"}
+                          key={`DynamicContentVueProductSliderContainer${index}`}
+                          index={index}
+                          isArabic={isArabic()}
+                        />
+                      </div>
+                    </>
+                  );
+                }
+                return null;
               }
               return null;
-            }
-            return null;
-          })}
-        </React.Fragment>
+            })}
+          </React.Fragment>
         </>
       );
     }
@@ -720,8 +718,8 @@ class PDPDetailsSection extends PureComponent {
     };
   }
   chat() {
-    if(document.querySelector(".ori-cursor-ptr")){
-    document.querySelector(".ori-cursor-ptr").click();
+    if (document.querySelector(".ori-cursor-ptr")) {
+      document.querySelector(".ori-cursor-ptr").click();
     }
   }
   renderContactUs() {
@@ -823,7 +821,7 @@ class PDPDetailsSection extends PureComponent {
   }
   getBrandUrl = () => {
     const {
-      product: { brand_name="" },
+      product: { brand_name = "" },
     } = this.props;
     const url = brand_name
       .replace(/'/g, "")
@@ -858,18 +856,7 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping(){
-
-    // let country = getCountryFromUrl()
-    // let txt = {
-    //   AE: __("Orders of less than AED 100 will be charged AED 10 shipping fee(non-refundable). Orders of AED 100 or more will be delivered free."),
-    //   SA: __("Orders of less than SAR 200 will be charged SAR 20 shipping fee(non-refundable). Orders of SAR 200 or more will be delivered free."),
-    //   KW: __("Orders of less than KWD 20 will be charged KWD 2.75 shipping fee(non-refundable). Orders of KWD 20 or more will be delivered free."),
-    //   QA: __("Orders of less than QAR 200 will be charged QAR 20 shipping fee(non-refundable). Orders of QAR 200 or more will be delivered free."),
-    //   OM: __("Orders of less than OMR 20 will be charged OMR 3.5 shipping fee(non-refundable). Orders of OMR 20 or more will be delivered free."),
-    //   BH: __("Orders of less than BHD 20 will be charged BHD 3 shipping fee(non-refundable). Orders of BHD 20 or more will be delivered free.")
-    // }
-
+  renderShipping() {
     let country = getCountryFromUrl()
     let txt = {
       AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
@@ -879,48 +866,40 @@ class PDPDetailsSection extends PureComponent {
       OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
       BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
     }
-
-    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
-    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
-    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 200 ريال إماراتي ",
-    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 ريال إماراتي ",
-    // "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.":"سيتم تسليم الشحنات في غضون 5-7 أيام لمعظم المناطق. توصيل مجاني للطلبات التي تزيد عن 20 دينار إماراتي ",
-
-    return(
+    return (
       <div>
-        <p>{txt[country]}
+        <p> {txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
         </p>
       </div>
-    )
+    );
   }
 
-  renderShippingAndFreeReturns(){
-
-    if(this.props.product.is_returnable === 1){
-      return(
+  renderShippingAndFreeReturns() {
+    if (this.props.product.is_returnable === 1) {
+      return (
         <div>
-          <p>{__("100 days free return available. Shop freely.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("100 days free return available. Shop freely.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
-      )
+      );
     }
 
-    if(this.props.product.is_returnable === 0){
-      return(
+    if (this.props.product.is_returnable === 0) {
+      return (
         <div>
-          <p>{ __("Not eligible for return.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("Not eligible for return.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
-      )
+      );
     }
 
     // if(this.props.product.is_returnable === "NO"){
@@ -929,18 +908,18 @@ class PDPDetailsSection extends PureComponent {
     //   )
     // }
 
-    return(
+    return (
       <div>
         <p>
-        { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          {__("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.")}
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
-        </p>
-      </div>
-    )
+        </p >
+      </div >
+    );
   }
-  
+
   render() {
     const {
       product: { brand_name },
@@ -973,7 +952,7 @@ class PDPDetailsSection extends PureComponent {
         </div >
         {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
-          <Accordion
+          {/* <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
@@ -982,14 +961,13 @@ class PDPDetailsSection extends PureComponent {
             <br />
             {this.renderShippingAndFreeReturns()}
             {isMobile ? <br /> : null}
-          </Accordion>
-          {this.renderAccordionSeperator()}
+          </Accordion> */}
+          {/* {this.renderAccordionSeperator()} */}
         </div >
-
         {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
-        <div block="Seperator2" />
+        {/* <div block="Seperator2" /> */}
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

@@ -101,8 +101,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
-    items.forEach((item) => {
-      Object.assign(item, { store_code: getStoreName });
+    const getIndexId = this.props?.index ? this.props.index : "";
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        store_code: getStoreName,
+        indexValue: index + 1,
+        default_Index: getIndexId,
+      });
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
@@ -136,8 +141,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
-    items.forEach((item) => {
-      Object.assign(item, { store_code: getStoreName });
+    const getIndexId = this.props?.index ? this.props.index : "";
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        store_code: getStoreName,
+        indexValue: index + 1,
+        default_Index: getIndexId,
+      });
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
@@ -227,12 +237,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderScrollbar = () => {
     const { items = [] } = this.props;
 
-    const width = `${
-      (this.itemRef.current && this.itemRef.current.clientWidth) *
-        items.length +
+    const width = `${(this.itemRef.current && this.itemRef.current.clientWidth) *
+      items.length +
       items.length * 7 * 2 -
       690
-    }px`;
+      }px`;
     return (
       <div
         block="Outer"

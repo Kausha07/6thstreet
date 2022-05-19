@@ -35,7 +35,6 @@
     max-width: 450px;
     min-height: 400px;
     margin: auto;
-
     @include desktop {
       top: 20vh;
       position: fixed;
@@ -50,6 +49,10 @@
     &_payments {
       right: -10px;
       left: -10px;
+    }
+    &_isArabic {
+      left: 0;
+      right: 0;
     }
   }
 
@@ -68,7 +71,9 @@
     color: var(--tabby-popup-text-color-dark);
     animation-name: tabby_show_up;
     animation-duration: 1s;
-
+    &_isArabic {
+      margin: 0 16px;
+    }
     @keyframes tabby_show_up {
       from {
         opacity: 0;

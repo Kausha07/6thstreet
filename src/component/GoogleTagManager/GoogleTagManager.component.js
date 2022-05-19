@@ -21,6 +21,8 @@ import {
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
+import EddVisibilityEvent from "./events/EddVisibility.event";
+import EddTrackOnOrderEvent from "./events/EddDateOnOrder.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
 import BannerImpressionEvent from "./events/BannerImpression.event";
@@ -51,6 +53,8 @@ export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
 export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
 export const EVENT_ADD_TO_CART = "addToCart";
+export const EVENT_EDD_VISIBILITY = "eddVisibility";
+export const EVENT_EDD_TRACK_ON_ORDER = "eddTrackOnOrder";
 export const EVENT_REMOVE_FROM_CART = "removeFromCart";
 export const EVENT_PRODUCT_DETAIL = "productdetail";
 export const EVENT_PURCHASE = "checkout-complete";
@@ -105,6 +109,8 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CHECKOUT_OPTION]: CheckoutOptionEvent,
     [EVENT_IMPRESSION]: Impression,
     [EVENT_ADD_TO_CART]: AddToCartEvent,
+    [EVENT_EDD_VISIBILITY]:EddVisibilityEvent,
+    [EVENT_EDD_TRACK_ON_ORDER]:EddTrackOnOrderEvent,
     [EVENT_ADD_TO_WISHLIST]: AddToWishlistEvent,
     [EVENT_PRODUCT_CLICK]: ProductClickEvent,
     [EVENT_WISHLIST_PRODUCT_CLICK]: WishlistClickEvent,

@@ -51,11 +51,11 @@ class HeaderTopBar extends NavigationAbstract {
 
     return location.pathname !== "/" && isMobile.any()
       ? {
-          isOnMobile: true,
-        }
+        isOnMobile: true,
+      }
       : {
-          isOnMobile: false,
-        };
+        isOnMobile: false,
+      };
   }
 
   componentDidMount() {

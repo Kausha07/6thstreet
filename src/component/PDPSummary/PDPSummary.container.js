@@ -1,31 +1,66 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
 
-import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { Product } from "Util/API/endpoint/Product/Product.type";
 
-import PDPSummary from './PDPSummary.component';
+import PDPSummary from "./PDPSummary.component";
+import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 
 import Algolia from "Util/API/provider/Algolia";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
   isLoading: state.PDP.isLoading,
-  brand_url: state.PLP.brand_url
+  brand_url: state.PLP.brand_url,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  addressCityData: state.MyAccountReducer.addressCityData,
+  edd_info: state.AppConfig.edd_info,
 });
 
-export const mapDispatchToProps = (_dispatch) => ({});
+export const mapDispatchToProps = (_dispatch) => ({
+  getTabbyInstallment: (price) =>
+    CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
+  setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
+});
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
-    isLoading: PropTypes.bool.isRequired
+    isLoading: PropTypes.bool.isRequired,
   };
 
   containerFunctions = {};
 
   containerProps = () => {
-    const { product, isLoading, renderMySignInPopup } = this.props;
-    return { product, isLoading, renderMySignInPopup };
+    const {
+      product,
+      isLoading,
+      renderMySignInPopup,
+      getTabbyInstallment,
+      defaultShippingAddress,
+      eddResponse,
+      edd_info,
+      addressCityData,
+      estimateEddResponse,
+      setEddResponse,
+    } = this.props;
+    return {
+      product,
+      isLoading,
+      renderMySignInPopup,
+      getTabbyInstallment,
+      defaultShippingAddress,
+      eddResponse,
+      edd_info,
+      addressCityData,
+      estimateEddResponse,
+      setEddResponse,
+    };
   };
 
   constructor(props) {
@@ -81,4 +116,7 @@ export class PDPSummaryContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPSummaryContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PDPSummaryContainer);
