@@ -40,7 +40,7 @@ class GoToSearchEvent extends BaseEvent {
       event: EVENT_TYPE,
       eventCategory: "search",
       eventAction: "go_to_search",
-      UserType: this.getCustomerId() > 1 ? "Logged In" : "Guest User",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: "",

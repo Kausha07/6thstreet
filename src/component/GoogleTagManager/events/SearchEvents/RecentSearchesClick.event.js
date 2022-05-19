@@ -40,9 +40,9 @@ class RecentSearchesClickEvent extends BaseEvent {
       event: EVENT_TYPE,
       eventCategory: "search",
       eventAction: "recent_searches_click",
-      UserType: this.getCustomerId() > 1 ? "Logged In" : "Guest User",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
       CustomerID: this.getCustomerId(),
-      // PageType: this.getPageType(),
+      PageType: this.getPageType(),
       SearchTerm: data || "",
     });
   }

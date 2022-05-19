@@ -31,7 +31,7 @@ class TrendingTagsClickEvent extends BaseEvent {
       event: "trending_tag_click",
       eventCategory: "search",
       eventAction: "trending_tag_click",
-      UserType: this.getCustomerId() > 1 ? "Logged In" : "Guest User",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: trendingTags || "",
