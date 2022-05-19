@@ -37,7 +37,6 @@ function getSearchPLP(URL, options = {}, params = {}) {
       if (err) {
         return reject(err);
       }
-      console.log("muskan query",queries);
       const output = {
         data: res.results,
       };
