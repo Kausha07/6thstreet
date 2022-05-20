@@ -5,6 +5,8 @@ import BaseEvent from "./Base.event";
 /**
  * Trending brands click event
  */
+
+export const URL_REWRITE = "url-rewrite";
 class TrendingBrandsClickEvent extends BaseEvent {
   /**
    * Set delay
@@ -27,12 +29,41 @@ class TrendingBrandsClickEvent extends BaseEvent {
    */
   handler(trendingBrands) {
     this.pushEventData({
+      event: "trending_brand_click",
+      eventCategory: "search",
+      eventAction: "trending_brand_click",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
+      CustomerID: this.getCustomerId(),
+      PageType: this.getPageType(),
+      SearchTerm: trendingBrands || "",
       ecommerce: {
         click: {
           trendingBrands: trendingBrands,
         },
       },
     });
+  }
+  getCustomerId() {
+    return this.isSignedIn()
+      ? this.getAppState().MyAccountReducer.customer.id || ""
+      : "";
+  }
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === URL_REWRITE) {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 }
 
