@@ -67,37 +67,40 @@ export class PDPSummaryContainer extends PureComponent {
     super(props);
     this.getBrandDetails = this.getBrandDetails.bind(this);
     this.state = {
-      url_path: "",
-    };
+      url_path: ""
+    }
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     const { brand_url } = this.props;
     if (!brand_url) {
       this.getBrandDetails();
-    } else {
+    }
+    else {
       this.setState({
-        url_path: brand_url,
-      });
+        url_path: brand_url
+      })
     }
   }
 
   async getBrandDetails() {
-    const {
-      product: { brand_name },
-    } = this.props;
-    try {
+    const { product: { brand_name } } = this.props;
+    if(brand_name) {
+      try {
       const data = await new Algolia({
         index: "brands_info",
-      }).getBrandsDetails({
-        query: brand_name,
-        limit: 1,
-      });
+      })
+        .getBrandsDetails({
+          query: brand_name,
+          limit: 1,
+        });
       this.setState({
-        url_path: data?.hits[0]?.url_path,
+        url_path: data?.hits[0]?.url_path
       });
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err);
+    }
     }
   }
 
