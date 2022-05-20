@@ -172,21 +172,21 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           <h6 id="brandName">{brand_name}</h6>
           <span id="productName">{name}</span>
           {this.renderPrice(price)}
+          {this.renderIsNew(is_new_in)}
           {
             productTag ?
               this.renderProductTag(productTag)
               :
               this.renderIsNew(is_new_in)
           }
-          { }
-        </Link>
+        </Link >
         <WishlistIcon
           renderMySignInPopup={renderMySignInPopup}
           sku={sku}
           data={data}
           pageType={pageType}
         />
-      </div>
+      </div >
     );
   }
 }
