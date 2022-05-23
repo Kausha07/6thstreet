@@ -89,6 +89,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
   renderDetails() {
     const {
       displayDiscountPercentage,
+      isExchange,
       item: {
         name,
         color,

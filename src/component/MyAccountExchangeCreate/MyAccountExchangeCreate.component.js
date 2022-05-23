@@ -35,13 +35,8 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItem = (item) => {
     const { item_id } = item;
-    const {
-      onItemClick,
-      onReasonChange,
-      resolutions,
-      product,
-      reasonId,
-    } = this.props;
+    const { onItemClick, onReasonChange, resolutions, product, reasonId } =
+      this.props;
 
     if (!item.is_exchangeable) {
       return false;
@@ -53,6 +48,7 @@ export class MyAccountExchangeCreate extends PureComponent {
           item={item}
           {...this.props}
           product={product}
+          isExchange={true}
           reasonId={reasonId}
           onClick={onItemClick}
           onReasonChange={onReasonChange}
