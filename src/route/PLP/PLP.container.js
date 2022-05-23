@@ -34,7 +34,7 @@ import {
   updatePLPInitialFilters,
   setPrevProductSku,
   setPrevPath,
-  setBrandurl
+  setBrandurl,
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
@@ -839,7 +839,7 @@ export class PLPContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-
+    const { brandDescription, brandName } = this.state;
     if (!q) {
       return;
     }
@@ -854,35 +854,41 @@ export class PLPContainer extends PureComponent {
       .split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
-    setMeta({
-      title: __("%s | 6thStreet.com %s", categoryName, countryName),
+    const PLPMetaTitle =
+      (brandDescription && brandName)
+        ? __(
+            "Shop %s Online | Buy Latest Collections on 6thStreet %s",
+            brandName,
+            countryName
+          )
+        : __("%s | 6thStreet.com %s", categoryName, countryName);
 
+    const PLPMetaDesc = (brandDescription && brandName)
+      ? __(
+          "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with Free Delivery on minimum order & 100 days Free Return.",
+          brandName,
+          countryName,
+          brandName
+        )
+      : __(
+          "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+          categoryName,
+          countryName,
+          countryName
+        );
+
+    setMeta({
+      title: PLPMetaTitle,
       keywords: __(
         "%s, online shopping, %s, free shipping, returns",
         categoryName,
         countryName
       ),
-      description: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
-      twitter_title: __("%s | 6thStreet.com %s", categoryName, countryName),
-
-      twitter_desc: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
-      og_title: __("%s | 6thStreet.com %s", categoryName, countryName),
-      og_desc: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
+      description: PLPMetaDesc,
+      twitter_title: PLPMetaTitle,
+      twitter_desc: PLPMetaDesc,
+      og_title: PLPMetaTitle,
+      og_desc: PLPMetaDesc,
     });
   }
 
