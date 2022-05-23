@@ -854,15 +854,16 @@ export class PLPContainer extends PureComponent {
       .split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
-    const PLPMetaTitle = brandDescription
-      ? __(
-          "Shop %s Online | Buy Latest Collections on 6thStreet %s",
-          brandName,
-          countryName
-        )
-      : __("%s | 6thStreet.com %s", categoryName, countryName);
-      
-    const PLPMetaDesc = brandDescription
+    const PLPMetaTitle =
+      (brandDescription && brandName)
+        ? __(
+            "Shop %s Online | Buy Latest Collections on 6thStreet %s",
+            brandName,
+            countryName
+          )
+        : __("%s | 6thStreet.com %s", categoryName, countryName);
+
+    const PLPMetaDesc = (brandDescription && brandName)
       ? __(
           "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with Free Delivery on minimum order & 100 days Free Return.",
           brandName,
