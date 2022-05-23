@@ -597,8 +597,8 @@ class SearchSuggestion extends PureComponent {
       recommendedForYou,
       renderMySignInPopup,
     } = this.props;
-    const sku = JSON.parse(localStorage.getItem("PRODUCT_SKU"));
-    const sourceCatgID = JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"));
+    const sku = localStorage.getItem("PRODUCT_SKU") !== "undefined" ? JSON.parse(localStorage.getItem("PRODUCT_SKU")) : null;
+    const sourceCatgID = localStorage.getItem("PRODUCT_CATEGORY") !== "undefined" ? JSON.parse(localStorage.getItem("PRODUCT_CATEGORY")) : null;
     if (recommendedForYou && recommendedForYou.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
