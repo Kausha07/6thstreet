@@ -210,14 +210,13 @@ renderSliderWithLabel = (item, i) => {
 renderScrollbar = () => {
     const datasintest = datasintests;
     const items = datasintest.items;
-
-    // const width = `${
-    //   (this.itemRef.current && this.itemRef.current.clientWidth) *
-    //     items.length +
-    //   items.length * 7 * 2 -
-    //   690
-    // }px`;
-    const width = `${900}px`;
+    const width = `${
+      (this.itemRef.current && this.itemRef.current.clientWidth) *
+        items.length +
+      items.length * 7 * 2 -
+      690
+    }px`;
+    // const width = `${900}px`;
 
     return (
       <div
@@ -243,33 +242,6 @@ renderScrollbar = () => {
     prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
 
-  renderScrollbarExp = () => {
-    const datasintest = datasintests;
-    const items = datasintest.items;
-
-    const width = `${
-      (this.itemRef.current && this.itemRef.current.clientWidth) *
-        items.length +
-      items.length * 7 * 2 -
-      690
-    }px`;
-    // const width = `${960}px`;
-
-    return (
-      <div
-        block="OuterE"
-        mods={{
-          Hidden:
-            this.scrollerRef.current &&
-            this.scrollerRef.current.clientWidth >= width,
-        }}
-        ref={this.scrollerRef}
-        onScroll={this.handleScrollEXP}
-      >
-        <div block="OuterE" style={{ width: width }} elem="Inner"></div>
-      </div>
-    );
-  };
 
   handleScrollEXP = (event) => {
     const target = event.nativeEvent.target;
@@ -335,7 +307,7 @@ renderSliderWithLabels() {
                   )
                 }
 
-                <SliderAboutPage />
+                <SliderAboutPage {...this.props}/>
 
                 {
                   isArabic ? (
