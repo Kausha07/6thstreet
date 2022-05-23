@@ -86,10 +86,6 @@ export class CartItem extends PureComponent {
     this.cartItemRef = React.createRef();
   }
   componentDidMount() {
-    // window.addEventListener("mouseup", this.onDragEndMouse);
-    // window.addEventListener("mouseleave", this.onDragEndMouse);
-    // window.addEventListener("touchend", this.onDragEndTouch);
-
     this.cartItemRef.current.addEventListener(
       "mousedown",
       this.onDragStartMouse
@@ -99,8 +95,6 @@ export class CartItem extends PureComponent {
       "mouseleave",
       this.onDragEndMouse
     );
-    //this.cartItemRef.current.addEventListener("mousemove", this.onMouseMove);
-
     this.cartItemRef.current.addEventListener(
       "touchstart",
       this.onDragStartTouch
@@ -110,7 +104,6 @@ export class CartItem extends PureComponent {
       "touchcancel",
       this.onDragEndTouch
     );
-    //this.cartItemRef.current.addEventListener("touchmove", this.onTouchMove);
 
     if (this.state.dragged) {
       this.cartItemRef.current.addEventListener("mousemove", this.onMouseMove);
@@ -238,21 +231,14 @@ export class CartItem extends PureComponent {
   };
 
   onDragStartMouse = (evt) => {
-    //this.onDragStart(evt.clientX);
+    
     const el = this.cartItemRef.current;
     el.classList.add("active");
     this.setState({
       dragged: true,
       dragStartX: evt.clientX,
     });
-    //el.addEventListener("mousemove", this.onMouseMove(evt));
-    //console.log("onDragStartMouse", this.state);
   };
-
-  // this.cartItemRef.current.addEventListener('ontouchstart',this.onDragStartTouch)
-  //   this.cartItemRef.current.addEventListener('ontouchend',this.onDragEndTouch)
-  //   this.cartItemRef.current.addEventListener('ontouchcancel',this.onDragEndTouch)
-  //   this.cartItemRef.current.addEventListener('ontouchmove',this.onTouchMove)
 
   onDragStartTouch = (evt) => {
     const touch = evt.targetTouches[0];
@@ -260,53 +246,21 @@ export class CartItem extends PureComponent {
       dragged: true,
       dragStartX: touch.clientX,
     });
-    //console.log("onDragStartTouch", this.state);
   };
 
   onDragEndMouse = (evt) => {
-    //evt.preventDefault();
     this.setState({
       dragged: false,
     });
     const el = this.cartItemRef.current;
     el.classList.remove("active");
-    //el.removeEventListener("mouseup", this.onMouseMove);
-    //this.onDragEnd();
-    //console.log("onDragEndMouse", this.state);
   };
   onDragEndTouch = (evt) => {
     this.setState({
       dragged: false,
     });
-    //console.log("onDragEndTouch", this.state);
   };
-
-  // onDragStart = (clientX) => {
-  //   this.setState({
-  //     dragged:true,
-  //     dragStartX:clientX
-  //   });
-
-  //   // this.state.dragged = true;
-  //   // this.state.dragStartX = clientX;
-  //   //requestAnimationFrame(this.updatePosition);
-  //   console.log("onDragStart", this.state);
-  // };
-
-  // onDragEnd = () => {
-  //   if (this.state.dragged) {
-  //     this.setState({ dragged: false });
-  //     // const threshold = this.props.threshold || 0.3;
-
-  //     // if (this.left < this.listElement.offsetWidth * threshold * -1) {
-  //     //   this.left = -this.listElement.offsetWidth * 2;
-  //     //   this.onSwiped();
-  //     // } else {
-  //     //   this.left = 0;
-  //     // }
-  //   }
-  //   console.log("onDradEnd", this.state);
-  // };
+  
 
   onTouchMove = (evt) => {
     const touch = evt.targetTouches[0];
@@ -317,7 +271,6 @@ export class CartItem extends PureComponent {
         : touch.clientX < this.state.dragStartX
         ? "left"
         : "none";
-    //console.log("leftOrRight", evt, evt.type, evt.button);
 
     this.setState({
       dragDirection: leftOrRight,
@@ -340,19 +293,15 @@ export class CartItem extends PureComponent {
     let rightDirMove = this.state.isArabic ? "-116px" : "116px";
 
     if (this.state.isSignedIn) {
-      ////
-      console.log("sign");
 
       if (this.state.dragDirection === leftDir) {
         if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(-16px)";
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(-16px)";
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({
@@ -361,17 +310,14 @@ export class CartItem extends PureComponent {
             dragOpenEl: rightDir,
           });
         }
-        //document.getElementById("myDIV").style.transform = "translateX(16px)";
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(16px)";
           el2.style.transform = `translateX(0})`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
           el1.style.setProperty("width", 98 + "px");
-          //el2.style.transform = "translateX(16px)";
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({
@@ -381,16 +327,13 @@ export class CartItem extends PureComponent {
           });
         }
       }
-
-      ////
     } else {
       if (this.state.dragDirection === leftDir) {
-        //console.log("welcome left");
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          console.log("llll-bbbbb");
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -398,16 +341,14 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-          console.log("llll-aaaaa");
+          
         }
-        //document.getElementById("myDIV").style.transform = "translateX(16px)";
       } else if (this.state.dragDirection === rightDir) {
-        //console.log("welcome right");
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          console.log("rrrr- bbbbb");
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -415,16 +356,13 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-          console.log("rrrr- aaaaa");
+          
         }
       }
     }
-
-    console.log("onTouchMove", this.state);
   };
 
   onMouseMove = (evt) => {
-    //console.log("mouseMove", evt);
     const dragChange = evt.clientX - this.state.dragStartX;
     const leftOrRight =
       evt.clientX > this.state.dragStartX
@@ -432,8 +370,6 @@ export class CartItem extends PureComponent {
         : evt.clientX < this.state.dragStartX
         ? "left"
         : "none";
-    //console.log("leftOrRight", evt, evt.type, evt.button);
-
     this.setState({
       dragDirection: leftOrRight,
       dragCount: dragChange,
@@ -454,44 +390,18 @@ export class CartItem extends PureComponent {
     let leftDirMove = this.state.isArabic ? "116px" : "-116px";
     let rightDirMove = this.state.isArabic ? "-116px" : "116px";
 
-    // let leftDir, rightDir, leftDirMove, rightDirMove;
-    // if(this.state.isArabic){
-    //   leftDir = "left";
-    //   rightDir = "right";
-    //   leftDirMove = "-16px";
-    //   rightDirMove = "16px";
-    // }else{
-    //   leftDir = "right";
-    //   rightDir = "left";
-    //   leftDirMove = "16px";
-    //   rightDirMove = "-16px";
-    // }
-
-    // if (this.state.dragDirection === leftDir) {
-    //   el1.style.setProperty("width", 98 + "px");
-    //   el2.style.transform = "translateX(16px)";
-    //   el3.style.setProperty("width", 0 + "px");
-    //   //document.getElementById("myDIV").style.transform = "translateX(16px)";
-    // } else if (this.state.dragDirection === rightDir) {
-    //   el1.style.setProperty("width", 0 + "px");
-    //   el2.style.transform = "translateX(-16px)";
-    //   el3.style.setProperty("width", 98 + "px");
-    // }
+    
 
     if (this.state.isSignedIn) {
-      ////
-      console.log("sign");
 
       if (this.state.dragDirection === leftDir) {
         if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(-16px)";
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
           el1.style.setProperty("width", 0 + "px");
-          //el2.style.transform = "translateX(-16px)";
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({
@@ -500,17 +410,16 @@ export class CartItem extends PureComponent {
             dragOpenEl: rightDir,
           });
         }
-        //document.getElementById("myDIV").style.transform = "translateX(16px)";
+        
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
-          console.log("aaasddddd")
+          
           el1.style.setProperty("width", 0 + "px");
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
           el1.style.setProperty("width", 98 + "px");
-          //el2.style.transform = "translateX(16px)";
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({
@@ -520,23 +429,13 @@ export class CartItem extends PureComponent {
           });
         }
       }
-      console.log(
-        "drag fix",
-        this.state.isArabic,
-        this.state.dragDirection,
-        this.state.dragged,
-        this.state.dragOpenEl
-      );
-
-      ////
     } else {
       if (this.state.dragDirection === leftDir) {
-        //console.log("welcome left");
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          console.log("llll-bbbbb");
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -544,16 +443,15 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-          console.log("llll-aaaaa");
+          
         }
-        //document.getElementById("myDIV").style.transform = "translateX(16px)";
+        
       } else if (this.state.dragDirection === rightDir) {
-        //console.log("welcome right");
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          console.log("rrrr- bbbbb");
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -561,31 +459,12 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-          console.log("rrrr- aaaaa");
+         
         }
       }
     }
 
-    // console.log(
-    //   "drag fix",
-    //   this.state.isArabic,
-    //   this.state.dragDirection,
-    //   this.state.dragged,
-    //   this.state.dragOpenEl
-    // );
-
-    // if (left < 0) {
-    //   this.setState({
-    //     dragDirection: leftOrRight,
-    //     dragCount : dragChange
-    //   })
-    // }else{
-    //   this.setState({
-    //     dragDirection: leftOrRight,
-    //     dragCount : dragChange
-    //   })
-    // }
-    //console.log("onMouseMove", this.state);
+    
   };
 
   clickMove = (evt) => {
@@ -602,7 +481,7 @@ export class CartItem extends PureComponent {
     let rightDirMove = this.state.isArabic ? "-116px" : "116px";
 
     if (this.state.dragOpen) {
-      console.log("aaa");
+      
       el2.style.transform = `translateX(0)`;
       el3.style.width = "0";
       this.setState({ dragOpen: false, dragged: false, dragOpenEl: leftDir });
@@ -633,14 +512,7 @@ export class CartItem extends PureComponent {
     }
   }
   handleSwipe = () =>{
-    return(
-      // <button
-      //     block="CartPageItem"          
-      //     elem="Delete"
-      //     onClick={this.clickMove}          
-      //   >
-      //     <span />
-      // </button>
+    return(      
       <button block="SwipeActionBtn" onClick={this.clickMove}><span /></button>
     )
   }
@@ -694,9 +566,7 @@ export class CartItem extends PureComponent {
       <div
         block="swipeableItem"
         ref={this.cartItemRef}
-        // onMouseDown={this.onDragStartMouse}
-        // onMouseUp={this.onDragEndMouse}
-        //onTouchStart={this.onDragStartTouch}
+        
       >
         {this.state.isSignedIn ? (
           <div block="swipeableItemLeftAction" style={{ width: 0 }}>
@@ -705,7 +575,7 @@ export class CartItem extends PureComponent {
         ) : null}
 
         <div block="swipeableItemContent">
-          {/* <button onClick={this.clickMove}>Close</button> */}
+          
           <figure block="CartPageItem" elem="Wrapper">
             {this.renderImage()}
             {this.renderContent()}
