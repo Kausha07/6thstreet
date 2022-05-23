@@ -27,6 +27,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     onFormSubmit: this.onFormSubmit.bind(this),
     onSizeSelect: this.onSizeSelect.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
+    onAvailableProductSelect: this.onAvailableProductSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     handleDiscardClick: this.onDiscardClick.bind(this),
@@ -42,6 +43,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     sizeObject: {},
     selectedSizeCode: "",
     selectedSizeType: "eu",
+    selectedAvailProduct: "",
     isOutOfStock: false,
     isArabic: isArabic(),
     alsoAvailable: [],
@@ -218,6 +220,20 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     this.setState({
       selectedSizeType: type.target.value,
     });
+  }
+
+  onAvailableProductSelect(event) {
+    const { target: id } = event;
+    const { selectedAvailProduct } = this.state;
+    if (selectedAvailProduct === id) {
+      this.setState({
+        selectedAvailProduct: "",
+      });
+    } else {
+      this.setState({
+        selectedAvailProduct: id,
+      });
+    }
   }
 
   onDiscardClick() {

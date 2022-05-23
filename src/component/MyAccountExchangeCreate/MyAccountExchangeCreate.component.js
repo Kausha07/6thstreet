@@ -60,7 +60,6 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItems() {
     const { items = [], onFormSubmit } = this.props;
-    console.log("muskan items", this.props);
     return (
       <Form id="create-exchange" onSubmitSuccess={onFormSubmit}>
         <ul>{items.map(this.renderOrderItem)}</ul>

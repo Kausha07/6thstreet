@@ -173,8 +173,6 @@ class MyAccountOrderView extends PureComponent {
         </div>
       );
     }
-    console.log("muskan123", this.props);
-
     return (
       <div block="MyAccountOrderView" elem="Status">
         <div>

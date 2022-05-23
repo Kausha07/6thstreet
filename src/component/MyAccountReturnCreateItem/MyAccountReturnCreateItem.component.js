@@ -94,13 +94,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
         name,
         color,
         row_total,
+        price,
         discount_percent,
         discount_amount,
         size: sizeField,
+        qty,
         qty_shipped,
-        product_options: {
-          info_buyRequest: { qty },
-        },
       },
     } = this.props;
     const size =
@@ -115,10 +114,10 @@ export class MyAccountReturnCreateItem extends PureComponent {
               <span>{color}</span>
             </p>
           )}
-          {!!qty_shipped && (
+          {!!qty && (
             <p>
               {__("Qty: ")}
-              <span>{+qty_shipped}</span>
+              <span>{+qty}</span>
             </p>
           )}
           {!!size && (
@@ -134,7 +133,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
             elem="PriceRegular"
             mods={{ isDiscount: !!+discount_amount && !!+discount_percent }}
           >
-            {`${formatPrice(+row_total)}`}
+            {!isExchange
+              ? `${formatPrice(+row_total)}`
+              : `${formatPrice(+price)}`}
           </span>
           {!!+discount_amount && !!+discount_percent && (
             <>
@@ -147,7 +148,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 </span>
               )}
               <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
-                {`${formatPrice(+row_total - +discount_amount)}`}
+                {isExchange
+                  ? `${formatPrice(+price - +discount_amount)}`
+                  : `${formatPrice(+row_total - +discount_amount)}`}
               </span>
             </>
           )}
@@ -318,43 +321,34 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   };
 
-  renderAvailableImage = () => {
-    console.log("muskan--->",this.props);
-
-    const {
-      product: { thumbnail_url },
-    } = this.props;
-    return (
-      <div
-        block="PDPAlsoAvailableProduct-Link"
-        elem="Image"
-        style={{
-          backgroundImage: `url(${thumbnail_url})`,
-        }}
-      />
-    );
-  }
-
-  renderColor = ()=> {
-    const {
-      product: { color },
-    } = this.props;
-
-    return (
-      <h5 block="ProductItem" elem="Title">
-        {color}
-      </h5>
-    );
-  }
-
-  
   renderAvailableProducts = () => {
-    return (
-      <li block="PDPAlsoAvailableProduct">
-        {this.renderAvailableImage()}
-        {this.renderColor()}
-      </li>
-    );
+    const { onAvailableProductSelect, selectedAvailProduct, products } =
+      this.props;
+    return products.map((product) => {
+      const { sku, thumbnail_url, color } = product;
+      console.log("muskan", sku, this.props, selectedAvailProduct);
+
+      return (
+        <li
+          block="PDPAlsoAvailableProduct"
+          elem={sku === selectedAvailProduct ? "selectedProduct" : ""}
+          id={sku}
+          onClick={onAvailableProductSelect}
+        >
+          <div
+            block="PDPAlsoAvailableProduct-Link"
+            elem="Image"
+            id={sku}
+            style={{
+              backgroundImage: `url(${thumbnail_url})`,
+            }}
+          />
+          <h5 block="ProductItem" elem="Title" id={sku}>
+            {color}
+          </h5>
+        </li>
+      );
+    });
   };
 
   renderAvailableItemsSection = () => {
@@ -377,7 +371,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     }
 
     return null;
-  }
+  };
 
   isReasonSelected = () => {
     const { reasonId, reasonOptions } = this.props;
@@ -392,7 +386,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   render() {
     const { isSelected } = this.props;
-    console.log("muskan result->", this.props, this.isReasonSelected());
     return (
       <div block="MyAccountReturnCreateItem">
         <div block="MyAccountReturnCreateItem" elem="Content">

@@ -45,11 +45,9 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     }
   }
 
-  
   getAvailableProducts() {
-    const { productsAvailable = [] } = this.props;
-
-    productsAvailable.map((productID) =>
+    const { alsoAvailable = [] } = this.props;
+    alsoAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
         let { products = [] } = this.state;
 
@@ -63,10 +61,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     );
   }
 
-  
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
-
     return product;
   }
 
@@ -99,7 +95,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
   containerProps = () => {
     const { item, reasonId, product } = this.props;
-    const { isSelected ,isAlsoAvailable} = this.state;
+    const { isSelected, isAlsoAvailable ,products} = this.state;
 
     return {
       item,
@@ -107,6 +103,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       reasonId,
       product,
       isAlsoAvailable,
+      products,
       resolutions: this.getResolutionOptions(),
       reasonOptions: this.getReasonOptions(),
     };
@@ -124,9 +121,11 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
   getReasonOptions() {
     const {
-      item: { reason_options = [] },
+      item: { reason_options = [], exchange_reasons = [] },
+      isExchange,
     } = this.props;
-    return reason_options.map(({ id, label }) => {
+    let finalReasonList = isExchange ? exchange_reasons : reason_options;
+    return finalReasonList.map(({ id, label }) => {
       const value = id.toString();
       return {
         id: value,
