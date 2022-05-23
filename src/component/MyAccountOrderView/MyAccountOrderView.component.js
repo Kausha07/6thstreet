@@ -72,6 +72,7 @@ class MyAccountOrderView extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    eddEventSent: true,
   };
 
   renderAddress = (title, address) => {
@@ -98,6 +99,10 @@ class MyAccountOrderView extends PureComponent {
     );
   };
 
+  setEddEventSent = () => {
+    this.setState({ eddEventSent: false });
+  };
+
   renderItem = (item, eddItem) => {
     const {
       order: { order_currency_code: currency, status },
@@ -105,6 +110,7 @@ class MyAccountOrderView extends PureComponent {
       eddResponse,
       edd_info,
     } = this.props;
+    const {eddEventSent} = this.state
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
         ? eddItem?.edd
@@ -112,6 +118,8 @@ class MyAccountOrderView extends PureComponent {
     return (
       <MyAccountOrderViewItem
         item={item}
+        setEddEventSent={this.setEddEventSent}
+        eddEventSent={eddEventSent}
         status={status}
         myOrderEdd={finalEdd}
         compRef={"myOrder"}
