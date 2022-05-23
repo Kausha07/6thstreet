@@ -326,7 +326,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
       this.props;
     return products.map((product) => {
       const { sku, thumbnail_url, color } = product;
-      console.log("muskan", sku, this.props, selectedAvailProduct);
 
       return (
         <li

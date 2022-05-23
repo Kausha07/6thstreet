@@ -10,6 +10,8 @@
   }
   .PDPAlsoAvailable{
     margin-left: 40px;
+    border-bottom: 2px solid var(--color-gainsboro);
+
     .PDPAlsoAvailableProduct{
       &-selectedProduct{
         border: 1px solid var(--selected-step-color);

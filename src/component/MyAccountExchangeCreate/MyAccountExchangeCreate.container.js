@@ -223,15 +223,14 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   onAvailableProductSelect(event) {
-    const { target: id } = event;
     const { selectedAvailProduct } = this.state;
-    if (selectedAvailProduct === id) {
+    if (selectedAvailProduct === event.target.id) {
       this.setState({
         selectedAvailProduct: "",
       });
     } else {
       this.setState({
-        selectedAvailProduct: id,
+        selectedAvailProduct: event.target.id,
       });
     }
   }
@@ -291,7 +290,12 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } },
     }));
 
-    this.setState({ reasonId: reasonId });
+    this.setState({
+      reasonId: reasonId,
+      selectedSizeCode: "",
+      selectedSizeType: "eu",
+      selectedAvailProduct: "",
+    });
   }
 
   onFormSubmit() {
