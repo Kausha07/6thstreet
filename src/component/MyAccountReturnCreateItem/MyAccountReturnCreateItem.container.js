@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { ReturnResolutionType } from "Type/API";
 
 import MyAccountReturnCreateItem from "./MyAccountReturnCreateItem.component";
+import Algolia from "Util/API/provider/Algolia";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -20,7 +21,6 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       is_returnable: PropTypes.bool.isRequired,
     }).isRequired,
     onClick: PropTypes.func.isRequired,
-    onResolutionChange: PropTypes.func.isRequired,
     onReasonChange: PropTypes.func.isRequired,
     resolutions: PropTypes.arrayOf(ReturnResolutionType),
     country: PropTypes.string.isRequired,
@@ -44,10 +44,35 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       this.getAvailableProducts();
     }
   }
+
+  
+  getAvailableProducts() {
+    const { productsAvailable = [] } = this.props;
+
+    productsAvailable.map((productID) =>
+      this.getAvailableProduct(productID).then((productData) => {
+        let { products = [] } = this.state;
+
+        if (productData.nbHits === 1) {
+          this.setState({ products: [...products, productData.data] });
+          products = this.state?.products || [];
+        }
+
+        this.setState({ isAlsoAvailable: products.length === 0 });
+      })
+    );
+  }
+
+  
+  async getAvailableProduct(sku) {
+    const product = await new Algolia().getProductBySku({ sku });
+
+    return product;
+  }
+
   containerFunctions = {
     onClick: this.onClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
-    onResolutionChange: this.onResolutionChange.bind(this),
   };
 
   onReasonChange(value) {
@@ -57,15 +82,6 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     } = this.props;
 
     onReasonChange(item_id, value);
-  }
-
-  onResolutionChange(value) {
-    const {
-      onResolutionChange,
-      item: { item_id },
-    } = this.props;
-
-    onResolutionChange(item_id, value);
   }
 
   onClick() {
@@ -109,11 +125,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   getReasonOptions() {
     const {
       item: { reason_options = [] },
-      exchangeReason = [],
-      isExchangeItem,
     } = this.props;
-    const exchangeReasonList = isExchangeItem ? exchangeReason : reason_options;
-    return exchangeReasonList.map(({ id, label }) => {
+    return reason_options.map(({ id, label }) => {
       const value = id.toString();
       return {
         id: value,

@@ -13,7 +13,6 @@ export class MyAccountExchangeCreate extends PureComponent {
   static propTypes = {
     onItemClick: PropTypes.func.isRequired,
     onReasonChange: PropTypes.func.isRequired,
-    onResolutionChange: PropTypes.func.isRequired,
     onFormSubmit: PropTypes.func.isRequired,
     incrementId: PropTypes.string,
     items: PropTypes.arrayOf(
@@ -38,12 +37,10 @@ export class MyAccountExchangeCreate extends PureComponent {
     const { item_id } = item;
     const {
       onItemClick,
-      onResolutionChange,
       onReasonChange,
       resolutions,
-      exchangeReason,
       product,
-      reasonId
+      reasonId,
     } = this.props;
 
     if (!item.is_exchangeable) {
@@ -57,10 +54,7 @@ export class MyAccountExchangeCreate extends PureComponent {
           {...this.props}
           product={product}
           reasonId={reasonId}
-          isExchangeItem={true}
-          exchangeReason={exchangeReason}
           onClick={onItemClick}
-          onResolutionChange={onResolutionChange}
           onReasonChange={onReasonChange}
           resolutions={resolutions}
         />
@@ -70,33 +64,12 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItems() {
     const { items = [], onFormSubmit } = this.props;
+    console.log("muskan items", this.props);
     return (
       <Form id="create-exchange" onSubmitSuccess={onFormSubmit}>
         <ul>{items.map(this.renderOrderItem)}</ul>
         {this.renderActions()}
       </Form>
-    );
-  }
-
-  renderResolutions() {
-    const { resolutions, onResolutionChangeValue } = this.props;
-    const { pathname = "" } = location;
-    const isCancel = pathname.includes("/exchange-item/cancel");
-    const resolutionValue = resolutions.map(({ id, label }) => ({
-      id,
-      label,
-      value: isCancel ? id + 1 : id,
-    }));
-    return (
-      <Field
-        type="select"
-        id={`exchange_resolution`}
-        name={`exchange_resolution`}
-        placeholder={__("Select a resolution")}
-        mix={{ block: "MyAccountReturnCreateItem", elem: "Resolutions" }}
-        onChange={onResolutionChangeValue}
-        selectOptions={resolutionValue}
-      />
     );
   }
 
@@ -108,7 +81,6 @@ export class MyAccountExchangeCreate extends PureComponent {
         : __("Exchange %s item", selectedNumber);
     return (
       <div>
-        {this.renderResolutions()}
         <div block="MyAccountExchangeCreate" elem="Actions">
           <button
             block="MyAccountExchangeCreate"

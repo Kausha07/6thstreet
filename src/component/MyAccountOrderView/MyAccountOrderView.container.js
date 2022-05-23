@@ -11,7 +11,10 @@ import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Config } from "Util/API/endpoint/Config/Config.type";
 import MobileAPI from "Util/API/provider/MobileAPI";
-import { RETURN_ITEM_LABEL,EXCHANGE_ITEM_LABEL } from "./MyAccountOrderView.config";
+import {
+  RETURN_ITEM_LABEL,
+  EXCHANGE_ITEM_LABEL,
+} from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
 
 export const mapStateToProps = (state) => ({
@@ -50,14 +53,14 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country,eddResponse ,edd_info} = this.props;
+    const { history, country, eddResponse, edd_info } = this.props;
 
     return {
       isLoading,
       order,
       history,
       eddResponse,
-      edd_info
+      edd_info,
     };
   };
 
@@ -75,8 +78,11 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   openOrderCancelation(itemStatus = "") {
     const { history } = this.props;
-    const { order: { status, is_returnable, is_exchangeable } = {}, entity_id } =
-      this.state;
+    const {
+      order: { status, is_returnable, is_exchangeable} = {},
+      order,
+      entity_id,
+    } = this.state;
     if (
       !entity_id ||
       !(
@@ -95,7 +101,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
         ? `/my-account/return-item/create/${entity_id}`
         : `/my-account/return-item/cancel/${entity_id}`;
 
-    history.push(url);
+    history.push(url, { orderDetails: order });
   }
 
   async getOrder() {

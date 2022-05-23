@@ -29,9 +29,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
-    onResolutionChange: this.onResolutionChange.bind(this),
     handleDiscardClick: this.onDiscardClick.bind(this),
-    onResolutionChangeValue: this.onResolutionChangeValue.bind(this),
   };
 
   state = {
@@ -235,39 +233,25 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   getExchangableItems() {
-    const { showErrorMessage } = this.props;
-    const orderId = this.getOrderId();
-
-    this.setState({ isLoading: true });
-    MagentoAPI.get(`exchange/reasons`)
-      .then((response) => {
-        if (response && Object.values(response).length > 0) {
-          MagentoAPI.get(`orders/${orderId}/returnable-items`)
-            .then(
-              ({ data: { items, order_increment_id, resolution_options } }) => {
-                this.setState({
-                  items,
-                  incrementId: order_increment_id,
-                  isLoading: false,
-                  resolutions: resolution_options,
-                  exchangeReason: response,
-                });
-              }
-            )
-            .catch(() => {
-              showErrorMessage(
-                __("Error appeared while fetching exchangable items")
-              );
-              this.setState({ isLoading: false });
-            });
-        }
-      })
-      .catch(() => {
-        showErrorMessage(
-          __("Error appeared while fetching exchangable reasons")
-        );
-        this.setState({ isLoading: false });
+    const {
+      location: { state },
+    } = this.props;
+    if (state && state.orderDetails) {
+      const { groups = [], increment_id } = state.orderDetails;
+      let filteredItems = [];
+      groups.map((group) => {
+        group.items.map((item) => {
+          if (item.is_exchangeable) {
+            filteredItems.push(item);
+          }
+        });
       });
+      this.setState({
+        items: filteredItems,
+        incrementId: increment_id,
+        isLoading: false,
+      });
+    }
   }
 
   onItemClick(itemId, isSelected) {
@@ -282,16 +266,6 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
-  onResolutionChange(itemId, resolutionId) {
-    const {
-      selectedItems: { [itemId]: item },
-    } = this.state;
-
-    this.setState(({ selectedItems }) => ({
-      selectedItems: { ...selectedItems, [itemId]: { ...item, resolutionId } },
-    }));
-  }
-
   onReasonChange(itemId, reasonId) {
     const {
       selectedItems: { [itemId]: item },
@@ -302,12 +276,8 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     }));
 
     this.setState({ reasonId: reasonId });
+  }
 
-    this.onResolutionChangeValue({ resolutionId: false });
-  }
-  onResolutionChangeValue(value) {
-    this.setState({ resolutionId: value });
-  }
   onFormSubmit() {
     const { history, showErrorMessage } = this.props;
     const { selectedItems = {}, items, resolutionId } = this.state;

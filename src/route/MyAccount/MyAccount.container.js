@@ -128,14 +128,14 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   };
 
   tabMap = tabMap;
-  
+
   static defaultProps = {
     customer: null,
   };
 
   state = {
     clubApparel: null,
-    exchangeTabMap : exchangeTabMap
+    exchangeTabMap: exchangeTabMap,
   };
 
   static navigateToSelectedTab(props, state = {}) {
@@ -208,8 +208,13 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   updateBreadcrumbs() {
     const { updateBreadcrumbs } = this.props;
     const { activeTab } = this.state;
-    const { url, name, alternativePageName } = tabMap[activeTab];
-
+    let finalTabMap;
+    if (activeTab === EXCHANGE_ITEM) {
+      finalTabMap = exchangeTabMap[activeTab];
+    } else {
+      finalTabMap = tabMap[activeTab];
+    }
+    const { url, name, alternativePageName } = finalTabMap;
     updateBreadcrumbs([
       { url: `${MY_ACCOUNT_URL}${url}`, name: alternativePageName || name },
       { name: __("My Account"), url: `${MY_ACCOUNT_URL}/${DASHBOARD}` },

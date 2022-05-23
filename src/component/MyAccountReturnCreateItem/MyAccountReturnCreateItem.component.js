@@ -5,7 +5,6 @@ import Field from "Component/Field";
 import Image from "Component/Image";
 import { ReturnItemType, ReturnResolutionType } from "Type/API";
 import { v4 } from "uuid";
-import Algolia from "Util/API/provider/Algolia";
 
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 
@@ -28,30 +27,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
     fixedPrice: false,
     displayDiscountPercentage: true,
   };
-
-  renderResolutions() {
-    const {
-      item: { item_id },
-      isSelected,
-      onResolutionChange,
-      resolutions,
-    } = this.props;
-    if (!isSelected) {
-      return null;
-    }
-
-    return (
-      <Field
-        type="select"
-        id={`${item_id}_resolution`}
-        name={`${item_id}_resolution`}
-        placeholder={__("Select a resolution")}
-        mix={{ block: "MyAccountReturnCreateItem", elem: "Resolutions" }}
-        onChange={onResolutionChange}
-        selectOptions={resolutions}
-      />
-    );
-  }
 
   renderReasons() {
     const {
@@ -342,7 +317,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   };
 
-  renderImage = () => {
+  renderAvailableImage = () => {
     console.log("muskan--->",this.props);
 
     const {
@@ -375,35 +350,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
   renderAvailableProducts = () => {
     return (
       <li block="PDPAlsoAvailableProduct">
-        {this.renderImage()}
+        {this.renderAvailableImage()}
         {this.renderColor()}
       </li>
     );
   };
-
-  getAvailableProducts() {
-    const { productsAvailable = [] } = this.props;
-
-    productsAvailable.map((productID) =>
-      this.getAvailableProduct(productID).then((productData) => {
-        let { products = [] } = this.state;
-
-        if (productData.nbHits === 1) {
-          this.setState({ products: [...products, productData.data] });
-          products = this.state?.products || [];
-        }
-
-        this.setState({ isAlsoAvailable: products.length === 0 });
-      })
-    );
-  }
-
-  async getAvailableProduct(sku) {
-    const product = await new Algolia().getProductBySku({ sku });
-
-    return product;
-  }
-
 
   renderAvailableItemsSection = () => {
     const {
@@ -415,16 +366,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
-          <div block="PDPAlsoAvailable" mods={{ isAlsoAvailable }}>
+          <div block="PDPAlsoAvailable">
             <ul block="PDPAlsoAvailable" elem="List">
               {this.renderAvailableProducts()}
             </ul>
           </div>
-          //   <PDPAlsoAvailable
-          //     productsAvailable={alsoAvailable}
-          //     renderMySignInPopup={() => {}}
-          //     productSku={sku}
-          //   />
         );
       }
     }
@@ -457,7 +403,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
         </div>
         {isSelected && (
           <div block="MyAccountReturnCreateItem" elem="Resolution">
-            {/* { this.renderResolutions() } */}
             {this.renderReasons()}
           </div>
         )}
