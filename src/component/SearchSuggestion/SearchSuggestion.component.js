@@ -108,11 +108,14 @@ class SearchSuggestion extends PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this._handleKeyDown);
+
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
+
+
 
   _handleKeyDown = (event) => {
     switch (event.keyCode) {
@@ -634,7 +637,7 @@ class SearchSuggestion extends PureComponent {
           </p>
         </div>
         {this.renderRecentSearches()}
-        {this.renderTopSearches()}
+        {/* {this.renderTopSearches()} */}
         {this.renderTrendingBrands()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
@@ -971,14 +974,19 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderExploreMore = () => {
-    return <ExploreMore data={data} />
+    let a = this.props.exploreMoreData
+    // debugger
+    if (a) {
+      return <ExploreMore data={this.props.exploreMoreData} />
+    }
+
   }
 
   renderEmptySearch() {
     return (
       <>
         {this.renderRecentSearches()}
-        {this.renderTopSearches()}
+        {/* {this.renderTopSearches()} */}
         {this.renderTrendingBrands()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
