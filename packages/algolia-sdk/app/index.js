@@ -4,6 +4,7 @@ import getShopByBrands from "./get-shop-by-brands";
 import getBrands from "./get-brands";
 import getPDP from "./get-pdp";
 import getPLP from "./get-plp";
+import getSearchPLP from "./get-plp/get-search-plp";
 import getPopularBrands from "./get-popular-brands";
 import getProductBySku from "./get-product-by-sku";
 import getTopSearches from "./get-top-searches";
@@ -16,6 +17,7 @@ import getSuggestions from "./suggestions";
 export {
   init,
   getPLP,
+  getSearchPLP,
   getPDP,
   searchBy,
   getPopularBrands,

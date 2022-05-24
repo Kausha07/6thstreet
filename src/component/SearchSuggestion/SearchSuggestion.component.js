@@ -22,7 +22,7 @@ import Event, {
   EVENT_GTM_TRENDING_TAGS_CLICK,
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   EVENT_CLICK_RECENT_SEARCHES_CLICK,
-  EVENT_CLICK_TOP_SEARCHES_CLICK
+  EVENT_CLICK_TOP_SEARCHES_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
@@ -54,7 +54,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   static defaultProps = {
-    hideActiveOverlay: () => { },
+    hideActiveOverlay: () => {},
   };
 
   state = {
@@ -248,10 +248,10 @@ class SearchSuggestion extends PureComponent {
   onSearchQueryClick = (search, eventType) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
-    if(eventType) {
+    if (eventType) {
       Event.dispatch(eventType);
     }
-    setPrevPath(window.location.href)
+    setPrevPath(window.location.href);
     closeSearch();
   };
 
@@ -261,9 +261,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleBrandsClick = (brandItem) => {
-    const { closeSearch,setPrevPath } = this.props;
+    const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
-    setPrevPath(window.location.href)
+    setPrevPath(window.location.href);
     closeSearch();
   };
 
@@ -277,7 +277,7 @@ class SearchSuggestion extends PureComponent {
   handleTrendingTagsClick = (label) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
-    setPrevPath(window.location.href)
+    setPrevPath(window.location.href);
     closeSearch();
   };
 
@@ -398,7 +398,12 @@ class SearchSuggestion extends PureComponent {
         <li>
           <Link
             to={fetchSKU?.url}
-            onClick={() => this.onSearchQueryClick(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)}
+            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
+              // this.onSearchQueryClick(
+              //   query,
+              //   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK
+              // )
+            }
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
@@ -418,8 +423,13 @@ class SearchSuggestion extends PureComponent {
                 !brandValue?.includes("///") ? brandValue : null
               ),
             }}
-            onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query, EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK))
+            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
+              // this.onSearchQueryClick(
+              //   formatQuerySuggestions(
+              //     query,
+              //     EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK
+              //   )
+              // )
             }
           >
             <div className="suggestion-details-box">
@@ -717,8 +727,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                label
-              )}&p=0&dFR[gender][0]=${genderInURL}`,
+                  label
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -819,10 +829,12 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                search
-              )}&p=0&dFR[gender][0]=${genderInURL}`,
+                  search
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() => this.onSearchQueryClick(search, EVENT_CLICK_TOP_SEARCHES_CLICK)}
+          onClick={() =>
+            Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)
+          }
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {search}
@@ -891,10 +903,12 @@ class SearchSuggestion extends PureComponent {
             link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                name
-              )}&p=0&dFR[gender][0]=${genderInURL}`
+                  name
+                )}&p=0&dFR[gender][0]=${genderInURL}`
           }
-          onClick={() => this.onSearchQueryClick(name, EVENT_CLICK_RECENT_SEARCHES_CLICK)}
+          onClick={() =>
+            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name)
+          }
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {name}
@@ -993,10 +1007,14 @@ class SearchSuggestion extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { isPDPSearchVisible } = this.props
+    const { isPDPSearchVisible } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
-        <div block="SearchSuggestion" elem="Content" mods={{ isPDPSearchVisible }}>
+        <div
+          block="SearchSuggestion"
+          elem="Content"
+          mods={{ isPDPSearchVisible }}
+        >
           {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}

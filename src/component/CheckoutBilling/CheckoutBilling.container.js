@@ -33,7 +33,7 @@ import { isSignedIn } from "Util/Auth";
 import Logger from "Util/Logger";
 import { fetchMutation, fetchQuery } from "Util/Request";
 import * as Sentry from "@sentry/react";
-import { getCountryFromUrl } from 'Util/Url/Url';
+import { getCountryFromUrl } from "Util/Url/Url";
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   processingRequest: state.CartReducer.processingRequest,
@@ -47,6 +47,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -167,39 +168,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     // const countryCode = ['AE', 'SA', 'KW'].includes(getCountryFromUrl());
     const getCountryCode = getCountryFromUrl();
-    getTabbyInstallment(total).then((response) => {
-      if (response?.value) {
-        createTabbySession(shippingAddress)
-          .then((response) => {
-            if (response && response.configuration) {
-              const {
-                configuration: {
-                  available_products: { installments },
-                },
-                payment: { id },
-              } = response;
-              if (installments) {
-                if (installments) {
-                  setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-                  this.setState({ isTabbyInstallmentAvailable: true });
-                }
-              }
-            }
-          }, this._handleError)
-          .catch(() => { });
-      }
-    }, this._handleError).catch(() => { });
-  }
-  componentDidUpdate(prevProps) {
-    const {
-      createTabbySession,
-      shippingAddress,
-      setTabbyWebUrl,
-      getTabbyInstallment,
-      totals: { total },
-    } = this.props;
-    if (prevProps?.totals?.total !== total) {
-      getTabbyInstallment(total).then((response) => {
+    getTabbyInstallment(total)
+      .then((response) => {
         if (response?.value) {
           createTabbySession(shippingAddress)
             .then((response) => {
@@ -210,7 +180,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                   },
                   payment: { id },
                 } = response;
-
                 if (installments) {
                   if (installments) {
                     setTabbyWebUrl(
@@ -218,9 +187,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                       id,
                       TABBY_ISTALLMENTS
                     );
-
-                    // this variable actually is used in the component
-                    // eslint-disable-next-line quote-props
                     this.setState({ isTabbyInstallmentAvailable: true });
                   }
                 }
@@ -228,10 +194,52 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             }, this._handleError)
             .catch(() => { });
         }
-        else {
-          this.setState({ isTabbyInstallmentAvailable: false });
-        }
-      }, this._handleError).catch(() => { });
+      }, this._handleError)
+      .catch(() => {});
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      createTabbySession,
+      shippingAddress,
+      setTabbyWebUrl,
+      getTabbyInstallment,
+      totals: { total },
+    } = this.props;
+    if (prevProps?.totals?.total !== total) {
+      getTabbyInstallment(total)
+        .then((response) => {
+          if (response?.value) {
+            createTabbySession(shippingAddress)
+              .then((response) => {
+                if (response && response.configuration) {
+                  const {
+                    configuration: {
+                      available_products: { installments },
+                    },
+                    payment: { id },
+                  } = response;
+
+                  if (installments) {
+                    if (installments) {
+                      setTabbyWebUrl(
+                        installments[0].web_url,
+                        id,
+                        TABBY_ISTALLMENTS
+                      );
+
+                      // this variable actually is used in the component
+                      // eslint-disable-next-line quote-props
+                      this.setState({ isTabbyInstallmentAvailable: true });
+                    }
+                  }
+                }
+              }, this._handleError)
+              .catch(() => { });
+          } else {
+            this.setState({ isTabbyInstallmentAvailable: false });
+          }
+        }, this._handleError)
+        .catch(() => {});
     }
   }
   setOrderButtonDisabled() {
@@ -357,16 +365,31 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       newCardVisible,
       showErrorNotification,
       eddResponse,
-      edd_info
+      edd_info,
+      totals: { items = [] },
     } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
     let finalEdd = null;
-
-    if (edd_info && edd_info.is_enable && eddResponse) {
+    let nonCrossBorderItems = items.filter((item) => {
       const {
-        defaultEddDateString,
-      } = getDefaultEddDate(edd_info.default_message);
+        full_item_info: { cross_border = 0 },
+      } = item;
+
+      if (cross_border === 0) {
+        return item;
+      }
+    });
+
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      eddResponse &&
+      nonCrossBorderItems.length > 0
+    ) {
+      const { defaultEddDateString } = getDefaultEddDate(
+        edd_info.default_message
+      );
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
@@ -499,13 +522,28 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress,
       setTabbyWebUrl,
       eddResponse,
-      edd_info
+      edd_info,
+      totals: { items = [] },
     } = this.props;
     let finalEdd = null;
-    if (edd_info && edd_info.is_enable && eddResponse) {
+    let nonCrossBorderItems = items.filter((item) => {
       const {
-        defaultEddDateString,
-      } = getDefaultEddDate(edd_info.default_message);
+        full_item_info: { cross_border = 0 },
+      } = item;
+
+      if (cross_border === 0) {
+        return item;
+      }
+    });
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      eddResponse &&
+      nonCrossBorderItems.length > 0
+    ) {
+      const { defaultEddDateString } = getDefaultEddDate(
+        edd_info.default_message
+      );
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
@@ -846,7 +884,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         discount,
         shipping_fee = 0,
         total_segments: totals = [],
-        items,
+        items = [],
       },
     } = this.props;
     const LineItems = items.map((item) => ({

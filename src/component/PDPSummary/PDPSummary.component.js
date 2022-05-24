@@ -29,7 +29,7 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import "./PDPSummary.style";
-
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -54,6 +54,7 @@ class PDPSummary extends PureComponent {
     showPopupField: "",
     countryCode: null,
     Cityresponse: null,
+    eddEventSent: true,
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
@@ -213,23 +214,21 @@ class PDPSummary extends PureComponent {
     }
 
     const countryCode = getCountryFromUrl();
-    const { edd_info, addressCityData } = this.props;
-    if (edd_info && edd_info.is_enable && edd_info.has_pdp) {
-      if (addressCityData.length > 0) {
-        this.validateEddStatus(countryCode);
-      }
-    } else {
-      this.setState({
-        countryCode: countryCode,
-      });
-    }
+    this.setState({
+      countryCode: countryCode,
+    });
   }
   componentDidUpdate(prevProps) {
     const {
-      product: { price },
       getTabbyInstallment,
+      product: { cross_border = 0, price },
+      edd_info,
+      defaultShippingAddress,
+      addressCityData,
     } = this.props;
-    const { isArabic } = this.state;
+    const countryCode = getCountryFromUrl();
+
+    const { isArabic, eddEventSent } = this.state;
 
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -270,17 +269,33 @@ class PDPSummary extends PureComponent {
         }, this._handleError)
         .catch(() => {});
     }
-
-    const {
-      defaultShippingAddress,
-      estimateEddResponse,
-      addressCityData,
-      edd_info,
-    } = this.props;
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
     } = prevProps;
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp &&
+      eddEventSent &&
+      cross_border === 0
+    ) {
+      if (addressCityData.length > 0) {
+        this.validateEddStatus(countryCode);
+        let default_edd = defaultShippingAddress ? true : false;
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_pdp,
+            default_edd_status: default_edd,
+            edd_updated: false,
+          },
+          page: "pdp",
+        });
+        this.setState({
+          eddEventSent: false,
+        });
+      }
+    }
     if (
       prevAddressCitiesData &&
       addressCityData &&
@@ -361,8 +376,9 @@ class PDPSummary extends PureComponent {
   };
 
   handleAreaSelection = (area) => {
-    const { selectedCity, countryCode, isArabic } = this.state;
-    const { estimateEddResponse } = this.props;
+    const { selectedCity, countryCode } = this.state;
+    const { estimateEddResponse, defaultShippingAddress, edd_info } =
+      this.props;
     this.setState({
       selectedAreaId: area,
       selectedArea: area,
@@ -370,6 +386,15 @@ class PDPSummary extends PureComponent {
       showPopupField: "",
     });
     this.handleAreaDropDownClick();
+    let default_edd = defaultShippingAddress ? true : false;
+    Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+      edd_details: {
+        edd_status: edd_info.has_pdp,
+        default_edd_status: default_edd,
+        edd_updated: true,
+      },
+      page: "pdp",
+    });
     let request = {
       country: countryCode,
       city: selectedCity,
@@ -479,7 +504,7 @@ class PDPSummary extends PureComponent {
               block="ContentText"
               mods={{ isShown: showPopupField === "area" ? true : false }}
             >
-              <span>Select Area</span>
+              <span>{isArabic ? "حدد المنطقة" : "Select Area"}</span>
             </div>
           </div>
 
@@ -583,7 +608,9 @@ class PDPSummary extends PureComponent {
               onClick={() => this.handleAreaDropDownClick()}
             >
               <Image lazyLoad={false} src={address} alt="" />
-              <div block="SelectAreaText">Select Area</div>
+              <div block="SelectAreaText">
+                {isArabic ? "حدد المنطقة" : "Select Area"}
+              </div>
             </div>
           )}
           <div block="DropDownWrapper">

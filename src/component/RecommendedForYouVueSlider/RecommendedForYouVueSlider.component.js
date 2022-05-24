@@ -70,7 +70,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
     this.registerViewPortEvent();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
   registerViewPortEvent() {
     let observer;
@@ -190,7 +190,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-        items.length +
+      items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -209,7 +209,7 @@ class RecommendedForYouVueSlider extends PureComponent {
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-              this.state.customScrollWidth,
+            this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >
