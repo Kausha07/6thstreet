@@ -38,6 +38,7 @@ import TimerImage from "./icons/timer.png";
 import isMobile from "Util/Mobile";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
+import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
 import {
   CANCEL_ITEM_LABEL,
@@ -119,6 +120,7 @@ class MyAccountOrderView extends PureComponent {
         edd_info={edd_info}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
+        ctc_store_name={eddItem?.ctc_store_name}
       />
     );
   };
@@ -496,6 +498,7 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { groups: shipped = [] },
     } = this.props;
+    console.log({item,index})
     const { isArabic } = this.state;
     const itemNumber = shipped.length;
     const suffixNumber = appendOrdinalSuffix(itemNumber - index);
@@ -538,6 +541,9 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
+          <div>
+
+          </div>
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
