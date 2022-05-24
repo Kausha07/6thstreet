@@ -33,7 +33,7 @@ import { isSignedIn } from "Util/Auth";
 import Logger from "Util/Logger";
 import { fetchMutation, fetchQuery } from "Util/Request";
 import * as Sentry from "@sentry/react";
-import { getCountryFromUrl } from 'Util/Url/Url';
+import { getCountryFromUrl } from "Util/Url/Url";
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   processingRequest: state.CartReducer.processingRequest,
@@ -372,10 +372,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     const { code } = paymentMethod;
     let finalEdd = null;
     let nonCrossBorderItems = items.filter((item) => {
-      if (
-        !item.full_item_info.cross_border ||
-        item.full_item_info.cross_border === 0
-      ) {
+      const {
+        full_item_info: { cross_border = 0 },
+      } = item;
+
+      if (cross_border === 0) {
         return item;
       }
     });
@@ -526,10 +527,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     let finalEdd = null;
     let nonCrossBorderItems = items.filter((item) => {
-      if (
-        !item.full_item_info.cross_border ||
-        item.full_item_info.cross_border === 0
-      ) {
+      const {
+        full_item_info: { cross_border = 0 },
+      } = item;
+
+      if (cross_border === 0) {
         return item;
       }
     });

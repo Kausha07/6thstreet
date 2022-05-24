@@ -11,7 +11,6 @@ import {
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
-import { Store } from "../Icons";
 
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
@@ -29,7 +28,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
         qty,
       } = {},
       status,
-      ctc_store_name,
     } = this.props;
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
@@ -37,16 +35,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="MyAccountOrderViewItem" elem="Name">
           {name}
         </div>
-
-        {!!ctc_store_name && (
-          <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
-            <Store />
-            <div block="MyAccountOrderViewItem-ClickAndCollect" elem="StoreName">
-              {ctc_store_name}
-            </div>
-          </div>
-        )}
-
+        
         <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
           {!!color && (
             <p>
@@ -86,6 +75,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
       eddResponse,
       compRef,
       myOrderEdd,
+      setEddEventSent,
+      eddEventSent,
       edd_info,
       item: { edd_msg_color },
     } = this.props;
@@ -123,16 +114,17 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
-      if (myOrderEdd) {
-        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
-          edd_details: {
-            edd_status: edd_info.has_order_detail,
-            default_edd_status: null,
-            edd_updated: null,
-          },
-          page: "my_order",
-        });
-      }
+      if(myOrderEdd && !eddEventSent){
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+      setEddEventSent()
+    }
     }
 
     if (!actualEddMess) {
