@@ -11,7 +11,11 @@ import {
   UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
   UPDATE_CUSTOMER_SIGN_IN_STATUS,
   SET_CUSTOMER_ADDRESS_DATA,
-  SET_ADDRESS_LOADING_STATUS
+  SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS,
+  SET_ADDRESS_LOADING_STATUS,
+  SET_EDD_RESPONSE,
+  SET_PDP_EDD_ADDRESS,
+  SET_CITIES_DATA
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -23,10 +27,27 @@ export const initialState = {
   guestUserEmail: "",
   addresses: [],
   isAddressLoading: false,
+  defaultShippingAddress: null,
+  pdpEddAddressSelected: null,
+  eddResponse: null,
+  EddAddress: null,
+  addressCityData: []
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
-  const { status, customer, guestUserEmail, addresses, isLoading } = action;
+  const {
+    status,
+    customer,
+    guestUserEmail,
+    addresses,
+    isLoading,
+    defaultaddress,
+    eddResponse,
+    EddAddress,
+    PdpEddAddress,
+    defaultEddResponse,
+    citiesData
+  } = action;
 
   switch (action.type) {
     case UPDATE_CUSTOMER_SIGN_IN_STATUS:
@@ -50,6 +71,28 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         addresses,
       };
+    case SET_CITIES_DATA:
+      return {
+        ...state,
+        addressCityData: citiesData
+      };
+    case SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS:
+      return {
+        ...state,
+        defaultShippingAddress: defaultaddress,
+      };
+    case SET_EDD_RESPONSE:
+      return {
+        ...state,
+        eddResponse: eddResponse,
+        EddAddress: EddAddress
+      };
+    case SET_PDP_EDD_ADDRESS:
+      return {
+        ...state,
+        pdpEddAddressSelected: PdpEddAddress,
+        defaultEddResponse: defaultEddResponse
+      };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
         ...state,
@@ -67,16 +110,16 @@ export const MyAccountReducer = (state = initialState, action) => {
       const data =
         firstname || lastname
           ? {
-              ...customer,
-              firstname:
-                firstname.indexOf(" ") > 0
-                  ? firstname.substr(0, firstname.indexOf(" "))
-                  : firstname,
-              lastname:
-                firstname.indexOf(" ") > 0
-                  ? firstname.substr(firstname.indexOf(" ") + 1)
-                  : lastname,
-            }
+            ...customer,
+            firstname:
+              firstname.indexOf(" ") > 0
+                ? firstname.substr(0, firstname.indexOf(" "))
+                : firstname,
+            lastname:
+              firstname.indexOf(" ") > 0
+                ? firstname.substr(firstname.indexOf(" ") + 1)
+                : lastname,
+          }
           : customer;
 
       BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);

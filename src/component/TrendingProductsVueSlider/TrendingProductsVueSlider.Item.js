@@ -147,8 +147,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       data,
       widgetID,
     } = this.props;
-    const { isArabic } = this.state;
     let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
+    const { isArabic } = this.state;
     return (
       <div
         block="VueProductSlider"

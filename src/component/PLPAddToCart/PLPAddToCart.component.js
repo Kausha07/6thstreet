@@ -86,20 +86,20 @@ class PLPAddToCart extends PureComponent {
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
         size_us.length === 0 &&
-        size_uk.length === 0 &&
-        size_eu.length === 0 &&
-        in_stock === 0
+          size_uk.length === 0 &&
+          size_eu.length === 0 &&
+          in_stock === 0
           ? true
           : in_stock === 1 && stock_qty === 0
-          ? true
-          : false;
+            ? true
+            : false;
     } else {
       outOfStockStatus =
         in_stock === 0
           ? true
           : in_stock === 1 && stock_qty === 0
-          ? true
-          : false;
+            ? true
+            : false;
     }
     this.setState({
       isOutOfStock: outOfStockStatus,
@@ -134,7 +134,7 @@ class PLPAddToCart extends PureComponent {
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 3; //scroll-fast
-        if(slider){
+        if (slider) {
           slider.scrollLeft = scrollLeft - walk;
         }
       });
@@ -273,17 +273,19 @@ class PLPAddToCart extends PureComponent {
             onChange={this.onSizeTypeSelect}
           >
             {sizeObject.sizeTypes.map((type = "") => {
-              if (product[`size_${type}`].length > 0) {
-                return (
-                  <option
-                    key={type}
-                    block="PLPAddToCart"
-                    elem="SizeTypeOption"
-                    value={type}
-                  >
-                    {type.toUpperCase()}
-                  </option>
-                );
+              if (type) {
+                if (product[`size_${type}`]?.length > 0) {
+                  return (
+                    <option
+                      key={type}
+                      block="PLPAddToCart"
+                      elem="SizeTypeOption"
+                      value={type}
+                    >
+                      {type.toUpperCase()}
+                    </option>
+                  );
+                }
               }
               return null;
             })}
@@ -442,7 +444,7 @@ class PLPAddToCart extends PureComponent {
                   isArabic: isArabic(),
                 },
               }}
-              //   disabled={disabled}
+            //   disabled={disabled}
             >
               <span>{__("Add to bag")}</span>
               <span>{__("Adding...")}</span>
@@ -548,11 +550,6 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
-          size_type: optionId,
-          size: optionValue,
-          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
-          dimension10: basePrice,
-          dimension11: itemPrice,
         },
       });
 
@@ -610,11 +607,6 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
-          size_type: "",
-          size: "",
-          dimension9: (100 - Math.round((itemPrice / basePrice) * 100)) || 0,
-          dimension10: basePrice,
-          dimension11: itemPrice,
         },
       });
 
@@ -663,7 +655,7 @@ class PLPAddToCart extends PureComponent {
       <div block="PLPAddToCart">
         <div block="PLPAddToCart" elem="SizeSelector">
           {sizeObject.sizeTypes !== undefined &&
-          sizeObject.sizeTypes.length !== 0 ? (
+            sizeObject.sizeTypes.length !== 0 ? (
             <>
               <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
                 {this.getSizeTypeSelect()}

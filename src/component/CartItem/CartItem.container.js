@@ -81,7 +81,10 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export const mapStateToProps = (state) => ({
-  prevPath: state.PLP.prevPath
+  prevPath: state.PLP.prevPath,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
+  defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
 });
 
 export class CartItemContainer extends PureComponent {
@@ -152,6 +155,9 @@ export class CartItemContainer extends PureComponent {
     thumbnail: this._getProductThumbnail(),
     minSaleQuantity: this.getMinQuantity(),
     maxSaleQuantity: this.getMaxQuantity(),
+    eddResponse:this.props.eddResponse,
+    edd_info:this.props.edd_info,
+    defaultEddResponse:this.props.defaultEddResponse,
   });
   
   /**
@@ -276,11 +282,6 @@ export class CartItemContainer extends PureComponent {
           category: category,
           variant: color,
           quantity: qty,
-          size_type: size_option,
-          size: optionValue,
-          dimension9: (100 -(Math.round((row_total/original_price)*100))) || 0 ,
-          dimension10:original_price,
-          dimension11:row_total,
         },
       });
       // vue analytics
@@ -358,7 +359,6 @@ export class CartItemContainer extends PureComponent {
       item: { qty },
     } = this.props;
     const { showCartItemQuantityPopup } = this.state;
-
     return (
       <>
         <CartItem

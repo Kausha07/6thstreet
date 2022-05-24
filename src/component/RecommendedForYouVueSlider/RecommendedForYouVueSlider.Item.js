@@ -34,13 +34,15 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   onclick = (widgetID, item) => {
     const {
       pageType,
-      data: { category, sku, link },
+      data: { category, sku, link,name },
       sourceProdID,
       sourceCatgID,
       posofreco,
+      data
     } = this.props;
     let destProdID = sku;
     // vue analytics
+    
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
@@ -59,7 +61,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
-    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK);
+    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK, name);
     this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
@@ -189,8 +191,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       pageType,
       renderMySignInPopup,
     } = this.props;
-    const { isArabic } = this.state;
     let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
+    const { isArabic } = this.state;
     let newLink = link;
     if (this.props.data.url) {
       newLink = this.props.data.url;
@@ -199,10 +201,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
-        mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
-        mods={{ isArabic }}
         ref={this.childRef}
       >
         <Link

@@ -13,6 +13,7 @@ import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
+import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -30,8 +31,10 @@ class PDP extends PureComponent {
   };
   state = {
     signInPopUp: "",
+    isArabic: isArabic(),
     showPopup: false,
     isMobile: isMobile.any() || isMobile.tablet(),
+    showPopupField: "",
   };
 
   showMyAccountPopup = () => {

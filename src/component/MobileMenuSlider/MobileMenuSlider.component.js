@@ -24,7 +24,7 @@ export class MobileMenuSlider extends Slider {
         }
     }
 
-    handleDrag(state) {
+    handleDrag(state) {             
         const fullSliderSize = this.getFullSliderWidth();
         const { activeImage } = this.props;
         const { lastTranslateX, translateX } = state;
@@ -40,14 +40,17 @@ export class MobileMenuSlider extends Slider {
         }
     }
 
-    handleDragEnd(state, callback) {
+    handleDragEnd(state, callback) {        
         const { lastTranslateX, translateX } = state;
         const { onActiveImageChange, activeImage } = this.props;
         const direction = lastTranslateX > translateX ? 1 : -1;
         const activeSlide = activeImage + direction;
         const newTranslate = -activeSlide * (this.draggableRef.current.children[0].offsetWidth);
 
-        CSS.setVariable(this.draggableRef, 'animation-speed', '300ms');
+        CSS.setVariable(this.draggableRef, 'animation-speed', '300ms');        
+        if(newTranslate == -0){
+            return null
+        }
 
         CSS.setVariable(
             this.draggableRef,

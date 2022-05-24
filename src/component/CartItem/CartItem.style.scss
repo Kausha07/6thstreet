@@ -41,10 +41,10 @@
   }
   &-Color {
     &_isArabic {
-    }
+    }    
   }
   &-Size {
-    &_isArabic {
+    &_isArabic {      
     }
   }
   &-Pipe {
@@ -125,6 +125,23 @@
   &-Content {
     height: auto;
     width: 60%;
+    .AreaText {
+      color: #9b9b9b;
+      text-transform: none !important;
+      font-family: "Avenir Next";
+      text-transform: none !important;
+      font-size: 12px;
+      letter-spacing: 0;
+      line-height: 16px;
+      top: 1px;
+      
+      span:nth-child(2) {
+        color: #28d9aa;
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+
     @include desktop() {
       height: 130px;
       width: 100%;

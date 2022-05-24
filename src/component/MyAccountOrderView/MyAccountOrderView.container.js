@@ -19,6 +19,8 @@ import MyAccountOrderView from "./MyAccountOrderView.component";
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = () => ({});
@@ -50,12 +52,14 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country } = this.props;
+    const { history, country,eddResponse ,edd_info} = this.props;
 
     return {
       isLoading,
       order,
       history,
+      eddResponse,
+      edd_info
     };
   };
 

@@ -10,7 +10,10 @@ import Clear from "./icons/close-black.png";
 import searchPng from "./icons/search.svg";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import Event, { EVENT_GTM_CANCEL_SEARCH, EVENT_GTM_GO_TO_SEARCH } from "Util/Event";
+import Event, {
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
+} from "Util/Event";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -67,11 +70,7 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
 
-    if(!showSearch && prevShowSearch){
-      Event.dispatch(EVENT_GTM_CANCEL_SEARCH);
-    }
-
-    if(showSearch && !prevShowSearch){
+    if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
     }
   }
@@ -109,26 +108,30 @@ class HeaderSearch extends PureComponent {
   onFocus = () => {
     const { handleHomeSearchClick } = this.props;
     this.setState({ showSearch: true });
-    if(handleHomeSearchClick){
+    if (handleHomeSearchClick) {
       handleHomeSearchClick(true);
     }
     window.onpopstate = (e) => {
       if (document.body.classList.contains("isSuggestionOpen")) {
-        this.closeSearch();
+        this.cancelSearch();
         history.forward();
         e.preventDefault();
       }
     };
   };
+  cancelSearch = () => {
+    this.closeSearch();
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH);
+  };
   closeSearch = () => {
-    const { hideSearchBar, onSearchClean,handleHomeSearchClick } = this.props;
+    const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
     onSearchClean();
     this.setState({ showSearch: false });
-    if(handleHomeSearchClick){
-      handleHomeSearchClick(false)
+    if (handleHomeSearchClick) {
+      handleHomeSearchClick(false);
     }
   };
 
@@ -175,7 +178,7 @@ class HeaderSearch extends PureComponent {
           <button
             block="HeaderSearch"
             elem="Clear"
-            onClick={onSearchClean}
+            onClick={this.cancelSearch}
             type="button"
             mods={{
               type: "searchClear",
@@ -202,7 +205,7 @@ class HeaderSearch extends PureComponent {
               block="CloseContainer"
               elem="Close"
               mods={{ isArabic }}
-              onClick={this.closeSearch}
+              onClick={this.cancelSearch}
             >
               {__("Cancel")}
             </button>
