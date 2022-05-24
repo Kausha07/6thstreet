@@ -68,8 +68,7 @@ export class CartPage extends PureComponent {
     couponName: "",
     couponDescription: "",
     isCouponDetialPopupOpen: false,
-    couponModuleStatus: false,
-    isMobile: isMobile.any()
+    couponModuleStatus: false
   };
 
 
@@ -733,16 +732,18 @@ export class CartPage extends PureComponent {
       isLoading,
       processingRequest,
     } = this.props;
-    const { isArabic, isMobile } = this.state;
+    const { isArabic } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
     
     // if cart is not created and user goes to cart page in mobile view.
+    
+    const isMobiledev = isMobile ? isMobile.any() : false;
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
 
-    if(isMobile && !cart_id){
+    if(isMobiledev && !cart_id){
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderHeading()}
@@ -765,6 +766,14 @@ export class CartPage extends PureComponent {
     }
 
     if (Object.keys(totals).length === 0 || items.length === 0) {
+      if(isMobiledev){
+        return (
+          <div block="CartPage" elem="Static" mods={{ isArabic }}>
+            {this.renderHeading()}
+            {this.renderEmptyCartPageForMobile()}
+          </div>
+        );
+      }
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderHeading()}
