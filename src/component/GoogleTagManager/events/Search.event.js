@@ -10,11 +10,10 @@ import Event, {
   EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
   EVENT_GTM_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_TOP_SEARCHES_CLICK, // Done
-  EVENT_CLICK_RECOMMENDATION_CLICK // Done
+  EVENT_CLICK_RECOMMENDATION_CLICK, // Done
 } from "Util/Event";
 
 import BaseEvent from "./Base.event";
-
 
 /**
  * Constants
@@ -41,20 +40,11 @@ class SearchEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_CANCEL_SEARCH, () => {
-      this.handle(EVENT_GTM_CANCEL_SEARCH);
-    });
     Event.observer(EVENT_GTM_CLEAR_SEARCH, () => {
       this.handle(EVENT_GTM_CLEAR_SEARCH);
     });
-    Event.observer(EVENT_GTM_GO_TO_SEARCH, () => {
-      this.handle(EVENT_GTM_GO_TO_SEARCH);
-    });
     Event.observer(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, () => {
       this.handle(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK);
-    });
-    Event.observer(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, () => {
-      this.handle(EVENT_CLICK_SEARCH_WISH_LIST_CLICK);
     });
     Event.observer(EVENT_GTM_VIEW_SEARCH_RESULTS, () => {
       this.handle(EVENT_GTM_VIEW_SEARCH_RESULTS);
@@ -62,23 +52,14 @@ class SearchEvent extends BaseEvent {
     Event.observer(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, () => {
       this.handle(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW);
     });
-    Event.observer(EVENT_CLICK_RECENT_SEARCHES_CLICK, () => {
-      this.handle(EVENT_CLICK_RECENT_SEARCHES_CLICK);
-    });
     Event.observer(EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW, () => {
       this.handle(EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW);
     });
     Event.observer(EVENT_GTM_SEARCH_SCREEN_VIEW, () => {
       this.handle(EVENT_GTM_SEARCH_SCREEN_VIEW);
     });
-    Event.observer(EVENT_CLICK_TOP_SEARCHES_CLICK, () => {
-      this.handle(EVENT_CLICK_TOP_SEARCHES_CLICK);
-    });
-    Event.observer(EVENT_CLICK_RECOMMENDATION_CLICK, () => {
-      this.handle(EVENT_CLICK_RECOMMENDATION_CLICK);
-    });
   }
-  
+
   handler(EVENT_TYPE) {
     this.pushEventData({
       event: EVENT_TYPE,

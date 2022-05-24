@@ -54,6 +54,7 @@ class PDPSummary extends PureComponent {
     showPopupField: "",
     countryCode: null,
     Cityresponse: null,
+    eddEventSent: true,
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
@@ -213,42 +214,21 @@ class PDPSummary extends PureComponent {
     }
 
     const countryCode = getCountryFromUrl();
+    this.setState({
+      countryCode: countryCode,
+    });
+  }
+  componentDidUpdate(prevProps) {
     const {
-      product: { cross_border = 0 },
+      getTabbyInstallment,
+      product: { cross_border = 0, price },
       edd_info,
       defaultShippingAddress,
       addressCityData,
     } = this.props;
-    if (
-      edd_info &&
-      edd_info.is_enable &&
-      edd_info.has_pdp &&
-      cross_border === 0
-    ) {
-      if (addressCityData.length > 0) {
-        this.validateEddStatus(countryCode);
-        let default_edd = defaultShippingAddress ? true : false;
-        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
-          edd_details: {
-            edd_status: edd_info.has_pdp,
-            default_edd_status: default_edd,
-            edd_updated: false,
-          },
-          page: "pdp",
-        });
-      }
-    } else {
-      this.setState({
-        countryCode: countryCode,
-      });
-    }
-  }
-  componentDidUpdate(prevProps) {
-    const {
-      product: { price },
-      getTabbyInstallment,
-    } = this.props;
-    const { isArabic } = this.state;
+    const countryCode = getCountryFromUrl();
+
+    const { isArabic, eddEventSent } = this.state;
 
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -289,17 +269,33 @@ class PDPSummary extends PureComponent {
         }, this._handleError)
         .catch(() => {});
     }
-
-    const {
-      defaultShippingAddress,
-      estimateEddResponse,
-      addressCityData,
-      edd_info,
-    } = this.props;
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
     } = prevProps;
+    if (
+      edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp &&
+      eddEventSent &&
+      cross_border === 0
+    ) {
+      if (addressCityData.length > 0) {
+        this.validateEddStatus(countryCode);
+        let default_edd = defaultShippingAddress ? true : false;
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_pdp,
+            default_edd_status: default_edd,
+            edd_updated: false,
+          },
+          page: "pdp",
+        });
+        this.setState({
+          eddEventSent: false,
+        });
+      }
+    }
     if (
       prevAddressCitiesData &&
       addressCityData &&
@@ -612,7 +608,9 @@ class PDPSummary extends PureComponent {
               onClick={() => this.handleAreaDropDownClick()}
             >
               <Image lazyLoad={false} src={address} alt="" />
-              <div block="SelectAreaText">{isArabic ? "حدد المنطقة" : "Select Area"}</div>
+              <div block="SelectAreaText">
+                {isArabic ? "حدد المنطقة" : "Select Area"}
+              </div>
             </div>
           )}
           <div block="DropDownWrapper">

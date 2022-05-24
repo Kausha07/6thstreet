@@ -29,6 +29,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
 } from "../CheckoutPayments/CheckoutPayments.config";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 import Applepay from "./icons/apple.png";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -73,6 +74,7 @@ class MyAccountOrderView extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    eddEventSent: true,
   };
 
   renderAddress = (title, address) => {
@@ -99,6 +101,10 @@ class MyAccountOrderView extends PureComponent {
     );
   };
 
+  setEddEventSent = () => {
+    this.setState({ eddEventSent: false });
+  };
+
   renderItem = (item, eddItem) => {
     const {
       order: { order_currency_code: currency, status },
@@ -106,6 +112,7 @@ class MyAccountOrderView extends PureComponent {
       eddResponse,
       edd_info,
     } = this.props;
+    const { eddEventSent } = this.state;
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
         ? eddItem?.edd
@@ -113,6 +120,8 @@ class MyAccountOrderView extends PureComponent {
     return (
       <MyAccountOrderViewItem
         item={item}
+        setEddEventSent={this.setEddEventSent}
+        eddEventSent={eddEventSent}
         status={status}
         myOrderEdd={finalEdd}
         compRef={"myOrder"}
@@ -415,9 +424,21 @@ class MyAccountOrderView extends PureComponent {
   }
   renderEdd = (finalEdd, colorCode) => {
     let actualEddMess = finalEdd;
-
+    const { eddEventSent } = this.state;
+    const { edd_info } = this.props;
     if (!actualEddMess) {
       return null;
+    }
+    if (actualEddMess && eddEventSent) {
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+      this.setEddEventSent();
     }
     let splitKey = isArabic() ? "بواسطه" : "by";
     let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
