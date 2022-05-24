@@ -60,7 +60,6 @@ export class SearchSuggestionContainer extends PureComponent {
     const { prevSearch } = state;
 
     if (search !== prevSearch) {
-      SearchSuggestionContainer.requestSearchSuggestions(props);
       return { prevSearch: search };
     }
 
@@ -88,12 +87,13 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches: [],
       recommendedForYou: [],
       trendingProducts: [],
-      exploreMoreData: null
+      exploreMoreData: null,
+      typingTimeout: 0,
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
 
-    SearchSuggestionContainer.requestSearchSuggestions(props);
+    this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
     this.requestTopSearches();
     this.requestRecentSearches();
@@ -183,6 +183,21 @@ export class SearchSuggestionContainer extends PureComponent {
       });
   }
 
+  requestSearchSuggestions(props) {
+    const { search, requestSearchSuggestions } = props;
+    if (!search || search.length < 3) {
+      return;
+    }
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+    this.setState({
+      typingTimeout: setTimeout(() => {
+        requestSearchSuggestions(search);
+      }, [300]),
+    });
+  }
+
   componentDidMount() {
     sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
@@ -200,6 +215,15 @@ export class SearchSuggestionContainer extends PureComponent {
     browserHistory.push(`${location.pathname}${location.search}`);
     window.onpopstate = () => {
       closeSearch();
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props?.search !== this.props.prevSearch &&
+      prevProps?.search !== this.props?.search
+    ) {
+      this.requestSearchSuggestions(this.props);
     }
   }
 
@@ -259,18 +283,21 @@ export class SearchSuggestionContainer extends PureComponent {
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
     let refinedTopSearches = [];
+    let searchItem = [];
     await Promise.all(
       topSearches?.data
         ?.filter((ele) => ele !== "")
         .map(async (item) => {
-          const filteredItem = await this.checkForSKU(item.search);
-          if (filteredItem) {
-            refinedTopSearches.push({ link: filteredItem.url, ...item });
-          } else {
-            refinedTopSearches.push({ link: null, ...item });
-          }
+          searchItem.push(item.search);
         })
     );
+    if (topSearches?.data) {
+      refinedTopSearches = await this.checkForSearchSKU(
+        searchItem,
+        topSearches.data
+      );
+    }
+
     this.setState({
       topSearches: refinedTopSearches || [],
     });
@@ -280,16 +307,18 @@ export class SearchSuggestionContainer extends PureComponent {
     let recentSearches =
       JSON.parse(localStorage.getItem("recentSearches")) || [];
     let refinedRecentSearches = [];
+    let searchItem = [];
     if (recentSearches.length > 0) {
       await Promise.all(
         recentSearches?.map(async (item) => {
-          const filteredItem = await this.checkForSKU(item.name);
-          if (filteredItem) {
-            refinedRecentSearches.push({ link: filteredItem.url, ...item });
-          } else {
-            refinedRecentSearches.push({ link: null, ...item });
-          }
+          searchItem.push(item.name);
         })
+      );
+    }
+    if (recentSearches.length > 0) {
+      refinedRecentSearches = await this.checkForSearchSKU(
+        searchItem,
+        recentSearches
       );
     }
     this.setState({
@@ -297,17 +326,22 @@ export class SearchSuggestionContainer extends PureComponent {
     });
   }
 
-  checkForSKU = async (search) => {
-    const config = {
-      q: search,
-      page: 0,
-      limit: 2,
-    };
-    const { data } = await new Algolia().getPLP(config);
-    if (data && data.length === 1) {
-      return data[0];
+  checkForSearchSKU = async (searchArr, searchList) => {
+    const { data } = await new Algolia().getSearchPLP(searchArr);
+    let refinedSearches = [];
+    if (data && data.length > 0) {
+      data.map((subData, index) => {
+        if (subData && subData.hits.length === 1) {
+          refinedSearches.push({
+            link: subData.hits[0].url,
+            ...searchList[index],
+          });
+        } else {
+          refinedSearches.push({ link: null, ...searchList[index] });
+        }
+      });
     }
-    return null;
+    return refinedSearches;
   };
 
   containerProps = () => {
@@ -329,7 +363,7 @@ export class SearchSuggestionContainer extends PureComponent {
       renderMySignInPopup,
       // wishlistData,
       isPDPSearchVisible,
-      prevPath
+      prevPath,
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";

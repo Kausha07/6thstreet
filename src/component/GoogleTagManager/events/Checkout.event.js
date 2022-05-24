@@ -72,7 +72,7 @@ class CheckoutEvent extends BaseEvent {
                 {
                     ...ProductHelper.getItemData(item),
                     quantity: ProductHelper.getQuantity(item),
-                    availability: true
+                    id:item.full_item_info.config_sku || "" ,
                 }
             ]), []);
         const groupedProducts = this.getGroupedProducts();

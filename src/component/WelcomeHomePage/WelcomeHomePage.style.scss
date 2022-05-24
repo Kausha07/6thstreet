@@ -5,18 +5,38 @@
     &_isArabic {
         direction: rtl;
     }
-    margin-top: 31px;
     &-Top{
+        padding-left: 30px;
+        padding-top: 65px;
+        padding-bottom: 36px;
+        @include mobile {
+            padding-top: 28px;
+            padding-bottom: 40px;
+        }
         &-Logo{
             display: flex;
-            img{
-                margin: 0 auto;
-                @include mobile {
-                    margin: 0 0 0 20px;
-                }
-                width: 270px;
-                padding: 36px 0;
+            width: 270px;
+            background-image: url(/static/media/logo_en.c23a1de8.svg);
+            height: 45px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            left: 50%;
+            transform: translateX(-50%);
+            @include mobile {
+                left: unset;
+                transform: unset;
+                width: 190px;
+                height: 32px;
             }
+            // img{
+            //     margin: 0 auto;
+            //     @include mobile {
+            //         margin: 0 0 0 20px;
+            //     }
+            //     width: 270px;
+            //     padding: 36px 0;
+            // }
         }
     }
     &-MainSection{
@@ -150,12 +170,16 @@
             align-items: center;
 
             &-welcome{
-                font-size: 22px;
-                font-weight: 600;
-                letter-spacing: 0;
-                line-height: 30px;
-                @include mobile {
-                    font-size: 18px;
+                span:nth-child(1) {
+                    font-size: 16px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 22px;
+                }
+                span:nth-child(2) {
+                    font-size: 16px;
+                    font-weight: normal;
+                    letter-spacing: 0;
                     line-height: 22px;
                 }
             }
@@ -239,11 +263,12 @@
                 display: flex;
                 padding: unset;
                 .Language-Active{
+                    font-family: "Avenir Next";
                     display: block;
                     border: 1px solid #000000;
                     border-radius: 6px;
                     font-size: 12px;
-                    font-weight: 800;
+                    font-weight: bold;
                     letter-spacing: 0;
                     line-height: 16px;
                     text-align: center;
@@ -255,8 +280,8 @@
                     color: white;
                 }
                 .Language-Inactive {
-                    font-size: 12px;
-                    font-weight: 800;
+                    font-size: 14px;
+                    font-weight: 600;
                     letter-spacing: 0;
                     line-height: 16px;
                     text-align: center;

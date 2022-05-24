@@ -122,7 +122,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     return null;
   }
 
-
   renderProductTag(productTag) {
     return (
       <div block="VueProductSlider" elem="VueProductTag">

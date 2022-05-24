@@ -29,7 +29,7 @@ class DynamicContentProductSlider extends PureComponent {
     eventRegistered: false,
   };
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   registerViewPortEvent() {
     let observer;
@@ -69,8 +69,13 @@ class DynamicContentProductSlider extends PureComponent {
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
-    items.forEach((item) => {
-      Object.assign(item, { store_code: getStoreName });
+    const getIndexId = this.props?.index ? this.props.index : "";
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        store_code: getStoreName,
+        indexValue: index + 1,
+        default_Index: getIndexId,
+      });
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
@@ -96,7 +101,7 @@ class DynamicContentProductSlider extends PureComponent {
     );
   };
 
-  renderProductsDesktop() {}
+  renderProductsDesktop() { }
 
   renderTitle() {
     const { title, isHomePage } = this.props;
@@ -128,7 +133,13 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
-    const { title, isHomePage, products, renderMySignInPopup, index = 0 } = this.props;
+    const {
+      title,
+      isHomePage,
+      products,
+      renderMySignInPopup,
+      index = 0,
+    } = this.props;
     if (products.length === 0) {
       return null;
     }

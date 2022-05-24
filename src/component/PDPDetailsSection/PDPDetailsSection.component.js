@@ -23,7 +23,6 @@ class PDPDetailsSection extends PureComponent {
     product: Product.isRequired,
     clickAndCollectStores: PropTypes.object.isRequired,
   };
-
   state = {
     isHidden: true,
     isExpanded: {
@@ -72,11 +71,15 @@ class PDPDetailsSection extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
-        const payload = VueQuery.buildQuery(type, query, {
-          gender,
+        const queryPaylod = type === "vue_visually_similar_slider" ? {
           userID,
           sourceProduct,
-        });
+        } : {
+            gender,
+            userID,
+            sourceProduct,
+          }
+        const payload = VueQuery.buildQuery(type, query, queryPaylod);
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
@@ -906,7 +909,7 @@ class PDPDetailsSection extends PureComponent {
           </Link>
         </p>
       </div>
-    )
+    );
   }
 
   renderShippingAndFreeReturns() {
@@ -920,7 +923,7 @@ class PDPDetailsSection extends PureComponent {
             </Link>
           </p>
         </div>
-      )
+      );
     }
 
     if (this.props.product.is_returnable === 0) {
@@ -932,7 +935,7 @@ class PDPDetailsSection extends PureComponent {
             </Link>
           </p>
         </div>
-      )
+      );
     }
 
     // if(this.props.product.is_returnable === "NO"){
@@ -948,15 +951,18 @@ class PDPDetailsSection extends PureComponent {
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
             {" "} {__("More info")}
           </Link>
-        </p>
-      </div>
-    )
+        </p >
+      </div >
+    );
   }
 
   render() {
     const {
       product: { brand_name },
     } = this.props;
+    const {
+      pdpWidgetsAPIData,
+    } = this.state;
     const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
@@ -982,7 +988,7 @@ class PDPDetailsSection extends PureComponent {
         </div >
         {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
-          <Accordion
+          {/* <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
@@ -991,14 +997,13 @@ class PDPDetailsSection extends PureComponent {
             <br />
             {this.renderShippingAndFreeReturns()}
             {isMobile ? <br /> : null}
-          </Accordion>
-          {this.renderAccordionSeperator()}
+          </Accordion> */}
+          {/* {this.renderAccordionSeperator()} */}
         </div >
-
-        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
-        <div block="Seperator2" />
+        {/* <div block="Seperator2" /> */}
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

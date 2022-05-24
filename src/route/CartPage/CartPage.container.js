@@ -108,7 +108,8 @@ export class CartPageContainer extends PureComponent {
 
     state = {
         isEditing: false,
-        clubApparelMember: null
+        clubApparelMember: null,
+        errorState:false,
     };
 
     containerFunctions = {
@@ -151,7 +152,21 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, updateStoreCredit, prevPath=null, getCouponList } = this.props;
+        const {
+            updateMeta,
+            updateStoreCredit,
+            prevPath=null,
+            getCouponList,
+            totals: {
+                items = []
+            },
+            showNotification,
+            location:{
+                state:{
+                    errorState: propErrorState
+                } = {}
+            }
+        } = this.props;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;
@@ -173,6 +188,15 @@ export class CartPageContainer extends PureComponent {
         this._updateBreadcrumbs();
         this._changeHeaderState();
         getCouponList();
+        
+        const mappedItems = checkProducts(items) || [];
+        if (mappedItems.length !== 0 && (this.state.errorState === false || propErrorState === false)) {
+            showNotification(
+                "error",
+                __("Some products or selected quantities are no longer available")
+            );
+            this.setState({errorState:true});
+        }
 
     }
 
@@ -201,6 +225,25 @@ export class CartPageContainer extends PureComponent {
                 ...headerState,
                 title
             });
+        }
+
+        const {
+            totals: { items = []},
+            totals,
+            showNotification,
+        } = this.props;
+        const {
+            totals: { items: prevItems = []},
+            totals:prevtotals
+        } = prevProps;
+        if ( JSON.stringify(prevtotals) !== JSON.stringify(totals)) {
+            const mappedItems = checkProducts(items) || [];
+            if (mappedItems.length !== 0) {
+              showNotification(
+                "error",
+                __("Some products or selected quantities are no longer available")
+              );
+            }
         }
     }
 

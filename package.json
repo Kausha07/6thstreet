@@ -24,7 +24,6 @@
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
         "normalize-scroll-left": "^0.2.1",
-        "puppeteer": "^9.0.0",
         "react-circular-carousel": "^1.0.4-0",
         "react-collapse": "^5.1.0",
         "react-countdown": "^2.3.2",
@@ -40,11 +39,16 @@
         "tiny-slider-react": "0.5.3",
         "uuid": "^8.3.2",
         "workbox-webpack-plugin": "^6.0.2",
-        "workbox-window": "^6.4.2"
+        "workbox-window": "^6.4.2",
+        "algoliasearch": "^3.35.1",
+        "i18n-js": "^3.5.1",
+        "node-fetch": "^2.6.0",
+        "url-parse": "^1.4.7"
     },
     "scripts": {
         "start": "scandipwa-scripts start",
         "start-ar": "scandipwa-scripts start --locale ar_SA",
+        "pre": "sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' /app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
         "build-ssr": "set PUBLIC_URL='' && npm run build",

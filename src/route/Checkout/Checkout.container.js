@@ -13,7 +13,6 @@ import {
   AUTHORIZED_STATUS,
   CAPTURED_STATUS,
   DETAILS_STEP,
-  CREATED_STATUS,
   SHIPPING_STEP,
 } from "Route/Checkout/Checkout.config";
 import {
@@ -39,7 +38,10 @@ import {
 import StoreCreditDispatcher from "Store/StoreCredit/StoreCredit.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
-import Event, { EVENT_GTM_CHECKOUT } from "Util/Event";
+import Event, {
+  EVENT_GTM_CHECKOUT,
+  EVENT_GTM_EDD_TRACK_ON_ORDER,
+} from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -57,8 +59,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+  createOrder: (code, additional_data, finalEdd) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, finalEdd),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -105,6 +107,9 @@ export const mapStateToProps = (state) => ({
   cartId: state.CartReducer.cartId,
   savedCards: state.CreditCardReducer.savedCards,
   newCardVisible: state.CreditCardReducer.newCardVisible,
+  pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
+  edd_info: state.AppConfig.edd_info,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -417,7 +422,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const mappedItems = checkProducts(items) || [];
 
       if (mappedItems.length !== 0) {
-        history.push("/cart");
+        history.push("/cart", { errorState: false });
       }
     }
 
@@ -436,10 +441,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       total === 0 &&
       checkoutStep !== DETAILS_STEP
     ) {
-      const totalSum = total_segments.reduce(
-        (acc, item) => acc + item.value,
-        0
-      );
+      const totalSum = total_segments.reduce((acc, item) => {
+        if (item.code === "msp_cashondelivery") {
+          return acc + 0;
+        } else {
+          return acc + item.value;
+        }
+      }, 0);
 
       if (totalSum + discount !== 0) {
         showErrorNotification(__("Your cart is invalid"));
@@ -467,7 +475,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
-    
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
@@ -605,7 +612,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
+      finalEdd,
     } = paymentInformation;
+
     const {
       savedCards,
       newCardVisible,
@@ -615,6 +624,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       shippingAddress: { email },
     } = this.state;
     let data = {};
+
     if (code === CARD) {
       data = {
         ...additional_data,
@@ -657,13 +667,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
     } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation);
+      this.placeOrder(code, data, paymentInformation, finalEdd);
     } else {
-      this.placeOrder(code, data, null);
+      this.placeOrder(code, data, null, finalEdd);
     }
   }
 
-  async placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation, finalEdd) {
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
@@ -675,8 +685,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data);
+      const response = await createOrder(code, data, finalEdd);
       if (response && response.data) {
+        if (finalEdd) {
+          Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
+            edd_date: finalEdd,
+          });
+        }
         const { data } = response;
         if (typeof data === "object") {
           const {
@@ -850,11 +865,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const mobile = phone.slice(4);
 
         sendVerificationCode({ mobile, code }).then((response) => {
-          if(response.success) {
+          if (response.success) {
             this.setState({ isVerificationCodeSent: response.success });
-          } else 
-          {
-            console.log("response.error",response.error);
+          } else {
+            console.log("response.error", response.error);
             showErrorNotification(response.error);
           }
         }, this._handleError);
@@ -893,6 +907,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { getPaymentMethods } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
+      console.log("data",data);
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
         const { is_enabled } = paymentMethod;
 

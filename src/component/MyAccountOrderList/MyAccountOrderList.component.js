@@ -1,77 +1,69 @@
-import Loader from 'Component/Loader';
-import MyAccountOrderListItem from 'Component/MyAccountOrderListItem';
-import {
-    MyAccountReturnCreateList as SourceComponent
-} from 'Component/MyAccountReturnCreateList/MyAccountReturnCreateList.component';
+import Loader from "Component/Loader";
+import MyAccountOrderListItem from "Component/MyAccountOrderListItem";
+import { MyAccountReturnCreateList as SourceComponent } from "Component/MyAccountReturnCreateList/MyAccountReturnCreateList.component";
 
-import './MyAccountOrderList.style';
+import "./MyAccountOrderList.style";
 
 class MyAccountOrderList extends SourceComponent {
-    renderOrder(order) {
-        const { increment_id } = order;
+  renderOrder = (order) => {
+    const { increment_id } = order;
+    const { eddResponse } = this.props;
+    return (
+      <MyAccountOrderListItem
+        order={order}
+        eddResponse={eddResponse}
+        key={increment_id}
+      />
+    );
+  }
 
-        return (
-            <MyAccountOrderListItem
-              order={ order }
-              key={ increment_id }
-            />
-        );
+  renderNoOrders() {
+    return <p>{__("No orders")}</p>;
+  }
+
+  renderOrders() {
+    const { orders = [], isLoading } = this.props;
+
+    if (!orders.length && isLoading) {
+      return null;
     }
 
-    renderNoOrders() {
-        return (
-            <p>{ __('No orders') }</p>
-        );
+    if (!orders.length && !isLoading) {
+      return this.renderNoOrders();
     }
 
-    renderOrders() {
-        const {
-            orders = [],
-            isLoading
-        } = this.props;
+    return orders.map(this.renderOrder);
+  }
 
-        if (!orders.length && isLoading) {
-            return null;
-        }
+  renderLoader() {
+    const { isLoading } = this.props;
 
-        if (!orders.length && !isLoading) {
-            return this.renderNoOrders();
-        }
+    return <Loader isLoading={isLoading} />;
+  }
 
-        return orders.map(this.renderOrder);
+  renderMoreItems() {
+    const { requestInProgress } = this.props;
+
+    if (requestInProgress) {
+      return (
+        <div block="MyAccountOrderList" elem="MoreOrders">
+          Loading more orders...
+        </div>
+      );
     }
 
-    renderLoader() {
-        const { isLoading } = this.props;
+    return null;
+  }
 
-        return (
-            <Loader isLoading={ isLoading } />
-        );
-    }
-
-    renderMoreItems() {
-        const { requestInProgress } = this.props;
-
-        if (requestInProgress) {
-            return (
-                <div block="MyAccountOrderList" elem="MoreOrders">
-                    Loading more orders...
-                </div>
-            );
-        }
-
-        return null;
-    }
-
-    render() {
-        return (
-            <div block="MyAccountOrderList">
-                { this.renderOrders() }
-                { this.renderLoader() }
-                { this.renderMoreItems() }
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div block="MyAccountOrderList">
+        {this.renderOrders()}
+        {this.renderLoader()}
+        {this.renderMoreItems()}
+      </div>
+    );
+  }
 }
 
 export default MyAccountOrderList;

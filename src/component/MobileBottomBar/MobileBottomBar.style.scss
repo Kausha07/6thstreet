@@ -59,7 +59,7 @@
   display: flex;
   z-index: 95;
   background: $white;
-  height: 70px !important;
+  height: 83px !important;
   position: fixed;
   bottom: 0px;
   width: 100%;
@@ -109,15 +109,21 @@
       &::before {
         background: url(./icons/home.svg) no-repeat center center;
         background-size: 24px;
+        width: 40px;
+        height:40px;
+        background-position: center 20%;
       }
       &.MobileBottomBar-HomeAndBrand_isActive {
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before{
           background: url(./icons/home-active.svg) no-repeat center center;
           background-size: 24px;
+          width: 40px;
+          height:40px;
+          background-position: center 20%;
         }
       }
     }
@@ -126,21 +132,23 @@
       &::before {
         background: url(./icons/brand.svg) no-repeat center center;
         background-size: 24px;
+        width: 40px;
+        height:40px;
+        background-position: center 20%;
       }
       &.MobileBottomBar-HomeAndBrand_isActive {
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before{
           background: url(./icons/brand-active.svg) no-repeat center center;
           background-size: 24px;
+          width: 40px;
+          height:40px;
+          background-position: center 20%;
         }
       }
-    }
-
-    &_isHomeButton {
-
     }
 
     @include desktop {
@@ -178,17 +186,21 @@
         background: url(./icons/categories.svg) no-repeat center center;
         background-size: 24px;
         filter: none;
-        height: 24px;
-        width: 24px;
+        width: 40px;
+        height:40px;
+        background-position: center 20%;
       }
       &_isExpanded{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before {
           background: url(./icons/categories-active.svg) no-repeat center center;
           background-size: 24px;
+          width: 40px;
+          height:40px;
+          background-position: center 20%;
           filter: none;
         }
       }
@@ -209,18 +221,22 @@
         background: url(./icons/favorites.svg) no-repeat center center;
         background-size: 24px;
         filter: none;
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height:40px;
+        background-position: center 20%;
 
       }
       &_isWishlist{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before {
           background: url(./icons/favorites-active.svg) no-repeat center center;
           background-size: 24px;
+          width: 40px;
+          height:40px;
+          background-position: center 20%;
           filter: none;
 
         }
@@ -235,18 +251,21 @@
         background: url(./icons/account.svg) no-repeat center center;
         background-size: 24px;
         filter: none;
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height:40px;
+        background-position: center 20%;
 
       }
       &_isAccount{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before {
           background: url(./icons/account-active.svg) no-repeat center center;
-          background-size: 24px;
+          width: 40px;
+          height:40px;
+          background-position: center 20%;
           filter: none;
 
         }

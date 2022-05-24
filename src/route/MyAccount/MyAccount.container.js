@@ -21,6 +21,7 @@ import {
   RETURN_ITEM,
   SETTINGS_SCREEN,
   STORE_CREDIT,
+  WALLET_PAYMENTS,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
@@ -81,6 +82,11 @@ export const tabMap = {
   [ADDRESS_BOOK]: {
     url: "/address-book",
     name: __("My Address Book"),
+    className: "",
+  },
+  [WALLET_PAYMENTS]: {
+    url: "/wallet-payments",
+    name: __("Payment Methods"),
     className: "",
   },
   [SETTINGS_SCREEN]: {

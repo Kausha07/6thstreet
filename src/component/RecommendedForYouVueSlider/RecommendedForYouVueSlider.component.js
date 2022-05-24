@@ -109,10 +109,10 @@ class RecommendedForYouVueSlider extends PureComponent {
       sourceProdID,
     } = this.props;
     const target = event.nativeEvent.target;
-    if(this.scrollerRef && this.scrollerRef.current){
-    this.scrollerRef.current.scrollLeft = isArabic
-      ? Math.abs(target.scrollLeft)
-      : target.scrollLeft;
+    if (this.scrollerRef && this.scrollerRef.current) {
+      this.scrollerRef.current.scrollLeft = isArabic
+        ? Math.abs(target.scrollLeft)
+        : target.scrollLeft;
     }
     let width = 0;
     if (screen.width > 1024) {
@@ -232,8 +232,13 @@ class RecommendedForYouVueSlider extends PureComponent {
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
-    items.forEach((item) => {
-      Object.assign(item, { store_code: getStoreName });
+    const getIndexId = this.props?.index ? this.props.index : "";
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        store_code: getStoreName,
+        indexValue: index + 1,
+        default_Index: getIndexId,
+      });
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
@@ -305,7 +310,4 @@ class RecommendedForYouVueSlider extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(RecommendedForYouVueSlider);
+export default connect(mapStateToProps, null)(RecommendedForYouVueSlider);
