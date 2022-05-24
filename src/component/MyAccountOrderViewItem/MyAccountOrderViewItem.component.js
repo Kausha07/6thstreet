@@ -73,6 +73,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
       eddResponse,
       compRef,
       myOrderEdd,
+      setEddEventSent,
+      eddEventSent,
       edd_info,
       item: { edd_msg_color },
     } = this.props;
@@ -110,7 +112,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
-      if(myOrderEdd){
+      if(myOrderEdd && eddEventSent){
       Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
         edd_details: {
           edd_status: edd_info.has_order_detail,
@@ -119,6 +121,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         },
         page: "my_order",
       });
+      setEddEventSent()
     }
     }
 
