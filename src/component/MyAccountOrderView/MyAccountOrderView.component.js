@@ -73,7 +73,7 @@ class MyAccountOrderView extends PureComponent {
 
   state = {
     isArabic: isArabic(),
-    eddEventSent: true,
+    eddEventSent: false,
   };
 
   renderAddress = (title, address) => {
@@ -101,7 +101,7 @@ class MyAccountOrderView extends PureComponent {
   };
 
   setEddEventSent = () => {
-    this.setState({ eddEventSent: false });
+    this.setState({ eddEventSent: true });
   };
 
   renderItem = (item, eddItem) => {
@@ -405,7 +405,7 @@ class MyAccountOrderView extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    if (actualEddMess && eddEventSent) {
+    if (actualEddMess && !eddEventSent) {
       Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
         edd_details: {
           edd_status: edd_info.has_order_detail,

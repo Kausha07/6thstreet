@@ -54,7 +54,7 @@ class PDPSummary extends PureComponent {
     showPopupField: "",
     countryCode: null,
     Cityresponse: null,
-    eddEventSent: true,
+    eddEventSent: false,
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
@@ -277,7 +277,7 @@ class PDPSummary extends PureComponent {
       edd_info &&
       edd_info.is_enable &&
       edd_info.has_pdp &&
-      eddEventSent &&
+      !eddEventSent &&
       cross_border === 0
     ) {
       if (addressCityData.length > 0) {
@@ -292,7 +292,7 @@ class PDPSummary extends PureComponent {
           page: "pdp",
         });
         this.setState({
-          eddEventSent: false,
+          eddEventSent: true,
         });
       }
     }
