@@ -81,8 +81,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    let k = this.props
-    debugger
+
     return <PLPFilters {...this.props} isPLPSortBy={false} />;
   }
 
