@@ -112,7 +112,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
-      if(myOrderEdd && eddEventSent){
+      if(myOrderEdd && !eddEventSent){
       Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
         edd_details: {
           edd_status: edd_info.has_order_detail,
