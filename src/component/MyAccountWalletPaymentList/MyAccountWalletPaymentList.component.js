@@ -85,10 +85,10 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
             />
           </div>
           <div block="MyAccountPaymentCard" elem="DetailBlock">
-            {customer ?
+            {/* {customer ?
               <div block="MyAccountPaymentCard" elem="Name">
                 {customer?.firstname} {customer?.lastname}
-              </div> : null}
+              </div> : null} */}
             <div block="MyAccountPaymentCard" elem="cardNum">
               {cardNum}
             </div>
@@ -110,7 +110,6 @@ export class MyAccountWalletPaymentList extends KeyValueTable {
 
   render() {
     const { savedCard = {}, mix } = this.props;
-
     return (
       <div block="MyAccountWalletPaymentList" mix={mix}>
         {this.renderCard()}
