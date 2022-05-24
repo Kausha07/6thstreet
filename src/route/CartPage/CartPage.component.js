@@ -793,7 +793,7 @@ export class CartPage extends PureComponent {
           <Loader isLoading={processingRequest} />
           <div
             style={{
-              marginBottom: `${isMobile.any()
+              marginBottom: `${isMobile
                 ? this.dynamicHeight?.current?.clientHeight + additionalMargin
                 : 0
                 }px`,
