@@ -32,21 +32,26 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
   state = {
     products: [],
+    product: [],
+    alsoAvailable: [],
     isAlsoAvailable: true,
     firstLoad: true,
     isSelected: false,
+    sizeObject: {},
+    insertedSizeStatus: false,
   };
 
   componentDidMount() {
     const { firstLoad, products = [] } = this.state;
 
     if (firstLoad && !products.length) {
-      this.getAvailableProducts();
+      // this.getAvailableProducts();
     }
   }
 
-  getAvailableProducts() {
-    const { alsoAvailable = [] } = this.props;
+  getAvailableProducts(product) {
+    const alsoAvailable = product["6s_also_available"];
+    console.log("muskan ", product, alsoAvailable);
     alsoAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
         let { products = [] } = this.state;
@@ -56,7 +61,11 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
           products = this.state?.products || [];
         }
 
-        this.setState({ isAlsoAvailable: products.length === 0 });
+        this.setState({
+          isAlsoAvailable: products.length === 0,
+          alsoAvailable,
+          product,
+        });
       })
     );
   }
@@ -64,6 +73,121 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
     return product;
+  }
+
+  setSizeData = (product) => {
+    if (product.simple_products !== undefined) {
+      const { simple_products, size_eu } = product;
+
+      const filteredProductKeys = Object.keys(simple_products)
+        .reduce((acc, key) => {
+          const {
+            size: { eu: productSize },
+          } = simple_products[key];
+          acc.push([size_eu.indexOf(productSize), key]);
+          return acc;
+        }, [])
+        .sort((a, b) => {
+          if (a[0] < b[0]) {
+            return -1;
+          }
+          if (a[0] > b[0]) {
+            return 1;
+          }
+          return 0;
+        })
+        .reduce((acc, item) => {
+          acc.push(item[1]);
+          return acc;
+        }, []);
+
+      const filteredProductSizeKeys = Object.keys(
+        product.simple_products[filteredProductKeys[0]].size || {}
+      );
+
+      let object = {
+        sizeCodes: filteredProductKeys || [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
+      };
+
+      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
+        const sizeCode = size[0];
+        const { quantity } = size[1];
+
+        if (quantity !== null && quantity !== undefined) {
+          acc.push(sizeCode);
+        }
+
+        return acc;
+      }, []);
+
+      object.sizeCodes = allSizes;
+
+      if (
+        filteredProductKeys.length <= 1 &&
+        filteredProductSizeKeys.length === 0
+      ) {
+        this.setState({
+          insertedSizeStatus: false,
+          sizeObject: object,
+        });
+        return;
+      }
+
+      if (
+        filteredProductKeys.length > 1 &&
+        filteredProductSizeKeys.length === 0
+      ) {
+        const object = {
+          sizeCodes: [filteredProductKeys[1]],
+          sizeTypes: filteredProductSizeKeys,
+        };
+
+        this.setState({
+          insertedSizeStatus: false,
+          sizeObject: object,
+        });
+        return;
+      }
+
+      this.setState({
+        sizeObject: object,
+      });
+      return;
+    }
+    this.setState({
+      insertedSizeStatus: false,
+      sizeObject: {
+        sizeCodes: [],
+        sizeTypes: [],
+      },
+    });
+    return;
+  };
+
+  onAvailSizeSelect({ target }) {
+    const { value } = target;
+    const { onSizeSelect } = this.props;
+    const {
+      product: { simple_products: productStock },
+    } = this.state;
+    const { isOutOfStock } = this.state;
+    let outOfStockVal = isOutOfStock;
+    if (productStock && productStock[value]) {
+      const selectedSize = productStock[value];
+      if (
+        selectedSize["quantity"] !== undefined &&
+        selectedSize["quantity"] !== null &&
+        (typeof selectedSize["quantity"] === "string"
+          ? parseInt(selectedSize["quantity"], 0) === 0
+          : selectedSize["quantity"] === 0)
+      ) {
+        outOfStockVal = true;
+      } else {
+        outOfStockVal = false;
+      }
+    }
+    onSizeSelect(value, outOfStockVal);
   }
 
   containerFunctions = {
@@ -83,27 +207,41 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   onClick() {
     const {
       onClick,
-      item: { item_id },
+      item: { item_id, config_sku },
     } = this.props;
-
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
       onClick(item_id, isSelected);
+      const { product } = this.getAvailableProduct(config_sku);
+      console.log("muskan000000000000>",product);
+      if (product) {
+        this.getAvailableProducts(product);
+        this.setSizeData(product);
+      }
       return { isSelected };
     });
   }
 
   containerProps = () => {
-    const { item, reasonId, product } = this.props;
-    const { isSelected, isAlsoAvailable ,products} = this.state;
+    const { item, reasonId } = this.props;
+    const {
+      isSelected,
+      isAlsoAvailable,
+      products,
+      alsoAvailable,
+      product,
+      sizeObject,
+    } = this.state;
 
     return {
       item,
       isSelected,
       reasonId,
-      product,
       isAlsoAvailable,
+      alsoAvailable,
       products,
+      product,
+      sizeObject,
       resolutions: this.getResolutionOptions(),
       reasonOptions: this.getReasonOptions(),
     };

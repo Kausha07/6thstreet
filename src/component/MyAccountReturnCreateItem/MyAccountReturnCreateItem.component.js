@@ -206,7 +206,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect } = this.props;
+    const { selectedSizeCode, onAvailSizeSelect } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
       fontSize: "14px",
@@ -226,7 +226,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         key={v4()}
         className="SizeOptionList"
         onClick={() => {
-          onSizeSelect({ target: { value: code } });
+          onAvailSizeSelect({ target: { value: code } });
         }}
       >
         <input

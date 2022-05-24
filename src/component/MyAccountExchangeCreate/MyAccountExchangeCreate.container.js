@@ -40,36 +40,18 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     items: [],
     resolutionId: null,
     reasonId: 0,
-    sizeObject: {},
     selectedSizeCode: "",
     selectedSizeType: "eu",
     selectedAvailProduct: "",
     isOutOfStock: false,
     isArabic: isArabic(),
-    alsoAvailable: [],
     prevAlsoAvailable: [],
     exchangeReason: [],
   };
 
   componentDidMount() {
-    this.setSizeData();
+    // this.setSizeData();
     this.getExchangableItems();
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const { product } = props;
-
-    const { alsoAvailable, prevAlsoAvailable } = state;
-
-    const derivedState = {};
-
-    if (prevAlsoAvailable !== product["6s_also_available"]) {
-      Object.assign(derivedState, {
-        alsoAvailable: product["6s_also_available"],
-        prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
-      });
-    }
-    return Object.keys(derivedState).length ? derivedState : null;
   }
 
   containerProps = () => {
@@ -97,119 +79,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     };
   };
 
-  setSizeData = () => {
-    const { product } = this.props;
-
-    if (product.simple_products !== undefined) {
-      const { simple_products, size_eu } = product;
-
-      const filteredProductKeys = Object.keys(simple_products)
-        .reduce((acc, key) => {
-          const {
-            size: { eu: productSize },
-          } = simple_products[key];
-          acc.push([size_eu.indexOf(productSize), key]);
-          return acc;
-        }, [])
-        .sort((a, b) => {
-          if (a[0] < b[0]) {
-            return -1;
-          }
-          if (a[0] > b[0]) {
-            return 1;
-          }
-          return 0;
-        })
-        .reduce((acc, item) => {
-          acc.push(item[1]);
-          return acc;
-        }, []);
-
-      const filteredProductSizeKeys = Object.keys(
-        product.simple_products[filteredProductKeys[0]].size || {}
-      );
-
-      let object = {
-        sizeCodes: filteredProductKeys || [],
-        sizeTypes: filteredProductSizeKeys?.length ? ["eu", "uk", "us"] : [],
-      };
-
-      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
-        const sizeCode = size[0];
-        const { quantity } = size[1];
-
-        if (quantity !== null && quantity !== undefined) {
-          acc.push(sizeCode);
-        }
-
-        return acc;
-      }, []);
-
-      object.sizeCodes = allSizes;
-
-      if (
-        filteredProductKeys.length <= 1 &&
-        filteredProductSizeKeys.length === 0
-      ) {
-        this.setState({
-          insertedSizeStatus: false,
-          sizeObject: object,
-        });
-        return;
-      }
-
-      if (
-        filteredProductKeys.length > 1 &&
-        filteredProductSizeKeys.length === 0
-      ) {
-        const object = {
-          sizeCodes: [filteredProductKeys[1]],
-          sizeTypes: filteredProductSizeKeys,
-        };
-
-        this.setState({
-          insertedSizeStatus: false,
-          sizeObject: object,
-        });
-        return;
-      }
-
-      this.setState({
-        sizeObject: object,
-      });
-      return;
-    }
-    this.setState({
-      insertedSizeStatus: false,
-      sizeObject: {
-        sizeCodes: [],
-        sizeTypes: [],
-      },
-    });
-    return;
-  };
-
-  onSizeSelect({ target }) {
-    const { value } = target;
-    const {
-      product: { simple_products: productStock },
-    } = this.props;
-    const { isOutOfStock } = this.state;
-    let outOfStockVal = isOutOfStock;
-    if (productStock && productStock[value]) {
-      const selectedSize = productStock[value];
-      if (
-        selectedSize["quantity"] !== undefined &&
-        selectedSize["quantity"] !== null &&
-        (typeof selectedSize["quantity"] === "string"
-          ? parseInt(selectedSize["quantity"], 0) === 0
-          : selectedSize["quantity"] === 0)
-      ) {
-        outOfStockVal = true;
-      } else {
-        outOfStockVal = false;
-      }
-    }
+  onSizeSelect(value, outOfStockVal) {
     this.setState({
       selectedSizeCode: value,
       isOutOfStock: outOfStockVal,
