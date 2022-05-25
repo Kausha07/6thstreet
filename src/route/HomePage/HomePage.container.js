@@ -122,8 +122,8 @@ export class HomePageContainer extends PureComponent {
       countryName == "Saudi Arabia" ? "KSA" : countryName;
     const homePageMetaTitle =
       pagePathName == "/"
-      // Static gender name used for arabic transaltions
-        ? __(
+        ? // Static gender name used for arabic transaltions
+          __(
             "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
             countryNameConfig
           )
@@ -139,11 +139,11 @@ export class HomePageContainer extends PureComponent {
           )
         : pagePathName == "/kids.html"
         ? __(
-            "Online Shopping for %s Shoes, Clothing, Bags & more on 6thStreet %s",
+            "Online Shopping for Kids Shoes, Clothing, Bags & more on 6thStreet",
             countryNameConfig
           )
         : __(
-            "Online Shopping for Kids Shoes, Clothing, Bags & more on 6thStreet",
+            "Online Shopping for %s Shoes, Clothing, Bags & more on 6thStreet %s",
             genderName,
             countryName
           );
