@@ -359,6 +359,9 @@
       margin-top: 15px;
       font-size: 15px;
       margin-bottom: 0;
+      width: 245.39px;
+      height: auto;
+      margin-right: 7.92px;
       @include before-desktop() {
         font-size: 12px;
       }
@@ -482,7 +485,7 @@
     .Image {
       .LazyLoad-wrapper {
         img {
-          width: 100px !important;
+          // width: 100px !important;
           grid-column: 1;
           grid-row: auto;
         }
