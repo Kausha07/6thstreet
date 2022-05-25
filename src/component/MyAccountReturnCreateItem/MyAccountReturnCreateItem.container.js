@@ -31,8 +31,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   };
 
   state = {
-    products: [],
-    product: [],
+    availableProducts: [],
     alsoAvailable: [],
     isAlsoAvailable: true,
     firstLoad: true,
@@ -41,30 +40,22 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     insertedSizeStatus: false,
   };
 
-  componentDidMount() {
-    const { firstLoad, products = [] } = this.state;
-
-    if (firstLoad && !products.length) {
-      // this.getAvailableProducts();
-    }
-  }
-
   getAvailableProducts(product) {
     const alsoAvailable = product["6s_also_available"];
-    console.log("muskan ", product, alsoAvailable);
     alsoAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
-        let { products = [] } = this.state;
+        let { availableProducts = [] } = this.state;
 
         if (productData.nbHits === 1) {
-          this.setState({ products: [...products, productData.data] });
-          products = this.state?.products || [];
+          this.setState({
+            availableProducts: [...availableProducts, productData.data],
+          });
+          availableProducts = this.state?.availableProducts || [];
         }
 
         this.setState({
-          isAlsoAvailable: products.length === 0,
+          isAlsoAvailable: availableProducts.length === 0,
           alsoAvailable,
-          product,
         });
       })
     );
@@ -165,12 +156,11 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     return;
   };
 
-  onAvailSizeSelect({ target }) {
+  onAvailSizeSelect({ target }, itemId) {
     const { value } = target;
-    const { onSizeSelect } = this.props;
-    const {
-      product: { simple_products: productStock },
-    } = this.state;
+    const { onSizeSelect, products } = this.props;
+    let filteredProduct = products[itemId];
+    const { simple_products: productStock } = filteredProduct;
     const { isOutOfStock } = this.state;
     let outOfStockVal = isOutOfStock;
     if (productStock && productStock[value]) {
@@ -187,12 +177,13 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         outOfStockVal = false;
       }
     }
-    onSizeSelect(value, outOfStockVal);
+    onSizeSelect(value, outOfStockVal, itemId);
   }
 
   containerFunctions = {
     onClick: this.onClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
+    onAvailSizeSelect: this.onAvailSizeSelect.bind(this),
   };
 
   onReasonChange(value) {
@@ -211,13 +202,36 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     } = this.props;
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
-      onClick(item_id, isSelected);
-      const { product } = this.getAvailableProduct(config_sku);
-      console.log("muskan000000000000>",product);
-      if (product) {
-        this.getAvailableProducts(product);
-        this.setSizeData(product);
-      }
+      this.getAvailableProduct(config_sku).then((currentProduct) => {
+        if (currentProduct) {
+          onClick(item_id, isSelected, currentProduct.data);
+          this.getAvailableProducts(currentProduct.data);
+          this.setSizeData(currentProduct.data);
+        }
+        return { isSelected };
+      });
+    });
+  }
+  onClick() {
+    const {
+      onClick,
+      item: { item_id, config_sku },
+    } = this.props;
+    this.setState(({ isSelected: prevIsSelected }) => {
+      const isSelected = !prevIsSelected;
+      this.getAvailableProduct(config_sku).then((currentProduct) => {
+        if (currentProduct) {
+          if (isSelected) {
+            onClick(item_id, isSelected, currentProduct.data);
+          } else {
+            onClick(item_id, isSelected, null);
+          }
+
+          this.getAvailableProducts(currentProduct.data);
+          this.setSizeData(currentProduct.data);
+        }
+      });
+
       return { isSelected };
     });
   }
@@ -227,9 +241,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     const {
       isSelected,
       isAlsoAvailable,
-      products,
+      availableProducts,
       alsoAvailable,
-      product,
       sizeObject,
     } = this.state;
 
@@ -239,8 +252,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       reasonId,
       isAlsoAvailable,
       alsoAvailable,
-      products,
-      product,
+      availableProducts,
       sizeObject,
       resolutions: this.getResolutionOptions(),
       reasonOptions: this.getReasonOptions(),

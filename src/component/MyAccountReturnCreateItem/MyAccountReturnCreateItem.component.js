@@ -98,7 +98,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         discount_percent,
         discount_amount,
         size: sizeField,
-        qty,
+        exchangeable_qty = 0,
         qty_shipped,
       },
     } = this.props;
@@ -114,10 +114,16 @@ export class MyAccountReturnCreateItem extends PureComponent {
               <span>{color}</span>
             </p>
           )}
-          {!!qty && (
+          {!!qty_shipped && !isExchange && (
             <p>
               {__("Qty: ")}
-              <span>{+qty}</span>
+              <span>{+qty_shipped}</span>
+            </p>
+          )}
+          {!!exchangeable_qty && isExchange && (
+            <p>
+              {__("Qty: ")}
+              <span>{+exchangeable_qty}</span>
             </p>
           )}
           {!!size && (
@@ -166,12 +172,14 @@ export class MyAccountReturnCreateItem extends PureComponent {
       sizeObject = {},
       isArabic,
       isOutOfStock,
-      product,
+      products,
+      item: { item_id },
     } = this.props;
+
     if (isOutOfStock) {
       return null;
     }
-
+    let finalProduct = products[item_id];
     if (sizeObject.sizeTypes !== undefined) {
       return (
         <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{ isArabic }}>
@@ -183,7 +191,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
             onChange={onSizeTypeSelect}
           >
             {sizeObject.sizeTypes.map((type = "") => {
-              if (product[`size_${type}`].length > 0) {
+              if (finalProduct[`size_${type}`].length > 0) {
                 return (
                   <option
                     key={type}
@@ -206,7 +214,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onAvailSizeSelect } = this.props;
+    const {
+      selectedSizeCodes,
+      onAvailSizeSelect,
+      item: { item_id },
+    } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
       fontSize: "14px",
@@ -215,7 +227,15 @@ export class MyAccountReturnCreateItem extends PureComponent {
       letterSpacing: 0,
       backgroundColor: "#000000",
     };
-    const isCurrentSizeSelected = selectedSizeCode === code;
+    let filteredSizeCode = Object.entries(selectedSizeCodes).filter(
+      ([order_item_id, { value }]) => {
+        if (order_item_id === item_id) {
+          return value === code;
+        }
+      }
+    );
+    const isCurrentSizeSelected =
+      filteredSizeCode.length > 0 ? filteredSizeCode[0] : false;
     if (isNotAvailable) {
       return null;
     }
@@ -226,7 +246,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         key={v4()}
         className="SizeOptionList"
         onClick={() => {
-          onAvailSizeSelect({ target: { value: code } });
+          onAvailSizeSelect({ target: { value: code } }, item_id);
         }}
       >
         <input
@@ -246,14 +266,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
           >
             {label}
           </label>
-          {/* {isNotAvailable && (
-                <Image
-                  lazyLoad={false}
-                  src={StrikeThrough}
-                  className="lineImg"
-                  style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
-                />
-              )} */}
         </div>
         <div />
       </div>
@@ -262,16 +274,18 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   getSizeSelect = () => {
     const {
-      product: { simple_products: productStock },
-      product,
+      products,
+      item: { item_id, size = {} },
       isArabic,
       sizeObject,
       selectedSizeType,
     } = this.props;
+    let filteredProductStock = products[item_id];
+    const { simple_products: productStock } = filteredProductStock;
     if (
       sizeObject?.sizeCodes !== undefined &&
       Object.keys(productStock || []).length !== 0 &&
-      product[`size_${selectedSizeType}`].length !== 0
+      filteredProductStock[`size_${size["label"].toLowerCase()}`].length !== 0
     ) {
       return (
         <div
@@ -308,9 +322,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
               </h2>
             </div>
             <div block="SizeParentWrapper">
-              <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
+              {/* <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
                 {this.getSizeTypeSelect()}
-              </div>
+              </div> */}
               <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
                 {this.getSizeSelect()}
               </div>
@@ -322,9 +336,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
   };
 
   renderAvailableProducts = () => {
-    const { onAvailableProductSelect, selectedAvailProduct, products } =
+    const { onAvailableProductSelect, selectedAvailProduct, availableProducts } =
       this.props;
-    return products.map((product) => {
+    return availableProducts.map((product) => {
       const { sku, thumbnail_url, color } = product;
 
       return (
@@ -351,11 +365,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
   };
 
   renderAvailableItemsSection = () => {
-    const {
-      product: { sku },
-      isLoading,
-      alsoAvailable,
-    } = this.props;
+    const { isLoading, alsoAvailable } = this.props;
 
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
@@ -373,14 +383,20 @@ export class MyAccountReturnCreateItem extends PureComponent {
   };
 
   isReasonSelected = () => {
-    const { reasonId, reasonOptions } = this.props;
+    const {
+      reasonId,
+      reasonOptions,
+      selectedItems,
+      item: { item_id },
+    } = this.props;
     let finalReason = "";
-    reasonOptions.filter((reason) => {
-      if (reason.id === reasonId) {
-        finalReason = reason.label;
-      }
-    });
-    return finalReason;
+    // reasonOptions.filter((reason) => {
+    //   if (reason.id === reasonId) {
+    //     finalReason = reason.label;
+    //   }
+    // });
+
+    return selectedItems[item_id];
   };
 
   render() {
@@ -399,11 +415,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
             {this.renderReasons()}
           </div>
         )}
-        {this.isReasonSelected() === "Wrong Color" &&
-          this.renderAvailableItemsSection()}
-        {(this.isReasonSelected() === "Wrong Size" ||
-          this.isReasonSelected() === "Unfit") &&
-          this.renderSizeContent()}
+        {this.isReasonSelected() && isSelected && (
+          <>
+            {this.renderSizeContent()}
+            {this.renderAvailableItemsSection()}
+          </>
+        )}
       </div>
     );
   }
