@@ -120,10 +120,10 @@ export class HomePageContainer extends PureComponent {
     const pagePathName = new URL(window.location.href).pathname;
     const countryNameConfig =
       countryName == "Saudi Arabia" ? "KSA" : countryName;
+
     const homePageMetaTitle =
       pagePathName == "/"
-        ? // Static gender name used for arabic transaltions
-          __(
+        ? __(
             "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
             countryNameConfig
           )
