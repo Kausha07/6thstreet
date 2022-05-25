@@ -139,7 +139,7 @@ export class HomePageContainer extends PureComponent {
           )
         : pagePathName == "/kids.html"
         ? __(
-            "Online Shopping for Kids Shoes, Clothing, Bags & more on 6thStreet",
+            "Online Shopping for Kids Shoes, Clothing, Bags & more on 6thStreet %s",
             countryNameConfig
           )
         : __(
