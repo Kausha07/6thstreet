@@ -68,7 +68,9 @@ export class MyAccountExchangeCreate extends PureComponent {
   }
 
   renderActions() {
-    const { handleDiscardClick, selectedNumber } = this.props;
+    const { handleDiscardClick, selectedNumber,selectedSizeCodes,selectedItems } = this.props;
+    const sizeCodesLength = Object.keys(selectedSizeCodes).length
+    const selectedItemsLength = Object.keys(selectedItems).length
     const submitText =
       selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)
@@ -89,6 +91,7 @@ export class MyAccountExchangeCreate extends PureComponent {
             block="MyAccountExchangeCreate"
             elem="ButtonSubmit"
             type="submit"
+            disabled={sizeCodesLength < selectedItemsLength}
             mix={{ block: "Button" }}
           >
             {submitText}
