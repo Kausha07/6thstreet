@@ -3,8 +3,6 @@ import {
     HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
     HOME_PAGE_BANNER_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
-// import { getUUID } from "Util/Auth";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
@@ -65,108 +63,12 @@ class ExploreMore extends PureComponent {
     }
 
     componentDidMount() {
-        // if (this.props.items.length < 8) {
-        //     let setting = JSON.parse(JSON.stringify(this.state.settings));
-        //     setting.responsive[1024].items = this.props.items.length;
-        //     this.setState((prevState) => ({
-        //         ...prevState,
-        //         settings: {
-        //             ...prevState.settings,
-        //             responsive: {
-        //                 ...prevState.settings.responsive,
-        //                 1024: {
-        //                     ...prevState.settings.responsive[1024],
-        //                     items: this.props.items.length,
-        //                 },
-        //             },
-        //         },
-        //     }));
-        // }
-        // this.registerViewPortEvent();
     }
-    registerViewPortEvent() {
-        let observer;
 
-        let options = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0.5,
-        };
-
-        observer = new IntersectionObserver(this.handleIntersect, options);
-        observer.observe(this.viewElement);
-    }
-    sendImpressions() {
-        const { items = [] } = this.props;
-        const getStoreName = this.props?.promotion_name
-            ? this.props?.promotion_name
-            : "";
-        items.forEach((item) => {
-            Object.assign(item, { store_code: getStoreName });
-        });
-        Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-        this.setState({ impressionSent: true });
-    }
-    handleIntersect = (entries, observer) => {
-        const { impressionSent } = this.state;
-        if (impressionSent) {
-            return;
-        }
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                this.sendImpressions();
-            }
-        });
-    };
-
-    registerViewPortEvent() {
-        let observer;
-
-        let options = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0.5,
-        };
-
-        observer = new IntersectionObserver(this.handleIntersect, options);
-        observer.observe(this.viewElement);
-    }
-    sendImpressions() {
-        const { items = [] } = this.props;
-        const getStoreName = this.props?.promotion_name
-            ? this.props?.promotion_name
-            : "";
-        items.forEach((item) => {
-            Object.assign(item, { store_code: getStoreName });
-        });
-        Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-        this.setState({ impressionSent: true });
-    }
-    handleIntersect = (entries, observer) => {
-        const { impressionSent } = this.state;
-        if (impressionSent) {
-            return;
-        }
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                this.sendImpressions();
-            }
-        });
-    };
 
     onclick = (item) => {
-        const { index } = this.props;
-        let banner = {
-            link: item.link,
-            promotion_name: item.promotion_name,
-        };
-        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
-        this.sendBannerClickImpression(item);
-        this.props.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
+        //event for explore more
     };
-    sendBannerClickImpression(item) {
-        Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
-    }
 
     renderSliderWithLabel = (item, i) => {
         let height = this.props.data.image_size.height
@@ -252,24 +154,27 @@ class ExploreMore extends PureComponent {
 
     renderSliderWithLabels() {
         let items = this.props.data.items
-
-        return (
-            <DragScroll
-                data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
-            >
-                <div
-                    block="SliderWithLabelWrapper"
-                    id="SliderWithLabelWrapper"
-                    ref={this.cmpRef}
-                    onScroll={this.handleContainerScroll}
+        if (items.length > 0) {
+            return (
+                <DragScroll
+                    data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
                 >
-                    <div className="SliderHelper"></div>
-                    {items.map(this.renderSliderWithLabel)}
-                    <div className="SliderHelper"></div>
-                </div>
-                {this.renderScrollbar()}
-            </DragScroll>
-        );
+                    <div
+                        block="SliderWithLabelWrapper"
+                        id="SliderWithLabelWrapper"
+                        ref={this.cmpRef}
+                        onScroll={this.handleContainerScroll}
+                    >
+                        <div className="SliderHelper"></div>
+                        {items.map(this.renderSliderWithLabel)}
+                        <div className="SliderHelper"></div>
+                    </div>
+                    {this.renderScrollbar()}
+                </DragScroll>
+            );
+        }
+
+
     }
 
     render() {
