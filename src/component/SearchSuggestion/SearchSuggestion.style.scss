@@ -91,6 +91,9 @@
       overflow: scroll;
       li {
         margin-top: 20px !important;
+        width: 245.39px;
+        height: auto;
+        margin-right: 7.92px;
         a {
           &:hover {
             text-decoration: none;
@@ -359,9 +362,7 @@
       margin-top: 15px;
       font-size: 15px;
       margin-bottom: 0;
-      width: 245.39px;
-      height: auto;
-      margin-right: 7.92px;
+
       @include before-desktop() {
         font-size: 12px;
       }
