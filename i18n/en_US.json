@@ -830,5 +830,10 @@
     "State/Province": null,
     "This is default Billing Address": null,
     "This is default Shipping Address": null,
-    "Zip/Postal code": null
+    "Zip/Postal code": null,
+    "Return/Exchange an Item": null,
+    "Return/Exchange Statement": null,
+    "Return/Exchange": null,
+    "Return/Exchange Item": null,
+    "Select a Color": null
 }

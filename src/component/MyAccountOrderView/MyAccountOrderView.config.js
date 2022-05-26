@@ -14,6 +14,8 @@ export const CANCEL_ITEM_LABEL = __("Cancel an Item");
 
 export const RETURN_ITEM_LABEL = __("Return an Item");
 
+export const RETURN__EXCHANGE_ITEM_LABEL = __("Return/Exchange Item");
+
 export const EXCHANGE_ITEM_LABEL = __("Exchange an Item");
 
 export const STATUS_LABEL_MAP = {

@@ -43,7 +43,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     selectedSizeCode: "",
     selectedSizeCodes: {},
     selectedSizeType: "eu",
-    selectedAvailProduct: "",
+    selectedAvailProduct: {},
     isOutOfStock: false,
     isArabic: isArabic(),
     prevAlsoAvailable: [],
@@ -96,17 +96,18 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
-  onAvailableProductSelect(event) {
-    const { selectedAvailProduct } = this.state;
-    if (selectedAvailProduct === event.target.id) {
-      this.setState({
-        selectedAvailProduct: "",
-      });
-    } else {
-      this.setState({
-        selectedAvailProduct: event.target.id,
-      });
-    }
+  onAvailableProductSelect(event, itemId) {
+    const id = event.target.id;
+    const {
+      selectedAvailProduct: { [itemId]: item },
+    } = this.state;
+
+    this.setState(({ selectedAvailProduct }) => ({
+      selectedAvailProduct: {
+        ...selectedAvailProduct,
+        [itemId]: { ...item, id },
+      },
+    }));
   }
 
   onDiscardClick() {
@@ -186,9 +187,6 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
 
     this.setState({
       reasonId: reasonId,
-      selectedSizeCode: "",
-      selectedSizeType: "eu",
-      selectedAvailProduct: "",
     });
   }
 
@@ -200,6 +198,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       items,
       selectedSizeCodes,
       products = {},
+      selectedAvailProduct,
     } = this.state;
     const payload = {
       parent_order_id: this.getOrderId(),
@@ -220,6 +219,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
               currentSizeCode = selectedSizeCodes[sizeCode]["value"];
             }
           });
+          let finalCsku =
+            selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
+              ? selectedAvailProduct[item_id]["id"]
+              : null;
           let sizeValue =
             productStock[currentSizeCode].size[
               `${size["label"].toLowerCase()}`
@@ -227,7 +230,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           return {
             parent_order_item_id: order_item_id,
             exchange_sku: currentSizeCode,
-            exchange_csku: config_sku,
+            exchange_csku: finalCsku ? finalCsku : config_sku,
             options: [
               {
                 option_id: size["label"].toUpperCase(),

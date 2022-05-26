@@ -136,9 +136,8 @@ class MyAccountOrderView extends PureComponent {
   renderTitle() {
     const { isArabic } = this.state;
     const {
-      order: { groups = [], increment_id },
+      order: { increment_id },
     } = this.props;
-    console.log("muskan----------->",this.props.order);
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">

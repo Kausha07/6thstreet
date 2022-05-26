@@ -9,7 +9,10 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
-import { RETURN_ITEM_LABEL } from "Component/MyAccountOrderView/MyAccountOrderView.config.js";
+import {
+  RETURN_ITEM_LABEL,
+  RETURN__EXCHANGE_ITEM_LABEL,
+} from "Component/MyAccountOrderView/MyAccountOrderView.config.js";
 import MyAccountReturns from "Component/MyAccountReturns";
 import MyAccountStoreCredit from "Component/MyAccountStoreCredit";
 import MyAccountTabList from "Component/MyAccountTabList";
@@ -237,14 +240,14 @@ export class MyAccount extends SourceMyAccount {
           ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
-                {alternativePageName || returnTitle || name}
+                {isReturnButton ? __("Return/Exchange") :alternativePageName || returnTitle || name}
               </h1>
               <button
                 block="MyAccount"
                 elem="ReturnButton"
                 onClick={this.returnItemButtonClick}
               >
-                {RETURN_ITEM_LABEL}
+                {RETURN__EXCHANGE_ITEM_LABEL}
               </button>
             </div>
           )}

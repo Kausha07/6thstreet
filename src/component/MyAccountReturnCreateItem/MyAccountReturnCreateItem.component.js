@@ -336,17 +336,26 @@ export class MyAccountReturnCreateItem extends PureComponent {
   };
 
   renderAvailableProducts = () => {
-    const { onAvailableProductSelect, selectedAvailProduct, availableProducts } =
-      this.props;
+    const {
+      onAvailableProductSelect,
+      selectedAvailProduct,
+      item: { item_id },
+      availableProducts,
+    } = this.props;
     return availableProducts.map((product) => {
       const { sku, thumbnail_url, color } = product;
 
       return (
         <li
           block="PDPAlsoAvailableProduct"
-          elem={sku === selectedAvailProduct ? "selectedProduct" : ""}
+          elem={
+            selectedAvailProduct[item_id] &&
+            sku === selectedAvailProduct[item_id]["id"]
+              ? "selectedProduct"
+              : ""
+          }
           id={sku}
-          onClick={onAvailableProductSelect}
+          onClick={(event) => onAvailableProductSelect(event, item_id)}
         >
           <div
             block="PDPAlsoAvailableProduct-Link"
@@ -371,6 +380,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
           <div block="PDPAlsoAvailable">
+            <div block="PDPAddToCart" elem="SizeInfoContainer">
+              <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
+                {__("Select a Color")}
+              </h2>
+            </div>
             <ul block="PDPAlsoAvailable" elem="List">
               {this.renderAvailableProducts()}
             </ul>
@@ -389,18 +403,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
       selectedItems,
       item: { item_id },
     } = this.props;
-    let finalReason = "";
-    // reasonOptions.filter((reason) => {
-    //   if (reason.id === reasonId) {
-    //     finalReason = reason.label;
-    //   }
-    // });
-
     return selectedItems[item_id];
   };
 
   render() {
-    const { isSelected } = this.props;
+    const { isSelected, isExchange } = this.props;
     return (
       <div block="MyAccountReturnCreateItem">
         <div block="MyAccountReturnCreateItem" elem="Content">
@@ -415,7 +422,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
             {this.renderReasons()}
           </div>
         )}
-        {this.isReasonSelected() && isSelected && (
+        {isExchange && this.isReasonSelected() && isSelected && (
           <>
             {this.renderSizeContent()}
             {this.renderAvailableItemsSection()}

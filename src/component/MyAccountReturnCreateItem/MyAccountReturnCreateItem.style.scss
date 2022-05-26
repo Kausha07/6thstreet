@@ -8,22 +8,22 @@
       border-bottom: 2px solid var(--color-gainsboro);
     }
   }
-  .PDPAlsoAvailable{
+  .PDPAlsoAvailable {
     margin-left: 40px;
     border-bottom: 2px solid var(--color-gainsboro);
 
-    .PDPAlsoAvailableProduct{
-      &-selectedProduct{
+    .PDPAlsoAvailableProduct {
+      &-selectedProduct {
         border: 1px solid var(--selected-step-color);
         padding: 6px;
       }
     }
-    li{
-      padding-left: 0px;
+    li {
+      padding: 6px;
       cursor: pointer;
     }
-    &-List{
-      margin-top: 0px;
+    li:not(:last-child) {
+      margin-right: 10px;
     }
   }
   .SizeParentWrapper {

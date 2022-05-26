@@ -9,6 +9,7 @@ import MyAccountReturnCreateList from "Component/MyAccountReturnCreateList";
 import MyAccountReturnList from "Component/MyAccountReturnList";
 import MyAccountReturnSuccess from "Component/MyAccountReturnSuccess";
 import MyAccountReturnView from "Component/MyAccountReturnView";
+import MyAccountExchangeView from "Component/MyAccountExchangeView";
 import { withStoreRegex } from "Component/Router/Router.component";
 
 import "./MyAccountReturns.style";
@@ -38,8 +39,16 @@ class MyAccountReturns extends PureComponent {
     return <MyAccountReturnView match={match} />;
   }
 
+  renderExchangeOrderView({ match }) {
+    return <MyAccountExchangeView match={match} />;
+  }
+
   renderCreateReturnSuccess({ match }) {
     return <MyAccountReturnSuccess match={match} />;
+  }
+
+  renderCreateExchangeSuccess({ match }) {
+    return <MyAccountExchangeView match={match} exchangeSuccess={true} />;
   }
 
   renderCreateCancelSuccess({ match }) {
@@ -78,6 +87,13 @@ class MyAccountReturns extends PureComponent {
         />
         <Route
           path={withStoreRegex(
+            "/my-account/exchange-item/create/success/:exchange"
+          )}
+          render={this.renderCreateExchangeSuccess}
+          exact
+        />
+        <Route
+          path={withStoreRegex(
             "/my-account/return-item/cancel/success/:cancelId"
           )}
           render={this.renderCreateCancelSuccess}
@@ -91,6 +107,11 @@ class MyAccountReturns extends PureComponent {
         <Route
           path={withStoreRegex("/my-account/return-item/:return")}
           render={this.renderOrderView}
+          exact
+        />
+        <Route
+          path={withStoreRegex("/my-account/exchange-item/:exchange")}
+          render={this.renderExchangeOrderView}
           exact
         />
       </Switch>
