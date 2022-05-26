@@ -56,6 +56,10 @@ class HeaderGenders extends PureComponent {
         {
             label: `${__('Home')}`,
             key: 'home'
+        },
+        {
+            label: `${__('All')}`,
+            key: 'all'
         }
     ];
 
