@@ -181,10 +181,11 @@ export class HeaderSearchContainer extends PureComponent {
   onSearchChange(search) {
     this.setState({ search });
     const SearchValue = sessionStorage.getItem("Searched_value");
+    const searchedQuery = typeof SearchValue == "object" ? JSON.stringify(SearchValue) : SearchValue;
     if (!SearchValue){
-      sessionStorage.setItem("Searched_value", "");
+      sessionStorage.setItem("Searched_value", " ");
     }
-    if ((search.length > 0 ) && (SearchValue.length < search.length)){
+    if ((search.length > 0 ) && (searchedQuery.length < search.length)){
       sessionStorage.setItem("Searched_value", search);
     }
     if(search?.length === 0) {
