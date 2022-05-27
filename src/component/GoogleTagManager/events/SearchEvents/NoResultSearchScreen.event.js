@@ -10,8 +10,8 @@ import BaseEvent from "../Base.event";
  * @type {number}
  */
 export const URL_REWRITE = "url-rewrite";
-export const SPAM_PROTECTION_DELAY = 700;
-export const EVENT_HANDLE_DELAY = 1000;
+export const SPAM_PROTECTION_DELAY = 200;
+export const EVENT_HANDLE_DELAY = 700;
 
 /**
  * GTM PWA Impression Event

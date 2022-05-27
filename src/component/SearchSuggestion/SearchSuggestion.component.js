@@ -24,6 +24,7 @@ import Event, {
   EVENT_CLICK_RECENT_SEARCHES_CLICK,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
@@ -395,24 +396,33 @@ class SearchSuggestion extends PureComponent {
     //     );
     //   }
     // }
-    if (products.length === 1 && fetchSKU) {
-      return (
-        <li>
+    const suggestionEventDipatch = (query) => {
+      if (query == searchString) {
+        Event.dispatch(
+          EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+          formatQuerySuggestions(query)
+        );
+      } else {
+        Event.dispatch(
+          EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+          formatQuerySuggestions(query)
+        );
+      }
+    };
+    const suggestionContent = () => {
+      if (products.length === 1 && fetchSKU) {
+        return (
           <Link
             to={fetchSKU?.url}
-            onClick={() =>
-              Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, formatQuerySuggestions(query))
-            }
+            onClick={() => suggestionEventDipatch(query)}
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
             </div>
           </Link>
-        </li>
-      );
-    } else {
-      return (
-        <li>
+        );
+      } else {
+        return (
           <Link
             to={{
               pathname: this.getCatalogUrl(
@@ -422,17 +432,16 @@ class SearchSuggestion extends PureComponent {
                 !brandValue?.includes("///") ? brandValue : null
               ),
             }}
-            onClick={() =>
-              Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, formatQuerySuggestions(query))
-            }
+            onClick={() => suggestionEventDipatch(query)}
           >
             <div className="suggestion-details-box">
               {getHighlightedText(formatQuerySuggestions(query), searchString)}
             </div>
           </Link>
-        </li>
-      );
-    }
+        );
+      }
+    };
+    return <li>{suggestionContent()}</li>;
   };
 
   renderQuerySuggestions() {

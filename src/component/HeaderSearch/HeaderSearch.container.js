@@ -8,7 +8,10 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import HeaderSearch from "./HeaderSearch.component";
-import Event, { EVENT_GTM_CLEAR_SEARCH } from "Util/Event";
+import Event, {
+  EVENT_GTM_CLEAR_SEARCH,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+} from "Util/Event";
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
 });
@@ -51,6 +54,9 @@ export class HeaderSearchContainer extends PureComponent {
     if (data && data.length === 1) {
       return data[0];
     }
+    if (data.length === 0) {
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+    }
     return null;
   };
 
@@ -58,9 +64,11 @@ export class HeaderSearchContainer extends PureComponent {
     const { history } = this.props;
     const { search } = this.state;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
-    let finalSearch = search.match(invalid)? encodeURIComponent(search):search
+    let finalSearch = search.match(invalid)
+      ? encodeURIComponent(search)
+      : search;
     const filteredItem = await this.checkForSKU(search);
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
     if (filteredItem) {
@@ -74,17 +82,17 @@ export class HeaderSearchContainer extends PureComponent {
       const productData = await new Algolia().searchBy(
         isArabic()
           ? {
-            query: search,
-            limit: PRODUCT_RESULT_LIMIT,
-            gender: getGenderInArabic(gender),
-            addAnalytics: true,
-          }
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: getGenderInArabic(gender),
+              addAnalytics: true,
+            }
           : {
-            query: search,
-            limit: PRODUCT_RESULT_LIMIT,
-            gender: gender,
-            addAnalytics: true,
-          }
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: true,
+            }
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
@@ -172,29 +180,46 @@ export class HeaderSearchContainer extends PureComponent {
   // }
 
   containerProps = () => {
-    const { focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP,handleHomeSearchClick } = this.props;
+    const {
+      focusInput,
+      renderMySignInPopup,
+      isPDP,
+      isPDPSearchVisible,
+      isPLP,
+      handleHomeSearchClick,
+    } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput, renderMySignInPopup, isPDP, isPDPSearchVisible,isPLP,handleHomeSearchClick };
+    return {
+      search,
+      focusInput,
+      renderMySignInPopup,
+      isPDP,
+      isPDPSearchVisible,
+      isPLP,
+      handleHomeSearchClick,
+    };
   };
 
   onSearchChange(search) {
     this.setState({ search });
     const SearchValue = sessionStorage.getItem("Searched_value");
-    const searchedQuery = typeof SearchValue == "object" ? JSON.stringify(SearchValue) : SearchValue;
-    if (!SearchValue){
+    const searchedQuery =
+      typeof SearchValue == "object"
+        ? JSON.stringify(SearchValue)
+        : SearchValue;
+    if (!SearchValue) {
       sessionStorage.setItem("Searched_value", " ");
     }
-    if ((search.length > 0 ) && (searchedQuery.length < search.length)){
+    if (search.length > 0 && searchedQuery.length < search.length) {
       sessionStorage.setItem("Searched_value", search);
     }
-    if(search?.length === 0) {
-      Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue );
-      if (sessionStorage.hasOwnProperty("Searched_value")){
-      sessionStorage.removeItem("Searched_value");
+    if (search?.length === 0) {
+      Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue);
+      if (sessionStorage.hasOwnProperty("Searched_value")) {
+        sessionStorage.removeItem("Searched_value");
+      }
     }
-    }
-    
   }
 
   onSearchClean() {
