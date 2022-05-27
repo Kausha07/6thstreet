@@ -805,7 +805,7 @@ export class CartItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border },
+        full_item_info: { cross_border = 0 },
       },
     } = this.props;
     const { isNotAvailble } = this.state;

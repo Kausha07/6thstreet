@@ -38,6 +38,8 @@ import { Shipping } from "Component/Icons";
 import ClubApparel from "./icons/club-apparel.png";
 import CDN from "../../util/API/provider/CDN";
 
+import EmptyCardIcon from "./icons/cart.svg";
+
 import "./CartPage.style";
 
 export class CartPage extends PureComponent {
@@ -695,6 +697,35 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderEmptyCartPageForMobile() {
+    const { isArabic } = this.state;
+
+    return (
+      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
+        {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
+        <div block="CartPage" elem="EmptyCartImg">
+          {/* <image src={EmptyCardIcon}/> */}
+          <Image 
+          src={EmptyCardIcon}
+          />
+        </div>
+        <p block="CartPage" elem="EmptyCartText">
+          {__("Your bag is empty!")}
+        </p>
+        <p block="CartPage" elem="EmptyCartTextDec">
+          {__("Time to add some awesome stuff to your shopping bag")}
+        </p>
+        <div block="ExploreNowBtn">
+            <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
+              <span block="ExploreNowBtn" elem="ExploreButtonText">
+                {__("Explore now")}
+              </span>
+            </Link>
+        </div>
+      </div>
+    );
+  }
+
   renderDynamicContent() {
     const {
       totals = {},
@@ -708,8 +739,19 @@ export class CartPage extends PureComponent {
     ).data;
     
     // if cart is not created and user goes to cart page in mobile view.
+    
+    const isMobiledev = isMobile ? isMobile.any() : false;
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
+
+    if(isMobiledev && !cart_id){
+      return (
+        <div block="CartPage" elem="Static" mods={{ isArabic }}>
+          {this.renderHeading()}
+          {this.renderEmptyCartPageForMobile()}
+        </div>
+      );
+    }
 
     if(!cart_id){
       return (
@@ -725,6 +767,14 @@ export class CartPage extends PureComponent {
     }
 
     if (Object.keys(totals).length === 0 || items.length === 0) {
+      if(isMobiledev){
+        return (
+          <div block="CartPage" elem="Static" mods={{ isArabic }}>
+            {this.renderHeading()}
+            {this.renderEmptyCartPageForMobile()}
+          </div>
+        );
+      }
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderHeading()}
@@ -744,7 +794,7 @@ export class CartPage extends PureComponent {
           <Loader isLoading={processingRequest} />
           <div
             style={{
-              marginBottom: `${isMobile.any()
+              marginBottom: `${isMobile
                 ? this.dynamicHeight?.current?.clientHeight + additionalMargin
                 : 0
                 }px`,
