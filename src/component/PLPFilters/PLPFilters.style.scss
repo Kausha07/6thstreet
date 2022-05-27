@@ -462,6 +462,7 @@
         width: 115px;
       }
     }
+    
   }
 
 
@@ -475,7 +476,7 @@
     width: 261px;
     top: 153px;
     height: 80vh;
-    overflow: scroll;
+    // overflow: scroll; // remove it for 2663 revert it if it creates issue.
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     &::-webkit-scrollbar {
