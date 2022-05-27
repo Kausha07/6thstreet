@@ -709,12 +709,12 @@ class PDPDetailsSection extends PureComponent {
 
     const {
       opening_hours: { [language]: openHoursLabel },
-      // toll_free: phone,
-    } = countries[country];
+      contact_using : { options : { phone } }
+    } = countries[country]; 
 
     return {
       openHoursLabel,
-      // toll_free,
+      phone,
     };
   }
   chat() {
@@ -724,13 +724,13 @@ class PDPDetailsSection extends PureComponent {
   }
   renderContactUs() {
     const { config } = this.props;
-    const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    const { openHoursLabel, phone } = this.getCountryConfigs();
     return (
       <div block="ContactUs">
         <div block="ContactUs" elem="Icons">
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
-              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+              <a href={`tel:${ phone }`} target="_blank" rel="noreferrer">
                 <Phone />
               </a>
             </div>
