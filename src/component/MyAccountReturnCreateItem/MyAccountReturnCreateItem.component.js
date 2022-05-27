@@ -295,8 +295,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
-
-            if (label) {
+            if (label && label !== `${size["value"]}`) {
               acc.push(this.renderSizeOption(productStock, code, label));
             }
 
@@ -398,8 +397,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   isReasonSelected = () => {
     const {
-      reasonId,
-      reasonOptions,
       selectedItems,
       item: { item_id },
     } = this.props;

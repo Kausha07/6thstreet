@@ -35,8 +35,7 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItem = (item) => {
     const { item_id } = item;
-    const { onItemClick, onReasonChange, resolutions, reasonId } =
-      this.props;
+    const { onItemClick, onReasonChange, resolutions, reasonId } = this.props;
 
     if (!item.is_exchangeable) {
       return false;
@@ -67,10 +66,31 @@ export class MyAccountExchangeCreate extends PureComponent {
     );
   }
 
+  getSelectedReason = () => {
+    const { selectedItems, reasonId } = this.props;
+    let selectedReason = Object.values(selectedItems).filter((item) => {
+      if (item["reasonId"] === reasonId) {
+        return item;
+      }
+    });
+    return selectedReason;
+  };
+
   renderActions() {
-    const { handleDiscardClick, selectedNumber,selectedSizeCodes,selectedItems } = this.props;
-    const sizeCodesLength = Object.keys(selectedSizeCodes).length
-    const selectedItemsLength = Object.keys(selectedItems).length
+    const {
+      handleDiscardClick,
+      selectedNumber,
+      selectedSizeCodes,
+      selectedItems,
+      selectedAvailProduct,
+    } = this.props;
+    const sizeCodesLength = Object.keys(selectedSizeCodes).length;
+    const selectedItemsLength = Object.keys(selectedItems).length;
+    const selectedAvailProductLength = Object.keys(selectedAvailProduct).length;
+    const isDisabled =
+      this.getSelectedReason() === "Wrong Color"
+        ? selectedAvailProductLength < selectedItemsLength
+        : sizeCodesLength < selectedItemsLength;
     const submitText =
       selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)
@@ -91,7 +111,7 @@ export class MyAccountExchangeCreate extends PureComponent {
             block="MyAccountExchangeCreate"
             elem="ButtonSubmit"
             type="submit"
-            disabled={sizeCodesLength < selectedItemsLength}
+            disabled={isDisabled}
             mix={{ block: "Button" }}
           >
             {submitText}

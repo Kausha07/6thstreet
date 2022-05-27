@@ -49,7 +49,7 @@ import {
   EXCHANGE_ITEM_LABEL,
   STATUS_LABEL_MAP,
   NEW_STATUS_LABEL_MAP,
-  STATUS_PROCESSING,
+  NEW_EXCHANGE_STATUS_LABEL_MAP,
   STATUS_DISPATCHED,
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
@@ -156,11 +156,12 @@ class MyAccountOrderView extends PureComponent {
         is_returnable,
         is_cancelable,
         is_exchangeable,
+        is_exchange_order
       },
     } = this.props;
     const buttonText =
       status === STATUS_COMPLETE
-        ? is_exchangeable
+        ? is_exchangeable && is_exchange_order === 1
           ? EXCHANGE_ITEM_LABEL
           : RETURN_ITEM_LABEL
         : CANCEL_ITEM_LABEL;
@@ -213,7 +214,7 @@ class MyAccountOrderView extends PureComponent {
                 {CANCEL_ITEM_LABEL}
               </button>
             </div>
-          ) : is_returnable && is_exchangeable ? (
+          ) : is_returnable && is_exchangeable && is_exchange_order === 1 ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
                 {RETURN_ITEM_LABEL}
@@ -229,7 +230,7 @@ class MyAccountOrderView extends PureComponent {
               </button>
             </div>
           )
-        ) : status === STATUS_COMPLETE && is_exchangeable ? (
+        ) : status === STATUS_COMPLETE && is_exchangeable && is_exchange_order === 1 ? (
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
               {buttonText}
@@ -357,6 +358,9 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordionProgress(status, item) {
     const displayStatusBar = this.shouldDisplayBar(status);
+    const {
+      order: { is_exchange_order: exchangeCount },
+    } = this.props;
     if (!displayStatusBar) {
       return null;
     }
@@ -368,7 +372,10 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Processing" || item.status === "processing"
         ? item.items[0]?.edd_msg_color
         : item?.edd_msg_color;
-    const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
+    const STATUS_LABELS =
+      exchangeCount === 1
+        ? Object.assign({}, NEW_EXCHANGE_STATUS_LABEL_MAP)
+        : Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
         block="MyAccountOrderView"

@@ -223,6 +223,16 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
               ? selectedAvailProduct[item_id]["id"]
               : null;
+          let finalSize =
+            selectedSizeCodes[item_id] && selectedSizeCodes[item_id]["value"]
+              ? selectedSizeCodes[item_id]["value"]
+              : null;
+          let finalSizeValue = null;
+          if (finalSize) {
+            finalSizeValue =
+              productStock[finalSize].size[`${size["label"].toLowerCase()}`];
+          }
+
           let sizeValue =
             productStock[currentSizeCode].size[
               `${size["label"].toLowerCase()}`
@@ -234,7 +244,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             options: [
               {
                 option_id: size["label"].toUpperCase(),
-                option_value: sizeValue,
+                option_value: finalSizeValue ? finalSizeValue : sizeValue,
               },
             ],
             exchange_qty: 1,
@@ -244,8 +254,6 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       ),
     };
     this.setState({ isLoading: true });
-    console.log("muskan----->", payload);
-
     // const res = {
     //   order_id: order_id,
     //   increment_id: increment_id,
@@ -262,14 +270,14 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     //     }
     //   }
     // }
-    // MagentoAPI.post("exchange/create-order", payload)
-    //   .then(({ data: { id, order_id } }) => {
-    //     history.push(`/my-account/exchange-item/create/success/${order_id}`);
-    //   })
-    //   .catch(() => {
-    //     showErrorMessage(__("Error appeared while requesting a exchange"));
-    //     this.setState({ isLoading: false });
-    //   });
+    MagentoAPI.post("exchange/create-order", payload)
+      .then(({ data: { order_id } }) => {
+        history.push(`/my-account/exchange-item/create/success/${order_id}`);
+      })
+      .catch(() => {
+        showErrorMessage(__("Error appeared while requesting a exchange"));
+        this.setState({ isLoading: false });
+      });
   }
 
   render() {
