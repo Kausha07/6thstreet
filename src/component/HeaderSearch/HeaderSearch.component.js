@@ -98,7 +98,6 @@ class HeaderSearch extends PureComponent {
       current: {
         form: { children },
       },
-      search
     } = this.searchRef;
     
     const searchInput = children[0].children[0];
