@@ -23,6 +23,7 @@ import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   EVENT_CLICK_RECENT_SEARCHES_CLICK,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
+  EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
@@ -256,6 +257,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleProductClick = (product) => {
+    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     this.closeSearchPopup();
   };
@@ -398,11 +400,8 @@ class SearchSuggestion extends PureComponent {
         <li>
           <Link
             to={fetchSKU?.url}
-            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
-              // this.onSearchQueryClick(
-              //   query,
-              //   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK
-              // )
+            onClick={() =>
+              Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, formatQuerySuggestions(query))
             }
           >
             <div className="suggestion-details-box text-capitalize">
@@ -423,13 +422,8 @@ class SearchSuggestion extends PureComponent {
                 !brandValue?.includes("///") ? brandValue : null
               ),
             }}
-            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
-              // this.onSearchQueryClick(
-              //   formatQuerySuggestions(
-              //     query,
-              //     EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK
-              //   )
-              // )
+            onClick={() =>
+              Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, formatQuerySuggestions(query))
             }
           >
             <div className="suggestion-details-box">
@@ -603,12 +597,15 @@ class SearchSuggestion extends PureComponent {
   // recommended for you
 
   renderRecommendedForYou = () => {
-    const {
-      recommendedForYou,
-      renderMySignInPopup,
-    } = this.props;
-    const sku = localStorage.getItem("PRODUCT_SKU") !== "undefined" ? JSON.parse(localStorage.getItem("PRODUCT_SKU")) : null;
-    const sourceCatgID = localStorage.getItem("PRODUCT_CATEGORY") !== "undefined" ? JSON.parse(localStorage.getItem("PRODUCT_CATEGORY")) : null;
+    const { recommendedForYou, renderMySignInPopup } = this.props;
+    const sku =
+      localStorage.getItem("PRODUCT_SKU") !== "undefined"
+        ? JSON.parse(localStorage.getItem("PRODUCT_SKU"))
+        : null;
+    const sourceCatgID =
+      localStorage.getItem("PRODUCT_CATEGORY") !== "undefined"
+        ? JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"))
+        : null;
     if (recommendedForYou && recommendedForYou.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
@@ -832,9 +829,7 @@ class SearchSuggestion extends PureComponent {
                   search
                 )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() =>
-            Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)
-          }
+          onClick={() => Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {search}

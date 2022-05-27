@@ -60,6 +60,9 @@ export class HeaderSearchContainer extends PureComponent {
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)? encodeURIComponent(search):search
     const filteredItem = await this.checkForSKU(search);
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
     if (filteredItem) {
       this.logRecentSearch(search);
       history.push(filteredItem?.url.split(".com")[1]);
@@ -176,10 +179,21 @@ export class HeaderSearchContainer extends PureComponent {
   };
 
   onSearchChange(search) {
-    if(search?.length === 0) {
-      Event.dispatch(EVENT_GTM_CLEAR_SEARCH);
-    }
     this.setState({ search });
+    const SearchValue = sessionStorage.getItem("Searched_value");
+    if (!SearchValue){
+      sessionStorage.setItem("Searched_value", "");
+    }
+    if ((search.length > 0 ) && (SearchValue.length < search.length)){
+      sessionStorage.setItem("Searched_value", search);
+    }
+    if(search?.length === 0) {
+      Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue );
+      if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
+    }
+    
   }
 
   onSearchClean() {
