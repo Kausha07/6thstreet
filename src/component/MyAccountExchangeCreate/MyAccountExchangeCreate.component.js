@@ -88,7 +88,9 @@ export class MyAccountExchangeCreate extends PureComponent {
     const selectedItemsLength = Object.keys(selectedItems).length;
     const selectedAvailProductLength = Object.keys(selectedAvailProduct).length;
     const isDisabled =
-      this.getSelectedReason() === "Wrong Color"
+      selectedItemsLength === 0
+        ? true
+        : this.getSelectedReason() === "Wrong Color"
         ? selectedAvailProductLength < selectedItemsLength
         : sizeCodesLength < selectedItemsLength;
     const submitText =

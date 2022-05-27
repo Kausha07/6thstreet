@@ -28,9 +28,11 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     isLoading: true,
     order_id: null,
     order_increment_id: null,
-    increment_id: null,
     date: null,
     items: [],
+    orderIncrementId: null,
+    RmaIncrementId: null,
+    orderItemGroups: [],
   };
 
   constructor(props) {
@@ -43,7 +45,9 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     const {
       order_id,
       order_increment_id,
-      increment_id,
+      orderIncrementId,
+      orderItemGroups,
+      RmaIncrementId,
       date,
       items,
       isLoading,
@@ -53,9 +57,12 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     return {
       orderId: order_id,
       orderNumber: order_increment_id,
-      returnNumber: increment_id,
-      date,
+      returnNumber: RmaIncrementId,
+      orderIncrementId,
+      orderItemGroups,
+      RmaIncrementId,
       items,
+      date,
       isLoading,
       status,
       customer,
@@ -70,23 +77,35 @@ export class MyAccountExchangeViewContainer extends PureComponent {
   }
 
   async getReturn() {
+    const { exchangeSuccess } = this.props;
     try {
       const exchangeId = this.getExchangeId();
       const {
         data: {
           order_id,
           order_increment_id,
-          increment_id,
           date,
-          items,
           status,
+          items,
+          increment_id: RmaIncrementId,
         },
       } = await MagentoAPI.get(`returns/${exchangeId}`);
-
+      let orderIncrementId = 0;
+      let orderItemGroups = [];
+     
+      if (exchangeSuccess) {
+        const {
+          data: { increment_id, groups },
+        } = await MagentoAPI.get(`orders/${order_id}`);
+        orderIncrementId = increment_id;
+        orderItemGroups = groups;
+      }
       this.setState({
         order_id,
         order_increment_id,
-        increment_id,
+        orderIncrementId,
+        RmaIncrementId,
+        orderItemGroups,
         date,
         items,
         isLoading: false,

@@ -210,7 +210,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             exchange_reasons,
             item_id,
           } = items.find(({ item_id }) => item_id === order_item_id) || {};
-          const { label = "" } =
+          const { label = "", id } =
             exchange_reasons.find(({ id }) => id === reasonId) || {};
           const { simple_products: productStock } = products[order_item_id];
           let currentSizeCode = "";
@@ -248,30 +248,14 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
               },
             ],
             exchange_qty: 1,
-            exchange_reason: label,
+            exchange_reason: id,
           };
         }
       ),
     };
     this.setState({ isLoading: true });
-    // const res = {
-    //   order_id: order_id,
-    //   increment_id: increment_id,
-    //   created_at: created_at,
-    //   rma_increment_id: '23444241',
-    //   items: {
-    //     "10000869-BLACK": {
-    //       original_price: 299,
-    //       price: "209.0000"
-    //     },
-    //     "DSW-428998-BRIGHT-MULTI": {
-    //       original_price: 125,
-    //       price: "9.0000"
-    //     }
-    //   }
-    // }
     MagentoAPI.post("exchange/create-order", payload)
-      .then(({ data: { order_id } }) => {
+      .then(({ order_id }) => {
         history.push(`/my-account/exchange-item/create/success/${order_id}`);
       })
       .catch(() => {

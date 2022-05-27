@@ -11,12 +11,28 @@ import {
 import "./MyAccountExchangeView.style";
 
 export class MyAccountExchangeView extends SourceComponent {
+  getItemsFromGroup = () => {
+    const { orderItemGroups } = this.props;
+    const allItems = [
+      ...orderItemGroups.reduce((acc, { items }) => [...acc, ...items], []),
+    ];
+    return allItems;
+  };
+
   renderHeading() {
-    const { orderNumber, exchangeSuccess = false } = this.props;
+    const {
+      orderNumber,
+      exchangeSuccess = false,
+      orderIncrementId,
+    } = this.props;
 
     return (
       <div block="MyAccountReturnSuccess" elem="Heading">
-        <h3>{__("Order #%s", orderNumber)}</h3>
+        <h3>
+          {exchangeSuccess
+            ? __("Order #%s", orderIncrementId)
+            : __("Order #%s", orderNumber)}
+        </h3>
         {exchangeSuccess && this.renderRequestSuccessContent()}
       </div>
     );
@@ -38,7 +54,8 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderDetails() {
-    const { date, status, orderNumber } = this.props;
+    const { date, status, orderNumber, exchangeSuccess, RmaIncrementId } =
+      this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
     const dateString = formatDate("YY/MM/DD at hh:mm", dateObject);
     const { [status]: title } = STATUS_TITLE_MAP;
@@ -62,21 +79,27 @@ export class MyAccountExchangeView extends SourceComponent {
             {__("Order ID: ")}
             <span>{orderNumber}</span>
           </p>
+          {exchangeSuccess && (
+            <p block="MyAccountExchangeView" elem="Order">
+              {__("Order ID: ")}
+              <span>{RmaIncrementId}</span>
+            </p>
+          )}
         </div>
       </div>
     );
   }
 
   renderItems() {
-    const { items = [] } = this.props;
-
+    const { items = [], exchangeSuccess } = this.props;
+    let finalItems = exchangeSuccess ? this.getItemsFromGroup() : items;
     return (
       <div
         block="MyAccountExchangeView"
         elem="Items"
         mix={{ block: "MyAccountReturnSuccess", elem: "Items" }}
       >
-        {items.map((item) => (
+        {finalItems.map((item) => (
           <div key={item.id}>
             <MyAccountReturnSuccessItem item={item} />
             <div block="MyAccountExchangeView" elem="Reason">
