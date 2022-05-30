@@ -60,4 +60,5 @@ export const EVENT_CLICK_RECENT_SEARCHES_CLICK = "recent_searches_click";
 export const EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW = "search_logs_screen_view";
 export const EVENT_GTM_SEARCH_SCREEN_VIEW = "search_screen_view";
 export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
-export const EVENT_CLICK_RECOMMENDATION_CLICK = "Recommendation_clicked";
+export const EVENT_CLICK_RECOMMENDATION_CLICK = "recommendation_clicked";
+export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK = "search_product_suggestion_click"

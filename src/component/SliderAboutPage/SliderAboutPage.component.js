@@ -127,7 +127,7 @@ renderScrollbar = () => {
 handleScroll = (event) => {
     const target = event.nativeEvent.target;
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
-      (node) => node.className == "SliderWithLabelWrapper"
+      (node) => node.className == "SliderWithExperienceWrapper"
     )[0];
     prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
 };
