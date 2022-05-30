@@ -9,19 +9,8 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-:root {
-    --popup-background: #0003;
-    --popup-content-background: #{$white};
-    --popup-min-width: 100%;
-    --popup-content-padding: 1rem;
 
-    @include after-mobile {
-        --popup-min-width: 490px;
-        --popup-content-padding: 2rem;
-    }
-}
-
-.Popup {
+.CTCPopup {
     opacity: 0;
     pointer-events: none;
     z-index: 200;

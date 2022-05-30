@@ -32,7 +32,7 @@ export const mapDispatchToProps = (dispatch) => ({
     goToPreviousNavigationState: (state) => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
-export class PopupContainer extends PureComponent {
+export class CTCPopupContainer extends PureComponent {
     static propTypes = {
         payload: PropTypes.objectOf(
             PropTypes.shape({
@@ -87,4 +87,4 @@ export class PopupContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PopupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CTCPopupContainer);
