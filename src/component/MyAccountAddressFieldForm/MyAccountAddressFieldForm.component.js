@@ -20,12 +20,23 @@ import { isArabic } from "Util/App";
 import { PHONE_CODES } from "./MyAccountAddressFieldForm.config";
 
 import "./MyAccountAddressFieldForm.style";
-
+import isMobile from "Util/Mobile";
 export class MyAccountAddressFieldForm extends PureComponent {
   onFormSuccess() {}
 
   get fieldMap() {
     return {};
+  }
+
+  componentDidMount() {
+    if(window.location.pathname === "/checkout" && isMobile.any()) {
+      document.body.classList.add('overflow-hidden');
+    }
+  }
+  componentWillUnmount() {
+    if(window.location.pathname === "/checkout" && isMobile.any()) {
+      document.body.classList.remove('overflow-hidden');
+    }
   }
 
   getDefaultValues([key, props]) {
