@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import CTCPopup from "Component/CTCPopup";
 
-import Popup from "Component/Popup";
 import Form from "SourceComponent/Form";
 import Field from "SourceComponent/Field";
 import { Search } from "../Icons";
@@ -51,6 +51,11 @@ class PDPClickAndCollectPopup extends PureComponent {
     });
   }
 
+  storeListDisplay() {
+    this.setState({
+      showStoreList: true,
+    });
+  }
   renderStoreSelect() {
     const { searchKeyword } = this.state;
     return (
@@ -64,7 +69,7 @@ class PDPClickAndCollectPopup extends PureComponent {
             placeholder={`${__("Select a Store")}*`}
             value={searchKeyword}
             onChange={(value) => this.handleSearchKeywordChange(value)}
-            onClick={() => this.toggleStoreList()}
+            onClick={() => this.storeListDisplay()}
           />
         </Form>
         {this.renderStoresList()}
@@ -143,9 +148,9 @@ class PDPClickAndCollectPopup extends PureComponent {
     const { togglePDPClickAndCollectPopup, openClickAndCollectPopup } =
       this.props;
     const { showStoreList } = this.state;
+
     return (
-      <Popup
-      clickOutside={false}
+      <CTCPopup
         id={PDP_CLICK_AND_COLLECT_POPUP_ID}
         mix={{
           block: "PDPClickAndCollectPopup",
@@ -153,8 +158,8 @@ class PDPClickAndCollectPopup extends PureComponent {
             isArabic: isArabic(),
           },
         }}
-        onHide={ togglePDPClickAndCollectPopup }
-        // open={openClickAndCollectPopup}
+        onClose={togglePDPClickAndCollectPopup}
+        open={openClickAndCollectPopup}
       >
         <h3>{__("PICK A STORE")}</h3>
         <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer">
@@ -173,7 +178,7 @@ class PDPClickAndCollectPopup extends PureComponent {
             </div>
           </>
         ) : null}
-      </Popup>
+      </CTCPopup>
     );
   }
 }
