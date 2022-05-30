@@ -21,7 +21,8 @@ import Overlay from "Component/Overlay/Overlay.component";
 
 import { ESCAPE_KEY } from "./CTCPopup.config";
 
-export class Popup extends Overlay {
+
+export class CTCPopup extends Overlay {
   static propTypes = {
     ...Overlay.propTypes,
     clickOutside: PropTypes.bool,
@@ -102,7 +103,7 @@ export class Popup extends Overlay {
     }
 
     return (
-      <h3 block="Popup" elem="Heading">
+      <h3 block="CTCPopup" elem="Heading">
         {title}
       </h3>
     );
@@ -111,11 +112,11 @@ export class Popup extends Overlay {
   renderCloseButton() {
     return (
       <button
-        block="Popup"
+        block="CTCPopup"
         elem="CloseBtn"
         aria-label={__("Close")}
         onClick={this.hidePopUp}
-      />
+      /> 
     );
   }
 
@@ -127,8 +128,8 @@ export class Popup extends Overlay {
 
     return (
       <ClickOutside onClick={this.handleClickOutside}>
-        <div block="Popup" elem="Content">
-          <header block="Popup" elem="Header">
+        <div block="CTCPopup" elem="Content">
+          <header block="CTCPopup" elem="Header">
             {this.renderTitle()}
             {this.renderCloseButton()}
           </header>
@@ -143,7 +144,7 @@ export class Popup extends Overlay {
     return createPortal(
       <div
         ref={this.overlayRef}
-        block="Popup"
+        block="CTCPopup"
         mods={{ isVisible: open, isInstant: areOtherOverlaysOpen }}
         mix={{ ...mix, mods: { ...mix.mods, isVisible: open } }}
       >
@@ -154,4 +155,4 @@ export class Popup extends Overlay {
   }
 }
 
-export default Popup;
+export default CTCPopup;
