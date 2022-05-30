@@ -862,10 +862,10 @@ export class PLPContainer extends PureComponent {
             countryName
           )
         : __("%s | 6thStreet.com %s", categoryName, countryName);
-
+        
     const PLPMetaDesc = (brandDescription && brandName)
       ? __(
-          "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with Free Delivery on minimum order & 100 days Free Return.",
+          "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
           brandName,
           countryName,
           brandName
