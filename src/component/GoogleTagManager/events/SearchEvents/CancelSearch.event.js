@@ -30,20 +30,20 @@ class CancelSearchEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_CANCEL_SEARCH, () => {
-      this.handle(EVENT_GTM_CANCEL_SEARCH);
+    Event.observer(EVENT_GTM_CANCEL_SEARCH, (search) => {
+      this.handle(EVENT_GTM_CANCEL_SEARCH, search);
     });
   }
 
-  handler(EVENT_TYPE) {
+  handler(EVENT_TYPE, search) {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
       eventAction: "cancel_search",
-      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: "",
+      SearchTerm: search,
     });
   }
   getCustomerId() {
