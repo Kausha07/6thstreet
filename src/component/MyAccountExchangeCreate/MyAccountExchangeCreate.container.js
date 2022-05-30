@@ -26,6 +26,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   containerFunctions = {
     onFormSubmit: this.onFormSubmit.bind(this),
     onSizeSelect: this.onSizeSelect.bind(this),
+    checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     onAvailableProductSelect: this.onAvailableProductSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
@@ -49,12 +50,34 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     prevAlsoAvailable: [],
     exchangeReason: [],
     products: {},
+    disabledStatus: true,
+    disabledStatusArr: {},
   };
 
   componentDidMount() {
     this.getExchangableItems();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { selectedItems, selectedAvailProduct, selectedSizeCodes, reasonId } =
+      this.state;
+    const {
+      selectedItems: prevSelectedItems,
+      selectedAvailProduct: prevSelectedAvailProduct,
+      selectedSizeCodes: prevSelectedSizeCodes,
+      reasonId: prevReasonId,
+    } = prevState;
+    if (
+      JSON.stringify(selectedItems) !== JSON.stringify(prevSelectedItems) ||
+      JSON.stringify(selectedAvailProduct) !==
+        JSON.stringify(prevSelectedAvailProduct) ||
+      JSON.stringify(selectedSizeCodes) !==
+        JSON.stringify(prevSelectedSizeCodes) ||
+      reasonId !== prevReasonId
+    ) {
+      this.checkIsDisabled();
+    }
+  }
   containerProps = () => {
     const { history } = this.props;
     const {
@@ -78,6 +101,50 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       reasonId,
     };
   };
+
+  getSelectedReason = (item) => {
+    const { selectedItems } = this.state;
+    let selectedReasonId = "";
+    selectedReasonId = selectedItems[item]["reasonId"];
+    return selectedReasonId;
+  };
+
+  checkIsDisabled() {
+    const {
+      selectedSizeCodes,
+      selectedItems,
+      selectedAvailProduct,
+      products,
+      disabledStatusArr: stateDisabledStatusArr,
+    } = this.state;
+    const selectedItemsLength = Object.keys(selectedItems).length;
+    if (selectedItemsLength === 0) {
+      this.setState({
+        disabledStatus: true,
+      });
+    } else {
+      Object.keys(products).map((item) => {
+        if (this.getSelectedReason(item) === "37309") {
+          if (selectedAvailProduct[item] && !stateDisabledStatusArr[item]) {
+            this.setState({
+              disabledStatusArr: { ...stateDisabledStatusArr, [item]: true },
+              disabledStatus: false,
+            });
+          }
+        } else if (
+          this.getSelectedReason(item) === "37310" ||
+          this.getSelectedReason(item) === "37311"
+        ) {
+          if (selectedSizeCodes[item] && !stateDisabledStatusArr[item]) {
+            this.setState({
+              disabledStatus: false,
+              disabledStatusArr: { ...stateDisabledStatusArr, [item]: true },
+            });
+          }
+        }
+      });
+    }
+  }
 
   onSizeSelect(value, outOfStockVal, itemId) {
     const {
@@ -214,11 +281,20 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             exchange_reasons.find(({ id }) => id === reasonId) || {};
           const { simple_products: productStock } = products[order_item_id];
           let currentSizeCode = "";
-          Object.keys(selectedSizeCodes).filter((sizeCode) => {
-            if (sizeCode === order_item_id) {
-              currentSizeCode = selectedSizeCodes[sizeCode]["value"];
-            }
-          });
+          if (selectedSizeCodes[order_item_id]) {
+            currentSizeCode = selectedSizeCodes[order_item_id]["value"];
+          } else {
+            Object.entries(productStock).filter((product) => {
+              let itemCityCode = size["label"];
+              if (
+                product[1]["size"][`${itemCityCode.toLowerCase()}`] ===
+                size["value"]
+              ) {
+                currentSizeCode = product[0];
+              }
+            });
+          }
+
           let finalCsku =
             selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
               ? selectedAvailProduct[item_id]["id"]
@@ -231,12 +307,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           if (finalSize) {
             finalSizeValue =
               productStock[finalSize].size[`${size["label"].toLowerCase()}`];
+          } else {
+            finalSizeValue = size["value"];
           }
 
-          let sizeValue =
-            productStock[currentSizeCode].size[
-              `${size["label"].toLowerCase()}`
-            ];
           return {
             parent_order_item_id: order_item_id,
             exchange_sku: currentSizeCode,
@@ -244,7 +318,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             options: [
               {
                 option_id: size["label"].toUpperCase(),
-                option_value: finalSizeValue ? finalSizeValue : sizeValue,
+                option_value: finalSizeValue,
               },
             ],
             exchange_qty: 1,
@@ -255,7 +329,8 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     };
     this.setState({ isLoading: true });
     MagentoAPI.post("exchange/create-order", payload)
-      .then(({ order_id }) => {
+      .then(({ order_id, rma_increment_id }) => {
+        localStorage.setItem("RmaId", rma_increment_id);
         history.push(`/my-account/exchange-item/create/success/${order_id}`);
       })
       .catch(() => {

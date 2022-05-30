@@ -10,6 +10,7 @@
   }
   .PDPAlsoAvailable {
     margin-left: 40px;
+    margin-top: 15px;
     border-bottom: 2px solid var(--color-gainsboro);
 
     .PDPAlsoAvailableProduct {
@@ -32,7 +33,8 @@
     align-items: center;
     flex-direction: row;
     margin-top: 14px;
-    width: 46%;
+    max-width: 46%;
+    min-width: 12%;
     .PLPAddToCart {
       &-SizeTypeSelectElement {
         margin-bottom: 0px;

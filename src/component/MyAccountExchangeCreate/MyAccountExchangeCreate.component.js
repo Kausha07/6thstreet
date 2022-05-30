@@ -66,33 +66,19 @@ export class MyAccountExchangeCreate extends PureComponent {
     );
   }
 
-  getSelectedReason = () => {
-    const { selectedItems, reasonId } = this.props;
-    let selectedReason = Object.values(selectedItems).filter((item) => {
-      if (item["reasonId"] === reasonId) {
-        return item;
-      }
-    });
-    return selectedReason;
-  };
-
   renderActions() {
     const {
       handleDiscardClick,
       selectedNumber,
-      selectedSizeCodes,
-      selectedItems,
-      selectedAvailProduct,
+      disabledStatus,
+      disabledStatusArr,
     } = this.props;
-    const sizeCodesLength = Object.keys(selectedSizeCodes).length;
-    const selectedItemsLength = Object.keys(selectedItems).length;
-    const selectedAvailProductLength = Object.keys(selectedAvailProduct).length;
-    const isDisabled =
-      selectedItemsLength === 0
+    let isDisabled =
+      Object.keys(disabledStatusArr).length < selectedNumber
         ? true
-        : this.getSelectedReason() === "Wrong Color"
-        ? selectedAvailProductLength < selectedItemsLength
-        : sizeCodesLength < selectedItemsLength;
+        : disabledStatus === true
+        ? true
+        : false;
     const submitText =
       selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)

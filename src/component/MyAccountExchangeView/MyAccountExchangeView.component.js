@@ -54,8 +54,13 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderDetails() {
-    const { date, status, orderNumber, exchangeSuccess, RmaIncrementId } =
-      this.props;
+    const {
+      date,
+      status,
+      orderNumber,
+      exchangeSuccess,
+      returnNumber,
+    } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
     const dateString = formatDate("YY/MM/DD at hh:mm", dateObject);
     const { [status]: title } = STATUS_TITLE_MAP;
@@ -73,16 +78,18 @@ export class MyAccountExchangeView extends SourceComponent {
             mods={{ isDenied: status === STATUS_DENIED }}
           >
             {__("Status: ")}
-            <span>{title || status}</span>
-          </p>
-          <p block="MyAccountExchangeView" elem="Order">
-            {__("Order ID: ")}
-            <span>{orderNumber}</span>
+            <span>{`${title || status.split("_").join(" ")}`}</span>
           </p>
           {exchangeSuccess && (
             <p block="MyAccountExchangeView" elem="Order">
+              {__("ID: ")}
+              <span>{returnNumber}</span>
+            </p>
+          )}
+          {!exchangeSuccess && (
+            <p block="MyAccountExchangeView" elem="Order">
               {__("Order ID: ")}
-              <span>{RmaIncrementId}</span>
+              <span>{orderNumber}</span>
             </p>
           )}
         </div>
@@ -102,10 +109,12 @@ export class MyAccountExchangeView extends SourceComponent {
         {finalItems.map((item) => (
           <div key={item.id}>
             <MyAccountReturnSuccessItem item={item} />
-            <div block="MyAccountExchangeView" elem="Reason">
-              <h3>{__("Reason")}</h3>
-              {!!(item.reason || []).length && <p>{item.reason[0].value}</p>}
-            </div>
+            {!exchangeSuccess && (
+              <div block="MyAccountExchangeView" elem="Reason">
+                <h3>{__("Reason")}</h3>
+                {!!(item.reason || []).length && <p>{item.reason[0].value}</p>}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -129,7 +138,8 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderContent() {
-    const { isLoading, returnNumber } = this.props;
+    const { isLoading, returnNumber } =
+      this.props;
 
     if (isLoading) {
       return null;

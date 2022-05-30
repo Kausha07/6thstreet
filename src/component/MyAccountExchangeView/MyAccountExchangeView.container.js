@@ -6,6 +6,7 @@ import { MatchType } from "Type/Common";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 import MyAccountExchangeView from "./MyAccountExchangeView.component";
+import MobileAPI from "Util/API/provider/MobileAPI";
 
 export const mapStateToProps = (_state) => ({
   customer: _state.MyAccountReducer.customer,
@@ -31,7 +32,6 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     date: null,
     items: [],
     orderIncrementId: null,
-    RmaIncrementId: null,
     orderItemGroups: [],
   };
 
@@ -47,7 +47,6 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       order_increment_id,
       orderIncrementId,
       orderItemGroups,
-      RmaIncrementId,
       date,
       items,
       isLoading,
@@ -57,10 +56,9 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     return {
       orderId: order_id,
       orderNumber: order_increment_id,
-      returnNumber: RmaIncrementId,
+      returnNumber: localStorage.getItem('RmaId'),
       orderIncrementId,
       orderItemGroups,
-      RmaIncrementId,
       items,
       date,
       isLoading,
@@ -80,36 +78,39 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     const { exchangeSuccess } = this.props;
     try {
       const exchangeId = this.getExchangeId();
-      const {
-        data: {
-          order_id,
-          order_increment_id,
-          date,
-          status,
-          items,
-          increment_id: RmaIncrementId,
-        },
-      } = await MagentoAPI.get(`returns/${exchangeId}`);
-      let orderIncrementId = 0;
-      let orderItemGroups = [];
-     
-      if (exchangeSuccess) {
-        const {
-          data: { increment_id, groups },
-        } = await MagentoAPI.get(`orders/${order_id}`);
-        orderIncrementId = increment_id;
-        orderItemGroups = groups;
+      let resData = {};
+      if (!exchangeSuccess) {
+        const { data } = await MagentoAPI.get(`returns/${exchangeId}`);
+        resData = data;
       }
-      this.setState({
+      const {
         order_id,
         order_increment_id,
-        orderIncrementId,
-        RmaIncrementId,
-        orderItemGroups,
         date,
+        status,
+        items,
+        increment_id: RmaIncrementId,
+      } = resData || {};
+      if (exchangeSuccess) {
+        const { data } = await MobileAPI.get(`orders/${exchangeId}`);
+        resData = data;
+      }
+      const {
+        increment_id: orderIncrementId,
+        groups: orderItemGroups,
+        order_id: ordersId,
+        created_at: orderDate,
+        status: orderStatus,
+      } = resData || {};
+      this.setState({
+        order_id: order_id || ordersId,
+        order_increment_id,
+        orderIncrementId,
+        orderItemGroups,
+        date: date || orderDate,
         items,
         isLoading: false,
-        status,
+        status: status || orderStatus,
       });
     } catch (e) {
       this.setState({ isLoading: false });

@@ -218,6 +218,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     sessionStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
+    localStorage.removeItem('RmaId');
 
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
