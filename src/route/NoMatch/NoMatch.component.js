@@ -26,12 +26,13 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import { setLastTapItemOnHome} from "Store/PLP/PLP.action";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import DynamicContent from "Component/DynamicContent";
+import Event, { EVENT_PAGE_NOT_FOUND } from "Util/Event";
 
 export const mapStateToProps = () => ({});
 export const mapDispatchToProps = (dispatch) => ({
-  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item))
+  setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
 });
 
 export class NoMatch extends PureComponent {
@@ -43,15 +44,13 @@ export class NoMatch extends PureComponent {
   state = {
     gender: "",
     isArabic: isArabic(),
-    notFoundWidgetData :[]
-    
+    notFoundWidgetData: [],
   };
 
   setLastTapItem = (item) => {
     this.props.setLastTapItemOnHome(item);
   };
-
-  
+  pathname;
 
   componentDidMount() {
     this.addTag();
@@ -59,29 +58,30 @@ export class NoMatch extends PureComponent {
     this.updateHeaderState();
     this.cleanUpTransition();
     window.pageType = TYPE_NOTFOUND;
-    this.requestNoMatchWidgetData();    
+    this.requestNoMatchWidgetData();
+    Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname);
   }
 
   addTag() {
-    const meta = document.createElement('meta')
+    const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex";
-    if(meta){
+    if (meta) {
       document.head.append(meta);
     }
   }
 
   removeTag() {
     const tags = document.querySelectorAll("meta[name=robots]");
-    if(tags){
+    if (tags) {
       tags.forEach((tag) => {
         tag.remove();
-      })
+      });
     }
   }
 
   componentWillUnmount() {
-    window.pageType=undefined;
+    window.pageType = undefined;
     this.removeTag();
   }
 
@@ -124,50 +124,47 @@ export class NoMatch extends PureComponent {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "Home";
-    this.setState({ gender});
-    const devicePrefix = this.getDevicePrefix();    
-    
+    this.setState({ gender });
+    const devicePrefix = this.getDevicePrefix();
+
     // if (gender) {
-      try {
-        const notFoundWidget = await getStaticFile(HOME_STATIC_FILE_KEY, {
-          $FILE_NAME: `${devicePrefix}not_found.json`,
-          //$FILE_NAME: `${devicePrefix}${gender}.json`,
-        });
-        
-        if (typeof notFoundWidget === 'object') {
-          // let newWidgetData = notFoundWidget.filter((data)=>{
-          //     return data.type=== "grid" && data.tag.includes("Home") || data.type=== "vue_recently_viewed_slider"
-          // })
-          // const exploreMore = {
-          //   ......
-          // }
-          // newWidgetData.push(exploreMore);
-          this.setState({ notFoundWidgetData: notFoundWidget[gender] || [] });
-        } else {
-          this.setState({ notFoundWidgetData: [] });
-        }
-      } catch (e) {
+    try {
+      const notFoundWidget = await getStaticFile(HOME_STATIC_FILE_KEY, {
+        $FILE_NAME: `${devicePrefix}not_found.json`,
+        //$FILE_NAME: `${devicePrefix}${gender}.json`,
+      });
+
+      if (typeof notFoundWidget === "object") {
+        // let newWidgetData = notFoundWidget.filter((data)=>{
+        //     return data.type=== "grid" && data.tag.includes("Home") || data.type=== "vue_recently_viewed_slider"
+        // })
+        // const exploreMore = {
+        //   ......
+        // }
+        // newWidgetData.push(exploreMore);
+        this.setState({ notFoundWidgetData: notFoundWidget[gender] || [] });
+      } else {
         this.setState({ notFoundWidgetData: [] });
-        console.error(e);
       }
+    } catch (e) {
+      this.setState({ notFoundWidgetData: [] });
+      console.error(e);
+    }
     // } else {
     //   this.setState({ notFoundWidgetData: [] });
     // }
-    
   }
-  renderDynamicBanners(){
-    const {gender, notFoundWidgetData} = this.state;
-    return(
-     (notFoundWidgetData.length) ?
-      <>      
-      <DynamicContent
-        gender={gender}
-        content={notFoundWidgetData}
-        setLastTapItemOnHome={this.setLastTapItem}
-      />
+  renderDynamicBanners() {
+    const { gender, notFoundWidgetData } = this.state;
+    return notFoundWidgetData.length ? (
+      <>
+        <DynamicContent
+          gender={gender}
+          content={notFoundWidgetData}
+          setLastTapItemOnHome={this.setLastTapItem}
+        />
       </>
-      : null
-    )
+    ) : null;
   }
 
   render() {
@@ -207,7 +204,7 @@ export class NoMatch extends PureComponent {
           <div block="NotFoundContent">
             <div block="notFoundImage">
               <Image lazyLoad={true} src={pageNotFoundSVG} alt="pageNotFound" />
-            </div>            
+            </div>
             <h4 block="Title">{__("Oops! Nothing here.")}</h4>
             <p block="SubTitle">{__("Here are some products you may like.")}</p>
           </div>
