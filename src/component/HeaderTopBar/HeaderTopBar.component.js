@@ -51,11 +51,11 @@ class HeaderTopBar extends NavigationAbstract {
 
     return location.pathname !== "/" && isMobile.any()
       ? {
-        isOnMobile: true,
-      }
+          isOnMobile: true,
+        }
       : {
-        isOnMobile: false,
-      };
+          isOnMobile: false,
+        };
   }
 
   componentDidMount() {
@@ -85,33 +85,33 @@ class HeaderTopBar extends NavigationAbstract {
     return (
       <div className="customVerticalSlider">
         <div className="carouselItemInner">
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("800+ GLOBAL BRANDS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("100-DAY FREE RETURNS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("CLUB APPAREL REWARDS")}
           </div>
           {country ? (
-            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+            <div block="HeaderTopBar" elem="CmsBlock">
               {txt[country]}
             </div>
           ) : (
             " "
           )}
           {getCountryFromUrl() === "QA" ? (
-            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+            <div block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON RECEIVING")}
             </div>
           ) : (
-            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+            <div block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON DELIVERY")}
             </div>
           )}
 
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("ALL PRICES ARE INCLUSIVE OF VAT")}
           </div>
         </div>
