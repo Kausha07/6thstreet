@@ -59,7 +59,7 @@ export class NoMatch extends PureComponent {
     this.cleanUpTransition();
     window.pageType = TYPE_NOTFOUND;
     this.requestNoMatchWidgetData();
-    Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname);
+    Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
   }
 
   addTag() {
