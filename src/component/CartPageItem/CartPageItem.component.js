@@ -313,7 +313,7 @@ export class CartItem extends PureComponent {
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
           el1.style.setProperty("width", 0 + "px");
-          el2.style.transform = `translateX(0})`;
+          el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
         } else if (!this.state.dragOpen) {
