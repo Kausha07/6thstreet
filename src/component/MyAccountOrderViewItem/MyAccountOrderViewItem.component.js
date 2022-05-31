@@ -11,6 +11,7 @@ import {
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -34,6 +35,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="MyAccountOrderViewItem" elem="Name">
           {name}
         </div>
+        
         <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
           {!!color && (
             <p>
