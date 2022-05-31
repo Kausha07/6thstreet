@@ -100,11 +100,12 @@ handleContainerScroll = (event) => {
 
 renderScrollbar = () => {
     const items = this.experienceData.Datas;
+    const { minusWidth} = this.props;
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
         items.length +
       items.length * 7 * 2 -
-      690
+      minusWidth
     }px`;
     // const width = `${900}px`;
 
