@@ -431,7 +431,7 @@
             width: 100%;
             &:first-child {
                 padding: 0 16px;
-                padding-bottom: 280px;
+                // padding-bottom: 280px; // disabling it for PWA-2642 
             }
         }
         &_isArabic {

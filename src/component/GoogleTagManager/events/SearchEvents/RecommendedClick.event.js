@@ -39,8 +39,8 @@ class RecommendedClickEvent extends BaseEvent {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
-      eventAction: "top_searches_click",
-      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
+      eventAction: "recommendation_clicked",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: name || "",

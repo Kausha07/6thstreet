@@ -157,18 +157,18 @@ export class HomePageContainer extends PureComponent {
         : pagePathName == "/women.html"
         ? __(
             // eslint-disable-next-line max-len
-            "Buy Women Shoes, Clothing, Bags, Beauty Products, Accessories: Watches & Jewellery, Home Essentials & more from best brands in %s with best deals on 6thStreet. Free Delivery on minimum order. 100 days Free Return",
+            "Buy Women Shoes, Clothing, Bags, Beauty Products, Accessories: Watches & Jewellery, Home Essentials & more from best brands in %s with best deals on 6thStreet. ✅ Free Delivery on minimum order ✅ 100 days Free Return",
             countryName
           )
         : pagePathName == "/men.html"
         ? __(
-            "Buy Men Shoes, Clothing, Bags, Grooming Products, Accessories: Wallets & Belts, Home Essentials & more from best brands in %s with best deals on 6thStreet. Free Delivery on minimum order. 100 days Free Return",
+            "Buy Men Shoes, Clothing, Bags, Grooming Products, Accessories: Wallets & Belts, Home Essentials & more from best brands in %s with best deals on 6thStreet. ✅ Free Delivery on minimum order ✅ 100 days Free Return",
             countryName
           )
         : pagePathName == "/kids.html"
         ? __(
             // eslint-disable-next-line max-len
-            "Buy Kids Shoes, Clothing, Bags, Baby Care Products, Toys, School Supplies & More from best brands in %s with best deals on 6thStreet. Free Delivery on minimum order. 100 days Free Return",
+            "Buy Kids Shoes, Clothing, Bags, Baby Care Products, Toys, School Supplies & More from best brands in %s with best deals on 6thStreet. ✅ Free Delivery on minimum order ✅ 100 days Free Return",
             countryName
           )
         : __(

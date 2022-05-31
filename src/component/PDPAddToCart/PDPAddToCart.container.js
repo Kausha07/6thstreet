@@ -608,6 +608,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   afterAddToCart(isAdded = "true", options) {
     const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
+
     if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
     }
@@ -691,7 +692,6 @@ export class PDPAddToCartContainer extends PureComponent {
       product: { price = {}, size_uk = [], size_eu = [], size_us = [] },
       showNotification,
     } = this.props;
-
     if (!openClickAndCollectPopup) {
       if (!price[0]) {
         showNotification("error", __("Unable to add product to cart."));
