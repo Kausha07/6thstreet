@@ -551,6 +551,8 @@ export class PDPAddToCartContainer extends PureComponent {
           qty: 1,
           optionId: "",
           optionValue: "",
+          selectedClickAndCollectStore:
+            selectedClickAndCollectStore?.value || "",
         },
         color,
         null,
