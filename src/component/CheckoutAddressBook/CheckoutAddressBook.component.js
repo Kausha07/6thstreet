@@ -61,6 +61,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       shippingAddress,
       isClickAndCollect,
       clickAndCollectStatus,
+      customer
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -75,6 +76,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         shippingAddress={shippingAddress}
         clickAndCollectStatus={clickAndCollectStatus}
         isClickAndCollect={isClickAndCollect}
+        customer={customer}
       />
     );
   }

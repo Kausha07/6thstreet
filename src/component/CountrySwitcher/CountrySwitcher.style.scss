@@ -2,10 +2,7 @@
   align-items: center;
   display: flex;
   font-size: 11px;
-  @include desktop{
-    flex: 0 0 100%;
-  }
-
+  
   &-CountryBtn {
     display: flex;
     margin-top: 0;
