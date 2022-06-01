@@ -321,7 +321,10 @@ renderSliderWithLabels() {
                   )
                 }
 
-                <SliderAboutPage {...this.props}/>
+                <SliderAboutPage 
+                  {...this.props} 
+                  {...this.state}
+                />
 
                 {
                   isArabic ? (
