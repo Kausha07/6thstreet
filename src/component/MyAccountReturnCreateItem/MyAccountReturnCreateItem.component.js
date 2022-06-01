@@ -516,7 +516,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
             {this.renderReasons()}
           </div>
         )}
-        {this.renderOutOfStockPopUp()}
+        {isExchange && this.renderOutOfStockPopUp()}
         {isExchange && this.isReasonSelected() && isSelected && (
           <>
             {this.renderSizeContent()}
