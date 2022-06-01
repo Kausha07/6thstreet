@@ -39,6 +39,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
       startX: 0,
       scrollLeft: 0,
       isArabic: isArabic(),
+      screenWidth: window.innerWidth,
+      minusWidth: 690,
       settings: {
         lazyload: true,
         nav: false,
@@ -234,13 +236,23 @@ class DynamicContentSliderWithLabel extends PureComponent {
     )[0];
     prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
+  checkWidth(){
+    const { screenWidth, minusWidth } = this.state;
+    if(screenWidth > 1500){
+      this.setState({minusWidth: 590});
+    }else if(screenWidth < 1400){
+      this.setState({minusWidth: 570});
+    }
+  }
   renderScrollbar = () => {
     const { items = [] } = this.props;
+    this.checkWidth();
+    const { minusWidth } = this.state;
 
     const width = `${(this.itemRef.current && this.itemRef.current.clientWidth) *
       items.length +
       items.length * 7 * 2 -
-      690
+      minusWidth
       }px`;
     return (
       <div
