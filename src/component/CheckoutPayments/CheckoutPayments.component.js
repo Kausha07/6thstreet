@@ -35,7 +35,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
     processApplePay: true,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   paymentRenderMap = {
@@ -56,65 +56,36 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     isArabic: isArabic(),
     isMobile: isMobile.any() || isMobile.tablet(),
   };
-  componentDidMount() {
-    const script = document.createElement("script");
 
-    script.src = "https://checkout.tabby.ai/tabby-card.js";
-    script.async = true;
-    script.onload = function () {
-      let s = document.createElement("script");
-      s.type = "text/javascript";
-      const code = `new TabbyCard({
-        selector: '#tabbyCard', // empty div for TabbyCard
-        currency: 'AED', // or SAR, BHD, KWD; required, currency for your product
-        price: '100.00', // required, price or your product
-        lang: 'en', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
-        size: 'narrow' // or wide
-        });`;
-      try {
-        s.appendChild(document.createTextNode(code));
-        document.body.appendChild(s);
-      } catch (e) {
-        s.text = code;
-        document.body.appendChild(s);
-      }
-    };
-    document.body.appendChild(script);
+  componentDidMount() {
+    const { selectedPaymentCode, totals: { total, currency_code } } = this.props;
+    if (selectedPaymentCode === TABBY_ISTALLMENTS) {
+      this.addTabbyCard(total, currency_code);
+    }
   }
+
   componentDidUpdate(prevProps) {
     const {
       selectedPaymentCode,
       totals: { total, currency_code },
     } = this.props;
-    const { isArabic, isMobile } = this.state;
-    if (selectedPaymentCode === TABBY_ISTALLMENTS) {
-      const script = document.createElement("script");
-
-      script.src = "https://checkout.tabby.ai/tabby-card.js";
-      script.async = true;
-      script.onload = function () {
-        let s = document.createElement("script");
-        s.type = "text/javascript";
-        const code = `new TabbyCard({
-        selector: '#tabbyCard', // empty div for TabbyCard
-        currency: '${currency_code}', // or SAR, BHD, KWD; required, currency for your product
-        price: '${total}', // required, price or your product
-        lang: '${
-          isArabic ? `ar` : `en`
-        }', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
-        size: 'wide' // or wide
-        });`;
-        try {
-          s.appendChild(document.createTextNode(code));
-          document.body.appendChild(s);
-        } catch (e) {
-          s.text = code;
-          document.body.appendChild(s);
-        }
-      };
-      document.body.appendChild(script);
+    if (selectedPaymentCode === TABBY_ISTALLMENTS || prevProps?.totals?.total !== total) {
+      this.addTabbyCard(total, currency_code);
     }
   }
+
+  addTabbyCard = (total, currency_code) => {
+    const { isArabic } = this.state;
+    new window.TabbyCard({
+      selector: '#tabbyCard',
+      currency: currency_code.toString(),
+      price: total,
+      installmentsCount: 4,
+      lang: isArabic ? "ar" : "en",
+      size: 'wide',
+    });
+  }
+
   handleChange = (activeImage) => {
     this.setState({ activeSliderImage: activeImage });
   };
