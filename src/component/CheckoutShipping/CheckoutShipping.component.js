@@ -170,8 +170,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     ) {
       this.setState({isButtondisabled: true})
       return null;
+    }else {
+      this.setState({isButtondisabled: false})
     }
-    this.setState({isButtondisabled: false})
+    
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
         <button
