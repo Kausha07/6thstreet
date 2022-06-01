@@ -71,6 +71,7 @@ export class CartItem extends PureComponent {
     dragOpen: false,
     dragOpenEl: "",
     isSignedIn: this.props.isSignedIn,
+
   };
 
   static defaultProps = {
@@ -289,8 +290,8 @@ export class CartItem extends PureComponent {
 
     let leftDir = this.state.isArabic ? "right" : "left";
     let rightDir = this.state.isArabic ? "left" : "right";
-    let leftDirMove = this.state.isArabic ? "116px" : "-116px";
-    let rightDirMove = this.state.isArabic ? "-116px" : "116px";
+    let leftDirMove = this.state.isArabic ? "98px" : "-98px";
+    let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
     if (this.state.isSignedIn) {
 
@@ -387,8 +388,8 @@ export class CartItem extends PureComponent {
 
     let leftDir = this.state.isArabic ? "right" : "left";
     let rightDir = this.state.isArabic ? "left" : "right";
-    let leftDirMove = this.state.isArabic ? "116px" : "-116px";
-    let rightDirMove = this.state.isArabic ? "-116px" : "116px";
+    let leftDirMove = this.state.isArabic ? "98px" : "-98px";
+    let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
     
 
@@ -477,32 +478,30 @@ export class CartItem extends PureComponent {
 
     let leftDir = this.state.isArabic ? "right" : "left";
     let rightDir = this.state.isArabic ? "left" : "right";
-    let leftDirMove = this.state.isArabic ? "116px" : "-116px";
-    let rightDirMove = this.state.isArabic ? "-116px" : "116px";
+    let leftDirMove = this.state.isArabic ? "98px" : "-98px";
+    let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
-    if (this.state.dragOpen) {
-      
+    if (this.state.dragOpen) {      
       el2.style.transform = `translateX(0)`;
       el3.style.width = "0";
-      this.setState({ dragOpen: false, dragged: false, dragOpenEl: leftDir });
+      this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
       
-    } else {
-      
+    } else { 
       
 
       if (this.state.isSignedIn ) {
-        el1.style.width = "0px";
-        el2.style.transform = `translateX(${leftDirMove})`;
-        el3.style.width = "98px";
+        el1.style.width = "98px";
+        el2.style.transform = `translateX(${rightDirMove})`;
+        el3.style.width = "0px";
         setTimeout(() => {
-          el1.style.width = "98px";
-          el2.style.transform = `translateX(${rightDirMove})`;
-          el3.style.width = "0px";
-        }, 800);
+          el1.style.width = "0px";
+          el2.style.transform = `translateX(${leftDirMove})`;
+          el3.style.width = "98px";
+        }, 900);
         this.setState({
-          dragOpen: false,
+          dragOpen: true,
           dragged: false,
-          dragOpenEl: rightDir,
+          dragOpenEl: leftDir,
         });
       } else {        
         el2.style.transform = `translateX(${leftDirMove})`;
@@ -531,10 +530,9 @@ export class CartItem extends PureComponent {
             onClick={handleRemoveItem}
           >
             <img src={trash} alt="trash"/>
-            <span block="title">Delete</span>
+            <span block="title">{__("Delete")}</span>
           </button>
         </div>
-        
         
     )
   }
@@ -543,16 +541,21 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
     const { item: { sku, full_item_info,full_item_info: { config_sku }, }, item } = this.props;
     this.setState({isSwipe : false})
+    const {      
+      handleRemoveItem,
+    } = this.props;
     return(
-      <div block="actionItem">
+      <div block="actionItem" >
         <WishlistIcon
           sku={config_sku}      
           mods={{ isArabic }}
           pageType="cart-page"
           data={full_item_info}
-          renderMySignInPopup = {()=>{}}
+          swipeWishlist = {true}
+          renderMySignInPopup = {()=>{handleRemoveItem();}}
         />
-        <span block="title">Save to Wishlist</span>
+        {/* {handleRemoveItem()} */}
+        <span block="title">{__("Save to Wishlist")}</span>
       </div>
       
     )
