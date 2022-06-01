@@ -330,7 +330,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       totals,
       addresses,
       edd_info,
-      addressCityData
+      addressCityData,
+      customer
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -349,6 +350,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         totals={totals}
         isClickAndCollect={isClickAndCollect}
         clickAndCollectStatus={checkClickAndCollect()}
+        customer={customer}
       />
     );
   }
