@@ -41,6 +41,10 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   };
 
   getAvailableProducts(product) {
+    const {
+      setAvailableProduct,
+      item: { item_id },
+    } = this.props;
     const alsoAvailable = product["6s_also_available"];
     alsoAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
@@ -57,6 +61,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
           isAlsoAvailable: availableProducts.length === 0,
           alsoAvailable,
         });
+        setAvailableProduct(availableProducts, item_id);
       })
     );
   }
@@ -158,11 +163,24 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
   onAvailSizeSelect({ target }, itemId) {
     const { value } = target;
-    const { onSizeSelect, products } = this.props;
-    let filteredProduct = products[itemId];
+    const { onSizeSelect, products, selectedAvailProduct } = this.props;
+    const { availableProducts } = this.state;
+    let availProduct = null;
+    if (availableProducts.length > 0) {
+      availProduct = availableProducts.filter((product) => {
+        if (products[itemId]["6s_also_available"].includes(product.sku)) {
+          return product;
+        }
+      });
+    }
+    let filteredProduct =
+      selectedAvailProduct[itemId] && selectedAvailProduct[itemId].id !== false
+        ? availProduct[0]
+        : products[itemId];
+
     const { simple_products: productStock } = filteredProduct;
-    const { isOutOfStock } = this.state;
-    let outOfStockVal = isOutOfStock;
+
+    let outOfStockVal = false;
     if (productStock && productStock[value]) {
       const selectedSize = productStock[value];
       if (
@@ -184,6 +202,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onClick: this.onClick.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     onAvailSizeSelect: this.onAvailSizeSelect.bind(this),
+    onAvailableProductClick: this.onAvailableProductClick.bind(this),
   };
 
   onReasonChange(value) {
@@ -204,29 +223,11 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       const isSelected = !prevIsSelected;
       this.getAvailableProduct(config_sku).then((currentProduct) => {
         if (currentProduct) {
-          onClick(item_id, isSelected, currentProduct.data);
-          this.getAvailableProducts(currentProduct.data);
-          this.setSizeData(currentProduct.data);
-        }
-        return { isSelected };
-      });
-    });
-  }
-  onClick() {
-    const {
-      onClick,
-      item: { item_id, config_sku },
-    } = this.props;
-    this.setState(({ isSelected: prevIsSelected }) => {
-      const isSelected = !prevIsSelected;
-      this.getAvailableProduct(config_sku).then((currentProduct) => {
-        if (currentProduct) {
           if (isSelected) {
             onClick(item_id, isSelected, currentProduct.data);
           } else {
             onClick(item_id, isSelected, null);
           }
-
           this.getAvailableProducts(currentProduct.data);
           this.setSizeData(currentProduct.data);
         }
@@ -285,6 +286,29 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     });
   }
 
+  onAvailableProductClick(event, itemId, sku) {
+    const id = event.target.id;
+    const { availableProducts } = this.state;
+    const { onAvailableProductSelect, selectedAvailProduct, products } =
+      this.props;
+    let selectedAvailableProduct = Object.values(availableProducts).filter(
+      (product) => {
+        if (product.sku === sku) {
+          return product;
+        }
+      }
+    );
+    if (
+      selectedAvailProduct[itemId] &&
+      selectedAvailProduct[itemId].id === sku
+    ) {
+      this.setSizeData(products[itemId]);
+    } else {
+      this.setSizeData(selectedAvailableProduct[0]);
+    }
+
+    onAvailableProductSelect(id, itemId);
+  }
   render() {
     return (
       <MyAccountReturnCreateItem

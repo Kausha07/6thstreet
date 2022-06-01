@@ -1,11 +1,22 @@
 .MyAccountReturnCreateItem {
   margin-bottom: 30px;
+  .PDPAddToCart {
+    &-OutOfStockContainer {
+      width: 80%;
+      padding: 10px;
+      margin-left: 40px;
+    }
+  }
   .PLPAddToCart {
     &-SizeSelector {
       align-items: flex-start;
       margin-left: 40px;
       padding: 0px 0 25px 0;
       border-bottom: 2px solid var(--color-gainsboro);
+      &-SizeOptionContainerOOS {
+        cursor: pointer;
+        pointer-events: unset;
+      }
     }
   }
   .PDPAlsoAvailable {

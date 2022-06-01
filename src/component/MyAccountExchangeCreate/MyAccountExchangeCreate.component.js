@@ -66,6 +66,16 @@ export class MyAccountExchangeCreate extends PureComponent {
     );
   }
 
+  checkOutOfStockStatus = () => {
+    const { isOutOfStock } = this.props;
+    let outOfStockItems = Object.values(isOutOfStock).filter((item) => {
+      if (item === true) {
+        return item;
+      }
+    });
+    return outOfStockItems.length === Object.keys(isOutOfStock).length;
+  };
+  
   renderActions() {
     const {
       handleDiscardClick,
@@ -73,8 +83,11 @@ export class MyAccountExchangeCreate extends PureComponent {
       disabledStatus,
       disabledStatusArr,
     } = this.props;
+    let outOfStockStatus = this.checkOutOfStockStatus();
     let isDisabled =
-      Object.keys(disabledStatusArr).length < selectedNumber
+      outOfStockStatus === true
+        ? true
+        : Object.keys(disabledStatusArr).length < selectedNumber
         ? true
         : disabledStatus === true
         ? true

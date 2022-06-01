@@ -3,17 +3,31 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
-
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { HistoryType, MatchType } from "Type/Common";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { NOTIFY_EMAIL } from "../PDPAddToCart/PDPAddToCard.config";
+import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 import MyAccountExchangeCreate from "./MyAccountExchangeCreate.component";
 
-export const mapStateToProps = () => ({});
+export const mapStateToProps = (state) => ({
+  product: state.PDP.product,
+  locale: state.AppState.locale,
+  customer: state.MyAccountReducer.customer,
+  guestUserEmail: state.MyAccountReducer.guestUserEmail,
+});
 
 export const mapDispatchToProps = (dispatch) => ({
   showErrorMessage: (message) => dispatch(showNotification("error", message)),
+  showNotification: (type, message) =>
+    dispatch(showNotification(type, message)),
+  setGuestUserEmail: (email) =>
+    MyAccountDispatcher.setGuestUserEmail(dispatch, email),
+  sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
 });
 
 export class MyAccountExchangeCreateContainer extends PureComponent {
@@ -28,8 +42,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     onSizeSelect: this.onSizeSelect.bind(this),
     checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
+    sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     onAvailableProductSelect: this.onAvailableProductSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
+    setAvailableProduct: this.setAvailableProduct.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     handleDiscardClick: this.onDiscardClick.bind(this),
   };
@@ -45,13 +61,16 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     selectedSizeCodes: {},
     selectedSizeType: "eu",
     selectedAvailProduct: {},
-    isOutOfStock: false,
+    isOutOfStock: {},
+    notifyMeSuccess: false,
+    notifyMeLoading: false,
     isArabic: isArabic(),
     prevAlsoAvailable: [],
     exchangeReason: [],
     products: {},
     disabledStatus: true,
     disabledStatusArr: {},
+    availableProducts: {},
   };
 
   componentDidMount() {
@@ -149,11 +168,16 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   onSizeSelect(value, outOfStockVal, itemId) {
     const {
       selectedSizeCodes: { [itemId]: item },
+      isOutOfStock,
     } = this.state;
 
     this.setState(({ selectedSizeCodes }) => ({
       selectedSizeCodes: { ...selectedSizeCodes, [itemId]: { ...item, value } },
-      isOutOfStock: outOfStockVal,
+      isOutOfStock: {
+        ...isOutOfStock,
+        [itemId]: outOfStockVal,
+      },
+      notifyMeSuccess: false,
     }));
   }
 
@@ -163,18 +187,29 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
-  onAvailableProductSelect(event, itemId) {
-    const id = event.target.id;
+  onAvailableProductSelect(id, itemId) {
     const {
       selectedAvailProduct: { [itemId]: item },
+      selectedAvailProduct,
     } = this.state;
-
-    this.setState(({ selectedAvailProduct }) => ({
-      selectedAvailProduct: {
-        ...selectedAvailProduct,
-        [itemId]: { ...item, id },
-      },
-    }));
+    if (
+      selectedAvailProduct[itemId] &&
+      selectedAvailProduct[itemId].id === id
+    ) {
+      this.setState(({ selectedAvailProduct }) => ({
+        selectedAvailProduct: {
+          ...selectedAvailProduct,
+          [itemId]: false,
+        },
+      }));
+    } else {
+      this.setState(({ selectedAvailProduct }) => ({
+        selectedAvailProduct: {
+          ...selectedAvailProduct,
+          [itemId]: { ...item, id },
+        },
+      }));
+    }
   }
 
   onDiscardClick() {
@@ -246,14 +281,74 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   onReasonChange(itemId, reasonId) {
     const {
       selectedItems: { [itemId]: item },
+      disabledStatusArr,
     } = this.state;
 
     this.setState(({ selectedItems }) => ({
       selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } },
     }));
-
+    let itemArr = disabledStatusArr;
+    delete itemArr[itemId];
     this.setState({
       reasonId: reasonId,
+      disabledStatusArr: itemArr,
+    });
+  }
+
+  sendNotifyMeEmail(email, itemId) {
+    const { locale, sendNotifyMeEmail, showNotification, customer } =
+      this.props;
+    const { selectedSizeCodes, products } = this.state;
+    let data = {
+      email,
+      sku: selectedSizeCodes[itemId].value || products[itemId].sku,
+      locale,
+    };
+
+    this.setState({ notifyMeLoading: true });
+
+    sendNotifyMeEmail(data).then((response) => {
+      if (response && response.success) {
+        if (!(customer && customer.email)) {
+          BrowserDatabase.setItem(email, NOTIFY_EMAIL, ONE_MONTH_IN_SECONDS);
+        }
+        //if success
+        if (response.message) {
+          showNotification("error", response.message);
+          this.setState({
+            notifyMeSuccess: false,
+            isOutOfStock: true,
+          });
+        } else {
+          this.setState({
+            notifyMeSuccess: true,
+            isOutOfStock: true,
+          });
+
+          if (customer && customer.id) {
+            //if user is logged in then change email
+            const loginEvent = new CustomEvent("userLogin");
+            window.dispatchEvent(loginEvent);
+          }
+          setTimeout(() => {
+            this.setState({
+              notifyMeSuccess: false,
+              isOutOfStock: true,
+            });
+          }, 4000);
+        }
+      } else {
+        //if error
+        showNotification("error", __("Something went wrong."));
+      }
+      this.setState({ notifyMeLoading: false });
+    });
+  }
+
+  setAvailableProduct(products, itemId) {
+    const { availableProducts } = this.state;
+    this.setState({
+      availableProducts: { ...availableProducts, [itemId]: products },
     });
   }
 
@@ -266,7 +361,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       selectedSizeCodes,
       products = {},
       selectedAvailProduct,
+      availableProducts = {},
     } = this.state;
+
     const payload = {
       parent_order_id: this.getOrderId(),
       items: Object.entries(selectedItems).map(
@@ -277,9 +374,30 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             exchange_reasons,
             item_id,
           } = items.find(({ item_id }) => item_id === order_item_id) || {};
-          const { label = "", id } =
+          const { id } =
             exchange_reasons.find(({ id }) => id === reasonId) || {};
-          const { simple_products: productStock } = products[order_item_id];
+          let availProduct = null;
+
+          if (
+            selectedAvailProduct[order_item_id] &&
+            selectedAvailProduct[order_item_id].id !== false
+          ) {
+            if (Object.keys(availableProducts).length > 0) {
+              Object.values(availableProducts).filter((product) => {
+                Object.values(product).map((entry) => {
+                  if (entry.sku === selectedAvailProduct[order_item_id]["id"]) {
+                    availProduct = entry;
+                  }
+                });
+              });
+            }
+          }
+          const { simple_products: productStock } =
+            selectedAvailProduct[order_item_id] &&
+            selectedAvailProduct[order_item_id].id !== false
+              ? availProduct
+              : products[order_item_id];
+
           let currentSizeCode = "";
           if (selectedSizeCodes[order_item_id]) {
             currentSizeCode = selectedSizeCodes[order_item_id]["value"];
@@ -305,8 +423,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
               : null;
           let finalSizeValue = null;
           if (finalSize) {
-            finalSizeValue =
-              productStock[finalSize].size[`${size["label"].toLowerCase()}`];
+            finalSizeValue = productStock[finalSize]
+              ? productStock[finalSize].size[`${size["label"].toLowerCase()}`]
+              : size["value"];
           } else {
             finalSizeValue = size["value"];
           }

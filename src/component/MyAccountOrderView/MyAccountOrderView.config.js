@@ -12,6 +12,8 @@ export const STATUS_CANCELLED = "cancelled";
 
 export const CANCEL_ITEM_LABEL = __("Cancel an Item");
 
+export const CANCEL_ORDER_LABEL = __("Cancel order");
+
 export const RETURN_ITEM_LABEL = __("Return an Item");
 
 export const RETURN__EXCHANGE_ITEM_LABEL = __("Return/Exchange Item");

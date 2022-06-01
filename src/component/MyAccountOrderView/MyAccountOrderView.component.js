@@ -4,6 +4,7 @@ import Image from "Component/Image";
 import Loader from "Component/Loader";
 import {
   STATUS_BEING_PROCESSED,
+  STATUS_EXCHANGE_PENDING,
   STATUS_CANCELED,
   STATUS_COMPLETE,
   STATUS_FAILED,
@@ -47,7 +48,7 @@ import {
   RETURN_ITEM_LABEL,
   STATUS_IN_TRANSIT,
   EXCHANGE_ITEM_LABEL,
-  STATUS_LABEL_MAP,
+  CANCEL_ORDER_LABEL,
   NEW_STATUS_LABEL_MAP,
   NEW_EXCHANGE_STATUS_LABEL_MAP,
   STATUS_DISPATCHED,
@@ -233,6 +234,12 @@ class MyAccountOrderView extends PureComponent {
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
               {buttonText}
+            </button>
+          </div>
+        ) : status === STATUS_EXCHANGE_PENDING && is_cancelable ? (
+          <div block="MyAccountOrderView" elem="HeadingButton">
+            <button onClick={() => openOrderCancelation(CANCEL_ORDER_LABEL)}>
+              {CANCEL_ORDER_LABEL}
             </button>
           </div>
         ) : null}

@@ -5,9 +5,13 @@ import Field from "Component/Field";
 import Image from "Component/Image";
 import { ReturnItemType, ReturnResolutionType } from "Type/API";
 import { v4 } from "uuid";
+import StrikeThrough from "../PLPAddToCart/icons/strike-through.png";
+import NotifySuccessImg from "../PDPAddToCart/icons/success-circle.png";
+import { Rings } from "react-loader-spinner";
 
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
-
+import { NOTIFY_EMAIL } from "../PDPAddToCart/PDPAddToCard.config";
+import BrowserDatabase from "Util/BrowserDatabase";
 import "./MyAccountReturnCreateItem.style";
 
 export class MyAccountReturnCreateItem extends PureComponent {
@@ -22,7 +26,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
     displayDiscountPercentage: PropTypes.bool.isRequired,
     reasonId: PropTypes.string,
   };
-
+  state = {
+    notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
+  };
   static defaultProps = {
     fixedPrice: false,
     displayDiscountPercentage: true,
@@ -165,61 +171,26 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   }
 
-  getSizeTypeSelect() {
-    const {
-      selectedSizeType,
-      onSizeTypeSelect,
-      sizeObject = {},
-      isArabic,
-      isOutOfStock,
-      products,
-      item: { item_id },
-    } = this.props;
-
-    if (isOutOfStock) {
-      return null;
-    }
-    let finalProduct = products[item_id];
-    if (sizeObject.sizeTypes !== undefined) {
-      return (
-        <div block="PLPAddToCart" elem="SizeTypeSelect" mods={{ isArabic }}>
-          <select
-            key="SizeTypeSelect"
-            block="PLPAddToCart"
-            elem="SizeTypeSelectElement"
-            value={selectedSizeType}
-            onChange={onSizeTypeSelect}
-          >
-            {sizeObject.sizeTypes.map((type = "") => {
-              if (finalProduct[`size_${type}`].length > 0) {
-                return (
-                  <option
-                    key={type}
-                    block="PLPAddToCart"
-                    elem="SizeTypeOption"
-                    value={type}
-                  >
-                    {type.toUpperCase()}
-                  </option>
-                );
-              }
-              return null;
-            })}
-          </select>
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  renderSizeOption(productStock, code, label) {
+  renderSizeOption(
+    productStock,
+    code,
+    label,
+    selectedStatus,
+    availProductStatus
+  ) {
     const {
       selectedSizeCodes,
       onAvailSizeSelect,
       item: { item_id },
+      notifyMeSuccess,
+      notifyMeLoading,
     } = this.props;
-    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
+    const isNotAvailable =
+      (availProductStatus && selectedStatus)
+        ? false
+        : selectedStatus
+        ? selectedStatus
+        : parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
       fontSize: "14px",
       color: "#ffffff",
@@ -236,9 +207,10 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
     const isCurrentSizeSelected =
       filteredSizeCode.length > 0 ? filteredSizeCode[0] : false;
-    if (isNotAvailable) {
-      return null;
-    }
+    const selectedStrikeThruLineStyle = {
+      opacity: 0.6,
+      filter: "none",
+    };
     return (
       <div
         block="PLPAddToCart-SizeSelector"
@@ -246,7 +218,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
         key={v4()}
         className="SizeOptionList"
         onClick={() => {
-          onAvailSizeSelect({ target: { value: code } }, item_id);
+          if (!notifyMeLoading && !notifyMeSuccess)
+            onAvailSizeSelect({ target: { value: code } }, item_id);
         }}
       >
         <input
@@ -266,6 +239,14 @@ export class MyAccountReturnCreateItem extends PureComponent {
           >
             {label}
           </label>
+          {isNotAvailable && (
+            <Image
+              lazyLoad={false}
+              src={StrikeThrough}
+              className="lineImg"
+              style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+            />
+          )}
         </div>
         <div />
       </div>
@@ -278,9 +259,27 @@ export class MyAccountReturnCreateItem extends PureComponent {
       item: { item_id, size = {} },
       isArabic,
       sizeObject,
+      selectedAvailProduct,
+      availableProducts,
       selectedSizeType,
     } = this.props;
-    let filteredProductStock = products[item_id];
+    let availProduct = null;
+    if (availableProducts.length > 0) {
+      availProduct = availableProducts.filter((product) => {
+        if (products[item_id]["6s_also_available"].includes(product.sku)) {
+          return product;
+        }
+      });
+    }
+
+    let filteredProductStock =
+      selectedAvailProduct[item_id] &&
+      selectedAvailProduct[item_id].id !== false
+        ? availProduct[0]
+        : products[item_id];
+    let availProductStatus =
+      selectedAvailProduct[item_id] &&
+      selectedAvailProduct[item_id].id !== false;
     const { simple_products: productStock } = filteredProductStock;
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -294,9 +293,18 @@ export class MyAccountReturnCreateItem extends PureComponent {
           mods={{ isArabic }}
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
-            const label = productStock[code].size[selectedSizeType];
-            if (label && label !== `${size["value"]}`) {
-              acc.push(this.renderSizeOption(productStock, code, label));
+            const label = productStock[code]?.size[selectedSizeType];
+            const selectedStatus = label === `${size["value"]}`;
+            if (label && (availProductStatus || !selectedStatus)) {
+              acc.push(
+                this.renderSizeOption(
+                  productStock,
+                  code,
+                  label,
+                  selectedStatus,
+                  availProductStatus
+                )
+              );
             }
 
             return acc;
@@ -321,9 +329,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
               </h2>
             </div>
             <div block="SizeParentWrapper">
-              {/* <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
-                {this.getSizeTypeSelect()}
-              </div> */}
               <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
                 {this.getSizeSelect()}
               </div>
@@ -336,7 +341,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   renderAvailableProducts = () => {
     const {
-      onAvailableProductSelect,
+      onAvailableProductClick,
       selectedAvailProduct,
       item: { item_id },
       availableProducts,
@@ -354,7 +359,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               : ""
           }
           id={sku}
-          onClick={(event) => onAvailableProductSelect(event, item_id)}
+          onClick={(event) => onAvailableProductClick(event, item_id, sku)}
         >
           <div
             block="PDPAlsoAvailableProduct-Link"
@@ -395,6 +400,98 @@ export class MyAccountReturnCreateItem extends PureComponent {
     return null;
   };
 
+  onNotifyMeSendClick = () => {
+    const {
+      showAlertNotification,
+      sendNotifyMeEmail,
+      notifyMeLoading,
+      item: { item_id },
+    } = this.props;
+    if (notifyMeLoading) {
+      return;
+    }
+    const { notifyMeEmail } = this.state;
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (notifyMeEmail.length === 0 || !emailRegex.test(notifyMeEmail)) {
+      showAlertNotification(__("That looks like an invalid email address"));
+      return;
+    }
+    sendNotifyMeEmail(notifyMeEmail, item_id);
+  };
+
+  renderOutOfStockPopUp() {
+    const {
+      isOutOfStock,
+      notifyMeLoading,
+      item: { item_id },
+      customer: { email },
+      guestUserEmail,
+      isArabic,
+    } = this.props;
+    const { notifyMeEmail } = this.state;
+    if (
+      !isOutOfStock[item_id] ||
+      (isOutOfStock[item_id] && !isOutOfStock[item_id])
+    ) {
+      return null;
+    }
+
+    return (
+      <div block="PDPAddToCart" elem="OutOfStockContainer">
+        <span block="PDPAddToCart" elem="OutOfStockHeading">
+          {__("out of stock")}
+        </span>
+        <span block="PDPAddToCart" elem="NotifyWhenAvailable">
+          {__("Notify me when it’s available")}
+        </span>
+        <div block="PDPAddToCart" elem="EmailSendContainer">
+          <input
+            block="PDPAddToCart"
+            elem="EmailInput"
+            placeholder={`${__("Email")}*`}
+            value={notifyMeEmail}
+            disabled={notifyMeLoading}
+            onChange={({ target }) => {
+              this.setState({ notifyMeEmail: target.value });
+            }}
+          />
+          <span
+            block="PDPAddToCart"
+            elem="EmailSendBtn"
+            lang={isArabic ? "ar" : "en"}
+            onClick={this.onNotifyMeSendClick}
+          >
+            {notifyMeLoading ? __("Sending..") : __("Send")}
+          </span>
+        </div>
+        {notifyMeLoading && (
+          <div block="PDPAddToCart" elem="LoadingContainer">
+            <Rings color="white" height={80} width={"100%"} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  renderNotifyMeSuccess() {
+    const { notifyMeSuccess } = this.props;
+    if (!notifyMeSuccess) {
+      return null;
+    }
+
+    return (
+      <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
+        <Image lazyLoad={true} src={NotifySuccessImg} alt="success circle" />
+
+        <span>
+          {__("We’ll let you know as soon as the product becomes available")}
+        </span>
+      </div>
+    );
+  }
+
   isReasonSelected = () => {
     const {
       selectedItems,
@@ -419,6 +516,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
             {this.renderReasons()}
           </div>
         )}
+        {this.renderOutOfStockPopUp()}
         {isExchange && this.isReasonSelected() && isSelected && (
           <>
             {this.renderSizeContent()}

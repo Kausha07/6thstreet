@@ -1107,5 +1107,6 @@
     "Select a Color": null,
     "Exchange Shipped": null,
     "Exchange In Transit": null,
-    "Exchange Delivered": null
+    "Exchange Delivered": null,
+    "Cancel order": null
 }
