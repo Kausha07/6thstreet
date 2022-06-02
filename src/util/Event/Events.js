@@ -57,6 +57,7 @@ export const EVENT_CLICK_SEARCH_WISH_LIST_CLICK = "search_wish_list_click";
 export const EVENT_GTM_VIEW_SEARCH_RESULTS = "view_search_results";
 export const EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
 export const EVENT_CLICK_RECENT_SEARCHES_CLICK = "recent_searches_click";
+export const EVENT_EXPLORE_MORE_SEARCH_CLICK = "explore_more_click";
 export const EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW = "search_logs_screen_view";
 export const EVENT_GTM_SEARCH_SCREEN_VIEW = "search_screen_view";
 export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";

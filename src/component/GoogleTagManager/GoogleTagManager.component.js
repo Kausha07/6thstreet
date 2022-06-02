@@ -14,6 +14,7 @@ import {
   EVENT_GTM_VIEW_SEARCH_RESULTS,
   EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_EXPLORE_MORE_SEARCH_CLICK,
   EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
   EVENT_GTM_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
@@ -43,6 +44,7 @@ import WishlistClickEvent from "./events/WishlistClick.event";
 import SearchEvent from "./events/Search.event";
 import GoToSearchEvent from "./events/SearchEvents/GoToSearch.event";
 import RecentSearchesClickEvent from "./events/SearchEvents/RecentSearchesClick.event";
+import ExploreMoreClickEvent from "./events/SearchEvents/ExploreMore.event";
 import TopSearchesClickEvent from "./events/SearchEvents/TopSearchesClick.event";
 import SearchSuggesionClickEvent from "./events/SearchEvents/SearchSuggestionClick.event";
 import CancelSearchEvent from "./events/SearchEvents/CancelSearch.event";
@@ -99,7 +101,7 @@ class GoogleTagManager extends PureComponent {
       gtm_id: "",
     },
     state: {},
-    dispatch: () => {},
+    dispatch: () => { },
   };
 
   /**
@@ -116,8 +118,8 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CHECKOUT_OPTION]: CheckoutOptionEvent,
     [EVENT_IMPRESSION]: Impression,
     [EVENT_ADD_TO_CART]: AddToCartEvent,
-    [EVENT_EDD_VISIBILITY]:EddVisibilityEvent,
-    [EVENT_EDD_TRACK_ON_ORDER]:EddTrackOnOrderEvent,
+    [EVENT_EDD_VISIBILITY]: EddVisibilityEvent,
+    [EVENT_EDD_TRACK_ON_ORDER]: EddTrackOnOrderEvent,
     [EVENT_ADD_TO_WISHLIST]: AddToWishlistEvent,
     [EVENT_PRODUCT_CLICK]: ProductClickEvent,
     [EVENT_WISHLIST_PRODUCT_CLICK]: WishlistClickEvent,
@@ -138,6 +140,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_VIEW_SEARCH_RESULTS]: SearchEvent,
     [EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW]: SearchEvent,
     [EVENT_CLICK_RECENT_SEARCHES_CLICK]: RecentSearchesClickEvent,
+    [EVENT_EXPLORE_MORE_SEARCH_CLICK]: ExploreMoreClickEvent,
     [EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW]: SearchEvent,
     [EVENT_GTM_SEARCH_SCREEN_VIEW]: SearchEvent,
     [EVENT_CLICK_TOP_SEARCHES_CLICK]: TopSearchesClickEvent,
