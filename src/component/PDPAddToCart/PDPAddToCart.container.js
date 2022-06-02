@@ -669,7 +669,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   confirmClickAndCollect() {
-    this.addToCart(true);
+    this.addToCart();
   }
 
   selectClickAndCollectStore(value) {
