@@ -82,6 +82,11 @@
         overflow: hidden;
       }
     }
+    .CountrySwitcher{
+      @include desktop{
+        flex: 0 0 100%;
+      }
+    }
   }
 
   &-CmsBlock {

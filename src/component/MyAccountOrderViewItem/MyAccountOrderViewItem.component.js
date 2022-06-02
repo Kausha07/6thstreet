@@ -10,6 +10,8 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -33,6 +35,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="MyAccountOrderViewItem" elem="Name">
           {name}
         </div>
+        
         <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
           {!!color && (
             <p>
@@ -72,6 +75,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
       eddResponse,
       compRef,
       myOrderEdd,
+      setEddEventSent,
+      eddEventSent,
       edd_info,
       item: { edd_msg_color },
     } = this.props;
@@ -109,6 +114,17 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
+      if(myOrderEdd && !eddEventSent){
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+      setEddEventSent()
+    }
     }
 
     if (!actualEddMess) {
@@ -121,7 +137,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
     const idealFormat = actualEddMess.includes(splitKey) ? true : false;
     return (
-      <div block="AreaText">
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >

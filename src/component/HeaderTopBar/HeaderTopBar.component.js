@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { withRouter } from "react-router";
 import { getCountryFromUrl } from "Util/Url/Url";
-
 import CountrySwitcher from "Component/CountrySwitcher";
 import InlineCustomerSupport from "Component/InlineCustomerSupport";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -83,33 +82,36 @@ class HeaderTopBar extends NavigationAbstract {
       OM: __("FREE SHIPPING OVER OMR20"),
       BH: __("FREE SHIPPING OVER BHD20.5"),
     };
-
     return (
       <div className="customVerticalSlider">
         <div className="carouselItemInner">
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("800+ GLOBAL BRANDS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("100-DAY FREE RETURNS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("CLUB APPAREL REWARDS")}
           </div>
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
-            {txt[country]}
-          </div>
+          {country ? (
+            <div block="HeaderTopBar" elem="CmsBlock">
+              {txt[country]}
+            </div>
+          ) : (
+            " "
+          )}
           {getCountryFromUrl() === "QA" ? (
-            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+            <div block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON RECEIVING")}
             </div>
           ) : (
-            <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+            <div block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON DELIVERY")}
             </div>
           )}
 
-          <div key="cms" block="HeaderTopBar" elem="CmsBlock">
+          <div block="HeaderTopBar" elem="CmsBlock">
             {__("ALL PRICES ARE INCLUSIVE OF VAT")}
           </div>
         </div>

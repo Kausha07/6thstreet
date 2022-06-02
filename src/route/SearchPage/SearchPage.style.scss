@@ -26,6 +26,11 @@
           right: unset;
           left: 0;
       }
+      .Products {
+        &-FixScroll {
+          position: static !important; // for resolving 2663.
+        }
+      }
   }
 
 }

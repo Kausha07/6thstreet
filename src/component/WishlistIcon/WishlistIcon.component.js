@@ -10,6 +10,7 @@ import Event, {
   EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST,
   VUE_ADD_TO_WISHLIST,
   VUE_REMOVE_TO_WISHLIST,
+  EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
@@ -46,6 +47,7 @@ class WishlistIcon extends PureComponent {
       data,
       pageType,
       renderMySignInPopup,
+      swipeWishlist = false,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -94,6 +96,9 @@ class WishlistIcon extends PureComponent {
       return;
     }
     if (isSignedIn()) {
+      if(swipeWishlist){
+        renderMySignInPopup();
+      }
       addToWishlist(skuFromProps);
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);
@@ -104,7 +109,11 @@ class WishlistIcon extends PureComponent {
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
       : "";
-    Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
+    if (pageType == "search") {
+      Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data.name);
+    }
+    else{
+      Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
       product: {
         brand: data.brand_name,
         category: gender,
@@ -114,6 +123,8 @@ class WishlistIcon extends PureComponent {
         variant: data.color,
       },
     });
+    }
+    
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_WISHLIST,

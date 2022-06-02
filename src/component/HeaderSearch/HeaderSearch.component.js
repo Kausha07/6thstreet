@@ -10,7 +10,10 @@ import Clear from "./icons/close-black.png";
 import searchPng from "./icons/search.svg";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import Event, { EVENT_GTM_CANCEL_SEARCH, EVENT_GTM_GO_TO_SEARCH } from "Util/Event";
+import Event, {
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
+} from "Util/Event";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -47,6 +50,9 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     const { focusInput, isPDPSearchVisible } = this.props;
@@ -67,11 +73,7 @@ class HeaderSearch extends PureComponent {
       searchInput.focus();
     }
 
-    if(!showSearch && prevShowSearch){
-      Event.dispatch(EVENT_GTM_CANCEL_SEARCH);
-    }
-
-    if(showSearch && !prevShowSearch){
+    if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
     }
   }
@@ -97,10 +99,9 @@ class HeaderSearch extends PureComponent {
         form: { children },
       },
     } = this.searchRef;
-
+    
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
-
     submitBtn.blur();
     searchInput.blur();
     onSearchSubmit();
@@ -109,26 +110,37 @@ class HeaderSearch extends PureComponent {
   onFocus = () => {
     const { handleHomeSearchClick } = this.props;
     this.setState({ showSearch: true });
-    if(handleHomeSearchClick){
+    if (handleHomeSearchClick) {
       handleHomeSearchClick(true);
     }
     window.onpopstate = (e) => {
       if (document.body.classList.contains("isSuggestionOpen")) {
-        this.closeSearch();
+        this.cancelSearch();
         history.forward();
         e.preventDefault();
       }
     };
   };
+  cancelSearch = () => {
+    const {search} = this.props;
+    this.closeSearch();
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+  };
   closeSearch = () => {
-    const { hideSearchBar, onSearchClean,handleHomeSearchClick } = this.props;
+    const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
     if (hideSearchBar) {
       hideSearchBar();
     }
     onSearchClean();
     this.setState({ showSearch: false });
-    if(handleHomeSearchClick){
-      handleHomeSearchClick(false)
+    if (handleHomeSearchClick) {
+      handleHomeSearchClick(false);
     }
   };
 
@@ -175,7 +187,7 @@ class HeaderSearch extends PureComponent {
           <button
             block="HeaderSearch"
             elem="Clear"
-            onClick={onSearchClean}
+            onClick={this.cancelSearch}
             type="button"
             mods={{
               type: "searchClear",
@@ -202,7 +214,7 @@ class HeaderSearch extends PureComponent {
               block="CloseContainer"
               elem="Close"
               mods={{ isArabic }}
-              onClick={this.closeSearch}
+              onClick={this.cancelSearch}
             >
               {__("Cancel")}
             </button>
