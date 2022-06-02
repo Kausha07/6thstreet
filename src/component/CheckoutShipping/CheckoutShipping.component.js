@@ -161,8 +161,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       : {};
 
     if (
-      isMobile.any() ||
-      isMobile.tablet() ||
+      // isMobile.any() ||
+      // isMobile.tablet() ||
       (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
       (isSignedIn &&
         selectedAddressCountry !== getCountryFromUrl() &&
