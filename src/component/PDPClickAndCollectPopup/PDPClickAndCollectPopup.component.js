@@ -161,7 +161,7 @@ class PDPClickAndCollectPopup extends PureComponent {
         onClose={togglePDPClickAndCollectPopup}
         open={openClickAndCollectPopup}
       >
-        <div block="PDPClickAndCollectPopup" elem="HeadingBox">
+        <div block="PDPClickAndCollectPopup" elem="HeadingBox" mods={{isArabic: isArabic()}}>
           <h3>{__("PICK A STORE")}</h3>
         </div>
         <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer" mods={{isArabic: isArabic()}}>
