@@ -124,7 +124,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   getSelectedReason = (item) => {
     const { selectedItems } = this.state;
     let selectedReasonId = "";
-    selectedReasonId = selectedItems[item]["reasonId"];
+    selectedReasonId = selectedItems[item] && selectedItems[item]["reasonId"];
     return selectedReasonId;
   };
 
