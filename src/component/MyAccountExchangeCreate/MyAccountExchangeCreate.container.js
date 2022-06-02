@@ -7,18 +7,26 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { HistoryType, MatchType } from "Type/Common";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
+import {
+  ADDRESS_POPUP_ID,
+  ADD_ADDRESS,
+} from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { NOTIFY_EMAIL } from "../PDPAddToCart/PDPAddToCard.config";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { isSignedIn } from "Util/Auth";
+import isMobile from "Util/Mobile";
+import { showPopup } from "Store/Popup/Popup.action";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import MyAccountExchangeCreate from "./MyAccountExchangeCreate.component";
-
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
   locale: state.AppState.locale,
   customer: state.MyAccountReducer.customer,
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
+  addresses: state.MyAccountReducer.addresses,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -28,6 +36,7 @@ export const mapDispatchToProps = (dispatch) => ({
   setGuestUserEmail: (email) =>
     MyAccountDispatcher.setGuestUserEmail(dispatch, email),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
+  showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
 });
 
 export class MyAccountExchangeCreateContainer extends PureComponent {
@@ -42,12 +51,21 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     onSizeSelect: this.onSizeSelect.bind(this),
     checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
+    setSelectedAddress: this.setSelectedAddress.bind(this),
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     onAvailableProductSelect: this.onAvailableProductSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
     setAvailableProduct: this.setAvailableProduct.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     handleDiscardClick: this.onDiscardClick.bind(this),
+    openForm: this.openForm.bind(this),
+    closeForm: this.closeForm.bind(this),
+    showCards: this.showCards.bind(this),
+    hideCards: this.hideCards.bind(this),
+    showCreateNewPopup: this.showCreateNewPopup.bind(this),
+    openNewForm: this.openNewForm.bind(this),
+    setPopStatus: this.setPopStatus.bind(this),
+    notSavedAddress: this.notSavedAddress.bind(this),
   };
 
   state = {
@@ -71,6 +89,13 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     disabledStatus: true,
     disabledStatusArr: {},
     availableProducts: {},
+    showExchangeAddress: false,
+    selectedAddressId: "",
+    isArabic: isArabic(),
+    formContent: false,
+    isSignedIn: isSignedIn(),
+    isMobile: isMobile.any() || isMobile.tablet(),
+    openFirstPopup: false,
   };
 
   componentDidMount() {
@@ -98,7 +123,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     }
   }
   containerProps = () => {
-    const { history } = this.props;
+    const { history, addresses } = this.props;
     const {
       isLoading,
       incrementId,
@@ -118,8 +143,66 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       resolutions,
       resolutionId,
       reasonId,
+      addresses,
     };
   };
+
+  openForm() {
+    this.setState({ formContent: true });
+  }
+
+  closeForm() {
+    this.setState({ formContent: false });
+  }
+
+  hideCards() {
+    this.setState({ hideCards: true });
+  }
+
+  showCards() {
+    this.closeForm();
+    this.setState({ hideCards: false });
+  }
+
+  openNewForm() {
+    this.openForm();
+    this.showCreateNewPopup();
+  }
+
+  setPopStatus() {
+    this.setState({
+      openFirstPopup: true,
+    });
+  }
+
+  notSavedAddress() {
+    const { addresses } = this.props;
+
+    if (addresses.length === 0) {
+      return true;
+    }
+
+    return !addresses.find(
+      ({ country_code = null }) => country_code === getCountryFromUrl()
+    );
+  }
+
+  showCreateNewPopup() {
+    const { showPopup } = this.props;
+
+    this.openForm();
+    showPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+    });
+  }
+
+  setSelectedAddress(id) {
+    this.setState({
+      selectedAddressId: id,
+    });
+  }
 
   getSelectedReason = (item) => {
     const { selectedItems } = this.state;
@@ -352,111 +435,117 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
+  renderExchangeAddress = () => {
+    const { showExchangeAddress } = this.state;
+    this.setState({ showExchangeAddress: !showExchangeAddress });
+  };
+
   onFormSubmit() {
-    const { history, showErrorMessage } = this.props;
+    this.renderExchangeAddress();
+    // const { history, showErrorMessage } = this.props;
 
-    const {
-      selectedItems = {},
-      items,
-      selectedSizeCodes,
-      products = {},
-      selectedAvailProduct,
-      availableProducts = {},
-    } = this.state;
+    // const {
+    //   selectedItems = {},
+    //   items,
+    //   selectedSizeCodes,
+    //   products = {},
+    //   selectedAvailProduct,
+    //   availableProducts = {},
+    // } = this.state;
 
-    const payload = {
-      parent_order_id: this.getOrderId(),
-      items: Object.entries(selectedItems).map(
-        ([order_item_id, { reasonId }]) => {
-          const {
-            size = {},
-            config_sku,
-            exchange_reasons,
-            item_id,
-            exchangeable_qty
-          } = items.find(({ item_id }) => item_id === order_item_id) || {};
-          const { id } =
-            exchange_reasons.find(({ id }) => id === reasonId) || {};
-          let availProduct = null;
+    // const payload = {
+    //   parent_order_id: this.getOrderId(),
+    //   items: Object.entries(selectedItems).map(
+    //     ([order_item_id, { reasonId }]) => {
+    //       const {
+    //         size = {},
+    //         config_sku,
+    //         exchange_reasons,
+    //         item_id,
+    //         exchangeable_qty
+    //       } = items.find(({ item_id }) => item_id === order_item_id) || {};
+    //       const { id } =
+    //         exchange_reasons.find(({ id }) => id === reasonId) || {};
+    //       let availProduct = null;
 
-          if (
-            selectedAvailProduct[order_item_id] &&
-            selectedAvailProduct[order_item_id].id !== false
-          ) {
-            if (Object.keys(availableProducts).length > 0) {
-              Object.values(availableProducts).filter((product) => {
-                Object.values(product).map((entry) => {
-                  if (entry.sku === selectedAvailProduct[order_item_id]["id"]) {
-                    availProduct = entry;
-                  }
-                });
-              });
-            }
-          }
-          const { simple_products: productStock } =
-            selectedAvailProduct[order_item_id] &&
-            selectedAvailProduct[order_item_id].id !== false
-              ? availProduct
-              : products[order_item_id];
+    //       if (
+    //         selectedAvailProduct[order_item_id] &&
+    //         selectedAvailProduct[order_item_id].id !== false
+    //       ) {
+    //         if (Object.keys(availableProducts).length > 0) {
+    //           Object.values(availableProducts).filter((product) => {
+    //             Object.values(product).map((entry) => {
+    //               if (entry.sku === selectedAvailProduct[order_item_id]["id"]) {
+    //                 availProduct = entry;
+    //               }
+    //             });
+    //           });
+    //         }
+    //       }
+    //       const { simple_products: productStock } =
+    //         selectedAvailProduct[order_item_id] &&
+    //         selectedAvailProduct[order_item_id].id !== false
+    //           ? availProduct
+    //           : products[order_item_id];
 
-          let currentSizeCode = "";
-          if (selectedSizeCodes[order_item_id]) {
-            currentSizeCode = selectedSizeCodes[order_item_id]["value"];
-          } else {
-            Object.entries(productStock).filter((product) => {
-              let itemCityCode = size["label"];
-              if (
-                product[1]["size"][`${itemCityCode.toLowerCase()}`] ===
-                size["value"]
-              ) {
-                currentSizeCode = product[0];
-              }
-            });
-          }
+    //       let currentSizeCode = "";
+    //       if (selectedSizeCodes[order_item_id]) {
+    //         currentSizeCode = selectedSizeCodes[order_item_id]["value"];
+    //       } else {
+    //         Object.entries(productStock).filter((product) => {
+    //           let itemCityCode = size["label"];
+    //           if (
+    //             product[1]["size"][`${itemCityCode.toLowerCase()}`] ===
+    //             size["value"]
+    //           ) {
+    //             currentSizeCode = product[0];
+    //           }
+    //         });
+    //       }
 
-          let finalCsku =
-            selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
-              ? selectedAvailProduct[item_id]["id"]
-              : null;
-          let finalSize =
-            selectedSizeCodes[item_id] && selectedSizeCodes[item_id]["value"]
-              ? selectedSizeCodes[item_id]["value"]
-              : null;
-          let finalSizeValue = null;
-          if (finalSize) {
-            finalSizeValue = productStock[finalSize]
-              ? productStock[finalSize].size[`${size["label"].toLowerCase()}`]
-              : size["value"];
-          } else {
-            finalSizeValue = size["value"];
-          }
+    //       let finalCsku =
+    //         selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
+    //           ? selectedAvailProduct[item_id]["id"]
+    //           : null;
+    //       let finalSize =
+    //         selectedSizeCodes[item_id] && selectedSizeCodes[item_id]["value"]
+    //           ? selectedSizeCodes[item_id]["value"]
+    //           : null;
+    //       let finalSizeValue = null;
+    //       if (finalSize) {
+    //         finalSizeValue = productStock[finalSize]
+    //           ? productStock[finalSize].size[`${size["label"].toLowerCase()}`]
+    //           : size["value"];
+    //       } else {
+    //         finalSizeValue = size["value"];
+    //       }
 
-          return {
-            parent_order_item_id: order_item_id,
-            exchange_sku: currentSizeCode,
-            exchange_csku: finalCsku ? finalCsku : config_sku,
-            options: [
-              {
-                option_id: size["label"].toUpperCase(),
-                option_value: finalSizeValue,
-              },
-            ],
-            exchange_qty: +exchangeable_qty,
-            exchange_reason: id,
-          };
-        }
-      ),
-    };
-    this.setState({ isLoading: true });
-    MagentoAPI.post("exchange/create-order", payload)
-      .then(({ order_id, rma_increment_id }) => {
-        localStorage.setItem("RmaId", rma_increment_id);
-        history.push(`/my-account/exchange-item/create/success/${order_id}`);
-      })
-      .catch(() => {
-        showErrorMessage(__("Error appeared while requesting a exchange"));
-        this.setState({ isLoading: false });
-      });
+    //       return {
+    //         parent_order_item_id: order_item_id,
+    //         exchange_sku: currentSizeCode,
+    //         exchange_csku: finalCsku ? finalCsku : config_sku,
+    //         options: [
+    //           {
+    //             option_id: size["label"].toUpperCase(),
+    //             option_value: finalSizeValue,
+    //           },
+    //         ],
+    //         exchange_qty: +exchangeable_qty,
+    //         exchange_reason: id,
+    //       };
+    //     }
+    //   ),
+    // };
+    // this.setState({ isLoading: true });
+    // MagentoAPI.post("exchange/create-order", payload)
+    //   .then(({ order_id, rma_increment_id }) => {
+    //     localStorage.setItem("RmaId", rma_increment_id);
+    //     history.push(`/my-account/exchange-item/create/success/${order_id}`);
+    //   })
+    //   .catch(() => {
+    //     showErrorMessage(__("Error appeared while requesting a exchange"));
+    //     this.setState({ isLoading: false });
+    //   });
   }
 
   render() {

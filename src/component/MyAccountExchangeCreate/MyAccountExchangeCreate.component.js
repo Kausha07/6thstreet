@@ -1,13 +1,14 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import Field from "Component/Field";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 import Form from "Component/Form";
 import Loader from "Component/Loader";
 import MyAccountReturnCreateItem from "Component/MyAccountReturnCreateItem";
 import { ReturnReasonType, ReturnResolutionType } from "Type/API";
-
+import CheckoutAddressBook from "Component/CheckoutAddressBook";
 import "./MyAccountExchangeCreate.style";
+import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 
 export class MyAccountExchangeCreate extends PureComponent {
   static propTypes = {
@@ -75,7 +76,7 @@ export class MyAccountExchangeCreate extends PureComponent {
     });
     return outOfStockItems.length === Object.keys(isOutOfStock).length;
   };
-  
+
   renderActions() {
     const {
       handleDiscardClick,
@@ -84,14 +85,14 @@ export class MyAccountExchangeCreate extends PureComponent {
       disabledStatusArr,
     } = this.props;
     let outOfStockStatus = this.checkOutOfStockStatus();
-    let isDisabled =
-      outOfStockStatus === true
-        ? true
-        : Object.keys(disabledStatusArr).length < selectedNumber
-        ? true
-        : disabledStatus === true
-        ? true
-        : false;
+    let isDisabled = false;
+    // outOfStockStatus === true
+    //   ? true
+    //   : Object.keys(disabledStatusArr).length < selectedNumber
+    //   ? true
+    //   : disabledStatus === true
+    //   ? true
+    //   : false;
     const submitText =
       selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)
@@ -150,6 +151,129 @@ export class MyAccountExchangeCreate extends PureComponent {
     return __("Exchange is not possible at the time");
   }
 
+  onAddressSelect = (address) => {
+    const { id = 0 } = address;
+    const { setSelectedAddress } = this.props;
+    setSelectedAddress(id);
+  };
+
+  renderAddAdress() {
+    const { customer, showCards, closeForm, openForm, isArabic, formContent } =
+      this.props;
+    return (
+      <div
+        block="MyAccountAddressBook"
+        elem="ContentWrapper"
+        mods={{ formContent }}
+      >
+        <button
+          block="MyAccountAddressBook"
+          elem="backButton"
+          mods={{ isArabic }}
+          onClick={showCards}
+        />
+        <MyAccountAddressPopup
+          formContent={formContent}
+          closeForm={closeForm}
+          openForm={openForm}
+          showCards={showCards}
+          customer={customer}
+        />
+      </div>
+    );
+  }
+
+  renderButtonLabel() {
+    const { isMobile } = this.props;
+
+    return isMobile ? (
+      <>
+        <span
+          style={{ paddingRight: "10px", fontWeight: "bold", fontSize: "16px" }}
+        >
+          +
+        </span>{" "}
+        {__("New address")}
+      </>
+    ) : (
+      __("Add new address")
+    );
+  }
+
+  renderOpenPopupButton = () => {
+    const {
+      notSavedAddress,
+      addresses,
+      openFirstPopup,
+      formContent,
+      isArabic,
+      openNewForm,
+      setPopStatus,
+      isSignedIn,
+    } = this.props;
+
+    const isCountryNotAddressAvailable =
+      !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
+      !isMobile.any();
+    if (!openFirstPopup && addresses && isSignedIn && notSavedAddress()) {
+      setPopStatus();
+      openNewForm();
+    }
+
+    if (isSignedIn && addresses.length > 0) {
+      return (
+        <div
+          block="MyAccountAddressBook"
+          elem="NewAddressWrapper"
+          mods={{ formContent, isArabic, isCountryNotAddressAvailable }}
+        >
+          <button
+            block="MyAccountAddressBook"
+            elem="NewAddress"
+            mix={{
+              block: "button primary small",
+            }}
+            onClick={openNewForm}
+          >
+            {this.renderButtonLabel()}
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  renderExchangeAddress = () => {
+    const {
+      addresses,
+      hideCards,
+      showCards,
+      closeForm,
+      openForm,
+      formContent,
+      isSignedIn,
+    } = this.props;
+    return (
+      <>
+        {this.renderOpenPopupButton()}
+        {formContent ? (
+          this.renderAddAdress()
+        ) : (
+          <CheckoutAddressBook
+            onAddressSelect={this.onAddressSelect}
+            addresses={addresses}
+            formContent={formContent}
+            closeForm={closeForm}
+            openForm={openForm}
+            showCards={showCards}
+            hideCards={hideCards}
+          />
+        )}
+      </>
+    );
+  };
+
   renderContent() {
     const { isLoading, incrementId } = this.props;
     if (isLoading) {
@@ -170,10 +294,12 @@ export class MyAccountExchangeCreate extends PureComponent {
   }
 
   render() {
+    const { showExchangeAddress } = this.props;
     return (
       <div block="MyAccountExchangeCreate">
         {this.renderLoader()}
         {this.renderContent()}
+        {/* {showExchangeAddress && this.renderExchangeAddress()} */}
       </div>
     );
   }

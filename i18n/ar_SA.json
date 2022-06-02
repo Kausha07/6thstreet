@@ -1052,5 +1052,7 @@
     "Exchange Shipped": null,
     "Exchange In Transit": null,
     "Exchange Delivered": null,
-    "Cancel order": null
+    "Cancel order": null,
+    "Delivery country---": null,
+    "Choose address for delivery": null
 }
