@@ -23,6 +23,10 @@ export class CmsPage extends SourceCmsPage {
   renderCloseButton() {
     const { isArabic } = this.state;
     const { history } = this.props;
+
+    if (location.href.match(/source=mobileApp/)) {
+      return null
+    }
     return (
       <button
         elem="Button"

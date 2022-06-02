@@ -161,19 +161,23 @@ class PDPClickAndCollectPopup extends PureComponent {
         onClose={togglePDPClickAndCollectPopup}
         open={openClickAndCollectPopup}
       >
-        <h3>{__("PICK A STORE")}</h3>
-        <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer">
+        <div block="PDPClickAndCollectPopup" elem="HeadingBox" mods={{isArabic: isArabic()}}>
+          <h3>{__("PICK A STORE")}</h3>
+        </div>
+        <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer" mods={{isArabic: isArabic()}}>
           {this.renderStoreSelect()}
         </div>
         {!showStoreList ? (
-          <>
+          <div block="PDPClickAndCollectPopup" elem="MessageBox" mods={{
+            isArabic: isArabic(),
+          }}>
             <h4>
               {__("You will receive a message once your order is ready for pickup from the store.")}
             </h4>
             <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer">
               {this.renderConfirmButton()}
             </div>
-          </>
+          </div>
         ) : null}
       </CTCPopup>
     );
