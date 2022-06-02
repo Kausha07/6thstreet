@@ -88,7 +88,12 @@ export class CartPage extends PureComponent {
 
     getTabbyInstallment(total).then((response) => {
       if (response?.value) {
+        if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
+          document.getElementById("TabbyPromo").classList.remove("d-none");
+        }
         script.onload = this.addTabbyPromo(total, currency_code);
+      } else {
+        document.getElementById("TabbyPromo").classList.add("d-none");
       }
     }, this._handleError).catch(() => { });
     this.getCouponModuleStatus();
@@ -103,13 +108,19 @@ export class CartPage extends PureComponent {
     if (prevProps?.totals?.total !== total) {
       getTabbyInstallment(total).then((response) => {
         if (response?.value) {
+          if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
+            document.getElementById("TabbyPromo").classList.remove("d-none");
+          }
           this.addTabbyPromo(total, currency_code);
+        }
+        else {
+          document.getElementById("TabbyPromo").classList.add("d-none");
         }
       }, this._handleError).catch(() => { });
     }
   }
 
-  addTabbyPromo = (total,currency_code) => {
+  addTabbyPromo = (total, currency_code) => {
     const { isArabic } = this.state;
     new window.TabbyPromo({
       selector: '#TabbyPromo',
@@ -142,7 +153,7 @@ export class CartPage extends PureComponent {
             currency_code={quote_currency_code}
             isEditing
             isCartPage
-            isSignedIn = {this.props.isSignedIn}
+            isSignedIn={this.props.isSignedIn}
           />
         ))}
       </ul>
@@ -281,6 +292,8 @@ export class CartPage extends PureComponent {
   }
 
   renderPriceLine(price, name, mods, allowZero = false) {
+    console.log("price",price)
+    console.log("name",name)
     if (!price && !allowZero) {
       return null;
     }
