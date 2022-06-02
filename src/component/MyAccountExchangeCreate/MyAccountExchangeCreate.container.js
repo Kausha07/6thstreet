@@ -373,6 +373,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             config_sku,
             exchange_reasons,
             item_id,
+            exchangeable_qty
           } = items.find(({ item_id }) => item_id === order_item_id) || {};
           const { id } =
             exchange_reasons.find(({ id }) => id === reasonId) || {};
@@ -440,7 +441,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                 option_value: finalSizeValue,
               },
             ],
-            exchange_qty: 1,
+            exchange_qty: +exchangeable_qty,
             exchange_reason: id,
           };
         }
