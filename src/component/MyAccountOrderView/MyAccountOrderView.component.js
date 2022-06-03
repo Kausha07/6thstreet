@@ -248,7 +248,7 @@ class MyAccountOrderView extends PureComponent {
         />
         <p>
           {
-            shipped.length <= 1
+            shipped?.length <= 1
               ? __(
                   "Your order has been shipped in a single package, please find the package details below."
                 )
@@ -374,7 +374,7 @@ class MyAccountOrderView extends PureComponent {
           />
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
-          {Object.values(STATUS_LABELS).map((label, index) => (
+          {Object.values(STATUS_LABELS)?.map((label, index) => (
             <div block={index === 2 ? "EddDiv" : ""}>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
@@ -441,13 +441,18 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { status, groups: unship = [] },
     } = this.props;
-    if (STATUS_FAILED.includes(status) || !unship.length) {
+    if (STATUS_FAILED.includes(status) || !unship?.length) {
       return null;
     }
-    const processingItems = unship
+    let processingItems
+    unship.map((items) => {
+      if(items?.items?.length > 0) {
+        processingItems = unship
       .reduce((acc, { items }) => [...acc, ...items], [])
       .filter(({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered);
-    if (processingItems.length > 0) {
+      }
+    })
+    if (processingItems?.length > 0) {
       return (
         <div block="MyAccountOrderView" elem="AccordionWrapper">
           <Accordion
@@ -459,7 +464,7 @@ class MyAccountOrderView extends PureComponent {
             is_expanded
             MyAccountSection={true}
           >
-            {processingItems.map((item) => this.renderItem(item, ""))}
+            {processingItems?.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
@@ -484,17 +489,17 @@ class MyAccountOrderView extends PureComponent {
             )}
             MyAccountSection={true}
           >
-            {allItems.map((item) => this.renderItem(item, ""))}
+            {allItems?.map((item) => this.renderItem(item, ""))}
           </Accordion>
         </div>
       );
     }
 
-    const canceledItems = allItems.filter(
+    const canceledItems = allItems?.filter(
       ({ qty_partial_canceled }) => +qty_partial_canceled > 0
     );
 
-    if (!canceledItems.length) {
+    if (!canceledItems?.length) {
       return null;
     }
 
@@ -508,7 +513,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           MyAccountSection={true}
         >
-          {canceledItems.map((item) => this.renderItem(item, ""))}
+          {canceledItems?.map((item) => this.renderItem(item, ""))}
         </Accordion>
       </div>
     );
@@ -519,7 +524,7 @@ class MyAccountOrderView extends PureComponent {
       order: { groups: shipped = [] },
     } = this.props;
     const { isArabic } = this.state;
-    const itemNumber = shipped.length;
+    const itemNumber = shipped?.length;
     const suffixNumber = appendOrdinalSuffix(itemNumber - index);
     const getIcon =
       item.status === "Cancelled" || item.status === "cancelled"
@@ -567,12 +572,12 @@ class MyAccountOrderView extends PureComponent {
           <p>
             {__(
               "Package contains %s %s",
-              item.items.length,
-              item.items.length === 1 ? __("item") : __("items")
+              item.items?.length,
+              item.items?.length === 1 ? __("item") : __("items")
             )}
           </p>
           <div></div>
-          {item.items.map((data) => this.renderItem(data, item))}
+          {item.items?.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
     );
@@ -588,7 +593,7 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="Accordions">
-        {shipped.map((item, index) => this.renderAccordion(item, index))}
+        {shipped?.map((item, index) => this.renderAccordion(item, index))}
         {/* {this.renderProcessingItems()}
         {this.renderCanceledAccordion()} */}
       </div>
@@ -599,10 +604,16 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { status, groups: unship = [] },
     } = this.props;
-    const itemsArray = unship.reduce(
-      (acc, { items }) => [...acc, ...items],
-      []
-    );
+    console.log("unship",unship)
+    let itemsArray
+    unship.map((items) => {
+      if(items?.items?.length > 0) {
+        itemsArray = unship.reduce(
+          (acc, { items }) => [...acc, ...items],
+          []
+        );
+      }
+    })
 
     if (!STATUS_FAILED.includes(status)) {
       return null;
@@ -615,7 +626,7 @@ class MyAccountOrderView extends PureComponent {
         mods={{ failed: true }}
       >
         <h3>{__("Order detail")}</h3>
-        {itemsArray.map((item) => this.renderItem(item, ""))}
+        {itemsArray?.map((item) => this.renderItem(item, ""))}
       </div>
     );
   }

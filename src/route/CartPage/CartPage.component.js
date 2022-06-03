@@ -79,14 +79,14 @@ export class CartPage extends PureComponent {
 
   componentDidMount() {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
     const script = document.createElement('script');
     script.src = 'https://checkout.tabby.ai/tabby-promo.js';
     document.body.appendChild(script);
 
-    getTabbyInstallment(total).then((response) => {
+    getTabbyInstallment(subtotal).then((response) => {
       if (response?.value) {
         if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
           document.getElementById("TabbyPromo").classList.remove("d-none");
@@ -102,16 +102,16 @@ export class CartPage extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
-    if (prevProps?.totals?.total !== total) {
-      getTabbyInstallment(total).then((response) => {
+    if (prevProps?.totals?.subtotal !== subtotal) {
+      getTabbyInstallment(subtotal).then((response) => {
         if (response?.value) {
           if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
             document.getElementById("TabbyPromo").classList.remove("d-none");
           }
-          this.addTabbyPromo(total, currency_code);
+          this.addTabbyPromo(subtotal, currency_code);
         }
         else {
           document.getElementById("TabbyPromo").classList.add("d-none");
