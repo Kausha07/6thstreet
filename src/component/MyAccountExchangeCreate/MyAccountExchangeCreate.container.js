@@ -603,7 +603,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                     },
                   ]
                 : [],
-            exchange_qty: 1,
+            exchange_qty: +exchangeable_qty,
             exchange_reason: id,
           };
         }
