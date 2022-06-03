@@ -98,7 +98,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   static defaultProps = {
-    hideActiveOverlay: () => {},
+    hideActiveOverlay: () => { },
   };
 
   state = {
@@ -445,7 +445,7 @@ class SearchSuggestion extends PureComponent {
         <li>
           <Link
             to={fetchSKU?.url}
-            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
+            onClick={() => Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
               // this.onSearchQueryClick(
               //   query,
               //   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK
@@ -470,7 +470,7 @@ class SearchSuggestion extends PureComponent {
                 !brandValue?.includes("///") ? brandValue : null
               ),
             }}
-            onClick={() => Event.dispatch (EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
+            onClick={() => Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK)
               // this.onSearchQueryClick(
               //   formatQuerySuggestions(
               //     query,
@@ -783,8 +783,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  label
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                label
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -885,8 +885,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  search
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                search
+              )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
           onClick={() =>
             Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)
@@ -959,8 +959,8 @@ class SearchSuggestion extends PureComponent {
             link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                  name
-                )}&p=0&dFR[gender][0]=${genderInURL}`
+                name
+              )}&p=0&dFR[gender][0]=${genderInURL}`
           }
           onClick={() =>
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name)
@@ -1002,11 +1002,12 @@ class SearchSuggestion extends PureComponent {
         {this.renderRecentSearches()}
         {/* {this.renderTopSearches()} */}
         {this.renderTrendingBrands()}
+        {this.renderExploreMore()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
         {/* {this.renderWishlistProducts()} */}
-        {this.renderTrendingTags()}
-        {this.renderExploreMore()}
+        {/* {this.renderTrendingTags()} */}
+
       </>
     );
   }
