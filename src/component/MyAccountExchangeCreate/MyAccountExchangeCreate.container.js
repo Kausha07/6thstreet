@@ -52,12 +52,14 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     setSelectedAddress: this.setSelectedAddress.bind(this),
+    changeExchangeAddressStatus: this.changeExchangeAddressStatus.bind(this),
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     onAvailableProductSelect: this.onAvailableProductSelect.bind(this),
     onItemClick: this.onItemClick.bind(this),
     setAvailableProduct: this.setAvailableProduct.bind(this),
     onReasonChange: this.onReasonChange.bind(this),
     handleDiscardClick: this.onDiscardClick.bind(this),
+    handleAddressDiscardClick: this.onAddressDiscardClick.bind(this),
     openForm: this.openForm.bind(this),
     closeForm: this.closeForm.bind(this),
     showCards: this.showCards.bind(this),
@@ -90,8 +92,11 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     disabledStatusArr: {},
     availableProducts: {},
     showExchangeAddress: false,
-    selectedAddressId: "",
+    selectedAddressIds: {},
+    tempSelectedAddressIds: {},
     isArabic: isArabic(),
+    isSelected: false,
+    lastSelectedItem: "",
     formContent: false,
     isSignedIn: isSignedIn(),
     isMobile: isMobile.any() || isMobile.tablet(),
@@ -198,9 +203,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
-  setSelectedAddress(id) {
+  setSelectedAddress(id, itemId) {
+    const { tempSelectedAddressIds } = this.state;
     this.setState({
-      selectedAddressId: id,
+      tempSelectedAddressIds: { ...tempSelectedAddressIds, [itemId]: id },
     });
   }
 
@@ -336,6 +342,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     history.push(`/my-account/my-orders/${orderId}`);
   }
 
+  onAddressDiscardClick() {
+    this.setState({ showExchangeAddress: false });
+  }
+
   getOrderId() {
     const { match: { params: { order } = {} } = {} } = this.props;
 
@@ -372,6 +382,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           ...products,
           [itemId]: false,
         },
+        lastSelectedItem: "",
         isOutOfStock: {
           ...isOutOfStock,
           [itemId]: false,
@@ -383,9 +394,11 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           ...products,
           [itemId]: product,
         },
+        lastSelectedItem: itemId,
       });
     }
   };
+
   onItemClick(itemId, isSelected, product) {
     this.setState(({ selectedItems }) => {
       if (!isSelected) {
@@ -474,13 +487,17 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     });
   }
 
-  renderExchangeAddress = () => {
-    const { showExchangeAddress } = this.state;
-    this.setState({ showExchangeAddress: !showExchangeAddress });
-  };
+  changeExchangeAddressStatus() {
+    const { showExchangeAddress, tempSelectedAddressIds, selectedAddressIds } =
+      this.state;
+    this.setState({
+      showExchangeAddress: !showExchangeAddress,
+      isSelected: true,
+      selectedAddressIds: { ...selectedAddressIds, ...tempSelectedAddressIds },
+    });
+  }
 
   onFormSubmit() {
-    // this.renderExchangeAddress();
     const { history, showErrorMessage } = this.props;
 
     const {
@@ -489,6 +506,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       selectedSizeCodes,
       products = {},
       selectedAvailProduct,
+      selectedAddressIds,
       availableProducts = {},
     } = this.state;
 
@@ -548,6 +566,8 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                 }
               });
             }
+          } else {
+            currentSizeCode = Object.keys(productStock)[0];
           }
 
           let finalCsku =
@@ -573,6 +593,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             parent_order_item_id: order_item_id,
             exchange_sku: currentSizeCode,
             exchange_csku: finalCsku ? finalCsku : config_sku,
+            address_id: selectedAddressIds[order_item_id],
             options:
               sizeLessData.length === 0
                 ? [
@@ -582,7 +603,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                     },
                   ]
                 : [],
-            exchange_qty: +exchangeable_qty,
+            exchange_qty: 1,
             exchange_reason: id,
           };
         }

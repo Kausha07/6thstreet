@@ -58,11 +58,21 @@ export class MyAccountExchangeCreate extends PureComponent {
   };
 
   renderOrderItems() {
-    const { items = [], onFormSubmit } = this.props;
+    const {
+      items = [],
+      onFormSubmit,
+      showExchangeAddress,
+      changeExchangeAddressStatus,
+    } = this.props;
     return (
-      <Form id="create-exchange" onSubmitSuccess={onFormSubmit}>
+      <Form
+        id="create-exchange"
+        onSubmitSuccess={
+          this.isCtcItem() > 0 ? changeExchangeAddressStatus : onFormSubmit
+        }
+      >
         <ul>{items.map(this.renderOrderItem)}</ul>
-        {this.renderActions()}
+        {!showExchangeAddress && this.renderActions()}
       </Form>
     );
   }
@@ -115,6 +125,16 @@ export class MyAccountExchangeCreate extends PureComponent {
     return sizeLessStatus;
   };
 
+  isCtcItem = () => {
+    const { items, selectedAddressIds } = this.props;
+    let ctcItem = items.filter((item) => {
+      if (item.ctc_item && !selectedAddressIds[item.item_id]) {
+        return item;
+      }
+    });
+    return ctcItem.length;
+  };
+
   renderActions() {
     const {
       handleDiscardClick,
@@ -134,7 +154,9 @@ export class MyAccountExchangeCreate extends PureComponent {
       ? true
       : false;
     const submitText =
-      selectedNumber !== 1
+      this.isCtcItem() > 0
+        ? __("Continue")
+        : selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)
         : __("Exchange %s item", selectedNumber);
     return (
@@ -191,10 +213,9 @@ export class MyAccountExchangeCreate extends PureComponent {
     return __("Exchange is not possible at the time");
   }
 
-  onAddressSelect = (address) => {
-    const { id = 0 } = address;
+  onAddressSelect = (addressId = 0, itemId) => {
     const { setSelectedAddress } = this.props;
-    setSelectedAddress(id);
+    setSelectedAddress(addressId, itemId);
   };
 
   renderAddAdress() {
@@ -250,11 +271,12 @@ export class MyAccountExchangeCreate extends PureComponent {
       openNewForm,
       setPopStatus,
       isSignedIn,
+      isMobile,
     } = this.props;
 
     const isCountryNotAddressAvailable =
       !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
-      !isMobile.any();
+      !isMobile;
     if (!openFirstPopup && addresses && isSignedIn && notSavedAddress()) {
       setPopStatus();
       openNewForm();
@@ -284,7 +306,7 @@ export class MyAccountExchangeCreate extends PureComponent {
     return null;
   };
 
-  renderExchangeAddress = () => {
+  renderExchangeAddress = (itemId) => {
     const {
       addresses,
       hideCards,
@@ -292,7 +314,9 @@ export class MyAccountExchangeCreate extends PureComponent {
       closeForm,
       openForm,
       formContent,
-      isSignedIn,
+      handleAddressDiscardClick,
+      changeExchangeAddressStatus,
+      tempSelectedAddressIds,
     } = this.props;
     return (
       <>
@@ -301,7 +325,10 @@ export class MyAccountExchangeCreate extends PureComponent {
           this.renderAddAdress()
         ) : (
           <CheckoutAddressBook
-            onAddressSelect={this.onAddressSelect}
+            isExchange={true}
+            onExchangeAddressSelect={(address) =>
+              this.onAddressSelect(address, itemId)
+            }
             addresses={addresses}
             formContent={formContent}
             closeForm={closeForm}
@@ -310,6 +337,26 @@ export class MyAccountExchangeCreate extends PureComponent {
             hideCards={hideCards}
           />
         )}
+        <div block="MyAccountExchangeCreate" elem="Actions">
+          <button
+            block="MyAccountExchangeCreate"
+            elem="ButtonDiscard"
+            type="button"
+            mix={{ block: "Button" }}
+            onClick={handleAddressDiscardClick}
+          >
+            {__("Discard")}
+          </button>
+          <button
+            block="MyAccountExchangeCreate"
+            elem="ButtonSubmit"
+            onClick={changeExchangeAddressStatus}
+            disabled={tempSelectedAddressIds[itemId] ? false : true}
+            mix={{ block: "Button" }}
+          >
+            {__("Next")}
+          </button>
+        </div>
       </>
     );
   };
@@ -334,12 +381,13 @@ export class MyAccountExchangeCreate extends PureComponent {
   }
 
   render() {
-    const { showExchangeAddress } = this.props;
+    const { showExchangeAddress, lastSelectedItem } = this.props;
+    console.log("muskan props",this.props);
     return (
       <div block="MyAccountExchangeCreate">
         {this.renderLoader()}
         {this.renderContent()}
-        {/* {showExchangeAddress && this.renderExchangeAddress()} */}
+        {showExchangeAddress && this.renderExchangeAddress(lastSelectedItem)}
       </div>
     );
   }
