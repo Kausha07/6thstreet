@@ -40,7 +40,7 @@ class SearchWishlistClickEvent extends BaseEvent {
       event: EVENT_TYPE,
       eventCategory: "search",
       eventAction: "search_wish_list_click",
-      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
+      UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: name || "",

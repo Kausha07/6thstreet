@@ -47,6 +47,7 @@ class WishlistIcon extends PureComponent {
       data,
       pageType,
       renderMySignInPopup,
+      swipeWishlist = false,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -95,6 +96,9 @@ class WishlistIcon extends PureComponent {
       return;
     }
     if (isSignedIn()) {
+      if(swipeWishlist){
+        renderMySignInPopup();
+      }
       addToWishlist(skuFromProps);
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);

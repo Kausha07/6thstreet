@@ -48,7 +48,7 @@ class FooterMain extends PureComponent {
                   <span>{__("S")}</span>
                   <span>{__("TREET")}</span>
                 </div>,
-          href: "https://www.appareluae.com/6th-street/",
+          href: "/about",
         },
         {
           name: __("Consumer Rights"),

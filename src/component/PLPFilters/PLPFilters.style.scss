@@ -464,9 +464,6 @@
       }
     }
   }
-
-
-
 }
 
 .Products{
@@ -476,7 +473,7 @@
     width: 261px;
     top: 153px;
     height: 80vh;
-    overflow: scroll;
+    // overflow: scroll; // remove it for 2663 revert it if it creates issue.
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     &::-webkit-scrollbar {
@@ -496,8 +493,6 @@
         transform: rotate(90deg);
         cursor: pointer;
         box-shadow: 0 10px 16px 0 rgba(0, 0, 0, .12), 0 6px 20px 0 rgba(0 ,0, 0, .02)
-
     }
-
 }
 }

@@ -21,6 +21,8 @@ export class About extends PureComponent {
           isArabic: isArabic(),
           isMobile: isMobile.any() || isMobile.tablet(),
           isTablet: isMobile.tablet(),
+          screenWidth: window.innerWidth,
+          minusWidth: 690,
         };
       }
 
@@ -207,14 +209,26 @@ renderSliderWithLabel = (item, i) => {
     );
 };
 
+checkWidth(){
+  const { screenWidth, minusWidth } = this.state;
+  if(screenWidth > 1500){
+    this.setState({minusWidth: 590});
+  }else if(screenWidth < 1400){
+    this.setState({minusWidth: 660});
+  }
+}
+
 renderScrollbar = () => {
     const datasintest = datasintests;
     const items = datasintest.items;
+    this.checkWidth();
+    const { screenWidth, minusWidth } = this.state;
+
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
         items.length +
       items.length * 7 * 2 -
-      690
+      minusWidth
     }px`;
     // const width = `${900}px`;
 
@@ -307,7 +321,10 @@ renderSliderWithLabels() {
                   )
                 }
 
-                <SliderAboutPage {...this.props}/>
+                <SliderAboutPage 
+                  {...this.props} 
+                  {...this.state}
+                />
 
                 {
                   isArabic ? (

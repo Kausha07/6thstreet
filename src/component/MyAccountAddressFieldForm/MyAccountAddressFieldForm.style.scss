@@ -87,7 +87,8 @@
     font-size: 18px;
     font-weight: var(--fw-demi);
     display: inline-block;
-    margin: 20px;
+    margin-top: 60px;
+    margin-bottom: 0;
 
     @include desktop() {
       display: block;
@@ -216,4 +217,8 @@
       }
     }
   }
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
 }

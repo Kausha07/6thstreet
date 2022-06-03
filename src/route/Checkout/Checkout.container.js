@@ -213,9 +213,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const TABBY_CHECK = JSON.parse(
         localStorage.getItem("TABBY_ORDER_DETAILS")
       );
-      const { order_id, increment_id } = TABBY_CHECK;
       const now = new Date();
       if (TABBY_CHECK && now.getTime() < TABBY_CHECK?.expiry) {
+        const { order_id, increment_id } = TABBY_CHECK;
         this.setState({ PaymentRedirect: true, isLoading: false });
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")

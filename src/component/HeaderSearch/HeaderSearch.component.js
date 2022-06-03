@@ -50,6 +50,9 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     const { focusInput, isPDPSearchVisible } = this.props;
@@ -96,10 +99,9 @@ class HeaderSearch extends PureComponent {
         form: { children },
       },
     } = this.searchRef;
-
+    
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
-
     submitBtn.blur();
     searchInput.blur();
     onSearchSubmit();
@@ -120,11 +122,18 @@ class HeaderSearch extends PureComponent {
     };
   };
   cancelSearch = () => {
+    const {search} = this.props;
     this.closeSearch();
-    Event.dispatch(EVENT_GTM_CANCEL_SEARCH);
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
   };
   closeSearch = () => {
     const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;
+    if (sessionStorage.hasOwnProperty("Searched_value")){
+      sessionStorage.removeItem("Searched_value");
+    }
     if (hideSearchBar) {
       hideSearchBar();
     }
