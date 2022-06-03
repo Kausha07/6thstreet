@@ -40,20 +40,33 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     insertedSizeStatus: false,
   };
 
-  getAvailableProducts(product) {
+  getAvailableProducts(product, isSelected) {
     const {
       setAvailableProduct,
       item: { item_id },
     } = this.props;
+    let { availableProducts = [] } = this.state;
     const alsoAvailable = product["6s_also_available"];
     alsoAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
-        let { availableProducts = [] } = this.state;
-
         if (productData.nbHits === 1) {
-          this.setState({
-            availableProducts: [...availableProducts, productData.data],
-          });
+          if (!isSelected) {
+            let removedItem = availableProducts;
+
+            availableProducts.map((item, index) => {
+              if (item["6s_also_available"].includes(product.sku)) {
+                removedItem.splice(index, 1);
+                this.setState({
+                  availableProducts: removedItem,
+                });
+              }
+            });
+          } else {
+            this.setState({
+              availableProducts: [...availableProducts, productData.data],
+            });
+          }
+
           availableProducts = this.state?.availableProducts || [];
         }
 
@@ -65,7 +78,6 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       })
     );
   }
-
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
     return product;
@@ -224,11 +236,12 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       this.getAvailableProduct(config_sku).then((currentProduct) => {
         if (currentProduct) {
           if (isSelected) {
+            this.getAvailableProducts(currentProduct.data, isSelected);
             onClick(item_id, isSelected, currentProduct.data);
           } else {
+            this.getAvailableProducts(currentProduct.data, isSelected);
             onClick(item_id, isSelected, null);
           }
-          this.getAvailableProducts(currentProduct.data);
           this.setSizeData(currentProduct.data);
         }
       });

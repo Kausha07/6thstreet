@@ -226,23 +226,58 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       });
     } else {
       Object.keys(products).map((item) => {
-        if (this.getSelectedReason(item) === "37309") {
-          if (selectedAvailProduct[item] && !stateDisabledStatusArr[item]) {
-            this.setState({
-              disabledStatusArr: { ...stateDisabledStatusArr, [item]: true },
-              disabledStatus: false,
-            });
+        const { simple_products } = products[item];
+        if (simple_products) {
+          let sizeLessData = Object.values(simple_products).filter(
+            (product) => {
+              if (product.size.length === 0) {
+                return product;
+              }
+            }
+          );
+          if (sizeLessData.length === 0) {
+            if (this.getSelectedReason(item)) {
+              if (selectedAvailProduct[item] && !stateDisabledStatusArr[item]) {
+                this.setState({
+                  disabledStatusArr: {
+                    ...stateDisabledStatusArr,
+                    [item]: true,
+                  },
+                  disabledStatus: false,
+                });
+              } else if (
+                selectedSizeCodes[item] &&
+                !stateDisabledStatusArr[item]
+              ) {
+                this.setState({
+                  disabledStatus: false,
+                  disabledStatusArr: {
+                    ...stateDisabledStatusArr,
+                    [item]: true,
+                  },
+                });
+              }
+            } else {
+            }
+            // else if (
+            //   this.getSelectedReason(item) === "37310" ||
+            //   this.getSelectedReason(item) === "37311"
+            // ) {
+            //   if (selectedSizeCodes[item] && !stateDisabledStatusArr[item]) {
+            //     this.setState({
+            //       disabledStatus: false,
+            //       disabledStatusArr: {
+            //         ...stateDisabledStatusArr,
+            //         [item]: true,
+            //       },
+            //     });
+            //   }
+            // }
           }
-        } else if (
-          this.getSelectedReason(item) === "37310" ||
-          this.getSelectedReason(item) === "37311"
-        ) {
-          if (selectedSizeCodes[item] && !stateDisabledStatusArr[item]) {
-            this.setState({
-              disabledStatus: false,
-              disabledStatusArr: { ...stateDisabledStatusArr, [item]: true },
-            });
-          }
+        } else {
+          this.setState({
+            disabledStatus: false,
+          });
         }
       });
     }
@@ -441,111 +476,130 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   };
 
   onFormSubmit() {
-    this.renderExchangeAddress();
-    // const { history, showErrorMessage } = this.props;
+    // this.renderExchangeAddress();
+    const { history, showErrorMessage } = this.props;
 
-    // const {
-    //   selectedItems = {},
-    //   items,
-    //   selectedSizeCodes,
-    //   products = {},
-    //   selectedAvailProduct,
-    //   availableProducts = {},
-    // } = this.state;
+    const {
+      selectedItems = {},
+      items,
+      selectedSizeCodes,
+      products = {},
+      selectedAvailProduct,
+      availableProducts = {},
+    } = this.state;
 
-    // const payload = {
-    //   parent_order_id: this.getOrderId(),
-    //   items: Object.entries(selectedItems).map(
-    //     ([order_item_id, { reasonId }]) => {
-    //       const {
-    //         size = {},
-    //         config_sku,
-    //         exchange_reasons,
-    //         item_id,
-    //         exchangeable_qty
-    //       } = items.find(({ item_id }) => item_id === order_item_id) || {};
-    //       const { id } =
-    //         exchange_reasons.find(({ id }) => id === reasonId) || {};
-    //       let availProduct = null;
+    const payload = {
+      parent_order_id: this.getOrderId(),
+      items: Object.entries(selectedItems).map(
+        ([order_item_id, { reasonId }]) => {
+          const {
+            size = {},
+            config_sku,
+            exchange_reasons,
+            item_id,
+            exchangeable_qty,
+          } = items.find(({ item_id }) => item_id === order_item_id) || {};
+          const { id } =
+            exchange_reasons.find(({ id }) => id === reasonId) || {};
+          let availProduct = null;
 
-    //       if (
-    //         selectedAvailProduct[order_item_id] &&
-    //         selectedAvailProduct[order_item_id].id !== false
-    //       ) {
-    //         if (Object.keys(availableProducts).length > 0) {
-    //           Object.values(availableProducts).filter((product) => {
-    //             Object.values(product).map((entry) => {
-    //               if (entry.sku === selectedAvailProduct[order_item_id]["id"]) {
-    //                 availProduct = entry;
-    //               }
-    //             });
-    //           });
-    //         }
-    //       }
-    //       const { simple_products: productStock } =
-    //         selectedAvailProduct[order_item_id] &&
-    //         selectedAvailProduct[order_item_id].id !== false
-    //           ? availProduct
-    //           : products[order_item_id];
+          if (
+            selectedAvailProduct[order_item_id] &&
+            selectedAvailProduct[order_item_id].id !== false
+          ) {
+            if (Object.keys(availableProducts).length > 0) {
+              Object.values(availableProducts).filter((product) => {
+                Object.values(product).map((entry) => {
+                  if (entry.sku === selectedAvailProduct[order_item_id]["id"]) {
+                    availProduct = entry;
+                  }
+                });
+              });
+            }
+          }
+          const { simple_products: productStock } =
+            selectedAvailProduct[order_item_id] &&
+            selectedAvailProduct[order_item_id].id !== false
+              ? availProduct
+              : products[order_item_id];
+          let sizeLessData = [];
+          Object.values(productStock).filter((product) => {
+            if (product.size.length === 0) {
+              sizeLessData.push(product);
+            }
+          });
+          let currentSizeCode = "";
 
-    //       let currentSizeCode = "";
-    //       if (selectedSizeCodes[order_item_id]) {
-    //         currentSizeCode = selectedSizeCodes[order_item_id]["value"];
-    //       } else {
-    //         Object.entries(productStock).filter((product) => {
-    //           let itemCityCode = size["label"];
-    //           if (
-    //             product[1]["size"][`${itemCityCode.toLowerCase()}`] ===
-    //             size["value"]
-    //           ) {
-    //             currentSizeCode = product[0];
-    //           }
-    //         });
-    //       }
+          if (sizeLessData.length === 0) {
+            if (selectedSizeCodes[order_item_id]) {
+              currentSizeCode = selectedSizeCodes[order_item_id]["value"];
+            } else {
+              Object.entries(productStock).filter((product) => {
+                let itemCityCode = size["label"];
+                if (
+                  product[1]["size"][`${itemCityCode.toLowerCase()}`] ===
+                  size["value"]
+                ) {
+                  currentSizeCode = product[0];
+                }
+              });
+            }
+          }
 
-    //       let finalCsku =
-    //         selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
-    //           ? selectedAvailProduct[item_id]["id"]
-    //           : null;
-    //       let finalSize =
-    //         selectedSizeCodes[item_id] && selectedSizeCodes[item_id]["value"]
-    //           ? selectedSizeCodes[item_id]["value"]
-    //           : null;
-    //       let finalSizeValue = null;
-    //       if (finalSize) {
-    //         finalSizeValue = productStock[finalSize]
-    //           ? productStock[finalSize].size[`${size["label"].toLowerCase()}`]
-    //           : size["value"];
-    //       } else {
-    //         finalSizeValue = size["value"];
-    //       }
+          let finalCsku =
+            selectedAvailProduct[item_id] && selectedAvailProduct[item_id]["id"]
+              ? selectedAvailProduct[item_id]["id"]
+              : null;
+          let finalSize =
+            selectedSizeCodes[item_id] && selectedSizeCodes[item_id]["value"]
+              ? selectedSizeCodes[item_id]["value"]
+              : null;
+          let finalSizeValue = null;
+          if (sizeLessData.length === 0) {
+            if (finalSize) {
+              finalSizeValue = productStock[finalSize]
+                ? productStock[finalSize].size[`${size["label"].toLowerCase()}`]
+                : size["value"];
+            } else {
+              finalSizeValue = size["value"];
+            }
+          }
 
-    //       return {
-    //         parent_order_item_id: order_item_id,
-    //         exchange_sku: currentSizeCode,
-    //         exchange_csku: finalCsku ? finalCsku : config_sku,
-    //         options: [
-    //           {
-    //             option_id: size["label"].toUpperCase(),
-    //             option_value: finalSizeValue,
-    //           },
-    //         ],
-    //         exchange_qty: +exchangeable_qty,
-    //         exchange_reason: id,
-    //       };
-    //     }
-    //   ),
-    // };
-    // this.setState({ isLoading: true });
-    // MagentoAPI.post("exchange/create-order", payload)
-    //   .then(({ order_id, rma_increment_id }) => {
-    //     localStorage.setItem("RmaId", rma_increment_id);
-    //     history.push(`/my-account/exchange-item/create/success/${order_id}`);
-    //   })
-    //   .catch(() => {
-    //     showErrorMessage(__("Error appeared while requesting a exchange"));
-    //     this.setState({ isLoading: false });
-    //   });
+          return {
+            parent_order_item_id: order_item_id,
+            exchange_sku: currentSizeCode,
+            exchange_csku: finalCsku ? finalCsku : config_sku,
+            options:
+              sizeLessData.length === 0
+                ? [
+                    {
+                      option_id: size["label"].toUpperCase(),
+                      option_value: finalSizeValue,
+                    },
+                  ]
+                : [],
+            exchange_qty: +exchangeable_qty,
+            exchange_reason: id,
+          };
+        }
+      ),
+    };
+
+    this.setState({ isLoading: true });
+    MagentoAPI.post("exchange/create-order", payload)
+      .then(({ order_id, rma_increment_id }) => {
+        if (order_id) {
+          localStorage.setItem("RmaId", rma_increment_id);
+          history.push(`/my-account/exchange-item/create/success/${order_id}`);
+        } else {
+          showErrorMessage(__("Error appeared while requesting a exchange"));
+          this.setState({ isLoading: false });
+        }
+      })
+      .catch(() => {
+        showErrorMessage(__("Error appeared while requesting a exchange"));
+        this.setState({ isLoading: false });
+      });
   }
 
   render() {

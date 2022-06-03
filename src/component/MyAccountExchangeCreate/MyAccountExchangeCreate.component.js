@@ -77,6 +77,44 @@ export class MyAccountExchangeCreate extends PureComponent {
     return outOfStockItems.length === Object.keys(isOutOfStock).length;
   };
 
+  isSizelessProduct = () => {
+    const { selectedItems, products, disabledStatusArr, selectedNumber } =
+      this.props;
+    let sizeLessData = [];
+    let sizeLessStatus = false;
+    if (Object.keys(selectedItems).length > 0) {
+      Object.keys(selectedItems).filter((item) => {
+        const { simple_products } = products[item];
+        Object.values(simple_products).filter((product) => {
+          if (product.size.length === 0 && selectedItems[item] !== false) {
+            sizeLessData.push(product);
+          }
+        });
+      });
+    }
+    if (Object.keys(sizeLessData).length !== 0) {
+      if (
+        Object.keys(sizeLessData).length < Object.keys(selectedItems).length
+      ) {
+        if (
+          Object.keys(disabledStatusArr).length ===
+          selectedNumber - Object.keys(sizeLessData).length
+        ) {
+          sizeLessStatus = true;
+        } else {
+          sizeLessStatus = false;
+        }
+      } else if (
+        Object.keys(sizeLessData).length === Object.keys(selectedItems).length
+      ) {
+        sizeLessStatus = true;
+      }
+    } else {
+      sizeLessStatus = false;
+    }
+    return sizeLessStatus;
+  };
+
   renderActions() {
     const {
       handleDiscardClick,
@@ -85,14 +123,16 @@ export class MyAccountExchangeCreate extends PureComponent {
       disabledStatusArr,
     } = this.props;
     let outOfStockStatus = this.checkOutOfStockStatus();
-    let isDisabled = false;
-    // outOfStockStatus === true
-    //   ? true
-    //   : Object.keys(disabledStatusArr).length < selectedNumber
-    //   ? true
-    //   : disabledStatus === true
-    //   ? true
-    //   : false;
+    let isSizeLessData = this.isSizelessProduct();
+    let isDisabled = isSizeLessData
+      ? false
+      : outOfStockStatus
+      ? true
+      : Object.keys(disabledStatusArr).length < selectedNumber
+      ? true
+      : disabledStatus
+      ? true
+      : false;
     const submitText =
       selectedNumber !== 1
         ? __("Exchange %s items", selectedNumber)
