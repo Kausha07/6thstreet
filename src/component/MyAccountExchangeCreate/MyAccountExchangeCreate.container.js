@@ -365,11 +365,15 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   setOrderItem = (product, itemId, isSelected) => {
-    const { products } = this.state;
+    const { products, isOutOfStock } = this.state;
     if (isSelected) {
       this.setState({
         products: {
           ...products,
+          [itemId]: false,
+        },
+        isOutOfStock: {
+          ...isOutOfStock,
           [itemId]: false,
         },
       });
