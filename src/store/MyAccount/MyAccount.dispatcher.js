@@ -64,7 +64,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
     let finalCity = city;
-    if (isArabic() && addressCityData && Object.values(addressCityData).length > 0) {
+    if (
+      isArabic() &&
+      addressCityData &&
+      Object.values(addressCityData).length > 0
+    ) {
       let finalResp = Object.values(addressCityData).filter((cityData) => {
         return cityData.city === city;
       });
@@ -212,13 +216,16 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setCustomerDefaultShippingAddress(null));
     dispatch(setEddResponse(null, null));
     dispatch(setDefaultEddAddress(null, null));
+    dispatch(setCitiesData([]));
+    dispatch(setCustomerAddressData([]));
+
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     sessionStorage.removeItem("EddAddressReq");
     sessionStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
-    localStorage.removeItem('RmaId');
+    localStorage.removeItem("RmaId");
 
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
