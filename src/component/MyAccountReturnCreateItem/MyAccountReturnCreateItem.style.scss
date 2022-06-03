@@ -46,6 +46,9 @@
     margin-top: 14px;
     max-width: 46%;
     min-width: 12%;
+    @include mobile {
+      max-width: 84%;
+    }
     .PLPAddToCart {
       &-SizeTypeSelectElement {
         margin-bottom: 0px;
@@ -53,6 +56,9 @@
       &-SizeSelector {
         &-SizeContainer {
           width: 85%;
+          @include mobile {
+            width: 100%;
+          }
           &-AvailableSizes {
             margin-bottom: 0px;
           }

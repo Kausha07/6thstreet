@@ -263,22 +263,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                   },
                 });
               }
-            } else {
             }
-            // else if (
-            //   this.getSelectedReason(item) === "37310" ||
-            //   this.getSelectedReason(item) === "37311"
-            // ) {
-            //   if (selectedSizeCodes[item] && !stateDisabledStatusArr[item]) {
-            //     this.setState({
-            //       disabledStatus: false,
-            //       disabledStatusArr: {
-            //         ...stateDisabledStatusArr,
-            //         [item]: true,
-            //       },
-            //     });
-            //   }
-            // }
           }
         } else {
           this.setState({

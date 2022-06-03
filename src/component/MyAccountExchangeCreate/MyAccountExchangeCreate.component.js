@@ -219,20 +219,21 @@ export class MyAccountExchangeCreate extends PureComponent {
   };
 
   renderAddAdress() {
-    const { customer, showCards, closeForm, openForm, isArabic, formContent } =
-      this.props;
+    const {
+      customer,
+      showCards,
+      closeForm,
+      openForm,
+      isArabic,
+      formContent,
+      isMobile,
+    } = this.props;
     return (
       <div
         block="MyAccountAddressBook"
         elem="ContentWrapper"
         mods={{ formContent }}
       >
-        <button
-          block="MyAccountAddressBook"
-          elem="backButton"
-          mods={{ isArabic }}
-          onClick={showCards}
-        />
         <MyAccountAddressPopup
           formContent={formContent}
           closeForm={closeForm}
@@ -240,6 +241,16 @@ export class MyAccountExchangeCreate extends PureComponent {
           showCards={showCards}
           customer={customer}
         />
+        {isMobile && (
+          <button
+            block="MyAccountAddressBook"
+            elem="MobileBackButton"
+            mods={{ isArabic }}
+            onClick={showCards}
+          >
+            {__("Discard")}
+          </button>
+        )}
       </div>
     );
   }
@@ -382,7 +393,6 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   render() {
     const { showExchangeAddress, lastSelectedItem } = this.props;
-    console.log("muskan props",this.props);
     return (
       <div block="MyAccountExchangeCreate">
         {this.renderLoader()}

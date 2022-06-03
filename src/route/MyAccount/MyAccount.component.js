@@ -240,7 +240,9 @@ export class MyAccount extends SourceMyAccount {
           ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
-                {isReturnButton ? __("Return/Exchange") :alternativePageName || returnTitle || name}
+                {isReturnButton
+                  ? __("Return/Exchange")
+                  : alternativePageName || returnTitle || name}
               </h1>
               <button
                 block="MyAccount"
@@ -264,6 +266,7 @@ export class MyAccount extends SourceMyAccount {
       isSignedIn,
       mobileTabActive,
       setMobileTabActive,
+      exchangeTabMap
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
@@ -287,7 +290,13 @@ export class MyAccount extends SourceMyAccount {
     const { pathname = "" } = location;
 
     const TabContent = this.renderMap[activeTab];
-    const { alternativePageName, name, alternateName } = tabMap[activeTab];
+    let finalTab;
+    if (tabMap[activeTab]) {
+      finalTab = tabMap[activeTab];
+    } else if (exchangeTabMap[activeTab]) {
+      finalTab = exchangeTabMap[activeTab];
+    }
+    const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
@@ -367,7 +376,7 @@ export class MyAccount extends SourceMyAccount {
           </div>
           <MyAccountTabList
             tabMap={tabMap}
-            activeTab={activeTab}
+            activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />

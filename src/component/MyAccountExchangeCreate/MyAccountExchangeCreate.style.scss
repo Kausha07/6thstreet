@@ -1,12 +1,23 @@
 .MyAccountExchangeCreate {
   margin-bottom: 20px;
 
-  .CheckoutAddressBook{
+  .CheckoutAddressBook {
     top: 6px;
   }
 
   .MyAccountAddressBook {
     &-ContentWrapper {
+      @include mobile {
+        .MyAccountAddressPopup {
+          &-DeleteBtn {
+            position: absolute;
+            top: 5px;
+          }
+          &-DeletePopup {
+            z-index: 99;
+          }
+        }
+      }
       &_formContent {
         .MyAccountAddressPopup {
           position: relative;
@@ -14,6 +25,17 @@
         }
       }
       .MyAccountAddressBook {
+        &-MobileBackButton {
+          position: absolute;
+          top: 5px;
+          right: unset;
+          left: -8px;
+          z-index: 9;
+          color: #ec694f;
+          font-weight: var(--fw-regular);
+          text-transform: none;
+        }
+
         &-backButton {
           @include desktop {
             display: none;
@@ -24,7 +46,7 @@
 
     &-ContentWrapper {
       @include before-desktop {
-        top: -90px;
+        top: 0px;
       }
 
       &_formContent {
@@ -99,6 +121,7 @@
       color: #000000;
       border: none;
       margin: 0 5px;
+      top: -20px;
       // padding-inline: 20px;
 
       &:hover {
@@ -110,7 +133,7 @@
         background: var(--my-acc-background);
         text-transform: capitalize;
         min-width: 140px;
-        margin-top: 28px;
+        margin-top: 8px;
 
         &:hover {
           text-decoration: underline;
@@ -126,6 +149,12 @@
     height: 100% !important;
     position: absolute;
     width: 100%;
+    .MyAccountAddressFieldForm{
+      @include mobile{
+        top: 0;
+      }
+    }
+
     .Form {
       @include desktop {
         top: 0;
@@ -213,7 +242,7 @@
     justify-content: space-between;
     margin: 0 auto;
     max-width: 320px;
-
+    margin-top: 40px;
     @include desktop {
       flex-direction: row-reverse;
       margin: 10px 0 0 40px;
