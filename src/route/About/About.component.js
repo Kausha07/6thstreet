@@ -214,7 +214,7 @@ checkWidth(){
   if(screenWidth > 1500){
     this.setState({minusWidth: 590});
   }else if(screenWidth < 1400){
-    this.setState({minusWidth: 570});
+    this.setState({minusWidth: 660});
   }
 }
 
