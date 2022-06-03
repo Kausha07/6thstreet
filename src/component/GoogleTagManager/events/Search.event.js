@@ -41,17 +41,8 @@ class SearchEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_CLEAR_SEARCH, () => {
-      this.handle(EVENT_GTM_CLEAR_SEARCH);
-    });
-    Event.observer(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, () => {
-      this.handle(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK);
-    });
     Event.observer(EVENT_GTM_VIEW_SEARCH_RESULTS, () => {
       this.handle(EVENT_GTM_VIEW_SEARCH_RESULTS);
-    });
-    Event.observer(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, () => {
-      this.handle(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW);
     });
     Event.observer(EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW, () => {
       this.handle(EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW);

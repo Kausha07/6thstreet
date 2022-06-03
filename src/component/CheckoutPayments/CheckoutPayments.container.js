@@ -60,6 +60,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       totals: { total },
       isTabbyInstallmentAvailable,
     } = this.props;
+    const { selectedPaymentCode } = this.state;
     const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
     this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
@@ -71,6 +72,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         "CheckoutPaymentsContainer"
       );
     }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.tabby.ai/tabby-card.js';
+    document.body.appendChild(script);
 
     this.setState({ isTabbyInstallmentAvailable: isTabbyInstallmentAvailable });
 

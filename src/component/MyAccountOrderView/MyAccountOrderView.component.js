@@ -39,6 +39,7 @@ import TimerImage from "./icons/timer.png";
 import isMobile from "Util/Mobile";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
+import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
 import {
   CANCEL_ITEM_LABEL,
@@ -552,6 +553,17 @@ class MyAccountOrderView extends PureComponent {
               item.courier_logo,
               item.courier_tracking_link
             )}
+          {!!item?.ctc_store_name && (
+            <div block="MyAccountOrderView" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderView-ClickAndCollect"
+                elem="StoreName"
+              >
+                {item?.ctc_store_name}
+              </div>
+            </div>
+          )}
           <p>
             {__(
               "Package contains %s %s",
@@ -559,6 +571,7 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
+          <div></div>
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>

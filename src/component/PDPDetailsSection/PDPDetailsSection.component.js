@@ -744,12 +744,12 @@ class PDPDetailsSection extends PureComponent {
 
     const {
       opening_hours: { [language]: openHoursLabel },
-      // toll_free: phone,
-    } = countries[country];
+      contact_using : { options : { phone } }
+    } = countries[country]; 
 
     return {
       openHoursLabel,
-      // toll_free,
+      toll_free : phone,
     };
   }
   chat() {
