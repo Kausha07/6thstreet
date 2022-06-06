@@ -19,16 +19,15 @@ import {
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
-  EXCHANGE_ITEM,
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
-import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 export { BreadcrumbsDispatcher, MyAccountDispatcher };
-import { customerType } from "Type/Account";
-import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.type";
+import { customerType } from 'Type/Account';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
@@ -46,16 +45,6 @@ export const mapDispatchToProps = (dispatch) => ({
   setMeta: (meta) => dispatch(updateMeta(meta)),
   updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
 });
-
-export const exchangeTabMap = {
-  [EXCHANGE_ITEM]: {
-    url: "/exchange-item",
-    name: __("My Return/Exchange"),
-    alternateName: __("Cancel an item"),
-    alternateSecondName: __("Exchange an item"),
-    className: "",
-  },
-};
 
 export const tabMap = {
   [STORE_CREDIT]: {
@@ -81,9 +70,8 @@ export const tabMap = {
   },
   [RETURN_ITEM]: {
     url: "/return-item",
-    name: __("My Return/Exchange"),
+    name: __("My Returns"),
     alternateName: __("Cancel an item"),
-    alternateSecondName: __("Exchange an item"),
     className: "",
   },
   [MY_WISHLIST]: {
@@ -134,13 +122,16 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   };
 
   state = {
-    clubApparel: null,
-    exchangeTabMap: exchangeTabMap,
+    clubApparel: null
   };
 
   static navigateToSelectedTab(props, state = {}) {
     const {
-      match: { params: { tab: historyActiveTab = DASHBOARD } = {} } = {},
+      match: {
+        params: {
+          tab: historyActiveTab = DASHBOARD
+        } = {}
+      } = {}
     } = props;
 
     const { activeTab } = state;
@@ -155,16 +146,10 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   static getDerivedStateFromProps(props, state) {
     const { clubApparel } = props;
     const { clubApparel: currentClubApparel } = state;
-    const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(
-      props,
-      state
-    );
+    const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(props, state);
     if (clubApparel !== currentClubApparel) {
       if (isNavigateToSelectedTab) {
-        return {
-          clubApparel,
-          ...MyAccountContainer.navigateToSelectedTab(props, state),
-        };
+        return { clubApparel, ...MyAccountContainer.navigateToSelectedTab(props, state) };
       }
       return { clubApparel };
     }
@@ -172,12 +157,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   componentDidMount() {
-    const {
-      setMeta,
-      updateStoreCredit,
-      customer: { id },
-      getMember,
-    } = this.props;
+    const { setMeta, updateStoreCredit, customer: { id }, getMember } = this.props;
 
     updateStoreCredit();
     setMeta({ title: __("My Account") });
@@ -191,13 +171,13 @@ export class MyAccountContainer extends SourceMyAccountContainer {
       customer: { id },
       country,
       language,
-      getMember,
+      getMember
     } = this.props;
 
     const {
       customer: { id: prevId },
       country: prevCountry,
-      language: prevLanguage,
+      language: prevLanguage
     } = prevProps;
 
     if (prevId !== id || prevCountry !== country || prevLanguage !== language) {
@@ -208,13 +188,8 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   updateBreadcrumbs() {
     const { updateBreadcrumbs } = this.props;
     const { activeTab } = this.state;
-    let finalTabMap;
-    if (activeTab === EXCHANGE_ITEM) {
-      finalTabMap = exchangeTabMap[activeTab];
-    } else {
-      finalTabMap = tabMap[activeTab];
-    }
-    const { url, name, alternativePageName } = finalTabMap;
+    const { url, name, alternativePageName } = tabMap[activeTab];
+
     updateBreadcrumbs([
       { url: `${MY_ACCOUNT_URL}${url}`, name: alternativePageName || name },
       { name: __("My Account"), url: `${MY_ACCOUNT_URL}/${DASHBOARD}` },

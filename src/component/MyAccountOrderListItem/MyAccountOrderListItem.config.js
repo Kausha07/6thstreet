@@ -12,8 +12,6 @@ export const STATUS_PAYMENT_SUCCESS = "payment_success";
 
 export const STATUS_PAYMENT_FAILED = "payment_failed";
 
-export const STATUS_EXCHANGE_PENDING = "exchange_pending";
-
 export const STATUS_HIDE_BAR = [
   STATUS_COMPLETE,
   STATUS_CANCELED,

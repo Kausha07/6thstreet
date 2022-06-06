@@ -27,7 +27,6 @@ export const tabMapType = PropTypes.objectOf(tabType);
 export const STORE_CREDIT = "storecredit";
 export const CLUB_APPAREL = "club-apparel";
 export const RETURN_ITEM = "return-item";
-export const EXCHANGE_ITEM = "exchange-item";
 export const CONTACT_HELP = "contact-help";
 export const SETTINGS_SCREEN = "settings";
 export const FAQ = "faq";

@@ -79,7 +79,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("My Return/Exchange")}
+          {__("My Returns")}
         </span>
       </Link>
     );
