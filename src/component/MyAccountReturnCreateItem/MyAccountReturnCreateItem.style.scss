@@ -1,6 +1,71 @@
 .MyAccountReturnCreateItem {
   margin-bottom: 30px;
+  .PDPAddToCart {
+    &-OutOfStockContainer {
+      width: 80%;
+      padding: 10px;
+      margin-left: 40px;
+    }
+  }
+  .PLPAddToCart {
+    &-SizeSelector {
+      align-items: flex-start;
+      margin-left: 40px;
+      padding: 0px 0 25px 0;
+      border-bottom: 2px solid var(--color-gainsboro);
+      &-SizeOptionContainerOOS {
+        cursor: pointer;
+        pointer-events: unset;
+      }
+    }
+  }
+  .PDPAlsoAvailable {
+    margin-left: 40px;
+    margin-top: 15px;
+    border-bottom: 2px solid var(--color-gainsboro);
 
+    .PDPAlsoAvailableProduct {
+      &-selectedProduct {
+        border: 1px solid var(--selected-step-color);
+        padding: 6px;
+      }
+    }
+    li {
+      padding: 6px;
+      cursor: pointer;
+    }
+    li:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  .SizeParentWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 14px;
+    max-width: 46%;
+    min-width: 12%;
+    @include mobile {
+      max-width: 84%;
+    }
+    .PLPAddToCart {
+      &-SizeTypeSelectElement {
+        margin-bottom: 0px;
+      }
+      &-SizeSelector {
+        &-SizeContainer {
+          width: 85%;
+          @include mobile {
+            width: 100%;
+          }
+          &-AvailableSizes {
+            margin-bottom: 0px;
+          }
+        }
+      }
+    }
+  }
   &-Content {
     display: flex;
     margin-bottom: 15px;
@@ -95,7 +160,6 @@
   }
 
   &-Resolutions {
-
     @include desktop {
       margin: 10px 0 0 40px;
     }
@@ -132,7 +196,6 @@
       width: calc(50% - 10px);
     }
   }
-
 
   .Price {
     span {
