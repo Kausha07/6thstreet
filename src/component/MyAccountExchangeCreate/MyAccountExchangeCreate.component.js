@@ -330,7 +330,7 @@ export class MyAccountExchangeCreate extends PureComponent {
       tempSelectedAddressIds,
     } = this.props;
     return (
-      <>
+      <div block="AddressContainer">
         {this.renderOpenPopupButton()}
         {formContent ? (
           this.renderAddAdress()
@@ -368,7 +368,7 @@ export class MyAccountExchangeCreate extends PureComponent {
             {__("Next")}
           </button>
         </div>
-      </>
+      </div>
     );
   };
 
