@@ -67,6 +67,7 @@ export class MyAccountExchangeCreate extends PureComponent {
     return (
       <Form
         id="create-exchange"
+        mix={{ block: showExchangeAddress ? "showExchangeAddress" : "" }}
         onSubmitSuccess={
           this.isCtcItem() > 0 ? changeExchangeAddressStatus : onFormSubmit
         }
