@@ -286,8 +286,21 @@ class WelcomeHomePage extends PureComponent {
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
                                         <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                            <span>{__("Welcome, ")}</span>
-                                            <span>{__("you are shopping in")}</span>
+                                            {
+                                                language === "en" ?
+                                                    <div>
+                                                        <div block="Text-welcome">
+                                                            <span>Welcome,</span>
+                                                        &nbsp;
+                                                        <span>you are shopping in</span>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div>
+                                                        <div block="Text-welcome">اهلاً  ,</div>
+                                                        <div block="Text-shop">كنت تسوق في</div>
+                                                    </div>
+                                            }
                                         </div>
                                         <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
                                             <LanguageSwitcher welcomePagePopup={true} />
