@@ -159,6 +159,11 @@ $select-arrow-width: 6px !default;
                     text-align: right;
                 }
             }
+            ul {
+                li {
+                    text-align: right;
+                }
+            }
         }
     }
     &-ConfirmButtonContainer {

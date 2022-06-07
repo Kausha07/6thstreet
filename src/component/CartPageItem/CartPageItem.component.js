@@ -71,7 +71,6 @@ export class CartItem extends PureComponent {
     dragOpen: false,
     dragOpenEl: "",
     isSignedIn: this.props.isSignedIn,
-
   };
 
   static defaultProps = {
@@ -501,7 +500,7 @@ export class CartItem extends PureComponent {
         this.setState({
           dragOpen: true,
           dragged: false,
-          dragOpenEl: leftDir,
+          dragOpenEl: rightDir,
         });
       } else {        
         el2.style.transform = `translateX(${leftDirMove})`;
@@ -532,8 +531,7 @@ export class CartItem extends PureComponent {
             <img src={trash} alt="trash"/>
             <span block="title">{__("Delete")}</span>
           </button>
-        </div>
-        
+        </div>    
     )
   }
 
