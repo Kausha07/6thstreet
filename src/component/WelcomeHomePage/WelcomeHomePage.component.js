@@ -288,17 +288,14 @@ class WelcomeHomePage extends PureComponent {
                                         <div block="WelcomeHomePage-Popup-Content" elem="Text">
                                             {
                                                 language === "en" ?
-                                                    <div>
-                                                        <div block="Text-welcome">
-                                                            <span>Welcome,</span>
-                                                        &nbsp;
+                                                    <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                        <span>Welcome,</span>
                                                         <span>you are shopping in</span>
-                                                        </div>
                                                     </div>
                                                     :
-                                                    <div>
-                                                        <div block="Text-welcome">اهلاً  ,</div>
-                                                        <div block="Text-shop">كنت تسوق في</div>
+                                                    <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                        <span>اهلاً,</span>
+                                                        <span>كنت تسوق في</span>
                                                     </div>
                                             }
                                         </div>
