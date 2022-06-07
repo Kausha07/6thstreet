@@ -39,6 +39,9 @@
       .Image {
         display: block;
         width: 142px;
+        @include mobile() {
+          width: 138px;
+        }
 
         &-Image {
           position: relative;
