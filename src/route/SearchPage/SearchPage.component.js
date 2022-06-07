@@ -6,6 +6,7 @@ import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
 import "./SearchPage.style";
 
+import NoMatch from "Route/NoMatch";
 
 class SearchPage extends PLP {
   renderSearchNotFound() {
@@ -42,7 +43,7 @@ class SearchPage extends PLP {
     //   );
     // }
     if (
-      isLoading ||
+      //isLoading ||
       (pages.undefined && pages.undefined.length > 0) ||
       (pages["0"] && pages["0"].length > 0)
     ) {
@@ -67,13 +68,14 @@ class SearchPage extends PLP {
     }
 
     return (
-      <main block="SearchPage" >
-        <ContentWrapper label={__("Product List Page")}>
-          {this.renderPLPDetails()}
-          {this.renderPLPPages()}
-          {this.renderSearchNotFound()}
-        </ContentWrapper>
-      </main>
+      // <main block="SearchPage" >
+      //   <ContentWrapper label={__("Product List Page")}>
+      //     {this.renderPLPDetails()}
+      //     {this.renderPLPPages()}
+      //     {this.renderSearchNotFound()}
+      //   </ContentWrapper>
+      // </main>
+      <NoMatch/>
     );
   }
 }

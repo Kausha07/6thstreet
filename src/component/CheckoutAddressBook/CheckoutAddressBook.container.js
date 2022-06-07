@@ -51,49 +51,39 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
 
   onAddressSelect(address) {
     const { id = 0, city, area, country_code } = address;
-    const {
-      estimateEddResponse,
-      edd_info,
-      addressCityData,
-      isExchange = false,
-      onExchangeAddressSelect,
-    } = this.props;
+    const { estimateEddResponse, edd_info, addressCityData } = this.props;
     let finalArea = area;
     let finalCity = city;
     this.setState({ selectedAddressId: id });
-    if (!isExchange) {
-      if (isArabic()) {
-        let finalResp = Object.values(addressCityData).filter((cityData) => {
-          return cityData.city === city;
-        });
+    if (isArabic()) {
+      let finalResp = Object.values(addressCityData).filter((cityData) => {
+        return cityData.city === city;
+      });
 
-        let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
-          if (finalResp[0].areas[key] === area) {
-            return key;
+      let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+        if (finalResp[0].areas[key] === area) {
+          return key;
+        }
+      });
+      let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+        (area, index) => {
+          if (index === parseInt(engAreaIndex[0])) {
+            return area;
           }
-        });
-        let arabicArea = Object.values(finalResp[0].areas_ar).filter(
-          (area, index) => {
-            if (index === parseInt(engAreaIndex[0])) {
-              return area;
-            }
-          }
-        );
-        finalArea = arabicArea[0];
-        finalCity = finalResp[0].city_ar;
-      }
-      if (edd_info && edd_info.is_enable) {
-        let request = {
-          country: country_code,
-          city: finalCity,
-          area: finalArea,
-          courier: null,
-          source: null,
-        };
-        estimateEddResponse(request, false);
-      }
-    } else {
-      onExchangeAddressSelect(id);
+        }
+      );
+      finalArea = arabicArea[0];
+      finalCity = finalResp[0].city_ar;
+    }
+    if (edd_info && edd_info.is_enable) {
+      let request = {
+        country: country_code,
+        city: finalCity,
+        area: finalArea,
+        courier: null,
+        source: null,
+      };
+      estimateEddResponse(request, false);
     }
   }
 
