@@ -931,7 +931,6 @@ class SearchSuggestion extends PureComponent {
     }
 
     if (inNothingFound && querySuggestions.length === 0) {
-      // debugger
       return this.renderNothingFound();
     }
 

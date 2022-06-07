@@ -147,7 +147,10 @@ class ExploreMore extends PureComponent {
 
     renderItems() {
         let items = this.props.data.items
-        return items.map(this.renderItem);
+        if (items.length > 0) {
+            return items.map(this.renderItem);
+        }
+
     }
 
     renderGrid() {
