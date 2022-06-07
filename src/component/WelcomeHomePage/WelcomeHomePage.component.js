@@ -265,8 +265,8 @@ class WelcomeHomePage extends PureComponent {
                                                 </div>
                                                 :
                                                 <div>
-                                                    <div block="Text-welcome">اهلاً  ,</div>
-                                                    <div block="Text-shop">كنت تسوق في</div>
+                                                    <div block="Text-welcome">يا هلا فيك،</div>
+                                                    <div block="Text-shop">أنت تتسوق في</div>
                                                 </div>
                                         }
                                     </div>
@@ -285,20 +285,18 @@ class WelcomeHomePage extends PureComponent {
                                         <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
-                                        <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                            {
-                                                language === "en" ?
-                                                    <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                                        <span>Welcome,</span>
-                                                        <span>you are shopping in</span>
-                                                    </div>
-                                                    :
-                                                    <div block="WelcomeHomePage-Popup-Content" elem="Text">
-                                                        <span>اهلاً,</span>
-                                                        <span>كنت تسوق في</span>
-                                                    </div>
-                                            }
-                                        </div>
+                                        {
+                                            language === "en" ?
+                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                    <span>Welcome,</span>
+                                                    <span>you are shopping in</span>
+                                                </div>
+                                                :
+                                                <div block="WelcomeHomePage-Popup-Content" elem="Text">
+                                                    <span>يا هلا فيك،</span>
+                                                    <span>أنت تتسوق في</span>
+                                                </div>
+                                        }
                                         <div block="WelcomeHomePage-Popup-Content" elem="SwitcherContainer" mods={{ isArabic: language === "ar" }}>
                                             <LanguageSwitcher welcomePagePopup={true} />
                                             <CountrySwitcher />
