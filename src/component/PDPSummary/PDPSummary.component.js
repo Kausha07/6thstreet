@@ -186,6 +186,9 @@ class PDPSummary extends PureComponent {
       product: { price },
       getTabbyInstallment,
     } = this.props;
+    const script = document.createElement('script');
+    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];

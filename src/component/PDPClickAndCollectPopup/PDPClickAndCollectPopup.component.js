@@ -61,7 +61,7 @@ class PDPClickAndCollectPopup extends PureComponent {
     return (
       <>
         <Form key="select-store">
-          <Search />
+          {!isArabic() ?<Search /> : null  }
           <Field
             type="input"
             id="selectStore"
@@ -71,6 +71,7 @@ class PDPClickAndCollectPopup extends PureComponent {
             onChange={(value) => this.handleSearchKeywordChange(value)}
             onClick={() => this.storeListDisplay()}
           />
+          {isArabic() ?<Search /> : null  }
         </Form>
         {this.renderStoresList()}
       </>

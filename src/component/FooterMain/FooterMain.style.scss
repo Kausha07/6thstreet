@@ -21,12 +21,6 @@
     margin: auto;
     display: flex;
     justify-content: space-between;
-    padding-right: 90px;
-    &_isArabic {
-      padding-right: 0px;
-      padding-left: 90px;
-    }
-
     p {
       letter-spacing: 0;
       margin-bottom: 20px;
@@ -41,7 +35,9 @@
     letter-spacing: 0;
     line-height: 22px;
   }
-
+  &-LastColumn {
+    flex: 0 0 24%;
+  }
   &-Column {
     min-height: 240px;
 
@@ -65,13 +61,13 @@
       color: var(--foter-hyperlink-color);
       div {
         display: flex;
-        span:nth-last-of-type(2){
+        span:nth-last-of-type(2) {
           font-size: 20px;
           line-height: 35px;
           transform: translateY(-2px);
           font-weight: var(--fw-light);
         }
-        span:nth-last-of-type(4){
+        span:nth-last-of-type(4) {
           font-size: 20px;
           line-height: 35px;
           transform: translateY(-2px);
@@ -124,12 +120,15 @@
   &-SocialIcon {
     display: inline-block;
     vertical-align: top;
-    padding: 20px;
     background: var(--social-icon-background-color);
     border-radius: 50%;
     float: none;
     width: 60px;
     height: 60px;
     text-align: center;
+    margin: 0 5px 10px 0;
+    &.instaIcon {
+      padding: 20px;
+    }
   }
 }

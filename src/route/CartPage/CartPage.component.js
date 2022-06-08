@@ -79,13 +79,13 @@ export class CartPage extends PureComponent {
 
   componentDidMount() {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
     const script = document.createElement('script');
     script.src = 'https://checkout.tabby.ai/tabby-promo.js';
     document.body.appendChild(script);
-
+    const total = subtotal;
     getTabbyInstallment(total).then((response) => {
       if (response?.value) {
         if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
@@ -102,10 +102,11 @@ export class CartPage extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
-    if (prevProps?.totals?.total !== total) {
+    if (prevProps?.totals?.subtotal !== subtotal) {
+      const total= subtotal;
       getTabbyInstallment(total).then((response) => {
         if (response?.value) {
           if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
@@ -292,8 +293,6 @@ export class CartPage extends PureComponent {
   }
 
   renderPriceLine(price, name, mods, allowZero = false) {
-    console.log("price",price)
-    console.log("name",name)
     if (!price && !allowZero) {
       return null;
     }
@@ -391,12 +390,12 @@ export class CartPage extends PureComponent {
           {__("Proceed to Checkout")}
         </button>
         {/* <Link
-                  block="CartPage"
-                  elem="ContinueShopping"
-                  to="/"
-                >
-                    { __('Continue shopping') }
-                </Link> */}
+                   block="CartPage"
+                   elem="ContinueShopping"
+                   to="/"
+                 >
+                     { __('Continue shopping') }
+                 </Link> */}
       </div>
     );
   }
