@@ -196,37 +196,37 @@ class FooterMain extends PureComponent {
                 <div block="FooterMain" elem="WrapperSecond">
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.facebook_href} key={items.id_facebook} target="_blank">
-                      <Image lazyLoad={true} src={facebook} alt="facebook icon" />
+                      <Image lazyLoad={true} src={facebook} alt="facebook" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon instaIcon">
                     <Link to={items.insta_href} key={items.id_insta} target="_blank">
-                      <Image lazyLoad={true} src={instagram} alt="instagram icon" />
+                      <Image lazyLoad={true} src={instagram} alt="instagram" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.twitter_href} key={items.id_twitter} target="_blank">
-                      <Image lazyLoad={true} src={twitter} alt="Twitter icon" />
+                      <Image lazyLoad={true} src={twitter} alt="Twitter" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.pinterest_href} key={items.id_pinterest} target="_blank">
-                      <Image lazyLoad={true} src={pinterest} alt="Pinterest icon" />
+                      <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.youtube_href} key={items.id_youtube} target="_blank">
-                      <Image lazyLoad={true} src={youtube} alt="Youtube icon" />
+                      <Image lazyLoad={true} src={youtube} alt="Youtube" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.tiktok_href} key={items.id_tiktok} target="_blank">
-                      <Image lazyLoad={true} src={tiktok} alt="Tiktok icon" />
+                      <Image lazyLoad={true} src={tiktok} alt="Tiktok" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.snapchat_href} key={items.id_snapchat} target="_blank">
-                      <Image lazyLoad={true} src={snapchat} alt="SnapChat icon" />
+                      <Image lazyLoad={true} src={snapchat} alt="Snapchat" />
                     </Link>
                   </div>
                 </div>
