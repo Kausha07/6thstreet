@@ -6,7 +6,7 @@ import { isArabic } from "Util/App";
 import { connect } from "react-redux";
 import { URLS } from 'Util/Url/Url.config';
 import facebook from "./icons/facebook-2.svg";
-import instagram from "./icons/instagram.png";
+import instagram from "./icons/instagram-2.svg";
 import twitter from "./icons/twitter.svg";
 import pinterest from "./icons/pinterest.svg";
 import snapchat from "./icons/snapchat.svg";
@@ -199,7 +199,7 @@ class FooterMain extends PureComponent {
                       <Image lazyLoad={true} src={facebook} alt="facebook" />
                     </Link>
                   </div>
-                  <div block="FooterMain" elem="SocialIcon instaIcon">
+                  <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.insta_href} key={items.id_insta} target="_blank">
                       <Image lazyLoad={true} src={instagram} alt="instagram" />
                     </Link>
