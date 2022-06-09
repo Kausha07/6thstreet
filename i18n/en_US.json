@@ -822,6 +822,7 @@
     "Link Account": null,
     "Verify number": null,
     "Pickup Failed": null,
+    "Pick up Failed": null,
     "Please select product options!": null,
     "Sorry! The selected product option is out of stock!": null,
     "Sorry! Child product quantities are invalid!": null,
@@ -833,5 +834,6 @@
     "Trending tags": null,
     "Top searches": null,
     "Recent searches": null,
-    "view all": null
+    "view all": null,
+    "Picked up from Store": null
 }
