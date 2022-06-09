@@ -51,7 +51,9 @@ import {
   NEW_STATUS_LABEL_MAP,
   STATUS_PROCESSING,
   STATUS_DISPATCHED,
-  PICKUP_FAILED
+  PICKUP_FAILED,
+  PICKEDUP,
+  READY_TO_PICK
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
@@ -551,7 +553,8 @@ class MyAccountOrderView extends PureComponent {
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
-            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED && 
+            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED &&
+            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&  
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
