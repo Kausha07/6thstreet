@@ -166,14 +166,29 @@ class PDPSummary extends PureComponent {
       });
       setEddResponse(null, null);
     }
-  };
+  }
+
+
+  addTabbyPromo = (total,currency_code) => {
+    const { isArabic } = this.state;
+    new window.TabbyPromo({
+      selector: '#TabbyPromo',
+      currency: currency_code.toString(),
+      price: total,
+      installmentsCount: 4,
+      lang: isArabic ? "ar" : "en",
+      source: 'product',
+    });
+  }
 
   componentDidMount() {
     const {
       product: { price },
       getTabbyInstallment,
     } = this.props;
-    const { isArabic } = this.state;
+    const script = document.createElement('script');
+    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
@@ -182,35 +197,11 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            const script = document.createElement("script");
-            script.src = "https://checkout.tabby.ai/tabby-promo.js";
-            script.async = true;
-            script.onload = function () {
-              let s = document.createElement("script");
-              s.type = "text/javascript";
-              const code = `new TabbyPromo({
-          selector: '#TabbyPromo',
-          currency: '${currency}',
-          price: '${defPrice}',
-          installmentsCount: 4,
-          lang: '${isArabic ? "ar" : "en"}',
-          source: 'product',
-        });`;
-              try {
-                s.appendChild(document.createTextNode(code));
-                document.body.appendChild(s);
-              } catch (e) {
-                s.text = code;
-                document.body.appendChild(s);
-              }
-            };
-            document.body.appendChild(script);
-          }
-        }, this._handleError)
-        .catch(() => {});
+      getTabbyInstallment(defPrice).then((response) => {
+        if (response?.value) {
+          this.addTabbyPromo(defPrice, currency);
+        }
+      }, this._handleError).catch(() => { });
     }
 
     const countryCode = getCountryFromUrl();
@@ -228,7 +219,7 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const countryCode = getCountryFromUrl();
 
-    const { isArabic, eddEventSent } = this.state;
+    const { eddEventSent } = this.state;
 
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -237,37 +228,11 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            if (prevProps.product.price !== price) {
-              const script = document.createElement("script");
-              script.src = "https://checkout.tabby.ai/tabby-promo.js";
-              script.async = true;
-              script.onload = function () {
-                let s = document.createElement("script");
-                s.type = "text/javascript";
-                const code = `new TabbyPromo({
-            selector: '#TabbyPromo',
-            currency: '${currency}',
-            price: '${defPrice}',
-            installmentsCount: 4,
-            lang: '${isArabic ? "ar" : "en"}',
-            source: 'product',
-          });`;
-                try {
-                  s.appendChild(document.createTextNode(code));
-                  document.body.appendChild(s);
-                } catch (e) {
-                  s.text = code;
-                  document.body.appendChild(s);
-                }
-              };
-              document.body.appendChild(script);
-            }
-          }
-        }, this._handleError)
-        .catch(() => {});
+      getTabbyInstallment(defPrice).then((response) => {
+        if (response?.value) {
+          this.addTabbyPromo(defPrice, currency);
+        }
+      }, this._handleError).catch(() => { });
     }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,

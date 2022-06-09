@@ -61,7 +61,7 @@ class PDPClickAndCollectPopup extends PureComponent {
     return (
       <>
         <Form key="select-store">
-          <Search />
+          {!isArabic() ?<Search /> : null  }
           <Field
             type="input"
             id="selectStore"
@@ -71,6 +71,7 @@ class PDPClickAndCollectPopup extends PureComponent {
             onChange={(value) => this.handleSearchKeywordChange(value)}
             onClick={() => this.storeListDisplay()}
           />
+          {isArabic() ?<Search /> : null  }
         </Form>
         {this.renderStoresList()}
       </>
@@ -161,19 +162,23 @@ class PDPClickAndCollectPopup extends PureComponent {
         onClose={togglePDPClickAndCollectPopup}
         open={openClickAndCollectPopup}
       >
-        <h3>{__("PICK A STORE")}</h3>
-        <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer">
+        <div block="PDPClickAndCollectPopup" elem="HeadingBox" mods={{isArabic: isArabic()}}>
+          <h3>{__("PICK A STORE")}</h3>
+        </div>
+        <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer" mods={{isArabic: isArabic()}}>
           {this.renderStoreSelect()}
         </div>
         {!showStoreList ? (
-          <>
+          <div block="PDPClickAndCollectPopup" elem="MessageBox" mods={{
+            isArabic: isArabic(),
+          }}>
             <h4>
-              {__("Orders can take 1-2 hours to get to the store. In addition to your order confirmation, you will receive an email notification once your order has shipped and another email once it has arrived in store and is available for pickup.")}
+              {__("You will receive a message once your order is ready for pickup from the store.")}
             </h4>
             <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer">
               {this.renderConfirmButton()}
             </div>
-          </>
+          </div>
         ) : null}
       </CTCPopup>
     );

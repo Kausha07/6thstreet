@@ -51,6 +51,7 @@ import {
   NEW_STATUS_LABEL_MAP,
   STATUS_PROCESSING,
   STATUS_DISPATCHED,
+  PICKUP_FAILED
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
@@ -284,7 +285,10 @@ class MyAccountOrderView extends PureComponent {
         return __("Ready for Pick up");
       }
       case "pickedup": {
-        return __("Items Picked Up");
+        return __("Picked up from Store");
+      }
+      case "pickupfailed":{
+        return __("Pickup Failed");
       }
       default: {
         return null;
@@ -547,7 +551,7 @@ class MyAccountOrderView extends PureComponent {
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
-            item.status !== DELIVERY_FAILED &&
+            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED && 
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
