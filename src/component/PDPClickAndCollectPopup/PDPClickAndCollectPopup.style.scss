@@ -139,6 +139,9 @@ $select-arrow-width: 6px !default;
                     font-weight: 600;
                     letter-spacing: 0;
                     line-height: 43px;
+                    @include mobile {
+                        font-size: 10px;
+                    }
                 }
                 div:nth-child(2) {
                     color: #9B9B9B;
