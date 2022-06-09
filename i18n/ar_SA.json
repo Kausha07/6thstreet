@@ -932,7 +932,7 @@
     "%s | 6thStreet.com %s": null,
     "%s, online shopping, %s, free shipping, returns": null,
     "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
-    "Ready for Pick up": null,
+    "Ready for Pick up": "جاهز للإستلام",
     "Items Picked Up": null,
     "shipment": "الشحن",
     "SHARE": null,
@@ -1047,5 +1047,6 @@
     "You will receive a message once your order is ready for pickup from the store.": "ستصلك رسالة نصية عندما يكون طلبك جاهز للاستلام",
     "Online Shopping for %s Shoes, Clothing, Bags & more on 6thStreet %s": null,
     "Save to Wishlist": "إضافة إلى قائمة الأمنيات",
-    "Pick up Failed": "لم تتم عملية الإستلام بنجاح"
+    "Pick up Failed": null,
+    "Picked up from Store": "جاهز للإستلام من المتجر"
 }

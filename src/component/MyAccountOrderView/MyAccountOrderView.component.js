@@ -284,7 +284,7 @@ class MyAccountOrderView extends PureComponent {
         return __("Ready for Pick up");
       }
       case "pickedup": {
-        return __("Items Picked Up");
+        return __("Picked up from Store");
       }
       case "pickupfailed":{
         return __("Pick up Failed");
