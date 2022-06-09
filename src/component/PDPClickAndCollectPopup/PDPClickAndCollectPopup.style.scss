@@ -185,8 +185,13 @@ $select-arrow-width: 6px !default;
             ul {
                 li {
                     text-align: right;
+                    div:nth-child(1) {
+                        &::before {
+                            margin-left: 8px;
+                        }
+                    }
                     div:nth-child(2) {
-                        margin-right: 8px;
+                        margin-right: 36px;
                     }
                 }
             }
@@ -223,6 +228,12 @@ $select-arrow-width: 6px !default;
             right: 0;
             transform: translateY(-50%);
             margin: 0 12px;
+        }
+        &_isArabic {
+            button:after {
+                left: 0;
+                right: unset;
+            }
         }
     }
     &-SizeSelectContainer {
