@@ -30,11 +30,13 @@ class CountrySwitcher extends PureComponent {
     }
 
     togglePopup = () => {
+        const { onCountrySelect } = this.props;
         if (this.state.content === '') {
             this.openPopup();
         }
         else {
             this.closePopup();
+            onCountrySelect;
         }
     }
 
