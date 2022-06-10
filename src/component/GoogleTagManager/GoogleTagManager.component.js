@@ -21,6 +21,7 @@ import {
   EVENT_CLICK_RECOMMENDATION_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
   EVENT_PAGE_NOT_FOUND,
+  EVENT_GTM_SEARCH
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -56,6 +57,7 @@ import ClearSearchEvent from "./events/SearchEvents/ClearSearch.event";
 import SearchSuggestionProductClickEvent from "./events/SearchEvents/SearchSuggestionProductClick.event";
 import NoResultSearchScreenEvent from "./events/SearchEvents/NoResultSearchScreen.event";
 import PageNotFoundEvent from "./events/PageNotFound.event";
+import SearchResultEvent from "./events/SearchEvents/SearchResult.event";
 import Scripts from "./Scripts";
 
 /**
@@ -153,6 +155,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CLICK_RECOMMENDATION_CLICK]: RecommendedClickEvent,
     [EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK]: SearchSuggestionProductClickEvent,
     [EVENT_PAGE_NOT_FOUND]: PageNotFoundEvent,
+    [EVENT_GTM_SEARCH]:SearchResultEvent,
   };
 
   /**
