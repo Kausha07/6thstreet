@@ -34,7 +34,6 @@ class CheckoutEvent extends BaseEvent {
         if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
             return;
         }
-        
         this.pushEventData({
             ecommerce: {
                 currencyCode: this.getCurrencyCode(),
