@@ -104,10 +104,6 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-    const {isLoading} = this.props;
-    if(isLoading) {
-      return <Loader isLoading={isLoading} />;
-    }
       return (
         <div block="PDP" onClick={this.onPDPPageClicked}>
           {this.renderMySignInPopup()}
@@ -121,11 +117,15 @@ class PDP extends PureComponent {
   }
 
   render() {
-    const {isLoading, nbHits}= this.props;
-    if (!isLoading && nbHits === 1) {
-    return this.renderPDP();
+    const {isLoading, product, nbHits}= this.props;
+    if(isLoading) {
+      return <Loader isLoading={isLoading} />;
+    } else if(!isLoading && nbHits === 1 && product) {
+      return this.renderPDP();
     }
+    else {
     return <NoMatch />
+    } 
   }
 }
 
