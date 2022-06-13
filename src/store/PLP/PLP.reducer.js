@@ -151,6 +151,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
         pages: {
           [initialPage]: products,
         },
+        isLoading:false
       };
 
     case SET_PLP_LOADING:
