@@ -952,9 +952,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (isMobile.any()) {
             showOverlay(CC_POPUP_ID);
           }
-          setTimeout(() => {
-            hideActiveOverlay();
-          },5000);
+          hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {})
