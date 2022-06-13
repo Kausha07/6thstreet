@@ -4,6 +4,7 @@ import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import EmptySearch from "Component/EmptySearch";
 import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
+import Loader from "Component/Loader";
 import "./SearchPage.style";
 
 import NoMatch from "Route/NoMatch";
@@ -72,7 +73,7 @@ class SearchPage extends PLP {
         );
       }
    
-      return null
+      return  <Loader isLoading={isLoading} />
     // return (
     //   // <main block="SearchPage" >
     //   //   <ContentWrapper label={__("Product List Page")}>

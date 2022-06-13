@@ -7,7 +7,6 @@ import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
 import CountrySwitcher from './CountrySwitcher.component';
-import { isSignedIn } from 'Util/Auth';
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -34,9 +33,6 @@ export class CountrySwitcherContainer extends PureComponent {
         sessionStorage.removeItem('EddAddressReq')
         sessionStorage.removeItem('EddAddressRes')
         setCountry(value);
-        if (!isSignedIn()) {
-            localStorage.removeItem("customer");
-        }
     }
 
     containerProps = () => {

@@ -40,6 +40,7 @@ $select-arrow-width: 6px !default;
         letter-spacing: 1px!important;
         line-height: 40px!important;
         text-align: left;
+        margin-bottom: 0;
     }
     h4 {
         font-size: 12px;
@@ -115,6 +116,7 @@ $select-arrow-width: 6px !default;
             margin-top: 18px;
             width: 100%;
             max-height: 40vh;
+            margin-top: 0;
             li {
                 padding-left: 4px;
                 cursor: pointer;
