@@ -155,7 +155,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CLICK_RECOMMENDATION_CLICK]: RecommendedClickEvent,
     [EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK]: SearchSuggestionProductClickEvent,
     [EVENT_PAGE_NOT_FOUND]: PageNotFoundEvent,
-    [EVENT_GTM_SEARCH]:SearchResultEvent,
+    [EVENT_GTM_SEARCH]: SearchResultEvent,
   };
 
   /**

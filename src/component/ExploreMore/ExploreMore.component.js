@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import Event, {
-    EVENT_CLICK_RECENT_SEARCHES_CLICK
+    EVENT_CLICK_RECENT_SEARCHES_CLICK,
+    EVENT_EXPLORE_MORE_SEARCH_CLICK
 } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -41,7 +42,7 @@ class ExploreMore extends PureComponent {
 
 
     onclick = (item) => {
-        Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, item)
+        Event.dispatch(EVENT_EXPLORE_MORE_SEARCH_CLICK, item?.tag ? item?.tag : item);
 
     };
 
