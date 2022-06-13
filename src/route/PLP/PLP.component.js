@@ -141,7 +141,12 @@ export class PLP extends PureComponent {
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
-    const {pages} = this.props;
+    const {pages, isLoading} = this.props;
+    if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
+      return (
+        <NoMatch/>
+      )
+    }
     if (      
       (pages.undefined && pages.undefined.length > 0) ||
       (pages["0"] && pages["0"].length > 0)
@@ -169,12 +174,10 @@ export class PLP extends PureComponent {
           </div>
         </ContentWrapper>
       </main>
-    )}
+      )}
 
-    return (
-      <NoMatch/>
-    )
-  }
+      return null
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PLP);
