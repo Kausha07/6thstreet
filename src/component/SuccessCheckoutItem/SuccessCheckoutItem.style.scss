@@ -302,4 +302,16 @@
       }
     }
   }
+  &-ClickAndCollect {
+    display: flex;
+    font-family: "Avenir Next";
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--cart-item-heading-color);
+    font-weight: var(--fw-medium);
+    margin-left: -3px;
+  }
 }

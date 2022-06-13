@@ -245,7 +245,7 @@ class PDPSummary extends PureComponent {
       !eddEventSent &&
       cross_border === 0
     ) {
-      if (addressCityData.length > 0) {
+      if (addressCityData?.length > 0) {
         this.validateEddStatus(countryCode);
         let default_edd = defaultShippingAddress ? true : false;
         Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
