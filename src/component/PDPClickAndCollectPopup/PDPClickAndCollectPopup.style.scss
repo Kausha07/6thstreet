@@ -186,6 +186,7 @@ $select-arrow-width: 6px !default;
                 }
             }
             ul {
+                direction: rtl;
                 li {
                     text-align: right;
                     div:nth-child(1) {
