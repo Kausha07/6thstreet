@@ -40,6 +40,9 @@ $select-arrow-width: 6px !default;
         letter-spacing: 1px!important;
         line-height: 40px!important;
         text-align: left;
+        @include mobile {
+            margin-bottom: 0;
+        }
     }
     h4 {
         font-size: 12px;
@@ -152,6 +155,9 @@ $select-arrow-width: 6px !default;
                     margin-left: 28px;
                     font-weight: 400;
                 }
+            }
+            @include mobile {
+                margin-top: 0;
             }
         }
         &_isArabic {

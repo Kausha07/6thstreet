@@ -13,6 +13,8 @@ import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSli
 import "./PLP.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
+import Loader from "Component/Loader";
+
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -176,7 +178,7 @@ export class PLP extends PureComponent {
       </main>
       )}
 
-      return null
+      return  <Loader isLoading={isLoading} />
     }
 }
 
