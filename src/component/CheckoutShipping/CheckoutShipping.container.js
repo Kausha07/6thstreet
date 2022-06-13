@@ -20,6 +20,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_PLACE_ORDER } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint";
+import { camelCase } from "Util/Common";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -78,14 +79,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const getStoreAddressResponse = await getStoreAddress(storeNo);
     let addressField = getStoreAddressResponse.data;
     let inputFields = {
-      city: addressField.city,
+      city: camelCase(addressField.city || ""),
       country_id: addressField.country,
       firstname: fields.firstname,
       guest_email: fields.guest_email,
       lastname: fields.lastname,
       phonecode: fields.phonecode,
-      postcode: addressField.area,
-      region_id: addressField.area,
+      postcode: camelCase(addressField.area || ""),
+      region_id: camelCase(addressField.area || ""),
       street: addressField.address,
       telephone: fields.telephone,
     };
