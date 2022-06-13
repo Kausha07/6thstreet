@@ -34,7 +34,7 @@ class CheckoutEvent extends BaseEvent {
         if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
             return;
         }
-
+        
         this.pushEventData({
             ecommerce: {
                 currencyCode: this.getCurrencyCode(),
@@ -72,7 +72,8 @@ class CheckoutEvent extends BaseEvent {
                 {
                     ...ProductHelper.getItemData(item),
                     quantity: ProductHelper.getQuantity(item),
-                    id:item.full_item_info.config_sku || "" ,
+                    id:item.full_item_info.config_sku || item.full_item_info.sku ,
+                    category: item.product_type_6s || "",
                 }
             ]), []);
         const groupedProducts = this.getGroupedProducts();

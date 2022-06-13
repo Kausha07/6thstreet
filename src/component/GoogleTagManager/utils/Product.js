@@ -249,6 +249,7 @@ class Product {
             row_total,
             price = {},
             product,
+            product_type_6s,
         } = item;
 
         const { sku = '', name = '' } = product || {};
@@ -260,7 +261,7 @@ class Product {
             id:  sku || parentSku,
             price: row_total || itemPrice.toString(),
             brand: brand_name,
-            category,
+            category: product_type_6s || category || "",
             [PRODUCT_COLOR]: color,
             quantity:qty,
         };
