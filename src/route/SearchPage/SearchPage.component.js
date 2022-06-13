@@ -42,41 +42,46 @@ class SearchPage extends PLP {
     //     </>
     //   );
     // }
-    if (
-      //isLoading ||
-      (pages.undefined && pages.undefined.length > 0) ||
-      (pages["0"] && pages["0"].length > 0)
-    ) {
+    if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
       return (
-        <main block="SearchPage" id="plp-main-scroll-id">
-          <ContentWrapper label={__("Product List Page")}>
-            {this.renderPLPDetails()}
-            {this.state.bannerData && this.renderBanner()}
-            <div>
-              <div block="Products" elem="Wrapper">
-                {this.renderPLPFilters()}
-                {this.renderPLPPages()}
-              </div>
-              {
-                !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
-              }
-            </div>
-            {this.renderSearchNotFound()}
-          </ContentWrapper>
-        </main>
-      );
+        <NoMatch/>
+      )
     }
-
-    return (
-      // <main block="SearchPage" >
-      //   <ContentWrapper label={__("Product List Page")}>
-      //     {this.renderPLPDetails()}
-      //     {this.renderPLPPages()}
-      //     {this.renderSearchNotFound()}
-      //   </ContentWrapper>
-      // </main>
-      <NoMatch/>
-    );
+      if (
+        // isLoading ||
+        (pages.undefined && pages.undefined.length > 0) ||
+        (pages["0"] && pages["0"].length > 0)
+      ) {
+        return (
+          <main block="SearchPage" id="plp-main-scroll-id">
+            <ContentWrapper label={__("Product List Page")}>
+              {this.renderPLPDetails()}
+              {this.state.bannerData && this.renderBanner()}
+              <div>
+                <div block="Products" elem="Wrapper">
+                  {this.renderPLPFilters()}
+                  {this.renderPLPPages()}
+                </div>
+                {
+                  !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
+                }
+              </div>
+              {this.renderSearchNotFound()}
+            </ContentWrapper>
+          </main>
+        );
+      }
+   
+      return null
+    // return (
+    //   // <main block="SearchPage" >
+    //   //   <ContentWrapper label={__("Product List Page")}>
+    //   //     {this.renderPLPDetails()}
+    //   //     {this.renderPLPPages()}
+    //   //     {this.renderSearchNotFound()}
+    //   //   </ContentWrapper>
+    //   // </main>
+    // );    
   }
 }
 
