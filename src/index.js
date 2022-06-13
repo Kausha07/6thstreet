@@ -44,40 +44,40 @@ Sentry.init({
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
 if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
-window.addEventListener("beforeinstallprompt", (ev) => {
-  ev.preventDefault();
-});
+  window.addEventListener("beforeinstallprompt", (ev) => {
+    ev.preventDefault();
+  });
 
-window.addEventListener("load", () => {
-  const BaseUrl = new URL(window.location.href).origin;
-  const swUrl = BaseUrl + "/serviceworker.js";
-  window.wb = new Workbox(swUrl);
-  const newVersionPopupEvent = new Event("showNewVersionPopup");
+  window.addEventListener("load", () => {
+    const BaseUrl = new URL(window.location.href).origin;
+    const swUrl = BaseUrl + "/serviceworker.js";
+    window.wb = new Workbox(swUrl);
+    const newVersionPopupEvent = new Event("showNewVersionPopup");
 
-  const showSkipWaitingPrompt = (event) => {
-    window.dispatchEvent(newVersionPopupEvent);
-  };
-  window.wb.addEventListener("waiting", showSkipWaitingPrompt);
-  window.wb.register();
+    const showSkipWaitingPrompt = (event) => {
+      window.dispatchEvent(newVersionPopupEvent);
+    };
+    window.wb.addEventListener("waiting", showSkipWaitingPrompt);
+    window.wb.register();
 
-  // navigator.serviceWorker.register(swUrl).then((reg) => {
-  //   const newVersionPopupEvent = new Event("showNewVersionPopup");
+    // navigator.serviceWorker.register(swUrl).then((reg) => {
+    //   const newVersionPopupEvent = new Event("showNewVersionPopup");
 
-  //   // eslint-disable-next-line no-param-reassign
-  //   reg.onupdatefound = function () {
-  //     const installingWorker = reg.installing;
+    //   // eslint-disable-next-line no-param-reassign
+    //   reg.onupdatefound = function () {
+    //     const installingWorker = reg.installing;
 
-  //     installingWorker.onstatechange = function () {
-  //       if (installingWorker.state === "redundant") {
-  //         console.error(
-  //           "***",
-  //           "The installing service worker became redundant."
-  //         );
-  //         window.dispatchEvent(newVersionPopupEvent);
-  //       }
-  //     };
-  //   };
-  // })
-});
+    //     installingWorker.onstatechange = function () {
+    //       if (installingWorker.state === "redundant") {
+    //         console.error(
+    //           "***",
+    //           "The installing service worker became redundant."
+    //         );
+    //         window.dispatchEvent(newVersionPopupEvent);
+    //       }
+    //     };
+    //   };
+    // })
+  });
 }
 render(<App />, document.getElementById("root"));
