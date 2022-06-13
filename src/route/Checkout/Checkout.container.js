@@ -945,7 +945,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (status === "Authorized") {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
@@ -953,6 +952,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (isMobile.any()) {
             showOverlay(CC_POPUP_ID);
           }
+          setTimeout(() => {
+            hideActiveOverlay();
+          },5000);
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {})
