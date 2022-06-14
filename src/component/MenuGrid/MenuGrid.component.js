@@ -37,7 +37,8 @@ class MenuGrid extends PureComponent {
   }
 
   onItemClick = () => {
-    const { toggleOverlayByKey, setPrevPath } = this.props;
+    const { toggleOverlayByKey, setPrevPath,setLastTapItemOnHome } = this.props;
+    setLastTapItemOnHome("")
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setPrevPath(window.location.href);
   };
