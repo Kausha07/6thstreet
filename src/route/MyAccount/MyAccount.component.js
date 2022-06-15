@@ -9,10 +9,7 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
-import {
-  RETURN_ITEM_LABEL,
-  RETURN__EXCHANGE_ITEM_LABEL,
-} from "Component/MyAccountOrderView/MyAccountOrderView.config.js";
+import { RETURN_ITEM_LABEL } from "Component/MyAccountOrderView/MyAccountOrderView.config.js";
 import MyAccountReturns from "Component/MyAccountReturns";
 import MyAccountStoreCredit from "Component/MyAccountStoreCredit";
 import MyAccountTabList from "Component/MyAccountTabList";
@@ -29,7 +26,6 @@ import {
   MY_ORDERS,
   MY_WISHLIST,
   RETURN_ITEM,
-  EXCHANGE_ITEM,
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
@@ -76,7 +72,6 @@ export class MyAccount extends SourceMyAccount {
     [DASHBOARD]: MyAccountDashboard,
     [MY_ORDERS]: MyAccountMyOrders,
     [RETURN_ITEM]: MyAccountReturns,
-    [EXCHANGE_ITEM]: MyAccountReturns,
     [MY_WISHLIST]: MyAccountMyWishlist,
     [ADDRESS_BOOK]: MyAccountAddressBook,
     [WALLET_PAYMENTS]: WalletAndPayments,
@@ -108,6 +103,8 @@ export class MyAccount extends SourceMyAccount {
       ],
     },
   ];
+
+
 
   renderAppColumn() {
     return this.linksMap.map((column) => (
@@ -152,8 +149,8 @@ export class MyAccount extends SourceMyAccount {
   }
 
   chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
+    if(document.querySelector(".ori-cursor-ptr")){
+    document.querySelector(".ori-cursor-ptr").click();
     }
   }
 
@@ -191,8 +188,7 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderDesktop() {
-    const { activeTab, tabMap, changeActiveTab, isSignedIn, exchangeTabMap } =
-      this.props;
+    const { activeTab, tabMap, changeActiveTab, isSignedIn } = this.props;
     const { pathname = "" } = location;
 
     const { isArabic } = this.state;
@@ -201,21 +197,12 @@ export class MyAccount extends SourceMyAccount {
       const { history } = this.props;
       return history.push("/");
     }
+
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
-    let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
-    } else if (exchangeTabMap[activeTab]) {
-      finalTab = exchangeTabMap[activeTab];
-    }
-    const { name, alternativePageName, alternateName } = finalTab;
+    const { name, alternativePageName, alternateName } = tabMap[activeTab];
     const returnTitle =
-      activeTab === RETURN_ITEM
-        ? __("Return Statement")
-        : activeTab === EXCHANGE_ITEM
-        ? __("Exchange Statement")
-        : null;
+      activeTab === RETURN_ITEM ? __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
@@ -225,31 +212,29 @@ export class MyAccount extends SourceMyAccount {
       >
         <MyAccountTabList
           tabMap={tabMap}
-          activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
+          activeTab={activeTab}
           changeActiveTab={changeActiveTab}
           onSignOut={this.handleSignOut}
         />
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-            <h1 block="MyAccount" elem="Heading">
-              {isCancel
-                ? alternateName
-                : alternativePageName || returnTitle || name}
-            </h1>
-          ) : (
+            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+              <h1 block="MyAccount" elem="Heading">
+                {isCancel
+                  ? alternateName
+                  : alternativePageName || returnTitle || name}
+              </h1>
+            ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
-                {isReturnButton
-                  ? __("Return/Exchange")
-                  : alternativePageName || returnTitle || name}
+                {alternativePageName || returnTitle || name}
               </h1>
               <button
                 block="MyAccount"
                 elem="ReturnButton"
                 onClick={this.returnItemButtonClick}
               >
-                {RETURN__EXCHANGE_ITEM_LABEL}
+                {RETURN_ITEM_LABEL}
               </button>
             </div>
           )}
@@ -260,28 +245,21 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderMobile() {
-    const {
-      activeTab,
-      tabMap,
-      isSignedIn,
-      mobileTabActive,
-      setMobileTabActive,
-      exchangeTabMap
-    } = this.props;
+    
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
 
-    const { isArabic, isMobile } = this.state;
+    const { isArabic,isMobile } = this.state;
 
-    const showProfileMenu =
-      location.pathname.match("\\/my-account").input === "/my-account";
+    const showProfileMenu = location.pathname.match('\\/my-account').input === "/my-account";
     // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
     // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
     let hiddenTabContent, hiddenTabList;
-    if (showProfileMenu) {
+    if(showProfileMenu) {
       hiddenTabList = "Active";
-      hiddenTabContent = "Hidden";
+      hiddenTabContent= "Hidden"
     } else {
       hiddenTabList = "Hidden";
-      hiddenTabContent = "Active";
+      hiddenTabContent= "Active"
     }
     if (!isSignedIn) {
       return this.renderLoginOverlay();
@@ -290,13 +268,7 @@ export class MyAccount extends SourceMyAccount {
     const { pathname = "" } = location;
 
     const TabContent = this.renderMap[activeTab];
-    let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
-    } else if (exchangeTabMap[activeTab]) {
-      finalTab = exchangeTabMap[activeTab];
-    }
-    const { name, alternativePageName, alternateName } = finalTab;
+    const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
@@ -327,10 +299,8 @@ export class MyAccount extends SourceMyAccount {
               </div>
               {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
               {this.props.clubApparel?.accountLinked ? (
-                <button
-                  onClick={() => this.handleTabChange("club-apparel")}
-                  block="AccountLinked"
-                >
+                <button onClick={() => this.handleTabChange("club-apparel")}
+                  block="AccountLinked">
                   <div block="AccountLinkedTextBlock">
                     <span block="ClubApparelImgBlock">
                       <Image
@@ -376,7 +346,7 @@ export class MyAccount extends SourceMyAccount {
           </div>
           <MyAccountTabList
             tabMap={tabMap}
-            activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
+            activeTab={activeTab}
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
@@ -392,7 +362,7 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderContent() {
-    const { isMobile } = this.state;
+    const {isMobile} = this.state;
     return isMobile ? this.renderMobile() : this.renderDesktop();
   }
 }

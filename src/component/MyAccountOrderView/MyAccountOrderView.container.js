@@ -13,12 +13,8 @@ import { Config } from "Util/API/endpoint/Config/Config.type";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import {
   RETURN_ITEM_LABEL,
-  EXCHANGE_ITEM_LABEL,
-  CANCEL_ORDER_LABEL,
 } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
-import { showNotification } from "Store/Notification/Notification.action";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -27,9 +23,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
 });
 
-export const mapDispatchToProps = () => ({
-  showErrorMessage: (message) => dispatch(showNotification("error", message)),
-});
+export const mapDispatchToProps = () => ({});
 
 export class MyAccountOrderViewContainer extends PureComponent {
   static propTypes = {
@@ -58,14 +52,14 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country, eddResponse, edd_info } = this.props;
+    const { history, country,eddResponse ,edd_info} = this.props;
 
     return {
       isLoading,
       order,
       history,
       eddResponse,
-      edd_info,
+      edd_info
     };
   };
 
@@ -81,77 +75,26 @@ export class MyAccountOrderViewContainer extends PureComponent {
     return order;
   }
 
-  openOrderCancelation(itemStatus = "") {
+  openOrderCancelation(itemStatus = '') {
     const { history } = this.props;
-    const {
-      order: { status, is_returnable, is_exchangeable } = {},
-      order,
-      entity_id,
-    } = this.state;
-    if (itemStatus === CANCEL_ORDER_LABEL) {
-      this.cancelExchangeOrder(order);
-    } else {
-      if (
-        !entity_id ||
-        !(
-          STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ||
-          (status === STATUS_COMPLETE && is_exchangeable)
-        )
-      ) {
-        return;
-      }
+    const { order: { status, is_returnable } = {}, entity_id } = this.state;
 
-      const url =
-        status === STATUS_COMPLETE && itemStatus === EXCHANGE_ITEM_LABEL
-          ? `/my-account/exchange-item/create/${entity_id}`
-          : status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
-          ? `/my-account/return-item/create/${entity_id}`
-          : `/my-account/return-item/cancel/${entity_id}`;
-
-      history.push(url, { orderDetails: order });
+    if (
+      !entity_id ||
+      !(
+        STATUS_BEING_PROCESSED.includes(status) ||
+        (status === STATUS_COMPLETE && is_returnable)
+      )
+    ) {
+      return;
     }
-  }
 
-  cancelExchangeOrder(order) {
-    const { increment_id, groups } = order;
-    const allItems = [
-      ...groups.reduce((acc, { items }) => [...acc, ...items], []),
-    ];
-    const { showErrorMessage, history } = this.props;
-    const payload = {
-      order_id: increment_id,
-      items: allItems.map((item) => {
-        const { item_id, qty } = item;
-        return {
-          item_id: item_id,
-          qty: qty,
-          reason: "Exchange Cancel",
-        };
-      }),
-      return_to_store_credit: 0,
-    };
-    this.setState({ isLoading: true });
+    const url =
+      status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
+        ? `/my-account/return-item/create/${entity_id}`
+        : `/my-account/return-item/cancel/${entity_id}`;
 
-    MagentoAPI.post("recan/commitRecan", payload)
-      .then((response) => {
-        if (!!!response?.success) {
-          if (typeof response === "string") {
-            this.setState({ isLoading: false });
-            showErrorMessage(response);
-          } else {
-            showErrorMessage(
-              __("Error appeared while requesting a cancelation")
-            );
-          }
-        } else {
-          this.getOrder()
-        }
-      })
-      .catch(() => {
-        showErrorMessage(__("Error appeared while requesting a cancelation"));
-        this.setState({ isLoading: false });
-      });
+    history.push(url);
   }
 
   async getOrder() {

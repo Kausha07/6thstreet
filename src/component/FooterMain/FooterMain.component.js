@@ -5,9 +5,13 @@ import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import { connect } from "react-redux";
 import { URLS } from 'Util/Url/Url.config';
-
-import facebook from "./icons/facebook.png";
-import instagram from "./icons/instagram.png";
+import facebook from "./icons/facebook-2.svg";
+import instagram from "./icons/instagram-2.svg";
+import twitter from "./icons/twitter.svg";
+import pinterest from "./icons/pinterest.svg";
+import snapchat from "./icons/snapchat.svg";
+import tiktok from "./icons/tiktok.svg";
+import youtube from "./icons/youtube.svg";
 import Image from "Component/Image";
 
 import "./FooterMain.style";
@@ -112,6 +116,16 @@ class FooterMain extends PureComponent {
           facebook_href: "https://www.facebook.com/shop6thstreet/",
           id_insta: "Insta1",
           insta_href: "https://www.instagram.com/shop6thstreet/",
+          id_twitter: "Twitter1",
+          twitter_href: "https://twitter.com/shop6thstreet",
+          id_pinterest: "Pinterest1",
+          pinterest_href: "https://in.pinterest.com/6thstreetonline/",
+          id_youtube: "Youtube1",
+          youtube_href: "https://www.youtube.com/c/6thStreet",
+          id_tiktok: "Tiktok1",
+          tiktok_href: "https://www.tiktok.com/@shop6thstreet",
+          id_snapchat: "Snapchat1",
+          snapchat_href: "https://www.snapchat.com/add/Shopat6thstreet",
         },
       ],
     },
@@ -181,14 +195,38 @@ class FooterMain extends PureComponent {
                 <h4>{items.header}</h4>
                 <div block="FooterMain" elem="WrapperSecond">
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.facebook_href} key={items.id_facebook}>
-                      <Image lazyLoad={true} src={facebook} alt="facebook icon" />
+                    <Link to={items.facebook_href} key={items.id_facebook} target="_blank">
+                      <Image lazyLoad={true} src={facebook} alt="facebook" />
                     </Link>
                   </div>
-                  <span />
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.insta_href} key={items.id_insta}>
-                      <Image lazyLoad={true} src={instagram} alt="instagram icon" />
+                    <Link to={items.insta_href} key={items.id_insta} target="_blank">
+                      <Image lazyLoad={true} src={instagram} alt="instagram" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link to={items.twitter_href} key={items.id_twitter} target="_blank">
+                      <Image lazyLoad={true} src={twitter} alt="Twitter" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link to={items.pinterest_href} key={items.id_pinterest} target="_blank">
+                      <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link to={items.youtube_href} key={items.id_youtube} target="_blank">
+                      <Image lazyLoad={true} src={youtube} alt="Youtube" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link to={items.tiktok_href} key={items.id_tiktok} target="_blank">
+                      <Image lazyLoad={true} src={tiktok} alt="Tiktok" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link to={items.snapchat_href} key={items.id_snapchat} target="_blank">
+                      <Image lazyLoad={true} src={snapchat} alt="Snapchat" />
                     </Link>
                   </div>
                 </div>
