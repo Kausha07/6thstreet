@@ -764,7 +764,7 @@
     "brands": null,
     "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.": null,
     "& is wearing": null,
-    "Delivery Failed": null,
+    "Delivery Failed": "لم يتم توصيل الطلب",
     "About 6THSTREET": "نبذة عن 6 ستريت",
     "Off": "",
     "clear": "إزالة",
@@ -1049,6 +1049,6 @@
     "Pickup Failed": "لم تتم عملية الإستلام بنجاح",
     "Save to Wishlist": "إضافة إلى قائمة الأمنيات",
     "Pick up Failed": "لم تتم عملية الإستلام بنجاح",
-    "Select a Store*": "*اختر المتجر",
+    "Select a Store*": null,
     "Picked up from Store": "جاهز للإستلام من المتجر"
 }
