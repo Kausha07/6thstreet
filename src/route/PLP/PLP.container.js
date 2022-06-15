@@ -844,6 +844,10 @@ export class PLPContainer extends PureComponent {
       return;
     }
 
+    const pagePathName = new URL(window.location.href).pathname;
+    const checkBrandPage = pagePathName.includes(".html")
+      ? pagePathName.split(".html").join("").split("/")
+      : "";
     const genderName = capitalize(gender);
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
@@ -855,7 +859,7 @@ export class PLPContainer extends PureComponent {
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
     const PLPMetaTitle =
-      (brandDescription && brandName)
+      brandName && (checkBrandPage.length < 3)
         ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
@@ -863,19 +867,20 @@ export class PLPContainer extends PureComponent {
           )
         : __("%s | 6thStreet.com %s", categoryName, countryName);
 
-    const PLPMetaDesc = (brandDescription && brandName)
-      ? __(
-          "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with Free Delivery on minimum order & 100 days Free Return.",
-          brandName,
-          countryName,
-          brandName
-        )
-      : __(
-          "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-          categoryName,
-          countryName,
-          countryName
-        );
+    const PLPMetaDesc =
+      brandName && (checkBrandPage.length < 3)
+        ? __(
+            "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
+            brandName,
+            countryName,
+            brandName
+          )
+        : __(
+            "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+            categoryName,
+            countryName,
+            countryName
+          );
 
     setMeta({
       title: PLPMetaTitle,
@@ -917,7 +922,7 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages } = this.props;
+    const { query, plpWidgetData, gender, filters, pages, isLoading } = this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
 
     // isDisabled: this._getIsDisabled()
@@ -932,6 +937,7 @@ export class PLPContainer extends PureComponent {
       filters,
       pages,
       activeFilters,
+      isLoading
     };
   };
 

@@ -483,6 +483,16 @@
   &-AccordionTitle {
     margin-left: 8px;
   }
+  &-ClickAndCollect {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 11px;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--cart-item-heading-color);
+    font-weight: 500;
+  }
 }
 h2.prodDetailTitle {
   margin: 7px 0px 0px;

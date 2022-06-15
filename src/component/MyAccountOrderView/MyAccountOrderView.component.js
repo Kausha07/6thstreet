@@ -39,6 +39,7 @@ import TimerImage from "./icons/timer.png";
 import isMobile from "Util/Mobile";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
+import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
 import {
   CANCEL_ITEM_LABEL,
@@ -50,6 +51,9 @@ import {
   NEW_STATUS_LABEL_MAP,
   STATUS_PROCESSING,
   STATUS_DISPATCHED,
+  PICKUP_FAILED,
+  PICKEDUP,
+  READY_TO_PICK
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
@@ -283,7 +287,10 @@ class MyAccountOrderView extends PureComponent {
         return __("Ready for Pick up");
       }
       case "pickedup": {
-        return __("Items Picked Up");
+        return __("Picked up from Store");
+      }
+      case "pickupfailed":{
+        return __("Pickup Failed");
       }
       default: {
         return null;
@@ -546,12 +553,24 @@ class MyAccountOrderView extends PureComponent {
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
-            item.status !== DELIVERY_FAILED &&
+            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED &&
+            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&  
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
               item.courier_tracking_link
             )}
+          {!!item?.ctc_store_name && (
+            <div block="MyAccountOrderView" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderView-ClickAndCollect"
+                elem="StoreName"
+              >
+                {item?.ctc_store_name}
+              </div>
+            </div>
+          )}
           <p>
             {__(
               "Package contains %s %s",
@@ -559,6 +578,7 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
+          <div></div>
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
