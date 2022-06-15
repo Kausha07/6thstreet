@@ -37,6 +37,7 @@ class MenuBrands extends PureComponent {
   };
 
   onItemClick = () => {
+
     const { toggleOverlayByKey, setPrevPath,setLastTapItemOnHome } = this.props;
     setLastTapItemOnHome("")
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);

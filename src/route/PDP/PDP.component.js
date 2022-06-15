@@ -116,6 +116,7 @@ class PDP extends PureComponent {
       );
   }
 
+
   render() {
     const {isLoading, product, nbHits}= this.props;
     if(isLoading) {
