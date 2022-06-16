@@ -39,9 +39,6 @@
       .Image {
         display: block;
         width: 142px;
-        @include mobile() {
-          width: 138px;
-        }
 
         &-Image {
           position: relative;
@@ -112,7 +109,6 @@
       .swipeableItemContent {
         width: 100%;
         transition: all 800ms;
-        padding-right: 8px;
         .CartPageItem-Wrapper{
           padding-top:0;
           position: relative;
@@ -223,8 +219,7 @@
     .CartPageItem{
       .swipeableItem {
         .swipeableItemContent {
-          padding-left: 8px;
-          padding-right: 0;
+          
           .CartPageItem-Wrapper{
            
             .SwipeActionBtn{

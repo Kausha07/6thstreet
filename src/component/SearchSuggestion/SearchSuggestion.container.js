@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import CDN from "../../util/API/provider/CDN";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
@@ -87,7 +86,6 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches: [],
       recommendedForYou: [],
       trendingProducts: [],
-      exploreMoreData: null,
       typingTimeout: 0,
     };
 
@@ -97,7 +95,6 @@ export class SearchSuggestionContainer extends PureComponent {
     this.requestTrendingInformation();
     this.requestTopSearches();
     this.requestRecentSearches();
-    this.getExploreMoreData();
   }
 
   getAlgoliaIndex(countryCodeFromUrl, lang) {
@@ -247,7 +244,6 @@ export class SearchSuggestionContainer extends PureComponent {
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
     const { gender } = this.props;
-
     if (gender !== "home") {
       this.getPdpSearchWidgetData();
     }
@@ -272,36 +268,6 @@ export class SearchSuggestionContainer extends PureComponent {
 
   componentWillUnmount() {
     document.body.classList.remove("isSuggestionOpen");
-  }
-
-  getExploreMoreData = async () => {
-    // let device = isMobile.any() ? 'm' : 'd'
-    const { gender } = this.props;
-    const locale = getLocaleFromUrl();
-    let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
-    try {
-      const resp = await CDN.get(url);
-
-
-      if (resp) {
-        let k = resp.widgets
-        let itemYouWant = null;
-        k.forEach((item) => {
-          if (item.header) {
-            if (item.header.title === "Explore More") {
-              itemYouWant = item
-            }
-          }
-        });
-
-        this.setState({
-          exploreMoreData: itemYouWant
-        })
-      }
-    }
-    catch (error) {
-      console.error(error);
-    }
   }
 
   async requestTrendingInformation() {
@@ -395,7 +361,6 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      exploreMoreData
     } = this.state;
     const {
       search,
@@ -431,7 +396,6 @@ export class SearchSuggestionContainer extends PureComponent {
       renderMySignInPopup,
       isPDPSearchVisible,
       prevPath,
-      exploreMoreData
       // wishlistData,
     };
   };

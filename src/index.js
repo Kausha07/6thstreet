@@ -19,8 +19,8 @@ import { BrowserTracing } from "@sentry/tracing";
 import { Workbox } from "workbox-window";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { render } from "react-dom";
-import { createBrowserHistory } from "history";
-import * as Sentry from "@sentry/react";
+import { createBrowserHistory } from 'history';
+import * as Sentry from '@sentry/react';
 
 import App from "Component/App";
 
@@ -49,8 +49,7 @@ if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
   });
 
   window.addEventListener("load", () => {
-    const BaseUrl = new URL(window.location.href).origin;
-    const swUrl = BaseUrl + "/serviceworker.js";
+    const swUrl = '/serviceworker.js';
     window.wb = new Workbox(swUrl);
     const newVersionPopupEvent = new Event("showNewVersionPopup");
 

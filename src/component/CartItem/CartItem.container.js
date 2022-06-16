@@ -266,7 +266,7 @@ export class CartItemContainer extends PureComponent {
           color,
           qty,
           product: { name } = {},
-          full_item_info: { config_sku, category, price,product_type_6s, original_price,size_option },
+          full_item_info: { config_sku, category, price, original_price,size_option },
           full_item_info,
         },
         prevPath= null,
@@ -276,10 +276,10 @@ export class CartItemContainer extends PureComponent {
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
           name,
-          id: config_sku || sku,
+          id: sku,
           price: row_total,
           brand: brand_name,
-          category: product_type_6s || category,
+          category: category,
           variant: color,
           quantity: qty,
         },

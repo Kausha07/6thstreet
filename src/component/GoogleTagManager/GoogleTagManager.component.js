@@ -14,14 +14,12 @@ import {
   EVENT_GTM_VIEW_SEARCH_RESULTS,
   EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_RECENT_SEARCHES_CLICK,
-  EVENT_EXPLORE_MORE_SEARCH_CLICK,
   EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW,
   EVENT_GTM_SEARCH_SCREEN_VIEW,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_CLICK_RECOMMENDATION_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
   EVENT_PAGE_NOT_FOUND,
-  EVENT_GTM_SEARCH,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -47,7 +45,6 @@ import WishlistClickEvent from "./events/WishlistClick.event";
 import SearchEvent from "./events/Search.event";
 import GoToSearchEvent from "./events/SearchEvents/GoToSearch.event";
 import RecentSearchesClickEvent from "./events/SearchEvents/RecentSearchesClick.event";
-import ExploreMoreClickEvent from "./events/SearchEvents/ExploreMore.event";
 import TopSearchesClickEvent from "./events/SearchEvents/TopSearchesClick.event";
 import SearchSuggesionClickEvent from "./events/SearchEvents/SearchSuggestionClick.event";
 import CancelSearchEvent from "./events/SearchEvents/CancelSearch.event";
@@ -57,7 +54,6 @@ import ClearSearchEvent from "./events/SearchEvents/ClearSearch.event";
 import SearchSuggestionProductClickEvent from "./events/SearchEvents/SearchSuggestionProductClick.event";
 import NoResultSearchScreenEvent from "./events/SearchEvents/NoResultSearchScreen.event";
 import PageNotFoundEvent from "./events/PageNotFound.event";
-import SearchResultEvent from "./events/SearchEvents/SearchResult.event";
 import Scripts from "./Scripts";
 
 /**
@@ -148,14 +144,12 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_VIEW_SEARCH_RESULTS]: SearchEvent,
     [EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW]: NoResultSearchScreenEvent,
     [EVENT_CLICK_RECENT_SEARCHES_CLICK]: RecentSearchesClickEvent,
-    [EVENT_EXPLORE_MORE_SEARCH_CLICK]: ExploreMoreClickEvent,
     [EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW]: SearchEvent,
     [EVENT_GTM_SEARCH_SCREEN_VIEW]: SearchEvent,
     [EVENT_CLICK_TOP_SEARCHES_CLICK]: TopSearchesClickEvent,
     [EVENT_CLICK_RECOMMENDATION_CLICK]: RecommendedClickEvent,
     [EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK]: SearchSuggestionProductClickEvent,
     [EVENT_PAGE_NOT_FOUND]: PageNotFoundEvent,
-    [EVENT_GTM_SEARCH]: SearchResultEvent,
   };
 
   /**
@@ -381,15 +375,6 @@ class GoogleTagManager extends PureComponent {
    */
   processDataPush(event, data) {
     if (this.enabled) {
-      dataLayer.push({
-        ecommerce: null,
-        eventCategory: null,
-        eventAction: null,
-        UserType:null,
-        CustomerID:null,
-        PageType: null,
-        SearchTerm: null,
-      });
       this.addDataLayer(data);
 
       if (this.debug) {
@@ -423,10 +408,22 @@ class GoogleTagManager extends PureComponent {
    *
    * @param data
    */
-
+  resetCustomData = {
+    ecommerce: null,
+    eventCategory: null,
+    eventAction: null,
+    UserType: null,
+    CustomerID: null,
+    PageType: null,
+    SearchTerm: null,
+  };
   addDataLayer(data) {
     if (this.enabled) {
-      this.currentDataLayer = { ...this.currentDataLayer, ...data };
+      this.currentDataLayer = {
+        ...this.currentDataLayer,
+        ...this.resetCustomData,
+        ...data,
+      };
     }
   }
 

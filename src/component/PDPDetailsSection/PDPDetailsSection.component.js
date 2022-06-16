@@ -75,10 +75,10 @@ class PDPDetailsSection extends PureComponent {
           userID,
           sourceProduct,
         } : {
-            gender,
-            userID,
-            sourceProduct,
-          }
+          gender,
+          userID,
+          sourceProduct,
+        }
         const payload = VueQuery.buildQuery(type, query, queryPaylod);
         promisesArray.push(fetchVueData(payload));
       });
@@ -160,38 +160,6 @@ class PDPDetailsSection extends PureComponent {
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
     const { isArabic } = this.state;
-    const {
-      product: {
-        sku,
-        highlighted_attributes,
-        categories,
-        model_height,
-        product_height,
-        product_length,
-        product_width,
-        bag_dimension,
-        model_wearing_size,
-      },
-      product,
-    } = this.props;
-    const highlights = this.getHighlights(
-      highlighted_attributes,
-      categories,
-      product_height,
-      product_length,
-      product_width,
-      bag_dimension,
-      product
-    );
-    let isReturnable = true
-    highlights.forEach((val) => {
-      if (val.key === "returnable") {
-        if (val.value === "No") {
-          isReturnable = false;
-        }
-      }
-    })
-
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
@@ -219,17 +187,14 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        { isReturnable &&
-          <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
-            <div
-              block="PDPDetailsSection"
-              elem="Icon"
-              mods={{ freeReturn: true }}
-            />
-            <div>{__("Free Returns")}</div>
-          </div>
-        }
-
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
+          <div
+            block="PDPDetailsSection"
+            elem="Icon"
+            mods={{ freeReturn: true }}
+          />
+          <div>{__("Free Returns")}</div>
+        </div>
       </div>
     );
   }
@@ -692,7 +657,7 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-          <div block="Seperator2" />
+          {/* <div block="Seperator2" /> */}
           <React.Fragment>
             {pdpWidgetsAPIData.map((item, index) => {
               if (typeof item === "object" && Object.keys(item).length > 0) {
@@ -913,7 +878,6 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShippingAndFreeReturns() {
-
     if (this.props.product.is_returnable === 1) {
       return (
         <div>
@@ -971,8 +935,8 @@ class PDPDetailsSection extends PureComponent {
             {this.renderSeperator()} {this.renderIconsSection()}
           </div>
         ) : (
-            ""
-          )}
+          ""
+        )}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
@@ -1030,7 +994,7 @@ class PDPDetailsSection extends PureComponent {
                   is_expanded={this.state.isExpanded["4"]}
                 >
                 </Accordion>
-
+                
                 */}
       </div >
     );

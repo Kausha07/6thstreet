@@ -28,15 +28,12 @@ import Event, {
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
-import ExploreMore from "../ExploreMore"
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import Price from "Component/Price";
 
 var ESCAPE_KEY = 27;
-
-
 
 class SearchSuggestion extends PureComponent {
   static propTypes = {
@@ -59,7 +56,7 @@ class SearchSuggestion extends PureComponent {
   };
 
   static defaultProps = {
-    hideActiveOverlay: () => { },
+    hideActiveOverlay: () => {},
   };
 
   state = {
@@ -69,14 +66,11 @@ class SearchSuggestion extends PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this._handleKeyDown);
-
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
-
-
 
   _handleKeyDown = (event) => {
     switch (event.keyCode) {
@@ -343,7 +337,65 @@ class SearchSuggestion extends PureComponent {
         item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
         item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
-
+    // will be good to work when all brands exists properly
+    // if (isBrand) {
+    //   return (
+    //     <li>
+    //       <Link
+    //         to={
+    //           encodeURIComponent(
+    //             this.getBrandSuggestionUrl(
+    //               formatQuerySuggestions(query),
+    //               queryID
+    //             )
+    //           )
+    //         }
+    //         onClick={() =>
+    //           this.onSearchQueryClick(formatQuerySuggestions(query))
+    //         }
+    //       >
+    //         <div className="suggestion-details-box">
+    //           {getHighlightedText(formatQuerySuggestions(query), searchString)}
+    //           <div>{count}</div>
+    //         </div>
+    //       </Link>
+    //     </li>
+    //   );
+    // } else {
+    //   if (products.length === 1 && fetchSKU) {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={fetchSKU?.url}
+    //           onClick={() => this.onSearchQueryClick(query)}
+    //         >
+    //           <div className="suggestion-details-box text-capitalize">
+    //             {getHighlightedText(query, searchString)}
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   } else {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={`${encodeURIComponent(this.getCatalogUrl(query, gender, queryID))}`}
+    //           onClick={() =>
+    //             this.onSearchQueryClick(formatQuerySuggestions(query))
+    //           }
+    //         >
+    //           <div className="suggestion-details-box">
+    //             {getHighlightedText(
+    //               formatQuerySuggestions(query),
+    //               searchString
+    //             )}
+    //             <div>{count}</div>
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   }
+    // }
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
         Event.dispatch(
@@ -510,6 +562,7 @@ class SearchSuggestion extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
+
     return (
       <div block="SearchSuggestion" elem="Recommended">
         {/* <h2>{__("Trending Products")}</h2> */}
@@ -519,17 +572,12 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderSuggestions() {
-    const { products = [] } = this.props;
-    const { querySuggestions = [] } = this.props;
-    let isRecommended = (products.length === 0) && (querySuggestions.length === 1)
     return (
       <>
         {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
-        {isRecommended && this.renderRecommendedForYou()}
-
       </>
     );
   }
@@ -546,7 +594,7 @@ class SearchSuggestion extends PureComponent {
           </p>
         </div>
         {this.renderRecentSearches()}
-        {/* {this.renderTopSearches()} */}
+        {this.renderTopSearches()}
         {this.renderTrendingBrands()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
@@ -685,8 +733,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                label
-              )}&p=0&dFR[gender][0]=${genderInURL}`,
+                  label
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -787,8 +835,8 @@ class SearchSuggestion extends PureComponent {
             pathname: link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                search
-              )}&p=0&dFR[gender][0]=${genderInURL}`,
+                  search
+                )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
           onClick={() => Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)}
         >
@@ -859,15 +907,15 @@ class SearchSuggestion extends PureComponent {
             link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
-                name
-              )}&p=0&dFR[gender][0]=${genderInURL}`
+                  name
+                )}&p=0&dFR[gender][0]=${genderInURL}`
           }
           onClick={() =>
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name)
           }
         >
-          <div block="SearchSuggestion" elem="TrandingTag">
-            #{name}
+          <div block="SearchSuggestion" elem="TopSearches">
+            {name}
           </div>
         </Link>
       </li>
@@ -887,26 +935,16 @@ class SearchSuggestion extends PureComponent {
     ) : null;
   }
 
-  renderExploreMore = () => {
-    let a = this.props.exploreMoreData
-    if (a) {
-      return <ExploreMore data={this.props.exploreMoreData} />
-    }
-
-  }
-
   renderEmptySearch() {
     return (
       <>
         {this.renderRecentSearches()}
-        {/* {this.renderTopSearches()} */}
+        {this.renderTopSearches()}
         {this.renderTrendingBrands()}
-        {this.renderExploreMore()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
         {/* {this.renderWishlistProducts()} */}
-        {/* {this.renderTrendingTags()} */}
-
+        {this.renderTrendingTags()}
       </>
     );
   }
@@ -918,7 +956,6 @@ class SearchSuggestion extends PureComponent {
       inNothingFound,
       querySuggestions = [],
     } = this.props;
-
     if (!isActive) {
       return null;
     }
@@ -930,9 +967,9 @@ class SearchSuggestion extends PureComponent {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length === 0) {
-      return this.renderNothingFound();
-    }
+    // if (inNothingFound && querySuggestions.length === 0) {
+    //   return this.renderNothingFound();
+    // }
 
     return this.renderSuggestions();
   }

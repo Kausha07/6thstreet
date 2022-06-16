@@ -85,19 +85,9 @@
     margin-top: 15px;
     margin-left: 15px;
     margin-right: 15px;
-
     ul {
-      display: flex;
-      width: 1011px;
-      overflow: scroll;
-      &::-webkit-scrollbar {
-        width: 1px;
-    }
       li {
         margin-top: 20px !important;
-        width: 245.39px;
-        height: auto;
-        margin-right: 7.92px;
         a {
           &:hover {
             text-decoration: none;
@@ -366,7 +356,6 @@
       margin-top: 15px;
       font-size: 15px;
       margin-bottom: 0;
-
       @include before-desktop() {
         font-size: 12px;
       }
@@ -445,10 +434,10 @@
   }
 
   .SearchProduct {
-    // display: grid;
-    // grid-template-columns: auto 1fr 1fr;
-    // grid-auto-flow: row dense;
-    // grid-gap: 10px;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-auto-flow: row dense;
+    grid-gap: 10px;
     &-SpecialPriceCon {
       display: block;
       right: unset;
@@ -481,16 +470,16 @@
       }
     }
     &-Info {
-      // grid-column: 2;
-      // grid-row: auto;
-      // display: flex;
-      // flex-direction: column;
-      // justify-content: flex-end;
+      grid-column: 2;
+      grid-row: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
     .Image {
       .LazyLoad-wrapper {
         img {
-          // width: 100px !important;
+          width: 80px !important;
           grid-column: 1;
           grid-row: auto;
         }
@@ -503,7 +492,7 @@
       letter-spacing: 0;
       line-height: 19px;
       color: var(--color-pure-black);
-      width: 200px;
+      width: 400px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -521,7 +510,7 @@
       font-size: 13px;
       letter-spacing: 0;
       line-height: 15px;
-      width: 200px;
+      width: 400px;
       overflow: hidden;
       text-overflow: ellipsis;
       -webkit-line-clamp: 2;
