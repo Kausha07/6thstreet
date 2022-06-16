@@ -61,17 +61,16 @@ class PDPClickAndCollectPopup extends PureComponent {
     return (
       <>
         <Form key="select-store">
-          {!isArabic() ?<Search /> : null  }
+          <Search />
           <Field
             type="input"
             id="selectStore"
             name="selectStore"
-            placeholder={`${__("Select a Store*")}`}
+            placeholder={`${__("Select a Store")}*`}
             value={searchKeyword}
             onChange={(value) => this.handleSearchKeywordChange(value)}
             onClick={() => this.storeListDisplay()}
           />
-          {isArabic() ?<Search /> : null  }
         </Form>
         {this.renderStoresList()}
       </>
@@ -175,9 +174,7 @@ class PDPClickAndCollectPopup extends PureComponent {
             <h4>
               {__("You will receive a message once your order is ready for pickup from the store.")}
             </h4>
-            <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer" mods={{
-            isArabic: isArabic(),
-          }}>
+            <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer">
               {this.renderConfirmButton()}
             </div>
           </div>

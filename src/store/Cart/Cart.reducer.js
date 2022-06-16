@@ -124,11 +124,9 @@ export const CartReducer = (state = getInitialState(), action) => {
                     url: item.thumbnail_url
                 },
                 url: item.url,
-                variants: [],
-                product_type_6s: item.product_type_6s,
+                variants: []
             },
             row_total: item.itemPrice || 0,
-            product_type_6s: item.product_type_6s,
             sku: item.sku,
             qty: item.qty,
             color: item.color,
