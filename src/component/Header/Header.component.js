@@ -48,7 +48,7 @@ export class Header extends PureComponent {
   }
 
   componentDidUpdate(prevState) {
-    const { delay, type } = this.state;
+    const { delay, type,isMobile } = this.state;
     if (prevState !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
