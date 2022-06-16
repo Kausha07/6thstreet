@@ -13,8 +13,6 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { getUUID } from "Util/Auth";
-import NoMatch from "Route/NoMatch";
-import Loader from "Component/Loader";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
@@ -462,16 +460,9 @@ export class PDPContainer extends PureComponent {
   };
 
   render() {
-    const {isLoading, product,nbHits } = this.props;
+    const { product } = this.props;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    if(product && nbHits === 1) {
-      return <PDP {...this.containerProps()} {...this.props} />;
-    }
-    else if(!product && nbHits === 0){
-      return <NoMatch />;
-    } else {
-      return <Loader isLoading={isLoading} />
-    }
+    return <PDP {...this.containerProps()} {...this.props} />;
   }
 }
 
