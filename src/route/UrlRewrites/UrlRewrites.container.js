@@ -148,6 +148,12 @@ export class UrlRewritesContainer extends PureComponent {
       });
       window.pageType = TYPE_CATEGORY;
     } else { // PDP & PLP w/o query params
+      let gClidParam = "";
+      if(search.startsWith("?gclid=")) {
+        const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+        let gclidValue = url.searchParams.get("gclid");
+        gClidParam= `&gclid=${gclidValue}`
+      }
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
@@ -159,7 +165,7 @@ export class UrlRewritesContainer extends PureComponent {
       const {
         type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
         id,
-        query=UpdatedURL,
+        query= gClidParam ? `?${UpdatedURL}` : UpdatedURL,
         data: {
           //url: query,
           brand_html: brandDescription,
@@ -193,7 +199,7 @@ export class UrlRewritesContainer extends PureComponent {
           id: id === undefined ? magentoProductId : id,
           isLoading: false,
           sku: possibleSku,
-          query: finalType === TYPE_PRODUCT ? "" : query,
+          query: finalType === TYPE_PRODUCT ? "" : `${query}${gClidParam}`,
           brandDescription: brandDescription,
           brandImg: brandImg,
           brandName: brandName,
