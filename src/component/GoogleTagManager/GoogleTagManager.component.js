@@ -389,6 +389,7 @@ class GoogleTagManager extends PureComponent {
         CustomerID:null,
         PageType: null,
         SearchTerm: null,
+        BannerName: null,
       });
       this.addDataLayer(data);
 
