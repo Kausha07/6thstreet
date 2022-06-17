@@ -43,7 +43,7 @@ class ExploreMoreClickEvent extends BaseEvent {
             UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
             CustomerID: this.getCustomerId(),
             PageType: this.getPageType(),
-            SearchTerm: data || "",
+            BannerName: data || "",
         });
     }
     getCustomerId() {
