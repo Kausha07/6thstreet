@@ -145,21 +145,35 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
 
     let splitKey = isArabic() ? "بواسطه" : "by";
-
+    let splitReadyByKey = isArabic() && 'جاهز في غضون'
     let colorCode =
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
-    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
+      const splitByInclude = actualEddMess.includes(splitKey)
+      const splitByReadyInclude = splitReadyByKey && actualEddMess.includes(splitReadyByKey)
+      const idealFormat = splitByInclude || splitByReadyInclude ? true : false;
+      let splitBy = actualEddMess.split(splitKey)
+
+      if(idealFormat){
+        if(splitByReadyInclude){
+          splitBy=actualEddMess.split(splitReadyByKey)
+          splitKey=splitReadyByKey
+        }else{
+          splitBy = actualEddMess.split(splitKey)
+          splitKey=splitKey
+        }
+      }
+
     return (
       <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
           {idealFormat
-            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            ? `${splitBy[0]} ${splitKey}`
             : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
-          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
+          {idealFormat ? `${splitBy[1]}` : actualEddMess}
         </span>
       </div>
     );
