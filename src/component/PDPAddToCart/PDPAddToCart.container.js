@@ -714,7 +714,6 @@ export class PDPAddToCartContainer extends PureComponent {
         showNotification("error", __("Please select a size."));
         return;
       }
-
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
@@ -725,9 +724,9 @@ export class PDPAddToCartContainer extends PureComponent {
       {
         openClickAndCollectPopup: !openClickAndCollectPopup,
       },
-      () => {
-        this.toggleRootElementsOpacity();
-      }
+      // () => {
+      //   this.toggleRootElementsOpacity();
+      // }
     );
   }
 
