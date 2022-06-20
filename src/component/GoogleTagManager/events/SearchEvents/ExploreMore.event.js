@@ -38,8 +38,8 @@ class ExploreMoreClickEvent extends BaseEvent {
     handler(EVENT_TYPE, data) {
         this.pushEventData({
             event: EVENT_TYPE,
-            eventCategory: "search",
-            eventAction: "explore_more_click",
+            eventCategory: EVENT_TYPE,
+            eventAction: EVENT_TYPE,
             UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
             CustomerID: this.getCustomerId(),
             PageType: this.getPageType(),
