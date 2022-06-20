@@ -6,11 +6,17 @@ import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
+import { getCountryFromUrl } from "Util/Url/Url";
 
 
-export const mapStateToProps = (state) => ({
-    currContentGender: state.AppState.gender
-});
+export const mapStateToProps = (state) => (
+    //console.log("state", state.AppConfig.config.countries["AE"]);
+    //console.log("state", state.AppConfig.config.countries["AE"].price_strip_insignificant_zeros);
+    {
+        currContentGender: state.AppState.gender,
+        allGender : state.AppConfig.config
+    }
+);
 
 class HeaderGenders extends PureComponent {
 
@@ -39,8 +45,12 @@ class HeaderGenders extends PureComponent {
         isMenu: false
     };
 
-
+    
     genderList = [
+        {
+            label: `${__('All')}`,
+            key: 'all'
+        },
         {
             label: __('Women'),
             key: 'women'
@@ -56,14 +66,9 @@ class HeaderGenders extends PureComponent {
         {
             label: `${__('Home')}`,
             key: 'home'
-        },
-        {
-            label: `${__('All')}`,
-            key: 'all'
         }
-    ];
-
-    getNewActiveMenuGender = (key) => {
+     ];
+     getNewActiveMenuGender = (key) => {
         const { currentGenderButton } = this.state;
         if (currentGenderButton !== key) {
             this.setState({ currentGenderButton: key });
@@ -131,7 +136,26 @@ class HeaderGenders extends PureComponent {
     };
 
     renderGenders() {
-        return this.genderList.map(this.renderGender);
+        //let showAllStatus = getCountryFromUrl() === "BH"  
+
+        
+        const { allGender } = this.props;
+        let showAllStatus =  allGender.countries[getCountryFromUrl()].price_strip_insignificant_zeros;
+
+        return this.genderList.map((value) =>{
+            
+            if(showAllStatus){
+                return this.renderGender(value)
+                    
+            }else{
+                if(value.key !== "all"){
+                    return (
+                        this.renderGender(value)
+                    )
+                } 
+            }
+            
+        })
     }
 
     render() {

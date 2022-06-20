@@ -1,4 +1,7 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { getCountryFromUrl } from "Util/Url/Url";
+import { getConfig } from 'Util/API/endpoint/Config/Config.endpoint';
+
 
 import {
     SET_COUNTRY,
@@ -14,25 +17,32 @@ export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
 
 export const APP_STATE_CACHE_KEY_WELCOME = 'APP_STATE_CACHE_KEY_WELCOME';
 
-export const getInitials = () => {
+export const getInitials = async  () => {
 
     let country = ''
     let lang = ''
     let locale = ''
     let langOptions = ['en', 'ar']
-
-    let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-    if (k && k.data.country) {
-        country = k.data.country
+    let gender = "women";
+    const config = await getConfig();
+    
+    let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)    
+    console.log("K")
+    if (k && k.country) {
+        country = k.country;
+        // gender = config.countries[k.country]?.price_strip_insignificant_zeros ? "all" : "women";
+        gender = "women";  
     }
-    if (k && k.data.language) {
-        lang = k.data.language
+    if (k && k.language) {
+        lang = k.language
     }
-    if (k && k.data.locale) {
-        locale = k.data.locale
-    }
-
+    if (k && k.locale) {
+        locale = k.locale
+    } 
     if (!k) {
+        //gender = (getCountryFromUrl() === 'BH') ? 'all' : 'women' 
+        //gender = config.countries[k?.country]?.price_strip_insignificant_zeros ? 'all' : 'women'
+        gender = "women"
         if (langOptions.includes(window.navigator.language.slice(0, 2))) {
             lang = window.navigator.language.slice(0, 2);
             if (lang === 'ar')
@@ -48,24 +58,27 @@ export const getInitials = () => {
     let data = {
         language: lang,
         country: country,
-        locale: locale
-    }
+        locale: locale,
+        gender
+    }    
+    console.log("data", data)
     return data
 
 }
 
-export const getInitialState = () => (
+export const getInitialState = () => {
+    return(
     {
         ...(BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
             locale: getInitials().locale, // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
             country: getInitials().country, // one of AE, SA, KW, OM, BH, QA
             language: getInitials().language, // one of en, ar
-            gender: 'women' // one of 'men', 'women', 'kids'
+            gender: getInitials().gender // one of 'men', 'women', 'kids'
         }),
         pdpWidgetsData: []
 
-    }
-);
+    }    
+)};
 
 export const updateCacheAndReturn = (state) => {
     const ONE_YEAR_IN_SECONDS = 31536000; // this will invalidate config after one year
