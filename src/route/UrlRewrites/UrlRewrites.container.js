@@ -161,6 +161,7 @@ export class UrlRewritesContainer extends PureComponent {
           appendQueryString=`&${url.search.split('?')[1].toString()}`;
         }
       }
+      
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
