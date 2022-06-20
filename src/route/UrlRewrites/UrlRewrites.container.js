@@ -149,24 +149,30 @@ export class UrlRewritesContainer extends PureComponent {
       window.pageType = TYPE_CATEGORY;
     } else { // PDP & PLP w/o query params
       let gClidParam = "";
-      if(search.startsWith("?gclid=")) {
+      let hasQueryString = 0;
+      let appendQueryString;
+      if (search.startsWith("?")) {
         const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-        let gclidValue = url.searchParams.get("gclid");
-        gClidParam= `&gclid=${gclidValue}`
+        if (search.startsWith("?gclid=")) {
+          let gclidValue = url.searchParams.get("gclid");
+          gClidParam = `&gclid=${gclidValue}`
+        } else {
+          hasQueryString = 1;
+          appendQueryString=`&${url.search.split('?')[1].toString()}`;
+        }
       }
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
       let UpdatedURL;
-      if(urlResolver && urlResolver.data.url)
-      {
-        UpdatedURL = urlResolver.data.url.split("&p=")[0]+'&p=0'+urlResolver.data.url.split("&p=")[1].substring(1)
+      if (urlResolver && urlResolver.data.url) {
+        UpdatedURL = urlResolver.data.url.split("&p=")[0] + '&p=0' + urlResolver.data.url.split("&p=")[1].substring(1)
       }
 
       const {
         type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
         id,
-        query= gClidParam ? `?${UpdatedURL}` : UpdatedURL,
+        query = gClidParam || hasQueryString ? `?${UpdatedURL}` : UpdatedURL,
         data: {
           //url: query,
           brand_html: brandDescription,
@@ -200,7 +206,7 @@ export class UrlRewritesContainer extends PureComponent {
           id: id === undefined ? magentoProductId : id,
           isLoading: false,
           sku: possibleSku,
-          query: finalType === TYPE_PRODUCT ? "" : `${query}${gClidParam}`,
+          query: finalType === TYPE_PRODUCT ? "" : hasQueryString ? `${query}${appendQueryString}` : `${query}${gClidParam}`,
           brandDescription: brandDescription,
           brandImg: brandImg,
           brandName: brandName,
