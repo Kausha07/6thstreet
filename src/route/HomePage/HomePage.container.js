@@ -19,6 +19,18 @@ import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import browserHistory from "Util/History";
 
+import { getCookie } from "Util/Url/Url";
+
+import {
+  deleteAuthorizationToken,
+  deleteMobileAuthorizationToken,
+  getAuthorizationToken,
+  getMobileAuthorizationToken,
+  isSignedIn,
+  setAuthorizationToken,
+  setMobileAuthorizationToken,
+} from "Util/Auth";
+
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
@@ -28,12 +40,20 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
 
+export const MyAccountDispatcher = import(
+  "Store/MyAccount/MyAccount.dispatcher"
+);
+
 export const mapDispatchToProps = (dispatch) => ({
   toggleBreadcrumbs: (areBreadcrumbsVisible) =>
     dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
+  requestCustomerData: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.requestCustomerData(dispatch)
+    ),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -45,6 +65,7 @@ export class HomePageContainer extends PureComponent {
     setMeta: PropTypes.func.isRequired,
     country: PropTypes.string.isRequired,
     config: PropTypes.object.isRequired,
+    requestCustomerData: PropTypes.func.isRequired,
   };
 
   state = {
@@ -62,7 +83,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { prevPath = null } = this.props;
+    const { prevPath = null, requestCustomerData } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -77,11 +98,57 @@ export class HomePageContainer extends PureComponent {
       },
     });
 
+    const decodedParams = atob(getCookie("authData"));
+
+    if (
+      decodedParams.match("mobileToken") &&
+      decodedParams.match("authToken")
+    ){
+
+      const params = decodedParams.split("&").reduce((acc, param) => {
+        acc[param.substr(0, param.indexOf("="))] = param.substr(
+          param.indexOf("=") + 1
+        );
+        return acc;
+      }, {});
+
+      const { mobileToken } = params;
+      const { authToken } = params;
+
+      if (isSignedIn()) {
+        if (
+          getMobileAuthorizationToken() === mobileToken &&
+          getAuthorizationToken() === authToken
+        ) {
+          requestCustomerData();
+        } else {
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
+        }
+      } else {
+        setMobileAuthorizationToken(mobileToken);
+        setAuthorizationToken(authToken);
+
+        requestCustomerData().then(() => {
+          window.location.reload();
+        });
+      }
+    }else {
+      deleteAuthorizationToken();
+      deleteMobileAuthorizationToken();
+    }
+
     const { gender, toggleBreadcrumbs } = this.props;
     toggleBreadcrumbs(false);
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
     this.setSchemaJSON();
+  }
+
+  requestCustomerData() {
+    const { requestCustomerData } = this.props;
+
+    requestCustomerData();
   }
 
   componentDidUpdate(prevProps) {

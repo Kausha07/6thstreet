@@ -21,7 +21,7 @@ import {
   EVENT_CLICK_RECOMMENDATION_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
   EVENT_PAGE_NOT_FOUND,
-  EVENT_GTM_SEARCH
+  EVENT_GTM_SEARCH,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -109,7 +109,7 @@ class GoogleTagManager extends PureComponent {
       gtm_id: "",
     },
     state: {},
-    dispatch: () => { },
+    dispatch: () => {},
   };
 
   /**
@@ -381,6 +381,16 @@ class GoogleTagManager extends PureComponent {
    */
   processDataPush(event, data) {
     if (this.enabled) {
+      dataLayer.push({
+        ecommerce: null,
+        eventCategory: null,
+        eventAction: null,
+        UserType:null,
+        CustomerID:null,
+        PageType: null,
+        SearchTerm: null,
+        BannerName: null,
+      });
       this.addDataLayer(data);
 
       if (this.debug) {
@@ -414,22 +424,10 @@ class GoogleTagManager extends PureComponent {
    *
    * @param data
    */
-  resetCustomData = {
-    ecommerce: null,
-    eventCategory: null,
-    eventAction: null,
-    UserType: null,
-    CustomerID: null,
-    PageType: null,
-    SearchTerm: null,
-  };
+
   addDataLayer(data) {
     if (this.enabled) {
-      this.currentDataLayer = {
-        ...this.currentDataLayer,
-        ...this.resetCustomData,
-        ...data,
-      };
+      this.currentDataLayer = { ...this.currentDataLayer, ...data };
     }
   }
 

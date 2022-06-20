@@ -25,7 +25,6 @@ export class PDPDispatcher {
       dispatch(setPDPData(response, options));
     } catch (e) {
       Logger.log(e);
-
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, {}));
     }
@@ -49,7 +48,6 @@ export class PDPDispatcher {
       dispatch(setPDPData(response, options));
     } catch (e) {
       Logger.log(e);
-
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, options));
     }
