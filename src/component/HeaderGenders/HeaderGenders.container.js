@@ -27,6 +27,7 @@ class HeaderGendersContainer extends PureComponent {
         isMobile: false
     };
     componentDidMount(){
+        console.log("aaaaaaaaaaaaaaaa", window.location.pathname, this.props.product.gender)
         if(window.location.pathname.includes("women")){
             this.props.setGender("women")
         }
