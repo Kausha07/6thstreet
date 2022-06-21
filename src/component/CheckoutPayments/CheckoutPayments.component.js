@@ -97,11 +97,11 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
       isClickAndCollect,
-      totals: { items },
+      totals: { items=[] },
     } = this.props;
     const { m_code } = method;
     
-    const hasClickAndCollect = items.some(
+    const hasClickAndCollect = items?.some(
       ({ extension_attributes }) => extension_attributes?.click_to_collect_store
     );
 
