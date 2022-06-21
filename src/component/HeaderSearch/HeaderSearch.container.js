@@ -131,7 +131,7 @@ export class HeaderSearchContainer extends PureComponent {
         });
 
       } else if(gender === "all"){
-        const allGender = isArabic? "أولاد,بنات,نساء,رجال" : "Men,Women,Kids"
+        const allGender = isArabic() ? "أولاد,بنات,نساء,رجال" : "Men,Women,Kids,Boy,Girl"
         history.push({
           pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
           state: { prevPath: window.location.href },

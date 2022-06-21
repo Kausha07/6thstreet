@@ -121,11 +121,15 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let brandUrl;
     let formattedBrandName;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
+
+
     if (isArabic) {
-      let requestedGender = getGenderInArabic(gender);
+      let requestedGender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ? "أولاد,بنات,نساء,رجال" : getGenderInArabic(gender);
       let arabicAlphabetDigits =
         /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]|[\u0200]|[\u00A0]/g;
       if (arabicAlphabetDigits.test(brandName)) {
@@ -166,6 +170,8 @@ class SearchSuggestion extends PureComponent {
       if (gender === "kids") {
         genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
+      }else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           requestedGender = getGenderInArabic(gender);
@@ -180,7 +186,10 @@ class SearchSuggestion extends PureComponent {
     } else {
       if (gender === "kids") {
         genderInURL = "Boy,Girl";
-      } else {
+      } else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
+      }
+       else {
         if (gender !== "home") {
           genderInURL = requestedGender?.replace(
             requestedGender?.charAt(0),
@@ -335,7 +344,9 @@ class SearchSuggestion extends PureComponent {
     const { query, count, isBrand, filter } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
     const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     const fetchSKU = products.find(
@@ -439,7 +450,9 @@ class SearchSuggestion extends PureComponent {
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
     const { isArabic } = this.state;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
@@ -449,6 +462,8 @@ class SearchSuggestion extends PureComponent {
       if (gender === "kids") {
         genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
+      }else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           requestedGender = getGenderInArabic(gender);
@@ -463,6 +478,8 @@ class SearchSuggestion extends PureComponent {
     } else {
       if (gender === "kids") {
         genderInURL = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           genderInURL = requestedGender?.replace(
@@ -642,7 +659,9 @@ class SearchSuggestion extends PureComponent {
     //   .replace(/(\s+)|--/g, "-")
     //   .replace("@", "at")
     //   .toLowerCase();
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
@@ -652,6 +671,8 @@ class SearchSuggestion extends PureComponent {
       if (gender === "kids") {
         genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
+      }else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           requestedGender = getGenderInArabic(gender);
@@ -666,6 +687,8 @@ class SearchSuggestion extends PureComponent {
     } else {
       if (gender === "kids") {
         genderInURL = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           genderInURL = requestedGender?.replace(
@@ -745,7 +768,9 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearch = ({ search, link }, i) => {
     const { isArabic } = this.state;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
@@ -755,6 +780,8 @@ class SearchSuggestion extends PureComponent {
       if (gender === "kids") {
         genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
+      }else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           requestedGender = getGenderInArabic(gender);
@@ -769,6 +796,8 @@ class SearchSuggestion extends PureComponent {
     } else {
       if (gender === "kids") {
         genderInURL = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           genderInURL = requestedGender?.replace(
@@ -817,7 +846,9 @@ class SearchSuggestion extends PureComponent {
 
   renderRecentSearch = ({ name, link }, i) => {
     const { isArabic } = this.state;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
@@ -827,6 +858,8 @@ class SearchSuggestion extends PureComponent {
       if (gender === "kids") {
         genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
+      }else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           requestedGender = getGenderInArabic(gender);
@@ -841,6 +874,8 @@ class SearchSuggestion extends PureComponent {
     } else {
       if (gender === "kids") {
         genderInURL = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           genderInURL = requestedGender?.replace(
