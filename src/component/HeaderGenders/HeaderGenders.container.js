@@ -27,69 +27,74 @@ class HeaderGendersContainer extends PureComponent {
         isMobile: false
     };
     componentDidMount(){
-        console.log("aaaaaaaaaaaaaaaa", window.location.pathname, this.props.product.gender)
-        if(window.location.pathname.includes("women")){
-            this.props.setGender("women")
-        }
-        else if(window.location.pathname.includes("men")){
-            this.props.setGender("men")
-        }
-        else if(window.location.pathname.includes("kid")){
-            this.props.setGender("kids")
-        }
-        else if(window.location.pathname.includes("home")){
-            this.props.setGender("home")
-        }
-        else if(window.location.pathname.includes("all")){
-            this.props.setGender("all")
-        }
-        else if(this.props.product.gender === "Women"){
-            this.props.setGender("women")
-        }
-        else if(this.props.product.gender === "Men"){
-            this.props.setGender("men")
-        }
-        else if(this.props.product.gender === "Kids"){
-            this.props.setGender("kids")
-        }
-        else if(this.props.product.gender === "Home"){
-            this.props.setGender("home")
-        }
-        else if(this.props.product.gender === "all"){
-            this.props.setGender("all")
+        const { currentContentGender } = this.props
+        if (currentContentGender !== 'all') {
+            if(window.location.pathname.includes("women")){
+                this.props.setGender("women")
+            }
+            else if(window.location.pathname.includes("men")){
+                this.props.setGender("men")
+            }
+            else if(window.location.pathname.includes("kid")){
+                this.props.setGender("kids")
+            }
+            else if(window.location.pathname.includes("home")){
+                this.props.setGender("home")
+            }
+            else if(window.location.pathname.includes("all")){
+                this.props.setGender("all")
+            }
+            else if(this.props.product.gender === "Women"){
+                this.props.setGender("women")
+            }
+            else if(this.props.product.gender === "Men"){
+                this.props.setGender("men")
+            }
+            else if(this.props.product.gender === "Kids"){
+                this.props.setGender("kids")
+            }
+            else if(this.props.product.gender === "Home"){
+                this.props.setGender("home")
+            }
+            else if(this.props.product.gender === "all"){
+                this.props.setGender("all")
+            }
         }
     }
 
     componentDidUpdate(){
-        if(window.location.pathname.includes("women")){
-            this.props.setGender("women")
-        }
-        else if(window.location.pathname.includes("men")){
-            this.props.setGender("men")
-        }
-        else if(window.location.pathname.includes("kid")){
-            this.props.setGender("kids")
-        }
-        else if(window.location.pathname.includes("home")){
-            this.props.setGender("home")
-        }
-        else if(window.location.pathname.includes("all")){
-            this.props.setGender("all")
-        }
-        else if(this.props.product.gender === "Women"){
-            this.props.setGender("women")
-        }
-        else if(this.props.product.gender === "Men"){
-            this.props.setGender("men")
-        }
-        else if(this.props.product.gender === "Kids"){
-            this.props.setGender("kids")
-        }
-        else if(this.props.product.gender === "Home"){
-            this.props.setGender("home")
-        }
-        else if(this.props.product.gender === "All"){
-            this.props.setGender("all")
+        const { currentContentGender } = this.props
+        if (currentContentGender !== 'all') {
+            if(window.location.pathname.includes("women")){
+                this.props.setGender("women")
+            }
+            else if(window.location.pathname.includes("men")){
+                this.props.setGender("men")
+            }
+            else if(window.location.pathname.includes("kid")){
+                this.props.setGender("kids")
+            }
+            else if(window.location.pathname.includes("home")){
+                this.props.setGender("home")
+            }
+            else if(window.location.pathname.includes("all")){
+                this.props.setGender("all")
+            }
+            else if(this.props.product.gender === "Women"){
+                this.props.setGender("women")
+            }
+            else if(this.props.product.gender === "Men"){
+                this.props.setGender("men")
+            }
+            else if(this.props.product.gender === "Kids"){
+                this.props.setGender("kids")
+            }
+            else if(this.props.product.gender === "Home"){
+                this.props.setGender("home")
+            }
+            else if(this.props.product.gender === "All"){
+                this.props.setGender("all")
+            }
         }
     }
 
