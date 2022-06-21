@@ -1,8 +1,5 @@
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { getCountryFromUrl } from "Util/Url/Url";
-import { getConfig } from 'Util/API/endpoint/Config/Config.endpoint';
-
-
 import {
     SET_COUNTRY,
     SET_GENDER,
@@ -17,21 +14,21 @@ export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
 
 export const APP_STATE_CACHE_KEY_WELCOME = 'APP_STATE_CACHE_KEY_WELCOME';
 
-export const getInitials = async  () => {
+export const getInitials =   () => {
 
     let country = ''
     let lang = ''
     let locale = ''
     let langOptions = ['en', 'ar']
     let gender = "women";
-    const config = await getConfig();
     
-    let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)    
-    console.log("K")
+    let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)   
+    let countryList = ['OM', 'BH', 'QA']; 
+    
     if (k && k.country) {
         country = k.country;
-        // gender = config.countries[k.country]?.price_strip_insignificant_zeros ? "all" : "women";
-        gender = "women";  
+        gender = countryList.includes(country) ? "all" : 'women';
+  
     }
     if (k && k.language) {
         lang = k.language
@@ -40,9 +37,9 @@ export const getInitials = async  () => {
         locale = k.locale
     } 
     if (!k) {
-        //gender = (getCountryFromUrl() === 'BH') ? 'all' : 'women' 
-        //gender = config.countries[k?.country]?.price_strip_insignificant_zeros ? 'all' : 'women'
-        gender = "women"
+
+       gender = countryList.includes(getCountryFromUrl()) ? "all" : 'women';
+
         if (langOptions.includes(window.navigator.language.slice(0, 2))) {
             lang = window.navigator.language.slice(0, 2);
             if (lang === 'ar')
@@ -61,7 +58,7 @@ export const getInitials = async  () => {
         locale: locale,
         gender
     }    
-    console.log("data", data)
+    
     return data
 
 }

@@ -10,11 +10,8 @@ import { getCountryFromUrl } from "Util/Url/Url";
 
 
 export const mapStateToProps = (state) => (
-    //console.log("state", state.AppConfig.config.countries["AE"]);
-    //console.log("state", state.AppConfig.config.countries["AE"].price_strip_insignificant_zeros);
     {
-        currContentGender: state.AppState.gender,
-        allGender : state.AppConfig.config
+        currContentGender: state.AppState.gender
     }
 );
 
@@ -78,11 +75,9 @@ class HeaderGenders extends PureComponent {
     isCurrentGender(key) {
 
         let { currentContentGender } = this.props;
-
-        if (currentContentGender === '' && key === 'women') {
+        if (currentContentGender === '' && (key === 'women'|| key === 'all' )) {
             return true;
         }
-
 
         return key === currentContentGender;
     }
@@ -136,12 +131,9 @@ class HeaderGenders extends PureComponent {
     };
 
     renderGenders() {
-        //let showAllStatus = getCountryFromUrl() === "BH"  
-
+        let countryList = ['OM', 'BH', 'QA'];
+        let showAllStatus = countryList.includes(getCountryFromUrl());
         
-        const { allGender } = this.props;
-        let showAllStatus =  allGender.countries[getCountryFromUrl()].price_strip_insignificant_zeros;
-
         return this.genderList.map((value) =>{
             
             if(showAllStatus){
