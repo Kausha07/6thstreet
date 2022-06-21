@@ -1,6 +1,6 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event"
+import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
@@ -46,7 +46,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     }
     this.registerViewPortEvent();
   }
-  componentWillUnmount() { }
+  componentWillUnmount() {}
 
   registerViewPortEvent() {
     const { index = 0 } = this.props;
@@ -139,10 +139,10 @@ class DynamicContentVueProductSlider extends PureComponent {
       sourceCatgID = null,
     } = this.props;
     const target = event.nativeEvent.target;
-    if(this.scrollerRef && this.scrollerRef.current){
+    if (this.scrollerRef && this.scrollerRef.current) {
       this.scrollerRef.current.scrollLeft = isArabic
-      ? Math.abs(target.scrollLeft)
-      : target.scrollLeft;
+        ? Math.abs(target.scrollLeft)
+        : target.scrollLeft;
     }
     let width = 0;
     if (screen.width > 1024) {
@@ -232,7 +232,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-      items.length +
+        items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -245,13 +245,13 @@ class DynamicContentVueProductSlider extends PureComponent {
       <div
         block="VueProductSlider"
         elem="SliderContainer"
-        mods={{ isArabic: isArabic() }}
         ref={this.scrollerRef}
         mods={{
+          isArabic: isArabic(),
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-            this.state.customScrollWidth,
+              this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >
