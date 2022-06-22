@@ -19,6 +19,9 @@ import { getDefaultEddDate } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_READY_MESSAGE,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 
 import PropTypes from "prop-types";
@@ -232,7 +235,7 @@ export class CartItem extends PureComponent {
   };
 
   onDragStartMouse = (evt) => {
-    
+
     const el = this.cartItemRef.current;
     el.classList.add("active");
     this.setState({
@@ -249,7 +252,7 @@ export class CartItem extends PureComponent {
     });
   };
 
-  onDragEndMouse = (evt) => {   
+  onDragEndMouse = (evt) => {
     this.setState({
       dragged: false,
     });
@@ -263,7 +266,7 @@ export class CartItem extends PureComponent {
       dragStartY: Math.round(touch.clientY)
     });
   };
-  
+
 
   onTouchMove = (evt) => {
     const touch = evt.targetTouches[0];
@@ -273,8 +276,8 @@ export class CartItem extends PureComponent {
       touch.clientX > this.state.dragStartX
         ? "right"
         : touch.clientX < this.state.dragStartX
-        ? "left"
-        : "none";
+          ? "left"
+          : "none";
 
     this.setState({
       dragDirection: leftOrRight,
@@ -296,76 +299,76 @@ export class CartItem extends PureComponent {
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
     if((dragChangeY< 20) && (dragChangeY > -20)){
-      
-    if (this.state.isSignedIn) {
-      
-      if (this.state.dragDirection === leftDir) {
-        if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
-          el1.style.setProperty("width", 0 + "px");
-          el2.style.transform = `translateX(0)`;
-          el3.style.setProperty("width", 0 + "px");
-          this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
-        } else if (!this.state.dragOpen) {
-          el1.style.setProperty("width", 0 + "px");
-          el2.style.transform = `translateX(${leftDirMove})`;
-          el3.style.setProperty("width", 98 + "px");
-          this.setState({
-            dragOpen: true,
-            dragged: false,
-            dragOpenEl: rightDir,
-          });
+
+      if (this.state.isSignedIn) {
+
+        if (this.state.dragDirection === leftDir) {
+          if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
+            el1.style.setProperty("width", 0 + "px");
+            el2.style.transform = `translateX(0)`;
+            el3.style.setProperty("width", 0 + "px");
+            this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
+          } else if (!this.state.dragOpen) {
+            el1.style.setProperty("width", 0 + "px");
+            el2.style.transform = `translateX(${leftDirMove})`;
+            el3.style.setProperty("width", 98 + "px");
+            this.setState({
+              dragOpen: true,
+              dragged: false,
+              dragOpenEl: rightDir,
+            });
+          }
+        } else if (this.state.dragDirection === rightDir) {
+          if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
+            el1.style.setProperty("width", 0 + "px");
+            el2.style.transform = `translateX(0)`;
+            el3.style.setProperty("width", 0 + "px");
+            this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
+          } else if (!this.state.dragOpen) {
+            el1.style.setProperty("width", 98 + "px");
+            el2.style.transform = `translateX(${rightDirMove})`;
+            el3.style.setProperty("width", 0 + "px");
+            this.setState({
+              dragOpen: true,
+              dragged: false,
+              dragOpenEl: leftDir,
+            });
+          }
         }
-      } else if (this.state.dragDirection === rightDir) {
-        if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
-          el1.style.setProperty("width", 0 + "px");
-          el2.style.transform = `translateX(0)`;
-          el3.style.setProperty("width", 0 + "px");
-          this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
-        } else if (!this.state.dragOpen) {
-          el1.style.setProperty("width", 98 + "px");
-          el2.style.transform = `translateX(${rightDirMove})`;
-          el3.style.setProperty("width", 0 + "px");
-          this.setState({
-            dragOpen: true,
-            dragged: false,
-            dragOpenEl: leftDir,
-          });
-        }
-      }
-    } else {
-      if (this.state.dragDirection === leftDir) {
-        if (this.state.dragOpen && this.state.dragDirection === rightDir) {
-          el2.style.transform = `translateX(0)`;
-          el3.style.setProperty("width", 0 + "px");
-          this.setState({ dragOpen: false, dragged: false });
-          
-        } else if (
-          !this.state.dragOpen &&
-          this.state.dragDirection === leftDir
-        ) {
-          el2.style.transform = `translateX(${leftDirMove})`;
-          el3.style.setProperty("width", 98 + "px");
-          this.setState({ dragOpen: true, dragged: false });
-          
-        }
-      } else if (this.state.dragDirection === rightDir) {
-        if (this.state.dragOpen && this.state.dragDirection === rightDir) {
-          el2.style.transform = `translateX(0)`;
-          el3.style.setProperty("width", 0 + "px");
-          this.setState({ dragOpen: false, dragged: false });
-          
-        } else if (
-          !this.state.dragOpen &&
-          this.state.dragDirection === leftDir
-        ) {
-          el2.style.transform = `translateX(${rightDirMove})`;
-          el3.style.setProperty("width", 98 + "px");
-          this.setState({ dragOpen: true, dragged: false });
-          
+      } else {
+        if (this.state.dragDirection === leftDir) {
+          if (this.state.dragOpen && this.state.dragDirection === rightDir) {
+            el2.style.transform = `translateX(0)`;
+            el3.style.setProperty("width", 0 + "px");
+            this.setState({ dragOpen: false, dragged: false });
+
+          } else if (
+            !this.state.dragOpen &&
+            this.state.dragDirection === leftDir
+          ) {
+            el2.style.transform = `translateX(${leftDirMove})`;
+            el3.style.setProperty("width", 98 + "px");
+            this.setState({ dragOpen: true, dragged: false });
+
+          }
+        } else if (this.state.dragDirection === rightDir) {
+          if (this.state.dragOpen && this.state.dragDirection === rightDir) {
+            el2.style.transform = `translateX(0)`;
+            el3.style.setProperty("width", 0 + "px");
+            this.setState({ dragOpen: false, dragged: false });
+
+          } else if (
+            !this.state.dragOpen &&
+            this.state.dragDirection === leftDir
+          ) {
+            el2.style.transform = `translateX(${rightDirMove})`;
+            el3.style.setProperty("width", 98 + "px");
+            this.setState({ dragOpen: true, dragged: false });
+
+          }
         }
       }
     }
-  }
   };
 
   onMouseMove = (evt) => {
@@ -374,8 +377,8 @@ export class CartItem extends PureComponent {
       evt.clientX > this.state.dragStartX
         ? "right"
         : evt.clientX < this.state.dragStartX
-        ? "left"
-        : "none";
+          ? "left"
+          : "none";
     this.setState({
       dragDirection: leftOrRight,
       dragCount: dragChange,
@@ -396,7 +399,7 @@ export class CartItem extends PureComponent {
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
-    
+
 
     if (this.state.isSignedIn) {
 
@@ -416,10 +419,10 @@ export class CartItem extends PureComponent {
             dragOpenEl: rightDir,
           });
         }
-        
+
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
-          
+
           el1.style.setProperty("width", 0 + "px");
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
@@ -441,7 +444,7 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          
+
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -449,15 +452,15 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-          
+
         }
-        
+
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-          
+
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -465,12 +468,12 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-         
+
         }
       }
     }
 
-    
+
   };
 
   clickMove = (evt) => {
@@ -486,13 +489,13 @@ export class CartItem extends PureComponent {
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
-    if (this.state.dragOpen) {      
+    if (this.state.dragOpen) {
       el2.style.transform = `translateX(0)`;
       el3.style.width = "0";
       this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
-      
-    } else { 
-      
+
+    } else {
+
 
       if (this.state.isSignedIn ) {
         el1.style.width = "98px";
@@ -508,7 +511,7 @@ export class CartItem extends PureComponent {
           dragged: false,
           dragOpenEl: rightDir,
         });
-      } else {        
+      } else {
         el2.style.transform = `translateX(${leftDirMove})`;
         el3.style.width = "98px";
         this.setState({ dragOpen: true, dragged: false, dragOpenEl: leftDir });
@@ -516,28 +519,28 @@ export class CartItem extends PureComponent {
     }
   }
   handleSwipe = () =>{
-    return(      
+    return(
       <button block="SwipeActionBtn" onClick={this.clickMove}><span /></button>
     )
   }
   handleSwipeRemoveItem = () => {
-    const {      
+    const {
       handleRemoveItem,
     } = this.props;
     return(
-        <div block="actionItem">
-          <button
-            block=""
-            id="RemoveItem"
-            name="RemoveItem"
-            elem="Delete"
-            aria-label="Remove item from cart"
-            onClick={handleRemoveItem}
-          >
-            <img src={trash} alt="trash"/>
-            <span block="title">{__("Delete")}</span>
-          </button>
-        </div>    
+      <div block="actionItem">
+        <button
+          block=""
+          id="RemoveItem"
+          name="RemoveItem"
+          elem="Delete"
+          aria-label="Remove item from cart"
+          onClick={handleRemoveItem}
+        >
+          <img src={trash} alt="trash"/>
+          <span block="title">{__("Delete")}</span>
+        </button>
+      </div>
     )
   }
 
@@ -545,13 +548,13 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
     const { item: { sku, full_item_info,full_item_info: { config_sku }, }, item } = this.props;
     this.setState({isSwipe : false})
-    const {      
+    const {
       handleRemoveItem,
     } = this.props;
     return(
       <div block="actionItem" >
         <WishlistIcon
-          sku={config_sku}      
+          sku={config_sku}
           mods={{ isArabic }}
           pageType="cart-page"
           data={full_item_info}
@@ -561,7 +564,7 @@ export class CartItem extends PureComponent {
         {/* {handleRemoveItem()} */}
         <span block="title">{__("Save to Wishlist")}</span>
       </div>
-      
+
     )
   }
 
@@ -573,23 +576,23 @@ export class CartItem extends PureComponent {
       <div
         block="swipeableItem"
         ref={this.cartItemRef}
-        
+
       >
         {this.state.isSignedIn ? (
           <div block="swipeableItemLeftAction" style={{ width: 0 }}>
-              {this.handleSwipeWishlistItem()}
+            {this.handleSwipeWishlistItem()}
           </div>
         ) : null}
 
         <div block="swipeableItemContent">
-          
+
           <figure block="CartPageItem" elem="Wrapper">
             {this.renderImage()}
             {this.renderContent()}
           </figure>
         </div>
         <div block="swipeableItemRightAction" style={{ width: 0 }}>
-            {this.handleSwipeRemoveItem()}
+          {this.handleSwipeRemoveItem()}
         </div>
       </div>
     );
@@ -757,7 +760,7 @@ export class CartItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { eddResponse, edd_info } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes } } = this.props;
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
@@ -767,9 +770,10 @@ export class CartItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
+    let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_MESSAGE
     let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
-      : DEFAULT_MESSAGE;
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+      : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
@@ -792,14 +796,19 @@ export class CartItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
 
     return (
       <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
-        </span>
+        {extension_attributes?.click_to_collect_store ?
+          <span>
+            {splitReadyByKey}
+          </span> : <span>
+            {actualEddMess.split(splitKey)[0]}
+            {splitKey}
+          </span>
+        }
         <span>{actualEddMess.split(splitKey)[1]}</span>
       </div>
     );
@@ -867,7 +876,7 @@ export class CartItem extends PureComponent {
           elem="Delete"
           aria-label="Remove item from cart"
           onClick={handleRemoveItem}
-          
+
         >
           <span />
         </button>

@@ -1,5 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import cardValidator from "card-validator";
+import { isArabic } from "Util/App";
 
 export const CONST_TEN = 10;
 
@@ -28,9 +29,16 @@ export const DEFAULT_MESSAGE = 'Delivery by'
 
 export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
 
+export const DEFAULT_READY_MESSAGE = 'Ready by'
+
+export const DEFAULT_SPLIT_KEY = isArabic() ? "بواسطه" : "by"
+
+export const DEFAULT_READY_SPLIT_KEY = isArabic() ? 'جاهز في غضون' : "Ready by"
+
 export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Delivery by": "التوصيل بواسطه",
   "Arriving by": "الوصول بواسطه",
+  "Ready by": "جاهز في غضون"
 };
 
 export const SPECIAL_COLORS = {
@@ -436,8 +444,8 @@ export const getCardType = (cardNumber = "") => {
 };
 
 export const camelCase=(str)=>{
-   return str.toLowerCase()
-   .split(' ')
-   .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-   .join(' ');
+  return str.toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }

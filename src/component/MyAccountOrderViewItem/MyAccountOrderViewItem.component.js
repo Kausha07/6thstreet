@@ -8,6 +8,8 @@ import { getDefaultEddDate } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
@@ -146,10 +148,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
       return null;
     }
 
-    let splitKey = isArabic() ? "بواسطه" : "by";
-    let splitReadyByKey = isArabic() && 'جاهز في غضون'
     let colorCode =
-      compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+    compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
       const splitByInclude = actualEddMess.includes(splitKey)
       const splitByReadyInclude = splitReadyByKey && actualEddMess.includes(splitReadyByKey)
       const idealFormat = splitByInclude || splitByReadyInclude ? true : false;

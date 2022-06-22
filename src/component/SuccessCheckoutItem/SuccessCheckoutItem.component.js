@@ -18,6 +18,9 @@ import "./SuccessCheckoutItem.extended.style";
 import {
   DEFAULT_ARRIVING_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_MESSAGE,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 
 export const mapStateToProps = (state) => ({
@@ -270,7 +273,7 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { eddResponse, edd_info } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes }  } = this.props;
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
@@ -280,9 +283,10 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(edd_info.default_message);
+    let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_ARRIVING_MESSAGE
     let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_ARRIVING_MESSAGE]
-      : DEFAULT_ARRIVING_MESSAGE;
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+      : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
@@ -302,13 +306,18 @@ export class SuccessCheckoutItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
     return (
       <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
-        </span>
+        {extension_attributes?.click_to_collect_store ?
+          <span>
+            {splitReadyByKey}
+          </span> : <span>
+            {actualEddMess.split(splitKey)[0]}
+            {splitKey}
+          </span>
+        }
         <span>{actualEddMess.split(splitKey)[1]}</span>
       </div>
     );

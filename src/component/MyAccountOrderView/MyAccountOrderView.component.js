@@ -58,7 +58,7 @@ import {
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
 import { isObject } from "Util/API/helper/Object";
-import { SPECIAL_COLORS } from "../../util/Common";
+import { SPECIAL_COLORS, DEFAULT_SPLIT_KEY, DEFAULT_READY_SPLIT_KEY } from "../../util/Common";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -199,7 +199,7 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable) ? (
+          (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -253,11 +253,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -427,9 +427,14 @@ class MyAccountOrderView extends PureComponent {
       });
       this.setEddEventSent();
     }
-    let splitKey = isArabic() ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
+    const splitByReadyInclude = actualEddMess.includes(splitReadyByKey)
+
     let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
-    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
+    const idealFormat = splitByReadyInclude || actualEddMess.includes(splitKey) ? true : false;
+    let commonSplitKey = splitByReadyInclude ? splitReadyByKey : splitKey
+
     return (
       <div block="AreaText">
         <span
@@ -437,12 +442,13 @@ class MyAccountOrderView extends PureComponent {
             color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"],
           }}
         >
-          {idealFormat
-            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-            : null}{" "}
+          {splitByReadyInclude ? `${splitReadyByKey}` :
+            idealFormat
+              ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+              : null}{" "}
         </span>
         <span style={{ color: finalColorCode }}>
-          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
+          {idealFormat ? `${actualEddMess.split(commonSplitKey)[1]}` : actualEddMess}
         </span>
       </div>
     );
@@ -535,8 +541,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-        ? TimerImage
-        : PackageImage;
+          ? TimerImage
+          : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -558,7 +564,7 @@ class MyAccountOrderView extends PureComponent {
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED &&
-            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&  
+            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
@@ -868,15 +874,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                  isStoreCredit: true,
-                })
+                isStoreCredit: true,
+              })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -886,11 +892,11 @@ class MyAccountOrderView extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLine(
-                  msp_cod_amount,
-                  getCountryFromUrl() === "QA"
-                    ? __("Cash on Receiving Fee")
-                    : __("Cash on Delivery Fee")
-                )
+                msp_cod_amount,
+                getCountryFromUrl() === "QA"
+                  ? __("Cash on Receiving Fee")
+                  : __("Cash on Delivery Fee")
+              )
               : null}
             {this.renderPriceLine(
               grandTotal,
