@@ -829,9 +829,9 @@ export class CartItem extends PureComponent {
         {!isNotAvailble && (
           <>
             {this.renderProductPrice()}
-            {this.renderClickAndCollectStoreName()}
           </>
         )}
+        {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
         {edd_info &&
           edd_info.is_enable &&

@@ -622,12 +622,16 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const { url_path } = this.props;
     const { isArabic } = this.state;
-    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     if (isArabic) {
       if (gender === "kids") {
         gender = "أولاد,بنات";
+      } else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           gender = getGenderInArabic(gender);
@@ -640,6 +644,8 @@ class PDPSummary extends PureComponent {
     } else {
       if (gender === "kids") {
         gender = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           gender = gender?.replace(
