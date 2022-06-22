@@ -123,9 +123,17 @@ export class HeaderSearchContainer extends PureComponent {
           );
         }
       }
-      if (gender !== "home") {
+      if (gender !== "home" && gender !== "all" ) {
+        
         history.push({
           pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
+          state: { prevPath: window.location.href },
+        });
+
+      } else if(gender === "all"){
+        const allGender = isArabic() ? "أولاد,بنات,نساء,رجال" : "Men,Women,Kids,Boy,Girl"
+        history.push({
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
           state: { prevPath: window.location.href },
         });
       } else {
