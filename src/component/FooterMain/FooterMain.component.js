@@ -214,7 +214,7 @@ class FooterMain extends PureComponent {
     return this.linksMap
       .filter((column) => column.title === __("Download The App"))
       .map((column) => (
-        <div block="FooterMain" elem="SocialColumn" key={column.title}>
+        <div block="FooterMain" elem="SocialColumn">
           <div block="FooterMain" elem="SocialLinks">
             {column.items.map((items) => (
               <Fragment key="last_main_footer_column">
