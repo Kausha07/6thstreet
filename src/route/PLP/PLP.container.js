@@ -34,7 +34,7 @@ import {
   updatePLPInitialFilters,
   setPrevProductSku,
   setPrevPath,
-  setBrandurl
+  setBrandurl,
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
@@ -839,11 +839,15 @@ export class PLPContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-
+    const { brandDescription, brandName } = this.state;
     if (!q) {
       return;
     }
 
+    const pagePathName = new URL(window.location.href).pathname;
+    const checkBrandPage = pagePathName.includes(".html")
+      ? pagePathName.split(".html").join("").split("/")
+      : "";
     const genderName = capitalize(gender);
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
@@ -854,35 +858,42 @@ export class PLPContainer extends PureComponent {
       .split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
-    setMeta({
-      title: __("%s | 6thStreet.com %s", categoryName, countryName),
+    const PLPMetaTitle =
+      brandName && (checkBrandPage.length < 3)
+        ? __(
+            "Shop %s Online | Buy Latest Collections on 6thStreet %s",
+            brandName,
+            countryName
+          )
+        : __("%s | 6thStreet.com %s", categoryName, countryName);
 
+    const PLPMetaDesc =
+      brandName && (checkBrandPage.length < 3)
+        ? __(
+            "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
+            brandName,
+            countryName,
+            brandName
+          )
+        : __(
+            "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+            categoryName,
+            countryName,
+            countryName
+          );
+
+    setMeta({
+      title: PLPMetaTitle,
       keywords: __(
         "%s, online shopping, %s, free shipping, returns",
         categoryName,
         countryName
       ),
-      description: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
-      twitter_title: __("%s | 6thStreet.com %s", categoryName, countryName),
-
-      twitter_desc: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
-      og_title: __("%s | 6thStreet.com %s", categoryName, countryName),
-      og_desc: __(
-        "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
-        categoryName,
-        countryName,
-        countryName
-      ),
+      description: PLPMetaDesc,
+      twitter_title: PLPMetaTitle,
+      twitter_desc: PLPMetaDesc,
+      og_title: PLPMetaTitle,
+      og_desc: PLPMetaDesc,
     });
   }
 
@@ -911,7 +922,7 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages } = this.props;
+    const { query, plpWidgetData, gender, filters, pages, isLoading } = this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
 
     // isDisabled: this._getIsDisabled()
@@ -926,6 +937,7 @@ export class PLPContainer extends PureComponent {
       filters,
       pages,
       activeFilters,
+      isLoading
     };
   };
 

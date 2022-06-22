@@ -65,17 +65,18 @@ class ProductImpressionEvent extends BaseEvent {
           category,
           price,
           list,
+          product_Position
         },
         index
       ) => ({
-        name: name || label,
-        id: sku || id,
-        price: price[0][Object.keys(price[0])[0]]["6s_special_price"],
-        brand: brand_name,
-        category: product_type_6s || category,
-        variant: color,
+        name: name || label || "",
+        id: sku || id || "",
+        price: price ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : "",
+        brand: brand_name ? brand_name : "",
+        category: product_type_6s || category || "",
+        variant: color || "",
         list: list || "Recommendations",
-        position: index + 1,
+        position: product_Position ? product_Position : (index + 1) || "",
       })
     );
 

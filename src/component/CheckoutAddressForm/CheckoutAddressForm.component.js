@@ -82,9 +82,11 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       storeAddress,
       clickAndCollectStatus,
       setClickAndCollect,
+      customer,
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
+    const customerPhone =  customer?.phone?.slice(4,customer?.phone)
 
     fieldMap.street = {
       ...street,
@@ -95,6 +97,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       ...telephone,
       onChange: (value) => this.onChange("telephone", value),
       type: "phone",
+      value: customerPhone,
     };
 
     const fFieldMap = isSignedIn
@@ -104,7 +107,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             placeholder: __("Email"),
             validation: ["notEmpty", "email"],
             type: "email",
-            value: guest_email || "",
+            value: guest_email || customer?.email || "",
           },
           ...fieldMap,
         };

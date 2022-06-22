@@ -10,6 +10,9 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import { Store } from "../Icons";
+
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
     let {
@@ -25,6 +28,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         size: { value: size = "" } = {},
         qty,
         cross_border = 0,
+        ctc_store_name="",
       } = {},
       status,
     } = this.props;
@@ -34,6 +38,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div block="MyAccountOrderViewItem" elem="Name">
           {name}
         </div>
+        
         <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
           {!!color && (
             <p>
@@ -59,6 +64,17 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {!!ctc_store_name && (
+            <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderViewItem-ClickAndCollect"
+                elem="StoreName"
+              >
+                {ctc_store_name}
+              </div>
+            </div>
+          )}
         {edd_info &&
           edd_info.is_enable &&
           cross_border === 0 &&
@@ -74,6 +90,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
       eddResponse,
       compRef,
       myOrderEdd,
+      setEddEventSent,
+      eddEventSent,
       edd_info,
       item: { edd_msg_color },
     } = this.props;
@@ -111,6 +129,17 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
+      if(myOrderEdd && !eddEventSent){
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+      setEddEventSent()
+    }
     }
 
     if (!actualEddMess) {
@@ -118,21 +147,35 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
 
     let splitKey = isArabic() ? "بواسطه" : "by";
-
+    let splitReadyByKey = isArabic() && 'جاهز في غضون'
     let colorCode =
       compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
-    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
+      const splitByInclude = actualEddMess.includes(splitKey)
+      const splitByReadyInclude = splitReadyByKey && actualEddMess.includes(splitReadyByKey)
+      const idealFormat = splitByInclude || splitByReadyInclude ? true : false;
+      let splitBy = actualEddMess.split(splitKey)
+
+      if(idealFormat){
+        if(splitByReadyInclude){
+          splitBy=actualEddMess.split(splitReadyByKey)
+          splitKey=splitReadyByKey
+        }else{
+          splitBy = actualEddMess.split(splitKey)
+          splitKey=splitKey
+        }
+      }
+
     return (
-      <div block="AreaText">
+      <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
           {idealFormat
-            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            ? `${splitBy[0]} ${splitKey}`
             : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
-          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
+          {idealFormat ? `${splitBy[1]}` : actualEddMess}
         </span>
       </div>
     );

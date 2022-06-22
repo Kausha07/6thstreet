@@ -67,13 +67,11 @@ class BannerImpressionEvent extends BaseEvent {
     //   return;
     // }
     const formattedImpressions = impressions.map(
-      ({ label, promotion_name, id, store_code }, index) => ({
-        id:
-          (store_code ? store_code + "-" : "") +
-          (id ? id : promotion_name ? promotion_name.split(" ").join("-") : ""),
+      ({ label, promotion_name, id, store_code, tag, indexValue }, index) => ({
+        id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : "",
         name: (store_code ? store_code + "-" : "") + (label || promotion_name),
-        creative: (store_code ? store_code + "-" : "") + promotion_name || "",
-        position: index + 1,
+        creative: tag || promotion_name || "",
+        position: indexValue ? indexValue : index + 1,
       })
     );
 

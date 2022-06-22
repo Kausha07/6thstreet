@@ -29,6 +29,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
 } from "../CheckoutPayments/CheckoutPayments.config";
+import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
 import Applepay from "./icons/apple.png";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -38,6 +39,7 @@ import TimerImage from "./icons/timer.png";
 import isMobile from "Util/Mobile";
 import TruckImage from "./icons/truck.png";
 import WarningImage from "./icons/warning.png";
+import { Store } from "../Icons";
 import ContactHelpContainer from "Component/ContactHelp/ContactHelp.container";
 import {
   CANCEL_ITEM_LABEL,
@@ -49,6 +51,9 @@ import {
   NEW_STATUS_LABEL_MAP,
   STATUS_PROCESSING,
   STATUS_DISPATCHED,
+  PICKUP_FAILED,
+  PICKEDUP,
+  READY_TO_PICK
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
@@ -72,6 +77,7 @@ class MyAccountOrderView extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    eddEventSent: false,
   };
 
   renderAddress = (title, address) => {
@@ -98,6 +104,10 @@ class MyAccountOrderView extends PureComponent {
     );
   };
 
+  setEddEventSent = () => {
+    this.setState({ eddEventSent: true });
+  };
+
   renderItem = (item, eddItem) => {
     const {
       order: { order_currency_code: currency, status },
@@ -105,6 +115,7 @@ class MyAccountOrderView extends PureComponent {
       eddResponse,
       edd_info,
     } = this.props;
+    const { eddEventSent } = this.state;
     let finalEdd =
       item.status === "Processing" || item.status === "processing"
         ? eddItem?.edd
@@ -112,6 +123,8 @@ class MyAccountOrderView extends PureComponent {
     return (
       <MyAccountOrderViewItem
         item={item}
+        setEddEventSent={this.setEddEventSent}
+        eddEventSent={eddEventSent}
         status={status}
         myOrderEdd={finalEdd}
         compRef={"myOrder"}
@@ -264,7 +277,9 @@ class MyAccountOrderView extends PureComponent {
       case "delivery_successful": {
         return __("Delivered");
       }
-      case "delivery_failed":
+      case "delivery_failed": {
+        return __("Delivery Failed");
+      }
       case "cancelled": {
         return __("Order Cancelled");
       }
@@ -272,7 +287,10 @@ class MyAccountOrderView extends PureComponent {
         return __("Ready for Pick up");
       }
       case "pickedup": {
-        return __("Items Picked Up");
+        return __("Picked up from Store");
+      }
+      case "pickupfailed":{
+        return __("Pickup Failed");
       }
       default: {
         return null;
@@ -393,9 +411,21 @@ class MyAccountOrderView extends PureComponent {
   }
   renderEdd = (finalEdd, colorCode) => {
     let actualEddMess = finalEdd;
-
+    const { eddEventSent } = this.state;
+    const { edd_info } = this.props;
     if (!actualEddMess) {
       return null;
+    }
+    if (actualEddMess && !eddEventSent) {
+      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+        edd_details: {
+          edd_status: edd_info.has_order_detail,
+          default_edd_status: null,
+          edd_updated: null,
+        },
+        page: "my_order",
+      });
+      this.setEddEventSent();
     }
     let splitKey = isArabic() ? "بواسطه" : "by";
     let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
@@ -527,12 +557,24 @@ class MyAccountOrderView extends PureComponent {
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
-            item.status !== DELIVERY_FAILED &&
+            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED &&
+            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&  
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
               item.courier_tracking_link
             )}
+          {!!item?.ctc_store_name && (
+            <div block="MyAccountOrderView" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderView-ClickAndCollect"
+                elem="StoreName"
+              >
+                {item?.ctc_store_name}
+              </div>
+            </div>
+          )}
           <p>
             {__(
               "Package contains %s %s",
@@ -540,6 +582,7 @@ class MyAccountOrderView extends PureComponent {
               item.items.length === 1 ? __("item") : __("items")
             )}
           </p>
+          <div></div>
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>

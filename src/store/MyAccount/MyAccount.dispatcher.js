@@ -52,6 +52,7 @@ import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
+import { isArabic } from "Util/App";
 
 export {
   CUSTOMER,
@@ -60,53 +61,96 @@ export {
 export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
+  getArabicCityArea = (city, area, addressCityData) => {
+    let finalArea = area;
+    let finalCity = city;
+    if (
+      isArabic() &&
+      addressCityData &&
+      Object.values(addressCityData).length > 0
+    ) {
+      let finalResp = Object.values(addressCityData).filter((cityData) => {
+        return cityData.city === city;
+      });
+      if (finalResp.length > 0) {
+        let engAreaIndex = Object.keys(finalResp[0].areas).filter((key) => {
+          if (finalResp[0].areas[key] === area) {
+            return key;
+          }
+        });
+        let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+          (area, index) => {
+            if (index === parseInt(engAreaIndex[0])) {
+              return area;
+            }
+          }
+        );
+        finalArea = arabicArea[0];
+        finalCity = finalResp[0].city_ar;
+      }
+    }
+    return { finalArea, finalCity };
+  };
   requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     getShippingAddresses().then((response) => {
       if (response.data) {
-        dispatch(setCustomerAddressData(response.data));
-        if (Object.values(response.data).length > 0) {
-          const defaultShippingAddress = Object.values(response.data).filter(
-            (address) => {
-              return address.default_shipping === true;
-            }
-          );
-          if (
-            defaultShippingAddress &&
-            Object.values(defaultShippingAddress).length > 0
-          ) {
-            const { country_code, city, area } = defaultShippingAddress[0];
-            let request = {
-              country: country_code,
-              city: city,
-              area: area,
-              courier: null,
-              source: null,
-            };
-            this.estimateDefaultEddResponse(dispatch, request);
-            dispatch(
-              setCustomerDefaultShippingAddress(defaultShippingAddress[0])
+        AppConfigDispatcher.getCities().then((resp) => {
+          let finalRes = resp?.data;
+          if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+            const defaultShippingAddress = Object.values(response.data).filter(
+              (address) => {
+                return address.default_shipping === true;
+              }
             );
-          } else {
-            if (!login) {
-              const { country_code, city, area } = response.data[0];
+            if (
+              defaultShippingAddress &&
+              Object.values(defaultShippingAddress).length > 0
+            ) {
+              const { country_code, city, area } = defaultShippingAddress[0];
+              const { finalCity, finalArea } = this.getArabicCityArea(
+                city,
+                area,
+                finalRes
+              );
               let request = {
                 country: country_code,
-                city: city,
-                area: area,
+                city: isArabic() ? finalCity : city,
+                area: isArabic() ? finalArea : area,
                 courier: null,
                 source: null,
               };
               this.estimateDefaultEddResponse(dispatch, request);
+              dispatch(
+                setCustomerDefaultShippingAddress(defaultShippingAddress[0])
+              );
             } else {
-              dispatch(setEddResponse(null, null));
-              dispatch(setCustomerDefaultShippingAddress(null));
+              if (!login) {
+                const { country_code, city, area } = response.data[0];
+                const { finalCity, finalArea } = this.getArabicCityArea(
+                  city,
+                  area,
+                  finalRes
+                );
+                let request = {
+                  country: country_code,
+                  city: isArabic() ? finalCity : city,
+                  area: isArabic() ? finalArea : area,
+                  courier: null,
+                  source: null,
+                };
+                this.estimateDefaultEddResponse(dispatch, request);
+              } else {
+                dispatch(setEddResponse(null, null));
+                dispatch(setCustomerDefaultShippingAddress(null));
+              }
             }
+          } else {
+            dispatch(setEddResponse(null, null));
+            dispatch(setCustomerDefaultShippingAddress(null));
           }
-        } else {
-          dispatch(setEddResponse(null, null));
-          dispatch(setCustomerDefaultShippingAddress(null));
-        }
+        });
+        dispatch(setCustomerAddressData(response.data));
       }
     });
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
@@ -172,12 +216,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setCustomerDefaultShippingAddress(null));
     dispatch(setEddResponse(null, null));
     dispatch(setDefaultEddAddress(null, null));
+    dispatch(setCustomerAddressData([]));
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     sessionStorage.removeItem("EddAddressReq");
     sessionStorage.removeItem("EddAddressRes");
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
+    localStorage.removeItem("RmaId");
 
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));

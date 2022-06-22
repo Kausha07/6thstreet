@@ -20,6 +20,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_PLACE_ORDER } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint";
+import { camelCase } from "Util/Common";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -78,14 +79,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const getStoreAddressResponse = await getStoreAddress(storeNo);
     let addressField = getStoreAddressResponse.data;
     let inputFields = {
-      city: addressField.city,
+      city: camelCase(addressField.city || ""),
       country_id: addressField.country,
       firstname: fields.firstname,
       guest_email: fields.guest_email,
       lastname: fields.lastname,
       phonecode: fields.phonecode,
-      postcode: addressField.area,
-      region_id: addressField.area,
+      postcode: camelCase(addressField.area || ""),
+      region_id: camelCase(addressField.area || ""),
       street: addressField.address,
       telephone: fields.telephone,
     };
@@ -212,13 +213,104 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       : trimAddressFields(fields);
     const addressForValidation =
       isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
-    const validationResult = this.validateAddress(addressForValidation);
-    if (!validationResult) {
-      showNotification("error", __("Something went wrong."));
-    }
+    if (!this.checkClickAndCollect()) {
+      const validationResult = this.validateAddress(addressForValidation);
+      if (!validationResult) {
+        showNotification("error", __("Something went wrong."));
+      }
 
-    validationResult.then((response) => {
-      const { success } = response;
+      validationResult.then((response) => {
+        const { success } = response;
+        if (edd_info && edd_info.is_enable) {
+          if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
+            const { country_id, city, postcode } = addressForValidation;
+            let request = {
+              country: country_id,
+              courier: null,
+              source: null,
+            };
+            if (isArabic()) {
+              let finalResp = Object.values(addressCityData).filter(
+                (cityData) => {
+                  return cityData.city === city;
+                }
+              );
+
+              let engAreaIndex = Object.keys(finalResp[0].areas).filter(
+                (key) => {
+                  if (finalResp[0].areas[key] === postcode) {
+                    return key;
+                  }
+                }
+              );
+              let arabicArea = Object.values(finalResp[0].areas_ar).filter(
+                (area, index) => {
+                  if (index === parseInt(engAreaIndex[0])) {
+                    return area;
+                  }
+                }
+              );
+              request["area"] = arabicArea[0];
+              request["city"] = finalResp[0].city_ar;
+            } else {
+              request["area"] = postcode;
+              request["city"] = city;
+            }
+
+            estimateEddResponse(request, false);
+          }
+        }
+
+        if (success && !selectedShippingMethod) {
+          const estimationResult = this.estimateShipping(
+            addressForValidation,
+            true
+          );
+
+          if (!estimationResult) {
+            setLoading(false);
+            showNotification("error", __("Something went wrong."));
+            dispatch(resetCart());
+            CartDispatcher.getCart(dispatch);
+            return true;
+          }
+
+          estimationResult.then((response) => {
+            if (typeof response !== "undefined") {
+              const { data = [] } = response;
+
+              if (data.length !== 0) {
+                const { available } = data ? data[0] : { available: false };
+
+                if (available) {
+                  this.setState(
+                    {
+                      selectedShippingMethod: response.data[0],
+                    },
+                    () => this.processDelivery(fields)
+                  );
+                } else {
+                  const { error } = response;
+                  this.handleError(error);
+                }
+              } else {
+                setLoading(false);
+                showNotification(
+                  "error",
+                  __("We can't ship products to selected address")
+                );
+              }
+            } else {
+              setLoading(false);
+            }
+          });
+        } else if (success) {
+          this.processDelivery(fields);
+        } else {
+          this.handleError(response);
+        }
+      });
+    } else {
       if (edd_info && edd_info.is_enable) {
         if (!isSignedIn() || (isSignedIn() && !eddResponse)) {
           const { country_id, city, postcode } = addressForValidation;
@@ -253,11 +345,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             request["city"] = city;
           }
 
-          estimateEddResponse(request,false);
+          estimateEddResponse(request, false);
         }
       }
-
-      if (success && !selectedShippingMethod) {
+      if (!selectedShippingMethod) {
         const estimationResult = this.estimateShipping(
           addressForValidation,
           true
@@ -300,12 +391,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             setLoading(false);
           }
         });
-      } else if (success) {
-        this.processDelivery(fields);
       } else {
-        this.handleError(response);
+        this.processDelivery(fields);
       }
-    });
+    }
   }
 
   handleError(response) {
@@ -378,7 +467,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_carrier_code,
       shipping_method_code,
     };
-
 
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");

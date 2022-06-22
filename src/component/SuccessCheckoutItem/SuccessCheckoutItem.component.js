@@ -169,6 +169,28 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
+  renderClickAndCollectStoreName() {
+    const {
+      item: { extension_attributes },
+    } = this.props;
+
+    const { isArabic } = this.state;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="SuccessCheckoutItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+
   renderColSizeQty() {
     const {
       item: { color, optionValue, qty },
@@ -217,7 +239,7 @@ export class SuccessCheckoutItem extends PureComponent {
       item: {
         customizable_options,
         bundle_options,
-        full_item_info: { cross_border },
+        full_item_info: { cross_border = 0 },
       },
       edd_info,
       isFailed,
@@ -236,6 +258,8 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
+        {this.renderClickAndCollectStoreName()}
+
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you && 

@@ -35,11 +35,11 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     isMobile: isMobile.any() || isMobile.tablet(),
     openFirstPopup: false,
     renderLoading: false,
+    isButtondisabled: false,
   };
 
   renderButtonsPlaceholder() {
-    const {isMobile} = this.state
-    return isMobile ? __("Proceed to secure payment") : __("Place order");
+    return __("Proceed to secure payment")
   }
 
   renderPriceLine(price, name, mods) {
@@ -119,6 +119,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
   renderActions() {
     const { isPaymentLoading } = this.props;
+    const {isButtondisabled} = this.state;
+
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
         {this.renderTotals()}
@@ -127,6 +129,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           block={"Button"}
           form={SHIPPING_STEP}
           // disabled={this.checkForDisabling()}
+          disabled={isButtondisabled}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
@@ -158,16 +161,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       : {};
 
     if (
-      isMobile.any() ||
-      isMobile.tablet() ||
+      // isMobile.any() ||
+      // isMobile.tablet() ||
       (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
       (isSignedIn &&
         selectedAddressCountry !== getCountryFromUrl() &&
         !checkClickAndCollect())
     ) {
+      this.setState({isButtondisabled: true})
       return null;
+    }else {
+      this.setState({isButtondisabled: false})
     }
-
+    
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
         <button
@@ -330,7 +336,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       checkClickAndCollect,
       totals,
       addresses,
-      edd_info
+      edd_info,
+      addressCityData,
+      customer
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -338,6 +346,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         onAddressSelect={onAddressSelect}
         addresses={addresses}
         edd_info={edd_info}
+        addressCityData={addressCityData}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
         formContent={formContent}
@@ -348,6 +357,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         totals={totals}
         isClickAndCollect={isClickAndCollect}
         clickAndCollectStatus={checkClickAndCollect()}
+        customer={customer}
       />
     );
   }

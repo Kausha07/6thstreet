@@ -155,17 +155,19 @@ class PDPAddToCart extends PureComponent {
           onChange={onSizeTypeSelect}
         >
           {sizeObject.sizeTypes.map((type = "") => {
-            if (product[`size_${type}`].length > 0) {
-              return (
-                <option
-                  key={type}
-                  block="PDPAddToCart"
-                  elem="SizeTypeOption"
-                  value={type}
-                >
-                  {type.toUpperCase()}
-                </option>
-              );
+            if(type) {
+              if (product[`size_${type}`]?.length > 0) {
+                return (
+                  <option
+                    key={type}
+                    block="PDPAddToCart"
+                    elem="SizeTypeOption"
+                    value={type}
+                  >
+                    {type.toUpperCase()}
+                  </option>
+                );
+              }
             }
             return null;
           })}

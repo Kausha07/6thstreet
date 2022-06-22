@@ -99,11 +99,13 @@ class PLPFilters extends PureComponent {
   componentDidMount() {
     if (!isMobile.any()) {
       window.addEventListener("scroll", this.handleGoToTop);
+      window.addEventListener("mousewheel", this.handleScroll);
     }
 
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleGoToTop);
+    window.removeEventListener('mousewheel', this.handleScroll);
   }
 
   handleGoToTop = () => {
@@ -126,6 +128,73 @@ class PLPFilters extends PureComponent {
 
   scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onFixWindow = (e) => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: n,
+        left: 0,
+        behavior: 'instant'
+      }
+    )
+  }
+
+  onNotFixWindow = () => {
+    let myDiv = document.getElementById("productFilterScroll")
+    let n = myDiv.scrollHeight - myDiv.offsetHeight
+    myDiv.scrollBy(
+      {
+        top: -n,
+        left: 0,
+        behavior: 'instant'
+      }
+    )
+  }
+
+
+  handleScroll = (e) => {
+    let k = document.getElementById("plp-main-scroll-id")
+    if (k) {
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
+        if (!this.state.fixWindow) {
+          this.setState({
+            fixWindow: true
+          })
+          this.onFixWindow(e)
+        }
+
+
+      }
+      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
+        if (this.state.fixWindow) {
+
+          this.setState({
+            fixWindow: false
+          })
+          this.onNotFixWindow(e)
+        }
+
+      }
+
+      if (window.pageYOffset > 95) {
+        if (!this.state.fixFilter) {
+          this.setState({
+            fixFilter: true
+          })
+        }
+      }
+      else {
+        if (this.state.fixFilter) {
+
+          this.setState({
+            fixFilter: false
+          })
+        }
+      }
+    }
   }
 
   setDefaultFilters = () => {
@@ -158,12 +227,9 @@ class PLPFilters extends PureComponent {
             return
           }
         }
-
-
       }
 
       if (filter[1]) {
-
         if (filter[0] === "sort" && !isMobile.any()) {
           return
         }

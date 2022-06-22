@@ -71,11 +71,15 @@ class PDPDetailsSection extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
-        const payload = VueQuery.buildQuery(type, query, {
-          gender,
+        const queryPaylod = type === "vue_visually_similar_slider" ? {
           userID,
           sourceProduct,
-        });
+        } : {
+            gender,
+            userID,
+            sourceProduct,
+          }
+        const payload = VueQuery.buildQuery(type, query, queryPaylod);
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
@@ -156,6 +160,38 @@ class PDPDetailsSection extends PureComponent {
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
     const { isArabic } = this.state;
+    const {
+      product: {
+        sku,
+        highlighted_attributes,
+        categories,
+        model_height,
+        product_height,
+        product_length,
+        product_width,
+        bag_dimension,
+        model_wearing_size,
+      },
+      product,
+    } = this.props;
+    const highlights = this.getHighlights(
+      highlighted_attributes,
+      categories,
+      product_height,
+      product_length,
+      product_width,
+      bag_dimension,
+      product
+    );
+    let isReturnable = true
+    highlights.forEach((val) => {
+      if (val.key === "returnable") {
+        if (val.value === "No") {
+          isReturnable = false;
+        }
+      }
+    })
+
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
@@ -183,14 +219,17 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
-          <div
-            block="PDPDetailsSection"
-            elem="Icon"
-            mods={{ freeReturn: true }}
-          />
-          <div>{__("Free Returns")}</div>
-        </div>
+        { isReturnable &&
+          <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
+            <div
+              block="PDPDetailsSection"
+              elem="Icon"
+              mods={{ freeReturn: true }}
+            />
+            <div>{__("Free Returns")}</div>
+          </div>
+        }
+
       </div>
     );
   }
@@ -653,43 +692,43 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-        <div block="Seperator2" />
-        <React.Fragment>
-          {pdpWidgetsAPIData.map((item, index) => {
-            if (typeof item === "object" && Object.keys(item).length > 0) {
-              const { title: heading } = pdpWidgetsData[index]["layout"];
-              const widgetID = pdpWidgetsData[index]["type"];
-              const { data } = item;
-              if (data && data.length > 0) {
-                return (
-                  <>
-                    <div
-                      block="PDPWidgets"
-                      elem="Slider"
-                      mods={{ largeScreen: width > 1440 }}
-                    >
-                      <DynamicContentVueProductSliderContainer
-                        widgetID={widgetID}
-                        products={data}
-                        heading={heading}
-                        isHome={true}
-                        renderMySignInPopup={renderMySignInPopup}
-                        sourceProdID={sku}
-                        sourceCatgID={categories_without_path[0]}
-                        pageType={"pdp"}
-                        key={`DynamicContentVueProductSliderContainer${index}`}
-                        index={index}
-                        isArabic={isArabic()}
-                      />
-                    </div>
-                  </>
-                );
+          <div block="Seperator2" />
+          <React.Fragment>
+            {pdpWidgetsAPIData.map((item, index) => {
+              if (typeof item === "object" && Object.keys(item).length > 0) {
+                const { title: heading } = pdpWidgetsData[index]["layout"];
+                const widgetID = pdpWidgetsData[index]["type"];
+                const { data } = item;
+                if (data && data.length > 0) {
+                  return (
+                    <>
+                      <div
+                        block="PDPWidgets"
+                        elem="Slider"
+                        mods={{ largeScreen: width > 1440 }}
+                      >
+                        <DynamicContentVueProductSliderContainer
+                          widgetID={widgetID}
+                          products={data}
+                          heading={heading}
+                          isHome={true}
+                          renderMySignInPopup={renderMySignInPopup}
+                          sourceProdID={sku}
+                          sourceCatgID={categories_without_path[0]}
+                          pageType={"pdp"}
+                          key={`DynamicContentVueProductSliderContainer${index}`}
+                          index={index}
+                          isArabic={isArabic()}
+                        />
+                      </div>
+                    </>
+                  );
+                }
+                return null;
               }
               return null;
-            }
-            return null;
-          })}
-        </React.Fragment>
+            })}
+          </React.Fragment>
         </>
       );
     }
@@ -705,12 +744,12 @@ class PDPDetailsSection extends PureComponent {
 
     const {
       opening_hours: { [language]: openHoursLabel },
-      // toll_free: phone,
-    } = countries[country];
+      contact_using : { options : { phone } }
+    } = countries[country]; 
 
     return {
       openHoursLabel,
-      // toll_free,
+      toll_free : phone,
     };
   }
   chat() {
@@ -852,7 +891,7 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping(){
+  renderShipping() {
     let country = getCountryFromUrl()
     let txt = {
       AE: __("Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."),
@@ -862,11 +901,11 @@ class PDPDetailsSection extends PureComponent {
       OM: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."),
       BH: __("Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20.")
     }
-    return(
+    return (
       <div>
         <p> {txt[country]}
           <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
         </p>
       </div>
@@ -874,13 +913,14 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShippingAndFreeReturns() {
+
     if (this.props.product.is_returnable === 1) {
       return (
         <div>
-          <p>{ __("100 days free return available. Shop freely.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("100 days free return available. Shop freely.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
       );
@@ -889,10 +929,10 @@ class PDPDetailsSection extends PureComponent {
     if (this.props.product.is_returnable === 0) {
       return (
         <div>
-          <p>{ __("Not eligible for return.") }
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
-          </Link>
+          <p>{__("Not eligible for return.")}
+            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
+              {" "} {__("More info")}
+            </Link>
           </p>
         </div>
       );
@@ -907,12 +947,12 @@ class PDPDetailsSection extends PureComponent {
     return (
       <div>
         <p>
-          { __("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.") }
+          {__("Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery.")}
           <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-          {" "} { __("More info") }
+            {" "} {__("More info")}
           </Link>
-        </p>
-      </div>
+        </p >
+      </div >
     );
   }
 
@@ -920,6 +960,9 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const {
+      pdpWidgetsAPIData,
+    } = this.state;
     const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
@@ -928,8 +971,8 @@ class PDPDetailsSection extends PureComponent {
             {this.renderSeperator()} {this.renderIconsSection()}
           </div>
         ) : (
-          ""
-        )}
+            ""
+          )}
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
@@ -945,7 +988,7 @@ class PDPDetailsSection extends PureComponent {
         </div >
         {isMobile ? null : this.renderSeperator()}
         <div block="AccordionWrapper">
-          <Accordion
+          {/* <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
             is_expanded={this.state.isExpanded["3"]}
@@ -954,14 +997,13 @@ class PDPDetailsSection extends PureComponent {
             <br />
             {this.renderShippingAndFreeReturns()}
             {isMobile ? <br /> : null}
-          </Accordion>
-          {this.renderAccordionSeperator()}
-        </div>
-
-        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+          </Accordion> */}
+          {/* {this.renderAccordionSeperator()} */}
+        </div >
+        {pdpWidgetsAPIData.length > 0 ? <div block="PDPWidgets">{this.renderPdpWidgets()}</div> : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
         {isMobile ? this.renderContactUsSection() : ""}
-        <div block="Seperator2" />
+        {/* <div block="Seperator2" /> */}
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
@@ -988,9 +1030,9 @@ class PDPDetailsSection extends PureComponent {
                   is_expanded={this.state.isExpanded["4"]}
                 >
                 </Accordion>
-                
+
                 */}
-      </div>
+      </div >
     );
   }
 }

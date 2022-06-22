@@ -30,6 +30,9 @@
 
         }
         &_isArabic{
+            @include desktop{
+                left: 45px;
+            }
             left: 150px;
             right: unset;
         }
