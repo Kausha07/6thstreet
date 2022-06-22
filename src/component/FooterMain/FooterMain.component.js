@@ -4,9 +4,9 @@ import FooterCustomerSupport from "Component/FooterCustomerSupport";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import { connect } from "react-redux";
-import { URLS } from 'Util/Url/Url.config';
-import facebook from "./icons/facebook-2.svg";
-import instagram from "./icons/instagram-2.svg";
+import { URLS } from "Util/Url/Url.config";
+import facebook from "./icons/facebook.svg";
+import instagram from "./icons/instagram.svg";
 import twitter from "./icons/twitter.svg";
 import pinterest from "./icons/pinterest.svg";
 import snapchat from "./icons/snapchat.svg";
@@ -28,30 +28,30 @@ class FooterMain extends PureComponent {
 
   getRootURL = () => {
     const { language, country } = this.props;
-    if(language && country && URLS){
+    if (language && country && URLS) {
       const locale = `${language}-${country.toLowerCase()}`;
       return URLS[locale] || "";
     }
     return "";
-  }
+  };
 
   linksMap = [
     {
       title: __("About"),
       items: [
         {
-          name: isArabic()
-                ?
-                <span>معلومات عن 6thستريت</span>
-                :
-                <div block="About">
-                  <span>{__("About")}</span>
-                  &nbsp;
-                  <span>6</span>
-                  <span>{__("TH")}</span>
-                  <span>{__("S")}</span>
-                  <span>{__("TREET")}</span>
-                </div>,
+          name: isArabic() ? (
+            <span>معلومات عن 6thستريت</span>
+          ) : (
+            <div block="About">
+              <span>{__("About")}</span>
+              &nbsp;
+              <span>6</span>
+              <span>{__("TH")}</span>
+              <span>{__("S")}</span>
+              <span>{__("TREET")}</span>
+            </div>
+          ),
           href: "/about",
         },
         {
@@ -111,7 +111,13 @@ class FooterMain extends PureComponent {
           app_gallery:
             "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg",
           gallery_onclick: "https://appgallery.huawei.com/#/app/C102324663",
-          header: __("Follow the latest trends"),
+          header: isArabic() ? (
+            <h4>شاركونا الآن</h4>
+          ) : (
+            <h4>
+              <span>Join</span> the <span>community!</span>
+            </h4>
+          ),
           id_facebook: "Facebook1",
           facebook_href: "https://www.facebook.com/shop6thstreet/",
           id_insta: "Insta1",
@@ -132,7 +138,7 @@ class FooterMain extends PureComponent {
   ];
 
   renderFirstTwoCloumns() {
-    const regExp = new RegExp('^(?:[a-z]+:)?//', 'i');
+    const regExp = new RegExp("^(?:[a-z]+:)?//", "i");
     const rootURL = this.getRootURL() || "";
     return this.linksMap
       .filter(
@@ -145,22 +151,18 @@ class FooterMain extends PureComponent {
           <h4>{column.title}</h4>
           <div block="FooterMain" elem="Nav" key={column.title}>
             <ul key={column.title}>
-              {
-                column.items.map((items) => {
-                  const navigateTo = regExp.test(items.href) ? items.href : `${rootURL}${items.href}`;
-                  return (
-                    <li key={items.name}>
-                      <Link
-                        block="FooterMain"
-                        elem="Link"
-                        to={navigateTo}
-                      >
-                        {items.name}
-                      </Link>
-                    </li>
-                  )
-                })
-              }
+              {column.items.map((items) => {
+                const navigateTo = regExp.test(items.href)
+                  ? items.href
+                  : `${rootURL}${items.href}`;
+                return (
+                  <li key={items.name}>
+                    <Link block="FooterMain" elem="Link" to={navigateTo}>
+                      {items.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -168,7 +170,6 @@ class FooterMain extends PureComponent {
   }
 
   renderAppColumn() {
-
     return this.linksMap
       .filter((column) => column.title === __("Download The App"))
       .map((column) => (
@@ -179,54 +180,109 @@ class FooterMain extends PureComponent {
               <Fragment key="last_main_footer_column">
                 <div block="FooterMain" elem="WrapperFirst">
                   <Link to={items.app_onclick} key={items.id_app}>
-                    <Image lazyLoad={true} src={items.app_store} alt="app store download" />
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_store}
+                      alt="app store download"
+                    />
                   </Link>
                   <br />
                   <Link to={items.google_onclick} key={items.id_google}>
-                    <Image lazyLoad={true} src={items.google_play} alt="google play download" />{" "}
-
+                    <Image
+                      lazyLoad={true}
+                      src={items.google_play}
+                      alt="google play download"
+                    />{" "}
                   </Link>
                   <br />
                   <Link to={items.gallery_onclick} key={items.id_gallery}>
-                    <Image lazyLoad={true} src={items.app_gallery} alt="app gallery download" className="appGallery"/>
-
+                    <Image
+                      lazyLoad={true}
+                      src={items.app_gallery}
+                      alt="app gallery download"
+                      className="appGallery"
+                    />
                   </Link>
                 </div>
-                <h4>{items.header}</h4>
+              </Fragment>
+            ))}
+          </div>
+        </div>
+      ));
+  }
+  renderSocialLinks() {
+    return this.linksMap
+      .filter((column) => column.title === __("Download The App"))
+      .map((column) => (
+        <div block="FooterMain" elem="SocialColumn" key={column.title}>
+          <div block="FooterMain" elem="SocialLinks">
+            {column.items.map((items) => (
+              <Fragment key="last_main_footer_column">
+                <div block="FooterMain" elem="SocialTitle">
+                  {items.header}
+                </div>
                 <div block="FooterMain" elem="WrapperSecond">
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.facebook_href} key={items.id_facebook} target="_blank">
-                      <Image lazyLoad={true} src={facebook} alt="facebook" />
-                    </Link>
-                  </div>
-                  <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.insta_href} key={items.id_insta} target="_blank">
+                    <Link
+                      to={items.insta_href}
+                      key={items.id_insta}
+                      target="_blank"
+                    >
                       <Image lazyLoad={true} src={instagram} alt="instagram" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.twitter_href} key={items.id_twitter} target="_blank">
-                      <Image lazyLoad={true} src={twitter} alt="Twitter" />
+                    <Link
+                      to={items.facebook_href}
+                      key={items.id_facebook}
+                      target="_blank"
+                    >
+                      <Image lazyLoad={true} src={facebook} alt="facebook" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.pinterest_href} key={items.id_pinterest} target="_blank">
-                      <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
-                    </Link>
-                  </div>
-                  <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.youtube_href} key={items.id_youtube} target="_blank">
-                      <Image lazyLoad={true} src={youtube} alt="Youtube" />
-                    </Link>
-                  </div>
-                  <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.tiktok_href} key={items.id_tiktok} target="_blank">
+                    <Link
+                      to={items.tiktok_href}
+                      key={items.id_tiktok}
+                      target="_blank"
+                    >
                       <Image lazyLoad={true} src={tiktok} alt="Tiktok" />
                     </Link>
                   </div>
                   <div block="FooterMain" elem="SocialIcon">
-                    <Link to={items.snapchat_href} key={items.id_snapchat} target="_blank">
+                    <Link
+                      to={items.snapchat_href}
+                      key={items.id_snapchat}
+                      target="_blank"
+                    >
                       <Image lazyLoad={true} src={snapchat} alt="Snapchat" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link
+                      to={items.twitter_href}
+                      key={items.id_twitter}
+                      target="_blank"
+                    >
+                      <Image lazyLoad={true} src={twitter} alt="Twitter" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon">
+                    <Link
+                      to={items.pinterest_href}
+                      key={items.id_pinterest}
+                      target="_blank"
+                    >
+                      <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
+                    </Link>
+                  </div>
+                  <div block="FooterMain" elem="SocialIcon youtube">
+                    <Link
+                      to={items.youtube_href}
+                      key={items.id_youtube}
+                      target="_blank"
+                    >
+                      <Image lazyLoad={true} src={youtube} alt="Youtube" />
                     </Link>
                   </div>
                 </div>
@@ -236,12 +292,12 @@ class FooterMain extends PureComponent {
         </div>
       ));
   }
-
   render() {
     const { isArabic } = this.state;
     return (
       <div block="FooterMain">
         <div block="FooterMain" elem="Layout" mods={{ isArabic }}>
+          {this.renderSocialLinks()}
           {this.renderFirstTwoCloumns()}
           <FooterCustomerSupport />
           {this.renderAppColumn()}
