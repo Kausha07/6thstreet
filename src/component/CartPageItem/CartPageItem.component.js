@@ -19,9 +19,6 @@
  import {
    DEFAULT_MESSAGE,
    EDD_MESSAGE_ARABIC_TRANSLATION,
-   DEFAULT_READY_MESSAGE,
-   DEFAULT_SPLIT_KEY,
-   DEFAULT_READY_SPLIT_KEY
  } from "../../util/Common/index";
  
  import PropTypes from "prop-types";
@@ -760,68 +757,53 @@
      );
    }
    renderEdd = () => {
-    const { eddResponse, edd_info, item: { extension_attributes } } = this.props;
-    const { isArabic } = this.state;
-    let actualEddMess = "";
-    let actualEdd = "";
-    const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
-    const {
-      defaultEddDateString,
-      defaultEddDay,
-      defaultEddMonth,
-      defaultEddDat,
-    } = getDefaultEddDate(defaultDay);
-    let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_MESSAGE
-    let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
-      : itemEddMessage;
-    if (eddResponse) {
-      if (isObject(eddResponse)) {
-        Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            if(extension_attributes?.click_to_collect_store){
-              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-            }else{
-              actualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            actualEdd = entry.edd_date;
-            }       
-          }
-        });
-      } else {
-        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        actualEdd = defaultEddDateString;
-      }
-    } else {
-      actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-      actualEdd = defaultEddDateString;
-    }
-
-    if (!actualEddMess) {
-      return null;
-    }
-    let splitKey = DEFAULT_SPLIT_KEY;
-    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
-
-    return (
-      <div block="AreaText" mods={{isArabic}}>
-        {extension_attributes?.click_to_collect_store ?
-          <span>
-            {splitReadyByKey}
-          </span> : <span>
-            {actualEddMess.split(splitKey)[0]}
-            {splitKey}
-          </span>
-        }
-         {extension_attributes?.click_to_collect_store ?
-          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
-          :
-          <span>{actualEddMess.split(splitKey)[1]}</span>
-        }
-      </div>
-    );
-  };
+     const { eddResponse, edd_info } = this.props;
+     const { isArabic } = this.state;
+     let actualEddMess = "";
+     let actualEdd = "";
+     const {
+       defaultEddDateString,
+       defaultEddDay,
+       defaultEddMonth,
+       defaultEddDat,
+     } = getDefaultEddDate(edd_info.default_message);
+     let customDefaultMess = isArabic
+       ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+       : DEFAULT_MESSAGE;
+     if (eddResponse) {
+       if (isObject(eddResponse)) {
+         Object.values(eddResponse).filter((entry) => {
+           if (entry.source === "cart" && entry.featute_flag_status === 1) {
+             actualEddMess = isArabic
+               ? entry.edd_message_ar
+               : entry.edd_message_en;
+             actualEdd = entry.edd_date;
+           }
+         });
+       } else {
+         actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+         actualEdd = defaultEddDateString;
+       }
+     } else {
+       actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+       actualEdd = defaultEddDateString;
+     }
+ 
+     if (!actualEddMess) {
+       return null;
+     }
+     let splitKey = isArabic ? "بواسطه" : "by";
+ 
+     return (
+       <div block="AreaText">
+         <span>
+           {actualEddMess.split(splitKey)[0]}
+           {splitKey}
+         </span>
+         <span>{actualEddMess.split(splitKey)[1]}</span>
+       </div>
+     );
+   };
  
    renderContent() {
      const {
