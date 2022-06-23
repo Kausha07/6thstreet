@@ -1049,5 +1049,8 @@
     "Save to Wishlist": "إضافة إلى قائمة الأمنيات",
     "Pick up Failed": "لم تتم عملية الإستلام بنجاح",
     "Select a Store*": "*اختر المتجر",
-    "Picked up from Store": "جاهز للإستلام من المتجر"
+    "Picked up from Store": "جاهز للإستلام من المتجر",
+    "Proceed": null,
+    "Select Pick Up Address": null,
+    "Next": null
 }

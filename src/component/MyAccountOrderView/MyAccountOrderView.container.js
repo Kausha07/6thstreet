@@ -89,10 +89,10 @@ export class MyAccountOrderViewContainer extends PureComponent {
       return;
     }
 
-    const url =
-      status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
-        ? `/my-account/return-item/create/${entity_id}`
-        : `/my-account/return-item/cancel/${entity_id}`;
+    const url = "/pick-up-address"
+      // status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
+      //   ? `/my-account/return-item/create/${entity_id}`
+      //   : `/my-account/return-item/cancel/${entity_id}`;
 
     history.push(url);
   }
