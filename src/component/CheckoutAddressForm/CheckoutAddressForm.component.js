@@ -196,20 +196,20 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
   }
 
   render() {
-    const { id, isSignedIn, clickAndCollectStatus, showCountry } = this.props;
+    const { id, isSignedIn, clickAndCollectStatus,showCountry } = this.props;
     const { isArabic } = this.state;
 
     const isGuestForm = !isSignedIn;
     const ClickNCollect = clickAndCollectStatus;
     return (
-      <FormPortal id={id} name="CheckoutAddressForm">
+      <FormPortal id={id} name="CheckoutAddressForm" >
         <div
           block="FieldForm"
           mix={{
             block: "CheckoutAddressForm",
-            mods: { isGuestForm, ClickNCollect, showCountry },
+            mods: { isGuestForm, ClickNCollect,showCountry },
           }}
-          mods={{ isArabic }}
+          mods={{ isArabic}}
         >
           {this.renderFields()}
         </div>
