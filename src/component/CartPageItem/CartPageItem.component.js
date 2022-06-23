@@ -764,12 +764,13 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
+    const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
     const {
       defaultEddDateString,
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
+    } = getDefaultEddDate(defaultDay);
     let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_MESSAGE
     let customDefaultMess = isArabic
       ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
@@ -778,10 +779,14 @@ export class CartItem extends PureComponent {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            actualEddMess = isArabic
+            if(extension_attributes?.click_to_collect_store){
+              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            }else{
+              actualEddMess = isArabic
               ? entry.edd_message_ar
               : entry.edd_message_en;
             actualEdd = entry.edd_date;
+            }       
           }
         });
       } else {
@@ -800,7 +805,7 @@ export class CartItem extends PureComponent {
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
 
     return (
-      <div block="AreaText">
+      <div block="AreaText" mods={{isArabic}}>
         {extension_attributes?.click_to_collect_store ?
           <span>
             {splitReadyByKey}
@@ -809,7 +814,11 @@ export class CartItem extends PureComponent {
             {splitKey}
           </span>
         }
-        <span>{actualEddMess.split(splitKey)[1]}</span>
+         {extension_attributes?.click_to_collect_store ?
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+          :
+          <span>{actualEddMess.split(splitKey)[1]}</span>
+        }
       </div>
     );
   };
