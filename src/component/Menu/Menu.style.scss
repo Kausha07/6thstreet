@@ -30,11 +30,12 @@
                     display: flex;
                     justify-content: center;
                     width: 33.33%;
+                    height: auto;
 
                     .GenderButton-Button {
                         height: 30px;
                         margin-top: 6px;
-                        padding: 0 15px;
+                        padding: 0 4px;
                     }
                 }
             }
