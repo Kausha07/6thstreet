@@ -175,8 +175,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
     productStock,
     code,
     label,
-    selectedStatus,
-    availProductStatus
   ) {
     const {
       selectedSizeCodes,
@@ -185,12 +183,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       notifyMeSuccess,
       notifyMeLoading,
     } = this.props;
-    const isNotAvailable =
-      (availProductStatus && selectedStatus)
-        ? false
-        : selectedStatus
-        ? selectedStatus
-        : parseInt(productStock[code].quantity) === 0;
+    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
       fontSize: "14px",
       color: "#ffffff",
@@ -277,9 +270,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       selectedAvailProduct[item_id].id !== false
         ? availProduct[0]
         : products[item_id];
-    let availProductStatus =
-      selectedAvailProduct[item_id] &&
-      selectedAvailProduct[item_id].id !== false;
+   
     const { simple_products: productStock } = filteredProductStock;
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -294,15 +285,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code]?.size[selectedSizeType];
-            const selectedStatus = label === `${size["value"]}`;
-            if (label && (availProductStatus || !selectedStatus)) {
+            if (label) {
               acc.push(
                 this.renderSizeOption(
                   productStock,
                   code,
                   label,
-                  selectedStatus,
-                  availProductStatus
                 )
               );
             }
