@@ -206,6 +206,19 @@ class MyAccountOrderView extends PureComponent {
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
         (status === STATUS_COMPLETE && is_returnable) ? (
+          is_returnable && is_cancelable && is_exchangeable ? (
+            <div block="MyAccountOrderView" elem="HeadingButtons">
+              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                {RETURN_ITEM_LABEL}
+              </button>
+              <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
+                {EXCHANGE_ITEM_LABEL}
+              </button>
+              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                {CANCEL_ITEM_LABEL}
+              </button>
+            </div>
+          ) :
           is_returnable && is_cancelable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>

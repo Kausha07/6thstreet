@@ -119,9 +119,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     if (
       JSON.stringify(selectedItems) !== JSON.stringify(prevSelectedItems) ||
       JSON.stringify(selectedAvailProduct) !==
-        JSON.stringify(prevSelectedAvailProduct) ||
+      JSON.stringify(prevSelectedAvailProduct) ||
       JSON.stringify(selectedSizeCodes) !==
-        JSON.stringify(prevSelectedSizeCodes) ||
+      JSON.stringify(prevSelectedSizeCodes) ||
       reasonId !== prevReasonId
     ) {
       this.checkIsDisabled();
@@ -360,13 +360,19 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   setOrderItem = (product, itemId, isSelected) => {
-    const { products, isOutOfStock } = this.state;
+    const { products, isOutOfStock, tempSelectedAddressIds } = this.state;
+    const { addresses } = this.props;
+    let address = null
+    if (addresses && addresses.length) {
+      address = addresses.find(({ default_shipping }) => default_shipping === true);
+    }
     if (isSelected) {
       this.setState({
         products: {
           ...products,
           [itemId]: false,
         },
+        tempSelectedAddressIds: { ...tempSelectedAddressIds, [itemId]: null },
         lastSelectedItem: "",
         isOutOfStock: {
           ...isOutOfStock,
@@ -379,6 +385,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           ...products,
           [itemId]: product,
         },
+        tempSelectedAddressIds: { ...tempSelectedAddressIds, [itemId]: address ? address.id : addresses[0].id },
         lastSelectedItem: itemId,
       });
     }
@@ -526,7 +533,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           }
           const { simple_products: productStock } =
             selectedAvailProduct[order_item_id] &&
-            selectedAvailProduct[order_item_id].id !== false
+              selectedAvailProduct[order_item_id].id !== false
               ? availProduct
               : products[order_item_id];
           let sizeLessData = [];
@@ -582,11 +589,11 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             options:
               sizeLessData.length === 0
                 ? [
-                    {
-                      option_id: size["label"].toUpperCase(),
-                      option_value: finalSizeValue,
-                    },
-                  ]
+                  {
+                    option_id: size["label"].toUpperCase(),
+                    option_value: finalSizeValue,
+                  },
+                ]
                 : [],
             exchange_qty: +exchangeable_qty,
             exchange_reason: id,

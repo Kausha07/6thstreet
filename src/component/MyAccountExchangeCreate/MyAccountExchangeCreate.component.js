@@ -236,6 +236,7 @@ export class MyAccountExchangeCreate extends PureComponent {
         mods={{ formContent }}
       >
         <MyAccountAddressPopup
+          isExchange={true}
           formContent={formContent}
           closeForm={closeForm}
           openForm={openForm}
