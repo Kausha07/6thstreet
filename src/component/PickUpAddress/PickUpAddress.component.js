@@ -1,9 +1,10 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import { PureComponent } from "react";
 import PropTypes from "prop-types";
+import history from "Util/History";
 
 import CheckoutAddressBook from "Component/CheckoutAddressBook";
-import CheckoutDeliveryOptions from "Component/CheckoutDeliveryOptions";
 import Form from "Component/Form";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import { SHIPPING_STEP } from "Route/Checkout/Checkout.config";
@@ -18,6 +19,7 @@ import { ThreeDots } from "react-loader-spinner";
 import "../CheckoutShipping/CheckoutShipping.style";
 import {
   ADDRESS_POPUP_ID,
+  ADD_ADDRESS
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 import { connect } from "react-redux";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -41,13 +43,10 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
 });
-export class PickUpAddress extends SourceCheckoutShipping {
+export class PickUpAddress extends PureComponent {
   static propTypes = {
-    ...SourceCheckoutShipping.propTypes,
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
-    shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {
@@ -60,6 +59,12 @@ export class PickUpAddress extends SourceCheckoutShipping {
     isButtondisabled: false,
   };
 
+  componentDidMount() {
+    const { isSignedIn } = this.state
+    if (!isSignedIn) {
+      history.push('/')
+    }
+  }
   renderButtonsPlaceholder() {
     return __("Proceed")
   }
@@ -184,10 +189,20 @@ export class PickUpAddress extends SourceCheckoutShipping {
     this.setState({ hideCards: false });
   };
 
-  openNewForm = () => {
-    const { showCreateNewPopup } = this.props;
+  showCreateNewPopup() {
+    const { showPopup } = this.props;
+
     this.openForm();
-    showCreateNewPopup();
+    showPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+    });
+  }
+
+  openNewForm = () => {
+    this.openForm();
+    this.showCreateNewPopup();
   };
 
   renderButtonLabel() {
@@ -312,7 +327,7 @@ export class PickUpAddress extends SourceCheckoutShipping {
     const {
       onShippingSuccess,
       onShippingError,
-      handleClickNCollectPayment,
+      addresses
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -335,11 +350,8 @@ export class PickUpAddress extends SourceCheckoutShipping {
               </h4>
             </>
           ) : null}
-          {this.renderAddressBook()}
+          {isSignedIn() && this.renderAddressBook()}
           <div>
-            {/* {<Loader isLoading={isLoading} />} */}
-            {/* {this.renderDelivery()} */}
-            {this.renderHeading(__("Payment Options"), true)}
             {this.renderActions()}
           </div>
         </Form>
