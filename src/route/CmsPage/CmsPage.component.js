@@ -20,6 +20,22 @@ export class CmsPage extends SourceCmsPage {
     }
   }
 
+  renderTitleMobile() {
+    if (location.href.match(/private-sales/)){
+      return "Private sales";
+    }else if (location.href.match(/about-apparel-group/)){
+      return "About Apparel Group";
+    }else if (location.href.match(/reward-points/)){
+      return "Reward Points";
+    }else if (location.href.match(/try-again-later/)){
+      return "Try Again Later";
+    }else if (location.href.match(/liked-products/)){
+      return "Liked Products";
+    }else{
+      return null;
+    }
+  }
+
   renderCloseButton() {
     const { isArabic } = this.state;
     const { history } = this.props;
@@ -66,8 +82,8 @@ export class CmsPage extends SourceCmsPage {
     const tws = document.createElement("html");
     tws.innerHTML = content;
 
-    const textChild = tws.lastChild.firstChild.firstChild.firstChild;
-    const result = String(textChild.innerHTML)
+    const textChild = tws?.lastChild?.firstChild?.firstChild?.firstChild;
+    const result = String(textChild?.innerHTML)
       .replace(/&lt;/g, "<")
       .replace(/&gt;/g, ">");
     const cmsBlock = pathname.slice(1);
@@ -82,6 +98,25 @@ export class CmsPage extends SourceCmsPage {
           fieldsetContainer.classList.toggle("open");
         });
       });
+    }
+
+    if (location.href.match(/private-sales/) || location.href.match(/about-apparel-group/) || location.href.match(/reward-points/) || location.href.match(/try-again-later/) || location.href.match(/liked-products/)) {
+
+      return (
+        <div block={cmsBlock}>
+          {isMobile ? (
+          <div block="MyAccountMobileHeader" elem="TabOptionHeader">
+            {this.renderCloseButton()}
+            <h1 block="MyAccountMobileHeader" elem="Heading">
+              {this.renderTitleMobile()}
+            </h1>
+          </div>
+          ) : null}
+          <div className="cmspagecontentwrap">
+            <Html content={content} />
+          </div>
+        </div>
+      );
     }
 
     return (

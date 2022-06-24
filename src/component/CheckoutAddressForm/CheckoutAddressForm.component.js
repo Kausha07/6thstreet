@@ -77,7 +77,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const {
       isSignedIn,
-      shippingAddress: { guest_email },
+      shippingAddress: { guest_email, phone = "" },
       isClickAndCollect,
       storeAddress,
       clickAndCollectStatus,
@@ -86,7 +86,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
-    const customerPhone =  customer?.phone?.slice(4,customer?.phone)
+    const phoneNumber = phone || customer?.phone
+    const customerPhone = phoneNumber?.slice(4, phoneNumber);
 
     fieldMap.street = {
       ...street,
