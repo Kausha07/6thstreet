@@ -1049,5 +1049,13 @@
     "Save to Wishlist": "إضافة إلى قائمة الأمنيات",
     "Pick up Failed": "لم تتم عملية الإستلام بنجاح",
     "Select a Store*": "*اختر المتجر",
-    "Picked up from Store": "جاهز للإستلام من المتجر"
+    "Picked up from Store": "جاهز للإستلام من المتجر",
+    "Cash on Delivery is not available for the order above": "الدفع نقداً عند الإستلام غير متوفر لطلبات بقيمة أعلى من",
+    "please choose another payment option.": "الرجاء تحديد خيار دفع آخر",
+    "AED 2700": "2700 درهم اماراتي",
+    "SAR 2700": "2700 ريال سعودي",
+    "QAR 2700": "2700 ريال قطري",
+    "KWD 250": "250 دينار كويتي",
+    "OMR 250": "250 ريال عُماني",
+    "BHD 250": "250 دينار بحريني"
 }
