@@ -6,11 +6,14 @@ import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
+import { getCountryFromUrl } from "Util/Url/Url";
 
 
-export const mapStateToProps = (state) => ({
-    currContentGender: state.AppState.gender
-});
+export const mapStateToProps = (state) => (
+    {
+        currContentGender: state.AppState.gender
+    }
+);
 
 class HeaderGenders extends PureComponent {
 
@@ -39,8 +42,12 @@ class HeaderGenders extends PureComponent {
         isMenu: false
     };
 
-
+    
     genderList = [
+        {
+            label: `${__('All')}`,
+            key: 'all'
+        },
         {
             label: __('Women'),
             key: 'women'
@@ -57,9 +64,8 @@ class HeaderGenders extends PureComponent {
             label: `${__('Home')}`,
             key: 'home'
         }
-    ];
-
-    getNewActiveMenuGender = (key) => {
+     ];
+     getNewActiveMenuGender = (key) => {
         const { currentGenderButton } = this.state;
         if (currentGenderButton !== key) {
             this.setState({ currentGenderButton: key });
@@ -69,11 +75,9 @@ class HeaderGenders extends PureComponent {
     isCurrentGender(key) {
 
         let { currentContentGender } = this.props;
-
-        if (currentContentGender === '' && key === 'women') {
+        if (currentContentGender === '' && (key === 'women'|| key === 'all' )) {
             return true;
         }
-
 
         return key === currentContentGender;
     }
@@ -127,7 +131,23 @@ class HeaderGenders extends PureComponent {
     };
 
     renderGenders() {
-        return this.genderList.map(this.renderGender);
+        let countryList = ['OM', 'BH', 'QA'];
+        let showAllStatus = countryList.includes(getCountryFromUrl());
+        
+        return this.genderList.map((value) =>{
+            
+            if(showAllStatus){
+                return this.renderGender(value)
+                    
+            }else{
+                if(value.key !== "all"){
+                    return (
+                        this.renderGender(value)
+                    )
+                } 
+            }
+            
+        })
     }
 
     render() {
