@@ -89,7 +89,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       return;
     }
 
-    const url = "/pick-up-address"
+    const url = "/my-account/return-item/pick-up-address"
       // status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
       //   ? `/my-account/return-item/create/${entity_id}`
       //   : `/my-account/return-item/cancel/${entity_id}`;

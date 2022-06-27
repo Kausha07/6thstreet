@@ -201,8 +201,10 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
     const { name, alternativePageName, alternateName } = tabMap[activeTab];
+    const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
+
     const returnTitle =
-      activeTab === RETURN_ITEM ? __("Return Statement") : null;
+      activeTab === RETURN_ITEM ? pickUpAddress ? __("Select Pick Up Address") : __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import React, { lazy } from "react";
 import { Route } from "react-router-dom";
 import Breadcrumbs from "Component/Breadcrumbs";
-import PickUpAddress from "Component/PickUpAddress/PickUpAddress.component";
 import ChatPopup from "Component/ChatPopup";
 import CookiePopup from "Component/CookiePopup";
 import DemoNotice from "Component/DemoNotice";
@@ -24,7 +23,6 @@ import {
   URL_REWRITES,
   LIVE_PARTY,
   ABOUT,
-  PICK_UP_ADDRESS
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -166,20 +164,6 @@ export class Router extends SourceRouter {
           render={(props) => (
             <GTMRouteWrapper route={CART}>
               <CartPage {...props} />
-            </GTMRouteWrapper>
-          )}
-        />
-      ),
-      position: 50,
-    },
-    {
-      component: (
-        <SentryRoute
-          path={withStoreRegex("/pick-up-address")}
-          exact
-          render={(props) => (
-            <GTMRouteWrapper route={PICK_UP_ADDRESS}>
-              <PickUpAddress {...props} />
             </GTMRouteWrapper>
           )}
         />
