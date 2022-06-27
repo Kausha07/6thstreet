@@ -8,7 +8,6 @@ import CheckoutAddressBook from "Component/CheckoutAddressBook";
 import Form from "Component/Form";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
 import { SHIPPING_STEP } from "Route/Checkout/Checkout.config";
-import { CheckoutShipping as SourceCheckoutShipping } from "SourceComponent/CheckoutShipping/CheckoutShipping.component";
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
@@ -16,7 +15,7 @@ import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { ThreeDots } from "react-loader-spinner";
 
-import "../CheckoutShipping/CheckoutShipping.style";
+import "./PickUpAddress.style";
 import {
   ADDRESS_POPUP_ID,
   ADD_ADDRESS
@@ -84,7 +83,7 @@ export class PickUpAddress extends PureComponent {
     const { isButtondisabled } = this.state;
 
     return (
-      <div block="Checkout" elem="StickyButtonWrapper">
+      <div block="PickUpAddresses" elem="StickyButtonWrapper">
         <button
           type="submit"
           block={"Button"}
@@ -92,7 +91,7 @@ export class PickUpAddress extends PureComponent {
           // disabled={this.checkForDisabling()}
           disabled={isButtondisabled}
           mix={{
-            block: "CheckoutShipping",
+            block: "PickUpAddress",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
           }}
         >
@@ -295,7 +294,7 @@ export class PickUpAddress extends PureComponent {
 
   renderHeading(text, isDisabled) {
     return (
-      <h2 block="Checkout" elem="Heading" mods={{ isDisabled }}>
+      <h2 block="PickUpAddresses" elem="Heading" mods={{ isDisabled }}>
         {__(text)}
       </h2>
     );
@@ -339,13 +338,13 @@ export class PickUpAddress extends PureComponent {
         {isSignedIn() ? this.renderAddAdress() : null}
         <Form
           id={SHIPPING_STEP}
-          mix={{ block: "CheckoutShipping" }}
+          mix={{ block: "PickUpAddress" }}
           onSubmitError={onShippingError}
           onSubmitSuccess={onShippingSuccess}
         >
           {isSignedIn() ? (
             <>
-              <h4 block="CheckoutShipping" elem="DeliveryMessage">
+              <h4 block="PickUpAddress" elem="DeliveryMessage">
                 {__("Select Pick Up Address")}
               </h4>
             </>
