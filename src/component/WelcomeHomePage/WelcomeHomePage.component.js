@@ -153,14 +153,22 @@ class WelcomeHomePage extends PureComponent {
         }
     }
 
-    closePopup = () => {
+    closePopup = (e) => {
         const { language, setLanguageForWelcome, country } = this.props;
         setCountry(country);
         setLanguage(language);
         setLanguageForWelcome(language);
+
+        let countryList = ['OM', 'BH', 'QA']; 
+        if(countryList.includes(country)){
+            this.onGenderSelect(e, "all")
+        }
+        
         this.setState({
             isPopupOpen: false
         })
+
+        
     }
 
     setLocalAndGenderCookies(locale, gender) {
