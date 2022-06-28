@@ -62,7 +62,7 @@ export class MyAccountExchangeView extends SourceComponent {
       returnNumber,
     } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
-    const dateString = formatDate("YY/MM/DD at hh:mm", dateObject);
+    const dateString = formatDate("DD/MM/YY at hh:mm", dateObject);
     const { [status]: title } = STATUS_TITLE_MAP;
 
     return (
