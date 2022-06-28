@@ -138,15 +138,19 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderContent() {
-    const { isLoading, returnNumber } =
+    const { isLoading, returnNumber,orderNumber,exchangeSuccess } =
       this.props;
 
     if (isLoading) {
       return null;
     }
 
-    if (!isLoading && !returnNumber) {
+    if (!isLoading) {
+      if(exchangeSuccess && !returnNumber){
+        return this.renderExchangeNotPossible();
+      }else if(!exchangeSuccess && !orderNumber){
       return this.renderExchangeNotPossible();
+      }
     }
 
     return (

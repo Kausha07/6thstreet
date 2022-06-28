@@ -215,6 +215,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onReasonChange: this.onReasonChange.bind(this),
     onAvailSizeSelect: this.onAvailSizeSelect.bind(this),
     onAvailableProductClick: this.onAvailableProductClick.bind(this),
+    onQuantitySelection:this.onQuantitySelection.bind(this)
   };
 
   onReasonChange(value) {
@@ -224,6 +225,11 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     } = this.props;
 
     onReasonChange(item_id, value);
+  }
+
+  onQuantitySelection(quantity,itemId){
+    const {handleChangeQuantity} = this.props
+    handleChangeQuantity(quantity,itemId)
   }
 
   onClick() {
@@ -251,7 +257,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { item, reasonId } = this.props;
+    const { item, reasonId,exchangableQuantity } = this.props;
     const {
       isSelected,
       isAlsoAvailable,
@@ -268,6 +274,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       alsoAvailable,
       availableProducts,
       sizeObject,
+      exchangableQuantity,
       resolutions: this.getResolutionOptions(),
       reasonOptions: this.getReasonOptions(),
     };

@@ -49,6 +49,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   containerFunctions = {
     onFormSubmit: this.onFormSubmit.bind(this),
     onSizeSelect: this.onSizeSelect.bind(this),
+    handleChangeQuantity: this.handleChangeQuantity.bind(this),
     checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     setSelectedAddress: this.setSelectedAddress.bind(this),
@@ -82,6 +83,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     selectedSizeType: "eu",
     selectedAvailProduct: {},
     isOutOfStock: {},
+    quantityObj: {},
     notifyMeSuccess: false,
     notifyMeLoading: false,
     isArabic: isArabic(),
@@ -287,6 +289,16 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         [itemId]: outOfStockVal,
       },
       notifyMeSuccess: false,
+    }));
+  }
+
+  handleChangeQuantity(quantity, itemId) {
+    const {
+      quantityObj: { [itemId]: item },
+    } = this.state;
+
+    this.setState(({ quantityObj }) => ({
+      quantityObj: { ...quantityObj, [itemId]: { ...item, quantity } },
     }));
   }
 
@@ -500,6 +512,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       selectedAvailProduct,
       selectedAddressIds,
       availableProducts = {},
+      quantityObj
     } = this.state;
 
     const payload = {
@@ -595,7 +608,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                   },
                 ]
                 : [],
-            exchange_qty: +exchangeable_qty,
+            exchange_qty: quantityObj[order_item_id] ? quantityObj[order_item_id].quantity : +exchangeable_qty,
             exchange_reason: id,
           };
         }
