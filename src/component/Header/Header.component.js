@@ -54,12 +54,10 @@ export class Header extends PureComponent {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
     }
-    if(isMobile) {
-      const { resetProduct, showPDPSearch } = this.props;
+    const { resetProduct, showPDPSearch } = this.props;
     if (prevState.type !== type && type === TYPE_NOTFOUND) {
       resetProduct();
       showPDPSearch(false);
-    }
     }
   }
 
