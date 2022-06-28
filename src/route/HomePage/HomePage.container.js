@@ -18,7 +18,7 @@ import HomePage from "./HomePage.component";
 import { HOME_STATIC_FILE_KEY } from "./HomePage.config";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import browserHistory from "Util/History";
-
+import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
 
 import {
@@ -136,6 +136,7 @@ export class HomePageContainer extends PureComponent {
     }else {
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
+      BrowserDatabase.deleteItem("customer");
     }
 
     const { gender, toggleBreadcrumbs } = this.props;
