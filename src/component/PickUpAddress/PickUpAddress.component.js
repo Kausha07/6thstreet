@@ -13,9 +13,6 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
-import { ThreeDots } from "react-loader-spinner";
-
-import "./PickUpAddress.style";
 import {
   ADDRESS_POPUP_ID,
   ADD_ADDRESS
@@ -24,6 +21,8 @@ import { connect } from "react-redux";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
+import { HistoryType } from "Type/Common";
+import "./PickUpAddress.style";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -46,6 +45,7 @@ export class PickUpAddress extends PureComponent {
   static propTypes = {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
+    history: HistoryType.isRequired,
   };
 
   state = {
@@ -56,6 +56,7 @@ export class PickUpAddress extends PureComponent {
     openFirstPopup: false,
     renderLoading: false,
     isButtondisabled: false,
+    selectedAddressId: null
   };
 
   componentDidMount() {
@@ -79,67 +80,22 @@ export class PickUpAddress extends PureComponent {
   }
 
   renderActions() {
-    const { isPaymentLoading } = this.props;
-    const { isButtondisabled } = this.state;
-
+    const {
+      selectedAddressId,
+    } = this.state;
     return (
-      <div block="PickUpAddresses" elem="StickyButtonWrapper">
+      <div block="Checkout" elem="StickyButtonWrapper">
         <button
           type="submit"
           block={"Button"}
           form={SHIPPING_STEP}
-          // disabled={this.checkForDisabling()}
-          disabled={isButtondisabled}
+          disabled={!selectedAddressId ? true : false}
           mix={{
-            block: "PickUpAddress",
-            elem: isPaymentLoading ? "LoadingButton" : "Button",
+            block: "CheckoutShipping",
+            elem: "Button",
           }}
         >
-          {!isPaymentLoading ? (
-            this.renderButtonsPlaceholder()
-          ) : (
-            <ThreeDots color="white" height={6} width={"100%"} />
-          )}
-        </button>
-      </div>
-    );
-  }
-
-  renderDeliveryButton() {
-    const {
-      addresses,
-      selectedCustomerAddressId,
-      isPaymentLoading,
-    } = this.props;
-    const { isSignedIn } = this.state;
-    const selectedAddress = addresses.filter(
-      ({ id }) => id === selectedCustomerAddressId
-    );
-    const { country_code: selectedAddressCountry = "" } = selectedAddress.length
-      ? selectedAddress[0]
-      : {};
-
-    if (
-      // isMobile.any() ||
-      // isMobile.tablet() ||
-      (isSignedIn && addresses.length === 0) ||
-      (isSignedIn &&
-        selectedAddressCountry !== getCountryFromUrl())
-    ) {
-      this.setState({ isButtondisabled: true })
-      return null;
-    } else {
-      this.setState({ isButtondisabled: false })
-    }
-
-    return (
-      <div block="CheckoutShippingStep" elem="DeliveryButton">
-        <button
-          type="submit"
-          block="Button button primary medium"
-          disabled={isPaymentLoading}
-        >
-          {__("Next")}
+          {this.renderButtonsPlaceholder()}
         </button>
       </div>
     );
@@ -150,7 +106,10 @@ export class PickUpAddress extends PureComponent {
   }
 
   closeForm = () => {
+    const { showPopup } = this.props;
+
     this.setState({ formContent: false });
+    showPopup({});
   };
 
   renderAddAdress() {
@@ -276,25 +235,9 @@ export class PickUpAddress extends PureComponent {
     return null;
   };
 
-  // renderDelivery() {
-  //   const { shippingMethods, onShippingMethodSelect } = this.props;
-
-  //   const { isArabic } = this.state;
-
-  //   return (
-  //     <div block="CheckoutShippingStep" mods={{ isArabic }}>
-  //       {this.renderDeliveryButton()}
-  //       <CheckoutDeliveryOptions
-  //         shippingMethods={shippingMethods}
-  //         onShippingMethodSelect={onShippingMethodSelect}
-  //       />
-  //     </div>
-  //   );
-  // }
-
   renderHeading(text, isDisabled) {
     return (
-      <h2 block="PickUpAddresses" elem="Heading" mods={{ isDisabled }}>
+      <h2 block="Checkout" elem="Heading" mods={{ isDisabled }}>
         {__(text)}
       </h2>
     );
@@ -303,17 +246,24 @@ export class PickUpAddress extends PureComponent {
     this.setState({ editAddress: true });
   }
 
+  onAddressSelect = (addressId) => {
+    const {
+      addresses,
+    } = this.props;
+    this.setState({ selectedAddressId: addressId });
+  }
+
   renderAddressBook() {
     const {
-      onAddressSelect,
       addresses,
     } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
-        onAddressSelect={onAddressSelect}
+        onAddressSelect={this.onAddressSelect}
         addresses={addresses}
         formContent={formContent}
+        PickUpAddress={true}
         closeForm={this.closeForm.bind(this)}
         openForm={this.openForm.bind(this)}
         showCards={this.showCards}
@@ -322,12 +272,13 @@ export class PickUpAddress extends PureComponent {
     );
   }
 
+  onAddressSelectionSuccess = () => {
+    const { selectedAddressId } = this.state;
+    const { location: { state: { orderId } } } = history
+    history.push(`/my-account/return-item/create/${orderId}`, { selectedAddressId })
+  }
+
   render() {
-    const {
-      onShippingSuccess,
-      onShippingError,
-      addresses
-    } = this.props;
     const { formContent } = this.state;
     return (
       <div
@@ -339,20 +290,17 @@ export class PickUpAddress extends PureComponent {
         <Form
           id={SHIPPING_STEP}
           mix={{ block: "PickUpAddress" }}
-          onSubmitError={onShippingError}
-          onSubmitSuccess={onShippingSuccess}
+          onSubmitSuccess={this.onAddressSelectionSuccess}
         >
-          {isSignedIn() ? (
+          {/* {isSignedIn() ? (
             <>
               <h4 block="PickUpAddress" elem="DeliveryMessage">
                 {__("Select Pick Up Address")}
               </h4>
             </>
-          ) : null}
+          ) : null} */}
           {isSignedIn() && this.renderAddressBook()}
-          <div>
-            {this.renderActions()}
-          </div>
+          {this.renderActions()}
         </Form>
       </div>
     );

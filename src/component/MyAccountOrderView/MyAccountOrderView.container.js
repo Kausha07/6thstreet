@@ -89,12 +89,13 @@ export class MyAccountOrderViewContainer extends PureComponent {
       return;
     }
 
-    const url = "/my-account/return-item/pick-up-address"
-      // status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
-      //   ? `/my-account/return-item/create/${entity_id}`
-      //   : `/my-account/return-item/cancel/${entity_id}`;
-
-    history.push(url);
+    const url = `/my-account/return-item/cancel/${entity_id}`;
+    
+    if(status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL){
+      history.push("/my-account/return-item/pick-up-address",{orderId : entity_id});
+    }else{
+      history.push(url);
+    }
   }
 
   async getOrder() {
