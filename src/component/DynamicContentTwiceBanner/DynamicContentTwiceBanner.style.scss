@@ -124,9 +124,13 @@
         }
         .TwiceBannerBlock {
             @include desktop {
-                left: 25%;
+                //left: 25%;
                 top: 40%;
                 position: absolute;
+                left:0;
+                width: 100%;
+                padding-left: 10%;
+                padding-right: 10%;
             }
             @include tablet {
                 left: 15%;
