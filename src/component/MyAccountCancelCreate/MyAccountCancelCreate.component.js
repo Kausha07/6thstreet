@@ -43,7 +43,7 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
             <Form id="create-cancel" onSubmitSuccess={onFormSubmit}>
                 <ul>
                 {items.map((item) => {
-                    if (+item?.qty_canceled <= +item?.qty_to_cancel) {
+                    if (+item?.qty_to_cancel > 0 && +item?.qty_canceled <= +item?.qty_to_cancel) {
                         return this.renderOrderItem(item);
                     }
                 })}
