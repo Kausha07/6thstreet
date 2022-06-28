@@ -55,7 +55,7 @@ export class Header extends PureComponent {
       this.timer = setInterval(this.tick, delay);
     }
     const { resetProduct, showPDPSearch } = this.props;
-    if (prevState.type !== type && type === TYPE_NOTFOUND) {
+    if (prevState.type !== type && type !== TYPE_PRODUCT) {
       resetProduct();
       showPDPSearch(false);
     }
