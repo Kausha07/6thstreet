@@ -124,8 +124,11 @@ class PDP extends PureComponent {
     } else if(!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
     }
+    else if(!isLoading && nbHits === 0 && product) {
+      return <NoMatch />
+    }
     else {
-    return <NoMatch />
+    return <div />
     } 
   }
 }

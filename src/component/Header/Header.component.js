@@ -15,6 +15,7 @@ import {
   TYPE_CART,
   TYPE_HOME,
   TYPE_PRODUCT,
+  TYPE_NOTFOUND
 } from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import isMobile from "Util/Mobile";
@@ -53,12 +54,10 @@ export class Header extends PureComponent {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
     }
-    if(isMobile) {
-      const { resetProduct, showPDPSearch } = this.props;
-    if (prevState.type !== type && type !== TYPE_PRODUCT) {
+    const { resetProduct, showPDPSearch } = this.props;
+    if (prevState.type !== type && type === TYPE_NOTFOUND) {
       resetProduct();
       showPDPSearch(false);
-    }
     }
   }
 
