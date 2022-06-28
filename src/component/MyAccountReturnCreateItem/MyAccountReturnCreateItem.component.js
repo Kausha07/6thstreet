@@ -92,6 +92,50 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   }
 
+  onQuantityChange = (quantity, itemId) => {
+    const {
+      onQuantitySelection,
+    } = this.props;
+    onQuantitySelection(parseInt(quantity), itemId);
+  };
+
+  renderQuantitySelection = (maxSaleQuantity) => {
+    const {
+      minSaleQuantity = 1,
+      item: { item_id },
+      exchangableQuantity = {},
+      isArabic
+    } = this.props;
+
+    const qtyList = Array.from(
+      { length: maxSaleQuantity - minSaleQuantity + 1 },
+      (v, k) => k + minSaleQuantity
+    );
+
+    return (
+      <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+        <select
+          value={exchangableQuantity[item_id] ? exchangableQuantity[item_id].quantity : maxSaleQuantity}
+          onChange={(e) => this.onQuantityChange(e.target.value, item_id)}
+        >
+          {qtyList.map((item, index) => {
+            return (
+              <option
+                key={index}
+                selected={exchangableQuantity[item_id] ? exchangableQuantity[item_id].quantity === item : maxSaleQuantity === item}
+                block="CartItem"
+                elem="QuantityOption"
+                value={item}
+              >
+                {item}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  };
+
   renderDetails() {
     const {
       displayDiscountPercentage,
@@ -127,9 +171,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
             </p>
           )}
           {!!exchangeable_qty && isExchange && (
-            <p>
+            <p block="Quantity">
               {__("Qty: ")}
-              <span>{+exchangeable_qty}</span>
+              {this.renderQuantitySelection(+exchangeable_qty)}
             </p>
           )}
           {!!size && (
@@ -267,10 +311,10 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
     let filteredProductStock =
       selectedAvailProduct[item_id] &&
-      selectedAvailProduct[item_id].id !== false
+        selectedAvailProduct[item_id].id !== false
         ? availProduct[0]
         : products[item_id];
-   
+
     const { simple_products: productStock } = filteredProductStock;
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -309,7 +353,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     return (
       <div block="PLPAddToCart" elem="SizeSelector">
         {sizeObject.sizeTypes !== undefined &&
-        sizeObject.sizeTypes.length !== 0 ? (
+          sizeObject.sizeTypes.length !== 0 ? (
           <>
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
@@ -342,7 +386,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
           block="PDPAlsoAvailableProduct"
           elem={
             selectedAvailProduct[item_id] &&
-            sku === selectedAvailProduct[item_id]["id"]
+              sku === selectedAvailProduct[item_id]["id"]
               ? "selectedProduct"
               : ""
           }

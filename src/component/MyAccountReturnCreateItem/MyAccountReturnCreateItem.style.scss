@@ -108,7 +108,14 @@
   &-Details {
     &Options {
       display: flex;
-
+      .Quantity{
+        display: flex;
+        .CartItem{
+          &-Quantity{
+            margin-left: 5px;
+          }
+        }
+      }
       p {
         color: var(--color-light-grey);
         margin: 0;

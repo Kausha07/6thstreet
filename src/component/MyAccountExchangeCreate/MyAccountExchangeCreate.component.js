@@ -36,7 +36,7 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItem = (item) => {
     const { item_id } = item;
-    const { onItemClick, onReasonChange, resolutions, reasonId } = this.props;
+    const { onItemClick, onReasonChange, resolutions, reasonId, handleChangeQuantity, quantityObj } = this.props;
 
     if (!item.is_exchangeable) {
       return false;
@@ -47,7 +47,9 @@ export class MyAccountExchangeCreate extends PureComponent {
         <MyAccountReturnCreateItem
           item={item}
           {...this.props}
+          exchangableQuantity={quantityObj}
           isExchange={true}
+          handleChangeQuantity={handleChangeQuantity}
           reasonId={reasonId}
           onClick={onItemClick}
           onReasonChange={onReasonChange}
@@ -148,18 +150,18 @@ export class MyAccountExchangeCreate extends PureComponent {
     let isDisabled = isSizeLessData
       ? false
       : outOfStockStatus
-      ? true
-      : Object.keys(disabledStatusArr).length < selectedNumber
-      ? true
-      : disabledStatus
-      ? true
-      : false;
+        ? true
+        : Object.keys(disabledStatusArr).length < selectedNumber
+          ? true
+          : disabledStatus
+            ? true
+            : false;
     const submitText =
       this.isCtcItem() > 0
         ? __("Continue")
         : selectedNumber !== 1
-        ? __("Exchange %s items", selectedNumber)
-        : __("Exchange %s item", selectedNumber);
+          ? __("Exchange %s items", selectedNumber)
+          : __("Exchange %s item", selectedNumber);
     return (
       <div>
         <div block="MyAccountExchangeCreate" elem="Actions">
