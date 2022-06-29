@@ -28,7 +28,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         onReasonChange: this.onReasonChange.bind(this),
         onResolutionChange: this.onResolutionChange.bind(this),
         handleDiscardClick: this.onDiscardClick.bind(this),
-        onResolutionChangeValue: this.onResolutionChangeValue.bind(this)
+        onResolutionChangeValue: this.onResolutionChangeValue.bind(this),
+        handleChangeQuantity: this.handleChangeQuantity.bind(this),
     };
 
     state = {
@@ -38,6 +39,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         items: [],
         resolutionId: null,
         reasonId:0,
+        quantityObj:{}
     };
 
     componentDidMount() {
@@ -53,7 +55,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             selectedItems = {},
             resolutions,
             resolutionId,
-            reasonId
+            reasonId,
+            quantityObj
         } = this.state;
 
         return {
@@ -64,7 +67,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             history,
             resolutions,
             resolutionId,
-            reasonId
+            reasonId,
+            quantityObj
         };
     };
     onDiscardClick() {
@@ -117,6 +121,17 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         });
     }
 
+    handleChangeQuantity(quantity, itemId) {
+        const {
+          quantityObj: { [itemId]: item },
+        } = this.state;
+    
+        this.setState(({ quantityObj }) => ({
+          quantityObj: { ...quantityObj, [itemId]: { ...item, quantity } },
+        }));
+      }
+    
+
     onResolutionChange(itemId, resolutionId) {
         const { selectedItems: { [itemId]: item }, } = this.state;
 
@@ -141,17 +156,18 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
     onFormSubmit() {
         const { history, showErrorMessage } = this.props;
-        const { selectedItems = {}, items, resolutionId } = this.state;
+        const { selectedItems = {}, items, resolutionId,quantityObj } = this.state;
+        const { location: { state: { selectedAddressId = 0 } } } = history
         const payload = {
             order_id: this.getOrderId(),
+            address_id: selectedAddressId,
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionIdd }]) => {
                 const {
-                    qty_shipped = 0
+                    qty_shipped = 0,
                 } = items.find(({ item_id }) => item_id === order_item_id) || {};
-
                 return {
                     order_item_id,
-                    qty_requested: qty_shipped,
+                    qty_requested: Object.keys(quantityObj).length > 0 ? quantityObj[order_item_id].quantity:  qty_shipped,
                     resolution: {
                         id: resolutionId,
                         data: null
@@ -164,7 +180,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             })
         };
         this.setState({ isLoading: true });
-
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
             history.push(`/my-account/return-item/create/success/${id}`);
         }).catch(() => {

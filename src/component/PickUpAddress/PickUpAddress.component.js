@@ -69,16 +69,6 @@ export class PickUpAddress extends PureComponent {
     return __("Proceed")
   }
 
-  checkForDisabling() {
-    const { selectedShippingMethod } = this.props;
-    const { isMobile } = this.state;
-    if ((!selectedShippingMethod) || !isMobile) {
-      return true;
-    }
-
-    return false;
-  }
-
   renderActions() {
     const {
       selectedAddressId,
@@ -241,9 +231,6 @@ export class PickUpAddress extends PureComponent {
         {__(text)}
       </h2>
     );
-  }
-  onEditSelect() {
-    this.setState({ editAddress: true });
   }
 
   onAddressSelect = (addressId) => {

@@ -288,7 +288,7 @@ export class MyAccount extends SourceMyAccount {
          onClose={this.handleClick}
          isHiddenTabContent={hiddenTabContent === "Active"}
          alternativePageName={alternativePageName}
-         name={isCancel ? alternateName : name}
+         name={isPickUpAddress ? "Select Pick Up Address" : isCancel ? alternateName : name}
          />
         }
        
