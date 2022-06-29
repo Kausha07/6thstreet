@@ -119,6 +119,11 @@ class PDP extends PureComponent {
 
   render() {
     const { isLoading, product, nbHits } = this.props;
+    console.log("bhavik loading",isLoading);
+    console.log("bhavik product",product);
+    console.log("bhavik nbHits",nbHits);
+    console.log("bhavik condition",(!isLoading && (!nbHits || nbHits === 0) && (product && Object.keys(product).length === 0
+    && Object.getPrototypeOf(product) === Object.prototype)))
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     } else if (!isLoading && nbHits > 0 && product) {
