@@ -23,6 +23,7 @@ export class PDPDispatcher {
       const response = await new Algolia().getPDP(options);
 
       dispatch(setPDPData(response, options));
+      dispatch(setPDPLoading(false));
     } catch (e) {
       Logger.log(e);
 

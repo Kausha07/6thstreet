@@ -48,18 +48,18 @@ export class Header extends PureComponent {
   }
 
   componentDidUpdate(prevState) {
-    const { delay, type,isMobile } = this.state;
-    if (prevState !== delay) {
-      clearInterval(this.timer);
-      this.timer = setInterval(this.tick, delay);
-    }
-    if(isMobile) {
-      const { resetProduct, showPDPSearch } = this.props;
-      if (prevState.type !== type && type !== TYPE_PRODUCT) {
-        resetProduct();
-        showPDPSearch(false);
-      }
-    }
+    // const { delay, type,isMobile } = this.state;
+    // if (prevState !== delay) {
+    //   clearInterval(this.timer);
+    //   this.timer = setInterval(this.tick, delay);
+    // }
+    // if(isMobile) {
+    //   const { resetProduct, showPDPSearch } = this.props;
+    //   if (prevState.type !== type && type !== TYPE_PRODUCT) {
+    //     resetProduct();
+    //     showPDPSearch(false);
+    //   }
+    // }
   }
 
   componentWillUnmount() {

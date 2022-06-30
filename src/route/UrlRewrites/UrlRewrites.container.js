@@ -89,8 +89,8 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
-      sku !== prevSku ||
-      !prevStatePathname
+      sku !== prevSku
+      // !prevStatePathname
     ) {
       hideActiveOverlay();
       document.body.style.overflow = "visible";

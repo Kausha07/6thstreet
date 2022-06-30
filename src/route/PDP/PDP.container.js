@@ -143,14 +143,14 @@ export class PDPContainer extends PureComponent {
     }
 
     // Request product, if URL rewrite has changed
-    if (id !== prevId) {
-      this.requestProduct();
-    }
+    // if (id !== prevId) {
+    //   this.requestProduct();
+    // }
 
     // Update loading from here, validate for last options recieved results from
-    if (isLoading !== currentIsLoading) {
-      setIsLoading(false);
-    }
+    // if (isLoading !== currentIsLoading) {
+    //   setIsLoading(false);
+    // }
 
     if (menuCategories.length !== 0 && sku && productSku !== sku) {
       this.updateBreadcrumbs();
