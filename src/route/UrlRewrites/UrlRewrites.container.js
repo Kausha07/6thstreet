@@ -87,14 +87,13 @@ export class UrlRewritesContainer extends PureComponent {
     // if (!location.search && query) {
     // history.push(`${pathname}?${query}`);
     // }
-
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
-      sku !== prevSku ||
-      !prevStatePathname
+      sku !== prevSku
+      // !prevStatePathname
     ) {
-      hideActiveOverlay();
+     hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
       this.requestUrlRewrite(true);

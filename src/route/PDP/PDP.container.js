@@ -145,10 +145,9 @@ export class PDPContainer extends PureComponent {
     }
 
     // Request product, if URL rewrite has changed
-    if (id !== prevId) {
-      this.requestProduct();
-    }
-
+    // if (id !== prevId) {
+    //   this.requestProduct();
+    // }
     // Update loading from here, validate for last options recieved results from
     // if (isLoading !== currentIsLoading) {
     //   console.log("isLoading on update",isLoading)
@@ -163,10 +162,10 @@ export class PDPContainer extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    const {resetProduct} =this.props;
-    resetProduct();
-  }
+  // componentWillUnmount() {
+  //   const {resetProduct} =this.props;
+  //   resetProduct();
+  // }
   renderVueHits() {
     const {
       prevPath = null,
