@@ -28,6 +28,7 @@ export class PDPDispatcher {
       Logger.log(e);
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, {}));
+      dispatch(setPDPLoading(false));
     }
   }
   async resetProduct(payload, dispatch) {
