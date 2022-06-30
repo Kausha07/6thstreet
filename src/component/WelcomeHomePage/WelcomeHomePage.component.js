@@ -190,7 +190,7 @@ class WelcomeHomePage extends PureComponent {
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
         this.setLocalAndGenderCookies(locale, val);
-        let url = val === "all"? `${URLS[locale]}/` : `${URLS[locale]}/${val}.html`
+        let url = val === "all"? `${URLS[locale]}` : `${URLS[locale]}/${val}.html`
         window.location.href = url
     }
 
