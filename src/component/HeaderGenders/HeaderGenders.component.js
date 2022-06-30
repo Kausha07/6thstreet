@@ -131,7 +131,7 @@ class HeaderGenders extends PureComponent {
     };
 
     renderGenders() {
-        let countryList = ['OM', 'BH', 'QA'];
+        let countryList = ['BH'];
         let showAllStatus = countryList.includes(getCountryFromUrl());
         
         return this.genderList.map((value) =>{

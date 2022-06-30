@@ -57,7 +57,7 @@ class WelcomeScreenContainer extends PureComponent {
                 this.props.setCountryForWelcome(value)
                 this.props.closePopup();
                 // this.props.setAppConfig(value)
-                let countryList = ['OM', 'BH', 'QA']; 
+                let countryList = ['BH']; 
                 if(countryList.includes(value) && isMobile.any()){      
                     const locale = `${language}-${value.toLowerCase()}`;      
                     let url = `${URLS[locale]}`

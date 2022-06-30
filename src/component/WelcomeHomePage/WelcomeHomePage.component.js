@@ -159,7 +159,7 @@ class WelcomeHomePage extends PureComponent {
         setLanguage(language);
         setLanguageForWelcome(language);
 
-        let countryList = ['OM', 'BH', 'QA']; 
+        let countryList = ['BH']; 
         if(countryList.includes(country)){
             this.onGenderSelect(e, "all")
         }

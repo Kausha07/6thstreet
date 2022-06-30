@@ -23,7 +23,7 @@ export const getInitials =   () => {
     let gender = "women";
     
     let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)   
-    let countryList = ['OM', 'BH', 'QA']; 
+    let countryList = ['BH']; 
     
     if (k && k.country) {
         country = k.country;
