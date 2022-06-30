@@ -83,7 +83,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   openOrderCancelation(itemStatus = '') {
     const { history,showPopup } = this.props;
-    const { order: { status, is_returnable } = {}, entity_id } = this.state;
+    const { order: { status, is_returnable } = {}, entity_id,order } = this.state;
 
     if (
       !entity_id ||
@@ -99,7 +99,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
     
     if(status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL){
       showPopup({});
-      history.push("/my-account/return-item/pick-up-address",{orderId : entity_id});
+      history.push("/my-account/return-item/pick-up-address",{orderId : entity_id,orderDetails: order});
     }else{
       history.push(url);
     }

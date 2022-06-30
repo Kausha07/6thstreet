@@ -261,8 +261,8 @@ export class PickUpAddress extends PureComponent {
 
   onAddressSelectionSuccess = () => {
     const { selectedAddressId } = this.state;
-    const { location: { state: { orderId } } } = history
-    history.push(`/my-account/return-item/create/${orderId}`, { selectedAddressId })
+    const { location: { state: { orderId, orderDetails } } } = history
+    history.push(`/my-account/return-item/create/${orderId}`, { selectedAddressId,orderDetails })
   }
 
   render() {

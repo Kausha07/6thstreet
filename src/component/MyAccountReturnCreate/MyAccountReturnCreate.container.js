@@ -155,13 +155,12 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         this.setState({ resolutionId: value })
     }
     onFormSubmit() {
-        const { history, showErrorMessage } = this.props;
+        const { history, showErrorMessage ,location} = this.props;
         const { selectedItems = {}, items, resolutionId,quantityObj } = this.state;
-        const { location: { state: { selectedAddressId = 0 } } } = history
+        const { location: { state: { selectedAddressId = 0,orderDetails={} } } } = history
         const payload = {
             order_id: this.getOrderId(),
-            address_id: selectedAddressId,
-            items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionIdd }]) => {
+            items: Object.entries(selectedItems).map(([order_item_id, { reasonId }]) => {
                 const {
                     qty_shipped = 0,
                 } = items.find(({ item_id }) => item_id === order_item_id) || {};
@@ -179,6 +178,13 @@ export class MyAccountReturnCreateContainer extends PureComponent {
                 };
             })
         };
+        if (orderDetails) {
+            const { pickup_address_required } = orderDetails;
+            if (pickup_address_required) {
+            payload["address_id"] = selectedAddressId
+            }
+        }
+
         this.setState({ isLoading: true });
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
             history.push(`/my-account/return-item/create/success/${id}`);
