@@ -502,7 +502,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   onFormSubmit() {
-    const { history, showErrorMessage } = this.props;
+    const { history, showErrorMessage, location: { state } } = this.props;
 
     const {
       selectedItems = {},
@@ -514,7 +514,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       availableProducts = {},
       quantityObj
     } = this.state;
-
+  
     const payload = {
       parent_order_id: this.getOrderId(),
       items: Object.entries(selectedItems).map(
@@ -598,7 +598,6 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             parent_order_item_id: order_item_id,
             exchange_sku: currentSizeCode,
             exchange_csku: finalCsku ? finalCsku : config_sku,
-            address_id: selectedAddressIds[order_item_id],
             options:
               sizeLessData.length === 0
                 ? [
@@ -608,13 +607,20 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
                   },
                 ]
                 : [],
-            exchange_qty: quantityObj[order_item_id] ? quantityObj[order_item_id].quantity : +exchangeable_qty,
+                exchange_qty: quantityObj[order_item_id] ? quantityObj[order_item_id].quantity : +exchangeable_qty,
             exchange_reason: id,
           };
         }
       ),
     };
 
+    if (state && state.orderDetails) {
+      const { pickup_address_required } = state.orderDetails;
+      if(pickup_address_required){
+        payload["address_id"] = Object.values(selectedAddressIds)[0]
+      }
+    }
+  
     this.setState({ isLoading: true });
     MagentoAPI.post("exchange/create-order", payload)
       .then(({ order_id, rma_increment_id }) => {
