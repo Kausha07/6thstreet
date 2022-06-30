@@ -60,7 +60,7 @@ class WelcomeScreenContainer extends PureComponent {
                 let countryList = ['OM', 'BH', 'QA']; 
                 if(countryList.includes(value) && isMobile.any()){      
                     const locale = `${language}-${value.toLowerCase()}`;      
-                    let url = `${URLS[locale]}/all.html`
+                    let url = `${URLS[locale]}`
                     window.location.href = url
                 }
             }
