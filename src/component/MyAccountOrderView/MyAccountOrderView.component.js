@@ -25,6 +25,7 @@ import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
   APPLE_PAY,
   CASH_ON_DELIVERY,
+  EXCHANGE_STORE_CREDIT,
   CHECKOUT_APPLE_PAY,
   CHECKOUT_QPAY,
   CHECK_MONEY,
@@ -205,7 +206,7 @@ class MyAccountOrderView extends PureComponent {
           </p>
         </div>
         {STATUS_BEING_PROCESSED.includes(status) ||
-        (status === STATUS_COMPLETE && is_returnable) ? (
+          (status === STATUS_COMPLETE && is_returnable) ? (
           is_returnable && is_cancelable && is_exchangeable ? (
             <div block="MyAccountOrderView" elem="HeadingButtons">
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
@@ -219,31 +220,31 @@ class MyAccountOrderView extends PureComponent {
               </button>
             </div>
           ) :
-          is_returnable && is_cancelable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                {RETURN_ITEM_LABEL}
-              </button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                {CANCEL_ITEM_LABEL}
-              </button>
-            </div>
-          ) : is_returnable && is_exchangeable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                {RETURN_ITEM_LABEL}
-              </button>
-              <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
-                {EXCHANGE_ITEM_LABEL}
-              </button>
-            </div>
-          ) : (
-            <div block="MyAccountOrderView" elem="HeadingButton">
-              <button onClick={() => openOrderCancelation(buttonText)}>
-                {buttonText}
-              </button>
-            </div>
-          )
+            is_returnable && is_cancelable ? (
+              <div block="MyAccountOrderView" elem="HeadingButtons">
+                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                  {RETURN_ITEM_LABEL}
+                </button>
+                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                  {CANCEL_ITEM_LABEL}
+                </button>
+              </div>
+            ) : is_returnable && is_exchangeable ? (
+              <div block="MyAccountOrderView" elem="HeadingButtons">
+                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+                  {RETURN_ITEM_LABEL}
+                </button>
+                <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
+                  {EXCHANGE_ITEM_LABEL}
+                </button>
+              </div>
+            ) : (
+              <div block="MyAccountOrderView" elem="HeadingButton">
+                <button onClick={() => openOrderCancelation(buttonText)}>
+                  {buttonText}
+                </button>
+              </div>
+            )
         ) : status === STATUS_COMPLETE && is_exchangeable ? (
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
@@ -293,11 +294,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -577,8 +578,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-        ? TimerImage
-        : PackageImage;
+          ? TimerImage
+          : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -815,6 +816,8 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("QPAY"));
         }
         return this.renderCardPaymentType();
+      case EXCHANGE_STORE_CREDIT:
+        return this.renderPaymentTypeText(__("Exchange Store Credit"));
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
           return this.renderPaymentTypeText(__("Club Apparel"));
@@ -909,15 +912,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                  isStoreCredit: true,
-                })
+                isStoreCredit: true,
+              })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -927,11 +930,11 @@ class MyAccountOrderView extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLine(
-                  msp_cod_amount,
-                  getCountryFromUrl() === "QA"
-                    ? __("Cash on Receiving Fee")
-                    : __("Cash on Delivery Fee")
-                )
+                msp_cod_amount,
+                getCountryFromUrl() === "QA"
+                  ? __("Cash on Receiving Fee")
+                  : __("Cash on Delivery Fee")
+              )
               : null}
             {this.renderPriceLine(
               grandTotal,
