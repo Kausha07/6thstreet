@@ -38,7 +38,7 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderRequestSuccessContent() {
-    const { customer: { email } = {} } = this.props;
+    const { customer: { email } = {} ,orderNumber} = this.props;
 
     return (
       <>
@@ -53,6 +53,30 @@ export class MyAccountExchangeView extends SourceComponent {
       </>
     );
   }
+
+  renderSuccessDetails() {
+    const { returnNumber, orderIncrementId, date } = this.props;
+    const dateObject = new Date(date.replace(/-/g, "/"));
+    const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
+
+    return (
+        <div block="MyAccountReturnSuccess" elem="Details">
+            <h3>{ __('Request information') }</h3>
+            <p>
+                { __('ID: ') }
+                <span>{ returnNumber }</span>
+            </p>
+            <p>
+                { __('Order ID: ') }
+                <span>{ orderIncrementId }</span>
+            </p>
+            <p>
+                { __('Date requested ') }
+                <span>{ dateString }</span>
+            </p>
+        </div>
+    );
+}
   renderDetails() {
     const {
       date,
@@ -156,8 +180,9 @@ export class MyAccountExchangeView extends SourceComponent {
     return (
       <>
         {this.renderHeading()}
-        {this.renderDetails()}
-        {this.renderItems()}
+        {exchangeSuccess && this.renderItems()}
+        {exchangeSuccess ? this.renderSuccessDetails() : this.renderDetails()}
+        {!exchangeSuccess && this.renderItems()}
       </>
     );
   }
