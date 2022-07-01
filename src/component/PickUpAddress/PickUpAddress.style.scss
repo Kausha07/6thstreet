@@ -5,6 +5,9 @@
 .MyAccount {
   &-TabContent {
     .ShippingStep {
+      @include mobile{
+        top: -40px;
+      }
       &_formContent{
         top: 130px;
       }
