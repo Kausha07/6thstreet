@@ -1,360 +1,624 @@
-.Container {
-    padding: 30px;
-    @include mobile {
-      padding: 10px;
-      margin-top: 165px;
+.LiveShopping{
+  @include desktop{
+      width: 76.389vw;
+      max-width: 1100px;
+      margin: 0 auto;
+  }
+.ContentWrapper{
+    @include mobile{
+        padding: 0;
     }
-    &-Title {
-      font-weight: 400;
-      padding: 0 5px;
-      @include mobile {
-        text-align: center;
-      }
+
+}
+.sectionTitle {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 25px;
+    margin-bottom: 40px;
+    @include mobile{
+        margin-left: 15px;
+        margin-bottom: 15px;
+        margin-top: 15px;
+        letter-spacing: 1px;
     }
+
   }
 
-  #live {
-    .spck-watch-button {
-      background: #f96446 !important;
+  .liveEventBanner {
+    width: 100%;
+    margin-bottom: 60px;
+    @include mobile{
+        margin-bottom: 25px;
     }
-    .spck-list:empty::before{
-      content: 'No Upcoming Videos';
-      font-size: 16px;
-      padding-left:5px;
-
-    }
-  }
-  #live,
-  #archived {
-    margin-bottom: 30px;
-    .spck-list {
-      display: flex !important;
-      flex-wrap: nowrap !important;
-      overflow-x: auto !important;
-      width: 100% !important;
-      justify-content: flex-start;
-      // @include scrollbar(10px, pink, red);
-      &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #585757;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #dcdcdc;
-      }
-
-      // For Internet Explorer
-      & {
-        scrollbar-face-color: #585757;
-        scrollbar-track-color: #dcdcdc;
-      }
-    }
-
-    .spck-wrapper {
-      flex-direction: column !important;
-      max-height: 1000px !important;
-      padding: 5px !important;
-    }
-    // .spck-shop-info {
-    //   padding: 5px;
-    // }
-    .spck-shop-info {
-      left: 5px;
-      bottom: 0;
-      position: absolute;
-      // width: 100%;
-      width: calc(100% - 10px);
-      height: auto;
-      background: rgba(255, 255, 255, 0.7);
-      padding: unset;
-      @include tablet {
-        left: 5px;
-        bottom: 0;
-        position: absolute;
-        // width: 100%;
-        width: calc(100% - 10px);
-        height: auto;
-        background: rgba(255, 255, 255, 0.7);
-        padding: unset;
-      }
-
-      @include mobile {
-        left: 5px;
-        bottom: 0;
-        position: absolute;
-        // width: 100%;
-        width: calc(100% - 10px);
-        height: auto;
-        background: rgba(255, 255, 255, 0.7);
-        padding: unset;
-      }
-    }
-    .spck-event-date {
-      font-family: inherit;
-      color: #ea0c0f;
-      font-weight: 500;
-      margin: unset !important;
-      text-align: left !important;
-      // padding: 0 !important;
-      padding: 0 10px 0 10px !important;
-      @include tablet {
-        padding: 0 10px 0 10px !important;
-      }
-    }
-    .spck-event-title {
-      margin: 0 !important;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: bold;
-      line-height: 23px;
-      padding: 0 10px 0 10px !important;
-      @include tablet {
-        padding: 0 10px 0 10px !important;
-      }
-    }
-    .spck-event-description {
-      margin: 0 0 10px 0 !important;
-      font-family: inherit;
-      padding: 0 10px 0 10px !important;
-    }
-    .spck-party-image {
-      max-width: 100% !important;
-    }
-    .spck-box {
-      height: auto !important;
-      min-width: 25%;
-      max-width: 25%;
-      margin-bottom: 30px;
-      margin-top: 0;
-      box-shadow: none;
-
-      @include mobile {
-        min-width: 80%;
-        min-height: auto;
-      }
-      @include tablet {
-        min-width: 30%;
-        max-width: 30%;
-        height: auto !important;
-        min-height: auto;
-      }
-      &:only-child {
-        @include mobile {
-          min-width: 100% !important;
+    .spck-live-event {
+        position: relative;
+        .mainImage {
+            display: flex;
+            img {
+                width: 100%;
+                max-height: 540px;
+                object-fit: cover;
+                margin: 0 auto;
+                margin-top: 40px;
+                object-position: 0% 25%;
+                @include mobile {
+                    width: 100%;
+                    height: 300px;
+                }
+            }
         }
-      }
-      // &:last-child {
-      //   @include mobile {
-      //     min-width: 100% !important;
-      //   }
-      // }
-    }
-    // .spck-box:first-child:nth-last-child(n + 1) ~ .spck-box {
-    //   @include mobile {
-    //     min-width: 80% !important;
-    //   }
-    // }
+        .eventPlayBtn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            img {
+                height: 63px;
+                width: 90px;
+                border-radius: 20px;
+                z-index: 2;
+                @include mobile{
+                    height: 49px;
+                    width: 70px;
+                }
+            }
+            &-block{
+                position: absolute;
+                width: 45px;
+                height: 30px;
+                left: 17%;
+                top: 25%;
+                background-color: black;
 
-    li.spck-wrapper::before {
-      content: "";
-    }
-    .spck-watch-button {
-      font-family: inherit;
+            }
+        }
+        .eventPlayBtn[disabled]{
+            opacity: 0.4;
+        }
+        .eventInfo {
+            bottom: 0;
+            position: absolute;
+            width: 100%;
+            height: auto;
+            background: linear-gradient(to top, rgba(0, 0, 0, .7), transparent);
+            padding: 45px;
+            @include mobile {
+                width: 100%;
+                left: 0;
+                padding: 15px;
+            }
+            .eventTitle {
+                color: #FFFFFF;
+                font-family: inherit;
+                font-size: 40px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 55px;
+                @include mobile{
+                    font-size: 20px;
+                    line-height: 30px;
+                }
+            }
+        }
+        .liveNow {
+            right: 24px;
+            top: 60px;
+            position: absolute;
+            width: fit-content;
+            height: auto;
+            background-color: #28D9AA;
+            border-radius: 30px;
+            @include mobile {
+                right: 5%;
+                top: 15%;
 
-      @include mobile {
-        margin: 0;
-        width: 100% !important;
-      }
-      @include tablet {
-        margin: 0;
-        width: 100% !important;
-      }
-    }
-    .spck-ical-button {
-      right: 0;
-      @include desktop{
-        bottom: 0 !important;
-      }
+            }
+            &-text {
+                color: #FFFFFF;
+                font-family: inherit;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 16px;
+                padding: 4px 12px;
+                @include mobile{
+                    padding: 3px 10px;
+                }
+            }
+        }
+        .eventStart {
+            right: calc(10% + 24px);
+            top: 60px;
+            height: 24px;
+            min-width: 74px;
+            border-radius: 15px;
+            background-color: #000000;
+            color: #FFFFFF;
+            font-size: 11px;
+            letter-spacing: 0;
+            line-height: 24px;
+            position: absolute;
+            padding-left: 6px;
+            padding-right: 10px;
+            display: flex;
+            align-items: center;
+            img {
+                width: 16px;
+                height: 16px;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 3px;
+                margin-top: 0px;
+            }
+            &-calender{
+                display: flex;
+                align-items: center;
+                font-weight: 600;
+                img{
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+            &-timer{
+                display: flex;
+                align-items: center;
+            }
+        }
 
-      @include mobile {
-        margin: 0 !important;
-        width: 100% !important;
-        background: #f96446 !important;
-      }
-      @include tablet {
-        margin: 0 !important;
-        width: 100% !important;
-        background: #f96446 !important;
-      }
-    }
-    .spck-timer-block {
-      height: 40px !important;
-      width: calc(100% - 40px) !important;
-      color: #ffffff;
-      background: #f96446;
-      border-color: #f96446 !important;
-      border-radius: 3px 0px 0px 3px !important;
+
     }
   }
 
-  #archived {
-    @include tablet {
-      margin-bottom: 80px;
+  .upComing-Grid {
+    margin-bottom: 64px;
+    @include mobile{
+        margin-bottom: 25px;
     }
-    .spck-list:empty::before{
-      content: 'No Recorded Videos';
-      font-size: 16px;
-      padding-left:5px;
-    }
-  }
-
-  #single {
-    margin-bottom: 30px;
-    .spck-event-date {
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 500;
-    }
-    .spck-list{
-        justify-content: center;
-    }
-    .spck-ical-button {
-        right: 0;
-        @include desktop{
-          bottom: 0 !important;
-        }
-    }
-    .spck-event-title {
-      font-family: inherit;
-      font-weight: 600;
-      font-size: 20px;
-    }
-    .spck-list{
-        @include desktop{
-            justify-content: center;
-        }
-    }
-
-    .spck-event-description {
-      font-family: inherit;
-    }
-    .spck-box-one {
-      padding: 0;
-      box-shadow: none;
-    }
-    .spck-watch-button {
-      font-family: inherit;
-      margin: 0 !important;
-      @include mobile {
-        margin: 0 !important;
-      }
-      @include tablet {
-        margin: 0 !important;
-        width: 100% !important;
-      }
-    }
-    .spck-wrapper {
-      box-shadow: 0 0 6px #ccc;
-    }
-    li {
-      @include desktop {
-        padding-left: 0;
-      }
-      @include tablet {
-        padding-left: 0;
-      }
-    }
-    li::before {
-      content: "";
-    }
-
-    .spck-shop-info {
-      @include mobile {
-        left: 5px;
-        bottom: 0;
-        position: absolute;
-        // width: 100%;
-        width: calc(100% - 10px);
-        height: auto;
-        background: rgba(255, 255, 255, 0.7);
-        padding: unset;
-      }
-      @include tablet {
-        left: 0;
-        bottom: 0;
-        position: absolute;
-        // width: 100%;
+    .spckItems {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
         width: 100%;
-        height: auto;
-        background: rgba(255, 255, 255, 0.7);
-        padding: unset;
-      }
-    }
-    .spck-box {
-      @include mobile {
-        height: auto !important;
-        margin-bottom: 30px;
-        margin-top: 0;
-        box-shadow: none;
-        min-width: 100%;
-        min-height: auto;
-      }
-      @include tablet {
-        height: auto !important;
-        min-height: auto;
-      }
-    }
-    @include mobile {
-      .spck-list {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        width: 100% !important;
         justify-content: flex-start;
-      }
+        &::-webkit-scrollbar {
+            width: 80%;
+            height: 3px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: black;
+        }
+        &::-webkit-scrollbar-track {
+            background: #dcdcdc;
+            margin-left: 350px;
+            margin-right: 350px;
+        }
+        // For Internet Explorer
+        & {
+            scrollbar-face-color: #585757;
+            scrollbar-track-color: #dcdcdc;
+        }
 
-      .spck-wrapper {
-        flex-direction: column !important;
-        max-height: 1000px !important;
-        padding: 5px !important;
-      }
+        .spckItem {
+            position: relative;
+            width: 308px;
+            box-sizing: border-box;
+            margin: 0;
+            list-style: none;
+            padding: 0;
+            margin-right: 15px;
+            margin-bottom: 40px;
+            &::before {
+                display: none;
+            }
 
-      .spck-event-date {
-        font-family: inherit;
-        color: #ea0c0f;
-        font-weight: 500;
-        margin: unset !important;
-        text-align: left !important;
-        // padding: 0 !important;
-        padding: 0 10px 0 10px !important;
-      }
-      .spck-event-title {
-        margin: 0 !important;
-        font-size: 14px;
-        font-family: inherit;
-        font-weight: bold;
-        line-height: 23px;
-        padding: 0 10px 0 10px !important;
-      }
-      .spck-event-description {
-        margin: 0 0 10px 0 !important;
-        font-family: inherit;
-        padding: 0 10px 0 10px !important;
-      }
-      .spck-party-image {
-        max-width: 100% !important;
-      }
 
-      li.spck-wrapper::before {
-        content: "";
-      }
-      .spck-watch-button {
-        margin: 0;
-        width: 100% !important;
-      }
+            .eventImage {
+                img {
+                    max-height: 386px;
+                    width: 308px;
+                    object-fit: cover;
+                }
+            }
+            .eventStart {
+                height: 24px;
+                min-width: 74px;
+                border-radius: 15px;
+                background-color: #000000;
+                color: #FFFFFF;
+                font-size: 11px;
+                letter-spacing: 0;
+                line-height: 24px;
+                position: absolute;
+                top: 14px;
+                left: 14px;
+                padding-left: 6px;
+                padding-right: 10px;
+                display: flex;
+                align-items: center;
+                img {
+                    width: 16px;
+                    height: 16px;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-right: 3px;
+                }
+                &-calender{
+                    display: flex;
+                    align-items: center;
+                    font-weight: 600;
+                    img{
+                        width: 14px;
+                        height: 14px;
+                    }
+                }
+                &-timer{
+                    display: flex;
+                    align-items: center;
+                }
+            }
+            .eventPlayBtn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -21px;
+                margin-top: -30px;
+                z-index: 3;
+                img {
+                    height: 42px;
+                    width: 60px;
+                    border-radius: 10px;
+                }
+            }
+            .eventInfo {
+                left: 0;
+                bottom: 0;
+                position: absolute;
+                width: 100%;
+                height: auto;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+                padding: 22px;
+                color: #FFFFFF;
+                .eventTitle {
+                    color: #FFFFFF;
+                    font-size: 16px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 30px;
+                    margin: 0;
+                    padding: 0;
+                }
+                .eventDesc {
+                    color: #FFFFFF;
+                    font-size: 13px;
+                    letter-spacing: 0;
+                    line-height: 18px;
+                    margin: 0;
+                    padding: 0;
+                    @include mobile {
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 160px;
+                        height: 1.2em;
+                        white-space: nowrap;
+                    }
+                }
+            }
+            @include mobile{
+                width: 180px;
+                margin-bottom: 0px;
+                &:nth-child(1) {
+                    margin-left: 15px;
+                }
+
+                .eventImage{
+                    img{
+                        width: 180px;
+                        height: 140px;
+                    }
+                }
+                .eventStart{
+                    height: 20px;
+                    font-size: 10px;
+                    line-height: 17px;
+                    top: 10px;
+                    left: 10px;
+                    padding-left: 4px;
+                    padding-right: 7px;
+
+                }
+                .eventInfo{
+                    padding: 15px;
+                    .eventTitle {
+                        font-size: 14px;
+                        line-height: 18px;
+                    }
+                    .eventDesc {
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: 160px;
+                            height: 1.2em;
+                            white-space: nowrap;
+                            font-size: 12px;
+                            line-height: 22px;
+                    }
+                }
+            }
+        }
     }
   }
+
+  .archived-Grid {
+    margin-bottom: 64px;
+    @include mobile{
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+    .spckItems {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+        .spckItem {
+            box-sizing: border-box;
+            margin: 0;
+            list-style: none;
+            padding: 0;
+            &::before {
+                display: none;
+            }
+            .eventImage {
+                img {
+                    max-height: 483px;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+            .eventProduct {
+                height: 24px;
+                border-radius: 15px;
+                background-color: #000000;
+                color: #FFFFFF;
+                font-size: 11px;
+                letter-spacing: 0;
+                line-height: 24px;
+                position: absolute;
+                top: 14px;
+                left: 14px;
+                padding-left: 6px;
+                padding-right: 12px;
+                display: flex;
+                align-items: center;
+                img {
+                    width: 16px;
+                    width: 16px;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+            }
+            .eventPlayBtn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 3;
+                img {
+                    height: 42px;
+                    width: 60px;
+                    border-radius: 10px;
+                }
+            }
+            .eventInfo {
+                left: 0;
+                bottom: 0;
+                position: absolute;
+                width: 100%;
+                height: auto;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+                padding: 22px;
+                color: #FFFFFF;
+                .eventTitle {
+                    color: #FFFFFF;
+                    font-size: 16px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 1.4;
+                    margin: 0 0 5px;
+                    padding: 0;
+                }
+                .eventDesc {
+                    color: #FFFFFF;
+                    font-size: 13px;
+                    letter-spacing: 0;
+                    line-height: 18px;
+                    margin: 0;
+                    padding: 0;
+                    @include mobile {
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        width: 125px;
+                        height: 1.2em;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+        @include mobile{
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            .spckItem {
+            .eventProduct{
+                top: 10px;
+                left: 10px;
+            }
+            .eventPlayBtn{
+                img{
+                    height: 28px;
+                    width: 40px;
+                }
+            }
+            .eventInfo{
+                padding: 15px;
+                .eventTitle{
+                    font-size: 14px;
+                    line-height: 1;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    width: 125px;
+                    height: 1.2em;
+                    white-space: nowrap;
+                    margin: 0;
+                }
+                .eventDesc {
+                    font-size: 12px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    width: 125px;
+                    height: 1.2em;
+                    white-space: nowrap;
+                }
+            }
+        }
+        }
+    }
+    .sectionTitle{
+        @include mobile{
+            margin-left: 0;
+        }
+    }
+  }
+
+  .spck-popup-iframe {
+    width: 100%;
+    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    z-index: 10000;
+    body{
+        background-color: red;
+    }
+  }
+
+
+  .spkBtn {
+    position: absolute;
+    right: 75px;
+    top: 16px;
+    z-index: 100000;
+    background-color: white;
+    // display: none;
+  }
+
+  #all{
+      display: none;
+  }
+
+
+
+  .Product-LoadMore {
+      text-align: center;
+      margin-bottom: 6px;
+      margin-top: 58px;
+      .Product-Loaded-Info {
+          color: #000000;
+          font-family: "Avenir Next";
+          font-size: 14px;
+          letter-spacing: 0;
+          line-height: 16px;
+          text-align: center;
+          margin-bottom: 6px;
+      }
+      .Product-ProgressBar {
+          margin-bottom: 34px;
+          width: 220px;
+          display: inline-flex;
+          .Product-ProgressBar-Container {
+              height: 3px;
+              width: 100%;
+              background-color: #D8D8D8;
+              display: flex;
+              align-items: center;
+          }
+          .Product-ProgressBar-Bar {
+              width: 10px;
+              height: 3px;
+              background-color: #F96446;
+              display: block;
+          }
+      }
+      .LoadMore {
+          .button {
+              height: 50px;
+              width: 300px;
+              background-color: #FFFFFF;
+              color: #000000;
+              font-family: "Avenir Next";
+              font-size: 12px;
+              font-weight: bold;
+              letter-spacing: 0;
+              line-height: 12px;
+              text-align: center;
+              box-sizing: border-box;
+              border: 1px solid #000000;
+              border-radius: 6px;
+              margin-bottom: 70px;
+              &:disabled {
+                  background: #000000;
+                  color: #FFFFFF;
+                  opacity: .3;
+              }
+          }
+      }
+  }
+}
+
+.Recentlyplayed-heading-layout {
+    display : flex;
+    flex-direction: row;
+    justify-content:space-between;
+    @include mobile{
+        display : flex;
+        flex-direction: column;
+        margin-bottom : 18px;
+    }
+}
+
+.refineButton-div {
+    position: absolute;
+    z-index: 2;
+    top: 25px;
+    right: 0;
+    height: 34px;
+    width: 87px;
+    @include mobile {
+        display : flex;
+        flex-direction: row;
+        font-size : 20px;
+    }
+}
+
+.refine-button {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: inherit;
+    margin-left:5px;
+    @include mobile{
+        height: 40px;
+        float : right;
+    }
+}
+
+.influencerSearchInput {
+    height: 50px;
+    width : 200px;
+    border-radius: 8px;
+    @include mobile{
+        height: 40px;
+        width : 70%;
+    }
+}

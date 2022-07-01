@@ -10,7 +10,6 @@ import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
-import { getCountryFromUrl } from "Util/Url/Url";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -67,14 +66,12 @@ export class LiveExperienceContainer extends PureComponent {
 
   requestUpcomingParty() {
     const { requestUpcomingParty } = this.props;
-    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging });
+    requestUpcomingParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
   }
 
   requestArchivedParty() {
     const { requestArchivedParty } = this.props;
-    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
-    requestArchivedParty({ storeId: Config.storeId, isStaging });
+    requestArchivedParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
   }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
@@ -138,7 +135,6 @@ export class LiveExperienceContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-
     if (!q) {
       return;
     }
@@ -166,57 +162,12 @@ export class LiveExperienceContainer extends PureComponent {
         categoryName,
         countryName
       ),
-      description: getCountryFromUrl() === 'QA' ? __(
+      description: __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
-      twitter_title: __(
-        "%s %s Online shopping in %s | 6thStreet",
-        genderName,
-        categoryName,
-        countryName
       ),
-      twitter_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
-        genderName,
-        categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
-      og_title: __(
-        "%s %s Online shopping in %s | 6thStreet",
-        genderName,
-        categoryName,
-        countryName
-      ),
-      og_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
-        genderName,
-        categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
     });
   }
   containerProps = () => {
@@ -230,7 +181,7 @@ export class LiveExperienceContainer extends PureComponent {
       return (val.id.toString() !== broadcastId)
     })
     return {
-      broadcastId
+      broadcastId, live, updatedUpcoming, updatedArchived
     };
   };
 
