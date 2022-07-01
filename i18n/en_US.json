@@ -839,5 +839,13 @@
     "Select a Store*": null,
     "Proceed": null,
     "Select Pick Up Address": null,
-    "Next": null
+    "Next": null,
+    "AED 2700": null,
+    "SAR 2700": null,
+    "QAR 2700": null,
+    "KWD 250": null,
+    "OMR 250": null,
+    "BHD 250": null,
+    "Cash on Delivery is not available for the order above": null,
+    "please choose another payment option.": null
 }

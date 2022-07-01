@@ -44,6 +44,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
   requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
+  resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
   getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
@@ -98,6 +99,7 @@ export class PDPContainer extends PureComponent {
   static defaultProps = {
     // nbHits: 1,
     sku: "",
+    isLoading: true,
   };
 
   state = {
@@ -143,14 +145,14 @@ export class PDPContainer extends PureComponent {
     }
 
     // Request product, if URL rewrite has changed
-    if (id !== prevId) {
-      this.requestProduct();
-    }
-
+    // if (id !== prevId) {
+    //   this.requestProduct();
+    // }
     // Update loading from here, validate for last options recieved results from
-    if (isLoading !== currentIsLoading) {
-      setIsLoading(false);
-    }
+    // if (isLoading !== currentIsLoading) {
+    //   console.log("isLoading on update",isLoading)
+    //   setIsLoading(false);
+    // }
 
     if (menuCategories.length !== 0 && sku && productSku !== sku) {
       this.updateBreadcrumbs();
@@ -160,6 +162,10 @@ export class PDPContainer extends PureComponent {
     }
   }
 
+  // componentWillUnmount() {
+  //   const {resetProduct} =this.props;
+  //   resetProduct();
+  // }
   renderVueHits() {
     const {
       prevPath = null,
@@ -415,7 +421,6 @@ export class PDPContainer extends PureComponent {
       id,
       options: { id: requestedId },
     } = this.props;
-
     return id !== requestedId;
   }
 
@@ -446,12 +451,12 @@ export class PDPContainer extends PureComponent {
       clickAndCollectStores,
     } = this.props;
 
-    const { isLoading: isCategoryLoading } = this.state;
+    // const { isLoading: isCategoryLoading } = this.state;
 
     return {
       nbHits,
       isLoading,
-      isCategoryLoading,
+      // isCategoryLoading : isLoading,
       brandDescription,
       brandImg,
       brandName,

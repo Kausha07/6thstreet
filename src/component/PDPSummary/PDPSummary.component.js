@@ -20,6 +20,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
@@ -531,7 +532,7 @@ class PDPSummary extends PureComponent {
     if (isMobile && showCityDropdown) {
       return this.renderMobileSelectCity();
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
     let EddMessMargin = selectedAreaId ? true : false;
     return (
       <div block="EddParentWrapper">

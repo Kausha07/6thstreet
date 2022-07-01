@@ -104,29 +104,32 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-      return (
-        <div block="PDP" onClick={this.onPDPPageClicked}>
-          {this.renderMySignInPopup()}
-          {this.renderMainSection()}
-          {this.renderSeperator()}
-          {this.renderMixAndMatchSection()}
-          {this.renderDetailsSection()}
-          {this.renderDetail()}
-        </div>
-      );
+    return (
+      <div block="PDP" onClick={this.onPDPPageClicked}>
+        {this.renderMySignInPopup()}
+        {this.renderMainSection()}
+        {this.renderSeperator()}
+        {this.renderMixAndMatchSection()}
+        {this.renderDetailsSection()}
+        {this.renderDetail()}
+      </div>
+    );
   }
 
 
   render() {
-    const {isLoading, product, nbHits}= this.props;
-    if(isLoading) {
+    const { isLoading, product, nbHits } = this.props;
+    if (isLoading) {
       return <Loader isLoading={isLoading} />;
-    } else if(!isLoading && nbHits > 0 && product) {
+    } else if (!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
     }
+    else if ((!isLoading && (!nbHits || nbHits === 0) && (Object.keys(product)?.length === 0))) {
+      return <NoMatch />
+    }
     else {
-    return <NoMatch />
-    } 
+      return <div />
+    }
   }
 }
 
