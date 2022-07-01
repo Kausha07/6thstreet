@@ -32,7 +32,7 @@ export function createReducer(asyncReducers) {
 
 export const store = createStore(
     createReducer(),
-    (process.env.NODE_ENV === 'developmnt' && applyMiddleware(...middlewares))
+    (process.env.NODE_ENV === 'development' && applyMiddleware(...middlewares))
     // ( // enable Redux dev-tools only in development
     //     process.env.NODE_ENV === 'development'
     //     && window.__REDUX_DEVTOOLS_EXTENSION__
