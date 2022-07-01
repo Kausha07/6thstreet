@@ -191,12 +191,9 @@ export class PickUpAddress extends PureComponent {
     const isCountryNotAddressAvailable =
       !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
       !isMobile.any();
-    if (
-      !openFirstPopup &&
-      addresses &&
-      isSignedIn() &&
-      this.notSavedAddress()
-    ) {
+    const openFormState = !openFirstPopup && addresses && isSignedIn() && this.notSavedAddress()
+
+    if (openFormState) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
     }

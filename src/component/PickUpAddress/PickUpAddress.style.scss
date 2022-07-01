@@ -9,7 +9,9 @@
         top: -40px;
       }
       &_formContent{
-        top: 130px;
+        @include mobile{
+          top: 130px;
+        }
       }
 
       &_isSignedIn {
