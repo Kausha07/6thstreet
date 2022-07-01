@@ -159,7 +159,7 @@ class WelcomeHomePage extends PureComponent {
         setLanguage(language);
         setLanguageForWelcome(language);
 
-        let countryList = ['OM', 'BH', 'QA']; 
+        let countryList = ['BH']; 
         if(countryList.includes(country)){
             this.onGenderSelect(e, "all")
         }
@@ -190,7 +190,7 @@ class WelcomeHomePage extends PureComponent {
 
         BrowserDatabase.setItem(data, 'PREVIOUS_USER');
         this.setLocalAndGenderCookies(locale, val);
-        let url = `${URLS[locale]}/${val}.html`
+        let url = val === "all"? `${URLS[locale]}` : `${URLS[locale]}/${val}.html`
         window.location.href = url
     }
 
