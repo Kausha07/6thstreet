@@ -17,9 +17,16 @@ import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import Event, { EVENT_GTM_PRODUCT_DETAIL, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_PRODUCT_DETAIL,
+  VUE_PAGE_VIEW,
+  EVENT_MOE_PRODUCT_DETAIL,
+} from "Util/Event";
 import PDP from "./PDP.component";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import browserHistory from "Util/History";
+import { getCurrency } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -235,6 +242,8 @@ export class PDPContainer extends PureComponent {
         categories = {},
         name,
         sku,
+        image_url,
+        url,
         product_type_6s,
         price,
         highlighted_attributes = [],
@@ -247,7 +256,7 @@ export class PDPContainer extends PureComponent {
       nbHits,
       menuCategories,
     } = this.props;
-
+    console.log("product", product);
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
@@ -319,7 +328,7 @@ export class PDPContainer extends PureComponent {
         : checkCategoryLevel().includes("///") == 1
         ? checkCategoryLevel().split("///").pop()
         : "";
-        
+
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,
@@ -329,6 +338,25 @@ export class PDPContainer extends PureComponent {
         category: categoryLevel,
         varient: productKeys?.color || "",
       },
+    });
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      : "";
+    Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
+      country: currentAppState.country.toUpperCase() || "",
+      language: currentAppState.language.toUpperCase() || "",
+      category: currentAppState.gender.toUpperCase() || "",
+      subcategory: product_type_6s || categoryLevel,
+      color: productKeys?.color || "",
+      brand_name: productKeys?.brand_name || "",
+      full_price: originalPrice || "",
+      product_url: url,
+      currency: getCurrency() || "",
+      product_sku: sku || "",
+      discounted_price: specialPrice || "",
+      product_image_url: image_url || "",
+      product_name: name || "",
     });
   }
 

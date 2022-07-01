@@ -16,13 +16,14 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
-import { isArabic } from "Util/App";
+import { isArabic,getCurrency } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
+  EVENT_MOE_PRODUCT_CLICK
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -134,8 +135,10 @@ class ProductItem extends PureComponent {
         categories,
         price = {},
         product_Position,
+        thumbnail_url,
       },
     } = this.props;
+
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -180,17 +183,35 @@ class ProductItem extends PureComponent {
       price: itemPrice,
       brand: brand_name,
       category: product_type_6s || categoryLevel,
-      varient: color,
-      position: product_Position || "" ,
+      varient: color || "",
+      position: product_Position || "",
     });
-    // if (queryID) {
-    //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-    //     objectIDs: [product.objectID],
-    //     queryID,
-    //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-    //     position: [position],
-    //   });
-    // }
+    if (queryID) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [product.objectID],
+        queryID,
+        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        position: [position],
+      });
+    }
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      : "";
+    Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
+      country: currentAppState.country.toUpperCase() || "",
+      language: currentAppState.language.toUpperCase() || "",
+      category: currentAppState.gender.toUpperCase() || "",
+      subcategory: product_type_6s || categoryLevel,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: basePrice || "",
+      product_url: url,
+      currency: getCurrency() || "",
+      product_sku: sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name,
+    });
     // this.sendBannerClickImpression(product);
   }
 

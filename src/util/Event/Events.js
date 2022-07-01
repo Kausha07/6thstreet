@@ -65,3 +65,12 @@ export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
 export const EVENT_CLICK_RECOMMENDATION_CLICK = "recommendation_clicked";
 export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK = "search_product_suggestion_click";
 export const EVENT_PAGE_NOT_FOUND = "pageNotFound";
+
+
+//MOENGAGE EVENTS
+export const EVENT_MOE_PROMOTION_IMPRESSION = "view_promotion";
+export const EVENT_MOE_PROMOTION_CLICK = "select_promotion";
+export const EVENT_MOE_PRODUCT_CLICK = "select_item";
+export const EVENT_MOE_PRODUCT_DETAIL = "view_item";
+export const EVENT_MOE_ADD_TO_CART = "add_to_cart";
+export const EVENT_MOE_REMOVE_FROM_CART = "remove_from_cart";

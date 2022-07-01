@@ -2,7 +2,8 @@ import Event, {
   EVENT_PROMOTION_IMPRESSION,
   EVENT_CLICK_PROMOTION_IMPRESSION,
 } from "Util/Event";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BaseEvent from "./Base.event";
 
 /**
@@ -21,7 +22,7 @@ export const HOME_PAGE_BANNER_CLICK_IMPRESSIONS =
  */
 export const SPAM_PROTECTION_DELAY = 200;
 export const EVENT_HANDLE_DELAY = 700;
-
+export const URL_REWRITE = "url-rewrite";
 /**
  * GTM PWA Impression Event
  *
@@ -74,7 +75,6 @@ class BannerImpressionEvent extends BaseEvent {
         position: indexValue ? indexValue : index + 1,
       })
     );
-
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
@@ -84,6 +84,27 @@ class BannerImpressionEvent extends BaseEvent {
           promotions: formattedImpressions,
         },
       },
+    });
+    const MoeEventType =
+      EVENT_TYPE == "promotionImpression"
+        ? "view_promotion"
+        : EVENT_TYPE == "promotionClick"
+        ? "select_promotion"
+        : null;
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      : "";
+    const currentPageType = this.getPageType() || "";
+    formattedImpressions.forEach(function (item) {
+      Moengage.track_event(MoeEventType, {
+        country: currentAppState.country.toUpperCase() || "",
+        language: currentAppState.language.toUpperCase() || "",
+        promotion_id: item.id || "",
+        promotion_name: item.name || "",
+        category: currentAppState.gender.toUpperCase() || "",
+        screen: currentPageType ,
+        index: item.position,
+      });
     });
   }
 }
