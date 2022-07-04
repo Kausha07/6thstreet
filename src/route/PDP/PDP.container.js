@@ -23,8 +23,8 @@ import Event, {
   EVENT_MOE_PRODUCT_DETAIL,
 } from "Util/Event";
 import PDP from "./PDP.component";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import browserHistory from "Util/History";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 
@@ -244,6 +244,7 @@ export class PDPContainer extends PureComponent {
         sku,
         image_url,
         url,
+        thumbnail_url,
         product_type_6s,
         price,
         highlighted_attributes = [],
@@ -256,7 +257,6 @@ export class PDPContainer extends PureComponent {
       nbHits,
       menuCategories,
     } = this.props;
-    console.log("product", product);
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
@@ -355,7 +355,7 @@ export class PDPContainer extends PureComponent {
       currency: getCurrency() || "",
       product_sku: sku || "",
       discounted_price: specialPrice || "",
-      product_image_url: image_url || "",
+      product_image_url: thumbnail_url || "",
       product_name: name || "",
     });
   }
@@ -381,22 +381,22 @@ export class PDPContainer extends PureComponent {
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
 
-    const checkCategory = () => {
-      if (!categories) {
-        return "this category";
-      }
-      if (categories.level4 && categories.level4.length > 0) {
-        return categories.level4[0];
-      } else if (categories.level3 && categories.level3.length > 0) {
-        return categories.level3[0];
-      } else if (categories.level2 && categories.level2.length > 0) {
-        return categories.level2[0];
-      } else if (categories.level1 && categories.level1.length > 0) {
-        return categories.level1[0];
-      } else if (categories.level0 && categories.level0.length > 0) {
-        return categories.level0[0];
-      } else return "this category";
-    };
+      const checkCategory = () => {
+        if (!categories) {
+          return "this category";
+        }
+        if (categories.level4 && categories.level4.length > 0) {
+          return categories.level4[0];
+        } else if (categories.level3 && categories.level3.length > 0) {
+          return categories.level3[0];
+        } else if (categories.level2 && categories.level2.length > 0) {
+          return categories.level2[0];
+        } else if (categories.level1 && categories.level1.length > 0) {
+          return categories.level1[0];
+        } else if (categories.level0 && categories.level0.length > 0) {
+          return categories.level0[0];
+        } else return "this category";
+      };
     const categoryLevel = checkCategory().split("///").pop();
     const getTitle = () => {
       if (!color) {

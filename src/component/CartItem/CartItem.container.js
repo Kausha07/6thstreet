@@ -31,9 +31,13 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
   VUE_REMOVE_FROM_CART,
+  EVENT_MOE_ADD_TO_CART,
+  EVENT_MOE_REMOVE_FROM_CART,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getCurrency } from "Util/App";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -79,6 +83,8 @@ export const mapDispatchToProps = (dispatch) => ({
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
+
+export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -155,11 +161,11 @@ export class CartItemContainer extends PureComponent {
     thumbnail: this._getProductThumbnail(),
     minSaleQuantity: this.getMinQuantity(),
     maxSaleQuantity: this.getMaxQuantity(),
-    eddResponse:this.props.eddResponse,
-    edd_info:this.props.edd_info,
-    defaultEddResponse:this.props.defaultEddResponse,
+    eddResponse: this.props.eddResponse,
+    edd_info: this.props.edd_info,
+    defaultEddResponse: this.props.defaultEddResponse,
   });
-  
+
   /**
    * Handle item quantity change. Check that value is <1
    * @param {Number} quantity new quantity
@@ -183,7 +189,7 @@ export class CartItemContainer extends PureComponent {
         },
         showNotification,
       } = this.props;
-
+      
       updateProductInCart(
         item_id,
         quantity,
@@ -201,6 +207,11 @@ export class CartItemContainer extends PureComponent {
             showNotification("error", __(response));
           } else {
             showNotification("success", __("Quantity successfully updated"));
+            if (oldQuantity < quantity){
+              this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
+            }else{
+              this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+            }
           }
 
           this.setStateNotLoading();
@@ -266,12 +277,22 @@ export class CartItemContainer extends PureComponent {
           color,
           qty,
           product: { name } = {},
-          full_item_info: { config_sku, category, price,product_type_6s, original_price,size_option },
+          full_item_info: {
+            config_sku,
+            category,
+            price,
+            product_type_6s,
+            original_price,
+            size_option,
+          },
           full_item_info,
         },
-        prevPath= null,
+        prevPath = null,
       } = this.props;
-      removeProduct(item_id).then(() => this.setStateNotLoading());
+      removeProduct(item_id).then(() => {
+        this.setStateNotLoading();
+        this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+      });
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {
@@ -304,6 +325,59 @@ export class CartItemContainer extends PureComponent {
           userID: userID,
         },
       });
+    });
+  }
+  sendMoEImpressions(event) {
+    const {
+      item: {
+        full_item_info: {
+          basePrice,
+          brand_name,
+          color,
+          config_sku,
+          gender,
+          itemPrice,
+          item_id,
+          name,
+          original_price,
+          product_type_6s,
+          qty,
+          size_option,
+          size_value,
+          subcategory,
+          thumbnail_url,
+          price,
+          url
+        },
+      },
+    } = this.props;
+
+    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      : "";
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      : "";
+    Moengage.track_event(event, {
+      country: currentAppState.country.toUpperCase() || "",
+      language: currentAppState.language.toUpperCase() || "",
+      category: currentAppState.gender.toUpperCase() || "",
+      subcategory: product_type_6s || subcategory || "",
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: original_price || basePrice || "",
+      product_url: url || "",
+      currency: getCurrency() || "",
+      gender: currentAppState.gender.toUpperCase() || gender || "",
+      product_sku: config_sku || item_id || "",
+      discounted_price: itemPrice || price || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      size_id: size_option || "",
+      size: size_value || "",
+      quantity: qty || "",
+      cart_id: getCartID || "",
     });
   }
 

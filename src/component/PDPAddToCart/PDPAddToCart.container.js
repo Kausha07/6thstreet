@@ -21,6 +21,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART,
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -28,6 +29,8 @@ import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
 import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getCurrency } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -38,6 +41,8 @@ export const mapStateToProps = (state) => ({
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
   prevPath: state.PLP.prevPath,
 });
+
+export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
@@ -146,20 +151,19 @@ export class PDPAddToCartContainer extends PureComponent {
 
   updateDefaultSizeType() {
     const { product } = this.props;
-    if(product?.size_eu &&  product?.size_uk && product?.size_us) {
-      const sizeTypes = ['eu', 'uk', 'us'];
+    if (product?.size_eu && product?.size_uk && product?.size_us) {
+      const sizeTypes = ["eu", "uk", "us"];
       let index = 0;
-      while(product[`size_${sizeTypes[index]}`]?.length <= 0){
+      while (product[`size_${sizeTypes[index]}`]?.length <= 0) {
         index = index + 1;
       }
 
-      if(index >= sizeTypes.length) {
+      if (index >= sizeTypes.length) {
         index = 0;
       }
-      this.setState({selectedSizeType: sizeTypes[index]});
+      this.setState({ selectedSizeType: sizeTypes[index] });
     }
   }
-
 
   static getDerivedStateFromProps(props) {
     const { product } = props;
@@ -374,7 +378,8 @@ export class PDPAddToCartContainer extends PureComponent {
       openClickAndCollectPopup,
     } = this.state;
     const basePrice =
-      product?.price && product.price[0] &&
+      product?.price &&
+      product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
 
     return {
@@ -437,13 +442,14 @@ export class PDPAddToCartContainer extends PureComponent {
         sku: configSKU,
         objectID,
         product_type_6s,
+        categories = {},
       },
+      product,
       addProductToCart,
       showNotification,
       prevPath = null,
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
-
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
       return;
@@ -520,7 +526,7 @@ export class PDPAddToCartContainer extends PureComponent {
           quantity: 1,
         },
       });
-
+      
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
 
@@ -609,7 +615,11 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true", options) {
-    const { buttonRefreshTimeout, openClickAndCollectPopup, selectedClickAndCollectStore } = this.state;
+    const {
+      buttonRefreshTimeout,
+      openClickAndCollectPopup,
+      selectedClickAndCollectStore,
+    } = this.state;
 
     if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
@@ -619,7 +629,7 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState({ isLoading: false });
     // TODO props for addedToCart
     const timeout = 1250;
-
+    this.sendMoEImpressions();
     if (isAdded) {
       if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
@@ -640,7 +650,93 @@ export class PDPAddToCartContainer extends PureComponent {
       timeout
     );
   }
+  sendMoEImpressions() {
+    const {
+      product: {
+        categories = {},
+        brand_name,
+        color,
+        name,
+        price,
+        product_type_6s,
+        sku,
+        thumbnail_url,
+        url,
+        simple_products,
+        size_uk = [],
+        size_eu = [],
+        size_us = [],
+      },
+      product,
+    } = this.props;
+    const { selectedSizeType, selectedSizeCode } = this.state;
 
+    const productStock = simple_products;
+
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+
+    const checkproductSize =
+      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      selectedSizeCode !== "";
+
+    const { size } = checkproductSize ? productStock[selectedSizeCode] : "";
+    const optionId = checkproductSize
+      ? selectedSizeType.toLocaleUpperCase()
+      : "";
+    const optionValue = checkproductSize ? size[selectedSizeType] : "";
+
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///") == 1
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+
+    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      : "";
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+      : "";
+    Moengage.track_event(EVENT_MOE_ADD_TO_CART, {
+      country: currentAppState.country.toUpperCase() || "",
+      language: currentAppState.language.toUpperCase() || "",
+      category: currentAppState.gender.toUpperCase() || "",
+      subcategory: product_type_6s || categoryLevel,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: basePrice || "",
+      product_url: url || "",
+      currency: getCurrency() || "",
+      gender: currentAppState.gender.toUpperCase() || "",
+      product_sku: sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      size_id: optionId,
+      size: optionValue,
+      quantity: 1,
+      cart_id: getCartID || "",
+    });
+  }
   clearTimeAll() {
     this.setState({ hideCheckoutBlock: false });
 
@@ -666,7 +762,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   routeChangeToCart() {
-    history.push("/cart",{errorState: false});
+    history.push("/cart", { errorState: false });
   }
 
   showAlertNotification(message) {
@@ -723,7 +819,7 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState(
       {
         openClickAndCollectPopup: !openClickAndCollectPopup,
-      },
+      }
       // () => {
       //   this.toggleRootElementsOpacity();
       // }
