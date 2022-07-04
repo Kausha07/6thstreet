@@ -7,6 +7,7 @@ import cartIcon from './icons/cart-icon.png';
 import timerIcon from './icons/timer.png';
 import calenderIcon from './icons/calendar.svg'
 import playbtn from './icons/player.svg';
+import Refine from "../../component/Icons/Refine/icon.png";
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -263,8 +264,8 @@ export class LiveExperience extends PureComponent {
 
     return (
       <div block="refineButton-div" elem="Refine" mods={{ isArabic }}>
-        {(isRefineButtonClicked) ? <input type="text" block="influencerSearchInput" placeholder="Search for influencer" onChange = { this.handleSearchInfluencerText}/> : ""}
-        <button block= "refine-button" onClick = { this.handleRefineButtonClick }>{__("refine")}</button>
+        {(isRefineButtonClicked) ? <input type="text" block="influencerSearchInput" placeholder="Search for influencer" onChange = { this.handleSearchInfluencerText }/> : ""}
+        <button block= "refine-button" onClick = { this.handleRefineButtonClick }> <img src={Refine} /> {__("refine")}</button>
       </div>
     );
   }
@@ -307,7 +308,7 @@ export class LiveExperience extends PureComponent {
             <div block="archived-Grid">
               <div block="Recentlyplayed-heading-layout">
                 <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
-                <div>{this.renderRefine()}</div>
+                <div block="RecentlyPlayed-refine-button">{this.renderRefine()}</div>
               </div>
               <div id="archived"></div>
               <ul block="spckItems">
