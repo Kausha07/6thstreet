@@ -238,13 +238,24 @@ class MyAccountOrderView extends PureComponent {
                   {EXCHANGE_ITEM_LABEL}
                 </button>
               </div>
-            ) : (
-              <div block="MyAccountOrderView" elem="HeadingButton">
-                <button onClick={() => openOrderCancelation(buttonText)}>
-                  {buttonText}
-                </button>
-              </div>
-            )
+            ) :
+              is_cancelable && is_exchangeable ? (
+                <div block="MyAccountOrderView" elem="HeadingButtons">
+                  <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
+                    {EXCHANGE_ITEM_LABEL}
+                  </button>
+                  <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+                    {CANCEL_ITEM_LABEL}
+                  </button>
+                </div>
+              ) :
+                (
+                  <div block="MyAccountOrderView" elem="HeadingButton">
+                    <button onClick={() => openOrderCancelation(buttonText)}>
+                      {buttonText}
+                    </button>
+                  </div>
+                )
         ) : status === STATUS_COMPLETE && is_exchangeable ? (
           <div block="MyAccountOrderView" elem="HeadingButton">
             <button onClick={() => openOrderCancelation(buttonText)}>
