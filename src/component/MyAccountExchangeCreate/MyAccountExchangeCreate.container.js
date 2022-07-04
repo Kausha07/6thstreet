@@ -623,12 +623,13 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   
     this.setState({ isLoading: true });
     MagentoAPI.post("exchange/create-order", payload)
-      .then(({ order_id, rma_increment_id }) => {
+      .then((response) => {
+        const { order_id, rma_increment_id } = response
         if (order_id) {
           localStorage.setItem("RmaId", rma_increment_id);
           history.push(`/my-account/exchange-item/create/success/${order_id}`);
         } else {
-          showErrorMessage(__("Error appeared while requesting a exchange"));
+          showErrorMessage(response);
           this.setState({ isLoading: false });
         }
       })
