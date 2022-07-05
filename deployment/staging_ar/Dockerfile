@@ -14,7 +14,7 @@ RUN npm install --g lerna
 
 RUN npm i npm -g; \
     npm install; \
-    sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' /app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js; \
+    sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js; \
     npm install --g lerna; \
     lerna bootstrap; \
     npm rebuild node-sass; \
