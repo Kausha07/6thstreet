@@ -19,7 +19,11 @@ RUN npm i npm -g; \
     lerna bootstrap; \
     npm rebuild node-sass; \
     npm run build-ar; \
-    npm run image-opt
+    npm run image-opt; \
+    npm install -g @sentry/cli --unsafe-perm; \
+    sentry-cli login --auth-token 4881bcdf97b043e3bddf35fde23cfec8b958e9a09dfa46349dd1de3a3abc9345; \
+    sentry-cli releases new staging-map --org 6thstreet-eq; \
+    sentry-cli releases files staging-map upload-sourcemaps /app/build/static/js/*.map --org 6thstreet-eq --project pwa-dev
 
 EXPOSE 3000
 CMD ["node", "app.js"]
