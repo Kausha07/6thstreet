@@ -390,6 +390,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         currency_code === "QAR" && total > 2700
         ){
           setLimitEnabled();
+        }else{
+          setLimitDisabled();
         }
     }else{
       setLimitDisabled();
