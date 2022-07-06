@@ -10,6 +10,7 @@ import {
   STATUS_FAILED,
   STATUS_PAYMENT_ABORTED,
   STATUS_SUCCESS,
+  translateArabicStatus,
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getFinalPrice } from "Component/Price/Price.config";
@@ -167,6 +168,11 @@ class MyAccountOrderView extends PureComponent {
           ? EXCHANGE_ITEM_LABEL
           : RETURN_ITEM_LABEL
         : CANCEL_ITEM_LABEL;
+        const finalStatus = isArabic()
+        ? translateArabicStatus(status)
+        : status
+        ? status.split("_").join(" ")
+        : "";
     if (STATUS_FAILED.includes(status)) {
       const title =
         status === STATUS_PAYMENT_ABORTED
@@ -193,7 +199,7 @@ class MyAccountOrderView extends PureComponent {
             mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
           >
             {__("Status: ")}
-            <span>{`${status.split("_").join(" ")}`}</span>
+            <span>{`- ${finalStatus}`}</span>
           </p>
           <p block="MyAccountOrderView" elem="StatusDate">
             {__("Order placed: ")}

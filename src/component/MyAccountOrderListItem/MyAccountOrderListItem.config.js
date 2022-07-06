@@ -43,6 +43,18 @@ export const ARABIC_STATUS_TRANSLATE = {
   processing: "معالجة",
   payment_aborted: "تم إلغاء الدفع",
   payment_success: "تم الدفع بنجاح",
+  exchange_request_placed:"تم قبول طلب الإستبدال",
+  exchange_delivered:"تم توصيل المنتج المراد استبداله",
+  exchange_rejected:"صرف مرفوض",
+  exchange_shipped:"تم شحن المنتج المراد استبداله",
+  exchange_item_shipped:"تم شحن المنتج المراد استبداله",
+  exchange_request_placed:"تم قبول طلب الإستبدال",
+  exchange_pending:"عملية الإستبدال معلقة",
+  exchange_initiated:"بدأت عملية الإستبدال",
+  exchange_complete:"تمت عملية الإستبدال",
+  item_exchanged:"تم استبدال المنتج",
+  items_exchanged:"تم استبدال المنتجات",
+  exchange_in_transit:"المنتج المستبدل قيد الإنتقال"
 };
 
 export const translateArabicStatus = (status) => {
