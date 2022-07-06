@@ -358,8 +358,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       let filteredItems = [];
       groups.map((group) => {
         group.items.map((item) => {
-          const isItemExisting = filteredItems.find(({item_id})=>item_id === item.item_id )
-          if (item.is_exchangeable && !isItemExisting) {
+          if (item.is_exchangeable) {
             filteredItems.push(item);
           }
         });
