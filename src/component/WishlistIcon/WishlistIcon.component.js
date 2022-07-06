@@ -11,11 +11,14 @@ import Event, {
   VUE_ADD_TO_WISHLIST,
   VUE_REMOVE_TO_WISHLIST,
   EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
+  EVENT_MOE_ADD_TO_WISHLIST,
+  EVENT_MOE_REMOVE_FROM_WISHLIST,
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -54,15 +57,15 @@ class WishlistIcon extends PureComponent {
     const { skuFromProps } = this.state;
     const wishListItem = items.find(
       ({ product: { sku } }) => sku === skuFromProps
-    );    
+    );
     const locale = VueIntegrationQueries.getLocaleFromUrl();
-
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     if (wishListItem) {
       const { wishlist_item_id, product } = wishListItem;
-      //removeFromWishlist(wishlist_item_id);      
-      if(swipeWishlist){
+      //removeFromWishlist(wishlist_item_id);
+      if (swipeWishlist) {
         renderMySignInPopup();
-      }else{
+      } else {
         removeFromWishlist(wishlist_item_id);
       }
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
@@ -79,6 +82,37 @@ class WishlistIcon extends PureComponent {
       const prodPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_base_price"]
         : "";
+      const itemPrice = prodPriceObject
+        ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_special_price"]
+        : "";
+
+      Moengage.track_event(EVENT_MOE_REMOVE_FROM_WISHLIST, {
+        country: currentAppState.country
+          ? currentAppState.country.toUpperCase()
+          : "",
+        language: currentAppState.language
+          ? currentAppState.language.toUpperCase()
+          : "",
+        category: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        brand_name: wishListItem.product?.brand_name || "",
+        full_price: prodPrice || "",
+        product_url: wishListItem.product?.url || "",
+        currency: getCurrency() || "",
+        gender: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : gender
+          ? gender
+          : "",
+        product_sku: wishListItem.product?.sku || "",
+        discounted_price: itemPrice || "",
+        product_image_url: wishListItem.product?.thumbnail_url || "",
+        product_name: wishListItem.product?.name || "",
+        // subcategory: Yet to add,
+        // color: Yet to add,
+      });
+
       if (userID) {
         // to do add 6s_special_price when we get response from backend.
         VueIntegrationQueries.vueAnalayticsLogger({
@@ -100,10 +134,10 @@ class WishlistIcon extends PureComponent {
       }
       return;
     }
-    if (isSignedIn()) {      
-      if(swipeWishlist){
+    if (isSignedIn()) {
+      if (swipeWishlist) {
         renderMySignInPopup();
-      }     
+      }
       addToWishlist(skuFromProps);
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);
@@ -114,22 +148,50 @@ class WishlistIcon extends PureComponent {
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
       : "";
+    const basePrice = priceObject
+      ? priceObject[Object.keys(priceObject)[0]]["6s_base_price"]
+      : "";
     if (pageType == "search") {
       Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data.name);
-    }
-    else{
+    } else {
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
-      product: {
-        brand: data.brand_name,
-        category: gender,
-        id: skuFromProps,
-        name: data.name,
-        price: itemPrice,
-        variant: data.color,
-      },
-    });
+        product: {
+          brand: data.brand_name,
+          category: gender,
+          id: skuFromProps,
+          name: data.name,
+          price: itemPrice,
+          variant: data.color,
+        },
+      });
     }
-    
+
+    Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      subcategory: data.product_type_6s || "",
+      color: data.color || "",
+      brand_name: data.brand_name || "",
+      full_price: basePrice || "",
+      product_url: data?.url || "",
+      currency: getCurrency() || "",
+      gender: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : gender
+        ? gender
+        : "",
+      product_sku: data.config_sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: data?.thumbnail_url || "",
+      product_name: data?.name || "",
+    });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_WISHLIST,

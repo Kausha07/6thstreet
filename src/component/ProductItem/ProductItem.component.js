@@ -16,14 +16,14 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
-import { isArabic,getCurrency } from "Util/App";
+import { isArabic, getCurrency } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
-  EVENT_MOE_PRODUCT_CLICK
+  EVENT_MOE_PRODUCT_CLICK,
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -194,13 +194,17 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
-      country: currentAppState.country.toUpperCase() || "",
-      language: currentAppState.language.toUpperCase() || "",
-      category: currentAppState.gender.toUpperCase() || "",
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
       subcategory: product_type_6s || categoryLevel,
       color: color || "",
       brand_name: brand_name || "",

@@ -480,10 +480,7 @@ class PLPAddToCart extends PureComponent {
       },
       product,
     } = this.props;
-    const {
-      selectedSizeType,
-      selectedSizeCode,
-    } = this.state;
+    const { selectedSizeType, selectedSizeCode } = this.state;
 
     const productStock = simple_products;
 
@@ -527,20 +524,26 @@ class PLPAddToCart extends PureComponent {
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
 
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_ADD_TO_CART, {
-      country: currentAppState.country.toUpperCase() || "",
-      language: currentAppState.language.toUpperCase() || "",
-      category: currentAppState.gender.toUpperCase() || "",
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
       subcategory: product_type_6s || categoryLevel,
       color: color || "",
       brand_name: brand_name || "",
       full_price: basePrice || "",
       product_url: url || "",
       currency: getCurrency() || "",
-      gender: currentAppState.gender.toUpperCase() || "",
+      gender: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
       product_sku: sku || "",
       discounted_price: itemPrice || "",
       product_image_url: thumbnail_url || "",
@@ -549,7 +552,6 @@ class PLPAddToCart extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
-      
     });
   }
 

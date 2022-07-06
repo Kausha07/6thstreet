@@ -340,13 +340,17 @@ export class PDPContainer extends PureComponent {
       },
     });
 
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
-      country: currentAppState.country.toUpperCase() || "",
-      language: currentAppState.language.toUpperCase() || "",
-      category: currentAppState.gender.toUpperCase() || "",
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
       subcategory: product_type_6s || categoryLevel,
       color: productKeys?.color || "",
       brand_name: productKeys?.brand_name || "",
@@ -381,22 +385,22 @@ export class PDPContainer extends PureComponent {
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
 
-      const checkCategory = () => {
-        if (!categories) {
-          return "this category";
-        }
-        if (categories.level4 && categories.level4.length > 0) {
-          return categories.level4[0];
-        } else if (categories.level3 && categories.level3.length > 0) {
-          return categories.level3[0];
-        } else if (categories.level2 && categories.level2.length > 0) {
-          return categories.level2[0];
-        } else if (categories.level1 && categories.level1.length > 0) {
-          return categories.level1[0];
-        } else if (categories.level0 && categories.level0.length > 0) {
-          return categories.level0[0];
-        } else return "this category";
-      };
+    const checkCategory = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "this category";
+    };
     const categoryLevel = checkCategory().split("///").pop();
     const getTitle = () => {
       if (!color) {

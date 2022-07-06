@@ -200,9 +200,9 @@ export class CartItemContainer extends PureComponent {
             showNotification("error", __(response));
           } else {
             showNotification("success", __("Quantity successfully updated"));
-            if (oldQuantity < quantity){
+            if (oldQuantity < quantity) {
               this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
-            }else{
+            } else {
               this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
             }
           }
@@ -320,7 +320,7 @@ export class CartItemContainer extends PureComponent {
       });
     });
   }
-  sendMoEImpressions(event)  {
+  sendMoEImpressions(event) {
     const {
       item: {
         full_item_info: {
@@ -349,13 +349,17 @@ export class CartItemContainer extends PureComponent {
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
 
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(event, {
-      country: currentAppState.country.toUpperCase() || "",
-      language: currentAppState.language.toUpperCase() || "",
-      category: currentAppState.gender.toUpperCase() || "",
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
       subcategory: product_type_6s || subcategory || "",
       color: color || "",
       brand_name: brand_name || "",

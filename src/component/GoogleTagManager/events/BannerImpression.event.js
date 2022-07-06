@@ -91,18 +91,22 @@ class BannerImpressionEvent extends BaseEvent {
         : EVENT_TYPE == "promotionClick"
         ? "select_promotion"
         : null;
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
-      : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const currentPageType = this.getPageType() || "";
     formattedImpressions.forEach(function (item) {
       Moengage.track_event(MoeEventType, {
-        country: currentAppState.country.toUpperCase() || "",
-        language: currentAppState.language.toUpperCase() || "",
+        country: currentAppState.country
+          ? currentAppState.country.toUpperCase()
+          : "",
+        language: currentAppState.language
+          ? currentAppState.language.toUpperCase()
+          : "",
         promotion_id: item.id || "",
         promotion_name: item.name || "",
-        category: currentAppState.gender.toUpperCase() || "",
-        screen: currentPageType ,
+        category: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        screen: currentPageType,
         index: item.position,
       });
     });
