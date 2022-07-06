@@ -1066,5 +1066,6 @@
     "Exchange %s items": null,
     "Exchange %s item": null,
     "Select 1 or more items you wish to exchange.": null,
-    "Exchange is not possible at the time": null
+    "Exchange is not possible at the time": null,
+    "Exchange Store Credit": null
 }
