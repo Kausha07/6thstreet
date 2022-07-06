@@ -12,7 +12,7 @@ RUN npm i npm -g; \
     sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js; \
     cat node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js; \
     npm rebuild node-sass; \
-    npm run build; \
+    npm run build-ar; \
     npm run image-opt; \
         #npm install -g @sentry/cli --unsafe-perm; \
         #sentry-cli login --auth-token 4881bcdf97b043e3bddf35fde23cfec8b958e9a09dfa46349dd1de3a3abc9345; \
