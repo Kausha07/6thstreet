@@ -392,7 +392,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               : ""
           }
           id={sku}
-          onClick={(event) => onAvailableProductClick(event, item_id, sku)}
+          onClick={isNotAvailable ? ()=>{} :(event) => onAvailableProductClick(event, item_id, sku)}
         >
           <div
             block="PDPAlsoAvailableProduct-Link"
