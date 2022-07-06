@@ -379,12 +379,13 @@ export class MyAccountReturnCreateItem extends PureComponent {
       availableProducts,
     } = this.props;
     return availableProducts.map((product) => {
-      const { sku, thumbnail_url, color } = product;
-
+      const { sku, thumbnail_url, color, in_stock, stock_qty } = product;
+      const isNotAvailable = (in_stock === 0 || (in_stock === 1 && stock_qty === 0))
       return (
         <li
           block="PDPAlsoAvailableProduct"
           elem={
+            isNotAvailable ? "SizeOptionContainerOOS" :
             selectedAvailProduct[item_id] &&
               sku === selectedAvailProduct[item_id]["id"]
               ? "selectedProduct"
