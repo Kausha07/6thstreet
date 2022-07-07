@@ -537,11 +537,11 @@ class SearchSuggestion extends PureComponent {
 
   renderSuggestions() {
     const { products = [] } = this.props;
-    const { querySuggestions = [] } = this.props;
+    const { querySuggestions = [], suggestionEnabled } = this.props;
     let isRecommended = (products.length === 0) && (querySuggestions.length === 1)
     return (
       <>
-        {this.renderQuerySuggestions()}
+        {suggestionEnabled && this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
@@ -952,7 +952,6 @@ class SearchSuggestion extends PureComponent {
       isEmpty,
       inNothingFound,
       querySuggestions = [],
-      suggestionEnabled
     } = this.props;
 
     if (!isActive) {
@@ -970,11 +969,7 @@ class SearchSuggestion extends PureComponent {
       return this.renderNothingFound();
     }
 
-    if(suggestionEnabled){
-      return this.renderSuggestions();
-    }
-
-    return null;
+    return this.renderSuggestions();
   }
 
   renderCloseButton() {
