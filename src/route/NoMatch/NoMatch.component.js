@@ -65,6 +65,7 @@ export class NoMatch extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: location.pathname || "",
+      app6thstreet_platform: "Web",
     });
   }
 

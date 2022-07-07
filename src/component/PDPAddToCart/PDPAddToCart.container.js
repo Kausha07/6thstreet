@@ -741,6 +741,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
+      app6thstreet_platform: "Web",
     });
   }
   clearTimeAll() {

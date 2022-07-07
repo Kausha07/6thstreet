@@ -81,6 +81,7 @@ class HeaderSearch extends PureComponent {
         language: getLanguageFromUrl()
           ? getLanguageFromUrl().toUpperCase()
           : "",
+          app6thstreet_platform: "Web",
       });
     }
   }
@@ -139,6 +140,7 @@ class HeaderSearch extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: search || "",
+      app6thstreet_platform: "Web",
     });
   };
   closeSearch = () => {

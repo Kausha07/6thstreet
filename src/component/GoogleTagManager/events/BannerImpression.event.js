@@ -108,6 +108,7 @@ class BannerImpressionEvent extends BaseEvent {
           : "",
         screen: currentPageType,
         index: item.position,
+        app6thstreet_platform: "Web",
       });
     });
   }

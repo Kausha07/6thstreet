@@ -279,6 +279,7 @@ class SearchSuggestion extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: product?.name || "",
+      app6thstreet_platform: "Web",
     });
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     this.closeSearchPopup();
@@ -291,6 +292,7 @@ class SearchSuggestion extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: brandItem || "",
+      app6thstreet_platform: "Web",
     });
     setPrevPath(window.location.href);
     closeSearch();
@@ -303,6 +305,7 @@ class SearchSuggestion extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: brandName || "",
+      app6thstreet_platform: "Web",
     });
     setPrevPath(window.location.href);
     closeSearch();
@@ -315,6 +318,7 @@ class SearchSuggestion extends PureComponent {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
       search_term: label || "",
+      app6thstreet_platform: "Web",
     });
     setPrevPath(window.location.href);
     closeSearch();
@@ -389,6 +393,7 @@ class SearchSuggestion extends PureComponent {
             ? getLanguageFromUrl().toUpperCase()
             : "",
           search_term: formatQuerySuggestions(query) || "",
+          app6thstreet_platform: "Web",
         });
       } else {
         Event.dispatch(
@@ -401,6 +406,7 @@ class SearchSuggestion extends PureComponent {
             ? getLanguageFromUrl().toUpperCase()
             : "",
           search_term: formatQuerySuggestions(query) || "",
+          app6thstreet_platform: "Web",
         });
       }
     };
@@ -867,6 +873,7 @@ class SearchSuggestion extends PureComponent {
                 ? getLanguageFromUrl().toUpperCase()
                 : "",
               search_term: search || "",
+              app6thstreet_platform: "Web",
             });
           }}
         >
@@ -957,6 +964,7 @@ class SearchSuggestion extends PureComponent {
                 ? getLanguageFromUrl().toUpperCase()
                 : "",
               search_term: name || "",
+              app6thstreet_platform: "Web",
             });
           }}
         >

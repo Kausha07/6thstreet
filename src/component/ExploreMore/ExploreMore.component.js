@@ -48,6 +48,7 @@ class ExploreMore extends PureComponent {
             country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
             language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
             search_term: item?.tag ? item?.tag : item || "",
+            app6thstreet_platform: "Web",
           });
 
     };

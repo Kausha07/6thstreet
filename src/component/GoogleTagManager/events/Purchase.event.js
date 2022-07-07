@@ -106,6 +106,7 @@ class PurchaseEvent extends BaseEvent {
       total_amount: totals?.total || "",
       transaction_id: totals?.id || "",
       product: formattedDetetails,
+      app6thstreet_platform: "Web",
       //shipping: "",
       //value: "",
     });

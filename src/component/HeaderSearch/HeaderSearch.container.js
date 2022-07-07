@@ -12,6 +12,7 @@ import Event, {
   EVENT_GTM_CLEAR_SEARCH,
   EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_GTM_SEARCH,
+  EVENT_GTM_VIEW_SEARCH_RESULTS
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 export const mapStateToProps = (_state) => ({
@@ -99,12 +100,13 @@ export class HeaderSearchContainer extends PureComponent {
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
         Event.dispatch(EVENT_GTM_SEARCH, search);
-        Moengage.track_event(EVENT_GTM_SEARCH, {
+        Moengage.track_event(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
           language: getLanguageFromUrl()
             ? getLanguageFromUrl().toUpperCase()
             : "",
           search_term: search || "",
+          app6thstreet_platform: "Web",
         });
       }
 
@@ -241,6 +243,7 @@ export class HeaderSearchContainer extends PureComponent {
           ? getLanguageFromUrl().toUpperCase()
           : "",
         search_term: SearchValue || "",
+        app6thstreet_platform: "Web",
       });
       if (sessionStorage.hasOwnProperty("Searched_value")) {
         sessionStorage.removeItem("Searched_value");

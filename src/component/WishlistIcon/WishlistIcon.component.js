@@ -109,6 +109,7 @@ class WishlistIcon extends PureComponent {
         discounted_price: itemPrice || "",
         product_image_url: wishListItem.product?.thumbnail_url || "",
         product_name: wishListItem.product?.name || "",
+        app6thstreet_platform: "Web",
         // subcategory: Yet to add,
         // color: Yet to add,
       });
@@ -164,6 +165,7 @@ class WishlistIcon extends PureComponent {
           ? currentAppState.gender.toUpperCase()
           : "",
         search_term: data?.name || "",
+        app6thstreet_platform: "Web",
       });
     } else {
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
@@ -203,6 +205,7 @@ class WishlistIcon extends PureComponent {
       discounted_price: itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",
+      app6thstreet_platform: "Web",
     });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
