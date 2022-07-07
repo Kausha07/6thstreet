@@ -9,6 +9,7 @@ import {
   STATUS_COMPLETE,
   STATUS_FAILED,
   STATUS_PAYMENT_ABORTED,
+  STATUS_EXCHANGE_REJECTED,
   STATUS_SUCCESS,
   translateArabicStatus,
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
@@ -177,6 +178,7 @@ class MyAccountOrderView extends PureComponent {
       const title =
         status === STATUS_PAYMENT_ABORTED
           ? __("Payment Failed")
+          : status === STATUS_EXCHANGE_REJECTED ? __("Exchange Rejected")
           : __("Order Cancelled");
       const StatusImage =
         status === STATUS_PAYMENT_ABORTED ? WarningImage : CloseImage;

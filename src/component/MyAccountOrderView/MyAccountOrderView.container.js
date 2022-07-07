@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import {
   STATUS_BEING_PROCESSED,
   STATUS_COMPLETE,
-  STATUS_SUCCESS
+  STATUS_ABLE_TO_EXCHANGE
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
@@ -104,7 +104,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       }
 
       const url =
-        (status === STATUS_COMPLETE ||  STATUS_SUCCESS.includes(status)) && itemStatus === EXCHANGE_ITEM_LABEL
+        (STATUS_ABLE_TO_EXCHANGE.includes(status)) && itemStatus === EXCHANGE_ITEM_LABEL
           ? `/my-account/exchange-item/create/${entity_id}`
           : status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
             ? `/my-account/return-item/create/${entity_id}`
