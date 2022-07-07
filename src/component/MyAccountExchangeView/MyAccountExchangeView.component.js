@@ -72,7 +72,7 @@ export class MyAccountExchangeView extends SourceComponent {
             </p>
             <p>
                 { __('Date requested ') }
-                <span>{ dateString }</span>
+                <span>{dateString.split('at').join(__('at'))}</span>
             </p>
         </div>
     );
@@ -93,7 +93,7 @@ export class MyAccountExchangeView extends SourceComponent {
       <div block="MyAccountExchangeView" elem="Details">
         <p block="MyAccountExchangeView" elem="DetailsDate">
           {__("Date Requested: ")}
-          <span>{dateString}</span>
+          <span>{dateString.split('at').join(__('at'))}</span>
         </p>
         <div block="MyAccountExchangeView" elem="SubDetails">
           <p
@@ -102,7 +102,7 @@ export class MyAccountExchangeView extends SourceComponent {
             mods={{ isDenied: status === STATUS_DENIED }}
           >
             {__("Status: ")}
-            <span>{`${title || status.split("_").join(" ")}`}</span>
+            <span>{__(`${title || status.split("_").join(" ")}`)}</span>
           </p>
           {exchangeSuccess && (
             <p block="MyAccountExchangeView" elem="Order">

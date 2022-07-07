@@ -29,7 +29,7 @@ export class MyAccountReturnView extends SourceComponent {
             <div block="MyAccountReturnView" elem="Details">
                 <p block="MyAccountReturnView" elem="DetailsDate">
                     { __('Date Requested: ') }
-                    <span>{ dateString }</span>
+                    <span>{dateString.split('at').join(__('at'))}</span>
                 </p>
                 <div block="MyAccountReturnView" elem="SubDetails">
                     <p block="MyAccountReturnView" elem="Status" mods={ { isDenied: status === STATUS_DENIED } }>
