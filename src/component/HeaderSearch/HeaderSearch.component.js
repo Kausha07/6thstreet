@@ -14,6 +14,7 @@ import Event, {
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_GO_TO_SEARCH,
 } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -75,6 +76,12 @@ class HeaderSearch extends PureComponent {
 
     if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+      Moengage.track_event(EVENT_GTM_GO_TO_SEARCH, {
+        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+        language: getLanguageFromUrl()
+          ? getLanguageFromUrl().toUpperCase()
+          : "",
+      });
     }
   }
   searchRef = createRef();
@@ -99,7 +106,7 @@ class HeaderSearch extends PureComponent {
         form: { children },
       },
     } = this.searchRef;
-    
+
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
     submitBtn.blur();
@@ -122,12 +129,17 @@ class HeaderSearch extends PureComponent {
     };
   };
   cancelSearch = () => {
-    const {search} = this.props;
+    const { search } = this.props;
     this.closeSearch();
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
     Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    Moengage.track_event(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      search_term: search || "",
+    });
   };
   closeSearch = () => {
     const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;

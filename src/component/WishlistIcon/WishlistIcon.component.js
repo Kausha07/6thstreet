@@ -152,7 +152,19 @@ class WishlistIcon extends PureComponent {
       ? priceObject[Object.keys(priceObject)[0]]["6s_base_price"]
       : "";
     if (pageType == "search") {
-      Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data.name);
+      Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data?.name);
+      Moengage.track_event(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
+        country: currentAppState.country
+          ? currentAppState.country.toUpperCase()
+          : "",
+        language: currentAppState.language
+          ? currentAppState.language.toUpperCase()
+          : "",
+        category: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        search_term: data?.name || "",
+      });
     } else {
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
         product: {

@@ -77,3 +77,6 @@ export const EVENT_MOE_REMOVE_FROM_CART = "remove_from_cart";
 export const EVENT_MOE_PURCHASE_SUCCESS = "ecommerce_purchase_success";
 export const EVENT_MOE_ADD_TO_WISHLIST = "add_to_wishlist";
 export const EVENT_MOE_REMOVE_FROM_WISHLIST = "remove_from_wishlist";
+export const EVENT_MOE_TRENDING_BRANDS_CLICK = "trending_brands_click";
+export const EVENT_MOE_TRENDING_TAGS_CLICK = "trending_tags_click";
+export const EVENT_MOE_BRANDS_CLICK = "brands_click";

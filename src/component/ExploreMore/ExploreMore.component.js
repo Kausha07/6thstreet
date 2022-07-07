@@ -14,6 +14,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./ExploreMore.style";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class ExploreMore extends PureComponent {
     static propTypes = {
@@ -43,6 +44,11 @@ class ExploreMore extends PureComponent {
 
     onclick = (item) => {
         Event.dispatch(EVENT_EXPLORE_MORE_SEARCH_CLICK, item?.tag ? item?.tag : item);
+        Moengage.track_event(EVENT_EXPLORE_MORE_SEARCH_CLICK, {
+            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+            language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+            search_term: item?.tag ? item?.tag : item || "",
+          });
 
     };
 

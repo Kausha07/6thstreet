@@ -29,6 +29,7 @@ import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoin
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import DynamicContent from "Component/DynamicContent";
 import Event, { EVENT_PAGE_NOT_FOUND } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = () => ({});
 export const mapDispatchToProps = (dispatch) => ({
@@ -60,6 +61,11 @@ export class NoMatch extends PureComponent {
     window.pageType = TYPE_NOTFOUND;
     this.requestNoMatchWidgetData();
     Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
+    Moengage.track_event(EVENT_PAGE_NOT_FOUND, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      search_term: location.pathname || "",
+    });
   }
 
   addTag() {
