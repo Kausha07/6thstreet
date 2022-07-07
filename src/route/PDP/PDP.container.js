@@ -118,6 +118,7 @@ export class PDPContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.requestProduct();
+    this.renderVueHits();
   }
 
   componentDidMount() {
@@ -147,9 +148,9 @@ export class PDPContainer extends PureComponent {
     const { productSku, currentLocation } = this.state;
 
     // if (sku != undefined)
-    if (productSku != sku && currentLocation === this.props.location.pathname) {
-      this.renderVueHits();
-    }
+    // if (productSku != sku && currentLocation === this.props.location.pathname) {
+    //   this.renderVueHits();
+    // }
 
     // Request product, if URL rewrite has changed
     // if (id !== prevId) {
@@ -460,7 +461,6 @@ export class PDPContainer extends PureComponent {
   requestProduct() {
     const { requestProduct, requestProductBySku, id, setIsLoading, sku } =
       this.props;
-
     // ignore product request if there is no ID passed
     if (!id) {
       if (sku) {
