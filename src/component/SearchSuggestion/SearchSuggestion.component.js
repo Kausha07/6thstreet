@@ -952,6 +952,7 @@ class SearchSuggestion extends PureComponent {
       isEmpty,
       inNothingFound,
       querySuggestions = [],
+      suggestionEnabled
     } = this.props;
 
     if (!isActive) {
@@ -969,7 +970,11 @@ class SearchSuggestion extends PureComponent {
       return this.renderNothingFound();
     }
 
-    return this.renderSuggestions();
+    if(suggestionEnabled){
+      return this.renderSuggestions();
+    }
+
+    return null;
   }
 
   renderCloseButton() {
