@@ -40,46 +40,83 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     insertedSizeStatus: false,
   };
 
-  getAvailableProducts(product, isSelected) {
+  getAvailableProducts(product, productList = [], isSelected) {
     const {
       setAvailableProduct,
       item: { item_id },
     } = this.props;
     let { availableProducts = [] } = this.state;
+    console.log("muskan products", product, productList);
     const alsoAvailable = product["6s_also_available"];
-    alsoAvailable.map((productID) =>
-      this.getAvailableProduct(productID).then((productData) => {
-        if (productData.nbHits === 1) {
-          if (!isSelected) {
-            let removedItem = availableProducts;
+    productList.map((entry) => {
+      if(entry && entry['sku'] !== product['sku']){
+      if (entry) {
+        if (!isSelected) {
+          let removedItem = availableProducts;
 
-            availableProducts.map((item, index) => {
-              if (item["6s_also_available"].includes(product.sku)) {
-                removedItem.splice(index, 1);
-                this.setState({
-                  availableProducts: removedItem,
-                });
-              }
-            });
-          } else {
-            this.setState({
-              availableProducts: [...availableProducts, productData.data],
-            });
-          }
-
-          availableProducts = this.state?.availableProducts || [];
+          availableProducts.map((item, index) => {
+            if (item["6s_also_available"].includes(product.sku)) {
+              removedItem.splice(index, 1);
+              this.setState({
+                availableProducts: removedItem,
+              });
+            }
+          });
+        } else {
+          this.setState({
+            availableProducts: [...availableProducts, entry],
+          });
         }
 
-        this.setState({
-          isAlsoAvailable: availableProducts.length === 0,
-          alsoAvailable,
-        });
-        setAvailableProduct(availableProducts, item_id);
-      })
-    );
+        availableProducts = this.state?.availableProducts || [];
+      }
+
+      this.setState({
+        isAlsoAvailable: availableProducts.length === 0,
+        alsoAvailable,
+      });
+      setAvailableProduct(availableProducts, item_id);
+    }
+    })
+    // alsoAvailable.map((productID) =>
+    //   this.getAvailableProduct(productID).then((productData) => {
+    //     if (productData.nbHits === 1) {
+    //       if (!isSelected) {
+    //         let removedItem = availableProducts;
+
+    //         availableProducts.map((item, index) => {
+    //           if (item["6s_also_available"].includes(product.sku)) {
+    //             removedItem.splice(index, 1);
+    //             this.setState({
+    //               availableProducts: removedItem,
+    //             });
+    //           }
+    //         });
+    //       } else {
+    //         this.setState({
+    //           availableProducts: [...availableProducts, productData.data],
+    //         });
+    //       }
+
+    //       availableProducts = this.state?.availableProducts || [];
+    //     }
+
+    //     this.setState({
+    //       isAlsoAvailable: availableProducts.length === 0,
+    //       alsoAvailable,
+    //     });
+    //     setAvailableProduct(availableProducts, item_id);
+    //   })
+    // );
   }
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
+    return product;
+  }
+
+  async getAvailableProductByIds(alsoAvailableArr) {
+    const product = await new Algolia().getMultiProducts({ objectIDs: alsoAvailableArr });
+    console.log("muskan rets",product);
     return product;
   }
 
@@ -215,7 +252,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onReasonChange: this.onReasonChange.bind(this),
     onAvailSizeSelect: this.onAvailSizeSelect.bind(this),
     onAvailableProductClick: this.onAvailableProductClick.bind(this),
-    onQuantitySelection:this.onQuantitySelection.bind(this)
+    onQuantitySelection: this.onQuantitySelection.bind(this)
   };
 
   onReasonChange(value) {
@@ -227,37 +264,54 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onReasonChange(item_id, value);
   }
 
-  onQuantitySelection(quantity,itemId){
-    const {handleChangeQuantity} = this.props
-    handleChangeQuantity(quantity,itemId)
+  onQuantitySelection(quantity, itemId) {
+    const { handleChangeQuantity } = this.props
+    handleChangeQuantity(quantity, itemId)
   }
 
   onClick() {
     const {
       onClick,
-      item: { item_id, config_sku },
+      item: { item_id, config_product_id, also_available },
     } = this.props;
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
-      this.getAvailableProduct(config_sku).then((currentProduct) => {
-        if (currentProduct) {
+      let finalIdsArray = also_available ? also_available : []
+      finalIdsArray.push(config_product_id)
+      console.log("muskan daat1",finalIdsArray);
+      this.getAvailableProductByIds(finalIdsArray).then((results) => {
+      console.log("muskan daat909090",results);
+
+        if (results.length > 0) {
           if (isSelected) {
-            this.getAvailableProducts(currentProduct.data, isSelected);
-            onClick(item_id, isSelected, currentProduct.data);
+            this.getAvailableProducts(results[0], results, isSelected);
+            onClick(item_id, isSelected, results[0]);
           } else {
-            this.getAvailableProducts(currentProduct.data, isSelected);
+            this.getAvailableProducts(results[0], results, isSelected);
             onClick(item_id, isSelected, null);
           }
-          this.setSizeData(currentProduct.data);
+          this.setSizeData(results[0]);
         }
-      });
+      })
+      // this.getAvailableProduct(config_sku).then((currentProduct) => {
+      //   if (currentProduct) {
+      //     if (isSelected) {
+      //       this.getAvailableProducts(currentProduct.data, isSelected);
+      //       onClick(item_id, isSelected, currentProduct.data);
+      //     } else {
+      //       this.getAvailableProducts(currentProduct.data, isSelected);
+      //       onClick(item_id, isSelected, null);
+      //     }
+      //     this.setSizeData(currentProduct.data);
+      //   }
+      // });
 
       return { isSelected };
     });
   }
 
   containerProps = () => {
-    const { item, reasonId,exchangableQuantity } = this.props;
+    const { item, reasonId, exchangableQuantity } = this.props;
     const {
       isSelected,
       isAlsoAvailable,
