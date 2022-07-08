@@ -266,7 +266,6 @@
     "Total: %s": "المبلغ الإجمالي: %s",
     "Item": "منتج",
     "Items": "منتجات",
-    "Order placed: ": null,
     "Shop By Brands": "تسوق حسب الماركة",
     "Load previous": null,
     "We are sorry!": null,
@@ -378,7 +377,6 @@
     "Earn & Burn": null,
     "Sign In": null,
     "You can create an account after checkout.": "يمكنك إنشاء حساب بعد إنهاء طلبك.",
-    "Order Placed": null,
     "Coupon Code": null,
     "Apply Coupon": null,
     "Deliver to this address": null,
@@ -1079,5 +1077,7 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "Order Placed": "تم الطلب",
+    "Order placed: ": "تم الطلب :"
 }
