@@ -635,6 +635,11 @@
     }
 }
 
+.refineImage {
+    &_isArabic {
+        margin-right : -4px !important;
+    }
+}
 .influencerSearchInput {
     height: 36px !important;
     width : 200px;
@@ -644,9 +649,15 @@
     border : none !important;
     outline: none !important;
     font-size: 14px;
+    &_isArabic{
+        margin-left : 5px;
+    }
     @include mobile{
         height: 40px;
         width : 70%;
+        &_isArabic{
+            margin-left : 2px;
+        }
     }
 }
 
@@ -655,4 +666,83 @@
     @include mobile {
         top : 0px !important;
     }
+}
+
+.catergoryBlockLayout {
+    display : inline-flex;
+    justify-content: center;
+    margin-left : 40%;
+    &_isArabic {
+        margin-right: 33%;
+        //margin-left: 56px !important;
+    }
+    @include mobile {
+        margin-left : 25% !important;
+        &_isMobile {
+          display: flex;
+          flex-direction: row;
+          background: $white;
+          width: 100%;
+          padding-top: 10px;
+          padding-bottom: 18px;
+          align-items: center;
+          margin-top: 0px;
+          top: 100px;
+          position: fixed;
+          justify-content: center;
+          padding-left: 17.5%;
+          padding-right: 17.5%;
+        }
+        &_isArabic {
+            margin-right: 26%;
+        }
+  
+        .GenderButton-Container {
+          display: flex;
+          justify-content: center;
+          //width: 33.33%;
+  
+          .GenderButton-Button {
+            padding: 0 0px;
+          }
+          .GenderButton-Button::before {
+            display: block;
+            content: attr(name);
+            font-weight: bold;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            width: 60px;
+          }
+        }
+      }
+      @include tablet {
+        margin-left : 35%;
+        &_isMobile {
+          display: flex;
+          background: $white;
+          width: 100%;
+          padding-top: 10px;
+          padding-bottom: 18px;
+          align-items: center;
+          margin-top: 0px;
+          top: 100px !important;
+          position: fixed;
+          justify-content: center;
+        }
+        &_isArabic {
+            margin-right: 35%;
+        }
+  
+        .GenderButton-Container {
+          display: flex;
+          justify-content: center !important;
+          // width: 33.33%;
+  
+          .GenderButton-Button {
+            padding: 0;
+            height: 20px;
+          }
+        }
+      }
 }

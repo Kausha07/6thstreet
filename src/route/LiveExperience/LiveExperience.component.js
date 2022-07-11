@@ -8,6 +8,7 @@ import timerIcon from './icons/timer.png';
 import calenderIcon from './icons/calendar.svg'
 import playbtn from './icons/player.svg';
 import Refine from "../../component/Icons/Refine/icon.png";
+import { isArabic } from 'Util/App';
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -18,7 +19,8 @@ export class LiveExperience extends PureComponent {
       isLive: false,
       archivedItemToShow: 9,
       isRefineButtonClicked : false,
-      influencerSearchText : ""
+      influencerSearchText : "",
+      isArabic: isArabic()
     };
   }
 
@@ -264,8 +266,8 @@ export class LiveExperience extends PureComponent {
 
     return (
       <div block="refineButton-div" elem="Refine" mods={{ isArabic }}>
-        {(isRefineButtonClicked) ? <input type="text" block="influencerSearchInput" placeholder="Search for influencer" onChange = { this.handleSearchInfluencerText }/> : ""}
-        <button block= "refine-button" onClick = { this.handleRefineButtonClick }> <img src={Refine} /> {__("refine")}</button>
+        {(isRefineButtonClicked) ? <input type="text" block="influencerSearchInput" mods={{isArabic}} placeholder="Search for influencer" onChange = { this.handleSearchInfluencerText }/> : ""}
+        <button block= "refine-button" onClick = { this.handleRefineButtonClick }> <img block="refineImage" mods={{isArabic}}src={Refine} /> {__("refine")}</button>
       </div>
     );
   }
@@ -275,10 +277,27 @@ export class LiveExperience extends PureComponent {
     let archProducts = this.state.archivedItemToShow
     let totalProducts = this.props.updatedArchived.length
     let progressWidth = (archProducts * 100) / totalProducts;
+    const { isArabic } = this.state;
 
     return (
       <main block="LiveShopping">
-
+        <div block="catergoryBlockLayout" mods={{ isArabic }}>
+          <div block="GenderButton-Container">
+            <a href="/all.html">
+              <button  block="GenderButton-Button" >{__('All')}</button>
+            </a>
+          </div>
+          <div block="GenderButton-Container">
+            <a href="/women.html">
+              <button  block="GenderButton-Button" >{__('Women')}</button>
+            </a>
+          </div>
+          <div block="GenderButton-Container">
+            <a href="/men.html">
+              <button block="GenderButton-Button">{__('Men')}</button>
+            </a>
+          </div>
+        </div>
         <ContentWrapper
           mix={{ block: 'LiveShopping' }}
           wrapperMix={{
