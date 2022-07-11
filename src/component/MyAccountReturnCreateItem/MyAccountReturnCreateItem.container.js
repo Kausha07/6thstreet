@@ -40,46 +40,53 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     insertedSizeStatus: false,
   };
 
-  getAvailableProducts(product, isSelected) {
+  getAvailableProducts(product, productList = [], isSelected) {
     const {
       setAvailableProduct,
       item: { item_id },
     } = this.props;
     let { availableProducts = [] } = this.state;
     const alsoAvailable = product["6s_also_available"];
-    alsoAvailable.map((productID) =>
-      this.getAvailableProduct(productID).then((productData) => {
-        if (productData.nbHits === 1) {
-          if (!isSelected) {
-            let removedItem = availableProducts;
+    productList.map((entry) => {
+      if(entry && entry['objectID'] !== product['objectID']){
 
-            availableProducts.map((item, index) => {
-              if (item["6s_also_available"].includes(product.sku)) {
-                removedItem.splice(index, 1);
-                this.setState({
-                  availableProducts: removedItem,
-                });
-              }
-            });
-          } else {
-            this.setState({
-              availableProducts: [...availableProducts, productData.data],
-            });
-          }
+      if (entry) {
+        if (!isSelected) {
+          let removedItem = availableProducts;
 
-          availableProducts = this.state?.availableProducts || [];
+          availableProducts.map((item, index) => {
+            if (item["6s_also_available"].includes(product.sku)) {
+              removedItem.splice(index, 1);
+              this.setState({
+                availableProducts: removedItem,
+              });
+            }
+          });
+        } else {
+          this.setState({
+            availableProducts: [...availableProducts, entry],
+          });
         }
 
-        this.setState({
-          isAlsoAvailable: availableProducts.length === 0,
-          alsoAvailable,
-        });
-        setAvailableProduct(availableProducts, item_id);
-      })
-    );
+        availableProducts = this.state?.availableProducts || [];
+      }
+
+      this.setState({
+        isAlsoAvailable: availableProducts.length === 0,
+        alsoAvailable,
+      });
+      setAvailableProduct(availableProducts, item_id);
+    }
+    })
   }
+  
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
+    return product;
+  }
+
+  async getAvailableProductByIds(alsoAvailableArr) {
+    const product = await new Algolia().getMultiProducts({ objectIDs: alsoAvailableArr });
     return product;
   }
 
@@ -215,7 +222,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onReasonChange: this.onReasonChange.bind(this),
     onAvailSizeSelect: this.onAvailSizeSelect.bind(this),
     onAvailableProductClick: this.onAvailableProductClick.bind(this),
-    onQuantitySelection:this.onQuantitySelection.bind(this)
+    onQuantitySelection: this.onQuantitySelection.bind(this)
   };
 
   onReasonChange(value) {
@@ -227,37 +234,40 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     onReasonChange(item_id, value);
   }
 
-  onQuantitySelection(quantity,itemId){
-    const {handleChangeQuantity} = this.props
-    handleChangeQuantity(quantity,itemId)
+  onQuantitySelection(quantity, itemId) {
+    const { handleChangeQuantity } = this.props
+    handleChangeQuantity(quantity, itemId)
   }
 
   onClick() {
     const {
       onClick,
-      item: { item_id, config_sku },
+      item: { item_id, config_product_id, also_available },
     } = this.props;
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
-      this.getAvailableProduct(config_sku).then((currentProduct) => {
-        if (currentProduct) {
+      let finalIdsArray = also_available ? also_available : []
+      finalIdsArray.unshift(config_product_id)
+      this.getAvailableProductByIds(finalIdsArray).then((results) => {
+
+        if (results.length > 0) {
           if (isSelected) {
-            this.getAvailableProducts(currentProduct.data, isSelected);
-            onClick(item_id, isSelected, currentProduct.data);
+            this.getAvailableProducts(results[0], results, isSelected);
+            onClick(item_id, isSelected, results[0]);
           } else {
-            this.getAvailableProducts(currentProduct.data, isSelected);
+            this.getAvailableProducts(results[0], results, isSelected);
             onClick(item_id, isSelected, null);
           }
-          this.setSizeData(currentProduct.data);
+          this.setSizeData(results[0]);
         }
-      });
+      })
 
       return { isSelected };
     });
   }
 
   containerProps = () => {
-    const { item, reasonId,exchangableQuantity } = this.props;
+    const { item, reasonId, exchangableQuantity } = this.props;
     const {
       isSelected,
       isAlsoAvailable,
