@@ -7,6 +7,7 @@ export const CUSTOMER_ACCOUNT_PAGE = "customer_account_page";
 export const HOME_PAGE = "homepage";
 export const SEARCH = "search";
 export const CART = "cart";
+export const PICK_UP_ADDRESS = "pick-up-address";
 export const CART_OVERLAY = "cart_overlay";
 export const CART_EDITING = "cart_editing";
 export const CHECKOUT = "checkout";

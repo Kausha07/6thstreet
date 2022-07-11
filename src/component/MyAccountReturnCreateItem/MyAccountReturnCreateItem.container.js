@@ -37,15 +37,23 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     containerFunctions = {
         onClick: this.onClick.bind(this),
         onReasonChange: this.onReasonChange.bind(this),
-        onResolutionChange: this.onResolutionChange.bind(this)
+        onResolutionChange: this.onResolutionChange.bind(this),
+        onQuantitySelection:this.onQuantitySelection.bind(this)
     };
-
+  
     onReasonChange(value) {
-        const { onReasonChange, item: { item_id } } = this.props;
-
-        onReasonChange(item_id, value);
+      const {
+        onReasonChange,
+        item: { item_id },
+      } = this.props;
+  
+      onReasonChange(item_id, value);
     }
-
+  
+    onQuantitySelection(quantity,itemId){
+      const {handleChangeQuantity} = this.props
+      handleChangeQuantity(quantity,itemId)
+    }
     onResolutionChange(value) {
         const { onResolutionChange, item: { item_id } } = this.props;
 
@@ -63,12 +71,13 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { item, country } = this.props;
+        const { item, country ,quantityObj} = this.props;
         const { isSelected } = this.state;
 
         return {
             item,
             isSelected,
+            returnableQty:quantityObj,
             resolutions: this.getResolutionOptions(),
             reasonOptions: this.getReasonOptions()
         };

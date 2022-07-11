@@ -38,6 +38,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
         area
       },
       isSelected,
+      PickUpAddress
     } = this.props;
 
     const def = default_billing === true ? __("default") : " ";
@@ -72,7 +73,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
               {this.getPhone()}
             </div>
           </div>
-          {isMobile.any() ? (
+          {!PickUpAddress && isMobile.any() ? (
             <div
               block="EditAddress"
               elem="Container"
@@ -154,6 +155,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
       countries = [],
       mix,
       address: { country_code },
+      PickUpAddress
     } = this.props;
     const { isArabic } = this.state;
 
@@ -165,7 +167,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
       <div block="MyAccountAddressTable" mods={{ isArabic }} mix={mix}>
         <Loader isLoading={!countries.length} />
         {this.renderCard()}
-        {this.renderActions()}
+        {!PickUpAddress && this.renderActions()}
       </div>
     );
   }
