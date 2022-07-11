@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -219,7 +220,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
               {method_title}
             </h2>
             <p block="CheckoutPayments" elem="MethodDiscription">
-              {__("Cash on Delivery is not available for the order above")}
+              {getCountryFromUrl() === "QA" 
+                ? __("Cash on Receiving is not available for the order above")
+                :__("Cash on Delivery is not available for the order above")
+              }
               <span>{this.renderLimit()}</span>
               {__("please choose another payment option.")}
 
