@@ -27,7 +27,6 @@ function getMultiProductWithObjectID(objectIDs, options) {
 export default async function getMultiProducts({
   objectIDs = []
 }, options = {}) {
-  console.log("muskan objectIDs",objectIDs);
   const product = await getMultiProductWithObjectID(objectIDs, options);
   return product;
 }

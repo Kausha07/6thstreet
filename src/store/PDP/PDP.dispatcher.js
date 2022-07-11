@@ -17,7 +17,6 @@ import { setPdpWidgetsData } from "../AppState/AppState.action";
 export class PDPDispatcher {
   async requestProduct(payload, dispatch) {
     dispatch(setPDPLoading(true));
-    console.log("muskanio");
     const { options } = payload;
     try {
       const response = await new Algolia().getPDP(options);

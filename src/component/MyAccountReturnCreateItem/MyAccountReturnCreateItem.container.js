@@ -46,10 +46,10 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       item: { item_id },
     } = this.props;
     let { availableProducts = [] } = this.state;
-    console.log("muskan products", product, productList);
     const alsoAvailable = product["6s_also_available"];
     productList.map((entry) => {
-      if(entry && entry['sku'] !== product['sku']){
+      if(entry && entry['objectID'] !== product['objectID']){
+
       if (entry) {
         if (!isSelected) {
           let removedItem = availableProducts;
@@ -78,37 +78,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       setAvailableProduct(availableProducts, item_id);
     }
     })
-    // alsoAvailable.map((productID) =>
-    //   this.getAvailableProduct(productID).then((productData) => {
-    //     if (productData.nbHits === 1) {
-    //       if (!isSelected) {
-    //         let removedItem = availableProducts;
-
-    //         availableProducts.map((item, index) => {
-    //           if (item["6s_also_available"].includes(product.sku)) {
-    //             removedItem.splice(index, 1);
-    //             this.setState({
-    //               availableProducts: removedItem,
-    //             });
-    //           }
-    //         });
-    //       } else {
-    //         this.setState({
-    //           availableProducts: [...availableProducts, productData.data],
-    //         });
-    //       }
-
-    //       availableProducts = this.state?.availableProducts || [];
-    //     }
-
-    //     this.setState({
-    //       isAlsoAvailable: availableProducts.length === 0,
-    //       alsoAvailable,
-    //     });
-    //     setAvailableProduct(availableProducts, item_id);
-    //   })
-    // );
   }
+  
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
     return product;
@@ -116,7 +87,6 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
   async getAvailableProductByIds(alsoAvailableArr) {
     const product = await new Algolia().getMultiProducts({ objectIDs: alsoAvailableArr });
-    console.log("muskan rets",product);
     return product;
   }
 
@@ -277,10 +247,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
       let finalIdsArray = also_available ? also_available : []
-      finalIdsArray.push(config_product_id)
-      console.log("muskan daat1",finalIdsArray);
+      finalIdsArray.unshift(config_product_id)
       this.getAvailableProductByIds(finalIdsArray).then((results) => {
-      console.log("muskan daat909090",results);
 
         if (results.length > 0) {
           if (isSelected) {
@@ -293,18 +261,6 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
           this.setSizeData(results[0]);
         }
       })
-      // this.getAvailableProduct(config_sku).then((currentProduct) => {
-      //   if (currentProduct) {
-      //     if (isSelected) {
-      //       this.getAvailableProducts(currentProduct.data, isSelected);
-      //       onClick(item_id, isSelected, currentProduct.data);
-      //     } else {
-      //       this.getAvailableProducts(currentProduct.data, isSelected);
-      //       onClick(item_id, isSelected, null);
-      //     }
-      //     this.setSizeData(currentProduct.data);
-      //   }
-      // });
 
       return { isSelected };
     });
