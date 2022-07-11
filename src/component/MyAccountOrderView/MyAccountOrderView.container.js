@@ -58,7 +58,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country,eddResponse ,edd_info} = this.props;
+    const { history, country, eddResponse, edd_info } = this.props;
 
     return {
       isLoading,
@@ -82,8 +82,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
   }
 
   openOrderCancelation(itemStatus = '') {
-    const { history,showPopup } = this.props;
-    const { order: { status, is_returnable } = {}, entity_id,order } = this.state;
+    const { history, showPopup } = this.props;
+    const { order: { status, is_returnable, pickup_address_required } = {}, entity_id, order } = this.state;
 
     if (
       !entity_id ||
@@ -95,14 +95,22 @@ export class MyAccountOrderViewContainer extends PureComponent {
       return;
     }
 
-    const url = `/my-account/return-item/cancel/${entity_id}`;
-    
-    if(status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL){
-      showPopup({});
-      history.push("/my-account/return-item/pick-up-address",{orderId : entity_id,orderDetails: order});
-    }else{
-      history.push(url);
+    const url =
+      status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
+        ? `/my-account/return-item/create/${entity_id}`
+        : `/my-account/return-item/cancel/${entity_id}`;
+    if (status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL) {
+      if (pickup_address_required) {
+        showPopup({});
+        history.push("/my-account/return-item/pick-up-address", { orderId: entity_id, orderDetails: order });
+      }else{
+      history.push(url, { orderDetails: order });
+      }
     }
+    else {
+      history.push(url, { orderDetails: order });
+    }
+
   }
 
   async getOrder() {
