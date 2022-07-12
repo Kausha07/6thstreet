@@ -13,7 +13,16 @@ import snapchat from "./icons/snapchat.svg";
 import tiktok from "./icons/tiktok.svg";
 import youtube from "./icons/youtube.svg";
 import Image from "Component/Image";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {
+  EVENT_MOE_INSTA_FOLLOW,
+  EVENT_MOE_FB_FOLLOW,
+  EVENT_MOE_TIKTOK_FOLLOW,
+  EVENT_MOE_SNAPCHAT_FOLLOW,
+  EVENT_MOE_TWITTER_FOLLOW,
+  EVENT_MOE_PINTEREST_FOLLOW,
+  EVENT_MOE_YOUTUBE_FOLLOW,
+} from "Util/Event";
 import "./FooterMain.style";
 
 export const mapStateToProps = (state) => ({
@@ -136,7 +145,13 @@ class FooterMain extends PureComponent {
       ],
     },
   ];
-
+  sendMOEEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderFirstTwoCloumns() {
     const regExp = new RegExp("^(?:[a-z]+:)?//", "i");
     const rootURL = this.getRootURL() || "";
@@ -227,6 +242,9 @@ class FooterMain extends PureComponent {
                       to={items.insta_href}
                       key={items.id_insta}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_INSTA_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={instagram} alt="instagram" />
                     </Link>
@@ -236,6 +254,9 @@ class FooterMain extends PureComponent {
                       to={items.facebook_href}
                       key={items.id_facebook}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_FB_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={facebook} alt="facebook" />
                     </Link>
@@ -245,6 +266,9 @@ class FooterMain extends PureComponent {
                       to={items.tiktok_href}
                       key={items.id_tiktok}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_TIKTOK_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={tiktok} alt="Tiktok" />
                     </Link>
@@ -254,6 +278,9 @@ class FooterMain extends PureComponent {
                       to={items.snapchat_href}
                       key={items.id_snapchat}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_SNAPCHAT_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={snapchat} alt="Snapchat" />
                     </Link>
@@ -263,6 +290,9 @@ class FooterMain extends PureComponent {
                       to={items.twitter_href}
                       key={items.id_twitter}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_TWITTER_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={twitter} alt="Twitter" />
                     </Link>
@@ -272,6 +302,9 @@ class FooterMain extends PureComponent {
                       to={items.pinterest_href}
                       key={items.id_pinterest}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_PINTEREST_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
                     </Link>
@@ -281,6 +314,9 @@ class FooterMain extends PureComponent {
                       to={items.youtube_href}
                       key={items.id_youtube}
                       target="_blank"
+                      onClick={() => {
+                        this.sendMOEEvents(EVENT_MOE_YOUTUBE_FOLLOW);
+                      }}
                     >
                       <Image lazyLoad={true} src={youtube} alt="Youtube" />
                     </Link>

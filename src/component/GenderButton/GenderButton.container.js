@@ -6,13 +6,7 @@ import { setGender } from "Store/AppState/AppState.action";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import GenderButton from "./GenderButton.component";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import Event, {
-  EVENT_MOE_TOP_NAV_HOME,
-  EVENT_MOE_TOP_NAV_MEN,
-  EVENT_MOE_TOP_NAV_WOMEN,
-  EVENT_MOE_TOP_NAV_KIDS,
-  EVENT_MOE_TOP_NAV_DEFAULT,
-} from "Util/Event";
+import { EVENT_MOE_TOP_NAV_CHANGE } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -66,28 +60,13 @@ export class GenderButtonContainer extends PureComponent {
     };
   };
   sendNavigationImpressions(label) {
-    const MoeEvent =
-      label == "women"
-        ? EVENT_MOE_TOP_NAV_WOMEN
-        : label == "men"
-        ? EVENT_MOE_TOP_NAV_MEN
-        : label == "home"
-        ? EVENT_MOE_TOP_NAV_HOME
-        : label == "kids"
-        ? EVENT_MOE_TOP_NAV_KIDS
-        : label == "all"
-        ? EVENT_MOE_TOP_NAV_DEFAULT
-        : "";
-    if (MoeEvent && MoeEvent.length > 0) {
-      Moengage.track_event(MoeEvent, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
-        screen_name: this.getPageType() ? this.getPageType() : "",
-        app6thstreet_platform: "Web",
-      });
-    }
+    Moengage.track_event(EVENT_MOE_TOP_NAV_CHANGE, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      screen_name: this.getPageType() ? this.getPageType() : "",
+      category: label || "",
+      app6thstreet_platform: "Web",
+    });
   }
   getPageType() {
     const { urlRewrite, currentRouteName } = window;

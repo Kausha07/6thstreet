@@ -2,11 +2,11 @@ import Field from "Component/Field";
 import Loader from "Component/Loader";
 import { CartCoupon as SourceCartCoupon } from "SourceComponent/CartCoupon/CartCoupon.component";
 import { isArabic } from "Util/App";
-
+import { EVENT_MOE_REMOVE_COUPON } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./CartCoupon.extended.style";
 
 export class CartCoupon extends SourceCartCoupon {
-    
   handleCouponCodeChange = (enteredCouponCode) => {
     this.setState({
       enteredCouponCode: this.removeCouponSpace(enteredCouponCode),
@@ -14,13 +14,13 @@ export class CartCoupon extends SourceCartCoupon {
   };
 
   removeCouponSpace = (value) => {
-   // if (value.includes(" ")) {
-      return value.replace(/\s/g, "");
+    // if (value.includes(" ")) {
+    return value.replace(/\s/g, "");
     //} else {
     //  return value;
     //}
   };
- 
+
   handleApplyCoupon = () => {
     const { handleApplyCouponToCart } = this.props;
     const { enteredCouponCode } = this.state;
@@ -47,6 +47,14 @@ export class CartCoupon extends SourceCartCoupon {
 
     if (couponCode) {
       this.handleRemoveCoupon();
+      Moengage.track_event(EVENT_MOE_REMOVE_COUPON, {
+        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+        language: getLanguageFromUrl()
+          ? getLanguageFromUrl().toUpperCase()
+          : "",
+        coupon_code: couponCode || "",
+        app6thstreet_platform: "Web",
+      });
       return;
     }
 

@@ -1,6 +1,8 @@
 import Event, {
   EVENT_PROMOTION_IMPRESSION,
   EVENT_CLICK_PROMOTION_IMPRESSION,
+  EVENT_MOE_PROMOTION_IMPRESSION,
+  EVENT_MOE_PROMOTION_CLICK
 } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -75,6 +77,13 @@ class BannerImpressionEvent extends BaseEvent {
         position: indexValue ? indexValue : index + 1,
       })
     );
+    const moeImpressions = impressions.map(
+      ({ label, promotion_name, id, store_code, indexValue }, index) => ({
+        promotion_id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : "",
+        promotion_name: (store_code ? store_code + "-" : "") + (label || promotion_name),
+        index: indexValue ? indexValue : index + 1,
+      })
+    );
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
@@ -87,29 +96,25 @@ class BannerImpressionEvent extends BaseEvent {
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
-        ? "view_promotion"
+        ? EVENT_MOE_PROMOTION_IMPRESSION
         : EVENT_TYPE == "promotionClick"
-        ? "select_promotion"
+        ? EVENT_MOE_PROMOTION_CLICK
         : null;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const currentPageType = this.getPageType() || "";
-    formattedImpressions.forEach(function (item) {
-      Moengage.track_event(MoeEventType, {
-        country: currentAppState.country
-          ? currentAppState.country.toUpperCase()
-          : "",
-        language: currentAppState.language
-          ? currentAppState.language.toUpperCase()
-          : "",
-        promotion_id: item.id || "",
-        promotion_name: item.name || "",
-        category: currentAppState.gender
-          ? currentAppState.gender.toUpperCase()
-          : "",
-        screen: currentPageType,
-        index: item.position,
-        app6thstreet_platform: "Web",
-      });
+    Moengage.track_event(MoeEventType, {
+      country: currentAppState.country
+        ? currentAppState.country.toUpperCase()
+        : "",
+      language: currentAppState.language
+        ? currentAppState.language.toUpperCase()
+        : "",
+      promotions:moeImpressions,
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      screen: currentPageType,
+      app6thstreet_platform: "Web",
     });
   }
 }

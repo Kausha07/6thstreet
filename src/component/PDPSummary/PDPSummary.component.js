@@ -167,28 +167,27 @@ class PDPSummary extends PureComponent {
       });
       setEddResponse(null, null);
     }
-  }
+  };
 
-
-  addTabbyPromo = (total,currency_code) => {
+  addTabbyPromo = (total, currency_code) => {
     const { isArabic } = this.state;
     new window.TabbyPromo({
-      selector: '#TabbyPromo',
+      selector: "#TabbyPromo",
       currency: currency_code.toString(),
       price: total,
       installmentsCount: 4,
       lang: isArabic ? "ar" : "en",
-      source: 'product',
+      source: "product",
     });
-  }
+  };
 
   componentDidMount() {
     const {
       product: { price },
       getTabbyInstallment,
     } = this.props;
-    const script = document.createElement('script');
-    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    const script = document.createElement("script");
+    script.src = "https://checkout.tabby.ai/tabby-promo.js";
     document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -198,11 +197,13 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          this.addTabbyPromo(defPrice, currency);
-        }
-      }, this._handleError).catch(() => { });
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            this.addTabbyPromo(defPrice, currency);
+          }
+        }, this._handleError)
+        .catch(() => {});
     }
 
     const countryCode = getCountryFromUrl();
@@ -229,11 +230,13 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          this.addTabbyPromo(defPrice, currency);
-        }
-      }, this._handleError).catch(() => { });
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            this.addTabbyPromo(defPrice, currency);
+          }
+        }, this._handleError)
+        .catch(() => {});
     }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
@@ -623,11 +626,12 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const { url_path } = this.props;
     const { isArabic } = this.state;
-    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
-    "Men,Women,Kids,Boy,Girl": 
-     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
+    let gender =
+      BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
+        ? "Men,Women,Kids,Boy,Girl"
+        : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+        ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+        : "home";
     if (isArabic) {
       if (gender === "kids") {
         gender = "أولاد,بنات";
@@ -645,7 +649,7 @@ class PDPSummary extends PureComponent {
     } else {
       if (gender === "kids") {
         gender = "Boy,Girl";
-      }else if (gender === "all") {
+      } else if (gender === "all") {
         genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
@@ -783,7 +787,9 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.href}
             image={gallery_images[0] || fallbackImage}
+            product ={product}
           />
+
           <WishlistIcon
             sku={sku}
             renderMySignInPopup={renderMySignInPopup}

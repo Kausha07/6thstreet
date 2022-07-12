@@ -7,6 +7,9 @@ import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./HeaderCart.style";
+import { EVENT_MOE_GO_TO_BAG } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
 
 class HeaderCart extends PureComponent {
   static propTypes = {
@@ -100,6 +103,14 @@ class HeaderCart extends PureComponent {
     }
 
     hideActiveOverlay();
+    Moengage.track_event(EVENT_MOE_GO_TO_BAG, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl()
+      ? getLanguageFromUrl().toUpperCase()
+      : "",
+      screen_name: this.getPageType() ? this.getPageType() : "",
+      app6thstreet_platform: "Web",
+    });
     history.push({
       pathname: "/cart",
       state: {
@@ -107,6 +118,24 @@ class HeaderCart extends PureComponent {
       },
     });
   };
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
 
   renderItemCount() {
     const {

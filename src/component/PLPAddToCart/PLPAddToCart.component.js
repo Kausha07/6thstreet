@@ -15,6 +15,7 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART_FAILED,
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -461,7 +462,7 @@ class PLPAddToCart extends PureComponent {
     );
   }
 
-  sendMoEImpressions() {
+  sendMoEImpressions(event) {
     const {
       product: {
         categories = {},
@@ -525,7 +526,7 @@ class PLPAddToCart extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_ADD_TO_CART, {
+    Moengage.track_event(event, {
       country: currentAppState.country
         ? currentAppState.country.toUpperCase()
         : "",
@@ -638,8 +639,10 @@ class PLPAddToCart extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {});
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {});
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -736,7 +739,7 @@ class PLPAddToCart extends PureComponent {
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
-    this.sendMoEImpressions();
+    //this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
     // TODO props for addedToCart
     const timeout = 1250;
 

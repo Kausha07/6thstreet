@@ -22,6 +22,9 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART_FAILED,
+  EVENT_MOE_VIEW_BAG,
+  EVENT_MOE_SELECT_SIZE
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -31,6 +34,7 @@ import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -346,9 +350,8 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       totals: { total = null },
     } = this.props;
-
-    const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
-
+    const { productAdded, selectedSizeType, selectedSizeCode, productStock } =
+      this.state;
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
@@ -356,6 +359,16 @@ export class PDPAddToCartContainer extends PureComponent {
 
     const { setSize } = this.props;
     const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
+
+    const prev_selectedSizeType = prevState?.selectedSizeType;
+    const prev_selectedSizeCode = prevState?.selectedSizeCode;
+    if (
+      selectedSizeCode &&
+      prev_selectedSizeCode == selectedSizeCode
+    ) {
+
+      this.sendMoEImpressions(EVENT_MOE_SELECT_SIZE);
+    }
     if (
       selectedSizeType !== prevSelectedSizeType ||
       selectedSizeCode !== prevSelectedSizeCode
@@ -381,7 +394,6 @@ export class PDPAddToCartContainer extends PureComponent {
       product?.price &&
       product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
-
     return {
       ...this.state,
       sizeObject: mappedSizeObject,
@@ -508,10 +520,12 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
         }
       });
 
@@ -571,11 +585,13 @@ export class PDPAddToCartContainer extends PureComponent {
       ).then((response) => {
         // Response is sent only if error appear
         if (response) {
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
           showNotification("error", __(response));
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
         } else {
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
@@ -629,7 +645,6 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState({ isLoading: false });
     // TODO props for addedToCart
     const timeout = 1250;
-    this.sendMoEImpressions();
     if (isAdded) {
       if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
@@ -650,7 +665,7 @@ export class PDPAddToCartContainer extends PureComponent {
       timeout
     );
   }
-  sendMoEImpressions() {
+  sendMoEImpressions(event) {
     const {
       product: {
         categories = {},
@@ -714,7 +729,7 @@ export class PDPAddToCartContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_ADD_TO_CART, {
+    Moengage.track_event(event, {
       country: currentAppState.country
         ? currentAppState.country.toUpperCase()
         : "",
@@ -770,6 +785,11 @@ export class PDPAddToCartContainer extends PureComponent {
 
   routeChangeToCart() {
     history.push("/cart", { errorState: false });
+    Moengage.track_event(EVENT_MOE_VIEW_BAG, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
   }
 
   showAlertNotification(message) {

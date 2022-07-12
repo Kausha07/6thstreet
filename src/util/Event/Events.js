@@ -20,7 +20,8 @@ export const EVENT_GTM_PRODUCT_CLICK = "gtm_product_click";
 export const EVENT_GTM_VUE_PRODUCT_CLICK = "gtm_vue_product_click";
 export const EVENT_GTM_WISHLIST_PRODUCT_CLICK = "gtm_wishlist_product_click";
 export const EVENT_GTM_PRODUCT_DETAIL = "gtm_product_detail";
-export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART = "gtm_product_remove_from_cart";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
+  "gtm_product_remove_from_cart";
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
 
@@ -30,7 +31,8 @@ export const EVENT_GTM_TRENDING_TAGS_CLICK = "gtm_trending_tags_click";
 export const EVENT_GTM_BRANDS_CLICK = "gtm_brands_click";
 export const EVENT_GTM_RECOMMENDED_CLICK = "gtm_recommended_click";
 export const EVENT_GTM_PRODUCT_ADD_TO_WISHLIST = "gtm_product_add_to_wishlist";
-export const EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST = "gtm_product_remove_from_wishlist";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST =
+  "gtm_product_remove_from_wishlist";
 
 export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";
 export const SELECT_ITEM_ALGOLIA = "select_item_algolia";
@@ -52,10 +54,12 @@ export const EVENT_PRODUCT_IMPRESSION = "productImpression";
 export const EVENT_GTM_CANCEL_SEARCH = "cancel_search";
 export const EVENT_GTM_CLEAR_SEARCH = "clear_search";
 export const EVENT_GTM_GO_TO_SEARCH = "go_to_search";
-export const EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK = "search_query_suggestion_click";
+export const EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK =
+  "search_query_suggestion_click";
 export const EVENT_CLICK_SEARCH_WISH_LIST_CLICK = "search_wish_list_click";
 export const EVENT_GTM_VIEW_SEARCH_RESULTS = "view_search_results";
-export const EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
+export const EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW =
+  "no_result_search_screen_view";
 export const EVENT_CLICK_RECENT_SEARCHES_CLICK = "recent_searches_click";
 export const EVENT_EXPLORE_MORE_SEARCH_CLICK = "search_explore_more";
 export const EVENT_GTM_SEARCH_LOGS_SCREEN_VIEW = "search_logs_screen_view";
@@ -63,9 +67,9 @@ export const EVENT_GTM_SEARCH_SCREEN_VIEW = "search_screen_view";
 export const EVENT_GTM_SEARCH = "search";
 export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
 export const EVENT_CLICK_RECOMMENDATION_CLICK = "recommendation_clicked";
-export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK = "search_product_suggestion_click";
+export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK =
+  "search_product_suggestion_click";
 export const EVENT_PAGE_NOT_FOUND = "pageNotFound";
-
 
 //MOENGAGE EVENTS
 export const EVENT_MOE_PROMOTION_IMPRESSION = "view_promotion";
@@ -84,4 +88,29 @@ export const EVENT_MOE_TOP_NAV_HOME = "top_nav_home";
 export const EVENT_MOE_TOP_NAV_MEN = "top_nav_men";
 export const EVENT_MOE_TOP_NAV_WOMEN = "top_nav_women";
 export const EVENT_MOE_TOP_NAV_KIDS = "top_nav_kids";
+export const EVENT_MOE_TOP_NAV_ALL = "top_nav_all";
 export const EVENT_MOE_TOP_NAV_DEFAULT = "top_nav_default";
+export const EVENT_MOE_TOP_NAV_CHANGE = "top_nav_change";
+export const EVENT_MOE_GO_TO_BAG = "go_to_bag";
+export const EVENT_MOE_GO_TO_BRAND = "go_to_brand";
+export const EVENT_MOE_GO_TO_SIZE_CHART = "go_to_size_chart";
+export const EVENT_MOE_SELECT_SIZE = "select_size";
+export const EVENT_MOE_ADD_TO_CART_FAILED = "add_to_cart_failed";
+export const EVENT_MOE_VIEW_BAG = "view_bag";
+export const EVENT_MOE_PHONE = "phone_support_icon";
+export const EVENT_MOE_MAIL = "email_support_icon";
+export const EVENT_MOE_CHAT = "whatsapp_support_icon";
+export const EVENT_MOE_SHARE = "share";
+export const EVENT_MOE_FB_SHARE = "facebook_share_icon";
+export const EVENT_MOE_PINTEREST_SHARE = "pinterest_share_icon";
+export const EVENT_MOE_REMOVE_COUPON = "remove_coupon_code";
+export const EVENT_MOE_APPLY_COUPON = "apply_coupon_code";
+export const EVENT_MOE_APPLY_COUPON_FAILED = "apply_coupon_code_failed";
+export const EVENT_MOE_VIEW_PLP_ITEMS ="view_plp_items";
+export const EVENT_MOE_INSTA_FOLLOW = "insta_follow_icon";
+export const EVENT_MOE_FB_FOLLOW = "fb_follow_icon";
+export const EVENT_MOE_TIKTOK_FOLLOW = "tiktok_follow_icon";
+export const EVENT_MOE_SNAPCHAT_FOLLOW = "snapchat_follow_icon";
+export const EVENT_MOE_TWITTER_FOLLOW = "twitter_follow_icon";
+export const EVENT_MOE_PINTEREST_FOLLOW = "pinterest_follow_icon";
+export const EVENT_MOE_YOUTUBE_FOLLOW = "youtube_follow_icon";

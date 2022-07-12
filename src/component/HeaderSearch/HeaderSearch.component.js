@@ -81,7 +81,7 @@ class HeaderSearch extends PureComponent {
         language: getLanguageFromUrl()
           ? getLanguageFromUrl().toUpperCase()
           : "",
-          app6thstreet_platform: "Web",
+        app6thstreet_platform: "Web",
       });
     }
   }

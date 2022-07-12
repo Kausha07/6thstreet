@@ -23,8 +23,9 @@ import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.act
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
-
+import { EVENT_MOE_GO_TO_BAG } from "Util/Event";
 import CartOverlay from './CartOverlay.component';
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const CartDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -81,13 +82,37 @@ export class CartOverlayContainer extends PureComponent {
             isCheckoutAvailable,
             showNotification
         } = this.props;
-
+        Moengage.track_event(EVENT_MOE_GO_TO_BAG, {
+            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+            language: getLanguageFromUrl()
+            ? getLanguageFromUrl().toUpperCase()
+            : "",
+            screen_name: this.getPageType() ? this.getPageType() : "",
+            app6thstreet_platform: "Web",
+        });
         hideActiveOverlay();
         closePopup();
         if (!isCheckoutAvailable) {
             showNotification('error', __('Some products or selected quantities are no longer available'));
         }
     }
+    getPageType() {
+        const { urlRewrite, currentRouteName } = window;
+    
+        if (currentRouteName === "url-rewrite") {
+          if (typeof urlRewrite === "undefined") {
+            return "";
+          }
+    
+          if (urlRewrite.notFound) {
+            return "notfound";
+          }
+    
+          return (urlRewrite.type || "").toLowerCase();
+        }
+    
+        return (currentRouteName || "").toLowerCase();
+      }
 
     handleCheckoutClick(e) {
         const {

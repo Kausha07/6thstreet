@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_MOE_PHONE, EVENT_MOE_MAIL } from "Util/Event";
 import "./FooterCustomerSupport.style";
 
 class FooterCustomerSupport extends PureComponent {
@@ -20,7 +21,14 @@ class FooterCustomerSupport extends PureComponent {
     }
 
     return (
-      <a block="FooterCustomerSupport" elem="Email" href={`mailto:${email}`}>
+      <a
+        block="FooterCustomerSupport"
+        elem="Email"
+        href={`mailto:${email}`}
+        onClick={() => {
+          this.sendEvents(EVENT_MOE_MAIL);
+        }}
+      >
         {email}
       </a>
     );
@@ -34,7 +42,14 @@ class FooterCustomerSupport extends PureComponent {
     }
 
     return (
-      <a block="FooterCustomerSupport" elem="Phone" href={`tel:${phone}`}>
+      <a
+        block="FooterCustomerSupport"
+        elem="Phone"
+        href={`tel:${phone}`}
+        onClick={() => {
+          this.sendEvents(EVENT_MOE_PHONE);
+        }}
+      >
         <bdi>{phone}</bdi>
       </a>
     );
@@ -54,7 +69,13 @@ class FooterCustomerSupport extends PureComponent {
       </div>
     );
   }
-
+  sendEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderSupport() {
     const Phone = this.renderPhone();
     const Email = this.renderEmail();
