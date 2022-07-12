@@ -169,9 +169,9 @@ class MyAccountOrderView extends PureComponent {
           ? EXCHANGE_ITEM_LABEL
           : RETURN_ITEM_LABEL
         : CANCEL_ITEM_LABEL;
-        const finalStatus = isArabic()
-        ? translateArabicStatus(status)
-        : status
+    const finalStatus = isArabic()
+      ? translateArabicStatus(status)
+      : status
         ? status.split("_").join(" ")
         : "";
     if (STATUS_FAILED.includes(status)) {
@@ -179,7 +179,7 @@ class MyAccountOrderView extends PureComponent {
         status === STATUS_PAYMENT_ABORTED
           ? __("Payment Failed")
           : status === STATUS_EXCHANGE_REJECTED ? __("Exchange Rejected")
-          : __("Order Cancelled");
+            : __("Order Cancelled");
       const StatusImage =
         status === STATUS_PAYMENT_ABORTED ? WarningImage : CloseImage;
       return (
@@ -213,70 +213,34 @@ class MyAccountOrderView extends PureComponent {
             </span>
           </p>
         </div>
-        {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
-          is_returnable && is_cancelable && is_exchangeable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
+        {
+          <div block="MyAccountOrderView" elem="HeadingButtons">
+            {
+              is_returnable &&
               <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
                 {RETURN_ITEM_LABEL}
               </button>
+            }
+            {
+              is_exchangeable &&
               <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
                 {EXCHANGE_ITEM_LABEL}
               </button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                {CANCEL_ITEM_LABEL}
-              </button>
-            </div>
-          ) :
-            is_returnable && is_cancelable ? (
-              <div block="MyAccountOrderView" elem="HeadingButtons">
-                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                  {RETURN_ITEM_LABEL}
-                </button>
-                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
-                  {CANCEL_ITEM_LABEL}
-                </button>
-              </div>
-            ) : is_returnable && is_exchangeable ? (
-              <div block="MyAccountOrderView" elem="HeadingButtons">
-                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
-                  {RETURN_ITEM_LABEL}
-                </button>
-                <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
-                  {EXCHANGE_ITEM_LABEL}
-                </button>
-              </div>
-            ) :
-              is_cancelable && is_exchangeable ? (
-                <div block="MyAccountOrderView" elem="HeadingButtons">
-                  <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
-                    {EXCHANGE_ITEM_LABEL}
+            }
+            {
+              status === STATUS_EXCHANGE_PENDING && is_cancelable ?
+                <div block="MyAccountOrderView" elem="HeadingButton">
+                  <button onClick={() => openOrderCancelation(CANCEL_ORDER_LABEL)}>
+                    {CANCEL_ORDER_LABEL}
                   </button>
+                </div> :
+                is_cancelable ?
                   <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
                     {CANCEL_ITEM_LABEL}
-                  </button>
-                </div>
-              ) :
-                (
-                  <div block="MyAccountOrderView" elem="HeadingButton">
-                    <button onClick={() => openOrderCancelation(buttonText)}>
-                      {buttonText}
-                    </button>
-                  </div>
-                )
-        ) : status === STATUS_COMPLETE && is_exchangeable ? (
-          <div block="MyAccountOrderView" elem="HeadingButton">
-            <button onClick={() => openOrderCancelation(buttonText)}>
-              {buttonText}
-            </button>
+                  </button> : null
+            }
           </div>
-        ) : status === STATUS_EXCHANGE_PENDING && is_cancelable ? (
-          <div block="MyAccountOrderView" elem="HeadingButton">
-            <button onClick={() => openOrderCancelation(CANCEL_ORDER_LABEL)}>
-              {CANCEL_ORDER_LABEL}
-            </button>
-          </div>
-        ) : null}
+        }
       </div>
     );
   }
@@ -349,7 +313,7 @@ class MyAccountOrderView extends PureComponent {
       case "pickedup": {
         return __("Items Picked Up");
       }
-      case "pickupfailed":{
+      case "pickupfailed": {
         return __("Pick up Failed");
       }
       default: {

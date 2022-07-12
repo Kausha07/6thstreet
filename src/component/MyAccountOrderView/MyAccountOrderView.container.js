@@ -28,7 +28,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
 });
 
-export const mapDispatchToProps = () => ({
+export const mapDispatchToProps = (dispatch) => ({
   showErrorMessage: (message) => dispatch(showNotification("error", message)),
 });
 
@@ -92,24 +92,12 @@ export class MyAccountOrderViewContainer extends PureComponent {
     if (itemStatus === CANCEL_ORDER_LABEL) {
       this.cancelExchangeOrder(order);
     } else {
-      if (
-        !entity_id ||
-        !(
-          STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ||
-          (status === STATUS_COMPLETE && is_exchangeable)
-        )
-      ) {
-        return;
-      }
-
       const url =
-        (STATUS_ABLE_TO_EXCHANGE.includes(status)) && itemStatus === EXCHANGE_ITEM_LABEL
+        itemStatus === EXCHANGE_ITEM_LABEL
           ? `/my-account/exchange-item/create/${entity_id}`
-          : status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
+          : itemStatus === RETURN_ITEM_LABEL
             ? `/my-account/return-item/create/${entity_id}`
             : `/my-account/return-item/cancel/${entity_id}`;
-
       history.push(url, { orderDetails: order });
     }
   }
