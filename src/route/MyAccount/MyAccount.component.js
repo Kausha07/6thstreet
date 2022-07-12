@@ -40,6 +40,7 @@ import box from "./icons/box.png";
 import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
+import { ADD_ADDRESS } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -201,8 +202,10 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
     const { name, alternativePageName, alternateName } = tabMap[activeTab];
+    const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
+
     const returnTitle =
-      activeTab === RETURN_ITEM ? __("Return Statement") : null;
+      activeTab === RETURN_ITEM ? pickUpAddress ? __("Select Pick Up Address") : __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
@@ -246,7 +249,7 @@ export class MyAccount extends SourceMyAccount {
 
   renderMobile() {
     
-    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive,payload } = this.props;
 
     const { isArabic,isMobile } = this.state;
 
@@ -270,20 +273,25 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
+    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
+    const payloadKey = Object.keys(payload)[0]
     return (
       <ContentWrapper
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        <MyAccountMobileHeader
-          onClose={this.handleClick}
-          isHiddenTabContent={hiddenTabContent === "Active"}
-          alternativePageName={alternativePageName}
-          name={isCancel ? alternateName : name}
-        />
+        {!(isPickUpAddress && payloadKey && payload[payloadKey].title ) &&
+         <MyAccountMobileHeader
+         onClose={this.handleClick}
+         isHiddenTabContent={hiddenTabContent === "Active"}
+         alternativePageName={alternativePageName}
+         name={isPickUpAddress ? "Select Pick Up Address" : isCancel ? alternateName : name}
+         />
+        }
+       
         <div block={hiddenTabList}>
           <div block="UserBlock">
             <span>{__("Hello, ")}</span>

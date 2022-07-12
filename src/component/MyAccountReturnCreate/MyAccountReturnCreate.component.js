@@ -37,7 +37,7 @@ export class MyAccountReturnCreate extends PureComponent {
   
   renderOrderItem = (item) => {
     const { item_id } = item;
-    const { onItemClick, onResolutionChange, onReasonChange, resolutions } =
+    const { onItemClick, onResolutionChange, onReasonChange, resolutions, quantityObj,handleChangeQuantity } =
       this.props;
 
     if (!item.is_returnable) {
@@ -48,6 +48,8 @@ export class MyAccountReturnCreate extends PureComponent {
       <li block="MyAccountReturnCreate" elem="Item" key={item_id}>
         <MyAccountReturnCreateItem
           item={item}
+          quantityObj={quantityObj}
+          handleChangeQuantity={handleChangeQuantity}
           onClick={onItemClick}
           onResolutionChange={onResolutionChange}
           onReasonChange={onReasonChange}
