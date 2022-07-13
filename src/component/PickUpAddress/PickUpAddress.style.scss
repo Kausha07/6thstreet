@@ -100,7 +100,7 @@
             z-index: 1;
 
             @include before-desktop {
-              top: 0;
+              top: -60px;
               display: flex;
               justify-content: center;
               align-items: center;
@@ -212,24 +212,174 @@
         }
       }
       .PickUpAddress{
+        @include before-desktop {
+          .Checkout-StickyButtonWrapper {
+              padding-top: 0.5rem;
+              padding: 5px 30px calc(env(safe-area-inset-bottom) + 1rem);
+          }
+      }
+      @include mobile {
+          padding-bottom: 120px;
+          .Checkout-StickyButtonWrapper {
+              padding: 2px 10px calc(env(safe-area-inset-bottom) + 1rem);
+          }
+      }
         .Checkout{
-          &-StickyButtonWrapper{
+          &-StickyButtonWrapper {
+            .Checkout {
+                &-OrderTotals {
+                    .ReactCollapse--collapse {
+                        transition: height 500ms;
+                    }
+                    .CheckoutOrderSummary {
+                        &-Text {
+                            font-weight: var(--fw-regular);
+                            font-size: 13px;
+                        }
+                        &-Price {
+                            font-weight: var(--fw-medium);
+                            font-size: 13px;
+                        }
+                        &-SummaryItem_divider {
+                            border-top: 1px solid var(--color-soft-gray);
+                            margin-top: 6px;
+                            padding-top: 10px;
+                            padding-bottom: 10px;
+                            .CheckoutOrderSummary-Text {
+                                font-weight: var(--fw-regular);
+                                font-size: 15px;
+                                line-height: 17px;
+                            }
+                            .CheckoutOrderSummary-Price {
+                                font-weight: var(--fw-bold);
+                                font-size: 15px;
+                                line-height: 17px;
+                            }
+                        }
+                        &-SummaryItem_subtotalOnly {
+                            padding: 10px 0;
+                            .CheckoutOrderSummary-Text {
+                                font-weight: var(--fw-regular);
+                                font-size: 15px;
+                                line-height: 17px;
+                            }
+                            .CheckoutOrderSummary-Price {
+                                font-weight: var(--fw-bold);
+                                font-size: 15px;
+                                line-height: 17px;
+                            }
+                        }
+                    }
+                    .CheckoutBillingTotal {
+                        padding: 10px 0;
+                        margin-bottom: 11px;
+                        .CheckoutOrderSummary-Text {
+                            font-weight: var(--fw-regular);
+                            font-size: 15px;
+                            line-height: 17px;
+                        }
+                        .CheckoutOrderSummary-Price {
+                            font-weight: var(--fw-bold);
+                            font-size: 15px;
+                            line-height: 17px;
+                        }
+                    }
+                    @include desktop {
+                        display: none;
+                    }
+                }
+                &-OrderSummaryTotalsContainer {
+                    @include desktop {
+                        display: none;
+                    }
+                    .CheckoutOrderSummary {
+                        padding: 0;
+                        &-Text {
+                            font-weight: var(--fw-regular);
+                            font-size: 13px;
+                            &:empty {
+                                display: none;
+                            }
+                        }
+                        &-Price {
+                            font-weight: var(--fw-medium);
+                            font-size: 13px;
+                            &:empty {
+                                display: none;
+                            }
+                        }
+                        &-SummaryItem,
+                        &-DiscountOptionWrapper {
+                            padding: 3px 0;
+                            &:empty {
+                                display: none;
+                            }
+                        }
+                        &-PromoBlock {
+                            margin: 10px 0 0;
+                            &:empty {
+                                display: none;
+                            }
+                        }
+                        &-DiscountOptionWrapper {
+                            &:empty {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+                &-OrderSummaryTriggerContainer {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 5px 0;
+                    @include desktop {
+                        display: none;
+                    }
+                }
+                &-OrderSummaryTrigger {
+                    content: '';
+                    max-width: 30px;
+                    top: 47%;
+                    border: solid #0a0a0a;
+                    border-width: 0 2px 2px 0;
+                    display: inline-block;
+                    padding: 4px;
+                    transform: rotate(-135deg);
+                    -webkit-transform: rotate(-135deg);
+                    &_dropdownToggleIcon {
+                        transform: rotate(45deg);
+                        -webkit-transform: rotate(45deg);
+                    }
+                    @include desktop {
+                        display: none;
+                    }
+                }
+            }
+            @include before-desktop {
+                border-top: 1px solid var(--primary-divider-color);
+                background-color: #ffffff;
+                position: fixed;
+                padding: 1.5rem 1.5rem calc(env(safe-area-inset-bottom) + 1rem);
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                z-index: 9999;
+            }
             .Button {
-              width: 100%;
-              color: #ffffff;
-              background-color: var(--selected-step-color);
-              font-weight: var(--fw-bold);
-              @include before-desktop {
-                  opacity: 1;
-                  border-radius: 7px;
-                  margin-top: 25px;
-              }
-              @include desktop {
-                  margin-top: 25px;
-                  margin-bottom: 45px;
-              }
-          }
-          }
+                width: 100%;
+                color: #ffffff;
+                background-color: var(--selected-step-color);
+                font-weight: var(--fw-bold);
+                @include before-desktop {
+                    opacity: 1;
+                    border-radius: 7px;
+                }
+                @include desktop {
+                    margin-top: 25px;
+                }
+            }
+        }
         }
       }
     }
