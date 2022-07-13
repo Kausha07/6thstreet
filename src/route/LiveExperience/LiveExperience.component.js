@@ -202,7 +202,7 @@ export class LiveExperience extends PureComponent {
   renderArchivedGridBlock = (block, i) => {
     // debugger
     const { mainImageURI, name, description, productHighlights } = block;
-    console.log("mainImageURI", mainImageURI,name,description,productHighlights);
+
     if (mainImageURI) {
       return (
         <li block="spckItem" id={block.id}>
@@ -258,7 +258,7 @@ export class LiveExperience extends PureComponent {
   handleSearchInfluencerText = (e) => {
     const { influencerSearchText } = this.state;
     this.setState({influencerSearchText: e.target.value});
-    console.log("text",influencerSearchText);
+    
   }
 
   renderRefine() {
