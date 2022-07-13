@@ -95,10 +95,10 @@ export class MyAccountExchangeCreate extends PureComponent {
       this.props;
     let sizeLessData = [];
     let sizeLessStatus = false;
-    if (Object.keys(selectedItems).length > 0) {
-      Object.keys(selectedItems).filter((item) => {
+    if (Object.keys(selectedItems)?.length > 0) {
+      Object.keys(selectedItems)?.filter((item) => {
         const { simple_products } = products[item];
-        Object.values(simple_products).filter((product) => {
+        Object.values(simple_products)?.filter((product) => {
           if (product.size.length === 0 && selectedItems[item] !== false) {
             sizeLessData.push(product);
           }

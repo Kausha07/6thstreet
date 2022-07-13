@@ -233,10 +233,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         disabledStatus: true,
       });
     } else {
-      Object.keys(products).map((item) => {
+      Object.keys(products)?.map((item) => {
         const { simple_products } = products[item];
         if (simple_products) {
-          let sizeLessData = Object.values(simple_products).filter(
+          let sizeLessData = Object.values(simple_products)?.filter(
             (product) => {
               if (product.size.length === 0) {
                 return product;
