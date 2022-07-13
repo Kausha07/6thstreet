@@ -97,12 +97,14 @@ export class MyAccountExchangeCreate extends PureComponent {
     let sizeLessStatus = false;
     if (Object.keys(selectedItems)?.length > 0) {
       Object.keys(selectedItems)?.filter((item) => {
-        const { simple_products } = products[item];
-        Object.values(simple_products)?.filter((product) => {
-          if (product.size.length === 0 && selectedItems[item] !== false) {
-            sizeLessData.push(product);
-          }
-        });
+        if (Object.keys(products).length > 0) {
+          const { simple_products } = products[item];
+          Object.values(simple_products)?.filter((product) => {
+            if (product.size.length === 0 && selectedItems[item] !== false) {
+              sizeLessData.push(product);
+            }
+          });
+        }
       });
     }
     if (Object.keys(sizeLessData).length !== 0) {
