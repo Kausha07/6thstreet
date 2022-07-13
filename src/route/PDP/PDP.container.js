@@ -149,9 +149,9 @@ export class PDPContainer extends PureComponent {
     // if (id !== prevId) {
     //   this.requestProduct();
     // }
+
     // Update loading from here, validate for last options recieved results from
     // if (isLoading !== currentIsLoading) {
-    //   console.log("isLoading on update",isLoading)
     //   setIsLoading(false);
     // }
 
@@ -176,8 +176,8 @@ export class PDPContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_special_price"]
+          : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -252,7 +252,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -290,14 +290,14 @@ export class PDPContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_special_price"]
+          : null;
     const originalPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_base_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_base_price"]
+          : null;
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -318,9 +318,9 @@ export class PDPContainer extends PureComponent {
       product_type_6s && product_type_6s.length > 0
         ? product_type_6s
         : checkCategoryLevel().includes("///") == 1
-        ? checkCategoryLevel().split("///").pop()
-        : "";
-        
+          ? checkCategoryLevel().split("///").pop()
+          : "";
+
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,

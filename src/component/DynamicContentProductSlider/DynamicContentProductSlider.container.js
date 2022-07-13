@@ -44,6 +44,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       isHomePage = false,
       setLastTapItemOnHome,
       index= 0,
+      setLastTapItemOnHome,
     } = this.props;
 
     const { products, isLoading } = this.state;

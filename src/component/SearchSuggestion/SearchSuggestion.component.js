@@ -829,6 +829,7 @@ class SearchSuggestion extends PureComponent {
     );
   };
 
+  /*
   renderTopSearches() {
     const { topSearches = [] } = this.props;
     const { isArabic } = this.state;
@@ -841,6 +842,7 @@ class SearchSuggestion extends PureComponent {
       </div>
     ) : null;
   }
+  */
 
   // recent searches
 
