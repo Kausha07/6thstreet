@@ -103,8 +103,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
       if (pickup_address_required) {
         showPopup({});
         history.push("/my-account/return-item/pick-up-address", { orderId: entity_id, orderDetails: order });
-      }else{
-      history.push(url, { orderDetails: order });
+      } else {
+        history.push(url, { orderDetails: order });
       }
     }
     else {
