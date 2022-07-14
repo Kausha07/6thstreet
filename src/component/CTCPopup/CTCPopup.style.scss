@@ -10,7 +10,7 @@
  */
 
 
-.CTCPopup {
+ .CTCPopup {
     opacity: 0;
     pointer-events: none;
     z-index: 200;
@@ -55,14 +55,16 @@
         background-color: var(--popup-content-background);
         border-radius: 5px;
         padding: var(--popup-content-padding);
-        min-width: var(--popup-min-width);
+        // min-width: var(--popup-min-width);
         max-width: calc(var(--content-wrapper-width) * .8);
         max-height: 80%;
         overflow-y: hidden;
+        min-width: 540px;
 
         @include mobile {
             border-radius: 0;
             max-height: 100%;
+            min-width: 100%;
         }
     }
 
