@@ -13,6 +13,7 @@ import {
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import { Store } from "../Icons";
 
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
@@ -65,6 +66,17 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {!!ctc_store_name && (
+            <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderViewItem-ClickAndCollect"
+                elem="StoreName"
+              >
+                {ctc_store_name}
+              </div>
+            </div>
+          )}
         {edd_info &&
           edd_info.is_enable &&
           cross_border === 0 &&
