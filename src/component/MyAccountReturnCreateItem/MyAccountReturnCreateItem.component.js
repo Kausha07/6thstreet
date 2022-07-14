@@ -563,7 +563,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       </div>
     );
   }
-  
+
   renderOutOfStockPopUp() {
     const {
       isOutOfStock,

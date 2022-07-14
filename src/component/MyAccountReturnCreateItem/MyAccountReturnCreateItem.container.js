@@ -48,38 +48,38 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     let { availableProducts = [] } = this.state;
     const alsoAvailable = product["6s_also_available"];
     productList.map((entry) => {
-      if(entry && entry['objectID'] !== product['objectID']){
+      if (entry && entry['objectID'] !== product['objectID']) {
 
-      if (entry) {
-        if (!isSelected) {
-          let removedItem = availableProducts;
+        if (entry) {
+          if (!isSelected) {
+            let removedItem = availableProducts;
 
-          availableProducts.map((item, index) => {
-            if (item["6s_also_available"].includes(product.sku)) {
-              removedItem.splice(index, 1);
-              this.setState({
-                availableProducts: removedItem,
-              });
-            }
-          });
-        } else {
-          this.setState({
-            availableProducts: [...availableProducts, entry],
-          });
+            availableProducts.map((item, index) => {
+              if (item["6s_also_available"].includes(product.sku)) {
+                removedItem.splice(index, 1);
+                this.setState({
+                  availableProducts: removedItem,
+                });
+              }
+            });
+          } else {
+            this.setState({
+              availableProducts: [...availableProducts, entry],
+            });
+          }
+
+          availableProducts = this.state?.availableProducts || [];
         }
 
-        availableProducts = this.state?.availableProducts || [];
+        this.setState({
+          isAlsoAvailable: availableProducts.length === 0,
+          alsoAvailable,
+        });
+        setAvailableProduct(availableProducts, item_id);
       }
-
-      this.setState({
-        isAlsoAvailable: availableProducts.length === 0,
-        alsoAvailable,
-      });
-      setAvailableProduct(availableProducts, item_id);
-    }
     })
   }
-  
+
   async getAvailableProduct(sku) {
     const product = await new Algolia().getProductBySku({ sku });
     return product;
