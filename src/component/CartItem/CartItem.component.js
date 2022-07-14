@@ -76,7 +76,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => { },
+    closePopup: () => {},
     isCartPage: false,
     readOnly: false,
   };
@@ -343,8 +343,8 @@ export class CartItem extends PureComponent {
           })}
 
           {/* <option block="CartItem" elem="QuantityOption" value="2">
-             2
-           </option> */}
+            2
+          </option> */}
         </select>
       </div>
     );
@@ -432,7 +432,7 @@ export class CartItem extends PureComponent {
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
     return (
-      <div block="AreaText" mods={{ isArabic }}>
+      <div block="AreaText" mods={{isArabic}}>
         {extension_attributes?.click_to_collect_store ?
           <span>
             {splitReadyByKey}

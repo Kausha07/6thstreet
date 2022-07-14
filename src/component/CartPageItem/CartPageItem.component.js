@@ -68,7 +68,7 @@ export class CartItem extends PureComponent {
     isNotAvailble: false,
 
     dragStartX: 0,
-    dragStartY: 0,
+    dragStartY:0,
     dragCount: 0,
     dragDirection: 0,
     dragged: false,
@@ -81,7 +81,7 @@ export class CartItem extends PureComponent {
     isEditing: false,
     isLikeTable: false,
     brand_name: "",
-    closePopup: () => { },
+    closePopup: () => {},
     isCartPage: false,
   };
 
@@ -235,7 +235,7 @@ export class CartItem extends PureComponent {
   };
 
   onDragStartMouse = (evt) => {
-
+    
     const el = this.cartItemRef.current;
     el.classList.add("active");
     this.setState({
@@ -252,7 +252,7 @@ export class CartItem extends PureComponent {
     });
   };
 
-  onDragEndMouse = (evt) => {
+  onDragEndMouse = (evt) => {   
     this.setState({
       dragged: false,
     });
@@ -266,7 +266,7 @@ export class CartItem extends PureComponent {
       dragStartY: Math.round(touch.clientY)
     });
   };
-
+  
 
   onTouchMove = (evt) => {
     const touch = evt.targetTouches[0];
@@ -276,8 +276,8 @@ export class CartItem extends PureComponent {
       touch.clientX > this.state.dragStartX
         ? "right"
         : touch.clientX < this.state.dragStartX
-          ? "left"
-          : "none";
+        ? "left"
+        : "none";
 
     this.setState({
       dragDirection: leftOrRight,
@@ -298,111 +298,10 @@ export class CartItem extends PureComponent {
     let rightDir = this.state.isArabic ? "left" : "right";
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
-    if ((dragChangeY < 20) && (dragChangeY > -20)) {
-
-      if (this.state.isSignedIn) {
-
-        if (this.state.dragDirection === leftDir) {
-          if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
-            el1.style.setProperty("width", 0 + "px");
-            el2.style.transform = `translateX(0)`;
-            el3.style.setProperty("width", 0 + "px");
-            this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
-          } else if (!this.state.dragOpen) {
-            el1.style.setProperty("width", 0 + "px");
-            el2.style.transform = `translateX(${leftDirMove})`;
-            el3.style.setProperty("width", 98 + "px");
-            this.setState({
-              dragOpen: true,
-              dragged: false,
-              dragOpenEl: rightDir,
-            });
-          }
-        } else if (this.state.dragDirection === rightDir) {
-          if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
-            el1.style.setProperty("width", 0 + "px");
-            el2.style.transform = `translateX(0)`;
-            el3.style.setProperty("width", 0 + "px");
-            this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
-          } else if (!this.state.dragOpen) {
-            el1.style.setProperty("width", 98 + "px");
-            el2.style.transform = `translateX(${rightDirMove})`;
-            el3.style.setProperty("width", 0 + "px");
-            this.setState({
-              dragOpen: true,
-              dragged: false,
-              dragOpenEl: leftDir,
-            });
-          }
-        }
-      } else {
-        if (this.state.dragDirection === leftDir) {
-          if (this.state.dragOpen && this.state.dragDirection === rightDir) {
-            el2.style.transform = `translateX(0)`;
-            el3.style.setProperty("width", 0 + "px");
-            this.setState({ dragOpen: false, dragged: false });
-
-          } else if (
-            !this.state.dragOpen &&
-            this.state.dragDirection === leftDir
-          ) {
-            el2.style.transform = `translateX(${leftDirMove})`;
-            el3.style.setProperty("width", 98 + "px");
-            this.setState({ dragOpen: true, dragged: false });
-
-          }
-        } else if (this.state.dragDirection === rightDir) {
-          if (this.state.dragOpen && this.state.dragDirection === rightDir) {
-            el2.style.transform = `translateX(0)`;
-            el3.style.setProperty("width", 0 + "px");
-            this.setState({ dragOpen: false, dragged: false });
-
-          } else if (
-            !this.state.dragOpen &&
-            this.state.dragDirection === leftDir
-          ) {
-            el2.style.transform = `translateX(${rightDirMove})`;
-            el3.style.setProperty("width", 98 + "px");
-            this.setState({ dragOpen: true, dragged: false });
-
-          }
-        }
-      }
-    }
-  };
-
-  onMouseMove = (evt) => {
-    const dragChange = evt.clientX - this.state.dragStartX;
-    const leftOrRight =
-      evt.clientX > this.state.dragStartX
-        ? "right"
-        : evt.clientX < this.state.dragStartX
-          ? "left"
-          : "none";
-    this.setState({
-      dragDirection: leftOrRight,
-      dragCount: dragChange,
-    });
-
-    const el = this.cartItemRef.current;
-    const elBounding = el.getBoundingClientRect();
+    if((dragChangeY< 20) && (dragChangeY > -20)){
+      
     if (this.state.isSignedIn) {
-      const el1 = el.getElementsByClassName("swipeableItemLeftAction")[0];
-    }
-
-    const el1 = el.getElementsByClassName("swipeableItemLeftAction")[0];
-    const el2 = el.getElementsByClassName("swipeableItemContent")[0];
-    const el3 = el.getElementsByClassName("swipeableItemRightAction")[0];
-
-    let leftDir = this.state.isArabic ? "right" : "left";
-    let rightDir = this.state.isArabic ? "left" : "right";
-    let leftDirMove = this.state.isArabic ? "98px" : "-98px";
-    let rightDirMove = this.state.isArabic ? "-98px" : "98px";
-
-
-
-    if (this.state.isSignedIn) {
-
+      
       if (this.state.dragDirection === leftDir) {
         if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
           el1.style.setProperty("width", 0 + "px");
@@ -419,10 +318,8 @@ export class CartItem extends PureComponent {
             dragOpenEl: rightDir,
           });
         }
-
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
-
           el1.style.setProperty("width", 0 + "px");
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
@@ -444,7 +341,7 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -452,15 +349,14 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${leftDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
-
+          
         }
-
       } else if (this.state.dragDirection === rightDir) {
         if (this.state.dragOpen && this.state.dragDirection === rightDir) {
           el2.style.transform = `translateX(0)`;
           el3.style.setProperty("width", 0 + "px");
           this.setState({ dragOpen: false, dragged: false });
-
+          
         } else if (
           !this.state.dragOpen &&
           this.state.dragDirection === leftDir
@@ -468,12 +364,116 @@ export class CartItem extends PureComponent {
           el2.style.transform = `translateX(${rightDirMove})`;
           el3.style.setProperty("width", 98 + "px");
           this.setState({ dragOpen: true, dragged: false });
+          
+        }
+      }
+    }
+  }
+  };
 
+  onMouseMove = (evt) => {
+    const dragChange = evt.clientX - this.state.dragStartX;
+    const leftOrRight =
+      evt.clientX > this.state.dragStartX
+        ? "right"
+        : evt.clientX < this.state.dragStartX
+        ? "left"
+        : "none";
+    this.setState({
+      dragDirection: leftOrRight,
+      dragCount: dragChange,
+    });
+
+    const el = this.cartItemRef.current;
+    const elBounding = el.getBoundingClientRect();
+    if (this.state.isSignedIn) {
+      const el1 = el.getElementsByClassName("swipeableItemLeftAction")[0];
+    }
+
+    const el1 = el.getElementsByClassName("swipeableItemLeftAction")[0];
+    const el2 = el.getElementsByClassName("swipeableItemContent")[0];
+    const el3 = el.getElementsByClassName("swipeableItemRightAction")[0];
+
+    let leftDir = this.state.isArabic ? "right" : "left";
+    let rightDir = this.state.isArabic ? "left" : "right";
+    let leftDirMove = this.state.isArabic ? "98px" : "-98px";
+    let rightDirMove = this.state.isArabic ? "-98px" : "98px";
+
+    
+
+    if (this.state.isSignedIn) {
+
+      if (this.state.dragDirection === leftDir) {
+        if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
+          el1.style.setProperty("width", 0 + "px");
+          el2.style.transform = `translateX(0)`;
+          el3.style.setProperty("width", 0 + "px");
+          this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
+        } else if (!this.state.dragOpen) {
+          el1.style.setProperty("width", 0 + "px");
+          el2.style.transform = `translateX(${leftDirMove})`;
+          el3.style.setProperty("width", 98 + "px");
+          this.setState({
+            dragOpen: true,
+            dragged: false,
+            dragOpenEl: rightDir,
+          });
+        }
+        
+      } else if (this.state.dragDirection === rightDir) {
+        if (this.state.dragOpen && this.state.dragOpenEl == rightDir) {
+          
+          el1.style.setProperty("width", 0 + "px");
+          el2.style.transform = `translateX(0)`;
+          el3.style.setProperty("width", 0 + "px");
+          this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
+        } else if (!this.state.dragOpen) {
+          el1.style.setProperty("width", 98 + "px");
+          el2.style.transform = `translateX(${rightDirMove})`;
+          el3.style.setProperty("width", 0 + "px");
+          this.setState({
+            dragOpen: true,
+            dragged: false,
+            dragOpenEl: leftDir,
+          });
+        }
+      }
+    } else {
+      if (this.state.dragDirection === leftDir) {
+        if (this.state.dragOpen && this.state.dragDirection === rightDir) {
+          el2.style.transform = `translateX(0)`;
+          el3.style.setProperty("width", 0 + "px");
+          this.setState({ dragOpen: false, dragged: false });
+          
+        } else if (
+          !this.state.dragOpen &&
+          this.state.dragDirection === leftDir
+        ) {
+          el2.style.transform = `translateX(${leftDirMove})`;
+          el3.style.setProperty("width", 98 + "px");
+          this.setState({ dragOpen: true, dragged: false });
+          
+        }
+        
+      } else if (this.state.dragDirection === rightDir) {
+        if (this.state.dragOpen && this.state.dragDirection === rightDir) {
+          el2.style.transform = `translateX(0)`;
+          el3.style.setProperty("width", 0 + "px");
+          this.setState({ dragOpen: false, dragged: false });
+          
+        } else if (
+          !this.state.dragOpen &&
+          this.state.dragDirection === leftDir
+        ) {
+          el2.style.transform = `translateX(${rightDirMove})`;
+          el3.style.setProperty("width", 98 + "px");
+          this.setState({ dragOpen: true, dragged: false });
+         
         }
       }
     }
 
-
+    
   };
 
   clickMove = (evt) => {
@@ -489,15 +489,15 @@ export class CartItem extends PureComponent {
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
 
-    if (this.state.dragOpen) {
+    if (this.state.dragOpen) {      
       el2.style.transform = `translateX(0)`;
       el3.style.width = "0";
       this.setState({ dragOpen: false, dragged: false, dragOpenEl: "" });
+      
+    } else { 
+      
 
-    } else {
-
-
-      if (this.state.isSignedIn) {
+      if (this.state.isSignedIn ) {
         el1.style.width = "98px";
         el2.style.transform = `translateX(${rightDirMove})`;
         el3.style.width = "0px";
@@ -511,60 +511,60 @@ export class CartItem extends PureComponent {
           dragged: false,
           dragOpenEl: rightDir,
         });
-      } else {
+      } else {        
         el2.style.transform = `translateX(${leftDirMove})`;
         el3.style.width = "98px";
         this.setState({ dragOpen: true, dragged: false, dragOpenEl: leftDir });
       }
     }
   }
-  handleSwipe = () => {
-    return (
+  handleSwipe = () =>{
+    return(      
       <button block="SwipeActionBtn" onClick={this.clickMove}><span /></button>
     )
   }
   handleSwipeRemoveItem = () => {
-    const {
+    const {      
       handleRemoveItem,
     } = this.props;
-    return (
-      <div block="actionItem">
-        <button
-          block=""
-          id="RemoveItem"
-          name="RemoveItem"
-          elem="Delete"
-          aria-label="Remove item from cart"
-          onClick={handleRemoveItem}
-        >
-          <img src={trash} alt="trash" />
-          <span block="title">{__("Delete")}</span>
-        </button>
-      </div>
+    return(
+        <div block="actionItem">
+          <button
+            block=""
+            id="RemoveItem"
+            name="RemoveItem"
+            elem="Delete"
+            aria-label="Remove item from cart"
+            onClick={handleRemoveItem}
+          >
+            <img src={trash} alt="trash"/>
+            <span block="title">{__("Delete")}</span>
+          </button>
+        </div>    
     )
   }
 
-  handleSwipeWishlistItem = () => {
+  handleSwipeWishlistItem = ()=>{
     const { isArabic } = this.state;
-    const { item: { sku, full_item_info, full_item_info: { config_sku }, }, item } = this.props;
-    this.setState({ isSwipe: false })
-    const {
+    const { item: { sku, full_item_info,full_item_info: { config_sku }, }, item } = this.props;
+    this.setState({isSwipe : false})
+    const {      
       handleRemoveItem,
     } = this.props;
-    return (
+    return(
       <div block="actionItem" >
         <WishlistIcon
-          sku={config_sku}
+          sku={config_sku}      
           mods={{ isArabic }}
           pageType="cart-page"
           data={full_item_info}
-          swipeWishlist={true}
-          renderMySignInPopup={() => { handleRemoveItem(); }}
+          swipeWishlist = {true}
+          renderMySignInPopup = {()=>{handleRemoveItem();}}
         />
         {/* {handleRemoveItem()} */}
         <span block="title">{__("Save to Wishlist")}</span>
       </div>
-
+      
     )
   }
 
@@ -576,23 +576,23 @@ export class CartItem extends PureComponent {
       <div
         block="swipeableItem"
         ref={this.cartItemRef}
-
+        
       >
         {this.state.isSignedIn ? (
           <div block="swipeableItemLeftAction" style={{ width: 0 }}>
-            {this.handleSwipeWishlistItem()}
+              {this.handleSwipeWishlistItem()}
           </div>
         ) : null}
 
         <div block="swipeableItemContent">
-
+          
           <figure block="CartPageItem" elem="Wrapper">
             {this.renderImage()}
             {this.renderContent()}
           </figure>
         </div>
         <div block="swipeableItemRightAction" style={{ width: 0 }}>
-          {this.handleSwipeRemoveItem()}
+            {this.handleSwipeRemoveItem()}
         </div>
       </div>
     );
@@ -805,13 +805,13 @@ export class CartItem extends PureComponent {
       actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       actualEdd = defaultEddDateString;
     }
-
+  
     if (!actualEddMess) {
       return null;
     }
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
-
+  
     return (
       <div block="AreaText" mods={{ isArabic }}>
         {extension_attributes?.click_to_collect_store ? (
@@ -893,7 +893,7 @@ export class CartItem extends PureComponent {
           elem="Delete"
           aria-label="Remove item from cart"
           onClick={handleRemoveItem}
-
+          
         >
           <span />
         </button>
