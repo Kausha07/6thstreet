@@ -13,7 +13,7 @@
     bottom: 0;
     left: 0;
     background: var(--overlay-background-color);
-    z-index: 600;
+    z-index: 1000;
     grid-template-columns: 1fr 6fr;
     height:100%;
     &-Crumbs {
@@ -74,7 +74,7 @@
         min-width: 0;
         order: 1;
         &_isArabic {
-            direction: rtl!important;
+            // direction: rtl!important;
         }
         &_isCrumbs {
             width: 85px;
