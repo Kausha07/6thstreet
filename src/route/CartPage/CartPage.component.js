@@ -85,8 +85,8 @@ export class CartPage extends PureComponent {
     const script = document.createElement('script');
     script.src = 'https://checkout.tabby.ai/tabby-promo.js';
     document.body.appendChild(script);
-    const total = subtotal;
-    getTabbyInstallment(total).then((response) => {
+
+    getTabbyInstallment(subtotal).then((response) => {
       if (response?.value) {
         if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
           document.getElementById("TabbyPromo").classList.remove("d-none");
@@ -106,13 +106,12 @@ export class CartPage extends PureComponent {
       getTabbyInstallment
     } = this.props;
     if (prevProps?.totals?.subtotal !== subtotal) {
-      const total= subtotal;
-      getTabbyInstallment(total).then((response) => {
+      getTabbyInstallment(subtotal).then((response) => {
         if (response?.value) {
           if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
             document.getElementById("TabbyPromo").classList.remove("d-none");
           }
-          this.addTabbyPromo(total, currency_code);
+          this.addTabbyPromo(subtotal, currency_code);
         }
         else {
           document.getElementById("TabbyPromo").classList.add("d-none");
@@ -293,6 +292,8 @@ export class CartPage extends PureComponent {
   }
 
   renderPriceLine(price, name, mods, allowZero = false) {
+    console.log("price",price)
+    console.log("name",name)
     if (!price && !allowZero) {
       return null;
     }
@@ -390,12 +391,12 @@ export class CartPage extends PureComponent {
           {__("Proceed to Checkout")}
         </button>
         {/* <Link
-                   block="CartPage"
-                   elem="ContinueShopping"
-                   to="/"
-                 >
-                     { __('Continue shopping') }
-                 </Link> */}
+                  block="CartPage"
+                  elem="ContinueShopping"
+                  to="/"
+                >
+                    { __('Continue shopping') }
+                </Link> */}
       </div>
     );
   }

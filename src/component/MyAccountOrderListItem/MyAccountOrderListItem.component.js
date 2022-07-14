@@ -38,8 +38,8 @@ class MyAccountOrderListItem extends SourceComponent {
     const finalStatus = isArabic()
       ? translateArabicStatus(status)
       : status
-      ? status.split("_").join(" ")
-      : "";
+        ? status.split("_").join(" ")
+        : "";
 
     return (
       <p
@@ -142,9 +142,9 @@ class MyAccountOrderListItem extends SourceComponent {
               {isArabic()
                 ? arabicDate
                 : formatDate(
-                    "DD MMM YYYY",
-                    new Date(created_at.replace(/-/g, "/"))
-                  )}
+                  "DD MMM YYYY",
+                  new Date(created_at.replace(/-/g, "/"))
+                )}
             </span>
           </p>
         </div>
@@ -159,19 +159,19 @@ class MyAccountOrderListItem extends SourceComponent {
     if (STATUS_HIDE_BAR.includes(status)) {
       return null;
     }
-
+    
     return (
       <div block="MyAccountOrderListItem" elem="Status">
         <div block="MyAccountOrderListItem" elem="ProgressBar">
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
-            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status), isArabic: isArabic() }}
           />
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
-            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status), isArabic: isArabic() }}
           />
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">

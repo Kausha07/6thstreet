@@ -245,7 +245,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 placeholder: __('Last Name'),
                 validation: ['notEmpty'],
                 type: 'hidden',
-                value: isShippingAddress ? lastname : customer?.lastname?.trim() || ''
+                value: isShippingAddress ? lastname : customer?.lastname || ''
             },
             phonecode: {
                 type: 'text',

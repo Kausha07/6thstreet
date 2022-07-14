@@ -14,6 +14,7 @@ import {
   searchBy,
   getBrandsDetails,
   getShopByBrands,
+  getMultiProducts
 } from "./app";
 import { getIndex } from "./app/utils";
 
@@ -52,6 +53,7 @@ const AlgoliaSDK = {
   getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
+  getMultiProducts: (idsArray) => getMultiProducts(idsArray, { index: AlgoliaSDK.index }),
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
   getWishlistProduct: (idsArray) =>
     getWishlistProduct(idsArray, { index: AlgoliaSDK.index }),

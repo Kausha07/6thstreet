@@ -216,7 +216,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setCustomerDefaultShippingAddress(null));
     dispatch(setEddResponse(null, null));
     dispatch(setDefaultEddAddress(null, null));
+    dispatch(setCitiesData([]));
     dispatch(setCustomerAddressData([]));
+
     CartDispatcher.getCart(dispatch);
     WishlistDispatcher.updateInitialWishlistData(dispatch);
     sessionStorage.removeItem("EddAddressReq");

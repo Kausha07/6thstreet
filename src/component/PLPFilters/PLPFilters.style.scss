@@ -8,6 +8,7 @@
 :root {
   --color-button-red: #ff5637;
   --color-gainsboro: #dcdcdc;
+  --selected-step-color: #f96446;
   --color-gray: #808080;
   --color-light-grey: #d3d3d3;
   --color-medium-grey: #b5b5b5;
@@ -472,7 +473,7 @@
     width: 261px;
     top: 153px;
     height: 80vh;
-    overflow: scroll;
+    overflow: scroll; // remove it for 2663 revert it if it creates issue.
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     &::-webkit-scrollbar {

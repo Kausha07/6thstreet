@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import CDN from "../../util/API/provider/CDN";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
@@ -74,7 +73,7 @@ export class SearchSuggestionContainer extends PureComponent {
       return;
     }
 
-    requestSearchSuggestions(search);
+    // requestSearchSuggestions(search);
   }
 
   constructor(props) {
@@ -88,24 +87,26 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches: [],
       recommendedForYou: [],
       trendingProducts: [],
-      exploreMoreData: null,
       typingTimeout: 0,
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
 
-    this.requestSearchSuggestions(props);
+    // this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
     // this.requestTopSearches();
     this.requestRecentSearches();
-    this.getExploreMoreData();
   }
 
   getAlgoliaIndex(countryCodeFromUrl, lang) {
     const algoliaENV =
-      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+      process.env.REACT_APP_ALGOLIA_ENV === "staging"
+        ? "stage"
+        : process.env.REACT_APP_ALGOLIA_ENV === "uat"
+        ? "preprod"
+        : "enterprise";
     // production will work after resolving index issue.
-    if (lang === "english") {
+    if (lang === "english" && process.env.REACT_APP_ALGOLIA_ENV !== "uat") {
       switch (countryCodeFromUrl) {
         case "en-ae":
           return `${algoliaENV}_magento_english_products_query_suggestions`;
@@ -120,7 +121,10 @@ export class SearchSuggestionContainer extends PureComponent {
         case "en-sa":
           return `${algoliaENV}_magento_en_sa_products_query_suggestions`;
       }
-    } else {
+    } else if (
+      lang !== "english" &&
+      process.env.REACT_APP_ALGOLIA_ENV !== "uat"
+    ) {
       switch (countryCodeFromUrl) {
         case "ar-ae":
           return `${algoliaENV}_magento_arabic_products_query_suggestions`;
@@ -134,6 +138,42 @@ export class SearchSuggestionContainer extends PureComponent {
           return `${algoliaENV}_magento_ar_qa_products_query_suggestions`;
         case "ar-sa":
           return `${algoliaENV}_magento_ar_sa_products_query_suggestions`;
+      }
+    } else if (
+      lang === "english" &&
+      process.env.REACT_APP_ALGOLIA_ENV === "uat"
+    ) {
+      switch (countryCodeFromUrl) {
+        case "en-ae":
+          return `${algoliaENV}_english_suggestions`;
+        case "en-bh":
+          return `${algoliaENV}_en_bh_suggestions`;
+        case "en-kw":
+          return `${algoliaENV}_en_kw_suggestions`;
+        case "en-om":
+          return `${algoliaENV}_en_om_suggestions`;
+        case "en-qa":
+          return `${algoliaENV}_en_qa_suggestions`;
+        case "en-sa":
+          return `${algoliaENV}_en_sa_suggestions`;
+      }
+    } else if (
+      lang !== "english" &&
+      process.env.REACT_APP_ALGOLIA_ENV === "uat"
+    ) {
+      switch (countryCodeFromUrl) {
+        case "ar-ae":
+          return `${algoliaENV}_arabic_suggestions`;
+        case "ar-bh":
+          return `${algoliaENV}_ar_bh_suggestions`;
+        case "ar-kw":
+          return `${algoliaENV}_ar_kw_suggestions`;
+        case "ar-om":
+          return `${algoliaENV}_ar_om_suggestions`;
+        case "ar-qa":
+          return `${algoliaENV}_ar_qa_suggestions`;
+        case "ar-sa":
+          return `${algoliaENV}_ar_sa_suggestions`;
       }
     }
   }
@@ -205,7 +245,6 @@ export class SearchSuggestionContainer extends PureComponent {
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
     const { gender } = this.props;
-
     if (gender !== "home") {
       this.getPdpSearchWidgetData();
     }
@@ -224,42 +263,12 @@ export class SearchSuggestionContainer extends PureComponent {
       this.props?.search !== this.props.prevSearch &&
       prevProps?.search !== this.props?.search
     ) {
-      this.requestSearchSuggestions(this.props);
+      // this.requestSearchSuggestions(this.props);
     }
   }
 
   componentWillUnmount() {
     document.body.classList.remove("isSuggestionOpen");
-  }
-
-  getExploreMoreData = async () => {
-    // let device = isMobile.any() ? 'm' : 'd'
-    const { gender } = this.props;
-    const locale = getLocaleFromUrl();
-    let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
-    try {
-      const resp = await CDN.get(url);
-
-
-      if (resp) {
-        let k = resp.widgets
-        let itemYouWant = null;
-        k.forEach((item) => {
-          if (item.header) {
-            if (item.header.title === "Explore More") {
-              itemYouWant = item
-            }
-          }
-        });
-
-        this.setState({
-          exploreMoreData: itemYouWant
-        })
-      }
-    }
-    catch (error) {
-      console.error(error);
-    }
   }
 
   async requestTrendingInformation() {
@@ -355,7 +364,6 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      exploreMoreData
     } = this.state;
     const {
       search,

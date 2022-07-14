@@ -37,14 +37,10 @@ export class CTCPopup extends Overlay {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
-    this.freezeScroll();
-    window.addEventListener('popstate', this.hidePopUp);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
-    this.unfreezeScroll()
-    window.removeEventListener('popstate', this.hidePopUp);
   }
 
   onVisible() {

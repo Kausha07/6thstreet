@@ -68,13 +68,13 @@ export class CartItem extends PureComponent {
     isNotAvailble: false,
 
     dragStartX: 0,
-    dragStartY:0,
     dragCount: 0,
     dragDirection: 0,
     dragged: false,
     dragOpen: false,
     dragOpenEl: "",
     isSignedIn: this.props.isSignedIn,
+
   };
 
   static defaultProps = {
@@ -252,7 +252,7 @@ export class CartItem extends PureComponent {
     });
   };
 
-  onDragEndMouse = (evt) => {   
+  onDragEndMouse = (evt) => {
     this.setState({
       dragged: false,
     });
@@ -260,18 +260,15 @@ export class CartItem extends PureComponent {
     el.classList.remove("active");
   };
   onDragEndTouch = (evt) => {
-    const touch = evt.changedTouches[0];
     this.setState({
       dragged: false,
-      dragStartY: Math.round(touch.clientY)
     });
   };
   
 
   onTouchMove = (evt) => {
     const touch = evt.targetTouches[0];
-    const dragChange = Math.round(touch.clientX - this.state.dragStartX);
-    const dragChangeY = Math.round(touch.clientY - this.state.dragStartY);
+    const dragChange = touch.clientX - this.state.dragStartX;
     const leftOrRight =
       touch.clientX > this.state.dragStartX
         ? "right"
@@ -298,10 +295,9 @@ export class CartItem extends PureComponent {
     let rightDir = this.state.isArabic ? "left" : "right";
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
-    if((dragChangeY< 20) && (dragChangeY > -20)){
-      
+
     if (this.state.isSignedIn) {
-      
+
       if (this.state.dragDirection === leftDir) {
         if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
           el1.style.setProperty("width", 0 + "px");
@@ -368,7 +364,6 @@ export class CartItem extends PureComponent {
         }
       }
     }
-  }
   };
 
   onMouseMove = (evt) => {
@@ -509,7 +504,7 @@ export class CartItem extends PureComponent {
         this.setState({
           dragOpen: true,
           dragged: false,
-          dragOpenEl: rightDir,
+          dragOpenEl: leftDir,
         });
       } else {        
         el2.style.transform = `translateX(${leftDirMove})`;
@@ -540,7 +535,8 @@ export class CartItem extends PureComponent {
             <img src={trash} alt="trash"/>
             <span block="title">{__("Delete")}</span>
           </button>
-        </div>    
+        </div>
+        
     )
   }
 

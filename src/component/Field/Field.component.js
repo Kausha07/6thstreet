@@ -97,18 +97,9 @@ export class Field extends SourceField {
     }
 
     renderPhone() {
-        const {handleChange} = this.props
         return (
             <FieldInput
               { ...this.props }
-              onChange={(event) => {
-                const {
-                  target: { value = "" },
-                } = event;
-                if (value.charAt(0) !== "0") {
-                  handleChange(value);
-                }
-              }}
               type="number"
               max="none"
             />

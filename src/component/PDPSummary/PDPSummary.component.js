@@ -187,9 +187,6 @@ class PDPSummary extends PureComponent {
       product: { price },
       getTabbyInstallment,
     } = this.props;
-    const script = document.createElement('script');
-    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
-    document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
@@ -246,7 +243,7 @@ class PDPSummary extends PureComponent {
       !eddEventSent &&
       cross_border === 0
     ) {
-      if (addressCityData?.length > 0) {
+      if (addressCityData.length > 0) {
         this.validateEddStatus(countryCode);
         let default_edd = defaultShippingAddress ? true : false;
         Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
