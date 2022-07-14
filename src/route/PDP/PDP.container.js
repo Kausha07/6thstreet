@@ -97,7 +97,7 @@ export class PDPContainer extends PureComponent {
   };
 
   static defaultProps = {
-    nbHits: 1,
+    // nbHits: 1,
     sku: "",
     isLoading: true,
   };
@@ -325,7 +325,7 @@ export class PDPContainer extends PureComponent {
       product: {
         name: productKeys.name,
         id: sku,
-        price: originalPrice,
+        price: specialPrice || originalPrice,
         brand: productKeys?.brand_name,
         category: categoryLevel,
         varient: productKeys?.color || "",

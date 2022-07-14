@@ -12,6 +12,9 @@ import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSli
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
 import { connect } from "react-redux";
+import NoMatch from "Route/NoMatch";
+import Loader from "Component/Loader";
+
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -81,6 +84,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
+
     return <PLPFilters {...this.props} isPLPSortBy={false} />;
   }
 
@@ -139,6 +143,16 @@ export class PLP extends PureComponent {
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
+    const {pages, isLoading} = this.props;
+    if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
+      return (
+        <NoMatch/>
+      )
+    }
+    if (      
+      (pages.undefined && pages.undefined.length > 0) ||
+      (pages["0"] && pages["0"].length > 0)
+    ) {
 
     return (
       <main block="PLP" id="plp-main-scroll-id">
@@ -162,8 +176,10 @@ export class PLP extends PureComponent {
           </div>
         </ContentWrapper>
       </main>
-    );
-  }
+      )}
+
+      return  <Loader isLoading={isLoading} />
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PLP);
