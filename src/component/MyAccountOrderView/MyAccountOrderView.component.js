@@ -56,6 +56,9 @@ import {
   NEW_STATUS_LABEL_MAP,
   NEW_EXCHANGE_STATUS_LABEL_MAP,
   STATUS_DISPATCHED,
+  PICKUP_FAILED,
+  PICKEDUP,
+  READY_TO_PICK
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
