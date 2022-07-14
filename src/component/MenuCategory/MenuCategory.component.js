@@ -35,6 +35,11 @@ class MenuCategory extends PureComponent {
 
   onLeave = this.handleHover.bind(this, false);
 
+  onHoverItemClick = (item) => {
+    this.handleHover(false);
+    this.props.setLastTapItemOnHome(item)
+  }
+
   handleHover(isVisible) {
     this.setState({ isVisible});
   }
@@ -54,7 +59,7 @@ class MenuCategory extends PureComponent {
         return (
           <div block="DynamicContent" elem="Wrapper">
             <MenuDynamicContent
-              setLastTapItemOnHome={setLastTapItemOnHome}
+              setLastTapItemOnHome={this.onHoverItemClick}
               toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
               content={data}
             />
@@ -68,7 +73,7 @@ class MenuCategory extends PureComponent {
       return (
         <div block="DynamicContent" elem="Wrapper">
           <MenuDynamicContent
-            setLastTapItemOnHome={setLastTapItemOnHome}
+            setLastTapItemOnHome={this.onHoverItemClick}
             toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
             content={data}
           />
@@ -79,7 +84,7 @@ class MenuCategory extends PureComponent {
     return (
       <div block="DynamicContent" elem="Wrapper">
         <MenuDynamicContent
-          setLastTapItemOnHome={setLastTapItemOnHome}
+          setLastTapItemOnHome={this.onHoverItemClick}
           toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
           content={data}
         />
