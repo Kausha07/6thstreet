@@ -98,5 +98,4 @@ class PurchaseEvent extends BaseEvent {
     return products;
   }
 }
-
 export default PurchaseEvent;
