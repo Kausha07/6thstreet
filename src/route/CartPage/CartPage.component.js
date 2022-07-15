@@ -106,7 +106,7 @@ export class CartPage extends PureComponent {
       getTabbyInstallment
     } = this.props;
     if (prevProps?.totals?.subtotal !== subtotal) {
-      const total = subtotal;
+      const total= subtotal;
       getTabbyInstallment(total).then((response) => {
         if (response?.value) {
           if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
@@ -389,13 +389,6 @@ export class CartPage extends PureComponent {
           <span />
           {__("Proceed to Checkout")}
         </button>
-        {/* <Link
-                    block="CartPage"
-                    elem="ContinueShopping"
-                    to="/"
-                  >
-                      { __('Continue shopping') }
-                  </Link> */}
       </div>
     );
   }
