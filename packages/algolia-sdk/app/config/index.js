@@ -27,7 +27,7 @@ const FACET_FILTERS = [
   "tommy_label",
   "in_stock",
   "age",
-  'promotion'
+  "promotion",
 ];
 
 const config = {
@@ -59,7 +59,92 @@ const config = {
 
   SIZE_FILTERS: ["size_uk", "size_eu", "size_us"],
   CURRENCY_STRIP_INSIGNIFICANT_ZEROS: ["AED", "SAR", "QAR"],
-
+  PREPROD_INDICES: {
+    "en-ae": {
+      default: "english_products",
+      latest: "english_products_created_at_desc",
+      price_low: "english_products_price_default_asc",
+      price_high: "english_products_price_default_desc",
+      discount: "english_products_discount_desc",
+    },
+    "ar-ae": {
+      default: "arabic_products",
+      latest: "arabic_products_created_at_desc",
+      price_low: "arabic_products_price_default_asc",
+      price_high: "arabic_products_price_default_desc",
+      discount: "arabic_products_discount_desc",
+    },
+    "en-sa": {
+      default: "en_sa_products",
+      latest: "en_sa_products_created_at_desc",
+      price_low: "en_sa_products_price_default_asc",
+      price_high: "en_sa_products_price_default_desc",
+      discount: "en_sa_products_discount_desc",
+    },
+    "ar-sa": {
+      default: "ar_sa_products",
+      latest: "ar_sa_products_created_at_desc",
+      price_low: "ar_sa_products_price_default_asc",
+      price_high: "ar_sa_products_price_default_desc",
+      discount: "ar_sa_products_discount_desc",
+    },
+    "en-kw": {
+      default: "en_kw_products",
+      latest: "en_kw_products_created_at_desc",
+      price_low: "en_kw_products_price_default_asc",
+      price_high: "en_kw_products_price_default_desc",
+      discount: "en_kw_products_discount_desc",
+    },
+    "ar-kw": {
+      default: "ar_kw_products",
+      latest: "ar_kw_products_created_at_desc",
+      price_low: "ar_kw_products_price_default_asc",
+      price_high: "ar_kw_products_price_default_desc",
+      discount: "ar_kw_products_discount_desc",
+    },
+    "en-om": {
+      default: "en_om_products",
+      latest: "en_om_products_created_at_desc",
+      price_low: "en_om_products_price_default_asc",
+      price_high: "en_om_products_price_default_desc",
+      discount: "en_om_products_discount_desc",
+    },
+    "ar-om": {
+      default: "ar_om_products",
+      latest: "ar_om_products_created_at_desc",
+      price_low: "ar_om_products_price_default_asc",
+      price_high: "ar_om_products_price_default_desc",
+      discount: "ar_om_products_discount_desc",
+    },
+    "en-bh": {
+      default: "en_bh_products",
+      latest: "en_bh_products_created_at_desc",
+      price_low: "en_bh_products_price_default_asc",
+      price_high: "en_bh_products_price_default_desc",
+      discount: "en_bh_products_discount_desc",
+    },
+    "ar-bh": {
+      default: "ar_bh_products",
+      latest: "ar_bh_products_created_at_desc",
+      price_low: "ar_bh_products_price_default_asc",
+      price_high: "ar_bh_products_price_default_desc",
+      discount: "ar_bh_products_discount_desc",
+    },
+    "en-qa": {
+      default: "en_qa_products",
+      latest: "en_qa_products_created_at_desc",
+      price_low: "en_qa_products_price_default_asc",
+      price_high: "en_qa_products_price_default_desc",
+      discount: "en_qa_products_discount_desc",
+    },
+    "ar-qa": {
+      default: "ar_qa_products",
+      latest: "ar_qa_products_created_at_desc",
+      price_low: "ar_qa_products_price_default_asc",
+      price_high: "ar_qa_products_price_default_desc",
+      discount: "ar_qa_products_discount_desc",
+    },
+  },
   INDICES: {
     "en-ae": {
       default: "magento_english_products",
@@ -174,7 +259,7 @@ const config = {
       "color",
       "stock_qty",
       "highlighted_attributes",
-      "product_tag"
+      "product_tag",
     ],
     facets: FACET_FILTERS,
     facetFilters: [],
@@ -190,6 +275,7 @@ const SIZE_FILTERS = config.SIZE_FILTERS;
 const CURRENCY_STRIP_INSIGNIFICANT_ZEROS =
   config.CURRENCY_STRIP_INSIGNIFICANT_ZEROS;
 const INDICES = config.INDICES;
+const PREPROD_INDICES = config.PREPROD_INDICES;
 const searchParams = config.searchParams;
 
 const VISIBLE_GENDERS = {
@@ -222,6 +308,7 @@ export {
   SIZE_FILTERS,
   CURRENCY_STRIP_INSIGNIFICANT_ZEROS,
   INDICES,
+  PREPROD_INDICES,
   searchParams,
   VISIBLE_GENDERS,
 };

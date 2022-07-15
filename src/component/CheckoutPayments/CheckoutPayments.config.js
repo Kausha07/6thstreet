@@ -8,6 +8,7 @@ export const CASH_ON_DELIVERY = "msp_cashondelivery";
 export const TABBY_ISTALLMENTS = "tabby_installments";
 export const FREE = "free";
 export const CHECKOUT_QPAY = "checkout_qpay";
+export const EXCHANGE_STORE_CREDIT = "exchange_store_credit";
 export const TABBY_PAYMENT_CODES = [TABBY_ISTALLMENTS];
 export const HIDDEN_PAYMENTS = [
   "checkout",

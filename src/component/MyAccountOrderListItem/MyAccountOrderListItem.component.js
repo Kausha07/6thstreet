@@ -166,12 +166,18 @@ class MyAccountOrderListItem extends SourceComponent {
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
-            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+            mods={{
+              isProcessing: STATUS_BEING_PROCESSED.includes(status),
+              isArabic: isArabic(),
+            }}
           />
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
-            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+            mods={{
+              isProcessing: STATUS_BEING_PROCESSED.includes(status),
+              isArabic: isArabic(),
+            }}
           />
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">

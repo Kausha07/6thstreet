@@ -12,6 +12,7 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import isMobile from "Util/Mobile";
 
 import Loader from 'Component/Loader';
 import MyAccountDeliveryAddressForm from 'Component/MyAccountDeliveryAddressForm';
@@ -77,29 +78,31 @@ export class MyAccountAddressPopup extends PureComponent {
 
     renderAddressForm(form) {
         const {
-            payload: { address }, customer, closeForm, handleAddress
+            payload: { address }, customer, closeForm, handleAddress, isExchange
         } = this.props;
         const { defaultChecked, mobileDeleteNotice } = this.state;
 
         return (
             <>
-                <button
-                  block="MyAccountAddressPopup"
-                  elem="DeleteBtn"
-                  mods={ { newForm: form } }
-                  onClick={ this.openMobileDeleteNotice }
-                >
-                    { __('Delete') }
-                </button>
-                { mobileDeleteNotice ? this.renderMobileDeleteNotice() : null }
+                {isExchange && isMobile.any() ? null :
+                    <button
+                        block="MyAccountAddressPopup"
+                        elem="DeleteBtn"
+                        mods={{ newForm: form }}
+                        onClick={this.openMobileDeleteNotice}
+                    >
+                        {__('Delete')}
+                    </button>
+                }
+                {mobileDeleteNotice ? this.renderMobileDeleteNotice() : null}
                 <MyAccountDeliveryAddressForm
-                  newForm={ form }
-                  address={ address }
-                  onSave={ handleAddress }
-                  closeForm={ closeForm }
-                  customer={ customer }
-                  defaultChecked={ defaultChecked }
-                  changeDefaultShipping={ this.changeDefaultShipping }
+                    newForm={form}
+                    address={address}
+                    onSave={handleAddress}
+                    closeForm={closeForm}
+                    customer={customer}
+                    defaultChecked={defaultChecked}
+                    changeDefaultShipping={this.changeDefaultShipping}
                 />
             </>
         );
@@ -122,25 +125,25 @@ export class MyAccountAddressPopup extends PureComponent {
     renderMobileDeleteNotice() {
         return (
             <div
-              block="MyAccountAddressPopup"
-              elem="DeletePopup"
+                block="MyAccountAddressPopup"
+                elem="DeletePopup"
             >
                 <div
-                  block="MyAccountAddressPopup"
-                  elem="DeletePopupContainer"
-                  mods={ { isMobile: true } }
+                    block="MyAccountAddressPopup"
+                    elem="DeletePopupContainer"
+                    mods={{ isMobile: true }}
                 >
-                    <h2>{ __('Delete') }</h2>
-                    <p>{ __('Are you sure you want to delete this address?') }</p>
+                    <h2>{__('Delete')}</h2>
+                    <p>{__('Are you sure you want to delete this address?')}</p>
                     <div
-                      block="MyAccountAddressPopup"
-                      elem="BtnContainer"
+                        block="MyAccountAddressPopup"
+                        elem="BtnContainer"
                     >
-                        <button block="MyAccountAddressPopup" elem="NoBtn" onClick={ this.closeMobileDeleteNotice }>
-                            { __('No') }
+                        <button block="MyAccountAddressPopup" elem="NoBtn" onClick={this.closeMobileDeleteNotice}>
+                            {__('No')}
                         </button>
-                        <button block="MyAccountAddressPopup" elem="YesBtn" onClick={ this.deleteMobile }>
-                        { __('Yes') }
+                        <button block="MyAccountAddressPopup" elem="YesBtn" onClick={this.deleteMobile}>
+                            {__('Yes')}
                         </button>
                     </div>
                 </div>
@@ -153,21 +156,21 @@ export class MyAccountAddressPopup extends PureComponent {
 
         return (
             <div
-              block="MyAccountAddressPopup"
-              elem="DeletePopup"
+                block="MyAccountAddressPopup"
+                elem="DeletePopup"
             >
                 <div
-                  block="MyAccountAddressPopup"
-                  elem="DeletePopupContainer"
+                    block="MyAccountAddressPopup"
+                    elem="DeletePopupContainer"
                 >
-                    <p>{ __('Are you sure you want to delete this address?') }</p>
-                    <button block="button primary" onClick={ handleDeleteAddress }>
-                        { __('Yes') }
+                    <p>{__('Are you sure you want to delete this address?')}</p>
+                    <button block="button primary" onClick={handleDeleteAddress}>
+                        {__('Yes')}
                     </button>
-                    <button block="MyAccountAddressPopup" elem="CancelBtn" onClick={ closeForm }>
-                        { __('Cancel') }
+                    <button block="MyAccountAddressPopup" elem="CancelBtn" onClick={closeForm}>
+                        {__('Cancel')}
                     </button>
-                    <button block="MyAccountAddressPopup" elem="xBtn" onClick={ closeForm }>
+                    <button block="MyAccountAddressPopup" elem="xBtn" onClick={closeForm}>
                         &#10005;
                     </button>
                 </div>
@@ -179,14 +182,14 @@ export class MyAccountAddressPopup extends PureComponent {
         const { payload: { action } } = this.props;
 
         switch (action) {
-        case EDIT_ADDRESS:
-            return this.renderAddressForm(false);
-        case ADD_ADDRESS:
-            return this.renderAddressForm(true);
-        case DELETE_ADDRESS:
-            return this.renderDeleteNotice();
-        default:
-            return null;
+            case EDIT_ADDRESS:
+                return this.renderAddressForm(false);
+            case ADD_ADDRESS:
+                return this.renderAddressForm(true);
+            case DELETE_ADDRESS:
+                return this.renderDeleteNotice();
+            default:
+                return null;
         }
     }
 
@@ -196,11 +199,11 @@ export class MyAccountAddressPopup extends PureComponent {
 
         return (
             <div
-              id={ ADDRESS_POPUP_ID }
-              mix={ { block: 'MyAccountAddressPopup', mods: { isArabic } } }
+                id={ADDRESS_POPUP_ID}
+                mix={{ block: 'MyAccountAddressPopup', mods: { isArabic } }}
             >
-                <Loader isLoading={ isLoading } />
-                { formContent ? this.renderContent() : null }
+                <Loader isLoading={isLoading} />
+                {formContent ? this.renderContent() : null}
             </div>
         );
     }
