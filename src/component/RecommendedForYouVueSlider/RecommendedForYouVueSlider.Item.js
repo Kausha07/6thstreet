@@ -8,7 +8,11 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK, EVENT_CLICK_RECOMMENDATION_CLICK } from "Util/Event";
+import Event, {
+  VUE_CAROUSEL_CLICK,
+  EVENT_CLICK_RECOMMENDATION_CLICK,
+  EVENT_GTM_PRODUCT_CLICK
+} from "Util/Event";
 import { Price as PriceType } from "Util/API/endpoint/Product/Product.type";
 
 export const mapStateToProps = (state) => ({
@@ -34,15 +38,24 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   onclick = (widgetID, item) => {
     const {
       pageType,
-      data: { category, sku, link,name },
+      data: {
+        category,
+        sku,
+        link,
+        name,
+        price,
+        product_type_6s,
+        color,
+        brand_name,
+        product_Position
+      },
       sourceProdID,
       sourceCatgID,
       posofreco,
-      data
+      data,
     } = this.props;
     let destProdID = sku;
     // vue analytics
-    
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
@@ -61,8 +74,18 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"] || "";
     Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK, name);
-    this.sendBannerClickImpression(item);
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
+      name: name || "",
+      id: sku || "",
+      price: itemPrice || "",
+      brand: brand_name || "",
+      category: product_type_6s || category,
+      varient: color || "",
+      position: product_Position || "",
+    });
+    //this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -70,7 +93,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     const { country, config } = this.props;
-    const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true
+    const showDiscountPercentage =
+      config?.countries[country]?.price_show_discount_percent ?? true;
     if (!showDiscountPercentage) {
       return null;
     }
@@ -191,7 +215,9 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       pageType,
       renderMySignInPopup,
     } = this.props;
-    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
+    let productTag = this.props.data.product_tag
+      ? this.props.data.product_tag
+      : "";
     const { isArabic } = this.state;
     let newLink = link;
     if (this.props.data.url) {
@@ -237,12 +263,9 @@ class RecommendedForYouVueSliderItem extends PureComponent {
           {name}
         </span>
         {this.renderPrice(price)}
-        {
-          productTag ?
-            this.renderProductTag(productTag)
-            :
-            this.renderIsNew(is_new_in)
-        }
+        {productTag
+          ? this.renderProductTag(productTag)
+          : this.renderIsNew(is_new_in)}
         <WishlistIcon
           sku={sku}
           data={data}

@@ -104,6 +104,50 @@ export class MyAccountReturnCreateItem extends PureComponent {
         );
     }
 
+    onQuantityChange = (quantity, itemId) => {
+        const {
+          onQuantitySelection,
+        } = this.props;
+        onQuantitySelection(parseInt(quantity), itemId);
+      };
+    
+      renderQuantitySelection = (maxSaleQuantity) => {
+        const {
+          minSaleQuantity = 1,
+          item: { item_id },
+          returnableQty = {},
+          isArabic
+        } = this.props;
+    
+        const qtyList = Array.from(
+          { length: maxSaleQuantity - minSaleQuantity + 1 },
+          (v, k) => k + minSaleQuantity
+        );
+    
+        return (
+          <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+            <select
+              value={returnableQty[item_id] ? returnableQty[item_id].quantity : maxSaleQuantity}
+              onChange={(e) => this.onQuantityChange(e.target.value, item_id)}
+            >
+              {qtyList.map((item, index) => {
+                return (
+                  <option
+                    key={index}
+                    selected={returnableQty[item_id] ? returnableQty[item_id].quantity === item : maxSaleQuantity === item}
+                    block="CartItem"
+                    elem="QuantityOption"
+                    value={item}
+                  >
+                    {item}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        );
+      };
+
     renderDetails() {
         const {
             displayDiscountPercentage,
@@ -114,6 +158,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 discount_percent,
                 discount_amount,
                 size: sizeField,
+                item_id,
                 qty_shipped,
                 product_options: { info_buyRequest: { qty } }
             }
@@ -130,9 +175,10 @@ export class MyAccountReturnCreateItem extends PureComponent {
                         </p>
                     )}
                     {!!qty_shipped && (
-                        <p>
+                        <p block="Quantity">
                             {__('Qty: ')}
-                            <span>{+qty_shipped}</span>
+                            {this.renderQuantitySelection(+qty_shipped,item_id)}
+                            {/* <span>{+qty_shipped}</span> */}
                         </p>
                     )}
                     {!!size && (

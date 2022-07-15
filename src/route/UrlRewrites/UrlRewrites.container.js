@@ -78,6 +78,8 @@ export class UrlRewritesContainer extends PureComponent {
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}${query}`);
         }
+      } else if (window.pageType = "CMS_PAGE") {
+        history.push(`${pathname}`);
       } else {
         history.push(`${pathname}?${query}`);
       }
@@ -85,7 +87,6 @@ export class UrlRewritesContainer extends PureComponent {
     // if (!location.search && query) {
     // history.push(`${pathname}?${query}`);
     // }
-
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
@@ -158,18 +159,18 @@ export class UrlRewritesContainer extends PureComponent {
           gClidParam = `&gclid=${gclidValue}`
         } else {
           hasQueryString = 1;
-          appendQueryString=`&${url.search.split('?')[1].toString()}`;
+          appendQueryString = `&${url.search.split('?')[1].toString()}`;
         }
       }
-      
+
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );
       let UpdatedURL;
-      if(urlResolver && urlResolver.data.url)
-      {
+      if (urlResolver && urlResolver.data.url) {
         UpdatedURL = urlResolver.data.url.split("&p=")[0] + '&p=0' + urlResolver.data.url.split("&p=")[1].substring(1)
       }
+
       const {
         type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
         id,

@@ -35,6 +35,29 @@ class GenderButton extends PureComponent {
     if (!urlKey) {
       return null;
     }
+    if(urlKey ==="all"){
+      return (
+        <Link
+          block="GenderButton"
+          elem="Link"
+          name={label}
+          to={`/`}
+        >
+          <button
+            mix={mix}
+            name={label}
+            block="GenderButton"
+            elem="Button"
+            mods={{ isCurrentGender, isUnsetStyle }}
+            onClick={onGenderClick}
+            onMouseEnter={onGenderEnter}
+            onMouseLeave={onGenderLeave}
+          >
+            {label}
+          </button>
+        </Link>
+      );
+    }
 
     return (
       <Link

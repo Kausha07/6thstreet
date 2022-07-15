@@ -8,7 +8,8 @@ export const APP_CONFIG_CACHE_KEY = 'APP_CONFIG_CACHE_KEY';
 export const getInitialState = () => (
     BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {
         config: {},
-        edd_info: null
+        edd_info: null,
+        suggestionEnabled: true
     }
 );
 
@@ -26,7 +27,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             const newState = {
                 ...state,
                 config,
-                edd_info: config.countries[getCountryCode]?.edd_info
+                edd_info: config.countries[getCountryCode]?.edd_info,
+                suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled
             };
 
             // this will invalidate config after one year

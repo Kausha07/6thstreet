@@ -30,6 +30,18 @@ class HeaderLogo extends PureComponent {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
+    if(gender === "all"){
+      return (
+        <Link
+          to={`/`}
+          block="HeaderLogo"
+          mods={{ isArabic }}
+          onClick={() => this.handleLinkOnClick(window.location.href)}
+        >
+          <Image lazyLoad={true} mix={{ block: "Image", mods: { isArabic } }} src={logo} />
+        </Link>
+      );
+    }
     return (
       <Link
         to={`/${gender}.html`}

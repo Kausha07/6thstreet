@@ -36,6 +36,7 @@ export const mapStateToProps = (state) => ({
   mobileTabActive: state.MyAccountReducer.mobileTabActive,
   country: state.AppState.country,
   language: state.AppState.language,
+  payload: state.PopupReducer.popupPayload
 });
 
 export const mapDispatchToProps = (dispatch) => ({

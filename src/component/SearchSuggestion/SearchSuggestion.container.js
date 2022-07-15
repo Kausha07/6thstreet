@@ -23,6 +23,7 @@ export const mapStateToProps = (state) => ({
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
   prevPath: state.PLP.prevPath,
+  suggestionEnabled:state.AppConfig.suggestionEnabled
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -95,7 +96,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    this.requestTopSearches();
+    // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
   }
@@ -280,6 +281,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
+  /*
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
     let refinedTopSearches = [];
@@ -302,6 +304,7 @@ export class SearchSuggestionContainer extends PureComponent {
       topSearches: refinedTopSearches || [],
     });
   }
+  */
 
   async requestRecentSearches() {
     let recentSearches =
@@ -364,6 +367,7 @@ export class SearchSuggestionContainer extends PureComponent {
       // wishlistData,
       isPDPSearchVisible,
       prevPath,
+      suggestionEnabled
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -388,7 +392,8 @@ export class SearchSuggestionContainer extends PureComponent {
       renderMySignInPopup,
       isPDPSearchVisible,
       prevPath,
-      exploreMoreData
+      exploreMoreData,
+      suggestionEnabled
       // wishlistData,
     };
   };

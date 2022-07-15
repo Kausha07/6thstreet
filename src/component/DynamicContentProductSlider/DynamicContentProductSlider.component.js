@@ -163,6 +163,7 @@ class DynamicContentProductSlider extends PureComponent {
           products={products}
           heading={finalTitle}
           withViewAll
+          setLastTapItemOnHome={setLastTapItemOnHome}
           renderMySignInPopup={renderMySignInPopup}
           setLastTapItemOnHome={setLastTapItemOnHome}
           key={`VueProductSliderContainer`}

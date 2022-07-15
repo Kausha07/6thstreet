@@ -15,6 +15,10 @@ import {
   RETURN_ITEM_LABEL,
 } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
+import {
+  ADDRESS_POPUP_ID,
+} from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import { showPopup } from "Store/Popup/Popup.action";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -23,7 +27,9 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
 });
 
-export const mapDispatchToProps = () => ({});
+export const mapDispatchToProps = (dispatch) => ({
+  showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
+});
 
 export class MyAccountOrderViewContainer extends PureComponent {
   static propTypes = {
@@ -52,7 +58,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country,eddResponse ,edd_info} = this.props;
+    const { history, country, eddResponse, edd_info } = this.props;
 
     return {
       isLoading,
@@ -76,8 +82,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
   }
 
   openOrderCancelation(itemStatus = '') {
-    const { history } = this.props;
-    const { order: { status, is_returnable } = {}, entity_id } = this.state;
+    const { history, showPopup } = this.props;
+    const { order: { status, is_returnable, pickup_address_required } = {}, entity_id, order } = this.state;
 
     if (
       !entity_id ||
@@ -93,8 +99,18 @@ export class MyAccountOrderViewContainer extends PureComponent {
       status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
         ? `/my-account/return-item/create/${entity_id}`
         : `/my-account/return-item/cancel/${entity_id}`;
+    if (status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL) {
+      if (pickup_address_required) {
+        showPopup({});
+        history.push("/my-account/return-item/pick-up-address", { orderId: entity_id, orderDetails: order });
+      } else {
+        history.push(url, { orderDetails: order });
+      }
+    }
+    else {
+      history.push(url, { orderDetails: order });
+    }
 
-    history.push(url);
   }
 
   async getOrder() {

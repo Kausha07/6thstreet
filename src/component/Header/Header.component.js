@@ -15,6 +15,7 @@ import {
   TYPE_CART,
   TYPE_HOME,
   TYPE_PRODUCT,
+  TYPE_NOTFOUND
 } from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import isMobile from "Util/Mobile";
@@ -124,7 +125,7 @@ export class Header extends PureComponent {
     if (chatElem) {
       if (
         location.pathname.match(/checkout|cart/) ||
-        (isMobile && location.pathname.match(/faq|shipping-policy|return-information/))
+        (isMobile && location.pathname.match(/faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/))
       ) {
         chatElem.classList.add("hidden");
       } else {
@@ -178,14 +179,14 @@ export class Header extends PureComponent {
     const {
       navigationState: { name },
     } = this.props;
-    const {isMobile} = this.state;
+    const { isMobile } = this.state;
 
     this.shouldChatBeHidden();
 
     return (
       <>
         <header block="Header" mods={{ name }} id="headerTop">
-          {isMobile && location.pathname.match(/faq|shipping-policy|return-information/)
+          {isMobile && location.pathname.match(/faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/)
             ? null
             : this.renderHeaderSections()}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />

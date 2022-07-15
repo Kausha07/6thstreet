@@ -104,16 +104,16 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-      return (
-        <div block="PDP" onClick={this.onPDPPageClicked}>
-          {this.renderMySignInPopup()}
-          {this.renderMainSection()}
-          {this.renderSeperator()}
-          {this.renderMixAndMatchSection()}
-          {this.renderDetailsSection()}
-          {this.renderDetail()}
-        </div>
-      );
+    return (
+      <div block="PDP" onClick={this.onPDPPageClicked}>
+        {this.renderMySignInPopup()}
+        {this.renderMainSection()}
+        {this.renderSeperator()}
+        {this.renderMixAndMatchSection()}
+        {this.renderDetailsSection()}
+        {this.renderDetail()}
+      </div>
+    );
   }
 
 
