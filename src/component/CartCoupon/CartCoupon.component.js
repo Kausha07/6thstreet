@@ -6,6 +6,7 @@ import { isArabic } from "Util/App";
 import "./CartCoupon.extended.style";
 
 export class CartCoupon extends SourceCartCoupon {
+    
   handleCouponCodeChange = (enteredCouponCode) => {
     this.setState({
       enteredCouponCode: this.removeCouponSpace(enteredCouponCode),
@@ -13,13 +14,13 @@ export class CartCoupon extends SourceCartCoupon {
   };
 
   removeCouponSpace = (value) => {
-    // if (value.includes(" ")) {
-    return value.replace(/\s/g, "");
+   // if (value.includes(" ")) {
+      return value.replace(/\s/g, "");
     //} else {
     //  return value;
     //}
   };
-
+ 
   handleApplyCoupon = () => {
     const { handleApplyCouponToCart } = this.props;
     const { enteredCouponCode } = this.state;
