@@ -90,5 +90,4 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
         );
     }
 }
-
 export default MyAccountReturnSuccessItem;
