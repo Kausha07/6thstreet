@@ -83,13 +83,8 @@ export class SearchSuggestionsDispatcher {
       // const lang = language === 'en' ? 'english' : 'arabic';
       var searchQuery = search;
       // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
-      if (
-        searchQuery.match(new RegExp(gender, "i")) === null &&
-        country.match(/bh|om|qa/i)
-      ) {
-        searchQuery = `${search} ${
-          isArabic() ? getGenderInArabic(gender) : gender
-        } `;
+      if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
+        searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
       }
 
       const data = await new Algolia({
@@ -111,17 +106,15 @@ export class SearchSuggestionsDispatcher {
       };
 
       var querySuggestions = [defaultHit];
-      if (country.match(/bh|om|qa/i)) {
+      if(country.match(/bh|om|qa/i)){
         querySuggestions = data?.hits || [defaultHit];
-      } else {
+      }
+      
+      else {
         querySuggestions =
-          data?.hits?.length > 0
-            ? getCustomQuerySuggestions(
-                data?.hits,
-                sourceIndexName,
-                data?.query
-              )
-            : [defaultHit];
+        data?.hits?.length > 0
+        ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
+        : [defaultHit];
       }
 
 
