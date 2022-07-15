@@ -1,80 +1,81 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
+import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-import { showNotification } from "Store/Notification/Notification.action";
-import { HistoryType } from "Type/Common";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
+import { showNotification } from 'Store/Notification/Notification.action';
+import { HistoryType } from 'Type/Common';
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
-import MyAccountReturnList from "./MyAccountReturnList.component";
+import MyAccountReturnList from './MyAccountReturnList.component';
 
 export const mapStateToProps = (_state) => ({
-  // wishlistItems: state.WishlistReducer.productsInWishlist
+    // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showErrorNotification: (error) => dispatch(showNotification("error", error)),
+    showErrorNotification: (error) => dispatch(showNotification('error', error))
 });
 
 export class MyAccountReturnListContainer extends PureComponent {
-  static propTypes = {
-    showErrorNotification: PropTypes.func.isRequired,
-    history: HistoryType.isRequired,
-  };
-
-  state = {
-    isLoading: true,
-    returns: [],
-  };
-
-  containerFunctions = {
-    handleCreateClick: this.handleCreateClick.bind(this),
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.getReturns();
-  }
-
-  handleCreateClick() {
-    const { history } = this.props;
-
-    history.push("/my-account/my-orders/");
-  }
-
-  containerProps = () => {
-    const { isLoading, returns } = this.state;
-
-    return {
-      isLoading,
-      returns,
+    static propTypes = {
+        showErrorNotification: PropTypes.func.isRequired,
+        history: HistoryType.isRequired
     };
-  };
 
-  async getReturns() {
-    const { showErrorNotification } = this.props;
+    state = {
+        isLoading: true,
+        returns: []
+    };
 
-    try {
-      const { data: returns } = await MagentoAPI.get("returns/list");
-      this.setState({ returns, isLoading: false });
-    } catch (e) {
-      showErrorNotification(e);
-      this.setState({ isLoading: false });
+    containerFunctions = {
+        handleCreateClick: this.handleCreateClick.bind(this)
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.getReturns();
     }
-  }
 
-  render() {
-    return (
-      <MyAccountReturnList
-        {...this.containerFunctions}
-        {...this.containerProps()}
-      />
-    );
-  }
+    handleCreateClick() {
+        const { history } = this.props;
+
+        history.push('/my-account/my-orders/');
+    }
+
+    containerProps = () => {
+        const {
+            isLoading,
+            returns
+        } = this.state;
+
+        return {
+            isLoading,
+            returns
+        };
+    };
+
+    async getReturns() {
+        const { showErrorNotification } = this.props;
+
+        try {
+            const { data: returns } = await MagentoAPI.get('returns/list');
+            this.setState({ returns, isLoading: false });
+        } catch (e) {
+            showErrorNotification(e);
+            this.setState({ isLoading: false });
+        }
+    }
+
+    render() {
+        return (
+            <MyAccountReturnList
+                {...this.containerFunctions}
+                {...this.containerProps()}
+            />
+        );
+    }
 }
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(MyAccountReturnListContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyAccountReturnListContainer));
