@@ -22,7 +22,7 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
   DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
@@ -30,7 +30,10 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import "./PDPSummary.style";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, {
+  EVENT_GTM_EDD_VISIBILITY,
+  EVENT_MOE_TABBY_LEARN_MORE_CLICK,
+} from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -955,11 +958,23 @@ class PDPSummary extends PureComponent {
 
     return null;
   }
-
+  sendMoEImpressions() {
+    const {
+      product: { sku, name, url },
+    } = this.props;
+    Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      product_name: name ? name : "",
+      product_sku: sku ? sku : "",
+      product_url: url ? url : "",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo"></div>
+        <div id="TabbyPromo" onClick={() => this.sendMoEImpressions()}></div>
       </>
     );
   }

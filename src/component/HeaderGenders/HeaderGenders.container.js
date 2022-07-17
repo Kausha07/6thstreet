@@ -33,7 +33,6 @@ class HeaderGendersContainer extends PureComponent {
     isMobile: false,
   };
   componentDidMount() {
-    this.sendMOEImpressions();
     this.setCurrentGender();
   }
 
@@ -66,50 +65,7 @@ class HeaderGendersContainer extends PureComponent {
       }
     }
   }
-  sendMOEImpressions() {
-    const { currentContentGender } = this.props;
-
-    const MoeEvent =
-      currentContentGender == "women"
-        ? EVENT_MOE_TOP_NAV_WOMEN
-        : currentContentGender == "men"
-        ? EVENT_MOE_TOP_NAV_MEN
-        : currentContentGender == "home"
-        ? EVENT_MOE_TOP_NAV_HOME
-        : currentContentGender == "kids"
-        ? EVENT_MOE_TOP_NAV_KIDS
-        : currentContentGender == "all"
-        ? EVENT_MOE_TOP_NAV_ALL
-        : "";
-    if (MoeEvent && MoeEvent.length > 0) {
-      Moengage.track_event(MoeEvent, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
-        screen_name: this.getPageType() ? this.getPageType() : "",
-        app6thstreet_platform: "Web",
-      });
-    }
-  }
-  getPageType() {
-    const { urlRewrite, currentRouteName } = window;
-
-    if (currentRouteName === "url-rewrite") {
-      if (typeof urlRewrite === "undefined") {
-        return "";
-      }
-
-      if (urlRewrite.notFound) {
-        return "notfound";
-      }
-
-      return (urlRewrite.type || "").toLowerCase();
-    }
-
-    return (currentRouteName || "").toLowerCase();
-  }
-
+  
   render() {
     return <HeaderGenders {...this.props} />;
   }

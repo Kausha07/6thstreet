@@ -6,7 +6,14 @@ import { setGender } from "Store/AppState/AppState.action";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import GenderButton from "./GenderButton.component";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import { EVENT_MOE_TOP_NAV_CHANGE } from "Util/Event";
+import {
+  EVENT_MOE_TOP_NAV_CHANGE,
+  EVENT_MOE_TOP_NAV_HOME,
+  EVENT_MOE_TOP_NAV_MEN,
+  EVENT_MOE_TOP_NAV_WOMEN,
+  EVENT_MOE_TOP_NAV_KIDS,
+  EVENT_MOE_TOP_NAV_ALL,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -60,13 +67,33 @@ export class GenderButtonContainer extends PureComponent {
     };
   };
   sendNavigationImpressions(label) {
-    Moengage.track_event(EVENT_MOE_TOP_NAV_CHANGE, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
-      screen_name: this.getPageType() ? this.getPageType() : "",
-      category: label || "",
-      app6thstreet_platform: "Web",
-    });
+    const MoeGenderEvent =
+      label == "women"
+        ? EVENT_MOE_TOP_NAV_WOMEN
+        : label == "men"
+        ? EVENT_MOE_TOP_NAV_MEN
+        : label == "kids"
+        ? EVENT_MOE_TOP_NAV_KIDS
+        : label == "all"
+        ? EVENT_MOE_TOP_NAV_ALL
+        : label == "home"
+        ? EVENT_MOE_TOP_NAV_HOME
+        : "";
+    const genderChangeEvent = (event) => {
+      Moengage.track_event(event, {
+        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+        language: getLanguageFromUrl()
+          ? getLanguageFromUrl().toUpperCase()
+          : "",
+        screen_name: this.getPageType() ? this.getPageType() : "",
+        category: label || "",
+        app6thstreet_platform: "Web",
+      });
+    };
+    if (MoeGenderEvent && MoeGenderEvent.length > 0) {
+      genderChangeEvent(EVENT_MOE_TOP_NAV_CHANGE);
+      genderChangeEvent(MoeGenderEvent);
+    }
   }
   getPageType() {
     const { urlRewrite, currentRouteName } = window;

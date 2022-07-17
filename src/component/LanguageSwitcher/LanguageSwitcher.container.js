@@ -6,6 +6,8 @@ import { getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.forma
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { setCountry, setLanguageForWelcome} from 'Store/AppState/AppState.action'
 import LanguageSwitcher from './LanguageSwitcher.component';
+import { EVENT_MOE_SET_LANGUAGE } from "Util/Event";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -30,23 +32,35 @@ export class LanguageSwitcherContainer extends PureComponent {
 
     onLanguageSelect(value) {
         const { language = '',history } = this.props;
+        Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
+            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+            language: value.toUpperCase() || "",
+            app6thstreet_platform: "Web",
+          });
+
         if(window.location.href.includes('en-') || window.location.href.includes('ar-')){
             if(location.pathname.match(/my-account/)) {
-                window.location.href = location.href.replace(
-                    language.toLowerCase(),
-                    value,
-                    location.href).split("/my-account")[0];
-            } else {
-                window.location.href = location.href.replace(
-                    language.toLowerCase(),
-                    value,
-                    location.href
-                );
+                setTimeout(() => { // Delay is for Moengage call to complete
+                    window.location.href = location.href.replace(
+                        language.toLowerCase(),
+                        value,
+                        location.href).split("/my-account")[0];
+                }, 1000);
+                
+            } else {                
+                setTimeout(() => { // Delay is for Moengage call to complete
+                    window.location.href = location.href.replace(
+                        language.toLowerCase(),
+                        value,
+                        location.href
+                    );
+                }, 1000);
             }
         }
         else{
             this.props.setLanguageForWelcome(value)
         }
+        
     }
 
     containerProps = () => {

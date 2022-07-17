@@ -136,7 +136,7 @@ class ShareButtonContainer extends PureComponent {
 
   render() {
     const { openShareOverlay } = this.state;
-    const { children, ...rest } = this.props;
+    const { children, product, ...rest } = this.props;
     const isDesktop = !(isMobile.any() || isMobile.tablet());
     return (
       <>
@@ -144,7 +144,8 @@ class ShareButtonContainer extends PureComponent {
           <SharePopup
             showShareOverlay={this.showShareOverlay}
             hideShareOverlay={this.hideShareOverlay}
-            openSharePopup={open}
+            openSharePopup={open} 
+            product={product}
             {...rest}
           />
         ) : null}
