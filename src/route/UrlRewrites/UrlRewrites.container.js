@@ -78,7 +78,7 @@ export class UrlRewritesContainer extends PureComponent {
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}${query}`);
         }
-      }else if(window.pageType = "CMS_PAGE"){
+      } else if (window.pageType = "CMS_PAGE") {
         history.push(`${pathname}`);
       } else {
         history.push(`${pathname}?${query}`);
@@ -93,7 +93,7 @@ export class UrlRewritesContainer extends PureComponent {
       sku !== prevSku
       // !prevStatePathname
     ) {
-     hideActiveOverlay();
+      hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
       this.requestUrlRewrite(true);
@@ -159,9 +159,10 @@ export class UrlRewritesContainer extends PureComponent {
           gClidParam = `&gclid=${gclidValue}`
         } else {
           hasQueryString = 1;
-          appendQueryString=`&${url.search.split('?')[1].toString()}`;
+          appendQueryString = `&${url.search.split('?')[1].toString()}`;
         }
       }
+
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
       );

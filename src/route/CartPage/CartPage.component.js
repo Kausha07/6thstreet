@@ -389,13 +389,6 @@ export class CartPage extends PureComponent {
           <span />
           {__("Proceed to Checkout")}
         </button>
-        {/* <Link
-                   block="CartPage"
-                   elem="ContinueShopping"
-                   to="/"
-                 >
-                     { __('Continue shopping') }
-                 </Link> */}
       </div>
     );
   }

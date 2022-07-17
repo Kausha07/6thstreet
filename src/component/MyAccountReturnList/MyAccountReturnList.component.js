@@ -56,7 +56,7 @@ class MyAccountReturnList extends PureComponent {
         return (
             <div block="MyAccountReturnList" elem="Header">
                 <button block="MyAccountReturnList" elem="Button" onClick={ handleCreateClick }>
-                    { __('Return an item') }
+                    { __('Return/Exchange an item') }
                 </button>
             </div>
         );

@@ -96,7 +96,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    this.requestTopSearches();
+    // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
   }
@@ -281,6 +281,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
+  /*
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
     let refinedTopSearches = [];
@@ -303,6 +304,7 @@ export class SearchSuggestionContainer extends PureComponent {
       topSearches: refinedTopSearches || [],
     });
   }
+  */
 
   async requestRecentSearches() {
     let recentSearches =

@@ -64,7 +64,7 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     renderDetails() {
         const { returnNumber, orderNumber, date } = this.props;
         const dateObject = new Date(date.replace(/-/g, "/"));
-        const dateString = formatDate('YY/MM/DD at hh:mm', dateObject);
+        const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
 
         return (
             <div block="MyAccountReturnSuccess" elem="Details">

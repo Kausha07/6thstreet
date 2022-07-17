@@ -109,7 +109,7 @@ class GoogleTagManager extends PureComponent {
       gtm_id: "",
     },
     state: {},
-    dispatch: () => {},
+    dispatch: () => { },
   };
 
   /**
@@ -385,8 +385,8 @@ class GoogleTagManager extends PureComponent {
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType:null,
-        CustomerID:null,
+        UserType: null,
+        CustomerID: null,
         PageType: null,
         SearchTerm: null,
         BannerName: null,
