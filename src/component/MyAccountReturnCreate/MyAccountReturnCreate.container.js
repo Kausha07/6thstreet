@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { isArabic } from "Util/App";
 
 import { showNotification } from 'Store/Notification/Notification.action';
 import { HistoryType, MatchType } from 'Type/Common';
@@ -39,7 +40,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         items: [],
         resolutionId: null,
         reasonId:0,
-        quantityObj:{}
+        quantityObj:{},
+        isArabic: isArabic(),
     };
 
     componentDidMount() {
@@ -56,7 +58,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             resolutions,
             resolutionId,
             reasonId,
-            quantityObj
+            quantityObj,
+            isArabic
         } = this.state;
 
         return {
@@ -68,7 +71,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             resolutions,
             resolutionId,
             reasonId,
-            quantityObj
+            quantityObj,
+            isArabic
         };
     };
     onDiscardClick() {
