@@ -5,6 +5,7 @@ import MyAccountCancelCreate from "Component/MyAccountCancelCreate";
 import MyAccountCancelCreateSuccess from "Component/MyAccountCancelCreateSuccess";
 import MyAccountReturnCreate from "Component/MyAccountReturnCreate";
 import MyAccountExchangeCreate from "Component/MyAccountExchangeCreate";
+import PickUpAddress from "Component/PickUpAddress/PickUpAddress.component";
 import MyAccountReturnCreateList from "Component/MyAccountReturnCreateList";
 import MyAccountReturnList from "Component/MyAccountReturnList";
 import MyAccountReturnSuccess from "Component/MyAccountReturnSuccess";
