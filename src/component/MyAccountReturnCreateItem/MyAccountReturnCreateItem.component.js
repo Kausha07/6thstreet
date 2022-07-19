@@ -93,36 +93,57 @@ export class MyAccountReturnCreateItem extends PureComponent {
   }
 
   onQuantityChange = (quantity, itemId) => {
-    const {
-      onQuantitySelection,
-    } = this.props;
+    const { onQuantitySelection } = this.props;
     onQuantitySelection(parseInt(quantity), itemId);
   };
 
+  isItemSelected = (item_id, item,maxSaleQuantity) => {
+    const {
+      exchangableQuantity = {},
+      returnableQty = {},
+      isExchange,
+    } = this.props;
+    const selectedValue = isExchange
+      ? exchangableQuantity[item_id]
+        ? exchangableQuantity[item_id].quantity === item
+        : maxSaleQuantity === item
+      : returnableQty[item_id]
+      ? returnableQty[item_id].quantity === item
+      : maxSaleQuantity === item;
+    return selectedValue;
+  };
   renderQuantitySelection = (maxSaleQuantity) => {
     const {
       minSaleQuantity = 1,
       item: { item_id },
       exchangableQuantity = {},
-      isArabic
+      returnableQty = {},
+      isArabic,
+      isExchange,
     } = this.props;
 
     const qtyList = Array.from(
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
-
+    const itemValue = isExchange
+      ? exchangableQuantity[item_id]
+        ? exchangableQuantity[item_id].quantity
+        : maxSaleQuantity
+      : returnableQty[item_id]
+      ? returnableQty[item_id].quantity
+      : maxSaleQuantity;
     return (
       <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
         <select
-          value={exchangableQuantity[item_id] ? exchangableQuantity[item_id].quantity : maxSaleQuantity}
+          value={itemValue}
           onChange={(e) => this.onQuantityChange(e.target.value, item_id)}
         >
           {qtyList.map((item, index) => {
             return (
               <option
                 key={index}
-                selected={exchangableQuantity[item_id] ? exchangableQuantity[item_id].quantity === item : maxSaleQuantity === item}
+                selected={this.isItemSelected(item_id,item,maxSaleQuantity)}
                 block="CartItem"
                 elem="QuantityOption"
                 value={item}
@@ -145,6 +166,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         color,
         row_total,
         price,
+        item_id,
         discount_percent,
         discount_amount,
         size: sizeField,
@@ -165,9 +187,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
             </p>
           )}
           {!!qty_shipped && !isExchange && (
-            <p>
+            <p block="Quantity">
               {__("Qty: ")}
-              <span>{+qty_shipped}</span>
+              {this.renderQuantitySelection(+qty_shipped, item_id)}
             </p>
           )}
           {!!exchangeable_qty && isExchange && (
@@ -215,11 +237,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   }
 
-  renderSizeOption(
-    productStock,
-    code,
-    label,
-  ) {
+  renderSizeOption(productStock, code, label) {
     const {
       selectedSizeCodes,
       onAvailSizeSelect,
@@ -311,7 +329,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
     let filteredProductStock =
       selectedAvailProduct[item_id] &&
-        selectedAvailProduct[item_id].id !== false
+      selectedAvailProduct[item_id].id !== false
         ? availProduct[0]
         : products[item_id];
 
@@ -330,13 +348,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code]?.size[selectedSizeType];
             if (label) {
-              acc.push(
-                this.renderSizeOption(
-                  productStock,
-                  code,
-                  label,
-                )
-              );
+              acc.push(this.renderSizeOption(productStock, code, label));
             }
 
             return acc;
@@ -353,7 +365,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     return (
       <div block="PLPAddToCart" elem="SizeSelector">
         {sizeObject.sizeTypes !== undefined &&
-          sizeObject.sizeTypes.length !== 0 ? (
+        sizeObject.sizeTypes.length !== 0 ? (
           <>
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
@@ -380,19 +392,25 @@ export class MyAccountReturnCreateItem extends PureComponent {
     } = this.props;
     return availableProducts.map((product) => {
       const { sku, thumbnail_url, color, in_stock, stock_qty } = product;
-      const isNotAvailable = (in_stock === 0 || (in_stock === 1 && stock_qty === 0))
+      const isNotAvailable =
+        in_stock === 0 || (in_stock === 1 && stock_qty === 0);
       return (
         <li
           block="PDPAlsoAvailableProduct"
           elem={
-            isNotAvailable ? "SizeOptionContainerOOS" :
-            selectedAvailProduct[item_id] &&
-              sku === selectedAvailProduct[item_id]["id"]
+            isNotAvailable
+              ? "SizeOptionContainerOOS"
+              : selectedAvailProduct[item_id] &&
+                sku === selectedAvailProduct[item_id]["id"]
               ? "selectedProduct"
               : ""
           }
           id={sku}
-          onClick={isNotAvailable ? ()=>{} :(event) => onAvailableProductClick(event, item_id, sku)}
+          onClick={
+            isNotAvailable
+              ? () => {}
+              : (event) => onAvailableProductClick(event, item_id, sku)
+          }
         >
           <div
             block="PDPAlsoAvailableProduct-Link"
