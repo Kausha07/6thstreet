@@ -29,17 +29,18 @@ class MyAccountOrderListItem extends SourceComponent {
 
   renderHeading() {
     const {
-      order: { increment_id, status },
+      order: { increment_id, status,is_exchange_order = 0 },
     } = this.props;
     const statusMods = {
       isSuccess: STATUS_SUCCESS.includes(status),
       isFailed: STATUS_FAILED.includes(status),
     };
+    const modifiedStatus =  is_exchange_order === 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
-      ? translateArabicStatus(status)
-      : status
-      ? status.split("_").join(" ")
-      : "";
+      ? translateArabicStatus(modifiedStatus)
+      : modifiedStatus
+        ? modifiedStatus.split("_").join(" ")
+        : "";
 
     return (
       <p
