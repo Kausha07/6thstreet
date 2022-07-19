@@ -200,6 +200,7 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   componentDidMount() {
+    new Algolia();
     sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
