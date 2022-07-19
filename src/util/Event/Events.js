@@ -141,3 +141,20 @@ export const EVENT_MOE_SORT_BY_PRICE_HIGH = "sort_by_price_high";
 export const EVENT_MOE_SORT_BY_PRICE_LOW = "sort_by_price_low";
 export const EVENT_MOE_SORT_BY_RECOMMENDED = "sort_by_recommended";
 export const EVENT_MOE_SET_PREFERENCES_GENDER = "set_preferences_gender";
+
+export const EVENT_MOE_ACCOUNT_ORDERS_CLICK = "account_orders_click";
+export const EVENT_MOE_ACCOUNT_RETURNS_CLICK = "account_returns_click";
+export const EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK =
+  "account_address_book_click";
+export const EVENT_MOE_ACCOUNT_PROFILE_CLICK = "account_profile_click";
+export const EVENT_MOE_ACCOUNT_SETTINGS_CLICK = "account_settings_click";
+export const EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK =
+  "account_customer_support_click";
+export const EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK =
+  "account_club_apparel_click";
+export const EVENT_MOE_ORDER_ITEM_CLICK = "order_item_click";
+export const EVENT_MOE_NEW_ADDRESS_CLICK = "new_address_click";
+export const EVENT_MOE_EDIT_ADDRESS_CLICK = "edit_address_click";
+export const EVENT_MOE_UPDATE_PROFILE = "update_profile";
+export const EVENT_MOE_RETURN_AN_ITEM_CLICK = "return_an_item_click";
+export const EVENT_MOE_CANCEL_AN_ITEM_CLICK = "cancel_an_item_click";

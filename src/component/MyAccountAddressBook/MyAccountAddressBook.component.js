@@ -20,6 +20,8 @@ import { addressType, customerType } from "Type/Account";
 import isMobile from "Util/Mobile";
 import { withRouter } from "react-router";
 import "./MyAccountAddressBook.style";
+import { EVENT_MOE_NEW_ADDRESS_CLICK } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountAddressBook extends PureComponent {
   static propTypes = {
@@ -54,7 +56,12 @@ export class MyAccountAddressBook extends PureComponent {
 
   openNewForm = () => {
     const { showCreateNewPopup, history } = this.props;
-
+    Moengage.track_event(EVENT_MOE_NEW_ADDRESS_CLICK, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      screen_name: "Address Book",
+      app6thstreet_platform: "Web",
+    });
     if (isMobile.any()) {
       this.hideCards();
     }

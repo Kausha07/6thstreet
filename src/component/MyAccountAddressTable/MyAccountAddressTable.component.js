@@ -26,6 +26,8 @@ import pencil from "./icons/edit_btn.png";
 import trash from "./icons/trash.png";
 
 import "./MyAccountAddressTable.style";
+import { EVENT_MOE_EDIT_ADDRESS_CLICK } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountAddressTable extends KeyValueTable {
   static propTypes = {
@@ -58,8 +60,15 @@ export class MyAccountAddressTable extends KeyValueTable {
   };
 
   onEdit = () => {
-    const { onEditClick } = this.props;
+    const { onEditClick ,title } = this.props;
     onEditClick();
+    Moengage.track_event(EVENT_MOE_EDIT_ADDRESS_CLICK, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      screen_name: "Address Book",
+      address_no: title || "",
+      app6thstreet_platform: "Web",
+    });
     if (!isMobile.any()) {
       const elmnts = document.getElementsByClassName(
         "MyAccountAddressBook-NewAddress"

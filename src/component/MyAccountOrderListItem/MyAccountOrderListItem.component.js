@@ -16,6 +16,8 @@ import {
 } from "./MyAccountOrderListItem.config";
 
 import "./MyAccountOrderListItem.style";
+import { EVENT_MOE_ORDER_ITEM_CLICK } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class MyAccountOrderListItem extends SourceComponent {
   handleClick = () => {
@@ -25,6 +27,11 @@ class MyAccountOrderListItem extends SourceComponent {
     } = this.props;
 
     history.push(`/my-account/my-orders/${id}`);
+    Moengage.track_event(EVENT_MOE_ORDER_ITEM_CLICK, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
   };
 
   renderHeading() {

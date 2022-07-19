@@ -6,7 +6,7 @@ import { PureComponent } from "react";
 import { ReactComponent as AccountIcon } from "Style/account.svg";
 import { isArabic } from "Util/App";
 import AddressIcon from "./icons/address.svg";
-import WalletIcon from '../../style/icons/payment.png';
+import WalletIcon from "../../style/icons/payment.png";
 import OrdersIcon from "./icons/cat-menu.svg";
 import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
@@ -14,6 +14,14 @@ import LogoutIcon from "./icons/logout.png";
 import ReturnIcon from "./icons/return.svg";
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
 import "./MyAccountSignedInOverlay.style";
+import {
+  EVENT_MOE_ACCOUNT_ORDERS_CLICK,
+  EVENT_MOE_ACCOUNT_RETURNS_CLICK,
+  EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK,
+  EVENT_MOE_ACCOUNT_PROFILE_CLICK,
+  EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountSignedInOverlay extends PureComponent {
   static propTypes = {
@@ -32,12 +40,21 @@ export class MyAccountSignedInOverlay extends PureComponent {
     isArabic: isArabic(),
   };
 
+  sendMoeEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
+  }
+
   renderMyAccountLink() {
     return (
       <Link
         block="MyAccountSignedInOverlay"
         elem="LinkAccount"
         to="/my-account/dashboard"
+        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_PROFILE_CLICK)}
       >
         <AccountIcon />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
@@ -53,6 +70,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkHistory"
         to="/my-account/my-orders"
+        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_ORDERS_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -72,6 +90,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="ReturnAnItem"
         to="/my-account/return-item"
+        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_RETURNS_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -100,6 +119,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkClub"
         to="/my-account/club-apparel"
+        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -139,6 +159,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkDelivery"
         to="/my-account/address-book"
+        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK)}
       >
         <Image
           lazyLoad={true}
