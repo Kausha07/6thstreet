@@ -13,10 +13,12 @@ import init from "./init";
 import logAlgoliaAnalytics from "./logger";
 import searchBy from "./search-by";
 import getSuggestions from "./suggestions";
+import getPromotions  from "./get-promotions";
 
 export {
   init,
   getPLP,
+  getPromotions,
   getSearchPLP,
   getPDP,
   searchBy,

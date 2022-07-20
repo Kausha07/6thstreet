@@ -52,6 +52,21 @@ export class Algolia {
     return AlgoliaSDK.getPLP(`/?${url}`,params);
   }
 
+  async getPromotions(params = {}) {
+    const productCount = isMobile.any() ? 16 : 30;
+    const {
+      AppState: { locale = process.env.REACT_APP_LOCATE },
+    } = getStore().getState();
+
+    const url = queryString({
+      ...params,
+      limit: productCount,
+      locale,
+    });
+
+    return AlgoliaSDK.getPromotions(`/?${url}`,params);
+  }
+
   async getSearchPLP(params = {}) {
     const productCount = isMobile.any() ? 16 : 30;
     const {
