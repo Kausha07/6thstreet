@@ -202,10 +202,9 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
     const { name, alternativePageName, alternateName } = tabMap[activeTab];
-    const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
 
     const returnTitle =
-      activeTab === RETURN_ITEM ? pickUpAddress ? __("Select Pick Up Address") : __("Return Statement") : null;
+      activeTab === RETURN_ITEM ? __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
@@ -273,7 +272,6 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     const { alternativePageName, name, alternateName } = tabMap[activeTab];
     const isCancel = pathname.includes("/return-item/cancel");
-    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
@@ -283,14 +281,12 @@ export class MyAccount extends SourceMyAccount {
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        {!(isPickUpAddress && payloadKey && payload[payloadKey].title ) &&
-         <MyAccountMobileHeader
+        <MyAccountMobileHeader
          onClose={this.handleClick}
          isHiddenTabContent={hiddenTabContent === "Active"}
          alternativePageName={alternativePageName}
-         name={isPickUpAddress ? "Select Pick Up Address" : isCancel ? alternateName : name}
+         name={isCancel ? alternateName : name}
          />
-        }
        
         <div block={hiddenTabList}>
           <div block="UserBlock">

@@ -178,12 +178,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
                 };
             })
         };
-        if (orderDetails) {
-            const { pickup_address_required } = orderDetails;
-            if (pickup_address_required) {
-            payload["address_id"] = selectedAddressId
-            }
-        }
 
         this.setState({ isLoading: true });
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
