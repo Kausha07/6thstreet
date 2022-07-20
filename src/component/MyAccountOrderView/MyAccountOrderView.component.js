@@ -164,6 +164,7 @@ class MyAccountOrderView extends PureComponent {
         is_returnable,
         is_cancelable,
         is_exchangeable,
+        is_exchange_order = 0
       },
     } = this.props;
     const buttonText =
@@ -172,10 +173,11 @@ class MyAccountOrderView extends PureComponent {
           ? EXCHANGE_ITEM_LABEL
           : RETURN_ITEM_LABEL
         : CANCEL_ITEM_LABEL;
+    const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
-      ? translateArabicStatus(status)
-      : status
-        ? status.split("_").join(" ")
+      ? translateArabicStatus(modifiedStatus)
+      : modifiedStatus
+        ? modifiedStatus.split("_").join(" ")
         : "";
     if (STATUS_FAILED.includes(status)) {
       const title =
