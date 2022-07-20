@@ -63,7 +63,6 @@ export class RouterContainer extends SourceRouterContainer {
 
   constructor(props) {
     super(props);
-    this.getAlgoliaIndex();
   }
 
   
@@ -92,6 +91,7 @@ export class RouterContainer extends SourceRouterContainer {
       getCitiesData
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
+    this.getAlgoliaIndex();
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
