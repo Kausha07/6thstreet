@@ -96,10 +96,7 @@ export class PickUpAddress extends PureComponent {
   }
 
   closeForm = () => {
-    const { showPopup } = this.props;
-
     this.setState({ formContent: false });
-    showPopup({});
   };
 
   renderAddAdress() {
