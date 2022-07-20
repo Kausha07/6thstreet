@@ -15,14 +15,12 @@ const getIndex = (locale, env = "production", type = "default") => {
     if (env === "staging") {
       prefix = "stage_";
     }
-    //  else if (env === "uat") {
-    //   prefix = "preprod_";
-    // }
+     else if (env === "uat") {
+      prefix = "preprod_";
+    }
 
-    // const index =
-    //   env === 'uat' ? PREPROD_INDICES[locale][type] : INDICES[locale][type];
-    const index = INDICES[locale][type];
-
+    const index =
+      env === 'uat' ? PREPROD_INDICES[locale][type] : INDICES[locale][type];
     return `${prefix}${index}`;
   } catch (err) {
     console.error("Index not found", err);
