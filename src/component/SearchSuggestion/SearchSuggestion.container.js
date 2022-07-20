@@ -200,7 +200,8 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   componentDidMount() {
-    sourceIndexName = AlgoliaSDK.index.indexName;
+    sourceIndexName = AlgoliaSDK?.index?.indexName;
+    console.log("sourceIndexName",sourceIndexName);
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
@@ -369,13 +370,12 @@ export class SearchSuggestionContainer extends PureComponent {
       prevPath,
       suggestionEnabled
     } = this.props;
-    const { brands = [], products = [] } = data;
     const isEmpty = search === "";
-    const inNothingFound = brands.length + products.length === 0;
+    const inNothingFound = data?.brands?.length + data?.products?.length === 0;
     return {
       searchString: search,
-      brands,
-      products,
+      brands: data?.brands || [],
+      products: data?.products || [],
       inNothingFound,
       isEmpty,
       isActive: true, // TODO: implement

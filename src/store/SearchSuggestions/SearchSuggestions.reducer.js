@@ -3,6 +3,9 @@ import { SET_SEARCH_SUGGESTIONS } from "./SearchSuggestions.action";
 export const getInitialState = () => ({
   search: "",
   data: {},
+  queryID:"",
+  querySuggestions:[],
+
 });
 
 export const SearchSuggestionsReducer = (state = getInitialState(), action) => {

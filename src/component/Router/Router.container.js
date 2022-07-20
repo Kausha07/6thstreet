@@ -24,6 +24,7 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
+import Algolia from "Util/API/provider/Algolia";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -59,6 +60,13 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export class RouterContainer extends SourceRouterContainer {
+
+  constructor(props) {
+    super(props);
+    this.getAlgoliaIndex();
+  }
+
+  
   static propTypes = {
     ...SourceRouterContainer.propTypes,
     locale: PropTypes.string,
@@ -166,6 +174,11 @@ export class RouterContainer extends SourceRouterContainer {
       setUUIDToken(uuidv4());
     }
   }
+
+  async getAlgoliaIndex() {
+    return await new Algolia().getIndex();
+  }
+
 
   containerProps = () => {
     const { isBigOffline, setCountry, setLanguage } = this.props;

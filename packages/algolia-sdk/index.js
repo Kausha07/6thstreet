@@ -33,6 +33,8 @@ const AlgoliaSDK = {
     AlgoliaSDK.env = env;
   },
 
+  getAlgoliaIndex: () => AlgoliaSDK.index,
+  
   getPLP: (URL, params) =>
     getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params),
   getSearchPLP: (URL, params) =>

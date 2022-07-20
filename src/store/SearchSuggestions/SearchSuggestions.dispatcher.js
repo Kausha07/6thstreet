@@ -113,7 +113,7 @@ export class SearchSuggestionsDispatcher {
       else {
         querySuggestions =
         data?.hits?.length > 0
-        ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
+        ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
         : [defaultHit];
       }
 
@@ -125,7 +125,6 @@ export class SearchSuggestionsDispatcher {
         queryID = productData?.queryID ? productData?.queryID : null;
       }
       const results = formatProductSuggestions(productData);
-
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)
       );
