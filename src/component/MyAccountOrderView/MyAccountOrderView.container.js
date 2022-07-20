@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 import {
   STATUS_BEING_PROCESSED,
   STATUS_COMPLETE,
+  STATUS_ABLE_TO_EXCHANGE
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
@@ -17,6 +18,10 @@ import {
   CANCEL_ORDER_LABEL,
 } from "./MyAccountOrderView.config";
 import MyAccountOrderView from "./MyAccountOrderView.component";
+import {
+  ADDRESS_POPUP_ID,
+} from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import { showPopup } from "Store/Popup/Popup.action";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 import { showNotification } from "Store/Notification/Notification.action";
 
@@ -27,7 +32,8 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
 });
 
-export const mapDispatchToProps = () => ({
+export const mapDispatchToProps = (dispatch) => ({
+  showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   showErrorMessage: (message) => dispatch(showNotification("error", message)),
 });
 
@@ -83,33 +89,28 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   openOrderCancelation(itemStatus = "") {
     const { history } = this.props;
-    const {
-      order: { status, is_returnable, is_exchangeable } = {},
-      order,
-      entity_id,
-    } = this.state;
+    const { order: { status, is_returnable, pickup_address_required } = {}, entity_id, order } = this.state;
+
     if (itemStatus === CANCEL_ORDER_LABEL) {
       this.cancelExchangeOrder(order);
     } else {
-      if (
-        !entity_id ||
-        !(
-          STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ||
-          (status === STATUS_COMPLETE && is_exchangeable)
-        )
-      ) {
-        return;
-      }
-
       const url =
-        status === STATUS_COMPLETE && itemStatus === EXCHANGE_ITEM_LABEL
+        itemStatus === EXCHANGE_ITEM_LABEL
           ? `/my-account/exchange-item/create/${entity_id}`
-          : status === STATUS_COMPLETE || itemStatus === RETURN_ITEM_LABEL
-          ? `/my-account/return-item/create/${entity_id}`
-          : `/my-account/return-item/cancel/${entity_id}`;
-
-      history.push(url, { orderDetails: order });
+          : itemStatus === RETURN_ITEM_LABEL
+            ? `/my-account/return-item/create/${entity_id}`
+            : `/my-account/return-item/cancel/${entity_id}`;
+      if (itemStatus === RETURN_ITEM_LABEL) {
+        if (pickup_address_required) {
+          showPopup({});
+          history.push("/my-account/return-item/pick-up-address", { orderId: entity_id, orderDetails: order });
+        } else {
+          history.push(url, { orderDetails: order });
+        }
+      }
+      else {
+        history.push(url, { orderDetails: order });
+      }
     }
   }
 

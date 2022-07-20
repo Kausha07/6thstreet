@@ -13,7 +13,7 @@ import init from "./init";
 import logAlgoliaAnalytics from "./logger";
 import searchBy from "./search-by";
 import getSuggestions from "./suggestions";
-
+import getMultiProducts from "./get-multi-products";
 export {
   init,
   getPLP,
@@ -29,5 +29,6 @@ export {
   autocompleteSearch,
   getWishlistProduct,
   getBrandsDetails,
-  getShopByBrands
+  getShopByBrands,
+  getMultiProducts
 };

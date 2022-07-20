@@ -20,6 +20,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { isObject } from "Util/API/helper/Object";
@@ -186,6 +187,9 @@ class PDPSummary extends PureComponent {
       product: { price },
       getTabbyInstallment,
     } = this.props;
+    const script = document.createElement('script');
+    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
@@ -242,7 +246,7 @@ class PDPSummary extends PureComponent {
       !eddEventSent &&
       cross_border === 0
     ) {
-      if (addressCityData.length > 0) {
+      if (addressCityData?.length > 0) {
         this.validateEddStatus(countryCode);
         let default_edd = defaultShippingAddress ? true : false;
         Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
@@ -528,7 +532,7 @@ class PDPSummary extends PureComponent {
     if (isMobile && showCityDropdown) {
       return this.renderMobileSelectCity();
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
     let EddMessMargin = selectedAreaId ? true : false;
     return (
       <div block="EddParentWrapper">
@@ -619,12 +623,16 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const { url_path } = this.props;
     const { isArabic } = this.state;
-    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
+    "Men,Women,Kids,Boy,Girl": 
+     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     if (isArabic) {
       if (gender === "kids") {
         gender = "أولاد,بنات";
+      } else if (gender === "all") {
+        genderInURL = "أولاد,بنات,نساء,رجال";
       } else {
         if (gender !== "home") {
           gender = getGenderInArabic(gender);
@@ -637,6 +645,8 @@ class PDPSummary extends PureComponent {
     } else {
       if (gender === "kids") {
         gender = "Boy,Girl";
+      }else if (gender === "all") {
+        genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
           gender = gender?.replace(

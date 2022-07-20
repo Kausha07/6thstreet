@@ -19,6 +19,9 @@ import { getDefaultEddDate } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_READY_MESSAGE,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 
 import PropTypes from "prop-types";
@@ -65,13 +68,13 @@ export class CartItem extends PureComponent {
     isNotAvailble: false,
 
     dragStartX: 0,
+    dragStartY:0,
     dragCount: 0,
     dragDirection: 0,
     dragged: false,
     dragOpen: false,
     dragOpenEl: "",
     isSignedIn: this.props.isSignedIn,
-
   };
 
   static defaultProps = {
@@ -249,7 +252,7 @@ export class CartItem extends PureComponent {
     });
   };
 
-  onDragEndMouse = (evt) => {
+  onDragEndMouse = (evt) => {   
     this.setState({
       dragged: false,
     });
@@ -257,15 +260,18 @@ export class CartItem extends PureComponent {
     el.classList.remove("active");
   };
   onDragEndTouch = (evt) => {
+    const touch = evt.changedTouches[0];
     this.setState({
       dragged: false,
+      dragStartY: Math.round(touch.clientY)
     });
   };
   
 
   onTouchMove = (evt) => {
     const touch = evt.targetTouches[0];
-    const dragChange = touch.clientX - this.state.dragStartX;
+    const dragChange = Math.round(touch.clientX - this.state.dragStartX);
+    const dragChangeY = Math.round(touch.clientY - this.state.dragStartY);
     const leftOrRight =
       touch.clientX > this.state.dragStartX
         ? "right"
@@ -292,9 +298,10 @@ export class CartItem extends PureComponent {
     let rightDir = this.state.isArabic ? "left" : "right";
     let leftDirMove = this.state.isArabic ? "98px" : "-98px";
     let rightDirMove = this.state.isArabic ? "-98px" : "98px";
-
+    if((dragChangeY< 20) && (dragChangeY > -20)){
+      
     if (this.state.isSignedIn) {
-
+      
       if (this.state.dragDirection === leftDir) {
         if (this.state.dragOpen && this.state.dragOpenEl === leftDir) {
           el1.style.setProperty("width", 0 + "px");
@@ -361,6 +368,7 @@ export class CartItem extends PureComponent {
         }
       }
     }
+  }
   };
 
   onMouseMove = (evt) => {
@@ -501,7 +509,7 @@ export class CartItem extends PureComponent {
         this.setState({
           dragOpen: true,
           dragged: false,
-          dragOpenEl: leftDir,
+          dragOpenEl: rightDir,
         });
       } else {        
         el2.style.transform = `translateX(${leftDirMove})`;
@@ -532,8 +540,7 @@ export class CartItem extends PureComponent {
             <img src={trash} alt="trash"/>
             <span block="title">{__("Delete")}</span>
           </button>
-        </div>
-        
+        </div>    
     )
   }
 
@@ -753,27 +760,41 @@ export class CartItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { eddResponse, edd_info } = this.props;
+    const {
+      eddResponse,
+      edd_info,
+      item: { extension_attributes },
+    } = this.props;
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
+    const defaultDay = extension_attributes?.click_to_collect_store
+      ? edd_info.ctc_message
+      : edd_info.default_message;
     const {
       defaultEddDateString,
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
-    let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+    } = getDefaultEddDate(defaultDay);
+    let itemEddMessage = extension_attributes?.click_to_collect_store
+      ? DEFAULT_READY_MESSAGE
       : DEFAULT_MESSAGE;
+    let customDefaultMess = isArabic
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+      : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            actualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            actualEdd = entry.edd_date;
+            if (extension_attributes?.click_to_collect_store) {
+              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            } else {
+              actualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              actualEdd = entry.edd_date;
+            }
           }
         });
       } else {
@@ -784,19 +805,28 @@ export class CartItem extends PureComponent {
       actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       actualEdd = defaultEddDateString;
     }
-
+  
     if (!actualEddMess) {
       return null;
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
-
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+  
     return (
-      <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
-        </span>
-        <span>{actualEddMess.split(splitKey)[1]}</span>
+      <div block="AreaText" mods={{ isArabic }}>
+        {extension_attributes?.click_to_collect_store ? (
+          <span>{splitReadyByKey}</span>
+        ) : (
+          <span>
+            {actualEddMess.split(splitKey)[0]}
+            {splitKey}
+          </span>
+        )}
+        {extension_attributes?.click_to_collect_store ? (
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+        ) : (
+          <span>{actualEddMess.split(splitKey)[1]}</span>
+        )}
       </div>
     );
   };
@@ -825,9 +855,9 @@ export class CartItem extends PureComponent {
         {!isNotAvailble && (
           <>
             {this.renderProductPrice()}
-            {this.renderClickAndCollectStoreName()}
           </>
         )}
+        {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
         {edd_info &&
           edd_info.is_enable &&

@@ -21,7 +21,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
 
   static defaultProps = {
     title: "",
-    setImpressions: () => {},
+    setImpressions: () => { },
   };
 
   state = {
@@ -42,7 +42,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       language,
       renderMySignInPopup,
       isHomePage = false,
-      index= 0,
+      setLastTapItemOnHome,
+      index = 0,
     } = this.props;
 
     const { products, isLoading } = this.state;
@@ -55,7 +56,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       products,
       renderMySignInPopup,
       isHomePage,
-      index
+      index,
+      setLastTapItemOnHome
     };
   };
   async requestItems() {

@@ -38,7 +38,7 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderRequestSuccessContent() {
-    const { customer: { email } = {} } = this.props;
+    const { customer: { email } = {} ,orderNumber} = this.props;
 
     return (
       <>
@@ -53,6 +53,30 @@ export class MyAccountExchangeView extends SourceComponent {
       </>
     );
   }
+
+  renderSuccessDetails() {
+    const { returnNumber, orderIncrementId, date } = this.props;
+    const dateObject = new Date(date.replace(/-/g, "/"));
+    const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
+
+    return (
+        <div block="MyAccountReturnSuccess" elem="Details">
+            <h3>{ __('Request information') }</h3>
+            <p>
+                { __('ID: ') }
+                <span>{ returnNumber }</span>
+            </p>
+            <p>
+                { __('Order ID: ') }
+                <span>{ orderIncrementId }</span>
+            </p>
+            <p>
+                { __('Date requested ') }
+                <span>{dateString.split('at').join(__('at'))}</span>
+            </p>
+        </div>
+    );
+}
   renderDetails() {
     const {
       date,
@@ -62,14 +86,14 @@ export class MyAccountExchangeView extends SourceComponent {
       returnNumber,
     } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
-    const dateString = formatDate("YY/MM/DD at hh:mm", dateObject);
+    const dateString = formatDate("DD/MM/YY at hh:mm", dateObject);
     const { [status]: title } = STATUS_TITLE_MAP;
 
     return (
       <div block="MyAccountExchangeView" elem="Details">
         <p block="MyAccountExchangeView" elem="DetailsDate">
           {__("Date Requested: ")}
-          <span>{dateString}</span>
+          <span>{dateString.split('at').join(__('at'))}</span>
         </p>
         <div block="MyAccountExchangeView" elem="SubDetails">
           <p
@@ -78,7 +102,7 @@ export class MyAccountExchangeView extends SourceComponent {
             mods={{ isDenied: status === STATUS_DENIED }}
           >
             {__("Status: ")}
-            <span>{`${title || status.split("_").join(" ")}`}</span>
+            <span>{__(`${title || status.split("_").join(" ")}`)}</span>
           </p>
           {exchangeSuccess && (
             <p block="MyAccountExchangeView" elem="Order">
@@ -138,22 +162,27 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
   renderContent() {
-    const { isLoading, returnNumber } =
+    const { isLoading, returnNumber,orderNumber,exchangeSuccess } =
       this.props;
 
     if (isLoading) {
       return null;
     }
 
-    if (!isLoading && !returnNumber) {
+    if (!isLoading) {
+      if(exchangeSuccess && !returnNumber){
+        return this.renderExchangeNotPossible();
+      }else if(!exchangeSuccess && !orderNumber){
       return this.renderExchangeNotPossible();
+      }
     }
 
     return (
       <>
         {this.renderHeading()}
-        {this.renderDetails()}
-        {this.renderItems()}
+        {exchangeSuccess && this.renderItems()}
+        {exchangeSuccess ? this.renderSuccessDetails() : this.renderDetails()}
+        {!exchangeSuccess && this.renderItems()}
       </>
     );
   }

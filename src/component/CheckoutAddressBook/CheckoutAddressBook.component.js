@@ -37,10 +37,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderHeading() {
-    const { isBilling, isSignedIn } = this.props;
+    const { isBilling, isSignedIn,isExchange } = this.props;
     const { isArabic } = this.state;
 
-    const addressName = isBilling ? null : __("Delivery country");
+    const addressName = isBilling ? null : isExchange ? ("Select a pick up address"): __("Delivery country");
 
     return (
       <h2
@@ -89,6 +89,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       closeForm,
       hideCards,
       isBilling,
+      PickUpAddress
     } = this.props;
     const { id, area } = address;
     if (!area) {
@@ -102,6 +103,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         title={__("Address #%s", id)}
         address={address}
         key={id}
+        PickUpAddress={PickUpAddress}
         showActions={!!!isBilling}
         hideCards={hideCards}
         openForm={openForm}
@@ -192,7 +194,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   };
 
   renderPopup() {
-    const { formContent, closeForm, openForm, customer } = this.props;
+    const { formContent, closeForm, openForm, customer,isExchange } = this.props;
 
     return (
       <div block="EditAddress" elem="PopUp">
@@ -202,6 +204,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
           onClick={this.showCards}
         />
         <MyAccountAddressPopup
+          isExchange={isExchange}
           formContent={formContent}
           closeForm={closeForm}
           openForm={openForm}
@@ -222,10 +225,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   render() {
-    const { isBilling } = this.props;
+    const { isBilling,PickUpAddress } = this.props;
     return (
       <div block="CheckoutAddressBook" mods={{ isBilling }}>
-        {this.renderHeading()}
+        {!PickUpAddress && this.renderHeading()}
         {this.renderContent()}
       </div>
     );

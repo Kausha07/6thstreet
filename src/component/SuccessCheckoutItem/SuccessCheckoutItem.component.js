@@ -18,6 +18,9 @@ import "./SuccessCheckoutItem.extended.style";
 import {
   DEFAULT_ARRIVING_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_MESSAGE,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 
 export const mapStateToProps = (state) => ({
@@ -169,6 +172,28 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
+  renderClickAndCollectStoreName() {
+    const {
+      item: { extension_attributes },
+    } = this.props;
+
+    const { isArabic } = this.state;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="SuccessCheckoutItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+
   renderColSizeQty() {
     const {
       item: { color, optionValue, qty },
@@ -236,6 +261,8 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
+        {this.renderClickAndCollectStoreName()}
+
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you && 
@@ -246,27 +273,33 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = () => {
-    const { eddResponse, edd_info } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes }  } = this.props;
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
+    const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
     const {
       defaultEddDateString,
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
+    } = getDefaultEddDate(defaultDay);
+    let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_ARRIVING_MESSAGE
     let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_ARRIVING_MESSAGE]
-      : DEFAULT_ARRIVING_MESSAGE;
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+      : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-            actualEddMess = isArabic
+            if(extension_attributes?.click_to_collect_store){
+              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            }else{
+              actualEddMess = isArabic
               ? entry.edd_message_ar
               : entry.edd_message_en;
             actualEdd = entry.edd_date;
+            }
           }
         });
       } else {
@@ -278,14 +311,23 @@ export class SuccessCheckoutItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
     return (
-      <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
-        </span>
-        <span>{actualEddMess.split(splitKey)[1]}</span>
+      <div block="AreaText" mods={{isArabic}}>
+        {extension_attributes?.click_to_collect_store ?
+          <span>
+            {splitReadyByKey}
+          </span> : <span>
+            {actualEddMess.split(splitKey)[0]}
+            {splitKey}
+          </span>
+        }
+         {extension_attributes?.click_to_collect_store ?
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+          :
+          <span>{actualEddMess.split(splitKey)[1]}</span>
+        }
       </div>
     );
   };

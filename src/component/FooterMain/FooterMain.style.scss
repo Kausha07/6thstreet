@@ -5,7 +5,7 @@
 }
 
 .FooterMain {
-  padding-top: 50px;
+  padding-top: 60px;
   padding-bottom: 27px;
   background: var(--footer-background-color);
   // height: 352px;
@@ -21,18 +21,49 @@
     margin: auto;
     display: flex;
     justify-content: space-between;
-    padding-right: 90px;
-    &_isArabic {
-      padding-right: 0px;
-      padding-left: 90px;
-    }
-
+    flex-wrap: wrap;
     p {
       letter-spacing: 0;
       margin-bottom: 20px;
     }
   }
-
+  &-SocialColumn {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+    .FooterMain {
+      &-SocialLinks {
+        display: flex;
+        width: 100%;
+        align-items: center;
+      }
+      &-SocialTitle {
+        flex: 0 0 33%;
+        h4{
+          font-size: 35px;
+          line-height: 1;
+          font-weight: 400;
+          letter-spacing: -1px;
+          margin-bottom: 0;
+          span{
+            font-weight: 600;
+            text-transform: capitalize;
+          }
+        }
+      }
+      &-SocialIcon {
+        .Image {
+          padding: 18px;
+        }
+        &.youtube {
+          .Image {
+            padding: 3px;
+          }
+        }
+      }
+    }
+  }
   h4 {
     // text-transform: uppercase;
     margin-bottom: 6px;
@@ -41,7 +72,9 @@
     letter-spacing: 0;
     line-height: 22px;
   }
-
+  &-LastColumn {
+    flex: 0 0 24%;
+  }
   &-Column {
     min-height: 240px;
 
@@ -65,13 +98,13 @@
       color: var(--foter-hyperlink-color);
       div {
         display: flex;
-        span:nth-last-of-type(2){
+        span:nth-last-of-type(2) {
           font-size: 20px;
           line-height: 35px;
           transform: translateY(-2px);
           font-weight: var(--fw-light);
         }
-        span:nth-last-of-type(4){
+        span:nth-last-of-type(4) {
           font-size: 20px;
           line-height: 35px;
           transform: translateY(-2px);
@@ -124,12 +157,12 @@
   &-SocialIcon {
     display: inline-block;
     vertical-align: top;
-    padding: 20px;
     background: var(--social-icon-background-color);
     border-radius: 50%;
     float: none;
     width: 60px;
     height: 60px;
     text-align: center;
+    margin: 0 7px 10px ;
   }
 }

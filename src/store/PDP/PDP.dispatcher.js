@@ -17,17 +17,18 @@ import { setPdpWidgetsData } from "../AppState/AppState.action";
 export class PDPDispatcher {
   async requestProduct(payload, dispatch) {
     dispatch(setPDPLoading(true));
-
+    
     const { options } = payload;
     try {
       const response = await new Algolia().getPDP(options);
 
       dispatch(setPDPData(response, options));
+      dispatch(setPDPLoading(false));
     } catch (e) {
       Logger.log(e);
-
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, {}));
+      dispatch(setPDPLoading(false));
     }
   }
   async resetProduct(payload, dispatch) {
@@ -49,7 +50,6 @@ export class PDPDispatcher {
       dispatch(setPDPData(response, options));
     } catch (e) {
       Logger.log(e);
-
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, options));
     }

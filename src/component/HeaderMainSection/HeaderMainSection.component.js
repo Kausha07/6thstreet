@@ -306,6 +306,9 @@ class HeaderMainSection extends NavigationAbstract {
       case "home":
         history.push("/home.html");
         break;
+        case "all":
+          history.push("/all.html");
+          break;
       default:
         history.push("/");
     }

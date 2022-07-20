@@ -83,7 +83,16 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     isSignedIn: isSignedIn(),
     isDropdownOpen: true,
     dropdownToggleIcon: true,
+    isInLimit: true,
   };
+
+  setLimitDisabled() {
+    this.setState({isInLimit: true});
+  }
+
+  setLimitEnabled() {
+    this.setState({isInLimit: false});
+  }
 
   renderPriceLine(price, name, mods) {
     const {
@@ -225,6 +234,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   }
 
   renderPayments() {
+    const setLimitDisabled = this.setLimitDisabled.bind(this);
+    const setLimitEnabled = this.setLimitEnabled.bind(this);
+
     const {
       paymentMethods = [],
       onPaymentMethodSelect,
@@ -275,6 +287,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
         isTabbyInstallmentAvailable={isTabbyInstallmentAvailable}
+        setLimitDisabled={setLimitDisabled}
+        setLimitEnabled={setLimitEnabled}
       />
     );
   }
@@ -361,7 +375,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   }
 
   renderActions() {
-    const { isTermsAndConditionsAccepted, isArabic } = this.state;
+    const { isTermsAndConditionsAccepted, isArabic, isInLimit } = this.state;
     const { isOrderButtonVisible, isOrderButtonEnabled } = this.props;
     const {
       termsAreEnabled,
@@ -425,7 +439,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 isDisabled ||
                 processingRequest ||
                 processingPaymentSelectRequest ||
-                isApplePay
+                isApplePay ||
+                !isInLimit
               }
               mix={{
                 block: "CheckoutBilling",

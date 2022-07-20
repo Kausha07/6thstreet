@@ -92,6 +92,71 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   }
 
+  onQuantityChange = (quantity, itemId) => {
+    const { onQuantitySelection } = this.props;
+    onQuantitySelection(parseInt(quantity), itemId);
+  };
+
+  isItemSelected = (item_id, item,maxSaleQuantity) => {
+    const {
+      exchangableQuantity = {},
+      returnableQty = {},
+      isExchange,
+    } = this.props;
+    const selectedValue = isExchange
+      ? exchangableQuantity[item_id]
+        ? exchangableQuantity[item_id].quantity === item
+        : maxSaleQuantity === item
+      : returnableQty[item_id]
+      ? returnableQty[item_id].quantity === item
+      : maxSaleQuantity === item;
+    return selectedValue;
+  };
+  renderQuantitySelection = (maxSaleQuantity) => {
+    const {
+      minSaleQuantity = 1,
+      item: { item_id },
+      exchangableQuantity = {},
+      returnableQty = {},
+      isArabic,
+      isExchange,
+    } = this.props;
+
+    const qtyList = Array.from(
+      { length: maxSaleQuantity - minSaleQuantity + 1 },
+      (v, k) => k + minSaleQuantity
+    );
+    const itemValue = isExchange
+      ? exchangableQuantity[item_id]
+        ? exchangableQuantity[item_id].quantity
+        : maxSaleQuantity
+      : returnableQty[item_id]
+      ? returnableQty[item_id].quantity
+      : maxSaleQuantity;
+    return (
+      <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+        <select
+          value={itemValue}
+          onChange={(e) => this.onQuantityChange(e.target.value, item_id)}
+        >
+          {qtyList.map((item, index) => {
+            return (
+              <option
+                key={index}
+                selected={this.isItemSelected(item_id,item,maxSaleQuantity)}
+                block="CartItem"
+                elem="QuantityOption"
+                value={item}
+              >
+                {item}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  };
+
   renderDetails() {
     const {
       displayDiscountPercentage,
@@ -101,6 +166,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         color,
         row_total,
         price,
+        item_id,
         discount_percent,
         discount_amount,
         size: sizeField,
@@ -121,15 +187,15 @@ export class MyAccountReturnCreateItem extends PureComponent {
             </p>
           )}
           {!!qty_shipped && !isExchange && (
-            <p>
+            <p block="Quantity">
               {__("Qty: ")}
-              <span>{+qty_shipped}</span>
+              {this.renderQuantitySelection(+qty_shipped, item_id)}
             </p>
           )}
           {!!exchangeable_qty && isExchange && (
-            <p>
+            <p block="Quantity">
               {__("Qty: ")}
-              <span>{+exchangeable_qty}</span>
+              {this.renderQuantitySelection(+exchangeable_qty)}
             </p>
           )}
           {!!size && (
@@ -171,13 +237,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
     );
   }
 
-  renderSizeOption(
-    productStock,
-    code,
-    label,
-    selectedStatus,
-    availProductStatus
-  ) {
+  renderSizeOption(productStock, code, label) {
     const {
       selectedSizeCodes,
       onAvailSizeSelect,
@@ -185,12 +245,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       notifyMeSuccess,
       notifyMeLoading,
     } = this.props;
-    const isNotAvailable =
-      (availProductStatus && selectedStatus)
-        ? false
-        : selectedStatus
-        ? selectedStatus
-        : parseInt(productStock[code].quantity) === 0;
+    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
     const selectedLabelStyle = {
       fontSize: "14px",
       color: "#ffffff",
@@ -277,9 +332,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       selectedAvailProduct[item_id].id !== false
         ? availProduct[0]
         : products[item_id];
-    let availProductStatus =
-      selectedAvailProduct[item_id] &&
-      selectedAvailProduct[item_id].id !== false;
+
     const { simple_products: productStock } = filteredProductStock;
     if (
       sizeObject?.sizeCodes !== undefined &&
@@ -294,17 +347,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code]?.size[selectedSizeType];
-            const selectedStatus = label === `${size["value"]}`;
-            if (label && (availProductStatus || !selectedStatus)) {
-              acc.push(
-                this.renderSizeOption(
-                  productStock,
-                  code,
-                  label,
-                  selectedStatus,
-                  availProductStatus
-                )
-              );
+            if (label) {
+              acc.push(this.renderSizeOption(productStock, code, label));
             }
 
             return acc;
@@ -347,19 +391,26 @@ export class MyAccountReturnCreateItem extends PureComponent {
       availableProducts,
     } = this.props;
     return availableProducts.map((product) => {
-      const { sku, thumbnail_url, color } = product;
-
+      const { sku, thumbnail_url, color, in_stock, stock_qty } = product;
+      const isNotAvailable =
+        in_stock === 0 || (in_stock === 1 && stock_qty === 0);
       return (
         <li
           block="PDPAlsoAvailableProduct"
           elem={
-            selectedAvailProduct[item_id] &&
-            sku === selectedAvailProduct[item_id]["id"]
+            isNotAvailable
+              ? "SizeOptionContainerOOS"
+              : selectedAvailProduct[item_id] &&
+                sku === selectedAvailProduct[item_id]["id"]
               ? "selectedProduct"
               : ""
           }
           id={sku}
-          onClick={(event) => onAvailableProductClick(event, item_id, sku)}
+          onClick={
+            isNotAvailable
+              ? () => {}
+              : (event) => onAvailableProductClick(event, item_id, sku)
+          }
         >
           <div
             block="PDPAlsoAvailableProduct-Link"

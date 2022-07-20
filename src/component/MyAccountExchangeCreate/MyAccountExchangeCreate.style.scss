@@ -2,7 +2,7 @@
   margin-bottom: 20px;
 
   .CheckoutAddressBook {
-    top: 6px;
+    top: 4px;
   }
 
   .showExchangeAddress {
@@ -14,6 +14,11 @@
     top: 0;
     background: #ffffff;
     width: 100%;
+    top: -100px;
+    @include desktop{
+      position: relative;
+      top: -168px;
+    }
   }
 
   .MyAccountAddressBook {
@@ -105,7 +110,8 @@
       z-index: 1;
 
       @include before-desktop {
-        top: 0;
+        width: 100%;
+        top: 264px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -253,7 +259,7 @@
     justify-content: space-between;
     margin: 0 auto;
     max-width: 320px;
-    margin-top: 40px;
+    margin-top: 140px;
     @include desktop {
       flex-direction: row-reverse;
       margin: 10px 0 0 40px;

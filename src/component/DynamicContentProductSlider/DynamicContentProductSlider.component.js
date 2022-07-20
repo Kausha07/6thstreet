@@ -138,6 +138,7 @@ class DynamicContentProductSlider extends PureComponent {
       isHomePage,
       products,
       renderMySignInPopup,
+      setLastTapItemOnHome,
       index = 0,
     } = this.props;
     if (products.length === 0) {
@@ -162,7 +163,9 @@ class DynamicContentProductSlider extends PureComponent {
           products={products}
           heading={finalTitle}
           withViewAll
+          setLastTapItemOnHome={setLastTapItemOnHome}
           renderMySignInPopup={renderMySignInPopup}
+          setLastTapItemOnHome={setLastTapItemOnHome}
           key={`VueProductSliderContainer`}
           isHome={true}
           pageType={"home"}

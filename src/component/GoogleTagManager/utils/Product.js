@@ -241,7 +241,8 @@ class Product {
                 category = '',
                 qty,
                 size_option,
-                basePrice
+                basePrice,
+                config_sku
             } = {},
             sku: parentSku,
             name: parentName,
@@ -249,6 +250,7 @@ class Product {
             row_total,
             price = {},
             product,
+            product_type_6s,
         } = item;
 
         const { sku = '', name = '' } = product || {};
@@ -257,10 +259,10 @@ class Product {
 
         return {
             name: name || parentName,
-            id:  sku || parentSku,
+            id:  config_sku || parentSku,
             price: row_total || itemPrice.toString(),
             brand: brand_name,
-            category,
+            category: product_type_6s || category || "",
             [PRODUCT_COLOR]: color,
             quantity:qty,
         };

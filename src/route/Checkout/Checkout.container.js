@@ -907,7 +907,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { getPaymentMethods } = this.props;
 
     getPaymentMethods().then(({ data = [] }) => {
-      console.log("data",data);
       const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
         const { is_enabled } = paymentMethod;
 
@@ -945,7 +944,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (status === "Authorized") {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
@@ -953,6 +951,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (isMobile.any()) {
             showOverlay(CC_POPUP_ID);
           }
+          hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {})

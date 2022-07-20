@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -97,11 +98,11 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
       isClickAndCollect,
-      totals: { items },
+      totals: { items=[] },
     } = this.props;
     const { m_code } = method;
     
-    const hasClickAndCollect = items.some(
+    const hasClickAndCollect = items?.some(
       ({ extension_attributes }) => extension_attributes?.click_to_collect_store
     );
 
@@ -153,8 +154,50 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     return selectedMethod;
   };
 
+  renderLimit() {
+    const { totals: { total, currency_code } } = this.props;
+    if(currency_code === "AED"){
+      return (
+        <>
+          <b> {__("AED 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "SAR"){
+      return (
+        <>
+          <b> {__("SAR 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "QAR"){
+      return (
+        <>
+          <b> {__("QAR 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "KWD"){
+      return (
+        <>
+          <b> {__("KWD 250")}, </b> 
+        </>
+      );
+    }else if(currency_code === "OMR"){
+      return (
+        <>
+          <b> {__("OMR 250")}, </b> 
+        </>
+      );
+    }else if(currency_code === "BHD"){
+      return (
+        <>
+          <b> {__("BHD 250")}, </b> 
+        </>
+      );
+    }
+  }
+
   renderCashOnDelivery() {
-    const { isClickAndCollect } = this.props;
+    const { isClickAndCollect, totals: { total, currency_code }, setOrderButtonDisabled } = this.props;
+
     if (isClickAndCollect) {
       return null;
     }
@@ -162,6 +205,32 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();
+
+    if(
+      currency_code === "AED" && total > 2700 || 
+      currency_code === "SAR" && total > 2700 ||
+      currency_code === "KWD" && total > 250 ||
+      currency_code === "OMR" && total > 250 ||
+      currency_code === "BHD" && total > 250 ||
+      currency_code === "QAR" && total > 2700
+      ){
+        return (
+          <div block="CheckoutPayments" elem="SelectedInfo">
+            <h2 block="CheckoutPayments" elem="MethodTitle">
+              {method_title}
+            </h2>
+            <p block="CheckoutPayments" elem="MethodDiscription">
+              {getCountryFromUrl() === "QA" 
+                ? __("Cash on Receiving is not available for the order above")
+                :__("Cash on Delivery is not available for the order above")
+              }
+              <span>{this.renderLimit()}</span>
+              {__("please choose another payment option.")}
+
+            </p>
+          </div>
+        );
+    }
 
     return (
       <div block="CheckoutPayments" elem="SelectedInfo">
@@ -313,7 +382,24 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderSelectedPayment() {
-    const { selectedPaymentCode } = this.props;
+    const { selectedPaymentCode, setLimitDisabled, setLimitEnabled, totals: { total, currency_code }, } = this.props;
+    
+    if(selectedPaymentCode === "msp_cashondelivery" ){
+      if(
+        currency_code === "AED" && total > 2700 || 
+        currency_code === "SAR" && total > 2700 ||
+        currency_code === "KWD" && total > 250 ||
+        currency_code === "OMR" && total > 250 ||
+        currency_code === "BHD" && total > 250 ||
+        currency_code === "QAR" && total > 2700
+        ){
+          setLimitEnabled();
+        }else{
+          setLimitDisabled();
+        }
+    }else{
+      setLimitDisabled();
+    }
 
     const render = this.paymentRenderMap[selectedPaymentCode];
     if (!render) {

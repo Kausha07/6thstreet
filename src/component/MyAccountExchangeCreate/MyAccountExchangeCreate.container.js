@@ -49,6 +49,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   containerFunctions = {
     onFormSubmit: this.onFormSubmit.bind(this),
     onSizeSelect: this.onSizeSelect.bind(this),
+    handleChangeQuantity: this.handleChangeQuantity.bind(this),
     checkIsDisabled: this.checkIsDisabled.bind(this),
     onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
     setSelectedAddress: this.setSelectedAddress.bind(this),
@@ -82,6 +83,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     selectedSizeType: "eu",
     selectedAvailProduct: {},
     isOutOfStock: {},
+    quantityObj: {},
     notifyMeSuccess: false,
     notifyMeLoading: false,
     isArabic: isArabic(),
@@ -119,9 +121,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     if (
       JSON.stringify(selectedItems) !== JSON.stringify(prevSelectedItems) ||
       JSON.stringify(selectedAvailProduct) !==
-        JSON.stringify(prevSelectedAvailProduct) ||
+      JSON.stringify(prevSelectedAvailProduct) ||
       JSON.stringify(selectedSizeCodes) !==
-        JSON.stringify(prevSelectedSizeCodes) ||
+      JSON.stringify(prevSelectedSizeCodes) ||
       reasonId !== prevReasonId
     ) {
       this.checkIsDisabled();
@@ -231,10 +233,10 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         disabledStatus: true,
       });
     } else {
-      Object.keys(products).map((item) => {
+      Object.keys(products)?.map((item) => {
         const { simple_products } = products[item];
         if (simple_products) {
-          let sizeLessData = Object.values(simple_products).filter(
+          let sizeLessData = Object.values(simple_products)?.filter(
             (product) => {
               if (product.size.length === 0) {
                 return product;
@@ -287,6 +289,16 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
         [itemId]: outOfStockVal,
       },
       notifyMeSuccess: false,
+    }));
+  }
+
+  handleChangeQuantity(quantity, itemId) {
+    const {
+      quantityObj: { [itemId]: item },
+    } = this.state;
+
+    this.setState(({ quantityObj }) => ({
+      quantityObj: { ...quantityObj, [itemId]: { ...item, quantity } },
     }));
   }
 
@@ -346,7 +358,8 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       let filteredItems = [];
       groups.map((group) => {
         group.items.map((item) => {
-          if (item.is_exchangeable) {
+          const isItemExisting = filteredItems.find(({item_id})=>item_id === item.item_id )
+          if (item.is_exchangeable && !isItemExisting) {
             filteredItems.push(item);
           }
         });
@@ -360,13 +373,19 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   setOrderItem = (product, itemId, isSelected) => {
-    const { products, isOutOfStock } = this.state;
+    const { products, isOutOfStock, tempSelectedAddressIds } = this.state;
+    const { addresses } = this.props;
+    let address = null
+    if (addresses && addresses.length) {
+      address = addresses.find(({ default_shipping }) => default_shipping === true);
+    }
     if (isSelected) {
       this.setState({
         products: {
           ...products,
           [itemId]: false,
         },
+        tempSelectedAddressIds: { ...tempSelectedAddressIds, [itemId]: null },
         lastSelectedItem: "",
         isOutOfStock: {
           ...isOutOfStock,
@@ -379,6 +398,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           ...products,
           [itemId]: product,
         },
+        tempSelectedAddressIds: { ...tempSelectedAddressIds, [itemId]: address ? address.id : addresses[0].id },
         lastSelectedItem: itemId,
       });
     }
@@ -483,7 +503,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
   }
 
   onFormSubmit() {
-    const { history, showErrorMessage } = this.props;
+    const { history, showErrorMessage, location: { state } } = this.props;
 
     const {
       selectedItems = {},
@@ -493,8 +513,9 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
       selectedAvailProduct,
       selectedAddressIds,
       availableProducts = {},
+      quantityObj
     } = this.state;
-
+  
     const payload = {
       parent_order_id: this.getOrderId(),
       items: Object.entries(selectedItems).map(
@@ -526,7 +547,7 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
           }
           const { simple_products: productStock } =
             selectedAvailProduct[order_item_id] &&
-            selectedAvailProduct[order_item_id].id !== false
+              selectedAvailProduct[order_item_id].id !== false
               ? availProduct
               : products[order_item_id];
           let sizeLessData = [];
@@ -578,31 +599,38 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
             parent_order_item_id: order_item_id,
             exchange_sku: currentSizeCode,
             exchange_csku: finalCsku ? finalCsku : config_sku,
-            address_id: selectedAddressIds[order_item_id],
             options:
               sizeLessData.length === 0
                 ? [
-                    {
-                      option_id: size["label"].toUpperCase(),
-                      option_value: finalSizeValue,
-                    },
-                  ]
+                  {
+                    option_id: size["label"].toUpperCase(),
+                    option_value: finalSizeValue,
+                  },
+                ]
                 : [],
-            exchange_qty: +exchangeable_qty,
+                exchange_qty: quantityObj[order_item_id] ? quantityObj[order_item_id].quantity : +exchangeable_qty,
             exchange_reason: id,
           };
         }
       ),
     };
 
+    if (state && state.orderDetails) {
+      const { pickup_address_required } = state.orderDetails;
+      if(pickup_address_required){
+        payload["address_id"] = Object.values(selectedAddressIds)[0]
+      }
+    }
+  
     this.setState({ isLoading: true });
     MagentoAPI.post("exchange/create-order", payload)
-      .then(({ order_id, rma_increment_id }) => {
+      .then((response) => {
+        const { order_id, rma_increment_id } = response
         if (order_id) {
           localStorage.setItem("RmaId", rma_increment_id);
           history.push(`/my-account/exchange-item/create/success/${order_id}`);
         } else {
-          showErrorMessage(__("Error appeared while requesting a exchange"));
+          showErrorMessage(response);
           this.setState({ isLoading: false });
         }
       })

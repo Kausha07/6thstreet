@@ -8,9 +8,12 @@ import { getDefaultEddDate } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import { Store } from "../Icons";
 
 export class MyAccountOrderViewItem extends SourceComponent {
   renderDetails() {
@@ -26,6 +29,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
         price,
         size: { value: size = "" } = {},
         qty,
+        cross_border = 0,
+        ctc_store_name="",
       } = {},
       status,
     } = this.props;
@@ -61,8 +66,20 @@ export class MyAccountOrderViewItem extends SourceComponent {
             {`${formatPrice(+price, currency)}`}
           </span>
         </p>
+        {!!ctc_store_name && (
+            <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
+              <Store />
+              <div
+                block="MyAccountOrderViewItem-ClickAndCollect"
+                elem="StoreName"
+              >
+                {ctc_store_name}
+              </div>
+            </div>
+          )}
         {edd_info &&
           edd_info.is_enable &&
+          cross_border === 0 &&
           !isFailed &&
           status !== "payment_failed" &&
           status !== "payment_aborted" &&
@@ -131,22 +148,36 @@ export class MyAccountOrderViewItem extends SourceComponent {
       return null;
     }
 
-    let splitKey = isArabic() ? "بواسطه" : "by";
-
     let colorCode =
-      compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
-    const idealFormat = actualEddMess.includes(splitKey) ? true : false;
+    compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
+      const splitByInclude = actualEddMess.includes(splitKey)
+      const splitByReadyInclude = splitReadyByKey && actualEddMess.includes(splitReadyByKey)
+      const idealFormat = splitByInclude || splitByReadyInclude ? true : false;
+      let splitBy = actualEddMess.split(splitKey)
+
+      if(idealFormat){
+        if(splitByReadyInclude){
+          splitBy=actualEddMess.split(splitReadyByKey)
+          splitKey=splitReadyByKey
+        }else{
+          splitBy = actualEddMess.split(splitKey)
+          splitKey=splitKey
+        }
+      }
+
     return (
       <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
           {idealFormat
-            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            ? `${splitBy[0]} ${splitKey}`
             : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
-          {idealFormat ? `${actualEddMess.split(splitKey)[1]}` : actualEddMess}
+          {idealFormat ? `${splitBy[1]}` : actualEddMess}
         </span>
       </div>
     );

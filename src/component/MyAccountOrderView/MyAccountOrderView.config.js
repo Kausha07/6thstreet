@@ -10,6 +10,12 @@ export const DELIVERY_SUCCESSFUL = "delivery_successful";
 
 export const STATUS_CANCELLED = "cancelled";
 
+export const PICKUP_FAILED = 'pickupfailed'
+
+export const PICKEDUP = 'pickedup'
+
+export const READY_TO_PICK = 'readytopick'
+
 export const CANCEL_ITEM_LABEL = __("Cancel an Item");
 
 export const CANCEL_ORDER_LABEL = __("Cancel order");

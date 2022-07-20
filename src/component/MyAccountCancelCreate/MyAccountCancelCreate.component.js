@@ -39,12 +39,14 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
 
     renderOrderItems() {
         const { items = [], onFormSubmit } = this.props;
-
         return (
             <Form id="create-cancel" onSubmitSuccess={onFormSubmit}>
                 <ul>
-                    {items.filter(({ qty_canceled, qty_to_cancel }) => +qty_canceled < +qty_to_cancel)
-                        .map(this.renderOrderItem)}
+                {items.map((item) => {
+                    if (+item?.qty_to_cancel > 0 && +item?.qty_canceled <= +item?.qty_to_cancel) {
+                        return this.renderOrderItem(item);
+                    }
+                })}
                 </ul>
                 {this.renderActions()}
             </Form>

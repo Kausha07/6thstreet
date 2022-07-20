@@ -44,6 +44,7 @@ import box from "./icons/box.png";
 import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
+import { ADD_ADDRESS } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -203,6 +204,7 @@ export class MyAccount extends SourceMyAccount {
     }
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
+
     let finalTab;
     if (tabMap[activeTab]) {
       finalTab = tabMap[activeTab];
@@ -210,12 +212,13 @@ export class MyAccount extends SourceMyAccount {
       finalTab = exchangeTabMap[activeTab];
     }
     const { name, alternativePageName, alternateName } = finalTab;
+    const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
+
     const returnTitle =
-      activeTab === RETURN_ITEM
-        ? __("Return Statement")
-        : activeTab === EXCHANGE_ITEM
+      activeTab === RETURN_ITEM ? pickUpAddress ? __("Select Pick Up Address") : __("Return Statement") : activeTab === EXCHANGE_ITEM
         ? __("Exchange Statement")
         : null;
+
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
@@ -231,13 +234,13 @@ export class MyAccount extends SourceMyAccount {
         />
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-            <h1 block="MyAccount" elem="Heading">
-              {isCancel
-                ? alternateName
-                : alternativePageName || returnTitle || name}
-            </h1>
-          ) : (
+            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+              <h1 block="MyAccount" elem="Heading">
+                {isCancel
+                  ? alternateName
+                  : alternativePageName || returnTitle || name}
+              </h1>
+            ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {isReturnButton
@@ -266,7 +269,8 @@ export class MyAccount extends SourceMyAccount {
       isSignedIn,
       mobileTabActive,
       setMobileTabActive,
-      exchangeTabMap
+      exchangeTabMap,
+      payload
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
@@ -298,20 +302,25 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
+    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
+    const payloadKey = Object.keys(payload)[0]
     return (
       <ContentWrapper
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        <MyAccountMobileHeader
-          onClose={this.handleClick}
-          isHiddenTabContent={hiddenTabContent === "Active"}
-          alternativePageName={alternativePageName}
-          name={isCancel ? alternateName : name}
-        />
+        {!(isPickUpAddress && payloadKey && payload[payloadKey].title) &&
+          <MyAccountMobileHeader
+            onClose={this.handleClick}
+            isHiddenTabContent={hiddenTabContent === "Active"}
+            alternativePageName={alternativePageName}
+            name={isPickUpAddress ? "Select Pick Up Address" : isCancel ? alternateName : name}
+          />
+        }
+
         <div block={hiddenTabList}>
           <div block="UserBlock">
             <span>{__("Hello, ")}</span>

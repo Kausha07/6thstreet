@@ -609,7 +609,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true", options) {
-    const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
+    const { buttonRefreshTimeout, openClickAndCollectPopup, selectedClickAndCollectStore } = this.state;
 
     if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
@@ -623,6 +623,11 @@ export class PDPAddToCartContainer extends PureComponent {
     if (isAdded) {
       if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
+      }
+      if (selectedClickAndCollectStore) {
+        this.setState({
+          selectedClickAndCollectStore: null,
+        });
       }
       this.setState(
         { addedToCart: true },
@@ -709,7 +714,6 @@ export class PDPAddToCartContainer extends PureComponent {
         showNotification("error", __("Please select a size."));
         return;
       }
-
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
@@ -720,9 +724,9 @@ export class PDPAddToCartContainer extends PureComponent {
       {
         openClickAndCollectPopup: !openClickAndCollectPopup,
       },
-      () => {
-        this.toggleRootElementsOpacity();
-      }
+      // () => {
+      //   this.toggleRootElementsOpacity();
+      // }
     );
   }
 

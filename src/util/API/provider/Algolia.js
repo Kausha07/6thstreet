@@ -99,6 +99,12 @@ export class Algolia {
     return data;
   }
 
+  async getMultiProducts(idsArray) {
+    // TODO: validate data, possible cache
+    const { data = [] } = (await AlgoliaSDK.getMultiProducts(idsArray)) || {};
+    return data;
+  }
+
   async getPopularBrands(limit) {
     // TODO: validate data, possible cache
     const { data = [] } = (await AlgoliaSDK.getPopularBrands(limit)) || {};

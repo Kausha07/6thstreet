@@ -36,7 +36,7 @@ export class MyAccountExchangeCreate extends PureComponent {
 
   renderOrderItem = (item) => {
     const { item_id } = item;
-    const { onItemClick, onReasonChange, resolutions, reasonId } = this.props;
+    const { onItemClick, onReasonChange, resolutions, reasonId, handleChangeQuantity, quantityObj } = this.props;
 
     if (!item.is_exchangeable) {
       return false;
@@ -47,7 +47,9 @@ export class MyAccountExchangeCreate extends PureComponent {
         <MyAccountReturnCreateItem
           item={item}
           {...this.props}
+          exchangableQuantity={quantityObj}
           isExchange={true}
+          handleChangeQuantity={handleChangeQuantity}
           reasonId={reasonId}
           onClick={onItemClick}
           onReasonChange={onReasonChange}
@@ -93,14 +95,16 @@ export class MyAccountExchangeCreate extends PureComponent {
       this.props;
     let sizeLessData = [];
     let sizeLessStatus = false;
-    if (Object.keys(selectedItems).length > 0) {
-      Object.keys(selectedItems).filter((item) => {
-        const { simple_products } = products[item];
-        Object.values(simple_products).filter((product) => {
-          if (product.size.length === 0 && selectedItems[item] !== false) {
-            sizeLessData.push(product);
-          }
-        });
+    if (Object.keys(selectedItems)?.length > 0) {
+      Object.keys(selectedItems)?.filter((item) => {
+        if (Object.keys(products).length > 0) {
+          const { simple_products } = products[item];
+          Object.values(simple_products)?.filter((product) => {
+            if (product.size.length === 0 && selectedItems[item] !== false) {
+              sizeLessData.push(product);
+            }
+          });
+        }
       });
     }
     if (Object.keys(sizeLessData).length !== 0) {
@@ -148,18 +152,18 @@ export class MyAccountExchangeCreate extends PureComponent {
     let isDisabled = isSizeLessData
       ? false
       : outOfStockStatus
-      ? true
-      : Object.keys(disabledStatusArr).length < selectedNumber
-      ? true
-      : disabledStatus
-      ? true
-      : false;
+        ? true
+        : Object.keys(disabledStatusArr).length < selectedNumber
+          ? true
+          : disabledStatus
+            ? true
+            : false;
     const submitText =
       this.isCtcItem() > 0
         ? __("Continue")
         : selectedNumber !== 1
-        ? __("Exchange %s items", selectedNumber)
-        : __("Exchange %s item", selectedNumber);
+          ? __("Exchange %s items", selectedNumber)
+          : __("Exchange %s item", selectedNumber);
     return (
       <div>
         <div block="MyAccountExchangeCreate" elem="Actions">
@@ -236,6 +240,7 @@ export class MyAccountExchangeCreate extends PureComponent {
         mods={{ formContent }}
       >
         <MyAccountAddressPopup
+          isExchange={true}
           formContent={formContent}
           closeForm={closeForm}
           openForm={openForm}

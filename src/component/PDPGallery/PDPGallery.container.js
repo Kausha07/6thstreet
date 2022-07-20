@@ -66,6 +66,9 @@ export class PDPGalleryContainer extends PureComponent {
       case "home":
         history.push("/home.html");
         break;
+      case "all":
+          history.push("/all.html");
+          break;
       default:
         history.push("/");
     }
