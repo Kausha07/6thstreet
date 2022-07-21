@@ -28,20 +28,12 @@ export class SearchSuggestionsDispatcher {
               page: 0,
               limit: PRODUCT_RESULT_LIMIT,
               gender: getGenderInArabic(gender),
-              // query: search,
-              // limit: PRODUCT_RESULT_LIMIT,
-              // gender: getGenderInArabic(gender),
-              // addAnalytics: false,
             }
           : {
-              // query: search,
-              // limit: PRODUCT_RESULT_LIMIT,
               gender: gender,
-              // addAnalytics: false,
               q: search,
               page: 0,
               limit: PRODUCT_RESULT_LIMIT,
-              // gender: gender,
             }
       );
 
@@ -94,10 +86,12 @@ export class SearchSuggestionsDispatcher {
           ? {
               query: searchQuery,
               limit: QUERY_SUGGESTION_LIMIT,
+              facetFilters :[[`gender: ${getGenderInArabic(gender)}`]]
             }
           : {
               query: searchQuery,
               limit: QUERY_SUGGESTION_LIMIT,
+              facetFilters :[[`gender: ${gender}`]]
             }
       );
       const defaultHit = {
