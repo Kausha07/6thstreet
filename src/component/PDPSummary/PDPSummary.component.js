@@ -22,7 +22,7 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
   DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
@@ -33,6 +33,7 @@ import "./PDPSummary.style";
 import Event, {
   EVENT_GTM_EDD_VISIBILITY,
   EVENT_MOE_TABBY_LEARN_MORE_CLICK,
+  EVENT_MOE_EDD_VISIBILITY,
 } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -263,6 +264,7 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
+
         this.setState({
           eddEventSent: true,
         });
@@ -366,6 +368,14 @@ class PDPSummary extends PureComponent {
         edd_updated: true,
       },
       page: "pdp",
+    });
+    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      edd_status: edd_info.has_pdp,
+      edd_updated: true,
+      default_edd_status: default_edd,
+      app6thstreet_platform: "Web",
     });
     let request = {
       country: countryCode,
@@ -790,7 +800,7 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.href}
             image={gallery_images[0] || fallbackImage}
-            product ={product}
+            product={product}
           />
 
           <WishlistIcon

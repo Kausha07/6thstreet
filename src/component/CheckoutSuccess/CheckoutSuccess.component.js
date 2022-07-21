@@ -15,7 +15,6 @@ import { TotalsType } from "Type/MiniCart";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getDiscountFromTotals, isArabic, getCurrency } from "Util/App";
 import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
-import { getCountryFromUrl } from "Util/Url/Url";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
 import Call from "./icons/call.svg";
@@ -27,7 +26,14 @@ import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import Image from "Component/Image";
-import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
+import Event, {
+  EVENT_GTM_PURCHASE,
+  EVENT_MOE_CONTINUE_SHOPPING,
+  EVENT_MOE_PHONE,
+  EVENT_MOE_MAIL,
+  EVENT_MOE_CHAT,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {
@@ -285,7 +291,7 @@ export class CheckoutSuccess extends PureComponent {
       order: { base_currency_code: currency },
       eddResponse,
       isFailed,
-      edd_info
+      edd_info,
     } = this.props;
 
     return (
@@ -331,7 +337,7 @@ export class CheckoutSuccess extends PureComponent {
       const {
         initialTotals: { items = [], quote_currency_code },
         incrementID,
-        isFailed
+        isFailed,
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -463,7 +469,12 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
         <div block="ContactInfo" elem="Links">
-          <a href={`tel:${TEL_LINK}`} target="_blank" rel="noreferrer">
+          <a
+            href={`tel:${TEL_LINK}`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => this.sendMOEEvents(EVENT_MOE_PHONE)}
+          >
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Call} alt="Call" />
@@ -473,7 +484,12 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+          <a
+            href={`mailto:${EMAIL_LINK}`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => this.sendMOEEvents(EVENT_MOE_MAIL)}
+          >
             <div block="ContactInfo" elem="LinkMiddle">
               <span>
                 <img src={Mail} alt="e-mail" />
@@ -483,7 +499,12 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href={`${WHATSAPP_LINK}`} target="_blank" rel="noreferrer">
+          <a
+            href={`${WHATSAPP_LINK}`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => this.sendMOEEvents(EVENT_MOE_CHAT)}
+          >
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Whatsapp} alt="whatsapp" />
@@ -798,12 +819,24 @@ export class CheckoutSuccess extends PureComponent {
     }
   }
 
+  sendMOEEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderButton() {
     const { isArabic } = this.state;
 
     return (
       <div block="CheckoutSuccess" elem="ButtonWrapper" mods={{ isArabic }}>
-        <Link block="CheckoutSuccess" elem="ContinueButton" to="/">
+        <Link
+          block="CheckoutSuccess"
+          elem="ContinueButton"
+          to="/"
+          onClick={() => this.sendMOEEvents(EVENT_MOE_CONTINUE_SHOPPING)}
+        >
           <button block="primary">{__("Continue shopping")}</button>
         </Link>
       </div>

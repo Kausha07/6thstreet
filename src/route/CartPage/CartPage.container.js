@@ -36,6 +36,9 @@ import isMobile from 'Util/Mobile';
 import { appendWithStoreCode } from 'Util/Url';
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import {EVENT_MOE_BEGIN_CHECKOUT } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -252,6 +255,64 @@ export class CartPageContainer extends PureComponent {
         const { [activeTab]: { url } } = tabMap;
         history.push(`${MY_ACCOUNT_URL}${url}`);
     }
+    sendBeginCheckoutEvent() {
+        const { totals:{
+            items,
+            coupon_code,
+            currency_code,
+            discount,
+            shipping_fee,
+            subtotal,
+            total
+          } } = this.props;
+          const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+          const formattedDetetails = items.map(
+            ({
+              full_item_info: {
+                name,
+                brand_name,
+                itemPrice,
+                price,
+                category,
+                config_sku,
+                gender,
+                size_option,
+                size_value,
+                sku,
+                color,
+                product_type_6s,
+                original_price
+              },
+            }) => ({
+              brand_name: brand_name || "",
+              color: color || "",
+              discounted_price: itemPrice || price,
+              full_price: original_price || basePrice,
+              product_name: name || "",
+              product_sku: config_sku || sku,
+              gender: gender || "",
+              size_id: size_option || "",
+              size: size_value || "",
+              subcategory: product_type_6s || category || "",
+            })
+          );
+          Moengage.track_event(EVENT_MOE_BEGIN_CHECKOUT, {
+            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+            language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+            category: currentAppState.gender
+              ? currentAppState.gender.toUpperCase()
+              : "",
+            coupon_code_applied: coupon_code || "",
+            currency: currency_code || "",
+            discounted_amount: discount || "",
+            product_count: items.length || "",
+            shipping_fee: shipping_fee || "",
+            subtotal_amount: subtotal || "",
+            total_amount: total || "",
+            product: formattedDetetails,
+            app6thstreet_platform: "Web",
+          });
+      }
 
     onCheckoutButtonClick(e) {
         const {
@@ -266,6 +327,7 @@ export class CartPageContainer extends PureComponent {
             e.nativeEvent.stopImmediatePropagation();
 
             if (guest_checkout) {
+                this.sendBeginCheckoutEvent();
                 history.push({
                     pathname: appendWithStoreCode(CHECKOUT_URL)
                 });
@@ -274,6 +336,7 @@ export class CartPageContainer extends PureComponent {
             }
 
             if (isSignedIn()) {
+                this.sendBeginCheckoutEvent();
                 history.push({
                     pathname: appendWithStoreCode(CHECKOUT_URL)
                 });
@@ -285,6 +348,7 @@ export class CartPageContainer extends PureComponent {
             showNotification('info', __('Please sign-in to complete checkout!'));
 
             if (isMobile.any()) { // for all mobile devices, simply switch route
+                this.sendBeginCheckoutEvent();
                 history.push({ pathname: appendWithStoreCode('/my-account') });
                 return;
             }

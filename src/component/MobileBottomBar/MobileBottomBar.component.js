@@ -13,6 +13,13 @@ import { setIsMobileTabActive } from "Store/MyAccount/MyAccount.action";
 import { TYPE_PRODUCT } from "Route/UrlRewrites/UrlRewrites.config";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
+import {
+  EVENT_MOE_HOME_TAB_ICON,
+  EVENT_MOE_BRANDS_TAB_ICON,
+  EVENT_MOE_WISHLIST_TAB_ICON,
+  EVENT_MOE_ACCOUNT_TAB_ICON,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./MobileBottomBar.style.scss";
 
@@ -149,6 +156,16 @@ class MobileBottomBar extends NavigationAbstract {
       window.navigator.userAgent.match(/iPhone/) && window.outerHeight > "800"
     );
   }
+  
+  sendMoeEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl()
+      ? getLanguageFromUrl().toUpperCase()
+      : "",
+      app6thstreet_platform: "Web",
+    });
+  }
 
   renderHome() {
     const { history } = this.props;
@@ -165,7 +182,10 @@ class MobileBottomBar extends NavigationAbstract {
 
     return (
       <button
-        onClick={this.routeChangeHome}
+        onClick={() => {
+          this.routeChangeHome();
+          this.sendMoeEvents(EVENT_MOE_HOME_TAB_ICON);
+        }}
         key="homeButton"
         block="MobileBottomBar"
         elem="HomeAndBrand"
@@ -191,12 +211,16 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     this.setState({
-      isBrand: window.location.pathname === "/shop-by-brands" && !isCategoryMenu,
+      isBrand:
+        window.location.pathname === "/shop-by-brands" && !isCategoryMenu,
     });
 
     return (
       <button
-        onClick={this.routeChangeBrand}
+        onClick={() => {
+          this.routeChangeBrand();
+          this.sendMoeEvents(EVENT_MOE_BRANDS_TAB_ICON);
+        }}
         key="brandButton"
         block="MobileBottomBar"
         elem="HomeAndBrand"
@@ -241,7 +265,10 @@ class MobileBottomBar extends NavigationAbstract {
     return (
       <div key="wishlist">
         <div
-          onClick={onClickHandle}
+          onClick={() => {
+            onClickHandle();
+            this.sendMoeEvents(EVENT_MOE_WISHLIST_TAB_ICON);
+          }}
           key="wishlistButton"
           block="MobileBottomBar"
           elem="WishListAndAccount"
@@ -270,7 +297,10 @@ class MobileBottomBar extends NavigationAbstract {
     return (
       <div key="account">
         <button
-          onClick={onClickHandle}
+          onClick={() => {
+            onClickHandle();
+            this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
+          }}
           key="accountButton"
           block="MobileBottomBar"
           elem="WishListAndAccount"
@@ -294,9 +324,9 @@ class MobileBottomBar extends NavigationAbstract {
     // if(this.isPDP()){
     //     return null;
     // }
-    
-    if(!isMobile.any()){
-      return null
+
+    if (!isMobile.any()) {
+      return null;
     }
     return (
       <div

@@ -2,7 +2,11 @@ import Field from "Component/Field";
 import Loader from "Component/Loader";
 import { CartCoupon as SourceCartCoupon } from "SourceComponent/CartCoupon/CartCoupon.component";
 import { isArabic } from "Util/App";
-import { EVENT_MOE_REMOVE_COUPON } from "Util/Event";
+import {
+  EVENT_MOE_REMOVE_COUPON,
+  EVENT_MOE_APPLY_COUPON_FAILED,
+  EVENT_MOE_APPLY_COUPON,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./CartCoupon.extended.style";
 
@@ -28,11 +32,28 @@ export class CartCoupon extends SourceCartCoupon {
     handleApplyCouponToCart(formattedCouponValue);
   };
 
+   sendMOEEvents(event , coupon){
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl()
+        ? getLanguageFromUrl().toUpperCase()
+        : "",
+      coupon_code: coupon || "",
+      app6thstreet_platform: "Web",
+    });
+  };
+
   handleApplyCode = async (e, couponCode) => {
     e.stopPropagation();
+
     try {
       let apiResponse =
         (await this.props.applyCouponToCart(couponCode)) || null;
+      if (apiResponse) {
+        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON_FAILED, couponCode);
+      } else {
+        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON,couponCode);
+      }
       if (typeof apiResponse !== "string") {
         this.props.closePopup();
       }
@@ -41,20 +62,25 @@ export class CartCoupon extends SourceCartCoupon {
     }
   };
 
+  handleRemoveCoupon = () => {
+    const { handleRemoveCouponFromCart } = this.props;
+    const { couponCode } = this.props;
+    handleRemoveCouponFromCart();
+    this.sendMOEEvents(EVENT_MOE_REMOVE_COUPON,couponCode);
+
+    // We need to reset input field. If we do it in applyCouponCode,
+    // then it will disappear if code is incorrect. We want to avoid it
+    this.setState({
+      enteredCouponCode: "",
+    });
+  };
+
   handleFormSubmit = (e) => {
     const { couponCode } = this.props;
     e.preventDefault();
 
     if (couponCode) {
       this.handleRemoveCoupon();
-      Moengage.track_event(EVENT_MOE_REMOVE_COUPON, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
-        coupon_code: couponCode || "",
-        app6thstreet_platform: "Web",
-      });
       return;
     }
 

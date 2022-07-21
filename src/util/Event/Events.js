@@ -141,7 +141,6 @@ export const EVENT_MOE_SORT_BY_PRICE_HIGH = "sort_by_price_high";
 export const EVENT_MOE_SORT_BY_PRICE_LOW = "sort_by_price_low";
 export const EVENT_MOE_SORT_BY_RECOMMENDED = "sort_by_recommended";
 export const EVENT_MOE_SET_PREFERENCES_GENDER = "set_preferences_gender";
-
 export const EVENT_MOE_ACCOUNT_ORDERS_CLICK = "account_orders_click";
 export const EVENT_MOE_ACCOUNT_RETURNS_CLICK = "account_returns_click";
 export const EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK =
@@ -153,8 +152,34 @@ export const EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK =
 export const EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK =
   "account_club_apparel_click";
 export const EVENT_MOE_ORDER_ITEM_CLICK = "order_item_click";
-export const EVENT_MOE_NEW_ADDRESS_CLICK = "new_address_click";
-export const EVENT_MOE_EDIT_ADDRESS_CLICK = "edit_address_click";
 export const EVENT_MOE_UPDATE_PROFILE = "update_profile";
 export const EVENT_MOE_RETURN_AN_ITEM_CLICK = "return_an_item_click";
 export const EVENT_MOE_CANCEL_AN_ITEM_CLICK = "cancel_an_item_click";
+export const EVENT_MOE_SELECT_RETURN_RESOLUTION = "select_return_resolution";
+export const EVENT_MOE_SELECT_RETURN_REASON = "select_return_reason";
+export const EVENT_MOE_SUBMIT_RETURN_REQUEST = "submit_return_request";
+export const EVENT_MOE_BACK_TO_ORDER_DETAILS = "back_to_order_details";
+export const EVENT_MOE_EDD_VISIBILITY = "edd_visibility";
+export const EVENT_MOE_ECOMMERCE_PURCHASE_FAILED = "ecommerce_purchase_failed";
+export const EVENT_MOE_HOME_TAB_ICON = "home_tab_icon";
+export const EVENT_MOE_CATEGORIES_TAB_ICON = "categories_tab_icon";
+export const EVENT_MOE_BRANDS_TAB_ICON = "brands_tab_icon";
+export const EVENT_MOE_WISHLIST_TAB_ICON = "wishlist_tab_icon";
+export const EVENT_MOE_ACCOUNT_TAB_ICON = "account_tab_icon";
+export const EVENT_MOE_BEGIN_CHECKOUT ="begin_checkout";
+export const EVENT_MOE_TYPE_EMAIL_ID ="type_email_id";
+export const EVENT_MOE_TYPE_FIRST_NAME ="type_first_name";
+export const EVENT_MOE_TYPE_LAST_NAME ="type_last_name";
+export const EVENT_MOE_TYPE_ADDRESS ="type_address";
+export const EVENT_MOE_TYPE_CITY ="type_city";
+export const EVENT_MOE_TYPE_AREA ="type_area";
+export const EVENT_MOE_TYPE_PHONE_NUMBER ="type_phone_number";
+export const EVENT_MOE_ADD_NEW_ADDRESS ="add_new_address";
+export const EVENT_MOE_GO_TO_PAYMENT ="go_to_payment";
+export const EVENT_MOE_GO_TO_PAYMENT_PRODUCT ="go_to_payment_product";
+export const EVENT_MOE_NEW_ADDRESS_CLICK ="new_address_click";
+export const EVENT_MOE_EDIT_ADDRESS_CLICK ="edit_address_click";
+export const EVENT_MOE_CONTINUE_SHOPPING = "continue_shopping";
+
+
+

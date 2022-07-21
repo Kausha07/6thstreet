@@ -40,6 +40,7 @@ export class FieldSelectContainer extends SourceFieldSelectContainer {
             const { id, value } = selectOptions[valueIndex];
             // converting to string for avoiding the error with the first select option
             onChange(value.toString());
+            console.log("BARATH")
             const formattedId = id.split(' ')[0];
             const selectedElement = document.querySelector(`#${selectId} + ul #o${formattedId}`);
 

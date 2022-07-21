@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
-
+import { EVENT_MOE_CATEGORIES_TAB_ICON} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Menu from "Component/Menu";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import browserHistory from "Util/History";
@@ -47,7 +48,13 @@ class HeaderMenu extends PureComponent {
     if (gender === "home_beauty_women") {
       setGender("women");
     }
-
+    Moengage.track_event(EVENT_MOE_CATEGORIES_TAB_ICON, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl()
+      ? getLanguageFromUrl().toUpperCase()
+      : "",
+      app6thstreet_platform: "Web",
+    });
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");

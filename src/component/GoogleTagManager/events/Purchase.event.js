@@ -54,7 +54,6 @@ class PurchaseEvent extends BaseEvent {
         },
       },
     });
-    console.log("totals", totals);
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const productDetails = totals?.items;
     const formattedDetetails = productDetails.map(
@@ -76,7 +75,7 @@ class PurchaseEvent extends BaseEvent {
       }) => ({
         brand_name: brand_name || "",
         color: color || "",
-        discounted_amount: itemPrice || price,
+        discounted_price: itemPrice || price,
         product_name: name || "",
         product_sku: config_sku || sku,
         gender: gender || "",
@@ -85,7 +84,7 @@ class PurchaseEvent extends BaseEvent {
         subcategory: product_type_6s || category || "",
       })
     );
-    console.log("formattedDetetails", formattedDetetails);
+
     Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS, {
       country: currentAppState.country
         ? currentAppState.country.toUpperCase()
@@ -100,6 +99,7 @@ class PurchaseEvent extends BaseEvent {
       coupon_code_applied: totals?.coupon_code || "",
       currency: totals?.currency_code || "",
       product_count: totals?.items.length || "",
+      discounted_amount: totals?.discount || "",
       shipping_fee: totals?.shipping_fee || "",
       subtotal_amount: totals?.subtotal || "",
       order_id: orderId || "",

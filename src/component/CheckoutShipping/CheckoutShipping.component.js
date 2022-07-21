@@ -14,8 +14,11 @@ import { customerType } from "Type/Account";
 import { getCurrency, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
-import { getCountryFromUrl } from "Util/Url/Url";
 import { ThreeDots } from "react-loader-spinner";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { EVENT_MOE_GO_TO_PAYMENT } from "Util/Event";
 
 import "./CheckoutShipping.style";
 
@@ -39,7 +42,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   };
 
   renderButtonsPlaceholder() {
-    return __("Proceed to secure payment")
+    return __("Proceed to secure payment");
   }
 
   renderPriceLine(price, name, mods) {
@@ -118,8 +121,73 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   renderActions() {
-    const { isPaymentLoading } = this.props;
-    const {isButtondisabled} = this.state;
+    const {
+      isPaymentLoading,
+      totals: {
+        items,
+        coupon_code,
+        currency_code,
+        shipping_fee,
+        subtotal,
+        total,
+        discount
+      },
+    } = this.props;
+    const { isButtondisabled } = this.state;
+    const sendMOEEvents = () => {
+      const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+      const formattedDetetails = items.map(
+        ({
+          full_item_info: {
+            name,
+            brand_name,
+            itemPrice,
+            price,
+            category,
+            config_sku,
+            gender,
+            size_option,
+            size_value,
+            sku,
+            color,
+            product_type_6s,
+            original_price,
+          },
+        }) => ({
+          brand_name: brand_name || "",
+          color: color || "",
+          discounted_price: itemPrice || price,
+          full_price: original_price || basePrice,
+          product_name: name || "",
+          product_sku: config_sku || sku,
+          gender: gender || "",
+          size_id: size_option || "",
+          size: size_value || "",
+          subcategory: product_type_6s || category || "",
+        })
+      );
+      Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
+        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+        language: getLanguageFromUrl()
+          ? getLanguageFromUrl().toUpperCase()
+          : "",
+        category: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        coupon_code_applied: coupon_code || "",
+        currency: currency_code || "",
+        discounted_amount: discount || "",
+        product_count: items.length || "",
+        shipping_fee: shipping_fee || "",
+        subtotal_amount: subtotal || "",
+        total_amount: total || "",
+        product: formattedDetetails,
+        city: "",
+        area: "",
+        email: "",
+        app6thstreet_platform: "Web",
+      });
+    };
 
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
@@ -130,6 +198,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           form={SHIPPING_STEP}
           // disabled={this.checkForDisabling()}
           disabled={isButtondisabled}
+          onClick={sendMOEEvents}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
@@ -168,12 +237,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         selectedAddressCountry !== getCountryFromUrl() &&
         !checkClickAndCollect())
     ) {
-      this.setState({isButtondisabled: true})
+      this.setState({ isButtondisabled: true });
       return null;
-    }else {
-      this.setState({isButtondisabled: false})
+    } else {
+      this.setState({ isButtondisabled: false });
     }
-    
+
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
         <button
@@ -338,7 +407,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       addresses,
       edd_info,
       addressCityData,
-      customer
+      customer,
     } = this.props;
     const { formContent } = this.state;
     return (

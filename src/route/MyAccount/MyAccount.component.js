@@ -53,6 +53,7 @@ import {
   EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
   EVENT_MOE_ACCOUNT_SETTINGS_CLICK,
   EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
+  EVENT_MOE_RETURN_AN_ITEM_CLICK
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -166,6 +167,7 @@ export class MyAccount extends SourceMyAccount {
     Moengage.track_event(event, {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {screen_name: "Return List"}),
       app6thstreet_platform: "Web",
     });
   }
@@ -224,6 +226,7 @@ export class MyAccount extends SourceMyAccount {
     const { history } = this.props;
 
     history.push("/my-account/my-orders");
+    this.sendEvents(EVENT_MOE_RETURN_AN_ITEM_CLICK);
   }
 
   renderDesktop() {
