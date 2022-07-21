@@ -1,5 +1,5 @@
 import { getStore } from "Store";
-import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
+import { setSearchSuggestions,setAlgoliaIndex } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
@@ -133,6 +133,13 @@ export class SearchSuggestionsDispatcher {
       console.error(e);
       dispatch(setSearchSuggestions(search));
     }
+  }
+
+  async requestAlgoliaIndex(dispatch) {
+    const algoliaIndex = await new Algolia().getIndex();
+    dispatch(
+      setAlgoliaIndex(algoliaIndex)
+    );
   }
 }
 

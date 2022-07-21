@@ -9,6 +9,7 @@ import {
 import { setCountry, setLanguage } from "Store/AppState/AppState.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { updateCustomerDetails, setEddResponse } from "Store/MyAccount/MyAccount.action";
+import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -24,7 +25,6 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
-import Algolia from "Util/API/provider/Algolia";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -36,6 +36,7 @@ export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
   addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
+  algoliaIndex: state.SearchSuggestions.algoliaIndex,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -57,6 +58,7 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
+  requestAlgoliaIndex: () => SearchSuggestionDispatcher.requestAlgoliaIndex(dispatch),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -71,6 +73,7 @@ export class RouterContainer extends SourceRouterContainer {
     locale: PropTypes.string,
     requestCustomerData: PropTypes.func.isRequired,
     getCart: PropTypes.func.isRequired,
+    requestAlgoliaIndex: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -82,16 +85,15 @@ export class RouterContainer extends SourceRouterContainer {
     const {
       getCart,
       requestCustomerData,
-      updateCustomerDetails,
-      requestPdpWidgetData,
-      pdpWidgetsData,
       setEddResponse,
       eddResponse,
       addressCityData,
-      getCitiesData
+      getCitiesData,
+      requestAlgoliaIndex,
+      algoliaIndex
     } = this.props;
+    console.log("all well",this.props);
     const decodedParams = atob(getCookie("authData"));
-    this.getAlgoliaIndex();
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
@@ -153,6 +155,9 @@ export class RouterContainer extends SourceRouterContainer {
       const request = JSON.parse(sessionStorage.getItem('EddAddressReq'))
       setEddResponse(response, request)
     }
+    if(!algoliaIndex) {
+      requestAlgoliaIndex()
+    }
   }
 
   componentDidUpdate() {
@@ -173,10 +178,6 @@ export class RouterContainer extends SourceRouterContainer {
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
-  }
-
-  async getAlgoliaIndex() {
-    return await new Algolia().getIndex();
   }
 
 

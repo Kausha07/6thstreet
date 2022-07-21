@@ -23,6 +23,7 @@ export const mapStateToProps = (state) => ({
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
   prevPath: state.PLP.prevPath,
+  algoliaIndex: state.SearchSuggestions.algoliaIndex,
   suggestionEnabled:state.AppConfig.suggestionEnabled
   // wishlistData: state.WishlistReducer.items,
 });
@@ -53,6 +54,7 @@ export class SearchSuggestionContainer extends PureComponent {
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
     querySuggestions: PropTypes.array,
+    algoliaIndex: PropTypes.object.isRequired,
     // wishlistData: WishlistItems.isRequired,
   };
 
@@ -200,11 +202,11 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   componentDidMount() {
-    sourceIndexName = AlgoliaSDK?.index?.indexName;
+    const { gender, algoliaIndex } = this.props;
+    sourceIndexName = algoliaIndex?.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    const { gender } = this.props;
 
     if (gender !== "home") {
       this.getPdpSearchWidgetData();

@@ -1,15 +1,16 @@
-import { SET_SEARCH_SUGGESTIONS } from "./SearchSuggestions.action";
+import { SET_SEARCH_SUGGESTIONS,SET_ALGOLIA_INDEX } from "./SearchSuggestions.action";
 
 export const getInitialState = () => ({
   search: "",
   data: {},
   queryID:"",
   querySuggestions:[],
+  algoliaIndex: null,
 
 });
 
 export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
-  const { type } = action;
+  const { type,algoliaIndex } = action;
 
   switch (type) {
     case SET_SEARCH_SUGGESTIONS:
@@ -21,6 +22,11 @@ export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
         queryID,
         querySuggestions,
       };
+      case SET_ALGOLIA_INDEX:
+        return {
+          ...state,
+          algoliaIndex,
+        };
 
     default:
       return state;

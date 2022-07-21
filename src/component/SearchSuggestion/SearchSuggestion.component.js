@@ -365,7 +365,6 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, label } = querySuggestions;
-    console.log("querySuggestions", querySuggestions);
     const { searchString, queryID, products = [] } = this.props;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -393,7 +392,6 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestions() {
     const { querySuggestions = [] } = this.props;
-    console.log("bhavik", querySuggestions);
     return (
       <div block="SearchSuggestion" elem="Item">
         {querySuggestions.length > 0 ? (
