@@ -4,9 +4,11 @@
 
 .CheckoutSuccess {
   margin-bottom: -var(navi);
+
   @include desktop {
     padding-top: 156px;
   }
+
   .SuccessOverlay {
     height: 100%;
     background-color: var(--color-green-cyan);
@@ -62,6 +64,7 @@
 
   &-Details {
     margin: 0 10px;
+
     .SuccessMessage {
       &-Icon {
         height: 50px;
@@ -151,6 +154,137 @@
       }
     }
 
+    .VerifyPhone {
+      height: auto;
+      text-align: center;
+      margin: 30px 0;
+      background-color: var(--lightest-gray);
+      height: auto;
+      padding: 28px 0;
+      text-align: center;
+      width: 100vw;
+
+      &-Text {
+        font-family: var(--avenir-demi-font);
+        margin: 0 60px;
+        display: grid;
+
+        &-Title {
+          font-size: 18px;
+          font-weight: var(--fw-demi);
+          text-transform: capitalize;
+          margin: 0px 0 20px;
+        }
+
+        &-Message {
+          color: #4a4a4a;
+          font-size: 14px;
+        }
+
+        &-SubTitle {
+          margin: 16px 0;
+          margin: 6px auto;
+          font-size: 14px;
+        }
+
+        &-Phone {
+          margin-bottom: 50px;
+
+          button {
+            text-decoration: underline !important;
+            height: fit-content;
+          }
+        }
+      }
+
+      &-Code {
+        input {
+          text-align: center;
+          width: 100%;
+          margin: auto;
+          background-color: transparent;
+          border: 0;
+          letter-spacing: 3px;
+        }
+      }
+
+      &-ErrMessage {
+        display: none;
+
+        &_isValidated {
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          color: #f01136;
+          font-size: 13px;
+          margin-top: 11px;
+        }
+      }
+
+      &-OtpLoader {
+        display: none;
+
+        &_isSubmitted {
+          display: flex;
+          justify-content: center;
+          margin: 30px 0px 40px 0px;
+        }
+      }
+
+      &-VerifyButton {
+        margin-top: 25px;
+
+        button {
+          background-color: black;
+          color: white;
+          border-radius: 6px;
+          height: 40px;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+
+      }
+
+      &-ResendCode {
+        &_isVerifying {
+          display: block;
+          margin: 40px 0px 40px 0px;
+        }
+
+        button {
+          font-weight: var(--fw-regular);
+          font-size: 14px;
+          margin-top: 0;
+          text-transform: capitalize;
+          color: #4a4a4a;
+        }
+      }
+
+      @include before-desktop() {
+        background-color: #ffffff;
+      }
+
+      & form {
+        padding: 15px 60px 0px 60px;
+      }
+
+      @include after-mobile() {
+        margin-left: 0;
+        width: 100%;
+
+        button {
+          width: unset;
+        }
+      }
+
+      @include mobile() {
+        width: auto;
+        margin-inline: 0;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
     .TrackOrder {
       background-color: var(--lightest-gray);
       height: auto;
@@ -170,6 +304,7 @@
           margin-top: 12px !important;
           background-color: #ffffff;
           font-size: 12px;
+
           &:hover {
             background-color: #000000;
           }
@@ -204,6 +339,7 @@
 
         &-Phone {
           width: 100%;
+
           button {
             text-decoration: underline;
             margin-top: -5px;
@@ -317,27 +453,33 @@
 
     .ContactInfo {
       text-align: center;
-      a + a {
+
+      a+a {
         margin: 0 !important;
       }
+
       &-Timing {
         font-size: 13px;
         display: flex;
         flex-direction: column;
         margin: 30px 0;
       }
+
       &-Time {
         font-weight: var(--fw-bold);
       }
+
       &-Links {
         display: grid;
         grid-auto-flow: column;
         margin: 30px 0;
         text-decoration: none !important;
       }
+
       &-LinkName {
         margin-top: 5px;
       }
+
       &-Link,
       &-LinkMiddle {
         padding: 0px 10px;
@@ -345,11 +487,13 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         img {
           width: 25px;
           height: 25px;
         }
       }
+
       &-LinkMiddle {
         border-right: 2px solid var(--lightest-gray);
         border-left: 2px solid var(--lightest-gray);
@@ -427,12 +571,15 @@
           font-weight: var(--fw-demi);
           margin-bottom: 5px;
         }
+
         &-FullName {
           font-weight: var(--fw-demi);
         }
+
         &-PostCode {
           font-weight: var(--fw-demi);
         }
+
         &-Street {
           word-break: break-all;
         }
@@ -475,6 +622,7 @@
           margin: auto 0;
           justify-content: flex-start;
           align-items: center;
+
           img {
             max-width: 30px;
             max-height: 30px;
@@ -501,21 +649,24 @@
             display: grid;
             grid-auto-flow: column;
 
-            & > div {
+            &>div {
               background-color: black;
               margin: auto;
               width: 3px;
               height: 3px;
               border-radius: 50px;
+
               @include desktop() {
                 width: 5px;
                 height: 5px;
               }
             }
+
             @include desktop() {
               width: 40px;
             }
           }
+
           @include desktop() {
             margin-left: 15px;
           }
@@ -528,6 +679,7 @@
           &-Number {
             margin-left: auto;
             margin-right: 5px;
+
             @include desktop() {
               margin-right: 15px;
             }
