@@ -7,27 +7,23 @@ import {
   setArchivedPartyLoading,
 } from "./LiveParty.action";
 
-import {
-  getLiveParty,
-  getUpcomingParty,
-  getArchivedParty,
-} from "Util/API/endpoint/LiveParty/LiveParty.endpoint";
+import { getLivePartyInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint";
 
 export class LivePartyDispatcher {
   async requestLiveParty(payload, dispatch) {
     dispatch(setLivePartyLoading(true));
 
-    const { broadcastId } = payload;
+    const { storeId, isStaging } = payload;
 
     try {
-      const response = await getLiveParty({
-        broadcastId,
+      const response = await getLivePartyInfo({
+        storeId,
+        isStaging,
       });
       dispatch(setLivePartyLoading(false));
 
-      dispatch(setLivePartyData(response));
+      dispatch(setLivePartyData(response.playlists[2].shows[0]));
     } catch (e) {
-      Logger.log(e);
       dispatch(setLivePartyLoading(false));
     }
   }
@@ -38,15 +34,14 @@ export class LivePartyDispatcher {
     const { storeId, isStaging } = payload;
 
     try {
-      const response = await getUpcomingParty({
+      const response = await getLivePartyInfo({
         storeId,
         isStaging,
       });
       dispatch(setUpcomingPartyLoading(false));
 
-      dispatch(setUpcomingPartyData(response));
+      dispatch(setUpcomingPartyData(response.playlists[0].shows));
     } catch (e) {
-      Logger.log(e);
       dispatch(setUpcomingPartyLoading(false));
     }
   }
@@ -57,15 +52,14 @@ export class LivePartyDispatcher {
     const { storeId, isStaging } = payload;
 
     try {
-      const response = await getArchivedParty({
+      const response = await getLivePartyInfo({
         storeId,
         isStaging,
       });
       dispatch(setArchivedPartyLoading(false));
 
-      dispatch(setArchivedPartyData(response));
+      dispatch(setArchivedPartyData(response.playlists[1].shows));
     } catch (e) {
-      Logger.log(e);
       dispatch(setArchivedPartyLoading(false));
     }
   }

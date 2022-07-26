@@ -13,7 +13,6 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
-import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
@@ -36,6 +35,13 @@ const settings = {
 };
 
 class DynamicContentCircleItemSlider extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      channelID: "RQi9v57VXHIFetDai47q",
+      apiUrl: `https://liveshopping-api.bambuser.com/v1/channels/`,
+    };
+  }
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -50,7 +56,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   state = {
     isArabic: isArabic(),
     impressionSent: false,
-    livePartyItems: null,
+    livePartyItems: [],
   };
   componentDidMount() {
     this.registerViewPortEvent();
@@ -58,19 +64,28 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
-    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING;
-    const apiUrl = `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=${isStaging}`;
-    fetch(apiUrl)
-      .then((response) => response.json())
+    const { channelID, apiUrl} = this.state;
 
-      .then((data) => {
-        let newData = data.filter((val) => !val.m3u8URI);
-        this.setState({
-          livePartyItems: newData,
-        });
+    try {
+      fetch(`${apiUrl}${channelID}`, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Token CHkWEZ9PgCdcqbzJhMtXbmYa8FuNL8xEnSrAeCXMpsKE",
+        },
       })
-      .catch((error) => console.error(error));
+        .then((response) => response.json())
+        .then((res) => {
+          this.setState({
+            livePartyItems: res.playlists[2].shows,
+          });
+        });
+    } catch (err) {
+      console.error(err);
+    }
   };
+
 
   registerViewPortEvent() {
     let observer;
@@ -193,10 +208,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   renderLiveParty = (item, i) => {
-    // const { link, label, image_url, plp_config } = item;
-    let link = `/live-party?broadcastId=${item.id}`;
-    let label = item.name;
-    let image_url = item.mainImageURI;
+    let link = `/live-party`;
+    let label = item.title;
+    let image_url = item.curtains.pending.backgroundImage;
     const { isArabic } = this.state;
 
     // TODO: move to new component
@@ -243,7 +257,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems &&
+          {this.state.livePartyItems &&((this.state.livePartyItems.length) && this.state.livePartyItems[0].isLive) &&
             this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>

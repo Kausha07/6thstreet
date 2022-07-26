@@ -7,6 +7,7 @@ class ThirdPartyAPI {
       method: type,
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Token CHkWEZ9PgCdcqbzJhMtXbmYa8FuNL8xEnSrAeCXMpsKE"
       },
     };
 

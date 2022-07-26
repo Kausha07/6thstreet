@@ -1,14 +1,14 @@
 import { PureComponent } from "react";
 import Countdown from "react-countdown";
-import ContentWrapper from 'Component/ContentWrapper';
+import ContentWrapper from "Component/ContentWrapper";
 import isMobile from "Util/Mobile";
-import './LiveExperience.style.scss';
-import cartIcon from './icons/cart-icon.png';
-import timerIcon from './icons/timer.png';
-import calenderIcon from './icons/calendar.svg'
-import playbtn from './icons/player.svg';
+import "./LiveExperience.style.scss";
+import cartIcon from "./icons/cart-icon.png";
+import timerIcon from "./icons/timer.png";
+import calenderIcon from "./icons/calendar.svg";
+import playbtn from "./icons/player.svg";
 import Refine from "../../component/Icons/Refine/icon.png";
-import { isArabic } from 'Util/App';
+import { isArabic } from "Util/App";
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -18,48 +18,35 @@ export class LiveExperience extends PureComponent {
       day: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
       isLive: false,
       archivedItemToShow: 9,
-      isRefineButtonClicked : false,
-      influencerSearchText : "",
-      isArabic: isArabic()
+      isRefineButtonClicked: false,
+      influencerSearchText: "",
+      isArabic: isArabic(),
     };
   }
 
   componentDidMount() {
-
     (function () {
-      var spck = {
-        storeId: "13207961",
-        storeType: "sixthstreet",
-        customColor: '#000000',
-        containerId: 'all',
-        displayType: 'all',
-        staging: process.env.REACT_APP_SPOCKEE_STAGING
-      };
-      var el = document.createElement('script');
-      el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
-      el.setAttribute('data-spck', JSON.stringify(spck));
-      document.body.appendChild(el);
+      if (!window.initBambuserLiveShopping) {
+        window.initBambuserLiveShopping = function (item) {
+          window.initBambuserLiveShopping.queue.push(item);
+        };
+        window.initBambuserLiveShopping.queue = [];
+        var scriptNode = document.createElement("script");
+        scriptNode["src"] = "https://lcx-embed.bambuser.com/default/embed.js";
+        document.body.appendChild(scriptNode);
+      }
     })();
-
-    if (this.props.broadcastId) {
-      this.renderLiveParty();
-    }
-    else {
-      this.renderUpcomingParty();
-      this.renderArchivedParty();
-    }
-
+    this.renderLiveParty();
+    this.renderUpcomingParty();
+    this.renderArchivedParty();
   }
   componentDidUpdate() {
-    if (this.props.broadcastId) {
-      this.renderLiveParty();
-    }
+    this.renderLiveParty();
   }
 
-  renderLiveParty = async () => { };
-  renderUpcomingParty = () => { };
-  renderArchivedParty = () => { };
-
+  renderLiveParty = async () => {};
+  renderUpcomingParty = () => {};
+  renderArchivedParty = () => {};
 
   renderSpckLiveEvent() {
     const content = this.props.live;
@@ -67,312 +54,314 @@ export class LiveExperience extends PureComponent {
   }
   renderSpckUpcomingEvent() {
     let content = this.props.updatedUpcoming;
-
-    // return
     return content.map(this.renderUpcomingGridBlock);
   }
 
-
   renderSpckarchivedEvent() {
-    //const content = this.props.archived;
     let content = this.props.updatedArchived;
     const { influencerSearchText } = this.state;
     if (!isMobile.any()) {
       content = content.slice(0, this.state.archivedItemToShow);
     }
 
-    return content?.filter((val) => {
-        if( val.name.toLowerCase().includes(influencerSearchText.toLowerCase())) {
+    return content
+      ?.filter((val) => {
+        if (val.title.toLowerCase().includes(influencerSearchText)) {
           return val;
         }
-    })?.map(this.renderArchivedGridBlock);
+      })
+      ?.map(this.renderArchivedGridBlock);
   }
-
 
   handleLoadMore = () => {
     let count = this.state.archivedItemToShow;
-    let totalProducts = this.props.updatedArchived.length
-    let itemsToShow = count + 9
+    let totalProducts = this.props.updatedArchived.length;
+    let itemsToShow = count + 9;
     if (itemsToShow > totalProducts) {
-      itemsToShow = totalProducts
+      itemsToShow = totalProducts;
     }
     this.setState({
-      archivedItemToShow: itemsToShow
-    })
-  }
+      archivedItemToShow: itemsToShow,
+    });
+  };
 
   onBroadcastIdLive = () => {
     this.setState({
-      isLive: true
-    })
-  }
+      isLive: true,
+    });
+  };
 
   renderLiveBlock = (block, i) => {
-    const { mainImageURI, squareImageURI, name, description, starts } = block;
-    let d = new Date(starts);
+    const { curtains, title, scheduledStartAt } = block;
+    const imageSRC = curtains && curtains.pending.backgroundImage;
+    let d = new Date(scheduledStartAt);
     let diffInTime = d - Date.now();
     var diffInDay = diffInTime / (1000 * 3600 * 24);
 
     if (diffInTime < 0) {
       this.onBroadcastIdLive();
     }
-    if (mainImageURI) {
+    if (imageSRC) {
       return (
         <div block="spck-live-event">
           <div block="mainImage">
-            <img src={mainImageURI} alt={name} />
-            {this.state.isLive ?
+            <img src={imageSRC} alt={title} />
+            {this.state.isLive ? (
               <div block="liveNow">
                 <p block="liveNow-text">LIVE NOW</p>
               </div>
-              :
+            ) : (
               <p block="eventStart">
-                {
-                  diffInDay < 1 ?
-                    <div block="eventStart-timer">
-                      <img src={timerIcon} alt="timerIcon" />
-                      <Countdown
-                        date={d}
-                        daysInHours={true}
-                        onComplete={this.onBroadcastIdLive}
-                      />
-                    </div>
-                    :
-                    <div block="eventStart-calender">
-                      <img src={calenderIcon} alt="calenderIcon" />
-                      <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
-                    </div>
-                }
+                {diffInDay < 1 ? (
+                  <div block="eventStart-timer">
+                    <img src={timerIcon} alt="timerIcon" />
+                    <Countdown
+                      date={d}
+                      daysInHours={true}
+                      onComplete={this.onBroadcastIdLive}
+                    />
+                  </div>
+                ) : (
+                  <div block="eventStart-calender">
+                    <img src={calenderIcon} alt="calenderIcon" />
+                    <div>{`${
+                      this.state.day[d.getDay()]
+                    }, ${d.getDate()} at ${d.toLocaleString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    })}`}</div>
+                  </div>
+                )}
               </p>
-
-            }
-
+            )}
           </div>
-          <a block="eventPlayBtn" disabled={!this.state.isLive} onClick={() => this.state.isLive && this.onClickPartyPlay(block.id)}><img src={playbtn} alt="event-playbtn" /><div block="eventPlayBtn-block"></div></a>
+          <a
+            block="eventPlayBtn"
+            onClick={() => this.onClickPartyPlay(block.id)}
+          >
+            <img src={playbtn} alt="event-playbtn" />
+          </a>
           <div block="eventInfo">
-            <h3 block="eventTitle">{name}</h3>
+            <h3 block="eventTitle">{title}</h3>
           </div>
-
         </div>
-      )
+      );
     }
   };
 
-
   renderUpcomingGridBlock = (block, i) => {
-    const { mainImageURI, squareImageURI, name, description, starts, products } = block;
-    let d = new Date(starts);
+    const { curtains, title, description, scheduledStartAt } = block;
+    const imageSRC = curtains.pending.backgroundImage;
+    let d = new Date(scheduledStartAt);
 
     let diffInTime = d - Date.now();
     var diffInDay = diffInTime / (1000 * 3600 * 24);
 
-    if (mainImageURI) {
+    if (imageSRC) {
       return (
         <li block="spckItem">
           <div block="eventImage">
-            <img src={mainImageURI} alt={name} />
+            <img src={imageSRC} alt={title} />
           </div>
           <p block="eventStart">
-            {
-              diffInDay < 1 ?
-                <div block="eventStart-timer">
-                  <img src={timerIcon} alt="timerIcon" />
-                  <Countdown
-                    date={d}
-                    daysInHours={true}
-                  />
-                </div>
-                :
-                <div block="eventStart-calender">
-                  <img src={calenderIcon} alt="calenderIcon" />
-                  <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
-                </div>
-            }
+            {diffInDay < 1 ? (
+              <div block="eventStart-timer">
+                <img src={timerIcon} alt="timerIcon" />
+                <Countdown date={d} daysInHours={true} />
+              </div>
+            ) : (
+              <div block="eventStart-calender">
+                <img src={calenderIcon} alt="calenderIcon" />
+                <div>{`${
+                  this.state.day[d.getDay()]
+                }, ${d.getDate()} at ${d.toLocaleString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true,
+                })}`}</div>
+              </div>
+            )}
           </p>
-
+          <a
+            block="eventPlayBtn"
+            onClick={() => this.onClickPartyPlay(block.id)}
+          >
+            <img src={playbtn} alt="event-playbtn" />
+          </a>
           <div block="eventInfo">
-            <h3 block="eventTitle">{name}</h3>
+            <h3 block="eventTitle">{title}</h3>
             <p block="eventDesc">{description}</p>
           </div>
         </li>
-      )
+      );
     }
   };
 
   renderArchivedGridBlock = (block, i) => {
     // debugger
-    const { mainImageURI, name, description, productHighlights } = block;
-
-    if (mainImageURI) {
+    const { curtains, title, description, productHighlights } = block;
+    let imageSRC = curtains.pending.backgroundImage;
+    if (imageSRC) {
       return (
         <li block="spckItem" id={block.id}>
           <div block="eventImage">
-            <img src={mainImageURI} alt={name} />
+            <img src={imageSRC} alt={title} />
           </div>
           <p block="eventProduct">
             <img src={cartIcon} alt="cartIcon" />
             <div>{productHighlights ? productHighlights.length : ""}</div>
           </p>
-          <a block="eventPlayBtn" onClick={() => this.onClickPartyPlay(block.id)} ><img src={playbtn} alt="event-playbtn" /></a>
+          <a
+            block="eventPlayBtn"
+            onClick={() => this.onClickPartyPlay(block.id)}
+          >
+            <img src={playbtn} alt="event-playbtn" />
+          </a>
           <div block="eventInfo">
-            <h3 block="eventTitle">{name}</h3>
+            <h3 block="eventTitle">{title}</h3>
             <p block="eventDesc">{description}</p>
           </div>
         </li>
-      )
+      );
     }
   };
+
   onClickPartyPlay = (bId) => {
-
-    // let newId = id.toString();
-    // let ele = document.getElementsByClassName("spck-watch-button");
-    // for (let i = 0; i < ele.length; i++) {
-    //   let dataInfo = JSON.parse(ele[i].getAttribute("data-info"));
-    //   if (dataInfo["spckId"] === newId) {
-    //     ele[i].click();
-    //   }
-    // }
-
-    const openSPEvent = new CustomEvent('spockeeOpenShoppingParty', {
-      detail: {
-        id: bId,
-        time: 0
-      }
+    window.initBambuserLiveShopping({
+      showId: bId,
+      type: "overlay",
     });
-
-
-    window.dispatchEvent(openSPEvent);
-
-
-
-
-  }
+  };
 
   handleRefineButtonClick = () => {
     const { isRefineButtonClicked } = this.state;
     this.setState({
-      isRefineButtonClicked : !isRefineButtonClicked
+      isRefineButtonClicked: !isRefineButtonClicked,
     });
-  }
+  };
 
   handleSearchInfluencerText = (e) => {
-    const { influencerSearchText } = this.state;
-    this.setState({influencerSearchText: e.target.value});
-    
-  }
+    this.setState({ influencerSearchText: e.target.value });
+  };
 
   renderRefine() {
-    const { isArabic,isRefineButtonClicked } = this.state;
+    const { isArabic, isRefineButtonClicked } = this.state;
 
     return (
       <div block="refineButton-div" elem="Refine" mods={{ isArabic }}>
-        {(isRefineButtonClicked) ? <input type="text" block="influencerSearchInput" mods={{isArabic}} placeholder="Search for influencer" onChange = { this.handleSearchInfluencerText }/> : ""}
-        <button block= "refine-button" onClick = { this.handleRefineButtonClick }> <img block="refineImage" mods={{isArabic}}src={Refine} /> {__("refine")}</button>
+        {isRefineButtonClicked ? (
+          <input
+            type="text"
+            block="influencerSearchInput"
+            mods={{ isArabic }}
+            placeholder="Search For Influencer title"
+            onChange={this.handleSearchInfluencerText}
+          />
+        ) : (
+          ""
+        )}
+        <button block="refine-button" onClick={this.handleRefineButtonClick}>
+          {" "}
+          <img block="refineImage" mods={{ isArabic }} src={Refine} />{" "}
+          {__("search")}
+        </button>
       </div>
     );
   }
 
-
   render() {
-    let archProducts = this.state.archivedItemToShow
-    let totalProducts = this.props.updatedArchived.length
+    let archProducts = this.state.archivedItemToShow;
+    let totalProducts = this.props.updatedArchived.length;
     let progressWidth = (archProducts * 100) / totalProducts;
     const { isArabic } = this.state;
-
     return (
       <main block="LiveShopping">
         <div block="catergoryBlockLayout" mods={{ isArabic }}>
           <div block="GenderButton-Container">
             <a href="/all.html">
-              <button  block="GenderButton-Button" >{__('All')}</button>
+              <button block="GenderButton-Button">{__("All")}</button>
             </a>
           </div>
           <div block="GenderButton-Container">
             <a href="/women.html">
-              <button  block="GenderButton-Button" >{__('Women')}</button>
+              <button block="GenderButton-Button">{__("Women")}</button>
             </a>
           </div>
           <div block="GenderButton-Container">
             <a href="/men.html">
-              <button block="GenderButton-Button">{__('Men')}</button>
+              <button block="GenderButton-Button">{__("Men")}</button>
             </a>
           </div>
         </div>
         <ContentWrapper
-          mix={{ block: 'LiveShopping' }}
+          mix={{ block: "LiveShopping" }}
           wrapperMix={{
-            block: 'LiveShopping',
-            elem: 'Wrapper'
+            block: "LiveShopping",
+            elem: "Wrapper",
           }}
-          label={__('LiveShopping')}
+          label={__("LiveShopping")}
         >
+          <div block="liveEventBanner">{this.renderSpckLiveEvent()}</div>
 
-          <div block="liveEventBanner">
-            {this.renderSpckLiveEvent()}
-          </div>
-
-          {
-            this.props.updatedUpcoming.length > 0 &&
+          {this.props.updatedUpcoming.length > 0 && (
             <div block="upComing-Grid">
               <h3 block="sectionTitle">{__("COMING NEXT")}</h3>
               <div id="live"></div>
-              <ul block="spckItems">
-                {this.renderSpckUpcomingEvent()}
-              </ul>
+              <ul block="spckItems">{this.renderSpckUpcomingEvent()}</ul>
             </div>
-          }
+          )}
 
-
-          {this.props.updatedArchived.length > 0 &&
+          {this.props.updatedArchived.length > 0 && (
             <div block="archived-Grid">
               <div block="Recentlyplayed-heading-layout">
                 <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
-                <div block="RecentlyPlayed-refine-button">{this.renderRefine()}</div>
-              </div>
-              <div id="archived"></div>
-              <ul block="spckItems">
-                {this.renderSpckarchivedEvent()}
-              </ul>
-            </div>
-          }
-          {
-            this.props.updatedArchived.length > 9 && (!isMobile.any()) ?
-
-              <div block="Product-LoadMore">
-                {
-                  <>
-                    <div block="Product-Loaded-Info">
-                      {__("You’ve viewed %s of %s products", archProducts, totalProducts)}
-                    </div>
-
-                    <div block="Product-ProgressBar">
-                      <div block="Product-ProgressBar-Container">
-                        <div
-                          block="Product-ProgressBar-Bar"
-                          style={{ width: `${progressWidth}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </>
-                }
-
-                <div block="LoadMore">
-                  <button
-                    block="button"
-                    onClick={this.handleLoadMore}
-                    // disabled={disablebtn || this.props.productLoad}
-                    ref={this.buttonRef}
-                  >
-                    {__("Load More")}
-                  </button>
+                <div block="RecentlyPlayed-refine-button">
+                  {this.renderRefine()}
                 </div>
               </div>
+              <div id="archived"></div>
+              <ul block="spckItems">{this.renderSpckarchivedEvent()}</ul>
+            </div>
+          )}
 
-              :
-              ""
-          }
+          {this.props.updatedArchived.length > 9 && !isMobile.any() ? (
+            <div block="Product-LoadMore">
+              {
+                <>
+                  <div block="Product-Loaded-Info">
+                    {__(
+                      "You’ve viewed %s of %s products",
+                      archProducts,
+                      totalProducts
+                    )}
+                  </div>
 
+                  <div block="Product-ProgressBar">
+                    <div block="Product-ProgressBar-Container">
+                      <div
+                        block="Product-ProgressBar-Bar"
+                        style={{ width: `${progressWidth}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </>
+              }
 
+              <div block="LoadMore">
+                <button
+                  block="button"
+                  onClick={this.handleLoadMore}
+                  // disabled={disablebtn || this.props.productLoad}
+                  ref={this.buttonRef}
+                >
+                  {__("Load More")}
+                </button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </ContentWrapper>
         <div id="all"></div>
       </main>

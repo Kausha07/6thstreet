@@ -50,7 +50,7 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
-    broadcastId: PropTypes.number,
+    // broadcastId: PropTypes.number,
   };
 
   constructor(props) {
@@ -59,9 +59,9 @@ export class LiveExperienceContainer extends PureComponent {
   }
 
   requestLiveParty() {
-    const broadcastId = getQueryParam("broadcastId", location);
+    // const broadcastId = getQueryParam("broadcastId", location);
     const { requestLiveParty } = this.props;
-    requestLiveParty({ broadcastId });
+    requestLiveParty({ storeId: Config.storeId});
   }
 
   requestUpcomingParty() {
@@ -85,10 +85,6 @@ export class LiveExperienceContainer extends PureComponent {
     if (!results[2]) return "";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   };
-
-  static getDerivedStateFromProps(props) {
-    const { live, upcoming, archived } = props;
-  }
 
   componentDidMount() {
     this.requestLiveParty();
@@ -171,17 +167,16 @@ export class LiveExperienceContainer extends PureComponent {
     });
   }
   containerProps = () => {
-    const broadcastId = getQueryParam("broadcastId", location);
-    let { live, upcoming, archived } = this.props;
+    let { live, upcoming, archived} = this.props;
     // Updating upcoming data to remove current broadCastId from it.
     let updatedUpcoming = upcoming.filter((val) => {
-      return (val.id.toString() !== broadcastId)
+      return (val.id.toString() !== live.id)
     })
     let updatedArchived = archived.filter((val) => {
-      return (val.id.toString() !== broadcastId)
+      return (val.id.toString() !== live.id)
     })
     return {
-      broadcastId, live, updatedUpcoming, updatedArchived
+       live, updatedUpcoming, updatedArchived
     };
   };
 
