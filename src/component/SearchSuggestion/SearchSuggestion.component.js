@@ -955,7 +955,7 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    if (gender !== "home" && querySuggestions.length === 0) {
+    if (gender === "home" && querySuggestions.length === 0) {
       return null
     }
     if(isEmpty) {
