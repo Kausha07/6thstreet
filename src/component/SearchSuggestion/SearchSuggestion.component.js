@@ -955,11 +955,14 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    if (isEmpty && isActive && gender !== "home") {
+    if (gender !== "home" && querySuggestions.length === 0) {
+      return null
+    }
+    if(isEmpty) {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length === 0) {
+    if (inNothingFound && querySuggestions.length <= 1) {
       return this.renderNothingFound();
     }
 
@@ -1003,7 +1006,6 @@ class SearchSuggestion extends PureComponent {
 
   render() {
     const { isPDPSearchVisible, suggestionEnabled } = this.props;
-    console.log("all well", suggestionEnabled);
     const { isArabic } = this.state;
     // const { isPDPSearchVisible } = this.props;
     return (
