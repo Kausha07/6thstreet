@@ -50,7 +50,6 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
-    // broadcastId: PropTypes.number,
   };
 
   constructor(props) {
@@ -59,7 +58,6 @@ export class LiveExperienceContainer extends PureComponent {
   }
 
   requestLiveParty() {
-    // const broadcastId = getQueryParam("broadcastId", location);
     const { requestLiveParty } = this.props;
     requestLiveParty({ storeId: Config.storeId});
   }
