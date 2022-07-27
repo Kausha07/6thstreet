@@ -79,83 +79,60 @@ export class CartPage extends PureComponent {
 
   componentDidMount() {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
-    const { isArabic } = this.state;
-    const { country } = JSON.parse(
-      localStorage.getItem("APP_STATE_CACHE_KEY")
-    ).data;
-
+    const script = document.createElement('script');
+    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    document.body.appendChild(script);
+    const total = subtotal;
     getTabbyInstallment(total).then((response) => {
       if (response?.value) {
-        const script = document.createElement("script");
-        script.src = "https://checkout.tabby.ai/tabby-promo.js";
-        script.async = true;
-        script.onload = function () {
-          let s = document.createElement("script");
-          s.type = "text/javascript";
-          const code = `new TabbyPromo({
-          selector: '#TabbyPromo', 
-          currency: '${currency_code}', // required, currency of your product
-          price: '${total}', 
-          installmentsCount: 4,
-          lang: '${isArabic ? "ar" : "en"}', 
-          source: 'product', 
-        });`;
-          try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
-          } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
-          }
-        };
-        document.body.appendChild(script);
+        if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
+          document.getElementById("TabbyPromo").classList.remove("d-none");
+        }
+        script.onload = this.addTabbyPromo(total, currency_code);
+      } else {
+        document.getElementById("TabbyPromo").classList.add("d-none");
       }
     }, this._handleError).catch(() => { });
     this.getCouponModuleStatus();
     window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
+
   componentDidUpdate(prevProps) {
     const {
-      totals: { total, currency_code },
+      totals: { subtotal, currency_code },
       getTabbyInstallment
     } = this.props;
-    const { isArabic } = this.state;
-    const { country } = JSON.parse(
-      localStorage.getItem("APP_STATE_CACHE_KEY")
-    ).data;
-    if (prevProps?.totals?.total !== total) {
+    if (prevProps?.totals?.subtotal !== subtotal) {
+      const total= subtotal;
       getTabbyInstallment(total).then((response) => {
         if (response?.value) {
-          const script = document.createElement("script");
-          script.src = "https://checkout.tabby.ai/tabby-promo.js";
-          script.async = true;
-          script.onload = function () {
-            let s = document.createElement("script");
-            s.type = "text/javascript";
-            const code = `new TabbyPromo({
-            selector: '#TabbyPromo', 
-            currency: '${currency_code}', // required, currency of your product
-            price: '${total}', 
-            installmentsCount: 4,
-            lang: '${isArabic ? "ar" : "en"}', 
-            source: 'product', 
-          });`;
-            try {
-              s.appendChild(document.createTextNode(code));
-              document.body.appendChild(s);
-            } catch (e) {
-              s.text = code;
-              document.body.appendChild(s);
-            }
-          };
-          document.body.appendChild(script);
+          if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
+            document.getElementById("TabbyPromo").classList.remove("d-none");
+          }
+          this.addTabbyPromo(total, currency_code);
+        }
+        else {
+          document.getElementById("TabbyPromo").classList.add("d-none");
         }
       }, this._handleError).catch(() => { });
     }
   }
+
+  addTabbyPromo = (total, currency_code) => {
+    const { isArabic } = this.state;
+    new window.TabbyPromo({
+      selector: '#TabbyPromo',
+      currency: currency_code.toString(),
+      price: total,
+      installmentsCount: 4,
+      lang: isArabic ? "ar" : "en",
+      source: 'product',
+    });
+  }
+
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -177,6 +154,7 @@ export class CartPage extends PureComponent {
             currency_code={quote_currency_code}
             isEditing
             isCartPage
+            isSignedIn={this.props.isSignedIn}
           />
         ))}
       </ul>
@@ -412,12 +390,12 @@ export class CartPage extends PureComponent {
           {__("Proceed to Checkout")}
         </button>
         {/* <Link
-                  block="CartPage"
-                  elem="ContinueShopping"
-                  to="/"
-                >
-                    { __('Continue shopping') }
-                </Link> */}
+                   block="CartPage"
+                   elem="ContinueShopping"
+                   to="/"
+                 >
+                     { __('Continue shopping') }
+                 </Link> */}
       </div>
     );
   }
@@ -704,8 +682,8 @@ export class CartPage extends PureComponent {
         {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
         <div block="CartPage" elem="EmptyCartImg">
           {/* <image src={EmptyCardIcon}/> */}
-          <Image 
-          src={EmptyCardIcon}
+          <Image
+            src={EmptyCardIcon}
           />
         </div>
         <p block="CartPage" elem="EmptyCartText">
@@ -715,11 +693,11 @@ export class CartPage extends PureComponent {
           {__("Time to add some awesome stuff to your shopping bag")}
         </p>
         <div block="ExploreNowBtn">
-            <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
-              <span block="ExploreNowBtn" elem="ExploreButtonText">
-                {__("Explore now")}
-              </span>
-            </Link>
+          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
+            <span block="ExploreNowBtn" elem="ExploreButtonText">
+              {__("Explore now")}
+            </span>
+          </Link>
         </div>
       </div>
     );
@@ -736,14 +714,14 @@ export class CartPage extends PureComponent {
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
-    
+
     // if cart is not created and user goes to cart page in mobile view.
-    
+
     const isMobiledev = isMobile ? isMobile.any() : false;
 
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
 
-    if(isMobiledev && !cart_id){
+    if (isMobiledev && !cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderHeading()}
@@ -752,7 +730,7 @@ export class CartPage extends PureComponent {
       );
     }
 
-    if(!cart_id){
+    if (!cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderHeading()}
@@ -760,13 +738,13 @@ export class CartPage extends PureComponent {
         </div>
       );
     }
-    
+
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     }
 
     if (Object.keys(totals).length === 0 || items.length === 0) {
-      if(isMobiledev){
+      if (isMobiledev) {
         return (
           <div block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderHeading()}

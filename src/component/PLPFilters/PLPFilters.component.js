@@ -227,12 +227,9 @@ class PLPFilters extends PureComponent {
             return
           }
         }
-
-
       }
 
       if (filter[1]) {
-
         if (filter[0] === "sort" && !isMobile.any()) {
           return
         }

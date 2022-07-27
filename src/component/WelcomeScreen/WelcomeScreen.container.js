@@ -8,6 +8,7 @@ import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpo
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import WelcomeScreen from './WelcomeScreen.component';
+import isMobile from "Util/Mobile";
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -56,6 +57,12 @@ class WelcomeScreenContainer extends PureComponent {
                 this.props.setCountryForWelcome(value)
                 this.props.closePopup();
                 // this.props.setAppConfig(value)
+                let countryList = ['BH']; 
+                if(countryList.includes(value) && isMobile.any()){      
+                    const locale = `${language}-${value.toLowerCase()}`;      
+                    let url = `${URLS[locale]}`
+                    window.location.href = url
+                }
             }
         } else {
             const locale = `${language}-${value.toLowerCase()}`;

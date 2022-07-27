@@ -14,6 +14,11 @@ export const CANCEL_ITEM_LABEL = __("Cancel an Item");
 
 export const RETURN_ITEM_LABEL = __("Return an Item");
 
+export const PICKUP_FAILED = 'pickupfailed'
+export const PICKEDUP = 'pickedup'
+export const READY_TO_PICK = 'readytopick'
+
+
 export const STATUS_LABEL_MAP = {
   [STATUS_PROCESSING]: __("Processing"),
   [STATUS_DISPATCHED]: __("Shipped"),

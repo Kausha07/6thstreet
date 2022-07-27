@@ -20,6 +20,9 @@ import { getDefaultEddDate } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_READY_MESSAGE,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY
 } from "../../util/Common/index";
 
 import Image from "Component/Image";
@@ -27,6 +30,7 @@ import Loader from "Component/Loader";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import Price from "Component/Price";
+import { Store } from "../Icons";
 
 import "./CartItem.style";
 import "./CartItem.extended.style";
@@ -273,6 +277,28 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderClickAndCollectStoreName() {
+    const {
+      item: { extension_attributes },
+    } = this.props;
+
+    const { isArabic } = this.state;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="CartItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="CartItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="CartItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+
   onQuantityChange = (quantity) => {
     const {
       handleChangeQuantity,
@@ -361,27 +387,34 @@ export class CartItem extends PureComponent {
   }
 
   renderEdd = () => {
-    const { eddResponse, edd_info } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes } } = this.props;
+
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
+    const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
     const {
       defaultEddDateString,
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
+    } = getDefaultEddDate(defaultDay);
+    let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_MESSAGE
     let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
-      : DEFAULT_MESSAGE;
+      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+      : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
           if (entry.source === "cart" && entry.featute_flag_status === 1) {
-            actualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            actualEdd = entry.edd_date;
+            if (extension_attributes?.click_to_collect_store) {
+              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            } else {
+              actualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              actualEdd = entry.edd_date;
+            }
           }
         });
       } else {
@@ -396,15 +429,23 @@ export class CartItem extends PureComponent {
     if (!actualEddMess) {
       return null;
     }
-    let splitKey = isArabic ? "بواسطه" : "by";
-
+    let splitKey = DEFAULT_SPLIT_KEY;
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
     return (
-      <div block="AreaText">
-        <span>
-          {actualEddMess.split(splitKey)[0]}
-          {splitKey}
-        </span>
-        <span>{actualEddMess.split(splitKey)[1]}</span>
+      <div block="AreaText" mods={{isArabic}}>
+        {extension_attributes?.click_to_collect_store ?
+          <span>
+            {splitReadyByKey}
+          </span> : <span>
+            {actualEddMess.split(splitKey)[0]}
+            {splitKey}
+          </span>
+        }
+        {extension_attributes?.click_to_collect_store ?
+          <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
+          :
+          <span>{actualEddMess.split(splitKey)[1]}</span>
+        }
       </div>
     );
   };
@@ -432,10 +473,15 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? null : this.renderProductPrice()}
+        {isNotAvailble ? null : (
+          <>
+            {this.renderProductPrice()}
+          </>
+        )}
+        {this.renderClickAndCollectStoreName()}
         {edd_info &&
           edd_info.is_enable &&
-          edd_info.has_cart && 
+          edd_info.has_cart &&
           cross_border === 0 &&
           this.renderEdd()}
         {this.renderActions()}

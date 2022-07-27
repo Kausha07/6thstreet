@@ -77,14 +77,17 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const {
       isSignedIn,
-      shippingAddress: { guest_email },
+      shippingAddress: { guest_email, phone = "" },
       isClickAndCollect,
       storeAddress,
       clickAndCollectStatus,
       setClickAndCollect,
+      customer,
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
+    const phoneNumber = phone || customer?.phone
+    const customerPhone = phoneNumber?.slice(4, phoneNumber);
 
     fieldMap.street = {
       ...street,
@@ -95,6 +98,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       ...telephone,
       onChange: (value) => this.onChange("telephone", value),
       type: "phone",
+      value: customerPhone,
     };
 
     const fFieldMap = isSignedIn
@@ -104,7 +108,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             placeholder: __("Email"),
             validation: ["notEmpty", "email"],
             type: "email",
-            value: guest_email || "",
+            value: guest_email || customer?.email || "",
           },
           ...fieldMap,
         };

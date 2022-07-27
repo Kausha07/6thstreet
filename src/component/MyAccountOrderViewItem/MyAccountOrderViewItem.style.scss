@@ -5,7 +5,7 @@
     display: flex;
     font-family: "Avenir Next";
     font-size: 12px;
-    font-weight:var(--fw-medium) ;
+    font-weight: var(--fw-medium);
     align-items: center;
     letter-spacing: 0;
     line-height: 12px;
@@ -25,5 +25,16 @@
   }
   &-Name {
     margin: 0 0 10px 0;
+  }
+  &-ClickAndCollect {
+    display: flex;
+    font-family: "Avenir Next";
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--cart-item-heading-color);
+    font-weight: var(--fw-medium);
   }
 }

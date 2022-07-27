@@ -40,6 +40,7 @@ import box from "./icons/box.png";
 import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
+import { ADD_ADDRESS } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -201,6 +202,7 @@ export class MyAccount extends SourceMyAccount {
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
     const { name, alternativePageName, alternateName } = tabMap[activeTab];
+
     const returnTitle =
       activeTab === RETURN_ITEM ? __("Return Statement") : null;
     const isCancel = pathname.includes("/return-item/cancel");
@@ -246,7 +248,7 @@ export class MyAccount extends SourceMyAccount {
 
   renderMobile() {
     
-    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive } = this.props;
+    const { activeTab, tabMap, isSignedIn, mobileTabActive,setMobileTabActive,payload } = this.props;
 
     const { isArabic,isMobile } = this.state;
 
@@ -273,17 +275,19 @@ export class MyAccount extends SourceMyAccount {
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
+    const payloadKey = Object.keys(payload)[0]
     return (
       <ContentWrapper
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
         <MyAccountMobileHeader
-          onClose={this.handleClick}
-          isHiddenTabContent={hiddenTabContent === "Active"}
-          alternativePageName={alternativePageName}
-          name={isCancel ? alternateName : name}
-        />
+         onClose={this.handleClick}
+         isHiddenTabContent={hiddenTabContent === "Active"}
+         alternativePageName={alternativePageName}
+         name={isCancel ? alternateName : name}
+         />
+       
         <div block={hiddenTabList}>
           <div block="UserBlock">
             <span>{__("Hello, ")}</span>

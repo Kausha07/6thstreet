@@ -183,7 +183,7 @@
       margin-top: 0px;
 
       &::before {
-        background: url(./icons/categories.svg) no-repeat center center;
+        background: url(../../style/icons/categories.png) no-repeat center center;
         background-size: 24px;
         filter: none;
         width: 40px;
@@ -196,7 +196,7 @@
         background-size: 100% 1px, calc(100% - 1px) 100%;
         background-position: center top, 1px 0;
         &::before {
-          background: url(./icons/categories-active.svg) no-repeat center center;
+          background: url(../../style/icons/categories-active.png) no-repeat center center;
           background-size: 24px;
           width: 40px;
           height:40px;

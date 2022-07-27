@@ -61,6 +61,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       shippingAddress,
       isClickAndCollect,
       clickAndCollectStatus,
+      customer
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -75,6 +76,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         shippingAddress={shippingAddress}
         clickAndCollectStatus={clickAndCollectStatus}
         isClickAndCollect={isClickAndCollect}
+        customer={customer}
       />
     );
   }
@@ -87,6 +89,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       closeForm,
       hideCards,
       isBilling,
+      PickUpAddress
     } = this.props;
     const { id, area } = address;
     if (!area) {
@@ -100,6 +103,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         title={__("Address #%s", id)}
         address={address}
         key={id}
+        PickUpAddress={PickUpAddress}
         showActions={!!!isBilling}
         hideCards={hideCards}
         openForm={openForm}
@@ -220,10 +224,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   render() {
-    const { isBilling } = this.props;
+    const { isBilling,PickUpAddress } = this.props;
     return (
       <div block="CheckoutAddressBook" mods={{ isBilling }}>
-        {this.renderHeading()}
+        {!PickUpAddress && this.renderHeading()}
         {this.renderContent()}
       </div>
     );

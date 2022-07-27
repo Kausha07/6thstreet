@@ -34,7 +34,8 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 imageIndex: 0,
                 product,
                 options,
-                nbHits
+                nbHits,
+                isLoading:false,
             };
 
         case SET_PDP_GALLERY_IMAGE_INDEX:

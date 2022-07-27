@@ -7,8 +7,8 @@ export const validateEmails = ({ value = '' }) => value.split(',').every((email)
 export const validatePassword = ({ value }) => value.length >= MIN_PASSWORD_LENGTH;
 export const validateContainNumber = ({ value }) => /\d/.test(value);
 export const validateContainCapitalize = ({ value }) => /[A-Z]/.test(value);
-export const validateTelephoneAE = ({ value }) => value.length > 0 && value.match(/^[0-9]{9}$/);
-export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^[0-9]{8}$/);
+export const validateTelephoneAE = ({ value }) => value.length > 0 && value.match(/^[1-9][0-9]{8}$/);
+export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^[1-9][0-9]{7}$/);
 export const isNotEmpty = ({ value }) => value.trim().length > 0;
 export const validatePasswordMatch = ({ value }, { password }) => {
     const { current: { value: passwordValue } } = password || { current: {} };

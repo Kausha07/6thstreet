@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl } from "Util/Url/Url";
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -35,7 +36,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
     processApplePay: true,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   paymentRenderMap = {
@@ -56,65 +57,36 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     isArabic: isArabic(),
     isMobile: isMobile.any() || isMobile.tablet(),
   };
-  componentDidMount() {
-    const script = document.createElement("script");
 
-    script.src = "https://checkout.tabby.ai/tabby-card.js";
-    script.async = true;
-    script.onload = function () {
-      let s = document.createElement("script");
-      s.type = "text/javascript";
-      const code = `new TabbyCard({
-        selector: '#tabbyCard', // empty div for TabbyCard
-        currency: 'AED', // or SAR, BHD, KWD; required, currency for your product
-        price: '100.00', // required, price or your product
-        lang: 'en', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
-        size: 'narrow' // or wide
-        });`;
-      try {
-        s.appendChild(document.createTextNode(code));
-        document.body.appendChild(s);
-      } catch (e) {
-        s.text = code;
-        document.body.appendChild(s);
-      }
-    };
-    document.body.appendChild(script);
+  componentDidMount() {
+    const { selectedPaymentCode, totals: { total, currency_code } } = this.props;
+    if (selectedPaymentCode === TABBY_ISTALLMENTS) {
+      this.addTabbyCard(total, currency_code);
+    }
   }
+
   componentDidUpdate(prevProps) {
     const {
       selectedPaymentCode,
       totals: { total, currency_code },
     } = this.props;
-    const { isArabic, isMobile } = this.state;
-    if (selectedPaymentCode === TABBY_ISTALLMENTS) {
-      const script = document.createElement("script");
-
-      script.src = "https://checkout.tabby.ai/tabby-card.js";
-      script.async = true;
-      script.onload = function () {
-        let s = document.createElement("script");
-        s.type = "text/javascript";
-        const code = `new TabbyCard({
-        selector: '#tabbyCard', // empty div for TabbyCard
-        currency: '${currency_code}', // or SAR, BHD, KWD; required, currency for your product
-        price: '${total}', // required, price or your product
-        lang: '${
-          isArabic ? `ar` : `en`
-        }', // or ar; optional, language of snippet and popups, if the property is not set, then it is based on the attribute 'lang' of your html tag
-        size: 'wide' // or wide
-        });`;
-        try {
-          s.appendChild(document.createTextNode(code));
-          document.body.appendChild(s);
-        } catch (e) {
-          s.text = code;
-          document.body.appendChild(s);
-        }
-      };
-      document.body.appendChild(script);
+    if (selectedPaymentCode === TABBY_ISTALLMENTS || prevProps?.totals?.total !== total) {
+      this.addTabbyCard(total, currency_code);
     }
   }
+
+  addTabbyCard = (total, currency_code) => {
+    const { isArabic } = this.state;
+    new window.TabbyCard({
+      selector: '#tabbyCard',
+      currency: currency_code.toString(),
+      price: total,
+      installmentsCount: 4,
+      lang: isArabic ? "ar" : "en",
+      size: 'wide',
+    });
+  }
+
   handleChange = (activeImage) => {
     this.setState({ activeSliderImage: activeImage });
   };
@@ -126,9 +98,18 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
       isClickAndCollect,
+      totals: { items=[] },
     } = this.props;
     const { m_code } = method;
-    if (m_code === "msp_cashondelivery" && isClickAndCollect) {
+    
+    const hasClickAndCollect = items?.some(
+      ({ extension_attributes }) => extension_attributes?.click_to_collect_store
+    );
+
+    if (
+      m_code === "msp_cashondelivery" &&
+      (isClickAndCollect || hasClickAndCollect)
+    ) {
       return null;
     }
 
@@ -173,8 +154,50 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     return selectedMethod;
   };
 
+  renderLimit() {
+    const { totals: { total, currency_code } } = this.props;
+    if(currency_code === "AED"){
+      return (
+        <>
+          <b> {__("AED 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "SAR"){
+      return (
+        <>
+          <b> {__("SAR 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "QAR"){
+      return (
+        <>
+          <b> {__("QAR 2700")}, </b> 
+        </>
+      );
+    }else if(currency_code === "KWD"){
+      return (
+        <>
+          <b> {__("KWD 250")}, </b> 
+        </>
+      );
+    }else if(currency_code === "OMR"){
+      return (
+        <>
+          <b> {__("OMR 250")}, </b> 
+        </>
+      );
+    }else if(currency_code === "BHD"){
+      return (
+        <>
+          <b> {__("BHD 250")}, </b> 
+        </>
+      );
+    }
+  }
+
   renderCashOnDelivery() {
-    const { isClickAndCollect } = this.props;
+    const { isClickAndCollect, totals: { total, currency_code }, setOrderButtonDisabled } = this.props;
+
     if (isClickAndCollect) {
       return null;
     }
@@ -182,6 +205,32 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();
+
+    if(
+      currency_code === "AED" && total > 2700 || 
+      currency_code === "SAR" && total > 2700 ||
+      currency_code === "KWD" && total > 250 ||
+      currency_code === "OMR" && total > 250 ||
+      currency_code === "BHD" && total > 250 ||
+      currency_code === "QAR" && total > 2700
+      ){
+        return (
+          <div block="CheckoutPayments" elem="SelectedInfo">
+            <h2 block="CheckoutPayments" elem="MethodTitle">
+              {method_title}
+            </h2>
+            <p block="CheckoutPayments" elem="MethodDiscription">
+              {getCountryFromUrl() === "QA" 
+                ? __("Cash on Receiving is not available for the order above")
+                :__("Cash on Delivery is not available for the order above")
+              }
+              <span>{this.renderLimit()}</span>
+              {__("please choose another payment option.")}
+
+            </p>
+          </div>
+        );
+    }
 
     return (
       <div block="CheckoutPayments" elem="SelectedInfo">
@@ -333,7 +382,24 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderSelectedPayment() {
-    const { selectedPaymentCode } = this.props;
+    const { selectedPaymentCode, setLimitDisabled, setLimitEnabled, totals: { total, currency_code }, } = this.props;
+    
+    if(selectedPaymentCode === "msp_cashondelivery" ){
+      if(
+        currency_code === "AED" && total > 2700 || 
+        currency_code === "SAR" && total > 2700 ||
+        currency_code === "KWD" && total > 250 ||
+        currency_code === "OMR" && total > 250 ||
+        currency_code === "BHD" && total > 250 ||
+        currency_code === "QAR" && total > 2700
+        ){
+          setLimitEnabled();
+        }else{
+          setLimitDisabled();
+        }
+    }else{
+      setLimitDisabled();
+    }
 
     const render = this.paymentRenderMap[selectedPaymentCode];
     if (!render) {

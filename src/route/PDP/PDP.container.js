@@ -44,6 +44,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
   requestPdpWidgetData: () => PDPDispatcher.requestPdpWidgetData(dispatch),
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
+  resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
   getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
@@ -96,8 +97,9 @@ export class PDPContainer extends PureComponent {
   };
 
   static defaultProps = {
-    nbHits: 1,
+    // nbHits: 1,
     sku: "",
+    isLoading: true,
   };
 
   state = {
@@ -109,6 +111,7 @@ export class PDPContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.requestProduct();
+    // this.renderVueHits();`
   }
 
   componentDidMount() {
@@ -138,19 +141,19 @@ export class PDPContainer extends PureComponent {
     const { productSku, currentLocation } = this.state;
 
     // if (sku != undefined)
-    if (productSku != sku && currentLocation === this.props.location.pathname) {
-      this.renderVueHits();
-    }
+    // if (productSku != sku && currentLocation === this.props.location.pathname) {
+    //   this.renderVueHits();
+    // }
 
     // Request product, if URL rewrite has changed
-    if (id !== prevId) {
-      this.requestProduct();
-    }
+    // if (id !== prevId) {
+    //   this.requestProduct();
+    // }
 
     // Update loading from here, validate for last options recieved results from
-    if (isLoading !== currentIsLoading) {
-      setIsLoading(false);
-    }
+    // if (isLoading !== currentIsLoading) {
+    //   setIsLoading(false);
+    // }
 
     if (menuCategories.length !== 0 && sku && productSku !== sku) {
       this.updateBreadcrumbs();
@@ -160,34 +163,38 @@ export class PDPContainer extends PureComponent {
     }
   }
 
-  renderVueHits() {
-    const {
-      prevPath = null,
-      product: { product_type_6s, sku, url, price },
-    } = this.props;
-    const itemPrice =
-      price && price[0]
-        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-        : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: prevPath,
-        url: window.location.href,
-        sourceProdID: sku,
-        sourceCatgID: product_type_6s, // TODO: replace with category id
-        prodPrice: itemPrice,
-      },
-    });
-  }
+  // componentWillUnmount() {
+  //   const {resetProduct} =this.props;
+  //   resetProduct();
+  // }
+  // renderVueHits() {
+  //   const {
+  //     prevPath = null,
+  //     product: { product_type_6s, sku, url, price },
+  //   } = this.props;
+  //   const itemPrice =
+  //     price && price[0]
+  //       ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+  //       : price && Object.keys(price)[0] !== "0"
+  //         ? price[Object.keys(price)[0]]["6s_special_price"]
+  //         : null;
+  //   const locale = VueIntegrationQueries.getLocaleFromUrl();
+  //   VueIntegrationQueries.vueAnalayticsLogger({
+  //     event_name: VUE_PAGE_VIEW,
+  //     params: {
+  //       event: VUE_PAGE_VIEW,
+  //       pageType: "pdp",
+  //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+  //       clicked: Date.now(),
+  //       uuid: getUUID(),
+  //       referrer: prevPath,
+  //       url: window.location.href,
+  //       sourceProdID: sku,
+  //       sourceCatgID: product_type_6s, // TODO: replace with category id
+  //       prodPrice: itemPrice,
+  //     },
+  //   });
+  // }
 
   fetchClickAndCollectStores(brandName, sku) {
     const { getClickAndCollectStores } = this.props;
@@ -245,7 +252,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -283,14 +290,14 @@ export class PDPContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_special_price"]
+          : null;
     const originalPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_base_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_base_price"]
+          : null;
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -311,14 +318,14 @@ export class PDPContainer extends PureComponent {
       product_type_6s && product_type_6s.length > 0
         ? product_type_6s
         : checkCategoryLevel().includes("///") == 1
-        ? checkCategoryLevel().split("///").pop()
-        : "";
-        
+          ? checkCategoryLevel().split("///").pop()
+          : "";
+
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
         name: productKeys.name,
         id: sku,
-        price: originalPrice,
+        price: specialPrice || originalPrice,
         brand: productKeys?.brand_name,
         category: categoryLevel,
         varient: productKeys?.color || "",
@@ -415,14 +422,12 @@ export class PDPContainer extends PureComponent {
       id,
       options: { id: requestedId },
     } = this.props;
-
     return id !== requestedId;
   }
 
   requestProduct() {
     const { requestProduct, requestProductBySku, id, setIsLoading, sku } =
       this.props;
-
     // ignore product request if there is no ID passed
     if (!id) {
       if (sku) {
@@ -446,12 +451,12 @@ export class PDPContainer extends PureComponent {
       clickAndCollectStores,
     } = this.props;
 
-    const { isLoading: isCategoryLoading } = this.state;
+    // const { isLoading: isCategoryLoading } = this.state;
 
     return {
       nbHits,
       isLoading,
-      isCategoryLoading,
+      // isCategoryLoading : isLoading,
       brandDescription,
       brandImg,
       brandName,

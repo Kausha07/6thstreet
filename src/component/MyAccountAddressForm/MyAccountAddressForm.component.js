@@ -207,7 +207,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 lastname,
                 phone,
                 street: shippingStreet = {}
-            }
+            },
+            customer
         } = this.props;
 
         const { street = [] } = address;
@@ -238,13 +239,13 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 validation: ['notEmpty'],
                 type: 'hidden',
                 label: __('Delivering to'),
-                value: isShippingAddress ? firstname : ''
+                value: isShippingAddress ? firstname : customer?.firstname || ''
             },
             lastname: {
                 placeholder: __('Last Name'),
                 validation: ['notEmpty'],
                 type: 'hidden',
-                value: isShippingAddress ? lastname : ''
+                value: isShippingAddress ? lastname : customer?.lastname?.trim() || ''
             },
             phonecode: {
                 type: 'text',

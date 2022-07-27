@@ -47,18 +47,24 @@ class WishlistIcon extends PureComponent {
       data,
       pageType,
       renderMySignInPopup,
+      swipeWishlist = false,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
     const wishListItem = items.find(
       ({ product: { sku } }) => sku === skuFromProps
-    );
+    );    
     const locale = VueIntegrationQueries.getLocaleFromUrl();
 
     if (wishListItem) {
       const { wishlist_item_id, product } = wishListItem;
-      removeFromWishlist(wishlist_item_id);
+      //removeFromWishlist(wishlist_item_id);      
+      if(swipeWishlist){
+        renderMySignInPopup();
+      }else{
+        removeFromWishlist(wishlist_item_id);
+      }
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
         product: {
           brand: wishListItem.product.brand_name,
@@ -94,7 +100,10 @@ class WishlistIcon extends PureComponent {
       }
       return;
     }
-    if (isSignedIn()) {
+    if (isSignedIn()) {      
+      if(swipeWishlist){
+        renderMySignInPopup();
+      }     
       addToWishlist(skuFromProps);
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);

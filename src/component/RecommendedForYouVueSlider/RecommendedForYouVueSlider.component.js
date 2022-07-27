@@ -1,5 +1,6 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
@@ -70,7 +71,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
     this.registerViewPortEvent();
   }
-  componentWillUnmount() { }
+  componentWillUnmount() {}
 
   registerViewPortEvent() {
     let observer;
@@ -190,7 +191,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       (this.itemRef &&
         this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
-      items.length +
+        items.length +
       items.length * 7 * 2 -
       690;
     this.setState({
@@ -203,13 +204,13 @@ class RecommendedForYouVueSlider extends PureComponent {
       <div
         block="VueProductSlider"
         elem="SliderContainer"
-        mods={{ isArabic: isArabic() }}
         ref={this.scrollerRef}
         mods={{
+          isArabic: isArabic(),
           Hidden:
             this.scrollerRef.current &&
             this.scrollerRef.current.clientWidth >=
-            this.state.customScrollWidth,
+              this.state.customScrollWidth,
         }}
         onScroll={this.handleScroll}
       >
@@ -223,24 +224,19 @@ class RecommendedForYouVueSlider extends PureComponent {
   };
   sendImpressions() {
     const products = this.getProducts();
-    const items = products.map((item) => {
+    const items = products.map((item, index) => {
       return {
+        name: item.name,
         id: item.sku,
-        label: item.name,
+        price: item.price,
+        brand_name: item.brand_name,
+        category: item.product_type_6s ? item.product_type_6s : item.category,
+        color: item.color ? item.color : "",
+        list: "Search Recommendation",
+        product_Position: index + 1,
       };
     });
-    const getStoreName = this.props?.promotion_name
-      ? this.props?.promotion_name
-      : "";
-    const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
-      });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, items);
     this.setState({ impressionSent: true });
   }
 
@@ -254,6 +250,11 @@ class RecommendedForYouVueSlider extends PureComponent {
       sourceCatgID,
       sourceProdID,
     } = this.props;
+    items.forEach((item, index) => {
+      Object.assign(item, {
+        product_Position: index +1,
+      });
+    });
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>

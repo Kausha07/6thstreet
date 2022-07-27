@@ -60,6 +60,11 @@
       letter-spacing: 0;
       line-height: 12px;
       text-transform: none;
+      &_isArabic span:nth-child(2) {
+        margin-right: 4px;
+        margin-left: 0px;
+        color: #28d9aa;
+      }
       span:nth-child(2) {
         margin-left: 4px;
         color: #28d9aa;
@@ -301,5 +306,17 @@
         }
       }
     }
+  }
+  &-ClickAndCollect {
+    display: flex;
+    font-family: "Avenir Next";
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--cart-item-heading-color);
+    font-weight: var(--fw-medium);
+    margin-left: -3px;
   }
 }
