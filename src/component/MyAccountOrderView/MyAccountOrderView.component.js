@@ -166,13 +166,9 @@ class MyAccountOrderView extends PureComponent {
         is_exchangeable,
         is_exchange_order = 0
       },
+      is_exchange_enabled = false
     } = this.props;
-    const buttonText =
-      status === STATUS_COMPLETE
-        ? is_exchangeable
-          ? EXCHANGE_ITEM_LABEL
-          : RETURN_ITEM_LABEL
-        : CANCEL_ITEM_LABEL;
+
     const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
       ? translateArabicStatus(modifiedStatus)
@@ -227,7 +223,7 @@ class MyAccountOrderView extends PureComponent {
               </button>
             }
             {
-              is_exchangeable &&
+              is_exchangeable && is_exchange_enabled &&
               <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
                 {EXCHANGE_ITEM_LABEL}
               </button>

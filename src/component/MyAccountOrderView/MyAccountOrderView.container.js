@@ -30,6 +30,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
+  is_exchange_enabled: state.AppConfig.is_exchange_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,7 +65,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country, eddResponse, edd_info } = this.props;
+    const { history, country, eddResponse, edd_info,is_exchange_enabled } = this.props;
 
     return {
       isLoading,
@@ -72,6 +73,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       history,
       eddResponse,
       edd_info,
+      is_exchange_enabled
     };
   };
 
