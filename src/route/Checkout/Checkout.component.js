@@ -161,7 +161,7 @@ export class Checkout extends SourceCheckout {
 
     if (
       prevState?.paymentInformation?.paymentMethod?.code !==
-        paymentInformation?.paymentMethod?.code &&
+      paymentInformation?.paymentMethod?.code &&
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
@@ -525,6 +525,7 @@ export class Checkout extends SourceCheckout {
       newCardVisible,
       QPayDetails,
       QPayOrderDetails,
+      guestAutoSignIn,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -549,6 +550,7 @@ export class Checkout extends SourceCheckout {
           QPAY_DETAILS={QPayDetails}
           selectedCard={newCardVisible ? {} : selectedCard}
           order={QPayOrderDetails}
+          guestAutoSignIn={guestAutoSignIn}
         />
       );
     }

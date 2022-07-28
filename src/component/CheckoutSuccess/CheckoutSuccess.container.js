@@ -12,7 +12,6 @@ import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
 import { updateMeta } from "Store/Meta/Meta.action";
-import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
@@ -29,6 +28,9 @@ import CheckoutSuccess from "./CheckoutSuccess.component";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
+);
+export const MyAccountDispatcher = import(
+  "Store/MyAccount/MyAccount.dispatcher"
 );
 
 export const mapStateToProps = (state) => ({
@@ -61,6 +63,14 @@ export const mapDispatchToProps = (dispatch) => ({
   requestCustomerData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
+    ),
+  loginAccount: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.loginAccount(options, dispatch)
+    ),
+  signInOTP: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.signInOTP(options, dispatch)
     ),
   setCheckoutDetails: (checkoutDetails) =>
     CartDispatcher.setCheckoutStep(dispatch, checkoutDetails),
@@ -95,6 +105,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     isPhoneVerified: false,
     isChangePhonePopupOpen: false,
     isMobileVerification: false,
+    isLoading: false,
   };
 
   containerFunctions = {
@@ -104,6 +115,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     onResendCode: this.onResendCode.bind(this),
     changePhone: this.changePhone.bind(this),
     toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this),
+    onGuestAutoSignIn: this.onGuestAutoSignIn.bind(this),
   };
 
   constructor(props) {
@@ -314,6 +326,40 @@ export class CheckoutSuccessContainer extends PureComponent {
           }
         }, this._handleError);
       }
+    }
+  }
+
+  async onGuestAutoSignIn(otp) {
+    const { phone } = this.state;
+    try {
+      const { loginAccount, showNotification } = this.props;
+      this.setState({ isLoading: true });
+      const response = await loginAccount({
+        password: otp,
+        is_phone: true,
+        username: phone,
+      });
+      const { success } = response;
+      if (success) {
+        const { signInOTP } = this.props;
+        try {
+          await signInOTP(response);
+          // this.checkForOrder();
+        } catch (e) {
+          this.setState({ isLoading: false });
+          showNotification("error", e.message);
+        }
+        this.setState({
+          isLoading: false,
+        });
+      }
+      if (typeof response === "string") {
+        showNotification('error', response);
+      }
+      this.setState({ isLoading: false });
+    } catch (err) {
+      this.setState({ isLoading: false });
+      console.error("Error while creating customer", err);
     }
   }
 

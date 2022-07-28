@@ -61,6 +61,7 @@ export class CheckoutSuccess extends PureComponent {
     delay: 1000,
     successHidden: false,
     wasLoaded: false,
+    otp: null,
   };
 
   componentDidMount() {
@@ -145,10 +146,24 @@ export class CheckoutSuccess extends PureComponent {
       toggleChangePhonePopup,
       phone,
       isVerificationCodeSent,
+      guestAutoSignIn,
+      onGuestAutoSignIn,
+      isLoading,
     } = this.props;
-    const { isArabic, isPhoneVerification } = this.state;
+    const { isArabic, isPhoneVerification, otp } = this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
+    const isNumber = (evt) => {
+      const invalidChars = ["-", "+", "e", "E", "."];
+      const abc = evt.target.value;
+      if (invalidChars.includes(evt.key)) {
+        evt.preventDefault();
+        return false;
+      }
+      if (abc.length > 4) {
+        return evt.preventDefault();
+      }
+    };
 
     if (!isPhoneVerified && isVerificationCodeSent && isSignedIn) {
       return (
@@ -233,10 +248,11 @@ export class CheckoutSuccess extends PureComponent {
               type="number"
               placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
               name="otp"
-              // disabled={isLoading}
+              disabled={isLoading}
               id="otp"
               // onChange={OTPFieldChange}
               onKeyPress={(e) => isNumber(e)}
+              onChange={(e) => this.setState({ otp: e.target.value })}
             />
           </div>
           <div
@@ -249,26 +265,34 @@ export class CheckoutSuccess extends PureComponent {
           <div
             block="VerifyPhone"
             elem="OtpLoader"
-          // mods={{ isSubmitted: isLoading }}
+            mods={{ isSubmitted: isLoading }}
           >
-            {/* <Oval
+            <Oval
               color="#333"
               secondaryColor="#333"
               height={38}
               width={"100%"}
               strokeWidth={3}
               strokeWidthSecondary={3}
-            /> */}
+            />
           </div>
-          <div block="VerifyPhone" elem="VerifyButton">
-            <button>VERIFY PHONE NUMBER</button>
+          <div block="VerifyPhone" elem={otp === null || otp?.length < 5 ? "VerifyButton disabled" : "VerifyButton"} >
+            <button
+              disabled={otp === null || otp?.length < 5}
+              onClick={() => {
+                onGuestAutoSignIn(otp)
+              }}
+              className={otp === null || otp?.length < 5 ? "disabled" : ""}
+            >
+              VERIFY PHONE NUMBER
+            </button>
           </div>
           <div
             block="VerifyPhone"
             elem="ResendCode"
-          // mods={{ isVerifying: !isLoading }}
+            mods={{ isVerifying: !isLoading }}
           >
-            <button onClick={() => console.log("resnd otp clicked")}>{__("Resend Verification Code")}</button>
+            <button onClick={() => console.log("test resnd otp clicked")}>{__("Resend Verification Code")}</button>
           </div>
         </div>
         <div mix={{ block: "TrackOrder", mods: { isArabic } }}>

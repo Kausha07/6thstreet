@@ -700,12 +700,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             success,
             response_code,
             increment_id,
+            guest_auto_sign_in,
             id = "",
             _links: { redirect: { href = "" } = {} } = {},
           } = data;
 
           if (success || response_code === 200 || http_response_code === 202) {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, guestAutoSignIn: guest_auto_sign_in });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
                 order_id,
@@ -799,7 +800,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -954,7 +955,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
