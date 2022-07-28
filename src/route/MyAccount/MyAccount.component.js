@@ -35,6 +35,7 @@ import {
   WALLET_PAYMENTS,
   tabMapType,
 } from "Type/Account";
+import { exchangeReturnState,returnState,tabMap,tabMap2 } from "./MyAccount.container";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -44,7 +45,7 @@ import box from "./icons/box.png";
 import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
-import { ADD_ADDRESS } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
+import { ADD_ADDRESS } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -192,10 +193,11 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderDesktop() {
-    const { activeTab, tabMap, changeActiveTab, isSignedIn, exchangeTabMap } =
+    const { activeTab, changeActiveTab, isSignedIn, exchangeTabMap,is_exchange_enabled = false } =
       this.props;
     const { pathname = "" } = location;
-
+    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
+    {...tabMap,...returnState,...tabMap2}
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
@@ -206,8 +208,8 @@ export class MyAccount extends SourceMyAccount {
     // eslint-disable-next-line no-unused-vars
 
     let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
+    if (newTabMap[activeTab]) {
+      finalTab = newTabMap[activeTab];
     } else if (exchangeTabMap[activeTab]) {
       finalTab = exchangeTabMap[activeTab];
     }
@@ -215,8 +217,12 @@ export class MyAccount extends SourceMyAccount {
     const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
 
     const returnTitle =
-      activeTab === RETURN_ITEM ? pickUpAddress ? __("Select Pick Up Address") : __("Return Statement") : activeTab === EXCHANGE_ITEM
-        ? __("Exchange Statement")
+      activeTab === RETURN_ITEM
+        ? pickUpAddress
+          ? __("Select Pick Up Address")
+          : __("Return Statement")
+        : activeTab === EXCHANGE_ITEM ? is_exchange_enabled
+        ? __("Exchange Statement") : __("Return Statement")
         : null;
 
     const isCancel = pathname.includes("/return-item/cancel");
@@ -227,24 +233,26 @@ export class MyAccount extends SourceMyAccount {
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
         <MyAccountTabList
-          tabMap={tabMap}
+          tabMap={newTabMap}
           activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
           changeActiveTab={changeActiveTab}
           onSignOut={this.handleSignOut}
         />
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-              <h1 block="MyAccount" elem="Heading">
-                {isCancel
-                  ? alternateName
-                  : alternativePageName || returnTitle || name}
-              </h1>
-            ) : (
+          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+            <h1 block="MyAccount" elem="Heading">
+              {isCancel
+                ? alternateName
+                : alternativePageName || returnTitle || name}
+            </h1>
+          ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {isReturnButton
-                  ? __("Return/Exchange")
+                  ? is_exchange_enabled
+                    ? __("Return/Exchange Statement")
+                    : __("Return Statement")
                   : alternativePageName || returnTitle || name}
               </h1>
               <button
@@ -252,7 +260,7 @@ export class MyAccount extends SourceMyAccount {
                 elem="ReturnButton"
                 onClick={this.returnItemButtonClick}
               >
-                {RETURN__EXCHANGE_ITEM_LABEL}
+                {is_exchange_enabled ? RETURN__EXCHANGE_ITEM_LABEL : RETURN_ITEM_LABEL}
               </button>
             </div>
           )}
@@ -265,16 +273,17 @@ export class MyAccount extends SourceMyAccount {
   renderMobile() {
     const {
       activeTab,
-      tabMap,
       isSignedIn,
       mobileTabActive,
       setMobileTabActive,
       exchangeTabMap,
-      payload
+      payload,
+      is_exchange_enabled
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
-
+    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
+    {...tabMap,...returnState,...tabMap2}
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
     // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
@@ -295,8 +304,8 @@ export class MyAccount extends SourceMyAccount {
 
     const TabContent = this.renderMap[activeTab];
     let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
+    if (newTabMap[activeTab]) {
+      finalTab = newTabMap[activeTab];
     } else if (exchangeTabMap[activeTab]) {
       finalTab = exchangeTabMap[activeTab];
     }
@@ -384,7 +393,7 @@ export class MyAccount extends SourceMyAccount {
             </div>
           </div>
           <MyAccountTabList
-            tabMap={tabMap}
+            tabMap={newTabMap}
             activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
