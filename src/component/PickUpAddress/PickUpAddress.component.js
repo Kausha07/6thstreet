@@ -15,7 +15,7 @@ import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
 import {
   ADDRESS_POPUP_ID,
-  ADD_ADDRESS
+  ADD_ADDRESS,
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 import { connect } from "react-redux";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -56,23 +56,21 @@ export class PickUpAddress extends PureComponent {
     openFirstPopup: false,
     renderLoading: false,
     isButtondisabled: false,
-    selectedAddressId: null
+    selectedAddressId: null,
   };
 
   componentDidMount() {
-    const { isSignedIn } = this.state
+    const { isSignedIn } = this.state;
     if (!isSignedIn) {
-      history.push('/')
+      history.push("/");
     }
   }
   renderButtonsPlaceholder() {
-    return __("Proceed")
+    return __("Proceed");
   }
 
   renderActions() {
-    const {
-      selectedAddressId,
-    } = this.state;
+    const { selectedAddressId } = this.state;
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
         <button
@@ -92,14 +90,24 @@ export class PickUpAddress extends PureComponent {
   }
 
   openForm() {
+    const { showPopup } = this.props;
+
     this.setState({ formContent: true });
+    showPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+    });
   }
 
   closeForm = () => {
     const { showPopup } = this.props;
+    const { isMobile } = this.state;
 
     this.setState({ formContent: false });
-    showPopup({});
+    if (isMobile) {
+      showPopup({});
+    }
   };
 
   renderAddAdress() {
@@ -180,18 +188,17 @@ export class PickUpAddress extends PureComponent {
     return !addresses.find(
       ({ country_code = null }) => country_code === getCountryFromUrl()
     );
-  }
+  };
 
   renderOpenPopupButton = () => {
     const { openFirstPopup, formContent, isArabic } = this.state;
-    const {
-      addresses,
-    } = this.props;
+    const { addresses } = this.props;
 
     const isCountryNotAddressAvailable =
       !addresses.some((add) => add.country_code === getCountryFromUrl()) &&
       !isMobile.any();
-    const openFormState = !openFirstPopup && addresses && isSignedIn() && this.notSavedAddress()
+    const openFormState =
+      !openFirstPopup && addresses && isSignedIn() && this.notSavedAddress();
 
     if (openFormState) {
       this.setState({ openFirstPopup: true });
@@ -231,16 +238,12 @@ export class PickUpAddress extends PureComponent {
   }
 
   onAddressSelect = (addressId) => {
-    const {
-      addresses,
-    } = this.props;
+    const { addresses } = this.props;
     this.setState({ selectedAddressId: addressId });
-  }
+  };
 
   renderAddressBook() {
-    const {
-      addresses,
-    } = this.props;
+    const { addresses } = this.props;
     const { formContent } = this.state;
     return (
       <CheckoutAddressBook
@@ -258,9 +261,16 @@ export class PickUpAddress extends PureComponent {
 
   onAddressSelectionSuccess = () => {
     const { selectedAddressId } = this.state;
-    const { location: { state: { orderId, orderDetails } } } = history
-    history.push(`/my-account/return-item/create/${orderId}`, { selectedAddressId,orderDetails })
-  }
+    const {
+      location: {
+        state: { orderId, orderDetails },
+      },
+    } = history;
+    history.push(`/my-account/return-item/create/${orderId}`, {
+      selectedAddressId,
+      orderDetails,
+    });
+  };
 
   render() {
     const { formContent } = this.state;
@@ -291,7 +301,4 @@ export class PickUpAddress extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PickUpAddress);
+export default connect(mapStateToProps, mapDispatchToProps)(PickUpAddress);

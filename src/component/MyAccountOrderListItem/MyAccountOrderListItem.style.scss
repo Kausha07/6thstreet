@@ -201,13 +201,24 @@
       top: 50%;
       transform: translate(-50%, -50%);
       width: 15px;
-
-      .PageWrapper_isArabic & {
-        left: unset;
-        right: 30px;
+      &_isArabic{
+        right: 10% !important;
+        left: unset !important;
         transform: translate(50%, -50%);
       }
-
+      .PageWrapper_isArabic &_isProcessing {
+          right: 50% !important;
+      }
+      .PageWrapper_isArabic &_inTransit {
+        right: 50% !important;
+      }
+      .PageWrapper_isArabic &_isDelivered {
+        right: 100% !important;
+      }
+      .PageWrapper_isArabic & {
+        left: unset;
+        transform: translate(50%, -50%);
+      }
       &::after {
         border-bottom: 3px solid var(--primary-base-color);
         border-right: 3px solid var(--primary-base-color);

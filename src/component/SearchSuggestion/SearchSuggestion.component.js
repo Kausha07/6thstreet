@@ -537,11 +537,11 @@ class SearchSuggestion extends PureComponent {
 
   renderSuggestions() {
     const { products = [] } = this.props;
-    const { querySuggestions = [], suggestionEnabled } = this.props;
+    const { querySuggestions = [] } = this.props;
     let isRecommended = (products.length === 0) && (querySuggestions.length === 1)
     return (
       <>
-        {suggestionEnabled && this.renderQuerySuggestions()}
+        {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}

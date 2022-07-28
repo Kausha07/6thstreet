@@ -32,8 +32,14 @@ export class MyAccountReturnListItemContainer extends PureComponent {
     };
 
     getLinkTo() {
-        const { return: { return_id } } = this.props;
-        return `/my-account/return-item/${ return_id }`;
+      const {
+        return: { return_id, is_exchange_rma },
+      } = this.props;
+      if (is_exchange_rma) {
+        return `/my-account/exchange-item/${return_id}`;
+      } else {
+        return `/my-account/return-item/${return_id}`;
+      }
     }
 
     render() {
