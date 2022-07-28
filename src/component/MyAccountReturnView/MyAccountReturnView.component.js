@@ -22,14 +22,14 @@ export class MyAccountReturnView extends SourceComponent {
     renderDetails() {
         const { date, status, orderNumber } = this.props;
         const dateObject = new Date(date.replace(/-/g, "/"));
-        const dateString = formatDate('YY/MM/DD at hh:mm', dateObject);
+        const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
         const { [status]: title } = STATUS_TITLE_MAP;
 
         return (
             <div block="MyAccountReturnView" elem="Details">
                 <p block="MyAccountReturnView" elem="DetailsDate">
                     { __('Date Requested: ') }
-                    <span>{ dateString }</span>
+                    <span>{dateString.split('at').join(__('at'))}</span>
                 </p>
                 <div block="MyAccountReturnView" elem="SubDetails">
                     <p block="MyAccountReturnView" elem="Status" mods={ { isDenied: status === STATUS_DENIED } }>
