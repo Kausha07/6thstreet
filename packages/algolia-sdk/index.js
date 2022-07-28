@@ -3,6 +3,7 @@ import {
   getBrands,
   getPDP,
   getPLP,
+  getProductForSearchContainer,
   getSearchPLP,
   getPopularBrands,
   getProductBySku,
@@ -37,6 +38,8 @@ const AlgoliaSDK = {
   
   getPLP: (URL, params) =>
     getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params),
+  getProductForSearchContainer: (URL, params, suggestionQuery) =>
+    getProductForSearchContainer(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params, suggestionQuery),
   getSearchPLP: (URL, params) =>
     getSearchPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }, params),
   getPDP: (params) => getPDP(params, { index: AlgoliaSDK.index }),

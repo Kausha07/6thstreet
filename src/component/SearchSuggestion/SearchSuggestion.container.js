@@ -98,7 +98,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    // this.requestTopSearches();
+    this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
   }
@@ -283,7 +283,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-  /*
+
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
     let refinedTopSearches = [];
@@ -306,7 +306,6 @@ export class SearchSuggestionContainer extends PureComponent {
       topSearches: refinedTopSearches || [],
     });
   }
-  */
 
   async requestRecentSearches() {
     let recentSearches =
@@ -369,7 +368,6 @@ export class SearchSuggestionContainer extends PureComponent {
       // wishlistData,
       isPDPSearchVisible,
       prevPath,
-      suggestionEnabled
     } = this.props;
     const isEmpty = search === "";
     const inNothingFound = data?.brands?.length + data?.products?.length === 0;
@@ -394,7 +392,6 @@ export class SearchSuggestionContainer extends PureComponent {
       isPDPSearchVisible,
       prevPath,
       exploreMoreData,
-      suggestionEnabled
       // wishlistData,
     };
   };

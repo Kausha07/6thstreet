@@ -14,9 +14,12 @@ import logAlgoliaAnalytics from "./logger";
 import searchBy from "./search-by";
 import getSuggestions from "./suggestions";
 import getMultiProducts from "./get-multi-products";
+import getProductForSearchContainer from "./get-product-for-search-container";
+
 export {
   init,
   getPLP,
+  getProductForSearchContainer,
   getSearchPLP,
   getPDP,
   searchBy,

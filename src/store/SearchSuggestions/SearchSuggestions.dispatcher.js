@@ -20,23 +20,31 @@ export class SearchSuggestionsDispatcher {
     } = getStore().getState();
     let queryID = null;
 
-    try {
-      const productData = await new Algolia().getPLP(
-        isArabic()
-          ? {
-              q: search,
-              page: 0,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: getGenderInArabic(gender),
-            }
-          : {
-              gender: gender,
-              q: search,
-              page: 0,
-              limit: PRODUCT_RESULT_LIMIT,
-            }
-      );
+    var searchQuery = search;
+      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
+    if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
+      searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
+    }
 
+    try {
+      const searchData = await new Algolia().getProductForSearchContainer(
+        {
+          q: search,
+          page: 0,
+          limit: PRODUCT_RESULT_LIMIT,
+          gender: isArabic() ? getGenderInArabic(gender) : gender,
+        },
+        {
+          indexName: sourceQuerySuggestionIndex,
+          params: {
+            query: searchQuery,
+            hitsPerPage: QUERY_SUGGESTION_LIMIT,
+            clickAnalytics: true,
+          }
+        }
+      );
+      let { productData, suggestionData } = searchData;
+      
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
       // var data = localStorage.getItem("customer");
@@ -73,41 +81,25 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      // var searchQuery = search;
-      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
-      // if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
-      //   searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
-      // }
-
-      const data = await new Algolia({
-        index: sourceQuerySuggestionIndex,
-      }).autocompleteSearch(
-        isArabic()
-          ? {
-              query: search,
-              limit: QUERY_SUGGESTION_LIMIT,
-              facetFilters :[[`gender: ${getGenderInArabic(gender)}`]]
-            }
-          : {
-              query: search,
-              limit: QUERY_SUGGESTION_LIMIT,
-              facetFilters :[[`gender: ${gender}`]]
-            }
-      );
+      
       const defaultHit = {
         query: search,
         count: "",
       };
 
       var querySuggestions = [defaultHit];
-      querySuggestions =
-        data?.hits?.length > 0
-        ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
+      if(country.match(/bh|om|qa/i)){
+        querySuggestions = suggestionData?.hits || [defaultHit];
+      }
+      else {
+        querySuggestions =
+        suggestionData?.hits?.length > 0
+        ? getCustomQuerySuggestions(suggestionData?.hits, sourceIndexName, suggestionData?.query)
         : [defaultHit];
-
+      }
       
-      if (data && data.queryID) {
-        queryID = data.queryID;
+      if (suggestionData && suggestionData.queryID) {
+        queryID = suggestionData.queryID;
       } else {
         queryID = productData?.queryID ? productData?.queryID : null;
       }

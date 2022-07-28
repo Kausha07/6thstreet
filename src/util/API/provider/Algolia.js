@@ -56,6 +56,21 @@ export class Algolia {
     return AlgoliaSDK.getPLP(`/?${url}`, params);
   }
 
+  async getProductForSearchContainer(params = {}, suggestionQuery) {
+    const productCount = isMobile.any() ? 16 : 30;
+    const {
+      AppState: { locale = process.env.REACT_APP_LOCATE },
+    } = getStore().getState();
+
+    const url = queryString({
+      ...params,
+      limit: productCount,
+      locale,
+    });
+
+    return AlgoliaSDK.getProductForSearchContainer(`/?${url}`,params, suggestionQuery);
+  }
+
   async getSearchPLP(params = {}) {
     const productCount = isMobile.any() ? 16 : 30;
     const {

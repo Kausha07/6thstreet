@@ -32,6 +32,7 @@ import ExploreMore from "../ExploreMore";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import Price from "Component/Price";
+import { v4 } from "uuid";
 
 var ESCAPE_KEY = 27;
 
@@ -294,7 +295,7 @@ class SearchSuggestion extends PureComponent {
     const urlName = this.getBrandUrl(name);
 
     return (
-      <li>
+      <li key={v4()}>
         <Link
           to={{
             pathname: `/${urlName}.html?q=${urlName}`,
@@ -378,7 +379,7 @@ class SearchSuggestion extends PureComponent {
         item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
     return (
-      <li>
+      <li key={v4()}>
         {this.suggestionContent(
           fetchSKU,
           products,
@@ -488,7 +489,7 @@ class SearchSuggestion extends PureComponent {
       : url;
 
     return (
-      <li>
+      <li key={v4()}>
         <Link
           to={parseLink ? parseLink : "#"}
           onClick={() => this.handleProductClick(product)}
@@ -533,7 +534,7 @@ class SearchSuggestion extends PureComponent {
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
     return (
       <>
-        {suggestionEnabled && this.renderQuerySuggestions()}
+        {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
