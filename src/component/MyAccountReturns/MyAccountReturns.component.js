@@ -31,15 +31,10 @@ class MyAccountReturns extends PureComponent {
   renderCreateExchange({ match }) {
     return <MyAccountExchangeCreate match={match} />;
   }
-
-  renderPickUpAddress() {
-    return <PickUpAddress />;
-  }
-
+    
   renderOrderList(type) {
     return <MyAccountReturnList type={type} />;
   }
-
   renderOrderView({ match }) {
     return <MyAccountReturnView match={match} />;
   }

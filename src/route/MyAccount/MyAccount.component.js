@@ -35,7 +35,12 @@ import {
   WALLET_PAYMENTS,
   tabMapType,
 } from "Type/Account";
-import { exchangeReturnState,returnState,tabMap,tabMap2 } from "./MyAccount.container";
+import {
+  exchangeReturnState,
+  returnState,
+  tabMap,
+  tabMap2,
+} from "./MyAccount.container";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -193,11 +198,17 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderDesktop() {
-    const { activeTab, changeActiveTab, isSignedIn, exchangeTabMap,is_exchange_enabled = false } =
-      this.props;
+    const {
+      activeTab,
+      changeActiveTab,
+      isSignedIn,
+      exchangeTabMap,
+      is_exchange_enabled = false,
+    } = this.props;
     const { pathname = "" } = location;
-    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
-    {...tabMap,...returnState,...tabMap2}
+    let newTabMap = is_exchange_enabled
+      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
+      : { ...tabMap, ...returnState, ...tabMap2 };
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
@@ -214,15 +225,14 @@ export class MyAccount extends SourceMyAccount {
       finalTab = exchangeTabMap[activeTab];
     }
     const { name, alternativePageName, alternateName } = finalTab;
-    const pickUpAddress = pathname === "/my-account/return-item/pick-up-address";
 
     const returnTitle =
       activeTab === RETURN_ITEM
-        ? pickUpAddress
-          ? __("Select Pick Up Address")
+        ? __("Return Statement")
+        : activeTab === EXCHANGE_ITEM
+        ? is_exchange_enabled
+          ? __("Exchange Statement")
           : __("Return Statement")
-        : activeTab === EXCHANGE_ITEM ? is_exchange_enabled
-        ? __("Exchange Statement") : __("Return Statement")
         : null;
 
     const isCancel = pathname.includes("/return-item/cancel");
@@ -260,7 +270,9 @@ export class MyAccount extends SourceMyAccount {
                 elem="ReturnButton"
                 onClick={this.returnItemButtonClick}
               >
-                {is_exchange_enabled ? RETURN__EXCHANGE_ITEM_LABEL : RETURN_ITEM_LABEL}
+                {is_exchange_enabled
+                  ? RETURN__EXCHANGE_ITEM_LABEL
+                  : RETURN_ITEM_LABEL}
               </button>
             </div>
           )}
@@ -278,12 +290,13 @@ export class MyAccount extends SourceMyAccount {
       setMobileTabActive,
       exchangeTabMap,
       payload,
-      is_exchange_enabled
+      is_exchange_enabled,
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
-    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
-    {...tabMap,...returnState,...tabMap2}
+    let newTabMap = is_exchange_enabled
+      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
+      : { ...tabMap, ...returnState, ...tabMap2 };
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
     // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
@@ -311,24 +324,21 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
-    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
-    const payloadKey = Object.keys(payload)[0]
+    const payloadKey = Object.keys(payload)[0];
     return (
       <ContentWrapper
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        {!(isPickUpAddress && payloadKey && payload[payloadKey].title) &&
-          <MyAccountMobileHeader
-            onClose={this.handleClick}
-            isHiddenTabContent={hiddenTabContent === "Active"}
-            alternativePageName={alternativePageName}
-            name={isPickUpAddress ? "Select Pick Up Address" : isCancel ? alternateName : name}
-          />
-        }
+        <MyAccountMobileHeader
+          onClose={this.handleClick}
+          isHiddenTabContent={hiddenTabContent === "Active"}
+          alternativePageName={alternativePageName}
+          name={isCancel ? alternateName : name}
+        />
 
         <div block={hiddenTabList}>
           <div block="UserBlock">
