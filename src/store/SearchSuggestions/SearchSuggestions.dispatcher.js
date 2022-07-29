@@ -20,11 +20,11 @@ export class SearchSuggestionsDispatcher {
     } = getStore().getState();
     let queryID = null;
 
-    var searchQuery = search;
+    // var searchQuery = search;
       // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
-    if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
-      searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
-    }
+    // if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
+    //   searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
+    // }
 
     try {
       const searchData = await new Algolia().getProductForSearchContainer(
@@ -37,7 +37,7 @@ export class SearchSuggestionsDispatcher {
         {
           indexName: sourceQuerySuggestionIndex,
           params: {
-            query: searchQuery,
+            query: search,
             hitsPerPage: QUERY_SUGGESTION_LIMIT,
             clickAnalytics: true,
           }
@@ -86,17 +86,12 @@ export class SearchSuggestionsDispatcher {
         query: search,
         count: "",
       };
-
+      console.log("suggestionData",suggestionData)
       var querySuggestions = [defaultHit];
-      if(country.match(/bh|om|qa/i)){
-        querySuggestions = suggestionData?.hits || [defaultHit];
-      }
-      else {
-        querySuggestions =
+      querySuggestions =
         suggestionData?.hits?.length > 0
         ? getCustomQuerySuggestions(suggestionData?.hits, sourceIndexName, suggestionData?.query)
         : [defaultHit];
-      }
       
       if (suggestionData && suggestionData.queryID) {
         queryID = suggestionData.queryID;

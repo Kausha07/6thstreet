@@ -534,7 +534,8 @@ class SearchSuggestion extends PureComponent {
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
     return (
       <>
-        {this.renderQuerySuggestions()}
+        {suggestionEnabled ? this.renderQuerySuggestions() : null}
+        {/* {this.renderQuerySuggestions()} */}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
