@@ -5,7 +5,6 @@ import MyAccountCancelCreate from "Component/MyAccountCancelCreate";
 import MyAccountCancelCreateSuccess from "Component/MyAccountCancelCreateSuccess";
 import MyAccountReturnCreate from "Component/MyAccountReturnCreate";
 import MyAccountExchangeCreate from "Component/MyAccountExchangeCreate";
-import PickUpAddress from "Component/PickUpAddress/PickUpAddress.component";
 import MyAccountReturnCreateList from "Component/MyAccountReturnCreateList";
 import MyAccountReturnList from "Component/MyAccountReturnList";
 import MyAccountReturnSuccess from "Component/MyAccountReturnSuccess";
@@ -78,11 +77,6 @@ class MyAccountReturns extends PureComponent {
         <Route
           path={withStoreRegex("/my-account/return-item")}
           render={() => this.renderOrderList("return")}
-          exact
-        />
-        <Route
-          path={withStoreRegex('/my-account/return-item/pick-up-address')}
-          render={this.renderPickUpAddress}
           exact
         />
         <Route
