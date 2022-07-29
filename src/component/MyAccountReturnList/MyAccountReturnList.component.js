@@ -51,12 +51,11 @@ class MyAccountReturnList extends PureComponent {
     }
 
     renderHeading() {
-        const { handleCreateClick } = this.props;
-
+        const { handleCreateClick,is_exchange_enabled= false } = this.props;
         return (
             <div block="MyAccountReturnList" elem="Header">
                 <button block="MyAccountReturnList" elem="Button" onClick={ handleCreateClick }>
-                    { __('Return an item') }
+                    {is_exchange_enabled ?  __('Return/Exchange an item') : __('Return an item')}
                 </button>
             </div>
         );

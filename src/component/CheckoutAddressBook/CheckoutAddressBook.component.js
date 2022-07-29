@@ -37,10 +37,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
 
   renderHeading() {
-    const { isBilling, isSignedIn } = this.props;
+    const { isBilling, isSignedIn,isExchange } = this.props;
     const { isArabic } = this.state;
 
-    const addressName = isBilling ? null : __("Delivery country");
+    const addressName = isBilling ? null : isExchange ? ("Select a pick up address"): __("Delivery country");
 
     return (
       <h2
@@ -194,7 +194,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   };
 
   renderPopup() {
-    const { formContent, closeForm, openForm, customer } = this.props;
+    const { formContent, closeForm, openForm, customer,isExchange } = this.props;
 
     return (
       <div block="EditAddress" elem="PopUp">
@@ -204,6 +204,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
           onClick={this.showCards}
         />
         <MyAccountAddressPopup
+          isExchange={isExchange}
           formContent={formContent}
           closeForm={closeForm}
           openForm={openForm}

@@ -9,6 +9,7 @@ export const getInitialState = () => (
     BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {
         config: {},
         edd_info: null,
+        is_exchange_enabled:false
     }
 );
 
@@ -27,6 +28,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ...state,
                 config,
                 edd_info: config.countries[getCountryCode]?.edd_info,
+                is_exchange_enabled: config.countries[getCountryCode]?.is_exchange_enabled,
             };
 
             // this will invalidate config after one year

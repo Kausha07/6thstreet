@@ -199,7 +199,8 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   componentDidMount() {
-    sourceIndexName = AlgoliaSDK?.index?.indexName;
+    new Algolia();
+    sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
