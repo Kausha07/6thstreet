@@ -267,7 +267,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { item, reasonId, exchangableQuantity,quantityObj } = this.props;
+    const { item, reasonId, exchangableQuantity,quantityObj,isArabic } = this.props;
     const {
       isSelected,
       isAlsoAvailable,
@@ -288,6 +288,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
       returnableQty:quantityObj,
       resolutions: this.getResolutionOptions(),
       reasonOptions: this.getReasonOptions(),
+      isArabic
     };
   };
 
