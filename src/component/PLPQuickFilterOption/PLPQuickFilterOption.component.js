@@ -125,7 +125,7 @@ class PLPQuickFilterOption extends PureComponent {
               htmlFor={ facet_value }
             >
                 { label }
-                { product_count && !isMobile.any() ? this.renderCount() : null }
+                { product_count && this.renderCount() }
             </label>
         );
     }

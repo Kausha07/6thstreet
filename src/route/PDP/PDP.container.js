@@ -118,7 +118,7 @@ export class PDPContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.requestProduct();
-    this.renderVueHits();
+    // this.renderVueHits();`
   }
 
   componentDidMount() {
@@ -174,34 +174,34 @@ export class PDPContainer extends PureComponent {
   //   const {resetProduct} =this.props;
   //   resetProduct();
   // }
-  renderVueHits() {
-    const {
-      prevPath = null,
-      product: { product_type_6s, sku, url, price },
-    } = this.props;
-    const itemPrice =
-      price && price[0]
-        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-        : price && Object.keys(price)[0] !== "0"
-          ? price[Object.keys(price)[0]]["6s_special_price"]
-          : null;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: prevPath,
-        url: window.location.href,
-        sourceProdID: sku,
-        sourceCatgID: product_type_6s, // TODO: replace with category id
-        prodPrice: itemPrice,
-      },
-    });
-  }
+  // renderVueHits() {
+  //   const {
+  //     prevPath = null,
+  //     product: { product_type_6s, sku, url, price },
+  //   } = this.props;
+  //   const itemPrice =
+  //     price && price[0]
+  //       ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+  //       : price && Object.keys(price)[0] !== "0"
+  //         ? price[Object.keys(price)[0]]["6s_special_price"]
+  //         : null;
+  //   const locale = VueIntegrationQueries.getLocaleFromUrl();
+  //   VueIntegrationQueries.vueAnalayticsLogger({
+  //     event_name: VUE_PAGE_VIEW,
+  //     params: {
+  //       event: VUE_PAGE_VIEW,
+  //       pageType: "pdp",
+  //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+  //       clicked: Date.now(),
+  //       uuid: getUUID(),
+  //       referrer: prevPath,
+  //       url: window.location.href,
+  //       sourceProdID: sku,
+  //       sourceCatgID: product_type_6s, // TODO: replace with category id
+  //       prodPrice: itemPrice,
+  //     },
+  //   });
+  // }
 
   fetchClickAndCollectStores(brandName, sku) {
     const { getClickAndCollectStores } = this.props;

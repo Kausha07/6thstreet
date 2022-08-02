@@ -208,12 +208,16 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         }
       ),
     };
-    if (orderDetails) {
-      const { pickup_address_required } = orderDetails;
-      if (pickup_address_required) {
-        payload["address_id"] = selectedAddressId;
-      }
-    }
+
+    this.setState({ isLoading: true });
+    MagentoAPI.post("returns/request", payload)
+      .then(({ data: { id } }) => {
+        history.push(`/my-account/return-item/create/success/${id}`);
+      })
+      .catch(() => {
+        showErrorMessage(__("Error appeared while requesting a return"));
+        this.setState({ isLoading: false });
+      });
 
     this.setState({ isLoading: true });
     MagentoAPI.post("returns/request", payload)

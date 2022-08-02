@@ -226,7 +226,7 @@ class PLPFilterOption extends PureComponent {
           />
           {isArabic() && !isMobile.any() ? label : null}
           {!isArabic() ? label : null}
-          {product_count && !isMobile.any() ? this.renderCount() : null}
+          {product_count && this.renderCount()}
         </label>
       );
     }
@@ -234,7 +234,7 @@ class PLPFilterOption extends PureComponent {
     return (
       <label block="PLPFilterOption" htmlFor={facet_value}>
         {label}
-        {product_count && !isMobile.any() ? this.renderCount() : null}
+        {product_count && this.renderCount() }
       </label>
     );
   }
