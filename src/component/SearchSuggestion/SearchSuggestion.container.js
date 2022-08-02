@@ -23,6 +23,7 @@ export const mapStateToProps = (state) => ({
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
   prevPath: state.PLP.prevPath,
+  suggestionEnabled:state.AppConfig.suggestionEnabled
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -366,6 +367,7 @@ export class SearchSuggestionContainer extends PureComponent {
       // wishlistData,
       isPDPSearchVisible,
       prevPath,
+      suggestionEnabled
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -391,6 +393,7 @@ export class SearchSuggestionContainer extends PureComponent {
       isPDPSearchVisible,
       prevPath,
       exploreMoreData,
+      suggestionEnabled
       // wishlistData,
     };
   };
