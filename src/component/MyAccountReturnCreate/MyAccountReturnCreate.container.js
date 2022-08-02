@@ -166,6 +166,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
       this.sendMoeEvents(EVENT_MOE_SELECT_RETURN_REASON);
     }
   }
+
   onResolutionChangeValue(value) {
     const pagePathName = new URL(window.location.href).pathname;
     this.setState({ resolutionId: value });
@@ -212,17 +213,6 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     this.setState({ isLoading: true });
     MagentoAPI.post("returns/request", payload)
       .then(({ data: { id } }) => {
-        history.push(`/my-account/return-item/create/success/${id}`);
-      })
-      .catch(() => {
-        showErrorMessage(__("Error appeared while requesting a return"));
-        this.setState({ isLoading: false });
-      });
-
-    this.setState({ isLoading: true });
-    MagentoAPI.post("returns/request", payload)
-      .then(({ data: { id } }) => {
-        this.sendMoeEvents(EVENT_MOE_SUBMIT_RETURN_REQUEST);
         history.push(`/my-account/return-item/create/success/${id}`);
       })
       .catch(() => {
