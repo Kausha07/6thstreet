@@ -92,7 +92,7 @@ class HeaderCart extends PureComponent {
       hideActiveOverlay,
       isCheckoutAvailable,
       showNotification,
-      totals: { items = [] }
+      totals: { items = [] },
     } = this.props;
 
     if (!isCheckoutAvailable && items.length) {
@@ -103,14 +103,6 @@ class HeaderCart extends PureComponent {
     }
 
     hideActiveOverlay();
-    Moengage.track_event(EVENT_MOE_GO_TO_BAG, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-      ? getLanguageFromUrl().toUpperCase()
-      : "",
-      screen_name: this.getPageType() ? this.getPageType() : "",
-      app6thstreet_platform: "Web",
-    });
     history.push({
       pathname: "/cart",
       state: {
@@ -159,16 +151,26 @@ class HeaderCart extends PureComponent {
     return null;
   }
 
+  sendMOEEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      screen_name: this.getPageType() ? this.getPageType() : "",
+      app6thstreet_platform: "Web",
+    });
+  }
+  
   render() {
     const { cartPopUp, isArabic } = this.state;
     return (
       <div block="HeaderCart" mods={{ isArabic }}>
         <button
-          onClick={
+          onClick={() => {
             isMobile.any() || isMobile.tablet()
-              ? this.routeChangeCart
-              : this.openPopup
-          }
+              ? this.routeChangeCart()
+              : this.openPopup();
+            this.sendMOEEvents(EVENT_MOE_GO_TO_BAG);
+          }}
           block="HeaderCart"
           elem="Button"
         >

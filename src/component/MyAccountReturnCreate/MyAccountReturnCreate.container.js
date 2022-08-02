@@ -161,11 +161,18 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     this.setState({ reasonId: reasonId });
 
     this.onResolutionChangeValue({ resolutionId: false });
-    this.sendMoeEvents(EVENT_MOE_SELECT_RETURN_REASON);
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes("/my-account/return-item/create/")) {
+      this.sendMoeEvents(EVENT_MOE_SELECT_RETURN_REASON);
+    }
   }
   onResolutionChangeValue(value) {
+    const pagePathName = new URL(window.location.href).pathname;
     this.setState({ resolutionId: value });
-    if (value.resolutionId !== false) {
+    if (
+      value.resolutionId !== false &&
+      pagePathName.includes("/my-account/return-item/create/")
+    ) {
       this.sendMoeEvents(EVENT_MOE_SELECT_RETURN_RESOLUTION);
     }
   }

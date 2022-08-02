@@ -130,42 +130,45 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         shipping_fee,
         subtotal,
         total,
-        discount
+        discount,
       },
+      shippingAddress: { city, email, area },
     } = this.props;
     const { isButtondisabled } = this.state;
     const sendMOEEvents = () => {
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      const formattedDetetails = items.map(
-        ({
-          full_item_info: {
-            name,
-            brand_name,
-            itemPrice,
-            price,
-            category,
-            config_sku,
-            gender,
-            size_option,
-            size_value,
-            sku,
-            color,
-            product_type_6s,
-            original_price,
-          },
-        }) => ({
-          brand_name: brand_name || "",
-          color: color || "",
-          discounted_price: itemPrice || price,
-          full_price: original_price || basePrice,
-          product_name: name || "",
-          product_sku: config_sku || sku,
-          gender: gender || "",
-          size_id: size_option || "",
-          size: size_value || "",
-          subcategory: product_type_6s || category || "",
-        })
-      );
+      let productName = [],
+        productColor = [],
+        productBrand = [],
+        productSku = [],
+        productGender = [],
+        productBasePrice = [],
+        productSizeOption = [],
+        productSizeValue = [],
+        productSubCategory = [],
+        productThumbanail = [],
+        productUrl = [],
+        productQty = [],
+        productCategory = [],
+        productItemPrice = [];
+      items.forEach((item) => {
+        let productKeys = item?.full_item_info;
+        productName.push(productKeys?.name);
+        productColor.push(productKeys?.color);
+        productBrand.push(productKeys?.brand_name);
+        productSku.push(productKeys?.config_sku);
+        productGender.push(productKeys?.gender);
+        productBasePrice.push(productKeys?.original_price);
+        productSizeOption.push(productKeys?.size_option);
+        productSizeValue.push(productKeys?.size_value);
+        productSubCategory.push(productKeys?.subcategory);
+        productThumbanail.push(productKeys?.thumbnail_url);
+        productUrl.push(productKeys?.url);
+        productQty.push(productKeys?.qty);
+        productCategory.push(productKeys?.original_price);
+        productItemPrice.push(productKeys?.itemPrice);
+      });
+
       Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
         country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
         language: getLanguageFromUrl()
@@ -174,6 +177,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         category: currentAppState.gender
           ? currentAppState.gender.toUpperCase()
           : "",
+        brand_name: productBrand.length > 0 ? productBrand : "",
+        color: productColor.length > 0 ? productColor : "",
+        discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+        full_price: productBasePrice.length > 0 ? productBasePrice : "",
+        product_name: productName.length > 0 ? productName : "",
+        product_sku: productSku.length > 0 ? productSku : "",
+        gender: productGender.length > 0 ? productGender : "",
+        size_id: productSizeOption.length > 0 ? productSizeOption : "",
+        size: productSizeValue.length > 0 ? productSizeValue : "",
+        subcategory: productSubCategory.length > 0 ? productSubCategory : "",
         coupon_code_applied: coupon_code || "",
         currency: currency_code || "",
         discounted_amount: discount || "",
@@ -181,10 +194,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         shipping_fee: shipping_fee || "",
         subtotal_amount: subtotal || "",
         total_amount: total || "",
-        product: formattedDetetails,
-        city: "",
-        area: "",
-        email: "",
+        city: city || "",
+        area: area || "",
+        email: email || "",
         app6thstreet_platform: "Web",
       });
     };
@@ -198,7 +210,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           form={SHIPPING_STEP}
           // disabled={this.checkForDisabling()}
           disabled={isButtondisabled}
-          onClick={sendMOEEvents}
+          onClick={() => sendMOEEvents()}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",

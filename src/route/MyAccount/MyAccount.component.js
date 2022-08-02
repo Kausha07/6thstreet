@@ -167,7 +167,7 @@ export class MyAccount extends SourceMyAccount {
     Moengage.track_event(event, {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
-      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {screen_name: "Return List"}),
+      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK  && {screen_name: "Return List"}),
       app6thstreet_platform: "Web",
     });
   }
@@ -224,7 +224,6 @@ export class MyAccount extends SourceMyAccount {
 
   returnItemButtonClick() {
     const { history } = this.props;
-
     history.push("/my-account/my-orders");
     this.sendEvents(EVENT_MOE_RETURN_AN_ITEM_CLICK);
   }

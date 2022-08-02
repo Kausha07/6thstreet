@@ -33,6 +33,7 @@ import Event, {
   VUE_REMOVE_FROM_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
+  EVENT_MOE_REMOVE_FROM_CART_FAILED,
 } from "Util/Event";
 import CartPageItem from "./CartPageItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -280,11 +281,14 @@ export class CartItemContainer extends PureComponent {
         },
         prevPath = null,
       } = this.props;
-
-      removeProduct(item_id).then(() => {
-        this.setStateNotLoading();
-        this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
-      });
+      removeProduct(item_id)
+        .then((data) => {
+          this.setStateNotLoading();
+          this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+        })
+        .catch(() => {
+          this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);
+        });
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
         product: {

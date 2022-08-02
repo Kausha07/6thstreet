@@ -25,34 +25,38 @@ export class CheckoutFail extends CheckoutSuccess {
       orderID,
     } = this.props;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    const formattedDetetails = items.map(
-      ({
-        full_item_info: {
-          name,
-          brand_name,
-          itemPrice,
-          price,
-          category,
-          config_sku,
-          gender,
-          size_option,
-          size_value,
-          sku,
-          color,
-          product_type_6s,
-        },
-      }) => ({
-        brand_name: brand_name || "",
-        color: color || "",
-        discounted_price: itemPrice || price,
-        product_name: name || "",
-        product_sku: config_sku || sku,
-        gender: gender || "",
-        size_id: size_option || "",
-        size: size_value || "",
-        subcategory: product_type_6s || category || "",
-      })
-    );
+
+    let productName = [],
+      productColor = [],
+      productBrand = [],
+      productSku = [],
+      productGender = [],
+      productBasePrice = [],
+      productSizeOption = [],
+      productSizeValue = [],
+      productSubCategory = [],
+      productThumbanail = [],
+      productUrl = [],
+      productQty = [],
+      productCategory = [],
+      productItemPrice = [];
+      items.forEach((item) => {
+      let productKeys = item?.full_item_info;
+      productName.push(productKeys?.name);
+      productColor.push(productKeys?.color);
+      productBrand.push(productKeys?.brand_name);
+      productSku.push(productKeys?.config_sku);
+      productGender.push(productKeys?.gender);
+      productBasePrice.push(productKeys?.original_price);
+      productSizeOption.push(productKeys?.size_option);
+      productSizeValue.push(productKeys?.size_value);
+      productSubCategory.push(productKeys?.subcategory);
+      productThumbanail.push(productKeys?.thumbnail_url);
+      productUrl.push(productKeys?.url);
+      productQty.push(productKeys?.qty);
+      productCategory.push(productKeys?.original_price);
+      productItemPrice.push(productKeys?.itemPrice);
+    });
     Moengage.track_event(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
@@ -67,7 +71,16 @@ export class CheckoutFail extends CheckoutSuccess {
       order_id: orderID || "",
       total_amount: total || "",
       transaction_id: id || "",
-      product: formattedDetetails,
+      brand_name: productBrand.length > 0 ? productBrand : "",
+      color: productColor.length > 0 ? productColor : "",
+      discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+      full_price: productBasePrice.length > 0 ? productBasePrice : "",
+      product_name: productName.length > 0 ? productName : "",
+      product_sku: productSku.length > 0 ? productSku : "",
+      gender: productGender.length > 0 ? productGender : "",
+      size_id: productSizeOption.length > 0 ? productSizeOption : "",
+      size: productSizeValue.length > 0 ? productSizeValue : "",
+      subcategory: productSubCategory.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
     });
   }

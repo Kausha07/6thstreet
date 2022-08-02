@@ -788,6 +788,7 @@ export class PDPAddToCartContainer extends PureComponent {
     Moengage.track_event(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
       language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      screen_name: "Product Page",
       app6thstreet_platform: "Web",
     });
   }

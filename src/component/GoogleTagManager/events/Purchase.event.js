@@ -2,6 +2,7 @@
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_PURCHASE_SUCCESS,
+  EVENT_MOE_PURCHASE_SUCCESS_PRODUCT,
 } from "Util/Event";
 import { roundPrice } from "Util/Price";
 
@@ -56,34 +57,66 @@ class PurchaseEvent extends BaseEvent {
     });
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const productDetails = totals?.items;
-    const formattedDetetails = productDetails.map(
-      ({
-        full_item_info: {
-          name,
-          brand_name,
-          itemPrice,
-          price,
-          category,
-          config_sku,
-          gender,
-          size_option,
-          size_value,
-          sku,
-          color,
-          product_type_6s
-        },
-      }) => ({
-        brand_name: brand_name || "",
-        color: color || "",
-        discounted_price: itemPrice || price,
-        product_name: name || "",
-        product_sku: config_sku || sku,
-        gender: gender || "",
-        size_id: size_option || "",
-        size: size_value || "",
-        subcategory: product_type_6s || category || "",
-      })
-    );
+    console.log("productDetails",totals);
+    let productName = [],
+      productColor = [],
+      productBrand = [],
+      productSku = [],
+      productGender = [],
+      productBasePrice = [],
+      productSizeOption = [],
+      productSizeValue = [],
+      productSubCategory = [],
+      productThumbanail = [],
+      productUrl = [],
+      productQty = [],
+      productCategory = [],
+      productItemPrice = [];
+    productDetails.forEach((item) => {
+      let productKeys = item?.full_item_info;
+      productName.push(productKeys?.name);
+      productColor.push(productKeys?.color);
+      productBrand.push(productKeys?.brand_name);
+      productSku.push(productKeys?.config_sku);
+      productGender.push(productKeys?.gender);
+      productBasePrice.push(productKeys?.original_price);
+      productSizeOption.push(productKeys?.size_option);
+      productSizeValue.push(productKeys?.size_value);
+      productSubCategory.push(productKeys?.subcategory);
+      productThumbanail.push(productKeys?.thumbnail_url);
+      productUrl.push(productKeys?.url);
+      productQty.push(productKeys?.qty);
+      productCategory.push(productKeys?.category);
+      productItemPrice.push(productKeys?.itemPrice);
+
+      Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS_PRODUCT, {
+        country: currentAppState.country
+          ? currentAppState.country.toUpperCase()
+          : "",
+        language: currentAppState.language
+          ? currentAppState.language.toUpperCase()
+          : "",
+        category: productKeys?.category
+          ? productKeys?.category
+          : currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        currency: totals?.currency_code || "",
+        order_id: orderId || "",
+        transaction_id: totals?.id || "",
+        brand_name: productKeys?.brand_name || "",
+        color: productKeys?.color || "",
+        discounted_price: productKeys?.itemPrice || "",
+        full_price: productKeys?.original_price || "",
+        product_name: productKeys?.name || "",
+        product_sku: productKeys?.config_sku || "",
+        gender: productKeys?.gender || "",
+        size_id: productKeys?.size_option || "",
+        size: productKeys?.size_value || "",
+        subcategory: productKeys?.subcategory || "",
+        app6thstreet_platform: "Web",
+      });
+    });
 
     Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS, {
       country: currentAppState.country
@@ -92,10 +125,12 @@ class PurchaseEvent extends BaseEvent {
       language: currentAppState.language
         ? currentAppState.language.toUpperCase()
         : "",
-      category: currentAppState.gender
-        ? currentAppState.gender.toUpperCase()
-        : "",
-
+      category:
+        productCategory.length > 0
+          ? productCategory
+          : currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
       coupon_code_applied: totals?.coupon_code || "",
       currency: totals?.currency_code || "",
       product_count: totals?.items.length || "",
@@ -105,7 +140,16 @@ class PurchaseEvent extends BaseEvent {
       order_id: orderId || "",
       total_amount: totals?.total || "",
       transaction_id: totals?.id || "",
-      product: formattedDetetails,
+      brand_name: productBrand.length > 0 ? productBrand : "",
+      color: productColor.length > 0 ? productColor : "",
+      discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+      full_price: productBasePrice.length > 0 ? productBasePrice : "",
+      product_name: productName.length > 0 ? productName : "",
+      product_sku: productSku.length > 0 ? productSku : "",
+      gender: productGender > 0 ?  productGender : "",
+      size_id: productSizeOption.length > 0 ? productSizeOption : "",
+      size: productSizeValue.length > 0 ? productSizeValue : "",
+      subcategory: productSubCategory.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
       //shipping: "",
       //value: "",

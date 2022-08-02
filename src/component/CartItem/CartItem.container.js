@@ -33,6 +33,7 @@ import Event, {
   VUE_REMOVE_FROM_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
+  EVENT_MOE_REMOVE_FROM_CART_FAILED
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
@@ -292,6 +293,8 @@ export class CartItemContainer extends PureComponent {
       removeProduct(item_id).then(() => {
         this.setStateNotLoading();
         this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+       }).catch(() => {
+        this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);
       });
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
