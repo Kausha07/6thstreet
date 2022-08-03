@@ -86,7 +86,6 @@ export class SearchSuggestionsDispatcher {
         query: search,
         count: "",
       };
-      console.log("suggestionData",suggestionData)
       var querySuggestions = [defaultHit];
       querySuggestions =
         suggestionData?.hits?.length > 0

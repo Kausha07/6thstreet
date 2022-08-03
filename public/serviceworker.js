@@ -1,5 +1,5 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-sw.js');
-// importScripts("//cdn.moengage.com/webpush/releases/serviceworker_cdn.min.latest.js?date="+new Date().getUTCFullYear()+""+new Date().getUTCMonth()+""+new Date().getUTCDate());
+importScripts("https://cdn.moengage.com/webpush/releases/serviceworker_cdn.min.latest.js");
 
 
 const { routing, strategies, cacheableResponse, expiration } = workbox;

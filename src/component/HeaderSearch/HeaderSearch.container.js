@@ -11,8 +11,10 @@ import HeaderSearch from "./HeaderSearch.component";
 import Event, {
   EVENT_GTM_CLEAR_SEARCH,
   EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
-  EVENT_GTM_SEARCH
+  EVENT_GTM_SEARCH,
+  EVENT_GTM_VIEW_SEARCH_RESULTS
 } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
 });
@@ -98,8 +100,14 @@ export class HeaderSearchContainer extends PureComponent {
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
         Event.dispatch(EVENT_GTM_SEARCH, search);
+        Moengage.track_event(EVENT_GTM_VIEW_SEARCH_RESULTS, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: search || "",
+          app6thstreet_platform: "Web",
+        });
       }
-      
+
       const queryID = productData?.queryID ? productData?.queryID : null;
       let requestedGender = gender;
       let genderInURL;
@@ -123,15 +131,15 @@ export class HeaderSearchContainer extends PureComponent {
           );
         }
       }
-      if (gender !== "home" && gender !== "all" ) {
-        
+      if (gender !== "home" && gender !== "all") {
         history.push({
           pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
           state: { prevPath: window.location.href },
         });
-
-      } else if(gender === "all"){
-        const allGender = isArabic() ? "أولاد,بنات,نساء,رجال" : "Men,Women,Kids,Boy,Girl"
+      } else if (gender === "all") {
+        const allGender = isArabic()
+          ? "أولاد,بنات,نساء,رجال"
+          : "Men,Women,Kids,Boy,Girl";
         history.push({
           pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
           state: { prevPath: window.location.href },
@@ -227,6 +235,12 @@ export class HeaderSearchContainer extends PureComponent {
     }
     if (search?.length === 0) {
       Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue);
+      Moengage.track_event(EVENT_GTM_CLEAR_SEARCH, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        search_term: SearchValue || "",
+        app6thstreet_platform: "Web",
+      });
       if (sessionStorage.hasOwnProperty("Searched_value")) {
         sessionStorage.removeItem("Searched_value");
       }

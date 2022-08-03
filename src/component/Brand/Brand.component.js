@@ -5,6 +5,8 @@ import { Brand as BrandType } from "Util/API/endpoint/Brands/Brands.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import "./Brand.style";
+import { EVENT_MOE_GO_TO_BRAND } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class Brand extends PureComponent {
   static propTypes = {
@@ -26,7 +28,14 @@ class Brand extends PureComponent {
 
     return name;
   }
-
+  sendMoeEvent(brandName) {
+    Moengage.track_event(EVENT_MOE_GO_TO_BRAND, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      brand_name: brandName || "",
+      app6thstreet_platform: "Web",
+    });
+  }
   render() {
     const {
       brand: { name = "", name_ar = "", url_path: url = "" },
@@ -40,18 +49,14 @@ class Brand extends PureComponent {
     if (type) {
       if (type === "kids") {
         requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
-      } 
-      else if(type=== "النساء"){
-        requestedGender = "نساء"
-      }
-      else if(type=== "الرجال"){
-        requestedGender = "رجال"
-      }
-      else if(type=== "الأطفال"){
-        requestedGender = "أولاد,بنات"
-      }      
-      else {
-        requestedGender =  type;
+      } else if (type === "النساء") {
+        requestedGender = "نساء";
+      } else if (type === "الرجال") {
+        requestedGender = "رجال";
+      } else if (type === "الأطفال") {
+        requestedGender = "أولاد,بنات";
+      } else {
+        requestedGender = type;
       }
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
@@ -72,11 +77,17 @@ class Brand extends PureComponent {
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
           )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`;
-          
     }
+
     return (
       <div block="Brand">
-        <Link to={finalURL} block="BrandLink">
+        <Link
+          to={finalURL}
+          block="BrandLink"
+          onClick={() => {
+            this.sendMoeEvent(brandName);
+          }}
+        >
           {/* {this.renderName()} */}
           {brandName}
         </Link>

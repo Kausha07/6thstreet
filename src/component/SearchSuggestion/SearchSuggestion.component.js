@@ -20,18 +20,22 @@ import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_GTM_BRANDS_CLICK,
-  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+  EVENT_MOE_BRANDS_CLICK,
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
+  EVENT_MOE_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
+  EVENT_MOE_TRENDING_TAGS_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
-import ExploreMore from "../ExploreMore";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
+import ExploreMore from "../ExploreMore";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
+import "./SearchSuggestion.style";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./SearchSuggestion.style";
 
 var ESCAPE_KEY = 27;
@@ -263,6 +267,12 @@ class SearchSuggestion extends PureComponent {
 
   handleProductClick = (product) => {
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
+    Moengage.track_event(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: product?.name || "",
+      app6thstreet_platform: "Web",
+    });
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     this.closeSearchPopup();
   };
@@ -270,6 +280,12 @@ class SearchSuggestion extends PureComponent {
   handleBrandsClick = (brandItem) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
+    Moengage.track_event(EVENT_MOE_BRANDS_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: brandItem || "",
+      app6thstreet_platform: "Web",
+    });
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -277,6 +293,12 @@ class SearchSuggestion extends PureComponent {
   handleTrendingBrandsClick = (brandName) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
+    Moengage.track_event(EVENT_MOE_TRENDING_BRANDS_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: brandName || "",
+      app6thstreet_platform: "Web",
+    });
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -284,6 +306,12 @@ class SearchSuggestion extends PureComponent {
   handleTrendingTagsClick = (label) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
+    Moengage.track_event(EVENT_MOE_TRENDING_TAGS_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: label || "",
+      app6thstreet_platform: "Web",
+    });
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -367,6 +395,7 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestion = (querySuggestions) => {
     const { query, label } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
+    const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
@@ -378,17 +407,65 @@ class SearchSuggestion extends PureComponent {
         item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
         item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
-    return (
-      <li key={v4()}>
-        {this.suggestionContent(
-          fetchSKU,
-          products,
-          searchString,
-          label,
-          gender
-        )}
-      </li>
-    );
+
+    const suggestionEventDipatch = (query) => {
+      if (query == searchString) {
+        Event.dispatch(
+          EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+          formatQuerySuggestions(query)
+        );
+        Moengage.track_event(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: formatQuerySuggestions(query) || "",
+          app6thstreet_platform: "Web",
+        });
+      } else {
+        Event.dispatch(
+          EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+          formatQuerySuggestions(query)
+        );
+        Moengage.track_event(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: formatQuerySuggestions(query) || "",
+          app6thstreet_platform: "Web",
+        });
+      }
+    };
+    const suggestionContent = () => {
+      if (products.length === 1 && fetchSKU) {
+        return (
+          <Link
+            to={fetchSKU?.url}
+            onClick={() => suggestionEventDipatch(query)}
+          >
+            <div className="suggestion-details-box text-capitalize">
+              {getHighlightedText(query, searchString)}
+            </div>
+          </Link>
+        );
+      } else {
+        return (
+          <Link
+            to={{
+              pathname: this.getCatalogUrl(
+                query,
+                gender,
+                queryID,
+                !brandValue?.includes("///") ? brandValue : null
+              ),
+            }}
+            onClick={() => suggestionEventDipatch(query)}
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+            </div>
+          </Link>
+        );
+      }
+    };
+    return <li>{suggestionContent()}</li>;
   };
 
   renderQuerySuggestions() {
@@ -813,7 +890,15 @@ class SearchSuggestion extends PureComponent {
                   search
                 )}&p=0&dFR[gender][0]=${genderInURL}`,
           }}
-          onClick={() => Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search)}
+          onClick={() => {
+            Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search);
+            Moengage.track_event(EVENT_CLICK_TOP_SEARCHES_CLICK, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              search_term: search || "",
+              app6thstreet_platform: "Web",
+            });
+          }}
         >
           <div block="SearchSuggestion" elem="TopSearches">
             {search}
@@ -894,9 +979,15 @@ class SearchSuggestion extends PureComponent {
                   name
                 )}&p=0&dFR[gender][0]=${genderInURL}`
           }
-          onClick={() =>
-            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name)
-          }
+          onClick={() => {
+            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
+            Moengage.track_event(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              search_term: name || "",
+              app6thstreet_platform: "Web",
+            });
+          }}
         >
           <div block="SearchSuggestion" elem="TrandingTag">
             #{name}
