@@ -1,19 +1,14 @@
 import Url from "url-parse";
-import {
-  searchParams as defaultSearchParams
-} from "./config";
-import {
-  formatNewInTag,
-  getAlgoliaFilters,
-  getIndex,
-} from "./utils";
-import {
-  getIndexBySort
-} from "./utils/filters";
+import { searchParams as defaultSearchParams } from "./config";
+import { formatNewInTag, getAlgoliaFilters, getIndex } from "./utils";
+import { getIndexBySort } from "./utils/filters";
 
-
-function getProductForSearchContainer(URL, options = {}, params = {}, suggestionQuery) {
-    console.log("getProductForSearchContainer");
+function getProductForSearchContainer(
+  URL,
+  options = {},
+  params = {},
+  suggestionQuery
+) {
   const { client, env } = options;
 
   return new Promise((resolve, reject) => {
@@ -47,7 +42,6 @@ function getProductForSearchContainer(URL, options = {}, params = {}, suggestion
       },
     };
 
-
     let queries = [];
     queries.push(query);
     queries.push(suggestionQuery);
@@ -57,22 +51,21 @@ function getProductForSearchContainer(URL, options = {}, params = {}, suggestion
         return reject(err);
       }
 
-      const { hits, nbHits, nbPages, hitsPerPage, queryID } =
-        res.results[0];
+      const { hits, nbHits, nbPages, hitsPerPage, queryID } = res.results[0];
 
-        const output = {
-            productData: {
-                data: hits.map(formatNewInTag),
-                meta: {
-                    page: res.page,
-                    limit: hitsPerPage,
-                    hits_count: nbHits,
-                    page_count: nbPages,
-                    query: queryParams,
-                },
-                queryID,
-            },
-            suggestionData: res.results[1]
+      const output = {
+        productData: {
+          data: hits.map(formatNewInTag),
+          meta: {
+            page: res.page,
+            limit: hitsPerPage,
+            hits_count: nbHits,
+            page_count: nbPages,
+            query: queryParams,
+          },
+          queryID,
+        },
+        suggestionData: res.results[1],
       };
 
       return resolve(output);

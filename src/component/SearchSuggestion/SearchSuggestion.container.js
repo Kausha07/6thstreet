@@ -71,7 +71,7 @@ export class SearchSuggestionContainer extends PureComponent {
   static requestSearchSuggestions(props) {
     const { search, requestSearchSuggestions } = props;
 
-    if (!search) {
+    if (!search || search.length < 3) {
       return;
     }
 
