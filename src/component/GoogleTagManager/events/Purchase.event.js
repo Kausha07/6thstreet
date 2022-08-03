@@ -57,7 +57,6 @@ class PurchaseEvent extends BaseEvent {
     });
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const productDetails = totals?.items;
-    console.log("productDetails",totals);
     let productName = [],
       productColor = [],
       productBrand = [],
