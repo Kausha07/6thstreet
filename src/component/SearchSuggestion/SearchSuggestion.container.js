@@ -97,7 +97,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    this.requestTopSearches();
+    // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
   }
@@ -280,28 +280,28 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-  async requestTopSearches() {
-    const topSearches = await new Algolia().getTopSearches();
-    let refinedTopSearches = [];
-    let searchItem = [];
-    await Promise.all(
-      topSearches?.data
-        ?.filter((ele) => ele !== "")
-        .map(async (item) => {
-          searchItem.push(item.search);
-        })
-    );
-    if (topSearches?.data) {
-      refinedTopSearches = await this.checkForSearchSKU(
-        searchItem,
-        topSearches.data
-      );
-    }
+  // async requestTopSearches() {
+  //   const topSearches = await new Algolia().getTopSearches();
+  //   let refinedTopSearches = [];
+  //   let searchItem = [];
+  //   await Promise.all(
+  //     topSearches?.data
+  //       ?.filter((ele) => ele !== "")
+  //       .map(async (item) => {
+  //         searchItem.push(item.search);
+  //       })
+  //   );
+  //   if (topSearches?.data) {
+  //     refinedTopSearches = await this.checkForSearchSKU(
+  //       searchItem,
+  //       topSearches.data
+  //     );
+  //   }
 
-    this.setState({
-      topSearches: refinedTopSearches || [],
-    });
-  }
+  //   this.setState({
+  //     topSearches: refinedTopSearches || [],
+  //   });
+  // }
 
   async requestRecentSearches() {
     let recentSearches =
