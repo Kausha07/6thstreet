@@ -7,18 +7,15 @@ import "./CartCoupon.extended.style";
 
 export class CartCoupon extends SourceCartCoupon {
 
-    handleCouponCodeChange = (enteredCouponCode) => {
-        this.setState({
-            enteredCouponCode: this.removeCouponSpace(enteredCouponCode),
-        });
+    removeCouponSpace = (value) => {
+        return value.replace(/\s/g, "");
     };
 
-    removeCouponSpace = (value) => {
-        // if (value.includes(" ")) {
-        return value.replace(/\s/g, "");
-        //} else {
-        //  return value;
-        //}
+    handleCouponCodeChange = (enteredCouponCode) => {
+        const SpaceRemovedCoupon = this.removeCouponSpace(enteredCouponCode);
+        this.setState({
+            enteredCouponCode: SpaceRemovedCoupon,
+        });
     };
 
     handleApplyCoupon = () => {
