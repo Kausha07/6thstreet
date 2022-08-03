@@ -292,7 +292,7 @@ export class CheckoutSuccess extends PureComponent {
             elem="ResendCode"
             mods={{ isVerifying: !isLoading }}
           >
-            <button onClick={() => console.log("test resnd otp clicked")}>{__("Resend Verification Code")}</button>
+            <button onClick={onResendCode}>{__("Resend Verification Code")}</button>
           </div>
         </div>
         <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
