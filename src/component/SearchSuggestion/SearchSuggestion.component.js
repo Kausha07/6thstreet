@@ -20,22 +20,21 @@ import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_GTM_BRANDS_CLICK,
-  EVENT_MOE_BRANDS_CLICK,
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
-  EVENT_MOE_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
+  EVENT_MOE_BRANDS_CLICK,
+  EVENT_MOE_TRENDING_BRANDS_CLICK,
   EVENT_MOE_TRENDING_TAGS_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { v4 } from "uuid";
-import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 import ExploreMore from "../ExploreMore";
+import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
-import "./SearchSuggestion.style";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./SearchSuggestion.style";
 
 var ESCAPE_KEY = 27;
@@ -394,47 +393,40 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, label } = querySuggestions;
-    const { searchString, queryID, products = [] } = this.props;
-    const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
+    const { searchString, products = [] } = this.props;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
         : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
         ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
         : "home";
-    const fetchSKU = products.find(
+    const fetchSKU = products?.find(
       (item) =>
-        item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
-        item.sku?.toUpperCase()?.includes(query?.toUpperCase())
+        item?.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
+        item?.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
 
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        Event.dispatch(
-          EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
-          formatQuerySuggestions(query)
-        );
+        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
         Moengage.track_event(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
-          search_term: formatQuerySuggestions(query) || "",
+          search_term: query || "",
           app6thstreet_platform: "Web",
         });
       } else {
-        Event.dispatch(
-          EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
-          formatQuerySuggestions(query)
-        );
+        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
         Moengage.track_event(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
-          search_term: formatQuerySuggestions(query) || "",
+          search_term: query || "",
           app6thstreet_platform: "Web",
         });
       }
     };
     const suggestionContent = () => {
-      if (products.length === 1 && fetchSKU) {
+      if (products?.length === 1 && fetchSKU) {
         return (
           <Link
             to={fetchSKU?.url}
@@ -449,17 +441,12 @@ class SearchSuggestion extends PureComponent {
         return (
           <Link
             to={{
-              pathname: this.getCatalogUrl(
-                query,
-                gender,
-                queryID,
-                !brandValue?.includes("///") ? brandValue : null
-              ),
+              pathname: this.getCatalogUrl(query, gender),
             }}
             onClick={() => suggestionEventDipatch(query)}
           >
             <div className="suggestion-details-box">
-              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              {getHighlightedText(query, searchString)}
             </div>
           </Link>
         );
@@ -472,7 +459,7 @@ class SearchSuggestion extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        {querySuggestions.length > 0 ? (
+        {querySuggestions?.length > 0 ? (
           <ul>
             {querySuggestions?.slice(0, 5).map(this.renderQuerySuggestion)}
           </ul>
