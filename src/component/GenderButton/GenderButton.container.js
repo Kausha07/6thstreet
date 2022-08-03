@@ -81,10 +81,8 @@ export class GenderButtonContainer extends PureComponent {
         : "";
     const genderChangeEvent = (event) => {
       Moengage.track_event(event, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType() ? this.getPageType() : "",
         category: label || "",
         app6thstreet_platform: "Web",

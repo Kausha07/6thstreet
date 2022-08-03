@@ -8,7 +8,8 @@ import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import { postFeedback } from "Util/API/endpoint/Feedback/Feedback.endpoint";
 import { updateMeta } from "Store/Meta/Meta.action";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_MOE_FEEDBACK_FORM_SUBMIT } from "Util/Event";
 import Logger from "Util/Logger";
 import Feedback from "./Feedback.component";
 
@@ -77,7 +78,13 @@ export class FeedbackContainer extends PureComponent {
 
     updateBreadcrumbs(breadcrumbs);
   }
-
+  sendMOEEvents() {
+    Moengage.track_event(EVENT_MOE_FEEDBACK_FORM_SUBMIT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
   async onSubmit(data) {
     const {
       firstname,
@@ -97,6 +104,9 @@ export class FeedbackContainer extends PureComponent {
         "contactForm[comment]": comment,
       });
       if (response) {
+        if (response.type == "success"){
+          this.sendMOEEvents();
+        }
         showNotification(response.type ? "success" : "error", response.message);
       }
     } catch (err) {

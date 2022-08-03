@@ -101,8 +101,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
                 phone: phoneCountryCode + phone
             });
             Moengage.track_event(EVENT_MOE_UPDATE_PROFILE, {
-                country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-                language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+                country: getCountryFromUrl().toUpperCase(),
+                language: getLanguageFromUrl().toUpperCase(),
                 gender: GetGender || "",
                 app6thstreet_platform: "Web",
               });

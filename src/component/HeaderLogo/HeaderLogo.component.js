@@ -29,11 +29,9 @@ class HeaderLogo extends PureComponent {
     setGender();
     setPrevPath(path);
     Moengage.track_event(EVENT_MOE_TOP_NAV_DEFAULT, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-        ? getLanguageFromUrl().toUpperCase()
-        : "",
-      screen_name: this.getPageType() ? this.getPageType() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageType(),
       category: genderDefault || "",
       app6thstreet_platform: "Web",
     });

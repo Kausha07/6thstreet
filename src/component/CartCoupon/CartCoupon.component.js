@@ -34,10 +34,8 @@ export class CartCoupon extends SourceCartCoupon {
 
    sendMOEEvents(event , coupon){
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-        ? getLanguageFromUrl().toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       coupon_code: coupon || "",
       app6thstreet_platform: "Web",
     });

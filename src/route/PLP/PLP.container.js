@@ -342,8 +342,8 @@ export class PLPContainer extends PureComponent {
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
     Moengage.track_event(EVENT_MOE_VIEW_PLP_ITEMS, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       ...(category_1 && { category_level_1: category_1 }),
       ...(category_2 && { category_level_2: category_2 }),
       ...(category_3 && { category_level_3: category_3 }),

@@ -33,8 +33,8 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
         ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
         : "";
     Moengage.track_event(MoeEvent, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
   }

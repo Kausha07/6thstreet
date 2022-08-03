@@ -108,10 +108,8 @@ class SharePopup extends PureComponent {
         : "";
     if (MoeEvent && MoeEvent.length > 0) {
       Moengage.track_event(MoeEvent, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         product_name: name ? name : "",
         product_sku: sku ? sku : "",
         product_url : url ? url : "",

@@ -58,8 +58,8 @@ export class CheckoutFail extends CheckoutSuccess {
       productItemPrice.push(productKeys?.itemPrice);
     });
     Moengage.track_event(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

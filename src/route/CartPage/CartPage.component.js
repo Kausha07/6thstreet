@@ -185,8 +185,8 @@ export class CartPage extends PureComponent {
     });
     if (pageLoaded){
       Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         brand_name: productBrand.length > 0 ? productBrand : "",
         color: productColor.length > 0 ? productColor : "",
         coupon_code_applied: coupon_code || "",

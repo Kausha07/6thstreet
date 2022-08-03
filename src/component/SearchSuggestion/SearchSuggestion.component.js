@@ -276,8 +276,8 @@ class SearchSuggestion extends PureComponent {
   handleProductClick = (product) => {
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
     Moengage.track_event(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: product?.name || "",
       app6thstreet_platform: "Web",
     });
@@ -289,8 +289,8 @@ class SearchSuggestion extends PureComponent {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
     Moengage.track_event(EVENT_MOE_BRANDS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: brandItem || "",
       app6thstreet_platform: "Web",
     });
@@ -302,8 +302,8 @@ class SearchSuggestion extends PureComponent {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
     Moengage.track_event(EVENT_MOE_TRENDING_BRANDS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: brandName || "",
       app6thstreet_platform: "Web",
     });
@@ -315,8 +315,8 @@ class SearchSuggestion extends PureComponent {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
     Moengage.track_event(EVENT_MOE_TRENDING_TAGS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: label || "",
       app6thstreet_platform: "Web",
     });
@@ -388,10 +388,8 @@ class SearchSuggestion extends PureComponent {
           formatQuerySuggestions(query)
         );
         Moengage.track_event(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
-          country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-          language: getLanguageFromUrl()
-            ? getLanguageFromUrl().toUpperCase()
-            : "",
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
           search_term: formatQuerySuggestions(query) || "",
           app6thstreet_platform: "Web",
         });
@@ -401,10 +399,8 @@ class SearchSuggestion extends PureComponent {
           formatQuerySuggestions(query)
         );
         Moengage.track_event(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
-          country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-          language: getLanguageFromUrl()
-            ? getLanguageFromUrl().toUpperCase()
-            : "",
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
           search_term: formatQuerySuggestions(query) || "",
           app6thstreet_platform: "Web",
         });
@@ -866,12 +862,8 @@ class SearchSuggestion extends PureComponent {
           onClick={() => {
             Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search);
             Moengage.track_event(EVENT_CLICK_TOP_SEARCHES_CLICK, {
-              country: getCountryFromUrl()
-                ? getCountryFromUrl().toUpperCase()
-                : "",
-              language: getLanguageFromUrl()
-                ? getLanguageFromUrl().toUpperCase()
-                : "",
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
               search_term: search || "",
               app6thstreet_platform: "Web",
             });
@@ -959,12 +951,8 @@ class SearchSuggestion extends PureComponent {
           onClick={() => {
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
             Moengage.track_event(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
-              country: getCountryFromUrl()
-                ? getCountryFromUrl().toUpperCase()
-                : "",
-              language: getLanguageFromUrl()
-                ? getLanguageFromUrl().toUpperCase()
-                : "",
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
               search_term: name || "",
               app6thstreet_platform: "Web",
             });

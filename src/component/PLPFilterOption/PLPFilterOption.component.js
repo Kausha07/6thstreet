@@ -82,10 +82,8 @@ class PLPFilterOption extends PureComponent {
 
     const sendMoeEvents = (event) => {
       Moengage.track_event(event, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
     };
@@ -93,10 +91,8 @@ class PLPFilterOption extends PureComponent {
     if (checked || isRadio) {
       if (facet_key == "sort") {
         Moengage.track_event(EVENT_MOE_PLP_SORT, {
-          country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-          language: getLanguageFromUrl()
-            ? getLanguageFromUrl().toUpperCase()
-            : "",
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
           sort_value: facet_value || "",
           app6thstreet_platform: "Web",
         });
@@ -117,10 +113,8 @@ class PLPFilterOption extends PureComponent {
         }
       } else {
         Moengage.track_event(EVENT_MOE_PLP_FILTER, {
-          country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-          language: getLanguageFromUrl()
-            ? getLanguageFromUrl().toUpperCase()
-            : "",
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
           filter_type: facet_key || "",
           filter_value: facet_value || "",
           app6thstreet_platform: "Web",

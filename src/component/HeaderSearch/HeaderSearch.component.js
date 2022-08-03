@@ -77,10 +77,8 @@ class HeaderSearch extends PureComponent {
     if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
       Moengage.track_event(EVENT_GTM_GO_TO_SEARCH, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
     }
@@ -137,8 +135,8 @@ class HeaderSearch extends PureComponent {
     }
     Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
     Moengage.track_event(EVENT_GTM_CANCEL_SEARCH, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: search || "",
       app6thstreet_platform: "Web",
     });

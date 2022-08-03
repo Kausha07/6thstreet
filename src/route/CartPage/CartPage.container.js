@@ -307,8 +307,8 @@ export class CartPageContainer extends PureComponent {
     });
 
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

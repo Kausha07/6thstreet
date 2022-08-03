@@ -103,8 +103,8 @@ class ShareButtonContainer extends PureComponent {
         : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_SHARE, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

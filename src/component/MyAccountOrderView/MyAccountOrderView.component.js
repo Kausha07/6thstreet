@@ -164,8 +164,8 @@ class MyAccountOrderView extends PureComponent {
   }
   sendMoeEvents(event) {
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       screen_name: "OrderDetails",
       app6thstreet_platform: "Web",
     });

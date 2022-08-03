@@ -71,8 +71,8 @@ class FooterCustomerSupport extends PureComponent {
   }
   sendEvents(event) {
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
   }

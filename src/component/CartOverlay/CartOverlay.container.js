@@ -92,8 +92,8 @@ export class CartOverlayContainer extends PureComponent {
       showNotification,
     } = this.props;
     Moengage.track_event(EVENT_MOE_VIEW_BAG, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       screen_name: "Minicart",
       app6thstreet_platform: "Web",
     });
@@ -168,8 +168,8 @@ export class CartOverlayContainer extends PureComponent {
       productItemPrice.push(productKeys?.itemPrice);
     });
     Moengage.track_event(EVENT_MOE_BEGIN_CHECKOUT, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

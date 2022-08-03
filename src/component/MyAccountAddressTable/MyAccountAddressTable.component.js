@@ -63,8 +63,8 @@ export class MyAccountAddressTable extends KeyValueTable {
     const { onEditClick ,title } = this.props;
     onEditClick();
     Moengage.track_event(EVENT_MOE_EDIT_ADDRESS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       screen_name: "Address Book",
       address_no: title || "",
       app6thstreet_platform: "Web",

@@ -92,8 +92,8 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     const isReturnSuccess = pathname.includes("/my-account/return-item/create/success/") && pathLength > 4;
     const isReturnDetail = pathname.includes("/my-account/return-item/") && pathLength < 5;
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       ...(isReturnSuccess  && {screen_name: "ReturnSuccess"}),
       ...(isReturnDetail  && {screen_name: "ReturnDetails"}),
       app6thstreet_platform: "Web",

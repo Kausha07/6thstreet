@@ -57,8 +57,8 @@ export class MyAccountAddressBook extends PureComponent {
   openNewForm = () => {
     const { showCreateNewPopup, history } = this.props;
     Moengage.track_event(EVENT_MOE_NEW_ADDRESS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       screen_name: "Address Book",
       app6thstreet_platform: "Web",
     });

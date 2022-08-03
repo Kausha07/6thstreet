@@ -45,8 +45,8 @@ class ExploreMore extends PureComponent {
     onclick = (item) => {
         Event.dispatch(EVENT_EXPLORE_MORE_SEARCH_CLICK, item?.tag ? item?.tag : item);
         Moengage.track_event(EVENT_EXPLORE_MORE_SEARCH_CLICK, {
-            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-            language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
             search_term: item?.tag ? item?.tag : item || "",
             app6thstreet_platform: "Web",
           });

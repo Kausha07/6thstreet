@@ -62,8 +62,8 @@ export class NoMatch extends PureComponent {
     this.requestNoMatchWidgetData();
     Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
     Moengage.track_event(EVENT_PAGE_NOT_FOUND, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       search_term: location.pathname || "",
       app6thstreet_platform: "Web",
     });

@@ -868,8 +868,8 @@ export class CartItem extends PureComponent {
       },
     } = this.props;
     Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       brand_name: brand_name || "",
       category: category || product_type_6s || "",
       subcategory: subcategory || "",

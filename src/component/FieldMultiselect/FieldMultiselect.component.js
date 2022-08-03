@@ -274,20 +274,16 @@ class FieldMultiselect extends PureComponent {
     const checked = e.target.getAttribute("value") === "false" ? true : false;
     if (!isMobile.any() && checked) {
       Moengage.track_event(EVENT_MOE_PLP_FILTER, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
         filter_value: facet_value || "",
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
         Moengage.track_event(EVENT_MOE_SIZES_SEARCH_FILTER, {
-          country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-          language: getLanguageFromUrl()
-            ? getLanguageFromUrl().toUpperCase()
-            : "",
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
         });
       }
@@ -373,18 +369,16 @@ class FieldMultiselect extends PureComponent {
         ? EVENT_MOE_DISCOUNT_FILTER_CLICK
         : "";
     Moengage.track_event(EVENT_MOE_PLP_FILTER, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       filter_type: category || "",
       filter_value: "All",
       app6thstreet_platform: "Web",
     });
     if (MoeFilterEvent && MoeFilterEvent.length > 0) {
       Moengage.track_event(MoeFilterEvent, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
     }
@@ -586,10 +580,8 @@ class FieldMultiselect extends PureComponent {
 
   sendMoeEvents (event){
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-        ? getLanguageFromUrl().toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
   }

@@ -49,7 +49,7 @@ class WelcomeScreenContainer extends PureComponent {
     onCountrySelect(value) {
         Moengage.track_event(EVENT_MOE_SET_COUNTRY, {
             country: value.toUpperCase() || "",
-            language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+            language: getLanguageFromUrl().toUpperCase(),
             app6thstreet_platform: "Web",
           });
         const { country, language } = this.props;

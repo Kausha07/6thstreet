@@ -86,8 +86,8 @@ class PDPSizeGuide extends PureComponent {
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     Moengage.track_event(EVENT_MOE_GO_TO_SIZE_CHART, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       currency: getCurrency() || "",
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()

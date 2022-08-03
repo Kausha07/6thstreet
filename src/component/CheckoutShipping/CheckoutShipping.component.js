@@ -170,10 +170,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       });
 
       Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
-        country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-        language: getLanguageFromUrl()
-          ? getLanguageFromUrl().toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
           ? currentAppState.gender.toUpperCase()
           : "",

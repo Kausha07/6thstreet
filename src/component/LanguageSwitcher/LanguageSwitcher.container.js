@@ -33,7 +33,7 @@ export class LanguageSwitcherContainer extends PureComponent {
     onLanguageSelect(value) {
         const { language = '',history } = this.props;
         Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
-            country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
+            country: getCountryFromUrl().toUpperCase(),
             language: value.toUpperCase() || "",
             app6thstreet_platform: "Web",
           });

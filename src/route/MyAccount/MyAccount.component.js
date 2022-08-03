@@ -165,8 +165,8 @@ export class MyAccount extends SourceMyAccount {
 
   sendEvents(event) {
     Moengage.track_event(event, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK  && {screen_name: "Return List"}),
       app6thstreet_platform: "Web",
     });

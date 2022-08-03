@@ -30,10 +30,8 @@ class Brand extends PureComponent {
   }
   sendMoeEvent(brandName) {
     Moengage.track_event(EVENT_MOE_GO_TO_BRAND, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-      ? getLanguageFromUrl().toUpperCase()
-      : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       brand_name: brandName || "",
       app6thstreet_platform: "Web",
     });

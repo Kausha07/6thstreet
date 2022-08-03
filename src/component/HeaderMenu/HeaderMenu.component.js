@@ -49,10 +49,8 @@ class HeaderMenu extends PureComponent {
       setGender("women");
     }
     Moengage.track_event(EVENT_MOE_CATEGORIES_TAB_ICON, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl()
-      ? getLanguageFromUrl().toUpperCase()
-      : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
     this.setState(({ expanded }) => ({ expanded: !expanded }));

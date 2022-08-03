@@ -348,8 +348,8 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
     Object.keys(activeFilters).map((key) =>

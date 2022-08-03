@@ -370,8 +370,8 @@ class PDPSummary extends PureComponent {
       page: "pdp",
     });
     Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       edd_status: edd_info.has_pdp,
       edd_updated: true,
       default_edd_status: default_edd,
@@ -973,8 +973,8 @@ class PDPSummary extends PureComponent {
       product: { sku, name, url },
     } = this.props;
     Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
-      country: getCountryFromUrl() ? getCountryFromUrl().toUpperCase() : "",
-      language: getLanguageFromUrl() ? getLanguageFromUrl().toUpperCase() : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
       product_sku: sku ? sku : "",
       product_url: url ? url : "",
