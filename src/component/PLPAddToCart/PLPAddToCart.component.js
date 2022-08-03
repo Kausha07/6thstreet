@@ -22,6 +22,7 @@ import "./PLPAddToCart.style";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -531,12 +532,8 @@ class PLPAddToCart extends PureComponent {
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(event, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

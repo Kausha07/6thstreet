@@ -10,7 +10,7 @@ import ProductHelper from "../utils";
 import BaseEvent from "./Base.event";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 export const PURCHASE_EVENT_HANDLE_DELAY = 700;
 export const SPAM_PROTECTION_DELAY = 10000;
 
@@ -90,12 +90,8 @@ class PurchaseEvent extends BaseEvent {
       productItemPrice.push(productKeys?.itemPrice);
 
       Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS_PRODUCT, {
-        country: currentAppState.country
-          ? currentAppState.country.toUpperCase()
-          : "",
-        language: currentAppState.language
-          ? currentAppState.language.toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         category: productKeys?.category
           ? productKeys?.category
           : currentAppState.gender
@@ -119,12 +115,8 @@ class PurchaseEvent extends BaseEvent {
     });
 
     Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category:
         productCategory.length > 0
           ? productCategory

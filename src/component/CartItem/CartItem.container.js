@@ -39,6 +39,7 @@ import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -361,12 +362,8 @@ export class CartItemContainer extends PureComponent {
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(event, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

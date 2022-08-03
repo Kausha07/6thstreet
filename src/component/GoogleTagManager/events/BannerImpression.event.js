@@ -7,6 +7,7 @@ import Event, {
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BaseEvent from "./Base.event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 /**
  * Website places, from where was received event data
@@ -103,12 +104,8 @@ class BannerImpressionEvent extends BaseEvent {
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const currentPageType = this.getPageType() || "";
     Moengage.track_event(MoeEventType, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       promotions:moeImpressions,
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()

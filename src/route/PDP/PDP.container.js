@@ -27,6 +27,7 @@ import browserHistory from "Util/History";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -343,12 +344,8 @@ export class PDPContainer extends PureComponent {
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

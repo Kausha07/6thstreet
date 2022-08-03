@@ -30,6 +30,7 @@ import { setPrevPath } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -196,12 +197,8 @@ class ProductItem extends PureComponent {
     }
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",

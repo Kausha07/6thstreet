@@ -19,6 +19,7 @@ import "./WishlistIcon.style";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -87,12 +88,8 @@ class WishlistIcon extends PureComponent {
         : "";
 
       Moengage.track_event(EVENT_MOE_REMOVE_FROM_WISHLIST, {
-        country: currentAppState.country
-          ? currentAppState.country.toUpperCase()
-          : "",
-        language: currentAppState.language
-          ? currentAppState.language.toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
           ? currentAppState.gender.toUpperCase()
           : "",
@@ -155,12 +152,8 @@ class WishlistIcon extends PureComponent {
     if (pageType == "search") {
       Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data?.name);
       Moengage.track_event(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
-        country: currentAppState.country
-          ? currentAppState.country.toUpperCase()
-          : "",
-        language: currentAppState.language
-          ? currentAppState.language.toUpperCase()
-          : "",
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
           ? currentAppState.gender.toUpperCase()
           : "",
@@ -181,12 +174,8 @@ class WishlistIcon extends PureComponent {
     }
 
     Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
-      country: currentAppState.country
-        ? currentAppState.country.toUpperCase()
-        : "",
-      language: currentAppState.language
-        ? currentAppState.language.toUpperCase()
-        : "",
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
