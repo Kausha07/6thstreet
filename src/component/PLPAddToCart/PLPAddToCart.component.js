@@ -491,8 +491,12 @@ class PLPAddToCart extends PureComponent {
     const checkproductSize =
       (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
       selectedSizeCode !== "";
-
-    const { size } = checkproductSize ? productStock[selectedSizeCode] : "";
+    const checkproductStock =
+      typeof productStock === "object" && productStock !== null;
+    const { size } =
+      checkproductSize && checkproductStock
+        ? productStock[selectedSizeCode]
+        : "";
     const optionId = checkproductSize
       ? selectedSizeType.toLocaleUpperCase()
       : "";
