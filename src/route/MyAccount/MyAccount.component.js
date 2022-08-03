@@ -302,6 +302,7 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
+    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
