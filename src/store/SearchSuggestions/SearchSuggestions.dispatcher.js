@@ -1,5 +1,5 @@
 import { getStore } from "Store";
-import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
+import { setSearchSuggestions,setAlgoliaIndex } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
@@ -20,31 +20,31 @@ export class SearchSuggestionsDispatcher {
     } = getStore().getState();
     let queryID = null;
 
-    try {
-      const productData = await new Algolia().getPLP(
-        isArabic()
-          ? {
-              q: search,
-              page: 0,
-              limit: PRODUCT_RESULT_LIMIT,
-              gender: getGenderInArabic(gender),
-              // query: search,
-              // limit: PRODUCT_RESULT_LIMIT,
-              // gender: getGenderInArabic(gender),
-              // addAnalytics: false,
-            }
-          : {
-              // query: search,
-              // limit: PRODUCT_RESULT_LIMIT,
-              gender: gender,
-              // addAnalytics: false,
-              q: search,
-              page: 0,
-              limit: PRODUCT_RESULT_LIMIT,
-              // gender: gender,
-            }
-      );
+    // var searchQuery = search;
+      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
+    // if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
+    //   searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
+    // }
 
+    try {
+      const searchData = await new Algolia().getProductForSearchContainer(
+        {
+          q: search,
+          page: 0,
+          limit: PRODUCT_RESULT_LIMIT,
+          gender: isArabic() ? getGenderInArabic(gender) : gender,
+        },
+        {
+          indexName: sourceQuerySuggestionIndex,
+          params: {
+            query: search,
+            hitsPerPage: QUERY_SUGGESTION_LIMIT,
+            clickAnalytics: true,
+          }
+        }
+      );
+      let { productData, suggestionData } = searchData;
+      
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
       // var data = localStorage.getItem("customer");
@@ -81,51 +81,24 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      var searchQuery = search;
-      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
-      if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
-        searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
-      }
-
-      const data = await new Algolia({
-        index: sourceQuerySuggestionIndex,
-      }).autocompleteSearch(
-        isArabic()
-          ? {
-              query: searchQuery,
-              limit: QUERY_SUGGESTION_LIMIT,
-            }
-          : {
-              query: searchQuery,
-              limit: QUERY_SUGGESTION_LIMIT,
-            }
-      );
+      
       const defaultHit = {
         query: search,
         count: "",
       };
-
+      console.log("suggestionData",suggestionData)
       var querySuggestions = [defaultHit];
-      if(country.match(/bh|om|qa/i)){
-        querySuggestions = data?.hits || [defaultHit];
-      }
-      
-      else {
-        querySuggestions =
-        data?.hits?.length > 0
-        ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
+      querySuggestions =
+        suggestionData?.hits?.length > 0
+        ? getCustomQuerySuggestions(suggestionData?.hits, sourceIndexName, suggestionData?.query)
         : [defaultHit];
-      }
-
-
       
-      if (data && data.queryID) {
-        queryID = data.queryID;
+      if (suggestionData && suggestionData.queryID) {
+        queryID = suggestionData.queryID;
       } else {
         queryID = productData?.queryID ? productData?.queryID : null;
       }
       const results = formatProductSuggestions(productData);
-
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)
       );
@@ -134,6 +107,13 @@ export class SearchSuggestionsDispatcher {
       console.error(e);
       dispatch(setSearchSuggestions(search));
     }
+  }
+
+  async requestAlgoliaIndex(dispatch) {
+    const algoliaIndex = await new Algolia().getIndex();
+    dispatch(
+      setAlgoliaIndex(algoliaIndex)
+    );
   }
 }
 

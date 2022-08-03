@@ -323,7 +323,8 @@ class PDPDetailsSection extends PureComponent {
     product_length = "",
     product_width = "",
     bag_dimension = "",
-    product
+    product,
+    
   ) {
     if (!Object.keys(categories).length) {
       return highlights || [];
@@ -511,6 +512,10 @@ class PDPDetailsSection extends PureComponent {
       key: "coverage",
       value: product?.coverage,
     };
+    const materialComposition = {
+      key: "material_composition",
+      value: product?.material_composition,
+    };
 
     return [
       ...(highlights || []),
@@ -552,6 +557,7 @@ class PDPDetailsSection extends PureComponent {
       ...(preference.value ? [preference] : []),
       ...(finish.value ? [finish] : []),
       ...(coverage.value ? [coverage] : []),
+      ...(materialComposition.value ? [materialComposition] : []),
     ];
   }
 
@@ -567,6 +573,7 @@ class PDPDetailsSection extends PureComponent {
         product_width,
         bag_dimension,
         model_wearing_size,
+        material_composition
       },
       product,
     } = this.props;
@@ -579,7 +586,8 @@ class PDPDetailsSection extends PureComponent {
       product_length,
       product_width,
       bag_dimension,
-      product
+      product,
+      material_composition
     );
 
     return (
@@ -699,7 +707,6 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
         <>
-          <div block="Seperator2" />
           <React.Fragment>
             {pdpWidgetsAPIData.map((item, index) => {
               if (typeof item === "object" && Object.keys(item).length > 0) {

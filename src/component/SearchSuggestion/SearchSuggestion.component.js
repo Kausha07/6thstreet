@@ -1,13 +1,13 @@
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Loader from "Component/Loader";
+import Price from "Component/Price";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
-  formatQuerySuggestions,
   getGenderInArabic,
   getHighlightedText,
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
@@ -16,6 +16,9 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_GTM_BRANDS_CLICK,
   EVENT_MOE_BRANDS_CLICK,
   EVENT_GTM_PRODUCT_CLICK,
@@ -23,20 +26,17 @@ import Event, {
   EVENT_MOE_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
   EVENT_MOE_TRENDING_TAGS_CLICK,
-  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
-  EVENT_CLICK_RECENT_SEARCHES_CLICK,
-  EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
-  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
+import { v4 } from "uuid";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 import ExploreMore from "../ExploreMore";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
-import Price from "Component/Price";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import "./SearchSuggestion.style";
 
 var ESCAPE_KEY = 27;
 
@@ -163,7 +163,7 @@ class SearchSuggestion extends PureComponent {
     return brandUrl;
   };
 
-  getCatalogUrl = (query, gender, queryID, brandValue = null) => {
+  getCatalogUrl = (query, gender) => {
     const { isArabic } = this.state;
     let requestedGender = gender;
     let catalogUrl;
@@ -201,17 +201,9 @@ class SearchSuggestion extends PureComponent {
         }
       }
     }
-    if (brandValue) {
-      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
-        formatQuerySuggestions(query)
-      )}&p=0&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
-        brandValue
-      )}`;
-    } else {
-      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
-        formatQuerySuggestions(query)
-      )}&p=0&dFR[gender][0]=${genderInURL}`;
-    }
+    catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+      query
+    )}&p=0&dFR[gender][0]=${genderInURL}`;
     return catalogUrl;
   };
 
@@ -331,7 +323,7 @@ class SearchSuggestion extends PureComponent {
     const urlName = this.getBrandUrl(name);
 
     return (
-      <li>
+      <li key={v4()}>
         <Link
           to={{
             pathname: `/${urlName}.html?q=${urlName}`,
@@ -365,8 +357,43 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  suggestionEventDispatch = (query, searchString) => {
+    if (query == searchString) {
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
+    } else {
+      Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
+    }
+  };
+  suggestionContent = (fetchSKU, products, searchString, query, gender) => {
+    if (products?.length === 1 && fetchSKU) {
+      return (
+        <Link
+          to={fetchSKU?.url}
+          onClick={() => this.suggestionEventDispatch(query, searchString)}
+        >
+          <div className="suggestion-details-box text-capitalize">
+            {getHighlightedText(query, searchString)}
+          </div>
+        </Link>
+      );
+    } else {
+      return (
+        <Link
+          to={{
+            pathname: this.getCatalogUrl(query, gender),
+          }}
+          onClick={() => this.suggestionEventDispatch(query, searchString)}
+        >
+          <div className="suggestion-details-box">
+            {getHighlightedText(query, searchString)}
+          </div>
+        </Link>
+      );
+    }
+  };
+
   renderQuerySuggestion = (querySuggestions) => {
-    const { query, count, isBrand, filter } = querySuggestions;
+    const { query, label } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
     const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
     const gender =
@@ -445,7 +472,11 @@ class SearchSuggestion extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        <ul>{querySuggestions.slice(0, 5).map(this.renderQuerySuggestion)}</ul>
+        {querySuggestions.length > 0 ? (
+          <ul>
+            {querySuggestions?.slice(0, 5).map(this.renderQuerySuggestion)}
+          </ul>
+        ) : null}
       </div>
     );
   }
@@ -535,7 +566,7 @@ class SearchSuggestion extends PureComponent {
       : url;
 
     return (
-      <li>
+      <li key={v4()}>
         <Link
           to={parseLink ? parseLink : "#"}
           onClick={() => this.handleProductClick(product)}
@@ -576,11 +607,11 @@ class SearchSuggestion extends PureComponent {
 
   renderSuggestions() {
     const { products = [] } = this.props;
-    const { querySuggestions = [] } = this.props;
-    let isRecommended = (products.length === 0) && (querySuggestions.length === 1)
+    const { querySuggestions = [], suggestionEnabled = false } = this.props;
+    let isRecommended = products.length === 0 && querySuggestions.length === 1;
     return (
       <>
-        {this.renderQuerySuggestions()}
+        {suggestionEnabled && this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
@@ -1007,6 +1038,7 @@ class SearchSuggestion extends PureComponent {
       isEmpty,
       inNothingFound,
       querySuggestions = [],
+      searchString,
     } = this.props;
 
     if (!isActive) {
@@ -1016,15 +1048,21 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    if (isEmpty && isActive && gender !== "home") {
+    if (gender === "home" && querySuggestions.length === 0) {
+      return null;
+    }
+    if (isEmpty) {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length === 0) {
+    if (inNothingFound && querySuggestions.length <= 1) {
       return this.renderNothingFound();
     }
-
-    return this.renderSuggestions();
+    if (searchString.length > 3 && querySuggestions.length > 1) {
+      return this.renderSuggestions();
+    } else {
+      return this.renderEmptySearch();
+    }
   }
 
   renderCloseButton() {
@@ -1063,8 +1101,9 @@ class SearchSuggestion extends PureComponent {
   }
 
   render() {
+    const { isPDPSearchVisible, suggestionEnabled } = this.props;
     const { isArabic } = this.state;
-    const { isPDPSearchVisible } = this.props;
+    // const { isPDPSearchVisible } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div
