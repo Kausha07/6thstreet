@@ -86,7 +86,6 @@ export class MyAccountExchangeCreateContainer extends PureComponent {
     quantityObj: {},
     notifyMeSuccess: false,
     notifyMeLoading: false,
-    isArabic: isArabic(),
     prevAlsoAvailable: [],
     exchangeReason: [],
     products: {},

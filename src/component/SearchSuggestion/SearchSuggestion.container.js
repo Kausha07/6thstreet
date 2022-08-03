@@ -1,20 +1,19 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import CDN from "../../util/API/provider/CDN";
+import { setPrevPath } from "Store/PLP/PLP.action";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
+import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import browserHistory from "Util/History";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
+import CDN from "../../util/API/provider/CDN";
 import SearchSuggestion from "./SearchSuggestion.component";
-import { getUUIDToken } from "Util/Auth";
-import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -24,7 +23,7 @@ export const mapStateToProps = (state) => ({
   querySuggestions: state.SearchSuggestions.querySuggestions,
   prevPath: state.PLP.prevPath,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
-  suggestionEnabled:state.AppConfig.suggestionEnabled
+  suggestionEnabled: state.AppConfig.suggestionEnabled,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -242,27 +241,25 @@ export class SearchSuggestionContainer extends PureComponent {
     try {
       const resp = await CDN.get(url);
 
-
       if (resp) {
-        let k = resp.widgets
+        let k = resp.widgets;
         let itemYouWant = null;
         k.forEach((item) => {
           if (item.header) {
             if (item.header.title === "Explore More") {
-              itemYouWant = item
+              itemYouWant = item;
             }
           }
         });
 
         this.setState({
-          exploreMoreData: itemYouWant
-        })
+          exploreMoreData: itemYouWant,
+        });
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   async requestTrendingInformation() {
     const { gender } = this.props;
@@ -282,7 +279,6 @@ export class SearchSuggestionContainer extends PureComponent {
       console.error(e);
     }
   }
-
 
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
@@ -356,7 +352,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      exploreMoreData
+      exploreMoreData,
     } = this.state;
     const {
       search,
@@ -368,6 +364,7 @@ export class SearchSuggestionContainer extends PureComponent {
       // wishlistData,
       isPDPSearchVisible,
       prevPath,
+      suggestionEnabled,
     } = this.props;
     const isEmpty = search === "";
     const inNothingFound = data?.brands?.length + data?.products?.length === 0;
@@ -392,6 +389,7 @@ export class SearchSuggestionContainer extends PureComponent {
       isPDPSearchVisible,
       prevPath,
       exploreMoreData,
+      suggestionEnabled,
       // wishlistData,
     };
   };

@@ -1,6 +1,7 @@
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Loader from "Component/Loader";
+import Price from "Component/Price";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
@@ -15,24 +16,23 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
+  EVENT_CLICK_RECENT_SEARCHES_CLICK,
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_GTM_BRANDS_CLICK,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
-  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
-  EVENT_CLICK_RECENT_SEARCHES_CLICK,
-  EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
-  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
-import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
+import { v4 } from "uuid";
 import ExploreMore from "../ExploreMore";
+import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
-import Price from "Component/Price";
-import { v4 } from "uuid";
 
 var ESCAPE_KEY = 27;
 
@@ -530,12 +530,11 @@ class SearchSuggestion extends PureComponent {
 
   renderSuggestions() {
     const { products = [] } = this.props;
-    const { querySuggestions = [], suggestionEnabled } = this.props;
+    const { querySuggestions = [], suggestionEnabled = false } = this.props;
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
     return (
       <>
-        {suggestionEnabled ? this.renderQuerySuggestions() : null}
-        {/* {this.renderQuerySuggestions()} */}
+        {suggestionEnabled && this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
         {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
@@ -958,9 +957,9 @@ class SearchSuggestion extends PureComponent {
       : "home";
 
     if (gender === "home" && querySuggestions.length === 0) {
-      return null
+      return null;
     }
-    if(isEmpty) {
+    if (isEmpty) {
       return this.renderEmptySearch();
     }
 
