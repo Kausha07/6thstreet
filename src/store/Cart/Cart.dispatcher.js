@@ -58,7 +58,7 @@ export class CartDispatcher {
         Logger.log(e);
       }
     } else {
-      if(cartId) {
+      if (cartId) {
         await this.getCartTotals(dispatch, cartId);
       }
     }
@@ -111,7 +111,13 @@ export class CartDispatcher {
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
     try {
       dispatch(processingCartRequest());
-      const { data } = await getCart(cartId);    
+      const { data } = await getCart(cartId);
+      const lastCouponCode = localStorage.getItem('lastCouponCode');
+      if ((data.coupon_code === null) && (lastCouponCode && lastCouponCode.length > 0)) {
+        const couponAppliedResponse = await applyCouponCode({ cartId, couponCode: lastCouponCode });
+        dispatch(showNotification("error", couponAppliedResponse));
+        localStorage.removeItem("lastCouponCode");
+      }
       const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
       if (!data) {
         try {
@@ -164,7 +170,7 @@ export class CartDispatcher {
       Cart: { cartId },
     } = getStore().getState();
     let newCartId;
-    if(!cartId) {
+    if (!cartId) {
       try {
         const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
         const { data: requestedCartId = null } = await createCart(cart_id);
@@ -337,14 +343,14 @@ export class CartDispatcher {
   }
 
   async getCoupon(dispatch) {
-    const { Cart: { cartId },} = getStore().getState();
+    const { Cart: { cartId }, } = getStore().getState();
     try {
-      const {avail_coupons} = await getCoupon(cartId)
+      const { avail_coupons } = await getCoupon(cartId)
       dispatch(setCartCoupon(avail_coupons));
       return;
     } catch (e) {
-        dispatch(setCartCoupon());
-        Logger.log(e);
+      dispatch(setCartCoupon());
+      Logger.log(e);
     }
   }
 
