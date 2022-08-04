@@ -19,12 +19,18 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from "react-redux";
 import HomeIcon from "Component/Icons/Home/home.png";
 import { setPDPGaleryImage } from "Store/PDP/PDP.action";
+import { EVENT_MOE_PDP_IMAGE_SCROLL } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getCurrency } from "Util/App";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showPDPSearch: (displaySearch) => PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  showPDPSearch: (displaySearch) =>
+    PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
   setImageIndex: (index) => dispatch(setPDPGaleryImage(index)),
 });
 
@@ -50,7 +56,7 @@ class PDPGallery extends PureComponent {
       isVideoPlaying: false,
       isArabic: isArabic(),
       listener: "",
-      isFirstTimeZoomedIn: true
+      isFirstTimeZoomedIn: true,
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
@@ -202,12 +208,12 @@ class PDPGallery extends PureComponent {
 
   showGalleryOverlay = () => {
     const { location } = browserHistory;
-    document.body.style.position="fixed";
-    this.setState({openGalleryOverlay: true}, () => {
+    document.body.style.position = "fixed";
+    this.setState({ openGalleryOverlay: true }, () => {
       document.body.style.overflow = "hidden";
       browserHistory.push(`${location.pathname}`);
     });
-  }
+  };
 
   renderGalleryOverlay = () => {
     window.onpopstate = () => {
@@ -225,7 +231,7 @@ class PDPGallery extends PureComponent {
   };
 
   closeGalleryOverlay = () => {
-    document.body.style.position="static";
+    document.body.style.position = "static";
     this.setState({ openGalleryOverlay: false }, () => {
       document.body.style.overflow = "visible";
       this.props.setImageIndex(this.props.currentIndex);
@@ -373,8 +379,24 @@ class PDPGallery extends PureComponent {
   }
 
   onSlideChange = (activeSlide) => {
-    const { gallery, onSliderChange, prod_360_video, prod_style_video } =
-      this.props;
+    const {
+      gallery,
+      onSliderChange,
+      prod_360_video,
+      prod_style_video,
+      product: {
+        categories = {},
+        name,
+        sku,
+        url,
+        thumbnail_url,
+        product_type_6s,
+        price,
+        gender,
+        color,
+        brand_name,
+      },
+    } = this.props;
     const { isVideoPlaying, listener } = this.state;
 
     if (activeSlide <= gallery.length - 1) {
@@ -426,6 +448,61 @@ class PDPGallery extends PureComponent {
         }
       }
     }
+    const specialPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
+    const originalPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///") == 1
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    Moengage.track_event(EVENT_MOE_PDP_IMAGE_SCROLL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      subcategory: product_type_6s || categoryLevel,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: originalPrice || "",
+      product_url: url,
+      currency: getCurrency() || "",
+      gender: gender || "",
+      product_sku: sku || "",
+      discounted_price: specialPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      image_no: activeSlide || "",
+      app6thstreet_platform: "Web",
+    });
   };
   searchButtonClick = (e) => {
     e.stopPropagation();
@@ -495,11 +572,9 @@ class PDPGallery extends PureComponent {
     const { renderMySignInPopup } = this.props;
     return (
       <div block="PDPGallery">
-        {
-          openGalleryOverlay
-          ?
+        {openGalleryOverlay ? (
           this.renderGalleryOverlay()
-          :
+        ) : (
           <>
             {this.renderBackButton()}
             {this.renderCrumbs()}
@@ -508,7 +583,7 @@ class PDPGallery extends PureComponent {
               {this.renderWishlistIcon()}
             </div>
           </>
-        }
+        )}
         <button
           ref={this.overlaybuttonRef}
           block="PDPGallery"

@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
 import CartCouponList from "Component/CartCouponList";
-import CartCouponDetail from 'Component/CartCouponDetail';
+import CartCouponDetail from "Component/CartCouponDetail";
 import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
@@ -29,7 +29,8 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-
+import { EVENT_MOE_VIEW_CART_ITEMS } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
@@ -68,34 +69,38 @@ export class CartPage extends PureComponent {
     couponName: "",
     couponDescription: "",
     isCouponDetialPopupOpen: false,
-    couponModuleStatus: false
+    couponModuleStatus: false,
+    pageLoaded: true,
   };
-
 
   static defaultProps = {
     clubApparel: {},
-    processingRequest: false
+    processingRequest: false,
   };
 
   componentDidMount() {
     const {
       totals: { subtotal, currency_code },
-      getTabbyInstallment
+      getTabbyInstallment,
     } = this.props;
-    const script = document.createElement('script');
-    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    const script = document.createElement("script");
+    script.src = "https://checkout.tabby.ai/tabby-promo.js";
     document.body.appendChild(script);
     const total = subtotal;
-    getTabbyInstallment(total).then((response) => {
-      if (response?.value) {
-        if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
-          document.getElementById("TabbyPromo").classList.remove("d-none");
+    getTabbyInstallment(total)
+      .then((response) => {
+        if (response?.value) {
+          if (
+            document.getElementById("TabbyPromo").classList.contains("d-none")
+          ) {
+            document.getElementById("TabbyPromo").classList.remove("d-none");
+          }
+          script.onload = this.addTabbyPromo(total, currency_code);
+        } else {
+          document.getElementById("TabbyPromo").classList.add("d-none");
         }
-        script.onload = this.addTabbyPromo(total, currency_code);
-      } else {
-        document.getElementById("TabbyPromo").classList.add("d-none");
-      }
-    }, this._handleError).catch(() => { });
+      }, this._handleError)
+      .catch(() => {});
     this.getCouponModuleStatus();
     window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
@@ -103,48 +108,120 @@ export class CartPage extends PureComponent {
   componentDidUpdate(prevProps) {
     const {
       totals: { subtotal, currency_code },
-      getTabbyInstallment
+      getTabbyInstallment,
     } = this.props;
     if (prevProps?.totals?.subtotal !== subtotal) {
-      const total= subtotal;
-      getTabbyInstallment(total).then((response) => {
-        if (response?.value) {
-          if (document.getElementById("TabbyPromo").classList.contains("d-none")) {
-            document.getElementById("TabbyPromo").classList.remove("d-none");
+      const total = subtotal;
+      getTabbyInstallment(total)
+        .then((response) => {
+          if (response?.value) {
+            if (
+              document.getElementById("TabbyPromo").classList.contains("d-none")
+            ) {
+              document.getElementById("TabbyPromo").classList.remove("d-none");
+            }
+            this.addTabbyPromo(total, currency_code);
+          } else {
+            document.getElementById("TabbyPromo").classList.add("d-none");
           }
-          this.addTabbyPromo(total, currency_code);
-        }
-        else {
-          document.getElementById("TabbyPromo").classList.add("d-none");
-        }
-      }, this._handleError).catch(() => { });
+        }, this._handleError)
+        .catch(() => {});
     }
   }
 
   addTabbyPromo = (total, currency_code) => {
     const { isArabic } = this.state;
     new window.TabbyPromo({
-      selector: '#TabbyPromo',
+      selector: "#TabbyPromo",
       currency: currency_code.toString(),
       price: total,
       installmentsCount: 4,
       lang: isArabic ? "ar" : "en",
-      source: 'product',
+      source: "product",
     });
+  };
+
+  sendMoeEvent() {
+    const {
+      totals: {
+        items = [],
+        discount,
+        coupon_code,
+        subtotal,
+        total,
+      },
+    } = this.props;
+    const {pageLoaded} = this.state;
+    let productName = [],
+      productColor = [],
+      productBrand = [],
+      productSku = [],
+      productGender = [],
+      productBasePrice = [],
+      productSizeOption = [],
+      productSizeValue = [],
+      productSubCategory = [],
+      productThumbanail = [],
+      productUrl = [],
+      productQty = [],
+      productCategory = [],
+      productItemPrice = [];
+    items.forEach((item) => {
+      let productKeys = item?.full_item_info;
+      productName.push(productKeys?.name);
+      productColor.push(productKeys?.color);
+      productBrand.push(productKeys?.brand_name);
+      productSku.push(productKeys?.config_sku);
+      productGender.push(productKeys?.gender);
+      productBasePrice.push(productKeys?.original_price);
+      productSizeOption.push(productKeys?.size_option);
+      productSizeValue.push(productKeys?.size_value);
+      productSubCategory.push(productKeys?.subcategory);
+      productThumbanail.push(productKeys?.thumbnail_url);
+      productUrl.push(productKeys?.url);
+      productQty.push(productKeys?.qty);
+      productCategory.push(productKeys?.original_price);
+      productItemPrice.push(productKeys?.itemPrice);
+    });
+    if (pageLoaded){
+      Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        brand_name: productBrand.length > 0 ? productBrand : "",
+        color: productColor.length > 0 ? productColor : "",
+        coupon_code_applied: coupon_code || "",
+        currency: getCurrency(),
+        discounted_amount: discount || "",
+        discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+        full_price: productBasePrice.length > 0 ? productBasePrice : "",
+        product_count: items.length > 0 ? items.length : 0,
+        product_name: productName.length > 0 ? productName : "",
+        product_sku: productSku.length > 0 ? productSku : "",
+        subtotal_amount: subtotal || "",
+        total_amount: total || "",
+        size_id: productSizeOption.length > 0 ? productSizeOption : "",
+        size: productSizeValue.length > 0 ? productSizeValue : "",
+        category: productCategory.length > 0 ? productCategory : "",
+        gender: productGender.length > 0 ? productGender : "",
+        subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+        app6thstreet_platform: "Web",
+      });
+    }
   }
 
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
     } = this.props;
-
+    this.sendMoeEvent();
+    this.setState({pageLoaded : false});
     if (!items || items.length < 1) {
       return (
         <p block="CartPage" elem="Empty">
           {__("There are no products in cart.")}
         </p>
       );
-    }
+    }    
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
         {items.map((item) => (
@@ -161,134 +238,172 @@ export class CartPage extends PureComponent {
     );
   }
 
-  outsideCouponPopupClick = e => {
-    if (this.state.isCouponPopupOpen && this.cartCouponPopup.current && !this.cartCouponPopup.current.contains(e.target)) {
+  outsideCouponPopupClick = (e) => {
+    if (
+      this.state.isCouponPopupOpen &&
+      this.cartCouponPopup.current &&
+      !this.cartCouponPopup.current.contains(e.target)
+    ) {
       this.setState({
-        isCouponPopupOpen: false
-      })
+        isCouponPopupOpen: false,
+      });
       const bodyElt = document.querySelector("body");
       bodyElt.removeAttribute("style");
     }
-  }
+  };
   closeCouponPopup = () => {
     this.setState({
-      isCouponPopupOpen: false
-    })
+      isCouponPopupOpen: false,
+    });
     const bodyElt = document.querySelector("body");
     bodyElt.removeAttribute("style");
-  }
+  };
   openCouponPopup = () => {
     this.setState({
-      isCouponPopupOpen: true
-    })
+      isCouponPopupOpen: true,
+    });
     const bodyElt = document.querySelector("body");
     bodyElt.style.overflow = "hidden";
-  }
+  };
   showCouponDetial = (e, coupon) => {
-    e.stopPropagation()
+    e.stopPropagation();
     this.setState({
       couponCode: coupon.code,
       couponName: coupon.name,
       couponDescription: coupon.description,
-      isCouponDetialPopupOpen: true
-    })
+      isCouponDetialPopupOpen: true,
+    });
 
     const bodyElt = document.querySelector("body");
     bodyElt.style.overflow = "hidden";
-
-  }
+  };
   hideCouponDetial = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     this.setState({
-      isCouponDetialPopupOpen: false
-    })
+      isCouponDetialPopupOpen: false,
+    });
     if (!this.state.isCouponPopupOpen) {
       const bodyElt = document.querySelector("body");
       bodyElt.removeAttribute("style");
     }
-  }
+  };
   handleRemoveCode = (e) => {
-    e.stopPropagation()
-    this.props.removeCouponFromCart()
-  }
+    e.stopPropagation();
+    this.props.removeCouponFromCart();
+  };
   getCouponModuleStatus = async () => {
     const { country, config } = this.props;
     if (config) {
       let couponModule = Object.keys(config?.countries).find(function (val) {
-        return val == country
-      })
+        return val == country;
+      });
       this.setState({
-        couponModuleStatus: couponModule
-      })
+        couponModuleStatus: couponModule,
+      });
     }
-
-  }
+  };
   renderDiscountCode() {
     const {
       totals: { coupon_code },
-      couponsItems = []
+      couponsItems = [],
     } = this.props;
     const isOpen = false;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
       appliedCoupon = couponsItems.find(function (coupon) {
-        return coupon.code == coupon_code
-      })
+        return coupon.code == coupon_code;
+      });
     }
-    return (
-      (this.state?.couponModuleStatus) ?
-        <ExpandableContent
-          isOpen={isOpen}
-          heading={__("Have a discount code?")}
-          mix={{ block: "CartPage", elem: "Discount" }}
-        >
-          <CartCoupon couponCode={coupon_code} />
-        </ExpandableContent>
-        :
-        <>{
-          (!this.state?.isCouponPopupOpen) ?
-            <>
-              <div block="cartCouponBlock">
-                {
-                  coupon_code ?
-                    <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
-                      <div block="appliedCouponDetail">
-                        <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
-                        {appliedCoupon && (
-                          <>
-                            <p block="appliedCouponName">{appliedCoupon?.name}</p>
-                            <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
-                          </>
-                        )}
-
-                      </div>
-                      <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
-                    </div>
-                    :
-                    <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
-                }
-              </div>
-              {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
-            </>
-            :
-            <>
-              <div block="couponPopupBlock">
-                <div block="couponPopupContent" ref={this.cartCouponPopup}>
-                  <div block="couponPopupTop">
-                    {__("Promo codes (%s)", promoCount)}
-                    <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
-                      <span>Close</span>
-                    </button>
+    return this.state?.couponModuleStatus ? (
+      <ExpandableContent
+        isOpen={isOpen}
+        heading={__("Have a discount code?")}
+        mix={{ block: "CartPage", elem: "Discount" }}
+      >
+        <CartCoupon couponCode={coupon_code} />
+      </ExpandableContent>
+    ) : (
+      <>
+        {!this.state?.isCouponPopupOpen ? (
+          <>
+            <div block="cartCouponBlock">
+              {coupon_code ? (
+                <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                  <div block="appliedCouponDetail">
+                    <p block="appliedCouponCode">
+                      {appliedCoupon ? appliedCoupon?.code : coupon_code}
+                    </p>
+                    {appliedCoupon && (
+                      <>
+                        <p block="appliedCouponName">{appliedCoupon?.name}</p>
+                        <button
+                          block="appliedCouponViewBtn"
+                          onClick={(e) => {
+                            this.showCouponDetial(e, appliedCoupon);
+                          }}
+                        >
+                          View Detail
+                        </button>
+                      </>
+                    )}
                   </div>
-                  <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
-                  <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
-                  {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} />}
+                  <button
+                    block="appliedCouponBtn remove"
+                    onClick={(e) => {
+                      this.handleRemoveCode(e);
+                    }}
+                  >
+                    {__("Remove")}
+                  </button>
                 </div>
+              ) : (
+                <button onClick={this.openCouponPopup} block="showCouponBtn">
+                  {__("Enter coupon or promo code")}
+                </button>
+              )}
+            </div>
+            {this.state?.isCouponDetialPopupOpen && (
+              <CartCouponDetail
+                couponDetail={this.state}
+                hideDetail={this.hideCouponDetial}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <div block="couponPopupBlock">
+              <div block="couponPopupContent" ref={this.cartCouponPopup}>
+                <div block="couponPopupTop">
+                  {__("Promo codes (%s)", promoCount)}
+                  <button
+                    onClick={this.closeCouponPopup}
+                    block="closeCouponPopupBtn"
+                  >
+                    <span>Close</span>
+                  </button>
+                </div>
+                <CartCoupon
+                  couponCode={coupon_code}
+                  closePopup={this.closeCouponPopup}
+                />
+                <CartCouponList
+                  couponCode={coupon_code}
+                  closePopup={this.closeCouponPopup}
+                  showDetail={this.showCouponDetial}
+                  {...this.props}
+                />
+                {this.state?.isCouponDetialPopupOpen && (
+                  <CartCouponDetail
+                    couponDetail={this.state}
+                    hideDetail={this.hideCouponDetial}
+                  />
+                )}
               </div>
-
-            </>
-        }</>
+            </div>
+          </>
+        )}
+      </>
     );
   }
 
@@ -308,8 +423,9 @@ export class CartPage extends PureComponent {
           {name}
         </strong>
         <strong block="CartPage" elem="Price">
-          {`${parseFloat(price) || price === 0 ? currency_code : ""
-            } ${finalPrice}`}
+          {`${
+            parseFloat(price) || price === 0 ? currency_code : ""
+          } ${finalPrice}`}
         </strong>
       </li>
     );
@@ -336,7 +452,6 @@ export class CartPage extends PureComponent {
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
     if (discount != 0) {
-
       return (
         <div block="CartPage" elem="OrderTotals">
           <ul>
@@ -362,13 +477,17 @@ export class CartPage extends PureComponent {
         </div>
       );
     } else {
-      return (<div block="CartPage" elem="OrderTotals">
-        <ul>
-          <div block="CartPage" elem="Subtotals">
-            {this.renderPriceLine(subTotal, __("Subtotal"), { subtotalOnly: true, })}
-          </div>
-        </ul>
-      </div>)
+      return (
+        <div block="CartPage" elem="OrderTotals">
+          <ul>
+            <div block="CartPage" elem="Subtotals">
+              {this.renderPriceLine(subTotal, __("Subtotal"), {
+                subtotalOnly: true,
+              })}
+            </div>
+          </ul>
+        </div>
+      );
     }
   }
 
@@ -389,13 +508,6 @@ export class CartPage extends PureComponent {
           <span />
           {__("Proceed to Checkout")}
         </button>
-        {/* <Link
-                   block="CartPage"
-                   elem="ContinueShopping"
-                   to="/"
-                 >
-                     { __('Continue shopping') }
-                 </Link> */}
       </div>
     );
   }
@@ -619,7 +731,7 @@ export class CartPage extends PureComponent {
     }
     const goBack = () => {
       history.goBack();
-    }
+    };
 
     return (
       <div block="CartPage" elem="BackArrow">
@@ -633,7 +745,7 @@ export class CartPage extends PureComponent {
   renderContent() {
     const { activeTab, changeActiveTab } = this.props;
     const { name } = tabMap[activeTab];
-
+    
     if (!isMobile.any()) {
       return null;
     }
@@ -682,9 +794,7 @@ export class CartPage extends PureComponent {
         {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
         <div block="CartPage" elem="EmptyCartImg">
           {/* <image src={EmptyCardIcon}/> */}
-          <Image
-            src={EmptyCardIcon}
-          />
+          <Image src={EmptyCardIcon} />
         </div>
         <p block="CartPage" elem="EmptyCartText">
           {__("Your bag is empty!")}
@@ -771,10 +881,11 @@ export class CartPage extends PureComponent {
           <Loader isLoading={processingRequest} />
           <div
             style={{
-              marginBottom: `${isMobile
-                ? this.dynamicHeight?.current?.clientHeight + additionalMargin
-                : 0
-                }px`,
+              marginBottom: `${
+                isMobile
+                  ? this.dynamicHeight?.current?.clientHeight + additionalMargin
+                  : 0
+              }px`,
             }}
             block="CartPage"
             elem="Static"
@@ -819,6 +930,7 @@ export class CartPage extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    
     return (
       <main block="CartPage" aria-label="Cart Page" mods={{ isArabic }}>
         {this.renderDynamicContent()}

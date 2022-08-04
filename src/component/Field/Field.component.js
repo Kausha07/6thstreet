@@ -35,7 +35,7 @@ export class Field extends SourceField {
                 <FieldInput
                   { ...this.props }
                   type="radio"
-                  onChange={ onClick }
+                  onChange={()=> {onClick}}
                 />
                 <label htmlFor={ id } />
                 <span>{ label }</span>

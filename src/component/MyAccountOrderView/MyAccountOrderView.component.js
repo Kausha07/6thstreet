@@ -4,11 +4,14 @@ import Image from "Component/Image";
 import Loader from "Component/Loader";
 import {
   STATUS_BEING_PROCESSED,
+  STATUS_EXCHANGE_PENDING,
   STATUS_CANCELED,
   STATUS_COMPLETE,
   STATUS_FAILED,
   STATUS_PAYMENT_ABORTED,
+  STATUS_EXCHANGE_REJECTED,
   STATUS_SUCCESS,
+  translateArabicStatus,
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getFinalPrice } from "Component/Price/Price.config";
@@ -19,11 +22,12 @@ import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
 import { formatDate, getDefaultEddDate } from "Util/Date";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import {
   APPLE_PAY,
   CASH_ON_DELIVERY,
+  EXCHANGE_STORE_CREDIT,
   CHECKOUT_APPLE_PAY,
   CHECKOUT_QPAY,
   CHECK_MONEY,
@@ -47,18 +51,27 @@ import {
   DELIVERY_SUCCESSFUL,
   RETURN_ITEM_LABEL,
   STATUS_IN_TRANSIT,
-  STATUS_LABEL_MAP,
+  EXCHANGE_ITEM_LABEL,
+  CANCEL_ORDER_LABEL,
   NEW_STATUS_LABEL_MAP,
-  STATUS_PROCESSING,
+  NEW_EXCHANGE_STATUS_LABEL_MAP,
   STATUS_DISPATCHED,
   PICKUP_FAILED,
   PICKEDUP,
-  READY_TO_PICK
+  READY_TO_PICK,
 } from "./MyAccountOrderView.config";
 import "./MyAccountOrderView.style";
 import Link from "Component/Link";
 import { isObject } from "Util/API/helper/Object";
-import { SPECIAL_COLORS, DEFAULT_SPLIT_KEY, DEFAULT_READY_SPLIT_KEY } from "../../util/Common";
+import {
+  SPECIAL_COLORS,
+  DEFAULT_SPLIT_KEY,
+  DEFAULT_READY_SPLIT_KEY,
+} from "../../util/Common";
+import {
+  EVENT_MOE_RETURN_AN_ITEM_CLICK,
+  EVENT_MOE_CANCEL_AN_ITEM_CLICK,
+} from "Util/Event";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -139,9 +152,8 @@ class MyAccountOrderView extends PureComponent {
   renderTitle() {
     const { isArabic } = this.state;
     const {
-      order: { groups = [], increment_id },
+      order: { increment_id },
     } = this.props;
-
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">
@@ -150,22 +162,45 @@ class MyAccountOrderView extends PureComponent {
       </div>
     );
   }
-
+  sendMoeEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: "OrderDetails",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderStatus() {
     const {
       openOrderCancelation,
-      order: { status, created_at, is_returnable, is_cancelable },
+      order: {
+        status,
+        created_at,
+        is_returnable,
+        is_cancelable,
+        is_exchangeable,
+      },
     } = this.props;
     const buttonText =
-      status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
+      status === STATUS_COMPLETE
+        ? is_exchangeable
+          ? EXCHANGE_ITEM_LABEL
+          : RETURN_ITEM_LABEL
+        : CANCEL_ITEM_LABEL;
+    const finalStatus = isArabic()
+      ? translateArabicStatus(status)
+      : status
+      ? status.split("_").join(" ")
+      : "";
     if (STATUS_FAILED.includes(status)) {
       const title =
         status === STATUS_PAYMENT_ABORTED
           ? __("Payment Failed")
+          : status === STATUS_EXCHANGE_REJECTED
+          ? __("Exchange Rejected")
           : __("Order Cancelled");
       const StatusImage =
         status === STATUS_PAYMENT_ABORTED ? WarningImage : CloseImage;
-
       return (
         <div block="MyAccountOrderView" elem="StatusFailed">
           <Image
@@ -176,7 +211,6 @@ class MyAccountOrderView extends PureComponent {
         </div>
       );
     }
-
     return (
       <div block="MyAccountOrderView" elem="Status">
         <div>
@@ -186,7 +220,7 @@ class MyAccountOrderView extends PureComponent {
             mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
           >
             {__("Status: ")}
-            <span>{`${status.split("_").join(" ")}`}</span>
+            <span>{`- ${finalStatus}`}</span>
           </p>
           <p block="MyAccountOrderView" elem="StatusDate">
             {__("Order placed: ")}
@@ -198,25 +232,43 @@ class MyAccountOrderView extends PureComponent {
             </span>
           </p>
         </div>
-        {STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable) ? (
-          is_returnable && is_cancelable ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>
+        {
+          <div block="MyAccountOrderView" elem="HeadingButtons">
+            {is_returnable && (
+              <button
+                onClick={() => {
+                  openOrderCancelation(RETURN_ITEM_LABEL);
+                  this.sendMoeEvents(EVENT_MOE_RETURN_AN_ITEM_CLICK);
+                }}
+              >
                 {RETURN_ITEM_LABEL}
               </button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>
+            )}
+            {is_exchangeable && (
+              <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
+                {EXCHANGE_ITEM_LABEL}
+              </button>
+            )}
+            {status === STATUS_EXCHANGE_PENDING && is_cancelable ? (
+              <div block="MyAccountOrderView" elem="HeadingButton">
+                <button
+                  onClick={() => openOrderCancelation(CANCEL_ORDER_LABEL)}
+                >
+                  {CANCEL_ORDER_LABEL}
+                </button>
+              </div>
+            ) : is_cancelable ? (
+              <button
+                onClick={() => {
+                  openOrderCancelation(CANCEL_ITEM_LABEL);
+                  this.sendMoeEvents(EVENT_MOE_CANCEL_AN_ITEM_CLICK);
+                }}
+              >
                 {CANCEL_ITEM_LABEL}
               </button>
-            </div>
-          ) : (
-            <div block="MyAccountOrderView" elem="HeadingButton">
-              <button onClick={() => openOrderCancelation(buttonText)}>
-                {buttonText}
-              </button>
-            </div>
-          )
-        ) : null}
+            ) : null}
+          </div>
+        }
       </div>
     );
   }
@@ -253,11 +305,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                "Your order has been shipped in a single package, please find the package details below."
-              )
+                  "Your order has been shipped in a single package, please find the package details below."
+                )
               : __(
-                "Your order has been shipped in multiple packages, please find the package details below."
-              )
+                  "Your order has been shipped in multiple packages, please find the package details below."
+                )
             // eslint-disable-next-line
           }
         </p>
@@ -287,10 +339,10 @@ class MyAccountOrderView extends PureComponent {
         return __("Ready for Pick up");
       }
       case "pickedup": {
-        return __("Picked up from Store");
+        return __("Items Picked Up");
       }
-      case "pickupfailed":{
-        return __("Pickup Failed");
+      case "pickupfailed": {
+        return __("Pick up Failed");
       }
       default: {
         return null;
@@ -341,6 +393,9 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordionProgress(status, item) {
     const displayStatusBar = this.shouldDisplayBar(status);
+    const {
+      order: { is_exchange_order: exchangeCount },
+    } = this.props;
     if (!displayStatusBar) {
       return null;
     }
@@ -354,7 +409,10 @@ class MyAccountOrderView extends PureComponent {
         : item?.edd_msg_color;
     let crossBorder =
       item.cross_border && item.cross_border === 1 ? true : false;
-    const STATUS_LABELS = Object.assign({}, NEW_STATUS_LABEL_MAP);
+    const STATUS_LABELS =
+      exchangeCount === 1
+        ? Object.assign({}, NEW_EXCHANGE_STATUS_LABEL_MAP)
+        : Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
         block="MyAccountOrderView"
@@ -428,12 +486,13 @@ class MyAccountOrderView extends PureComponent {
       this.setEddEventSent();
     }
     let splitKey = DEFAULT_SPLIT_KEY;
-    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
-    const splitByReadyInclude = actualEddMess.includes(splitReadyByKey)
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+    const splitByReadyInclude = actualEddMess.includes(splitReadyByKey);
 
     let finalColorCode = colorCode ? colorCode : SPECIAL_COLORS["shamrock"];
-    const idealFormat = splitByReadyInclude || actualEddMess.includes(splitKey) ? true : false;
-    let commonSplitKey = splitByReadyInclude ? splitReadyByKey : splitKey
+    const idealFormat =
+      splitByReadyInclude || actualEddMess.includes(splitKey) ? true : false;
+    let commonSplitKey = splitByReadyInclude ? splitReadyByKey : splitKey;
 
     return (
       <div block="AreaText">
@@ -442,13 +501,16 @@ class MyAccountOrderView extends PureComponent {
             color: !idealFormat ? finalColorCode : SPECIAL_COLORS["nobel"],
           }}
         >
-          {splitByReadyInclude ? `${splitReadyByKey}` :
-            idealFormat
-              ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
-              : null}{" "}
+          {splitByReadyInclude
+            ? `${splitReadyByKey}`
+            : idealFormat
+            ? `${actualEddMess.split(splitKey)[0]} ${splitKey}`
+            : null}{" "}
         </span>
         <span style={{ color: finalColorCode }}>
-          {idealFormat ? `${actualEddMess.split(commonSplitKey)[1]}` : actualEddMess}
+          {idealFormat
+            ? `${actualEddMess.split(commonSplitKey)[1]}`
+            : actualEddMess}
         </span>
       </div>
     );
@@ -541,8 +603,8 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Cancelled" || item.status === "cancelled"
         ? CancelledImage
         : item.status === "Processing" || item.status === "processing"
-          ? TimerImage
-          : PackageImage;
+        ? TimerImage
+        : PackageImage;
     return (
       <div
         key={item.shipment_number}
@@ -563,8 +625,10 @@ class MyAccountOrderView extends PureComponent {
           MyAccountSection={true}
         >
           {item.status !== DELIVERY_SUCCESSFUL &&
-            item.status !== DELIVERY_FAILED && item.status !== PICKUP_FAILED &&
-            item.status !== PICKEDUP && item.status !== READY_TO_PICK &&
+            item.status !== DELIVERY_FAILED &&
+            item.status !== PICKUP_FAILED &&
+            item.status !== PICKEDUP &&
+            item.status !== READY_TO_PICK &&
             this.renderShipmentTracking(
               item.courier_name,
               item.courier_logo,
@@ -573,10 +637,7 @@ class MyAccountOrderView extends PureComponent {
           {!!item?.ctc_store_name && (
             <div block="MyAccountOrderView" elem="ClickAndCollect">
               <Store />
-              <div
-                block="MyAccountOrderView-ClickAndCollect"
-                elem="StoreName"
-              >
+              <div block="MyAccountOrderView-ClickAndCollect" elem="StoreName">
                 {item?.ctc_store_name}
               </div>
             </div>
@@ -780,6 +841,8 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("QPAY"));
         }
         return this.renderCardPaymentType();
+      case EXCHANGE_STORE_CREDIT:
+        return this.renderPaymentTypeText(__("Exchange Store Credit"));
       case "free":
         if (parseFloat(club_apparel_amount) !== 0) {
           return this.renderPaymentTypeText(__("Club Apparel"));
@@ -874,15 +937,15 @@ class MyAccountOrderView extends PureComponent {
             })}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
-                isStoreCredit: true,
-              })
+                  isStoreCredit: true,
+                })
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
@@ -892,11 +955,11 @@ class MyAccountOrderView extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLine(
-                msp_cod_amount,
-                getCountryFromUrl() === "QA"
-                  ? __("Cash on Receiving Fee")
-                  : __("Cash on Delivery Fee")
-              )
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving Fee")
+                    : __("Cash on Delivery Fee")
+                )
               : null}
             {this.renderPriceLine(
               grandTotal,

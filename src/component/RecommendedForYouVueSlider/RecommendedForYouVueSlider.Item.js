@@ -22,7 +22,6 @@ export const mapStateToProps = (state) => ({
 
 class RecommendedForYouVueSliderItem extends PureComponent {
   static propTypes = {
-    price: PriceType.isRequired,
     country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     pageType: PropTypes.string.isRequired,

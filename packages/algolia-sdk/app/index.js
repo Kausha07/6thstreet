@@ -13,10 +13,15 @@ import init from "./init";
 import logAlgoliaAnalytics from "./logger";
 import searchBy from "./search-by";
 import getSuggestions from "./suggestions";
+import getPromotions  from "./get-promotions";
+import getMultiProducts from "./get-multi-products";
+import getProductForSearchContainer from "./get-product-for-search-container";
 
 export {
   init,
   getPLP,
+  getProductForSearchContainer,
+  getPromotions,
   getSearchPLP,
   getPDP,
   searchBy,
@@ -29,5 +34,6 @@ export {
   autocompleteSearch,
   getWishlistProduct,
   getBrandsDetails,
-  getShopByBrands
+  getShopByBrands,
+  getMultiProducts
 };

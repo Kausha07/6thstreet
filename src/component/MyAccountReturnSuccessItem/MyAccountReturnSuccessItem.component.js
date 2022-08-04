@@ -52,7 +52,8 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
                     ) }
                 </div>
                 <p block="MyAccountReturnSuccessItem" elem="Price">
-                    <span
+                    {`${formatPrice(+price)}`}
+                    {/* <span
                       block="MyAccountReturnSuccessItem"
                       elem="PriceRegular"
                       mods={ { isDiscount: !!(price < original_price) } }
@@ -71,7 +72,7 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
                                 { `${ formatPrice(+price) }` }
                             </span>
                         </>
-                    ) }
+                    ) } */}
                 </p>
             </div>
         );
@@ -89,5 +90,4 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
         );
     }
 }
-
 export default MyAccountReturnSuccessItem;

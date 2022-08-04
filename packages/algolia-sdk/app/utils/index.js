@@ -1,4 +1,9 @@
-import { INDICES, FACET_FILTERS, NUMERIC_FILTERS } from "../config";
+import {
+  INDICES,
+  PREPROD_INDICES,
+  FACET_FILTERS,
+  NUMERIC_FILTERS,
+} from "../config";
 import { translate } from "../config/translations";
 
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
@@ -10,9 +15,12 @@ const getIndex = (locale, env = "production", type = "default") => {
     if (env === "staging") {
       prefix = "stage_";
     }
+     else if (env === "uat") {
+      prefix = "preprod_";
+    }
 
-    const index = INDICES[locale][type];
-
+    const index =
+      env === 'uat' ? PREPROD_INDICES[locale][type] : INDICES[locale][type];
     return `${prefix}${index}`;
   } catch (err) {
     console.error("Index not found", err);
