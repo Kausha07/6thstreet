@@ -1,24 +1,24 @@
 // import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
+import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import { Chat, Email, Phone } from "Component/Icons";
+import Link from "Component/Link";
+import PDPDetail from "Component/PDPDetail";
 import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { isArabic } from "Util/App";
+import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
+import isMobile from "Util/Mobile";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
-import { getUUIDToken } from "Util/Auth";
-import isMobile from "Util/Mobile";
-import { Phone, Chat, Email } from "Component/Icons";
-import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
-import Link from "Component/Link";
-import PDPDetail from "Component/PDPDetail";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_MOE_PHONE, EVENT_MOE_MAIL, EVENT_MOE_CHAT } from "Util/Event";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -323,8 +323,7 @@ class PDPDetailsSection extends PureComponent {
     product_length = "",
     product_width = "",
     bag_dimension = "",
-    product,
-    
+    product
   ) {
     if (!Object.keys(categories).length) {
       return highlights || [];
@@ -573,7 +572,7 @@ class PDPDetailsSection extends PureComponent {
         product_width,
         bag_dimension,
         model_wearing_size,
-        material_composition
+        material_composition,
       },
       product,
     } = this.props;
@@ -787,7 +786,11 @@ class PDPDetailsSection extends PureComponent {
       <div block="ContactUs">
         <div block="ContactUs" elem="Icons">
           <div block="IconWrapper">
-            <div block="IconWrapper" elem="Icon" onClick={() => this.sendEvents(EVENT_MOE_PHONE)}>
+            <div
+              block="IconWrapper"
+              elem="Icon"
+              onClick={() => this.sendEvents(EVENT_MOE_PHONE)}
+            >
               <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
                 <Phone />
               </a>
@@ -798,10 +801,14 @@ class PDPDetailsSection extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div block="IconWrapper" elem="Icon" onClick={() => {
-              this.sendEvents(EVENT_MOE_CHAT);
-              this.chat();
-            }}>
+            <div
+              block="IconWrapper"
+              elem="Icon"
+              onClick={() => {
+                this.sendEvents(EVENT_MOE_CHAT);
+                this.chat();
+              }}
+            >
               <Chat />
             </div>
             <p block="IconWrapper" elem="IconTitle">
@@ -810,7 +817,11 @@ class PDPDetailsSection extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div block="IconWrapper" elem="Icon" onClick={() => this.sendEvents(EVENT_MOE_MAIL)}>
+            <div
+              block="IconWrapper"
+              elem="Icon"
+              onClick={() => this.sendEvents(EVENT_MOE_MAIL)}
+            >
               <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
                 <Email />
               </a>
