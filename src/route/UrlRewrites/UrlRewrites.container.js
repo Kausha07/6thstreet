@@ -78,7 +78,7 @@ export class UrlRewritesContainer extends PureComponent {
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}${query}`);
         }
-      } else if (window.pageType = "CMS_PAGE") {
+      } else if (window.pageType === "CMS_PAGE") {
         history.push(`${pathname}`);
       } else {
         history.push(`${pathname}?${query}`);
