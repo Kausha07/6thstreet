@@ -35,5 +35,6 @@ export const PDP_ARABIC_VALUES_TRANSLATIONS = {
   fashion_segment: "قسم الموضة",
   unisex: "للجنسين",
   sustainable_fashion: "أزياء مستدامة",
+  discountable: "قابل للخصم",
   material_composition: "مكونات الخامات",
 };
