@@ -357,41 +357,6 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  suggestionEventDispatch = (query, searchString) => {
-    if (query == searchString) {
-      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
-    } else {
-      Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
-    }
-  };
-  suggestionContent = (fetchSKU, products, searchString, query, gender) => {
-    if (products?.length === 1 && fetchSKU) {
-      return (
-        <Link
-          to={fetchSKU?.url}
-          onClick={() => this.suggestionEventDispatch(query, searchString)}
-        >
-          <div className="suggestion-details-box text-capitalize">
-            {getHighlightedText(query, searchString)}
-          </div>
-        </Link>
-      );
-    } else {
-      return (
-        <Link
-          to={{
-            pathname: this.getCatalogUrl(query, gender),
-          }}
-          onClick={() => this.suggestionEventDispatch(query, searchString)}
-        >
-          <div className="suggestion-details-box">
-            {getHighlightedText(query, searchString)}
-          </div>
-        </Link>
-      );
-    }
-  };
-
   renderQuerySuggestion = (querySuggestions) => {
     const { query, label } = querySuggestions;
     const { searchString, products = [] } = this.props;

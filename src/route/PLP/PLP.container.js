@@ -119,36 +119,6 @@ export class PLPContainer extends PureComponent {
 
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
-  compareObjects(object1 = {}, object2 = {}) {
-    if (Object.keys(object1).length === Object.keys(object2).length) {
-      const isEqual = Object.entries(object1).reduce((acc, key) => {
-        if (object2[key[0]]) {
-          if (key[0] === "discount") {
-            if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
-              acc.push(0);
-            } else {
-              acc.push(1);
-            }
-          } else {
-            if (key[1].length !== object2[key[0]].length) {
-              acc.push(0);
-            } else {
-              acc.push(1);
-            }
-          }
-        } else {
-          acc.push(1);
-        }
-
-        return acc;
-      }, []);
-
-      return !isEqual.includes(0);
-    }
-
-    return false;
-  }
-
   static getRequestOptions() {
     let params;
     if (location.search && location.search.startsWith("?q")) {
@@ -201,7 +171,7 @@ export class PLPContainer extends PureComponent {
     if (Object.keys(object1).length === Object.keys(object2).length) {
       const isEqual = Object.entries(object1).reduce((acc, key) => {
         if (object2[key[0]]) {
-          if (key[1].length !== object2[key[0]].length) {
+          if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
             acc.push(0);
           } else {
             acc.push(1);
