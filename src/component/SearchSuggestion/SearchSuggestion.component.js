@@ -20,6 +20,7 @@ import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   EVENT_CLICK_TOP_SEARCHES_CLICK,
   EVENT_GTM_BRANDS_CLICK,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_GTM_PRODUCT_CLICK,
   EVENT_GTM_TRENDING_BRANDS_CLICK,
   EVENT_GTM_TRENDING_TAGS_CLICK,
@@ -446,7 +447,7 @@ class SearchSuggestion extends PureComponent {
             onClick={() => suggestionEventDipatch(query)}
           >
             <div className="suggestion-details-box">
-              {getHighlightedText(query, searchString)}
+              {getHighlightedText(label, searchString)}
             </div>
           </Link>
         );
