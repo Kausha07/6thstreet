@@ -41,6 +41,8 @@ import { checkProducts } from "Util/Cart/Cart";
 import Event, {
   EVENT_GTM_CHECKOUT,
   EVENT_GTM_EDD_TRACK_ON_ORDER,
+  EVENT_MOE_ADD_PAYMENT_INFO,
+  EVENT_MOE_EDD_TRACK_ON_ORDER,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -49,6 +51,7 @@ import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
 } from "../../store/MobileCart/MobileCart.reducer";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
@@ -489,6 +492,35 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
   }
 
+  sendMoeEvent(paymentInformation) {
+    const {
+      totals: { currency_code, discount, subtotal, total },
+    } = this.props;
+    const paymentCodeData = paymentInformation?.paymentMethod?.code;
+    if (paymentCodeData && paymentCodeData.length > 0) {
+      const payment_Type =
+        paymentCodeData == "msp_cashondelivery"
+          ? "Cash on Delivery"
+          : paymentCodeData == "checkoutcom_card_payment"
+          ? "Card"
+          : paymentCodeData == "checkout_apple_pay" || "APPLE_PAY"
+          ? "Apple Pay"
+          : paymentCodeData == "tabby_installments"
+          ? "Tabby - Installments"
+          : paymentCodeData;
+      Moengage.track_event(EVENT_MOE_ADD_PAYMENT_INFO, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        subtotal_amount: subtotal,
+        discounted_amount: discount,
+        total_amount: total,
+        currency: currency_code,
+        payment_type: payment_Type,
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
+
   /* eslint-disable no-magic-numbers */
   getCheckoutStepNumber() {
     const { checkoutStep } = this.state;
@@ -671,6 +703,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } else {
       this.placeOrder(code, data, null, finalEdd);
     }
+    this.sendMoeEvent(paymentInformation);
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd) {
@@ -690,6 +723,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (finalEdd) {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
             edd_date: finalEdd,
+          });
+          Moengage.track_event(EVENT_MOE_EDD_TRACK_ON_ORDER, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            edd_date: finalEdd,
+            app6thstreet_platform: "Web",
           });
         }
         const { data } = response;
