@@ -24,7 +24,7 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
   EVENT_MOE_VIEW_BAG,
-  EVENT_MOE_SELECT_SIZE
+  EVENT_MOE_SELECT_SIZE,
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -147,6 +147,7 @@ export class PDPAddToCartContainer extends PureComponent {
       notifyMeSuccess: false,
       openClickAndCollectPopup: false,
       selectedClickAndCollectStore: null,
+      isAddToCartClicked: false,
     };
 
     this.fullCheckoutHide = null;
@@ -350,8 +351,13 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       totals: { total = null },
     } = this.props;
-    const { productAdded, selectedSizeType, selectedSizeCode, productStock } =
-      this.state;
+    const {
+      productAdded,
+      selectedSizeType,
+      selectedSizeCode,
+      productStock,
+      isAddToCartClicked,
+    } = this.state;
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
@@ -364,9 +370,9 @@ export class PDPAddToCartContainer extends PureComponent {
     const prev_selectedSizeCode = prevState?.selectedSizeCode;
     if (
       selectedSizeCode &&
-      prev_selectedSizeCode == selectedSizeCode
+      prev_selectedSizeCode == selectedSizeCode &&
+      !isAddToCartClicked
     ) {
-
       this.sendMoEImpressions(EVENT_MOE_SELECT_SIZE);
     }
     if (
@@ -466,7 +472,7 @@ export class PDPAddToCartContainer extends PureComponent {
       showNotification("error", __("Unable to add product to cart."));
       return;
     }
-
+    this.setState({ isAddToCartClicked: true });
     const { selectedSizeType, selectedSizeCode, insertedSizeStatus } =
       this.state;
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];

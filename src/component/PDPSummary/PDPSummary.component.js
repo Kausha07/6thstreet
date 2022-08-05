@@ -264,6 +264,14 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
+        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          edd_status: edd_info.has_pdp,
+          edd_updated: false,
+          default_edd_status: default_edd,
+          app6thstreet_platform: "Web",
+        });
 
         this.setState({
           eddEventSent: true,
