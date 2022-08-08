@@ -18,9 +18,11 @@ import { ThreeDots } from "react-loader-spinner";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { EVENT_MOE_GO_TO_PAYMENT } from "Util/Event";
+import { EVENT_MOE_GO_TO_PAYMENT, EVENT_MOE_ADD_NEW_ADDRESS } from "Util/Event";
 
 import "./CheckoutShipping.style";
+
+export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export class CheckoutShipping extends SourceCheckoutShipping {
   static propTypes = {
@@ -137,66 +139,68 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { isButtondisabled } = this.state;
     const sendMOEEvents = () => {
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      let productName = [],
-        productColor = [],
-        productBrand = [],
-        productSku = [],
-        productGender = [],
-        productBasePrice = [],
-        productSizeOption = [],
-        productSizeValue = [],
-        productSubCategory = [],
-        productThumbanail = [],
-        productUrl = [],
-        productQty = [],
-        productCategory = [],
-        productItemPrice = [];
-      items.forEach((item) => {
-        let productKeys = item?.full_item_info;
-        productName.push(productKeys?.name);
-        productColor.push(productKeys?.color);
-        productBrand.push(productKeys?.brand_name);
-        productSku.push(productKeys?.config_sku);
-        productGender.push(productKeys?.gender);
-        productBasePrice.push(productKeys?.original_price);
-        productSizeOption.push(productKeys?.size_option);
-        productSizeValue.push(productKeys?.size_value);
-        productSubCategory.push(productKeys?.subcategory);
-        productThumbanail.push(productKeys?.thumbnail_url);
-        productUrl.push(productKeys?.url);
-        productQty.push(productKeys?.qty);
-        productCategory.push(productKeys?.original_price);
-        productItemPrice.push(productKeys?.itemPrice);
-      });
+      if (items && items.length > 0) {
+        let productName = [],
+          productColor = [],
+          productBrand = [],
+          productSku = [],
+          productGender = [],
+          productBasePrice = [],
+          productSizeOption = [],
+          productSizeValue = [],
+          productSubCategory = [],
+          productThumbanail = [],
+          productUrl = [],
+          productQty = [],
+          productCategory = [],
+          productItemPrice = [];
+        items.forEach((item) => {
+          let productKeys = item?.full_item_info;
+          productName.push(productKeys?.name);
+          productColor.push(productKeys?.color);
+          productBrand.push(productKeys?.brand_name);
+          productSku.push(productKeys?.config_sku);
+          productGender.push(productKeys?.gender);
+          productBasePrice.push(productKeys?.original_price);
+          productSizeOption.push(productKeys?.size_option);
+          productSizeValue.push(productKeys?.size_value);
+          productSubCategory.push(productKeys?.subcategory);
+          productThumbanail.push(productKeys?.thumbnail_url);
+          productUrl.push(productKeys?.url);
+          productQty.push(productKeys?.qty);
+          productCategory.push(productKeys?.original_price);
+          productItemPrice.push(productKeys?.itemPrice);
+        });
 
-      Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        category: currentAppState.gender
-          ? currentAppState.gender.toUpperCase()
-          : "",
-        brand_name: productBrand.length > 0 ? productBrand : "",
-        color: productColor.length > 0 ? productColor : "",
-        discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
-        full_price: productBasePrice.length > 0 ? productBasePrice : "",
-        product_name: productName.length > 0 ? productName : "",
-        product_sku: productSku.length > 0 ? productSku : "",
-        gender: productGender.length > 0 ? productGender : "",
-        size_id: productSizeOption.length > 0 ? productSizeOption : "",
-        size: productSizeValue.length > 0 ? productSizeValue : "",
-        subcategory: productSubCategory.length > 0 ? productSubCategory : "",
-        coupon_code_applied: coupon_code || "",
-        currency: currency_code || "",
-        discounted_amount: discount || "",
-        product_count: items.length || "",
-        shipping_fee: shipping_fee || "",
-        subtotal_amount: subtotal || "",
-        total_amount: total || "",
-        city: city || "",
-        area: area || "",
-        email: email || "",
-        app6thstreet_platform: "Web",
-      });
+        Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          category: currentAppState.gender
+            ? currentAppState.gender.toUpperCase()
+            : "",
+          brand_name: productBrand.length > 0 ? productBrand : "",
+          color: productColor.length > 0 ? productColor : "",
+          discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+          full_price: productBasePrice.length > 0 ? productBasePrice : "",
+          product_name: productName.length > 0 ? productName : "",
+          product_sku: productSku.length > 0 ? productSku : "",
+          gender: productGender.length > 0 ? productGender : "",
+          size_id: productSizeOption.length > 0 ? productSizeOption : "",
+          size: productSizeValue.length > 0 ? productSizeValue : "",
+          subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+          coupon_code_applied: coupon_code || "",
+          currency: currency_code || "",
+          discounted_amount: discount || "",
+          product_count: items.length || "",
+          shipping_fee: shipping_fee || "",
+          subtotal_amount: subtotal || "",
+          total_amount: total || "",
+          city: city || "",
+          area: area || "",
+          email: email || "",
+          app6thstreet_platform: "Web",
+        });
+      }
     };
 
     return (
@@ -313,6 +317,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { showCreateNewPopup } = this.props;
     this.openForm();
     showCreateNewPopup();
+    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      : "";
+    Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      cart_id: getCartID,
+      screen_name: "AddressAdd",
+      app6thstreet_platform: "Web",
+    });
   };
 
   renderButtonLabel() {

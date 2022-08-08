@@ -51,7 +51,7 @@ class ProductImpressionEvent extends BaseEvent {
    */
   handler(EVENT_TYPE, impressions = []) {
     const storage = this.getStorage();
-
+    console.log("impressions", impressions);
     const formattedImpressions = impressions.map(
       (
         {
@@ -71,7 +71,7 @@ class ProductImpressionEvent extends BaseEvent {
       ) => ({
         name: name || label || "",
         id: sku || id || "",
-        price: price ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : "",
+        price: price && price.length > 0 ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : "",
         brand: brand_name ? brand_name : "",
         category: product_type_6s || category || "",
         variant: color || "",
