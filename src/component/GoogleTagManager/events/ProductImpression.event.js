@@ -51,7 +51,6 @@ class ProductImpressionEvent extends BaseEvent {
    */
   handler(EVENT_TYPE, impressions = []) {
     const storage = this.getStorage();
-    console.log("impressions", impressions);
     const formattedImpressions = impressions.map(
       (
         {
