@@ -260,6 +260,7 @@ const config = {
       "stock_qty",
       "highlighted_attributes",
       "product_tag",
+      "material_composition",
     ],
     facets: FACET_FILTERS,
     facetFilters: [],

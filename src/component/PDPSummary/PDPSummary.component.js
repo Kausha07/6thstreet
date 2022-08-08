@@ -22,7 +22,7 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
   DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isObject } from "Util/API/helper/Object";
 import { getDefaultEddDate } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
@@ -30,7 +30,11 @@ import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
 import Image from "Component/Image";
 import "./PDPSummary.style";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, {
+  EVENT_GTM_EDD_VISIBILITY,
+  EVENT_MOE_TABBY_LEARN_MORE_CLICK,
+  EVENT_MOE_EDD_VISIBILITY,
+} from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -167,28 +171,27 @@ class PDPSummary extends PureComponent {
       });
       setEddResponse(null, null);
     }
-  }
+  };
 
-
-  addTabbyPromo = (total,currency_code) => {
+  addTabbyPromo = (total, currency_code) => {
     const { isArabic } = this.state;
     new window.TabbyPromo({
-      selector: '#TabbyPromo',
+      selector: "#TabbyPromo",
       currency: currency_code.toString(),
       price: total,
       installmentsCount: 4,
       lang: isArabic ? "ar" : "en",
-      source: 'product',
+      source: "product",
     });
-  }
+  };
 
   componentDidMount() {
     const {
       product: { price },
       getTabbyInstallment,
     } = this.props;
-    const script = document.createElement('script');
-    script.src = 'https://checkout.tabby.ai/tabby-promo.js';
+    const script = document.createElement("script");
+    script.src = "https://checkout.tabby.ai/tabby-promo.js";
     document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -198,11 +201,13 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          this.addTabbyPromo(defPrice, currency);
-        }
-      }, this._handleError).catch(() => { });
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            this.addTabbyPromo(defPrice, currency);
+          }
+        }, this._handleError)
+        .catch(() => {});
     }
 
     const countryCode = getCountryFromUrl();
@@ -229,11 +234,13 @@ class PDPSummary extends PureComponent {
         localStorage.getItem("APP_STATE_CACHE_KEY")
       ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice).then((response) => {
-        if (response?.value) {
-          this.addTabbyPromo(defPrice, currency);
-        }
-      }, this._handleError).catch(() => { });
+      getTabbyInstallment(defPrice)
+        .then((response) => {
+          if (response?.value) {
+            this.addTabbyPromo(defPrice, currency);
+          }
+        }, this._handleError)
+        .catch(() => {});
     }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
@@ -257,6 +264,15 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
+        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          edd_status: edd_info.has_pdp,
+          edd_updated: false,
+          default_edd_status: default_edd,
+          app6thstreet_platform: "Web",
+        });
+
         this.setState({
           eddEventSent: true,
         });
@@ -360,6 +376,14 @@ class PDPSummary extends PureComponent {
         edd_updated: true,
       },
       page: "pdp",
+    });
+    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      edd_status: edd_info.has_pdp,
+      edd_updated: true,
+      default_edd_status: default_edd,
+      app6thstreet_platform: "Web",
     });
     let request = {
       country: countryCode,
@@ -623,11 +647,12 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const { url_path } = this.props;
     const { isArabic } = this.state;
-    let gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all" ?
-    "Men,Women,Kids,Boy,Girl": 
-     BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
+    let gender =
+      BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
+        ? "Men,Women,Kids,Boy,Girl"
+        : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+        ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+        : "home";
     if (isArabic) {
       if (gender === "kids") {
         gender = "أولاد,بنات";
@@ -645,7 +670,7 @@ class PDPSummary extends PureComponent {
     } else {
       if (gender === "kids") {
         gender = "Boy,Girl";
-      }else if (gender === "all") {
+      } else if (gender === "all") {
         genderInURL = "Boy,Girl,Men,Women,Kids";
       } else {
         if (gender !== "home") {
@@ -783,7 +808,9 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.href}
             image={gallery_images[0] || fallbackImage}
+            product={product}
           />
+
           <WishlistIcon
             sku={sku}
             renderMySignInPopup={renderMySignInPopup}
@@ -949,11 +976,23 @@ class PDPSummary extends PureComponent {
 
     return null;
   }
-
+  sendMoEImpressions() {
+    const {
+      product: { sku, name, url },
+    } = this.props;
+    Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      product_name: name ? name : "",
+      product_sku: sku ? sku : "",
+      product_url: url ? url : "",
+      app6thstreet_platform: "Web",
+    });
+  }
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo"></div>
+        <div id="TabbyPromo" onClick={() => this.sendMoEImpressions()}></div>
       </>
     );
   }

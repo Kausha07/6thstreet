@@ -21,6 +21,10 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART_FAILED,
+  EVENT_MOE_VIEW_BAG,
+  EVENT_MOE_SELECT_SIZE,
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -28,6 +32,9 @@ import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
 import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getCurrency } from "Util/App";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -38,6 +45,8 @@ export const mapStateToProps = (state) => ({
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
   prevPath: state.PLP.prevPath,
 });
+
+export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
@@ -138,6 +147,7 @@ export class PDPAddToCartContainer extends PureComponent {
       notifyMeSuccess: false,
       openClickAndCollectPopup: false,
       selectedClickAndCollectStore: null,
+      isAddToCartClicked: false,
     };
 
     this.fullCheckoutHide = null;
@@ -146,20 +156,19 @@ export class PDPAddToCartContainer extends PureComponent {
 
   updateDefaultSizeType() {
     const { product } = this.props;
-    if(product?.size_eu &&  product?.size_uk && product?.size_us) {
-      const sizeTypes = ['eu', 'uk', 'us'];
+    if (product?.size_eu && product?.size_uk && product?.size_us) {
+      const sizeTypes = ["eu", "uk", "us"];
       let index = 0;
-      while(product[`size_${sizeTypes[index]}`]?.length <= 0){
+      while (product[`size_${sizeTypes[index]}`]?.length <= 0) {
         index = index + 1;
       }
 
-      if(index >= sizeTypes.length) {
+      if (index >= sizeTypes.length) {
         index = 0;
       }
-      this.setState({selectedSizeType: sizeTypes[index]});
+      this.setState({ selectedSizeType: sizeTypes[index] });
     }
   }
-
 
   static getDerivedStateFromProps(props) {
     const { product } = props;
@@ -342,9 +351,13 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       totals: { total = null },
     } = this.props;
-
-    const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
-
+    const {
+      productAdded,
+      selectedSizeType,
+      selectedSizeCode,
+      productStock,
+      isAddToCartClicked,
+    } = this.state;
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
@@ -352,6 +365,16 @@ export class PDPAddToCartContainer extends PureComponent {
 
     const { setSize } = this.props;
     const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
+
+    const prev_selectedSizeType = prevState?.selectedSizeType;
+    const prev_selectedSizeCode = prevState?.selectedSizeCode;
+    if (
+      selectedSizeCode &&
+      prev_selectedSizeCode == selectedSizeCode &&
+      !isAddToCartClicked
+    ) {
+      this.sendMoEImpressions(EVENT_MOE_SELECT_SIZE);
+    }
     if (
       selectedSizeType !== prevSelectedSizeType ||
       selectedSizeCode !== prevSelectedSizeCode
@@ -374,9 +397,9 @@ export class PDPAddToCartContainer extends PureComponent {
       openClickAndCollectPopup,
     } = this.state;
     const basePrice =
-      product?.price && product.price[0] &&
+      product?.price &&
+      product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
-
     return {
       ...this.state,
       sizeObject: mappedSizeObject,
@@ -437,18 +460,19 @@ export class PDPAddToCartContainer extends PureComponent {
         sku: configSKU,
         objectID,
         product_type_6s,
+        categories = {},
       },
+      product,
       addProductToCart,
       showNotification,
       prevPath = null,
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
-
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
       return;
     }
-
+    this.setState({ isAddToCartClicked: true });
     const { selectedSizeType, selectedSizeCode, insertedSizeStatus } =
       this.state;
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
@@ -502,10 +526,12 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
         }
       });
 
@@ -565,11 +591,13 @@ export class PDPAddToCartContainer extends PureComponent {
       ).then((response) => {
         // Response is sent only if error appear
         if (response) {
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
           showNotification("error", __(response));
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
         } else {
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
@@ -609,7 +637,11 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true", options) {
-    const { buttonRefreshTimeout, openClickAndCollectPopup, selectedClickAndCollectStore } = this.state;
+    const {
+      buttonRefreshTimeout,
+      openClickAndCollectPopup,
+      selectedClickAndCollectStore,
+    } = this.state;
 
     if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
@@ -619,7 +651,6 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState({ isLoading: false });
     // TODO props for addedToCart
     const timeout = 1250;
-
     if (isAdded) {
       if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
@@ -640,7 +671,96 @@ export class PDPAddToCartContainer extends PureComponent {
       timeout
     );
   }
+  sendMoEImpressions(event) {
+    const {
+      product: {
+        categories = {},
+        brand_name,
+        color,
+        name,
+        price,
+        product_type_6s,
+        sku,
+        thumbnail_url,
+        url,
+        simple_products,
+        size_uk = [],
+        size_eu = [],
+        size_us = [],
+      },
+      product,
+    } = this.props;
+    const { selectedSizeType, selectedSizeCode } = this.state;
 
+    const productStock = simple_products;
+
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+
+    const checkproductSize =
+      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      selectedSizeCode !== "";
+
+    const { size } = checkproductSize ? productStock[selectedSizeCode] : "";
+    const optionId = checkproductSize
+      ? selectedSizeType.toLocaleUpperCase()
+      : "";
+    const optionValue = checkproductSize ? size[selectedSizeType] : "";
+
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///") == 1
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+
+    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      : "";
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      subcategory: product_type_6s || categoryLevel,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: basePrice || "",
+      product_url: url || "",
+      currency: getCurrency() || "",
+      gender: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      product_sku: sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      size_id: optionId,
+      size: optionValue,
+      quantity: 1,
+      cart_id: getCartID || "",
+      app6thstreet_platform: "Web",
+    });
+  }
   clearTimeAll() {
     this.setState({ hideCheckoutBlock: false });
 
@@ -666,7 +786,13 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   routeChangeToCart() {
-    history.push("/cart",{errorState: false});
+    history.push("/cart", { errorState: false });
+    Moengage.track_event(EVENT_MOE_VIEW_BAG, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: "Product Page",
+      app6thstreet_platform: "Web",
+    });
   }
 
   showAlertNotification(message) {
@@ -723,7 +849,7 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState(
       {
         openClickAndCollectPopup: !openClickAndCollectPopup,
-      },
+      }
       // () => {
       //   this.toggleRootElementsOpacity();
       // }

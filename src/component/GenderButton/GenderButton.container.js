@@ -6,6 +6,16 @@ import { setGender } from "Store/AppState/AppState.action";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import GenderButton from "./GenderButton.component";
 import { getLocaleFromUrl } from "Util/Url/Url";
+import {
+  EVENT_MOE_TOP_NAV_CHANGE,
+  EVENT_MOE_TOP_NAV_HOME,
+  EVENT_MOE_TOP_NAV_MEN,
+  EVENT_MOE_TOP_NAV_WOMEN,
+  EVENT_MOE_TOP_NAV_KIDS,
+  EVENT_MOE_TOP_NAV_ALL,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
 export const mapStateToProps = (state) => ({
   currentContentGender: state.AppState.gender,
 });
@@ -32,8 +42,8 @@ export class GenderButtonContainer extends PureComponent {
   };
 
   static defaultProps = {
-    onClick: () => { },
-    changeMenuGender: () => { },
+    onClick: () => {},
+    changeMenuGender: () => {},
   };
 
   containerFunctions = {
@@ -56,7 +66,50 @@ export class GenderButtonContainer extends PureComponent {
       isUnsetStyle,
     };
   };
+  sendNavigationImpressions(label) {
+    const MoeGenderEvent =
+      label == "women"
+        ? EVENT_MOE_TOP_NAV_WOMEN
+        : label == "men"
+        ? EVENT_MOE_TOP_NAV_MEN
+        : label == "kids"
+        ? EVENT_MOE_TOP_NAV_KIDS
+        : label == "all"
+        ? EVENT_MOE_TOP_NAV_ALL
+        : label == "home"
+        ? EVENT_MOE_TOP_NAV_HOME
+        : "";
+    const genderChangeEvent = (event) => {
+      Moengage.track_event(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        screen_name: this.getPageType() ? this.getPageType() : "",
+        category: label || "",
+        app6thstreet_platform: "Web",
+      });
+    };
+    if (MoeGenderEvent && MoeGenderEvent.length > 0) {
+      genderChangeEvent(EVENT_MOE_TOP_NAV_CHANGE);
+      genderChangeEvent(MoeGenderEvent);
+    }
+  }
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
 
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
   onGenderClick() {
     const {
       onClick,
@@ -67,6 +120,7 @@ export class GenderButtonContainer extends PureComponent {
 
     setGender(key);
     onClick(key);
+    this.sendNavigationImpressions(key);
     const locale = getLocaleFromUrl();
     if (locale) {
       requestPLPWidgetData();

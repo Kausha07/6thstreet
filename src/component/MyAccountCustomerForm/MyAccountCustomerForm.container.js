@@ -6,7 +6,8 @@ import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm
 import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
-import { getCountryFromUrl } from 'Util/Url';
+import { EVENT_MOE_UPDATE_PROFILE } from "Util/Event";
+import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 
 import MyAccountCustomerForm from './MyAccountCustomerForm.component';
 
@@ -91,7 +92,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         const { countryCode, gender, phoneCountryCode = PHONE_CODES[countryCode] } = this.state;
         const { phone } = customer;
         const elmnts = document.getElementsByClassName('MyAccount-Heading');
-
+        const GetGender = gender == "1" ? "Male" : gender == "2" ? "Female" : "Prefer Not To Say" 
         try {
             updateCustomer({
                 ...oldCustomerData,
@@ -99,7 +100,14 @@ export class MyAccountCustomerFormContainer extends PureComponent {
                 gender,
                 phone: phoneCountryCode + phone
             });
+            Moengage.track_event(EVENT_MOE_UPDATE_PROFILE, {
+                country: getCountryFromUrl().toUpperCase(),
+                language: getLanguageFromUrl().toUpperCase(),
+                gender: GetGender || "",
+                app6thstreet_platform: "Web",
+              });
             showSuccessNotification(__('Your information was successfully updated!'));
+
         } catch (e) {
             showErrorNotification(e);
         }
