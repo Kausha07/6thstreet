@@ -18,11 +18,9 @@ import { ThreeDots } from "react-loader-spinner";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { EVENT_MOE_GO_TO_PAYMENT, EVENT_MOE_ADD_NEW_ADDRESS } from "Util/Event";
+import { EVENT_MOE_GO_TO_PAYMENT } from "Util/Event";
 
 import "./CheckoutShipping.style";
-
-export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export class CheckoutShipping extends SourceCheckoutShipping {
   static propTypes = {
@@ -317,16 +315,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { showCreateNewPopup } = this.props;
     this.openForm();
     showCreateNewPopup();
-    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
-      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
-      : "";
-    Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      cart_id: getCartID,
-      screen_name: "AddressAdd",
-      app6thstreet_platform: "Web",
-    });
   };
 
   renderButtonLabel() {
