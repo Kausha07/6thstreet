@@ -1,5 +1,6 @@
 
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
+import { isArabic } from "Util/App";
 const createQuerySuggestionIDRegexp = new RegExp(' ', 'g');
 
 export const getCustomQuerySuggestions = (hits, indexName) => {
@@ -53,6 +54,25 @@ export const getGenderInArabic = (gender) => {
       return "منزل";
   }
 };
+
+export const getGenderParam = (gender, isProduct = false) => {
+  switch (gender.toLowerCase()) {
+    case 'kids':
+      if(isProduct) {
+        return isArabic() ? 'أولاد~بنات,' : 'Boy~Girl';
+      }
+      return isArabic() ? 'بنات,أولاد,البنات الرضع,الأولاد الرضع,' : 'girl,boy,baby girl,baby boy,unisex,infant';
+
+    case 'women':
+      return isArabic() ? getGenderInArabic('women'): 'women';
+
+    case 'men':
+      return isArabic() ? getGenderInArabic('men'): 'men';
+
+    default:
+      return undefined;
+  }
+}
 
 export const getAlgoliaIndexForQuerySuggestion = (countryCodeFromUrl, lang) => {
   const algoliaENV =

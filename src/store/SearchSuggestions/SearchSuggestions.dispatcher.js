@@ -3,21 +3,23 @@ import {
   setSearchSuggestions,
   setAlgoliaIndex,
 } from "Store/SearchSuggestions/SearchSuggestions.action";
-import { getCustomQuerySuggestions, getAlgoliaIndexForQuerySuggestion } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  getCustomQuerySuggestions,
+  getAlgoliaIndexForQuerySuggestion,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  getGenderInArabic,
+  getGenderParam,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import { getLocaleFromUrl } from "Util/Url/Url";
 const PRODUCT_RESULT_LIMIT = 8;
 const QUERY_SUGGESTION_LIMIT = 5;
 
 export class SearchSuggestionsDispatcher {
-  async requestSearchSuggestions(
-    search,
-    sourceIndexName,
-    dispatch
-  ) {
+  async requestSearchSuggestions(search, sourceIndexName, dispatch) {
     const {
       AppState: { gender, country },
     } = getStore().getState();
@@ -36,29 +38,50 @@ export class SearchSuggestionsDispatcher {
         countryCodeFromUrl,
         lang
       );
-      const searchData = await new Algolia().getProductForSearchContainer(
-        {
-          q: search,
-          page: 0,
-          limit: PRODUCT_RESULT_LIMIT,
-          gender: isArabic() ? getGenderInArabic(gender) : gender,
-        },
-        {
-          indexName: `${algoliaQueryIndex}_query_suggestions`,
-          params: {
-            query: search,
-            hitsPerPage: QUERY_SUGGESTION_LIMIT,
-            clickAnalytics: true,
-            facetFilters: [
-              [
-                `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${
-                  isArabic() ? getGenderInArabic(gender) : gender
-                }`,
-              ],
-            ],
+      let searchData = [];
+      if (gender !== "all" && gender !== "home") {
+        searchData = await new Algolia().getProductForSearchContainer(
+          {
+            q: search,
+            page: 0,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: getGenderParam(
+              gender,true
+            ),
           },
-        }
-      );
+          {
+            indexName: `${algoliaQueryIndex}_query_suggestions`,
+            params: {
+              query: search,
+              hitsPerPage: QUERY_SUGGESTION_LIMIT,
+              clickAnalytics: true,
+              facetFilters: [
+                [
+                  `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${getGenderParam(
+                    gender,false
+                  )}`,
+                ],
+              ],
+            },
+          }
+        );
+      } else {
+        searchData = await new Algolia().getProductForSearchContainer(
+          {
+            q: search,
+            page: 0,
+            limit: PRODUCT_RESULT_LIMIT,
+          },
+          {
+            indexName: `${algoliaQueryIndex}_query_suggestions`,
+            params: {
+              query: search,
+              hitsPerPage: QUERY_SUGGESTION_LIMIT,
+              clickAnalytics: true,
+            },
+          }
+        );
+      }
       let { productData, suggestionData } = searchData;
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
@@ -132,7 +155,6 @@ export class SearchSuggestionsDispatcher {
     const algoliaIndex = await new Algolia().getIndex();
     dispatch(setAlgoliaIndex(algoliaIndex));
   }
-
 }
 
 export default new SearchSuggestionsDispatcher();
