@@ -6,7 +6,6 @@ import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestion
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
-import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import browserHistory from "Util/History";
@@ -32,14 +31,12 @@ export const mapDispatchToProps = (dispatch) => ({
     SearchSuggestionDispatcher.requestSearchSuggestions(
       search,
       sourceIndexName,
-      sourceQuerySuggestionIndex,
       dispatch
     );
   },
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
 });
 let sourceIndexName;
-let sourceQuerySuggestionIndex;
 export class SearchSuggestionContainer extends PureComponent {
   static propTypes = {
     requestSearchSuggestions: PropTypes.func.isRequired,
@@ -100,43 +97,6 @@ export class SearchSuggestionContainer extends PureComponent {
     // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
-  }
-
-  getAlgoliaIndex(countryCodeFromUrl, lang) {
-    const algoliaENV =
-      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
-    // production will work after resolving index issue.
-    if (lang === "english") {
-      switch (countryCodeFromUrl) {
-        case "en-ae":
-          return `${algoliaENV}_magento_english_products_query_suggestions`;
-        case "en-bh":
-          return `${algoliaENV}_magento_en_bh_products_query_suggestions`;
-        case "en-kw":
-          return `${algoliaENV}_magento_en_kw_products_query_suggestions`;
-        case "en-om":
-          return `${algoliaENV}_magento_en_om_products_query_suggestions`;
-        case "en-qa":
-          return `${algoliaENV}_magento_en_qa_products_query_suggestions`;
-        case "en-sa":
-          return `${algoliaENV}_magento_en_sa_products_query_suggestions`;
-      }
-    } else {
-      switch (countryCodeFromUrl) {
-        case "ar-ae":
-          return `${algoliaENV}_magento_arabic_products_query_suggestions`;
-        case "ar-bh":
-          return `${algoliaENV}_magento_ar_bh_products_query_suggestions`;
-        case "ar-kw":
-          return `${algoliaENV}_magento_ar_kw_products_query_suggestions`;
-        case "ar-om":
-          return `${algoliaENV}_magento_ar_om_products_query_suggestions`;
-        case "ar-qa":
-          return `${algoliaENV}_magento_ar_qa_products_query_suggestions`;
-        case "ar-sa":
-          return `${algoliaENV}_magento_ar_sa_products_query_suggestions`;
-      }
-    }
   }
 
   async getPdpSearchWidgetData() {
@@ -203,9 +163,6 @@ export class SearchSuggestionContainer extends PureComponent {
   componentDidMount() {
     const { gender, algoliaIndex } = this.props;
     sourceIndexName = algoliaIndex?.indexName;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const lang = isArabic() ? "arabic" : "english";
-    sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
 
     if (gender !== "home") {
       this.getPdpSearchWidgetData();

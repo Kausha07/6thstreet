@@ -53,3 +53,40 @@ export const getGenderInArabic = (gender) => {
       return "منزل";
   }
 };
+
+export const getAlgoliaIndexForQuerySuggestion = (countryCodeFromUrl, lang) => {
+  const algoliaENV =
+    process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+  // production will work after resolving index issue.
+  if (lang === "english") {
+    switch (countryCodeFromUrl) {
+      case "en-ae":
+        return `${algoliaENV}_magento_english_products`;
+      case "en-bh":
+        return `${algoliaENV}_magento_en_bh_products`;
+      case "en-kw":
+        return `${algoliaENV}_magento_en_kw_products`;
+      case "en-om":
+        return `${algoliaENV}_magento_en_om_products`;
+      case "en-qa":
+        return `${algoliaENV}_magento_en_qa_products`;
+      case "en-sa":
+        return `${algoliaENV}_magento_en_sa_products`;
+    }
+  } else {
+    switch (countryCodeFromUrl) {
+      case "ar-ae":
+        return `${algoliaENV}_magento_arabic_products`;
+      case "ar-bh":
+        return `${algoliaENV}_magento_ar_bh_products`;
+      case "ar-kw":
+        return `${algoliaENV}_magento_ar_kw_products`;
+      case "ar-om":
+        return `${algoliaENV}_magento_ar_om_products`;
+      case "ar-qa":
+        return `${algoliaENV}_magento_ar_qa_products`;
+      case "ar-sa":
+        return `${algoliaENV}_magento_ar_sa_products`;
+    }
+  }
+}

@@ -1,10 +1,14 @@
 import { getStore } from "Store";
-import { setSearchSuggestions,setAlgoliaIndex } from "Store/SearchSuggestions/SearchSuggestions.action";
-import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  setSearchSuggestions,
+  setAlgoliaIndex,
+} from "Store/SearchSuggestions/SearchSuggestions.action";
+import { getCustomQuerySuggestions, getAlgoliaIndexForQuerySuggestion } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
+import { getLocaleFromUrl } from "Util/Url/Url";
 const PRODUCT_RESULT_LIMIT = 8;
 const QUERY_SUGGESTION_LIMIT = 5;
 
@@ -12,7 +16,6 @@ export class SearchSuggestionsDispatcher {
   async requestSearchSuggestions(
     search,
     sourceIndexName,
-    sourceQuerySuggestionIndex,
     dispatch
   ) {
     const {
@@ -21,12 +24,18 @@ export class SearchSuggestionsDispatcher {
     let queryID = null;
 
     // var searchQuery = search;
-      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
+    // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
     // if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
     //   searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
     // }
 
     try {
+      const countryCodeFromUrl = getLocaleFromUrl();
+      const lang = isArabic() ? "arabic" : "english";
+      const algoliaQueryIndex = getAlgoliaIndexForQuerySuggestion(
+        countryCodeFromUrl,
+        lang
+      );
       const searchData = await new Algolia().getProductForSearchContainer(
         {
           q: search,
@@ -35,16 +44,23 @@ export class SearchSuggestionsDispatcher {
           gender: isArabic() ? getGenderInArabic(gender) : gender,
         },
         {
-          indexName: sourceQuerySuggestionIndex,
+          indexName: `${algoliaQueryIndex}_query_suggestions`,
           params: {
             query: search,
             hitsPerPage: QUERY_SUGGESTION_LIMIT,
             clickAnalytics: true,
-          }
+            facetFilters: [
+              [
+                `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${
+                  isArabic() ? getGenderInArabic(gender) : gender
+                }`,
+              ],
+            ],
+          },
         }
       );
       let { productData, suggestionData } = searchData;
-      
+
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
       // var data = localStorage.getItem("customer");
@@ -81,7 +97,7 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      
+
       const defaultHit = {
         query: search,
         count: "",
@@ -89,9 +105,13 @@ export class SearchSuggestionsDispatcher {
       var querySuggestions = [defaultHit];
       querySuggestions =
         suggestionData?.hits?.length > 0
-        ? getCustomQuerySuggestions(suggestionData?.hits, sourceIndexName, suggestionData?.query)
-        : [defaultHit];
-      
+          ? getCustomQuerySuggestions(
+              suggestionData?.hits,
+              sourceIndexName,
+              suggestionData?.query
+            )
+          : [defaultHit];
+
       if (suggestionData && suggestionData.queryID) {
         queryID = suggestionData.queryID;
       } else {
@@ -110,9 +130,44 @@ export class SearchSuggestionsDispatcher {
 
   async requestAlgoliaIndex(dispatch) {
     const algoliaIndex = await new Algolia().getIndex();
-    dispatch(
-      setAlgoliaIndex(algoliaIndex)
-    );
+    dispatch(setAlgoliaIndex(algoliaIndex));
+  }
+
+  getAlgoliaIndexForGender(countryCodeFromUrl, lang) {
+    const algoliaENV =
+      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+    // production will work after resolving index issue.
+    if (lang === "english") {
+      switch (countryCodeFromUrl) {
+        case "en-ae":
+          return `${algoliaENV}_magento_english_products`;
+        case "en-bh":
+          return `${algoliaENV}_magento_en_bh_products`;
+        case "en-kw":
+          return `${algoliaENV}_magento_en_kw_products`;
+        case "en-om":
+          return `${algoliaENV}_magento_en_om_products`;
+        case "en-qa":
+          return `${algoliaENV}_magento_en_qa_products`;
+        case "en-sa":
+          return `${algoliaENV}_magento_en_sa_products`;
+      }
+    } else {
+      switch (countryCodeFromUrl) {
+        case "ar-ae":
+          return `${algoliaENV}_magento_arabic_products`;
+        case "ar-bh":
+          return `${algoliaENV}_magento_ar_bh_products`;
+        case "ar-kw":
+          return `${algoliaENV}_magento_ar_kw_products`;
+        case "ar-om":
+          return `${algoliaENV}_magento_ar_om_products`;
+        case "ar-qa":
+          return `${algoliaENV}_magento_ar_qa_products`;
+        case "ar-sa":
+          return `${algoliaENV}_magento_ar_sa_products`;
+      }
+    }
   }
 }
 
