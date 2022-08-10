@@ -28,14 +28,14 @@ export class CartCoupon extends SourceCartCoupon {
     handleApplyCouponToCart(formattedCouponValue);
   };
 
-   sendMOEEvents(event , coupon){
+  sendMOEEvents(event, coupon) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       coupon_code: coupon || "",
       app6thstreet_platform: "Web",
     });
-  };
+  }
 
   handleApplyCode = async (e, couponCode) => {
     e.stopPropagation();
@@ -46,7 +46,7 @@ export class CartCoupon extends SourceCartCoupon {
       if (apiResponse) {
         this.sendMOEEvents(EVENT_MOE_APPLY_COUPON_FAILED, couponCode);
       } else {
-        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON,couponCode);
+        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON, couponCode);
       }
       if (typeof apiResponse !== "string") {
         this.props.closePopup();
@@ -59,8 +59,9 @@ export class CartCoupon extends SourceCartCoupon {
   handleRemoveCoupon = () => {
     const { handleRemoveCouponFromCart } = this.props;
     const { couponCode } = this.props;
+    localStorage.removeItem("lastCouponCode");
     handleRemoveCouponFromCart();
-    this.sendMOEEvents(EVENT_MOE_REMOVE_COUPON,couponCode);
+    this.sendMOEEvents(EVENT_MOE_REMOVE_COUPON, couponCode);
 
     // We need to reset input field. If we do it in applyCouponCode,
     // then it will disappear if code is incorrect. We want to avoid it
@@ -84,6 +85,7 @@ export class CartCoupon extends SourceCartCoupon {
   renderApplyCoupon() {
     const { enteredCouponCode } = this.state;
     const formattedCouponValue = this.removeCouponSpace(enteredCouponCode);
+    localStorage.setItem("lastCouponCode", formattedCouponValue);
     return (
       <>
         <Field
