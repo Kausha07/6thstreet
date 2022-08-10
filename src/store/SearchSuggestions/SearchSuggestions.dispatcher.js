@@ -39,26 +39,31 @@ export class SearchSuggestionsDispatcher {
         lang
       );
       let searchData = [];
+      let paramsForProductSearch = {
+        q: search,
+        page: 0,
+        limit: PRODUCT_RESULT_LIMIT,
+      };
+      let paramsForQuerySuggestion = {
+        indexName: `${algoliaQueryIndex}_query_suggestions`,
+        params: {
+          query: search,
+          hitsPerPage: QUERY_SUGGESTION_LIMIT,
+          clickAnalytics: true,
+        },
+      };
       if (gender !== "all" && gender !== "home") {
         searchData = await new Algolia().getProductForSearchContainer(
+          { ...paramsForProductSearch, gender: getGenderParam(gender, true) },
           {
-            q: search,
-            page: 0,
-            limit: PRODUCT_RESULT_LIMIT,
-            gender: getGenderParam(
-              gender,true
-            ),
-          },
-          {
-            indexName: `${algoliaQueryIndex}_query_suggestions`,
+            ...paramsForQuerySuggestion,
             params: {
-              query: search,
-              hitsPerPage: QUERY_SUGGESTION_LIMIT,
-              clickAnalytics: true,
+              ...paramsForQuerySuggestion.params,
               facetFilters: [
                 [
                   `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${getGenderParam(
-                    gender,false
+                    gender,
+                    false
                   )}`,
                 ],
               ],
@@ -67,19 +72,8 @@ export class SearchSuggestionsDispatcher {
         );
       } else {
         searchData = await new Algolia().getProductForSearchContainer(
-          {
-            q: search,
-            page: 0,
-            limit: PRODUCT_RESULT_LIMIT,
-          },
-          {
-            indexName: `${algoliaQueryIndex}_query_suggestions`,
-            params: {
-              query: search,
-              hitsPerPage: QUERY_SUGGESTION_LIMIT,
-              clickAnalytics: true,
-            },
-          }
+          { ...paramsForProductSearch },
+          { ...paramsForQuerySuggestion }
         );
       }
       let { productData, suggestionData } = searchData;
