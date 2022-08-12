@@ -733,7 +733,6 @@ export class PDPAddToCartContainer extends PureComponent {
     const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
-
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -741,7 +740,7 @@ export class PDPAddToCartContainer extends PureComponent {
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
-      subcategory: product_type_6s || categoryLevel,
+      subcategory: categoryLevel || product_type_6s,
       color: color || "",
       brand_name: brand_name || "",
       full_price: basePrice || "",
@@ -757,7 +756,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size_id: optionId,
       size: optionValue,
       quantity: 1,
-      cart_id: getCartID || "",
+      ...((event !== EVENT_MOE_SELECT_SIZE ) && {cart_id: getCartID || ""}),
       app6thstreet_platform: "Web",
     });
   }

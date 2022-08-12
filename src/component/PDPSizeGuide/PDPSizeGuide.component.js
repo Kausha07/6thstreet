@@ -95,7 +95,7 @@ class PDPSizeGuide extends PureComponent {
       gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
-      subcategory: product_type_6s || categoryLevel,
+      subcategory: categoryLevel || product_type_6s,
       color: color || "",
       brand_name: brand_name || "",
       product_url: url || "",

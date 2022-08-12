@@ -168,9 +168,117 @@ export class PDPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
       this.fetchClickAndCollectStores(brandName, sku);
+      this.appendSchemaData();
     }
   }
+  appendSchemaData() {
+    const {
+      product: {
+        brand_name,
+        color,
+        gallery_images,
+        upper_material,
+        material,
+        url,
+        sku,
+        name,
+        description,
+        price,
+        categories,
+        categories_without_path,
+      },
+      brandImg,
+      config,
+      country,
+      product,
+    } = this.props;
 
+    const countryList = getCountriesForSelect(config);
+    const { label: countryName = "" } =
+      countryList.find((obj) => obj.id === country) || {};
+    const specialPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"].toString()
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"].toString()
+        : null;
+    let galleryImages = [];
+    gallery_images.forEach((item) => {
+      galleryImages.push(item);
+    });
+    const currency =
+      price && price[0] && Object.keys(price[0])
+        ? Object.keys(price[0]).toString()
+        : "";
+    const checkCategoryLevel = () => {
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel = checkCategoryLevel().includes("///")
+      ? checkCategoryLevel().split("///").join(">")
+      : checkCategoryLevel();
+    const schemaData = [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        brand: {
+          "@type": "Brand",
+          name: brand_name || "",
+          logo: brandImg || "",
+        },
+        name: name || "",
+        image: galleryImages || "",
+        description: description || "",
+        sku: sku || "",
+        category: categoryLevel || "",
+        material:
+          material && material !== null
+            ? material
+            : upper_material
+            ? upper_material
+            : "",
+        keywords: __(
+          "%s, %s, %s, Online Shopping %s",
+          brand_name || "",
+          name || "",
+          categories_without_path.join(" ") || "",
+          countryName || ""
+        ),
+        color: color || "",
+        offers: {
+          "@type": "Offer",
+          priceCurrency: currency || "",
+          price: specialPrice || "",
+          availability: "https://schema.org/InStock",
+          url: url || "",
+        },
+      },
+    ];
+
+    const scriptText = document.createTextNode(JSON.stringify(schemaData));
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "product-schema";
+    script.appendChild(scriptText);
+    document.head.appendChild(script);
+  }
+
+  componentWillUnmount() {
+    const schemaTags = document.getElementById("product-schema");
+
+    if (schemaTags) {
+      schemaTags.parentNode.removeChild(schemaTags);
+    }
+  }
   // componentWillUnmount() {
   //   const {resetProduct} =this.props;
   //   resetProduct();
@@ -262,7 +370,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-        Object.keys(categories)[Object.keys(categories).length - 1]
+          Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -300,14 +408,14 @@ export class PDPContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-          ? price[Object.keys(price)[0]]["6s_special_price"]
-          : null;
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const originalPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
         : price && Object.keys(price)[0] !== "0"
-          ? price[Object.keys(price)[0]]["6s_base_price"]
-          : null;
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -349,7 +457,10 @@ export class PDPContainer extends PureComponent {
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
-      subcategory: product_type_6s || categoryLevel,
+      gender: currentAppState.gender
+      ? currentAppState.gender.toUpperCase()
+      : "",
+      subcategory: categoryLevel || product_type_6s,
       color: productKeys?.color || "",
       brand_name: productKeys?.brand_name || "",
       full_price: originalPrice || "",

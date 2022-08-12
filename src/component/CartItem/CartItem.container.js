@@ -355,7 +355,6 @@ export class CartItemContainer extends PureComponent {
         },
       },
     } = this.props;
-
     const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";

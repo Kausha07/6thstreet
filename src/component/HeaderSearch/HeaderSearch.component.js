@@ -16,6 +16,7 @@ import Event, {
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
+export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
   static propTypes = {
     search: PropTypes.string,
@@ -51,7 +52,7 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
   }
@@ -79,6 +80,7 @@ class HeaderSearch extends PureComponent {
       Moengage.track_event(EVENT_GTM_GO_TO_SEARCH, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
+        screen_name: this.getPageType(),
         app6thstreet_platform: "Web",
       });
     }
@@ -96,6 +98,24 @@ class HeaderSearch extends PureComponent {
     return {
       isClearVisible: search !== "",
     };
+  }
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === URL_REWRITE) {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 
   onSubmit = () => {
@@ -143,7 +163,7 @@ class HeaderSearch extends PureComponent {
   };
   closeSearch = () => {
     const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
     if (hideSearchBar) {
