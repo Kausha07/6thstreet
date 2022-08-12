@@ -53,7 +53,6 @@ class ShareButtonContainer extends PureComponent {
   async _initiateShare() {
     const isDesktop = !(isMobile.any() || isMobile.tablet());
     const {
-      product,
       product: {
         categories = {},
         name,
@@ -67,7 +66,6 @@ class ShareButtonContainer extends PureComponent {
         color,
       },
     } = this.props;
-    console.log("product", product);
     const specialPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
