@@ -726,7 +726,7 @@ export class PDPAddToCartContainer extends PureComponent {
     const categoryLevel =
       product_type_6s && product_type_6s.length > 0
         ? product_type_6s
-        : checkCategoryLevel().includes("///") == 1
+        : checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
 

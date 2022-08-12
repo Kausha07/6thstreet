@@ -172,7 +172,7 @@ class ProductItem extends PureComponent {
       } else return "";
     };
     const categoryLevel =
-      checkCategoryLevel().includes("///") == 1
+      checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
 
