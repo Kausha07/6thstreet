@@ -1,50 +1,83 @@
 import { getStore } from "Store";
-import { setSearchSuggestions,setAlgoliaIndex } from "Store/SearchSuggestions/SearchSuggestions.action";
-import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  setSearchSuggestions,
+  setAlgoliaIndex,
+} from "Store/SearchSuggestions/SearchSuggestions.action";
+import {
+  getCustomQuerySuggestions,
+  getAlgoliaIndexForQuerySuggestion,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  getGenderInArabic,
+  getGenderParam,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
+import { getLocaleFromUrl } from "Util/Url/Url";
 const PRODUCT_RESULT_LIMIT = 8;
 const QUERY_SUGGESTION_LIMIT = 5;
 
 export class SearchSuggestionsDispatcher {
-  async requestSearchSuggestions(
-    search,
-    sourceIndexName,
-    sourceQuerySuggestionIndex,
-    dispatch
-  ) {
+  async requestSearchSuggestions(search, sourceIndexName, dispatch) {
     const {
       AppState: { gender, country },
     } = getStore().getState();
     let queryID = null;
 
     // var searchQuery = search;
-      // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
+    // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
     // if(searchQuery.match(new RegExp(gender, "i")) === null && country.match(/bh|om|qa/i)) {
     //   searchQuery = `${search} ${isArabic() ? getGenderInArabic(gender) : gender} `;
     // }
 
     try {
-      const searchData = await new Algolia().getProductForSearchContainer(
-        {
-          q: search,
-          page: 0,
-          limit: PRODUCT_RESULT_LIMIT,
-          gender: isArabic() ? getGenderInArabic(gender) : gender,
-        },
-        {
-          indexName: sourceQuerySuggestionIndex,
-          params: {
-            query: search,
-            hitsPerPage: QUERY_SUGGESTION_LIMIT,
-            clickAnalytics: true,
-          }
-        }
+      const countryCodeFromUrl = getLocaleFromUrl();
+      const lang = isArabic() ? "arabic" : "english";
+      const algoliaQueryIndex = getAlgoliaIndexForQuerySuggestion(
+        countryCodeFromUrl,
+        lang
       );
+      let searchData = [];
+      let paramsForProductSearch = {
+        q: search,
+        page: 0,
+        limit: PRODUCT_RESULT_LIMIT,
+      };
+      let paramsForQuerySuggestion = {
+        indexName: `${algoliaQueryIndex}_query_suggestions`,
+        params: {
+          query: search,
+          hitsPerPage: QUERY_SUGGESTION_LIMIT,
+          clickAnalytics: true,
+        },
+      };
+      if (gender !== "all" && gender !== "home") {
+        searchData = await new Algolia().getProductForSearchContainer(
+          { ...paramsForProductSearch, gender: getGenderParam(gender, true) },
+          {
+            ...paramsForQuerySuggestion,
+            params: {
+              ...paramsForQuerySuggestion.params,
+              facetFilters: [
+                [
+                  `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${getGenderParam(
+                    gender,
+                    false
+                  )}`,
+                ],
+              ],
+            },
+          }
+        );
+      } else {
+        searchData = await new Algolia().getProductForSearchContainer(
+          { ...paramsForProductSearch },
+          { ...paramsForQuerySuggestion }
+        );
+      }
       let { productData, suggestionData } = searchData;
-      
+
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
       // var data = localStorage.getItem("customer");
@@ -81,7 +114,7 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      
+
       const defaultHit = {
         query: search,
         count: "",
@@ -89,9 +122,13 @@ export class SearchSuggestionsDispatcher {
       var querySuggestions = [defaultHit];
       querySuggestions =
         suggestionData?.hits?.length > 0
-        ? getCustomQuerySuggestions(suggestionData?.hits, sourceIndexName, suggestionData?.query)
-        : [defaultHit];
-      
+          ? getCustomQuerySuggestions(
+              suggestionData?.hits,
+              sourceIndexName,
+              suggestionData?.query
+            )
+          : [defaultHit];
+
       if (suggestionData && suggestionData.queryID) {
         queryID = suggestionData.queryID;
       } else {
@@ -110,9 +147,7 @@ export class SearchSuggestionsDispatcher {
 
   async requestAlgoliaIndex(dispatch) {
     const algoliaIndex = await new Algolia().getIndex();
-    dispatch(
-      setAlgoliaIndex(algoliaIndex)
-    );
+    dispatch(setAlgoliaIndex(algoliaIndex));
   }
 }
 

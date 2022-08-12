@@ -1,6 +1,6 @@
-
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
-const createQuerySuggestionIDRegexp = new RegExp(' ', 'g');
+import { isArabic } from "Util/App";
+const createQuerySuggestionIDRegexp = new RegExp(" ", "g");
 
 export const getCustomQuerySuggestions = (hits, indexName) => {
   const arr = [];
@@ -11,7 +11,7 @@ export const getCustomQuerySuggestions = (hits, indexName) => {
       label: capitalizeFirstLetters(query),
       query,
       count: ele[indexName]?.exact_nb_hits,
-      objectID: query?.replace(createQuerySuggestionIDRegexp, '_')
+      objectID: query?.replace(createQuerySuggestionIDRegexp, "_"),
     });
   }
   return arr;
@@ -51,5 +51,42 @@ export const getGenderInArabic = (gender) => {
       return "أطفال";
     case "home":
       return "منزل";
+  }
+};
+
+export const getGenderParam = (gender, isProduct = false) => {
+  switch (gender.toLowerCase()) {
+    case "kids":
+      if (isProduct) {
+        return isArabic() ? "أولاد~بنات," : "Boy~Girl";
+      }
+      return isArabic()
+        ? "بنت, ولد, بيبي بنت, بيبي ولد, للجنسين, رضع"
+        : "girl,boy,baby girl,baby boy,unisex,infant";
+
+    case "women":
+      return isArabic() ? getGenderInArabic("women") : "women";
+
+    case "men":
+      return isArabic() ? getGenderInArabic("men") : "men";
+
+    default:
+      return undefined;
+  }
+};
+
+export const getAlgoliaIndexForQuerySuggestion = (countryCodeFromUrl, lang) => {
+  const algoliaENV =
+    process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+  switch (countryCodeFromUrl) {
+    case "en-ae":
+      return `${algoliaENV}_magento_english_products`;
+    case "ar-ae":
+      return `${algoliaENV}_magento_arabic_products`;
+    default:
+      return `${algoliaENV}_magento_${countryCodeFromUrl.replace(
+        "-",
+        "_"
+      )}_products`;
   }
 };
