@@ -24,14 +24,16 @@ export class Seo extends PureComponent {
     renderCanonicals() {
         const { setMeta, metaData: { canonical_url: canonicalUrl }, metaData } = this.props;
         const { origin = '', pathname = '' } = location || {};
-        const urlWithoutParams = `${ origin }${ pathname }`;
-
+        const urlWithoutParams =
+            pathname !== "/catalogsearch/result/"
+                ? `${origin}${pathname}`
+                : `${origin}${"/"}`;
         if (urlWithoutParams && canonicalUrl !== urlWithoutParams) {
             const hreflangs = this.renderHreflangs();
 
             setMeta({
                 ...metaData,
-                canonical_url: `${ origin }${ pathname }`,
+                canonical_url: urlWithoutParams,
                 hreflangs
             });
         }
