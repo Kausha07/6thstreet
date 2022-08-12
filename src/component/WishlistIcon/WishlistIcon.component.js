@@ -190,7 +190,7 @@ class WishlistIcon extends PureComponent {
         : gender
         ? gender
         : "",
-      product_sku: data.config_sku || "",
+      product_sku: data.config_sku || data.sku ||"",
       discounted_price: itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",

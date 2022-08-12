@@ -78,13 +78,15 @@ class BannerImpressionEvent extends BaseEvent {
         position: indexValue ? indexValue : index + 1,
       })
     );
-    const moeImpressions = impressions.map(
-      ({ label, promotion_name, id, store_code, indexValue }, index) => ({
-        promotion_id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : "",
-        promotion_name: (store_code ? store_code + "-" : "") + (label || promotion_name),
-        index: indexValue ? indexValue : index + 1,
-      })
-    );
+
+    let promoName = [], promoID = [], promoIndex = [];
+
+    formattedImpressions.forEach((item) => {
+      promoName.push(item?.name);
+      promoID.push(item?.id);
+      promoIndex.push(item?.position);
+    });
+    
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
@@ -99,20 +101,25 @@ class BannerImpressionEvent extends BaseEvent {
       EVENT_TYPE == "promotionImpression"
         ? EVENT_MOE_PROMOTION_IMPRESSION
         : EVENT_TYPE == "promotionClick"
-        ? EVENT_MOE_PROMOTION_CLICK
-        : null;
+          ? EVENT_MOE_PROMOTION_CLICK
+          : null;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const currentPageType = this.getPageType() || "";
-    Moengage.track_event(MoeEventType, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      promotions:moeImpressions,
-      category: currentAppState.gender
-        ? currentAppState.gender.toUpperCase()
-        : "",
-      screen: currentPageType,
-      app6thstreet_platform: "Web",
-    });
+
+    if (document.readyState == ("complete" || "interactive")) {
+      Moengage.track_event(MoeEventType, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        promotion_id: promoID.length == 1 ? promoID.toString() : promoID,
+        promotion_name: promoName.length == 1 ? promoName.toString() : promoName,
+        index: promoIndex.length == 1 ? promoIndex.toString() : promoIndex,
+        category_name: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        screen_name: currentPageType,
+        app6thstreet_platform: "Web",
+      });
+    }
   }
 }
 

@@ -4,6 +4,8 @@ import { withRouter } from "react-router";
 
 import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import { EVENT_MOE_WISHLIST_TAB_ICON } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./HeaderWishlist.style";
 
@@ -30,6 +32,12 @@ class HeaderWishlist extends PureComponent {
 
   routeChangeWishlist = () => {
     const { history, isSignedIn, showNotification } = this.props;
+
+    Moengage.track_event(EVENT_MOE_WISHLIST_TAB_ICON, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
 
     if (isSignedIn) {
       history.push("/my-account/my-wishlist");
@@ -107,7 +115,7 @@ class HeaderWishlist extends PureComponent {
           />
         </button>
         {this.renderMySignInPopup()}
-        { !isBottomBar && <label htmlFor="WishList">{__("Wishlist")}</label>}
+        {!isBottomBar && <label htmlFor="WishList">{__("Wishlist")}</label>}
       </div>
     );
   }

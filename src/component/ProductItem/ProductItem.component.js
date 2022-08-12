@@ -172,7 +172,7 @@ class ProductItem extends PureComponent {
       } else return "";
     };
     const categoryLevel =
-      checkCategoryLevel().includes("///") == 1
+      checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
 
@@ -202,7 +202,7 @@ class ProductItem extends PureComponent {
       category: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
-      subcategory: product_type_6s || categoryLevel,
+      subcategory: categoryLevel || product_type_6s,
       color: color || "",
       brand_name: brand_name || "",
       full_price: basePrice || "",

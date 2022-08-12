@@ -42,8 +42,8 @@ export class GenderButtonContainer extends PureComponent {
   };
 
   static defaultProps = {
-    onClick: () => {},
-    changeMenuGender: () => {},
+    onClick: () => { },
+    changeMenuGender: () => { },
   };
 
   containerFunctions = {
@@ -71,20 +71,20 @@ export class GenderButtonContainer extends PureComponent {
       label == "women"
         ? EVENT_MOE_TOP_NAV_WOMEN
         : label == "men"
-        ? EVENT_MOE_TOP_NAV_MEN
-        : label == "kids"
-        ? EVENT_MOE_TOP_NAV_KIDS
-        : label == "all"
-        ? EVENT_MOE_TOP_NAV_ALL
-        : label == "home"
-        ? EVENT_MOE_TOP_NAV_HOME
-        : "";
+          ? EVENT_MOE_TOP_NAV_MEN
+          : label == "kids"
+            ? EVENT_MOE_TOP_NAV_KIDS
+            : label == "all"
+              ? EVENT_MOE_TOP_NAV_ALL
+              : label == "home"
+                ? EVENT_MOE_TOP_NAV_HOME
+                : "";
     const genderChangeEvent = (event) => {
       Moengage.track_event(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
-        screen_name: this.getPageType() ? this.getPageType() : "",
-        category: label || "",
+        screen_name: this.getPageType(),
+        ...((event == EVENT_MOE_TOP_NAV_CHANGE) && { category: label || "" }),
         app6thstreet_platform: "Web",
       });
     };

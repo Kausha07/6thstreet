@@ -53,7 +53,6 @@ class ShareButtonContainer extends PureComponent {
   async _initiateShare() {
     const isDesktop = !(isMobile.any() || isMobile.tablet());
     const {
-      product,
       product: {
         categories = {},
         name,
@@ -71,14 +70,14 @@ class ShareButtonContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_special_price"]
+          : null;
     const originalPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
         : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_base_price"]
-        : null;
+          ? price[Object.keys(price)[0]]["6s_base_price"]
+          : null;
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -98,14 +97,17 @@ class ShareButtonContainer extends PureComponent {
     const categoryLevel =
       product_type_6s && product_type_6s.length > 0
         ? product_type_6s
-        : checkCategoryLevel().includes("///") == 1
-        ? checkCategoryLevel().split("///").pop()
-        : "";
+        : checkCategoryLevel().includes("///")
+          ? checkCategoryLevel().split("///").pop()
+          : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_SHARE, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       subcategory: product_type_6s || categoryLevel,
@@ -144,7 +146,7 @@ class ShareButtonContainer extends PureComponent {
           <SharePopup
             showShareOverlay={this.showShareOverlay}
             hideShareOverlay={this.hideShareOverlay}
-            openSharePopup={open} 
+            openSharePopup={open}
             product={product}
             {...rest}
           />
