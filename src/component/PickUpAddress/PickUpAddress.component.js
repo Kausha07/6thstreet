@@ -64,6 +64,18 @@ export class PickUpAddress extends PureComponent {
     if (!isSignedIn) {
       history.push("/");
     }
+    const {
+      location: { state },
+    } = history;
+    if (state && state.orderDetails) {
+      const {
+        orderDetails: {
+          shipping_address: { customer_address_id },
+        },
+      } = state;
+
+      this.onAddressSelect(customer_address_id);
+    }
   }
   renderButtonsPlaceholder() {
     return __("Proceed");
@@ -244,10 +256,11 @@ export class PickUpAddress extends PureComponent {
 
   renderAddressBook() {
     const { addresses } = this.props;
-    const { formContent } = this.state;
+    const { formContent, selectedAddressId } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={this.onAddressSelect}
+        selectedAddressId={selectedAddressId}
         addresses={addresses}
         formContent={formContent}
         PickUpAddress={true}

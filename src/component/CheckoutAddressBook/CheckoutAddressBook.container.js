@@ -49,6 +49,38 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
   };
 
+  static _getDefaultAddressId(props) {
+    const { customer, isBilling } = props;
+    const defaultKey = isBilling ? "default_billing" : "default_shipping";
+    const { [defaultKey]: defaultAddressId, addresses } = customer;
+
+    if (defaultAddressId) {
+      return +defaultAddressId;
+    }
+    if (addresses && addresses.length) {
+      return addresses[0].id;
+    }
+
+    return 0;
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { prevDefaultAddressId } = state;
+    const { selectedAddressId } = props;
+    const defaultAddressId = selectedAddressId
+      ? selectedAddressId
+      : CheckoutAddressBookContainer._getDefaultAddressId(props);
+
+    if (defaultAddressId !== prevDefaultAddressId) {
+      return {
+        selectedAddressId: defaultAddressId,
+        prevDefaultAddressId: defaultAddressId,
+      };
+    }
+
+    return null;
+  }
+
   onAddressSelect(address) {
     const { id = 0, city, area, country_code } = address;
     const {
