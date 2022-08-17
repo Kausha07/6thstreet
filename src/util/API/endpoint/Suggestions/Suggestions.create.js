@@ -61,8 +61,8 @@ export const getGenderParam = (gender, isProduct = false) => {
         return isArabic() ? "أولاد~بنات," : "Boy~Girl";
       }
       return isArabic()
-        ? "بنت, ولد, بيبي بنت, بيبي ولد, للجنسين, رضع"
-        : "girl,boy,baby girl,baby boy,unisex,infant";
+        ? "بنات,أولاد,الجنسين,أطفال,طفلة,للرضع"
+        : "girl,boy,baby girl,baby boy,unisex,infant, kids";
 
     case "women":
       return isArabic() ? getGenderInArabic("women") : "women";
