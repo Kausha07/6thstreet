@@ -714,6 +714,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           } = data;
 
           if (success || response_code === 200 || http_response_code === 202) {
+            localStorage.removeItem("lastCouponCode");
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
