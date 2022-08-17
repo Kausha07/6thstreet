@@ -343,13 +343,32 @@ class PLPFilters extends PureComponent {
       },
     });
   };
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
 
   onShowResultButton = () => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
+    
     Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageType() || "",
       app6thstreet_platform: "Web",
     });
     Object.keys(activeFilters).map((key) =>
