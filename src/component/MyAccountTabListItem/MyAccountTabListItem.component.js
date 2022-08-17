@@ -31,6 +31,8 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
         ? EVENT_MOE_ACCOUNT_RETURNS_CLICK
         : name == "Club Apparel Loyalty"
         ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
+        : name == "Contact & Help"
+        ? EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK
         : "";
     Moengage.track_event(MoeEvent, {
       country: getCountryFromUrl().toUpperCase(),

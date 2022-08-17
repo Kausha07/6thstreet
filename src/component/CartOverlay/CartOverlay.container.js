@@ -84,6 +84,25 @@ export class CartOverlayContainer extends PureComponent {
     handleViewBagClick: this.handleViewBagClick.bind(this),
   };
 
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   handleViewBagClick() {
     const {
       hideActiveOverlay,
@@ -94,7 +113,7 @@ export class CartOverlayContainer extends PureComponent {
     Moengage.track_event(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      screen_name: "Minicart",
+      screen_name: this.getPageType() || "",
       app6thstreet_platform: "Web",
     });
     hideActiveOverlay();
