@@ -86,7 +86,6 @@ class WishlistIcon extends PureComponent {
       const itemPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_special_price"]
         : "";
-
       Moengage.track_event(EVENT_MOE_REMOVE_FROM_WISHLIST, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),

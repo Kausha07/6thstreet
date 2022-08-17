@@ -137,7 +137,7 @@ class PurchaseEvent extends BaseEvent {
       full_price: productBasePrice.length > 0 ? productBasePrice : "",
       product_name: productName.length > 0 ? productName : "",
       product_sku: productSku.length > 0 ? productSku : "",
-      gender: productGender > 0 ?  productGender : "",
+      gender: productGender.length > 0 ?  productGender : "",
       size_id: productSizeOption.length > 0 ? productSizeOption : "",
       size: productSizeValue.length > 0 ? productSizeValue : "",
       subcategory: productSubCategory.length > 0 ? productSubCategory : "",
