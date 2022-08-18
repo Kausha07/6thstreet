@@ -559,8 +559,7 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderSuggestions() {
-    const { products = [] } = this.props;
-    const { querySuggestions = [], suggestionEnabled = false } = this.props;
+    const { products = [],querySuggestions, suggestionEnabled = false } = this.props;
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
     return (
       <>
@@ -1008,10 +1007,10 @@ class SearchSuggestion extends PureComponent {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length <= 1) {
+    if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 3 && querySuggestions.length >= 1) {
+    if (searchString.length > 3) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();
