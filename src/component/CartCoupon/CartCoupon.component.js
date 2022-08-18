@@ -79,7 +79,8 @@ export class CartCoupon extends SourceCartCoupon {
       return;
     }
 
-    this.handleApplyCoupon();
+    const submitButton = document.getElementById("couponCodeButton");
+    submitButton.click();
   };
 
   renderApplyCoupon() {
@@ -101,6 +102,7 @@ export class CartCoupon extends SourceCartCoupon {
           block="CartCoupon"
           elem="Button"
           type="button"
+          id="couponCodeButton"
           mix={{ block: "Button" }}
           disabled={!formattedCouponValue}
           onClick={(e) => {
