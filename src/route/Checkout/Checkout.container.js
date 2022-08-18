@@ -570,23 +570,34 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   async saveAddressInformation(addressInformation) {
-    const { saveAddressInformation } = this.props;
+    const { saveAddressInformation, showErrorNotification } = this.props;
     const { shipping_address } = addressInformation;
 
     this.setState({
       isLoading: true,
       shippingAddress: shipping_address,
     });
-    saveAddressInformation(addressInformation).then(({ data }) => {
-      const { totals } = data;
 
-      BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
-
-      this.setState({
-        paymentTotals: totals,
-      });
-
-      this.getPaymentMethods();
+    saveAddressInformation(addressInformation).then((res) => {
+      const data = res.data;
+      if(!data){
+        showErrorNotification(
+          res
+        );
+        setTimeout(() => {
+          window.location = "/";
+        }, 1500);
+      } else {
+        const { totals } = data;
+  
+        BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
+  
+        this.setState({
+          paymentTotals: totals,
+        });
+  
+        this.getPaymentMethods();
+      }
     }, this._handleError);
   }
 
