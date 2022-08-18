@@ -11,12 +11,7 @@ import {
 import "./PDPGalleryCrumb.style";
 
 class PDPGalleryCrumb extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      imgSRC: {},
-    };
-  }
+
   static propTypes = {
     onClick: PropTypes.func.isRequired,
     isActive: PropTypes.bool.isRequired,
@@ -26,10 +21,7 @@ class PDPGalleryCrumb extends PureComponent {
     }).isRequired,
   };
 
-  componentDidUpdate() {
-    this.setSchemaJSON();
-  }
-
+  
   renderMap = {
     [GALLERY_IMAGE_TYPE]: this.renderImage.bind(this),
     [GALLERY_VIDEO_TYPE]: this.renderVideo.bind(this),
@@ -55,24 +47,6 @@ class PDPGalleryCrumb extends PureComponent {
           <img src={src} className="staticImg" />
         </div>
       );
-    }
-  }
-
-  async setSchemaJSON() {
-    const tag = document.createElement("script");
-    if (tag) {
-      tag.type = "application/ld+json";
-      tag.text = JSON.stringify({
-        "@type": "Product",
-        "@context": "http://schema.org/",
-        name: "Shivani",
-        description: "Description by Shivani",
-        brand: { "@type": "Thing", name: "Shivani's brand" },
-        image: this.state.imgSRC,
-        sku: "126098696_BLUE",
-      });
-      // document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
-      document.head.appendChild(tag);
     }
   }
 
