@@ -74,7 +74,11 @@ export class PickUpAddress extends PureComponent {
         },
       } = state;
 
-      this.onAddressSelect(customer_address_id);
+      this.onAddressSelect(
+        customer_address_id
+          ? parseInt(customer_address_id)
+          : customer_address_id
+      );
     }
   }
   renderButtonsPlaceholder() {
@@ -250,8 +254,9 @@ export class PickUpAddress extends PureComponent {
   }
 
   onAddressSelect = (addressId) => {
-    const { addresses } = this.props;
-    this.setState({ selectedAddressId: addressId });
+    if (addressId) {
+      this.setState({ selectedAddressId: addressId });
+    }
   };
 
   renderAddressBook() {

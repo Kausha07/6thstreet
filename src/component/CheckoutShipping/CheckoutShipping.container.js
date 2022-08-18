@@ -439,7 +439,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       email: isSignedIn() ? email : guestEmail,
       region: city,
       region_id: 0,
-      id:selectedCustomerAddressId
+      address_id:selectedCustomerAddressId
     };
 
     const {
