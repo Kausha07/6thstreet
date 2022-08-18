@@ -213,6 +213,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     this.setState({ isLoading: true });
     MagentoAPI.post("returns/request", payload)
       .then(({ data: { id } }) => {
+        this.sendMoeEvents(EVENT_MOE_SUBMIT_RETURN_REQUEST);
         history.push(`/my-account/return-item/create/success/${id}`);
       })
       .catch(() => {

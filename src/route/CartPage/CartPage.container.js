@@ -315,7 +315,7 @@ export class CartPageContainer extends PureComponent {
       coupon_code_applied: coupon_code || "",
       currency: currency_code || "",
       discounted_amount: discount || "",
-      product_count: items.length || "",
+      product_count: productQty || "",
       shipping_fee: shipping_fee || "",
       subtotal_amount: subtotal || "",
       total_amount: total || "",
