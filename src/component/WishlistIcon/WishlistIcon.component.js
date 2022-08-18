@@ -171,6 +171,8 @@ class WishlistIcon extends PureComponent {
         },
       });
     }
+    const windowLocation= new URL(window.location.href);
+    const parseProductUrl = windowLocation + data?.url_key + ".html";
 
     Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
       country: getCountryFromUrl().toUpperCase(),
@@ -181,8 +183,8 @@ class WishlistIcon extends PureComponent {
       subcategory: data.product_type_6s || "",
       color: data.color || "",
       brand_name: data.brand_name || "",
-      full_price: basePrice || "",
-      product_url: data?.url || "",
+      full_price: basePrice || data?.original_price ||"",
+      product_url: data?.url && data?.url !== null ? data.url : parseProductUrl || "",
       currency: getCurrency() || "",
       gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
@@ -190,7 +192,7 @@ class WishlistIcon extends PureComponent {
         ? gender
         : "",
       product_sku: data.config_sku || data.sku ||"",
-      discounted_price: itemPrice || "",
+      discounted_price: itemPrice || data?.itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",
       app6thstreet_platform: "Web",
