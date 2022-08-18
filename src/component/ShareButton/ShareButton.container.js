@@ -100,7 +100,6 @@ class ShareButtonContainer extends PureComponent {
         : product_type_6s && product_type_6s.length > 0
           ? product_type_6s
           : "";
-    console.log("categoryLevel", checkCategoryLevel(), product_type_6s);
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_SHARE, {
       country: getCountryFromUrl().toUpperCase(),
