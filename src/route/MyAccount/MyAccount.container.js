@@ -33,6 +33,7 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   customer: state.MyAccountReducer.customer,
+  is_exchange_enabled: state.AppConfig.is_exchange_enabled,
   clubApparel: state.ClubApparelReducer.clubApparel,
   mobileTabActive: state.MyAccountReducer.mobileTabActive,
   country: state.AppState.country,
@@ -57,7 +58,25 @@ export const exchangeTabMap = {
     className: "",
   },
 };
+export const returnState = {
+  [RETURN_ITEM]: {
+    url: "/return-item",
+    name: __("My Returns"),
+    alternateName: __("Cancel an item"),
+    alternateSecondName: __("Return an item"),
+    className: "",
+  },
+}
 
+export const exchangeReturnState = {
+  [RETURN_ITEM]: {
+    url: "/return-item",
+    name: __("My Return/Exchange"),
+    alternateName: __("Cancel an item"),
+    alternateSecondName: __("Exchange an item"),
+    className: "",
+  },
+}
 export const tabMap = {
   [STORE_CREDIT]: {
     url: "/storecredit/info",
@@ -79,14 +98,10 @@ export const tabMap = {
     url: "/my-orders",
     name: __("My Orders"),
     className: "MobileHide",
-  },
-  [RETURN_ITEM]: {
-    url: "/return-item",
-    name: __("My Return/Exchange"),
-    alternateName: __("Cancel an item"),
-    alternateSecondName: __("Exchange an item"),
-    className: "",
-  },
+  }
+};
+
+export const tabMap2 = {
   [MY_WISHLIST]: {
     url: "/my-wishlist",
     name: __("My wishlist"),
@@ -128,7 +143,6 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     language: PropTypes.string.isRequired,
   };
 
-  tabMap = tabMap;
 
   static defaultProps = {
     customer: null,
@@ -152,6 +166,15 @@ export class MyAccountContainer extends SourceMyAccountContainer {
 
     return null;
   }
+
+
+  changeActiveTab(activeTab) {
+    const { history,is_exchange_enabled } = this.props;
+    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
+    {...tabMap,...returnState,...tabMap2}
+    const { [activeTab]: { url } } = newTabMap;
+    history.push(`${ MY_ACCOUNT_URL }${ url }`);
+}
 
   static getDerivedStateFromProps(props, state) {
     const { clubApparel } = props;
@@ -207,13 +230,15 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs } = this.props;
+    const { updateBreadcrumbs,is_exchange_enabled } = this.props;
     const { activeTab } = this.state;
     let finalTabMap;
+    let newTabMap = is_exchange_enabled? {...tabMap,...exchangeReturnState,...tabMap2}:
+    {...tabMap,...returnState,...tabMap2}
     if (activeTab === EXCHANGE_ITEM) {
       finalTabMap = exchangeTabMap[activeTab];
     } else {
-      finalTabMap = tabMap[activeTab];
+      finalTabMap = newTabMap[activeTab];
     }
     const { url, name, alternativePageName } = finalTabMap;
     updateBreadcrumbs([

@@ -179,19 +179,17 @@ class MyAccountOrderView extends PureComponent {
         is_returnable,
         is_cancelable,
         is_exchangeable,
+        is_exchange_order = 0
       },
+      is_exchange_enabled = false
     } = this.props;
-    const buttonText =
-      status === STATUS_COMPLETE
-        ? is_exchangeable
-          ? EXCHANGE_ITEM_LABEL
-          : RETURN_ITEM_LABEL
-        : CANCEL_ITEM_LABEL;
+
+    const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
-      ? translateArabicStatus(status)
-      : status
-      ? status.split("_").join(" ")
-      : "";
+      ? translateArabicStatus(modifiedStatus)
+      : modifiedStatus
+        ? modifiedStatus.split("_").join(" ")
+        : "";
     if (STATUS_FAILED.includes(status)) {
       const title =
         status === STATUS_PAYMENT_ABORTED
@@ -244,11 +242,12 @@ class MyAccountOrderView extends PureComponent {
                 {RETURN_ITEM_LABEL}
               </button>
             )}
-            {is_exchangeable && (
+            {
+              is_exchangeable && is_exchange_enabled &&
               <button onClick={() => openOrderCancelation(EXCHANGE_ITEM_LABEL)}>
                 {EXCHANGE_ITEM_LABEL}
               </button>
-            )}
+            }
             {status === STATUS_EXCHANGE_PENDING && is_cancelable ? (
               <div block="MyAccountOrderView" elem="HeadingButton">
                 <button
