@@ -120,9 +120,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     return false;
   }
 
-  renderActions() {
+  sendMOEEvents = () => {
     const {
-      isPaymentLoading,
       totals: {
         items,
         coupon_code,
@@ -132,74 +131,120 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         total,
         discount,
       },
-      shippingAddress: { city, email, area },
+      shippingAddress: { city, email, area, telephone },
+      addresses,
+      selectedCustomerAddressId,
+      customer,
     } = this.props;
-    const { isButtondisabled } = this.state;
-    const sendMOEEvents = () => {
-      const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      if (items && items.length > 0) {
-        let productName = [],
-          productColor = [],
-          productBrand = [],
-          productSku = [],
-          productGender = [],
-          productBasePrice = [],
-          productSizeOption = [],
-          productSizeValue = [],
-          productSubCategory = [],
-          productThumbanail = [],
-          productUrl = [],
-          productQty = [],
-          productCategory = [],
-          productItemPrice = [];
-        items.forEach((item) => {
-          let productKeys = item?.full_item_info;
-          productName.push(productKeys?.name);
-          productColor.push(productKeys?.color);
-          productBrand.push(productKeys?.brand_name);
-          productSku.push(productKeys?.config_sku);
-          productGender.push(productKeys?.gender);
-          productBasePrice.push(productKeys?.original_price);
-          productSizeOption.push(productKeys?.size_option);
-          productSizeValue.push(productKeys?.size_value);
-          productSubCategory.push(productKeys?.subcategory);
-          productThumbanail.push(productKeys?.thumbnail_url);
-          productUrl.push(productKeys?.url);
-          productQty.push(productKeys?.qty);
-          productCategory.push(productKeys?.original_price);
-          productItemPrice.push(productKeys?.itemPrice);
-        });
-
-        Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
-          country: getCountryFromUrl().toUpperCase(),
-          language: getLanguageFromUrl().toUpperCase(),
-          category: currentAppState.gender
-            ? currentAppState.gender.toUpperCase()
-            : "",
-          brand_name: productBrand.length > 0 ? productBrand : "",
-          color: productColor.length > 0 ? productColor : "",
-          discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
-          full_price: productBasePrice.length > 0 ? productBasePrice : "",
-          product_name: productName.length > 0 ? productName : "",
-          product_sku: productSku.length > 0 ? productSku : "",
-          gender: productGender.length > 0 ? productGender : "",
-          size_id: productSizeOption.length > 0 ? productSizeOption : "",
-          size: productSizeValue.length > 0 ? productSizeValue : "",
-          subcategory: productSubCategory.length > 0 ? productSubCategory : "",
-          coupon_code_applied: coupon_code || "",
-          currency: currency_code || "",
-          discounted_amount: discount || "",
-          product_count: items.length || "",
-          shipping_fee: shipping_fee || "",
-          subtotal_amount: subtotal || "",
-          total_amount: total || "",
-          city: city || "",
-          area: area || "",
-          email: email || "",
-          app6thstreet_platform: "Web",
-        });
+    const selectedAddress = addresses.filter(
+      ({ id }) => id === selectedCustomerAddressId
+    );
+    const getformValue = (key) => {
+      if (document.getElementById(key)) {
+        return document.getElementById(key).value;
+      } else {
+        return;
       }
     };
+    const form_phone = getformValue("phonecode") + getformValue("telephone");
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    const selectedAddressInBook = selectedAddress[0];
+    const phoneNumber =
+      telephone && telephone.length > 0
+        ? telephone
+        : form_phone && form_phone.length > 0
+        ? form_phone
+        : selectedAddressInBook.phone
+        ? selectedAddressInBook.phone
+        : "";
+    const formatPhoneNumber = phoneNumber.includes("+")
+      ? phoneNumber.replace("+", "")
+      : phoneNumber;
+
+    if (items && items.length > 0) {
+      let productName = [],
+        productColor = [],
+        productBrand = [],
+        productSku = [],
+        productGender = [],
+        productBasePrice = [],
+        productSizeOption = [],
+        productSizeValue = [],
+        productSubCategory = [],
+        productThumbanail = [],
+        productUrl = [],
+        productQty = [],
+        productCategory = [],
+        productItemPrice = [];
+      items.forEach((item) => {
+        let productKeys = item?.full_item_info;
+        productName.push(productKeys?.name);
+        productColor.push(productKeys?.color);
+        productBrand.push(productKeys?.brand_name);
+        productSku.push(productKeys?.config_sku);
+        productGender.push(productKeys?.gender);
+        productBasePrice.push(productKeys?.original_price);
+        productSizeOption.push(productKeys?.size_option);
+        productSizeValue.push(productKeys?.size_value);
+        productSubCategory.push(productKeys?.subcategory);
+        productThumbanail.push(productKeys?.thumbnail_url);
+        productUrl.push(productKeys?.url);
+        productQty.push(productKeys?.qty);
+        productCategory.push(productKeys?.original_price);
+        productItemPrice.push(productKeys?.itemPrice);
+      });
+
+      Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        category: currentAppState.gender
+          ? currentAppState.gender.toUpperCase()
+          : "",
+        brand_name: productBrand.length > 0 ? productBrand : "",
+        color: productColor.length > 0 ? productColor : "",
+        discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
+        full_price: productBasePrice.length > 0 ? productBasePrice : "",
+        product_name: productName.length > 0 ? productName : "",
+        product_sku: productSku.length > 0 ? productSku : "",
+        gender: productGender.length > 0 ? productGender : "",
+        size_id: productSizeOption.length > 0 ? productSizeOption : "",
+        size: productSizeValue.length > 0 ? productSizeValue : "",
+        subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+        coupon_code_applied: coupon_code || "",
+        currency: currency_code || "",
+        discounted_amount: discount || "",
+        product_count: items.length || "",
+        shipping_fee: shipping_fee || "",
+        subtotal_amount: subtotal || "",
+        total_amount: total || "",
+        city:
+          city && city.length > 0
+            ? city
+            : getformValue("city") && getformValue("city").length > 0
+            ? getformValue("city")
+            : selectedAddressInBook?.city || "",
+        area:
+          area && area.length > 0
+            ? area
+            : getformValue("region_id") && getformValue("region_id").length > 0
+            ? getformValue("region_id")
+            : selectedAddressInBook?.area || "",
+        email:
+          email && email.length > 0
+            ? email
+            : getformValue("guest_email") &&
+              getformValue("guest_email").length > 0
+            ? getformValue("guest_email")
+            : customer.email || "",
+        phone: formatPhoneNumber,
+        app6thstreet_platform: "Web",
+      });
+    }
+  };
+
+  renderActions() {
+    const { isPaymentLoading } = this.props;
+    const { isButtondisabled } = this.state;
 
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
@@ -210,7 +255,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           form={SHIPPING_STEP}
           // disabled={this.checkForDisabling()}
           disabled={isButtondisabled}
-          onClick={() => sendMOEEvents()}
+          onClick={() => this.sendMOEEvents()}
           mix={{
             block: "CheckoutShipping",
             elem: isPaymentLoading ? "LoadingButton" : "Button",
@@ -261,6 +306,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           type="submit"
           block="Button button primary medium"
           disabled={isPaymentLoading}
+          onClick={() => this.sendMOEEvents()}
         >
           {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
         </button>
