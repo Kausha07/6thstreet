@@ -27,7 +27,11 @@ import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_IMPRESSIONS_PLP,
+  VUE_PAGE_VIEW,
+  EVENT_MOE_VIEW_PLP_ITEMS,
+} from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
@@ -38,6 +42,7 @@ import {
 } from "Store/PLP/PLP.action";
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -114,36 +119,6 @@ export class PLPContainer extends PureComponent {
 
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
-  compareObjects(object1 = {}, object2 = {}) {
-    if (Object.keys(object1).length === Object.keys(object2).length) {
-      const isEqual = Object.entries(object1).reduce((acc, key) => {
-        if (object2[key[0]]) {
-          if (key[0] === "discount") {
-            if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
-              acc.push(0);
-            } else {
-              acc.push(1);
-            }
-          } else {
-            if (key[1].length !== object2[key[0]].length) {
-              acc.push(0);
-            } else {
-              acc.push(1);
-            }
-          }
-        } else {
-          acc.push(1);
-        }
-
-        return acc;
-      }, []);
-
-      return !isEqual.includes(0);
-    }
-
-    return false;
-  }
-
   static getRequestOptions() {
     let params;
     if (location.search && location.search.startsWith("?q")) {
@@ -161,7 +136,6 @@ export class PLPContainer extends PureComponent {
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
     const options = PLPContainer.getRequestOptions();
-
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -176,6 +150,7 @@ export class PLPContainer extends PureComponent {
     isArabic: isArabic(),
     prevProductSku: "",
     activeFilters: {},
+    categoryloaded: false,
   };
 
   containerFunctions = {
@@ -196,7 +171,7 @@ export class PLPContainer extends PureComponent {
     if (Object.keys(object1).length === Object.keys(object2).length) {
       const isEqual = Object.entries(object1).reduce((acc, key) => {
         if (object2[key[0]]) {
-          if (key[1].length !== object2[key[0]].length) {
+          if (JSON.stringify(key[1]) !== JSON.stringify(object2[key[0]])) {
             acc.push(0);
           } else {
             acc.push(1);
@@ -273,7 +248,6 @@ export class PLPContainer extends PureComponent {
 
     return mappedData;
   }
-
   constructor(props) {
     super(props);
     let prevLocation;
@@ -314,10 +288,53 @@ export class PLPContainer extends PureComponent {
     return initialOptions;
   };
 
+  sendMOEevents() {
+    const { requestedOptions } = this.props;
+
+    const categorylevelPath = requestedOptions["categories.level4"]
+      ? requestedOptions["categories.level4"]
+      : requestedOptions["categories.level3"]
+      ? requestedOptions["categories.level3"]
+      : requestedOptions["categories.level2"]
+      ? requestedOptions["categories.level2"]
+      : requestedOptions["categories.level1"]
+      ? requestedOptions["categories.level1"]
+      : requestedOptions["categories.level0"]
+      ? requestedOptions["categories.level0"]
+      : "";
+    const Categories_level =
+      categorylevelPath && categorylevelPath.includes("///")
+        ? categorylevelPath.replaceAll(" ", "").split("///")
+        : [categorylevelPath];
+    const checkCategories = Categories_level && Categories_level.length > 0;
+    let category_1 = checkCategories ? Categories_level.shift() : "";
+    let category_2 = checkCategories ? Categories_level.shift() : "";
+    let category_3 = checkCategories ? Categories_level.shift() : "";
+    let category_4 = checkCategories ? Categories_level.shift() : "";
+    Moengage.track_event(EVENT_MOE_VIEW_PLP_ITEMS, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      ...(category_1 && { category_level_1: category_1 }),
+      ...(category_2 && { category_level_2: category_2 }),
+      ...(category_3 && { category_level_3: category_3 }),
+      ...(category_4 && { category_level_4: category_4 }),
+      plp_name: category_4
+        ? category_4
+        : category_3
+        ? category_3
+        : category_2
+        ? category_2
+        : category_1
+        ? category_1
+        : "",
+      app6thstreet_platform: "Web",
+    });
+    this.setState({ categoryloaded: false });
+  }
   componentDidMount() {
     const { menuCategories = [], prevPath = null, impressions } = this.props;
-    const { isArabic } = this.state;
-
+    const { isArabic, categoryloaded } = this.state;
+    this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -685,7 +702,6 @@ export class PLPContainer extends PureComponent {
     ) {
       // setIsLoading(currentIsLoading);
     }
-
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
@@ -859,7 +875,7 @@ export class PLPContainer extends PureComponent {
     const categoryName = capitalize(breadcrumbs.pop() || "");
 
     const PLPMetaTitle =
-      brandName && (checkBrandPage.length < 3)
+      brandName && checkBrandPage.length < 3
         ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
@@ -868,7 +884,7 @@ export class PLPContainer extends PureComponent {
         : __("%s | 6thStreet.com %s", categoryName, countryName);
 
     const PLPMetaDesc =
-      brandName && (checkBrandPage.length < 3)
+      brandName && checkBrandPage.length < 3
         ? __(
             "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             brandName,
@@ -922,9 +938,9 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages, isLoading } = this.props;
+    const { query, plpWidgetData, gender, filters, pages, isLoading } =
+      this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
-
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -937,13 +953,30 @@ export class PLPContainer extends PureComponent {
       filters,
       pages,
       activeFilters,
-      isLoading
+      isLoading,
     };
   };
 
   render() {
     const { requestedOptions, filters } = this.props;
+    const { categoryloaded } = this.state;
+    const categorylevelPath = requestedOptions["categories.level4"]
+      ? requestedOptions["categories.level4"]
+      : requestedOptions["categories.level3"]
+      ? requestedOptions["categories.level3"]
+      : requestedOptions["categories.level2"]
+      ? requestedOptions["categories.level2"]
+      : requestedOptions["categories.level1"]
+      ? requestedOptions["categories.level1"]
+      : requestedOptions["categories.level0"]
+      ? requestedOptions["categories.level0"]
+      : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
+    localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
+    if (this.getIsLoading() == false && categoryloaded == true) {
+      this.sendMOEevents();
+    }
+
     return (
       <PLP
         {...this.containerFunctions}

@@ -17,9 +17,17 @@ import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import Event, { EVENT_GTM_PRODUCT_DETAIL, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_PRODUCT_DETAIL,
+  VUE_PAGE_VIEW,
+  EVENT_MOE_PRODUCT_DETAIL,
+} from "Util/Event";
 import PDP from "./PDP.component";
 import browserHistory from "Util/History";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getCurrency } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -160,9 +168,115 @@ export class PDPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
       this.fetchClickAndCollectStores(brandName, sku);
+      this.appendSchemaData();
+    }
+  }
+  appendSchemaData() {
+    const {
+      product: {
+        brand_name,
+        color,
+        gallery_images,
+        upper_material,
+        material,
+        url,
+        sku,
+        name,
+        description,
+        price,
+        categories,
+        categories_without_path,
+      },
+      brandImg,
+      config,
+      country,
+      product,
+    } = this.props;
+
+    const countryList = getCountriesForSelect(config);
+    const { label: countryName = "" } =
+      countryList.find((obj) => obj.id === country) || {};
+    const specialPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"].toString()
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"].toString()
+        : null;
+    let galleryImages = [];
+    gallery_images.forEach((item) => {
+      galleryImages.push(item);
+    });
+    const currency =
+      price && price[0] && Object.keys(price[0])
+        ? Object.keys(price[0]).toString()
+        : "";
+    const checkCategoryLevel = () => {
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel = checkCategoryLevel().includes("///")
+      ? checkCategoryLevel().split("///").join(">")
+      : checkCategoryLevel();
+    const schemaData = [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        brand: {
+          "@type": "Brand",
+          name: brand_name || "",
+          logo: brandImg || "",
+        },
+        name: name || "",
+        image: galleryImages || "",
+        description: description || "",
+        sku: sku || "",
+        category: categoryLevel || "",
+        material:
+          material && material !== null
+            ? material
+            : upper_material
+            ? upper_material
+            : "",
+        keywords: __(
+          "%s, %s, %s, Online Shopping %s",
+          brand_name || "",
+          name || "",
+          categories_without_path.join(" ") || "",
+          countryName || ""
+        ),
+        color: color || "",
+        offers: {
+          "@type": "Offer",
+          priceCurrency: currency || "",
+          price: specialPrice || "",
+          availability: "https://schema.org/InStock",
+          url: url || "",
+        },
+      },
+    ];
+
+    const scriptText = document.createTextNode(JSON.stringify(schemaData));
+    const script = document.createElement("script");
+    if (script) {
+      script.type = "application/ld+json";
+      document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+      script.appendChild(scriptText);
+      document.head.appendChild(script);
     }
   }
 
+  componentWillUnmount() {
+    document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+  }
   // componentWillUnmount() {
   //   const {resetProduct} =this.props;
   //   resetProduct();
@@ -236,6 +350,9 @@ export class PDPContainer extends PureComponent {
         categories = {},
         name,
         sku,
+        image_url,
+        url,
+        thumbnail_url,
         product_type_6s,
         price,
         highlighted_attributes = [],
@@ -248,11 +365,10 @@ export class PDPContainer extends PureComponent {
       nbHits,
       menuCategories,
     } = this.props;
-
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-        Object.keys(categories)[Object.keys(categories).length - 1]
+          Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
@@ -290,14 +406,14 @@ export class PDPContainer extends PureComponent {
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
         : price && Object.keys(price)[0] !== "0"
-          ? price[Object.keys(price)[0]]["6s_special_price"]
-          : null;
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
     const originalPrice =
       price && price[0]
         ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
         : price && Object.keys(price)[0] !== "0"
-          ? price[Object.keys(price)[0]]["6s_base_price"]
-          : null;
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -317,9 +433,9 @@ export class PDPContainer extends PureComponent {
     const categoryLevel =
       product_type_6s && product_type_6s.length > 0
         ? product_type_6s
-        : checkCategoryLevel().includes("///") == 1
-          ? checkCategoryLevel().split("///").pop()
-          : "";
+        : checkCategoryLevel().includes("///")
+        ? checkCategoryLevel().split("///").pop()
+        : "";
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: {
@@ -330,6 +446,29 @@ export class PDPContainer extends PureComponent {
         category: categoryLevel,
         varient: productKeys?.color || "",
       },
+    });
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      gender: currentAppState.gender
+      ? currentAppState.gender.toUpperCase()
+      : "",
+      subcategory: categoryLevel || product_type_6s,
+      color: productKeys?.color || "",
+      brand_name: productKeys?.brand_name || "",
+      full_price: originalPrice || "",
+      product_url: url,
+      currency: getCurrency() || "",
+      product_sku: sku || "",
+      discounted_price: specialPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      app6thstreet_platform: "Web",
     });
   }
 

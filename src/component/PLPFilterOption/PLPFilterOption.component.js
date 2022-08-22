@@ -8,6 +8,23 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
 import "./PLPFilterOption.style";
+import {
+  EVENT_MOE_PLP_FILTER,
+  EVENT_MOE_PLP_SORT,
+  EVENT_MOE_BRAND_SEARCH_FILTER,
+  EVENT_MOE_COLOR_SEARCH_FILTER,
+  EVENT_MOE_SIZES_SEARCH_FILTER,
+  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
+  EVENT_MOE_DISCOUNT_FILTER_CLICK,
+  EVENT_MOE_PRICE_FILTER_CLICK,
+  EVENT_MOE_SORT_BY_DISCOUNT,
+  EVENT_MOE_SORT_BY_LATEST,
+  EVENT_MOE_SORT_BY_PRICE_HIGH,
+  EVENT_MOE_SORT_BY_PRICE_LOW,
+  EVENT_MOE_SORT_BY_RECOMMENDED,
+  EVENT_MOE_SET_PREFERENCES_GENDER,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class PLPFilterOption extends PureComponent {
   static propTypes = {
@@ -46,7 +63,90 @@ class PLPFilterOption extends PureComponent {
     } = this.props;
     const inputRef = this.optionRef.current.children[0].children[0];
     const { checked } = inputRef;
+    const MoeFilterEvent =
+      facet_key == "brand_name"
+        ? EVENT_MOE_BRAND_SEARCH_FILTER
+        : facet_key == "colorfamily"
+        ? EVENT_MOE_COLOR_SEARCH_FILTER
+        : facet_key == ("size_eu" || "size_us" || "size_uk")
+        ? EVENT_MOE_SIZES_SEARCH_FILTER
+        : facet_key == "categories_without_path"
+        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
+        : facet_key == "discount"
+        ? EVENT_MOE_DISCOUNT_FILTER_CLICK
+        : facet_key == "gender"
+        ? EVENT_MOE_SET_PREFERENCES_GENDER
+        : facet_key.includes("price")
+        ? EVENT_MOE_PRICE_FILTER_CLICK
+        : "";
 
+    const sendMoeEvents = (event) => {
+      Moengage.track_event(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    };
+
+    if (checked || isRadio) {
+      if (facet_key == "sort") {
+        const categorylevelPath =
+          localStorage.getItem("CATEGORY_CURRENT") !== null
+            ? localStorage.getItem("CATEGORY_CURRENT")
+            : "";
+        const Categories_level =
+          categorylevelPath && categorylevelPath.includes("///")
+            ? categorylevelPath.replaceAll(/"/g, "").split("///")
+            : [categorylevelPath];
+        const checkCategories = Categories_level && Categories_level.length > 0;
+        let category_1 = checkCategories ? Categories_level.shift() : "";
+        let category_2 = checkCategories ? Categories_level.shift() : "";
+        let category_3 = checkCategories ? Categories_level.shift() : "";
+        console.log("CATEGORY", category_1, category_2, category_3);
+        Moengage.track_event(EVENT_MOE_PLP_SORT, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          sort_value: facet_value || "",
+          ...(category_1 && { category_level_1: category_1 }),
+          ...(category_2 && { category_level_2: category_2 }),
+          ...(category_3 && { category_level_3: category_3 }),
+          plp_name: category_3
+            ? category_3
+            : category_2
+            ? category_2
+            : category_1
+            ? category_1
+            : "",
+          app6thstreet_platform: "Web",
+        });
+        const sortEventType =
+          facet_value == "recommended"
+            ? EVENT_MOE_SORT_BY_RECOMMENDED
+            : facet_value == "latest"
+            ? EVENT_MOE_SORT_BY_LATEST
+            : facet_value == "discount"
+            ? EVENT_MOE_SORT_BY_DISCOUNT
+            : facet_value == "price_low"
+            ? EVENT_MOE_SORT_BY_PRICE_LOW
+            : facet_value == "price_high"
+            ? EVENT_MOE_SORT_BY_PRICE_HIGH
+            : "";
+        if (sortEventType && sortEventType.length > 0) {
+          sendMoeEvents(sortEventType);
+        }
+      } else {
+        Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          filter_type: facet_key || "",
+          filter_value: facet_value || "",
+          app6thstreet_platform: "Web",
+        });
+        if (MoeFilterEvent && MoeFilterEvent.length > 0) {
+          sendMoeEvents(MoeFilterEvent);
+        }
+      }
+    }
     parentCallback(facet_key, facet_value, checked, isRadio);
   };
 
@@ -143,7 +243,7 @@ class PLPFilterOption extends PureComponent {
           />
           {isArabic() && !isMobile.any() ? label : null}
           {!isArabic() ? label : null}
-          {product_count && !isMobile.any() ? this.renderCount() : null}
+          {product_count && this.renderCount()}
         </label>
       );
     }
@@ -151,7 +251,7 @@ class PLPFilterOption extends PureComponent {
     return (
       <label block="PLPFilterOption" htmlFor={facet_value}>
         {label}
-        {product_count && !isMobile.any() ? this.renderCount() : null}
+        {product_count && this.renderCount()}
       </label>
     );
   }

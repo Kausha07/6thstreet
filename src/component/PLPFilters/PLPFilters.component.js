@@ -27,6 +27,8 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
+import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -341,10 +343,34 @@ class PLPFilters extends PureComponent {
       },
     });
   };
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
 
   onShowResultButton = () => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
+    
+    Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageType() || "",
+      app6thstreet_platform: "Web",
+    });
     Object.keys(activeFilters).map((key) =>
       WebUrlParser.setParam(key, activeFilters[key], query)
     );
