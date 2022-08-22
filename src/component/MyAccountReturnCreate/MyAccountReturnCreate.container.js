@@ -187,6 +187,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     } = history;
     const payload = {
       order_id: this.getOrderId(),
+      address_id: selectedAddressId,
       items: Object.entries(selectedItems).map(
         ([order_item_id, { reasonId }]) => {
           const { qty_shipped = 0 } =
