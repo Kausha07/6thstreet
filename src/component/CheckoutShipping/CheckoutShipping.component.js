@@ -149,6 +149,18 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const form_phone = getformValue("phonecode") + getformValue("telephone");
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const selectedAddressInBook = selectedAddress[0];
+    const phoneNumber =
+      telephone && telephone.length > 0
+        ? telephone
+        : form_phone && form_phone.length > 0
+        ? form_phone
+        : selectedAddressInBook.phone
+        ? selectedAddressInBook.phone
+        : "";
+    const formatPhoneNumber = phoneNumber.includes("+")
+      ? phoneNumber.replace("+", "")
+      : phoneNumber;
+
     if (items && items.length > 0) {
       let productName = [],
         productColor = [],
@@ -224,14 +236,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
               getformValue("guest_email").length > 0
             ? getformValue("guest_email")
             : customer.email || "",
-        phone:
-          telephone && telephone.length > 0
-            ? telephone
-            : form_phone && form_phone.length > 0
-            ? form_phone
-            : selectedAddressInBook.phone
-            ? selectedAddressInBook.phone
-            : "",
+        phone: formatPhoneNumber,
         app6thstreet_platform: "Web",
       });
     }
