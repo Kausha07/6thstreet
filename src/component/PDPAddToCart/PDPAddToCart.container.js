@@ -784,12 +784,30 @@ export class PDPAddToCartContainer extends PureComponent {
     );
   }
 
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   routeChangeToCart() {
     history.push("/cart", { errorState: false });
     Moengage.track_event(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      screen_name: "Product Page",
+      screen_name: this.getPageType() || "",
       app6thstreet_platform: "Web",
     });
   }

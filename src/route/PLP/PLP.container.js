@@ -318,6 +318,15 @@ export class PLPContainer extends PureComponent {
       ...(category_2 && { category_level_2: category_2 }),
       ...(category_3 && { category_level_3: category_3 }),
       ...(category_4 && { category_level_4: category_4 }),
+      plp_name: category_4
+        ? category_4
+        : category_3
+        ? category_3
+        : category_2
+        ? category_2
+        : category_1
+        ? category_1
+        : "",
       app6thstreet_platform: "Web",
     });
     this.setState({ categoryloaded: false });
@@ -951,7 +960,19 @@ export class PLPContainer extends PureComponent {
   render() {
     const { requestedOptions, filters } = this.props;
     const { categoryloaded } = this.state;
+    const categorylevelPath = requestedOptions["categories.level4"]
+      ? requestedOptions["categories.level4"]
+      : requestedOptions["categories.level3"]
+      ? requestedOptions["categories.level3"]
+      : requestedOptions["categories.level2"]
+      ? requestedOptions["categories.level2"]
+      : requestedOptions["categories.level1"]
+      ? requestedOptions["categories.level1"]
+      : requestedOptions["categories.level0"]
+      ? requestedOptions["categories.level0"]
+      : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
+    localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
     if (this.getIsLoading() == false && categoryloaded == true) {
       this.sendMOEevents();
     }

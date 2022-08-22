@@ -99,6 +99,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       isTabbyInstallmentAvailable,
       isClickAndCollect,
       totals: { items=[] },
+      totals
     } = this.props;
     const { m_code } = method;
     
@@ -130,6 +131,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           method={method}
           onClick={selectPaymentMethod}
           setCashOnDeliveryFee={setCashOnDeliveryFee}
+          totals={totals}
         />
       );
     }
@@ -141,6 +143,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         method={method}
         onClick={selectPaymentMethod}
         setCashOnDeliveryFee={setCashOnDeliveryFee}
+        totals={totals}
       />
     );
   };

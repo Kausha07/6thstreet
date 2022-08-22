@@ -11,6 +11,8 @@ import MyAccountReturnList from './MyAccountReturnList.component';
 
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
+     is_exchange_enabled: _state.AppConfig.is_exchange_enabled,
+
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -49,10 +51,12 @@ export class MyAccountReturnListContainer extends PureComponent {
             isLoading,
             returns
         } = this.state;
+        const {is_exchange_enabled} = this.props;
 
         return {
             isLoading,
-            returns
+            returns,
+            is_exchange_enabled
         };
     };
 

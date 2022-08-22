@@ -35,6 +35,12 @@ import {
   WALLET_PAYMENTS,
   tabMapType,
 } from "Type/Account";
+import {
+  exchangeReturnState,
+  returnState,
+  tabMap,
+  tabMap2,
+} from "./MyAccount.container";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -229,10 +235,17 @@ export class MyAccount extends SourceMyAccount {
   }
 
   renderDesktop() {
-    const { activeTab, tabMap, changeActiveTab, isSignedIn, exchangeTabMap } =
-      this.props;
+    const {
+      activeTab,
+      changeActiveTab,
+      isSignedIn,
+      exchangeTabMap,
+      is_exchange_enabled = false,
+    } = this.props;
     const { pathname = "" } = location;
-
+    let newTabMap = is_exchange_enabled
+      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
+      : { ...tabMap, ...returnState, ...tabMap2 };
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
@@ -241,10 +254,10 @@ export class MyAccount extends SourceMyAccount {
     }
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
-    
+
     let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
+    if (newTabMap[activeTab]) {
+      finalTab = newTabMap[activeTab];
     } else if (exchangeTabMap[activeTab]) {
       finalTab = exchangeTabMap[activeTab];
     }
@@ -268,7 +281,7 @@ export class MyAccount extends SourceMyAccount {
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
         <MyAccountTabList
-          tabMap={tabMap}
+          tabMap={newTabMap}
           activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
           changeActiveTab={changeActiveTab}
           onSignOut={this.handleSignOut}
@@ -285,7 +298,9 @@ export class MyAccount extends SourceMyAccount {
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {isReturnButton
-                  ? __("Return/Exchange")
+                  ? is_exchange_enabled
+                    ? __("Return/Exchange Statement")
+                    : __("Return Statement")
                   : alternativePageName || returnTitle || name}
               </h1>
               <button
@@ -293,7 +308,9 @@ export class MyAccount extends SourceMyAccount {
                 elem="ReturnButton"
                 onClick={this.returnItemButtonClick}
               >
-                {RETURN__EXCHANGE_ITEM_LABEL}
+                {is_exchange_enabled
+                  ? RETURN__EXCHANGE_ITEM_LABEL
+                  : RETURN_ITEM_LABEL}
               </button>
             </div>
           )}
@@ -306,16 +323,18 @@ export class MyAccount extends SourceMyAccount {
   renderMobile() {
     const {
       activeTab,
-      tabMap,
       isSignedIn,
       mobileTabActive,
       setMobileTabActive,
       exchangeTabMap,
       payload,
+      is_exchange_enabled,
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
-
+    let newTabMap = is_exchange_enabled
+      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
+      : { ...tabMap, ...returnState, ...tabMap2 };
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
     // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
@@ -336,8 +355,8 @@ export class MyAccount extends SourceMyAccount {
 
     const TabContent = this.renderMap[activeTab];
     let finalTab;
-    if (tabMap[activeTab]) {
-      finalTab = tabMap[activeTab];
+    if (newTabMap[activeTab]) {
+      finalTab = newTabMap[activeTab];
     } else if (exchangeTabMap[activeTab]) {
       finalTab = exchangeTabMap[activeTab];
     }
@@ -438,7 +457,7 @@ export class MyAccount extends SourceMyAccount {
             </div>
           </div>
           <MyAccountTabList
-            tabMap={tabMap}
+            tabMap={newTabMap}
             activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}

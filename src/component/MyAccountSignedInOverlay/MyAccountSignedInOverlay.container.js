@@ -13,7 +13,8 @@ export const MyAccountDispatcher = import(
 );
 
 export const mapStateToProps = (_state) => ({
-    clubApparel: _state.ClubApparelReducer.clubApparel
+    clubApparel: _state.ClubApparelReducer.clubApparel,
+    is_exchange_enabled: _state.AppConfig.is_exchange_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

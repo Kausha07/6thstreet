@@ -180,7 +180,7 @@ export class CartPage extends PureComponent {
       productThumbanail.push(productKeys?.thumbnail_url);
       productUrl.push(productKeys?.url);
       productQty.push(productKeys?.qty);
-      productCategory.push(productKeys?.original_price);
+      productCategory.push(productKeys?.gender);
       productItemPrice.push(productKeys?.itemPrice);
     });
     if (pageLoaded){

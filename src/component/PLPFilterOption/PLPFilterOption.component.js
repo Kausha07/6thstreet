@@ -90,10 +90,33 @@ class PLPFilterOption extends PureComponent {
 
     if (checked || isRadio) {
       if (facet_key == "sort") {
+        const categorylevelPath =
+          localStorage.getItem("CATEGORY_CURRENT") !== null
+            ? localStorage.getItem("CATEGORY_CURRENT")
+            : "";
+        const Categories_level =
+          categorylevelPath && categorylevelPath.includes("///")
+            ? categorylevelPath.replaceAll(/"/g, "").split("///")
+            : [categorylevelPath];
+        const checkCategories = Categories_level && Categories_level.length > 0;
+        let category_1 = checkCategories ? Categories_level.shift() : "";
+        let category_2 = checkCategories ? Categories_level.shift() : "";
+        let category_3 = checkCategories ? Categories_level.shift() : "";
+        console.log("CATEGORY", category_1, category_2, category_3);
         Moengage.track_event(EVENT_MOE_PLP_SORT, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           sort_value: facet_value || "",
+          ...(category_1 && { category_level_1: category_1 }),
+          ...(category_2 && { category_level_2: category_2 }),
+          ...(category_3 && { category_level_3: category_3 }),
+          plp_name: category_3
+            ? category_3
+            : category_2
+            ? category_2
+            : category_1
+            ? category_1
+            : "",
           app6thstreet_platform: "Web",
         });
         const sortEventType =
@@ -228,7 +251,7 @@ class PLPFilterOption extends PureComponent {
     return (
       <label block="PLPFilterOption" htmlFor={facet_value}>
         {label}
-        {product_count && this.renderCount() }
+        {product_count && this.renderCount()}
       </label>
     );
   }

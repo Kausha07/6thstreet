@@ -130,9 +130,9 @@ export class MyAccountExchangeView extends SourceComponent {
         elem="Items"
         mix={{ block: "MyAccountReturnSuccess", elem: "Items" }}
       >
-        {finalItems.map((item) => (
-          <div key={item.id}>
-            <MyAccountReturnSuccessItem item={item} />
+        {finalItems.map((item,index) => (
+          <div key={index}>
+            <MyAccountReturnSuccessItem item={item} key={index} />
             {!exchangeSuccess && (
               <div block="MyAccountExchangeView" elem="Reason">
                 <h3>{__("Reason")}</h3>

@@ -19,18 +19,20 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
 
   sendEvents(name) {
     const MoeEvent =
-      name == "My Profile"
+      name == ("My Profile" || "ملفي")
         ? EVENT_MOE_ACCOUNT_PROFILE_CLICK
-        : name == "My Orders"
+        : name == ("My Orders" || "طلباتي" || "الطلبات")
         ? EVENT_MOE_ACCOUNT_ORDERS_CLICK
-        : name == "settings"
+        : name == ("settings" || "الإعدادات")
         ? EVENT_MOE_ACCOUNT_SETTINGS_CLICK
-        : name == "My Address Book"
+        : name == ("My Address Book" || "دفتر العناوين")
         ? EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK
-        : name == "My Return/Exchange"
+        : name == ("My Return/Exchange" || "عودتي / الصرف")
         ? EVENT_MOE_ACCOUNT_RETURNS_CLICK
-        : name == "Club Apparel Loyalty"
+        : name ==  ("Club Apparel Loyalty" || "برنامج الولاء من كلوب أباريل")
         ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
+        : name == ("Contact & Help" || "الإتصال والمساعدة")
+        ? EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK
         : "";
     Moengage.track_event(MoeEvent, {
       country: getCountryFromUrl().toUpperCase(),

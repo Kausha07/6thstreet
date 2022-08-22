@@ -266,18 +266,16 @@ export class PDPContainer extends PureComponent {
 
     const scriptText = document.createTextNode(JSON.stringify(schemaData));
     const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.id = "product-schema";
-    script.appendChild(scriptText);
-    document.head.appendChild(script);
+    if (script) {
+      script.type = "application/ld+json";
+      document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
+      script.appendChild(scriptText);
+      document.head.appendChild(script);
+    }
   }
 
   componentWillUnmount() {
-    const schemaTags = document.getElementById("product-schema");
-
-    if (schemaTags) {
-      schemaTags.parentNode.removeChild(schemaTags);
-    }
+    document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
   }
   // componentWillUnmount() {
   //   const {resetProduct} =this.props;

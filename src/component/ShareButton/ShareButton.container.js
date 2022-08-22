@@ -95,10 +95,10 @@ class ShareButtonContainer extends PureComponent {
       } else return "";
     };
     const categoryLevel =
-      product_type_6s && product_type_6s.length > 0
-        ? product_type_6s
-        : checkCategoryLevel().includes("///")
-          ? checkCategoryLevel().split("///").pop()
+      checkCategoryLevel().includes("///")
+        ? checkCategoryLevel().split("///").pop()
+        : product_type_6s && product_type_6s.length > 0
+          ? product_type_6s
           : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     Moengage.track_event(EVENT_MOE_SHARE, {
@@ -110,7 +110,7 @@ class ShareButtonContainer extends PureComponent {
       gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : "",
-      subcategory: product_type_6s || categoryLevel,
+      subcategory: categoryLevel || "",
       color: color || "",
       brand_name: brand_name || "",
       full_price: originalPrice || "",

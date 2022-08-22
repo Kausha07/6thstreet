@@ -871,7 +871,7 @@ export class CartItem extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brand_name || "",
-      category: category || product_type_6s || "",
+      category: gender|| category || "",
       subcategory: subcategory || "",
       color: color || "",
       brand_name: brand_name || "",

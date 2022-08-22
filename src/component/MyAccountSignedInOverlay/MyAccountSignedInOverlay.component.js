@@ -85,6 +85,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderReturnAnItemLink() {
+    const {is_exchange_enabled = false} = this.props
     return (
       <Link
         block="MyAccountSignedInOverlay"
@@ -98,7 +99,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("My Return/Exchange")}
+          {is_exchange_enabled ? __("My Return/Exchange"):  __("My Returns")}
         </span>
       </Link>
     );

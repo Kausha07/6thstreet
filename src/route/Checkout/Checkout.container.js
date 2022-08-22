@@ -492,35 +492,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
   }
 
-  sendMoeEvent(paymentInformation) {
-    const {
-      totals: { currency_code, discount, subtotal, total },
-    } = this.props;
-    const paymentCodeData = paymentInformation?.paymentMethod?.code;
-    if (paymentCodeData && paymentCodeData.length > 0) {
-      const payment_Type =
-        paymentCodeData == "msp_cashondelivery"
-          ? "Cash on Delivery"
-          : paymentCodeData == "checkoutcom_card_payment"
-          ? "Card"
-          : paymentCodeData == "checkout_apple_pay" || "APPLE_PAY"
-          ? "Apple Pay"
-          : paymentCodeData == "tabby_installments"
-          ? "Tabby - Installments"
-          : paymentCodeData;
-      Moengage.track_event(EVENT_MOE_ADD_PAYMENT_INFO, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        subtotal_amount: subtotal,
-        discounted_amount: discount,
-        total_amount: total,
-        currency: currency_code,
-        payment_type: payment_Type,
-        app6thstreet_platform: "Web",
-      });
-    }
-  }
-
   /* eslint-disable no-magic-numbers */
   getCheckoutStepNumber() {
     const { checkoutStep } = this.state;
@@ -703,7 +674,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } else {
       this.placeOrder(code, data, null, finalEdd);
     }
-    this.sendMoeEvent(paymentInformation);
   }
 
   async placeOrder(code, data, paymentInformation, finalEdd) {
@@ -744,6 +714,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           } = data;
 
           if (success || response_code === 200 || http_response_code === 202) {
+            localStorage.removeItem("lastCouponCode");
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({

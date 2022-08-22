@@ -39,6 +39,7 @@ export class SearchSuggestionsDispatcher {
         lang
       );
       let searchData = [];
+      let filterArray = [];
       let paramsForProductSearch = {
         q: search,
         page: 0,
@@ -53,6 +54,13 @@ export class SearchSuggestionsDispatcher {
         },
       };
       if (gender !== "all" && gender !== "home") {
+        let genderParams = getGenderParam(
+          gender,
+          false
+        );
+        // need to pass multiple facet filters like this
+        // "stage_magento_english_products.facets.exact_matches.gender.value:Girl", into an array.
+        genderParams.split(",").map((item) => filterArray.push(`${algoliaQueryIndex}.facets.exact_matches.gender.value:${item}`))
         searchData = await new Algolia().getProductForSearchContainer(
           { ...paramsForProductSearch, gender: getGenderParam(gender, true) },
           {
@@ -60,12 +68,7 @@ export class SearchSuggestionsDispatcher {
             params: {
               ...paramsForQuerySuggestion.params,
               facetFilters: [
-                [
-                  `${algoliaQueryIndex}.facets.exact_matches.gender.value: ${getGenderParam(
-                    gender,
-                    false
-                  )}`,
-                ],
+                [...filterArray],
               ],
             },
           }
@@ -117,6 +120,7 @@ export class SearchSuggestionsDispatcher {
 
       const defaultHit = {
         query: search,
+        label: search,
         count: "",
       };
       var querySuggestions = [defaultHit];
