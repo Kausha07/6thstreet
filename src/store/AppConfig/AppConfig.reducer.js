@@ -9,7 +9,8 @@ export const getInitialState = () => (
     BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {
         config: {},
         edd_info: null,
-        suggestionEnabled: true
+        suggestionEnabled: true,
+        ctcReturnEnabled:false
     }
 );
 
@@ -28,7 +29,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ...state,
                 config,
                 edd_info: config.countries[getCountryCode]?.edd_info,
-                suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled
+                suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled,
+                ctcReturnEnabled: config.countries[getCountryCode]?.is_ctc_return_enabled
             };
 
             // this will invalidate config after one year
