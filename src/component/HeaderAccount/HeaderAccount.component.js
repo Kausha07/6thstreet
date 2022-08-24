@@ -10,6 +10,8 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { SMS_LINK } from "./HeaderAccount.config";
 import "./HeaderAccount.style";
+import { EVENT_MOE_ACCOUNT_TAB_ICON } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class HeaderAccount extends PureComponent {
   static propTypes = {
@@ -107,7 +109,14 @@ class HeaderAccount extends PureComponent {
       />
     );
   }
-
+  
+  sendMoeEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
   renderAccountButton() {
     const { isSignedIn, customer, isBottomBar, isFooter } = this.props;
 
@@ -127,10 +136,10 @@ class HeaderAccount extends PureComponent {
           block="HeaderAccount"
           elem="Button"
           mods={{ isArabic: this._isArabic, isFooter }}
-          onClick={
-            isFooter && isSignedIn
-              ? this.redirectToAccount
-              : this.showMyAccountPopup
+          onClick={() => {
+            isFooter && isSignedIn ? this.redirectToAccount() : this.showMyAccountPopup(),
+              this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
+          }
           }
         >
           <label htmlFor="Account">

@@ -417,7 +417,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       totals,
     } = this.props;
     const { guest_email: guestEmail } = fields;
-
+    const isCTC = this.checkClickAndCollect();
     const { selectedCustomerAddressId, selectedShippingMethod } = this.state;
 
     if (!selectedShippingMethod) {
@@ -439,6 +439,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       email: isSignedIn() ? email : guestEmail,
       region: city,
       region_id: 0,
+      address_id: isCTC ? null : selectedCustomerAddressId,
     };
 
     const {

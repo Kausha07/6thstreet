@@ -9,6 +9,8 @@ import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import WelcomeScreen from './WelcomeScreen.component';
 import isMobile from "Util/Mobile";
+import { EVENT_MOE_SET_COUNTRY } from "Util/Event";
+import { getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -45,14 +47,22 @@ class WelcomeScreenContainer extends PureComponent {
     };
 
     onCountrySelect(value) {
+        Moengage.track_event(EVENT_MOE_SET_COUNTRY, {
+            country: value.toUpperCase() || "",
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+          });
         const { country, language } = this.props;
         if (country) {
             if(window.location.href.includes('en-') || window.location.href.includes('ar-'))
+            setTimeout(() => { // Delay is for Moengage call to complete
                 window.location.href = location.origin.replace(
-                country.toLowerCase(),
-                value,
-                location.href
-            );
+                    country.toLowerCase(),
+                    value,
+                    location.href
+                );
+            }, 1000);
+                
             else{
                 this.props.setCountryForWelcome(value)
                 this.props.closePopup();

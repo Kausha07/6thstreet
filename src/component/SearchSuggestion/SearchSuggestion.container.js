@@ -1,20 +1,18 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import CDN from "../../util/API/provider/CDN";
+import { setPrevPath } from "Store/PLP/PLP.action";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
-import { isArabic } from "Util/App";
+import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import browserHistory from "Util/History";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
+import CDN from "../../util/API/provider/CDN";
 import SearchSuggestion from "./SearchSuggestion.component";
-import { getUUIDToken } from "Util/Auth";
-import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -23,6 +21,8 @@ export const mapStateToProps = (state) => ({
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
   prevPath: state.PLP.prevPath,
+  algoliaIndex: state.SearchSuggestions.algoliaIndex,
+  suggestionEnabled: state.AppConfig.suggestionEnabled,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -31,14 +31,12 @@ export const mapDispatchToProps = (dispatch) => ({
     SearchSuggestionDispatcher.requestSearchSuggestions(
       search,
       sourceIndexName,
-      sourceQuerySuggestionIndex,
       dispatch
     );
   },
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
 });
 let sourceIndexName;
-let sourceQuerySuggestionIndex;
 export class SearchSuggestionContainer extends PureComponent {
   static propTypes = {
     requestSearchSuggestions: PropTypes.func.isRequired,
@@ -52,6 +50,7 @@ export class SearchSuggestionContainer extends PureComponent {
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
     querySuggestions: PropTypes.array,
+    algoliaIndex: PropTypes.object.isRequired,
     // wishlistData: WishlistItems.isRequired,
   };
 
@@ -69,7 +68,7 @@ export class SearchSuggestionContainer extends PureComponent {
   static requestSearchSuggestions(props) {
     const { search, requestSearchSuggestions } = props;
 
-    if (!search) {
+    if (!search || search.length < 3) {
       return;
     }
 
@@ -95,46 +94,9 @@ export class SearchSuggestionContainer extends PureComponent {
 
     this.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    this.requestTopSearches();
+    // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
-  }
-
-  getAlgoliaIndex(countryCodeFromUrl, lang) {
-    const algoliaENV =
-      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
-    // production will work after resolving index issue.
-    if (lang === "english") {
-      switch (countryCodeFromUrl) {
-        case "en-ae":
-          return `${algoliaENV}_magento_english_products_query_suggestions`;
-        case "en-bh":
-          return `${algoliaENV}_magento_en_bh_products_query_suggestions`;
-        case "en-kw":
-          return `${algoliaENV}_magento_en_kw_products_query_suggestions`;
-        case "en-om":
-          return `${algoliaENV}_magento_en_om_products_query_suggestions`;
-        case "en-qa":
-          return `${algoliaENV}_magento_en_qa_products_query_suggestions`;
-        case "en-sa":
-          return `${algoliaENV}_magento_en_sa_products_query_suggestions`;
-      }
-    } else {
-      switch (countryCodeFromUrl) {
-        case "ar-ae":
-          return `${algoliaENV}_magento_arabic_products_query_suggestions`;
-        case "ar-bh":
-          return `${algoliaENV}_magento_ar_bh_products_query_suggestions`;
-        case "ar-kw":
-          return `${algoliaENV}_magento_ar_kw_products_query_suggestions`;
-        case "ar-om":
-          return `${algoliaENV}_magento_ar_om_products_query_suggestions`;
-        case "ar-qa":
-          return `${algoliaENV}_magento_ar_qa_products_query_suggestions`;
-        case "ar-sa":
-          return `${algoliaENV}_magento_ar_sa_products_query_suggestions`;
-      }
-    }
   }
 
   async getPdpSearchWidgetData() {
@@ -199,12 +161,8 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   componentDidMount() {
-    new Algolia();
-    sourceIndexName = AlgoliaSDK.index.indexName;
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const lang = isArabic() ? "arabic" : "english";
-    sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    const { gender } = this.props;
+    const { gender, algoliaIndex } = this.props;
+    sourceIndexName = algoliaIndex?.indexName;
 
     if (gender !== "home") {
       this.getPdpSearchWidgetData();
@@ -240,27 +198,25 @@ export class SearchSuggestionContainer extends PureComponent {
     try {
       const resp = await CDN.get(url);
 
-
       if (resp) {
-        let k = resp.widgets
+        let k = resp.widgets;
         let itemYouWant = null;
         k.forEach((item) => {
           if (item.header) {
             if (item.header.title === "Explore More") {
-              itemYouWant = item
+              itemYouWant = item;
             }
           }
         });
 
         this.setState({
-          exploreMoreData: itemYouWant
-        })
+          exploreMoreData: itemYouWant,
+        });
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   async requestTrendingInformation() {
     const { gender } = this.props;
@@ -281,8 +237,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-
-  async requestTopSearches() {
+  /*async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
     let refinedTopSearches = [];
     let searchItem = [];
@@ -303,7 +258,7 @@ export class SearchSuggestionContainer extends PureComponent {
     this.setState({
       topSearches: refinedTopSearches || [],
     });
-  }
+  } */
 
   async requestRecentSearches() {
     let recentSearches =
@@ -354,7 +309,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      exploreMoreData
+      exploreMoreData,
     } = this.state;
     const {
       search,
@@ -366,14 +321,14 @@ export class SearchSuggestionContainer extends PureComponent {
       // wishlistData,
       isPDPSearchVisible,
       prevPath,
+      suggestionEnabled,
     } = this.props;
-    const { brands = [], products = [] } = data;
     const isEmpty = search === "";
-    const inNothingFound = brands.length + products.length === 0;
+    const inNothingFound = data?.brands?.length + data?.products?.length === 0;
     return {
       searchString: search,
-      brands,
-      products,
+      brands: data?.brands || [],
+      products: data?.products || [],
       inNothingFound,
       isEmpty,
       isActive: true, // TODO: implement
@@ -391,6 +346,7 @@ export class SearchSuggestionContainer extends PureComponent {
       isPDPSearchVisible,
       prevPath,
       exploreMoreData,
+      suggestionEnabled,
       // wishlistData,
     };
   };

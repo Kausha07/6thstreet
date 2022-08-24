@@ -8,19 +8,23 @@ import {
 } from "SourceComponent/Router/Router.container";
 import { setCountry, setLanguage } from "Store/AppState/AppState.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
-import { updateCustomerDetails, setEddResponse } from "Store/MyAccount/MyAccount.action";
+import {
+  setEddResponse,
+  updateCustomerDetails,
+} from "Store/MyAccount/MyAccount.action";
+import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
   getAuthorizationToken,
   getMobileAuthorizationToken,
+  getUUID,
+  getUUIDToken,
   isSignedIn,
   setAuthorizationToken,
   setMobileAuthorizationToken,
   setUUID,
-  getUUID,
   setUUIDToken,
-  getUUIDToken
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
@@ -35,6 +39,7 @@ export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
   addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
+  algoliaIndex: state.SearchSuggestions.algoliaIndex,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -44,7 +49,8 @@ export const mapDispatchToProps = (dispatch) => ({
     wishlistDisp.syncWishlist(dispatch);
   },
   setCountry: (value) => dispatch(setCountry(value)),
-  setEddResponse: (response, request) => dispatch(setEddResponse(response, request)),
+  setEddResponse: (response, request) =>
+    dispatch(setEddResponse(response, request)),
   setLanguage: (value) => dispatch(setLanguage(value)),
   requestCustomerData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -56,14 +62,21 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
+  requestAlgoliaIndex: () =>
+    SearchSuggestionDispatcher.requestAlgoliaIndex(dispatch),
 });
 
 export class RouterContainer extends SourceRouterContainer {
+  constructor(props) {
+    super(props);
+  }
+
   static propTypes = {
     ...SourceRouterContainer.propTypes,
     locale: PropTypes.string,
     requestCustomerData: PropTypes.func.isRequired,
     getCart: PropTypes.func.isRequired,
+    requestAlgoliaIndex: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -75,13 +88,12 @@ export class RouterContainer extends SourceRouterContainer {
     const {
       getCart,
       requestCustomerData,
-      updateCustomerDetails,
-      requestPdpWidgetData,
-      pdpWidgetsData,
       setEddResponse,
       eddResponse,
       addressCityData,
-      getCitiesData
+      getCitiesData,
+      requestAlgoliaIndex,
+      algoliaIndex,
     } = this.props;
     const decodedParams = atob(getCookie("authData"));
     if (!getUUIDToken()) {
@@ -138,12 +150,17 @@ export class RouterContainer extends SourceRouterContainer {
       deleteMobileAuthorizationToken();
     }
     if (addressCityData.length === 0) {
-      getCitiesData()
+      getCitiesData();
     }
-    if (!eddResponse && sessionStorage.getItem('EddAddressReq')) {
-      const response = sessionStorage.getItem('EddAddressRes') ? JSON.parse(sessionStorage.getItem('EddAddressRes')) : null
-      const request = JSON.parse(sessionStorage.getItem('EddAddressReq'))
-      setEddResponse(response, request)
+    if (!eddResponse && sessionStorage.getItem("EddAddressReq")) {
+      const response = sessionStorage.getItem("EddAddressRes")
+        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+        : null;
+      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      setEddResponse(response, request);
+    }
+    if (!algoliaIndex) {
+      requestAlgoliaIndex();
     }
   }
 

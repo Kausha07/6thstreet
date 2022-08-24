@@ -15,6 +15,19 @@ import { v4 } from "uuid";
 import SelectImage from "./icons/selectMob.png";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
+import {
+  EVENT_MOE_PLP_FILTER,
+  EVENT_MOE_BRAND_SEARCH_FILTER,
+  EVENT_MOE_COLOR_SEARCH_FILTER,
+  EVENT_MOE_SIZES_SEARCH_FILTER,
+  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
+  EVENT_MOE_DISCOUNT_FILTER_CLICK,
+  EVENT_MOE_BRAND_SEARCH_FOCUS,
+  EVENT_MOE_COLOR_SEARCH_FOCUS,
+  EVENT_MOE_SIZES_SEARCH_FOCUS,
+  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -259,6 +272,23 @@ class FieldMultiselect extends PureComponent {
     const { id: facet_key } = e.target;
     const facet_value = e.target.getAttribute("name");
     const checked = e.target.getAttribute("value") === "false" ? true : false;
+    if (!isMobile.any() && checked) {
+      Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        filter_type: facet_key || "",
+        filter_value: facet_value || "",
+        app6thstreet_platform: "Web",
+      });
+      if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
+        Moengage.track_event(EVENT_MOE_SIZES_SEARCH_FILTER, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          app6thstreet_platform: "Web",
+        });
+      }
+    }
+
     parentCallback(facet_key, facet_value, checked, false);
   };
 
@@ -326,6 +356,32 @@ class FieldMultiselect extends PureComponent {
 
   onDeselectAllCategory = (category) => {
     const { onUnselectAllPress } = this.props;
+    const MoeFilterEvent =
+      category == "brand_name"
+        ? EVENT_MOE_BRAND_SEARCH_FILTER
+        : category == "colorfamily"
+        ? EVENT_MOE_COLOR_SEARCH_FILTER
+        : category == ("size_eu" || "size_us" || "size_uk")
+        ? EVENT_MOE_SIZES_SEARCH_FILTER
+        : category == "categories_without_path"
+        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
+        : category == "discount"
+        ? EVENT_MOE_DISCOUNT_FILTER_CLICK
+        : "";
+    Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      filter_type: category || "",
+      filter_value: "All",
+      app6thstreet_platform: "Web",
+    });
+    if (MoeFilterEvent && MoeFilterEvent.length > 0) {
+      Moengage.track_event(MoeFilterEvent, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    }
     onUnselectAllPress(category);
   };
 
@@ -522,6 +578,14 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
+  sendMoeEvents (event){
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
+
   renderFilterSearchbox(label, category) {
     let placeholder = label
       ? label
@@ -535,6 +599,18 @@ class FieldMultiselect extends PureComponent {
     if (isMobile.any() && currentActiveFilter !== category) {
       return null;
     }
+    const MoeFilterEvent =
+      (currentActiveFilter || category) == "brand_name"
+        ? EVENT_MOE_BRAND_SEARCH_FOCUS
+        : (currentActiveFilter || category) == "colorfamily"
+        ? EVENT_MOE_COLOR_SEARCH_FOCUS
+        : (currentActiveFilter || category) ==
+          ("size_eu" || "size_us" || "size_uk")
+        ? EVENT_MOE_SIZES_SEARCH_FOCUS
+        : (currentActiveFilter || category) == "categories_without_path"
+        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS
+        : "";
+
     return (
       <div block="Search-Container" mods={{ isArabic }}>
         <input
@@ -542,6 +618,8 @@ class FieldMultiselect extends PureComponent {
           id={isMobile.any() ? currentActiveFilter : category}
           placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
           onChange={(event) => this.handleFilterSearch(event)}
+          onFocus={() => this.sendMoeEvents(MoeFilterEvent)
+          }
         />
         {!isMobile.any() && (
           <button

@@ -20,6 +20,8 @@ import Link from "Component/Link";
 import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./ContactHelp.style";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_MOE_PHONE, EVENT_MOE_MAIL, EVENT_MOE_CHAT } from "Util/Event";
 
 export class ContactHelp extends PureComponent {
   static propTypes = {};
@@ -50,11 +52,17 @@ export class ContactHelp extends PureComponent {
     };
   }
   chat() {
-    if(document.querySelector(".ori-cursor-ptr")){
+    if (document.querySelector(".ori-cursor-ptr")) {
       document.querySelector(".ori-cursor-ptr").click();
     }
   }
-
+  sendEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
   renderContactUs() {
     const { config } = this.props;
     const { openHoursLabel, toll_free } = this.getCountryConfigs();
@@ -63,7 +71,14 @@ export class ContactHelp extends PureComponent {
         <div block="ContactUs" elem="Icons">
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
-              <a href={`tel:${TEL_LINK}`} target="_blank" rel="noreferrer">
+              <a
+                href={`tel:${TEL_LINK}`}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => {
+                  this.sendEvents(EVENT_MOE_PHONE);
+                }}
+              >
                 <Phone />
               </a>
             </div>
@@ -73,7 +88,14 @@ export class ContactHelp extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div block="IconWrapper" elem="Icon" onClick={this.chat}>
+            <div
+              block="IconWrapper"
+              elem="Icon"
+              onClick={() => {
+                this.chat();
+                this.sendEvents(EVENT_MOE_CHAT);
+              }}
+            >
               <Chat />
             </div>
             <p block="IconWrapper" elem="IconTitle">
@@ -83,7 +105,12 @@ export class ContactHelp extends PureComponent {
           <div block="divider"></div>
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
-              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+              <a
+                href={`mailto:${EMAIL_LINK}`}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => this.sendEvents(EVENT_MOE_MAIL)}
+              >
                 <Email />
               </a>
             </div>

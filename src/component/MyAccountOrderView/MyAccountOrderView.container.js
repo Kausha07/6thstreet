@@ -31,6 +31,7 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   is_exchange_enabled: state.AppConfig.is_exchange_enabled,
+  ctcReturnEnabled:state.AppConfig.ctcReturnEnabled
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -90,8 +91,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
   }
 
   openOrderCancelation(itemStatus = "") {
-    const { history } = this.props;
-    const { entity_id, order } = this.state;
+    const { history,ctcReturnEnabled = false } = this.props;
+    const { order: { status, is_returnable, pickup_address_required } = {}, entity_id, order } = this.state;
 
     if (itemStatus === CANCEL_ORDER_LABEL) {
       this.cancelExchangeOrder(order);
@@ -102,7 +103,17 @@ export class MyAccountOrderViewContainer extends PureComponent {
           : itemStatus === RETURN_ITEM_LABEL
             ? `/my-account/return-item/create/${entity_id}`
             : `/my-account/return-item/cancel/${entity_id}`;
+      if (itemStatus === RETURN_ITEM_LABEL) {
+        if (pickup_address_required && ctcReturnEnabled) {
+          showPopup({});
+          history.push("/my-account/return-item/pick-up-address", { orderId: entity_id, orderDetails: order });
+        } else {
+          history.push(url, { orderDetails: order });
+        }
+      }
+      else {
         history.push(url, { orderDetails: order });
+      }
     }
   }
 

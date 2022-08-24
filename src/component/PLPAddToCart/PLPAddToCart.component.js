@@ -14,9 +14,15 @@ import Image from "Component/Image";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART,
+  EVENT_MOE_ADD_TO_CART_FAILED,
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getCurrency } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -24,6 +30,8 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
 });
+
+export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
@@ -86,20 +94,20 @@ class PLPAddToCart extends PureComponent {
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
         size_us.length === 0 &&
-          size_uk.length === 0 &&
-          size_eu.length === 0 &&
-          in_stock === 0
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
           ? true
           : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+          ? true
+          : false;
     } else {
       outOfStockStatus =
         in_stock === 0
           ? true
           : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+          ? true
+          : false;
     }
     this.setState({
       isOutOfStock: outOfStockStatus,
@@ -444,7 +452,7 @@ class PLPAddToCart extends PureComponent {
                   isArabic: isArabic(),
                 },
               }}
-            //   disabled={disabled}
+              //   disabled={disabled}
             >
               <span>{__("Add to bag")}</span>
               <span>{__("Adding...")}</span>
@@ -453,6 +461,101 @@ class PLPAddToCart extends PureComponent {
           )}
       </>
     );
+  }
+
+  sendMoEImpressions(event) {
+    const {
+      product: {
+        categories = {},
+        brand_name,
+        color,
+        name,
+        price,
+        product_type_6s,
+        sku,
+        thumbnail_url,
+        url,
+        simple_products,
+        size_uk = [],
+        size_eu = [],
+        size_us = [],
+      },
+      product,
+    } = this.props;
+    const { selectedSizeType, selectedSizeCode } = this.state;
+
+    const productStock = simple_products;
+
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+
+    const checkproductSize =
+      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      selectedSizeCode !== "";
+    const checkproductStock =
+      typeof productStock === "object" && productStock !== null;
+    const { size } =
+      checkproductSize && checkproductStock
+        ? productStock[selectedSizeCode]
+        : "";
+    const optionId = checkproductSize
+      ? selectedSizeType.toLocaleUpperCase()
+      : "";
+    const optionValue = checkproductSize ? size[selectedSizeType] : "";
+
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///")
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+
+    const getCartID = BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
+      : "";
+
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      subcategory: categoryLevel || product_type_6s,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: basePrice || "",
+      product_url: url || "",
+      currency: getCurrency() || "",
+      gender: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      product_sku: sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name || "",
+      size_id: optionId,
+      size: optionValue,
+      quantity: 1,
+      cart_id: getCartID || "",
+      app6thstreet_platform: "Web",
+    });
   }
 
   addToCart(isClickAndCollect = false) {
@@ -537,8 +640,10 @@ class PLPAddToCart extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {});
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {});
+          this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -635,6 +740,7 @@ class PLPAddToCart extends PureComponent {
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
+    //this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
     // TODO props for addedToCart
     const timeout = 1250;
 
@@ -655,7 +761,7 @@ class PLPAddToCart extends PureComponent {
       <div block="PLPAddToCart">
         <div block="PLPAddToCart" elem="SizeSelector">
           {sizeObject.sizeTypes !== undefined &&
-            sizeObject.sizeTypes.length !== 0 ? (
+          sizeObject.sizeTypes.length !== 0 ? (
             <>
               <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
                 {this.getSizeTypeSelect()}

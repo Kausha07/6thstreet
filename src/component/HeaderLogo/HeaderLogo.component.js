@@ -8,6 +8,8 @@ import "./HeaderLogo.style";
 import logo from "./logo/6thstreet_logo.png";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { EVENT_MOE_TOP_NAV_DEFAULT } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class HeaderLogo extends PureComponent {
   static propTypes = {
@@ -20,9 +22,37 @@ class HeaderLogo extends PureComponent {
   };
 
   handleLinkOnClick = (path) => {
-    const {setGender, setPrevPath} = this.props;
+    const { setGender, setPrevPath } = this.props;
+    const genderDefault = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
     setGender();
-    setPrevPath(path)
+    setPrevPath(path);
+    Moengage.track_event(EVENT_MOE_TOP_NAV_DEFAULT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageType(),
+      category: genderDefault || "",
+      app6thstreet_platform: "Web",
+    });
+  };
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 
   render() {
@@ -30,7 +60,7 @@ class HeaderLogo extends PureComponent {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
-    if(gender === "all"){
+    if (gender === "all") {
       return (
         <Link
           to={`/`}
@@ -38,7 +68,11 @@ class HeaderLogo extends PureComponent {
           mods={{ isArabic }}
           onClick={() => this.handleLinkOnClick(window.location.href)}
         >
-          <Image lazyLoad={true} mix={{ block: "Image", mods: { isArabic } }} src={logo} />
+          <Image
+            lazyLoad={true}
+            mix={{ block: "Image", mods: { isArabic } }}
+            src={logo}
+          />
         </Link>
       );
     }
@@ -49,7 +83,11 @@ class HeaderLogo extends PureComponent {
         mods={{ isArabic }}
         onClick={() => this.handleLinkOnClick(window.location.href)}
       >
-        <Image lazyLoad={true} mix={{ block: "Image", mods: { isArabic } }} src={logo} />
+        <Image
+          lazyLoad={true}
+          mix={{ block: "Image", mods: { isArabic } }}
+          src={logo}
+        />
       </Link>
     );
   }

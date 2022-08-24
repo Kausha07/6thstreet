@@ -276,7 +276,6 @@ class RecommendedForYouVueSlider extends PureComponent {
                   key={sku}
                   renderMySignInPopup={renderMySignInPopup}
                   data={item}
-                  ref={this.itemRef}
                   widgetID={widgetID}
                   pageType={pageType}
                   sourceProdID={sourceProdID}
