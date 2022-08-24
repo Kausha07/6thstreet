@@ -83,7 +83,7 @@ export class RouterContainer extends SourceRouterContainer {
       addressCityData,
       getCitiesData
     } = this.props;
-    const decodedParams = atob(getCookie("authData"));
+    const decodedParams = atob(decodeURIComponent(getCookie("authData")));
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
