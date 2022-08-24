@@ -10,6 +10,7 @@ export const FREE = "free";
 export const CHECKOUT_QPAY = "checkout_qpay";
 export const EXCHANGE_STORE_CREDIT = "exchange_store_credit";
 export const TABBY_PAYMENT_CODES = [TABBY_ISTALLMENTS];
+export const KNET_PAY = "checkout_knet";
 export const HIDDEN_PAYMENTS = [
   "checkout",
   APPLE_PAY];

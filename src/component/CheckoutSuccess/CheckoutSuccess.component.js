@@ -327,6 +327,29 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
+    } else if (paymentMethod?.code === "checkout_knet") {
+
+      const {
+        order: { unship = [], base_currency_code: currency },
+        incrementID,
+      } = this.props;
+
+      return (
+        <div block="TotalItems">
+          <div block="TotalItems" elem="OrderId">
+            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          </div>
+          <ul block="TotalItems" elem="Items">
+            {unship
+              .reduce((acc, { items }) => [...acc, ...items], [])
+              .filter(
+                ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
+              )
+              .map(this.renderItem)}
+          </ul>
+        </div>
+      );
+
     } else {
       const {
         initialTotals: { items = [], quote_currency_code },
@@ -599,9 +622,76 @@ export class CheckoutSuccess extends PureComponent {
     </div>
   );
 
+  renderKNETPaymentType = () => {
+    const { KnetDetails, paymentMethod } = this.props;
+    const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
+    return (
+      <>
+      <p></p>
+      {paymentMethod?.code === "checkout_knet" && KnetDetails && (
+            <>
+              {KnetDetails?.knet_payment_id && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("KNET Payment Id")}
+                  </div>
+                  {KnetDetails?.knet_payment_id}
+                  <p></p>{" "}
+                </>
+              )}
+
+              {KnetDetails?.knet_transaction_id && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("KNET Transaction Id")}
+                  </div>
+                  {KnetDetails?.knet_transaction_id}
+                  <p></p>{" "}
+                </>
+              )}
+
+              {KnetDetails?.Payment_ID && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("Payment ID")}
+                  </div>
+                  {KnetDetails?.Payment_ID}
+                  <p></p>{" "}
+                </>
+              )}
+
+              {KnetDetails?.amount && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("Amount")}
+                  </div>
+                  {currency} {KnetDetails?.amount}
+                  <p></p>{" "}
+                </>
+              )}
+              <div block="PaymentType" elem="Title">
+                {__("Status")}
+              </div>
+              {status}
+              <p></p>
+              <div block="PaymentType" elem="Title">
+                {__("Date")}
+              </div>
+              {date}
+              <p></p>
+            </>
+          )}
+      </>
+    )
+  }
+
   renderPaymentType = () => {
     const { isArabic } = this.state;
-    const { QPAY_DETAILS, paymentMethod } = this.props;
+    const { QPAY_DETAILS, paymentMethod, KnetDetails } = this.props;
     const { PUN, date, status } = QPAY_DETAILS;
     return (
       <>
@@ -610,6 +700,7 @@ export class CheckoutSuccess extends PureComponent {
             {__("Payment")}
           </div>
           {this.renderPaymentTypeContent()}
+          {paymentMethod?.code === "checkout_knet" ? this.renderKNETPaymentType() : null}
           <p></p>
           {paymentMethod?.code === "checkout_qpay" && QPAY_DETAILS && (
             <>
@@ -765,6 +856,9 @@ export class CheckoutSuccess extends PureComponent {
       }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
+    }
+    else if (paymentMethod?.code?.match(/knet/)) {
+      this.setState({ paymentTitle: __("KNET") });
     }
 
     const { paymentTitle } = this.state;
@@ -931,7 +1025,8 @@ export class CheckoutSuccess extends PureComponent {
     if (pagePathName !== "/checkout/error") {
       if (
         paymentMethod?.code === "checkout_qpay" ||
-        paymentMethod?.code === "tabby_installments"
+        paymentMethod?.code === "tabby_installments" ||
+        paymentMethod?.code === "checkout_knet"
       ) {
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
@@ -958,7 +1053,8 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-          paymentMethod?.code === "tabby_installments"
+          paymentMethod?.code === "tabby_installments" ||
+          paymentMethod?.code === "checkout_knet"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}

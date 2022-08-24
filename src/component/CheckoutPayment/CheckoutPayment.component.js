@@ -66,6 +66,14 @@ export class CheckoutPayment extends PureComponent {
       );
     }
 
+    if(m_code === "checkout_knet"){
+      return (
+        <div block="CheckoutPayment" elem="Method">
+          <p>KNET</p>
+        </div>
+      );
+    }
+
     return (
       <div block="CheckoutPayment" elem="Method">
         <p>{m_code}</p>

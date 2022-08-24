@@ -820,6 +820,8 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;
+      case "checkout_knet":
+        return this.renderPaymentTypeText("KNET");
       default:
         return null;
     }

@@ -3,6 +3,7 @@ import {
   CHECKOUT_APPLE_PAY,
   CHECKOUT_QPAY,
   TABBY_ISTALLMENTS,
+  KNET_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
@@ -78,6 +79,14 @@ export const mapDispatchToProps = (dispatch) => ({
       paymentId,
       (qpaymethod = true)
     ),
+  getPaymentAuthorizationKNET: (paymentId, qpaymethod, KNETpay) =>
+    CheckoutDispatcher.getPaymentAuthorization(
+      dispatch,
+      paymentId,
+      qpaymethod,
+      (KNETpay=true)
+    ),
+
   capturePayment: (paymentId, orderId) =>
     CheckoutDispatcher.capturePayment(dispatch, paymentId, orderId),
   cancelOrder: (orderId, cancelReason) =>
@@ -192,6 +201,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       PaymentRedirect: false,
       tabbyURL: "",
       QPayOrderDetails: null,
+      KNETOrderDetails: null,
+      KnetDetails: {},
     };
   }
 
@@ -258,6 +269,107 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       console.error("error while auth in tabby pay case", error);
     }
   };
+
+  getKNETData = async () => {
+    try {
+      const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
+      const now = new Date();
+      if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
+      }
+      if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
+        this.setState({ PaymentRedirect: true });
+
+        const { getPaymentAuthorization, capturePayment, cancelOrder, getPaymentAuthorizationKNET } =
+          this.props;
+
+        const ShippingAddress = JSON.parse(
+          localStorage.getItem("Shipping_Address")
+        );
+
+        this.setState({ shippingAddress: ShippingAddress });
+
+        const { id, order_id, increment_id } = KNET_CHECK;
+        const response = await getPaymentAuthorizationKNET(id, false, true);
+        if (response) {
+          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+
+          localStorage.removeItem("Shipping_Address");
+
+          const { status, id: paymentId = "" } = response;
+
+          localStorage.removeItem("Shipping_Address");
+
+
+          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+
+
+          this.setState({ KNETOrderDetails: order });
+
+          if (status === "Authorized" || status === "Captured") {
+            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+            this.setDetailsStep(order_id, increment_id);
+            this.setState({ isLoading: false });
+            this.resetCart();
+            try {
+              const cResponse = await capturePayment(paymentId, order_id);
+              if (cResponse) {
+                const { bank_reference, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
+                this.setState({
+                  KnetDetails: {
+                    bank_reference: bank_reference,
+                    date: requested_on,
+                    status: "SUCCESS",
+                    amount: amount,
+                    currency: currency,
+                    knet_payment_id: knet_payment_id,
+                    knet_transaction_id: knet_transaction_id,
+                  },
+                });
+              }
+            } catch (error) {
+              console.error("capture api response", error);
+            }
+          }
+
+          if (
+            status === "Declined" ||
+            status === "Canceled" ||
+            status === "Pending"
+          ) {
+            cancelOrder(order_id, PAYMENT_FAILED);
+            this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+            try {
+              const cResponse = await capturePayment(paymentId, order_id);
+              if (cResponse) {
+                const { pun, requested_on, amount, currency } = cResponse;
+                this.setState({
+                  KnetDetails: {
+                    PUN: pun,
+                    date: requested_on,
+                    amount: `${currency} ${amount}`,
+                    status: "FAILED",
+                    Payment_ID: paymentId,
+                  },
+                });
+              }
+            } catch (error) {
+              console.error("capture api response", error);
+            }
+          }
+        }
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
+        return;
+      } else if (now.getTime() >= KNET_CHECK?.expiry) {
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
+      }
+    } catch (error) {
+      localStorage.removeItem("QPAY_ORDER_DETAILS");
+      console.error("error while auth in qpay case", error);
+    }
+  };
+
   getQPayData = async () => {
     try {
       const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
@@ -356,10 +468,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
-    if (!QPAY_CHECK && !TABBY_CHECK) {
+    const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
+    if (!QPAY_CHECK && !TABBY_CHECK && !KNET_CHECK) {
       this.refreshCart();
     }
     setMeta({ title: __("Checkout") });
+    this.getKNETData();
     this.getQPayData();
     this.getTabbyData();
   }
@@ -658,7 +772,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           id: gateway_token,
         };
       }
-    } else if (code === CHECKOUT_QPAY) {
+    } else if (code === CHECKOUT_QPAY || code === KNET_PAY) {
       data = {};
     } else {
       data = additional_data;
@@ -666,7 +780,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
+    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY || code === KNET_PAY) {
       this.placeOrder(code, data, paymentInformation, finalEdd);
     } else {
       this.placeOrder(code, data, null, finalEdd);
@@ -790,7 +904,34 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               window.open(`${href}`, "_self");
 
               //return true;
-            } else {
+            } else if(code === KNET_PAY) {
+
+              const { shippingAddress } = this.state;
+              this.setState({
+                order_id,
+                increment_id,
+                id,
+              });
+              const now = new Date();
+              const obj = {
+                order_id,
+                id,
+                increment_id,
+                // keep details in localstorage for 2 mins only
+                expiry: now.getTime() + 120000,
+              };
+              localStorage.setItem("KNET_ORDER_DETAILS", JSON.stringify(obj));
+              localStorage.setItem(
+                "PAYMENT_INFO",
+                JSON.stringify(paymentInformation)
+              );
+              localStorage.setItem(
+                "Shipping_Address",
+                JSON.stringify(shippingAddress)
+              );
+              window.open(`${href}`, "_self");
+
+          } else {
               if (code === CARD) {
                 const { saveCreditCard, newCardVisible } = this.props;
                 const { creditCardData } = this.state;
