@@ -627,7 +627,7 @@ export class CheckoutSuccess extends PureComponent {
     const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
     return (
       <>
-      <p></p>
+      <br /><br />
       {paymentMethod?.code === "checkout_knet" && KnetDetails && (
             <>
               {KnetDetails?.knet_payment_id && (
@@ -637,7 +637,7 @@ export class CheckoutSuccess extends PureComponent {
                     {__("KNET Payment Id")}
                   </div>
                   {KnetDetails?.knet_payment_id}
-                  <p></p>{" "}
+                  <br /><br />{" "}
                 </>
               )}
 
@@ -648,7 +648,7 @@ export class CheckoutSuccess extends PureComponent {
                     {__("KNET Transaction Id")}
                   </div>
                   {KnetDetails?.knet_transaction_id}
-                  <p></p>{" "}
+                  <br /><br />{" "}
                 </>
               )}
 
@@ -659,7 +659,7 @@ export class CheckoutSuccess extends PureComponent {
                     {__("Payment ID")}
                   </div>
                   {KnetDetails?.Payment_ID}
-                  <p></p>{" "}
+                  <br /><br />{" "}
                 </>
               )}
 
@@ -670,19 +670,19 @@ export class CheckoutSuccess extends PureComponent {
                     {__("Amount")}
                   </div>
                   {currency} {KnetDetails?.amount}
-                  <p></p>{" "}
+                  <br /><br />{" "}
                 </>
               )}
               <div block="PaymentType" elem="Title">
                 {__("Status")}
               </div>
               {status}
-              <p></p>
+              <br /><br />
               <div block="PaymentType" elem="Title">
                 {__("Date")}
               </div>
               {date}
-              <p></p>
+              <br /><br />
             </>
           )}
       </>
