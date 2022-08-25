@@ -8,9 +8,9 @@ import {
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { paymentMethodType } from "Type/Checkout";
 import { isArabic } from "Util/App";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl,getLanguageFromUrl } from "Util/Url/";
 import Image from "Component/Image";
-
+import {EVENT_MOE_ADD_PAYMENT_INFO} from "Util/Event"
 import { PAYMENTS_DATA } from "./CheckoutPayment.config";
 import tabbyAr from "./icons/tabby-logo-black-ar@2x.png";
 
@@ -32,17 +32,46 @@ export class CheckoutPayment extends PureComponent {
     isArabic: isArabic(),
   };
 
+  sendMoeEvent(method) {
+    const {
+      totals: { currency_code, discount, subtotal, total },
+    } = this.props;
+    if (method) {
+      const payment_Type =
+      (method == "msp_cashondelivery")
+          ? "Cash on Delivery"
+          : (method == "checkoutcom_card_payment")
+          ? "Card"
+          : (method == ("checkout_apple_pay" || "APPLE_PAY"))
+          ? "Apple Pay"
+          : (method == "tabby_installments")
+          ? "Tabby - Installments"
+          : method;
+      Moengage.track_event(EVENT_MOE_ADD_PAYMENT_INFO, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        subtotal_amount: subtotal,
+        discounted_amount: discount,
+        total_amount: total,
+        currency: currency_code,
+        payment_type: payment_Type,
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
+
   onClick = () => {
     const {
       setCashOnDeliveryFee,
       onClick,
       method,
-      method: { amount },
+      method: { amount,m_code },
     } = this.props;
-
     setCashOnDeliveryFee(amount);
     onClick(method);
+    this.sendMoeEvent(m_code);
   };
+  
 
   renderContent() {
     const {

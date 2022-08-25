@@ -16,19 +16,21 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
-import { isArabic } from "Util/App";
+import { isArabic, getCurrency } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
+  EVENT_MOE_PRODUCT_CLICK,
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -134,8 +136,10 @@ class ProductItem extends PureComponent {
         categories,
         price = {},
         product_Position,
+        thumbnail_url,
       },
     } = this.props;
+
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -168,7 +172,7 @@ class ProductItem extends PureComponent {
       } else return "";
     };
     const categoryLevel =
-      checkCategoryLevel().includes("///") == 1
+      checkCategoryLevel().includes("///")
         ? checkCategoryLevel().split("///").pop()
         : "";
 
@@ -180,17 +184,36 @@ class ProductItem extends PureComponent {
       price: itemPrice,
       brand: brand_name,
       category: product_type_6s || categoryLevel,
-      varient: color,
-      position: product_Position || "" ,
+      varient: color || "",
+      position: product_Position || "",
     });
-    // if (queryID) {
-    //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-    //     objectIDs: [product.objectID],
-    //     queryID,
-    //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-    //     position: [position],
-    //   });
-    // }
+    if (queryID) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [product.objectID],
+        queryID,
+        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        position: [position],
+      });
+    }
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      category: currentAppState.gender
+        ? currentAppState.gender.toUpperCase()
+        : "",
+      subcategory: categoryLevel || product_type_6s,
+      color: color || "",
+      brand_name: brand_name || "",
+      full_price: basePrice || "",
+      product_url: url,
+      currency: getCurrency() || "",
+      product_sku: sku || "",
+      discounted_price: itemPrice || "",
+      product_image_url: thumbnail_url || "",
+      product_name: name,
+      app6thstreet_platform: "Web",
+    });
     // this.sendBannerClickImpression(product);
   }
 

@@ -42,6 +42,8 @@ import { checkProducts } from "Util/Cart/Cart";
 import Event, {
   EVENT_GTM_CHECKOUT,
   EVENT_GTM_EDD_TRACK_ON_ORDER,
+  EVENT_MOE_ADD_PAYMENT_INFO,
+  EVENT_MOE_EDD_TRACK_ON_ORDER,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -50,6 +52,7 @@ import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
 } from "../../store/MobileCart/MobileCart.reducer";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
@@ -805,6 +808,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
             edd_date: finalEdd,
           });
+          Moengage.track_event(EVENT_MOE_EDD_TRACK_ON_ORDER, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            edd_date: finalEdd,
+            app6thstreet_platform: "Web",
+          });
         }
         const { data } = response;
         if (typeof data === "object") {
@@ -819,6 +828,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           } = data;
 
           if (success || response_code === 200 || http_response_code === 202) {
+            localStorage.removeItem("lastCouponCode");
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({

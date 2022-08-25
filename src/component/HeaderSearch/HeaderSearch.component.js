@@ -14,7 +14,9 @@ import Event, {
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_GO_TO_SEARCH,
 } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
+export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
   static propTypes = {
     search: PropTypes.string,
@@ -50,7 +52,7 @@ class HeaderSearch extends PureComponent {
     if (focusInput && searchInput) {
       searchInput.focus();
     }
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
   }
@@ -75,6 +77,12 @@ class HeaderSearch extends PureComponent {
 
     if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+      Moengage.track_event(EVENT_GTM_GO_TO_SEARCH, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        screen_name: this.getPageType(),
+        app6thstreet_platform: "Web",
+      });
     }
   }
   searchRef = createRef();
@@ -92,6 +100,24 @@ class HeaderSearch extends PureComponent {
     };
   }
 
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === URL_REWRITE) {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   onSubmit = () => {
     const { onSearchSubmit } = this.props;
     const {
@@ -99,7 +125,7 @@ class HeaderSearch extends PureComponent {
         form: { children },
       },
     } = this.searchRef;
-    
+
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
     submitBtn.blur();
@@ -122,16 +148,22 @@ class HeaderSearch extends PureComponent {
     };
   };
   cancelSearch = () => {
-    const {search} = this.props;
+    const { search } = this.props;
     this.closeSearch();
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
     Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    Moengage.track_event(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: search || "",
+      app6thstreet_platform: "Web",
+    });
   };
   closeSearch = () => {
     const { hideSearchBar, onSearchClean, handleHomeSearchClick } = this.props;
-    if (sessionStorage.hasOwnProperty("Searched_value")){
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
       sessionStorage.removeItem("Searched_value");
     }
     if (hideSearchBar) {

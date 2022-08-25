@@ -153,7 +153,7 @@ class HeaderGenders extends PureComponent {
     render() {
         const { isArabic } = this.state;
         const { isMobile } = this.props;
-
+        
         return (
             <div
               mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }

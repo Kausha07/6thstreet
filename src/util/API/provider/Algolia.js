@@ -35,6 +35,10 @@ export class Algolia {
     AlgoliaSDK.setIndex.call(AlgoliaSDK, locale, env, index);
   }
 
+  async getIndex() {
+    return AlgoliaSDK.index;
+  }
+
   async getPLP(params = {}) {
     const productCount = isMobile.any() ? 16 : 30;
     const {
@@ -49,7 +53,37 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`,params);
+    return AlgoliaSDK.getPLP(`/?${url}`, params);
+  }
+
+  async getProductForSearchContainer(params = {}, suggestionQuery) {
+    const productCount = isMobile.any() ? 16 : 30;
+    const {
+      AppState: { locale = process.env.REACT_APP_LOCATE },
+    } = getStore().getState();
+
+    const url = queryString({
+      ...params,
+      limit: productCount,
+      locale,
+    });
+
+    return AlgoliaSDK.getProductForSearchContainer(`/?${url}`,params, suggestionQuery);
+  }
+
+  async getPromotions(params = {}) {
+    const productCount = isMobile.any() ? 16 : 30;
+    const {
+      AppState: { locale = process.env.REACT_APP_LOCATE },
+    } = getStore().getState();
+
+    const url = queryString({
+      ...params,
+      limit: productCount,
+      locale,
+    });
+
+    return AlgoliaSDK.getPromotions(`/?${url}`,params);
   }
 
   async getSearchPLP(params = {}) {
@@ -66,7 +100,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getSearchPLP(`/?${url}`,params);
+    return AlgoliaSDK.getSearchPLP(`/?${url}`, params);
   }
 
   async getPDP(params = {}) {

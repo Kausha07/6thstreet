@@ -51,6 +51,17 @@ import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
 import { ADD_ADDRESS } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import {
+  EVENT_MOE_ACCOUNT_ORDERS_CLICK,
+  EVENT_MOE_ACCOUNT_RETURNS_CLICK,
+  EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK,
+  EVENT_MOE_ACCOUNT_PROFILE_CLICK,
+  EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
+  EVENT_MOE_ACCOUNT_SETTINGS_CLICK,
+  EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
+  EVENT_MOE_RETURN_AN_ITEM_CLICK
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -158,6 +169,15 @@ export class MyAccount extends SourceMyAccount {
     ));
   }
 
+  sendEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK  && {screen_name: "Return List"}),
+      app6thstreet_platform: "Web",
+    });
+  }
+
   chat() {
     if (document.querySelector(".ori-cursor-ptr")) {
       document.querySelector(".ori-cursor-ptr").click();
@@ -169,6 +189,23 @@ export class MyAccount extends SourceMyAccount {
 
     setMobileTabActive(!mobileTabActive);
     changeActiveTab(key);
+    const MoeEvent =
+      key == "dashboard"
+        ? EVENT_MOE_ACCOUNT_PROFILE_CLICK
+        : key == "my-orders"
+        ? EVENT_MOE_ACCOUNT_ORDERS_CLICK
+        : key == "settings"
+        ? EVENT_MOE_ACCOUNT_SETTINGS_CLICK
+        : key == "address-book"
+        ? EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK
+        : key == "return-item"
+        ? EVENT_MOE_ACCOUNT_RETURNS_CLICK
+        : key == "club-apparel"
+        ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
+        : "";
+    if (MoeEvent && MoeEvent.length > 0) {
+      this.sendEvents(MoeEvent);
+    }
   }
 
   openTabMenu() {
@@ -193,8 +230,8 @@ export class MyAccount extends SourceMyAccount {
 
   returnItemButtonClick() {
     const { history } = this.props;
-
     history.push("/my-account/my-orders");
+    this.sendEvents(EVENT_MOE_RETURN_AN_ITEM_CLICK);
   }
 
   renderDesktop() {
@@ -225,16 +262,17 @@ export class MyAccount extends SourceMyAccount {
       finalTab = exchangeTabMap[activeTab];
     }
     const { name, alternativePageName, alternateName } = finalTab;
+    const pickUpAddress =
+      pathname === "/my-account/return-item/pick-up-address";
 
     const returnTitle =
       activeTab === RETURN_ITEM
-        ? __("Return Statement")
-        : activeTab === EXCHANGE_ITEM
-        ? is_exchange_enabled
-          ? __("Exchange Statement")
+        ? pickUpAddress
+          ? __("Select Pick Up Address")
           : __("Return Statement")
+        : activeTab === EXCHANGE_ITEM
+        ? __("Exchange Statement")
         : null;
-
     const isCancel = pathname.includes("/return-item/cancel");
     const isReturnButton = pathname === "/my-account/return-item";
     return (
@@ -324,6 +362,7 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
+    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
@@ -333,12 +372,20 @@ export class MyAccount extends SourceMyAccount {
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        <MyAccountMobileHeader
-          onClose={this.handleClick}
-          isHiddenTabContent={hiddenTabContent === "Active"}
-          alternativePageName={alternativePageName}
-          name={isCancel ? alternateName : name}
-        />
+        {!(isPickUpAddress && payloadKey && payload[payloadKey].title) && (
+          <MyAccountMobileHeader
+            onClose={this.handleClick}
+            isHiddenTabContent={hiddenTabContent === "Active"}
+            alternativePageName={alternativePageName}
+            name={
+              isPickUpAddress
+                ? "Select Pick Up Address"
+                : isCancel
+                ? alternateName
+                : name
+            }
+          />
+        )}
 
         <div block={hiddenTabList}>
           <div block="UserBlock">
@@ -399,7 +446,14 @@ export class MyAccount extends SourceMyAccount {
             <div block="CardsContainer">
               <Image block="CardsIcon" src={contactHelp} alt={"box"} />
               <div block="CardTitle"> {__("Customer Support")} </div>
-              <button onClick={this.chat}>{__("Live Chat")}</button>
+              <button
+                onClick={() => {
+                  this.chat();
+                  this.sendEvents(EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                }}
+              >
+                {__("Live Chat")}
+              </button>
             </div>
           </div>
           <MyAccountTabList
