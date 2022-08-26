@@ -3,7 +3,7 @@ import { store } from "../../../store/index";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher"
 
 // eslint-disable-next-line
-export const doFetch = async (url, options,  checkUser) => {
+export const doFetch = async (url, options,  checkUser=false) => {
     try {
         const response = await fetch(url, options);
         const { ok, status } = response;
