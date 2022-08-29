@@ -26,8 +26,11 @@ import PDP from "./PDP.component";
 import browserHistory from "Util/History";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import BrowserDatabase from "Util/BrowserDatabase";
+import VueQuery from "../../query/Vue.query";
+import { getUUIDToken } from "Util/Auth";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -114,12 +117,13 @@ export class PDPContainer extends PureComponent {
     productSku: null,
     prevPathname: "",
     currentLocation: "",
+    pdpWidgetsAPIData: [],
+    isPdpWidgetSet:false,
   };
 
   constructor(props) {
     super(props);
     this.requestProduct();
-    // this.renderVueHits();`
   }
 
   componentDidMount() {
@@ -137,31 +141,23 @@ export class PDPContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      id,
-      isLoading,
-      setIsLoading,
-      product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
-      product: { highlighted_attributes = [] },
+      product: { sku, brand_name: brandName } = {},
       menuCategories = [],
+      pdpWidgetsData
     } = this.props;
-    const currentIsLoading = this.getIsLoading();
-    const { id: prevId } = prevProps;
-    const { productSku, currentLocation } = this.state;
+    const { productSku, currentLocation,isPdpWidgetSet } = this.state;
 
     // if (sku != undefined)
-    // if (productSku != sku && currentLocation === this.props.location.pathname) {
-    //   this.renderVueHits();
-    // }
+    if (productSku != sku && currentLocation === this.props.location.pathname) {
+      this.renderVueHits();
+    }
 
-    // Request product, if URL rewrite has changed
-    // if (id !== prevId) {
-    //   this.requestProduct();
-    // }
-
-    // Update loading from here, validate for last options recieved results from
-    // if (isLoading !== currentIsLoading) {
-    //   setIsLoading(false);
-    // }
+    if (!isPdpWidgetSet && pdpWidgetsData.length !== 0) {
+      this.getPdpWidgetsVueData();
+      this.setState({
+        isPdpWidgetSet: true,
+      });
+    }
 
     if (menuCategories.length !== 0 && sku && productSku !== sku) {
       this.updateBreadcrumbs();
@@ -277,38 +273,75 @@ export class PDPContainer extends PureComponent {
   componentWillUnmount() {
     document.querySelectorAll("script[type='application/ld+json']").forEach((node) => node.remove());
   }
-  // componentWillUnmount() {
-  //   const {resetProduct} =this.props;
-  //   resetProduct();
-  // }
-  // renderVueHits() {
-  //   const {
-  //     prevPath = null,
-  //     product: { product_type_6s, sku, url, price },
-  //   } = this.props;
-  //   const itemPrice =
-  //     price && price[0]
-  //       ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-  //       : price && Object.keys(price)[0] !== "0"
-  //         ? price[Object.keys(price)[0]]["6s_special_price"]
-  //         : null;
-  //   const locale = VueIntegrationQueries.getLocaleFromUrl();
-  //   VueIntegrationQueries.vueAnalayticsLogger({
-  //     event_name: VUE_PAGE_VIEW,
-  //     params: {
-  //       event: VUE_PAGE_VIEW,
-  //       pageType: "pdp",
-  //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-  //       clicked: Date.now(),
-  //       uuid: getUUID(),
-  //       referrer: prevPath,
-  //       url: window.location.href,
-  //       sourceProdID: sku,
-  //       sourceCatgID: product_type_6s, // TODO: replace with category id
-  //       prodPrice: itemPrice,
-  //     },
-  //   });
-  // }
+
+  renderVueHits() {
+    const {
+      prevPath = null,
+      product: { product_type_6s, sku, price },
+    } = this.props;
+    const itemPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+          ? price[Object.keys(price)[0]]["6s_special_price"]
+          : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+        sourceProdID: sku,
+        sourceCatgID: product_type_6s, // TODO: replace with category id
+        prodPrice: itemPrice,
+      },
+    });
+  }
+
+
+  getPdpWidgetsVueData() {
+    const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
+    if (pdpWidgetsData && pdpWidgetsData.length > 0) {
+      const userData = BrowserDatabase.getItem("MOE_DATA");
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      const query = {
+        filters: [],
+        num_results: 10,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      };
+
+      let promisesArray = [];
+      pdpWidgetsData.forEach((element) => {
+        const { type } = element;
+        const queryPaylod =
+          type === "vue_visually_similar_slider"
+            ? {
+                userID,
+                sourceProduct,
+              }
+            : {
+                gender,
+                userID,
+                sourceProduct,
+              };
+        const payload = VueQuery.buildQuery(type, query, queryPaylod);
+        promisesArray.push(fetchVueData(payload));
+      });
+      Promise.all(promisesArray)
+        .then((resp) => {
+          this.setState({ pdpWidgetsAPIData: resp });
+        })
+        .catch((err) => {
+          console.err(err);
+        });
+    }
+  }
 
   fetchClickAndCollectStores(brandName, sku) {
     const { getClickAndCollectStores } = this.props;
@@ -589,6 +622,7 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
     } = this.props;
+    const {pdpWidgetsAPIData} = this.state;
 
     // const { isLoading: isCategoryLoading } = this.state;
 
@@ -600,6 +634,7 @@ export class PDPContainer extends PureComponent {
       brandImg,
       brandName,
       clickAndCollectStores,
+      pdpWidgetsAPIData
     };
   };
 

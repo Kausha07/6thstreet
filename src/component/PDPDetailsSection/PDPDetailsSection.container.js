@@ -30,6 +30,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      pdpWidgetsAPIData
     } = this.props;
     return {
       product,
@@ -43,6 +44,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      pdpWidgetsAPIData
     };
   };
 
