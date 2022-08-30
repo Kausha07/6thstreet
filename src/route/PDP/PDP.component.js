@@ -61,7 +61,6 @@ class PDP extends PureComponent {
       prevPath = null,
       dataForVueCall={}
     } = this.props;
-    console.log("dataForVueCall",dataForVueCall)
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,

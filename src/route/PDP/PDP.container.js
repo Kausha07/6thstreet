@@ -615,7 +615,6 @@ export class PDPContainer extends PureComponent {
         ? product?.price[Object.keys(product?.price)[0]]["6s_special_price"]
         : null;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    console.log("all well", product);
     return Object.keys(product).length ? (
       <PDP
         {...this.containerProps()}
