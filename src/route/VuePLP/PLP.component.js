@@ -5,7 +5,6 @@ import { withRouter } from "react-router";
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import "../PLP/PLP.style";
-import "./PLP.style";
 import Loader from "Component/Loader";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
@@ -24,7 +23,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
     PLPDispatcher.requestProductList(options, dispatch, state),
 });
 
-const PLP = (props) => {
+const VuePLP = (props) => {
   const getRequestOptions = () => {
     let params;
     if (location.search && location.search.startsWith("?q")) {
@@ -130,4 +129,4 @@ const PLP = (props) => {
   }
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PLP));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VuePLP));

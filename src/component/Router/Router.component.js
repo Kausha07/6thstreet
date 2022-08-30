@@ -30,7 +30,6 @@ import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
-import PLP from "Route/VuePLP/PLP.component";
 import LiveExperience from "Route/LiveExperience";
 import About from "Route/About";
 import WelcomeHomePage from "Component/WelcomeHomePage";
