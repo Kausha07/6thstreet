@@ -26,7 +26,7 @@ class MobileAPI {
             ...payload({ body: JSON.stringify(body) })
         };
 
-        return doFetch(url, options);
+        return doFetch(url, options, true);
     }
 
     post(url, data) {
