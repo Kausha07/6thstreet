@@ -255,7 +255,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("/catalogsearch/result")}
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
-              <PLP {...props} />
+              <SearchPage {...props} />
             </GTMRouteWrapper>
           )}
         />
