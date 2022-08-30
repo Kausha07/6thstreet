@@ -1015,7 +1015,7 @@ class PDPDetailsSection extends PureComponent {
           </Accordion> */}
           {/* {this.renderAccordionSeperator()} */}
         </div>
-        {pdpWidgetsAPIData.length > 0 ? (
+        {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         ) : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}

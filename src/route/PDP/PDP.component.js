@@ -14,9 +14,13 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { isArabic } from "Util/App";
+import { VUE_PAGE_VIEW } from "Util/Event";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { getUUID } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -37,6 +41,9 @@ class PDP extends PureComponent {
     showPopupField: "",
   };
 
+  componentDidMount() {
+    this.renderVueHits();
+  }
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
   };
@@ -48,6 +55,69 @@ class PDP extends PureComponent {
   onSignIn = () => {
     this.closePopup();
   };
+
+  renderVueHits() {
+    const {
+      prevPath = null,
+      dataForVueCall={}
+    } = this.props;
+    console.log("dataForVueCall",dataForVueCall)
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+        sourceProdID: dataForVueCall?.sourceProdID,
+        sourceCatgID: dataForVueCall?.sourceCatgID, // TODO: replace with category id
+        prodPrice: dataForVueCall?.prodPrice,
+      },
+    });
+  }
+
+  getPdpWidgetsVueData() {
+    const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
+    if (pdpWidgetsData && pdpWidgetsData.length > 0) {
+      const userData = BrowserDatabase.getItem("MOE_DATA");
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      const query = {
+        filters: [],
+        num_results: 10,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      };
+
+      let promisesArray = [];
+      pdpWidgetsData.forEach((element) => {
+        const { type } = element;
+        const queryPaylod =
+          type === "vue_visually_similar_slider"
+            ? {
+                userID,
+                sourceProduct,
+              }
+            : {
+                gender,
+                userID,
+                sourceProduct,
+              };
+        const payload = VueQuery.buildQuery(type, query, queryPaylod);
+        promisesArray.push(fetchVueData(payload));
+      });
+      Promise.all(promisesArray)
+        .then((resp) => {
+          this.setState({ pdpWidgetsAPIData: resp });
+        })
+        .catch((err) => {
+          console.err(err);
+        });
+    }
+  }
 
   onPDPPageClicked = () => {
     const { showPDPSearch, displaySearch } = this.props;
