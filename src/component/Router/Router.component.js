@@ -30,6 +30,7 @@ import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
+import PLP from "Route/VuePLP/PLP.component";
 import LiveExperience from "Route/LiveExperience";
 import About from "Route/About";
 import WelcomeHomePage from "Component/WelcomeHomePage";
@@ -254,7 +255,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("/catalogsearch/result")}
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
-              <SearchPage {...props} />
+              <PLP {...props} />
             </GTMRouteWrapper>
           )}
         />

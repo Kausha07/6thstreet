@@ -1,185 +1,133 @@
 /* eslint-disable fp/no-let */
-import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
-import DynamicContent from "Component/DynamicContent";
-import MyAccountOverlay from "Component/MyAccountOverlay";
-import PLPDetails from "Component/PLPDetails";
-import PLPFilters from "Component/PLPFilters";
-import PLPPages from "Component/PLPPages";
-import isMobile from "Util/Mobile";
-import { isArabic } from "Util/App";
-import { PureComponent } from "react";
-import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-// import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
-import "./PLP.style";
+import { useEffect } from "react";
 import { connect } from "react-redux";
-import NoMatch from "Route/NoMatch";
+import { withRouter } from "react-router";
+import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import "../PLP/PLP.style";
+import "./PLP.style";
 import Loader from "Component/Loader";
-
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+import WebUrlParser from "Util/API/helper/WebUrlParser";
+import ProductItem from "Component/ProductItem";
 
 export const mapStateToProps = (state) => ({
-  prevPath: state.PLP.prevPath,
+  gender: state.AppState.gender,
+  requestedOptions: state.PLP.options,
+  isLoading: state.PLP.isLoading,
+  pages: state.PLP.pages,
+  prevProductSku: state.PLP.prevProductSku,
 });
-export const mapDispatchToProps = (_dispatch) => ({});
 
-export class PLP extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      bannerData: null,
-      signInPopUp: "",
-      showPopup: false,
-      circleBannerUrl: null,
-      activeFilters: {},
-      isArabic: isArabic(),
-    };
-  }
+export const mapDispatchToProps = (dispatch, state) => ({
+  requestProductList: (options) =>
+    PLPDispatcher.requestProductList(options, dispatch, state),
+});
 
-  componentDidMount() {
-    let bannerData = localStorage.getItem("bannerData");
-    let bannerUrl = localStorage.getItem("CircleBannerUrl");
-    if (bannerData) {
-      let banner = JSON.parse(bannerData);
-      this.setState({
-        bannerData: banner,
-        circleBannerUrl: bannerUrl
-      });
-    }
-  }
-  componentWillUnmount() {
-    const { resetPLPData } = this.props;
-    // resetPLPData();
-  }
-
-  showMyAccountPopup = () => {
-    this.setState({ showPopup: true });
-  };
-
-  closePopup = () => {
-    this.setState({ signInPopUp: "", showPopup: false });
-  };
-
-  onSignIn = () => {
-    this.closePopup();
-  };
-
-  renderMySignInPopup() {
-    const { showPopup } = this.state;
-    if (!showPopup) {
-      return null;
-    }
-    return (
-      <MyAccountOverlay
-        closePopup={this.closePopup}
-        onSignIn={this.onSignIn}
-        isPopup
-      />
-    );
-  }
-  // componentWillUnmount(){
-  //     localStorage.removeItem("bannerData");
-  // }
-
-  renderPLPDetails() {
-    return <PLPDetails {...this.props} />;
-  }
-
-  renderPLPFilters() {
-
-    return <PLPFilters {...this.props} isPLPSortBy={false} />;
-  }
-
-  renderPLPSortBy() {
-    return <PLPFilters {...this.props} isPLPSortBy={true} />;
-  }
-
-  renderPLPPages() {
-    const { prevPath = null, updateFiltersState } = this.props;
-    return (
-      <PLPPages
-        {...this.props}
-        updateFiltersState={updateFiltersState}
-        renderMySignInPopup={this.showMyAccountPopup}
-        prevPath={prevPath}
-      />
-    );
-  }
-
-  renderBanner() {
-    let isFromCircleItemSlider = window.location.href.includes('plp_config');
-
-    if (this.state.bannerData && isFromCircleItemSlider)
-      return (
-        <div>
-          <CircleItemSliderSubPage bannerData={this.state.bannerData} />
-        </div>
+const PLP = (props) => {
+  const getRequestOptions = () => {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
       );
-  }
-
-  renderPLPWidget = () => {
-    const { plpWidgetData } = this.props;
-    const { pathname } = location;
-    const tagName = pathname
-      .replace(".html", "")
-      .replace("/", "")
-      .replaceAll("/", "_");
-
-    const widget = plpWidgetData.filter((item) => item.tag == tagName);
-    if (widget && widget.length == 0) {
-      return null;
+      params = parsedParams;
     }
-    const { gender, setLastTapItem } = this.props;
+    return params;
+  };
 
-    // return <h1>Plp Widget</h1>;
+  const request = async () => {
+    const { requestProductList } = props;
+    const requestOptions = getRequestOptions();
+    requestProductList({ options: requestOptions });
+  };
+
+  useEffect(() => {
+    request();
+  }, []);
+
+  const renderProduct = (product, index, qid) => {
+    const { sku } = product;
+    const { renderMySignInPopup } = props;
     return (
-      <DynamicContent
-        gender={gender}
-        content={widget}
-        setLastTapItemOnHome={setLastTapItem}
-        renderMySignInPopup={this.showMyAccountPopup}
+      <ProductItem
+        position={index}
+        product={product}
+        key={sku}
+        pageType="plp"
+        page="plp"
+        renderMySignInPopup={renderMySignInPopup}
+        qid={qid}
+        lazyLoad={false}
+        sendProductImpression={()=>{}}
       />
     );
   };
 
-  render() {
-    const { signInPopUp } = this.state;
-    const { isArabic } = this.state;
-    const {pages, isLoading} = this.props;
-    if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
-      return (
-        <NoMatch/>
-      )
+  const renderProducts = (products) => {
+    products.forEach((item, index) => {
+      Object.assign(item, {
+        product_Position: index + 1,
+      });
+    });
+    var qid = null;
+    if (new URLSearchParams(window.location.search).get("qid")) {
+      qid = new URLSearchParams(window.location.search).get("qid");
+    } else {
+      qid = localStorage.getItem("queryID");
     }
-    if (      
-      (pages.undefined && pages.undefined.length > 0) ||
-      (pages["0"] && pages["0"].length > 0)
-    ) {
+    return products.map((i, index) => renderProduct(i, index + 1, qid));
+  };
 
+  const renderPage = ([key, page]) => {
+    const { products } = page;
     return (
-      <main block="PLP" id="plp-main-scroll-id">
+      <div block="PLPPage" key={key}>
+        <ul block="ProductItems">{renderProducts(page)}</ul>
+      </div>
+    );
+  };
+
+  const renderPages = () => {
+    const { pages = {} } = props;
+    return Object.entries(pages).map(renderPage);
+  };
+
+  const {
+    pages,
+    isLoading,
+    showPopup,
+    closePopup,
+    location: { pathname },
+  } = props;
+  let catalogKey = pathname.includes("catalogsearch");
+  if (isLoading) {
+    return <Loader isLoading={isLoading} />;
+  } else {
+    return (
+      <main block={catalogKey ? "SearchPage" : "PLP"} id="plp-main-scroll-id">
         <ContentWrapper label={__("Product List Page")}>
-          {this.renderMySignInPopup()}
-          {this.renderPLPDetails()}
-          {this.state.bannerData && this.renderBanner()}
-          {this.renderPLPWidget()}
-          <div>
-
-
-            <div block="Products" elem="Wrapper">
-              {this.renderPLPFilters()}
-              {this.renderPLPPages()}
-
+          {showPopup && (
+            <MyAccountOverlay
+              closePopup={closePopup}
+              onSignIn={closePopup}
+              isPopup
+            />
+          )}
+          <div block="Products" elem="Wrapper">
+            <div block="PLPPagesContainer">
+              <div block="PLPPages Products-Lists" id="Products-Lists">
+                {pages && renderPages()}
+              </div>
             </div>
-            {
-              !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
-            }
-
           </div>
         </ContentWrapper>
       </main>
-      )}
+    );
+  }
+};
 
-      return  <Loader isLoading={isLoading} />
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PLP);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PLP));
