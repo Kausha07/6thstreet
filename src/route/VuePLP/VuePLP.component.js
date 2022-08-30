@@ -1,20 +1,26 @@
 /* eslint-disable fp/no-let */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import "../PLP/PLP.style";
+import "./VuePLP.style";
 import Loader from "Component/Loader";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import ProductItem from "Component/ProductItem";
+import VueQuery from "../../query/Vue.query";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getUUIDToken } from "Util/Auth";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   requestedOptions: state.PLP.options,
   isLoading: state.PLP.isLoading,
   pages: state.PLP.pages,
+  gender: state.AppState.gender,
   prevProductSku: state.PLP.prevProductSku,
 });
 
@@ -24,6 +30,12 @@ export const mapDispatchToProps = (dispatch, state) => ({
 });
 
 const VuePLP = (props) => {
+  const stateObj = {
+    recommendedForYou: [],
+  };
+
+  const [state, setState] = useState(stateObj);
+
   const getRequestOptions = () => {
     let params;
     if (location.search && location.search.startsWith("?q")) {
@@ -42,6 +54,26 @@ const VuePLP = (props) => {
     const { requestProductList } = props;
     const requestOptions = getRequestOptions();
     requestProductList({ options: requestOptions });
+    const { gender } = props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const query = {
+      filters: [],
+      num_results: 10,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
+      gender,
+    });
+    fetchVueData(payload)
+      .then((resp) => {
+        setState({
+          ...state,
+          recommendedForYou: resp.data,
+        });
+      })
+      .catch((err) => {
+        console.error("fetchVueData error", err);
+      });
   };
 
   useEffect(() => {
@@ -49,6 +81,8 @@ const VuePLP = (props) => {
   }, []);
 
   const renderProduct = (product, index, qid) => {
+    console.log("muskan--------->", state.recommendedForYou[0],product);
+
     const { sku } = product;
     const { renderMySignInPopup } = props;
     return (
@@ -61,7 +95,7 @@ const VuePLP = (props) => {
         renderMySignInPopup={renderMySignInPopup}
         qid={qid}
         lazyLoad={false}
-        sendProductImpression={()=>{}}
+        sendProductImpression={() => {}}
       />
     );
   };
@@ -82,7 +116,6 @@ const VuePLP = (props) => {
   };
 
   const renderPage = ([key, page]) => {
-    const { products } = page;
     return (
       <div block="PLPPage" key={key}>
         <ul block="ProductItems">{renderProducts(page)}</ul>
@@ -119,6 +152,7 @@ const VuePLP = (props) => {
           <div block="Products" elem="Wrapper">
             <div block="PLPPagesContainer">
               <div block="PLPPages Products-Lists" id="Products-Lists">
+                {/* {state.recommendedForYou && renderPages()} */}
                 {pages && renderPages()}
               </div>
             </div>
