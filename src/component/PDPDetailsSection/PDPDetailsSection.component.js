@@ -656,22 +656,22 @@ class PDPDetailsSection extends PureComponent {
 
   renderPdpWidgets() {
     const {
-      pdpWidgetsData,
+      pdpWidgetsData = [],
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
-      pdpWidgetsAPIData,
+      pdpWidgetsAPIData = [],
     } = this.props;
     const { innerWidth: width } = window;
-    if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
+    if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
           <React.Fragment>
-            {pdpWidgetsAPIData.map((item, index) => {
-              if (typeof item === "object" && Object.keys(item).length > 0) {
+            {pdpWidgetsAPIData?.map((item, index) => {
+              if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
                 const widgetID = pdpWidgetsData[index]["type"];
                 const { data } = item;
-                if (data && data.length > 0) {
+                if (data && data?.length > 0) {
                   return (
                     <>
                       <div
@@ -976,7 +976,7 @@ class PDPDetailsSection extends PureComponent {
   render() {
     const {
       product: { brand_name },
-      pdpWidgetsAPIData
+      pdpWidgetsAPIData= []
     } = this.props;
     const { isMobile } = this.state;
     return (

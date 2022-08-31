@@ -61,13 +61,13 @@ class PDP extends PureComponent {
       prevPath = null,
       dataForVueCall={}
     } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
+    const locale = VueIntegrationQueries?.getLocaleFromUrl();
+    VueIntegrationQueries?.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
       params: {
         event: VUE_PAGE_VIEW,
         pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        currency: VueIntegrationQueries?.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: prevPath,
@@ -77,45 +77,6 @@ class PDP extends PureComponent {
         prodPrice: dataForVueCall?.prodPrice,
       },
     });
-  }
-
-  getPdpWidgetsVueData() {
-    const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
-    if (pdpWidgetsData && pdpWidgetsData.length > 0) {
-      const userData = BrowserDatabase.getItem("MOE_DATA");
-      const customer = BrowserDatabase.getItem("customer");
-      const userID = customer && customer.id ? customer.id : null;
-      const query = {
-        filters: [],
-        num_results: 10,
-        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
-      };
-
-      let promisesArray = [];
-      pdpWidgetsData.forEach((element) => {
-        const { type } = element;
-        const queryPaylod =
-          type === "vue_visually_similar_slider"
-            ? {
-                userID,
-                sourceProduct,
-              }
-            : {
-                gender,
-                userID,
-                sourceProduct,
-              };
-        const payload = VueQuery.buildQuery(type, query, queryPaylod);
-        promisesArray.push(fetchVueData(payload));
-      });
-      Promise.all(promisesArray)
-        .then((resp) => {
-          this.setState({ pdpWidgetsAPIData: resp });
-        })
-        .catch((err) => {
-          console.err(err);
-        });
-    }
   }
 
   onPDPPageClicked = () => {

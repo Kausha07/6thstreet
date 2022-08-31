@@ -125,8 +125,8 @@ export class PDPContainer extends PureComponent {
   async componentDidMount() {
     const {
       requestPdpWidgetData,
-      pdpWidgetsData,
-      location: { pathname },
+      pdpWidgetsData=[],
+      location: { pathname="" },
     } = this.props;
     this.requestProduct();
     if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
@@ -141,9 +141,9 @@ export class PDPContainer extends PureComponent {
       product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
-      pdpWidgetsData,
+      pdpWidgetsData = [],
     } = this.props;
-    const { productSku, currentLocation, isPdpWidgetSet } = this.state;
+    const { productSku ="", isPdpWidgetSet=false } = this.state;
     if(Object.keys(product).length) {
       if (!isPdpWidgetSet && pdpWidgetsData.length !== 0) {
         this.getPdpWidgetsVueData();
@@ -273,7 +273,7 @@ export class PDPContainer extends PureComponent {
   }
 
   getPdpWidgetsVueData() {
-    const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
+    const { gender="", pdpWidgetsData=[], product: sourceProduct={} } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
@@ -454,10 +454,10 @@ export class PDPContainer extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
-        ? currentAppState.gender.toUpperCase()
+        ? currentAppState?.gender?.toUpperCase()
         : "",
       gender: currentAppState.gender
-        ? currentAppState.gender.toUpperCase()
+        ? currentAppState?.gender?.toUpperCase()
         : "",
       subcategory: categoryLevel || product_type_6s,
       color: productKeys?.color || "",
@@ -588,7 +588,7 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
     } = this.props;
-    const { pdpWidgetsAPIData } = this.state;
+    const { pdpWidgetsAPIData=[] } = this.state;
 
     // const { isLoading: isCategoryLoading } = this.state;
 
@@ -605,7 +605,7 @@ export class PDPContainer extends PureComponent {
   };
 
   render() {
-    const { product } = this.props;
+    const { product={} } = this.props;
     const prodPrice =
       product?.price && product?.price[0]
         ? product?.price[0][Object.keys(product?.price[0])[0]][
