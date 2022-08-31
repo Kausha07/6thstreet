@@ -20,7 +20,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
   containerProps = () => {
     const {
       product,
-      pdpWidgetsData:[],
+      pdpWidgetsData,
       gender,
       renderMySignInPopup,
       clickAndCollectStores,
@@ -30,7 +30,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
-      pdpWidgetsAPIData:[]
+      pdpWidgetsAPIData
     } = this.props;
     return {
       product,
