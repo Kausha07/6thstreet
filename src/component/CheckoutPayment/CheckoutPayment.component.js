@@ -85,7 +85,7 @@ export class CheckoutPayment extends PureComponent {
       
       if(m_code === "checkout_qpay"){
         return (
-          <div block="CheckoutPayment" elem="Method">
+          <div block="CheckoutPayment" elem="MethodQPay">
             <p>QPay</p>
           </div>
         );
