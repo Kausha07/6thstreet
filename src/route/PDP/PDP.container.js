@@ -291,11 +291,10 @@ export class PDPContainer extends PureComponent {
           userID,
           sourceProduct,
         };
-        const queryPaylod =
-          type === "vue_visually_similar_slider"
-            ? {...defaultQueryPayload}
-            : { ...defaultQueryPayload, gender }
-        const payload = VueQuery.buildQuery(type, query, queryPaylod);
+        if(type !== "vue_visually_similar_slider") {
+          defaultQueryPayload.gender= gender;
+        }
+        const payload = VueQuery.buildQuery(type, query, defaultQueryPayload );
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
