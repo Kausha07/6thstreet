@@ -25,6 +25,8 @@ import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
+// import { Redirect } from "react-router";
+// import history from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -339,11 +341,11 @@ export class CheckoutSuccessContainer extends PureComponent {
         is_phone: true,
         username: phone,
       });
-      const { success } = response;
-      if (success) {
+      if (response.success) {
         const { signInOTP } = this.props;
         try {
           await signInOTP(response);
+          history.push("/my-account/my-orders");
           // this.checkForOrder();
         } catch (e) {
           this.setState({ isLoading: false });
@@ -354,7 +356,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         });
       }
       if (typeof response === "string") {
-        showNotification('error', response);
+        showNotification("error", response);
       }
       this.setState({ isLoading: false });
     } catch (err) {

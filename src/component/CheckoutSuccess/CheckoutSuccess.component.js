@@ -29,6 +29,7 @@ import Whatsapp from "./icons/whatsapp.svg";
 import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
+import { isSignedIn as isSignedInFn } from "Util/Auth";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {
@@ -164,6 +165,7 @@ export class CheckoutSuccess extends PureComponent {
         return evt.preventDefault();
       }
     };
+    const isSignedInState = isSignedInFn();
 
     if (!isPhoneVerified && isVerificationCodeSent && isSignedIn) {
       return (
@@ -229,72 +231,83 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <>
         {/* below code is just the ui design loginc and other tags has to fixed */}
-        <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
-          <div block="VerifyPhone" elem="Text">
-            <span block="VerifyPhone" elem="Text-Title">
-              {__("Please Verify your Number")}
-            </span>
-            <div block="VerifyPhone" elem="Text-Message">
-              {__("Verification code has been sent to")}
+        {!isSignedInState && guestAutoSignIn && (
+          <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
+            <div block="VerifyPhone" elem="Text">
+              <span block="VerifyPhone" elem="Text-Title">
+                {__("Please Verify your Number")}
+              </span>
+              <div block="VerifyPhone" elem="Text-Message">
+                {__("Verification code has been sent to")}
+              </div>
+              <div block="VerifyPhone" elem="Text-Phone">
+                <button onClick={() => console.log("change mobile number")}>
+                  {`${countryCode} ${phoneNumber}`}
+                </button>
+              </div>
             </div>
-            <div block="VerifyPhone" elem="Text-Phone">
-              <button onClick={() => console.log("change mobile number")}>
-                {`${countryCode} ${phoneNumber}`}
+            <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
+              <input
+                type="number"
+                placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
+                name="otp"
+                disabled={isLoading}
+                id="otp"
+                // onChange={OTPFieldChange}
+                onKeyPress={(e) => isNumber(e)}
+                onChange={(e) => this.setState({ otp: e.target.value })}
+              />
+            </div>
+            <div
+              block="VerifyPhone"
+              elem="ErrMessage"
+              // mods={{ isValidated: otpError.length !== 0 }}
+            >
+              {/* {__(otpError)} */}
+            </div>
+            <div
+              block="VerifyPhone"
+              elem="OtpLoader"
+              mods={{ isSubmitted: isLoading }}
+            >
+              <Oval
+                color="#333"
+                secondaryColor="#333"
+                height={38}
+                width={"100%"}
+                strokeWidth={3}
+                strokeWidthSecondary={3}
+              />
+            </div>
+            <div
+              block="VerifyPhone"
+              elem={
+                otp === null || otp?.length < 5
+                  ? "VerifyButton disabled"
+                  : "VerifyButton"
+              }
+            >
+              <button
+                disabled={otp === null || otp?.length < 5}
+                onClick={() => {
+                  onGuestAutoSignIn(otp);
+                }}
+                className={otp === null || otp?.length < 5 ? "disabled" : ""}
+              >
+                VERIFY PHONE NUMBER
+              </button>
+            </div>
+            <div
+              block="VerifyPhone"
+              elem="ResendCode"
+              mods={{ isVerifying: !isLoading }}
+            >
+              <button onClick={onResendCode}>
+                {__("Resend Verification Code")}
               </button>
             </div>
           </div>
-          <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
-            <input
-              type="number"
-              placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
-              name="otp"
-              disabled={isLoading}
-              id="otp"
-              // onChange={OTPFieldChange}
-              onKeyPress={(e) => isNumber(e)}
-              onChange={(e) => this.setState({ otp: e.target.value })}
-            />
-          </div>
-          <div
-            block="VerifyPhone"
-            elem="ErrMessage"
-          // mods={{ isValidated: otpError.length !== 0 }}
-          >
-            {/* {__(otpError)} */}
-          </div>
-          <div
-            block="VerifyPhone"
-            elem="OtpLoader"
-            mods={{ isSubmitted: isLoading }}
-          >
-            <Oval
-              color="#333"
-              secondaryColor="#333"
-              height={38}
-              width={"100%"}
-              strokeWidth={3}
-              strokeWidthSecondary={3}
-            />
-          </div>
-          <div block="VerifyPhone" elem={otp === null || otp?.length < 5 ? "VerifyButton disabled" : "VerifyButton"} >
-            <button
-              disabled={otp === null || otp?.length < 5}
-              onClick={() => {
-                onGuestAutoSignIn(otp)
-              }}
-              className={otp === null || otp?.length < 5 ? "disabled" : ""}
-            >
-              VERIFY PHONE NUMBER
-            </button>
-          </div>
-          <div
-            block="VerifyPhone"
-            elem="ResendCode"
-            mods={{ isVerifying: !isLoading }}
-          >
-            <button onClick={onResendCode}>{__("Resend Verification Code")}</button>
-          </div>
-        </div>
+        )}
         <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
           <div block="TrackOrder" elem="Text">
             <span block="TrackOrder" elem="Text-Title">
@@ -370,7 +383,7 @@ export class CheckoutSuccess extends PureComponent {
       order: { base_currency_code: currency },
       eddResponse,
       isFailed,
-      edd_info
+      edd_info,
     } = this.props;
 
     return (
@@ -416,7 +429,7 @@ export class CheckoutSuccess extends PureComponent {
       const {
         initialTotals: { items = [], quote_currency_code },
         incrementID,
-        isFailed
+        isFailed,
       } = this.props;
 
       if (!items || items.length < 1) {
@@ -520,7 +533,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"
             ? __("Cash on Receiving Fee")
             : __("Cash on Delivery Fee")
@@ -965,17 +978,17 @@ export class CheckoutSuccess extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
-                customer_balance_amount,
-                __("Store Credit"),
-                { isStoreCredit: true }
-              )
+                  customer_balance_amount,
+                  __("Store Credit"),
+                  { isStoreCredit: true }
+                )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
@@ -985,11 +998,11 @@ export class CheckoutSuccess extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLineQPAY(
-                msp_cod_amount,
-                getCountryFromUrl() === "QA"
-                  ? __("Cash on Receiving")
-                  : __("Cash on Delivery")
-              )
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving")
+                    : __("Cash on Delivery")
+                )
               : null}
             {this.renderPriceLineQPAY(
               grandTotal,
@@ -1043,7 +1056,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-            paymentMethod?.code === "tabby_installments"
+          paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}
