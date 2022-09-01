@@ -287,17 +287,14 @@ export class PDPContainer extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
+        const defaultQueryPayload ={
+          userID,
+          sourceProduct,
+        };
         const queryPaylod =
           type === "vue_visually_similar_slider"
-            ? {
-                userID,
-                sourceProduct,
-              }
-            : {
-                gender,
-                userID,
-                sourceProduct,
-              };
+            ? {...defaultQueryPayload}
+            : { ...defaultQueryPayload, gender }
         const payload = VueQuery.buildQuery(type, query, queryPaylod);
         promisesArray.push(fetchVueData(payload));
       });
