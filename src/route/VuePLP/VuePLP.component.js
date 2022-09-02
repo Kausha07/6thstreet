@@ -4,16 +4,24 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
-import "../PLP/PLP.style";
 import "./VuePLP.style";
+import "../PLP/PLP.style";
 import Loader from "Component/Loader";
+import { capitalizeFirstLetters } from "../../../packages/algolia-sdk/app/utils";
+import { VUE_PLP_TEXT } from "../../util/Common/index";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
-import ProductItem from "Component/ProductItem";
 import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import ProductItem from "Component/ProductItem";
+import { isArabic } from "Util/App";
+
+import RecommendedForYouVueSliderItem from "../../component/RecommendedForYouVueSlider/RecommendedForYouVueSlider.Item";
+export const BreadcrumbsDispatcher = import(
+  "Store/Breadcrumbs/Breadcrumbs.dispatcher"
+);
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
@@ -27,11 +35,17 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch, state) => ({
   requestProductList: (options) =>
     PLPDispatcher.requestProductList(options, dispatch, state),
+  updateBreadcrumbs: (breadcrumbs) => {
+    BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.update(breadcrumbs, dispatch)
+    );
+  },
 });
 
 const VuePLP = (props) => {
   const stateObj = {
     recommendedForYou: [],
+    showPopup: false,
   };
 
   const [state, setState] = useState(stateObj);
@@ -50,18 +64,34 @@ const VuePLP = (props) => {
     return params;
   };
 
+  const showMyAccountPopup = () => {
+    console.log("muskan show popup", state);
+    setState({ ...state, showPopup: true });
+  };
+
+  const closePopup = () => {
+    setState({ ...state, showPopup: false });
+  };
+
+  const onSignIn = () => {
+    closePopup();
+  };
+
   const request = async () => {
-    const { requestProductList } = props;
-    const requestOptions = getRequestOptions();
-    requestProductList({ options: requestOptions });
+    let vueSliderType = [
+      "vue_style_it_slider",
+      "vue_recently_viewed_slider",
+      "vue_visually_similar_slider",
+      "vue_browsing_history_slider",
+    ];
     const { gender } = props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const query = {
       filters: [],
-      num_results: 10,
+      num_results: 50,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
-    const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
+    const payload = VueQuery.buildQuery(vueSliderType[3], query, {
       gender,
     });
     fetchVueData(payload)
@@ -78,89 +108,84 @@ const VuePLP = (props) => {
 
   useEffect(() => {
     request();
+    updateBreadcrumbs();
   }, []);
 
-  const renderProduct = (product, index, qid) => {
-    console.log("muskan--------->", state.recommendedForYou[0],product);
+  const updateBreadcrumbs = () => {
+    const { updateBreadcrumbs, location: { pathname = "", search = "" } = {} } =
+      props;
+    const { q = {} } = getRequestOptions();
+    let breadCrumbName = q
+      ? isArabic() ? VUE_PLP_TEXT[q]  : capitalizeFirstLetters(q).split("_").join(" ")
+      : "Available products";
+    updateBreadcrumbs([{ name: breadCrumbName }]);
+  };
 
-    const { sku } = product;
-    const { renderMySignInPopup } = props;
+  const renderProduct = (item, index, qid) => {
+    const { sku } = item;
     return (
       <ProductItem
         position={index}
-        product={product}
+        product={item}
+        renderMySignInPopup={showMyAccountPopup}
         key={sku}
-        pageType="plp"
-        page="plp"
-        renderMySignInPopup={renderMySignInPopup}
+        page="vuePlp"
+        pageType="vuePlp"
         qid={qid}
-        lazyLoad={false}
-        sendProductImpression={() => {}}
+        isVueData={true}
       />
     );
   };
 
-  const renderProducts = (products) => {
-    products.forEach((item, index) => {
-      Object.assign(item, {
-        product_Position: index + 1,
-      });
-    });
+  const renderProducts = () => {
+    const { recommendedForYou } = state;
     var qid = null;
     if (new URLSearchParams(window.location.search).get("qid")) {
       qid = new URLSearchParams(window.location.search).get("qid");
     } else {
       qid = localStorage.getItem("queryID");
     }
-    return products.map((i, index) => renderProduct(i, index + 1, qid));
+    return recommendedForYou.map((i, index) =>
+      renderProduct(i, index + 1, qid)
+    );
   };
 
-  const renderPage = ([key, page]) => {
+  const renderPage = () => {
     return (
-      <div block="PLPPage" key={key}>
-        <ul block="ProductItems">{renderProducts(page)}</ul>
+      <div block="PLPPage">
+        <ul block="ProductItems">{renderProducts()}</ul>
       </div>
     );
   };
 
-  const renderPages = () => {
-    const { pages = {} } = props;
-    return Object.entries(pages).map(renderPage);
-  };
-
-  const {
-    pages,
-    isLoading,
-    showPopup,
-    closePopup,
-    location: { pathname },
-  } = props;
-  let catalogKey = pathname.includes("catalogsearch");
-  if (isLoading) {
-    return <Loader isLoading={isLoading} />;
-  } else {
-    return (
-      <main block={catalogKey ? "SearchPage" : "PLP"} id="plp-main-scroll-id">
+  return (
+    <div block="UrlRewrites" id="UrlRewrites">
+      <main
+        block={"PLP"}
+        mix={{ block: "VuePLP", elem: "VuePLPContainer" }}
+        id="plp-main-scroll-id"
+      >
         <ContentWrapper label={__("Product List Page")}>
-          {showPopup && (
+          {state.showPopup && (
             <MyAccountOverlay
               closePopup={closePopup}
-              onSignIn={closePopup}
+              onSignIn={onSignIn}
               isPopup
             />
           )}
-          <div block="Products" elem="Wrapper">
-            <div block="PLPPagesContainer">
-              <div block="PLPPages Products-Lists" id="Products-Lists">
-                {/* {state.recommendedForYou && renderPages()} */}
-                {pages && renderPages()}
+          <div>
+            <div block="Products" elem="Wrapper">
+              <div block="PLPPagesContainer">
+                <div block="PLPPages Products-Lists" id="Products-Lists">
+                  {state.recommendedForYou && renderPage()}
+                </div>
               </div>
             </div>
           </div>
         </ContentWrapper>
       </main>
-    );
-  }
+    </div>
+  );
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VuePLP));
+export default connect(mapStateToProps, mapDispatchToProps)(VuePLP);

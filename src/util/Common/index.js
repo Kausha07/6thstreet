@@ -25,6 +25,11 @@ export const appendOrdinalSuffix = (number) => {
   return `${number}th`;
 };
 
+export const VUE_PLP_TEXT ={
+  "you_may_also_like":"ربما يعجبك أيضا",
+  "recommended_for_you":"موصى به لك",
+  "style_it_with":"صممها باستخدام"
+}
 export const DEFAULT_MESSAGE = 'Delivery by'
 
 export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'

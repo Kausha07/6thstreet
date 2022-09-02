@@ -19,6 +19,7 @@ import {
   CUSTOMER_ACCOUNT,
   HOME_PAGE,
   SEARCH,
+  VIEWALL,
   FEEDBACK,
   URL_REWRITES,
   LIVE_PARTY,
@@ -255,6 +256,19 @@ export class Router extends SourceRouter {
           path={withStoreRegex("/catalogsearch/result")}
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
+              <SearchPage {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 90,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("/viewall")}
+          render={(props) => (
+            <GTMRouteWrapper route={VIEWALL}>
               <VuePLP {...props} />
             </GTMRouteWrapper>
           )}

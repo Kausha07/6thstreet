@@ -193,7 +193,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     return Object.keys(stateToBeUpdated).length ? stateToBeUpdated : null;
   }
-  handleBackBtn() {
+  handleBackBtn = () => {
     const { closePopup } = this.props;
     const getCurrentState = this.state.state;
     const { location } = browserHistory;
@@ -549,7 +549,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     this.setState({ otpError: "" });
   }
   render() {
-    this.handleBackBtn();
+    // this.handleBackBtn();
     const { state } = this.state;
     const { hideActiveOverlay } = this.props;
     if (state === "loggedIn") {

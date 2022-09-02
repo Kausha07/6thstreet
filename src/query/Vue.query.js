@@ -5,7 +5,7 @@ const DEFAULT_QUERY = {
     product_id: "", // only for 'visually_similar'
 };
 
-const MAX_NUM_RESULTS = 20;
+const MAX_NUM_RESULTS = 50;
 
 export class VueQuery {
 
