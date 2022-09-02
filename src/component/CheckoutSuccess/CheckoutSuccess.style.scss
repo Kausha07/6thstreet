@@ -71,7 +71,6 @@
         margin: 0 auto;
         margin-top: 20px;
         width: 50px;
-
       }
 
       &-Text {
@@ -246,7 +245,6 @@
         .disabled {
           background-color: #9a9999;
         }
-
       }
 
       &-ResendCode {
@@ -286,6 +284,22 @@
         margin-inline: 0;
         margin-left: 0;
         margin-right: 0;
+      }
+    }
+    .VerifyEmail {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      padding: 10px 40px 5px 40px;
+      border-radius: 8px;
+      background-color: #f0efef;
+      width: fit-content;
+
+      .VerifyEmailBtn {
+        font-size: smaller;
+        text-decoration: underline;
+        text-transform: inherit;
+        height: 25px;
       }
     }
 
@@ -458,7 +472,7 @@
     .ContactInfo {
       text-align: center;
 
-      a+a {
+      a + a {
         margin: 0 !important;
       }
 
@@ -653,7 +667,7 @@
             display: grid;
             grid-auto-flow: column;
 
-            &>div {
+            & > div {
               background-color: black;
               margin: auto;
               width: 3px;
@@ -679,7 +693,6 @@
 
       &_isArabic {
         .Details {
-
           &-Number {
             margin-left: auto;
             margin-right: 5px;

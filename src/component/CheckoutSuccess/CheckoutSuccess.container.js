@@ -20,13 +20,15 @@ import { customerType } from "Type/Account";
 import { TotalsType } from "Type/MiniCart";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUID, getUUIDToken } from "Util/Auth";
+import {
+  sendOTP,
+  sendOTPViaEmail,
+} from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
-// import { Redirect } from "react-router";
-// import history from "Util/History";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -108,6 +110,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     isChangePhonePopupOpen: false,
     isMobileVerification: false,
     isLoading: false,
+    email: null,
   };
 
   containerFunctions = {
@@ -118,6 +121,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     changePhone: this.changePhone.bind(this),
     toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this),
     onGuestAutoSignIn: this.onGuestAutoSignIn.bind(this),
+    sendOTPOnMailOrPhone: this.sendOTPOnMailOrPhone.bind(this),
   };
 
   constructor(props) {
@@ -331,16 +335,26 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
   }
 
-  async onGuestAutoSignIn(otp) {
-    const { phone } = this.state;
+  async onGuestAutoSignIn(otp, shouldLoginWithOtpOnEmail) {
+    const { phone, email } = this.state;
     try {
       const { loginAccount, showNotification } = this.props;
       this.setState({ isLoading: true });
-      const response = await loginAccount({
-        password: otp,
-        is_phone: true,
-        username: phone,
-      });
+      let payload;
+      if (shouldLoginWithOtpOnEmail) {
+        payload = {
+          password: otp,
+          email_otp: true,
+          username: email,
+        };
+      } else {
+        payload = {
+          password: otp,
+          is_phone: true,
+          username: phone,
+        };
+      }
+      const response = await loginAccount(payload);
       if (response.success) {
         const { signInOTP } = this.props;
         try {
@@ -362,6 +376,41 @@ export class CheckoutSuccessContainer extends PureComponent {
     } catch (err) {
       this.setState({ isLoading: false });
       console.error("Error while creating customer", err);
+    }
+  }
+
+  async sendOTPOnMailOrPhone(shouldLoginWithOtpOnEmail) {
+    const { phone } = this.state;
+    const { showNotification } = this.props;
+    try {
+      let response;
+      this.setState({ isLoading: true });
+      if (shouldLoginWithOtpOnEmail) {
+        response = await sendOTPViaEmail({
+          mobile: phone,
+          flag: "login",
+        });
+        if (response && response.email_id) {
+          this.setState({
+            email: response.email_id,
+          });
+        }
+      } else {
+        response = await sendOTP({
+          phone: phone,
+          flag: "login",
+        });
+      }
+      if (response && response.error) {
+        const { error } = response;
+        if (typeof error === "string") {
+          showNotification("error", response.error);
+        }
+      }
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+      console.error("error while sending OTP", error);
     }
   }
 

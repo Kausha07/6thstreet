@@ -63,6 +63,7 @@ export class CheckoutSuccess extends PureComponent {
     successHidden: false,
     wasLoaded: false,
     otp: null,
+    isVerifyEmailViewState: false,
   };
 
   componentDidMount() {
@@ -150,8 +151,11 @@ export class CheckoutSuccess extends PureComponent {
       guestAutoSignIn,
       onGuestAutoSignIn,
       isLoading,
+      sendOTPOnMailOrPhone,
+      email,
     } = this.props;
-    const { isArabic, isPhoneVerification, otp } = this.state;
+    const { isArabic, isPhoneVerification, otp, isVerifyEmailViewState } =
+      this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
     const isNumber = (evt) => {
@@ -241,9 +245,20 @@ export class CheckoutSuccess extends PureComponent {
                 {__("Verification code has been sent to")}
               </div>
               <div block="VerifyPhone" elem="Text-Phone">
-                <button onClick={() => console.log("change mobile number")}>
-                  {`${countryCode} ${phoneNumber}`}
-                </button>
+                {isLoading ? (
+                  <Oval
+                    color="#333"
+                    secondaryColor="#333"
+                    height={30}
+                    width={"100%"}
+                    strokeWidth={3}
+                    strokeWidthSecondary={3}
+                  />
+                ) : isVerifyEmailViewState ? (
+                  <button>{`${email}`}</button>
+                ) : (
+                  <button>{`${countryCode} ${phoneNumber}`}</button>
+                )}
               </div>
             </div>
             <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
@@ -290,7 +305,7 @@ export class CheckoutSuccess extends PureComponent {
               <button
                 disabled={otp === null || otp?.length < 5}
                 onClick={() => {
-                  onGuestAutoSignIn(otp);
+                  onGuestAutoSignIn(otp, isVerifyEmailViewState);
                 }}
                 className={otp === null || otp?.length < 5 ? "disabled" : ""}
               >
@@ -305,6 +320,32 @@ export class CheckoutSuccess extends PureComponent {
               <button onClick={onResendCode}>
                 {__("Resend Verification Code")}
               </button>
+            </div>
+            <div className="VerifyEmail">
+              <span>{__("Problems with verification code?")}</span>
+              {!isVerifyEmailViewState ? (
+                <button
+                  className="VerifyEmailBtn"
+                  onClick={() => {
+                    this.setState({ isVerifyEmailViewState: true });
+                    sendOTPOnMailOrPhone(true);
+                    console.log("verify with email clicked ");
+                  }}
+                >
+                  {__("Verify with E-mail")}
+                </button>
+              ) : (
+                <button
+                  className="VerifyEmailBtn"
+                  onClick={() => {
+                    this.setState({ isVerifyEmailViewState: false });
+                    sendOTPOnMailOrPhone(false);
+                    console.log("verify with phone clicked ");
+                  }}
+                >
+                  {__("Verify with Phone")}
+                </button>
+              )}
             </div>
           </div>
         )}
