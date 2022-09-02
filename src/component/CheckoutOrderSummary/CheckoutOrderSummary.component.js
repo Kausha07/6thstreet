@@ -238,13 +238,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
                       <div block="appliedCouponDetail">
                         <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
-                        {appliedCoupon && (
-                          <>
-                            <p block="appliedCouponName">{appliedCoupon?.name}</p>
-                            <button block="appliedCouponViewBtn" onClick={(e) => { this.showCouponDetial(e, appliedCoupon) }}>View Detail</button>
-                          </>
-                        )}
-  
                       </div>
                       <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
                     </div>
