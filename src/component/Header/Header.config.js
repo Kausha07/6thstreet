@@ -21,3 +21,4 @@ export const POPUP = "popup";
 export const FEEDBACK = "feedback";
 export const LIVE_PARTY = "live-party";
 export const ABOUT = "about";
+export const STORE = "store";
