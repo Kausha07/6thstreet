@@ -51,7 +51,6 @@ export class PLP extends PureComponent {
   }
 
   showMyAccountPopup = () => {
-    console.log("muskan------>",this.state.showPopup);
     this.setState({ showPopup: true });
   };
 

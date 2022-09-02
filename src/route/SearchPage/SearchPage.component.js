@@ -43,7 +43,6 @@ class SearchPage extends PLP {
     //     </>
     //   );
     // }
-    console.log("muskan------>",this.state);
 
     if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
       return (

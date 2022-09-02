@@ -65,7 +65,6 @@ const VuePLP = (props) => {
   };
 
   const showMyAccountPopup = () => {
-    console.log("muskan show popup", state);
     setState({ ...state, showPopup: true });
   };
 
@@ -168,6 +167,7 @@ const VuePLP = (props) => {
         <ContentWrapper label={__("Product List Page")}>
           {state.showPopup && (
             <MyAccountOverlay
+              isVuePLP ={ true}
               closePopup={closePopup}
               onSignIn={onSignIn}
               isPopup
