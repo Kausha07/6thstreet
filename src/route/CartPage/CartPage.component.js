@@ -42,6 +42,7 @@ import CDN from "../../util/API/provider/CDN";
 import EmptyCardIcon from "./icons/cart.svg";
 
 import "./CartPage.style";
+import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -64,6 +65,8 @@ export class CartPage extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    TermsAndConditions: "",
+    isTermsAndConditionspopupOpen:false,
     isCouponPopupOpen: false,
     couponCode: "",
     couponName: "",
@@ -71,6 +74,8 @@ export class CartPage extends PureComponent {
     isCouponDetialPopupOpen: false,
     couponModuleStatus: false,
     pageLoaded: true,
+    couponModuleStatus: false,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   static defaultProps = {
@@ -271,12 +276,21 @@ export class CartPage extends PureComponent {
       couponCode: coupon.code,
       couponName: coupon.name,
       couponDescription: coupon.description,
+      TermsAndConditions: coupon.term_and_cond,
       isCouponDetialPopupOpen: true,
     });
 
     const bodyElt = document.querySelector("body");
     bodyElt.style.overflow = "hidden";
   };
+
+  showTermsAndConditions = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isTermsAndConditionspopupOpen: true,
+    })
+  }
+
   hideCouponDetial = (e) => {
     e.stopPropagation();
     this.setState({
@@ -287,6 +301,14 @@ export class CartPage extends PureComponent {
       bodyElt.removeAttribute("style");
     }
   };
+
+  hideTermsAndConditions = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isTermsAndConditionspopupOpen: false,
+    })
+  }
+
   handleRemoveCode = (e) => {
     e.stopPropagation();
     this.props.removeCouponFromCart();
@@ -308,6 +330,7 @@ export class CartPage extends PureComponent {
       couponsItems = [],
     } = this.props;
     const isOpen = false;
+    const { isArabic, isMobile }= this.state;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -315,15 +338,16 @@ export class CartPage extends PureComponent {
         return coupon.code == coupon_code;
       });
     }
-    return this.state?.couponModuleStatus ? (
-      <ExpandableContent
-        isOpen={isOpen}
-        heading={__("Have a discount code?")}
-        mix={{ block: "CartPage", elem: "Discount" }}
-      >
-        <CartCoupon couponCode={coupon_code} />
-      </ExpandableContent>
-    ) : (
+    return (
+    // this.state?.couponModuleStatus ? (
+    //   <ExpandableContent
+    //     isOpen={isOpen}
+    //     heading={__("Have a discount code?")}
+    //     mix={{ block: "CartPage", elem: "Discount" }}
+    //   >
+    //     <CartCoupon couponCode={coupon_code} />
+    //   </ExpandableContent>
+    // ) : (
       <>
         {!this.state?.isCouponPopupOpen ? (
           <>
@@ -367,15 +391,22 @@ export class CartPage extends PureComponent {
               <CartCouponDetail
                 couponDetail={this.state}
                 hideDetail={this.hideCouponDetial}
+                showTermsAndConditions={this.showTermsAndConditions}
               />
             )}
+            {this.state?.isTermsAndConditionspopupOpen && (
+              <CartCouponTermsAndConditions
+                TermsAndConditions={this.state}
+                hideTermsAndConditions={this.hideTermsAndConditions}
+                />
+              )}
           </>
         ) : (
           <>
             <div block="couponPopupBlock">
-              <div block="couponPopupContent" ref={this.cartCouponPopup}>
-                <div block="couponPopupTop">
-                  {__("Promo codes (%s)", promoCount)}
+              <div block="couponPopupContent" ref={this.cartCouponPopup} mods={{isArabic}}>
+                <div block="couponPopupTop" mods={{isArabic}}>
+                  {isMobile ? __("Discount code") : __("Promo codes")}
                   <button
                     onClick={this.closeCouponPopup}
                     block="closeCouponPopupBtn"
@@ -383,10 +414,13 @@ export class CartPage extends PureComponent {
                     <span>Close</span>
                   </button>
                 </div>
-                <CartCoupon
-                  couponCode={coupon_code}
-                  closePopup={this.closeCouponPopup}
-                />
+                  {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
+                  <div block="couponInputBox">
+                      <CartCoupon
+                        couponCode={coupon_code}
+                        closePopup={this.closeCouponPopup}
+                      />
+                  </div>
                 <CartCouponList
                   couponCode={coupon_code}
                   closePopup={this.closeCouponPopup}
@@ -397,6 +431,13 @@ export class CartPage extends PureComponent {
                   <CartCouponDetail
                     couponDetail={this.state}
                     hideDetail={this.hideCouponDetial}
+                    showTermsAndConditions={this.showTermsAndConditions}
+                  />
+                )}
+                {this.state?.isTermsAndConditionspopupOpen && (
+                  <CartCouponTermsAndConditions
+                    TermsAndConditions={this.state}
+                    hideTermsAndConditions={this.hideTermsAndConditions}
                   />
                 )}
               </div>

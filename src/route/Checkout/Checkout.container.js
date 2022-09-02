@@ -93,10 +93,15 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  getCouponList: () => CartDispatcher.getCoupon(dispatch),
+  applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
+  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
+  couponsItems: state.CartReducer.cartCoupons,
+  couponLists: state.CartReducer.cartCoupons,
   totals: state.CartReducer.cartTotals,
   processingRequest: state.CartReducer.processingRequest,
   customer: state.MyAccountReducer.customer,
@@ -355,7 +360,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
 
   componentDidMount() {
-    const { setMeta } = this.props;
+    const { setMeta, getCouponList, } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
@@ -365,6 +370,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     setMeta({ title: __("Checkout") });
     this.getQPayData();
     this.getTabbyData();
+    getCouponList();
   }
 
   componentDidUpdate(prevProps, prevState) {

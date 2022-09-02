@@ -322,6 +322,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
           <Collapse isOpened={isDropdownOpen}>
             <CheckoutOrderSummary
               checkoutStep="BILLING_STEP"
+              {...this.props}
               totals={totals}
               cashOnDeliveryFee={cashOnDeliveryFee}
             />

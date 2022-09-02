@@ -1092,5 +1092,11 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "Discount code": "رمز الكوبون",
+    "Promo codes": "رمز الكوبون",
+    "Select a Promo or type a Coupon code": "أدخل القسيمة أو الرمز الترويجي",
+    "Terms & Conditions": "البنود و الظروف",
+    "I Agree": null,
+    "ENTER YOUR COUPON CODE": "أدخل رمز القسيمة الخاص بك"
 }

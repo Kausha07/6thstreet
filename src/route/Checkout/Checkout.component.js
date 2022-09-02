@@ -306,8 +306,16 @@ export class Checkout extends SourceCheckout {
 
   renderSummary() {
     const { cashOnDeliveryFee } = this.state;
-    const { checkoutTotals, checkoutStep, paymentTotals, processingRequest } =
-      this.props;
+    const {
+      checkoutTotals,
+      checkoutStep,
+      paymentTotals,
+      processingRequest,
+      couponsItems=[],
+      removeCouponFromCart,
+      couponLists,
+      applyCouponToCart,
+    } = this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
     if (!areTotalsVisible) {
       return null;
@@ -320,6 +328,10 @@ export class Checkout extends SourceCheckout {
         paymentTotals={paymentTotals}
         cashOnDeliveryFee={cashOnDeliveryFee}
         processingRequest={processingRequest}
+        couponsItems={couponsItems}
+        removeCouponFromCart={removeCouponFromCart}
+        couponLists={couponLists}
+        applyCouponToCart={applyCouponToCart}
       />
     );
   }
@@ -400,6 +412,13 @@ export class Checkout extends SourceCheckout {
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
+    const { 
+      couponsItems=[],
+      removeCouponFromCart,
+      couponLists,
+      applyCouponToCart,
+    } = this.props;
+
     return (
       <>
         <div block="Checkout" elem="BackButtons" mods={{ isArabic }}>
@@ -434,6 +453,10 @@ export class Checkout extends SourceCheckout {
           processApplePay={processApplePay}
           placeOrder={placeOrder}
           isClickAndCollect={isClickAndCollect}
+          couponsItems={couponsItems}
+          removeCouponFromCart={removeCouponFromCart}
+          couponLists={couponLists}
+          applyCouponToCart={applyCouponToCart}
         />
       </>
     );
