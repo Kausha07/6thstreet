@@ -147,7 +147,6 @@ class HeaderTopBar extends NavigationAbstract {
         pathname === "/men.html" ||
         pathname === "/kids.html" ||
         pathname === "/home.html" ||
-        //pathname === "/all.html" ||
         pathname.includes("catalogsearch")
       )
     ) {

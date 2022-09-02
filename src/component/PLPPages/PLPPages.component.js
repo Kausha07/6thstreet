@@ -49,8 +49,7 @@ class PLPPages extends PureComponent {
     let finalPrevLocation;
     let initialPrevProductSku;
     browserHistory.listen((nextLocation) => {
-      //let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html", "/all.html"];
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      let locationArr = ["/men.html", "/women.html", "/kids.html", "/home.html"];
       finalPrevLocation = prevLocation;
       prevLocation = nextLocation;
       const { search } = nextLocation;
