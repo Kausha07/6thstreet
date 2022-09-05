@@ -673,17 +673,6 @@ export class CheckoutSuccess extends PureComponent {
                 </>
               )}
 
-              {KnetDetails?.Payment_ID && (
-                <>
-                  {" "}
-                  <div block="PaymentType" elem="Title">
-                    {__("Payment ID")}
-                  </div>
-                  {KnetDetails?.Payment_ID}
-                  <br /><br />{" "}
-                </>
-              )}
-
               {KnetDetails?.amount && (
                 <>
                   {" "}

@@ -346,7 +346,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse = await capturePayment(paymentId, order_id);
               if (cResponse) {
-                const { pun, requested_on, amount, currency } = cResponse;
+                const { pun, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
                 this.setState({
                   KnetDetails: {
                     PUN: pun,
@@ -354,6 +354,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     amount: `${currency} ${amount}`,
                     status: "FAILED",
                     Payment_ID: paymentId,
+                    knet_payment_id: knet_payment_id,
+                    knet_transaction_id: knet_transaction_id,
                   },
                 });
               }
