@@ -34,14 +34,12 @@ class PDPDetailsSection extends PureComponent {
       4: true,
       5: true,
     },
-    pdpWidgetsAPIData: [],
     isArabic: isArabic(),
     showMore: isMobile.any() || isMobile.tablet() ? false : true,
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   componentDidMount() {
-    this.getPdpWidgetsVueData();
     const {
       product: { sku = null, categories_without_path = [] },
     } = this.props;
@@ -55,45 +53,6 @@ class PDPDetailsSection extends PureComponent {
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
-  }
-
-  getPdpWidgetsVueData() {
-    const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
-    if (pdpWidgetsData && pdpWidgetsData.length > 0) {
-      const userData = BrowserDatabase.getItem("MOE_DATA");
-      const customer = BrowserDatabase.getItem("customer");
-      const userID = customer && customer.id ? customer.id : null;
-      const query = {
-        filters: [],
-        num_results: 10,
-        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
-      };
-
-      let promisesArray = [];
-      pdpWidgetsData.forEach((element) => {
-        const { type } = element;
-        const queryPaylod =
-          type === "vue_visually_similar_slider"
-            ? {
-                userID,
-                sourceProduct,
-              }
-            : {
-                gender,
-                userID,
-                sourceProduct,
-              };
-        const payload = VueQuery.buildQuery(type, query, queryPaylod);
-        promisesArray.push(fetchVueData(payload));
-      });
-      Promise.all(promisesArray)
-        .then((resp) => {
-          this.setState({ pdpWidgetsAPIData: resp });
-        })
-        .catch((err) => {
-          console.err(err);
-        });
-    }
   }
 
   renderShareButton() {
@@ -697,22 +656,22 @@ class PDPDetailsSection extends PureComponent {
 
   renderPdpWidgets() {
     const {
-      pdpWidgetsData,
+      pdpWidgetsData = [],
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
+      pdpWidgetsAPIData = [],
     } = this.props;
-    const { pdpWidgetsAPIData } = this.state;
     const { innerWidth: width } = window;
-    if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
+    if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
           <React.Fragment>
-            {pdpWidgetsAPIData.map((item, index) => {
-              if (typeof item === "object" && Object.keys(item).length > 0) {
+            {pdpWidgetsAPIData?.map((item, index) => {
+              if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
                 const widgetID = pdpWidgetsData[index]["type"];
                 const { data } = item;
-                if (data && data.length > 0) {
+                if (data && data?.length > 0) {
                   return (
                     <>
                       <div
@@ -1017,8 +976,8 @@ class PDPDetailsSection extends PureComponent {
   render() {
     const {
       product: { brand_name },
+      pdpWidgetsAPIData= []
     } = this.props;
-    const { pdpWidgetsAPIData } = this.state;
     const { isMobile } = this.state;
     return (
       <div block="PDPDetailsSection">
@@ -1056,7 +1015,7 @@ class PDPDetailsSection extends PureComponent {
           </Accordion> */}
           {/* {this.renderAccordionSeperator()} */}
         </div>
-        {pdpWidgetsAPIData.length > 0 ? (
+        {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         ) : null}
         {isMobile ? this.renderMoreFromTheBrand() : ""}
