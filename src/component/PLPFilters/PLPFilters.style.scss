@@ -473,6 +473,7 @@
     width: 261px;
     top: 153px;
     height: 80vh;
+    overflow: scroll;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     &::-webkit-scrollbar {
