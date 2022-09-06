@@ -42,6 +42,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
     isArabic: isArabic(),
     isButtonDisabled: true,
     phoneValue: [],
+    otpValue: ""
   };
 
   renderMap = {
@@ -65,13 +66,19 @@ class MyAccountClubApparelOverlay extends PureComponent {
     const { country } = props;
 
     this.state = {
-      selectedCountry: country,
+      selectedCountry: country,      
     };
+  }
+  componentDidUpdate() {
+    const {error}= this.props
+    if(error){
+      this.setState({otpValue: ""})
+    }
   }
 
   handleVerifyChange = (e = []) => {
     // eslint-disable-next-line no-magic-numbers
-    this.setState({ isButtonDisabled: e.length !== 5 });
+    this.setState({ isButtonDisabled: e.length !== 5, otpValue: e});
   };
 
   renderEarn = () => {
@@ -208,11 +215,17 @@ class MyAccountClubApparelOverlay extends PureComponent {
   }
 
   renderLink() {
-    const { linkAccount } = this.props;
+    const { linkAccount,error,linkedNumber } = this.props;
 
     return (
       <>
-        <p>{__("Link Your Account by entering your mobile number")}</p>
+        { error && 
+          <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
+            {__("You have already linked with entered mobile number: ")} {linkedNumber}
+          </p>
+        }
+        <p>{__("Link your Club Apparel account and start earning points.")}</p>     
+
         <Form onSubmitSuccess={linkAccount}>
           {this.renderPhone()}
           <button
@@ -228,16 +241,15 @@ class MyAccountClubApparelOverlay extends PureComponent {
   }
 
   renderVerify() {
-    const { verifyOtp, phone } = this.props;
-    const { isButtonDisabled } = this.state;
+    const { verifyOtp, phone, error } = this.props;
+    const { isButtonDisabled, otpValue } = this.state;
 
     return (
       <div block="MyAccountClubApparelOverlay" elem="Verify">
+        {error &&  <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">{__(`OTP verification failed`)}</p>}
         <p>
-          {__(
-            `Enter the verification code we sent to +${phone.replace("00", "")}`
-          )}
-        </p>
+          {__("Enter the verification code we sent to +")}{phone.replace("00", "")}
+        </p>        
         <Form onSubmitSuccess={verifyOtp}>
           <Field
             type="text"
@@ -248,6 +260,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
             onChange={this.handleVerifyChange}
             validation={["notEmpty"]}
             maxlength="5"
+            value={otpValue}
           />
           <button
             block="MyAccountClubApparelOverlay"

@@ -1092,5 +1092,10 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "Return/Exchange Statement": null,
+    "You have already linked with entered mobile number: ": "تم ربط رقم الهاتف المدخل بحسابك مسبقاُ",
+    "Link your Club Apparel account and start earning points.": "أربط حسابك في كلوب أباريل وإبدأ في كسب النقاط",
+    "OTP verification failed": "فشل التحقق من كلمة المرور ",
+    "Enter the verification code we sent to +": "+ أدخل رمز التحقق المرسل إلى "
 }
