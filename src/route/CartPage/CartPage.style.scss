@@ -796,6 +796,9 @@
         .cartCouponBlock .appliedCouponBlock .appliedCouponBtn {
             margin-left: initial;
             margin-right: auto;
+            @include mobile {
+                right: 0;
+            }
         }
         
     }
@@ -844,6 +847,9 @@
                 .couponInputBox{
                     // padding-right: 10px;
                     margin-right: 63px;
+                    @include mobile {
+                        margin-right: 0;
+                    }
                 }
             }
 
@@ -897,6 +903,9 @@
                 &_isArabic {
                     text-align: right;
                     margin-right: 63px;
+                    @include mobile {
+                        margin-right: 0;
+                    }
                     padding-right: 0;
                 }
 
@@ -927,8 +936,9 @@
                         position: absolute;
                         top: 0px;
                         right: 40px;
-                        top: 16px;
-                        right: 5px;
+                        @include mobile {
+                            right: 40px !important; 
+                        }
                         display: inline-block;
                         padding: 1px;
                         background-image: url(/static/media/icon.12cc0c19.svg);
