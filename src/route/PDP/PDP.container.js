@@ -280,7 +280,7 @@ export class PDPContainer extends PureComponent {
       const userID = customer && customer.id ? customer.id : null;
       const query = {
         filters: [],
-        num_results: 10,
+        num_results: 50,
         mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
       };
 
