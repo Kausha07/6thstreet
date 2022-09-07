@@ -30,6 +30,7 @@ import { setPrevPath } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 //Global Variable for PLP AddToCart
@@ -41,6 +42,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch, state) => ({
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
+  resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
 });
 
 class ProductItem extends PureComponent {
@@ -126,6 +128,7 @@ class ProductItem extends PureComponent {
       qid,
       isVueData,
       setPrevPath,
+      resetProduct,
       product: {
         name,
         url,
@@ -144,6 +147,7 @@ class ProductItem extends PureComponent {
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
+    resetProduct();
     setPrevPath(window.location.href);
     if (!isVueData) {
       if (!qid) {

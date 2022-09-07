@@ -14,9 +14,13 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { isArabic } from "Util/App";
+import { VUE_PAGE_VIEW } from "Util/Event";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { getUUID } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
+  prevPath: state.PLP.prevPath,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -37,6 +41,9 @@ class PDP extends PureComponent {
     showPopupField: "",
   };
 
+  componentDidMount() {
+    this.renderVueHits();
+  }
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
   };
@@ -48,6 +55,29 @@ class PDP extends PureComponent {
   onSignIn = () => {
     this.closePopup();
   };
+
+  renderVueHits() {
+    const {
+      prevPath = null,
+      dataForVueCall={}
+    } = this.props;
+    const locale = VueIntegrationQueries?.getLocaleFromUrl();
+    VueIntegrationQueries?.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries?.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath,
+        url: window.location.href,
+        sourceProdID: dataForVueCall?.sourceProdID,
+        sourceCatgID: dataForVueCall?.sourceCatgID, // TODO: replace with category id
+        prodPrice: dataForVueCall?.prodPrice,
+      },
+    });
+  }
 
   onPDPPageClicked = () => {
     const { showPDPSearch, displaySearch } = this.props;

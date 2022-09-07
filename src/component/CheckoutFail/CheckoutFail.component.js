@@ -40,7 +40,7 @@ export class CheckoutFail extends CheckoutSuccess {
       productQty = [],
       productCategory = [],
       productItemPrice = [];
-      items.forEach((item) => {
+      items?.forEach((item) => {
       let productKeys = item?.full_item_info;
       productName.push(productKeys?.name);
       productColor.push(productKeys?.color);
@@ -65,22 +65,22 @@ export class CheckoutFail extends CheckoutSuccess {
         : "",
       coupon_code_applied: coupon_code || "",
       currency: currency_code || "",
-      product_count: items.length || "",
+      product_count: items?.length || "",
       shipping_fee: shipping_fee || "",
       subtotal_amount: subtotal || "",
       order_id: orderID || "",
       total_amount: total || "",
       transaction_id: id || "",
-      brand_name: productBrand.length > 0 ? productBrand : "",
-      color: productColor.length > 0 ? productColor : "",
-      discounted_price: productItemPrice.length > 0 ? productItemPrice : "",
-      full_price: productBasePrice.length > 0 ? productBasePrice : "",
-      product_name: productName.length > 0 ? productName : "",
-      product_sku: productSku.length > 0 ? productSku : "",
-      gender: productGender.length > 0 ? productGender : "",
-      size_id: productSizeOption.length > 0 ? productSizeOption : "",
-      size: productSizeValue.length > 0 ? productSizeValue : "",
-      subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+      brand_name: productBrand?.length > 0 ? productBrand : "",
+      color: productColor?.length > 0 ? productColor : "",
+      discounted_price: productItemPrice?.length > 0 ? productItemPrice : "",
+      full_price: productBasePrice?.length > 0 ? productBasePrice : "",
+      product_name: productName?.length > 0 ? productName : "",
+      product_sku: productSku?.length > 0 ? productSku : "",
+      gender: productGender?.length > 0 ? productGender : "",
+      size_id: productSizeOption?.length > 0 ? productSizeOption : "",
+      size: productSizeValue?.length > 0 ? productSizeValue : "",
+      subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
     });
   }

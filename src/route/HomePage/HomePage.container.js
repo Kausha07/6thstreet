@@ -98,7 +98,7 @@ export class HomePageContainer extends PureComponent {
       },
     });
 
-    const decodedParams = atob(getCookie("authData"));
+    const decodedParams = atob(decodeURIComponent(getCookie("authData")));
 
     if (
       decodedParams.match("mobileToken") &&

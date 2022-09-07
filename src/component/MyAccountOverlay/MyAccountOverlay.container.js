@@ -472,9 +472,12 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onForgotPasswordSuccess(fields) {
-    const { forgotPassword } = this.props;
+    const { forgotPassword,  showNotification } = this.props;
 
-    forgotPassword(fields).then(() => {
+    forgotPassword(fields).then((res) => {
+      if(typeof(res) === "string"){
+        showNotification('error', __(res));
+      }
       this.setState({ state: STATE_FORGOT_PASSWORD_SUCCESS });
       this.stopLoading();
     }, this.stopLoading);
