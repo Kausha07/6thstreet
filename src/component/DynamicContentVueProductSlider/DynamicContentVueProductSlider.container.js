@@ -15,11 +15,13 @@ export class DynamicContentVueProductSliderContainer extends PureComponent {
     products: PropTypes.array.isRequired,
     pageType: PropTypes.string.isRequired,
     index: PropTypes.number,
+    product: PropTypes.object,
   };
 
   static defaultProps = {
     sliderLength: 10,
-    withViewAll: false,
+    withViewAll: true,
+    product: {},
   };
 
   render() {
