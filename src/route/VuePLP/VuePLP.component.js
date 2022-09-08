@@ -1,13 +1,11 @@
 /* eslint-disable fp/no-let */
 import { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import "./VuePLP.style";
 import "../PLP/PLP.style";
 import { capitalizeFirstLetters } from "../../../packages/algolia-sdk/app/utils";
 import { VUE_PLP_TEXT } from "../../util/Common/index";
-import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -15,28 +13,11 @@ import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import ProductItem from "Component/ProductItem";
 import { isArabic } from "Util/App";
+import { useDispatch, useSelector } from "react-redux";
+
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
-
-export const mapStateToProps = (state) => ({
-  gender: state.AppState.gender,
-  requestedOptions: state.PLP.options,
-  isLoading: state.PLP.isLoading,
-  pages: state.PLP.pages,
-  gender: state.AppState.gender,
-  prevProductSku: state.PLP.prevProductSku,
-});
-
-export const mapDispatchToProps = (dispatch, state) => ({
-  requestProductList: (options) =>
-    PLPDispatcher.requestProductList(options, dispatch, state),
-  updateBreadcrumbs: (breadcrumbs) => {
-    BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.update(breadcrumbs, dispatch)
-    );
-  },
-});
 
 const VuePLP = (props) => {
   const stateObj = {
@@ -45,6 +26,11 @@ const VuePLP = (props) => {
   };
 
   const [state, setState] = useState(stateObj);
+
+
+  const gender = useSelector((state) => state.AppState.gender);
+  //dispatch
+  const dispatch = useDispatch();
 
   const getRequestOptions = () => {
     let params;
@@ -120,15 +106,15 @@ const VuePLP = (props) => {
   }, [state.vueRecommendation]);
 
   const updateBreadcrumbs = () => {
-    const { updateBreadcrumbs } =
-      props;
     const { q = {} } = getRequestOptions();
     let breadCrumbName = q
       ? isArabic()
         ? VUE_PLP_TEXT[q]
-        : capitalizeFirstLetters(q).split("_").join(" ")
+        : capitalizeFirstLetters(q.split("_").join(" "))
       : "Available products";
-    updateBreadcrumbs([{ name: breadCrumbName }]);
+      BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.update([{ name: breadCrumbName }], dispatch)
+    );
   };
 
   const renderProduct = (item, index, qid) => {
@@ -199,4 +185,4 @@ const VuePLP = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(VuePLP);
+export default VuePLP;
