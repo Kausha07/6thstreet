@@ -46,7 +46,7 @@ class DynamicContentVueSlider extends PureComponent {
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
-      num_results: 10,
+      num_results: 50,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     let type = this.props.type;
@@ -71,7 +71,7 @@ class DynamicContentVueSlider extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { renderMySignInPopup, index, setLastTapItemOnHome } = this.props;
+    const { renderMySignInPopup, index, setLastTapItemOnHome,widgetID } = this.props;
     if (this.state.data?.length === 0 || this.state.data === undefined) {
       return null;
     }
@@ -90,6 +90,7 @@ class DynamicContentVueSlider extends PureComponent {
             isHome={true}
             pageType={"Home"}
             index={index}
+            widgetID={widgetID}
           />
         )}
       </div>

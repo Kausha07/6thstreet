@@ -190,9 +190,9 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   viewAllBtn() {
-    const { withViewAll,widgetID, products,product } = this.props;
+    const { withViewAll= true, widgetID ="", products=[],product={} } = this.props;
     const linkTo = {
-      pathname: `viewall/?q=${widgetID.replace('vue_','')}`,
+      pathname: `viewall/?q=${widgetID?.replace('vue_','')}`,
       state: {
         vueProducts:products,
         sourceProduct: product
@@ -202,7 +202,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       return (
         <div block="VueProductSlider" elem="ViewAllBtn">
           <Link to={linkTo}>
-            <span>{"View All"}</span>
+            <span>{__("View All")}</span>
           </Link>
         </div>
       );
@@ -281,8 +281,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isHome, renderMySignInPopup, index, setLastTapItemOnHome } =
       this.props;
     const {
-      widgetID,
-      pageType,
+      widgetID="",
+      pageType="",
       sourceProdID = null,
       sourceCatgID = null,
     } = this.props;

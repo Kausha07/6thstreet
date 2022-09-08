@@ -47,7 +47,6 @@ const VuePLP = (props) => {
   };
   const { q = {} } = getRequestOptions();
 
-  console.log("q",q)
   const showMyAccountPopup = () => {
     setState({ ...state, showPopup: true });
   };
@@ -61,7 +60,6 @@ const VuePLP = (props) => {
   };
 
   const request = async () => {
-    const { gender } = props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const vueSliderType = `vue_${q}`;
     const customer = BrowserDatabase.getItem("customer");
@@ -100,13 +98,12 @@ const VuePLP = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props?.location?.state?.vueProducts?.length === 0) {
+    if (state?.vueRecommendation?.length === 0) {
     request();
     }
-  }, [state.vueRecommendation]);
+  }, [state?.vueRecommendation]);
 
   const updateBreadcrumbs = () => {
-    const { q = {} } = getRequestOptions();
     let breadCrumbName = q
       ? isArabic()
         ? VUE_PLP_TEXT[q]
