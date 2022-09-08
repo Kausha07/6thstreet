@@ -19,7 +19,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import { TotalsType } from "Type/MiniCart";
 
 import {
-  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES,
+  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES, KNET_PAY, CHECKOUT_QPAY
 } from "./CheckoutPayments.config";
 
 export const mapStateToProps = (state) => ({
@@ -62,8 +62,25 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     } = this.props;
     const { selectedPaymentCode } = this.state;
     const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
+    const KnetEnabledCountryCode = ['KW'].includes(getCountryFromUrl());
+    const QpayEnabledCountryCode = ['QA'].includes(getCountryFromUrl());
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
-    this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
+
+    let paymentMethod = CARD;
+    if(total) {
+      if(countryCode && !isApplePayAvailable){
+        paymentMethod = CHECKOUT_APPLE_PAY;
+      }else if (KnetEnabledCountryCode) {
+        paymentMethod = KNET_PAY;
+      }else if (QpayEnabledCountryCode) {
+        paymentMethod = CHECKOUT_QPAY;
+      }else {
+        paymentMethod = CARD;
+      }
+    } else {
+      paymentMethod = FREE;
+    }
+    this.selectPaymentMethod({ m_code: paymentMethod })
 
     if (window.formPortalCollector) {
       window.formPortalCollector.subscribe(

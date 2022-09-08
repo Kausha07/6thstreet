@@ -1092,5 +1092,7 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "KNET Payment Id" : " رمز تعريف الدفع بإستخدام كي نت",
+    "KNET Transaction Id" : "رمز تعريف معاملة كي نت"
 }
