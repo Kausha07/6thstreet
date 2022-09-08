@@ -152,7 +152,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             dispatch(setEddResponse(null, null));
             dispatch(setCustomerDefaultShippingAddress(null));
           }
-        // });
         dispatch(setCustomerAddressData(response.data));
       }
     });
