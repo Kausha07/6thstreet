@@ -28,6 +28,8 @@ export const appendOrdinalSuffix = (number) => {
 export const VUE_PLP_TEXT ={
   "you_may_also_like":"ربما يعجبك أيضا",
   "recommended_for_you":"موصى به لك",
+  "top_picks_slider":"أفضل شريط التمرير",
+  "recently_viewed_slider":"تم عرضه مؤخرا",
   "style_it_with":"صممها باستخدام"
 }
 export const DEFAULT_MESSAGE = 'Delivery by'
