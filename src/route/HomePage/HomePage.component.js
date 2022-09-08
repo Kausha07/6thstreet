@@ -76,6 +76,7 @@ class HomePage extends PureComponent {
   renderDynamicContent() {
     const { dynamicContent, gender, setLastTapItem } =
       this.props;
+      
     return (
       <DynamicContent
         gender={gender}
