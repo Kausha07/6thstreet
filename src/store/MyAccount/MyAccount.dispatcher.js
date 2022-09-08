@@ -45,6 +45,7 @@ import {
   setAuthorizationToken,
   setMobileAuthorizationToken,
 } from "Util/Auth";
+import { getStore } from "Store";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
 import { prepareQuery } from "Util/Query";
@@ -93,10 +94,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   };
   requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
-    getShippingAddresses().then((response) => {
+    const {
+      MyAccountReducer: { addressCityData = [] },
+    } = getStore().getState();
+    getShippingAddresses().then(async(response) => {
       if (response.data) {
-        AppConfigDispatcher.getCities().then((resp) => {
-          let finalRes = resp?.data;
+          let finalRes = addressCityData
           if (Object.values(response.data).length > 0 && finalRes.length > 0) {
             const defaultShippingAddress = Object.values(response.data).filter(
               (address) => {
@@ -149,7 +152,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             dispatch(setEddResponse(null, null));
             dispatch(setCustomerDefaultShippingAddress(null));
           }
-        });
+        // });
         dispatch(setCustomerAddressData(response.data));
       }
     });
