@@ -643,8 +643,19 @@ export class CheckoutSuccess extends PureComponent {
     </div>
   );
 
+  renderKnetStatus = () => {
+    const { KnetDetails } = this.props;
+    const { status} = KnetDetails;
+    if(status === "SUCCESS"){
+      return  __("SUCCESS");
+    }else if (status === "FAILED"){
+      return __("FAILED");
+    }
+  }
+
   renderKNETPaymentType = () => {
     const { KnetDetails, paymentMethod } = this.props;
+    const { isArabic } = this.state;
     const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
     return (
       <>
@@ -686,7 +697,7 @@ export class CheckoutSuccess extends PureComponent {
               <div block="PaymentType" elem="Title">
                 {__("Status")}
               </div>
-              {status}
+                {isArabic ? this.renderKnetStatus() : status}
               <br /><br />
               <div block="PaymentType" elem="Title">
                 {__("Date")}
