@@ -26,9 +26,11 @@ export const appendOrdinalSuffix = (number) => {
 };
 
 export const VUE_PLP_TEXT ={
-  "you_may_also_like":"ربما يعجبك أيضا",
+  "visually_similar_slider":"منتجات اخرى قد تنال إعجابك",
   "recommended_for_you":"موصى به لك",
-  "style_it_with":"صممها باستخدام"
+  "style_it_slider":"يمكنك تنسيقها مع",
+  "top_picks_slider":"أفضل شريط التمرير",
+  "recently_viewed_slider": "تم تصفحها مؤخراً"
 }
 export const DEFAULT_MESSAGE = 'Delivery by'
 

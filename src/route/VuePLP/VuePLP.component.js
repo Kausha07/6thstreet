@@ -21,12 +21,11 @@ export const BreadcrumbsDispatcher = import(
 
 const VuePLP = (props) => {
   const stateObj = {
-    vueRecommendation: [...props?.location?.state?.vueProducts],
+    vueRecommendation: props?.location?.state?.vueProducts || [],
     showPopup: false,
   };
 
   const [state, setState] = useState(stateObj);
-
 
   const gender = useSelector((state) => state.AppState.gender);
   //dispatch
@@ -46,6 +45,8 @@ const VuePLP = (props) => {
     return params;
   };
   const { q = {} } = getRequestOptions();
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
 
   const showMyAccountPopup = () => {
     setState({ ...state, showPopup: true });
@@ -71,7 +72,7 @@ const VuePLP = (props) => {
     };
     const defaultQueryPayload = {
       userID,
-      sourceProduct: props?.location?.state?.sourceProduct,
+      product_id: params?.product_id || "",
     };
     if (vueSliderType !== "vue_visually_similar_slider") {
       defaultQueryPayload.gender = gender;
@@ -99,17 +100,28 @@ const VuePLP = (props) => {
 
   useEffect(() => {
     if (state?.vueRecommendation?.length === 0) {
-    request();
+      request();
     }
   }, [state?.vueRecommendation]);
 
+  const fetchBreadCrumbsName = (q) => {
+    switch (q) {
+      case "style_it_slider":
+        return __("Style It With");
+      case "visually_similar_slider":
+        return __("You May Also Like");
+      case "recently_viewed_slider":
+        return __("Recently Viewed");
+      case "top_picks_slider":
+        return __("You May Like");
+    }
+  };
+
   const updateBreadcrumbs = () => {
     let breadCrumbName = q
-      ? isArabic()
-        ? VUE_PLP_TEXT[q]
-        : capitalizeFirstLetters(q.split("_").join(" "))
+        ? fetchBreadCrumbsName(q)
       : "Available products";
-      BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
+    BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update([{ name: breadCrumbName }], dispatch)
     );
   };

@@ -54,7 +54,7 @@ export class VueQuery {
     };
 
     buildQuery = (widgetType = "", query = {}, localParams = {}) => {
-        const { userID, sourceProduct } = localParams;
+        const { userID = null, product_id= "" } = localParams;
         const { mad_uuid } = query;
         const filters = this.buildFilters(query, localParams);
 
@@ -69,7 +69,7 @@ export class VueQuery {
                 query.num_results ?? DEFAULT_QUERY.num_results,
                 MAX_NUM_RESULTS
             ),
-            ...(sourceProduct ? { product_id: sourceProduct.sku } : {}),
+            ...(product_id ? { product_id: product_id } : {}),
         };
 
         // {
