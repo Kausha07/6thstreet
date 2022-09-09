@@ -40,7 +40,7 @@ class HeaderGendersContainer extends PureComponent {
     this.setCurrentGender();
   }
   setCurrentGender() {
-    const { currentContentGender } = this.props;
+    const { currentContentGender } = this.props;    
     if (currentContentGender !== "all") {
       if (window.location.pathname.includes("women")) {
         this.props.setGender("women");
@@ -50,8 +50,6 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (window.location.pathname.includes("home")) {
         this.props.setGender("home");
-      } else if (window.location.pathname.includes("all")) {
-        this.props.setGender("all");
       } else if (this.props.product.gender === "Women") {
         this.props.setGender("women");
       } else if (this.props.product.gender === "Men") {
@@ -60,8 +58,6 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (this.props.product.gender === "Home") {
         this.props.setGender("home");
-      } else if (this.props.product.gender === "All") {
-        this.props.setGender("all");
       }
     }
   }
