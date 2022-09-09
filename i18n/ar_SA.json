@@ -1094,5 +1094,7 @@
     "at": "في",
     "Exchange Rejected": "صرف مرفوض",
     "KNET Payment Id" : " رمز تعريف الدفع بإستخدام كي نت",
-    "KNET Transaction Id" : "رمز تعريف معاملة كي نت"
+    "KNET Transaction Id" : "رمز تعريف معاملة كي نت",
+    "SUCCESS": "ناجح",
+    "FAILED": "فشلت عملية الدفع"
 }
