@@ -206,6 +206,9 @@ class PDPSummary extends PureComponent {
           if (response?.value) {
             this.addTabbyPromo(defPrice, currency);
           }
+          else{
+            document.getElementById("TabbyPromo").classList.add("d-none");
+          }
         }, this._handleError)
         .catch(() => {});
     }
@@ -238,6 +241,9 @@ class PDPSummary extends PureComponent {
         .then((response) => {
           if (response?.value) {
             this.addTabbyPromo(defPrice, currency);
+          }
+          else{
+            document.getElementById("TabbyPromo").classList.add("d-none");
           }
         }, this._handleError)
         .catch(() => {});
