@@ -69,7 +69,6 @@ export class SearchSuggestionContainer extends PureComponent {
     const { search, requestSearchSuggestions } = props;
 
     if (!search || search.length < 2) {
-      console.log("all well 72")
       return;
     }
 
@@ -148,9 +147,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
   requestSearchSuggestions(props) {
     const { search, requestSearchSuggestions } = props;
-    console.log("all well search.length",search.length)
     if (!search || search.length < 2) {
-      console.log("all well")
       return;
     }
     if (this.state.typingTimeout) {
