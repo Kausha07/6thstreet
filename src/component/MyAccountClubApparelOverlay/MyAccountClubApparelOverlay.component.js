@@ -216,12 +216,14 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
   renderLink() {
     const { linkAccount,error,linkedNumber } = this.props;
+    
+    const number = linkedNumber.replace(/^(.{4})(.*)$/, "$1 $2");
 
     return (
       <>
         { error && 
           <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
-            {__("You have already linked with entered mobile number: ")} {linkedNumber}
+            {__("You have already linked with entered mobile number: ")} {number}
           </p>
         }
         <p>{__("Link your Club Apparel account and start earning points.")}</p>     
