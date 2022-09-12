@@ -9,8 +9,4 @@ export const mapStateToProps = (state) => ({
     default_country: state.ConfigReducer.default_country
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    getCities: (locale) => AppConfigDispatcher.getCities(dispatch, locale)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountAddressForm);
+export default connect(mapStateToProps, null)(MyAccountAddressForm);
