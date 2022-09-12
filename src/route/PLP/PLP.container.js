@@ -253,7 +253,7 @@ export class PLPContainer extends PureComponent {
     let prevLocation;
     let finalPrevLocation;
     browserHistory.listen((nextLocation) => {
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      let locationArr = ["/men.html", "/women.html", "/kids.html", "/home.html"];
       finalPrevLocation = prevLocation;
       prevLocation = nextLocation;
       const { search } = nextLocation;
