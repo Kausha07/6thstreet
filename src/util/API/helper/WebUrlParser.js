@@ -181,6 +181,24 @@ const Parser = {
     const { pathname, search } = url;
     browserHistory.replace(pathname + search);
   },
+  setQuickFilterParam(key, values = []) {
+    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    url.searchParams.set("p", 0);
+    url.searchParams.forEach((_, sKey) => {
+      if (sKey.includes(key)) {
+        url.searchParams.delete(sKey);
+      }
+    });
+    const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
+    if (Array.isArray(values)) {
+      url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+    } else {
+      url.searchParams.append(`${prefix}[${key}][0]`, values);
+    }
+    const { pathname, search } = url;
+    browserHistory.push(pathname + search);
+    window.scrollTo(0,0)
+  }
 };
 
 export default Parser;

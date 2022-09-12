@@ -11,7 +11,10 @@ import ProductLoad from "Component/PLPLoadMore";
 import { v4 } from "uuid";
 import { withRouter } from "react-router";
 import browserHistory from "Util/History";
-
+import { isArabic } from "Util/App";
+import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import PLPQuickFilter from "Component/PLPQuickFilter";
+import Field from "Component/Field";
 
 class PLPPages extends PureComponent {
   static propTypes = {
@@ -38,6 +41,8 @@ class PLPPages extends PureComponent {
       firstPageLoad: false,
       pageScrollHeight: 0,
       prevProductSku: "",
+      activeSliderImage: 0,
+      defaultSizeCode: "size_uk",
       loadedLastProduct: false,
     };
   }
@@ -126,6 +131,190 @@ class PLPPages extends PureComponent {
     }
   }
 
+  updateFilters = (...arg) => {
+    const valueArr = [arg[1]];
+    WebUrlParser.setQuickFilterParam(arg[0], valueArr);
+  };
+
+  handleSizeClick = (event) => {
+    const {
+      target: { value },
+    } = event;
+    this.setState({
+      defaultSizeCode: value,
+    });
+  };
+
+  renderCommonQuickFilter = (key, filter) => {
+    const { defaultSizeCode } = this.state;
+    return (
+      <PLPQuickFilter
+        key={key}
+        selectedSizeCode={defaultSizeCode}
+        filter={filter}
+        updateFilters={this.updateFilters}
+        onClick={this.updateFilters}
+        parentCallback={this.updateFilters}
+      />
+    );
+  };
+
+  getInlineFilterList = (filters) => {
+    const brandsCategoryName = "brand_name";
+    const stockName = "in_stock";
+    const categoryLevelName = "categories.level1";
+    const genderName = "gender";
+    const CategoryName = "categories_without_path";
+    const removedFilter = [
+      brandsCategoryName,
+      categoryLevelName,
+      genderName,
+      CategoryName,
+      stockName,
+    ];
+    const updatedFilter = deepCopy(filters);
+    removedFilter.map((key) => {
+      delete updatedFilter[key];
+    });
+    return updatedFilter;
+  };
+
+  shouldRenderQuickFilter = (filters, index) => {
+    const { pages = {} } = this.props;
+    const inlineFilterList = this.getInlineFilterList(filters);
+    const keyLabel = {
+      discount: "Discount",
+      colorfamily: "Colours",
+      "price.AED.default": "Price",
+      sizes: "Sizes",
+      sort: "Sort by",
+    };
+    const requiredPages =
+      pages && pages.length > 0 && pages[0].products.length > 9;
+    const filterIndex = index === 0 || !requiredPages ? null : index;
+    const shouldRender =
+      isMobile.any() &&
+      filterIndex !== null &&
+      index < Object.keys(filters).length &&
+      Object.values(inlineFilterList)[filterIndex];
+    const filterKey = Object.keys(inlineFilterList)[filterIndex];
+    const finalFilterKey = keyLabel[filterKey];
+    return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
+  };
+
+  inSearch = () => {
+    const { pathname } = window.location;
+
+    return pathname === "/catalogsearch/result/";
+  };
+
+  handleChange = (activeImage) => {
+    this.setState({ activeSliderImage: activeImage });
+  };
+
+  renderSizeQuickFilter = () => {
+    const { defaultSizeCode, activeSliderImage } = this.state;
+    const sizeData = ["size_uk", "size_eu", "size_us"];
+    const sizeLabel = {
+      size_uk: "Size UK",
+      size_eu: "Size EU",
+      size_us: "Size US",
+    };
+    return (
+      <div block="FieldMultiselect">
+        <fieldset block="PLPQuickFilter" mods={{ inSearch: this.inSearch() }}>
+          <div
+            mix={{ block: "QuickFilters", elem: "MobileSlider" }}
+            activeImage={activeSliderImage}
+            onActiveImageChange={this.handleChange}
+          >
+            <div block="QuickFilter" elem="List">
+              {sizeData.map((facet_value) => {
+                return (
+                  <li
+                    block="PLPFilterOption"
+                    elem="List"
+                    mix={{
+                      block: "PLPFilterOption-List",
+                      elem:
+                        facet_value === defaultSizeCode ? "SelectedList" : "",
+                    }}
+                    mods={{ isArabic: isArabic() }}
+                  >
+                    <Field
+                      onClick={this.handleSizeClick}
+                      mix={{
+                        block: "PLPFilterOption",
+                        elem: "Input",
+                      }}
+                      type={"checkbox"}
+                      id={facet_value}
+                      name={facet_value}
+                      value={facet_value}
+                      checked={facet_value === defaultSizeCode}
+                    />
+                    <label block="PLPFilterOption" htmlFor={facet_value}>
+                      {sizeLabel[facet_value]}
+                    </label>
+                  </li>
+                );
+              })}
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    );
+  };
+
+  renderQuickFilter = (filterIndex, inlineFilterList, label) => {
+    return (
+      <div
+        block="InlineFilterContainer"
+        mix={{
+          block: "InlineFilterContainer",
+          elem: label === "Sizes" ? "InlineSizeCont" : "",
+        }}
+      >
+        <div block="InlineFilter">
+          <p
+            mix={{ block: "InlineFilter", elem: "FilterLabel" }}
+          >{`What ${label} are you looking for ?`}</p>
+          <li
+            block="ProductItem"
+            id={filterIndex}
+            mix={{ block: "ProductItem", elem: "FilterBar" }}
+          >
+            <div
+              block="PLPFilters"
+              elem="QuickCategories"
+              mods={{ isArabic: isArabic() }}
+            >
+              {this.renderCommonQuickFilter(
+                filterIndex,
+                Object.values(inlineFilterList)[filterIndex]
+              )}
+            </div>
+          </li>
+          {label === "Sizes" && (
+            <li
+              block="ProductItem"
+              id={filterIndex}
+              mix={{ block: "ProductItem", elem: "SizeFilterBar" }}
+            >
+              <div
+                block="PLPFilters"
+                elem="QuickCategories"
+                mods={{ isArabic: isArabic() }}
+              >
+                {this.renderSizeQuickFilter()}
+              </div>
+            </li>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
     this.setState({
@@ -133,24 +322,40 @@ class PLPPages extends PureComponent {
     });
     const { impressions, query, renderMySignInPopup, filters, productLoading } =
       this.props;
+    const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
+    this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
       return (
+        <>
+        {shouldRender &&
+          this.renderQuickFilter(
+            filterIndex,
+            inlineFilterList,
+            finalFilterKey
+          )}
         <PLPPagePlaceholder
           isFirst={isFirst}
           key={v4()}
           pageIndex={key}
           query={query}
         />
+      </>
       );
     }
     return (
+      <>
+      {shouldRender &&
+        this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
       <PLPPage
         key={v4()}
         products={products}
+        handleCallback={this.handleCallback}
         impressions={impressions}
         renderMySignInPopup={renderMySignInPopup}
         filters={filters}
       />
+    </>
+
     );
   };
 

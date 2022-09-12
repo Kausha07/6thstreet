@@ -40,7 +40,7 @@ export class Algolia {
   }
 
   async getPLP(params = {}) {
-    const productCount = isMobile.any() ? 16 : 30;
+    const productCount = isMobile.any() ? 10 : 30;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
     } = getStore().getState();
