@@ -1097,5 +1097,11 @@
     "You have already linked with entered mobile number: ": "تم ربط رقم الهاتف المدخل بحسابك مسبقاُ",
     "Link your Club Apparel account and start earning points.": "أربط حسابك في كلوب أباريل وإبدأ في كسب النقاط",
     "OTP verification failed": "فشل التحقق من كلمة المرور ",
-    "Enter the verification code we sent to +": "+ أدخل رمز التحقق المرسل إلى "
+    "Enter the verification code we sent to +": "+ أدخل رمز التحقق المرسل إلى ",
+    "What %s are you looking for ?": "ما%s الذي تبحث عنه؟",
+    "Price": "سعر",
+    "Sizes": "الأحجام",
+    "Size UK": "حجم المملكة المتحدة",
+    "Size US": "المقاس الأمريكي",
+    "Size EU": "حجم الاتحاد الأوروبي"
 }
