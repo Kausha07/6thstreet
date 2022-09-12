@@ -223,7 +223,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
       <>
         { error && 
           <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
-            {__("You have already linked with entered mobile number: ")} {number}
+            {__("You have already linked with entered mobile number: ")} <span style={{"display": "inline-block"}}>{number}</span>
           </p>
         }
         <p>{__("Link your Club Apparel account and start earning points.")}</p>     
