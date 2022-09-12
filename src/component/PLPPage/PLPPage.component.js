@@ -61,7 +61,7 @@ class PLPPage extends PureComponent {
   };
 
   renderProducts() {
-    const { products = [], impressions } = this.props;
+    const { products = [], impressions = [] } = this.props;
     impressions.forEach((item, index) => {
       Object.assign(item, {
         product_Position: index + 1,
