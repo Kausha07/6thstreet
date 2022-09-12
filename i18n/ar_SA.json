@@ -834,8 +834,8 @@
     "Your Club Apparel Membership Tier defines the amount of points you will collect on your purchase. To know more about the tiers, please refer to ": " تحدد فئة عضويتك في كلوب أباريل بعدد النقاط التي ستجمعها عند شرائك لمعرفة المزيد عن الفئات يرجى الرجوع إلى",
     "Club Apparel Tiers": "فئات كلوب أباريل",
     "Please complete your profile on ": " يرجى إكمال ملفك التعريفي على",
-    "Club Apparel App": "تطبيق كلوب أباريل",
-    " to UNLOCK redemption.": "عى تطبيق  قيمة النقاط ",
+    "Club Apparel App": " تطبيق كلوب أباريل",
+    " to UNLOCK redemption.": " لتفعيل عملية الإسترداد.",
     "Link your ": null,
     "Club Apparel": null,
     " account and start earning points.": null,
@@ -1092,5 +1092,10 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "Return/Exchange Statement": null,
+    "You have already linked with entered mobile number: ": "تم ربط رقم الهاتف المدخل بحسابك مسبقاُ",
+    "Link your Club Apparel account and start earning points.": "أربط حسابك في كلوب أباريل وإبدأ في كسب النقاط",
+    "OTP verification failed": "فشل التحقق من كلمة المرور ",
+    "Enter the verification code we sent to +": "+ أدخل رمز التحقق المرسل إلى "
 }
