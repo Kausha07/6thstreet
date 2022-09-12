@@ -40,9 +40,9 @@ class PLPPages extends PureComponent {
       pageKey: 0,
       firstPageLoad: false,
       pageScrollHeight: 0,
-      prevProductSku: "",
       activeSliderImage: 0,
       defaultSizeCode: "size_uk",
+      prevProductSku: "",
       loadedLastProduct: false,
     };
   }
@@ -54,7 +54,13 @@ class PLPPages extends PureComponent {
     let finalPrevLocation;
     let initialPrevProductSku;
     browserHistory.listen((nextLocation) => {
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html", "/all.html"];
+      let locationArr = [
+        "/men.html",
+        "/women.html",
+        "kids.html",
+        "/home.html",
+        "/all.html",
+      ];
       finalPrevLocation = prevLocation;
       prevLocation = nextLocation;
       const { search } = nextLocation;
@@ -76,14 +82,12 @@ class PLPPages extends PureComponent {
         finalPrevLocation &&
         locationArr.includes(finalPrevLocation.pathname)
       ) {
-        // this.props.setPrevProductSku("");
         window.scrollTo(0, 0);
       }
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-
     const { activeFilters, prevProductSku } = this.props;
     const {
       activeFilters: prevActiveFilters,
@@ -183,11 +187,10 @@ class PLPPages extends PureComponent {
     const { pages = {} } = this.props;
     const inlineFilterList = this.getInlineFilterList(filters);
     const keyLabel = {
-      discount: "Discount",
-      colorfamily: "Colours",
-      "price.AED.default": "Price",
-      sizes: "Sizes",
-      sort: "Sort by",
+      discount: __("Discount"),
+      colorfamily: __("Colors"),
+      sizes: __("Sizes"),
+      sort: __("Sort by"),
     };
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;
@@ -198,7 +201,10 @@ class PLPPages extends PureComponent {
       index < Object.keys(filters).length &&
       Object.values(inlineFilterList)[filterIndex];
     const filterKey = Object.keys(inlineFilterList)[filterIndex];
-    const finalFilterKey = keyLabel[filterKey];
+    const finalFilterKey =
+      filterKey && filterKey.includes("price")
+        ? __("Price")
+        : keyLabel[filterKey];
     return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
   };
 
@@ -216,9 +222,9 @@ class PLPPages extends PureComponent {
     const { defaultSizeCode, activeSliderImage } = this.state;
     const sizeData = ["size_uk", "size_eu", "size_us"];
     const sizeLabel = {
-      size_uk: "Size UK",
-      size_eu: "Size EU",
-      size_us: "Size US",
+      size_uk: __("Size UK"),
+      size_eu: __("Size EU"),
+      size_us: __("Size US"),
     };
     return (
       <div block="FieldMultiselect">
@@ -272,13 +278,13 @@ class PLPPages extends PureComponent {
         block="InlineFilterContainer"
         mix={{
           block: "InlineFilterContainer",
-          elem: label === "Sizes" ? "InlineSizeCont" : "",
+          elem: (label === "Sizes" || label === "الأحجام") ? "InlineSizeCont" : "",
         }}
       >
         <div block="InlineFilter">
-          <p
-            mix={{ block: "InlineFilter", elem: "FilterLabel" }}
-          >{`What ${label} are you looking for ?`}</p>
+          <p mix={{ block: "InlineFilter", elem: "FilterLabel" }}>
+            {__("What %s are you looking for ?", label)}
+          </p>
           <li
             block="ProductItem"
             id={filterIndex}
@@ -295,7 +301,7 @@ class PLPPages extends PureComponent {
               )}
             </div>
           </li>
-          {label === "Sizes" && (
+          {(label === "Sizes" || label === "الأحجام") && (
             <li
               block="ProductItem"
               id={filterIndex}
@@ -323,39 +329,38 @@ class PLPPages extends PureComponent {
     const { impressions, query, renderMySignInPopup, filters, productLoading } =
       this.props;
     const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
-    this.shouldRenderQuickFilter(filters, parseInt(key));
+      this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
       return (
         <>
-        {shouldRender &&
-          this.renderQuickFilter(
-            filterIndex,
-            inlineFilterList,
-            finalFilterKey
-          )}
-        <PLPPagePlaceholder
-          isFirst={isFirst}
-          key={v4()}
-          pageIndex={key}
-          query={query}
-        />
-      </>
+          {shouldRender &&
+            this.renderQuickFilter(
+              filterIndex,
+              inlineFilterList,
+              finalFilterKey
+            )}
+          <PLPPagePlaceholder
+            isFirst={isFirst}
+            key={v4()}
+            pageIndex={key}
+            query={query}
+          />
+        </>
       );
     }
     return (
       <>
-      {shouldRender &&
-        this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
-      <PLPPage
-        key={v4()}
-        products={products}
-        handleCallback={this.handleCallback}
-        impressions={impressions}
-        renderMySignInPopup={renderMySignInPopup}
-        filters={filters}
-      />
-    </>
-
+        {shouldRender &&
+          this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
+        <PLPPage
+          key={v4()}
+          products={products}
+          handleCallback={this.handleCallback}
+          impressions={impressions}
+          renderMySignInPopup={renderMySignInPopup}
+          filters={filters}
+        />
+      </>
     );
   };
 
@@ -373,7 +378,6 @@ class PLPPages extends PureComponent {
 
   renderPages() {
     const { pages = {}, productLoading } = this.props;
-
     if (pages && pages.length === 0 && productLoading) {
       const placeholderConfig = [
         {
@@ -565,7 +569,7 @@ class PLPPages extends PureComponent {
       params = parsedParams;
     }
     return params;
-  }
+  };
 
   handleCallback = (
     initialFacetKey,

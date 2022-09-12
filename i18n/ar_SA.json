@@ -1092,5 +1092,12 @@
     "Exchange In Transit": "المنتج المستبدل قيد الإنتقال",
     "Exchange Store Credit": "ائتمان متجر الصرف",
     "at": "في",
-    "Exchange Rejected": "صرف مرفوض"
+    "Exchange Rejected": "صرف مرفوض",
+    "Return/Exchange Statement": null,
+    "What %s are you looking for ?": "ما%s الذي تبحث عنه؟",
+    "Price": "سعر",
+    "Sizes": "الأحجام",
+    "Size UK": "حجم المملكة المتحدة",
+    "Size US": "المقاس الأمريكي",
+    "Size EU": "حجم الاتحاد الأوروبي"
 }
