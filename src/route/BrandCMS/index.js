@@ -41,10 +41,11 @@ function BrandCMS(props) {
   const gender = useSelector((state) => state.AppState.gender);
   const BrandCMSData = useSelector((state) => state.BrandCms);
 
-  const [isLoading, setIsLoading] = useState();
-  const [widget, setWidget] = useState([]);
-  const [storeWidget, setStoreWidget] = useState([]);
-  const [shouldRender, setShouldRender] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [storeWidgets, setStoreWidgets] = useState([]);
+  const [widgets, setWidgets] = useState([]);
+
   const [showPopup, setShowPopup] = useState();
   const [signInPopUp, setSignInPopUp] = useState("");
   //dispatch
@@ -86,35 +87,42 @@ function BrandCMS(props) {
     return params;
   };
 
-  const renderWidget = async () => {
-    setIsLoading(true);
-    let widgetData = [];
-    
-    //props.requestBrandCMSData();
-    try {
-      //dispatch({ type: SET_BRAND_CMS_LOADING, isBrandCmsLoading: true });
-
-      const devicePrefix = isMobile.any() ? "m/" : "d/";
-      widgetData = await getStaticFile(HOME_STATIC_FILE_KEY, {
-        $FILE_NAME: `${devicePrefix}store_page.json`,
-      });
-
-      const { tagName } = getTagName();
-      const storeWidget = widgetData.filter(
-        (item) => item.tag.toLowerCase() === tagName.toLowerCase()
-      );
-      const shouldRender = !(storeWidget && storeWidget.length == 0);
-      setWidget(storeWidget);
-      setShouldRender(shouldRender);
-      setIsLoading(false);
-
-      //dispatch({ type: "SET_BRAND_CMS_DATA", data: widgetData });
-      //dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
-    } catch (e) {
-      console.log(e);
-      //dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
+  const getWidgets = async () => {
+    const { brandCmsData, isBrandCmsLoading } = BrandCMSData;
+    if (brandCmsData.length > 0 && !isBrandCmsLoading) {
+      setStoreWidgets(widgetData);
+      setIsLoading(isBrandCmsLoading);
+    } else {
+      
+      try {
+        setIsLoading(true);
+        dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: true });
+        const devicePrefix = isMobile.any() ? "m/" : "d/";
+        const widgetData = await getStaticFile(HOME_STATIC_FILE_KEY, {
+          $FILE_NAME: `${devicePrefix}store_page.json`,
+        });
+        dispatch({ type: "SET_BRAND_CMS_DATA", data: widgetData });
+        dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
+        
+        (Array.isArray(widgetData) && widgetData?.length > 0) ? setStoreWidgets(widgetData) : setStoreWidgets([]);
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+        dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
+        setStoreWidgets([]);
+        setIsLoading(false);
+      }
     }
   };
+
+  const renderWidget = () => {    
+    const { tagName } = getTagName();
+    const widgetData = storeWidgets.filter(
+      (item) => item.tag.toLowerCase() === tagName.toLowerCase()
+    );
+    setWidgets(widgetData);
+  };
+  
 
   const updateBreadcrumbs = () => {
     const { updateBreadcrumbs } = props;
@@ -135,19 +143,18 @@ function BrandCMS(props) {
   };
 
   useEffect(() => {
+    getWidgets();
     renderWidget();
-    //props.requestBrandCMSData();
     updateBreadcrumbs();
   }, []);
 
-  useEffect(() => {
-    setStoreWidget(widget);
-  }, [widget]);
+  useEffect(() => {    
+    renderWidget();
+  }, [storeWidgets]);
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />;
-  } 
-  else if (!isLoading && storeWidget.length === 0) {
+  } else if (!isLoading && widgets.length === 0) {
     return <NoMatch />;
   }
 
@@ -166,10 +173,11 @@ function BrandCMS(props) {
               <CircleItemSliderSubPage bannerData={bannerData} />
             </div>
           )} */}
-        {shouldRender && (
+        
+        {!isLoading && widgets?.length > 0 && (
           <DynamicContent
             gender={gender}
-            content={storeWidget}
+            content={widgets}
             setLastTapItemOnHome={setLastTapItem}
             renderMySignInPopup={showMyAccountPopup}
           />
@@ -178,7 +186,5 @@ function BrandCMS(props) {
     </main>
   );
 }
-
-//export default BrandCMS;
 
 export default connect(null, mapDispatchToProps)(BrandCMS);
