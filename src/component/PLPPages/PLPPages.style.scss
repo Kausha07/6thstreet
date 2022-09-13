@@ -20,6 +20,18 @@
           font-weight: 600;
           letter-spacing: 0.18px;
         }
+        .PLPFilters{
+          &-QuickCategories {
+            overflow-x: auto;
+            overflow-y: hidden;
+            &_isArabic {
+              width: 100vh;
+            }
+            @include desktop {
+              overflow: hidden;
+            }
+          }
+        }
       }
     }
     .sort-box {
