@@ -41,6 +41,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     isCouponDetialPopupOpen: false,
     couponModuleStatus: false,
     isMobile: isMobile.any() || isMobile.tablet(),
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -213,13 +214,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     this.props.removeCouponFromCart()
   }
 
+  setLoader = (currLoaderState) => {
+    this.setState({
+      isLoading: currLoaderState
+    })
+  }
+
   renderDiscountCode() {
     const {
       totals: { coupon_code },
       couponsItems = [], couponLists= []
     } = this.props;
     const isOpen = false;
-    const { isArabic, isMobile } = this.state;
+    const { isArabic, isMobile, isLoading } = this.state;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -262,10 +269,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     <div block="couponInputBox">
                       <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
                     </div>
-                  <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} />
+                  <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} setLoader={this.setLoader}/>
                   {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
                   {this.state?.isTermsAndConditionspopupOpen && <CartCouponTermsAndConditions TermsAndConditions={this.state} hideTermsAndConditions={this.hideTermsAndConditions} /> }
                 </div>
+              <Loader isLoading={isLoading} />
               </div>
             </>
         }</div>

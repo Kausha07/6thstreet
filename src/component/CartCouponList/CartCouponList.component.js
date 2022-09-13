@@ -13,13 +13,22 @@ export class CartCouponList extends PureComponent {
     }
 
     handleApplyCode = async (couponCode) => {
-        this.setState({isLoading:true});
+        const { setLoader } = this.props
+        if(setLoader) {
+            setLoader(true)
+        }else {
+            this.setState({isLoading:true});
+        }
         try{            
             let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
             if (typeof apiResponse !== "string") {
                 this.props.closePopup();
             }
-            this.setState({isLoading:false});
+            if(setLoader) {
+                setLoader(false)
+            }else {
+                this.setState({isLoading:false});
+            }
         }
         catch(error){
             console.error(error);
