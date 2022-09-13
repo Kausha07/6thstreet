@@ -19,7 +19,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import { TotalsType } from "Type/MiniCart";
 
 import {
-  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES,
+  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES,CHECKOUT_QPAY
 } from "./CheckoutPayments.config";
 
 export const mapStateToProps = (state) => ({
@@ -62,8 +62,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     } = this.props;
     const { selectedPaymentCode } = this.state;
     const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
+    const QpayEnabledCountryCode = ['QA'].includes(getCountryFromUrl());
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
-    this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
+    this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : QpayEnabledCountryCode ?  CHECKOUT_QPAY : CARD : FREE });
 
     if (window.formPortalCollector) {
       window.formPortalCollector.subscribe(
