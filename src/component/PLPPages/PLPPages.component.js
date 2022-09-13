@@ -305,7 +305,7 @@ class PLPPages extends PureComponent {
             <li
               block="ProductItem"
               id={filterIndex}
-              mix={{ block: "ProductItem", elem: "SizeFilterBar" }}
+              mix={{ block: "ProductItem", elem: "SizeFilterBar",mods:{isArabic:isArabic()} }}
             >
               <div
                 block="PLPFilters"

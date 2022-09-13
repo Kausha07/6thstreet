@@ -19,6 +19,18 @@
       margin-bottom: 15px !important;
       display: flex;
       justify-content: center;
+      &_isArabic {
+        display: unset;
+        .PLPFilters{
+          &-QuickCategories {
+            overflow-x: auto;
+            overflow-y: hidden;
+            &_isArabic {
+              width: 425px !important;
+            }
+          }
+        }
+      }
     }
     &-FilterBar {
       height: 55px !important;
