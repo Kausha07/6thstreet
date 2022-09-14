@@ -451,7 +451,6 @@ export class PLPContainer extends PureComponent {
     facet_value,
     checked,
     isRadio,
-    facet_key,
     isQuickFilters
   ) {
     const { activeFilters } = this.state;
