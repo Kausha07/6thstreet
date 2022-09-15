@@ -318,6 +318,11 @@ export class CartDispatcher {
 
       await this.getCartTotals(dispatch, cartId);
       
+      if(response === null){
+        dispatch(showNotification("success", __("Coupon was applied!")));
+        return response;
+      }
+
       if(response.message){
         dispatch(showNotification("success", response.message));  
       }else {
