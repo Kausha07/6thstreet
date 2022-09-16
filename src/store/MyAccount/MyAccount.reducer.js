@@ -31,7 +31,7 @@ export const initialState = {
   defaultShippingAddress: null,
   pdpEddAddressSelected: null,
   eddResponse: null,
-  intlEddResponse: null,
+  intlEddResponse: {},
   EddAddress: null,
   addressCityData: []
 };

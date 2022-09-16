@@ -22,6 +22,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     let {
       currency,
       edd_info,
+      compRef,
       displayDiscountPercentage,
       isFailed,
       item: {
@@ -48,7 +49,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
     const orderEddDetails = JSON.parse(localStorage.getItem("ORDER_EDD_ITEMS"));
     const renderOtherEdd =
       paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "checkout_knet" ||
       paymentMethod?.code === "tabby_installments";
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">

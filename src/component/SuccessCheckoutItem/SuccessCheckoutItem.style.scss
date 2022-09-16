@@ -48,6 +48,17 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
+    .AdditionShippingInformation {
+      font-family: "Avenir Next";
+      font-size: 12px;
+      letter-spacing: 0;
+      line-height: 16px;
+      text-align: left;
+      font-weight: var(--fw-medium);
+      &_isArabic{
+        text-align: right;
+      }
+    }
     .AreaText {
       display: flex;
       color: #9b9b9b;
