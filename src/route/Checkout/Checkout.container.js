@@ -6,7 +6,8 @@ import {
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isArabic } from "Util/App";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -51,7 +52,13 @@ import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
 } from "../../store/MobileCart/MobileCart.reducer";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {
+  INTL_BRAND,
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+  DEFAULT_READY_MESSAGE,
+} from "../../util/Common/index";
+import { getDefaultEddDate } from "Util/Date/index";
 
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
@@ -62,8 +69,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.estimateShipping(dispatch, address),
   saveAddressInformation: (address) =>
     CheckoutDispatcher.saveAddressInformation(dispatch, address),
-  createOrder: (code, additional_data, finalEdd) =>
-    CheckoutDispatcher.createOrder(dispatch, code, additional_data, finalEdd),
+  createOrder: (code, additional_data, eddItems) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
   getBinPromotion: (bin) => CheckoutDispatcher.getBinPromotion(dispatch, bin),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
   verifyPayment: (paymentId) =>
@@ -98,6 +105,7 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
+  cartItems: state.CartReducer.cartItems,
   processingRequest: state.CartReducer.processingRequest,
   customer: state.MyAccountReducer.customer,
   addresses: state.MyAccountReducer.addresses,
@@ -113,6 +121,7 @@ export const mapStateToProps = (state) => ({
   pdpEddAddressSelected: state.MyAccountReducer.pdpEddAddressSelected,
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -354,13 +363,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
   };
 
-  componentDidMount() {
-    const { setMeta } = this.props;
+  async componentDidMount() {
+    const { setMeta, cartId, updateTotals, getCouponList } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
     if (!QPAY_CHECK && !TABBY_CHECK) {
       this.refreshCart();
+    } else {
+      await updateTotals(cartId);
     }
     setMeta({ title: __("Checkout") });
     this.getQPayData();
@@ -581,9 +592,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     saveAddressInformation(addressInformation).then((res) => {
       const data = res.data;
       if(!data){
-        showErrorNotification(
-          res
-        );
+        showErrorNotification(res);
         setTimeout(() => {
           window.location = "/";
         }, 1500);
@@ -633,12 +642,93 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       savedCards,
       newCardVisible,
       customer: { email: customerEmail },
+      cartItems,
+      intlEddResponse,
+      edd_info,
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
-
+    let eddItems = [];
+    if (edd_info?.is_enable && cartItems) {
+      cartItems.map(({ full_item_info }) => {
+        const {
+          cross_border = 0,
+          brand_name,
+          international_vendor,
+          sku,
+          extension_attributes,
+        } = full_item_info;
+        const defaultDay = extension_attributes?.click_to_collect_store
+          ? edd_info.ctc_message
+          : edd_info.default_message;
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(defaultDay);
+        let itemEddMessage = extension_attributes?.click_to_collect_store
+          ? DEFAULT_READY_MESSAGE
+          : DEFAULT_MESSAGE;
+        let customDefaultMess = isArabic()
+          ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+          : itemEddMessage;
+        const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        const isIntlBrand =
+          (INTL_BRAND.includes(brand_name.toLowerCase()) &&
+            cross_border === 1) ||
+          cross_border === 1;
+        const intlEddObj = intlEddResponse["checkout"]?.find(
+          ({ vendor }) => vendor.toLowerCase() === brand_name.toLowerCase()
+        );
+        eddItems.push({
+          sku: sku,
+          edd_date:
+            isIntlBrand &&
+            intlEddObj &&
+            edd_info &&
+            edd_info.has_cross_border_enabled
+              ? intlEddObj["edd_date"]
+              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+              ? intlEddResponse["checkout"][0]["edd_date"]
+              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+              ? null
+              : extension_attributes?.click_to_collect_store
+              ? defaultEddDateString
+              : finalEdd,
+          cross_border: cross_border,
+          edd_message_en:
+            isIntlBrand &&
+            intlEddObj &&
+            edd_info &&
+            edd_info.has_cross_border_enabled
+              ? intlEddObj["edd_message_en"]
+              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+              ? intlEddResponse["checkout"][0]["edd_message_en"]
+              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+              ? null
+              : actualEddMess,
+          edd_message_ar:
+            isIntlBrand &&
+            intlEddObj &&
+            edd_info &&
+            edd_info.has_cross_border_enabled
+              ? intlEddObj["edd_message_ar"]
+              : isIntlBrand && edd_info && edd_info.has_cross_border_enabled
+              ? intlEddResponse["checkout"][0]["edd_message_ar"]
+              : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
+              ? null
+              : actualEddMess,
+          intl_vendors: INTL_BRAND.includes(brand_name.toLowerCase())
+            ? international_vendor
+            : cross_border === 1
+            ? international_vendor
+            : null,
+        });
+      });
+    }
     if (code === CARD) {
       data = {
         ...additional_data,
@@ -680,14 +770,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY) {
-      this.placeOrder(code, data, paymentInformation, finalEdd);
+    } else if (
+      code === TABBY_ISTALLMENTS ||
+      code === CHECKOUT_QPAY
+    ) {
+      this.placeOrder(code, data, paymentInformation, finalEdd, eddItems);
     } else {
-      this.placeOrder(code, data, null, finalEdd);
+      this.placeOrder(code, data, null, finalEdd, eddItems);
     }
   }
 
-  async placeOrder(code, data, paymentInformation, finalEdd) {
+  async placeOrder(code, data, paymentInformation, finalEdd, eddItems) {
     const { createOrder, showErrorNotification } = this.props;
     const { tabbyURL } = this.state;
     const ONE_YEAR_IN_SECONDS = 31536000;
@@ -699,7 +792,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data, finalEdd);
+      const response = await createOrder(code, data, eddItems);
       if (response && response.data) {
         if (finalEdd) {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
@@ -760,7 +853,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 // keep details in localstorage for 10 mins only
                 expiry: now.getTime() + 600000,
               };
-
+              localStorage.setItem("ORDER_EDD_ITEMS", JSON.stringify(eddItems));
               localStorage.setItem("TABBY_ORDER_DETAILS", JSON.stringify(obj));
               localStorage.setItem(
                 "PAYMENT_INFO",
@@ -799,6 +892,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 // keep details in localstorage for 2 mins only
                 expiry: now.getTime() + 120000,
               };
+              localStorage.setItem("ORDER_EDD_ITEMS", JSON.stringify(eddItems));
               localStorage.setItem("QPAY_ORDER_DETAILS", JSON.stringify(obj));
               localStorage.setItem(
                 "PAYMENT_INFO",
@@ -871,7 +965,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
       showErrorNotification(__("Something went wrong."));
       this.resetCart();
-      this._handleError(e);
+      // this._handleError(e);
     }
   }
 

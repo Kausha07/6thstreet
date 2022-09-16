@@ -4,12 +4,14 @@ import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import { isArabic } from "Util/App";
 import "./MyAccountOrderViewItem.style";
 import { isObject } from "Util/API/helper/Object";
-import { getDefaultEddDate } from "Util/Date/index";
+import { getDefaultEddDate, getDefaultEddMessage } from "Util/Date/index";
 import {
   DEFAULT_MESSAGE,
+  DEFAULT_READY_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  INTL_BRAND,
   DEFAULT_SPLIT_KEY,
-  DEFAULT_READY_SPLIT_KEY
+  DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
 import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
@@ -30,10 +32,24 @@ export class MyAccountOrderViewItem extends SourceComponent {
         size: { value: size = "" } = {},
         qty,
         cross_border = 0,
-        ctc_store_name="",
+        ctc_store_name = "",
+        int_shipment = "0",
       } = {},
       status,
+      paymentMethod,
     } = this.props;
+    const isIntlBrand =
+      (((INTL_BRAND.includes(brand_name.toLowerCase()) &&
+        parseInt(cross_border) === 1) ||
+        parseInt(cross_border) === 1) &&
+        edd_info &&
+        edd_info.has_cross_border_enabled) ||
+      int_shipment === "1";
+    const orderEddDetails = JSON.parse(localStorage.getItem("ORDER_EDD_ITEMS"));
+    const renderOtherEdd =
+      paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "checkout_knet" ||
+      paymentMethod?.code === "tabby_installments";
     return (
       <div block="MyAccountReturnSuccessItem" elem="Details">
         <h2>{brand_name}</h2>
@@ -67,27 +83,46 @@ export class MyAccountOrderViewItem extends SourceComponent {
           </span>
         </p>
         {!!ctc_store_name && (
-            <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
-              <Store />
-              <div
-                block="MyAccountOrderViewItem-ClickAndCollect"
-                elem="StoreName"
-              >
-                {ctc_store_name}
-              </div>
+          <div block="MyAccountOrderViewItem" elem="ClickAndCollect">
+            <Store />
+            <div
+              block="MyAccountOrderViewItem-ClickAndCollect"
+              elem="StoreName"
+            >
+              {ctc_store_name}
             </div>
-          )}
-        {edd_info &&
-          edd_info.is_enable &&
-          cross_border === 0 &&
+          </div>
+        )}
+        {((renderOtherEdd &&
+          orderEddDetails &&
+          edd_info &&
+          edd_info.is_enable) ||
+          (edd_info && edd_info.is_enable)) &&
+          (isIntlBrand || parseInt(cross_border) === 0) &&
           !isFailed &&
           status !== "payment_failed" &&
           status !== "payment_aborted" &&
-          this.renderEdd()}
+          this.renderEdd(parseInt(cross_border) === 1, orderEddDetails)}
+        {isIntlBrand &&
+          edd_info &&
+          edd_info.is_enable &&
+          !isFailed &&
+          status !== "payment_failed" &&
+          status !== "payment_aborted" &&
+          this.renderIntlTag()}
       </div>
     );
   }
-  renderEdd = () => {
+
+  renderIntlTag() {
+    return (
+      <span block="AdditionShippingInformation">
+        {__("International Shipment")}
+      </span>
+    );
+  }
+
+  renderEdd = (crossBorder, orderEddDetails) => {
     const {
       eddResponse,
       compRef,
@@ -95,53 +130,64 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color },
+      item: { edd_msg_color, brand_name, ctc_store_name },
+      intlEddResponse,
     } = this.props;
     let actualEddMess = "";
     let actualEdd = "";
+    const defaultDay = ctc_store_name
+      ? edd_info.ctc_message
+      : edd_info.default_message;
 
-    const {
-      defaultEddDateString,
-      defaultEddDay,
-      defaultEddMonth,
-      defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
-    let customDefaultMess = isArabic()
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
-      : DEFAULT_MESSAGE;
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
+    const { defaultEddDay, defaultEddMonth, defaultEddDat } =
+      getDefaultEddDate(defaultDay);
+
     if (compRef === "checkout") {
-      if (eddResponse) {
-        if (isObject(eddResponse)) {
-          Object.values(eddResponse).filter((entry) => {
-            if (
-              entry.source === "checkout" &&
-              entry.featute_flag_status === 1
-            ) {
-              actualEddMess = isArabic()
-                ? entry.edd_message_ar
-                : entry.edd_message_en;
-              actualEdd = entry.edd_date;
-            }
-          });
-        } else {
+      let customDefaultMess = isArabic()
+        ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
+        : DEFAULT_READY_MESSAGE;
+      const isIntlBrand =
+        ((INTL_BRAND.includes(brand_name.toLowerCase()) && crossBorder) ||
+          crossBorder) &&
+        edd_info &&
+        edd_info.has_cross_border_enabled;
+      const intlEddObj = intlEddResponse["thankyou"]?.find(
+        ({ vendor }) => vendor.toLowerCase() === brand_name.toLowerCase()
+      );
+      const intlEddMess = intlEddObj
+        ? isArabic()
+          ? intlEddObj["edd_message_ar"]
+          : intlEddObj["edd_message_en"]
+        : isIntlBrand
+        ? isArabic()
+          ? intlEddResponse["thankyou"][0]["edd_message_ar"]
+          : intlEddResponse["thankyou"][0]["edd_message_en"]
+        : "";
+
+      if (isIntlBrand) {
+        actualEddMess = intlEddMess;
+      } else {
+        if (ctc_store_name) {
           actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-          actualEdd = defaultEddDateString;
+        } else {
+          actualEddMess = paymentInformation["finalEddString"];
         }
       }
     } else {
       actualEddMess = myOrderEdd;
       actualEdd = myOrderEdd;
-      if(myOrderEdd && !eddEventSent){
-      Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
-        edd_details: {
-          edd_status: edd_info.has_order_detail,
-          default_edd_status: null,
-          edd_updated: null,
-        },
-        page: "my_order",
-      });
-      setEddEventSent()
-    }
+      if (myOrderEdd && !eddEventSent && edd_info) {
+        Event.dispatch(EVENT_GTM_EDD_VISIBILITY, {
+          edd_details: {
+            edd_status: edd_info.has_order_detail,
+            default_edd_status: null,
+            edd_updated: null,
+          },
+          page: "my_order",
+        });
+        setEddEventSent();
+      }
     }
 
     if (!actualEddMess) {
@@ -149,32 +195,31 @@ export class MyAccountOrderViewItem extends SourceComponent {
     }
 
     let colorCode =
-    compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
+      compRef === "checkout" ? SPECIAL_COLORS["shamrock"] : edd_msg_color;
     let splitKey = DEFAULT_SPLIT_KEY;
-    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
-      const splitByInclude = actualEddMess.includes(splitKey)
-      const splitByReadyInclude = splitReadyByKey && actualEddMess.includes(splitReadyByKey)
-      const idealFormat = splitByInclude || splitByReadyInclude ? true : false;
-      let splitBy = actualEddMess.split(splitKey)
+    let splitReadyByKey = DEFAULT_READY_SPLIT_KEY;
+    const splitByInclude = actualEddMess.includes(splitKey);
+    const splitByReadyInclude =
+      splitReadyByKey && actualEddMess.includes(splitReadyByKey);
+    const idealFormat = splitByInclude || splitByReadyInclude ? true : false;
+    let splitBy = actualEddMess.split(splitKey);
 
-      if(idealFormat){
-        if(splitByReadyInclude){
-          splitBy=actualEddMess.split(splitReadyByKey)
-          splitKey=splitReadyByKey
-        }else{
-          splitBy = actualEddMess.split(splitKey)
-          splitKey=splitKey
-        }
+    if (idealFormat) {
+      if (splitByReadyInclude) {
+        splitBy = actualEddMess.split(splitReadyByKey);
+        splitKey = splitReadyByKey;
+      } else {
+        splitBy = actualEddMess.split(splitKey);
+        splitKey = splitKey;
       }
+    }
 
     return (
       <div block="AreaText" mods={{ isArabic: isArabic() ? true : false }}>
         <span
           style={{ color: !idealFormat ? colorCode : SPECIAL_COLORS["nobel"] }}
         >
-          {idealFormat
-            ? `${splitBy[0]} ${splitKey}`
-            : null}{" "}
+          {idealFormat ? `${splitBy[0]} ${splitKey}` : null}{" "}
         </span>
         <span style={{ color: colorCode }}>
           {idealFormat ? `${splitBy[1]}` : actualEddMess}

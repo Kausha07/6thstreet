@@ -20,11 +20,12 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
+  INTL_BRAND,
   DEFAULT_SPLIT_KEY,
 } from "../../util/Common/index";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isObject } from "Util/API/helper/Object";
-import { getDefaultEddDate } from "Util/Date/index";
+import { getDefaultEddMessage } from "Util/Date/index";
 import { isSignedIn } from "Util/Auth";
 import address from "./icons/address.png";
 import addressBlack from "./icons/address_black.png";
@@ -58,7 +59,7 @@ class PDPSummary extends PureComponent {
     selectedCity: null,
     showPopupField: "",
     countryCode: null,
-    Cityresponse: null,
+    cityResponse: null,
     eddEventSent: false,
     isMobile: isMobile.any() || isMobile.tablet(),
   };
@@ -98,7 +99,7 @@ class PDPSummary extends PureComponent {
     );
     this.setState(
       {
-        Cityresponse: addressCityData,
+        cityResponse: addressCityData,
         selectedCity: cityEntry,
         selectedCityId: cityEntry,
         selectedAreaId: areaEntry,
@@ -122,7 +123,7 @@ class PDPSummary extends PureComponent {
     );
     this.setState(
       {
-        Cityresponse: addressCityData,
+        cityResponse: addressCityData,
         selectedCity: cityEntry,
         selectedCityId: cityEntry,
         selectedAreaId: areaEntry,
@@ -166,7 +167,7 @@ class PDPSummary extends PureComponent {
       this.getCityAreaFromStorage(addressCityData, countryCode);
     } else {
       this.setState({
-        Cityresponse: addressCityData,
+        cityResponse: addressCityData,
         countryCode: countryCode,
       });
       setEddResponse(null, null);
@@ -189,6 +190,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { price },
       getTabbyInstallment,
+      addressCityData,
     } = this.props;
     const script = document.createElement("script");
     script.src = "https://checkout.tabby.ai/tabby-promo.js";
@@ -213,6 +215,7 @@ class PDPSummary extends PureComponent {
     const countryCode = getCountryFromUrl();
     this.setState({
       countryCode: countryCode,
+      cityResponse: addressCityData,
     });
   }
   componentDidUpdate(prevProps) {
@@ -284,7 +287,7 @@ class PDPSummary extends PureComponent {
       prevAddressCitiesData.length !== addressCityData.length
     ) {
       this.setState({
-        Cityresponse: addressCityData,
+        cityResponse: addressCityData,
       });
       this.validateEddStatus();
     }
@@ -302,7 +305,7 @@ class PDPSummary extends PureComponent {
         );
         this.setState(
           {
-            Cityresponse: addressCityData,
+            cityResponse: addressCityData,
             selectedCity: cityEntry,
             selectedCityId: cityEntry,
             selectedAreaId: areaEntry,
@@ -433,8 +436,8 @@ class PDPSummary extends PureComponent {
     );
   }
   renderSelectCityItem() {
-    const { Cityresponse, isArabic } = this.state;
-    if (!Cityresponse) {
+    const { cityResponse, isArabic } = this.state;
+    if (!cityResponse) {
       return (
         <ul>
           <span block="NoAreaFound">No City Found</span>
@@ -443,7 +446,7 @@ class PDPSummary extends PureComponent {
     }
     return (
       <ul>
-        {Object.values(Cityresponse).map((city) => {
+        {Object.values(cityResponse).map((city) => {
           return (
             <li
               id={city.city_id}
@@ -508,8 +511,13 @@ class PDPSummary extends PureComponent {
       </div>
     );
   }
-  renderSelectCity() {
-    const { edd_info } = this.props;
+  renderSelectCity(crossBorder) {
+    const {
+      edd_info,
+      product: { brand_name },
+      eddResponse,
+      intlEddResponse,
+    } = this.props;
     const {
       showCityDropdown,
       showAreaDropDown,
@@ -519,47 +527,66 @@ class PDPSummary extends PureComponent {
       isMobile,
       isArabic,
     } = this.state;
-    const {
-      defaultEddDateString,
-      defaultEddDay,
-      defaultEddMonth,
-      defaultEddDat,
-    } = getDefaultEddDate(edd_info.default_message);
-
-    const { eddResponse } = this.props;
+    const isIntlBrand =
+      ((INTL_BRAND.includes(brand_name.toLowerCase()) && crossBorder) ||
+      crossBorder) && edd_info && edd_info.has_cross_border_enabled;
+    const intlEddObj = intlEddResponse["pdp"]?.find(
+      ({ vendor }) => vendor.toLowerCase() === brand_name.toLowerCase()
+    );
+    const intlEddMess = intlEddObj
+      ? isArabic
+        ? intlEddObj["edd_message_ar"]
+        : intlEddObj["edd_message_en"]
+      : isIntlBrand
+      ? isArabic
+        ? intlEddResponse["pdp"][0]["edd_message_ar"]
+        : intlEddResponse["pdp"][0]["edd_message_en"]
+      : "";
     let actualEddMess = "";
     let actualEdd = "";
-    let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
-      : DEFAULT_MESSAGE;
     if (eddResponse) {
       if (isObject(eddResponse)) {
-        Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "pdp" && entry.featute_flag_status === 1) {
-            actualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            actualEdd = entry.edd_date;
-          }
-        });
+        if (isIntlBrand) {
+          actualEddMess = intlEddMess;
+        } else {
+          Object.values(eddResponse).filter((entry) => {
+            if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+              actualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+              actualEdd = entry.edd_date;
+            }
+          });
+        }
       } else {
-        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        actualEdd = defaultEddDateString;
+        const { defaultEddMess, defaultEdd } = getDefaultEddMessage(
+          edd_info.default_message,
+          0,
+          crossBorder
+        );
+        actualEddMess = isIntlBrand ? intlEddMess : defaultEddMess;
+        actualEdd = defaultEdd;
       }
     } else {
-      actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-      actualEdd = defaultEddDateString;
+      const { defaultEddMess, defaultEdd } = getDefaultEddMessage(
+        edd_info.default_message,
+        0,
+        crossBorder
+      );
+      actualEddMess = isIntlBrand ? intlEddMess : defaultEddMess;
+      actualEdd = defaultEdd;
     }
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
+
     if (isMobile && showCityDropdown) {
       return this.renderMobileSelectCity();
     }
     let splitKey = DEFAULT_SPLIT_KEY;
     let EddMessMargin = selectedAreaId ? true : false;
     return (
-      <div block="EddParentWrapper">
+      <div block="EddParentWrapper" elem={{ isIntlBrand }}>
         <div block="EddWrapper">
           {actualEddMess && (
             <div
@@ -581,27 +608,31 @@ class PDPSummary extends PureComponent {
               <span>{actualEddMess.split(splitKey)[1]}</span>
             </div>
           )}
-          {selectedAreaId ? (
-            <div
-              block={`EddWrapper SelectedAreaWrapper`}
-              mods={{ isArabic }}
-              onClick={() => this.handleAreaDropDownClick()}
-            >
-              <Image lazyLoad={false} src={addressBlack} alt="" />
-              <div block={`SelectAreaText `}>{selectedArea}</div>
-            </div>
-          ) : (
-            <div
-              block="EddWrapper"
-              elem="AreaButton"
-              mods={{ isArabic }}
-              onClick={() => this.handleAreaDropDownClick()}
-            >
-              <Image lazyLoad={false} src={address} alt="" />
-              <div block="SelectAreaText">
-                {isArabic ? "حدد المنطقة" : "Select Area"}
-              </div>
-            </div>
+          {!crossBorder && (
+            <>
+              {selectedAreaId ? (
+                <div
+                  block={`EddWrapper SelectedAreaWrapper`}
+                  mods={{ isArabic }}
+                  onClick={() => this.handleAreaDropDownClick()}
+                >
+                  <Image lazyLoad={false} src={addressBlack} alt="" />
+                  <div block={`SelectAreaText `}>{selectedArea}</div>
+                </div>
+              ) : (
+                <div
+                  block="EddWrapper"
+                  elem="AreaButton"
+                  mods={{ isArabic }}
+                  onClick={() => this.handleAreaDropDownClick()}
+                >
+                  <Image lazyLoad={false} src={address} alt="" />
+                  <div block="SelectAreaText">
+                    {isArabic ? "حدد المنطقة" : "Select Area"}
+                  </div>
+                </div>
+              )}
+            </>
           )}
           <div block="DropDownWrapper">
             {showCityDropdown && !isMobile && (
@@ -825,6 +856,7 @@ class PDPSummary extends PureComponent {
   renderPriceAndPDPSummaryHeader() {
     const {
       product: { price, stock_qty, additional_shipping_info },
+      edd_info
     } = this.props;
     const { stockAvailibility } = this.state;
 
@@ -836,7 +868,7 @@ class PDPSummary extends PureComponent {
       <div block="PriceContainer">
         <Price price={price} renderSpecialPrice={true} />
         {isMobile.any() && this.renderPDPSummaryHeader()}
-        {additional_shipping_info ? (
+        {!edd_info || (edd_info && !edd_info.has_cross_border_enabled) && additional_shipping_info ? (
           <span block="AdditionShippingInformation">
             {additional_shipping_info}
           </span>
@@ -976,11 +1008,11 @@ class PDPSummary extends PureComponent {
 
     return null;
   }
-  sendMoEImpressions() {
+  sendImpressions() {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
+    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -988,22 +1020,41 @@ class PDPSummary extends PureComponent {
       product_url: url ? url : "",
       app6thstreet_platform: "Web",
     });
+    const eventData = {
+      name: EVENT_TABBY_LEARN_MORE_CLICK,
+      action: EVENT_TABBY_LEARN_MORE_CLICK,
+      product_name: name,
+      product_id: sku,
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
   }
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendMoEImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
       </>
     );
   }
 
+  renderIntlTag() {
+    return (
+      <span block="AdditionShippingInformation">
+        {__("International Shipment")}
+      </span>
+    );
+  }
+
   render() {
-    const { isArabic, Cityresponse, showCityDropdown, isMobile } = this.state;
+    const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0 },
+      product: { cross_border = 0, brand_name },
       edd_info,
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
+    const isIntlBrand =
+      ((INTL_BRAND.includes(brand_name.toLowerCase()) && cross_border === 1) ||
+      cross_border === 1) && edd_info && edd_info.has_cross_border_enabled;
+
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
@@ -1014,12 +1065,13 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
-        {Cityresponse &&
+        {cityResponse &&
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          cross_border === 0 &&
-          this.renderSelectCity()}
+          (isIntlBrand || cross_border === 0) &&
+          this.renderSelectCity(cross_border === 1)}
+        {isIntlBrand && this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
