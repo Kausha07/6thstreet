@@ -42,12 +42,11 @@ function BrandCMS(props) {
   const BrandCMSData = useSelector((state) => state.BrandCms);
 
   const [isLoading, setIsLoading] = useState(true);
-
   const [storeWidgets, setStoreWidgets] = useState([]);
   const [widgets, setWidgets] = useState([]);
-
   const [showPopup, setShowPopup] = useState();
   const [signInPopUp, setSignInPopUp] = useState("");
+
   //dispatch
   const dispatch = useDispatch();
 
@@ -58,7 +57,6 @@ function BrandCMS(props) {
     setShowPopup(false);
     setSignInPopUp("");
   };
-
   const setLastTapItem = (item) => {
     setLastTapItemOnHome(item);
   };
@@ -88,10 +86,13 @@ function BrandCMS(props) {
   };
 
   const getWidgets = async () => {
+    console.log("======")
+    
     const { brandCmsData, isBrandCmsLoading } = BrandCMSData;
     if (brandCmsData.length > 0 && !isBrandCmsLoading) {
-      setStoreWidgets(widgetData);
+      setStoreWidgets(brandCmsData);
       setIsLoading(isBrandCmsLoading);
+      console.log("API not called")
     } else {
       
       try {
@@ -103,9 +104,9 @@ function BrandCMS(props) {
         });
         dispatch({ type: "SET_BRAND_CMS_DATA", data: widgetData });
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
-        
         (Array.isArray(widgetData) && widgetData?.length > 0) ? setStoreWidgets(widgetData) : setStoreWidgets([]);
         setIsLoading(false);
+        console.log("API called")
       } catch (e) {
         console.log(e);
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
@@ -113,21 +114,29 @@ function BrandCMS(props) {
         setIsLoading(false);
       }
     }
+    
   };
 
   const renderWidget = () => {    
-    const { tagName } = getTagName();
-    const widgetData = storeWidgets.filter(
-      (item) => item.tag.toLowerCase() === tagName.toLowerCase()
-    );
-    setWidgets(widgetData);
+    const { tagName = "" } = getTagName();
+    let widgetData =[];
+    if(tagName && storeWidgets){
+      widgetData =  (storeWidgets.filter(
+        (item) => item?.tag?.toLowerCase() === tagName.toLowerCase()
+      ));
+      setWidgets(widgetData);
+    }else{
+      setWidgets([]);
+    }
+
+    
   };
   
 
   const updateBreadcrumbs = () => {
     const { updateBreadcrumbs } = props;
     const { BreadcrumbsName } = getTagName();
-
+    console.log("BreadcrumbsName", BreadcrumbsName);
     const breadcrumbs = [
       {
         url: "/",
@@ -145,16 +154,19 @@ function BrandCMS(props) {
   useEffect(() => {
     getWidgets();
     renderWidget();
-    updateBreadcrumbs();
+    
   }, []);
 
   useEffect(() => {    
     renderWidget();
+    updateBreadcrumbs();
   }, [storeWidgets]);
 
+  console.log("data", widgets, storeWidgets)
   if (isLoading) {
     return <Loader isLoading={isLoading} />;
-  } else if (!isLoading && widgets.length === 0) {
+  } else if (!isLoading && !(widgets?.length > 0)) {
+    console.log("Nomatch")
     return <NoMatch />;
   }
 
