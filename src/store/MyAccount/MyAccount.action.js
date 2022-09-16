@@ -15,6 +15,7 @@ export const SET_CUSTOMER_ADDRESS_DATA = "SET_CUSTOMER_ADDRESS_DATA";
 export const SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS = "SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS";
 export const SET_ADDRESS_LOADING_STATUS = "SET_ADDRESS_LOADING_STATUS";
 export const SET_EDD_RESPONSE = "SET_EDD_RESPONSE";
+export const SET_INTL_EDD_RESPONSE = "SET_INTL_EDD_RESPONSE";
 export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS"
 export const SET_CITIES_DATA = "SET_CITIES_DATA"
 
@@ -54,6 +55,10 @@ export const setEddResponse = (eddResponse, EddAddress) => ({
   EddAddress
 });
 
+export const setIntlEddResponse = (eddResponse) => ({
+  type: SET_INTL_EDD_RESPONSE,
+  eddResponse
+});
 
 export const setDefaultEddAddress = (defaultEddResponse, PdpEddAddress) => ({
   type: SET_PDP_EDD_ADDRESS,

@@ -15,6 +15,11 @@ import {
   WEEK_ARABIC_TRANSLATION,
   MONTHS_ARABIC_TRANSLATION,
 } from "../Common/index";
+import {
+  DEFAULT_MESSAGE,
+  EDD_MESSAGE_ARABIC_TRANSLATION,
+} from "../../util/Common/index";
+
 export const formatDate = (
   template,
   dateObject,
@@ -96,4 +101,79 @@ export const getDefaultEddDate = (days) => {
       : defaultEddMonth,
     defaultEddDat,
   };
+};
+
+export const getCrossBorderDefaultEddDate = (minDays, maxDays) => {
+  Date.prototype.addDays = function (noOfDays) {
+    let tmpDate = new Date(this.valueOf());
+    tmpDate.setDate(tmpDate.getDate() + noOfDays);
+    return tmpDate;
+  };
+
+  let minDate = new Date();
+  let maxDate = new Date();
+  const defaultMinEddDate = minDate.addDays(minDays);
+  const defaultMaxEddDate = maxDate.addDays(maxDays);
+  const defaultMinEddDateString = minDate
+    .addDays(minDays)
+    .toISOString()
+    .substring(0, 10);
+  const defaultMaxEddDateString = maxDate
+    .addDays(maxDays)
+    .toISOString()
+    .substring(0, 10);
+  const defaultMinEddMonth = defaultMinEddDate.toLocaleString("en-US", {
+    month: "short",
+  });
+  const defaultMinEddDat = ("0" + defaultMinEddDate.getDate()).slice(-2);
+  const defaultMaxEddMonth = defaultMaxEddDate.toLocaleString("en-US", {
+    month: "short",
+  });
+  const defaultMaxEddDat = ("0" + defaultMaxEddDate.getDate()).slice(-2);
+  return {
+    defaultMinEddDateString,
+    defaultMaxEddDateString,
+    defaultMinEddMonth: isArabic()
+      ? MONTHS_ARABIC_TRANSLATION[defaultMinEddMonth]
+      : defaultMinEddMonth,
+    defaultMaxEddMonth: isArabic()
+      ? MONTHS_ARABIC_TRANSLATION[defaultMaxEddMonth]
+      : defaultMaxEddMonth,
+    defaultMinEddDat,
+    defaultMaxEddDat,
+  };
+};
+
+export const getDefaultEddMessage = (
+  default_day,
+  default_max_day,
+  cross_border
+) => {
+  let customDefaultMess = isArabic()
+    ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_MESSAGE]
+    : DEFAULT_MESSAGE;
+  const {
+    defaultEddDateString,
+    defaultEddDay,
+    defaultEddMonth,
+    defaultEddDat,
+  } = getDefaultEddDate(default_day);
+  const {
+    defaultMaxEddDat,
+    defaultMaxEddDateString,
+    defaultMaxEddMonth,
+    defaultMinEddDat,
+    defaultMinEddDateString,
+    defaultMinEddMonth,
+  } = getCrossBorderDefaultEddDate(default_day, default_max_day);
+  let defaultEddMess = "";
+  let defaultEdd = "";
+  if (cross_border) {
+    defaultEddMess = `${customDefaultMess} ${defaultMinEddDat} ${defaultMinEddMonth} - ${defaultMaxEddDat} ${defaultMaxEddMonth}`;
+    defaultEdd = defaultMaxEddDateString;
+  } else {
+    defaultEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+    defaultEdd = defaultEddDateString;
+  }
+  return { defaultEddMess, defaultEdd };
 };
