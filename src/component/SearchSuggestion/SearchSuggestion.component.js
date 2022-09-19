@@ -7,6 +7,7 @@ import { PureComponent } from "react";
 import { withRouter } from "react-router";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   getGenderInArabic,
   getHighlightedText,
@@ -63,6 +64,7 @@ class SearchSuggestion extends PureComponent {
   static defaultProps = {
     hideActiveOverlay: () => {},
   };
+  ref = React.createRef();
 
   state = {
     isArabic: isArabic(),
@@ -753,9 +755,11 @@ class SearchSuggestion extends PureComponent {
     return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+        <DragScroll data={{ rootClass: "TrandingBrands", ref: this.ref }}>
+        <ul id="TrandingBrands" block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }} ref={this.ref}>
           {trendingBrands.map(this.renderTrendingBrand)}
         </ul>
+        </DragScroll>
       </div>
     ) : null;
   }
