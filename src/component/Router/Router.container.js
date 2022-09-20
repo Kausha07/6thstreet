@@ -168,7 +168,7 @@ export class RouterContainer extends SourceRouterContainer {
        
     
     const countrycache = getCountryFromUrl().toUpperCase()
-    if(this.props.currentGender === "all" && getCountryFromUrl() !== "BH" ){
+    if(this.props.currentGender === "all" && countrycache !== "BH" ){
         const appStateCache = JSON.parse(localStorage.getItem(APP_STATE_CACHE_KEY));
         appStateCache.data["gender"]= "women"
         localStorage.setItem(APP_STATE_CACHE_KEY,  JSON.stringify(appStateCache));
