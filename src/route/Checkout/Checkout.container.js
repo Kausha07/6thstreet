@@ -364,14 +364,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
           }
         }
-        localStorage.removeItem("QPAY_ORDER_DETAILS");
+        localStorage.removeItem("KNET_ORDER_DETAILS");
         return;
       } else if (now.getTime() >= KNET_CHECK?.expiry) {
-        localStorage.removeItem("QPAY_ORDER_DETAILS");
+        localStorage.removeItem("KNET_ORDER_DETAILS");
       }
     } catch (error) {
-      localStorage.removeItem("QPAY_ORDER_DETAILS");
-      console.error("error while auth in qpay case", error);
+      localStorage.removeItem("KNET_ORDER_DETAILS");
+      console.error("error while auth in Knet case", error);
     }
   };
 
