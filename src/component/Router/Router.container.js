@@ -28,9 +28,8 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
-
+import { getCountryFromUrl} from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import BrowserDatabase from "Util/BrowserDatabase";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -43,6 +42,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
+  currentGender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -165,32 +165,14 @@ export class RouterContainer extends SourceRouterContainer {
     if (!algoliaIndex) {
       requestAlgoliaIndex();
     }
-
-    const APP_VERSION_SIX = process.env.REACT_APP_CURRENT_GIT_SHA;
-    if (typeof localStorage.APP_VERSION_SIX === "undefined" || localStorage.APP_VERSION_SIX === null) {
-      localStorage.setItem("APP_VERSION_SIX", APP_VERSION_SIX);
+       
+    
+    const countrycache = getCountryFromUrl().toUpperCase()
+    if(this.props.currentGender === "all" && getCountryFromUrl() !== "BH" ){
+        const appStateCache = JSON.parse(localStorage.getItem(APP_STATE_CACHE_KEY));
+        appStateCache.data["gender"]= "women"
+        localStorage.setItem(APP_STATE_CACHE_KEY,  JSON.stringify(appStateCache));
     }
-
-    if (localStorage.APP_VERSION_SIX !== APP_VERSION_SIX) {
-      const appStateCache = JSON.parse(localStorage.getItem(APP_STATE_CACHE_KEY));
-      //const appStateCacheData = {...appStateCache, data: { ...appStateCache.data, gender: "kids" } };
-      if(appStateCache.data.country !== "BH" && appStateCache.data.gender==="all"){
-        appStateCache.data["gender"]= "men"
-      }
-      
-      //const ONE_YEAR_IN_SECONDS = 31536000; 
-      //BrowserDatabase.setItem(appStateCache, APP_STATE_CACHE_KEY, ONE_YEAR_IN_SECONDS);
-      
-      //localStorage.removeItem(APP_STATE_CACHE_KEY)
-      localStorage.setItem(APP_STATE_CACHE_KEY,  JSON.stringify(appStateCache));
-      localStorage.setItem("APP_VERSION_SIX", APP_VERSION_SIX);
-      
-      //localStorage.clear();
-    }
-
-
-
-
   }
 
   componentDidUpdate() {
