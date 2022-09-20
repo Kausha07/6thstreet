@@ -429,6 +429,12 @@
             overflow-y: hidden;
             overflow-x: hidden;
             width: 100%;
+            &_showClubOverflow{
+                margin-bottom: 261px !important;
+            }
+            &_showOverflow{
+                margin-bottom: 124px !important;
+            }
             &:first-child {
                 padding: 0 16px;
                 // padding-bottom: 280px; // disabling it for PWA-2642 
