@@ -74,25 +74,15 @@ function BrandCMS(props) {
           .split(/(?:_|-)+/)
           .join(" ");
 
-    // const tagName = pathname
-    //   .replace(".html", "")
-    //   .replace("/", "")
-    //   .replaceAll("/", "_");
-    // if (location.search && location.search.startsWith("?tag")) {
-    //   const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-    //   params = parsedParams;
-    // }
     return params;
   };
 
   const getWidgets = async () => {
-    console.log("======")
-    
     const { brandCmsData, isBrandCmsLoading } = BrandCMSData;
+
     if (brandCmsData.length > 0 && !isBrandCmsLoading) {
       setStoreWidgets(brandCmsData);
       setIsLoading(isBrandCmsLoading);
-      console.log("API not called")
     } else {
       
       try {
@@ -106,7 +96,6 @@ function BrandCMS(props) {
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
         (Array.isArray(widgetData) && widgetData?.length > 0) ? setStoreWidgets(widgetData) : setStoreWidgets([]);
         setIsLoading(false);
-        console.log("API called")
       } catch (e) {
         console.log(e);
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
@@ -136,7 +125,6 @@ function BrandCMS(props) {
   const updateBreadcrumbs = () => {
     const { updateBreadcrumbs } = props;
     const { BreadcrumbsName } = getTagName();
-    console.log("BreadcrumbsName", BreadcrumbsName);
     const breadcrumbs = [
       {
         url: "/",
@@ -162,11 +150,9 @@ function BrandCMS(props) {
     updateBreadcrumbs();
   }, [storeWidgets]);
 
-  console.log("data", widgets, storeWidgets)
   if (isLoading) {
     return <Loader isLoading={isLoading} />;
   } else if (!isLoading && !(widgets?.length > 0)) {
-    console.log("Nomatch")
     return <NoMatch />;
   }
 
@@ -180,11 +166,6 @@ function BrandCMS(props) {
             isPopup
           />
         )}
-        {/* {shouldRenderBanner() && (
-            <div>
-              <CircleItemSliderSubPage bannerData={bannerData} />
-            </div>
-          )} */}
         
         {!isLoading && widgets?.length > 0 && (
           <DynamicContent
