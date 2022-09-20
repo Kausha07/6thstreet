@@ -49,7 +49,6 @@ export class MenuContainer extends PureComponent {
         const { menuGender } = this.state;
         if (newMenuGender !== menuGender && newMenuGender !== '') {
             this.changeMenuGender();
-            this.requestCategories(true, newMenuGender);
         }
 
         if (gender !== prevGender || locale !== prevLocale) {
