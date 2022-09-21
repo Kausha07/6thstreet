@@ -51,7 +51,8 @@
       }
     }
     @media (max-width: 760px) {
-      display: block;
+      display: flex;
+      align-items: center;
       text-align: center;
       h1 {
         height: 40px;
