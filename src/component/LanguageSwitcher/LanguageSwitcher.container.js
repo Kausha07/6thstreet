@@ -47,6 +47,13 @@ export class LanguageSwitcherContainer extends PureComponent {
                         location.href).split("/my-account")[0];
                 }, 1000);
                 
+            }else if(location.pathname.match(/viewall/)){
+                setTimeout(() => { // Delay is for Moengage call to complete
+                    window.location.href = location.href.replace(
+                        language.toLowerCase(),
+                        value,
+                        location.href).split("/viewall")[0];
+                }, 1000);
             } else {                
                 setTimeout(() => { // Delay is for Moengage call to complete
                     window.location.href = location.href.replace(
