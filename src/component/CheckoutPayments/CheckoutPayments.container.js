@@ -53,7 +53,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
   };
 
   componentDidMount() {
-    const { createTabbySession } = this.props;
+    const { createTabbySession, paymentMethods } = this.props;
     const {
       billingAddress,
       setTabbyWebUrl,
@@ -67,10 +67,21 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
 
     let paymentMethod = CARD;
+
+    let isKnetAvailable = false;
+    if(paymentMethods){
+      paymentMethods.map(( paymeth) => {
+        const {code} = paymeth;
+        if(code === "checkout_knet"){
+          isKnetAvailable = true;
+        }
+      })
+    }
+
     if(total) {
       if(countryCode && !isApplePayAvailable){
         paymentMethod = CHECKOUT_APPLE_PAY;
-      }else if (KnetEnabledCountryCode) {
+      }else if (KnetEnabledCountryCode && isKnetAvailable) {
         paymentMethod = KNET_PAY;
       }else if (QpayEnabledCountryCode) {
         paymentMethod = CHECKOUT_QPAY;
