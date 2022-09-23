@@ -54,7 +54,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
-    logout: () =>
+  logout: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.logout(null, dispatch)
     ),
@@ -87,7 +87,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { prevPath = null, requestCustomerData,logout } = this.props;
+    const { prevPath = null, requestCustomerData, logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -107,8 +107,7 @@ export class HomePageContainer extends PureComponent {
     if (
       decodedParams.match("mobileToken") &&
       decodedParams.match("authToken")
-    ){
-
+    ) {
       const params = decodedParams.split("&").reduce((acc, param) => {
         acc[param.substr(0, param.indexOf("="))] = param.substr(
           param.indexOf("=") + 1
@@ -126,7 +125,9 @@ export class HomePageContainer extends PureComponent {
         ) {
           requestCustomerData();
         } else {
-          logout()
+          // logout();
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
         }
       } else {
         setMobileAuthorizationToken(mobileToken);
@@ -136,8 +137,10 @@ export class HomePageContainer extends PureComponent {
           window.location.reload();
         });
       }
-    }else {
-      logout()
+    } else {
+      deleteAuthorizationToken();
+      deleteMobileAuthorizationToken();
+      BrowserDatabase.deleteItem("customer");
     }
 
     const { gender, toggleBreadcrumbs } = this.props;

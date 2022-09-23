@@ -14,6 +14,8 @@ import {
 } from "Store/MyAccount/MyAccount.action";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import {
+  deleteAuthorizationToken,
+  deleteMobileAuthorizationToken,
   getAuthorizationToken,
   getMobileAuthorizationToken,
   getUUID,
@@ -26,6 +28,7 @@ import {
 } from "Util/Auth";
 import { getCookie } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -126,7 +129,10 @@ export class RouterContainer extends SourceRouterContainer {
         ) {
           requestCustomerData();
         } else {
-          logout();
+          console.log("inner else called")
+          // logout();
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
         }
         
       } else {
@@ -149,8 +155,11 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      logout();
+      console.log("main else called");
+      deleteAuthorizationToken();
+      deleteMobileAuthorizationToken();
     }
+
     if (addressCityData.length === 0) {
       getCitiesData();
     }
