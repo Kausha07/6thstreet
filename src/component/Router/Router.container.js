@@ -14,8 +14,6 @@ import {
 } from "Store/MyAccount/MyAccount.action";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import {
-  deleteAuthorizationToken,
-  deleteMobileAuthorizationToken,
   getAuthorizationToken,
   getMobileAuthorizationToken,
   getUUID,
@@ -64,6 +62,10 @@ export const mapDispatchToProps = (dispatch) => ({
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
   requestAlgoliaIndex: () =>
     SearchSuggestionDispatcher.requestAlgoliaIndex(dispatch),
+  logout: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.logout(null, dispatch)
+    ),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -94,6 +96,7 @@ export class RouterContainer extends SourceRouterContainer {
       getCitiesData,
       requestAlgoliaIndex,
       algoliaIndex,
+      logout,
     } = this.props;
     const decodedParams = atob(decodeURIComponent(getCookie("authData")));
     if (!getUUIDToken()) {
@@ -123,9 +126,9 @@ export class RouterContainer extends SourceRouterContainer {
         ) {
           requestCustomerData();
         } else {
-          deleteAuthorizationToken();
-          deleteMobileAuthorizationToken();
+          logout();
         }
+        
       } else {
         setMobileAuthorizationToken(mobileToken);
         setAuthorizationToken(authToken);
@@ -146,8 +149,7 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
+      logout();
     }
     if (addressCityData.length === 0) {
       getCitiesData();

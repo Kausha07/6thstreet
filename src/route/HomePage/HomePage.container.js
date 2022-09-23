@@ -54,6 +54,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+    logout: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.logout(null, dispatch)
+    ),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -83,7 +87,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { prevPath = null, requestCustomerData } = this.props;
+    const { prevPath = null, requestCustomerData,logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -122,8 +126,7 @@ export class HomePageContainer extends PureComponent {
         ) {
           requestCustomerData();
         } else {
-          deleteAuthorizationToken();
-          deleteMobileAuthorizationToken();
+          logout()
         }
       } else {
         setMobileAuthorizationToken(mobileToken);
@@ -134,9 +137,7 @@ export class HomePageContainer extends PureComponent {
         });
       }
     }else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
-      BrowserDatabase.deleteItem("customer");
+      logout()
     }
 
     const { gender, toggleBreadcrumbs } = this.props;
