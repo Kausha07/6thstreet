@@ -19,6 +19,7 @@ import {
   FREE,
   TABBY_ISTALLMENTS,
   TABBY_PAYMENT_CODES,
+  KNET_PAY,
 } from "./CheckoutPayments.config";
 import "./CheckoutPayments.extended.style";
 import Applepay from "./icons/apple-pay@3x.png";
@@ -47,6 +48,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this),
     [FREE]: this.renderFree.bind(this),
     [CHECKOUT_QPAY]: this.renderQPay.bind(this),
+    [KNET_PAY]: this.renderKnetPay.bind(this),
   };
 
   state = {
@@ -196,6 +198,24 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         </>
       );
     }
+  }
+
+  renderKnetPay() {
+
+    const {
+      options: { method_description, method_title },
+    } = this.getSelectedMethodData();
+
+    return (
+      <div block="CheckoutPayments" elem="SelectedInfo">
+        <h2 block="CheckoutPayments" elem="MethodTitle">
+          {method_title}
+        </h2>
+        <p block="CheckoutPayments" elem="MethodDiscription">
+          {method_description}
+        </p>
+      </div>
+    );
   }
 
   renderCashOnDelivery() {
