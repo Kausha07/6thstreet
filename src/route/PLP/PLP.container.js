@@ -811,6 +811,7 @@ export class PLPContainer extends PureComponent {
       options,
       menuCategories,
     } = this.props;
+    const {isArabic} = this.state
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level4"]
@@ -830,7 +831,7 @@ export class PLPContainer extends PureComponent {
           levelArray.map(() => urlArray.push("/"));
         }
         const breadcrumbsMapped =
-          getBreadcrumbs(levelArray, setGender, urlArray) || [];
+          getBreadcrumbs(levelArray, setGender, urlArray, isArabic) || [];
         const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
           acc.unshift(item);
 
