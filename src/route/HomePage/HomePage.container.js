@@ -125,9 +125,9 @@ export class HomePageContainer extends PureComponent {
         ) {
           requestCustomerData();
         } else {
-          // logout();
-          deleteAuthorizationToken();
-          deleteMobileAuthorizationToken();
+          logout();
+          // deleteAuthorizationToken();
+          // deleteMobileAuthorizationToken();
         }
       } else {
         setMobileAuthorizationToken(mobileToken);
@@ -138,9 +138,13 @@ export class HomePageContainer extends PureComponent {
         });
       }
     } else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
-      BrowserDatabase.deleteItem("customer");
+      const cartID = BrowserDatabase.getItem("CART_ID_CACHE_KEY");
+      if (cartID === parseInt(cartID, 10)) {
+        logout();
+      }
+      // deleteAuthorizationToken();
+      // deleteMobileAuthorizationToken();
+      // BrowserDatabase.deleteItem("customer");
     }
 
     const { gender, toggleBreadcrumbs } = this.props;

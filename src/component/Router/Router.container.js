@@ -129,9 +129,9 @@ export class RouterContainer extends SourceRouterContainer {
         ) {
           requestCustomerData();
         } else {
-          // logout();
-          deleteAuthorizationToken();
-          deleteMobileAuthorizationToken();
+          logout();
+          // deleteAuthorizationToken();
+          // deleteMobileAuthorizationToken();
         }
         
       } else {
@@ -154,8 +154,10 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
+      const cartID = BrowserDatabase.getItem("CART_ID_CACHE_KEY");
+      if(cartID === parseInt(cartID, 10)) {
+        logout();
+      }
     }
 
     if (addressCityData.length === 0) {
