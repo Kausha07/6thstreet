@@ -385,6 +385,14 @@ class PLPFilters extends PureComponent {
     );
   };
 
+  updateQuickFilters = () => {
+    const { activeFilters = {} } = this.state;
+    const { query } = this.props;
+    Object.keys(activeFilters).map((key) =>
+      WebUrlParser.setQuickFilterParam(key, activeFilters[key], query)
+    );
+  }
+
   renderSeeResultButton() {
     const { productsCount } = this.props;
     const { isArabic } = this.state;
@@ -729,8 +737,8 @@ class PLPFilters extends PureComponent {
           <PLPQuickFilter
             key={key}
             filter={filter}
-            updateFilters={this.updateFilters}
-            onClick={this.updateFilters}
+            updateFilters={this.updateQuickFilters}
+            onClick={this.updateQuickFilters}
             parentCallback={handleCallback}
           />
         );
@@ -740,8 +748,8 @@ class PLPFilters extends PureComponent {
         <PLPQuickFilter
           key={key}
           filter={filter}
-          updateFilters={this.updateFilters}
-          onClick={this.updateFilters}
+          updateFilters={this.updateQuickFilters}
+          onClick={this.updateQuickFilters}
           parentCallback={handleCallback}
         />
       );

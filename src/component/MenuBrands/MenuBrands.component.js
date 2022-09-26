@@ -55,7 +55,6 @@ class MenuBrands extends PureComponent {
         .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
         .replace("/kids.html", ".html")
         .replace("/home.html", ".html")
-        .replace("/all.html", ".html")
       : link;
 
     return (

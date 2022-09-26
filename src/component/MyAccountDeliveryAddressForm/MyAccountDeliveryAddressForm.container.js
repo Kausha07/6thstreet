@@ -19,13 +19,10 @@ export const mapStateToProps = (state) => ({
   countries: state.ConfigReducer.countries,
   default_country: state.ConfigReducer.default_country,
   isLoading: state.MyAccountReducer.isAddressLoading,
-});
-
-export const mapDispatchToProps = (dispatch) => ({
-  getCities: (locale) => AppConfigDispatcher.getCities(dispatch, locale),
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(MyAccountDeliveryAddressForm);

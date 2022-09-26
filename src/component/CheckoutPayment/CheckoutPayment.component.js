@@ -82,6 +82,15 @@ export class CheckoutPayment extends PureComponent {
       const { name, mod, paragraph, img } = PAYMENTS_DATA[m_code];
 
       const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
+      
+      if(m_code === "checkout_qpay"){
+        return (
+          <div block="CheckoutPayment" elem="MethodQPay">
+            <p>QPay</p>
+          </div>
+        );
+      }
+
       return (
         <div block="CheckoutPayment" elem="Method" mods={mod}>
           {/* {isTabby ? (
@@ -91,6 +100,14 @@ export class CheckoutPayment extends PureComponent {
           )} */}
           <img src={img} alt={name} />
           {paragraph ? <p>{paragraph}</p> : null}
+        </div>
+      );
+    }
+
+    if(m_code === "checkout_knet"){
+      return (
+        <div block="CheckoutPayment" elem="Method">
+          <p>KNET</p>
         </div>
       );
     }
