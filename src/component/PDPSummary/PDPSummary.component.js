@@ -1025,7 +1025,7 @@ class PDPSummary extends PureComponent {
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendMoEImpressions()}></div>
       </>
     );
   }
