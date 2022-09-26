@@ -273,14 +273,14 @@ export class PDPContainer extends PureComponent {
   }
 
   getPdpWidgetsVueData() {
-    const { gender="", pdpWidgetsData=[], product: sourceProduct={} } = this.props;
+    const { gender="", pdpWidgetsData=[], product: {sku = ""} = {} } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
       const userID = customer && customer.id ? customer.id : null;
       const query = {
         filters: [],
-        num_results: 10,
+        num_results: 50,
         mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
       };
 
@@ -289,7 +289,7 @@ export class PDPContainer extends PureComponent {
         const { type } = element;
         const defaultQueryPayload ={
           userID,
-          sourceProduct,
+          product_id: sku,
         };
         if(type !== "vue_visually_similar_slider") {
           defaultQueryPayload.gender= gender;

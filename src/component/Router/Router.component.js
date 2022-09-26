@@ -19,6 +19,7 @@ import {
   CUSTOMER_ACCOUNT,
   HOME_PAGE,
   SEARCH,
+  VIEWALL,
   FEEDBACK,
   URL_REWRITES,
   LIVE_PARTY,
@@ -30,6 +31,7 @@ import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
+import VuePLP from "Route/VuePLP/VuePLP.component";
 import LiveExperience from "Route/LiveExperience";
 import About from "Route/About";
 import WelcomeHomePage from "Component/WelcomeHomePage";
@@ -255,6 +257,19 @@ export class Router extends SourceRouter {
           render={(props) => (
             <GTMRouteWrapper route={SEARCH}>
               <SearchPage {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 90,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("/viewall")}
+          render={(props) => (
+            <GTMRouteWrapper route={VIEWALL}>
+              <VuePLP {...props} />
             </GTMRouteWrapper>
           )}
         />

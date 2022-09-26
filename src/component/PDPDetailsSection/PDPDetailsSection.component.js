@@ -8,14 +8,10 @@ import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
-import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { isArabic } from "Util/App";
-import { getUUIDToken } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
@@ -660,8 +656,10 @@ class PDPDetailsSection extends PureComponent {
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
       pdpWidgetsAPIData = [],
+      product
     } = this.props;
     const { innerWidth: width } = window;
+    document.body.style.overflowX = 'hidden';
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
@@ -691,6 +689,8 @@ class PDPDetailsSection extends PureComponent {
                           key={`DynamicContentVueProductSliderContainer${index}`}
                           index={index}
                           isArabic={isArabic()}
+                          withViewAll={true}
+                          product={product}
                         />
                       </div>
                     </>
