@@ -1132,5 +1132,22 @@
     "at": null,
     "Exchange Rejected": null,
     "Exchange Store Credit": null,
-    "Cash on Receiving is not available for the order above": null
+    "Cash on Receiving is not available for the order above": null,
+    "Return/Exchange Statement": null,
+    "Sizes": null,
+    "Sort by": null,
+    "Price": null,
+    "Size UK": null,
+    "Size EU": null,
+    "Size US": null,
+    "What %s are you looking for ?": null,
+    "You have already linked with entered mobile number: ": null,
+    "Link your Club Apparel account and start earning points.": null,
+    "OTP verification failed": null,
+    "Enter the verification code we sent to +": null,
+    "SUCCESS": null,
+    "FAILED": null,
+    "KNET Payment Id": null,
+    "KNET Transaction Id": null,
+    "KNET": null
 }
