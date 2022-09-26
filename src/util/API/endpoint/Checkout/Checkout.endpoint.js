@@ -49,6 +49,9 @@ export const getPaymentAuthorization = ({ paymentId }) =>
 export const getPaymentAuthorizationQPay = ({ paymentId }) =>
   MobileAPI.get(`/checkout/payments/${paymentId}?pmethod=checkout_qpay`) || {};
 
+export const getPaymentAuthorizationKNET = ({ paymentId }) => 
+MobileAPI.get(`/checkout/payments/${paymentId}?pmethod=checkout_knet`) || {};
+
 export const capturePayment = ({ paymentId, orderId }) =>
   MobileAPI.post(`/checkout/payments/${paymentId}/captures`, {
     order_id: orderId,

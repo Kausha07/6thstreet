@@ -90,6 +90,7 @@ class MyAccountClubApparel extends PureComponent {
       clubApparel: {
         caPointsValue,
         currency,
+        profileComplete,
         memberDetails: { memberTier, mobileNumber = "" },
       },
     } = this.props;
@@ -120,11 +121,13 @@ class MyAccountClubApparel extends PureComponent {
             />
           </div>
         </div>
-        <p block="MyAccountClubApparel" elem="Redemption">
-          {__("Please complete your profile on ")}
-          <span>{__("Club Apparel App")}</span>
-          {__(" to UNLOCK redemption.")}
-        </p>
+        {!profileComplete && 
+          <p block="MyAccountClubApparel" elem="Redemption">
+            {__("Please complete your profile on ")}
+            <span>{__("Club Apparel App")}</span>
+            {__(" to UNLOCK redemption.")}
+          </p>
+        }
         <p
           block="MyAccountClubApparel"
           elem="Number"
@@ -325,7 +328,11 @@ class MyAccountClubApparel extends PureComponent {
       linkAccount,
       country,
       verifyOtp,
-      clubApparel: { accountLinked },
+      clubApparel,
+      clubApparel: { 
+          accountLinked,
+          //memberDetails: { mobileNumber = "" },
+        },
     } = this.props;
     const { isAboutExpanded, isEarnExpanded, isArabic, isPopupOpen } =
       this.state;
@@ -333,7 +340,11 @@ class MyAccountClubApparel extends PureComponent {
     const isMobileLogo = isMobile.any() !== null;
     const isArabicAbout = isArabic && isAboutExpanded;
     const isArabicEarn = isArabic && isEarnExpanded;
-
+    
+    const mobileNumber = clubApparel?.memberDetails?.mobileNumber ? clubApparel?.memberDetails?.mobileNumber :"";
+    const number = mobileNumber.startsWith("00")
+      ? `+${mobileNumber.slice(2).replace(/^(.{3})(.*)$/, "$1$2")}`
+      : mobileNumber.replace(/^(.{3})(.*)$/, "$1$2");
     return (
       <div block="MyAccountClubApparel">
         <div block="MyAccountClubApparel" elem="Wrapper" />
@@ -381,6 +392,7 @@ class MyAccountClubApparel extends PureComponent {
             renderEarn={this.renderEarn}
             isAboutExpanded={isAboutExpanded}
             isEarnExpanded={isEarnExpanded}
+            linkedNumber= {number}
           />
         ) : null}
       </div>

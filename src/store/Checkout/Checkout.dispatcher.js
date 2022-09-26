@@ -22,6 +22,7 @@ import {
   getBinPromotion,
   removeBinPromotion,
   getPaymentAuthorizationQPay,
+  getPaymentAuthorizationKNET,
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,
@@ -212,10 +213,14 @@ export class CheckoutDispatcher {
     return getLastOrder();
   }
 
-  async getPaymentAuthorization(dispatch, paymentId, qpaymethod) {
+  async getPaymentAuthorization(dispatch, paymentId, qpaymethod, KNETpay) {
     if (qpaymethod) {
       return getPaymentAuthorizationQPay({ paymentId });
     }
+    if(KNETpay) {
+      return getPaymentAuthorizationKNET({ paymentId });
+    }
+    
     return getPaymentAuthorization({ paymentId });
   }
 

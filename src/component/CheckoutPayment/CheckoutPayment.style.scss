@@ -52,6 +52,19 @@
         //     }
         // }
     }
+    &-MethodQPay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-transform: none;
+        p {
+            margin-top: 5px;
+            font-size: 16px;
+            line-height: 14px;
+            color: var(--checkout-payment-standart);
+        }
+    }
     &-Button {
         display: flex;
         justify-content: center;
