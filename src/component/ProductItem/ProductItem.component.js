@@ -368,7 +368,12 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const { product } = this.props;
+    const { 
+      product,
+      pageType,
+      removeFromWishlist,
+      wishlist_item_id,
+    } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
       : Object.values(product.price);
@@ -377,7 +382,13 @@ class ProductItem extends PureComponent {
     }
     return (
       <div block="ProductItem" elem="AddToCart">
-        <PLPAddToCart product={this.props.product} url={urlWithQueryID} />
+        <PLPAddToCart 
+          product={this.props.product}
+          url={urlWithQueryID}
+          pageType={pageType}
+          removeFromWishlist={removeFromWishlist}
+          wishlist_item_id={wishlist_item_id}
+        />
       </div>
     );
   }
