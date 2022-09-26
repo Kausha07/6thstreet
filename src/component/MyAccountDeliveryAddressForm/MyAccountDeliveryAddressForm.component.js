@@ -132,7 +132,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
           placeholder: __("City area"),
           ...clearValue,
           onChange: this.copyValue,
-          disabled: true
+          disabled: true,
         },
       };
     }
@@ -155,16 +155,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   async getCitiesData() {
-    const { cities = [] } = this.state;
-    const { getCities } = this.props;
-
-    if (cities.length === 0) {
-      getCities().then((response) => {
-        if (response && response.data) {
-          this.setState({ cities: response.data });
-        }
-      });
-    }
+    const { addressCityData } = this.props;
+    this.setState({ cities: addressCityData });
   }
 
   setArea = (cityFromProps) => {
@@ -415,7 +407,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       <button
         type="submit"
         block="MyAccountBtn"
-        mods={{isLoading}}
+        mods={{ isLoading }}
         disabled={disabled}
         mix={{ block: "button primary" }}
       >

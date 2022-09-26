@@ -869,5 +869,22 @@
     "Select a Size": null,
     "Select a Color": null,
     "Error appeared while requesting a exchange": null,
-    "Return/Exchange an item": null
+    "Return/Exchange an item": null,
+    "Return/Exchange Statement": null,
+    "Sizes": null,
+    "Sort by": null,
+    "Price": null,
+    "Size UK": null,
+    "Size EU": null,
+    "Size US": null,
+    "What %s are you looking for ?": null,
+    "You have already linked with entered mobile number: ": null,
+    "Link your Club Apparel account and start earning points.": null,
+    "OTP verification failed": null,
+    "Enter the verification code we sent to +": null,
+    "SUCCESS": null,
+    "FAILED": null,
+    "KNET Payment Id": null,
+    "KNET Transaction Id": null,
+    "KNET": null
 }

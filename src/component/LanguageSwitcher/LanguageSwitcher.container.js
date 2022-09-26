@@ -1,93 +1,128 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
-import { Config } from 'Util/API/endpoint/Config/Config.type';
-import { setCountry, setLanguageForWelcome} from 'Store/AppState/AppState.action'
-import LanguageSwitcher from './LanguageSwitcher.component';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { getCountryLocaleForSelect } from "Util/API/endpoint/Config/Config.format";
+import { Config } from "Util/API/endpoint/Config/Config.type";
+import {
+  setCountry,
+  setLanguageForWelcome,
+} from "Store/AppState/AppState.action";
+import LanguageSwitcher from "./LanguageSwitcher.component";
 import { EVENT_MOE_SET_LANGUAGE } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
+import Loader from "Component/Loader";
 
 export const mapStateToProps = (state) => ({
-    config: state.AppConfig.config,
-    language: state.AppState.language,
-    country: state.AppState.country
+  config: state.AppConfig.config,
+  language: state.AppState.language,
+  country: state.AppState.country,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    setCountry: (value) => dispatch(setCountry(value)),
-    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),});
+  setCountry: (value) => dispatch(setCountry(value)),
+  setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value)),
+});
 
 export class LanguageSwitcherContainer extends PureComponent {
-    static propTypes = {
-        config: Config.isRequired,
-        language: PropTypes.string.isRequired,
-        country: PropTypes.string.isRequired
-    };
+  static propTypes = {
+    config: Config.isRequired,
+    language: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+  };
 
-    containerFunctions = {
-        onLanguageSelect: this.onLanguageSelect.bind(this)
-    };
+  containerFunctions = {
+    onLanguageSelect: this.onLanguageSelect.bind(this),
+  };
+  state = {
+    isLoad: false,
+  };
 
-    onLanguageSelect(value) {
-        const { language = '',history } = this.props;
-        Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
-            country: getCountryFromUrl().toUpperCase(),
-            language: value.toUpperCase() || "",
-            app6thstreet_platform: "Web",
-          });
-
-        if(window.location.href.includes('en-') || window.location.href.includes('ar-')){
-            if(location.pathname.match(/my-account/)) {
-                setTimeout(() => { // Delay is for Moengage call to complete
-                    window.location.href = location.href.replace(
-                        language.toLowerCase(),
-                        value,
-                        location.href).split("/my-account")[0];
-                }, 1000);
-                
-            } else {                
-                setTimeout(() => { // Delay is for Moengage call to complete
-                    window.location.href = location.href.replace(
-                        language.toLowerCase(),
-                        value,
-                        location.href
-                    );
-                }, 1000);
-            }
-        }
-        else{
-            this.props.setLanguageForWelcome(value)
-        }
-        
+  onLanguageSelect(value) {
+    const { language = "", history } = this.props;
+    this.setState({ isLoad: true });
+    Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: value.toUpperCase() || "",
+      app6thstreet_platform: "Web",
+    });
+    const pageUrl = new URL(window.location.href);
+    if (
+      window.location.href.includes("en-") ||
+      window.location.href.includes("ar-")
+    ) {
+      if (location.pathname.match(/my-account/)) {
+        setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = location.href
+            .replace(language.toLowerCase(), value, location.href)
+            .split("/my-account")[0];
+        }, 1000);
+      } else if (pageUrl.pathname == "/catalogsearch/result/") {
+        const pagePath = pageUrl.origin;
+        setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else if (
+        pageUrl.search &&
+        pageUrl.search.length > 0 &&
+        pageUrl.pathname !== "/catalogsearch/result/"
+      ) {
+        const pagePath = pageUrl.origin + pageUrl.pathname;
+        setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = location.href.replace(
+            language.toLowerCase(),
+            value,
+            location.href
+          );
+        }, 1000);
+      }
+    } else {
+      this.props.setLanguageForWelcome(value);
     }
+  }
 
-    containerProps = () => {
-        const {
-            language,
-            config,
-            country,
-            welcomePagePopup,
-            isWelcomeMobileView
-        } = this.props;
+  containerProps = () => {
+    const { language, config, country, welcomePagePopup, isWelcomeMobileView } =
+      this.props;
 
-        return {
-            languageSelectOptions: getCountryLocaleForSelect(config, country),
-            language,
-            welcomePagePopup,
-            isWelcomeMobileView
-        };
+    return {
+      languageSelectOptions: getCountryLocaleForSelect(config, country),
+      language,
+      welcomePagePopup,
+      isWelcomeMobileView,
     };
+  };
 
-    render() {
-        return (
-            <LanguageSwitcher
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-            />
-        );
-    }
+  render() {
+    const { isLoad } = this.state;
+    return (
+      <>
+        <LanguageSwitcher
+          {...this.containerFunctions}
+          {...this.containerProps()}
+        />
+        <Loader isLoading={isLoad} />
+      </>
+    );
+  }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer)
+);
