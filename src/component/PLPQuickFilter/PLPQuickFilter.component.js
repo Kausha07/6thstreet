@@ -1,38 +1,38 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import QuickCategoriesOptions from 'Component/QuickCategoriesOptions';
-import { Filter } from 'Util/API/endpoint/Product/Product.type';
+import QuickCategoriesOptions from "Component/QuickCategoriesOptions";
+import { Filter } from "Util/API/endpoint/Product/Product.type";
 
-import './PLPQuickFilter.style';
+import "./PLPQuickFilter.style";
 
 class PLPQuickFilter extends PureComponent {
-    static propTypes = {
-        filter: Filter.isRequired,
-        updateFilters: PropTypes.func.isRequired,
-        handleCallback: PropTypes.func.isRequired
-    };
+  static propTypes = {
+    filter: Filter.isRequired,
+    updateFilters: PropTypes.func.isRequired,
+    handleCallback: PropTypes.func.isRequired,
+  };
 
-    render() {
-        const {
-            filter: {
-                label
-            },
-            filter,
-            updateFilters,
-            handleCallback
-        } = this.props;
+  render() {
+    const {
+      filter: { label },
+      filter,
+      updateFilters,
+      handleCallback,
+      selectedSizeCode,
+    } = this.props;
 
-        return (
-            <QuickCategoriesOptions
-              placeholder={ label }
-              showCheckbox
-              filter={ filter }
-              updateFilters={ updateFilters }
-              parentCallback={ handleCallback }
-            />
-        );
-    }
+    return (
+      <QuickCategoriesOptions
+        placeholder={label}
+        showCheckbox
+        selectedSizeCode={selectedSizeCode}
+        filter={filter}
+        updateFilters={updateFilters}
+        parentCallback={handleCallback}
+      />
+    );
+  }
 }
 
 export default PLPQuickFilter;

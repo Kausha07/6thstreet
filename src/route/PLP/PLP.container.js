@@ -43,7 +43,7 @@ import {
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-
+import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -253,7 +253,7 @@ export class PLPContainer extends PureComponent {
     let prevLocation;
     let finalPrevLocation;
     browserHistory.listen((nextLocation) => {
-      let locationArr = ["/men.html", "/women.html", "kids.html", "/home.html"];
+      let locationArr = ["/men.html", "/women.html", "/kids.html", "/home.html"];
       finalPrevLocation = prevLocation;
       prevLocation = nextLocation;
       const { search } = nextLocation;
@@ -515,7 +515,7 @@ export class PLPContainer extends PureComponent {
                 [initialFacetKey]: filterArray,
               },
             },
-            () => this.select()
+            () => this.select(isQuickFilters)
           );
         }
       } else {
@@ -537,7 +537,7 @@ export class PLPContainer extends PureComponent {
                 [initialFacetKey]: [],
               },
             },
-            () => this.select()
+            () => this.select(isQuickFilters)
           );
         }
       }
@@ -560,7 +560,7 @@ export class PLPContainer extends PureComponent {
               [initialFacetKey]: [facet_value],
             },
           },
-          () => this.select()
+          () => this.select(isQuickFilters)
         );
       }
     }
@@ -574,7 +574,11 @@ export class PLPContainer extends PureComponent {
     }
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
-        WebUrlParser.setParam(key, activeFilters[key], query);
+        if (isQuickFilters) {
+          WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
+        } else {
+          WebUrlParser.setParam(key, activeFilters[key], query);
+        }
       }
     });
   };
