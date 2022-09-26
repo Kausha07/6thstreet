@@ -91,6 +91,7 @@ export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   eddResponse: state.MyAccountReducer.eddResponse,
+  intlEddResponse:state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
   defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
 });
@@ -163,9 +164,10 @@ export class CartItemContainer extends PureComponent {
     thumbnail: this._getProductThumbnail(),
     minSaleQuantity: this.getMinQuantity(),
     maxSaleQuantity: this.getMaxQuantity(),
-    eddResponse: this.props.eddResponse,
-    edd_info: this.props.edd_info,
-    defaultEddResponse: this.props.defaultEddResponse,
+    eddResponse:this.props.eddResponse,
+    intlEddResponse:this.props.intlEddResponse,
+    edd_info:this.props.edd_info,
+    defaultEddResponse:this.props.defaultEddResponse,
   });
 
   /**

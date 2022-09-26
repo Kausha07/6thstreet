@@ -17,6 +17,7 @@ export const mapStateToProps = (state) => ({
   brand_url: state.PLP.brand_url,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   eddResponse: state.MyAccountReducer.eddResponse,
+  intlEddResponse:state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
 });
@@ -44,6 +45,7 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,
@@ -56,6 +58,7 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,

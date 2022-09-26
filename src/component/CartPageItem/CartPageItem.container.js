@@ -48,6 +48,7 @@ export const CartDispatcher = import(
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   eddResponse: state.MyAccountReducer.eddResponse,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
 });
 
