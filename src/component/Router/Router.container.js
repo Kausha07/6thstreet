@@ -29,6 +29,8 @@ import {
 import { getCookie, getCountryFromUrl } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
 import { INTL_BRAND, INTL_BRAND_ARABIC } from "../../util/Common/index";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
@@ -41,6 +43,8 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
+  algoliaIndex: state.SearchSuggestions.algoliaIndex,
+  currentGender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -172,6 +176,14 @@ export class RouterContainer extends SourceRouterContainer {
     }
     if (!algoliaIndex) {
       requestAlgoliaIndex();
+    }
+       
+    
+    const countrycache = getCountryFromUrl().toUpperCase()
+    if(this.props.currentGender === "all" && countrycache !== "BH" ){
+        const appStateCache = JSON.parse(localStorage.getItem(APP_STATE_CACHE_KEY));
+        appStateCache.data["gender"]= "women"
+        localStorage.setItem(APP_STATE_CACHE_KEY,  JSON.stringify(appStateCache));
     }
   }
 
