@@ -129,7 +129,6 @@ export class RouterContainer extends SourceRouterContainer {
         ) {
           requestCustomerData();
         } else {
-          console.log("inner else called")
           // logout();
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
@@ -155,7 +154,6 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      console.log("main else called");
       deleteAuthorizationToken();
       deleteMobileAuthorizationToken();
     }
