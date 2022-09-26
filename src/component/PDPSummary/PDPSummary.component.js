@@ -1008,11 +1008,11 @@ class PDPSummary extends PureComponent {
 
     return null;
   }
-  sendImpressions() {
+  sendMoEImpressions() {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
+    Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -1020,12 +1020,6 @@ class PDPSummary extends PureComponent {
       product_url: url ? url : "",
       app6thstreet_platform: "Web",
     });
-    const eventData = {
-      name: EVENT_TABBY_LEARN_MORE_CLICK,
-      action: EVENT_TABBY_LEARN_MORE_CLICK,
-      product_name: name,
-      product_id: sku,
-    };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
   }
   renderTabby() {
