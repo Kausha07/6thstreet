@@ -62,7 +62,7 @@ export const getGenderInEnglish = (gender) => {
       return "women";
     case "أطفال":
       return "kids";
-    case "منزل":
+    case "المنزل":
       return "home";
   }
 };
