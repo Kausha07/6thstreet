@@ -29,7 +29,7 @@ import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
 import { getUUIDToken } from "Util/Auth";
-
+import { isArabic } from "Util/App";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -116,6 +116,7 @@ export class PDPContainer extends PureComponent {
     currentLocation: "",
     pdpWidgetsAPIData: [],
     isPdpWidgetSet: false,
+    isArabic: isArabic()
   };
 
   constructor(props) {
@@ -362,6 +363,7 @@ export class PDPContainer extends PureComponent {
       nbHits,
       menuCategories,
     } = this.props;
+    const {isArabic} = this.state
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
@@ -377,7 +379,7 @@ export class PDPContainer extends PureComponent {
         categoriesLastLevel.map(() => urlArray.push("/"));
       }
       const breadcrumbsMapped =
-        getBreadcrumbs(categoriesLastLevel, setGender, urlArray) || [];
+        getBreadcrumbs(categoriesLastLevel, setGender, urlArray, isArabic) || [];
       const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
         acc.unshift(item);
 
