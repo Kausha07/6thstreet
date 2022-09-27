@@ -816,7 +816,7 @@ export class CartPage extends PureComponent {
   renderDynamicContent() {
     const {
       totals = {},
-      totals: { total, items = [],extension_attributes },
+      totals: { total, items = [],extension_attributes,discount },
       isLoading,
       processingRequest,
     } = this.props;
@@ -872,7 +872,9 @@ export class CartPage extends PureComponent {
     const additionalMargin =
       (country === "AE" || country === "SA") && total >= 150 ? 100 : 5;
       const showClubOverflow = items?.length > 1 && extension_attributes?.club_apparel_estimated_pointsvalue !== 0 ? true : false
+      const showClubOverflowWithDic = showClubOverflow && discount != 0
       const showOverflow = items?.length > 1 && extension_attributes?.club_apparel_estimated_pointsvalue === 0 ? true :false
+      const finalOverlayCss = showClubOverflowWithDic ? 1 :  showClubOverflow ? 2 : 3
     return (
       <>
         {this.renderContent()}
@@ -891,7 +893,10 @@ export class CartPage extends PureComponent {
             }}
             block="CartPage"
             elem="Static"
-            mods={{ isArabic,showClubOverflow,showOverflow }}
+            mods={{ isArabic,
+              showClubOverflowWithDic:finalOverlayCss===1,
+              showClubOverflow:finalOverlayCss===2,
+              showOverflow }}
           >
             {this.renderHeading()}
             {this.renderCartItems()}
