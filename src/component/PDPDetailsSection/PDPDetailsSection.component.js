@@ -660,6 +660,7 @@ class PDPDetailsSection extends PureComponent {
       product
     } = this.props;
     const { innerWidth: width } = window;
+    document.body.style.overflowX = 'hidden';
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
