@@ -2,7 +2,6 @@ import { getStore } from "Store";
 // import CDN from "../../provider/CDN";
 import ThirdPartyAPI from "../../provider/ThirdPartyAPI";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import { getConfig } from "Util/API/endpoint/Config/Config.endpoint";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
@@ -16,8 +15,6 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
     },
     AppState: { locale, gender },
   } = getStore().getState();
-  const config = await getConfig();
-  const { static_files: customConfig } = config;
   const customLocale = getLocaleFromUrl();
 
   const templateParams =
@@ -27,7 +24,7 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
       ...TemplateParamsOverride,
     } || {};
 
-  const template = staticFiles ? staticFiles[key] : customConfig[key];
+  const template = staticFiles ? staticFiles[key] : null;
 
   if (!template) {
     throw new Error(
