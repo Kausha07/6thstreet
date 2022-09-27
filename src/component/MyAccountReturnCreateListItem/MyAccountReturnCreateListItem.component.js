@@ -59,7 +59,7 @@ export class MyAccountReturnCreateListItem extends PureComponent {
           lazyLoad={true}
           mix={{ block: "MyAccountReturnCreateListItem", elem: "Image" }}
           src={thumbnail}
-          alt={"thumbnailImage"}
+          alt={"MyAccountReturnCreateListItemImage"}
         />
         <div block="MyAccountReturnCreateListItem" elem="Details">
           {!(isMobile.any() || isMobile.tablet()) && this.renderHeading()}

@@ -74,7 +74,7 @@ class PDPMixAndMatchProduct extends PureComponent {
         <div block="OverlayIcons" mods={{ isArabic: isArabic() }}>
           {this.renderWishlistIcon()}
         </div>
-        <Image lazyLoad={true} src={thumbnail_url} alt={"thumbnailImage"} />
+        <Image lazyLoad={true} src={thumbnail_url} alt={"OverlayIconImage"} />
       </Link>
     );
   }

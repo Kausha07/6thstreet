@@ -38,7 +38,7 @@ class CircleItemSliderSubPage extends PureComponent {
             <div block="CircleItemSliderSubPage">
                 <div block="CircleItemSliderSubPage-Video" >
                     {
-                        banner.type === "image" ?
+                        banner && banner.type && banner.type === "image" ?
                             <img src={url} style={isMobile.any() && { height: mHeight, width: mWidth }} alt={"bannerImage"}/>
                             :
                             <video id="CircleItemSliderSubPage-Video" style={isMobile.any() && { height: mHeight, width: mWidth }}>

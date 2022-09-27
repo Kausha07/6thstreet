@@ -64,7 +64,7 @@ class MenuBrands extends PureComponent {
         key={i}
         onClick={this.onItemClick}
       >
-        <Image lazyLoad={true} src={image_url} alt={"imageUrl"}/>
+        <Image lazyLoad={true} src={image_url} alt={"CatergoryImages"}/>
         {label}
       </Link>
     );

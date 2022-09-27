@@ -68,7 +68,7 @@ class MenuGrid extends PureComponent {
         title={label}
         onClick={this.onItemClick}
       >
-        <Image lazyLoad={true} src={image_url} width="80px" height="80px" ratio="custom" alt={"imageUrl"} />
+        <Image lazyLoad={true} src={image_url} width="80px" height="80px" ratio="custom" alt={"MenuGridImages"} />
         <div block="MenuGrid" elem="ItemLabel">
           {label}
         </div>

@@ -69,7 +69,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         lazyLoad={true}
         src={thumbnail}
         mix={{ block: "MyAccountReturnCreateItem", elem: "Image" }}
-        alt={"thumbnail"}
+        alt={"MyAccountReturnCreateItemImage"}
       />
     );
   }

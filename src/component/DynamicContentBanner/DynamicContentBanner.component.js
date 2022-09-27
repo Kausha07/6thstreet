@@ -129,7 +129,7 @@ class DynamicContentBanner extends PureComponent {
             ratio="custom"
             height={ht}
             width={wd}
-            alt={"imageUrl"}
+            alt={"DynamicContentBannerImage"}
           />
           {this.renderButton()}
         </>
@@ -152,7 +152,7 @@ class DynamicContentBanner extends PureComponent {
           src={url || image_url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
-          alt={"imageUrl"}
+          alt={"DynamicContentBannerImage"}
         />
 
         {this.renderButton()}
