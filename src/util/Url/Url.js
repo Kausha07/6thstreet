@@ -74,7 +74,17 @@ export const setCrossSubdomainCookie = (
   const time = isExpired ? "Thu, 01 Jan 1970 00:00:01 GMT" : d.toUTCString();
   const expires = `expires=${time};`;
   const path = "path=/;";
-  document.cookie = assign + expires + path;
+  const url = location.host;
+  const domain = `domain=${url.substr(url.indexOf("."))};`;
+  document.cookie = assign + expires + path + domain;
+  // if(domain !== "domain=.localhost:3000;") {
+  //   document.cookie = assign + expires + path + domain;
+  // } else {
+  //   console.log("here")
+  //   document.cookie = assign + expires + path + "domain=en-ae.localhost;";
+  //   document.cookie = assign + expires + path + "domain=ar-ae.localhost;";
+  // }
+  document.cookie = assign + expires + path + domain;
 };
 
 export const getCookie = (name) => {
