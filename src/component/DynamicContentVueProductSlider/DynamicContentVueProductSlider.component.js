@@ -215,8 +215,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderHeader() {
     const { heading } = this.props;
-    const { isHome } = this.props;
-
+    const { isHome,products: data } = this.props;
     return (
       <div
         block="VueProductSlider"
@@ -227,7 +226,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         }}
       >
         <h2 className="productWidgetHeading">{heading}</h2>
-        {this.viewAllBtn()}
+        {data?.length > 5 ? this.viewAllBtn(): null}
       </div>
     );
   }
