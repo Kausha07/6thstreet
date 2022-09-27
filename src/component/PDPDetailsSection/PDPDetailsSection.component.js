@@ -49,6 +49,7 @@ class PDPDetailsSection extends PureComponent {
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
+    document.body.style.overflowX = 'visible';
   }
 
   renderShareButton() {
@@ -680,7 +681,7 @@ class PDPDetailsSection extends PureComponent {
                           widgetID={widgetID}
                           products={data}
                           heading={heading}
-                          isHome={true}
+                          isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
                           sourceProdID={sku}
                           sourceCatgID={categories_without_path[0]}

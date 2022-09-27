@@ -94,7 +94,7 @@ export class Router extends SourceRouter {
   state = {
     ...SourceRouter.state,
     isArabic: false,
-    homepageUrl: "/(|men.html|women.html|kids.html|home.html|all.html|home_beauty_women.html)/",
+    homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
   };
 
 

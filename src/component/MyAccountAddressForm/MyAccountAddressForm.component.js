@@ -144,17 +144,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     }
 
     async getCitiesAndRegionsData() {
-        const { cities = [] } = this.state;
-        const { getCities } = this.props;
-        if (cities.length === 0) {
-            getCities().then(
-                (response) => {
-                    if (response && response.data) {
-                        this.setState({ cities: response.data });
-                    }
-                }
-            );
-        }
+      const { addressCityData } = this.props;
+      this.setState({ cities: addressCityData });
     }
 
     renderCurrentPhoneCode() {

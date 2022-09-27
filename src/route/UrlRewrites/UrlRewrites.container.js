@@ -13,7 +13,7 @@ import {
   TYPE_NOTFOUND,
   TYPE_PRODUCT,
 } from "./UrlRewrites.config";
-
+import isMobile from "Util/Mobile";
 export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
 });
@@ -58,7 +58,7 @@ export class UrlRewritesContainer extends PureComponent {
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
-    const { locale, hideActiveOverlay } = this.props;
+    const { locale, hideActiveOverlay,resetPLPPage } = this.props;
     const { locale: prevLocale } = prevProps;
 
     const { prevPathname, query, sku } = this.state;
@@ -87,6 +87,36 @@ export class UrlRewritesContainer extends PureComponent {
     // if (!location.search && query) {
     // history.push(`${pathname}?${query}`);
     // }
+    let prevLocation;
+    let finalPrevLocation;
+    history.listen((nextLocation) => {
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+
+      if (
+        finalPrevLocation &&
+        finalPrevLocation.search &&
+        finalPrevLocation.search.includes("&p=") &&
+        nextLocation.search.includes("&p=") && 
+        isMobile.any()
+      ) {
+        let customPrevLoc = new URLSearchParams(finalPrevLocation.search);
+        customPrevLoc.delete("p");
+        let customCurrLoc = new URLSearchParams(location.search);
+        customCurrLoc.delete("p");
+        if (
+          customCurrLoc.toString() !== customPrevLoc.toString() &&
+          history.action === "POP"
+        ) {
+          const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+          url.searchParams.set("p", 0);
+          const { pathname, search } = url;
+          window.location.replace(pathname + search)
+          resetPLPPage();
+          this.requestUrlRewrite(true);
+        }
+      }
+    });
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||

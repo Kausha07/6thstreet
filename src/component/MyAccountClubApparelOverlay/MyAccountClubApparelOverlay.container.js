@@ -41,6 +41,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     state = {
         state: STATE_LINK,
         phone: '',
+        error:'',
         isLoading: false
     };
 
@@ -54,23 +55,33 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
             state,
             phone,
             countryPhoneCode,
-            isLoading
+            isLoading,
+            error
         } = this.state;
 
         return {
             state,
             phone,
             countryPhoneCode,
-            isLoading
+            isLoading,
+            error
         };
     };
 
     linkAccount(fields) {
-        const { customer: { id }, linkAccount } = this.props;
+        const { customer: { id }, linkAccount, linkedNumber } = this.props;
         const { phone, countryPhoneCode = '' } = fields;
         const formattedPhone = `00${countryPhoneCode.substr(1)}${phone}`;
         this.setState({ isLoading: true });
-
+        const enteredPhoneNo = `${countryPhoneCode}${phone}`;
+        if(linkedNumber === enteredPhoneNo){
+            this.setState({
+                error: true,
+                isLoading: false
+            });
+            return
+        }
+        
         linkAccount({ customerId: id, mobileNo: formattedPhone }).then(
             (response) => {
                 if (response) {
@@ -98,13 +109,13 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
                 }
             },
             this._handleError
-        );
+        );        
     }
 
     verifyOtp(fields) {
         const { customer: { id }, verifyOtp, getMember } = this.props;
         const { otp } = fields;
-        const { memberId, phone } = this.state;
+        const { memberId, phone } = this.state;       
 
         verifyOtp({
             customerId: id,
@@ -114,13 +125,23 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
         }).then(
             (response) => {
                 if (response) {
-                    this.setState({
-                        state: STATE_SUCCESS,
-                        isLoading: false
-                    }, ()=>getMember(id));
+                    if(response?.error){
+                        this.setState({
+                            state: STATE_VERIFY,
+                            error: true,
+                            isLoading: false
+                        });
+                    }else{
+                        this.setState({
+                            state: STATE_SUCCESS,
+                            error: false,
+                            isLoading: false
+                        }, ()=>getMember(id));                        
+                    }
                 } else {
                     this.setState({
                         state: STATE_NOT_SUCCESS,
+                        error: false,
                         isLoading: false
                     });
                 }
