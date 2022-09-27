@@ -579,7 +579,7 @@ export class CartItem extends PureComponent {
       isCartPage,
     } = this.props;
     const { isArabic } = this.state;
-    let customURL = `${url_key}.html`;
+    let customURL = `/${url_key}.html`;
     return (
       <div onClick={() => this.props.history.push(customURL)}>
         <Image
