@@ -20,6 +20,14 @@ export const sendOTP = ({ phone, flag }) => MobileAPI.post(
     { mobile: phone, flag }
 ) || {};
 
+export const sendOTPViaEmail = ({ mobile, flag }) => MobileAPI.post(
+    '/email/send-otp',
+    {
+        mobile: mobile,
+        flag: flag,
+    }
+)
+
 export const resetPasswordWithToken = (data) => MagentoAPI.post(
     '/customers/resetPassword',
     data
