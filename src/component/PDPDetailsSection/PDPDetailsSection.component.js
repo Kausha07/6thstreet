@@ -682,7 +682,7 @@ class PDPDetailsSection extends PureComponent {
                           widgetID={widgetID}
                           products={data}
                           heading={heading}
-                          isHome={true}
+                          isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
                           sourceProdID={sku}
                           sourceCatgID={categories_without_path[0]}

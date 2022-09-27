@@ -50,7 +50,7 @@
         margin-bottom: 34px;
       }
     }
-    @media (max-width: 760px) {
+    @media (max-width: 767px) {
       display: flex;
       align-items: center;
       text-align: center;
@@ -64,6 +64,24 @@
         letter-spacing: 1px;
         line-height: 40px;
         text-align: left;
+      }
+      .VueProductSlider {
+        &-ViewAllBtn {
+          margin: 0 20px;
+          &_isArabic {
+            margin: 0 !important;
+          }
+        }
+      }
+      &_isHome {
+        .VueProductSlider {
+          &-ViewAllBtn {
+            margin: 0 10px !important;
+            &_isArabic {
+              margin: 0 !important;
+            }
+          }
+        }
       }
     }
 
