@@ -27,7 +27,7 @@
     margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
-
+    align-items: center;
     @include mobile {
       margin-left: 20px;
     }
@@ -92,7 +92,6 @@
     border-radius: 11px;
     place-items: center;
     background-color: #f6f6f6;
-
     span {
       font-size: 13px;
       font-weight: var(--fw-demi);
