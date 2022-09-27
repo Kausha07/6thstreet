@@ -290,7 +290,7 @@ class WelcomeHomePage extends PureComponent {
                             {isPopupOpen &&
                                 <div block="WelcomeHomePage" elem="Popup">
                                     <div block="WelcomeHomePage-Popup" elem="Action" mods={{ isArabic: language === "ar" }}>
-                                        <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
+                                        <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} alt={"WelcomeHomePopupImage"} />
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
                                         {
@@ -332,7 +332,7 @@ class WelcomeHomePage extends PureComponent {
                                                     block="WelcomeHomePage-GenderSelection"
                                                     onClick={(e) => this.onGenderSelect(e, gender)}
                                                 >
-                                                    <img src={welcomeImg[gender][language].img} />
+                                                    <img src={welcomeImg[gender][language].img} alt={"WelcomeHomepageGenderSelection"}/>
                                                     <button block="WelcomeHomePage-GenderSelection-Button">
                                                         {welcomeImg[gender][language].label}
                                                     </button>

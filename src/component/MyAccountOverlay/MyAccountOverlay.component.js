@@ -360,7 +360,7 @@ export class MyAccountOverlay extends PureComponent {
             elem: "LockImg",
           }}
           src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/forgot_pass.png"
-          alt=""
+          alt="LockImg"
         />
 
         <p block="MyAccountOverlay" elem="Heading">

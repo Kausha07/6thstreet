@@ -69,6 +69,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         lazyLoad={true}
         src={thumbnail}
         mix={{ block: "MyAccountReturnCreateItem", elem: "Image" }}
+        alt={"thumbnail"}
       />
     );
   }
@@ -300,6 +301,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+              alt={"lineImg"}
             />
           )}
         </div>

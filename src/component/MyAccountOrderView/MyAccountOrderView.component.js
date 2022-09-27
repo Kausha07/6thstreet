@@ -204,6 +204,7 @@ class MyAccountOrderView extends PureComponent {
           <Image
             src={StatusImage}
             mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
+            alt={"StatusImage"}
           />
           <p>{title}</p>
         </div>
@@ -299,6 +300,7 @@ class MyAccountOrderView extends PureComponent {
         <Image
           src={TruckImage}
           mix={{ block: "MyAccountOrderView", elem: "TruckImage" }}
+          alt={"Truckimage"}
         />
         <p>
           {
@@ -362,6 +364,7 @@ class MyAccountOrderView extends PureComponent {
             elem: "AccordionTitleImage",
             mods: { isArabic: isArabic() },
           }}
+          alt={"AccordionTitleImage"}
         />
         <h3>
           {title}

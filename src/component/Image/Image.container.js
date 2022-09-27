@@ -104,6 +104,7 @@ export class ImageContainer extends PureComponent {
             <Image lazyLoad={true}
               { ...this.props }
               { ...this.containerProps() }
+              alt={"imageContainer"}
             />
         );
     }

@@ -37,11 +37,11 @@ class PDPGalleryCrumb extends PureComponent {
       options: { src },
     } = this.props;
     if (src.includes("http")) {
-      return <Image lazyLoad={false} src={src} />;
+      return <Image lazyLoad={false} src={src} alt={"staticImg"} />;
     } else {
       return (
         <div block="staticDiv">
-          <img src={src} className="staticImg" />
+          <img src={src} className="staticImg" alt={"staticImg"} />
         </div>
       );
     }

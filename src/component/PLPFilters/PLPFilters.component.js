@@ -715,7 +715,7 @@ class PLPFilters extends PureComponent {
           defaultFilters={defaultFilters}
           isSortBy={true}
         />
-        <img src={Refine} />
+        <img src={Refine} alt={"RefineImage"}/>
       </div>
     );
   };

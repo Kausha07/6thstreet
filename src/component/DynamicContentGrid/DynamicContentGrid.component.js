@@ -133,6 +133,7 @@ class DynamicContentGrid extends PureComponent {
             lazyLoad={index === 34 ? false : true}
             src={url}
             className="GridImage"
+            alt={"GridImage"}
           />
           {item.footer && (
             <div block="Footer">
@@ -175,7 +176,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={index === 34 ? false : true} src={url} />
+          <Image lazyLoad={index === 34 ? false : true} src={url} alt={"categoryItemsImage"}/>
 
           {item.footer && (
             <div block="Footer">

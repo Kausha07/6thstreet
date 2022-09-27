@@ -221,7 +221,7 @@ class HeaderMainSection extends NavigationAbstract {
   renderAccount() {
     const isFooter = false;
 
-    return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
+    return <HeaderAccount key="account" aria-label="Account" isFooter={isFooter} isMobile />;
   }
 
   renderCart() {
@@ -229,13 +229,14 @@ class HeaderMainSection extends NavigationAbstract {
       <HeaderCart
         key="cart"
         CartButton="CartButton"
+        aria-label="CartButton"
         showCartPopUp={!(isMobile.any() || isMobile.tablet())}
       />
     );
   }
 
   renderWishlist() {
-    return <HeaderWishlist key="wishlist" isMobile />;
+    return <HeaderWishlist key="wishlist" aria-label="wishlist" isMobile />;
   }
 
   renderGenderSwitcher() {
@@ -367,7 +368,7 @@ class HeaderMainSection extends NavigationAbstract {
       return null;
     }
     return (
-      <div block="SearchIcon" mods={{ isArabic: isArabic }}>
+      <div block="SearchIcon" mods={{ isArabic: isArabic }} aria-label="PLP Search Button">
         <button
           block="SearchIcon"
           onClick={

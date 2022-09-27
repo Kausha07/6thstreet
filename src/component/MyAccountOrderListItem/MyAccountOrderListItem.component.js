@@ -87,6 +87,7 @@ class MyAccountOrderListItem extends SourceComponent {
         <Image
           mix={{ block: "MyAccountOrderListItem", elem: "Image" }}
           src={thumbnail}
+          alt={"thumbnailImages"}
         />
         <div
           block="MyAccountOrderListItem"
@@ -118,6 +119,7 @@ class MyAccountOrderListItem extends SourceComponent {
                     block: "MyAccountOrderListItem",
                     elem: "PackageImage",
                   }}
+                  alt={"packageImage"}
                 />
                 <p
                   block="MyAccountOrderListItem"
