@@ -665,7 +665,7 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
-          {this.props.product.returnable ? (<div block="Seperator2" />) : (null)}
+          {this.props?.product?.returnable ? (<div block="Seperator2" />) : (null)}
           <React.Fragment>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
