@@ -1083,7 +1083,7 @@ class PDPDetailsSection extends PureComponent {
         {isMobile ? null : this.renderSeperator()}
 
         {
-          this.props.product.returnable ? (
+          this.props?.product?.returnable ? (
 
             <div block="AccordionWrapper">
               <Accordion
