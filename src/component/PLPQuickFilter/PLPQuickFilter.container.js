@@ -31,9 +31,9 @@ class PLPQuickFilterContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { filter, updateFilters,selectedSizeCode } = this.props;
+        const { filter, updateFilters,selectedSizeCode,brandFilter } = this.props;
 
-        return { filter, updateFilters,selectedSizeCode };
+        return { filter, updateFilters,selectedSizeCode,brandFilter };
     };
 
     render() {

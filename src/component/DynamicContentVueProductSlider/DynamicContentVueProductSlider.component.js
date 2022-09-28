@@ -1,10 +1,8 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events/ProductImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
-import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -12,6 +10,7 @@ import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
 import { connect } from "react-redux";
+import Link from "Component/Link";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
@@ -67,10 +66,14 @@ class DynamicContentVueProductSlider extends PureComponent {
   sendImpressions() {
     const products = this.getProducts();
     const items = products.map((item) => {
-      const itemPrice =
-        item.price[0][Object.keys(item.price[0])[0]]["6s_special_price"];
-      const basePrice =
-        item.price[0][Object.keys(item.price[0])[0]]["6s_base_price"];
+      let itemPrice = null;
+      let basePrice = null;
+      if(item.price.length > 0) {
+        itemPrice =
+        item?.price[0][Object.keys(item?.price[0])[0]]["6s_special_price"];
+      basePrice =
+        item?.price[0][Object.keys(item?.price[0])[0]]["6s_base_price"];
+      }
       return {
         id: item.sku,
         label: item.name,
@@ -179,7 +182,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   getProducts = () => {
     const { products: data, sliderLength } = this.props;
-    let products = [...data];
+    let products = data?.length > 10 ? [...data.slice(0,9)] : [...data];
     if (products.length > sliderLength) {
       products.length = sliderLength;
     }
@@ -187,11 +190,23 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   viewAllBtn() {
-    const { withViewAll } = this.props;
+    const { withViewAll= true, widgetID ="", products=[],product={} } = this.props;
+    let defaultPathName = `viewall/?q=${widgetID?.replace('vue_','')}`; 
+    const linkTo = {
+      pathname: product?.sku ? defaultPathName.concat(`&product_id=${product.sku}`) : defaultPathName,
+      state: {
+        vueProducts:products,
+        product_id:product.sku
+      },
+    };
     if (withViewAll) {
       return (
-        <div block="VueProductSlider" elem="ViewAllBtn">
-          <span>{"View All"}</span>
+        <div block="VueProductSlider" elem="ViewAllBtn" mods={{
+          isArabic: isArabic(),
+        }}>
+          <Link to={linkTo}>
+            <span>{__("View All")}</span>
+          </Link>
         </div>
       );
     }
@@ -200,8 +215,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderHeader() {
     const { heading } = this.props;
-    const { isHome } = this.props;
-
+    const { isHome,products: data } = this.props;
     return (
       <div
         block="VueProductSlider"
@@ -212,7 +226,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         }}
       >
         <h2 className="productWidgetHeading">{heading}</h2>
-        {/* {this.viewAllBtn()} */}
+        {data?.length > 5 ? this.viewAllBtn(): null}
       </div>
     );
   }
@@ -269,8 +283,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isHome, renderMySignInPopup, index, setLastTapItemOnHome } =
       this.props;
     const {
-      widgetID,
-      pageType,
+      widgetID="",
+      pageType="",
       sourceProdID = null,
       sourceCatgID = null,
     } = this.props;
@@ -291,7 +305,8 @@ class DynamicContentVueProductSlider extends PureComponent {
             }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-            {items.map((item, i) => {
+            {items.length > 0 ?
+            items.slice(0, 9).map((item, i) => {
               const { sku } = item;
               return (
                 <DynamicContentVueProductSliderItem
@@ -308,7 +323,8 @@ class DynamicContentVueProductSlider extends PureComponent {
                   sourceCatgID={sourceCatgID}
                 />
               );
-            })}
+            }) : null 
+            }
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
           </div>
           {this.renderScrollbar()}

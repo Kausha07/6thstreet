@@ -35,9 +35,11 @@ export const mapStateToProps = (state) => ({
   headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
   guest_checkout: state.ConfigReducer.guest_checkout,
   customer: state.MyAccountReducer.customer,
+  totals: state.CartReducer.cartTotals,
   isSignedIn: state.MyAccountReducer.isSignedIn,
   config: state.AppConfig.config,
   eddResponse: state.MyAccountReducer.eddResponse,
+  intlEddResponse:state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
 });
 

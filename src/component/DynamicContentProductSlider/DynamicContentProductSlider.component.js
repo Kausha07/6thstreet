@@ -165,7 +165,6 @@ class DynamicContentProductSlider extends PureComponent {
           withViewAll
           setLastTapItemOnHome={setLastTapItemOnHome}
           renderMySignInPopup={renderMySignInPopup}
-          setLastTapItemOnHome={setLastTapItemOnHome}
           key={`VueProductSliderContainer`}
           isHome={true}
           pageType={"home"}

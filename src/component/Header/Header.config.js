@@ -6,6 +6,7 @@ export const CUSTOMER_SUB_ACCOUNT = "customer_sub_account";
 export const CUSTOMER_ACCOUNT_PAGE = "customer_account_page";
 export const HOME_PAGE = "homepage";
 export const SEARCH = "search";
+export const VIEWALL = "view_all";
 export const CART = "cart";
 export const PICK_UP_ADDRESS = "pick-up-address";
 export const CART_OVERLAY = "cart_overlay";

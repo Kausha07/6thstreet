@@ -364,6 +364,9 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
+    if(!price || (Array.isArray(price) && !price[0])){
+      return null;
+    }
     return <Price price={price} page={page} renderSpecialPrice={true} />;
   }
 
@@ -443,6 +446,7 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
     const {
       product: { sku },
+      pageType
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -459,7 +463,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {!isMobile.any() && this.renderAddToCartOnHover()}
+        {!isMobile.any() && pageType !== "vuePlp" && this.renderAddToCartOnHover()}
       </li>
     );
   }

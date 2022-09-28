@@ -69,9 +69,9 @@ export class SplashContainer extends PureComponent {
     return null;
   }
 
-  requestConfig() {
+  async requestConfig() {
     const { getConfig } = this.props;
-    getConfig();
+    await getConfig();
   }
 
   containerProps = () => ({
