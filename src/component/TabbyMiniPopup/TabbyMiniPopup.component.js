@@ -85,7 +85,7 @@ class TabbyMiniPopup extends PureComponent {
         <h4>{__("Split your purchase into equal monthly installments")}</h4>
         <div block="TabbyMiniPopup" elem="Columns">
           <div block="TabbyMiniPopup" elem="Column">
-            {TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row))}
+            {TABBY_ROW_DATA.map((row, index) => this.renderTabbyPopupRow(row, index))}
           </div>
         </div>
         <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -101,7 +101,7 @@ class TabbyMiniPopup extends PureComponent {
         <h4>{__("Split into 4 equal monthly payments")}</h4>
         <div block="TabbyMiniPopup" elem="Columns">
           <div block="TabbyMiniPopup" elem="Column">
-            {TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row))}
+            {TABBY_ROW_DATA.map((row, index) => this.renderTabbyPopupRow(row, index))}
           </div>
         </div>
         <p block="TabbyMiniPopup" elem="ContentFooter">

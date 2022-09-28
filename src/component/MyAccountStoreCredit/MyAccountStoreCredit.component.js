@@ -34,8 +34,8 @@ class MyAccountStoreCredit extends PureComponent {
     renderTableHead(headers = []) {
         return (
             <thead>
-                { headers.map((header) => (
-                    <th>{ header }</th>
+                { headers.map((header, index) => (
+                    <th key={index}>{ header }</th>
                 )) }
             </thead>
         );
@@ -44,10 +44,10 @@ class MyAccountStoreCredit extends PureComponent {
     renderTableRows(rows = []) {
         return (
             <tbody>
-                { rows.map((cells = []) => (
-                    <tr>
-                        { cells.map((value) => (
-                            <td>{ value }</td>
+                { rows.map((cells = [], index) => (
+                    <tr key={index}>
+                        { cells.map((value, index) => (
+                            <td key={index}>{ value }</td>
                         )) }
                     </tr>
                 )) }

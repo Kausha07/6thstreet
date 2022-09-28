@@ -214,8 +214,8 @@ class WelcomeHomePage extends PureComponent {
         return <div block="FooterMain" elem="LastColumn" >
             <h4>{this.linkMap.title}</h4>
             <div block="FooterMain" elem="Nav">
-                {this.linkMap.items.map((items) => (
-                    <Fragment key="last_main_footer_column">
+                {this.linkMap.items.map((items, i) => (
+                    <Fragment key={`last_main_footer_column_${i}`}>
                         <div block="FooterMain" elem="WrapperFirst">
                             <Link to={items.app_onclick} key={items.id_app}>
                                 <Image lazyLoad={true} src={items.app_store} alt="app store download" />
