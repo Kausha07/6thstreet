@@ -46,8 +46,8 @@ class MyAccountStoreCredit extends PureComponent {
             <tbody>
                 { rows.map((cells = [], index) => (
                     <tr key={index}>
-                        { cells.map((value, index) => (
-                            <td key={index}>{ value }</td>
+                        { cells.map((value, i) => (
+                            <td key={i}>{ value }</td>
                         )) }
                     </tr>
                 )) }

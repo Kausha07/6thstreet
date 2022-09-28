@@ -357,7 +357,7 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  renderQuerySuggestion = (querySuggestions) => {
+  renderQuerySuggestion = (querySuggestions, i) => {
     const { query, label } = querySuggestions;
     const { searchString, products = [] } = this.props;
     const gender =
@@ -397,6 +397,7 @@ class SearchSuggestion extends PureComponent {
           <Link
             to={fetchSKU?.url}
             onClick={() => suggestionEventDipatch(query)}
+            key={i}
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
@@ -410,6 +411,7 @@ class SearchSuggestion extends PureComponent {
               pathname: this.getCatalogUrl(query, gender),
             }}
             onClick={() => suggestionEventDipatch(query)}
+            key={i}
           >
             <div className="suggestion-details-box">
               {getHighlightedText(label, searchString)}
