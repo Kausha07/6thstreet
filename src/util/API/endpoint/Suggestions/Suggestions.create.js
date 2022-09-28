@@ -55,7 +55,7 @@ export const getGenderInArabic = (gender) => {
 };
 
 export const getGenderInEnglish = (gender) => {
-  switch (gender) {
+  switch (gender.trim()) {
     case "رجال":
       return "men";
     case "نساء":
