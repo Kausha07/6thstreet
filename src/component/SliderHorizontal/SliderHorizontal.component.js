@@ -116,6 +116,7 @@ export class SliderHorizontal extends SliderVertical {
               mods={ { type: 'single' } }
               // eslint-disable-next-line react/jsx-no-bind
               onClick={ () => this.changeActiveImage(i) }
+              key={i}
             >
                 <div
                   block="SliderHorizontal"

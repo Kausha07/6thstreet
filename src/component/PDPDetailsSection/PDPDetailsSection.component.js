@@ -6,7 +6,7 @@ import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
 import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { isArabic } from "Util/App";
@@ -673,7 +673,7 @@ class PDPDetailsSection extends PureComponent {
                 const { data } = item;
                 if (data && data?.length > 0) {
                   return (
-                    <>
+                    <Fragment key={index}>
                       <div
                         block="PDPWidgets"
                         elem="Slider"
@@ -693,7 +693,7 @@ class PDPDetailsSection extends PureComponent {
                           isArabic={isArabic()}
                         />
                       </div>
-                    </>
+                    </Fragment>
                   );
                 }
                 return null;

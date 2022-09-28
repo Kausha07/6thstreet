@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import Link from "Component/Link";
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
@@ -413,9 +413,9 @@ class PDPSummary extends PureComponent {
     return (
       <ul>
         {isArea ? (
-          selectedCityArea.map((area) => {
+          selectedCityArea.map((area, index) => {
             return (
-              <li id={area} onClick={() => this.handleAreaSelection(area)}>
+              <li key={index} id={area} onClick={() => this.handleAreaSelection(area)}>
                 <button
                   block={`CountrySwitcher`}
                   elem="CountryBtn"
@@ -446,6 +446,7 @@ class PDPSummary extends PureComponent {
         {Object.values(Cityresponse).map((city) => {
           return (
             <li
+            key={city.city_id}
               id={city.city_id}
               onClick={() => this.handleCitySelection(city)}
             >
@@ -883,14 +884,14 @@ class PDPSummary extends PureComponent {
       : fixedColor;
 
     return (
-      <>
+      <Fragment key={color}>
         <span
           block="PDPSummary"
           elem="ProductColor"
           style={{ backgroundColor: prodColor }}
         />
         {color}
-      </>
+      </Fragment>
     );
   }
 

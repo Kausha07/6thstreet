@@ -103,10 +103,11 @@ class PDPAddToCart extends PureComponent {
     } = this.props;
 
     if (sizeObject.sizeTypes !== undefined) {
-      const listItems = sizeObject.sizeTypes.map((type = "") => {
+      const listItems = sizeObject.sizeTypes.map((type = "",index) => {
         if (product[`size_${type}`].length > 0) {
           return (
             <div
+              key={index}
               block="PDPAddToCart"
               elem="SizeTypeOptionContainer"
               mods={{

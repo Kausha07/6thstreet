@@ -324,13 +324,14 @@ class WelcomeHomePage extends PureComponent {
                                 welcomeImg &&
                                 <div block="WelcomeHomePage" elem="MainSection" >
                                     {
-                                        Object.keys(welcomeImg).map((gender) => {
+                                        Object.keys(welcomeImg).map((gender, index) => {
                                             const navigateTo = `${URLS[locale]}/${gender}.html`
                                             return (
                                                 <a
                                                     href={navigateTo}
                                                     block="WelcomeHomePage-GenderSelection"
                                                     onClick={(e) => this.onGenderSelect(e, gender)}
+                                                    key={index}
                                                 >
                                                     <img src={welcomeImg[gender][language].img} />
                                                     <button block="WelcomeHomePage-GenderSelection-Button">
