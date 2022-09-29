@@ -61,7 +61,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   renderImage() {
     const {
-      item: { thumbnail },
+      item: { thumbnail, name },
     } = this.props;
 
     return (
@@ -69,7 +69,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         lazyLoad={true}
         src={thumbnail}
         mix={{ block: "MyAccountReturnCreateItem", elem: "Image" }}
-        alt={"MyAccountReturnCreateItemImage"}
+        alt={name ? name : "MyAccountReturnCreateItemImage"}
       />
     );
   }
@@ -301,7 +301,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
-              alt={"lineImg"}
+              alt={label? label : "strike-through"}
             />
           )}
         </div>

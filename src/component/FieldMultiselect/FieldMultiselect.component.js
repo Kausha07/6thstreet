@@ -628,7 +628,7 @@ class FieldMultiselect extends PureComponent {
             type="button"
             mods={{ isArabic }}
           >
-            <Image lazyLoad={false} src={searchPng} alt="search" />
+            <Image lazyLoad={false} src={searchPng} alt="searchIcon" />
           </button>
         )}
       </div>

@@ -76,7 +76,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={OrdersIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"cat-menu"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("My Orders")}
@@ -98,7 +98,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={ReturnIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"returnIcon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {is_exchange_enabled ? __("My Return/Exchange"):  __("My Returns")}
@@ -128,7 +128,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={ClubIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"club-apparel-icon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("Club apparel loyalty")}
@@ -149,7 +149,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={HeartIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"heart-regular-icon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("My Wishlist")}
@@ -170,7 +170,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={AddressIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={ "MyAccountSignedInOverlayImage" }
+          alt={ "addressIcon" }
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("My Address Book")}
@@ -190,7 +190,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={WalletIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"WalletIcon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("Payments")}
@@ -212,7 +212,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           lazyLoad={true}
           src={LogoutIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"MyAccountSignedInOverlayImage"}
+          alt={"logoutIcon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("Logout")}

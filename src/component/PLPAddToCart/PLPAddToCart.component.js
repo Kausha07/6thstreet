@@ -388,7 +388,7 @@ class PLPAddToCart extends PureComponent {
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
-              alt={"lineImg"}
+              alt={"strike-through-icon"}
             />
           )}
         </div>

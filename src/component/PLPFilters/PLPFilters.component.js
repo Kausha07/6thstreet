@@ -482,7 +482,7 @@ class PLPFilters extends PureComponent {
         tabIndex={0}
         block="PLPFilterMobile"
       >
-        <Image lazyLoad={true} src={fitlerImage} alt="fitler" />
+        <Image lazyLoad={true} src={fitlerImage} alt="filter-button-icon" />
 
         {__("refine ")}
         <div block="PLPFilterMobile" elem="Count">
@@ -715,7 +715,7 @@ class PLPFilters extends PureComponent {
           defaultFilters={defaultFilters}
           isSortBy={true}
         />
-        <img src={Refine} alt={"RefineImage"}/>
+        <img src={Refine} alt={"Refine-icon"}/>
       </div>
     );
   };
@@ -873,7 +873,7 @@ class PLPFilters extends PureComponent {
             </div>
           )}
         </div>
-        {this.state.showArrow && <div block="Products" elem="UpArrow" ><img block="Products" elem="UpArrow-img" src={Arrow} onClick={this.scrollToTop} /></div>}
+        {this.state.showArrow && <div block="Products" elem="UpArrow" ><img block="Products" elem="UpArrow-img" src={Arrow} alt="UpArrowImage" onClick={this.scrollToTop} /></div>}
       </div>
     );
   }

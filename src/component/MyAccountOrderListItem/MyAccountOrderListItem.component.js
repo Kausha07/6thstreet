@@ -119,7 +119,7 @@ class MyAccountOrderListItem extends SourceComponent {
                     block: "MyAccountOrderListItem",
                     elem: "PackageImage",
                   }}
-                  alt={"packageImage"}
+                  alt={"Package-box"}
                 />
                 <p
                   block="MyAccountOrderListItem"

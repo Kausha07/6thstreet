@@ -32,10 +32,10 @@ class PLPDetails extends PureComponent {
   };
 
   renderBrandImage = () => {
-    const { brandImg } = this.props;
+    const { brandImg, brandName } = this.props;
     return (
       <div block="PLPDetails" elem="BrandImage">
-        <Image lazyLoad={true} src={brandImg}  alt={"brandImg"}/>
+        <Image lazyLoad={true} src={brandImg}  alt={ brandName ?  brandName : "brandImg"}/>
       </div>
     )
   };

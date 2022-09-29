@@ -60,6 +60,7 @@ class CreditCardTooltip extends PureComponent {
               ratio="custom"
               width="100px"
               height="35px"
+              alt={bankLogo.name ? bankLogo.name : "banklogoImages"}
             />
         ));
     }

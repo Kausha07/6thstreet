@@ -108,7 +108,7 @@ class DynamicContentBanner extends PureComponent {
   renderImage = (item, i) => {
     const { index, type } = this.props;
     // const { height, width } = items[0];
-    const { url, image_url, link, height = "", width = "" } = item;
+    const { url, image_url, link, height = "", width = "",promotion_name } = item;
     let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
@@ -129,7 +129,7 @@ class DynamicContentBanner extends PureComponent {
             ratio="custom"
             height={ht}
             width={wd}
-            alt={"DynamicContentBannerImage"}
+            alt={ promotion_name ? promotion_name : "DynamicContentBannerImage"}
           />
           {this.renderButton()}
         </>
@@ -152,7 +152,7 @@ class DynamicContentBanner extends PureComponent {
           src={url || image_url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
-          alt={"DynamicContentBannerImage"}
+          alt={item.promotion_name ? item.promotion_name : "DynamicContentBannerImage"}
         />
 
         {this.renderButton()}

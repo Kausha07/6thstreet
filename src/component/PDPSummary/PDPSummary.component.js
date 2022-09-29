@@ -587,7 +587,7 @@ class PDPSummary extends PureComponent {
               mods={{ isArabic }}
               onClick={() => this.handleAreaDropDownClick()}
             >
-              <Image lazyLoad={false} src={addressBlack} alt="addressBlackImage" />
+              <Image lazyLoad={false} src={addressBlack} alt="address_black_Icons" />
               <div block={`SelectAreaText `}>{selectedArea}</div>
             </div>
           ) : (
@@ -597,7 +597,7 @@ class PDPSummary extends PureComponent {
               mods={{ isArabic }}
               onClick={() => this.handleAreaDropDownClick()}
             >
-              <Image lazyLoad={false} src={address} alt="addressBlackImage" />
+              <Image lazyLoad={false} src={address} alt="addressIcons" />
               <div block="SelectAreaText">
                 {isArabic ? "حدد المنطقة" : "Select Area"}
               </div>

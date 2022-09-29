@@ -91,7 +91,7 @@ class ExploreMore extends PureComponent {
                         lazyLoad={index === 34 ? false : true}
                         src={url}
                         className="GridImage"
-                        alt={"GridImage"}
+                        alt={item.promotion_name ? item.promotion_name : "GridImage"}
                     />
                     {item.footer && (
                         <div block="Footer">
@@ -134,7 +134,7 @@ class ExploreMore extends PureComponent {
                         this.onclick(item);
                     }}
                 >
-                    <Image lazyLoad={index === 34 ? false : true} src={url} alt={"categoryItemImage"} />
+                    <Image lazyLoad={index === 34 ? false : true} src={url} alt={item.promotion_name ? item.promotion_name : "categoryItemImage"} />
 
                     {item.footer && (
                         <div block="Footer">

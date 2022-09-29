@@ -133,7 +133,7 @@ class DynamicContentGrid extends PureComponent {
             lazyLoad={index === 34 ? false : true}
             src={url}
             className="GridImage"
-            alt={"GridImage"}
+            alt={item.promotion_name ? item.promotion_name : "GridImage"}
           />
           {item.footer && (
             <div block="Footer">
@@ -156,7 +156,7 @@ class DynamicContentGrid extends PureComponent {
   };
 
   renderItemMobile = (item, i) => {
-    const { link, url } = item;
+    const { link, url,promotion_name, } = item;
     const { index } = this.props;
     let ht = this.props.item_height.toString() + "px";
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -176,7 +176,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={index === 34 ? false : true} src={url} alt={"categoryItemsImage"}/>
+          <Image lazyLoad={index === 34 ? false : true} src={url} alt={promotion_name ? promotion_name : "categoryItemsImage"}/>
 
           {item.footer && (
             <div block="Footer">
