@@ -61,6 +61,7 @@ class PDPSummary extends PureComponent {
     countryCode: null,
     cityResponse: null,
     eddEventSent: false,
+    intlEddResponseState:{},
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
@@ -330,7 +331,7 @@ class PDPSummary extends PureComponent {
     }
   }
   static getDerivedStateFromProps(props, state) {
-    const { product } = props;
+    const { product,intlEddResponse } = props;
 
     const { alsoAvailable, prevAlsoAvailable } = state;
 
@@ -342,7 +343,8 @@ class PDPSummary extends PureComponent {
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
       });
     }
-    return Object.keys(derivedState).length ? derivedState : null;
+    return {derivedState:Object.keys(derivedState).length ? derivedState : null,
+      intlEddResponseState:intlEddResponse};
   }
 
   closeAreaOverlay = () => {
@@ -1049,6 +1051,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { cross_border = 0, brand_name },
       edd_info,
+      intlEddResponse
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
@@ -1069,7 +1072,7 @@ class PDPSummary extends PureComponent {
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          (isIntlBrand || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0)  || cross_border === 0) &&
           this.renderSelectCity(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {/* <div block="Seperator" /> */}

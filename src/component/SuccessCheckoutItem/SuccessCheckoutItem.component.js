@@ -44,7 +44,18 @@ export class SuccessCheckoutItem extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    intlEddResponseState:{}
   };
+
+  static getDerivedStateFromProps(props) {
+    const {
+      intlEddResponse
+    } = props;
+
+    return {
+        intlEddResponseState:intlEddResponse
+    };
+  }
 
   static defaultProps = {
     isLikeTable: false,
@@ -258,7 +269,8 @@ export class SuccessCheckoutItem extends PureComponent {
       },
       edd_info,
       isFailed,
-      eddResponse
+      eddResponse,
+      intlEddResponse
     } = this.props;
     const isIntlBrand =
     ((INTL_BRAND.includes(brand_name.toLowerCase()) && cross_border === 1) ||
@@ -282,7 +294,7 @@ export class SuccessCheckoutItem extends PureComponent {
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you &&
-          (isIntlBrand || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && !isFailed && this.renderIntlTag()}
