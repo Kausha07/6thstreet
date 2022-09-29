@@ -268,15 +268,15 @@ export class CheckoutSuccess extends PureComponent {
                 name="otp"
                 disabled={isLoading}
                 id="otp"
-                // onChange={OTPFieldChange}
                 onKeyPress={(e) => isNumber(e)}
-                onChange={(e) => this.setState({ otp: e.target.value })}
+                onChange={(e) =>
+                  onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)}
               />
             </div>
             <div
               block="VerifyPhone"
               elem="ErrMessage"
-              // mods={{ isValidated: otpError.length !== 0 }}
+            // mods={{ isValidated: otpError.length !== 0 }}
             >
               {/* {__(otpError)} */}
             </div>
@@ -294,24 +294,7 @@ export class CheckoutSuccess extends PureComponent {
                 strokeWidthSecondary={3}
               />
             </div>
-            <div
-              block="VerifyPhone"
-              elem={
-                otp === null || otp?.length < 5
-                  ? "VerifyButton disabled"
-                  : "VerifyButton"
-              }
-            >
-              <button
-                disabled={otp === null || otp?.length < 5}
-                onClick={() => {
-                  onGuestAutoSignIn(otp, isVerifyEmailViewState);
-                }}
-                className={otp === null || otp?.length < 5 ? "disabled" : ""}
-              >
-                VERIFY PHONE NUMBER
-              </button>
-            </div>
+
             <div
               block="VerifyPhone"
               elem="ResendCode"
@@ -574,7 +557,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"
             ? __("Cash on Receiving Fee")
             : __("Cash on Delivery Fee")
@@ -1019,17 +1002,17 @@ export class CheckoutSuccess extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
-                  customer_balance_amount,
-                  __("Store Credit"),
-                  { isStoreCredit: true }
-                )
+                customer_balance_amount,
+                __("Store Credit"),
+                { isStoreCredit: true }
+              )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
@@ -1039,11 +1022,11 @@ export class CheckoutSuccess extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLineQPAY(
-                  msp_cod_amount,
-                  getCountryFromUrl() === "QA"
-                    ? __("Cash on Receiving")
-                    : __("Cash on Delivery")
-                )
+                msp_cod_amount,
+                getCountryFromUrl() === "QA"
+                  ? __("Cash on Receiving")
+                  : __("Cash on Delivery")
+              )
               : null}
             {this.renderPriceLineQPAY(
               grandTotal,
@@ -1097,7 +1080,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-          paymentMethod?.code === "tabby_installments"
+            paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}

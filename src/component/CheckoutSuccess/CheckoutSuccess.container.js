@@ -338,41 +338,43 @@ export class CheckoutSuccessContainer extends PureComponent {
   async onGuestAutoSignIn(otp, shouldLoginWithOtpOnEmail) {
     const { phone, email } = this.state;
     try {
-      const { loginAccount, showNotification } = this.props;
-      this.setState({ isLoading: true });
-      let payload;
-      if (shouldLoginWithOtpOnEmail) {
-        payload = {
-          password: otp,
-          email_otp: true,
-          username: email,
-        };
-      } else {
-        payload = {
-          password: otp,
-          is_phone: true,
-          username: phone,
-        };
-      }
-      const response = await loginAccount(payload);
-      if (response.success) {
-        const { signInOTP } = this.props;
-        try {
-          await signInOTP(response);
-          history.push("/my-account/my-orders");
-          // this.checkForOrder();
-        } catch (e) {
-          this.setState({ isLoading: false });
-          showNotification("error", e.message);
+      if (otp.length === 5) {
+        const { loginAccount, showNotification } = this.props;
+        this.setState({ isLoading: true });
+        let payload;
+        if (shouldLoginWithOtpOnEmail) {
+          payload = {
+            password: otp,
+            email_otp: true,
+            username: email,
+          };
+        } else {
+          payload = {
+            password: otp,
+            is_phone: true,
+            username: phone,
+          };
         }
-        this.setState({
-          isLoading: false,
-        });
+        const response = await loginAccount(payload);
+        if (response.success) {
+          const { signInOTP } = this.props;
+          try {
+            await signInOTP(response);
+            history.push("/my-account/my-orders");
+            // this.checkForOrder();
+          } catch (e) {
+            this.setState({ isLoading: false });
+            showNotification("error", e.message);
+          }
+          this.setState({
+            isLoading: false,
+          });
+        }
+        if (typeof response === "string") {
+          showNotification("error", response);
+        }
+        this.setState({ isLoading: false });
       }
-      if (typeof response === "string") {
-        showNotification("error", response);
-      }
-      this.setState({ isLoading: false });
     } catch (err) {
       this.setState({ isLoading: false });
       console.error("Error while creating customer", err);
