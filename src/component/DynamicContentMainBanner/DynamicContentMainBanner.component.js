@@ -86,12 +86,13 @@ class DynamicContentMainBanner extends PureComponent {
       link,
       // height,
       // width
+      promotion_name
     } = item;
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     if (!link) {
       return (
-        <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" alt={"DynamicMainBannerContentImage"}/>
+        <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" alt={promotion_name ? promotion_name : "DynamicMainBannerContentImage"}/>
       );
     }
 
@@ -103,7 +104,7 @@ class DynamicContentMainBanner extends PureComponent {
         }}
         key={i}
       >
-        <Image lazyLoad={true} src={url} ratio="custom" height="auto" alt={"CDNImages"} />
+        <Image lazyLoad={true} src={url} ratio="custom" height="auto" alt={promotion_name ? promotion_name : "CDNImages"} />
       </Link>
     );
   }

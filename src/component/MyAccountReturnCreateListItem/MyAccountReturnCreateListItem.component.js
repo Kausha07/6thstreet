@@ -50,16 +50,16 @@ export class MyAccountReturnCreateListItem extends PureComponent {
         grand_total,
         items_count,
         courier_deliver_date,
+        brand_name,
       },
     } = this.props;
-
     return (
       <div block="MyAccountReturnCreateListItem" elem="Content">
         <Image
           lazyLoad={true}
           mix={{ block: "MyAccountReturnCreateListItem", elem: "Image" }}
           src={thumbnail}
-          alt={"MyAccountReturnCreateListItemImage"}
+          alt={brand_name? brand_name : "MyAccountReturnCreateListItemImage"}
         />
         <div block="MyAccountReturnCreateListItem" elem="Details">
           {!(isMobile.any() || isMobile.tablet()) && this.renderHeading()}
