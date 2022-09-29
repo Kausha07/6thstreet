@@ -771,7 +771,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems.map(({ full_item_info }) => {
         const {
           cross_border = 0,
-          brand_name,
+          brand_name = "",
           international_vendor,
           sku,
           extension_attributes,
@@ -793,11 +793,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           : itemEddMessage;
         const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         const isIntlBrand =
-          (INTL_BRAND.includes(brand_name.toLowerCase()) &&
+          (INTL_BRAND.includes(brand_name.toString().toLowerCase()) &&
             cross_border === 1) ||
           cross_border === 1;
         const intlEddObj = intlEddResponse["checkout"]?.find(
-          ({ vendor }) => vendor.toLowerCase() === brand_name.toLowerCase()
+          ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
         );
         eddItems.push({
           sku: sku,
@@ -837,7 +837,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
               ? null
               : actualEddMess,
-          intl_vendors: INTL_BRAND.includes(brand_name.toLowerCase())
+          intl_vendors: INTL_BRAND.includes(brand_name.toString().toLowerCase())
             ? international_vendor
             : cross_border === 1
             ? international_vendor
