@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import { Store } from "../Icons";
 import Price from "Component/Price";
 import { isObject } from "Util/API/helper/Object";
-import { getDefaultEddDate } from "Util/Date/index";
+import { getDefaultEddMessage, getDefaultEddDate } from "Util/Date/index";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
@@ -20,12 +20,14 @@ import {
   EDD_MESSAGE_ARABIC_TRANSLATION,
   DEFAULT_SPLIT_KEY,
   DEFAULT_READY_MESSAGE,
-  DEFAULT_READY_SPLIT_KEY
+  DEFAULT_READY_SPLIT_KEY,
+  INTL_BRAND
 } from "../../util/Common/index";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   eddResponse: state.MyAccountReducer.eddResponse,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
 });
 
@@ -42,7 +44,18 @@ export class SuccessCheckoutItem extends PureComponent {
 
   state = {
     isArabic: isArabic(),
+    intlEddResponseState:{}
   };
+
+  static getDerivedStateFromProps(props) {
+    const {
+      intlEddResponse
+    } = props;
+
+    return {
+        intlEddResponseState:intlEddResponse
+    };
+  }
 
   static defaultProps = {
     isLikeTable: false,
@@ -236,6 +249,15 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
+  renderIntlTag() {
+    const {isArabic} = this.state
+    return (
+      <span block="AdditionShippingInformation" mods={{ isArabic }}>
+        {__("International Shipment")}
+      </span>
+    )
+  }
+
   renderContent() {
     const {
       isLikeTable,
@@ -243,10 +265,16 @@ export class SuccessCheckoutItem extends PureComponent {
         customizable_options,
         bundle_options,
         full_item_info: { cross_border = 0 },
+        brand_name
       },
       edd_info,
       isFailed,
+      eddResponse,
+      intlEddResponse
     } = this.props;
+    const isIntlBrand =
+    ((INTL_BRAND.includes(brand_name.toLowerCase()) && cross_border === 1) ||
+    cross_border === 1) && edd_info && edd_info.has_cross_border_enabled ;
 
     return (
       <figcaption
@@ -265,15 +293,17 @@ export class SuccessCheckoutItem extends PureComponent {
 
         {edd_info &&
           edd_info.is_enable &&
-          edd_info.has_thank_you && 
-          cross_border === 0 &&
+          edd_info.has_thank_you &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           !isFailed &&
-          this.renderEdd()}
+          this.renderEdd(cross_border === 1)}
+        {isIntlBrand && !isFailed && this.renderIntlTag()}
       </figcaption>
     );
   }
-  renderEdd = () => {
-    const { eddResponse, edd_info, item: { extension_attributes }  } = this.props;
+  renderEdd = (crossBorder) => {
+    const { eddResponse, edd_info, item: { extension_attributes, brand_name }, intlEddResponse } = this.props;
+
     const { isArabic } = this.state;
     let actualEddMess = "";
     let actualEdd = "";
@@ -284,26 +314,41 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
+    const isIntlBrand = ((INTL_BRAND.includes(brand_name.toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
+    const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === brand_name.toLowerCase());
+    const intlEddMess = intlEddObj
+      ? isArabic
+        ? intlEddObj["edd_message_ar"]
+        : intlEddObj["edd_message_en"]
+      : isIntlBrand
+      ? isArabic
+        ? intlEddResponse["thankyou"][0]["edd_message_ar"]
+        : intlEddResponse["thankyou"][0]["edd_message_en"]
+      : "";
     let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_ARRIVING_MESSAGE
     let customDefaultMess = isArabic
       ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
       : itemEddMessage;
     if (eddResponse) {
       if (isObject(eddResponse)) {
-        Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
-            if(extension_attributes?.click_to_collect_store){
-              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-            }else{
-              actualEddMess = isArabic
-              ? entry.edd_message_ar
-              : entry.edd_message_en;
-            actualEdd = entry.edd_date;
+        if (isIntlBrand) {
+          actualEddMess = intlEddMess
+        } else {
+          Object.values(eddResponse).filter((entry) => {
+            if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+              if (extension_attributes?.click_to_collect_store) {
+                actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+              } else {
+                actualEddMess = isArabic
+                  ? entry.edd_message_ar
+                  : entry.edd_message_en;
+                actualEdd = entry.edd_date;
+              }
             }
-          }
-        });
+          });
+        }
       } else {
-        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = isIntlBrand ? intlEddMess : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         actualEdd = defaultEddDateString;
       }
     }
@@ -314,7 +359,7 @@ export class SuccessCheckoutItem extends PureComponent {
     let splitKey = DEFAULT_SPLIT_KEY;
     let splitReadyByKey = DEFAULT_READY_SPLIT_KEY
     return (
-      <div block="AreaText" mods={{isArabic}}>
+      <div block="AreaText" mods={{ isArabic }}>
         {extension_attributes?.click_to_collect_store ?
           <span>
             {splitReadyByKey}
@@ -323,7 +368,7 @@ export class SuccessCheckoutItem extends PureComponent {
             {splitKey}
           </span>
         }
-         {extension_attributes?.click_to_collect_store ?
+        {extension_attributes?.click_to_collect_store ?
           <span>{actualEddMess.split(splitReadyByKey)[1]}</span>
           :
           <span>{actualEddMess.split(splitKey)[1]}</span>

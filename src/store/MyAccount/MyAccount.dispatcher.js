@@ -8,6 +8,7 @@ import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
   setEddResponse,
+  setIntlEddResponse,
   setDefaultEddAddress,
   setCitiesData,
 } from "Store/MyAccount/MyAccount.action";
@@ -484,24 +485,45 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
-          dispatch(setEddResponse(response?.result, request));
+          if (request['intl_vendors']) {
+            dispatch(setIntlEddResponse(response?.result));
+          } else {
+            dispatch(setEddResponse(response?.result, request));
+          }
           if (type) {
-            sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
-            sessionStorage.setItem(
-              "EddAddressRes",
-              JSON.stringify(response.result)
-            );
+            if (request['intl_vendors']) {
+              sessionStorage.setItem(
+                "IntlEddAddressRes",
+                JSON.stringify(response.result)
+              );
+            } else {
+              sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+              sessionStorage.setItem(
+                "EddAddressRes",
+                JSON.stringify(response.result)
+              );
+            }
           }
         } else {
-          dispatch(setEddResponse(response?.errorMessage, request));
-          sessionStorage.removeItem("EddAddressReq");
-          sessionStorage.removeItem("EddAddressRes");
+          if (request['intl_vendors']) {
+            dispatch(setIntlEddResponse({}));
+            sessionStorage.removeItem("IntlEddAddressRes");
+          } else {
+            dispatch(setEddResponse({}, request));
+            sessionStorage.removeItem("EddAddressReq");
+            sessionStorage.removeItem("EddAddressRes");
+          }
         }
       });
     } catch (error) {
-      dispatch(setEddResponse(null, request));
-      sessionStorage.removeItem("EddAddressReq");
-      sessionStorage.removeItem("EddAddressRes");
+      if (request['intl_vendors']) {
+        dispatch(setIntlEddResponse(null));
+        sessionStorage.removeItem("IntlEddAddressRes");
+      } else {
+        dispatch(setEddResponse(null, request));
+        sessionStorage.removeItem("EddAddressReq");
+        sessionStorage.removeItem("EddAddressRes");
+      }
     }
   }
 

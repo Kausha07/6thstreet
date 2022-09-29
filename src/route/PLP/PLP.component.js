@@ -153,7 +153,7 @@ export class PLP extends PureComponent {
       (pages.undefined && pages.undefined.length > 0) ||
       (pages["0"] && pages["0"].length > 0)
     ) {
-
+      
     return (
       <main block="PLP" id="plp-main-scroll-id">
         <ContentWrapper label={__("Product List Page")}>

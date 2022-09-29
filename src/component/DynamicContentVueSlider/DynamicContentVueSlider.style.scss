@@ -41,9 +41,6 @@
       }
       &-VueProductContainer {
         width: calc(50vw - 10px) !important;
-        &:nth-last-child(2) {
-          margin-right: 0px;
-        }
       }
     }
   }

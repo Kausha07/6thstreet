@@ -12,14 +12,9 @@ import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
 import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
 import { PureComponent } from "react";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
-import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
-import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
-import VueQuery from "../../query/Vue.query";
 import "./DynamicContent.style";
-import { getUUIDToken } from "Util/Auth";
 
 class DynamicContent extends PureComponent {
   static propTypes = {
@@ -53,30 +48,6 @@ class DynamicContent extends PureComponent {
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
   };
-  async getHomeWidgetsVueData(type) {
-    const { gender } = this.props;
-    const userData = BrowserDatabase.getItem("MOE_DATA");
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    const query = {
-      filters: [],
-      num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
-    };
-    const payload = VueQuery.buildQuery(type, query, {
-      gender,
-      userID,
-    });
-
-    try {
-      const pdpWidgetsData = await fetchVueData(payload);
-      if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
-        return "vue slider";
-      }
-    } catch (error) {
-      onsole.log("Home widget vue query catch", err);
-    }
-  }
   isCheckTwiceBanner = (block) => {
     let isValid = false;
     if (block.header) {
@@ -119,6 +90,7 @@ class DynamicContent extends PureComponent {
           promotion_name={promotion_name}
           tag={tag}
           type={type}
+          widgetID={type}
           key={i}
           isHomePage={true}
           index={i}
@@ -156,6 +128,7 @@ class DynamicContent extends PureComponent {
         key={i}
         isHomePage={true}
         index={i}
+        widgetID={type}
       />
     );
   };

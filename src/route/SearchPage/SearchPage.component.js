@@ -43,6 +43,7 @@ class SearchPage extends PLP {
     //     </>
     //   );
     // }
+
     if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
       return (
         <NoMatch/>
@@ -56,6 +57,7 @@ class SearchPage extends PLP {
         return (
           <main block="SearchPage" id="plp-main-scroll-id">
             <ContentWrapper label={__("Product List Page")}>
+              {this.renderMySignInPopup()}
               {this.renderPLPDetails()}
               {this.state.bannerData && this.renderBanner()}
               <div>

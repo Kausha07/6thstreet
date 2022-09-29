@@ -39,8 +39,8 @@
       }
     }
     @media (max-width: 760px) {
-      display: block;
-      text-align: center;
+      // display: block;
+      // text-align: center;
       h1 {
         font-size: 15px;
         margin-bottom: 0px;
@@ -111,9 +111,6 @@
     margin-right: 7.92px;
     display: inline-block;
     vertical-align: top;
-    &:nth-last-child(2) {
-      margin-right: 0;
-    }
     &_isArabic {
       &:nth-child(2) {
         margin-right: 0;

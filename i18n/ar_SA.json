@@ -1094,6 +1094,11 @@
     "at": "في",
     "Exchange Rejected": "صرف مرفوض",
     "Return/Exchange Statement": null,
+    "View All": "مراجعة الكل",
+    "Style It With": "يمكنك تنسيقها مع",
+    "You May Also Like": "منتجات اخرى قد تنال إعجابك",
+    "Recently Viewed": "تم تصفحها مؤخراً",
+    "You May Like": "أفضل شريط التمرير",
     "You have already linked with entered mobile number: ": "تم ربط رقم الهاتف المدخل بحسابك مسبقاُ",
     "Link your Club Apparel account and start earning points.": "أربط حسابك في كلوب أباريل وإبدأ في كسب النقاط",
     "OTP verification failed": "فشل التحقق من كلمة المرور ",
@@ -1104,8 +1109,9 @@
     "Size UK": "حجم المملكة المتحدة",
     "Size US": "المقاس الأمريكي",
     "Size EU": "حجم الاتحاد الأوروبي",
-    "KNET Payment Id" : " رمز تعريف الدفع بإستخدام كي نت",
-    "KNET Transaction Id" : "رمز تعريف معاملة كي نت",
+    "KNET Payment Id": " رمز تعريف الدفع بإستخدام كي نت",
+    "KNET Transaction Id": "رمز تعريف معاملة كي نت",
     "SUCCESS": "ناجح",
-    "FAILED": "فشلت عملية الدفع"
+    "FAILED": "فشلت عملية الدفع",
+    "Age": "سن"
 }

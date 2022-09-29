@@ -1010,7 +1010,7 @@ class SearchSuggestion extends PureComponent {
     if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 3) {
+    if (searchString.length > 2) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();

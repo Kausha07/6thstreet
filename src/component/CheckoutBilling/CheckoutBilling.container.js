@@ -27,7 +27,8 @@ import { CHECKOUT_APPLE_PAY } from "Component/CheckoutPayments/CheckoutPayments.
 import CheckoutComQuery from "Query/CheckoutCom.query";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { customerType } from "Type/Account";
-import { TotalsType } from "Type/MiniCart";
+import { isArabic } from "Util/App";
+
 import { tokenize } from "Util/API/endpoint/ApplePay/ApplePay.enpoint";
 import { isSignedIn } from "Util/Auth";
 import Logger from "Util/Logger";
@@ -371,6 +372,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
     let finalEdd = null;
+    let finalEddString = ""
     let nonCrossBorderItems = items.filter((item) => {
       const {
         full_item_info: { cross_border = 0 },
@@ -389,8 +391,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     ) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
             finalEdd = entry.edd_date;
+            finalEddString = isArabic() ? entry['edd_message_ar'] : entry['edd_message_en']
           }
         });
       }
@@ -462,6 +465,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 billing_address: address,
                 paymentMethod,
                 finalEdd,
+                finalEddString
               });
             } else if (Array.isArray(response)) {
               const message = response[0];
@@ -491,6 +495,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             paymentMethod,
             selectedCard,
             finalEdd,
+            finalEddString
           });
         } else {
           //if saved card is not selected
@@ -504,6 +509,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         billing_address: address,
         paymentMethod,
         finalEdd,
+        finalEddString
       });
     }
   }
@@ -521,6 +527,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       totals: { items = [] },
     } = this.props;
     let finalEdd = null;
+    let finalEddString = "";
     let nonCrossBorderItems = items.filter((item) => {
       const {
         full_item_info: { cross_border = 0 },
@@ -541,8 +548,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       );
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "cart" && entry.featute_flag_status === 1) {
+          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
             finalEdd = entry.edd_date;
+            finalEddString = isArabic() ? entry['edd_message_ar'] : entry['edd_message_en']
           }
         });
       } else {
@@ -566,6 +574,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
               billing_address: address,
               paymentMethod,
               finalEdd,
+              finalEddString
             });
           }
         }

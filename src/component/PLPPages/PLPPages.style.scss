@@ -25,10 +25,21 @@
             overflow-x: auto;
             overflow-y: hidden;
             &_isArabic {
-              width: 100vh;
+              .FieldMultiselect {
+                direction: rtl !important;
+              }
             }
             @include desktop {
               overflow: hidden;
+            }
+            .FieldMultiselect {
+              direction: ltr;
+            }
+            .QuickFilter {
+              &-List {
+                overflow-x: scroll;
+                overflow-y: hidden;
+              }
             }
           }
         }
