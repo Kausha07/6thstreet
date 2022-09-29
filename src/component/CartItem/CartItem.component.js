@@ -80,16 +80,20 @@ export class CartItem extends PureComponent {
     closePopup: () => {},
     isCartPage: false,
     readOnly: false,
+    intlEddResponseState:{}
   };
 
   static getDerivedStateFromProps(props) {
     const {
       item: { availability, availableQty, qty },
+      intlEddResponse
     } = props;
 
     return {
       isNotAvailble:
         availability === 0 || availableQty === 0 || qty > availableQty,
+        intlEddResponseState:intlEddResponse
+
     };
   }
   renderProductConfigurationOption = ([key, attribute]) => {
@@ -504,6 +508,7 @@ export class CartItem extends PureComponent {
         full_item_info: { cross_border = 0 },
         brand_name,
       },
+      intlEddResponse
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
@@ -529,7 +534,7 @@ export class CartItem extends PureComponent {
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_cart &&
-          (isIntlBrand || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {this.renderActions()}
