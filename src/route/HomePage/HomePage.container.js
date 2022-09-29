@@ -125,9 +125,9 @@ export class HomePageContainer extends PureComponent {
         ) {
           requestCustomerData();
         } else {
-          logout();
-          // deleteAuthorizationToken();
-          // deleteMobileAuthorizationToken();
+          // logout();
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
         }
       } else {
         setMobileAuthorizationToken(mobileToken);
