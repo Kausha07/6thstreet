@@ -254,11 +254,16 @@
         }
 
         button {
-          font-weight: var(--fw-regular);
-          font-size: 14px;
+          font-family: "Avenir Next Demi Bold";
+          font-size: 15px;
           margin-top: 0;
           text-transform: capitalize;
-          color: #4a4a4a;
+          text-decoration: underline;
+          color: var(--black-color);
+          width: unset;
+        }
+        .disableBtn {
+          color: var(--gray-color);
         }
       }
 
@@ -300,6 +305,9 @@
         text-decoration: underline;
         text-transform: inherit;
         height: 25px;
+      }
+      .disableBtn {
+        color: var(--gray-color);
       }
     }
 

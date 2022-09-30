@@ -64,6 +64,8 @@ export class CheckoutSuccess extends PureComponent {
     wasLoaded: false,
     otp: null,
     isVerifyEmailViewState: false,
+    otpTimer: 15,
+    isTimerEnabled: false,
   };
 
   componentDidMount() {
@@ -71,17 +73,46 @@ export class CheckoutSuccess extends PureComponent {
     this.timer = setInterval(this.tick, delay);
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { delay } = this.state;
     if (prevState !== delay) {
       clearInterval(this.interval);
       this.interval = setInterval(this.tick, delay);
     }
+
+    if (
+      this.state.otpTimer === 0 &&
+      this.state.isTimerEnabled &&
+      this.timer != null
+    ) {
+      clearInterval(this.timer);
+    }
+    if (
+      prevProps.selectedCard != this.props.selectedCard &&
+      prevProps.totals != this.props.totals
+    ) {
+      this.OtpTimerFunction();
+    }
+
   }
 
+  OtpTimerFunction() {
+    this.setState({
+      otpTimer: 15,
+    });
+    this.timer = setInterval(() => {
+      this.setState({
+        otpTimer: this.state.otpTimer - 1,
+        isTimerEnabled: true,
+      });
+    }, 1000);
+  }
   componentWillUnmount() {
     const { setCheckoutDetails } = this.props;
     setCheckoutDetails(false);
+    if (this.timer != null && this.state.isTimerEnabled) {
+      clearInterval(this.timer);
+    }
   }
   tick = () => {
     const { wasLoaded, successHidden } = this.state;
@@ -300,30 +331,46 @@ export class CheckoutSuccess extends PureComponent {
               elem="ResendCode"
               mods={{ isVerifying: !isLoading }}
             >
-              <button onClick={onResendCode}>
-                {__("Resend Verification Code")}
+              <span>{this.state.otpTimer > 0 && <span>0:{this.state.otpTimer} -</span>}</span>
+              <button
+                onClick={() => {
+                  onResendCode();
+                  this.OtpTimerFunction();
+                }}
+                className={this.state.otpTimer > 0 ? "disableBtn" : ""}
+                disabled={this.state.otpTimer > 0}
+              >
+                {__("Resend Code")}
               </button>
             </div>
             <div className="VerifyEmail">
               <span>{__("Problems with verification code?")}</span>
               {!isVerifyEmailViewState ? (
                 <button
-                  className="VerifyEmailBtn"
+                  className={
+                    this.state.otpTimer > 0
+                      ? "disableBtn VerifyEmailBtn"
+                      : "VerifyEmailBtn"
+                  }
                   onClick={() => {
                     this.setState({ isVerifyEmailViewState: true });
                     sendOTPOnMailOrPhone(true);
-                    console.log("verify with email clicked ");
+                    this.OtpTimerFunction();
                   }}
                 >
                   {__("Verify with E-mail")}
                 </button>
               ) : (
                 <button
-                  className="VerifyEmailBtn"
+                  className={
+                    this.state.otpTimer > 0
+                      ? "disableBtn VerifyEmailBtn"
+                      : "VerifyEmailBtn"
+                  }
                   onClick={() => {
                     this.setState({ isVerifyEmailViewState: false });
                     sendOTPOnMailOrPhone(false);
-                    console.log("verify with phone clicked ");
+                    this.OtpTimerFunction();
                   }}
                 >
                   {__("Verify with Phone")}
