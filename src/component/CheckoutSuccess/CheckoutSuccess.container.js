@@ -111,6 +111,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     isMobileVerification: false,
     isLoading: false,
     email: null,
+    otpError: "",
   };
 
   containerFunctions = {
@@ -361,7 +362,6 @@ export class CheckoutSuccessContainer extends PureComponent {
           try {
             await signInOTP(response);
             history.push("/my-account/my-orders");
-            // this.checkForOrder();
           } catch (e) {
             this.setState({ isLoading: false });
             showNotification("error", e.message);
@@ -370,7 +370,10 @@ export class CheckoutSuccessContainer extends PureComponent {
             isLoading: false,
           });
         }
-        if (typeof response === "string") {
+        if (response && typeof response === "string") {
+          this.setState({
+            otpError: response
+          });
           showNotification("error", response);
         }
         this.setState({ isLoading: false });

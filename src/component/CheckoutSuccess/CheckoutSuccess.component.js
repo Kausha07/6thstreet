@@ -184,6 +184,7 @@ export class CheckoutSuccess extends PureComponent {
       isLoading,
       sendOTPOnMailOrPhone,
       email,
+      otpError,
     } = this.props;
     const { isArabic, isPhoneVerification, otp, isVerifyEmailViewState } =
       this.state;
@@ -265,7 +266,6 @@ export class CheckoutSuccess extends PureComponent {
 
     return (
       <>
-        {/* below code is just the ui design loginc and other tags has to fixed */}
         {!isSignedInState && guestAutoSignIn && (
           <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
             <div block="VerifyPhone" elem="Text">
@@ -304,13 +304,16 @@ export class CheckoutSuccess extends PureComponent {
                   onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)}
               />
             </div>
-            <div
-              block="VerifyPhone"
-              elem="ErrMessage"
-            // mods={{ isValidated: otpError.length !== 0 }}
-            >
-              {/* {__(otpError)} */}
-            </div>
+            {
+              otpError &&
+              <div
+                block="VerifyPhone"
+                elem="ErrMessage"
+                mods={{ isValidated: otpError.length !== 0 }}
+              >
+                {__(otpError)}
+              </div>
+            }
             <div
               block="VerifyPhone"
               elem="OtpLoader"
