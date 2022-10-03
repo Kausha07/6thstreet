@@ -38,7 +38,7 @@ export class LanguageSwitcherContainer extends PureComponent {
     isLoad: false,
   };
 
-  timer;
+  timer = null;
 
   componentWillUnmount() {
     clearTimeout(this.timer);
