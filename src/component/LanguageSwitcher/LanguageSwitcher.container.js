@@ -38,6 +38,63 @@ export class LanguageSwitcherContainer extends PureComponent {
     isLoad: false,
   };
 
+  componentWillUnmount() {
+    clearTimeout(this.redirectMyAccount());
+    clearTimeout(this.redirectViewAll());
+    clearTimeout(this.redirectHomePage());
+    clearTimeout(this.redirectPLP());
+    clearTimeout(this.redirectDefault());
+  }
+  redirectMyAccount(value) {
+    const { language = "" } = this.props;
+    setTimeout(() => {
+      window.location.href = location.href
+        .replace(language.toLowerCase(), value, location.href)
+        .split("/my-account")[0];
+    }, 1000);
+  }
+  redirectViewAll(value) {
+    const { language = "" } = this.props;
+    setTimeout(() => {
+      window.location.href = location.href
+        .replace(language.toLowerCase(), value, location.href)
+        .split("/viewall")[0];
+    }, 1000);
+  }
+  redirectHomePage(value) {
+    const { language = "" } = this.props;
+    const pageUrl = new URL(window.location.href);
+    const pagePath = pageUrl.origin;
+    setTimeout(() => {
+      window.location.href = pagePath.replace(
+        language.toLowerCase(),
+        value,
+        pagePath
+      );
+    }, 1000);
+  }
+  redirectPLP(value) {
+    const { language = "" } = this.props;
+    const pageUrl = new URL(window.location.href);
+    const pagePath = pageUrl.origin;
+    setTimeout(() => {
+      window.location.href = pagePath.replace(
+        language.toLowerCase(),
+        value,
+        pagePath
+      );
+    }, 1000);
+  }
+  redirectDefault(value) {
+    const { language = "" } = this.props;
+    setTimeout(() => {
+      window.location.href = location.href.replace(
+        language.toLowerCase(),
+        value,
+        location.href
+      );
+    }, 1000);
+  }
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
     this.setState({ isLoad: true });
@@ -52,52 +109,19 @@ export class LanguageSwitcherContainer extends PureComponent {
       window.location.href.includes("ar-")
     ) {
       if (location.pathname.match(/my-account/)) {
-        setTimeout(() => {
-          // Delay is for Moengage call to complete
-          window.location.href = location.href
-            .replace(language.toLowerCase(), value, location.href)
-            .split("/my-account")[0];
-        }, 1000);
-      }else if (location.pathname.match(/viewall/)) {
-        setTimeout(() => {
-          // Delay is for Moengage call to complete
-          window.location.href = location.href
-            .replace(language.toLowerCase(), value, location.href)
-            .split("/viewall")[0];
-        }, 1000);
+        this.redirectMyAccount(value);
+      } else if (location.pathname.match(/viewall/)) {
+        this.redirectViewAll(value);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
-        const pagePath = pageUrl.origin;
-        setTimeout(() => {
-          // Delay is for Moengage call to complete
-          window.location.href = pagePath.replace(
-            language.toLowerCase(),
-            value,
-            pagePath
-          );
-        }, 1000);
+        this.redirectHomePage(value);
       } else if (
         pageUrl.search &&
         pageUrl.search.length > 0 &&
         pageUrl.pathname !== "/catalogsearch/result/"
       ) {
-        const pagePath = pageUrl.origin + pageUrl.pathname;
-        setTimeout(() => {
-          // Delay is for Moengage call to complete
-          window.location.href = pagePath.replace(
-            language.toLowerCase(),
-            value,
-            pagePath
-          );
-        }, 1000);
+        this.redirectPLP(value);
       } else {
-        setTimeout(() => {
-          // Delay is for Moengage call to complete
-          window.location.href = location.href.replace(
-            language.toLowerCase(),
-            value,
-            location.href
-          );
-        }, 1000);
+        this.redirectDefault(value);
       }
     } else {
       this.props.setLanguageForWelcome(value);
