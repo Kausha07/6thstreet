@@ -163,7 +163,7 @@ class HeaderCart extends PureComponent {
   render() {
     const { cartPopUp, isArabic } = this.state;
     return (
-      <div block="HeaderCart" mods={{ isArabic }}>
+      <div block="HeaderCart" mods={{ isArabic }} aria-label="header-cart-icon">
         <button
           onClick={() => {
             isMobile.any() || isMobile.tablet()
