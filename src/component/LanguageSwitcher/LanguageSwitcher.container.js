@@ -38,63 +38,12 @@ export class LanguageSwitcherContainer extends PureComponent {
     isLoad: false,
   };
 
+  timer;
+
   componentWillUnmount() {
-    clearTimeout(this.redirectMyAccount());
-    clearTimeout(this.redirectViewAll());
-    clearTimeout(this.redirectHomePage());
-    clearTimeout(this.redirectPLP());
-    clearTimeout(this.redirectDefault());
+    clearTimeout(this.timer);
   }
-  redirectMyAccount(value) {
-    const { language = "" } = this.props;
-    setTimeout(() => {
-      window.location.href = location.href
-        .replace(language.toLowerCase(), value, location.href)
-        .split("/my-account")[0];
-    }, 1000);
-  }
-  redirectViewAll(value) {
-    const { language = "" } = this.props;
-    setTimeout(() => {
-      window.location.href = location.href
-        .replace(language.toLowerCase(), value, location.href)
-        .split("/viewall")[0];
-    }, 1000);
-  }
-  redirectHomePage(value) {
-    const { language = "" } = this.props;
-    const pageUrl = new URL(window.location.href);
-    const pagePath = pageUrl.origin;
-    setTimeout(() => {
-      window.location.href = pagePath.replace(
-        language.toLowerCase(),
-        value,
-        pagePath
-      );
-    }, 1000);
-  }
-  redirectPLP(value) {
-    const { language = "" } = this.props;
-    const pageUrl = new URL(window.location.href);
-    const pagePath = pageUrl.origin;
-    setTimeout(() => {
-      window.location.href = pagePath.replace(
-        language.toLowerCase(),
-        value,
-        pagePath
-      );
-    }, 1000);
-  }
-  redirectDefault(value) {
-    const { language = "" } = this.props;
-    setTimeout(() => {
-      window.location.href = location.href.replace(
-        language.toLowerCase(),
-        value,
-        location.href
-      );
-    }, 1000);
-  }
+
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
     this.setState({ isLoad: true });
@@ -109,19 +58,52 @@ export class LanguageSwitcherContainer extends PureComponent {
       window.location.href.includes("ar-")
     ) {
       if (location.pathname.match(/my-account/)) {
-        this.redirectMyAccount(value);
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = location.href
+            .replace(language.toLowerCase(), value, location.href)
+            .split("/my-account")[0];
+        }, 1000);
       } else if (location.pathname.match(/viewall/)) {
-        this.redirectViewAll(value);
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = location.href
+            .replace(language.toLowerCase(), value, location.href)
+            .split("/viewall")[0];
+        }, 1000);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
-        this.redirectHomePage(value);
+        const pagePath = pageUrl.origin;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
       } else if (
         pageUrl.search &&
         pageUrl.search.length > 0 &&
         pageUrl.pathname !== "/catalogsearch/result/"
       ) {
-        this.redirectPLP(value);
+        const pagePath = pageUrl.origin + pageUrl.pathname;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
       } else {
-        this.redirectDefault(value);
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = location.href.replace(
+            language.toLowerCase(),
+            value,
+            location.href
+          );
+        }, 1000);
       }
     } else {
       this.props.setLanguageForWelcome(value);
