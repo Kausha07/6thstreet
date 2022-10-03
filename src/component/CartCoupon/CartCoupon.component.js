@@ -40,6 +40,10 @@ export class CartCoupon extends SourceCartCoupon {
   handleApplyCode = async (e, couponCode) => {
     e.stopPropagation();
 
+    this.setState({
+      enteredCouponCode: "",
+    });
+
     try {
       let apiResponse =
         (await this.props.applyCouponToCart(couponCode)) || null;
