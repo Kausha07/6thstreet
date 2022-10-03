@@ -27,6 +27,14 @@ export const appendOrdinalSuffix = (number) => {
 
 export const DEFAULT_MESSAGE = 'Delivery by'
 
+export const YES = "Yes"
+
+export const YES_IN_ARABIC = "نعم"
+
+export const NO = "No"
+
+export const NO_IN_ARABIC = "لا"
+
 export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
 
 export const DEFAULT_READY_MESSAGE = 'Ready by'

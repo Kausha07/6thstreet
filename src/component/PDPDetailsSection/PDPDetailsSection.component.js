@@ -19,6 +19,12 @@ import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
+import { 
+  YES_IN_ARABIC,
+  YES,
+  NO,
+  NO_IN_ARABIC,
+} from "../../util/Common/index";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -977,7 +983,9 @@ class PDPDetailsSection extends PureComponent {
   
   renderReturnInfo() {
 
-    if(this.props.product.returnable === "Yes"){
+    const { isArabic } = this.state;
+
+    if(this.props.product.returnable === YES || ( this.props.product.returnable === YES_IN_ARABIC && isArabic )){
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
@@ -985,7 +993,7 @@ class PDPDetailsSection extends PureComponent {
           </p>
         </div>
       )
-    } else if (this.props.product.returnable === "No"){
+    } else if (this.props.product.returnable === NO || ( this.props.product.returnable === NO_IN_ARABIC && isArabic ) ){
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
