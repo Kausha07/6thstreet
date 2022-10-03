@@ -170,6 +170,7 @@ class HeaderAccount extends PureComponent {
             mods: { isMobile },
           },
         }}
+        role="button"
         aria-label="header-account-icon"
       >
         {this.renderAccountButton()}

@@ -163,7 +163,7 @@ class HeaderCart extends PureComponent {
   render() {
     const { cartPopUp, isArabic } = this.state;
     return (
-      <div block="HeaderCart" mods={{ isArabic }} aria-label="header-cart-icon">
+      <div block="HeaderCart" mods={{ isArabic }}>
         <button
           onClick={() => {
             isMobile.any() || isMobile.tablet()
@@ -173,6 +173,8 @@ class HeaderCart extends PureComponent {
           }}
           block="HeaderCart"
           elem="Button"
+          role="button" 
+          aria-label="header-cart-icon"
         >
           {this.renderItemCount()}
         </button>
