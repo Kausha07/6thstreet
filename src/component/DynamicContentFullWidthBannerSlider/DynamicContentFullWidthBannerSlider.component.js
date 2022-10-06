@@ -131,7 +131,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img src={image_url} alt={label} />
+        <img src={image_url} alt={label ? label : "full-width-banner-image" } />
       </Link>
     );
   };
