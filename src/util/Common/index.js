@@ -30,6 +30,16 @@ export const INTL_BRAND = isArabic()
   : ["trendyol", "koton"];
 export const INTL_BRAND_ARABIC = ["ترينديول", "كوتون"];
 
+export const YES = "Yes"
+
+export const YES_IN_ARABIC = "نعم"
+
+export const NO = "No"
+
+export const NO_IN_ARABIC = "لا"
+
+export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
+
 export const DEFAULT_MESSAGE = "Delivery by";
 
 export const DEFAULT_ARRIVING_MESSAGE = "Arriving by";
