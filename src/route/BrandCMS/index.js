@@ -142,13 +142,13 @@ function BrandCMS(props) {
   useEffect(() => {
     getWidgets();
     renderWidget();
-    
+
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {  
     renderWidget();
     updateBreadcrumbs();
-  }, [storeWidgets]);
+  }, [storeWidgets,location.pathname]);
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />;
@@ -156,7 +156,7 @@ function BrandCMS(props) {
     return <NoMatch />;
   }
 
-  return (
+  return (    
     <main block="BrandCMS">
       <ContentWrapper label={__("BrandBy_Huge_DiscountCMS Page")}>
         {showPopup && (
