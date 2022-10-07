@@ -255,12 +255,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search, eventType) => {
+  onSearchQueryClick = (search) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
-    if (eventType) {
-      Event.dispatch(eventType);
-    }
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -390,6 +387,7 @@ class SearchSuggestion extends PureComponent {
           app6thstreet_platform: "Web",
         });
       }
+      this.onSearchQueryClick(query)
     };
     const suggestionContent = () => {
       if (products?.length === 1 && fetchSKU) {
