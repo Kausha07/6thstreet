@@ -184,7 +184,7 @@ class PLPPages extends PureComponent {
       discount: __("Discount"),
       colorfamily: __("Colors"),
       sizes: __("Sizes"),
-      sort: __("Sort by"),
+      age: __("Age"),
     };
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;

@@ -389,7 +389,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     Object.keys(activeFilters).map((key) =>
-      WebUrlParser.setQuickFilterParam(key, activeFilters[key], query)
+      WebUrlParser.setParam(key, activeFilters[key], query)
     );
   }
 
@@ -736,6 +736,7 @@ class PLPFilters extends PureComponent {
         return (
           <PLPQuickFilter
             key={key}
+            brandFilter={true}
             filter={filter}
             updateFilters={this.updateQuickFilters}
             onClick={this.updateQuickFilters}

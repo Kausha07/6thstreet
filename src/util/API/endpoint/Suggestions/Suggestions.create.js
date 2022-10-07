@@ -54,6 +54,19 @@ export const getGenderInArabic = (gender) => {
   }
 };
 
+export const getGenderInEnglish = (gender) => {
+  switch (gender.trim()) {
+    case "رجال":
+      return "men";
+    case "نساء":
+      return "women";
+    case "أطفال":
+      return "kids";
+    case "المنزل":
+      return "home";
+  }
+};
+
 export const getGenderParam = (gender, isProduct = false) => {
   switch (gender.toLowerCase()) {
     case "kids":

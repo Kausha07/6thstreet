@@ -20,12 +20,14 @@ class PLPQuickFilter extends PureComponent {
       updateFilters,
       handleCallback,
       selectedSizeCode,
+      brandFilter
     } = this.props;
 
     return (
       <QuickCategoriesOptions
         placeholder={label}
         showCheckbox
+        brandFilter={brandFilter}
         selectedSizeCode={selectedSizeCode}
         filter={filter}
         updateFilters={updateFilters}

@@ -38,8 +38,10 @@
               .Field {
                 label {
                   background-color: #000000;
-                  color: #ffffff;
                 }
+              }
+              label {
+                color: #ffffff !important;
               }
             }
             @include mobile {

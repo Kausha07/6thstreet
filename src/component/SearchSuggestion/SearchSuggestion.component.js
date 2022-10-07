@@ -7,6 +7,7 @@ import { PureComponent } from "react";
 import { withRouter } from "react-router";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   getGenderInArabic,
   getHighlightedText,
@@ -63,6 +64,7 @@ class SearchSuggestion extends PureComponent {
   static defaultProps = {
     hideActiveOverlay: () => {},
   };
+  ref = React.createRef();
 
   state = {
     isArabic: isArabic(),
@@ -255,12 +257,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search, eventType) => {
+  onSearchQueryClick = (search) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
-    if (eventType) {
-      Event.dispatch(eventType);
-    }
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -390,6 +389,7 @@ class SearchSuggestion extends PureComponent {
           app6thstreet_platform: "Web",
         });
       }
+      this.onSearchQueryClick(query)
     };
     const suggestionContent = () => {
       if (products?.length === 1 && fetchSKU) {
@@ -753,9 +753,11 @@ class SearchSuggestion extends PureComponent {
     return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+        <DragScroll data={{ rootClass: "TrandingBrands", ref: this.ref }}>
+        <ul id="TrandingBrands" block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }} ref={this.ref}>
           {trendingBrands.map(this.renderTrendingBrand)}
         </ul>
+        </DragScroll>
       </div>
     ) : null;
   }
@@ -1010,7 +1012,7 @@ class SearchSuggestion extends PureComponent {
     if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 3) {
+    if (searchString.length > 2) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();

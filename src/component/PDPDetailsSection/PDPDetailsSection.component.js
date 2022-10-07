@@ -8,17 +8,19 @@ import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
-import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { isArabic } from "Util/App";
-import { getUUIDToken } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
+import { 
+  YES_IN_ARABIC,
+  YES,
+  NO,
+  NO_IN_ARABIC,
+} from "../../util/Common/index";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -53,6 +55,7 @@ class PDPDetailsSection extends PureComponent {
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
+    document.body.style.overflowX = 'visible';
   }
 
   renderShareButton() {
@@ -660,11 +663,14 @@ class PDPDetailsSection extends PureComponent {
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
       pdpWidgetsAPIData = [],
+      product
     } = this.props;
     const { innerWidth: width } = window;
+    document.body.style.overflowX = 'clip';
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
+          {this.props?.product?.returnable ? (<div block="Seperator2" />) : (null)}
           <React.Fragment>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
@@ -683,7 +689,7 @@ class PDPDetailsSection extends PureComponent {
                           widgetID={widgetID}
                           products={data}
                           heading={heading}
-                          isHome={true}
+                          isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
                           sourceProdID={sku}
                           sourceCatgID={categories_without_path[0]}
@@ -691,6 +697,8 @@ class PDPDetailsSection extends PureComponent {
                           key={`DynamicContentVueProductSliderContainer${index}`}
                           index={index}
                           isArabic={isArabic()}
+                          withViewAll={true}
+                          product={product}
                         />
                       </div>
                     </>
@@ -973,6 +981,86 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
+  
+  renderReturnInfo() {
+
+    const { isArabic } = this.state;
+
+    if(this.props.product.returnable === YES || ( this.props.product.returnable === YES_IN_ARABIC && isArabic )){
+      return (
+        <div>
+          <p block="shippingAndFreeReturns" elem="infoShippingFee">
+              {__("Return any unsatisfactory items within 100 days from receiving your order.")}
+          </p>
+        </div>
+      )
+    } else if (this.props.product.returnable === NO || ( this.props.product.returnable === NO_IN_ARABIC && isArabic ) ){
+      return (
+        <div>
+          <p block="shippingAndFreeReturns" elem="infoShippingFee">
+            {__("Item cannot be returned.")}
+          </p>
+        </div>
+      )
+    } 
+
+    return (
+      <div>
+        <p block="shippingAndFreeReturns" elem="infoShippingFee">
+          {__(
+              "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
+            )}
+        </p>
+      </div>
+    )
+
+  }
+
+  renderShippingInfo() {
+    let country = getCountryFromUrl();
+      let txt = {
+        AE: __(
+          "*Free delivery for orders above AED 100."
+        ),
+        SA: __(
+          "*Free delivery for orders above SAR 200."
+        ),
+        KW: __(
+          "*Free delivery for orders above KWD 20."
+        ),
+        QA: __(
+          "*Free delivery for orders above QAR 200."
+        ),
+        OM: __(
+          "*Free delivery for orders above OMR 20."
+        ),
+        BH: __(
+          "*Free delivery for orders above BHD 20."
+        ),
+      };
+  
+    return (
+      <div>
+        <p block="shippingAndFreeReturns" elem="infoShippingFee">
+          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold"
+            >
+              {txt[country]}
+            </b>
+          <br />
+        </p>
+        <div block="FindOutMore">
+          <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>
+            <span block="FindOutMore" elem="ButtonText">
+              {__("Find Out More")}
+            </span>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+  
+
+
   render() {
     const {
       product: { brand_name },
@@ -1002,19 +1090,28 @@ class PDPDetailsSection extends PureComponent {
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
         {isMobile ? null : this.renderSeperator()}
-        <div block="AccordionWrapper">
-          {/* <Accordion
-            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
-            is_expanded={this.state.isExpanded["3"]}
-          >
-            {this.renderShipping()}
-            <br />
-            {this.renderShippingAndFreeReturns()}
-            {isMobile ? <br /> : null}
-          </Accordion> */}
-          {/* {this.renderAccordionSeperator()} */}
-        </div>
+
+        {
+          this.props?.product?.returnable ? (
+
+            <div block="AccordionWrapper">
+              <Accordion
+                mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+                title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
+                is_expanded={this.state.isExpanded["3"]}
+              >
+                {this.renderReturnInfo()}
+                {this.renderShippingInfo()}
+                {isMobile ? <br /> : null}
+              </Accordion>
+                {this.renderAccordionSeperator()}
+            </div>
+            
+          ) : (
+            null
+          )
+        }
+
         {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         ) : null}

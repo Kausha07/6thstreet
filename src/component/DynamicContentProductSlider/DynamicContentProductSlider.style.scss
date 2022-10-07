@@ -32,6 +32,21 @@
         text-transform: uppercase;
       }
     }
+    &_isArabic {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .productWidgetHeading {
+        text-align: right;
+        width: 100%;
+        padding: 0 24px;
+      }
+      .VueProductSlider {
+        &-ViewAllBtn {
+          text-align: left;
+        }
+      }
+    }
   }
   &-VueProductContainer {
     cursor: pointer;
@@ -113,6 +128,9 @@
       margin-left: 10px;
       margin-right: 10px;
     }
+    &_isArabic { 
+      text-align: left;
+      }
   }
   &_isArabic {
     right: 50%;

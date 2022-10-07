@@ -25,21 +25,37 @@ export const appendOrdinalSuffix = (number) => {
   return `${number}th`;
 };
 
-export const DEFAULT_MESSAGE = 'Delivery by'
+export const INTL_BRAND = isArabic()
+  ? ["ترينديول", "كوتون"]
+  : ["trendyol", "koton"];
+export const INTL_BRAND_ARABIC = ["ترينديول", "كوتون"];
 
-export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
+export const YES = "Yes"
 
-export const DEFAULT_READY_MESSAGE = 'Ready by'
+export const YES_IN_ARABIC = "نعم"
 
-export const DEFAULT_SPLIT_KEY = isArabic() ? "بواسطه" : "by"
+export const NO = "No"
 
-export const DEFAULT_READY_SPLIT_KEY = isArabic() ? 'جاهز في غضون' : "Ready by"
+export const NO_IN_ARABIC = "لا"
+
+export const DEFAULT_MESSAGE = "Delivery by";
+
+export const DEFAULT_ARRIVING_MESSAGE = "Arriving by";
+
+export const DEFAULT_READY_MESSAGE = "Ready by";
+
+export const DEFAULT_SPLIT_KEY = isArabic() ? "بواسطه" : "by";
+
+export const DEFAULT_READY_SPLIT_KEY = isArabic() ? "جاهز في غضون" : "Ready by";
 
 export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Delivery by": "التوصيل بواسطه",
   "Arriving by": "الوصول بواسطه",
   "Ready by": "جاهز في غضون"
 };
+
+export const TRENDING_BRANDS_ENG = "Trending brands";
+export const TRENDING_BRANDS_AR = "العلامات التجارية الأكثر رواجاً";
 
 export const SPECIAL_COLORS = {
   beige: "#f5f5dc",
@@ -443,7 +459,7 @@ export const getCardType = (cardNumber = "") => {
   }
 };
 
-export const camelCase=(str)=>{
+export const camelCase = (str) => {
   return str.toLowerCase()
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))

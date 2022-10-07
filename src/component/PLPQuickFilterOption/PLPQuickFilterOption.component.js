@@ -134,8 +134,10 @@ class PLPQuickFilterOption extends PureComponent {
         const { isArabic } = this.state;
         const {
             option: {
-                facet_value
-            }
+                facet_value,
+                is_selected: checked
+            },
+            brandFilter
         } = this.props;
 
         if (!facet_value) {
@@ -143,7 +145,14 @@ class PLPQuickFilterOption extends PureComponent {
         }
 
         return (
-            <li ref={ this.optionRef } block="PLPFilterOption" elem="List" mods={ { isArabic } }>
+            <li ref={ this.optionRef } block="PLPFilterOption" elem="List"
+            mix={{
+                block: "PLPFilterOption-List",
+                elem:
+                checked && brandFilter ? "SelectedList" : "",
+              }}
+            mods={ { isArabic } }
+            >
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

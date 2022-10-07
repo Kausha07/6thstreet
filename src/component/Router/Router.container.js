@@ -26,20 +26,25 @@ import {
   setUUID,
   setUUIDToken,
 } from "Util/Auth";
-import { getCookie } from "Util/Url/Url";
+import { getCookie, getCountryFromUrl } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
+import { INTL_BRAND, INTL_BRAND_ARABIC } from "../../util/Common/index";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
 );
+import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   locale: state.AppState.locale,
   addressCityData: state.MyAccountReducer.addressCityData,
   eddResponse: state.MyAccountReducer.eddResponse,
+  edd_info: state.AppConfig.edd_info,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
+  currentGender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -51,6 +56,10 @@ export const mapDispatchToProps = (dispatch) => ({
   setCountry: (value) => dispatch(setCountry(value)),
   setEddResponse: (response, request) =>
     dispatch(setEddResponse(response, request)),
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.estimateEddResponse(dispatch, request, type)
+    ),
   setLanguage: (value) => dispatch(setLanguage(value)),
   requestCustomerData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -94,7 +103,9 @@ export class RouterContainer extends SourceRouterContainer {
       getCitiesData,
       requestAlgoliaIndex,
       algoliaIndex,
+      edd_info,
     } = this.props;
+    const countryCode = getCountryFromUrl();
     const decodedParams = atob(decodeURIComponent(getCookie("authData")));
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
@@ -152,6 +163,10 @@ export class RouterContainer extends SourceRouterContainer {
     if (addressCityData.length === 0) {
       getCitiesData();
     }
+    if (edd_info && edd_info.is_enable && edd_info.has_cross_border_enabled) {
+      this.getInternationalEdd(countryCode);
+    }
+
     if (!eddResponse && sessionStorage.getItem("EddAddressReq")) {
       const response = sessionStorage.getItem("EddAddressRes")
         ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
@@ -162,7 +177,28 @@ export class RouterContainer extends SourceRouterContainer {
     if (!algoliaIndex) {
       requestAlgoliaIndex();
     }
+       
+    
+    const countrycache = getCountryFromUrl().toUpperCase()
+    if(this.props.currentGender === "all" && countrycache !== "BH" ){
+        const appStateCache = JSON.parse(localStorage.getItem(APP_STATE_CACHE_KEY));
+        appStateCache.data["gender"]= "women"
+        localStorage.setItem(APP_STATE_CACHE_KEY,  JSON.stringify(appStateCache));
+    }
   }
+
+  getInternationalEdd = (countryCode) => {
+    const { estimateEddResponse } = this.props;
+    let request = {
+      country: countryCode,
+      city: null,
+      area: null,
+      courier: null,
+      source: null,
+      intl_vendors: isArabic() ? INTL_BRAND_ARABIC : INTL_BRAND,
+    };
+    estimateEddResponse(request, true);
+  };
 
   componentDidUpdate() {
     const countryCode = navigator.language.substr(0, 2);

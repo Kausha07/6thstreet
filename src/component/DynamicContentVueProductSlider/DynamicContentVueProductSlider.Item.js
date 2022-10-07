@@ -151,7 +151,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
-        mods={{ isArabic }}
         ref={this.childRef}
       >
         <Link
