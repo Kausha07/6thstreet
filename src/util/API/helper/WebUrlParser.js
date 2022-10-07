@@ -157,7 +157,7 @@ const Parser = {
 
   setParam(key, values = []) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    if (!isMobile.any()) {
+    if (isMobile.any()) {
       url.searchParams.set("p", 0);
     }
     // remove all matchign search params

@@ -736,7 +736,12 @@ class PLPAddToCart extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true") {
-    const { setMinicartOpen } = this.props;
+    const { 
+      setMinicartOpen,
+      pageType,
+      removeFromWishlist,
+      wishlist_item_id,
+    } = this.props;
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
@@ -747,6 +752,13 @@ class PLPAddToCart extends PureComponent {
     if (isAdded) {
       setMinicartOpen(true);
       this.setState({ addedToCart: true });
+
+      /* if user is adding product from wishlist to cart then after adding to cart 
+           that product should remove from wishlist   */
+      
+      if(wishlist_item_id) {
+      removeFromWishlist(wishlist_item_id);
+      }
     }
 
     setTimeout(

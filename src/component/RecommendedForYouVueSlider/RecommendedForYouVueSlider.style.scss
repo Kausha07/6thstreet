@@ -151,16 +151,6 @@ html {
       vertical-align: top;
       overflow-y: hidden;
 
-      &:nth-last-child(2) {
-        margin-right: 0;
-      }
-
-      @include before-desktop {
-        &:first-child {
-          margin-left: 20px;
-        }
-      }
-
       &_isArabic {
         &:nth-child(2) {
           margin-right: 0;

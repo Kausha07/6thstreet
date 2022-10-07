@@ -551,12 +551,12 @@ class PDPAddToCart extends PureComponent {
   }
   renderAppParity() {
     const {
-      product: { brand_name="" },
+      product: { brand_name = "" },
     } = this.props;
 
     if (
-      brand_name.toLowerCase() === "trendyol" ||
-      brand_name.toLowerCase() === "ترينديول"
+      brand_name.toString().toLowerCase() === "trendyol" ||
+      brand_name.toString().toLowerCase() === "ترينديول"
     ) {
       return (
         <div block="AppParity">

@@ -1,6 +1,11 @@
 .MyAccountOrderViewItem {
   border-bottom: 2px solid var(--divider-color);
   padding: 10px 0;
+  .AdditionShippingInformation {
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 30px;
+  }
   .AreaText {
     display: flex;
     font-family: "Avenir Next";

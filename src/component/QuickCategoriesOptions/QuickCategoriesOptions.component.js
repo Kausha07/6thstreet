@@ -41,7 +41,7 @@ class QuickCategoriesOptions extends PureComponent {
   };
 
   renderOption = ([key, option = {}]) => {
-    const { updateFilters, parentCallback } = this.props;
+    const { updateFilters, parentCallback,brandFilter } = this.props;
     const { subcategories = {} } = option;
 
     if (Object.keys(subcategories).length !== 0) {
@@ -52,6 +52,7 @@ class QuickCategoriesOptions extends PureComponent {
       <PLPQuickFilterOption
         key={key}
         option={option}
+        brandFilter={brandFilter}
         updateFilters={updateFilters}
         parentCallback={parentCallback}
       />

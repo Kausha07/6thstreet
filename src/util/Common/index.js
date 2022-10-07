@@ -25,7 +25,10 @@ export const appendOrdinalSuffix = (number) => {
   return `${number}th`;
 };
 
-export const DEFAULT_MESSAGE = 'Delivery by'
+export const INTL_BRAND = isArabic()
+  ? ["ترينديول", "كوتون"]
+  : ["trendyol", "koton"];
+export const INTL_BRAND_ARABIC = ["ترينديول", "كوتون"];
 
 export const YES = "Yes"
 
@@ -37,11 +40,15 @@ export const NO_IN_ARABIC = "لا"
 
 export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
 
-export const DEFAULT_READY_MESSAGE = 'Ready by'
+export const DEFAULT_MESSAGE = "Delivery by";
 
-export const DEFAULT_SPLIT_KEY = isArabic() ? "بواسطه" : "by"
+export const DEFAULT_ARRIVING_MESSAGE = "Arriving by";
 
-export const DEFAULT_READY_SPLIT_KEY = isArabic() ? 'جاهز في غضون' : "Ready by"
+export const DEFAULT_READY_MESSAGE = "Ready by";
+
+export const DEFAULT_SPLIT_KEY = isArabic() ? "بواسطه" : "by";
+
+export const DEFAULT_READY_SPLIT_KEY = isArabic() ? "جاهز في غضون" : "Ready by";
 
 export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Delivery by": "التوصيل بواسطه",
