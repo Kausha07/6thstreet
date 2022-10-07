@@ -230,6 +230,7 @@ class PDPAddToCart extends PureComponent {
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+              alt={"strike-through"}
             />
           )}
         </div>
@@ -360,7 +361,7 @@ class PDPAddToCart extends PureComponent {
         disabled={disabled}
       >
         <div>{__("Click & Collect")}</div>
-        <Image lazyLoad={true} src={clickAndCollectIcon} />
+        <Image lazyLoad={true} src={clickAndCollectIcon} alt={"clickAndCollectIcon"} />
       </button>
     );
   }

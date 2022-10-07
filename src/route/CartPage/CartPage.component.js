@@ -794,7 +794,7 @@ export class CartPage extends PureComponent {
         {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
         <div block="CartPage" elem="EmptyCartImg">
           {/* <image src={EmptyCardIcon}/> */}
-          <Image src={EmptyCardIcon} />
+          <Image src={EmptyCardIcon} alt={"cart-icon"} />
         </div>
         <p block="CartPage" elem="EmptyCartText">
           {__("Your bag is empty!")}

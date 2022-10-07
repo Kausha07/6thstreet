@@ -72,6 +72,7 @@ class HeaderLogo extends PureComponent {
             lazyLoad={true}
             mix={{ block: "Image", mods: { isArabic } }}
             src={logo}
+            alt={"6thstreet_logo"}
           />
         </Link>
       );
@@ -87,6 +88,7 @@ class HeaderLogo extends PureComponent {
           lazyLoad={true}
           mix={{ block: "Image", mods: { isArabic } }}
           src={logo}
+          alt={"6thstreet_logo"}
         />
       </Link>
     );

@@ -528,7 +528,7 @@ class SearchSuggestion extends PureComponent {
             <Image
               lazyLoad={true}
               src={thumbnail_url}
-              alt="Product Image"
+              alt={ name ? name : "Product Image"}
               block="SearchProduct"
               elem="Image"
             />

@@ -75,6 +75,7 @@ class MyAccountOrderListItem extends SourceComponent {
         items_count,
         created_at,
         status,
+        brand_name
       },
     } = this.props;
     const date = new Date(created_at.replace(/-/g, "/"));
@@ -87,6 +88,7 @@ class MyAccountOrderListItem extends SourceComponent {
         <Image
           mix={{ block: "MyAccountOrderListItem", elem: "Image" }}
           src={thumbnail}
+          alt={brand_name ? brand_name : "MyAccountOrderListItemImages"}
         />
         <div
           block="MyAccountOrderListItem"
@@ -118,6 +120,7 @@ class MyAccountOrderListItem extends SourceComponent {
                     block: "MyAccountOrderListItem",
                     elem: "PackageImage",
                   }}
+                  alt={"Package-box"}
                 />
                 <p
                   block="MyAccountOrderListItem"

@@ -173,6 +173,8 @@ class HeaderCart extends PureComponent {
           }}
           block="HeaderCart"
           elem="Button"
+          role="button" 
+          aria-label="header-cart-icon"
         >
           {this.renderItemCount()}
         </button>

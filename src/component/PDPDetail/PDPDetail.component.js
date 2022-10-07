@@ -20,9 +20,9 @@ class PDPDetail extends PureComponent {
   };
 
   renderBrandImage = () => {
-    const { brandImg } = this.props;
+    const { brandImg,brandName } = this.props;
     return (
-      <Image lazyLoad={true} block="PDPDetail" elem="Image" src={brandImg} />
+      <Image lazyLoad={true} block="PDPDetail" elem="Image" src={brandImg} alt={brandName? brandName : "brandImage"}/>
     );
   };
 
