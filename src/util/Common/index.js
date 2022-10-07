@@ -54,6 +54,9 @@ export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Ready by": "جاهز في غضون"
 };
 
+export const TRENDING_BRANDS_ENG = "Trending brands";
+export const TRENDING_BRANDS_AR = "العلامات التجارية الأكثر رواجاً";
+
 export const SPECIAL_COLORS = {
   beige: "#f5f5dc",
   clear: "#ffffff",
