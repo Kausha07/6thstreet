@@ -113,7 +113,6 @@ export class RouterContainer extends SourceRouterContainer {
     } = this.props;
     const countryCode = getCountryFromUrl();
     const decodedParams = atob(decodeURIComponent(getCookie("authData")));
-    console.log("all well router called");
     if (!getUUIDToken()) {
       setUUIDToken(uuidv4());
     }
@@ -134,24 +133,19 @@ export class RouterContainer extends SourceRouterContainer {
 
       const { mobileToken } = params;
       const { authToken } = params;
-      console.log("all well got token from cookie");
       if (isSignedIn()) {
-        console.log("all well got token from ls");
         if (
           getMobileAuthorizationToken() === mobileToken &&
           getAuthorizationToken() === authToken
         ) {
-          console.log("all well got validated from ls");
           requestCustomerData();
         } else {
-          console.log("all well invalid from ls");
           // logout();
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
         }
         
       } else {
-        console.log("all well login failed from ls");
         setMobileAuthorizationToken(mobileToken);
         setAuthorizationToken(authToken);
 
@@ -171,7 +165,6 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      console.log("all well got no token from cookies")
       const cartID = BrowserDatabase.getItem("CART_ID_CACHE_KEY");
       if(cartID === parseInt(cartID, 10)) {
         logout();
