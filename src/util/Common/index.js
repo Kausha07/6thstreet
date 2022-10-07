@@ -38,8 +38,6 @@ export const NO = "No"
 
 export const NO_IN_ARABIC = "لا"
 
-export const DEFAULT_ARRIVING_MESSAGE = 'Arriving by'
-
 export const DEFAULT_MESSAGE = "Delivery by";
 
 export const DEFAULT_ARRIVING_MESSAGE = "Arriving by";
@@ -458,7 +456,7 @@ export const getCardType = (cardNumber = "") => {
   }
 };
 
-export const camelCase=(str)=>{
+export const camelCase = (str) => {
   return str.toLowerCase()
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
