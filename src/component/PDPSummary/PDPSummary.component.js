@@ -175,22 +175,10 @@ class PDPSummary extends PureComponent {
     }
   };
 
-  addTabbyPromo = (total, currency_code) => {
-    const { isArabic } = this.state;
-    new window.TabbyPromo({
-      selector: "#TabbyPromo",
-      currency: currency_code.toString(),
-      price: total,
-      installmentsCount: 4,
-      lang: isArabic ? "ar" : "en",
-      source: "product",
-    });
-  };
-
   componentDidMount() {
     const {
       product: { price },
-      getTabbyInstallment,
+      TabbyInstallment,
       addressCityData,
     } = this.props;
     const script = document.createElement("script");
@@ -199,21 +187,8 @@ class PDPSummary extends PureComponent {
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
-
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            this.addTabbyPromo(defPrice, currency);
-          }
-          else{
-            document.getElementById("TabbyPromo").classList.add("d-none");
-          }
-        }, this._handleError)
-        .catch(() => {});
+      TabbyInstallment(defPrice,currency);
     }
 
     const countryCode = getCountryFromUrl();
@@ -224,7 +199,7 @@ class PDPSummary extends PureComponent {
   }
   componentDidUpdate(prevProps) {
     const {
-      getTabbyInstallment,
+      // getTabbyInstallment,
       product: { cross_border = 0, price },
       edd_info,
       defaultShippingAddress,
@@ -233,25 +208,6 @@ class PDPSummary extends PureComponent {
     const countryCode = getCountryFromUrl();
 
     const { eddEventSent } = this.state;
-
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            this.addTabbyPromo(defPrice, currency);
-          }
-          else{
-            document.getElementById("TabbyPromo").classList.add("d-none");
-          }
-        }, this._handleError)
-        .catch(() => {});
-    }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
