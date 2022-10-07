@@ -700,13 +700,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             success,
             response_code,
             increment_id,
-            guest_auto_sign_in,
             id = "",
             _links: { redirect: { href = "" } = {} } = {},
           } = data;
 
           if (success || response_code === 200 || http_response_code === 202) {
-            this.setState({ isLoading: false, guestAutoSignIn: guest_auto_sign_in });
+            if (response && response.data && response.data.guest_auto_sign_in) {
+              this.setState({ guestAutoSignIn: response.data.guest_auto_sign_in });
+            }
+            this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
                 order_id,
