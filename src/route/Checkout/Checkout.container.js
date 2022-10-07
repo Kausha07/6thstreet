@@ -192,6 +192,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       PaymentRedirect: false,
       tabbyURL: "",
       QPayOrderDetails: null,
+      guestAutoSignIn: false,
     };
   }
 
