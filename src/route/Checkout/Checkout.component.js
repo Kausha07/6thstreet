@@ -516,6 +516,7 @@ export class Checkout extends SourceCheckout {
 
   renderDetailsStep() {
     const {
+      guestAutoSignIn,
       orderID,
       shippingAddress,
       incrementID,
@@ -525,7 +526,6 @@ export class Checkout extends SourceCheckout {
       newCardVisible,
       QPayDetails,
       QPayOrderDetails,
-      guestAutoSignIn,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
