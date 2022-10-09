@@ -9,6 +9,9 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentCircleItemSlider.style";
+
+import Config from "../../route/LiveExperience/LiveExperience.config";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
@@ -35,7 +38,6 @@ const settings = {
 };
 
 class DynamicContentCircleItemSlider extends PureComponent {
-  
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -51,23 +53,41 @@ class DynamicContentCircleItemSlider extends PureComponent {
     isArabic: isArabic(),
     impressionSent: false,
     livePartyItems: [],
-    channelID: "RQi9v57VXHIFetDai47q",
-    apiUrl: `https://liveshopping-api.bambuser.com/v1/channels/`
+    apiUrl: `https://liveshopping-api.bambuser.com/v1/channels/`,
   };
   componentDidMount() {
     this.registerViewPortEvent();
-    this.fetchLivePartyData();
+    this.getLiveLocation();
   }
 
+  getcountrySepicificChannelId = (country) => {
+    switch (country) {
+      case "ae":
+        return (Config.storeId = "RQi9v57VXHIFetDai47q");
+      case "sa":
+        return (Config.storeId = "LSC8XG1YSbgdX6Adwds4");
+      case "kw":
+        return (Config.storeId = "SbFHRnzIUHdcORz2ELjd");
+      case "om":
+        return (Config.storeId = "JFEsZsxpy6mp1HaawJvH");
+      case "bh":
+        return (Config.storeId = "TvklSoghpVJPJttPB94u");
+      case "qa":
+        return (Config.storeId = "mLnmwfhhDQZa8OzDYmni");
+      default:
+        return (Config.storeId = "RQi9v57VXHIFetDai47q");
+    }
+  };
+
   fetchLivePartyData = () => {
-    const { channelID, apiUrl} = this.state;
+    const { channelID, apiUrl } = this.state;
     try {
-      fetch(`${apiUrl}${channelID}`, {
+      fetch(`${apiUrl}${Config.storeId}`, {
         method: "GET",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
-          "Authorization": "Token CHkWEZ9PgCdcqbzJhMtXbmYa8FuNL8xEnSrAeCXMpsKE",
+          Authorization: "Token CHkWEZ9PgCdcqbzJhMtXbmYa8FuNL8xEnSrAeCXMpsKE",
         },
       })
         .then((response) => response.json())
@@ -80,6 +100,13 @@ class DynamicContentCircleItemSlider extends PureComponent {
       console.error(err);
     }
   };
+
+  getLiveLocation() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    this.getcountrySepicificChannelId(country);
+    this.fetchLivePartyData();
+  }
 
   registerViewPortEvent() {
     let observer;
@@ -252,7 +279,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems && ((this.state.livePartyItems.length) &&  this.state.livePartyItems[0].isLive) &&
+          {this.state.livePartyItems &&
+            this.state.livePartyItems.length &&
+            this.state.livePartyItems[0].isLive &&
             this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>

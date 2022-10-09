@@ -11,8 +11,9 @@ import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import { createCart, addProductToCart,updateProductInCart,removeProductFromCart,getCart } from "Util/API/endpoint/Cart/Cart.enpoint";
+
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -55,7 +56,8 @@ export const mapDispatchToProps = (dispatch) => ({
     thumbnail_url,
     url,
     itemPrice,
-    searchQueryId
+    searchQueryId,
+    cartId
   ) =>
     CartDispatcher.addProductToCart(
       dispatch,
@@ -67,25 +69,37 @@ export const mapDispatchToProps = (dispatch) => ({
       thumbnail_url,
       url,
       itemPrice,
-      searchQueryId
+      searchQueryId,
+      cartId
     ),
-    updateProductInCart: (
-      item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url, row_total, currency
-    ) => CartDispatcher.then(
-      ({ default: dispatcher }) => dispatcher.updateProductInCart(
-          dispatch,
-          item_id,
-          quantity,
-          color,
-          optionValue,
-          discount,
-          brand_name,
-          thumbnail_url,
-          url,
-          row_total,
-          currency
-      )
-    )
+  updateProductInCart: (
+    item_id,
+    quantity,
+    color,
+    optionValue,
+    discount,
+    brand_name,
+    thumbnail_url,
+    url,
+    row_total,
+    currency
+  ) =>
+    CartDispatcher.updateProductInCart(
+      dispatch,
+      item_id,
+      quantity,
+      color,
+      optionValue,
+      discount,
+      brand_name,
+      thumbnail_url,
+      url,
+      row_total,
+      currency
+    ),
+  removeProduct: (options) =>
+    CartDispatcher.removeProductFromCart(dispatch, options),
+  getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export class LiveExperienceContainer extends PureComponent {
@@ -94,30 +108,66 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
-    addProductToCart : PropTypes.func.isRequired,
-    updateProductInCart : PropTypes.func.isRequired,
-    // broadcastId: PropTypes.number,
+    addProductToCart: PropTypes.func.isRequired,
+    updateProductInCart: PropTypes.func.isRequired,
+    removeProduct: PropTypes.func.isRequired,
+    getCartTotals: PropTypes.func.isRequired,
+    livepartyId: PropTypes.string,
+    cartId: PropTypes.string,
+    token: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
     this.setMetaData();
   }
- 
+  getcountrySepicificChannelId = (country) => {
+    switch (country) {
+      case "ae":
+        return (Config.storeId = "RQi9v57VXHIFetDai47q");
+      case "sa":
+        return (Config.storeId = "LSC8XG1YSbgdX6Adwds4");
+      case "kw":
+        return (Config.storeId = "SbFHRnzIUHdcORz2ELjd");
+      case "om":
+        return (Config.storeId = "JFEsZsxpy6mp1HaawJvH");
+      case "bh":
+        return (Config.storeId = "TvklSoghpVJPJttPB94u");
+      case "qa":
+        return (Config.storeId = "mLnmwfhhDQZa8OzDYmni");
+      default:
+        return (Config.storeId = "RQi9v57VXHIFetDai47q");
+    }
+  };
+
   requestLiveParty() {
-    // const broadcastId = getQueryParam("broadcastId", location);
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
     const { requestLiveParty } = this.props;
-    requestLiveParty({ storeId: Config.storeId});
+    this.getcountrySepicificChannelId(country);
+    requestLiveParty({ storeId: Config.storeId });
   }
 
   requestUpcomingParty() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
     const { requestUpcomingParty } = this.props;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
+    this.getcountrySepicificChannelId(country);
+    requestUpcomingParty({
+      storeId: Config.storeId,
+      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
+    });
   }
 
   requestArchivedParty() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
     const { requestArchivedParty } = this.props;
-    requestArchivedParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
+    this.getcountrySepicificChannelId(country);
+    requestArchivedParty({
+      storeId: Config.storeId,
+      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
+    });
   }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
@@ -213,20 +263,49 @@ export class LiveExperienceContainer extends PureComponent {
     });
   }
   containerProps = () => {
-    let { live, upcoming, archived,addProductToCart, updateProductInCart } = this.props;
+    const livepartyId = getQueryParam("livepartyId", location);
+    const cartId = getQueryParam("cartId", location);
+    const token = getQueryParam("token", location);
+
+    let {
+      live,
+      upcoming,
+      archived,
+      addProductToCart,
+      updateProductInCart,
+      removeProduct,
+      updateCartProducts,
+      getCartTotals,
+    } = this.props;
+    // Updating upcoming data to remove current broadCastId from it.
     let updatedUpcoming = upcoming.filter((val) => {
-      return (val.id.toString() !== live.id)
-    })
+      return val.id.toString() !== live.id;
+    });
     let updatedArchived = archived.filter((val) => {
-      return (val.id.toString() !== live.id)
-    })
+      return val.id.toString() !== live.id;
+    });
+
     return {
-       live, updatedUpcoming, updatedArchived, addProductToCart, updateProductInCart
+      live,
+      updatedUpcoming,
+      updatedArchived,
+      addProductToCart,
+      updateProductInCart,
+      removeProduct,
+      updateCartProducts,
+      livepartyId,
+      cartId,
+      token,
     };
   };
 
   render() {
-    return <LiveExperience requestProduct={this.props.requestProduct}{...this.containerProps()} />;
+    return (
+      <LiveExperience
+        requestProduct={this.props.requestProduct}
+        {...this.containerProps()}
+      />
+    );
   }
 }
 
