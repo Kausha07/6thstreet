@@ -3,14 +3,6 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { setGender } from "Store/AppState/AppState.action";
 import HeaderGenders from "./HeaderGenders.component";
-import {
-  EVENT_MOE_TOP_NAV_HOME,
-  EVENT_MOE_TOP_NAV_MEN,
-  EVENT_MOE_TOP_NAV_WOMEN,
-  EVENT_MOE_TOP_NAV_KIDS,
-  EVENT_MOE_TOP_NAV_ALL,
-} from "Util/Event";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./HeaderGenders.style";
 
 export const mapStateToProps = (state) => ({
@@ -40,7 +32,7 @@ class HeaderGendersContainer extends PureComponent {
     this.setCurrentGender();
   }
   setCurrentGender() {
-    const { currentContentGender } = this.props;    
+    const { currentContentGender } = this.props;
     if (currentContentGender !== "all") {
       if (window.location.pathname.includes("women")) {
         this.props.setGender("women");
@@ -61,7 +53,7 @@ class HeaderGendersContainer extends PureComponent {
       }
     }
   }
-  
+
   render() {
     return <HeaderGenders {...this.props} />;
   }

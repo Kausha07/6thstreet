@@ -9,7 +9,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import { postFeedback } from "Util/API/endpoint/Feedback/Feedback.endpoint";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_MOE_FEEDBACK_FORM_SUBMIT } from "Util/Event";
+import Event,{EVENT_GTM_FOOTER, EVENT_FEEDBACK_FORM_SUBMIT } from "Util/Event";
 import Logger from "Util/Logger";
 import Feedback from "./Feedback.component";
 
@@ -79,11 +79,12 @@ export class FeedbackContainer extends PureComponent {
     updateBreadcrumbs(breadcrumbs);
   }
   sendMOEEvents() {
-    Moengage.track_event(EVENT_MOE_FEEDBACK_FORM_SUBMIT, {
+    Moengage.track_event(EVENT_FEEDBACK_FORM_SUBMIT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
+    Event.dispatch(EVENT_GTM_FOOTER,EVENT_FEEDBACK_FORM_SUBMIT);
   }
   async onSubmit(data) {
     const {

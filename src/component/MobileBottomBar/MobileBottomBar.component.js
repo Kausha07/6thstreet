@@ -13,11 +13,13 @@ import { setIsMobileTabActive } from "Store/MyAccount/MyAccount.action";
 import { TYPE_PRODUCT } from "Route/UrlRewrites/UrlRewrites.config";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
-import {
+import Event,{
   EVENT_MOE_HOME_TAB_ICON,
   EVENT_MOE_BRANDS_TAB_ICON,
   EVENT_MOE_WISHLIST_TAB_ICON,
   EVENT_MOE_ACCOUNT_TAB_ICON,
+  EVENT_GTM_ACCOUNT_TAB_CLICK,
+  EVENT_GTM_AUTHENTICATION,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -41,7 +43,7 @@ class MobileBottomBar extends NavigationAbstract {
   };
 
   static defaultProps = {
-    setIsMobileTabActive: () => {},
+    setIsMobileTabActive: () => { },
     newMenuGender: "women",
   };
 
@@ -291,13 +293,21 @@ class MobileBottomBar extends NavigationAbstract {
     const onClickHandle = !isSignedIn
       ? this.renderAccountPopUp
       : this.routeChangeAccount;
-
+    const sendGTMEvent = () => {
+      const eventData = {
+        name: EVENT_GTM_ACCOUNT_TAB_CLICK,
+        category: "top_navigation_menu",
+        action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+    };
     return (
       <div key="account">
         <button
           onClick={() => {
             onClickHandle();
             this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
+            sendGTMEvent();
           }}
           key="accountButton"
           block="MobileBottomBar"

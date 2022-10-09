@@ -151,13 +151,21 @@
     // margin: 4px 0;
     display: block;
     color: var(--link-color);
-
     @include desktop {
       color: var(--link-color);
       margin: unset;
     }
   }
-
+  .InlineCustomerSupport-Dropdown{
+    button{
+      height: auto;
+      padding: 0;
+      font-weight: normal;
+      color: var(--link-color);
+      font-size:12px;
+    }
+  }
+  
   &-OpenHours {
     padding-bottom: 12px;
     font-size: 15px !important;

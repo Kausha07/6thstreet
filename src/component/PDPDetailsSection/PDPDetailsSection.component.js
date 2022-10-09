@@ -9,7 +9,14 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
+import Event, {
+  EVENT_MOE_CHAT,
+  EVENT_MAIL,
+  EVENT_PHONE,
+  EVENT_MORE_FROM_THIS_BRAND_CLICK,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_EXPAND_PRODUCT_DETAILS,
+} from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
@@ -230,6 +237,16 @@ class PDPDetailsSection extends PureComponent {
     );
   }
   updateShowMoreState(state) {
+    const {
+      product: { name, sku },
+    } = this.props;
+    const eventData = {
+      name: EVENT_EXPAND_PRODUCT_DETAILS,
+      action: "expand_product_details_click",
+      product_name: name,
+      product_id: sku,
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({ showMore: state });
   }
 
@@ -749,7 +766,7 @@ class PDPDetailsSection extends PureComponent {
             <div
               block="IconWrapper"
               elem="Icon"
-              onClick={() => this.sendEvents(EVENT_MOE_PHONE)}
+              onClick={() => this.sendEvents(EVENT_PHONE)}
             >
               <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
                 <Phone />
@@ -780,7 +797,7 @@ class PDPDetailsSection extends PureComponent {
             <div
               block="IconWrapper"
               elem="Icon"
-              onClick={() => this.sendEvents(EVENT_MOE_MAIL)}
+              onClick={() => this.sendEvents(EVENT_MAIL)}
             >
               <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
                 <Email />
@@ -867,9 +884,18 @@ class PDPDetailsSection extends PureComponent {
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
+    const eventData = {
+      name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+      action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+    };
     return (
       <div block="FromBrand">
-        <Link block="FromBrand" elem="MoreButton" to={url}>
+        <Link
+          block="FromBrand"
+          elem="MoreButton"
+          to={url}
+          onClick={() => Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData)}
+        >
           <span block="FromBrand" elem="ButtonText">
             {__("More from this brand")}
           </span>

@@ -12,7 +12,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
 import Field from "SourceComponent/Field";
@@ -49,7 +49,16 @@ import {
   SSO_LOGIN_PROVIDERS,
   STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
-
+import Event, {
+  EVENT_LOGIN_TAB_CLICK,
+  EVENT_REGISTER_TAB_CLICK,
+  EVENT_MOE_TYPE_EMAIL_ID,
+  EVENT_MOE_TYPE_PASSWORD,
+  EVENT_FORGOT_PASSWORD_CLICK,
+  EVENT_LOGIN_DETAILS_ENTERED,
+  EVENT_RESEND_VERIFICATION_CODE,
+  EVENT_REGISTERATION_DETAILS_ENTERED,
+} from "Util/Event";
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
@@ -109,6 +118,9 @@ export class MyAccountOverlay extends PureComponent {
     isForgotValidated: false,
     isOTP: ENABLE_OTP_LOGIN,
     countryCode: PHONE_CODES[getCountryFromUrl()],
+    eventSent: false,
+    otpAttempt: 1,
+    registerDetailsEntered: false,
   };
 
   componentDidMount() {
@@ -180,6 +192,14 @@ export class MyAccountOverlay extends PureComponent {
       title: __("Confirm the email"),
     },
   };
+
+  sendMOEEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
 
   renderMyAccount() {
     const {
@@ -412,6 +432,7 @@ export class MyAccountOverlay extends PureComponent {
       customerLoginData,
       isLoading,
       otpError,
+      sendGTMEvents,
     } = this.props;
     const { isArabic } = this.state;
     const isNumber = (evt) => {
@@ -699,8 +720,13 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   getValidationForUserIdentifier() {
-    const { isOTP } = this.state;
+    const { isOTP, eventSent, isSignInValidated } = this.state;
+    const { sendGTMEvents } = this.props;
     if (!ENABLE_OTP_LOGIN || !isOTP) {
+      if (!eventSent && isSignInValidated) {
+        sendGTMEvents(EVENT_LOGIN_DETAILS_ENTERED, "Email");
+        this.setState({ eventSent: true });
+      }
       return "email";
     }
 
@@ -708,7 +734,10 @@ export class MyAccountOverlay extends PureComponent {
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
     );
-
+    if (!eventSent && isSignInValidated) {
+      sendGTMEvents(EVENT_LOGIN_DETAILS_ENTERED, "Mobile");
+      this.setState({ eventSent: true });
+    }
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
       ? "telephoneAE"
       : "telephone";
@@ -850,6 +879,7 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       onFormError,
       handleForgotPassword,
+      sendGTMEvents
     } = this.props;
 
     const { isArabic, isSignInValidated, isOTP, countryCode } = this.state;
@@ -924,7 +954,11 @@ export class MyAccountOverlay extends PureComponent {
             elem: "Button",
             mods: { isArabic },
           }}
-          onClick={handleForgotPassword}
+          onClick={(e)=>{
+             handleForgotPassword(e);
+             this.sendMOEEvents(EVENT_FORGOT_PASSWORD_CLICK);
+             sendGTMEvents(EVENT_FORGOT_PASSWORD_CLICK);
+          }}
         >
           {__("Forgot password?")}
         </button>
