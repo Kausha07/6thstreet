@@ -17,14 +17,13 @@ import { setPdpWidgetsData } from "../AppState/AppState.action";
 export class PDPDispatcher {
   async requestProduct(payload, dispatch) {
     dispatch(setPDPLoading(true));
-   
+    
     const { options } = payload;
     try {
       const response = await new Algolia().getPDP(options);
 
       dispatch(setPDPData(response, options));
       dispatch(setPDPLoading(false));
-      return response
     } catch (e) {
       Logger.log(e);
       // Needed, so PDP container sets "isLoading" to false

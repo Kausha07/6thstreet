@@ -11,7 +11,6 @@ import {
 import "./PDPGalleryCrumb.style";
 
 class PDPGalleryCrumb extends PureComponent {
-
   static propTypes = {
     onClick: PropTypes.func.isRequired,
     isActive: PropTypes.bool.isRequired,
@@ -21,7 +20,6 @@ class PDPGalleryCrumb extends PureComponent {
     }).isRequired,
   };
 
-  
   renderMap = {
     [GALLERY_IMAGE_TYPE]: this.renderImage.bind(this),
     [GALLERY_VIDEO_TYPE]: this.renderVideo.bind(this),
@@ -38,7 +36,6 @@ class PDPGalleryCrumb extends PureComponent {
     const {
       options: { src },
     } = this.props;
-    this.setState({ imgSRC: src });
     if (src.includes("http")) {
       return <Image lazyLoad={false} src={src} />;
     } else {

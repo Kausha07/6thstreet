@@ -1,6 +1,16 @@
 import ThirdPartyAPI from "../../provider/ThirdPartyAPI";
 
-export const getPartyInfo = ({ storeId, isStaging = false }) =>
+export const getLiveParty = ({ broadcastId }) =>
   ThirdPartyAPI.get(
-    `https://liveshopping-api.bambuser.com/v1/channels/${storeId}`
+    `https://api.spockee.io/rest/v2/broadcast?broadcastId=${broadcastId}`
+  ) || {};
+
+export const getUpcomingParty = ({ storeId, isStaging = false }) =>
+  ThirdPartyAPI.get(
+    `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=${storeId}&isStaging=${isStaging}`
+  ) || {};
+
+export const getArchivedParty = ({ storeId, isStaging = false }) =>
+  ThirdPartyAPI.get(
+    `https://api.spockee.io/rest/v2/broadcast/archived?storeId=${storeId}&isStaging=${isStaging}`
   ) || {};
