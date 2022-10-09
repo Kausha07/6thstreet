@@ -298,6 +298,7 @@ export class CheckoutSuccess extends PureComponent {
 
     return (
       <MyAccountOrderViewItem
+        key={item.item_id}
         item={item}
         isFailed={isFailed}
         compRef={"checkout"}

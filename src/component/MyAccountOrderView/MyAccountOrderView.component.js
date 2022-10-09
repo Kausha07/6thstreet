@@ -135,6 +135,7 @@ class MyAccountOrderView extends PureComponent {
         : item?.edd;
     return (
       <MyAccountOrderViewItem
+        key={item.item_id}
         item={item}
         setEddEventSent={this.setEddEventSent}
         eddEventSent={eddEventSent}
@@ -443,7 +444,7 @@ class MyAccountOrderView extends PureComponent {
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
           {Object.values(STATUS_LABELS).map((label, index) => (
-            <div block={index === 2 ? "EddDiv" : ""}>
+            <div block={index === 2 ? "EddDiv" : ""} key={index}>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>

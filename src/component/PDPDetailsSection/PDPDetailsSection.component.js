@@ -6,7 +6,7 @@ import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
 import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
@@ -679,7 +679,7 @@ class PDPDetailsSection extends PureComponent {
                 const { data } = item;
                 if (data && data?.length > 0) {
                   return (
-                    <>
+                    <Fragment key={index}>
                       <div
                         block="PDPWidgets"
                         elem="Slider"
@@ -701,7 +701,7 @@ class PDPDetailsSection extends PureComponent {
                           product={product}
                         />
                       </div>
-                    </>
+                    </Fragment>
                   );
                 }
                 return null;

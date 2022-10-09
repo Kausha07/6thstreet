@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import PLPFilterOption from "Component/PLPFilterOption";
 import PropTypes from "prop-types";
-import { createRef, PureComponent } from "react";
+import { createRef, PureComponent, Fragment } from "react";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
@@ -752,11 +752,11 @@ class FieldMultiselect extends PureComponent {
                         ? "Out of Stock"
                         : val.label;
                     return (
-                      <>
+                      <Fragment key={key}>
                         <li key={v4()} block="selectedListItem">
                           {label}
                         </li>
-                      </>
+                        </Fragment>
                     );
                   }
                 });
@@ -769,11 +769,11 @@ class FieldMultiselect extends PureComponent {
                       ? "Out of Stock"
                       : values.label;
                   return (
-                    <>
+                    <Fragment key={keys}>
                       <li key={v4()} block="selectedListItem">
                         {label}
                       </li>
-                    </>
+                      </Fragment>
                   );
                 }
               }

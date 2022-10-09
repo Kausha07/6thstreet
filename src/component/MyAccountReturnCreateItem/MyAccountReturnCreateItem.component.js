@@ -392,7 +392,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       item: { item_id },
       availableProducts,
     } = this.props;
-    return availableProducts.map((product) => {
+    return availableProducts.map((product, index) => {
       const { sku, thumbnail_url, color, in_stock, stock_qty } = product;
       const isNotAvailable =
         in_stock === 0 || (in_stock === 1 && stock_qty === 0);
@@ -407,6 +407,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               ? "selectedProduct"
               : ""
           }
+          key={index}
           id={sku}
           onClick={
             isNotAvailable
