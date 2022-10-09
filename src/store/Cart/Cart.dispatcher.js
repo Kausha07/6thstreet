@@ -34,11 +34,10 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
-    const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+    const cart_id =  BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
     if ((!cartId || isNewCart) && createNewCart) {
       try {
         const { data: requestedCartId = null } = await createCart(cart_id);
-
         if (!requestedCartId) {
           dispatch(
             showNotification(
@@ -368,3 +367,4 @@ export class CartDispatcher {
 }
 
 export default new CartDispatcher();
+

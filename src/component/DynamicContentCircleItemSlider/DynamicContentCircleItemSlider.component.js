@@ -35,13 +35,7 @@ const settings = {
 };
 
 class DynamicContentCircleItemSlider extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      channelID: "RQi9v57VXHIFetDai47q",
-      apiUrl: `https://liveshopping-api.bambuser.com/v1/channels/`,
-    };
-  }
+  
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -57,6 +51,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
     isArabic: isArabic(),
     impressionSent: false,
     livePartyItems: [],
+    channelID: "RQi9v57VXHIFetDai47q",
+    apiUrl: `https://liveshopping-api.bambuser.com/v1/channels/`
   };
   componentDidMount() {
     this.registerViewPortEvent();
@@ -65,7 +61,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   fetchLivePartyData = () => {
     const { channelID, apiUrl} = this.state;
-
     try {
       fetch(`${apiUrl}${channelID}`, {
         method: "GET",
@@ -85,7 +80,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
       console.error(err);
     }
   };
-
 
   registerViewPortEvent() {
     let observer;
@@ -208,6 +202,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   renderLiveParty = (item, i) => {
+    // const { link, label, image_url, plp_config } = item;
     let link = `/live-party`;
     let label = item.title;
     let image_url = item.curtains.pending.backgroundImage;
@@ -257,7 +252,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems &&((this.state.livePartyItems.length) && this.state.livePartyItems[0].isLive) &&
+          {this.state.livePartyItems && ((this.state.livePartyItems.length) &&  this.state.livePartyItems[0].isLive) &&
             this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>

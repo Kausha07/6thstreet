@@ -10,6 +10,9 @@ import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { createCart, addProductToCart,updateProductInCart,removeProductFromCart,getCart } from "Util/API/endpoint/Cart/Cart.enpoint";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -25,6 +28,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestLiveParty: (options) =>
     LivePartyDispatcher.requestLiveParty(options, dispatch),
 
@@ -42,6 +46,46 @@ export const mapDispatchToProps = (dispatch) => ({
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  addProductToCart: (
+    productData,
+    color,
+    optionValue,
+    basePrice,
+    brand_name,
+    thumbnail_url,
+    url,
+    itemPrice,
+    searchQueryId
+  ) =>
+    CartDispatcher.addProductToCart(
+      dispatch,
+      productData,
+      color,
+      optionValue,
+      basePrice,
+      brand_name,
+      thumbnail_url,
+      url,
+      itemPrice,
+      searchQueryId
+    ),
+    updateProductInCart: (
+      item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url, row_total, currency
+    ) => CartDispatcher.then(
+      ({ default: dispatcher }) => dispatcher.updateProductInCart(
+          dispatch,
+          item_id,
+          quantity,
+          color,
+          optionValue,
+          discount,
+          brand_name,
+          thumbnail_url,
+          url,
+          row_total,
+          currency
+      )
+    )
 });
 
 export class LiveExperienceContainer extends PureComponent {
@@ -50,14 +94,18 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
+    addProductToCart : PropTypes.func.isRequired,
+    updateProductInCart : PropTypes.func.isRequired,
+    // broadcastId: PropTypes.number,
   };
 
   constructor(props) {
     super(props);
     this.setMetaData();
   }
-
+ 
   requestLiveParty() {
+    // const broadcastId = getQueryParam("broadcastId", location);
     const { requestLiveParty } = this.props;
     requestLiveParty({ storeId: Config.storeId});
   }
@@ -165,8 +213,7 @@ export class LiveExperienceContainer extends PureComponent {
     });
   }
   containerProps = () => {
-    let { live, upcoming, archived} = this.props;
-    // Updating upcoming data to remove current broadCastId from it.
+    let { live, upcoming, archived,addProductToCart, updateProductInCart } = this.props;
     let updatedUpcoming = upcoming.filter((val) => {
       return (val.id.toString() !== live.id)
     })
@@ -174,12 +221,12 @@ export class LiveExperienceContainer extends PureComponent {
       return (val.id.toString() !== live.id)
     })
     return {
-       live, updatedUpcoming, updatedArchived
+       live, updatedUpcoming, updatedArchived, addProductToCart, updateProductInCart
     };
   };
 
   render() {
-    return <LiveExperience {...this.containerProps()} />;
+    return <LiveExperience requestProduct={this.props.requestProduct}{...this.containerProps()} />;
   }
 }
 
