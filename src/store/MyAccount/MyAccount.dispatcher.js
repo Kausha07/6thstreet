@@ -273,7 +273,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     await WishlistDispatcher.updateInitialWishlistData(dispatch);
     await StoreCreditDispatcher.getStoreCredit(dispatch);
-    setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
+    setCrossSubdomainCookie("authData", this.getCustomerData(), "90");
     this.requestCustomerData(dispatch, true);
 
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
