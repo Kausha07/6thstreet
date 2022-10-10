@@ -33,12 +33,11 @@
         border-radius: 6px;
         background-color: #F4FFFC;
         max-width: 354px;
-        max-height: 93px;
         &::before {
             display: none;
         }
         .couponItemBlock {
-            padding: 20px 15px;
+            padding: 15px 15px;
             display: flex;
             align-items: center;
             .couponItemDetail {
