@@ -134,7 +134,7 @@ class HeaderGenders extends PureComponent {
         let countryList = ['BH'];
         let showAllStatus = countryList.includes(getCountryFromUrl());
         
-        return this.genderList.map((value) =>{
+        return !location.pathname.match("/live-party") && this.genderList.map((value) =>{
             
             if(showAllStatus){
                 return this.renderGender(value)

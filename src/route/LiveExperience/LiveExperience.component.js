@@ -30,8 +30,10 @@ export class LiveExperience extends PureComponent {
       influencerSearchText: "",
       isArabic: isArabic(),
       ProductDetails: {},
+      ProductDetailsObj:{},
+      itemIdArr:{},
       item_id: null,
-      filterCount : -1,
+      filterCount: -1,
     };
   }
 
@@ -80,7 +82,7 @@ export class LiveExperience extends PureComponent {
 
   renderSpckarchivedEvent() {
     let content = this.props.updatedArchived;
-    const { influencerSearchText} = this.state;
+    const { influencerSearchText } = this.state;
     const lowerInfluencerSearchText = influencerSearchText.toLowerCase();
     if (!isMobile.any()) {
       content = content.slice(0, this.state.archivedItemToShow);
@@ -92,7 +94,7 @@ export class LiveExperience extends PureComponent {
           return val;
         }
       }).map(this.renderArchivedGridBlock);
-      this.setState({ filterCount : FilteredContent.length})
+    this.setState({ filterCount: FilteredContent.length });
     return FilteredContent;
   }
 
@@ -116,7 +118,6 @@ export class LiveExperience extends PureComponent {
     var diffInDay = diffInTime / (1000 * 3600 * 24);
     const { isArabic } = this.state;
 
-   
     if (imageSRC) {
       return (
         <div key={i} block="spck-live-event">
@@ -131,10 +132,7 @@ export class LiveExperience extends PureComponent {
                 {diffInDay < 1 ? (
                   <div block="eventStart-timer">
                     <img src={timerIcon} alt="timerIcon" />
-                    <Countdown
-                      date={d}
-                      daysInHours={true}
-                    />
+                    <Countdown date={d} daysInHours={true} />
                   </div>
                 ) : (
                   <div block="eventStart-calender">
@@ -217,7 +215,7 @@ export class LiveExperience extends PureComponent {
 
   renderArchivedGridBlock = (block, i) => {
     // debugger
-    const { curtains, title, description} = block;
+    const { curtains, title, description } = block;
     const imageSRC = curtains?.pending?.backgroundImage;
     if (imageSRC) {
       return (
@@ -240,11 +238,11 @@ export class LiveExperience extends PureComponent {
     }
   };
 
-
-  getProductDetails = async ( id ) => {
+  getProductDetails = async (id) => {
     try {
-      return MobileAPI.get(`bambuser/products/${id}`).then(async ({publicUrl}) => {
-          const { pathname : urlParam } = new URL(publicUrl);
+      return MobileAPI.get(`bambuser/products/${id}`).then(
+        async ({ publicUrl }) => {
+          const { pathname: urlParam } = new URL(publicUrl);
           const { requestProduct } = this.props;
           const { urlResolver } = await fetchQuery(
             UrlRewritesQuery.getQuery({ urlParam })
@@ -291,7 +289,7 @@ export class LiveExperience extends PureComponent {
           sku,
           configSKU,
           qty: 1,
-          optionId: (size !== "null") ? "EU" : null,
+          optionId: size !== "null" ? "EU" : null,
           optionValue: size,
           selectedClickAndCollectStore: "",
         },
@@ -314,24 +312,34 @@ export class LiveExperience extends PureComponent {
     const {
       options: { size },
     } = updatedItem;
-    const { item_id } = this.state;
+    const { itemIdArr, ProductDetailsObj } = this.state;
+    const isUpdatedItem = Object.values(ProductDetailsObj).filter((obj) => {
+      let filteredObj = null;
+      Object.keys(obj.simple_products).filter((objSku) => {
+        if (objSku === updatedItem.sku) {
+          filteredObj = obj;
+        }
+      });
+      return filteredObj;
+    });
+    if (!isUpdatedItem) {
+      return;
+    }
     const {
-      ProductDetails: {
-        thumbnail_url,
-        url,
-        color,
-        brand_name,
-        price = {},
-        discount,
-        sku: configSKU,
-        objectID,
-        simple_products,
-      },
-    } = this.state;
+      thumbnail_url,
+      url,
+      color,
+      brand_name,
+      price = {},
+      discount,
+      sku: configSKU,
+      objectID,
+      simple_products,
+    } = Object.values(isUpdatedItem)[0];
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     return updateProductInCart(
-      item_id,
+      itemIdArr[updatedItem.sku],
       updatedItem.quantity,
       color,
       size,
@@ -349,11 +357,12 @@ export class LiveExperience extends PureComponent {
     return removeProduct(itemId);
   };
 
-  sendMessageToNative = (payload) =>{
-    if(window){
-      window.ReactNativeWebView && window.ReactNativeWebView.postMessage(payload);
+  sendMessageToNative = (payload) => {
+    if (window) {
+      window.ReactNativeWebView &&
+        window.ReactNativeWebView.postMessage(payload);
     }
-  }
+  };
 
   onClickPartyPlay = async (bId) => {
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -362,11 +371,10 @@ export class LiveExperience extends PureComponent {
     let objectId = null;
     const livepartyId = this.props.livepartyId;
     window.onBambuserLiveShoppingReady = (player) => {
-     
-        player.configure({
-          currency: currency,
-          locale: locale,
-        });
+      player.configure({
+        currency: currency,
+        locale: locale,
+      });
 
       // Cart Integeration Code of Bambuser Live Shopping Cart
       player.on(player.EVENT.ADD_TO_CART, (addedItem, callback) => {
@@ -379,7 +387,7 @@ export class LiveExperience extends PureComponent {
             const {
               data: { item_id },
             } = res;
-            this.setState({ item_id: item_id, cartId: cartId });
+            this.setState({ item_id: item_id, cartId: cartId,itemIdArr :{...this.state.itemIdArr,[addedItem.sku]:item_id }});
             callback(true); // item successfully added to cart
           })
           .catch((error) => {
@@ -436,19 +444,18 @@ export class LiveExperience extends PureComponent {
           const payload = getStore().getState().Cart.cartId;
           this.sendMessageToNative(payload);
         } else {
-
-          player.showCheckout(window.open(window.location.origin + "/cart","_self"));
+          player.showCheckout(
+            window.open(window.location.origin + "/cart", "_self")
+          );
         }
       });
 
-      if(livepartyId)
-      {
+      if (livepartyId) {
         player.on(player.EVENT.CLOSE, () => {
           const payload = true;
           this.sendMessageToNative(payload);
         });
       }
-     
 
       // player.on(player.EVENT.SYNC_CART_STATE, () => {
       //   // Use your method to check if the user has checkout
@@ -476,7 +483,13 @@ export class LiveExperience extends PureComponent {
             gallery_images,
             simple_products,
           } = yourProduct.data;
-          this.setState({ ProductDetails: yourProduct.data });
+          this.setState({
+            ProductDetails: yourProduct.data,
+            ProductDetailsObj: {
+              ...this.state.ProductDetailsObj,
+              [yourProduct.data.sku]: yourProduct.data,
+            },
+          });
           player.updateProduct(id, (productFactory) =>
             productFactory.product((productDetailFactory) =>
               productDetailFactory
@@ -496,7 +509,14 @@ export class LiveExperience extends PureComponent {
                     .sizes((sizeFactory) =>
                       Object.keys(simple_products).map((VarientSku) =>
                         sizeFactory()
-                          .name((simple_products && simple_products[VarientSku] && simple_products[VarientSku].size && simple_products[VarientSku].size.eu) ? simple_products[VarientSku].size.eu : "null")
+                          .name(
+                            simple_products &&
+                              simple_products[VarientSku] &&
+                              simple_products[VarientSku].size &&
+                              simple_products[VarientSku].size.eu
+                              ? simple_products[VarientSku].size.eu
+                              : "null"
+                          )
                           .inStock(simple_products[VarientSku].quantity > 0)
                           .sku(VarientSku)
                           .price((priceFactory) =>
@@ -524,7 +544,8 @@ export class LiveExperience extends PureComponent {
     const { updatedArchived } = this.props;
     this.setState({
       isRefineButtonClicked: !isRefineButtonClicked,
-      archivedItemToShow: (updatedArchived && updatedArchived.length) && updatedArchived.length,
+      archivedItemToShow:
+        updatedArchived && updatedArchived.length && updatedArchived.length,
     });
   };
 
@@ -548,7 +569,11 @@ export class LiveExperience extends PureComponent {
         ) : (
           ""
         )}
-        <button block="refine-button"  mods={{ isArabic }} onClick={this.handleRefineButtonClick}>
+        <button
+          block="refine-button"
+          mods={{ isArabic }}
+          onClick={this.handleRefineButtonClick}
+        >
           {" "}
           <img block="refineImage" mods={{ isArabic }} src={Refine} />{" "}
           {__("Search")}
@@ -599,7 +624,9 @@ export class LiveExperience extends PureComponent {
 
               {this.props.updatedUpcoming.length > 0 && (
                 <div block="upComing-Grid">
-                  <h3 block="sectionTitle" mods={{ isArabic }}>{__("COMING NEXT")}</h3>
+                  <h3 block="sectionTitle" mods={{ isArabic }}>
+                    {__("COMING NEXT")}
+                  </h3>
                   <div id="live"></div>
                   <ul block="spckItems">{this.renderSpckUpcomingEvent()}</ul>
                 </div>
@@ -625,7 +652,9 @@ export class LiveExperience extends PureComponent {
                       <div block="Product-Loaded-Info">
                         {__(
                           "You’ve viewed %s of %s videos",
-                          (this.state.filterCount !== -1) ? this.state.filterCount : archProducts,
+                          this.state.filterCount !== -1
+                            ? this.state.filterCount
+                            : archProducts,
                           totalProducts
                         )}
                       </div>
