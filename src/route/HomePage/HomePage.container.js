@@ -83,7 +83,6 @@ export class HomePageContainer extends PureComponent {
   constructor(props) {
     super(props);
     window.history.scrollRestoration = "manual";
-    // this.requestDynamicContent();
   }
 
   componentDidMount() {
@@ -125,7 +124,6 @@ export class HomePageContainer extends PureComponent {
         ) {
           requestCustomerData();
         } else {
-          // logout();
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
         }
@@ -142,9 +140,6 @@ export class HomePageContainer extends PureComponent {
       if (cartID === parseInt(cartID, 10)) {
         logout();
       }
-      // deleteAuthorizationToken();
-      // deleteMobileAuthorizationToken();
-      // BrowserDatabase.deleteItem("customer");
     }
 
     const { gender, toggleBreadcrumbs } = this.props;

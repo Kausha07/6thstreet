@@ -140,7 +140,6 @@ export class RouterContainer extends SourceRouterContainer {
         ) {
           requestCustomerData();
         } else {
-          // logout();
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
         }
