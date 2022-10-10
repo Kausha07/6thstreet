@@ -45,8 +45,19 @@ class PurchaseEvent extends BaseEvent {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
-
+    const sha_email =
+      BrowserDatabase.getItem("TT_Data") &&
+      BrowserDatabase.getItem("TT_Data")?.mail
+        ? BrowserDatabase.getItem("TT_Data").mail
+        : null;
+    const sha_phone =
+      BrowserDatabase.getItem("TT_Data") &&
+      BrowserDatabase.getItem("TT_Data")?.phone
+        ? BrowserDatabase.getItem("TT_Data").phone
+        : null;
     this.pushEventData({
+      sha256_email: sha_email,
+      sha256_phone_number: sha_phone,
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
         purchase: {
