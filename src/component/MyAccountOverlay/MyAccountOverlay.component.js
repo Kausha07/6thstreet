@@ -49,14 +49,9 @@ import {
   SSO_LOGIN_PROVIDERS,
   STATE_VERIFY_NUMBER,
 } from "./MyAccountOverlay.config";
-import Event, {
-  EVENT_LOGIN_TAB_CLICK,
-  EVENT_REGISTER_TAB_CLICK,
-  EVENT_MOE_TYPE_EMAIL_ID,
-  EVENT_MOE_TYPE_PASSWORD,
+import {
   EVENT_FORGOT_PASSWORD_CLICK,
   EVENT_LOGIN_DETAILS_ENTERED,
-  EVENT_RESEND_VERIFICATION_CODE,
   EVENT_REGISTERATION_DETAILS_ENTERED,
 } from "Util/Event";
 import "./MyAccountOverlay.style";
@@ -201,6 +196,7 @@ export class MyAccountOverlay extends PureComponent {
     const { sendGTMEvents } = this.props;
     if (isCreateValidated && !registerDetailsEntered) {
       sendGTMEvents(EVENT_REGISTERATION_DETAILS_ENTERED);
+      this.sendMOEEvents(EVENT_REGISTERATION_DETAILS_ENTERED);
       this.setState({ registerDetailsEntered: true });
     }
   }
@@ -443,7 +439,6 @@ export class MyAccountOverlay extends PureComponent {
       customerLoginData,
       isLoading,
       otpError,
-      sendGTMEvents,
     } = this.props;
     const { isArabic } = this.state;
     const isNumber = (evt) => {
@@ -737,6 +732,7 @@ export class MyAccountOverlay extends PureComponent {
     if (!ENABLE_OTP_LOGIN || !isOTP) {
       if (!eventSent && isSignInValidated) {
         sendGTMEvents(EVENT_LOGIN_DETAILS_ENTERED, "Email");
+        this.sendMOEEvents(EVENT_LOGIN_DETAILS_ENTERED);
         this.setState({ eventSent: true });
       }
       return "email";
@@ -748,6 +744,7 @@ export class MyAccountOverlay extends PureComponent {
     );
     if (!eventSent && isSignInValidated) {
       sendGTMEvents(EVENT_LOGIN_DETAILS_ENTERED, "Mobile");
+      this.sendMOEEvents(EVENT_LOGIN_DETAILS_ENTERED);
       this.setState({ eventSent: true });
     }
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]

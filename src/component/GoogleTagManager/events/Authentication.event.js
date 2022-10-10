@@ -33,7 +33,6 @@ class AutheneticationEvent extends BaseEvent {
    */
   bindEvent() {
     Event.observer(EVENT_GTM_AUTHENTICATION, (data) => {
-      console.log("Barath", data);
       this.handle(data);
     });
   }

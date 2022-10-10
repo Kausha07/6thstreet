@@ -466,28 +466,25 @@ export class MyAccountOverlayContainer extends PureComponent {
           };
           response = await loginAccount(payload);
         }
-        const {
-          success,
-          data: {
-            user: { email },
-          },
-        } = response;
+        const { success, data } = response;
         if (success) {
           const { signInOTP, showNotification } = this.props;
           if (Object.entries(customerLoginData)?.length) {
             this.sendGTMEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
             this.sendMOEEvents(EVENT_LOGIN);
             this.sendGTMEvents(EVENT_LOGIN, "Mobile");
           }
           if (Object.entries(customerRegisterData)?.length) {
             this.sendGTMEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
             this.sendMOEEvents(EVENT_MOE_REGISTER);
             this.sendGTMEvents(EVENT_SIGN_UP);
           }
           try {
             await signInOTP(response);
-            if (email) {
-              Moengage.add_unique_user_id(email);
+            if (data?.user?.email) {
+              Moengage.add_unique_user_id(data?.user?.email);
             }
             this.checkForOrder();
           } catch (e) {
@@ -511,14 +508,17 @@ export class MyAccountOverlayContainer extends PureComponent {
         this.setState({ isLoading: false });
       }
     } catch (err) {
-      const { otpAttempt } = this.state;
+      const { otpAttempt, customerRegisterData, customerLoginData } =
+        this.state;
       this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       this.sendGTMEvents(EVENT_OTP_VERIFICATION_FAILED, err);
       if (Object.entries(customerRegisterData)?.length) {
         this.sendGTMEvents(EVENT_SIGN_UP_FAIL, err);
+        this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
       }
       if (Object.entries(customerLoginData)?.length) {
         this.sendGTMEvents(EVENT_LOGIN_FAILED, err);
+        this.sendMOEEvents(EVENT_LOGIN_FAILED);
       }
       console.error("Error while creating customer", err);
     }
@@ -609,6 +609,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         return;
       }
       this.sendGTMEvents(EVENT_PASSWORD_RESET_LINK_SENT);
+      this.sendMOEEvents(EVENT_PASSWORD_RESET_LINK_SENT);
       this.setState({ state: STATE_FORGOT_PASSWORD_SUCCESS });
       this.stopLoading();
     }, this.stopLoading);
@@ -662,7 +663,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     e.nativeEvent.stopImmediatePropagation();
     this.setState({ state: STATE_CREATE_ACCOUNT });
     this.sendGTMEvents(EVENT_REGISTER_TAB_CLICK);
-    this.sendMOEEvents(EVENT_LOGIN_TAB_CLICK);
+    this.sendMOEEvents(EVENT_REGISTER_TAB_CLICK);
     setHeaderState({
       name: CUSTOMER_SUB_ACCOUNT,
       title: __("Create account"),
