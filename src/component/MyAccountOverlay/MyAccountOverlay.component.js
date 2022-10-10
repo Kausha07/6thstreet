@@ -163,6 +163,9 @@ export class MyAccountOverlay extends PureComponent {
   //   );
   // };
 
+  componentDidUpdate() {
+    this.validateAndSendEvent();
+  }
   renderMap = {
     [STATE_INITIAL_LINKS]: {
       render: () => this.renderInitialLinks(),
@@ -185,7 +188,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -193,6 +196,14 @@ export class MyAccountOverlay extends PureComponent {
     },
   };
 
+  validateAndSendEvent() {
+    const { isCreateValidated, registerDetailsEntered } = this.state;
+    const { sendGTMEvents } = this.props;
+    if (isCreateValidated && !registerDetailsEntered) {
+      sendGTMEvents(EVENT_REGISTERATION_DETAILS_ENTERED);
+      this.setState({ registerDetailsEntered: true });
+    }
+  }
   sendMOEEvents(event) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -457,8 +468,9 @@ export class MyAccountOverlay extends PureComponent {
           </div>
           <div block="VerifyPhone-Text" elem="Phone">
             <button onClick={() => console.log("change mobile number")}>
-              {`${customerRegisterData?.contact_no || customerLoginData?.username
-                }`}
+              {`${
+                customerRegisterData?.contact_no || customerLoginData?.username
+              }`}
             </button>
           </div>
         </div>
@@ -879,7 +891,7 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       onFormError,
       handleForgotPassword,
-      sendGTMEvents
+      sendGTMEvents,
     } = this.props;
 
     const { isArabic, isSignInValidated, isOTP, countryCode } = this.state;
@@ -913,8 +925,9 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              placeholder={`${
+                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+              }*`}
               id="email"
               name="email"
               value={!ENABLE_OTP_LOGIN && !isOTP ? email : null}
@@ -954,10 +967,10 @@ export class MyAccountOverlay extends PureComponent {
             elem: "Button",
             mods: { isArabic },
           }}
-          onClick={(e)=>{
-             handleForgotPassword(e);
-             this.sendMOEEvents(EVENT_FORGOT_PASSWORD_CLICK);
-             sendGTMEvents(EVENT_FORGOT_PASSWORD_CLICK);
+          onClick={(e) => {
+            handleForgotPassword(e);
+            this.sendMOEEvents(EVENT_FORGOT_PASSWORD_CLICK);
+            sendGTMEvents(EVENT_FORGOT_PASSWORD_CLICK);
           }}
         >
           {__("Forgot password?")}

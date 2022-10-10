@@ -277,7 +277,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   handleBackBtn = () => {
-    const { closePopup,isVuePLP } = this.props;
+    const { closePopup, isVuePLP } = this.props;
     const getCurrentState = this.state.state;
     const { location } = browserHistory;
     if (isMobile.any() && !isVuePLP) {
@@ -292,7 +292,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         }
       };
     }
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const { isSignedIn: prevIsSignedIn } = prevProps;
@@ -372,6 +372,9 @@ export class MyAccountOverlayContainer extends PureComponent {
     try {
       await signIn(fields);
       onSignIn();
+      if (fields?.email) {
+        Moengage.add_unique_user_id(fields?.email);
+      }
       this.checkForOrder();
       this.sendMOEEvents(EVENT_LOGIN);
       this.sendGTMEvents(EVENT_LOGIN, "Email");
@@ -441,7 +444,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     const inputValue = field.target.value;
     try {
       const { createAccountNew, loginAccount } = this.props;
-      const { customerLoginData, customerRegisterData, otpAttempt } = this.state;
+      const { customerLoginData, customerRegisterData, otpAttempt } =
+        this.state;
       if (
         inputValue?.length === 5 &&
         (Object.entries(customerRegisterData)?.length ||
@@ -462,7 +466,12 @@ export class MyAccountOverlayContainer extends PureComponent {
           };
           response = await loginAccount(payload);
         }
-        const { success } = response;
+        const {
+          success,
+          data: {
+            user: { email },
+          },
+        } = response;
         if (success) {
           const { signInOTP, showNotification } = this.props;
           if (Object.entries(customerLoginData)?.length) {
@@ -477,6 +486,9 @@ export class MyAccountOverlayContainer extends PureComponent {
           }
           try {
             await signInOTP(response);
+            if (email) {
+              Moengage.add_unique_user_id(email);
+            }
             this.checkForOrder();
           } catch (e) {
             this.setState({ isLoading: false });
@@ -529,7 +541,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         });
         if (success) {
           showNotification("success", __("OTP sent successfully"));
-          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "sign_up")
+          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "sign_up");
           this.sendMOEEvents(EVENT_RESEND_VERIFICATION_CODE);
         } else if (error) {
           showNotification("error", error);
@@ -542,7 +554,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         });
         if (success) {
           showNotification("success", __("OTP sent successfully"));
-          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "user_login")
+          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "user_login");
           this.sendMOEEvents(EVENT_RESEND_VERIFICATION_CODE);
         } else if (error) {
           showNotification("error", error);
@@ -588,10 +600,10 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onForgotPasswordSuccess(fields) {
-    const { forgotPassword,  showNotification } = this.props;
+    const { forgotPassword, showNotification } = this.props;
 
     forgotPassword(fields).then((res) => {
-      if(typeof(res) === "string"){
+      if (typeof res === "string") {
         showNotification("error", __(res));
         this.stopLoading();
         return;
