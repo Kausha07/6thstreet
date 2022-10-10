@@ -38,6 +38,12 @@ export class LanguageSwitcherContainer extends PureComponent {
     isLoad: false,
   };
 
+  timer = null;
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
     this.setState({ isLoad: true });
@@ -52,14 +58,14 @@ export class LanguageSwitcherContainer extends PureComponent {
       window.location.href.includes("ar-")
     ) {
       if (location.pathname.match(/my-account/)) {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href
             .replace(language.toLowerCase(), value, location.href)
             .split("/my-account")[0];
         }, 1000);
-      }else if (location.pathname.match(/viewall/)) {
-        setTimeout(() => {
+      } else if (location.pathname.match(/viewall/)) {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href
             .replace(language.toLowerCase(), value, location.href)
@@ -67,7 +73,7 @@ export class LanguageSwitcherContainer extends PureComponent {
         }, 1000);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
         const pagePath = pageUrl.origin;
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(
             language.toLowerCase(),
@@ -81,7 +87,7 @@ export class LanguageSwitcherContainer extends PureComponent {
         pageUrl.pathname !== "/catalogsearch/result/"
       ) {
         const pagePath = pageUrl.origin + pageUrl.pathname;
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(
             language.toLowerCase(),
@@ -90,7 +96,7 @@ export class LanguageSwitcherContainer extends PureComponent {
           );
         }, 1000);
       } else {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href.replace(
             language.toLowerCase(),
