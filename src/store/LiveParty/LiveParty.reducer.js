@@ -2,6 +2,7 @@ import {
   SET_ARCHIVED_PARTY_DATA,
   SET_ARCHIVED_PARTY_LOADING,
   SET_LIVE_PARTY_DATA,
+  SET_LIVE_PARTY_ISLIVE,
   SET_LIVE_PARTY_LOADING,
   SET_UPCOMING_PARTY_DATA,
   SET_UPCOMING_PARTY_LOADING,
@@ -14,6 +15,7 @@ export const getInitialState = () => ({
   isLiveLoading: true,
   isUpcomingLoading: true,
   isArchivedLoading: true,
+  isLive: false
 });
 
 export const LivePartyReducer = (state = getInitialState(), action) => {
@@ -26,6 +28,13 @@ export const LivePartyReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         live,
+      };
+
+      case SET_LIVE_PARTY_ISLIVE:
+      const { data : isLive = {} } = action;
+      return {
+        ...state,
+        isLive,
       };
 
     case SET_LIVE_PARTY_LOADING:

@@ -1,71 +1,79 @@
 import {
   setLivePartyData,
   setLivePartyLoading,
+  setLivePartyIsLive,
   setUpcomingPartyData,
   setUpcomingPartyLoading,
   setArchivedPartyData,
   setArchivedPartyLoading,
 } from "./LiveParty.action";
 
-import {
-  getLiveParty,
-  getUpcomingParty,
-  getArchivedParty,
-} from "Util/API/endpoint/LiveParty/LiveParty.endpoint";
+import { getPartyInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint";
 
 export class LivePartyDispatcher {
-  async requestLiveParty(payload, dispatch) {
+  async requestLiveShoppingInfo(payload, dispatch) {
+
+    const { storeId } = payload;
+
+    try {
+      const response = await getPartyInfo({
+        storeId,
+      });
+      if (response) {
+        this.requestLiveParty(response, dispatch);
+        this.requestUpcomingParty(response, dispatch);
+        this.requestArchivedParty(response, dispatch);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async requestLiveParty(response, dispatch) {
     dispatch(setLivePartyLoading(true));
 
-    const { broadcastId } = payload;
-
     try {
-      const response = await getLiveParty({
-        broadcastId,
-      });
       dispatch(setLivePartyLoading(false));
+      if (response && response.playlists && response.playlists[2] && response.playlists[2].shows && response.playlists[2].shows[0]) {
+        dispatch(setLivePartyData(response.playlists[2].shows[0]));
 
-      dispatch(setLivePartyData(response));
+        if(response.playlists[2].shows[0].isLive)
+        dispatch(setLivePartyIsLive(response.playlists[2].shows[0].isLive));
+       
+      }
     } catch (e) {
-      Logger.log(e);
       dispatch(setLivePartyLoading(false));
     }
   }
 
-  async requestUpcomingParty(payload, dispatch) {
+  async requestUpcomingParty(response, dispatch) {
+    response.playlists[0].shows.sort(function(a,b){
+      return new Date(a.scheduledStartAt) - new Date(b.scheduledStartAt);
+    });
     dispatch(setUpcomingPartyLoading(true));
 
-    const { storeId, isStaging } = payload;
-
     try {
-      const response = await getUpcomingParty({
-        storeId,
-        isStaging,
-      });
       dispatch(setUpcomingPartyLoading(false));
-
-      dispatch(setUpcomingPartyData(response));
+      if(response && response.playlists && response.playlists[0] && response.playlists[0].shows) {
+        dispatch(setUpcomingPartyData(response.playlists[0].shows));
+      }
     } catch (e) {
-      Logger.log(e);
       dispatch(setUpcomingPartyLoading(false));
     }
   }
 
-  async requestArchivedParty(payload, dispatch) {
+  async requestArchivedParty(response, dispatch) {
+    response.playlists[1].shows.sort(function(a,b){
+      return new Date(b.endedAt) - new Date(a.endedAt);
+    });
     dispatch(setArchivedPartyLoading(true));
 
-    const { storeId, isStaging } = payload;
-
     try {
-      const response = await getArchivedParty({
-        storeId,
-        isStaging,
-      });
       dispatch(setArchivedPartyLoading(false));
-
-      dispatch(setArchivedPartyData(response));
+      if(response && response.playlists && response.playlists[1] && response.playlists[1].shows) {
+        dispatch(setArchivedPartyData(response.playlists[1].shows));
+      }
     } catch (e) {
-      Logger.log(e);
       dispatch(setArchivedPartyLoading(false));
     }
   }
