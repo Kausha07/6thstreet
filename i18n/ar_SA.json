@@ -941,7 +941,7 @@
     "shipment": "الشحن",
     "SHARE": "مشاركة",
     "Link copied to clipboard": "ارتباط منسوخ إلى الحافظة",
-    "LiveShopping": null,
+    "LiveShopping": "تسوق عبر البث المباشر",
     "Add New Address": "أضف عنوان جديد",
     "Results for ": "نتائج البحث ",
     "Sorry! We were unable to find a Club Apparel Account with this number.": "آسف! لم نتمكن من العثور على حساب بهذا الرقم.",
@@ -1118,5 +1118,5 @@
     "KNET Transaction Id": "رمز تعريف معاملة كي نت",
     "SUCCESS": "ناجح",
     "FAILED": "فشلت عملية الدفع",
-    "Age": null
+    "Age": "سن"
 }
