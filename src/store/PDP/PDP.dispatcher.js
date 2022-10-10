@@ -24,6 +24,7 @@ export class PDPDispatcher {
 
       dispatch(setPDPData(response, options));
       dispatch(setPDPLoading(false));
+      return response
     } catch (e) {
       Logger.log(e);
       // Needed, so PDP container sets "isLoading" to false
