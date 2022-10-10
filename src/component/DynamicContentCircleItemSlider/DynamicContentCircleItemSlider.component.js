@@ -9,11 +9,17 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentCircleItemSlider.style";
+
+import Config from "../../route/LiveExperience/LiveExperience.config";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+
 import Image from "Component/Image";
+import MobileAPI from "Util/API/provider/MobileAPI";
+import { getBambuserChannelID } from "../../util/Common/index";
 
 const settings = {
   lazyload: true,
@@ -50,27 +56,39 @@ class DynamicContentCircleItemSlider extends PureComponent {
   state = {
     isArabic: isArabic(),
     impressionSent: false,
-    livePartyItems: null,
+    livePartyItems: [],
+    itemforLiveParty: [
+      {
+        link: `/live-party`,
+      },
+    ],
   };
   componentDidMount() {
     this.registerViewPortEvent();
-    this.fetchLivePartyData();
+    this.getLiveLocation();
   }
 
-  fetchLivePartyData = () => {
-    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING;
-    const apiUrl = `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=${isStaging}`;
-    fetch(apiUrl)
-      .then((response) => response.json())
 
-      .then((data) => {
-        let newData = data.filter((val) => !val.m3u8URI);
-        this.setState({
-          livePartyItems: newData,
-        });
-      })
-      .catch((error) => console.error(error));
+  fetchLivePartyData = () => {
+    try {
+      MobileAPI.get(`bambuser/data/${Config.storeId}`).then((response) => {
+        if (response) {
+          this.setState({
+            livePartyItems: response.playlists[2].shows,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  getLiveLocation() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    Config.storeId = getBambuserChannelID(country);
+    this.fetchLivePartyData();
+  }
 
   registerViewPortEvent() {
     let observer;
@@ -192,11 +210,39 @@ class DynamicContentCircleItemSlider extends PureComponent {
     );
   };
 
+  renderDefaultLivePartyCircle = (item, i) => {
+    const { link } = item;
+    const { isArabic } = this.state;
+
+    // TODO: move to new component
+
+    return (
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
+        <Link
+          to={formatCDNLink(link)}
+          key={i}
+          data-banner-type="circleItemSlider"
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-tag={item.tag ? item.tag : ""}
+          onClick={() => {
+            this.clickLink(item);
+          }}
+        >
+          <div block="OuterCircle">
+            <div block="OuterCircle" elem="InnerCircle"></div>
+            <div block="OuterCircle" elem="DefaultbackgroundColor"></div>
+          </div>
+        </Link>
+        <div block="CircleSliderLabel">{__("Live Shopping")}</div>
+      </div>
+    );
+  };
+
   renderLiveParty = (item, i) => {
     // const { link, label, image_url, plp_config } = item;
-    let link = `/live-party?broadcastId=${item.id}`;
-    let label = item.name;
-    let image_url = item.mainImageURI;
+    let link = `/live-party`;
+    let label = item.title;
+    let image_url = item.curtains.pending.backgroundImage;
     const { isArabic } = this.state;
 
     // TODO: move to new component
@@ -217,7 +263,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             <div block="OuterCircle" elem="LiveParty"></div>
             <div block="OuterCircle" elem="LivePartyBackground"></div>
             <div block="OuterCircle" elem="LivePartyText">
-              LIVE
+              {__("LIVE")}
             </div>
             <img
               src={image_url}
@@ -228,13 +274,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
             />
           </div>
         </Link>
-        <div block="CircleSliderLabel">{label}</div>
+        <div block="CircleSliderLabel">{__("Live Shopping")}</div>
       </div>
     );
   };
 
   renderCircles() {
     const { items = [] } = this.props;
+    const { livePartyItems, itemforLiveParty } = this.state;
     return (
       <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
         <div
@@ -243,8 +290,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems &&
-            this.state.livePartyItems.map(this.renderLiveParty)}
+          {livePartyItems.length &&
+          livePartyItems[0] !== null &&
+          livePartyItems[0].isLive
+            ? livePartyItems.map(this.renderLiveParty)
+            : itemforLiveParty.map(this.renderDefaultLivePartyCircle)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>

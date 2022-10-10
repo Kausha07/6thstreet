@@ -504,6 +504,7 @@ export class CartPage extends PureComponent {
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
           onClick={onCheckoutButtonClick}
+          id="ProceedToCheckoutButton"
         >
           <span />
           {__("Proceed to Checkout")}

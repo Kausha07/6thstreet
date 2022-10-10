@@ -10,7 +10,11 @@ import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
-import { getCountryFromUrl } from "Util/Url/Url";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { getBambuserChannelID } from "../../util/Common/index";
+
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -23,18 +27,14 @@ export const mapStateToProps = (state) => ({
   live: state.LiveParty.live,
   upcoming: state.LiveParty.upcoming,
   archived: state.LiveParty.archived,
+  isLive: state.LiveParty.isLive,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  requestLiveParty: (options) =>
-    LivePartyDispatcher.requestLiveParty(options, dispatch),
+  requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
 
-  requestUpcomingParty: (options) =>
-    LivePartyDispatcher.requestUpcomingParty(options, dispatch),
-
-  requestArchivedParty: (options) =>
-    LivePartyDispatcher.requestArchivedParty(options, dispatch),
-
+  requestLiveShoppingInfo : (options) =>
+    LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update(breadcrumbs, dispatch)
@@ -43,6 +43,61 @@ export const mapDispatchToProps = (dispatch) => ({
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  addProductToCart: (
+    productData,
+    color,
+    optionValue,
+    basePrice,
+    brand_name,
+    thumbnail_url,
+    url,
+    itemPrice,
+    searchQueryId,
+    cartId,
+    liveparty
+  ) =>
+    CartDispatcher.addProductToCart(
+      dispatch,
+      productData,
+      color,
+      optionValue,
+      basePrice,
+      brand_name,
+      thumbnail_url,
+      url,
+      itemPrice,
+      searchQueryId,
+      cartId,
+      liveparty
+    ),
+  updateProductInCart: (
+    item_id,
+    quantity,
+    color,
+    optionValue,
+    discount,
+    brand_name,
+    thumbnail_url,
+    url,
+    row_total,
+    currency
+  ) =>
+    CartDispatcher.updateProductInCart(
+      dispatch,
+      item_id,
+      quantity,
+      color,
+      optionValue,
+      discount,
+      brand_name,
+      thumbnail_url,
+      url,
+      row_total,
+      currency
+    ),
+  removeProduct: (options) =>
+    CartDispatcher.removeProductFromCart(dispatch, options),
+  getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export class LiveExperienceContainer extends PureComponent {
@@ -51,7 +106,13 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
-    broadcastId: PropTypes.number,
+    addProductToCart: PropTypes.func.isRequired,
+    updateProductInCart: PropTypes.func.isRequired,
+    removeProduct: PropTypes.func.isRequired,
+    getCartTotals: PropTypes.func.isRequired,
+    livepartyId: PropTypes.string,
+    cartId: PropTypes.string,
+    token: PropTypes.string,
   };
 
   constructor(props) {
@@ -59,23 +120,20 @@ export class LiveExperienceContainer extends PureComponent {
     this.setMetaData();
   }
 
-  requestLiveParty() {
-    const broadcastId = getQueryParam("broadcastId", location);
-    const { requestLiveParty } = this.props;
-    requestLiveParty({ broadcastId });
+
+  requestLiveShoppingInfo() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    const { requestLiveShoppingInfo } = this.props;
+    Config.storeId = getBambuserChannelID(country);
+    if(requestLiveShoppingInfo) {
+      requestLiveShoppingInfo({
+      storeId: Config.storeId,
+      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
+    });
+    }
   }
 
-  requestUpcomingParty() {
-    const { requestUpcomingParty } = this.props;
-    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging });
-  }
-
-  requestArchivedParty() {
-    const { requestArchivedParty } = this.props;
-    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
-    requestArchivedParty({ storeId: Config.storeId, isStaging });
-  }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
   };
@@ -89,14 +147,8 @@ export class LiveExperienceContainer extends PureComponent {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   };
 
-  static getDerivedStateFromProps(props) {
-    const { live, upcoming, archived } = props;
-  }
-
   componentDidMount() {
-    this.requestLiveParty();
-    this.requestUpcomingParty();
-    this.requestArchivedParty();
+    this.requestLiveShoppingInfo();
     const showHeaderFooter = getQueryParam("showHeaderFooter", location);
 
     const isShowHeaderFooter = this.getParameterByName("showHeaderFooter");
@@ -119,7 +171,7 @@ export class LiveExperienceContainer extends PureComponent {
     const breadcrumbs = [
       {
         url: "/",
-        name: "Live Shopping",
+        name: __("Live Shopping"),
       },
       {
         url: "/",
@@ -138,7 +190,6 @@ export class LiveExperienceContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-
     if (!q) {
       return;
     }
@@ -166,76 +217,59 @@ export class LiveExperienceContainer extends PureComponent {
         categoryName,
         countryName
       ),
-      description: getCountryFromUrl() === 'QA' ? __(
+      description: __(
         // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
+        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
         genderName,
         categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
-      twitter_title: __(
-        "%s %s Online shopping in %s | 6thStreet",
-        genderName,
-        categoryName,
-        countryName
       ),
-      twitter_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
-        genderName,
-        categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
-      og_title: __(
-        "%s %s Online shopping in %s | 6thStreet",
-        genderName,
-        categoryName,
-        countryName
-      ),
-      og_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet.",
-        genderName,
-        categoryName
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
-          genderName,
-          categoryName
-        ),
     });
   }
   containerProps = () => {
-    const broadcastId = getQueryParam("broadcastId", location);
-    let { live, upcoming, archived } = this.props;
+    const livepartyId = getQueryParam("livepartyId", location);
+    const cartId = getQueryParam("cartId", location);
+    const token = getQueryParam("token", location);
+
+    let {
+      live,
+      upcoming,
+      archived,
+      isLive,
+      addProductToCart,
+      updateProductInCart,
+      removeProduct,
+      updateCartProducts
+    } = this.props;
     // Updating upcoming data to remove current broadCastId from it.
     let updatedUpcoming = upcoming.filter((val) => {
-      return (val.id.toString() !== broadcastId)
-    })
+      return val.id.toString() !== live.id;
+    });
     let updatedArchived = archived.filter((val) => {
-      return (val.id.toString() !== broadcastId)
-    })
+      return val.id.toString() !== live.id;
+    });
+
     return {
-      broadcastId
+      live,
+      isLive,
+      updatedUpcoming,
+      updatedArchived,
+      addProductToCart,
+      updateProductInCart,
+      removeProduct,
+      updateCartProducts,
+      livepartyId,
+      cartId,
+      token,
     };
   };
 
   render() {
-    return <LiveExperience {...this.containerProps()} />;
+    return (
+      <LiveExperience
+        requestProduct={this.props.requestProduct}
+        {...this.containerProps()}
+      />
+    );
   }
 }
 
