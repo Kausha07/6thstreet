@@ -406,7 +406,7 @@ export class LiveExperience extends PureComponent {
 
       // The user wants to change the quantity of an item in cart
       player.on(player.EVENT.UPDATE_ITEM_IN_CART, (updatedItem, callback) => {
-        const { item_id, ProductDetailsObj } = this.state;
+        const { item_id, ProductDetailsObj, itemIdArr } = this.state;
         let productQuantity = null;
         const isUpdatedItemCount = Object.values(ProductDetailsObj).filter((obj) => {
           let filteredProductCount = null;
@@ -453,7 +453,8 @@ export class LiveExperience extends PureComponent {
         }
 
         if (updatedItem.quantity === 0) {
-          this.removeProducts(item_id)
+          this.removeProducts(
+            itemIdArr[updatedItem.sku])
             .then(() => {
               // successfully deleted item
               callback(true);
