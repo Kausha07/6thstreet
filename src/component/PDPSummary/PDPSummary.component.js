@@ -190,6 +190,7 @@ class PDPSummary extends PureComponent {
   componentDidMount() {
     const {
       product: { price },
+      product,
       getTabbyInstallment,
       addressCityData,
     } = this.props;
@@ -221,6 +222,9 @@ class PDPSummary extends PureComponent {
       countryCode: countryCode,
       cityResponse: addressCityData,
     });
+    this.setState({
+      alsoAvailable: product["6s_also_available"]
+    })
   }
   componentDidUpdate(prevProps) {
     const {
@@ -343,6 +347,7 @@ class PDPSummary extends PureComponent {
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
       });
     }
+    
     return {derivedState:Object.keys(derivedState).length ? derivedState : null,
       intlEddResponseState:intlEddResponse};
   }
@@ -1001,7 +1006,6 @@ class PDPSummary extends PureComponent {
       renderMySignInPopup,
     } = this.props;
     const { alsoAvailable } = this.state;
-
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
