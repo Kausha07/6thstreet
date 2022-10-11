@@ -406,9 +406,23 @@ export class LiveExperience extends PureComponent {
 
       // The user wants to change the quantity of an item in cart
       player.on(player.EVENT.UPDATE_ITEM_IN_CART, (updatedItem, callback) => {
-        const { item_id } = this.state;
+        const { item_id, ProductDetailsObj } = this.state;
+        let productQuantity = null;
+        const isUpdatedItemCount = Object.values(ProductDetailsObj).filter((obj) => {
+          let filteredProductCount = null;
+          Object.keys(obj.simple_products).filter((objSku) => {
+            if (objSku === updatedItem.sku) {
+              filteredProductCount = obj.simple_products[objSku].quantity;
+            }
+          });
+          if(filteredProductCount){
+            productQuantity = +filteredProductCount
+          }
+          return filteredProductCount;
+        });
         if (updatedItem.quantity > 0) {
-          this.UpdateProductsInCart(updatedItem, currency)
+          if(updatedItem.quantity < 11 && updatedItem.quantity <= productQuantity) {
+            this.UpdateProductsInCart(updatedItem, currency)
             .then(() => {
               // cart update was successful
               callback(true);
@@ -423,6 +437,19 @@ export class LiveExperience extends PureComponent {
                 callback(false);
               }
             });
+          }else if(updatedItem.quantity > productQuantity){
+            callback({
+              success: false,
+              reason: "custom-error",
+              message: "Some products or selected quantities are no longer available",
+            });
+          }else {
+            callback({
+              success: false,
+              reason: "custom-error",
+              message: "You have exceeded the maximum limit to add this product",
+            });
+          }
         }
 
         if (updatedItem.quantity === 0) {
