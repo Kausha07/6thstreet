@@ -9,7 +9,7 @@ import {
 } from "Store/Overlay/Overlay.action";
 import ShareButton from "./ShareButton.component";
 import SharePopup from "Component/SharePopup";
-import { EVENT_MOE_SHARE } from "Util/Event";
+import Event,{ EVENT_SHARE, EVENT_GTM_PDP_TRACKING } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -101,7 +101,7 @@ class ShareButtonContainer extends PureComponent {
           ? product_type_6s
           : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_SHARE, {
+    Moengage.track_event(EVENT_SHARE, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -123,6 +123,14 @@ class ShareButtonContainer extends PureComponent {
       app6thstreet_platform: "Web",
     });
 
+    const eventData = {
+      name: EVENT_SHARE,
+      product_name: name,
+      product_id: sku,
+      action: "pdp_share_click",
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    
     if (isDesktop) {
       this.showShareOverlay();
     } else if (window.navigator.share) {

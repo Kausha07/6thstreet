@@ -22,6 +22,15 @@ import {
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
   EVENT_PAGE_NOT_FOUND,
   EVENT_GTM_SEARCH,
+  EVENT_GTM_FOOTER,
+  EVENT_GTM_COUPON,
+  EVENT_GTM_SORT,
+  EVENT_GTM_FILTER,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_GTM_TOP_NAV_CLICK,
+  EVENT_GTM_CUSTOMER_SUPPORT,
+  EVENT_GTM_CHECKOUT_BILLING
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -58,6 +67,15 @@ import SearchSuggestionProductClickEvent from "./events/SearchEvents/SearchSugge
 import NoResultSearchScreenEvent from "./events/SearchEvents/NoResultSearchScreen.event";
 import PageNotFoundEvent from "./events/PageNotFound.event";
 import SearchResultEvent from "./events/SearchEvents/SearchResult.event";
+import FooterEvent from "./events/Footer.event";
+import CouponEvent from "./events/Coupon.event";
+import SortEvent from "./events/Sort.event";
+import FilterEvent from "./events/Filter.event";
+import PDPTrackingEvent from "./events/PDPTracking.event";
+import AutheneticationEvent from "./events/Authentication.event";
+import TopNavigationEvent from "./events/TopNavigation.event";
+import CustomerSupportEvent from "./events/CustomerSupport.event";
+import CheckoutBillingEvent from "./events/CheckoutBilling.event";
 import Scripts from "./Scripts";
 
 /**
@@ -109,7 +127,7 @@ class GoogleTagManager extends PureComponent {
       gtm_id: "",
     },
     state: {},
-    dispatch: () => { },
+    dispatch: () => {},
   };
 
   /**
@@ -156,6 +174,15 @@ class GoogleTagManager extends PureComponent {
     [EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK]: SearchSuggestionProductClickEvent,
     [EVENT_PAGE_NOT_FOUND]: PageNotFoundEvent,
     [EVENT_GTM_SEARCH]: SearchResultEvent,
+    [EVENT_GTM_FOOTER]: FooterEvent,
+    [EVENT_GTM_COUPON]: CouponEvent,
+    [EVENT_GTM_SORT]: SortEvent,
+    [EVENT_GTM_FILTER]: FilterEvent,
+    [EVENT_GTM_PDP_TRACKING]: PDPTrackingEvent,
+    [EVENT_GTM_AUTHENTICATION]: AutheneticationEvent,
+    [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
+    [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
+    [EVENT_GTM_CHECKOUT_BILLING]:CheckoutBillingEvent,
   };
 
   /**

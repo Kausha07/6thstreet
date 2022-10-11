@@ -22,7 +22,11 @@ import { getQueryParam } from 'Util/Url';
 
 import PasswordChangePage from './PasswordChangePage.component';
 import { STATUS_PASSWORD_UPDATED } from './PasswordChangePage.config';
-
+import Event,{
+    EVENT_FORGOT_PASSWORD_RESET_SUCCESS,
+    EVENT_FORGOT_PASSWORD_RESET_FAIL,
+    EVENT_GTM_AUTHENTICATION} 
+from "Util/Event";
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     resetPassword: (data) => MyAccountDispatcher.resetPassword(data)
@@ -39,10 +43,11 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
                 switch (typeof response) {
                 case 'string':
                     showNotification('error', __(response));
-
+                    this.sendGTMEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);
                     break;
                 case 'boolean':
                     showNotification('success', __('Password has been successfully updated!'));
+                    this.sendGTMEvents(EVENT_FORGOT_PASSWORD_RESET_SUCCESS);
                     setTimeout(() => {
                         window.location.href = '/';
                     }, '4000');
@@ -50,7 +55,7 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
                     break;
                 default:
                     showNotification('error', __('Something Went Wrong'));
-
+                    this.sendGTMEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);
                     break;
                 }
 
@@ -59,6 +64,11 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
         );
     }
 
+    sendGTMEvents(event) {
+        const eventAction = { name: event, action: event, category: "user_login" };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, eventAction);
+    }
+    
     updateMeta() {
         const { updateMeta } = this.props;
         updateMeta({ title: __('Password Change Page') });

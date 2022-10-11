@@ -29,8 +29,8 @@ import Image from "Component/Image";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
-  EVENT_MOE_PHONE,
-  EVENT_MOE_MAIL,
+  EVENT_PHONE,
+  EVENT_MAIL,
   EVENT_MOE_CHAT,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -339,7 +339,7 @@ export class CheckoutSuccess extends PureComponent {
         </div>
       );
     } else if (paymentMethod?.code === "checkout_knet") {
-
+      
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
@@ -360,7 +360,7 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-
+    
     } else {
       const {
         initialTotals: { items = [], quote_currency_code },
@@ -501,7 +501,7 @@ export class CheckoutSuccess extends PureComponent {
             href={`tel:${TEL_LINK}`}
             target="_blank"
             rel="noreferrer"
-            onClick={() => this.sendMOEEvents(EVENT_MOE_PHONE)}
+            onClick={() => this.sendMOEEvents(EVENT_PHONE)}
           >
             <div block="ContactInfo" elem="Link">
               <span>
@@ -516,7 +516,7 @@ export class CheckoutSuccess extends PureComponent {
             href={`mailto:${EMAIL_LINK}`}
             target="_blank"
             rel="noreferrer"
-            onClick={() => this.sendMOEEvents(EVENT_MOE_MAIL)}
+            onClick={() => this.sendMOEEvents(EVENT_MAIL)}
           >
             <div block="ContactInfo" elem="LinkMiddle">
               <span>
@@ -661,56 +661,56 @@ export class CheckoutSuccess extends PureComponent {
   renderKNETPaymentType = () => {
     const { KnetDetails, paymentMethod } = this.props;
     const { isArabic } = this.state;
-    const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
+     const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
     return (
       <>
-      <br /><br />
-      {paymentMethod?.code === "checkout_knet" && KnetDetails && (
-            <>
-              {KnetDetails?.knet_payment_id && (
-                <>
-                  {" "}
-                  <div block="PaymentType" elem="Title">
-                    {__("KNET Payment Id")}
-                  </div>
-                  {KnetDetails?.knet_payment_id}
-                  <br /><br />{" "}
-                </>
-              )}
+        <br /><br />
+        {paymentMethod?.code === "checkout_knet" && KnetDetails && (
+          <>
+            {KnetDetails?.knet_payment_id && (
+              <>
+                {" "}
+                <div block="PaymentType" elem="Title">
+                  {__("KNET Payment Id")}
+                </div>
+                {KnetDetails?.knet_payment_id}
+                <br /><br />{" "}
+              </>
+            )}
 
-              {KnetDetails?.knet_transaction_id && (
-                <>
-                  {" "}
-                  <div block="PaymentType" elem="Title">
-                    {__("KNET Transaction Id")}
-                  </div>
-                  {KnetDetails?.knet_transaction_id}
-                  <br /><br />{" "}
-                </>
-              )}
+            {KnetDetails?.knet_transaction_id && (
+              <>
+                {" "}
+                <div block="PaymentType" elem="Title">
+                  {__("KNET Transaction Id")}
+                </div>
+                {KnetDetails?.knet_transaction_id}
+                <br /><br />{" "}
+              </>
+            )}
 
-              {KnetDetails?.amount && (
-                <>
-                  {" "}
-                  <div block="PaymentType" elem="Title">
-                    {__("Amount")}
-                  </div>
-                  {currency} {KnetDetails?.amount}
-                  <br /><br />{" "}
-                </>
-              )}
-              <div block="PaymentType" elem="Title">
-                {__("Status")}
-              </div>
-                {isArabic ? this.renderKnetStatus() : status}
-              <br /><br />
-              <div block="PaymentType" elem="Title">
-                {__("Date")}
-              </div>
-              {date}
-              <br /><br />
-            </>
-          )}
+            {KnetDetails?.amount && (
+              <>
+                {" "}
+                <div block="PaymentType" elem="Title">
+                  {__("Amount")}
+                </div>
+                {currency} {KnetDetails?.amount}
+                <br /><br />{" "}
+              </>
+            )}
+            <div block="PaymentType" elem="Title">
+              {__("Status")}
+            </div>
+            {isArabic ? this.renderKnetStatus() : status}
+            <br /><br />
+            <div block="PaymentType" elem="Title">
+              {__("Date")}
+            </div>
+            {date}
+            <br /><br />
+          </>
+        )}
       </>
     )
   }

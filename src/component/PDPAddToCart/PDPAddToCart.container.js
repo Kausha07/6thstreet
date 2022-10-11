@@ -24,7 +24,9 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
   EVENT_MOE_VIEW_BAG,
-  EVENT_MOE_SELECT_SIZE,
+  EVENT_SELECT_SIZE,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_SELECT_SIZE_TYPE,
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -350,6 +352,7 @@ export class PDPAddToCartContainer extends PureComponent {
     } = prevProps;
     const {
       totals: { total = null },
+      product: { size_uk = [], size_eu = [], size_us = [],sku,name },
     } = this.props;
     const {
       productAdded,
@@ -368,12 +371,20 @@ export class PDPAddToCartContainer extends PureComponent {
 
     const prev_selectedSizeType = prevState?.selectedSizeType;
     const prev_selectedSizeCode = prevState?.selectedSizeCode;
+    const checkproductSize =
+      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      selectedSizeCode !== "";
+
+    const { size } = checkproductSize ? productStock[selectedSizeCode] : "";
+    const optionValue = checkproductSize ? size[selectedSizeType] : "";
     if (
       selectedSizeCode &&
       prev_selectedSizeCode == selectedSizeCode &&
       !isAddToCartClicked
     ) {
-      this.sendMoEImpressions(EVENT_MOE_SELECT_SIZE);
+      const eventData = { name: EVENT_SELECT_SIZE, size_value: optionValue, product_name: name, product_id: sku, action:"select_size_no_option" };
+      Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+      this.sendMoEImpressions(EVENT_SELECT_SIZE);
     }
     if (
       selectedSizeType !== prevSelectedSizeType ||
@@ -415,6 +426,17 @@ export class PDPAddToCartContainer extends PureComponent {
   };
 
   onSizeTypeSelect(type) {
+    const {
+      product: {sku,name },
+    } = this.props;
+    const eventData = {
+      name: EVENT_SELECT_SIZE_TYPE,
+      size_type: type.target.value,
+      action: EVENT_SELECT_SIZE_TYPE,
+      product_name: name, 
+      product_id: sku
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({
       selectedSizeType: type.target.value,
     });
@@ -756,7 +778,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size_id: optionId,
       size: optionValue,
       quantity: 1,
-      ...((event !== EVENT_MOE_SELECT_SIZE ) && {cart_id: getCartID || ""}),
+      ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
       app6thstreet_platform: "Web",
     });
   }

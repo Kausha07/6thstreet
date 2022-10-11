@@ -14,7 +14,11 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { isSignedIn } from "Util/Auth";
 import { customerType } from "Type/Account";
 import Image from "Component/Image";
-
+import Event, {
+  EVENT_OUT_OF_STOCK,
+  EVENT_OUT_OF_STOCK_MAIL_SENT,
+  EVENT_GTM_PDP_TRACKING,
+} from "Util/Event";
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
 import StrikeThrough from "./icons/strike-through.png";
@@ -48,6 +52,8 @@ class PDPAddToCart extends PureComponent {
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
     isArabic: isArabic(),
     customer: null,
+    OOSrendered: false,
+    OOS_mailSent: false,
   };
 
   componentDidMount() {
@@ -156,7 +162,7 @@ class PDPAddToCart extends PureComponent {
           onChange={onSizeTypeSelect}
         >
           {sizeObject.sizeTypes.map((type = "") => {
-            if(type) {
+            if (type) {
               if (product[`size_${type}`]?.length > 0) {
                 return (
                   <option
@@ -458,11 +464,23 @@ class PDPAddToCart extends PureComponent {
       notifyMeLoading,
       customer: { email },
       guestUserEmail,
+      product: { name, sku },
     } = this.props;
-    const { notifyMeEmail } = this.state;
+    const { notifyMeEmail, OOSrendered } = this.state;
     if (!isOutOfStock) {
       return null;
     }
+    const eventData = {
+      name: EVENT_OUT_OF_STOCK,
+      product_name: name,
+      product_id: sku,
+      action: "out_of_stock_message",
+      stockStatus: "Out of Stock",
+    };
+    if (!OOSrendered) {
+      Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    }
+    this.setState({ OOSrendered: true });
     // if (email && notifyMeEmail !== email) {
     //   this.setState({ notifyMeEmail: email });
     // } else if (!email && guestUserEmail !== notifyMeEmail) {
@@ -509,11 +527,25 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderNotifyMeSuccess() {
-    const { notifyMeSuccess } = this.props;
+    const {
+      notifyMeSuccess,
+      product: { name, sku },
+    } = this.props;
+    const { OOS_mailSent } = this.state;
     if (!notifyMeSuccess) {
       return null;
     }
-
+    const eventData = {
+      name: EVENT_OUT_OF_STOCK_MAIL_SENT,
+      product_name: name,
+      product_id: sku,
+      action: "out_stock_mail_sent",
+      stockStatus: "Out of Stock",
+    };
+    if (!OOS_mailSent) {
+      Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    }
+    this.setState({ OOS_mailSent: true });
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
         <Image lazyLoad={true} src={NotifySuccessImg} alt="success circle" />

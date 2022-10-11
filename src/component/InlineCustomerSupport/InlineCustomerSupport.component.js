@@ -8,7 +8,15 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-
+import Event, {
+  EVENT_GTM_CUSTOMER_SUPPORT,
+  EVENT_CUSTOMER_SUPPORT_FAQ,
+  EVENT_CUSTOMER_SUPPORT_FREE_DELIVERY_MIN_ORDER,
+  EVENT_CUSTOMER_SUPPORT_FREE_RETURN,
+  EVENT_PHONE,
+  EVENT_MAIL,
+} from "Util/Event";
+import Loader from "Component/Loader";
 import "./InlineCustomerSupport.style";
 
 export const mapStateToProps = (state) => ({
@@ -30,6 +38,7 @@ class InlineCustomerSupport extends PureComponent {
     signInPopUp: "",
     showPopup: false,
     isArabic: isArabic(),
+    isLoad: false,
   };
 
   getRootURL = () => {
@@ -62,7 +71,12 @@ class InlineCustomerSupport extends PureComponent {
     }
 
     return (
-      <a block="InlineCustomerSupport" elem="Email" href={`mailto:${email}`}>
+      <a
+        block="InlineCustomerSupport"
+        elem="Email"
+        href={`mailto:${email}`}
+        onClick={() => this.sendGTMEvents(EVENT_MAIL)}
+      >
         {email}
       </a>
     );
@@ -84,6 +98,7 @@ class InlineCustomerSupport extends PureComponent {
             elem="Phone"
             mods={{ isArabic }}
             href={`https://api.whatsapp.com/send?phone=${phone}`}
+            onClick={() => this.sendGTMEvents(EVENT_PHONE)}
           >
             <bdi>{phone}</bdi>
           </a>
@@ -93,6 +108,7 @@ class InlineCustomerSupport extends PureComponent {
             elem="Phone"
             mods={{ isArabic }}
             href={`tel:${phone}`}
+            onClick={() => this.sendGTMEvents(EVENT_PHONE)}
           >
             <bdi>{phone}</bdi>
           </a>
@@ -157,6 +173,9 @@ class InlineCustomerSupport extends PureComponent {
     }
     return false;
   };
+  sendGTMEvents(event) {
+    Event.dispatch(EVENT_GTM_CUSTOMER_SUPPORT, event);
+  }
 
   renderDropdown() {
     const { isExpanded, isArabic } = this.state;
@@ -164,7 +183,12 @@ class InlineCustomerSupport extends PureComponent {
     const Phone = this.renderPhone();
 
     const rootURL = this.getRootURL() || "";
-
+    const changeRoute = (url) => {
+      this.setState({ isLoad: true });
+      setTimeout(() => {
+        window.location = url;
+      }, 1500);
+    };
     return (
       <div>
         <button
@@ -228,14 +252,17 @@ class InlineCustomerSupport extends PureComponent {
                 elem="FAQsIcon"
                 mods={{ isArabic }}
               />
-              <Link
+              <button
                 block="InlineCustomerSupport"
                 elem="faq"
                 mods={{ isArabic }}
-                to={`${rootURL}/faq`}
+                onClick={() => {
+                  changeRoute(`${rootURL}/faq`);
+                  this.sendGTMEvents(EVENT_CUSTOMER_SUPPORT_FAQ);
+                }}
               >
                 {__("FAQs")}
-              </Link>
+              </button>
             </div>
 
             <div>
@@ -245,14 +272,20 @@ class InlineCustomerSupport extends PureComponent {
                   elem="ShippingIcon"
                   mods={{ isArabic }}
                 />
-                <Link
+                <button
                   block="InlineCustomerSupport"
                   elem="shippingpolicy"
                   mods={{ isArabic }}
-                  to={`${rootURL}/shipping-policy`}
+                  onClick={() => {
+                    changeRoute(`${rootURL}/shipping-policy`);
+                    this.sendGTMEvents(
+                      EVENT_CUSTOMER_SUPPORT_FREE_DELIVERY_MIN_ORDER
+                    );
+                  }}
+                  //to={`${rootURL}/shipping-policy`}
                 >
                   {__("Free Delivery on min. order")}
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -262,14 +295,18 @@ class InlineCustomerSupport extends PureComponent {
                 elem="ReturnIcon"
                 mods={{ isArabic }}
               />
-              <Link
+              <button
                 block="InlineCustomerSupport"
                 elem="returnpolicy"
                 mods={{ isArabic }}
-                to={`${rootURL}/return-information`}
+                onClick={() => {
+                  changeRoute(`${rootURL}/return-information`);
+                  this.sendGTMEvents(EVENT_CUSTOMER_SUPPORT_FREE_RETURN);
+                }}
+                //to={`${rootURL}/return-information`}
               >
                 {__("100 Days Free Return")}
-              </Link>
+              </button>
             </div>
 
             {!isSignedIn() && (isMobile.any() || isMobile.tablet()) ? (
@@ -326,7 +363,7 @@ class InlineCustomerSupport extends PureComponent {
   }
 
   render() {
-    const { isArabic } = this.state;
+    const { isArabic, isLoad } = this.state;
     return (
       <>
         <div block="InlineCustomerSupport" mods={{ isArabic }}>
@@ -334,6 +371,7 @@ class InlineCustomerSupport extends PureComponent {
             {this.renderDropdown()}
             {/* {this.renderQuickAccess()} */}
           </ClickOutside>
+          <Loader isLoading={isLoad} />
         </div>
         {this.renderMySignInPopup()}
       </>

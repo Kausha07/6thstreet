@@ -6,6 +6,10 @@ import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
 import Image from "Component/Image";
+import Event, {
+  EVENT_MORE_FROM_THIS_BRAND_CLICK,
+  EVENT_GTM_PDP_TRACKING,
+} from "Util/Event";
 
 class PDPDetail extends PureComponent {
   static propTypes = {
@@ -51,9 +55,18 @@ class PDPDetail extends PureComponent {
   renderMoreFromBrand = () => {
     const { brandName } = this.props;
     const url = this.getBrandUrl();
+    const eventData = {
+      name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+      action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+    };
     return (
       <div block="BrandDescription">
-        <Link block="BrandDescription" elem="MoreButton" to={url}>
+        <Link
+          block="BrandDescription"
+          elem="MoreButton"
+          to={url}
+          onClick={() => Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData)}
+        >
           <span block="BrandDescription" elem="ButtonText">
             {__("More from this brand")}
           </span>
