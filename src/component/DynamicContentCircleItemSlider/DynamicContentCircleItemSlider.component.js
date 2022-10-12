@@ -294,7 +294,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
           livePartyItems[0] !== null &&
           livePartyItems[0].isLive
             ? livePartyItems.map(this.renderLiveParty)
-            : itemforLiveParty.map(this.renderDefaultLivePartyCircle)}
+            // : itemforLiveParty.map(this.renderDefaultLivePartyCircle)
+            :null
+          }
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>
