@@ -54,6 +54,10 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  logout: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.logout(null, dispatch)
+    ),
 });
 
 export class HomePageContainer extends PureComponent {
@@ -79,11 +83,10 @@ export class HomePageContainer extends PureComponent {
   constructor(props) {
     super(props);
     window.history.scrollRestoration = "manual";
-    // this.requestDynamicContent();
   }
 
   componentDidMount() {
-    const { prevPath = null, requestCustomerData } = this.props;
+    const { prevPath = null, requestCustomerData, logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -103,8 +106,7 @@ export class HomePageContainer extends PureComponent {
     if (
       decodedParams.match("mobileToken") &&
       decodedParams.match("authToken")
-    ){
-
+    ) {
       const params = decodedParams.split("&").reduce((acc, param) => {
         acc[param.substr(0, param.indexOf("="))] = param.substr(
           param.indexOf("=") + 1
@@ -133,10 +135,11 @@ export class HomePageContainer extends PureComponent {
           window.location.reload();
         });
       }
-    }else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
-      BrowserDatabase.deleteItem("customer");
+    } else {
+      const cartID = BrowserDatabase.getItem("CART_ID_CACHE_KEY");
+      if (cartID === parseInt(cartID, 10)) {
+        logout();
+      }
     }
 
     const { gender, toggleBreadcrumbs } = this.props;

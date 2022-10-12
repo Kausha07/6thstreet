@@ -33,7 +33,7 @@ export class WishlistDispatcher {
           productIdsArr
         );
         product_ids.map((product, index) => {
-          product["product"] = wishListData[index];
+          product["product"] = wishListData.results[index];
         });
         dispatch(setWishlistItems(product_ids));
       } else {

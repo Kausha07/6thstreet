@@ -21,6 +21,7 @@
         "imagemin-mozjpeg": "^9.0.0",
         "imagemin-pngquant": "^9.0.2",
         "imagemin-svgo": "^10.0.0",
+        "js-sha256": "^0.9.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
         "normalize-scroll-left": "^0.2.1",

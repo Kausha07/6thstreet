@@ -55,6 +55,7 @@ import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import { isArabic } from "Util/App";
+import { sha256 } from "js-sha256";
 
 export {
   CUSTOMER,
@@ -98,20 +99,39 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const {
       MyAccountReducer: { addressCityData = [] },
     } = getStore().getState();
-    getShippingAddresses().then(async(response) => {
+    getShippingAddresses().then(async (response) => {
       if (response.data) {
-          let finalRes = addressCityData
-          if (Object.values(response.data).length > 0 && finalRes.length > 0) {
-            const defaultShippingAddress = Object.values(response.data).filter(
-              (address) => {
-                return address.default_shipping === true;
-              }
+        let finalRes = addressCityData;
+        if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+          const defaultShippingAddress = Object.values(response.data).filter(
+            (address) => {
+              return address.default_shipping === true;
+            }
+          );
+          if (
+            defaultShippingAddress &&
+            Object.values(defaultShippingAddress).length > 0
+          ) {
+            const { country_code, city, area } = defaultShippingAddress[0];
+            const { finalCity, finalArea } = this.getArabicCityArea(
+              city,
+              area,
+              finalRes
             );
-            if (
-              defaultShippingAddress &&
-              Object.values(defaultShippingAddress).length > 0
-            ) {
-              const { country_code, city, area } = defaultShippingAddress[0];
+            let request = {
+              country: country_code,
+              city: isArabic() ? finalCity : city,
+              area: isArabic() ? finalArea : area,
+              courier: null,
+              source: null,
+            };
+            this.estimateDefaultEddResponse(dispatch, request);
+            dispatch(
+              setCustomerDefaultShippingAddress(defaultShippingAddress[0])
+            );
+          } else {
+            if (!login) {
+              const { country_code, city, area } = response.data[0];
               const { finalCity, finalArea } = this.getArabicCityArea(
                 city,
                 area,
@@ -125,34 +145,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
                 source: null,
               };
               this.estimateDefaultEddResponse(dispatch, request);
-              dispatch(
-                setCustomerDefaultShippingAddress(defaultShippingAddress[0])
-              );
             } else {
-              if (!login) {
-                const { country_code, city, area } = response.data[0];
-                const { finalCity, finalArea } = this.getArabicCityArea(
-                  city,
-                  area,
-                  finalRes
-                );
-                let request = {
-                  country: country_code,
-                  city: isArabic() ? finalCity : city,
-                  area: isArabic() ? finalArea : area,
-                  courier: null,
-                  source: null,
-                };
-                this.estimateDefaultEddResponse(dispatch, request);
-              } else {
-                dispatch(setEddResponse(null, null));
-                dispatch(setCustomerDefaultShippingAddress(null));
-              }
+              dispatch(setEddResponse(null, null));
+              dispatch(setCustomerDefaultShippingAddress(null));
             }
-          } else {
-            dispatch(setEddResponse(null, null));
-            dispatch(setCustomerDefaultShippingAddress(null));
           }
+        } else {
+          dispatch(setEddResponse(null, null));
+          dispatch(setCustomerDefaultShippingAddress(null));
+        }
         dispatch(setCustomerAddressData(response.data));
       }
     });
@@ -182,7 +183,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           CUSTOMER,
           ONE_MONTH_IN_SECONDS
         );
-
+        const customer_data = { ...stateCustomer, ...data };
+        const TiktokData = {
+          mail: customer_data?.email ? sha256(customer_data?.email) : null,
+          phone: customer_data?.phone ? sha256(customer_data?.phone) : null,
+        };
+        BrowserDatabase.setItem(TiktokData, "TT_Data", ONE_MONTH_IN_SECONDS);
         //after login dispatching custom event
         const loginEvent = new CustomEvent("userLogin");
         window.dispatchEvent(loginEvent);
@@ -227,6 +233,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     BrowserDatabase.deleteItem(ORDERS);
     BrowserDatabase.deleteItem(CUSTOMER);
     localStorage.removeItem("RmaId");
+    BrowserDatabase.deleteItem("TT_Data");
 
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
@@ -273,7 +280,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     await WishlistDispatcher.updateInitialWishlistData(dispatch);
     await StoreCreditDispatcher.getStoreCredit(dispatch);
-    setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
+    setCrossSubdomainCookie("authData", this.getCustomerData(), "90");
     this.requestCustomerData(dispatch, true);
 
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
@@ -485,13 +492,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
         if (response.success) {
-          if (request['intl_vendors']) {
+          if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse(response?.result));
           } else {
             dispatch(setEddResponse(response?.result, request));
           }
           if (type) {
-            if (request['intl_vendors']) {
+            if (request["intl_vendors"]) {
               sessionStorage.setItem(
                 "IntlEddAddressRes",
                 JSON.stringify(response.result)
@@ -505,7 +512,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             }
           }
         } else {
-          if (request['intl_vendors']) {
+          if (request["intl_vendors"]) {
             dispatch(setIntlEddResponse({}));
             sessionStorage.removeItem("IntlEddAddressRes");
           } else {
@@ -516,7 +523,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         }
       });
     } catch (error) {
-      if (request['intl_vendors']) {
+      if (request["intl_vendors"]) {
         dispatch(setIntlEddResponse(null));
         sessionStorage.removeItem("IntlEddAddressRes");
       } else {

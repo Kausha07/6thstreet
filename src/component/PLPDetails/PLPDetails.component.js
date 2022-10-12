@@ -32,10 +32,10 @@ class PLPDetails extends PureComponent {
   };
 
   renderBrandImage = () => {
-    const { brandImg } = this.props;
+    const { brandImg, brandName } = this.props;
     return (
       <div block="PLPDetails" elem="BrandImage">
-        <Image lazyLoad={true} src={brandImg} />
+        <Image lazyLoad={true} src={brandImg}  alt={ brandName ?  brandName : "brandImg"}/>
       </div>
     )
   };
@@ -80,14 +80,13 @@ class PLPDetails extends PureComponent {
 
   renderContent = () => {
     const { isMobile } = this.state;
-    const { brandDescription, brandImg, brandName } = this.props;
-    if (!brandDescription || !brandImg || !brandName) {
+    const { brandDescription, brandName } = this.props;
+    if (!brandDescription || !brandName) {
       return null;
     }
     if (isMobile) {
       return null;
     }
-    const brandImageVisible = brandImg ? "brandImageVisible" : "notBrandImageVisible";
 
     return (
       <div block="PLPDetails" elem="Wrapper">
@@ -97,7 +96,7 @@ class PLPDetails extends PureComponent {
             {isMobile ? "" : this.renderBrandImage()}
           </div>
         } */}
-        <div block="PLPDetails" elem={`BrandDescription ${brandImageVisible}`}>
+        <div block="PLPDetails" elem={`BrandDescription`}>
           {/* {this.renderActionButtons()} */}
           {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}

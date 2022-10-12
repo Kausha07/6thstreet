@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import PLPFilterOption from "Component/PLPFilterOption";
 import PropTypes from "prop-types";
-import { createRef, PureComponent } from "react";
+import { createRef, PureComponent, Fragment } from "react";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
@@ -15,17 +15,19 @@ import { v4 } from "uuid";
 import SelectImage from "./icons/selectMob.png";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import {
+import Event,{
   EVENT_MOE_PLP_FILTER,
-  EVENT_MOE_BRAND_SEARCH_FILTER,
-  EVENT_MOE_COLOR_SEARCH_FILTER,
-  EVENT_MOE_SIZES_SEARCH_FILTER,
-  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
-  EVENT_MOE_DISCOUNT_FILTER_CLICK,
-  EVENT_MOE_BRAND_SEARCH_FOCUS,
-  EVENT_MOE_COLOR_SEARCH_FOCUS,
-  EVENT_MOE_SIZES_SEARCH_FOCUS,
-  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
+  EVENT_BRAND_SEARCH_FILTER,
+  EVENT_COLOR_SEARCH_FILTER,
+  EVENT_SIZES_SEARCH_FILTER,
+  EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
+  EVENT_DISCOUNT_FILTER_CLICK,
+  EVENT_BRAND_SEARCH_FOCUS,
+  EVENT_COLOR_SEARCH_FOCUS,
+  EVENT_SIZES_SEARCH_FOCUS,
+  EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
+  EVENT_SET_PREFERENCES_GENDER,
+  EVENT_GTM_FILTER
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -281,11 +283,13 @@ class FieldMultiselect extends PureComponent {
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
-        Moengage.track_event(EVENT_MOE_SIZES_SEARCH_FILTER, {
+        Moengage.track_event(EVENT_SIZES_SEARCH_FILTER, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
         });
+        const EventData = { name:EVENT_SIZES_SEARCH_FILTER, value: facet_value}
+        Event.dispatch(EVENT_GTM_FILTER, EventData);
       }
     }
 
@@ -358,15 +362,17 @@ class FieldMultiselect extends PureComponent {
     const { onUnselectAllPress } = this.props;
     const MoeFilterEvent =
       category == "brand_name"
-        ? EVENT_MOE_BRAND_SEARCH_FILTER
+        ? EVENT_BRAND_SEARCH_FILTER
         : category == "colorfamily"
-        ? EVENT_MOE_COLOR_SEARCH_FILTER
-        : category == ("size_eu" || "size_us" || "size_uk")
-        ? EVENT_MOE_SIZES_SEARCH_FILTER
+        ? EVENT_COLOR_SEARCH_FILTER
+        : category == "sizes"
+        ? EVENT_SIZES_SEARCH_FILTER
         : category == "categories_without_path"
-        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
+        ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
         : category == "discount"
-        ? EVENT_MOE_DISCOUNT_FILTER_CLICK
+        ? EVENT_DISCOUNT_FILTER_CLICK
+        : category == "gender" 
+        ? EVENT_SET_PREFERENCES_GENDER
         : "";
     Moengage.track_event(EVENT_MOE_PLP_FILTER, {
       country: getCountryFromUrl().toUpperCase(),
@@ -381,6 +387,8 @@ class FieldMultiselect extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
+      const EventData = { name:MoeFilterEvent, value: "All"}
+      Event.dispatch(EVENT_GTM_FILTER, EventData);
     }
     onUnselectAllPress(category);
   };
@@ -578,12 +586,14 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  sendMoeEvents (event){
+  sendMoeEvents (event, value){
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
+    const eventData = {name: event, value: value};
+    Event.dispatch(EVENT_GTM_FILTER, eventData);
   }
 
   renderFilterSearchbox(label, category) {
@@ -601,14 +611,13 @@ class FieldMultiselect extends PureComponent {
     }
     const MoeFilterEvent =
       (currentActiveFilter || category) == "brand_name"
-        ? EVENT_MOE_BRAND_SEARCH_FOCUS
+        ? EVENT_BRAND_SEARCH_FOCUS
         : (currentActiveFilter || category) == "colorfamily"
-        ? EVENT_MOE_COLOR_SEARCH_FOCUS
-        : (currentActiveFilter || category) ==
-          ("size_eu" || "size_us" || "size_uk")
-        ? EVENT_MOE_SIZES_SEARCH_FOCUS
+        ? EVENT_COLOR_SEARCH_FOCUS
+        : (currentActiveFilter || category) == "sizes"
+        ? EVENT_SIZES_SEARCH_FOCUS
         : (currentActiveFilter || category) == "categories_without_path"
-        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS
+        ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS
         : "";
 
     return (
@@ -618,7 +627,7 @@ class FieldMultiselect extends PureComponent {
           id={isMobile.any() ? currentActiveFilter : category}
           placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
           onChange={(event) => this.handleFilterSearch(event)}
-          onFocus={() => this.sendMoeEvents(MoeFilterEvent)
+          onFocus={(event) => this.sendMoeEvents(MoeFilterEvent, event.target.value)
           }
         />
         {!isMobile.any() && (
@@ -628,7 +637,7 @@ class FieldMultiselect extends PureComponent {
             type="button"
             mods={{ isArabic }}
           >
-            <Image lazyLoad={false} src={searchPng} alt="search" />
+            <Image lazyLoad={false} src={searchPng} alt="searchIcon" />
           </button>
         )}
       </div>
@@ -752,11 +761,11 @@ class FieldMultiselect extends PureComponent {
                         ? "Out of Stock"
                         : val.label;
                     return (
-                      <>
+                      <Fragment key={key}>
                         <li key={v4()} block="selectedListItem">
                           {label}
                         </li>
-                      </>
+                        </Fragment>
                     );
                   }
                 });
@@ -769,11 +778,11 @@ class FieldMultiselect extends PureComponent {
                       ? "Out of Stock"
                       : values.label;
                   return (
-                    <>
+                    <Fragment key={keys}>
                       <li key={v4()} block="selectedListItem">
                         {label}
                       </li>
-                    </>
+                      </Fragment>
                   );
                 }
               }

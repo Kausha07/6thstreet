@@ -61,7 +61,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
   renderImage() {
     const {
-      item: { thumbnail },
+      item: { thumbnail, name },
     } = this.props;
 
     return (
@@ -69,6 +69,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         lazyLoad={true}
         src={thumbnail}
         mix={{ block: "MyAccountReturnCreateItem", elem: "Image" }}
+        alt={name ? name : "MyAccountReturnCreateItemImage"}
       />
     );
   }
@@ -300,6 +301,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+              alt={label? label : "strike-through"}
             />
           )}
         </div>
@@ -390,7 +392,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
       item: { item_id },
       availableProducts,
     } = this.props;
-    return availableProducts.map((product) => {
+    return availableProducts.map((product, index) => {
       const { sku, thumbnail_url, color, in_stock, stock_qty } = product;
       const isNotAvailable =
         in_stock === 0 || (in_stock === 1 && stock_qty === 0);
@@ -405,6 +407,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               ? "selectedProduct"
               : ""
           }
+          key={index}
           id={sku}
           onClick={
             isNotAvailable

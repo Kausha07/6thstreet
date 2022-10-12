@@ -214,8 +214,8 @@ class WelcomeHomePage extends PureComponent {
         return <div block="FooterMain" elem="LastColumn" >
             <h4>{this.linkMap.title}</h4>
             <div block="FooterMain" elem="Nav">
-                {this.linkMap.items.map((items) => (
-                    <Fragment key="last_main_footer_column">
+                {this.linkMap.items.map((items, i) => (
+                    <Fragment key={`last_main_footer_column_${i}`}>
                         <div block="FooterMain" elem="WrapperFirst">
                             <Link to={items.app_onclick} key={items.id_app}>
                                 <Image lazyLoad={true} src={items.app_store} alt="app store download" />
@@ -290,7 +290,7 @@ class WelcomeHomePage extends PureComponent {
                             {isPopupOpen &&
                                 <div block="WelcomeHomePage" elem="Popup">
                                     <div block="WelcomeHomePage-Popup" elem="Action" mods={{ isArabic: language === "ar" }}>
-                                        <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} />
+                                        <img block="WelcomeHomePage-Popup-Action" elem="Close" src={close} onClick={this.closePopup} alt={"CloseImage"} />
                                     </div>
                                     <div block="WelcomeHomePage-Popup" elem="Content" mods={{ isArabic: language === "ar" }}>
                                         {
@@ -324,15 +324,16 @@ class WelcomeHomePage extends PureComponent {
                                 welcomeImg &&
                                 <div block="WelcomeHomePage" elem="MainSection" >
                                     {
-                                        Object.keys(welcomeImg).map((gender) => {
+                                        Object.keys(welcomeImg).map((gender, index) => {
                                             const navigateTo = `${URLS[locale]}/${gender}.html`
                                             return (
                                                 <a
                                                     href={navigateTo}
                                                     block="WelcomeHomePage-GenderSelection"
                                                     onClick={(e) => this.onGenderSelect(e, gender)}
+                                                    key={index}
                                                 >
-                                                    <img src={welcomeImg[gender][language].img} />
+                                                    <img src={welcomeImg[gender][language].img} alt={welcomeImg[gender][language].label ? welcomeImg[gender][language].label : "WelcomeHomepageGenderSelection"}/>
                                                     <button block="WelcomeHomePage-GenderSelection-Button">
                                                         {welcomeImg[gender][language].label}
                                                     </button>

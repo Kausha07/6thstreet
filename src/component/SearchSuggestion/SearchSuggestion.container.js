@@ -13,6 +13,9 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import VueQuery from "../../query/Vue.query";
 import CDN from "../../util/API/provider/CDN";
 import SearchSuggestion from "./SearchSuggestion.component";
+import { TRENDING_BRANDS_ENG, TRENDING_BRANDS_AR } from "../../util/Common/index";
+import { isArabic } from "Util/App";
+
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -88,6 +91,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingProducts: [],
       exploreMoreData: null,
       typingTimeout: 0,
+      isArabic: isArabic(),
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -97,6 +101,7 @@ export class SearchSuggestionContainer extends PureComponent {
     // this.requestTopSearches();
     this.requestRecentSearches();
     this.getExploreMoreData();
+    this.getTrendingBrands();
   }
 
   async getPdpSearchWidgetData() {
@@ -218,18 +223,42 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   };
 
+  getTrendingBrands = async () => {
+    const { gender } = this.props;
+    const { isArabic } = this.state;
+    const locale = getLocaleFromUrl();
+    let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
+    if(process.env.REACT_APP_FOR_JSON === "production") {
+      url = `resources/20190121/${locale}/search/search_${gender}.json`;
+    }
+    try {
+      const resp = await CDN.get(url);
+
+      if (resp) {
+        let k = resp.widgets;
+        let filterString = isArabic ? TRENDING_BRANDS_AR : TRENDING_BRANDS_ENG;
+        let trendingBrandsList = k.find((item) => item?.layout?.title === filterString)?.items || [];
+        this.setState({
+          trendingBrands: trendingBrandsList,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   async requestTrendingInformation() {
     const { gender } = this.props;
 
     try {
       const data = await Promise.all([
-        getStaticFile("search_trending_brands"),
+        // getStaticFile("search_trending_brands"),
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
       this.setState({
-        trendingBrands: data[0][gender],
-        trendingTags: data[1][gender],
+        // trendingBrands: data[0][gender],
+        trendingTags: data[0][gender],
       });
     } catch (e) {
       // eslint-disable-next-line no-console

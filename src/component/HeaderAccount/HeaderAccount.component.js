@@ -10,7 +10,11 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { SMS_LINK } from "./HeaderAccount.config";
 import "./HeaderAccount.style";
-import { EVENT_MOE_ACCOUNT_TAB_ICON } from "Util/Event";
+import Event, {
+  EVENT_MOE_ACCOUNT_TAB_ICON,
+  EVENT_GTM_ACCOUNT_TAB_CLICK,
+  EVENT_GTM_AUTHENTICATION,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class HeaderAccount extends PureComponent {
@@ -109,7 +113,7 @@ class HeaderAccount extends PureComponent {
       />
     );
   }
-  
+
   sendMoeEvents(event) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -121,7 +125,7 @@ class HeaderAccount extends PureComponent {
     const { isSignedIn, customer, isBottomBar, isFooter } = this.props;
 
     if (isBottomBar) {
-      return
+      return;
       // return <label htmlFor="Account">{__("Account")}</label>;
     }
 
@@ -129,7 +133,14 @@ class HeaderAccount extends PureComponent {
       isSignedIn && customer && customer.firstname && customer.lastname
         ? `${customer.firstname} ${customer.lastname}`
         : __("Login/Register");
-
+    const sendGTMEvent = () => {
+      const eventData = {
+        name: EVENT_GTM_ACCOUNT_TAB_CLICK,
+        category: "top_navigation_menu",
+        action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+    };
     return (
       <div block="HeaderAccount" elem="ButtonWrapper">
         <button
@@ -137,10 +148,12 @@ class HeaderAccount extends PureComponent {
           elem="Button"
           mods={{ isArabic: this._isArabic, isFooter }}
           onClick={() => {
-            isFooter && isSignedIn ? this.redirectToAccount() : this.showMyAccountPopup(),
+            isFooter && isSignedIn
+              ? this.redirectToAccount()
+              : this.showMyAccountPopup(),
               this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
-          }
-          }
+              sendGTMEvent();
+          }}
         >
           <label htmlFor="Account">
             <span>{accountButtonText}</span>
@@ -170,6 +183,8 @@ class HeaderAccount extends PureComponent {
             mods: { isMobile },
           },
         }}
+        role="button"
+        aria-label="header-account-icon"
       >
         {this.renderAccountButton()}
       </div>

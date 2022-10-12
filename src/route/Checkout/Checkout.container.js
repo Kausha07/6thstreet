@@ -45,6 +45,7 @@ import Event, {
   EVENT_GTM_EDD_TRACK_ON_ORDER,
   EVENT_MOE_ADD_PAYMENT_INFO,
   EVENT_MOE_EDD_TRACK_ON_ORDER,
+  EVENT_GTM_CHECKOUT_BILLING,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -613,6 +614,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         totals,
         step: this.getCheckoutStepNumber(),
       });
+      if (this.getCheckoutStepNumber() == "2"){
+        Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
+      }
     }
     if (isInitial) {
       this.setState({ initialGTMSent: true });

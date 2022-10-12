@@ -1,7 +1,7 @@
 import PLPPage from "Component/PLPPage";
 import PLPPagePlaceholder from "Component/PLPPagePlaceholder";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import "./PLPPages.style";
 import { Close } from "Component/Icons";
@@ -229,7 +229,7 @@ class PLPPages extends PureComponent {
             onActiveImageChange={this.handleChange}
           >
             <div block="QuickFilter" elem="List">
-              {sizeData.map((facet_value) => {
+              {sizeData.map((facet_value, index) => {
                 return (
                   <li
                     block="PLPFilterOption"
@@ -240,6 +240,7 @@ class PLPPages extends PureComponent {
                         facet_value === defaultSizeCode ? "SelectedList" : "",
                     }}
                     mods={{ isArabic: isArabic() }}
+                    key={index}
                   >
                     <Field
                       onClick={this.handleSizeClick}
@@ -326,7 +327,7 @@ class PLPPages extends PureComponent {
       this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
       return (
-        <>
+        <Fragment key={key}>
           {shouldRender &&
             this.renderQuickFilter(
               filterIndex,
@@ -339,11 +340,11 @@ class PLPPages extends PureComponent {
             pageIndex={key}
             query={query}
           />
-        </>
+        </Fragment>
       );
     }
     return (
-      <>
+      <Fragment key={key}>
         {shouldRender &&
           this.renderQuickFilter(filterIndex, inlineFilterList, finalFilterKey)}
         <PLPPage
@@ -354,7 +355,7 @@ class PLPPages extends PureComponent {
           renderMySignInPopup={renderMySignInPopup}
           filters={filters}
         />
-      </>
+      </Fragment>
     );
   };
 

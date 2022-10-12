@@ -28,6 +28,7 @@ import {
 } from "Util/Auth";
 import { getCookie, getCountryFromUrl } from "Util/Url/Url";
 import { v4 as uuidv4 } from "uuid";
+import BrowserDatabase from "Util/BrowserDatabase";
 import { INTL_BRAND, INTL_BRAND_ARABIC } from "../../util/Common/index";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
@@ -73,6 +74,10 @@ export const mapDispatchToProps = (dispatch) => ({
   getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew),
   requestAlgoliaIndex: () =>
     SearchSuggestionDispatcher.requestAlgoliaIndex(dispatch),
+  logout: () =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.logout(null, dispatch)
+    ),
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -103,6 +108,7 @@ export class RouterContainer extends SourceRouterContainer {
       getCitiesData,
       requestAlgoliaIndex,
       algoliaIndex,
+      logout,
       edd_info,
     } = this.props;
     const countryCode = getCountryFromUrl();
@@ -137,6 +143,7 @@ export class RouterContainer extends SourceRouterContainer {
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
         }
+        
       } else {
         setMobileAuthorizationToken(mobileToken);
         setAuthorizationToken(authToken);
@@ -157,9 +164,12 @@ export class RouterContainer extends SourceRouterContainer {
         getCart(true);
       }
     } else {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
+      const cartID = BrowserDatabase.getItem("CART_ID_CACHE_KEY");
+      if(cartID === parseInt(cartID, 10)) {
+        logout();
+      }
     }
+
     if (addressCityData.length === 0) {
       getCitiesData();
     }

@@ -83,7 +83,7 @@ class HeaderTopBar extends NavigationAbstract {
       BH: __("FREE SHIPPING OVER BHD20.5"),
     };
     return (
-      <div className="customVerticalSlider">
+      <div className="customVerticalSlider" key="cms-block">
         <div className="carouselItemInner">
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("800+ GLOBAL BRANDS")}

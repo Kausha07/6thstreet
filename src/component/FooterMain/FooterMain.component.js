@@ -14,21 +14,22 @@ import tiktok from "./icons/tiktok.svg";
 import youtube from "./icons/youtube.svg";
 import Image from "Component/Image";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import {
-  EVENT_MOE_INSTA_FOLLOW,
-  EVENT_MOE_FB_FOLLOW,
-  EVENT_MOE_TIKTOK_FOLLOW,
-  EVENT_MOE_SNAPCHAT_FOLLOW,
-  EVENT_MOE_TWITTER_FOLLOW,
-  EVENT_MOE_PINTEREST_FOLLOW,
-  EVENT_MOE_YOUTUBE_FOLLOW,
-  EVENT_MOE_CONSUMER_RIGHTS_CLICK,
-  EVENT_MOE_SHIPPING_INFO_CLICK,
-  EVENT_MOE_RETURN_INFO_CLICK,
-  EVENT_MOE_FEEDBACK_CLICK,
-  EVENT_MOE_PRIVACY_POLICY_CLICK,
-  EVENT_MOE_DISCLAIMER_CLICK,
-  EVENT_MOE_ABOUT6S_CLICK,
+import Event, {
+  EVENT_INSTA_FOLLOW,
+  EVENT_FB_FOLLOW,
+  EVENT_TIKTOK_FOLLOW,
+  EVENT_SNAPCHAT_FOLLOW,
+  EVENT_TWITTER_FOLLOW,
+  EVENT_PINTEREST_FOLLOW,
+  EVENT_YOUTUBE_FOLLOW,
+  EVENT_CONSUMER_RIGHTS_CLICK,
+  EVENT_SHIPPING_INFO_CLICK,
+  EVENT_RETURN_INFO_CLICK,
+  EVENT_FEEDBACK_CLICK,
+  EVENT_PRIVACY_POLICY_CLICK,
+  EVENT_DISCLAIMER_CLICK,
+  EVENT_ABOUT6S_CLICK,
+  EVENT_GTM_FOOTER,
 } from "Util/Event";
 import Loader from "Component/Loader";
 import "./FooterMain.style";
@@ -160,6 +161,7 @@ class FooterMain extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
+    Event.dispatch(EVENT_GTM_FOOTER, event);
   }
   renderFirstTwoCloumns() {
     const { isLoad } = this.state;
@@ -182,20 +184,20 @@ class FooterMain extends PureComponent {
                   : `${rootURL}${items.href}`;
                 const changeRoute = (value) => {
                   const eventName =
-                    value == "Consumer Rights"
-                      ? EVENT_MOE_CONSUMER_RIGHTS_CLICK
-                      : value == "Disclaimer"
-                      ? EVENT_MOE_DISCLAIMER_CLICK
-                      : value == "Privacy Policy"
-                      ? EVENT_MOE_PRIVACY_POLICY_CLICK
-                      : value == "Shipping Information"
-                      ? EVENT_MOE_SHIPPING_INFO_CLICK
-                      : value == "Returns Information"
-                      ? EVENT_MOE_RETURN_INFO_CLICK
-                      : value == "Feedback"
-                      ? EVENT_MOE_FEEDBACK_CLICK
-                      : value.type == "div" && value.props.className == "About"
-                      ? EVENT_MOE_ABOUT6S_CLICK
+                    value == __("Consumer Rights")
+                    ? EVENT_CONSUMER_RIGHTS_CLICK
+                    : value ==  __("Disclaimer")
+                    ? EVENT_DISCLAIMER_CLICK
+                    : value ==  __("Privacy Policy")
+                    ? EVENT_PRIVACY_POLICY_CLICK
+                    : value ==  __("Shipping Information")
+                    ? EVENT_SHIPPING_INFO_CLICK
+                    : value ==  __("Returns Information")
+                    ? EVENT_RETURN_INFO_CLICK
+                    : value ==  __("Feedback")
+                    ? EVENT_FEEDBACK_CLICK
+                    : value.type == "div" && value.props.className ==  __("About")
+                    ? EVENT_ABOUT6S_CLICK
                       : "";
                   if (eventName && eventName.length > 0) {
                     this.setState({ isLoad: true });
@@ -234,8 +236,8 @@ class FooterMain extends PureComponent {
         <div block="FooterMain" elem="LastColumn" key={column.title}>
           <h4>{column.title}</h4>
           <div block="FooterMain" elem="Nav">
-            {column.items.map((items) => (
-              <Fragment key="last_main_footer_column">
+            {column.items.map((items,i) => (
+              <Fragment key={`last_main_footer_column${i}`}>
                 <div block="FooterMain" elem="WrapperFirst">
                   <Link to={items.app_onclick} key={items.id_app}>
                     <Image
@@ -271,11 +273,11 @@ class FooterMain extends PureComponent {
   renderSocialLinks() {
     return this.linksMap
       .filter((column) => column.title === __("Download The App"))
-      .map((column) => (
-        <div block="FooterMain" elem="SocialColumn">
+      .map((column, index) => (
+        <div block="FooterMain" elem="SocialColumn" key={index}>
           <div block="FooterMain" elem="SocialLinks">
-            {column.items.map((items) => (
-              <Fragment key="last_main_footer_column">
+            {column.items.map((items,i) => (
+              <Fragment key={`last_main_footer_column_${i}`}>
                 <div block="FooterMain" elem="SocialTitle">
                   {items.header}
                 </div>
@@ -286,7 +288,7 @@ class FooterMain extends PureComponent {
                       key={items.id_insta}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_INSTA_FOLLOW);
+                        this.sendMOEEvents(EVENT_INSTA_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={instagram} alt="instagram" />
@@ -298,7 +300,7 @@ class FooterMain extends PureComponent {
                       key={items.id_facebook}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_FB_FOLLOW);
+                        this.sendMOEEvents(EVENT_FB_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={facebook} alt="facebook" />
@@ -310,7 +312,7 @@ class FooterMain extends PureComponent {
                       key={items.id_tiktok}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_TIKTOK_FOLLOW);
+                        this.sendMOEEvents(EVENT_TIKTOK_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={tiktok} alt="Tiktok" />
@@ -322,7 +324,7 @@ class FooterMain extends PureComponent {
                       key={items.id_snapchat}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_SNAPCHAT_FOLLOW);
+                        this.sendMOEEvents(EVENT_SNAPCHAT_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={snapchat} alt="Snapchat" />
@@ -334,7 +336,7 @@ class FooterMain extends PureComponent {
                       key={items.id_twitter}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_TWITTER_FOLLOW);
+                        this.sendMOEEvents(EVENT_TWITTER_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={twitter} alt="Twitter" />
@@ -346,7 +348,7 @@ class FooterMain extends PureComponent {
                       key={items.id_pinterest}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_PINTEREST_FOLLOW);
+                        this.sendMOEEvents(EVENT_PINTEREST_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={pinterest} alt="Pinterest" />
@@ -358,7 +360,7 @@ class FooterMain extends PureComponent {
                       key={items.id_youtube}
                       target="_blank"
                       onClick={() => {
-                        this.sendMOEEvents(EVENT_MOE_YOUTUBE_FOLLOW);
+                        this.sendMOEEvents(EVENT_YOUTUBE_FOLLOW);
                       }}
                     >
                       <Image lazyLoad={true} src={youtube} alt="Youtube" />

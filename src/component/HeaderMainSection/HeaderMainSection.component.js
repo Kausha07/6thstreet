@@ -223,7 +223,7 @@ class HeaderMainSection extends NavigationAbstract {
   renderAccount() {
     const isFooter = false;
 
-    return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
+    return <HeaderAccount key="account"  isFooter={isFooter} isMobile />;
   }
 
   renderCart() {
@@ -378,6 +378,8 @@ class HeaderMainSection extends NavigationAbstract {
               : this.handleSearchClick.bind(this)
           }
           elem="Button"
+          aria-label="PLP Search Button"
+          role="button"
         ></button>
       </div>
     );

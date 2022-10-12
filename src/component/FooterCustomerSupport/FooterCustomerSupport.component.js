@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_MOE_PHONE, EVENT_MOE_MAIL } from "Util/Event";
+import Event, {
+  EVENT_PHONE,
+  EVENT_MAIL,
+  EVENT_GTM_CUSTOMER_SUPPORT,
+} from "Util/Event";
 import "./FooterCustomerSupport.style";
 
 class FooterCustomerSupport extends PureComponent {
@@ -26,7 +30,7 @@ class FooterCustomerSupport extends PureComponent {
         elem="Email"
         href={`mailto:${email}`}
         onClick={() => {
-          this.sendEvents(EVENT_MOE_MAIL);
+          this.sendEvents(EVENT_MAIL);
         }}
       >
         {email}
@@ -47,7 +51,7 @@ class FooterCustomerSupport extends PureComponent {
         elem="Phone"
         href={`tel:${phone}`}
         onClick={() => {
-          this.sendEvents(EVENT_MOE_PHONE);
+          this.sendEvents(EVENT_PHONE);
         }}
       >
         <bdi>{phone}</bdi>
@@ -75,6 +79,7 @@ class FooterCustomerSupport extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
+    Event.dispatch(EVENT_GTM_CUSTOMER_SUPPORT, event);
   }
   renderSupport() {
     const Phone = this.renderPhone();

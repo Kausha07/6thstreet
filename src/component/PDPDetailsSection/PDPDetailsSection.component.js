@@ -6,15 +6,28 @@ import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
 import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { EVENT_MOE_CHAT, EVENT_MOE_MAIL, EVENT_MOE_PHONE } from "Util/Event";
+import Event, {
+  EVENT_MOE_CHAT,
+  EVENT_MAIL,
+  EVENT_PHONE,
+  EVENT_MORE_FROM_THIS_BRAND_CLICK,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_EXPAND_PRODUCT_DETAILS,
+} from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
+import { 
+  YES_IN_ARABIC,
+  YES,
+  NO,
+  NO_IN_ARABIC,
+} from "../../util/Common/index";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -230,6 +243,16 @@ class PDPDetailsSection extends PureComponent {
     );
   }
   updateShowMoreState(state) {
+    const {
+      product: { name, sku },
+    } = this.props;
+    const eventData = {
+      name: EVENT_EXPAND_PRODUCT_DETAILS,
+      action: "expand_product_details_click",
+      product_name: name,
+      product_id: sku,
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({ showMore: state });
   }
 
@@ -660,10 +683,11 @@ class PDPDetailsSection extends PureComponent {
       product
     } = this.props;
     const { innerWidth: width } = window;
-    document.body.style.overflowX = 'hidden';
+    document.body.style.overflowX = 'clip';
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
+          {this.props?.product?.returnable ? (<div block="Seperator2" />) : (null)}
           <React.Fragment>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
@@ -672,7 +696,7 @@ class PDPDetailsSection extends PureComponent {
                 const { data } = item;
                 if (data && data?.length > 0) {
                   return (
-                    <>
+                    <Fragment key={index}>
                       <div
                         block="PDPWidgets"
                         elem="Slider"
@@ -694,7 +718,7 @@ class PDPDetailsSection extends PureComponent {
                           product={product}
                         />
                       </div>
-                    </>
+                    </Fragment>
                   );
                 }
                 return null;
@@ -749,7 +773,7 @@ class PDPDetailsSection extends PureComponent {
             <div
               block="IconWrapper"
               elem="Icon"
-              onClick={() => this.sendEvents(EVENT_MOE_PHONE)}
+              onClick={() => this.sendEvents(EVENT_PHONE)}
             >
               <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
                 <Phone />
@@ -780,7 +804,7 @@ class PDPDetailsSection extends PureComponent {
             <div
               block="IconWrapper"
               elem="Icon"
-              onClick={() => this.sendEvents(EVENT_MOE_MAIL)}
+              onClick={() => this.sendEvents(EVENT_MAIL)}
             >
               <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
                 <Email />
@@ -867,9 +891,18 @@ class PDPDetailsSection extends PureComponent {
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
+    const eventData = {
+      name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+      action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+    };
     return (
       <div block="FromBrand">
-        <Link block="FromBrand" elem="MoreButton" to={url}>
+        <Link
+          block="FromBrand"
+          elem="MoreButton"
+          to={url}
+          onClick={() => Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData)}
+        >
           <span block="FromBrand" elem="ButtonText">
             {__("More from this brand")}
           </span>
@@ -974,6 +1007,86 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
+  
+  renderReturnInfo() {
+
+    const { isArabic } = this.state;
+
+    if(this.props.product.returnable === YES || ( this.props.product.returnable === YES_IN_ARABIC && isArabic )){
+      return (
+        <div>
+          <p block="shippingAndFreeReturns" elem="infoShippingFee">
+              {__("Return any unsatisfactory items within 100 days from receiving your order.")}
+          </p>
+        </div>
+      )
+    } else if (this.props.product.returnable === NO || ( this.props.product.returnable === NO_IN_ARABIC && isArabic ) ){
+      return (
+        <div>
+          <p block="shippingAndFreeReturns" elem="infoShippingFee">
+            {__("Item cannot be returned.")}
+          </p>
+        </div>
+      )
+    } 
+
+    return (
+      <div>
+        <p block="shippingAndFreeReturns" elem="infoShippingFee">
+          {__(
+              "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
+            )}
+        </p>
+      </div>
+    )
+
+  }
+
+  renderShippingInfo() {
+    let country = getCountryFromUrl();
+      let txt = {
+        AE: __(
+          "*Free delivery for orders above AED 100."
+        ),
+        SA: __(
+          "*Free delivery for orders above SAR 200."
+        ),
+        KW: __(
+          "*Free delivery for orders above KWD 20."
+        ),
+        QA: __(
+          "*Free delivery for orders above QAR 200."
+        ),
+        OM: __(
+          "*Free delivery for orders above OMR 20."
+        ),
+        BH: __(
+          "*Free delivery for orders above BHD 20."
+        ),
+      };
+  
+    return (
+      <div>
+        <p block="shippingAndFreeReturns" elem="infoShippingFee">
+          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold"
+            >
+              {txt[country]}
+            </b>
+          <br />
+        </p>
+        <div block="FindOutMore">
+          <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>
+            <span block="FindOutMore" elem="ButtonText">
+              {__("Find Out More")}
+            </span>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+  
+
+
   render() {
     const {
       product: { brand_name },
@@ -1003,19 +1116,28 @@ class PDPDetailsSection extends PureComponent {
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
         {isMobile ? null : this.renderSeperator()}
-        <div block="AccordionWrapper">
-          {/* <Accordion
-            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={isMobile ? __("Shipping & Free Returns") : __("SHIPPING & FREE RETURNS")}
-            is_expanded={this.state.isExpanded["3"]}
-          >
-            {this.renderShipping()}
-            <br />
-            {this.renderShippingAndFreeReturns()}
-            {isMobile ? <br /> : null}
-          </Accordion> */}
-          {/* {this.renderAccordionSeperator()} */}
-        </div>
+
+        {
+          this.props?.product?.returnable ? (
+
+            <div block="AccordionWrapper">
+              <Accordion
+                mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+                title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
+                is_expanded={this.state.isExpanded["3"]}
+              >
+                {this.renderReturnInfo()}
+                {this.renderShippingInfo()}
+                {isMobile ? <br /> : null}
+              </Accordion>
+                {this.renderAccordionSeperator()}
+            </div>
+            
+          ) : (
+            null
+          )
+        }
+
         {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         ) : null}
