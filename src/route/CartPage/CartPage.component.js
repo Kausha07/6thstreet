@@ -34,6 +34,8 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
+import DynamicContentVueProductSliderContainer from "../../component/DynamicContentProductSlider";
+
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
@@ -42,6 +44,7 @@ import CDN from "../../util/API/provider/CDN";
 import EmptyCardIcon from "./icons/cart.svg";
 
 import "./CartPage.style";
+
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -769,19 +772,51 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderproductSlider() {
+    const {
+      // pdpWidgetsData = [],
+      // renderMySignInPopup,
+      // product: { sku = null, categories_without_path = [] },
+      // pdpWidgetsAPIData = [],
+      product
+    } = this.props;
+    console.log("props",
+    product);
+  //   return <DynamicContentVueProductSliderContainer
+  //   widgetID={widgetID}
+  //   products={data}
+  //   heading={heading}
+  //   isHome={false}
+  //   renderMySignInPopup={renderMySignInPopup}
+  //   sourceProdID={sku}
+  //   sourceCatgID={categories_without_path[0]}
+  //   pageType={"pdp"}
+  //   key={`DynamicContentVueProductSliderContainer${index}`}
+  //   index={index}
+  //   isArabic={isArabic()}
+  //   withViewAll={true}
+  //   product={product}
+  // />
+  return <div>all well</div>
+  }
+
   renderEmptyCartPage() {
     const { isArabic } = this.state;
 
     return (
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        <div block="CartPage" elem="EmptyCartIcon" />
-        <p>{__("You have no items in your shopping cart.")}</p>
-        <p>
+        {/* <div block="CartPage" elem="EmptyCartIcon"> */}
+        <div block="CartPage" elem="EmptyCartImg">
+        <Image src={EmptyCardIcon} />
+          </div>
+        <div className="mt-2 EmptyMessage">{__("Your shopping bag is empty.")}</div>
+        {/* <p>
           <Link to="/">
             <strong> {__("Click Here")} </strong>
           </Link>
-          {__("to continue shopping.")}
-        </p>
+          {__("to continue hopping.")}
+        </p> */}
+          
       </div>
     );
   }
@@ -843,8 +878,9 @@ export class CartPage extends PureComponent {
     if (!cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
-          {this.renderHeading()}
+          {/* {this.renderHeading()} */}
           {this.renderEmptyCartPage()}
+          {this.renderproductSlider()}
         </div>
       );
     }

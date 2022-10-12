@@ -35,9 +35,12 @@
         }
     }
    &-EmptyCartImg {
-       margin-top: 64px;
     //    margin-left: 10%;
+    @media (max-width:767px){
+        margin-top: 64px;
+    }
    }
+   
    &-EmptyCartText {
     margin-top: 74px;
 
@@ -942,3 +945,12 @@
   .d-none {
       display: none !important;
   }
+
+  .mt-2{
+      margin-top: 2rem !important;
+  }
+
+
+  .EmptyMessage{
+    font-size: 16px;
+}

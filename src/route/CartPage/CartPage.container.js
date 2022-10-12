@@ -71,6 +71,9 @@ export const mapStateToProps = (state) => {
     config: state.AppConfig.config,
     language: state.AppState.language,
     country: state.AppState.country,
+    product: state.PDP.product,
+    gender: state.AppState.gender,
+    pdpWidgetsData: state.AppState.pdpWidgetsData,
   };
 };
 
@@ -334,8 +337,12 @@ export class CartPageContainer extends PureComponent {
   }
 
   onCheckoutButtonClick(e) {
-    const { history, guest_checkout, showOverlay, showNotification } =
-      this.props;
+    const {
+      history,
+      guest_checkout,
+      showOverlay,
+      showNotification,
+    } = this.props;
     const { isCheckoutAvailable } = this.state;
     if (isCheckoutAvailable) {
       // to prevent outside-click handler trigger
