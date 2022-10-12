@@ -170,10 +170,11 @@ class PLPPages extends PureComponent {
       CategoryName,
       stockName,
     ];
-    const updatedFilter = deepCopy(filters);
+    let updatedFilter = deepCopy(filters);
     removedFilter.map((key) => {
       delete updatedFilter[key];
     });
+    updatedFilter = {stock:"stock",...updatedFilter}
     return updatedFilter;
   };
 
