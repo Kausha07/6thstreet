@@ -61,6 +61,9 @@ class PLPQuickFilterOption extends PureComponent {
         } = this.props;
 
         // TODO: fix radio ?
+        const defaultCheck = !!(
+            facet_value === "recommended" && facet_key === "sort"
+          );
         const type = isRadio ? 'radio' : 'checkbox';
 
         return (
@@ -74,7 +77,8 @@ class PLPQuickFilterOption extends PureComponent {
               id={ facet_value }
               name={ facet_key }
               value={ facet_value }
-              checked={ checked }
+              defaultChecked={ defaultCheck || checked }
+              checked={ defaultCheck || checked }
             />
         );
     }
@@ -135,11 +139,14 @@ class PLPQuickFilterOption extends PureComponent {
         const {
             option: {
                 facet_value,
+                facet_key,
                 is_selected: checked
             },
             brandFilter
         } = this.props;
-
+        const defaultCheck = !!(
+            facet_value === "recommended" && facet_key === "sort"
+          );
         if (!facet_value) {
             return null;
         }
@@ -149,7 +156,7 @@ class PLPQuickFilterOption extends PureComponent {
             mix={{
                 block: "PLPFilterOption-List",
                 elem:
-                checked && brandFilter ? "SelectedList" : "",
+                ((checked && brandFilter)|| defaultCheck) ? "SelectedList" : "",
               }}
             mods={ { isArabic } }
             >
