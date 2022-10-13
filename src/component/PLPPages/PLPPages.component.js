@@ -170,10 +170,16 @@ class PLPPages extends PureComponent {
       CategoryName,
       stockName,
     ];
+    const options = this.getRequestOptions()
     let updatedFilter = deepCopy(filters);
     removedFilter.map((key) => {
       delete updatedFilter[key];
     });
+    Object.keys(filters).map((key)=>{
+      if(Object.keys(options).includes(key)){
+        delete updatedFilter[key];
+      }
+    })
     updatedFilter = {stock:"stock",...updatedFilter}
     return updatedFilter;
   };
