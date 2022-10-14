@@ -1020,7 +1020,7 @@ class PDPDetailsSection extends PureComponent {
     let country = getCountryFromUrl();
       let txt = {
         AE: __(
-          "*Free delivery for orders above AED 100."
+          "*Free delivery for orders above AED 200."
         ),
         SA: __(
           "*Free delivery for orders above SAR 200."
