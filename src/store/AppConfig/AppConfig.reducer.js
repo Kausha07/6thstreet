@@ -10,8 +10,8 @@ export const getInitialState = () => (
         config: {},
         edd_info: null,
         suggestionEnabled: true,
-        is_exchange_enabled:false,
-        ctcReturnEnabled:false
+        is_exchange_enabled: false,
+        ctcReturnEnabled: false
     }
 );
 
@@ -29,6 +29,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
             const newState = {
                 ...state,
                 config,
+                newSigninSignupVersionEnabled: config.countries[getCountryCode]?.new_signin_signup_version_enabled,
                 edd_info: config.countries[getCountryCode]?.edd_info,
                 suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled,
                 is_exchange_enabled: config.countries[getCountryCode]?.is_exchange_enabled,
