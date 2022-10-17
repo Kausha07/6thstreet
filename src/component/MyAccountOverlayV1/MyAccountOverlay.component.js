@@ -277,8 +277,8 @@ export class MyAccountOverlay extends PureComponent {
 
     return (
       <div
-        block="MyAccountOverlay"
-        elem="Action"
+        block="MyAccountOverlayV1"
+        elem="ActionV1"
         mods={{
           state,
           MyAccountInitialLinks: state === STATE_INITIAL_LINKS && isArabic,
@@ -295,8 +295,8 @@ export class MyAccountOverlay extends PureComponent {
           </div>
         )}
         <p
-          block="MyAccountOverlay"
-          elem="Heading"
+          block="MyAccountOverlayV1"
+          elem="HeadingV1"
           mods={{ isArabic: isArabic }}
         >
           {title}
@@ -307,7 +307,7 @@ export class MyAccountOverlay extends PureComponent {
            : isCreateAccount
              ? this.renderSocials("Create")
              : null} */}
-        <div block="MyAccountOverlay" elem="Buttons">
+        <div block="MyAccountOverlayV1" elem="Buttons">
           {isCreateAccount && (
             <div className="toggle-login-register">
               <span className="toggle-text">
@@ -383,7 +383,7 @@ export class MyAccountOverlay extends PureComponent {
       state !== STATE_VERIFY_NUMBER && state !== STATE_FORGOT_PASSWORD;
     return (
       <button
-        block="MyAccountOverlay"
+        block="MyAccountOverlayV1"
         elem="Close"
         mods={{ isArabic, hideCloseBtn }}
         onClick={this.closePopup.bind(this)}
@@ -399,7 +399,7 @@ export class MyAccountOverlay extends PureComponent {
     return (
       <article
         aria-labelledby="confirm-email-notice"
-        block="MyAccountOverlay"
+        block="MyAccountOverlayV1"
         elem="Additional"
         mods={{ state }}
       >
@@ -438,7 +438,7 @@ export class MyAccountOverlay extends PureComponent {
         parentCallback={this.onForgotChange}
         isValidateOnChange
       >
-        <p block="MyAccountOverlay" elem="ForgotPasswordSubheading">
+        <p block="MyAccountOverlayV1" elem="ForgotPasswordSubheading">
           {__(
             "Enter the email associated with your account and we'll send instructions to reset your password."
           )}
@@ -452,7 +452,7 @@ export class MyAccountOverlay extends PureComponent {
           validation={["notEmpty", "email"]}
         />
         <div
-          block="MyAccountOverlay"
+          block="MyAccountOverlayV1"
           elem="Button"
           mods={{ isMargin: true, isForgotValidated }}
         >
@@ -461,7 +461,7 @@ export class MyAccountOverlay extends PureComponent {
             type="submit"
             disabled={!isForgotValidated || isLoading}
             mix={{
-              block: "MyAccountOverlay",
+              block: "MyAccountOverlayV1",
               elem: isLoading ? "LoadingButton" : "",
             }}
           >
@@ -510,14 +510,14 @@ export class MyAccountOverlay extends PureComponent {
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <MyAccountAutoDetectOTP updateOTP={updateOTP} />
-        <div block="VerifyPhone" elem="Text">
-          <div block="VerifyPhone-Text" elem="Title">
+        <div block="VerifyPhone" elem="TextV1">
+          <div block="VerifyPhone-TextV1" elem="TitleV1">
             {__("Enter Verification Code")}
           </div>
-          <div block="VerifyPhone-Text" elem="Message">
+          <div block="VerifyPhone-TextV1" elem="Message">
             {__("Verification code has been sent to")}
           </div>
-          <div block="VerifyPhone-Text" elem="Phone">
+          <div block="VerifyPhone-TextV1" elem="PhoneV1">
             <button onClick={() => console.log("change mobile number")}>
               {isLoading ? (
                 <Oval
@@ -540,7 +540,7 @@ export class MyAccountOverlay extends PureComponent {
             </button>
           </div>
         </div>
-        <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
+        <div block="VerifyPhone" elem="CodeV1" mods={{ isArabic }}>
           <input
             type="number"
             placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
@@ -578,7 +578,7 @@ export class MyAccountOverlay extends PureComponent {
         </div>
         <div
           block="VerifyPhone"
-          elem="ResendCode"
+          elem="ResendCodeV1"
         >
           {this.state.otpTimer > 0 && <span>0:{this.state.otpTimer} -</span>}
           <button
@@ -649,7 +649,7 @@ export class MyAccountOverlay extends PureComponent {
     return (
       <article
         aria-labelledby="forgot-password-success"
-        block="MyAccountOverlay"
+        block="MyAccountOverlayV1"
         elem="Additional"
         mods={{ state }}
       >
@@ -751,11 +751,11 @@ export class MyAccountOverlay extends PureComponent {
         isValidateOnChange
         parentCallback={this.onCreateChange}
       >
-        <span block="MyAccountOverlay" elem="RegisterSubHeading">
+        <span block="MyAccountOverlayV1" elem="RegisterSubHeading">
           {__("Register for a unique shopping experience")}
         </span>
         <div>
-          <fieldset block="MyAccountOverlay" elem="PhoneNumber">
+          <fieldset block="MyAccountOverlayV1" elem="PhoneNumber">
             <div
               block={
                 focusedElement
@@ -792,7 +792,7 @@ export class MyAccountOverlay extends PureComponent {
               />
             </div>
           </fieldset>
-          <fieldset block="MyAccountOverlay" elem="FullName">
+          <fieldset block="MyAccountOverlayV1" elem="FullName">
             <Field
               type="text"
               placeholder={`${__("NAME")}*`}
@@ -802,8 +802,8 @@ export class MyAccountOverlay extends PureComponent {
               validation={["notEmpty"]}
             />
           </fieldset>
-          <fieldset block="MyAccountOverlay" elem="Gender">
-            <div block="MyAccountOverlay" elem="Radio" mods={{ isArabic }}>
+          <fieldset block="MyAccountOverlayV1" elem="Gender">
+            <div block="MyAccountOverlayV1" elem="Radio" mods={{ isArabic }}>
               <Field
                 type="radio"
                 id="1"
@@ -833,7 +833,7 @@ export class MyAccountOverlay extends PureComponent {
               />
             </div>
           </fieldset>
-          <fieldset block="MyAccountOverlay" elem="Legend">
+          <fieldset block="MyAccountOverlayV1" elem="Legend">
             <Field
               type="text"
               placeholder={`${__("EMAIL")}*`}
@@ -857,7 +857,7 @@ export class MyAccountOverlay extends PureComponent {
             />
           </fieldset>
           <div
-            block="MyAccountOverlay"
+            block="MyAccountOverlayV1"
             elem="Button"
             mods={{ isCreateAccountButton: true, isCreateValidated }}
           >
@@ -866,7 +866,7 @@ export class MyAccountOverlay extends PureComponent {
               type="submit"
               disabled={!isCreateValidated || isLoading}
               mix={{
-                block: "MyAccountOverlay",
+                block: "MyAccountOverlayV1",
                 elem: isLoading ? "LoadingButton" : "",
               }}
             >
@@ -1203,7 +1203,7 @@ export class MyAccountOverlay extends PureComponent {
         isValidateOnChange
         parentCallback={this.onSignInChange}
       >
-        <fieldset block="MyAccountOverlay" elem="Legend">
+        <fieldset block="MyAccountOverlayV1" elem="Legend">
           <div
             block={
               focusedElement && isOTP && ENABLE_OTP_LOGIN
@@ -1273,11 +1273,11 @@ export class MyAccountOverlay extends PureComponent {
         {(!isOTP || !ENABLE_OTP_LOGIN) && (
           <button
             type="button"
-            block="MyAccountOverlay"
+            block="MyAccountOverlayV1"
             elem="Button"
             mods={{ likeLink: true }}
             mix={{
-              block: "MyAccountOverlay",
+              block: "MyAccountOverlayV1",
               elem: "Button",
               mods: { isArabic },
             }}
@@ -1289,10 +1289,10 @@ export class MyAccountOverlay extends PureComponent {
           </button>
         )}
         <div
-          block="MyAccountOverlay"
+          block="MyAccountOverlayV1"
           elem="Button"
           mix={{
-            block: "MyAccountOverlay",
+            block: "MyAccountOverlayV1",
             elem: "Login",
           }}
           mods={{ isSignIn: true, isSignInValidated }}
@@ -1301,7 +1301,7 @@ export class MyAccountOverlay extends PureComponent {
             block="Button"
             disabled={!isSignInValidated || isLoading}
             mix={{
-              block: "MyAccountOverlay",
+              block: "MyAccountOverlayV1",
               elem: isLoading ? "LoadingButton" : "",
             }}
           >
@@ -1319,7 +1319,7 @@ export class MyAccountOverlay extends PureComponent {
   renderChangeStore() {
     if (isMobile.any()) {
       return (
-        <div block="MyAccountOverlay" elem="StoreSwitcher">
+        <div block="MyAccountOverlayV1" elem="StoreSwitcher">
           <LanguageSwitcher />
           <CountrySwitcher />
         </div>
@@ -1336,7 +1336,7 @@ export class MyAccountOverlay extends PureComponent {
       <div block="HeaderAccount" elem="PopUp" mods={{ isHidden }}>
         <button
           onClick={this.closePopupOnClickOutside.bind(this)}
-          block="MyAccountOverlay"
+          block="MyAccountOverlayV1"
           elem="btnOutsidePopUpClose"
         >
           {/* closes modal on clicking outside the modal - btn text hidden*/}
@@ -1344,7 +1344,7 @@ export class MyAccountOverlay extends PureComponent {
         <Overlay
           id={CUSTOMER_ACCOUNT_OVERLAY_KEY}
           mix={{
-            block: "MyAccountOverlay",
+            block: "MyAccountOverlayV1",
             mods: { isPopup, isArabic },
           }}
           onVisible={onVisible}
