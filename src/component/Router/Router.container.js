@@ -46,6 +46,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
   currentGender: state.AppState.gender,
+  is_live_party_enabled: state.AppConfig.is_live_party_enabled
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -231,13 +232,14 @@ export class RouterContainer extends SourceRouterContainer {
   }
 
   containerProps = () => {
-    const { isBigOffline, setCountry, setLanguage } = this.props;
+    const { isBigOffline, setCountry, setLanguage, is_live_party_enabled} = this.props;
 
     return {
       isBigOffline,
       isAppReady: this.getIsAppReady(),
       setCountry,
       setLanguage,
+      is_live_party_enabled,
     };
   };
 

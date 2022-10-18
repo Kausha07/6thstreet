@@ -1,7 +1,7 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import "react-circular-carousel/dist/index.css";
 import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -20,6 +20,7 @@ import {
 import Image from "Component/Image";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import { getBambuserChannelID } from "../../util/Common/index";
+import { connect } from "react-redux";
 
 const settings = {
   lazyload: true,
@@ -41,6 +42,10 @@ const settings = {
   },
 };
 
+export const mapStateToProps = (state) => ({
+  is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+});
+
 class DynamicContentCircleItemSlider extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -57,22 +62,20 @@ class DynamicContentCircleItemSlider extends PureComponent {
     isArabic: isArabic(),
     impressionSent: false,
     livePartyItems: [],
-    itemforLiveParty: [
-      {
-        link: `/live-party`,
-      },
-    ],
   };
   componentDidMount() {
     this.registerViewPortEvent();
-    this.getLiveLocation();
   }
-
 
   fetchLivePartyData = () => {
     try {
       MobileAPI.get(`bambuser/data/${Config.storeId}`).then((response) => {
-        if (response) {
+        if (
+          response &&
+          response.playlists &&
+          response.playlists[2] &&
+          response.playlists[2].shows
+        ) {
           this.setState({
             livePartyItems: response.playlists[2].shows,
           });
@@ -83,11 +86,24 @@ class DynamicContentCircleItemSlider extends PureComponent {
     }
   };
 
-  getLiveLocation() {
+  getLiveLocation(item) {
+    const { livePartyItems } = this.state;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const [lang, country] = locale && locale.split("-");
     Config.storeId = getBambuserChannelID(country);
     this.fetchLivePartyData();
+
+    return(
+      <>
+      {livePartyItems.length &&
+        livePartyItems[0] !== null &&
+        livePartyItems[0].isLive
+          ? livePartyItems.map(this.renderLiveParty)
+          : this.renderDefaultLivePartyCircle(item)
+        }
+      </>
+      
+    )
   }
 
   registerViewPortEvent() {
@@ -175,10 +191,67 @@ class DynamicContentCircleItemSlider extends PureComponent {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
+  LiveShopping = (item, i) => {
+    const { is_live_party_enabled } = this.props;
+
+    return(
+      <Fragment>
+        {
+          is_live_party_enabled ? (
+            this.getLiveLocation(item)
+          ) :null
+        }
+      </Fragment>
+    );
+    
+  };
+
   renderCircle = (item, i) => {
-    const { link, label, image_url, plp_config } = item;
+    const { link, label, image_url, plp_config, promotion_name } = item;
     const { isArabic } = this.state;
     let newLink = formatCDNLink(link) + "&plp_config=true";
+    
+    // TODO: move to new component
+    return (
+      <Fragment key={i}>
+        {promotion_name !== "shopping_party" ? (
+          <div block="CircleSlider" mods={{ isArabic }} key={i}>
+            <Link
+              to={newLink}
+              key={i}
+              data-banner-type="circleItemSlider"
+              data-promotion-name={
+                item.promotion_name ? item.promotion_name : ""
+              }
+              data-tag={item.tag ? item.tag : ""}
+              onClick={() => {
+                this.clickLink(item);
+              }}
+            >
+              <div block="OuterCircle">
+                <div block="OuterCircle" elem="InnerCircle"></div>
+                <img
+                  src={image_url}
+                  alt={label}
+                  block="Image"
+                  width="70px"
+                  height="70px"
+                />
+              </div>
+            </Link>
+            <div block="CircleSliderLabel">{label}</div>
+          </div>
+        ) : (
+          this.LiveShopping(item)
+        )}
+      </Fragment>
+    );
+  };
+
+  renderDefaultLivePartyCircle = (item, i) => {
+    const { link, label, image_url } = item;
+    const { isArabic } = this.state;
+    let newLink = formatCDNLink(link);
 
     // TODO: move to new component
 
@@ -206,34 +279,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
           </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
-      </div>
-    );
-  };
-
-  renderDefaultLivePartyCircle = (item, i) => {
-    const { link } = item;
-    const { isArabic } = this.state;
-
-    // TODO: move to new component
-
-    return (
-      <div block="CircleSlider" mods={{ isArabic }} key={i}>
-        <Link
-          to={formatCDNLink(link)}
-          key={i}
-          data-banner-type="circleItemSlider"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
-          data-tag={item.tag ? item.tag : ""}
-          onClick={() => {
-            this.clickLink(item);
-          }}
-        >
-          <div block="OuterCircle">
-            <div block="OuterCircle" elem="InnerCircle"></div>
-            <div block="OuterCircle" elem="DefaultbackgroundColor"></div>
-          </div>
-        </Link>
-        <div block="CircleSliderLabel">{__("Live Shopping")}</div>
       </div>
     );
   };
@@ -274,14 +319,13 @@ class DynamicContentCircleItemSlider extends PureComponent {
             />
           </div>
         </Link>
-        <div block="CircleSliderLabel">{__("Live Shopping")}</div>
+        <div block="CircleSliderLabel">{__("Influencer")}</div>
       </div>
     );
   };
 
   renderCircles() {
     const { items = [] } = this.props;
-    const { livePartyItems, itemforLiveParty } = this.state;
     return (
       <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
         <div
@@ -290,13 +334,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {livePartyItems.length &&
-          livePartyItems[0] !== null &&
-          livePartyItems[0].isLive
-            ? livePartyItems.map(this.renderLiveParty)
-            // : itemforLiveParty.map(this.renderDefaultLivePartyCircle)
-            :null
-          }
+
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>
@@ -326,4 +364,4 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 }
 
-export default DynamicContentCircleItemSlider;
+export default connect(mapStateToProps, null)(DynamicContentCircleItemSlider);

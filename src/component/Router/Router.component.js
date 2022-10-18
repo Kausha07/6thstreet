@@ -10,6 +10,7 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import NoMatch from "Route/NoMatch";
 
 import {
   BRANDS,
@@ -307,7 +308,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("live-party")}
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
-              <LiveExperience {...props} />
+              {this.props.is_live_party_enabled ? <LiveExperience {...props} /> : <NoMatch />}
             </GTMRouteWrapper>
           )}
         />
