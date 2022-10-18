@@ -46,7 +46,11 @@ class AutheneticationEvent extends BaseEvent {
       ...(data.loginMode && { loginMode: data.loginMode }),
       ...(data.attemptNumber && { attemptNumber: data.attemptNumber }),
       UserType:
-        this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
+        data.name == "login"
+          ? "Logged In"
+          : this.getCustomerId().toString().length > 0
+          ? "Logged In"
+          : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       ClientID: this.getGAID(),
