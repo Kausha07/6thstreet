@@ -141,7 +141,7 @@ main {
     .ContentWrapper {
       & > .PLPDetails {
         @include mobile() {
-          padding-top: 60px;
+          padding-top: 0px;
         }
       }
     }
