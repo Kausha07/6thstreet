@@ -408,19 +408,12 @@ class GoogleTagManager extends PureComponent {
    */
 
   processDataPush(event, data) {
-    const customer = BrowserDatabase.getItem(CUSTOMER);
-    const customerStatus =
-      customer &&
-      typeof customer == "object" &&
-      Object.keys(customer).length > 0
-        ? true
-        : false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType: customerStatus ? "Logged In" : "Logged Out",
+        UserType: null,
         CustomerID: null,
         PageType: null,
         SearchTerm: null,
