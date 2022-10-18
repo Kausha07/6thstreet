@@ -463,7 +463,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {!isMobile.any() && pageType !== "vuePlp" && this.renderAddToCartOnHover()}
+        {!isMobile.any() && pageType !== "vuePlp" && pageType !== "cart" && this.renderAddToCartOnHover()}
       </li>
     );
   }
