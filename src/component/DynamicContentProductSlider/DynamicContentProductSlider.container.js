@@ -44,6 +44,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       isHomePage = false,
       setLastTapItemOnHome,
       index = 0,
+      heading
     } = this.props;
 
     const { products, isLoading } = this.state;
@@ -57,7 +58,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
       renderMySignInPopup,
       isHomePage,
       index,
-      setLastTapItemOnHome
+      setLastTapItemOnHome,
+      heading
     };
   };
   async requestItems() {

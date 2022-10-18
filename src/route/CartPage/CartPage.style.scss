@@ -915,7 +915,7 @@
     justify-content: left;
     align-items: center;
     margin: 10px 0;
-    margin-top: 95px;
+    // margin-top: 95px;
     // padding-bottom: 100px;
     &-ExploreButton {
       color: #000000;
@@ -923,10 +923,11 @@
       align-items: center;
       justify-content: center;
       border: 1px solid #000000;
-      height: 60px;
-      width: 280px;
+      height: 52px;
+      width: 180px;
       border-radius: 6px;
       background-color: #000000;
+      
     }
     &-ExploreButtonText {
       text-transform: none;
@@ -939,6 +940,7 @@
       letter-spacing: 0;
       line-height: 15px;
       text-align: center;
+      text-transform: uppercase;
     }
   }
   
@@ -954,3 +956,58 @@
   .EmptyMessage{
     font-size: 16px;
 }
+
+
+
+.PDPWidgets-cart {
+    &-Slider {
+      @include desktop {
+        margin-bottom: 70px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        &:nth-child(odd) {
+          &::-webkit-scrollbar {
+            display: none !important;
+          }
+          width: 100vw;
+  
+          margin-left: calc((-100vw + 76.389vw) / 2);
+          margin-right: calc((-100vw + 76.389vw) / 2);
+          overflow: hidden !important;
+  
+          #productSlider {
+            width: var(--main-container-width-dsk);
+            max-width: var(--container-max-width);
+            margin-inline: auto;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+        &_largeScreen {
+          &:nth-child(odd) {
+            margin-left: calc((1100px - 100vw) / 2);
+            margin-right: calc((1100px - 100vw) / 2);
+          }
+        }
+      }
+      @include mobile {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .cartAlsoLikeHeading{
+    color: #000;
+    font-family: "Avenir Next";
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 25px;
+    text-transform: uppercase;
+    padding-bottom: 20px;
+    @media (max-width:767px){
+        padding-top: 22px;
+        padding-bottom: 22px;
+    }
+  }

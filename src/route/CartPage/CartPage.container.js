@@ -47,8 +47,11 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
-
+import VueQuery from "../../query/Vue.query";
 import CartPage from "./CartPage.component";
+import { getUUIDToken } from "Util/Auth";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -73,7 +76,7 @@ export const mapStateToProps = (state) => {
     country: state.AppState.country,
     product: state.PDP.product,
     gender: state.AppState.gender,
-    pdpWidgetsData: state.AppState.pdpWidgetsData,
+    options: state.PDP.options,
   };
 };
 
@@ -125,6 +128,8 @@ export class CartPageContainer extends PureComponent {
     isEditing: false,
     clubApparelMember: null,
     errorState: false,
+    cartWidgetApiData: [],
+    youMayAlsoLikeData: [],
   };
 
   containerFunctions = {
@@ -175,6 +180,9 @@ export class CartPageContainer extends PureComponent {
       showNotification,
       location: { state: { errorState: propErrorState } = {} },
     } = this.props;
+
+    this.getCartWidgetsVueData();
+    this.getCartYoumayAlsoLikeWidgetsVueData();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -210,19 +218,69 @@ export class CartPageContainer extends PureComponent {
     }
   }
 
+  getCartWidgetsVueData() {
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const query = {
+      filters: [],
+      num_results: 50,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const type = "vue_recently_viewed_slider";
+    const defaultQueryPayload = {
+      userID,
+      product_id: "",
+    };
+    const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
+    var promise = Promise.resolve(fetchVueData(payload));
+    promise
+      .then((resp) => {
+        this.setState({ cartWidgetApiData: resp.data });
+      })
+      .catch((err) => {
+        console.error("uncaugh  errr", err);
+      });
+  }
+
+  getCartYoumayAlsoLikeWidgetsVueData() {
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const query = {
+      filters: [],
+      num_results: 50,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const type = "vue_top_picks_slider";
+    const defaultQueryPayload = {
+      userID,
+      product_id: "",
+    };
+    const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
+    var promise = Promise.resolve(fetchVueData(payload));
+    promise
+      .then((resp) => {
+        this.setState({ youMayAlsoLikeData: resp.data });
+      })
+      .catch((err) => {
+        console.error("uncaugh  errr", err);
+      });
+  }
+
   componentDidUpdate(prevProps) {
     const {
       changeHeaderState,
       totals: { items_qty },
       headerState,
       headerState: { name },
+      product,
     } = this.props;
 
     const {
       totals: { items_qty: prevItemsQty },
       headerState: { name: prevName },
     } = prevProps;
-
     if (name !== prevName) {
       if (name === CART) {
         this._changeHeaderState();
@@ -431,12 +489,27 @@ export class CartPageContainer extends PureComponent {
     });
   }
 
+
   render() {
-    return (
+    const cartWidgetApiData = this.state.cartWidgetApiData;
+    const youMayAlsoLikeData = this.state.youMayAlsoLikeData;
+    return cartWidgetApiData && youMayAlsoLikeData ? (
       <CartPage
         {...this.props}
         {...this.state}
         {...this.containerFunctions}
+        cartWidgetApiData={cartWidgetApiData}
+        youMayAlsoLikeData={youMayAlsoLikeData}
+        tabMap={tabMap}
+      />
+    ) : (
+      <CartPage
+        {...this.props}
+        {...this.state}
+        {...this.containerFunctions}
+        renderMySignInPopup={this.showPopup}
+        cartWidgetApiData={[]}
+        youMayAlsoLikeData={[]}
         tabMap={tabMap}
       />
     );
