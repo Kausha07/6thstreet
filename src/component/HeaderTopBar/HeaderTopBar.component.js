@@ -75,7 +75,7 @@ class HeaderTopBar extends NavigationAbstract {
     // TODO: find out what is this, render here
     let country = getCountryFromUrl();
     let txt = {
-      AE: __("FREE SHIPPING OVER AED99"),
+      AE: __("FREE SHIPPING OVER AED200"),
       SA: __("FREE SHIPPING OVER SAR199"),
       KW: __("FREE SHIPPING OVER KWD16.5"),
       QA: __("FREE SHIPPING OVER QAR199"),
