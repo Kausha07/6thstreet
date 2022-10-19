@@ -7,6 +7,9 @@
     }
     video{
         margin: 0 auto;
+        @include desktop {
+            max-width: 200px;
+        }
     }
     img{
         margin: 0 auto;
