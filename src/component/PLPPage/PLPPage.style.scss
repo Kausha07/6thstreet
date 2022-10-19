@@ -8,6 +8,14 @@
             grid-template-columns: repeat(2, 1fr);
             margin: 0;
             grid-gap: 29px 4px;
+            margin-top: 30px;
+        }
+        }
+        &:last-child{
+            ul {
+            @include mobile() {
+            margin-top: 0px;
+            }
         }
     }
     .ProductItem {

@@ -162,6 +162,11 @@
                 margin-right: 3px;
                 margin-top: 0px;
             }
+            .calenderFormatter{
+                &_isArabic{
+                    direction: ltr !important;
+                }
+            }
             &-calender{
                 display: flex;
                 align-items: center;
@@ -256,6 +261,11 @@
                     display: inline-block;
                     vertical-align: middle;
                     margin-right: 3px;
+                }
+                .calenderFormatter{
+                    &_isArabic{
+                        direction: ltr !important;
+                    }
                 }
                 &-calender{
                     display: flex;

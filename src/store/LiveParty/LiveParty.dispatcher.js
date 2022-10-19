@@ -47,9 +47,13 @@ export class LivePartyDispatcher {
   }
 
   async requestUpcomingParty(response, dispatch) {
-    response.playlists[0].shows.sort(function(a,b){
-      return new Date(a.scheduledStartAt) - new Date(b.scheduledStartAt);
-    });
+    if(response && response.playlists && response.playlists[0] && response.playlists[0].shows)
+    {
+      response.playlists[0].shows.sort(function(a,b){
+        return new Date(a.scheduledStartAt) - new Date(b.scheduledStartAt);
+      });
+    }
+    
     dispatch(setUpcomingPartyLoading(true));
 
     try {
@@ -63,9 +67,13 @@ export class LivePartyDispatcher {
   }
 
   async requestArchivedParty(response, dispatch) {
-    response.playlists[1].shows.sort(function(a,b){
-      return new Date(b.endedAt) - new Date(a.endedAt);
-    });
+    if(response && response.playlists && response.playlists[1] && response.playlists[1].shows)
+    {
+      response.playlists[1].shows.sort(function(a,b){
+        return new Date(b.endedAt) - new Date(a.endedAt);
+      });
+    }
+    
     dispatch(setArchivedPartyLoading(true));
 
     try {

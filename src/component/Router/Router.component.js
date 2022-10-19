@@ -10,6 +10,7 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import NoMatch from "Route/NoMatch";
 
 import {
   BRANDS,
@@ -24,6 +25,7 @@ import {
   URL_REWRITES,
   LIVE_PARTY,
   ABOUT,
+  STORE,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -35,6 +37,7 @@ import VuePLP from "Route/VuePLP/VuePLP.component";
 import LiveExperience from "Route/LiveExperience";
 import About from "Route/About";
 import WelcomeHomePage from "Component/WelcomeHomePage";
+import BrandCMS from "Route/BrandCMS"
 import * as Sentry from '@sentry/react';
 
 import {
@@ -250,6 +253,7 @@ export class Router extends SourceRouter {
       ),
       position: 90,
     },
+    
     {
       component: (
         <SentryRoute
@@ -307,7 +311,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("live-party")}
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
-              <LiveExperience {...props} />
+              {this.props.is_live_party_enabled ? <LiveExperience {...props} /> : <NoMatch />}
             </GTMRouteWrapper>
           )}
         />
@@ -326,6 +330,19 @@ export class Router extends SourceRouter {
         />
       ),
       position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("/store/:pagename")}
+          render={(props) => (
+            <GTMRouteWrapper route={STORE}>
+              <BrandCMS {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 96,
     },
   ];
 

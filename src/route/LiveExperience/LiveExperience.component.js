@@ -23,7 +23,9 @@ export class LiveExperience extends PureComponent {
     super(props);
     this.state = {
       url: null,
-      day: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+      month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ],
       isLive: false,
       archivedItemToShow: 9,
       isRefineButtonClicked: false,
@@ -137,9 +139,9 @@ export class LiveExperience extends PureComponent {
                 ) : (
                   <div block="eventStart-calender">
                     <img src={calenderIcon} alt="calenderIcon" />
-                    <div>{`${
-                      this.state.day[d.getDay()]
-                    }, ${d.getDate()} at ${d.toLocaleString("en-US", {
+                    <div block="calenderFormatter" mods={{ isArabic }}>{` ${d.getDate()}-${
+                      this.state.month[d.getMonth()]
+                    } at ${d.toLocaleString("en-US", {
                       hour: "numeric",
                       minute: "numeric",
                       hour12: true,
@@ -187,9 +189,9 @@ export class LiveExperience extends PureComponent {
             ) : (
               <div block="eventStart-calender">
                 <img src={calenderIcon} alt="calenderIcon" />
-                <div>{`${
-                  this.state.day[d.getDay()]
-                }, ${d.getDate()} at ${d.toLocaleString("en-US", {
+                <div block="calenderFormatter" mods={{ isArabic }}>{`${d.getDate()}-${
+                  this.state.month[d.getMonth()]
+                } at ${d.toLocaleString("en-US", {
                   hour: "numeric",
                   minute: "numeric",
                   hour12: true,
