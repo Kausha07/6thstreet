@@ -170,6 +170,7 @@ class PLPPages extends PureComponent {
       CategoryName,
       stockName,
     ];
+    const sizeOptions = ['size_eu','size_uk','size_us']
     const options = this.getRequestOptions()
     let updatedFilter = deepCopy(filters);
     removedFilter.map((key) => {
@@ -178,6 +179,12 @@ class PLPPages extends PureComponent {
     Object.keys(filters).map((key)=>{
       if(Object.keys(options).includes(key)){
         delete updatedFilter[key];
+      }else{
+        sizeOptions.map((size)=>{
+          if(Object.keys(options).includes(size)){
+            delete updatedFilter['sizes']
+          }
+        })
       }
     })
     updatedFilter = {stock:"stock",...updatedFilter}
