@@ -213,8 +213,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config, promotion_name } = item;
     const { isArabic } = this.state;
-    let newLink = formatCDNLink(link) + "&plp_config=true";
-    
+    let newLink = link.includes("/store/") ?  formatCDNLink(link) : `${formatCDNLink(link)}&plp_config=true`;
+
     // TODO: move to new component
     return (
       <Fragment key={i}>
@@ -245,7 +245,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             </Link>
             <div block="CircleSliderLabel">{label}</div>
           </div>
-        ) : (this.props.is_live_party_enabled && 
+        ) : (this.props.is_live_party_enabled &&
           this.LiveShopping(item)
         )}
       </Fragment>
