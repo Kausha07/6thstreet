@@ -2,6 +2,49 @@
     padding-top: 15px;
     // padding-top: 60px;
     margin-bottom: 82px;
+    .SortOverlay{
+        background-color: black;
+        position: fixed;
+        height: 40px;
+        width: 170px;
+        z-index: 9;
+        bottom: 120px;
+        border-radius: 20px;
+        margin: 0px 84px;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &-CenterLine{
+            img{
+            width: 4px !important;
+            height: 20px !important;
+         }
+        }
+        img{
+            height: 16px;
+            width: 11px;
+        }
+        :nth-child(3){
+            margin-left:5px ;
+        }
+    }
+    .CommonBlock{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 42%;
+        &-RefineImg{
+            height: 9px !important;
+            width: 15px !important;
+        }
+        .title {
+            color: #FFFFFF;
+            font-size: 13px;
+            font-weight: var(--fw-demi);
+            line-height: 16px;
+          }
+    }
     @include mobile {
         padding-top: 0;
     }

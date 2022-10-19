@@ -14,7 +14,9 @@ import "./PLP.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
 import Loader from "Component/Loader";
-
+import sort from "./icons/sort.svg";
+import refine from "./icons/refine.svg";
+import Line from "./icons/Line.svg";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -140,6 +142,23 @@ export class PLP extends PureComponent {
     );
   };
 
+  renderSortByOverlay = () => {
+    return (
+      <div block="SortOverlay">
+        <div block="CommonBlock">
+          <img src={sort} alt="sort" />
+          <span block="title">{__("Sort")}</span>
+        </div>
+        <div block="SortOverlay" elem="CenterLine">
+          <img src={Line} alt="line" />
+        </div>
+        <div block="CommonBlock">
+          <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
+          <span block="title">{__("Refine")}</span>
+        </div>
+      </div>
+    );
+  }
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
@@ -161,6 +180,7 @@ export class PLP extends PureComponent {
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
+          {isMobile.any() && this.renderSortByOverlay()}
           <div>
 
 
@@ -169,14 +189,15 @@ export class PLP extends PureComponent {
               {this.renderPLPPages()}
 
             </div>
-            {
-              !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
-            }
-
+            {!isMobile.any() && (
+              <div block="SortBy" mods={{ isArabic }}>
+                {this.renderPLPSortBy()}
+              </div>
+            )}
           </div>
         </ContentWrapper>
       </main>
-      )}
+    );}
 
       return  <Loader isLoading={isLoading} />
     }
