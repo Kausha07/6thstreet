@@ -30,8 +30,12 @@ import GiftIconLarge from "./icons/gift-heart@3x.png";
 import Image from "Component/Image";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
+import Event, {
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_CONTINUE_AS_GUEST,
+} from "Util/Event";
 
 import {
   CARD,
@@ -87,7 +91,11 @@ export class Checkout extends SourceCheckout {
     const { addressCityData } = this.props;
     let finalArea = area;
     let finalCity = city;
-    if (isArabic() && addressCityData && Object.values(addressCityData).length > 0) {
+    if (
+      isArabic() &&
+      addressCityData &&
+      Object.values(addressCityData).length > 0
+    ) {
       let finalResp = Object.values(addressCityData).filter((cityData) => {
         return cityData.city === city;
       });
@@ -461,6 +469,17 @@ export class Checkout extends SourceCheckout {
 
   continueAsGuest = () => {
     this.setState({ continueAsGuest: true });
+    const eventDetails = {
+      name: EVENT_CONTINUE_AS_GUEST,
+      action: EVENT_CONTINUE_AS_GUEST,
+      category: "checkout",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
+    Moengage.track_event(EVENT_CONTINUE_AS_GUEST, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   };
 
   changeEmail = () => {

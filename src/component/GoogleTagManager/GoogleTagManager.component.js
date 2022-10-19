@@ -30,7 +30,7 @@ import {
   EVENT_GTM_AUTHENTICATION,
   EVENT_GTM_TOP_NAV_CLICK,
   EVENT_GTM_CUSTOMER_SUPPORT,
-  EVENT_GTM_CHECKOUT_BILLING
+  EVENT_GTM_CHECKOUT_BILLING,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -182,7 +182,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_AUTHENTICATION]: AutheneticationEvent,
     [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
-    [EVENT_GTM_CHECKOUT_BILLING]:CheckoutBillingEvent,
+    [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
   };
 
   /**
@@ -406,6 +406,7 @@ class GoogleTagManager extends PureComponent {
    * @param event
    * @param data
    */
+
   processDataPush(event, data) {
     if (this.enabled) {
       dataLayer.push({
