@@ -202,7 +202,7 @@ class HeaderMainSection extends NavigationAbstract {
     if (matchPath(location.pathname, "/cart")) {
       return TYPE_CART;
     }
-    if (matchPath(location.pathname, "/viewall")) {
+    if (matchPath(location.pathname, "/viewall") || location.search.includes("?q=")) {
       return TYPE_CATEGORY;
     }
     return window.pageType;
