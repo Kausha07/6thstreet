@@ -65,6 +65,17 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
   componentDidMount() {
     this.registerViewPortEvent();
+    
+
+    if(this.props.is_live_party_enabled && this.filterPromotionName())
+    {
+      this.getLiveLocation();
+    }
+  }
+
+  filterPromotionName = () =>{
+  const result = this.props.items.filter(item => item.promotion_name === "shopping_party");
+  return result.length;
   }
 
   fetchLivePartyData = () => {
@@ -86,24 +97,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
     }
   };
 
-  getLiveLocation(item) {
-    const { livePartyItems } = this.state;
+  getLiveLocation() {
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const [lang, country] = locale && locale.split("-");
     Config.storeId = getBambuserChannelID(country);
     this.fetchLivePartyData();
-
-    return(
-      <>
-      {livePartyItems.length &&
-        livePartyItems[0] !== null &&
-        livePartyItems[0].isLive
-          ? livePartyItems.map(this.renderLiveParty)
-          : this.renderDefaultLivePartyCircle(item)
-        }
-      </>
-      
-    )
   }
 
   registerViewPortEvent() {
@@ -193,13 +191,19 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   LiveShopping = (item, i) => {
     const { is_live_party_enabled } = this.props;
+    const { livePartyItems } = this.state;
 
     return(
       <Fragment>
         {
-          is_live_party_enabled ? (
-            this.getLiveLocation(item)
-          ) :null
+          is_live_party_enabled &&
+          livePartyItems.length &&
+              livePartyItems[0] !== null &&
+              livePartyItems[0].isLive
+                ? livePartyItems.map(this.renderLiveParty)
+                : this.renderDefaultLivePartyCircle(item)
+              
+            //  :null
         }
       </Fragment>
     );
@@ -241,7 +245,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             </Link>
             <div block="CircleSliderLabel">{label}</div>
           </div>
-        ) : (
+        ) : (this.props.is_live_party_enabled && 
           this.LiveShopping(item)
         )}
       </Fragment>

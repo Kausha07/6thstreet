@@ -139,7 +139,7 @@ export class LiveExperience extends PureComponent {
                 ) : (
                   <div block="eventStart-calender">
                     <img src={calenderIcon} alt="calenderIcon" />
-                    <div>{` ${d.getDate()}-${
+                    <div block="calenderFormatter" mods={{ isArabic }}>{` ${d.getDate()}-${
                       this.state.month[d.getMonth()]
                     } at ${d.toLocaleString("en-US", {
                       hour: "numeric",
@@ -189,7 +189,7 @@ export class LiveExperience extends PureComponent {
             ) : (
               <div block="eventStart-calender">
                 <img src={calenderIcon} alt="calenderIcon" />
-                <div>{`${d.getDate()}-${
+                <div block="calenderFormatter" mods={{ isArabic }}>{`${d.getDate()}-${
                   this.state.month[d.getMonth()]
                 } at ${d.toLocaleString("en-US", {
                   hour: "numeric",
