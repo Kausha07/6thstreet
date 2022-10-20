@@ -232,7 +232,7 @@ class PLPFilters extends PureComponent {
       }
 
       if (filter[1]) {
-        if (filter[0] === "sort" && !isMobile.any()) {
+        if (filter[0] === "sort" ) {
           return
         }
         if (isMobile.any()) {

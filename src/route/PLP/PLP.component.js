@@ -35,6 +35,7 @@ export class PLP extends PureComponent {
       activeFilters: {},
       isArabic: isArabic(),
       isSortByOverlayOpen: false,
+      selectedSortOption : 'recommended'
     };
     this.sortByOverlay = createRef();
   }
@@ -193,8 +194,8 @@ export class PLP extends PureComponent {
   };
 
   renderSortByOverlay = () => {
-    const {filters} = this.props
-    console.log("muskan props", this.props.filters,this.props.filters['sort'].data);
+    const {filters,handleCallback} = this.props
+    const {selectedSortOption} = this.state
     return (
       <div block="couponDetailPopup">
         <div block="couponDetailOverlay">
@@ -211,12 +212,28 @@ export class PLP extends PureComponent {
               </button>
             </p>
             {filters && Object.values(filters['sort'].data).map((filter,index)=>{
+              const {facet_value, facet_key, label, is_selected} = filter
                 return (
-                <>
-                  <p block="couponItemName">{filter.label}</p>
-                  {index <= Object.values(filters['sort'].data).length-1 && <hr/>}
-                </>
-                )
+                  <>
+                    <p
+                      block="couponItemName"
+                      mix = {{block :"couponItemName",elem : (is_selected || selectedSortOption === facet_value) ? "SortSelected" : ""}}
+                      id={facet_value + facet_key}
+                      name={facet_key}
+                      value={facet_value}
+                      onClick={() => {
+                        this.setState({
+                          selectedSortOption: facet_value
+                        },()=>{
+                          handleCallback(facet_key, facet_value, true, true)
+                        })
+                      }}
+                    >
+                      {label}
+                    </p>
+                    <hr />
+                  </>
+                );
             })}
           </div>
         </div>
