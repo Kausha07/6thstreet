@@ -713,10 +713,10 @@ export class CartPage extends PureComponent {
         {this.renderBack()}
         <h1 block="CartPage" elem="Heading">
           {isMobile.any() ? __("My SHOPPING BAG ") : __("My Bag ")}
-          {/* <span>
+          <span>
             ({totalQuantity}
             {this.renderItemSuffix()})
-          </span> */}
+          </span>
         </h1>
       </div>
     );
