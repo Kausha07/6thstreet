@@ -656,7 +656,7 @@ export class PLPContainer extends PureComponent {
   }
 
   async getBrandDetails() {
-    const exceptionalBrand = ['men','women','kids']
+    const exceptionalBrand = ['men','women','kids','home']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
