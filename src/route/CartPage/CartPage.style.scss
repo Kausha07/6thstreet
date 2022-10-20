@@ -35,7 +35,6 @@
         }
     }
    &-EmptyCartImg {
-    //    margin-left: 10%;
     @media (max-width:767px){
         margin-top: 64px;
     }
@@ -69,7 +68,6 @@
         .CartPage-Wrapper {
             margin: 0 auto;
             @include mobile {
-                //margin-right: 0;
                 margin: 0 auto !important;
             }
         }
@@ -119,7 +117,6 @@
                 display: inline-block;
                 text-align: center;
                 margin-bottom: 20px;
-                // background-image: url();
                 background-position: -447px -31px;
             }
         }
@@ -157,7 +154,6 @@
             align-items: center;
             padding: 0 12px;
             line-height: 24px;
-            // height: 40px;
         }
     }
     &-CheckoutButton {
@@ -169,7 +165,6 @@
         font-weight: var(--fw-bold);
         border: none;
         @include mobile {
-            // width: 45%;
             height: 40px;
             font-size: 14px;
             order: 2;
@@ -290,9 +285,6 @@
         @include desktop {
             width: 100%;
         }
-        // @include mobile {
-        //     display: none;
-        // }
     }
     &-Promo {
         order: 2;
@@ -428,7 +420,6 @@
     }
     &-Static {
         @include mobile {
-            // max-height: calc(100vh - 275px);
             overflow-y: hidden;
             overflow-x: hidden;
             width: 100%;
@@ -627,8 +618,6 @@
         }
     }
     &-BackArrow {
-        // background-image: url(../../component/Icons/Close/icon.svg);
-        // background-size: cover;
         height: 19px;
         position: absolute;
         width: 19px;
@@ -662,7 +651,6 @@
         }
     }
     &-Totals {
-        // border-top: 1px solid var(--color-soft-gray);
         padding: 11px 0;
         .CartPage {
             &-SummaryItem {
@@ -818,8 +806,6 @@
         right: 0;
         position: fixed;
         z-Index: 9;
-        // overflow-Y: scroll;
-        // overflow-X: hidden;
         background-color: rgba(0, 0, 0, 0.5);
         .couponPopupContent {
             max-width: 660px;
@@ -859,22 +845,6 @@
                 }
                 .closeCouponPopupBtn {
                     cursor: pointer;
-                    // @include mobile {
-                    //     float: left;
-                    //     &:before {
-                    //         content: "";
-                    //         position: absolute;
-                    //         top: 20px;
-                    //         left: 5px;
-                    //         border: solid #0a0a0a;
-                    //         border-width: 0 2px 2px 0;
-                    //         display: inline-block;
-                    //         padding: 4px;
-                    //         transform: rotate( 135deg);
-                    //         -webkit-transform: rotate( 135deg);
-                    //     }
-                    // }
-                    // @include desktop {
                     float: right;
                     &:before {
                         content: "";
@@ -895,28 +865,17 @@
                     }
                 }
             }
-            // @include mobile {
-            //     .CartCoupon {
-            //         margin-left: 18px;
-            //         margin-right: 18px;
-            //     }
-            // }
         }
     }
 }
 
-.MobileBottomBar {
-    // display: none;
-}
+
 
 .ExploreNowBtn {
     display: flex;
-    // justify-content: center;
     justify-content: left;
     align-items: center;
     margin: 10px 0;
-    // margin-top: 95px;
-    // padding-bottom: 100px;
     &-ExploreButton {
       color: #000000;
       display: flex;
@@ -932,7 +891,6 @@
     &-ExploreButtonText {
       text-transform: none;
       height: 15px;
-    //   width: 91px;
       color: #FFFFFF;
       font-family: "Avenir Next";
       font-size: 14px;

@@ -35,14 +35,11 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
-// import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider/DynamicContentVueProductSliderContainer";
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
-import CDN from "../../util/API/provider/CDN";
-
 import EmptyCardIcon from "./icons/cart.svg";
 import ProductItem from "Component/ProductItem";
 
