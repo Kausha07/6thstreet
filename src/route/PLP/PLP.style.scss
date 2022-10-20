@@ -2,6 +2,31 @@
     padding-top: 15px;
     // padding-top: 60px;
     margin-bottom: 82px;
+    .couponDetailPopup{
+        z-index: 99999 !important;
+        .couponDetialPopupBlock{
+            padding: 42px 20px;
+            .couponItemCode{
+                color: #000000;
+                font-size: 16px;
+            }
+            .couponItemName{
+                text-align: center;
+                margin-bottom: 0px;
+            }
+            hr {
+                border-top: 1px solid #efefef;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                margin-left: auto;
+                margin-right: auto;
+                &:last-child{
+                    margin-bottom: 0;
+                }
+              }
+        } 
+    }
+    
     .SortOverlay{
         background-color: black;
         position: fixed;
@@ -25,8 +50,15 @@
             height: 16px;
             width: 11px;
         }
-        :nth-child(3){
-            margin-left:5px ;
+        .HighlightOval{
+            position: absolute;
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background-color: #F96446;
+            right: 35%;
+            top: 14px;
+            z-index: 9;
         }
     }
     .CommonBlock{
@@ -44,6 +76,9 @@
             font-weight: var(--fw-demi);
             line-height: 16px;
           }
+    }
+    .CommonBlock:nth-child(3){
+        margin-left:5px ;
     }
     @include mobile {
         padding-top: 0;
