@@ -196,13 +196,12 @@ export class SearchSuggestionContainer extends PureComponent {
 
   requestJsonInfo = async () =>{
     const { gender } = this.props;
-    const { isArabic } = this.state;
     const locale = getLocaleFromUrl();
     let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
     if(process.env.REACT_APP_FOR_JSON === "production") {
       url = `resources/20190121/${locale}/search/search_${gender}.json`;
     }
-    // let url = `resources/20191010${process.env.REACT_APP_FOR_JSON === "production" ? "":"_staging"}/${locale}/search/search_${gender}.json`;
+    
     try {
       const resp = await CDN.get(url);
 
