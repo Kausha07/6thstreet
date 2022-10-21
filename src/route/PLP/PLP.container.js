@@ -656,10 +656,14 @@ export class PLPContainer extends PureComponent {
   }
 
   async getBrandDetails() {
+    const exceptionalBrand = ['men','women','kids','home']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
       .split("/")?.[0];
+    if(exceptionalBrand.includes(brandName)){
+      return null;
+    }
     const data = await new Algolia({
       index: "brands_info",
     }).getBrandsDetails({
