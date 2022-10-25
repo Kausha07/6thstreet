@@ -850,8 +850,8 @@ class PLPFilters extends PureComponent {
           )}
 
           {isOpen && isMobile.any()
-            ? this.renderPopupFilters()
-            : this.renderFilterButton()}
+            && this.renderPopupFilters()
+            }
           {!isMobile.any() && (
             <form block="PLPFilters" name="filters">
               {this.renderFilters()}

@@ -174,9 +174,15 @@ export class PLP extends PureComponent {
     bodyElt.style.overflow = "hidden";
   };
 
+  handleFilterClick = () => {
+    const { showOverlay } = this.props;
+    showOverlay("PLPFilter");
+  };
+
   renderSortFilterOverlay = () => {
+    const { isArabic } = this.state
     return (
-      <div block="SortOverlay">
+      <div block="SortOverlay" mods={{isArabic}}>
         <div block="CommonBlock" onClick={(e) => this.showCouponDetial(e)}>
           <img src={sort} alt="sort" />
           <span block="title">{__("Sort")}</span>
@@ -185,7 +191,7 @@ export class PLP extends PureComponent {
           <img src={Line} alt="line" />
         </div>
         <div block="HighlightOval"></div>
-        <div block="CommonBlock">
+        <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
           <span block="title">{__("Refine")}</span>
         </div>
@@ -194,10 +200,10 @@ export class PLP extends PureComponent {
   };
 
   renderSortByOverlay = () => {
-    const {filters,handleCallback} = this.props
-    const {selectedSortOption} = this.state
+    const {filters, handleCallback} = this.props
+    const {selectedSortOption, isArabic} = this.state
     return (
-      <div block="couponDetailPopup">
+      <div block="couponDetailPopup" mods={{isArabic}}>
         <div block="couponDetailOverlay">
           <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
             <p block="couponItemCode">

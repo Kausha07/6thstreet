@@ -29,6 +29,16 @@
                 }
               }
         } 
+        &_isArabic{
+            .couponDetialPopupBlock{
+                .closePopupbtn{
+                    float: left;
+                    &:before{
+                    right: -22px;
+                    }
+                }
+            }
+        }
     }
     
     .SortOverlay{
@@ -63,6 +73,11 @@
             right: 35%;
             top: 14px;
             z-index: 9;
+        }
+        &_isArabic{
+            .HighlightOval{
+            right: 62%;
+            }
         }
     }
     .CommonBlock{

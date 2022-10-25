@@ -44,6 +44,7 @@ import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
+import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -88,6 +89,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
   setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
+  showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -942,7 +944,7 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages, isLoading } =
+    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay} =
       this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
     // isDisabled: this._getIsDisabled()
@@ -958,6 +960,7 @@ export class PLPContainer extends PureComponent {
       pages,
       activeFilters,
       isLoading,
+      showOverlay
     };
   };
 
