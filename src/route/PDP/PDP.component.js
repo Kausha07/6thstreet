@@ -17,6 +17,10 @@ import { isArabic } from "Util/App";
 import { VUE_PAGE_VIEW } from "Util/Event";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { getUUID } from "Util/Auth";
+import Event, {
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+} from "Util/Event";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -45,7 +49,17 @@ class PDP extends PureComponent {
     this.renderVueHits();
   }
   showMyAccountPopup = () => {
+    const { showPopup } = this.state;
     this.setState({ showPopup: true });
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: "Wishlist",
+    };
+    if (showPopup) {
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+    }
   };
 
   closePopup = () => {
@@ -57,10 +71,7 @@ class PDP extends PureComponent {
   };
 
   renderVueHits() {
-    const {
-      prevPath = null,
-      dataForVueCall={}
-    } = this.props;
+    const { prevPath = null, dataForVueCall = {} } = this.props;
     const locale = VueIntegrationQueries?.getLocaleFromUrl();
     VueIntegrationQueries?.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -146,19 +157,20 @@ class PDP extends PureComponent {
     );
   }
 
-
   render() {
     const { isLoading, product, nbHits } = this.props;
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     } else if (!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
-    }
-    else if ((!isLoading && (!nbHits || nbHits === 0) && (Object.keys(product)?.length === 0))) {
-      return <NoMatch />
-    }
-    else {
-      return <div />
+    } else if (
+      !isLoading &&
+      (!nbHits || nbHits === 0) &&
+      Object.keys(product)?.length === 0
+    ) {
+      return <NoMatch />;
+    } else {
+      return <div />;
     }
   }
 }

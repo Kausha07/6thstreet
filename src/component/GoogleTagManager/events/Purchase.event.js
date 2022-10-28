@@ -49,11 +49,17 @@ class PurchaseEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
         ? BrowserDatabase.getItem("TT_Data").mail
+        : BrowserDatabase.getItem("TT_Guest_Data") &&
+          BrowserDatabase.getItem("TT_Guest_Data")?.mail
+        ? BrowserDatabase.getItem("TT_Guest_Data").mail
         : null;
     const sha_phone =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
+        : BrowserDatabase.getItem("TT_Guest_Data") &&
+          BrowserDatabase.getItem("TT_Guest_Data")?.phone
+        ? BrowserDatabase.getItem("TT_Guest_Data").phone
         : null;
     this.pushEventData({
       sha256_email: sha_email,
@@ -158,8 +164,10 @@ class PurchaseEvent extends BaseEvent {
         //value: "",
       });
     }
+    if (localStorage.hasOwnProperty("TT_Guest_Data")) {
+      localStorage.removeItem("TT_Guest_Data");
+    }
   }
-  getMOEPurchaseDetails() {}
   /**
    * Get order information
    *

@@ -1,7 +1,9 @@
 /* eslint-disable import/no-cycle, @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
+import MyAccountDispatcher, {
+  CUSTOMER,
+} from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
@@ -408,12 +410,14 @@ class GoogleTagManager extends PureComponent {
    */
 
   processDataPush(event, data) {
+    const isCustomerStatus =
+      this.props.state.MyAccountReducer.isSignedIn || false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType: null,
+        UserType: isCustomerStatus ? "Logged In" : "Logged Out",
         CustomerID: null,
         PageType: null,
         SearchTerm: null,

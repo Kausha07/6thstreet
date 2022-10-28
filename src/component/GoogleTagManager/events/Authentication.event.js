@@ -45,6 +45,7 @@ class AutheneticationEvent extends BaseEvent {
       ...(data.failReason && { failReason: data.failReason }),
       ...(data.loginMode && { loginMode: data.loginMode }),
       ...(data.attemptNumber && { attemptNumber: data.attemptNumber }),
+      ...(data.popupSource && { PopupSource: data.popupSource }),
       UserType:
         data.name == "login"
           ? "Logged In"

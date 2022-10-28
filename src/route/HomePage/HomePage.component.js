@@ -5,7 +5,10 @@ import DynamicContent from "Component/DynamicContent";
 import LoginBlockContainer from "Component/LoginBlock";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import MyAccountOverlay from "Component/MyAccountOverlay";
-
+import Event, {
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+} from "Util/Event";
 import "./HomePage.style";
 
 class HomePage extends PureComponent {
@@ -38,6 +41,13 @@ class HomePage extends PureComponent {
     if (!showPopup) {
       return null;
     }
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: "Wishlist",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}
@@ -74,9 +84,8 @@ class HomePage extends PureComponent {
   }
 
   renderDynamicContent() {
-    const { dynamicContent, gender, setLastTapItem } =
-      this.props;
-      
+    const { dynamicContent, gender, setLastTapItem } = this.props;
+
     return (
       <DynamicContent
         gender={gender}

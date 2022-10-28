@@ -40,7 +40,7 @@ export class CheckoutFail extends CheckoutSuccess {
       productQty = [],
       productCategory = [],
       productItemPrice = [];
-      items?.forEach((item) => {
+    items?.forEach((item) => {
       let productKeys = item?.full_item_info;
       productName.push(productKeys?.name);
       productColor.push(productKeys?.color);
@@ -83,6 +83,9 @@ export class CheckoutFail extends CheckoutSuccess {
       subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
     });
+    if (localStorage.hasOwnProperty("TT_Guest_Data")) {
+      localStorage.removeItem("TT_Guest_Data");
+    }
   }
 
   renderStatus() {
