@@ -70,6 +70,7 @@ export class CheckoutSuccess extends PureComponent {
     successHidden: false,
     wasLoaded: false,
     eventSent: false,
+    popupEvent: false,
   };
 
   componentDidMount() {
@@ -260,7 +261,7 @@ export class CheckoutSuccess extends PureComponent {
   };
 
   renderMyAccountPopup() {
-    const { showPopup } = this.state;
+    const { showPopup, popupEvent } = this.state;
     const {
       billingAddress: { guest_email: email },
     } = this.props;
@@ -268,7 +269,7 @@ export class CheckoutSuccess extends PureComponent {
     if (!showPopup) {
       return null;
     }
-    if (showPopup) {
+    if (showPopup && !popupEvent) {
       const eventDetails = {
         name: EVENT_SIGN_IN_CTA_CLICK,
         action: EVENT_SIGN_IN_CTA_CLICK,
@@ -282,6 +283,7 @@ export class CheckoutSuccess extends PureComponent {
         popupSource: "Sign In CTA",
       };
       Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+      this.setState({ popupEvent: true });
     }
     return (
       <MyAccountOverlay
@@ -301,7 +303,7 @@ export class CheckoutSuccess extends PureComponent {
   };
 
   closePopup = () => {
-    this.setState({ showPopup: false });
+    this.setState({ showPopup: false, popupEvent: false });
   };
 
   renderItem = (item) => {
