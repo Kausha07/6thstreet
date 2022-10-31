@@ -20,6 +20,7 @@ import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import browserHistory from "Util/History";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
+import Event, { EVENT_PAGE_LOAD } from "Util/Event";
 
 import {
   deleteAuthorizationToken,
@@ -147,6 +148,7 @@ export class HomePageContainer extends PureComponent {
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
     this.setSchemaJSON();
+    Event.dispatch(EVENT_PAGE_LOAD);
   }
 
   requestCustomerData() {

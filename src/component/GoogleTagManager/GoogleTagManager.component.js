@@ -33,6 +33,7 @@ import {
   EVENT_GTM_TOP_NAV_CLICK,
   EVENT_GTM_CUSTOMER_SUPPORT,
   EVENT_GTM_CHECKOUT_BILLING,
+  EVENT_PAGE_LOAD,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -78,6 +79,7 @@ import AutheneticationEvent from "./events/Authentication.event";
 import TopNavigationEvent from "./events/TopNavigation.event";
 import CustomerSupportEvent from "./events/CustomerSupport.event";
 import CheckoutBillingEvent from "./events/CheckoutBilling.event";
+import PageLoadEvent from "./events/PageLoad.event";
 import Scripts from "./Scripts";
 
 /**
@@ -185,6 +187,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
+    [EVENT_PAGE_LOAD]: PageLoadEvent,
   };
 
   /**
