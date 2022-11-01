@@ -10,6 +10,7 @@ import { isArabic } from "Util/App";
 import { PureComponent, createRef } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
+import { PLPContainer } from "./PLP.container";
 import "./PLP.style";
 import "../../component/CartCouponDetail/CartCouponDetail.style";
 import { connect } from "react-redux";
@@ -179,6 +180,65 @@ export class PLP extends PureComponent {
     showOverlay("PLPFilter");
   };
 
+  getActiveFilter = () => {
+    const newActiveFilters = Object.entries(this.props.filters).reduce(
+      (acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
+
+          if (selected_filters_count !== 0) {
+            if (filter[0] === "sizes") {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  this.props
+                );
+
+                acc = { ...acc, [size[0]]: mappedSizeData };
+
+                return acc;
+              }, []);
+
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+              };
+            }
+          }
+
+          return acc;
+        }
+      },
+      {}
+    );
+    return newActiveFilters;
+  };
+
+  getFilterCount() {
+    // const { activeFilters = {} } = this.props;
+    let activeFilters = this.getActiveFilter();
+    let { count } = activeFilters
+      ? Object.entries(activeFilters).reduce(
+        (prev, [_key, value]) => ({
+          count: prev.count + value.length,
+        }),
+        { count: 0 }
+      )
+      : { count: 0 };
+    Object.keys(activeFilters).length > 0 &&
+      Object.keys(activeFilters).map((key) => {
+        if (key === "categories.level1") {
+          count = count - 1;
+        }
+      });
+    const displayCount = count;
+    return displayCount;
+  }
+
   renderSortFilterOverlay = () => {
     const { isArabic } = this.state
     return (
@@ -190,7 +250,7 @@ export class PLP extends PureComponent {
         <div block="SortOverlay" elem="CenterLine">
           <img src={Line} alt="line" />
         </div>
-        <div block="HighlightOval"></div>
+        {this.getFilterCount() > 0 && <div block="HighlightOval"></div>}
         <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
           <span block="title">{__("Refine")}</span>
