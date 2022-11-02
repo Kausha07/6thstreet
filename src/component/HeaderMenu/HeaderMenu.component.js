@@ -33,7 +33,6 @@ class HeaderMenu extends PureComponent {
       gender,
       activeOverlay,
     } = props;
-    console.log("muskan 1",gender);
     return {
       expanded:
         pathname.includes(`/${gender}.html`) &&

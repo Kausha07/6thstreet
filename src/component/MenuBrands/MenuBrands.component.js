@@ -45,7 +45,6 @@ class MenuBrands extends PureComponent {
   };
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
-    console.log("muskan 3");
 
     const updatedLink = link.match(
       /\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/
