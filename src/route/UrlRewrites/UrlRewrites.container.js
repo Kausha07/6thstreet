@@ -67,6 +67,7 @@ export class UrlRewritesContainer extends PureComponent {
       query: prevQuery,
       sku: prevSku,
     } = prevState;
+
     this.onPageReload();
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
@@ -78,10 +79,8 @@ export class UrlRewritesContainer extends PureComponent {
           history.push(`${pathname}${query}`);
         }
       } else if (window.pageType === "CMS_PAGE") {
-
         history.push(`${pathname}`);
       } else {
-
         history.push(`${pathname}?${query}`);
       }
     }
@@ -271,6 +270,7 @@ export class UrlRewritesContainer extends PureComponent {
         return acc;
       }, [])
       .join("-");
+
     return result.length ? result : false;
   }
 

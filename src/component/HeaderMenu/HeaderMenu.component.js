@@ -33,6 +33,7 @@ class HeaderMenu extends PureComponent {
       gender,
       activeOverlay,
     } = props;
+
     return {
       expanded:
         pathname.includes(`/${gender}.html`) &&
@@ -55,7 +56,6 @@ class HeaderMenu extends PureComponent {
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
-
     browserHistory.push(
       `/${gender === "home_beauty_women" ? "women" : gender}.html`
     );
