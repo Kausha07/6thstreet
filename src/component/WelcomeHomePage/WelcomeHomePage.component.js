@@ -176,7 +176,7 @@ class WelcomeHomePage extends PureComponent {
             const maxAge = 86400 * 90; // 1 Day * 90
             document.cookie = `locale=${locale}; max-age=${maxAge}; path=/`;
             if(gender === "all"){
-                document.cookie = `gender=/; max-age=${maxAge}; path=/`;
+                document.cookie = `gender=; max-age=${maxAge}; path=/`;
             }else{
                 document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
             }
