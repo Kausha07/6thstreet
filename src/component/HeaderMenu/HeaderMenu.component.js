@@ -55,7 +55,6 @@ class HeaderMenu extends PureComponent {
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
-    console.log("muskan 2",gender);
 
     browserHistory.push(
       `/${gender === "home_beauty_women" ? "women" : gender}.html`

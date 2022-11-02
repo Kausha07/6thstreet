@@ -52,7 +52,6 @@ export class UrlRewritesContainer extends PureComponent {
 
   componentDidMount() {
     const possibleSku = this.getPossibleSku();
-    console.log("muskan log1",possibleSku);
     this.setState({
       sku: possibleSku,
     });
@@ -68,13 +67,10 @@ export class UrlRewritesContainer extends PureComponent {
       query: prevQuery,
       sku: prevSku,
     } = prevState;
-    console.log("muskan",sku,prevSku,query,prevQuery,window.pageType);
     this.onPageReload();
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
-      console.log("muskan update")
       if (location.search) {
-        console.log("muskan 11");
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
@@ -82,11 +78,9 @@ export class UrlRewritesContainer extends PureComponent {
           history.push(`${pathname}${query}`);
         }
       } else if (window.pageType === "CMS_PAGE") {
-        console.log("muskan 12");
 
         history.push(`${pathname}`);
       } else {
-        console.log("muskan 13");
 
         history.push(`${pathname}?${query}`);
       }
@@ -262,7 +256,6 @@ export class UrlRewritesContainer extends PureComponent {
 
   getPossibleSku() {
     const { pathname } = location;
-    console.log("muskan 5");
 
     const uriElements = pathname
       .substr(0, pathname.indexOf(".html"))
@@ -278,7 +271,6 @@ export class UrlRewritesContainer extends PureComponent {
         return acc;
       }, [])
       .join("-");
-      console.log("muskan sku",uriElements, result);
     return result.length ? result : false;
   }
 
