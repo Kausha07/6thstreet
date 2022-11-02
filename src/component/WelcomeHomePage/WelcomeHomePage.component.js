@@ -180,7 +180,6 @@ class WelcomeHomePage extends PureComponent {
             }else{
                 document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
             }
-            // document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
         }
     }
     onGenderSelect = (event, val) => {
