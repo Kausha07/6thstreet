@@ -29,7 +29,11 @@ export const setLanguageForWelcome = (language) => ({
 
 export const setGender = (gender) => {
     const maxAge = 86400 * 90; // 1 Day * 90
-    document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
+    if(gender === "all"){
+        document.cookie = `gender=/; max-age=${maxAge}; path=/`;
+    }else{
+        document.cookie = `gender=${gender}.html; max-age=${maxAge}; path=/`;
+    }
     return ({
         type: SET_GENDER,
         gender
