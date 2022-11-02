@@ -6,6 +6,7 @@ import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { getLocaleFromUrl } from "Util/Url/Url";
 
 import "./HeaderBottomBar.style";
 
@@ -35,6 +36,10 @@ class HeaderBottomBar extends NavigationAbstract {
 
   renderMenu() {
     const { newMenuGender } = this.props;
+    const customLocale = getLocaleFromUrl();
+    if(!customLocale){
+      return null;
+    }
     if (isMobile.any()) {
       return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
     } 
