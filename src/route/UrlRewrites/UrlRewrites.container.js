@@ -255,6 +255,7 @@ export class UrlRewritesContainer extends PureComponent {
 
   getPossibleSku() {
     const { pathname } = location;
+    console.log("muskan 5");
 
     const uriElements = pathname
       .substr(0, pathname.indexOf(".html"))

@@ -49,6 +49,7 @@ class MenuGrid extends PureComponent {
     if (!link) {
       return null;
     }
+    console.log("muskan 4");
 
     const updatedLink = link.match(
       /\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/
