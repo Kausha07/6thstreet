@@ -120,6 +120,9 @@ export class LanguageSwitcherContainer extends PureComponent {
     } else {
       this.props.setLanguageForWelcome(value);
     }
+    this.timer = setTimeout(() => {
+      this.setState({ isLoad: false });
+    }, 1000);
   }
 
   containerProps = () => {

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import React, { lazy } from "react";
 import { Route } from "react-router-dom";
 import Breadcrumbs from "Component/Breadcrumbs";
-import ChatPopup from "Component/ChatPopup";
 import CookiePopup from "Component/CookiePopup";
 import DemoNotice from "Component/DemoNotice";
 import Footer from "Component/Footer";
@@ -253,7 +252,7 @@ export class Router extends SourceRouter {
       ),
       position: 90,
     },
-    
+
     {
       component: (
         <SentryRoute
@@ -324,7 +323,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("about")}
           render={(props) => (
             <GTMRouteWrapper route={ABOUT}>
-              <About {...props} /> 
+              <About {...props} />
             </GTMRouteWrapper>
           )}
         />
@@ -399,7 +398,6 @@ export class Router extends SourceRouter {
         {this.renderItemsOfType(BEFORE_ITEMS_TYPE)}
         <div block="PageWrapper" elem="Content">
           {this.renderMainItems()}
-          <ChatPopup />
         </div>
         {this.renderItemsOfType(AFTER_ITEMS_TYPE)}
       </div>

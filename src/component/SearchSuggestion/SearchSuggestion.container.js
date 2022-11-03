@@ -100,8 +100,6 @@ export class SearchSuggestionContainer extends PureComponent {
     this.requestTrendingInformation();
     // this.requestTopSearches();
     this.requestRecentSearches();
-    this.getExploreMoreData();
-    this.getTrendingBrands();
   }
 
   async getPdpSearchWidgetData() {
@@ -173,6 +171,7 @@ export class SearchSuggestionContainer extends PureComponent {
       this.getPdpSearchWidgetData();
     }
     // this.getTrendingProducts();
+    this.requestJsonInfo();
     document.body.classList.add("isSuggestionOpen");
     const { location } = browserHistory;
     const { closeSearch } = this.props;
@@ -195,15 +194,30 @@ export class SearchSuggestionContainer extends PureComponent {
     document.body.classList.remove("isSuggestionOpen");
   }
 
-  getExploreMoreData = async () => {
-    // let device = isMobile.any() ? 'm' : 'd'
+  requestJsonInfo = async () =>{
     const { gender } = this.props;
     const locale = getLocaleFromUrl();
     let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
+    if(process.env.REACT_APP_FOR_JSON === "production") {
+      url = `resources/20190121/${locale}/search/search_${gender}.json`;
+    }
+    
     try {
       const resp = await CDN.get(url);
 
       if (resp) {
+        this.getExploreMoreData(resp);
+        this.getTrendingBrands(resp);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  getExploreMoreData = async (resp) => {
+
+      if (resp && resp.widgets) {
         let k = resp.widgets;
         let itemYouWant = null;
         k.forEach((item) => {
@@ -218,23 +232,12 @@ export class SearchSuggestionContainer extends PureComponent {
           exploreMoreData: itemYouWant,
         });
       }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
-  getTrendingBrands = async () => {
-    const { gender } = this.props;
+  getTrendingBrands = async (resp) => {
     const { isArabic } = this.state;
-    const locale = getLocaleFromUrl();
-    let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
-    if(process.env.REACT_APP_FOR_JSON === "production") {
-      url = `resources/20190121/${locale}/search/search_${gender}.json`;
-    }
-    try {
-      const resp = await CDN.get(url);
 
-      if (resp) {
+      if (resp && resp.widgets) {
         let k = resp.widgets;
         let filterString = isArabic ? TRENDING_BRANDS_AR : TRENDING_BRANDS_ENG;
         let trendingBrandsList = k.find((item) => item?.layout?.title === filterString)?.items || [];
@@ -242,9 +245,7 @@ export class SearchSuggestionContainer extends PureComponent {
           trendingBrands: trendingBrandsList,
         });
       }
-    } catch (error) {
-      console.error(error);
-    }
+    
   };
 
   async requestTrendingInformation() {
