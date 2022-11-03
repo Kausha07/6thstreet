@@ -100,7 +100,7 @@ class FooterMain extends PureComponent {
         },
         {
           name: __("Order Tracking"),
-          href: "https://track.fetchr.us/",
+          href: "https://6thstreet.clickpost.in/",
         },
         {
           name: __("FAQs"),
