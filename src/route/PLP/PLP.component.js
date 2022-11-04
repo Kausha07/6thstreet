@@ -51,9 +51,11 @@ export class PLP extends PureComponent {
         circleBannerUrl: bannerUrl,
       });
     }
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
   componentWillUnmount() {
     const { resetPLPData } = this.props;
+    window.removeEventListener("mousedown", this.outsideCouponPopupClick);
     // resetPLPData();
   }
 
@@ -180,6 +182,20 @@ export class PLP extends PureComponent {
     showOverlay("PLPFilter");
   };
 
+  outsideCouponPopupClick = (e) => {
+    if (
+      this.state.isSortByOverlayOpen &&
+      this.sortByOverlay.current &&
+      !this.sortByOverlay.current.contains(e.target)
+    ) {
+      this.setState({
+        isSortByOverlayOpen: false,
+      });
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  };
+
   getActiveFilter = () => {
     const newActiveFilters = Object.entries(this.props.filters).reduce(
       (acc, filter) => {
@@ -240,7 +256,8 @@ export class PLP extends PureComponent {
   }
 
   renderSortFilterOverlay = () => {
-    const { isArabic } = this.state
+    const { isArabic } = this.state;
+    const filterCount = this.getFilterCount() 
     return (
       <div block="SortOverlay" mods={{isArabic}}>
         <div block="CommonBlock" onClick={(e) => this.showCouponDetial(e)}>
@@ -250,10 +267,9 @@ export class PLP extends PureComponent {
         <div block="SortOverlay" elem="CenterLine">
           <img src={Line} alt="line" />
         </div>
-        {this.getFilterCount() > 0 && <div block="HighlightOval"></div>}
         <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
-          <span block="title">{__("Refine")}</span>
+          <span block="title">{__("Filter")}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
         </div>
       </div>
     );
@@ -268,14 +284,6 @@ export class PLP extends PureComponent {
           <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
             <p block="couponItemCode">
               {__("SORT BY")}
-              <button
-                onClick={(e) => {
-                  this.hideSortByOverlay(e);
-                }}
-                block="closePopupbtn"
-              >
-                <span>Close</span>
-              </button>
             </p>
             {filters && Object.values(filters['sort'].data).map((filter,index)=>{
               const {facet_value, facet_key, label, is_selected} = filter
