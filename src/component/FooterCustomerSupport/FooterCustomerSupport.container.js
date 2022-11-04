@@ -51,10 +51,6 @@ export class FooterCustomerSupportContainer extends PureComponent {
         } = this.props;
 
         const {
-            contact_information: {
-                email: isEmailSupported,
-                phone: isPhoneSupported
-            },
             contact_using: {
                 text: {
                     [language]: contactLabel
@@ -66,6 +62,18 @@ export class FooterCustomerSupportContainer extends PureComponent {
             },
             toll_free: phone
         } = countries[country];
+
+        let isEmailSupported;
+        let isPhoneSupported;
+
+        if (
+            countries[country] &&
+            countries[country].contact_information &&
+            countries[country].contact_information.email &&
+            countries[country].contact_information.phone) {
+            isEmailSupported = countries[country].contact_information.email;
+            isPhoneSupported = countries[country].contact_information.phone;
+        }
 
         return {
             isEmailSupported,
@@ -80,8 +88,8 @@ export class FooterCustomerSupportContainer extends PureComponent {
     render() {
         return (
             <FooterCustomerSupport
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
+                {...this.containerFunctions}
+                {...this.containerProps()}
             />
         );
     }
