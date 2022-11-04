@@ -11,8 +11,13 @@ import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider
 import "./DynamicContentVueProductSlider.style.scss";
 import { connect } from "react-redux";
 import Link from "Component/Link";
+import { setPrevPath } from "Store/PLP/PLP.action";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath))
 });
 
 class DynamicContentVueProductSlider extends PureComponent {
@@ -190,7 +195,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   viewAllBtn() {
-    const { withViewAll= true, widgetID ="", products=[],product={} } = this.props;
+    const { withViewAll= true, widgetID ="", products=[],product={}, setPrevPath } = this.props;
     let defaultPathName = `viewall/?q=${widgetID?.replace('vue_','')}`; 
     const linkTo = {
       pathname: product?.sku ? defaultPathName.concat(`&product_id=${product.sku}`) : defaultPathName,
@@ -204,7 +209,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         <div block="VueProductSlider" elem="ViewAllBtn" mods={{
           isArabic: isArabic(),
         }}>
-          <Link to={linkTo}>
+          <Link to={linkTo} onClick={() => setPrevPath(window.location.href)}>
             <span>{__("View All")}</span>
           </Link>
         </div>
@@ -357,4 +362,4 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, null)(DynamicContentVueProductSlider);
+export default connect(mapStateToProps, mapDispatchToProps)(DynamicContentVueProductSlider);
