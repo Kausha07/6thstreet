@@ -50,7 +50,7 @@ export class InlineCustomerSupportContainer extends PureComponent {
       contactLabel,
       isContactEmail,
       openHoursLabel,
-      phone: phone && phone.includes("00") && phone.indexOf("00") === 0 ? phone.replace("00", "+") : phone,
+      phone: phone ? ((phone.includes("00") && phone.indexOf("00") === 0) ? phone.replace("00", "+") : phone) : "",
     };
   };
 
