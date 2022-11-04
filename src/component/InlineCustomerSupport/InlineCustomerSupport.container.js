@@ -69,9 +69,10 @@ export class InlineCustomerSupportContainer extends PureComponent {
 
     if (countries[country]) {
       if (countries[country].contact_information) {
-        if (countries[country].contact_information.email &&
-          countries[country].contact_information.phone) {
+        if (countries[country].contact_information.email) {
           isEmailSupported = countries[country].contact_information.email;
+        }
+        if (countries[country].contact_information.phone) {
           isPhoneSupported = countries[country].contact_information.phone;
         }
       }
