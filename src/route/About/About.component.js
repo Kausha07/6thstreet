@@ -35,11 +35,15 @@ export class About extends PureComponent {
               <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}> {__("Who we are")} </h3>
               <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
 
-                { __("We are an elevated fashion and lifestyle e-store committed to styling GEN NOW to WOW. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices.") } <br /> <br />
+                { __("We are an elevated fashion and lifestyle destination committed to styling GCC’s GEN NOW to WOW. We deliver on-trend shoes, bags, outfits, beauty essentials and accessories right at your doorstep in the UAE, KSA, Kuwait, Oman, Qatar & Bahrain. We believe in looking like a million bucks, not spending it – which is why we bring to you over 1200+ global brands at the most accessible prices.") } <br /> <br />
 
-                  {__("Wide range of international brands such as:")} <u><Link to={`/calvin-klein.html`} >{__("Calvin Klein")}</Link></u>, <u><Link to={`/beverly-hills-polo-club.html`} >{__("BHPC")}</Link></u>, <u><Link to={`/adidas.html`} >{__("Adidas")}</Link></u>, <u><Link to={`/nike.html`} >{__("Nike")}</Link></u>, <u><Link to={`/skechers.html`} >{__("Skechers")}</Link></u>, <u><Link to={`/puma.html`} >{__("Puma")}</Link></u> {__("And many others. Either in")} {__("If you are looking for a luxurious look for an important occasion you have, a sporty look for the gym or for casual daily outings, you can choose from")}<br /><br />
+                { __("Off to the gym? Performance sportswear from ") } <u><Link to={`/nike.html`} >{__("Nike")}</Link></u>, <u><Link to={`/adidas.html`} >{__("Adidas")}</Link></u>, <u><Link to={`/skechers.html`} >{__("Skechers")}</Link></u> { __("and On will power up your routine.") }<br /><br />
 
-                  {__("Shopping from the most famous brands such as:")} <u><Link to={`/charles-keith.html`} >{__("Charles & Keith")}</Link></u>, <u><Link to={`/dune-london.html`} >{__("Dune London")}</Link></u>, <u><Link to={`/aldo.html`} >{__("Aldo")}</Link></u>, <u><Link to={`/maybelline.html`} >{__("Maybelline")}</Link></u>, <u><Link to={`/bourjois.html`} >{__("Bourjois")}</Link></u>, <u><Link to={`/versace.html`} >{__("Versace")}</Link></u> {__("And others on 6th Street")} {__("With regard to completing the finishing touches to your looks, whether you choose a bag, shoes, accessories or even beauty products and perfumes, you can")}<br /><br />
+
+                {__("Date night tonight? Get elegant outfits from")} <u><Link to={`/tommy-hilfiger.html`} >{__("Tommy Hilfiger")}</Link></u>, <u><Link to={`/calvin-klein.html`} >{__("Calvin Klein")}</Link></u> {__("Complete your look with shoes & accessories from")} <u><Link to={`/trendyol.html`} >{__("Trendyol")}</Link></u>.<br /><br />
+
+                {__("At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start.")}<br /><br />
+                {__("We’re also home to GCC’s first phygital store.")}<br /><br />
 
                   {/* At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />  */}
               </p>
@@ -51,13 +55,15 @@ export class About extends PureComponent {
                 <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}>Who we are</h3>
                 <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
 
-                  We are an elevated fashion and lifestyle e-store committed to styling  <b>GEN NOW</b> to <b>WOW</b>. We deliver on-trend shoes, bags, outfits and accessories right at your doorstep. We believe in looking like a million bucks, not spending it – which is why we bring to you the best of global brands at the most accessible prices. <br /> <br />
+                We are an elevated fashion and lifestyle destination committed to styling GCC’s GEN NOW to WOW. We deliver on-trend shoes, bags, outfits, beauty essentials and accessories right at your doorstep in the UAE, KSA, Kuwait, Oman, Qatar & Bahrain. We believe in looking like a million bucks, not spending it – which is why we bring to you over 1200+ global brands at the most accessible prices. <br /> <br />
 
-                    <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> will power up your routine.<br /><br />
+                    <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
 
-                    <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers.<br /><br />
+                    <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers<br /><br />
 
-                    At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br /> </p>
+                    At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />
+                    
+                    We’re also home to GCC’s first phygital store. </p>
             </>
         )
     }
