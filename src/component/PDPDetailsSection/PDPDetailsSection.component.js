@@ -1043,38 +1043,57 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShippingInfo() {
-    let country = getCountryFromUrl();
-      let txt = {
+    let country_name = getCountryFromUrl();
+    const { isArabic } = this.state;
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+
+    const {
+      free_return_amount,
+    } = countries[country];
+
+      let txt_common = __("*Free delivery for orders above");
+
+      let txt_diff = {
         AE: __(
-          "*Free delivery for orders above AED 200."
+          "AED"
         ),
         SA: __(
-          "*Free delivery for orders above SAR 200."
+          "SAR"
         ),
         KW: __(
-          "*Free delivery for orders above KWD 20."
+          "KWD"
         ),
         QA: __(
-          "*Free delivery for orders above QAR 200."
+          "QAR"
         ),
         OM: __(
-          "*Free delivery for orders above OMR 20."
+          "OMR"
         ),
         BH: __(
-          "*Free delivery for orders above BHD 20."
+          "BHD"
         ),
       };
   
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold"
-            >
-              {txt[country]}
-            </b>
+        {
+            isArabic ? (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${free_return_amount} ${txt_diff[country_name]}`}
+              </b>
+            ) : (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${txt_diff[country_name]} ${free_return_amount}`}
+              </b>
+            )
+          }
           <br />
         </p>
-        <div block="FindOutMore">
+        <div block="FindOutMore" mods={{ isArabic }}>
           <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>
             <span block="FindOutMore" elem="ButtonText">
               {__("Find Out More")}
