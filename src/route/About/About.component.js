@@ -32,18 +32,17 @@ export class About extends PureComponent {
       if(isArabic){
         return (
           <>
-              <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}> {__("Who we are")} </h3>
+              <h3 block="aboutuswrapper" elem="descriptionheading" mods={{ isArabic }}>من نحن؟</h3>
               <p block="aboutuswrapper" elem="descriptiondetails" mods={{ isArabic }}>
 
-                { __("We are an elevated fashion and lifestyle destination committed to styling GCC’s GEN NOW to WOW. We deliver on-trend shoes, bags, outfits, beauty essentials and accessories right at your doorstep in the UAE, KSA, Kuwait, Oman, Qatar & Bahrain. We believe in looking like a million bucks, not spending it – which is why we bring to you over 1200+ global brands at the most accessible prices.") } <br /> <br />
+               نحن موقع تسوق إلكتروني رائد في منطقة الخليج، حيث نُقدم أرقى تصاميم الملابس، الأحذية والإكسسوارات العصرية للنساء، الرجال والأطفال. يوفر موقع 6 ستريت تشكيلة متنوعة تُرضي جميع الأذواق، فهو يحتوي عل أكثر من 1200 ماركة عالمية بأسعار في متناول الجميع. يمكن التسوق من خلال موقع 6 ستريت في الإمارات العربية المتحدة والمملكة العربية السعودية ودولة الكويت وسلطنة عمان ودولة قطر ومملكة البحرين. <br /> <br />
 
-                { __("Off to the gym? Performance sportswear from ") } <u><Link to={`/nike.html`} >{__("Nike")}</Link></u>, <u><Link to={`/adidas.html`} >{__("Adidas")}</Link></u>, <u><Link to={`/skechers.html`} >{__("Skechers")}</Link></u> { __("and On will power up your routine.") }<br /><br />
+               حفزّ نفسك على التمرين مع أروع الماركات الرياضية مثل <u><Link to={`/nike.html`} >نايك</Link></u>, <u><Link to={`/adidas.html`} >أديداس</Link></u>, <u><Link to={`/skechers.html`} >سكتشرز</Link></u> واون.<br /><br/>
 
+               أما إذا كنت تبحث عن إطلالات أنيقة لمناسباتك المختلفة، اكتشف تشكيلة من التصاميم الخالدة التي لا تزول موضتها من <u><Link to={`/tommy-hilfiger.html`} >تومي هيلفيغر</Link></u> و<u><Link to={`/calvin-klein.html`} >كالفن كلاين</Link></u> ولإطلالة عملية عصرية اختر ما يناسبك من <u><Link to={`/tommy-hilfiger.html`} >ترينديول</Link></u>.<br/><br/>
 
-                {__("Date night tonight? Get elegant outfits from")} <u><Link to={`/tommy-hilfiger.html`} >{__("Tommy Hilfiger")}</Link></u>, <u><Link to={`/calvin-klein.html`} >{__("Calvin Klein")}</Link></u> {__("Complete your look with shoes & accessories from")} <u><Link to={`/trendyol.html`} >{__("Trendyol")}</Link></u>.<br /><br />
-
-                {__("At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start.")}<br /><br />
-                {__("We’re also home to GCC’s first phygital store.")}<br /><br />
+               يحرص فريق 6 ستريت على تقديم كل ما هو جديد ومميّز في عالم الموضة والجمال من خلال تجربة تسوق استثنائية، <br /> <br />
+               ولذلك تم افتتاح متجر 6 ستريت "الفيجيتال" وهو الأول من نوعه في دول الخليج العربي.<br /> <br />
 
                   {/* At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />  */}
               </p>
@@ -57,13 +56,13 @@ export class About extends PureComponent {
 
                 We are an elevated fashion and lifestyle destination committed to styling GCC’s GEN NOW to WOW. We deliver on-trend shoes, bags, outfits, beauty essentials and accessories right at your doorstep in the UAE, KSA, Kuwait, Oman, Qatar & Bahrain. We believe in looking like a million bucks, not spending it – which is why we bring to you over 1200+ global brands at the most accessible prices. <br /> <br />
 
-                    <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
+                <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
 
-                    <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers<br /><br />
+                <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers<br /><br />
 
-                    At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />
-                    
-                    We’re also home to GCC’s first phygital store. </p>
+                At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />
+
+                We’re also home to GCC’s first phygital store. </p>
             </>
         )
     }
