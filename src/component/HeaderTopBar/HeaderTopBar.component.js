@@ -82,15 +82,17 @@ class HeaderTopBar extends NavigationAbstract {
   };
 
   renderShippingInfo() {
+    if(this.props.country && this.props.config && this.props.config.countries) {
     let country_name = getCountryFromUrl();
     const { isArabic } = this.state;
     const {
       config: { countries },
       country,
     } = this.props;
-    const {
-      free_return_amount = 200,
-    } = countries[country];
+    let free_return_amount = 200;
+    if( countries[country] && countries[country].free_return_amount){
+      free_return_amount = countries[country].free_return_amount;
+    }
     let txt_common = __("FREE SHIPPING OVER");
     let txt_diff = {
         AE: __(
@@ -124,6 +126,7 @@ class HeaderTopBar extends NavigationAbstract {
           }
       </>
     )
+    }
   }
 
   renderCmsBlock() {
