@@ -604,7 +604,6 @@ export class PDPContainer extends PureComponent {
 
   render() {
     const { product={}, isLoading, nbHits } = this.props;
-    console.log("PDPInfo",isLoading,nbHits,product);
     const prodPrice =
       product?.price && product?.price[0]
         ? product?.price[0][Object.keys(product?.price[0])[0]][
