@@ -69,11 +69,15 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     let paymentMethod = CARD;
 
     let isKnetAvailable = false;
+    let isQpayAvailable = false;
     if(paymentMethods){
       paymentMethods.map(( paymeth) => {
         const {code} = paymeth;
         if(code === "checkout_knet"){
           isKnetAvailable = true;
+        }
+        if(code === "checkout_qpay"){
+          isQpayAvailable = true;
         }
       })
     }
@@ -83,7 +87,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         paymentMethod = CHECKOUT_APPLE_PAY;
       }else if (KnetEnabledCountryCode && isKnetAvailable) {
         paymentMethod = KNET_PAY;
-      }else if (QpayEnabledCountryCode) {
+      }else if (QpayEnabledCountryCode && isQpayAvailable) {
         paymentMethod = CHECKOUT_QPAY;
       }else {
         paymentMethod = CARD;

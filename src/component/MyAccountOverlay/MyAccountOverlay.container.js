@@ -161,6 +161,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     this.state = this.redirectOrGetState(props);
   }
 
+  timer = null;
+
   static getDerivedStateFromProps(props, state) {
     const { isSignedIn, isPasswordForgotSend, showNotification, isPopup } =
       props;
@@ -294,6 +296,10 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
   };
 
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { isSignedIn: prevIsSignedIn } = prevProps;
     const { state: oldMyAccountState } = prevState;
@@ -366,6 +372,25 @@ export class MyAccountOverlayContainer extends PureComponent {
     return state;
   };
 
+  addMOEDetails() {
+    this.timer = setTimeout(() => {
+      if (BrowserDatabase.getItem("customer")) {
+        const customerDetail = BrowserDatabase.getItem("customer");
+        if (customerDetail.email && customerDetail.email.length) {
+          Moengage.add_email(customerDetail.email);
+        }
+        if (customerDetail.firstname && customerDetail.firstname.length) {
+          Moengage.add_first_name(customerDetail.firstname);
+        }
+        if (customerDetail.lastname && customerDetail.lastname.length) {
+          Moengage.add_last_name(customerDetail.lastname);
+        }
+        if (customerDetail.phone && customerDetail.phone.length) {
+          Moengage.add_mobile(customerDetail.phone);
+        }
+      }
+    }, 5000);
+  }
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
     const { otpAttempt } = this.state;
@@ -378,8 +403,8 @@ export class MyAccountOverlayContainer extends PureComponent {
       this.checkForOrder();
       this.sendMOEEvents(EVENT_LOGIN);
       this.sendGTMEvents(EVENT_LOGIN, "Email");
+      this.addMOEDetails();
     } catch (e) {
-      this.setState({ isLoading: false });
       this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       showNotification("error", e.message);
       this.sendMOEEvents(EVENT_LOGIN_FAILED);
@@ -415,6 +440,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     const { email } = fields;
     const phoneNumber = `${countryCode}${email}`;
     const { showError } = this.props;
+    const { otpAttempt } = this.state;
     try {
       const { success, error } = await sendOTP({
         phone: phoneNumber,
@@ -426,11 +452,16 @@ export class MyAccountOverlayContainer extends PureComponent {
           state: STATE_VERIFY_NUMBER,
         });
       } else {
+        this.setState({ otpAttempt: otpAttempt + 1 });
+        if (STATE_SIGN_IN) {
+          this.sendGTMEvents(EVENT_LOGIN_FAILED, error);
+          this.sendMOEEvents(EVENT_LOGIN_FAILED);
+        }
         showError(error);
       }
       this.setState({ isLoading: false });
     } catch (error) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       console.error("error while sending OTP", error);
     }
   }
@@ -487,6 +518,7 @@ export class MyAccountOverlayContainer extends PureComponent {
               Moengage.add_unique_user_id(data?.user?.email);
             }
             this.checkForOrder();
+            this.addMOEDetails();
           } catch (e) {
             this.setState({ isLoading: false });
             showNotification("error", e.message);
@@ -569,7 +601,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async onCreateAccountSuccess(fields, countryCode) {
     const { showError } = this.props;
-
+    const { otpAttempt } = this.state;
     const { password, email, fullname, gender, phone } = fields;
     const phoneNumber = `${countryCode}${phone}`;
     const customerData = {
@@ -590,11 +622,19 @@ export class MyAccountOverlayContainer extends PureComponent {
           state: STATE_VERIFY_NUMBER,
         });
       } else {
+        this.setState({ otpAttempt: otpAttempt + 1 });
+        this.sendGTMEvents(
+          EVENT_SIGN_UP_FAIL,
+          "Account with same phone number already exist"
+        );
+        this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
         showError(error);
       }
       this.setState({ isLoading: false });
     } catch (error) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
+      this.sendGTMEvents(EVENT_SIGN_UP_FAIL, error);
+      this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
       console.error("error while sending OTP", error);
     }
   }

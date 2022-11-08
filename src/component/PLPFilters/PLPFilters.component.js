@@ -749,6 +749,7 @@ class PLPFilters extends PureComponent {
         <PLPQuickFilter
           key={key}
           filter={filter}
+          brandFilter={true}
           updateFilters={this.updateQuickFilters}
           onClick={this.updateQuickFilters}
           parentCallback={handleCallback}

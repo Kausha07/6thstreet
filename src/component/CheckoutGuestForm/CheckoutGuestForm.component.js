@@ -16,6 +16,11 @@ import { isArabic } from "Util/App";
 import "./CheckoutGuestForm.style";
 import lock from "./icons/lock.png";
 import Image from "Component/Image";
+import Event, {
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_CTA_CLICK,
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class CheckoutGuestForm extends FieldForm {
   static propTypes = {
@@ -98,6 +103,17 @@ export class CheckoutGuestForm extends FieldForm {
 
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
+    const eventDetails = {
+      name: EVENT_SIGN_IN_CTA_CLICK,
+      action: EVENT_SIGN_IN_CTA_CLICK,
+      category: "checkout",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
+    Moengage.track_event(EVENT_SIGN_IN_CTA_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   };
 
   render() {

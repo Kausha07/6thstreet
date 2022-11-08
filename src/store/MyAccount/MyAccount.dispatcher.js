@@ -240,6 +240,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setClubApparel(getClubApparelInitialState()));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
+    Moengage.destroy_session();
 
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
