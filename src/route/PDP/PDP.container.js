@@ -603,7 +603,8 @@ export class PDPContainer extends PureComponent {
   };
 
   render() {
-    const { product={} } = this.props;
+    const { product={}, isLoading, nbHits } = this.props;
+    console.log("PDPInfo",isLoading,nbHits,product);
     const prodPrice =
       product?.price && product?.price[0]
         ? product?.price[0][Object.keys(product?.price[0])[0]][
@@ -613,7 +614,7 @@ export class PDPContainer extends PureComponent {
         ? product?.price[Object.keys(product?.price)[0]]["6s_special_price"]
         : null;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    return Object.keys(product).length ? (
+    return(
       <PDP
         {...this.containerProps()}
         {...this.props}
@@ -623,9 +624,7 @@ export class PDPContainer extends PureComponent {
           prodPrice: prodPrice,
         }}
       />
-    ) : (
-      <div />
-    );
+    )
   }
 }
 
