@@ -523,7 +523,7 @@ export class MyAccountOverlay extends PureComponent {
                 <Oval
                   color="#333"
                   secondaryColor="#333"
-                  height={30}
+                  height={20}
                   width={"100%"}
                   strokeWidth={3}
                   strokeWidthSecondary={3}
