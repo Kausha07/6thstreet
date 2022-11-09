@@ -9,6 +9,4 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-// export { default } from './MyAccountOverlay.container';
-
 export { default } from './MyAccountOverlayCountryBased';

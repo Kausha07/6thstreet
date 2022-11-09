@@ -129,12 +129,6 @@ export class MyAccountOverlay extends PureComponent {
     registerDetailsEntered: false,
   };
 
-  componentDidMount() {
-    // gapi.load("auth2", () => {
-    //   this.authRef.current = gapi.auth2.init();
-    //   this.attachSigninFunction(document.getElementById("g-signin2"));
-    // });
-  }
   componentDidUpdate(prevProps, prevState) {
     if (
       this.state.otpTimer === 0 &&
@@ -178,39 +172,6 @@ export class MyAccountOverlay extends PureComponent {
       clearInterval(this.timer);
     }
   }
-  // attachSigninFunction = (element) => {
-  //   this.authRef.current.attachClickHandler(
-  //     element,
-  //     {},
-  //     async (googleUser) => {
-  //       const { onSignInSuccess, onSignInAttempt } = this.props;
-  //       const profile = googleUser?.getBasicProfile();
-  //       const social_token = googleUser?.getAuthResponse()?.id_token;
-  //       const fullName = profile?.getName()?.split(" ");
-  //       const email = profile?.getEmail();
-  //       const payload = {
-  //         social_token,
-  //         firstname: fullName[0],
-  //         lastname: fullName[1],
-  //         email,
-  //         customer_telephone: null,
-  //         type: "google",
-  //         cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-  //       };
-  //       try {
-  //         onSignInAttempt();
-  //         onSignInSuccess(payload);
-  //       } catch (e) {
-  //         console.log("error", e);
-  //         deleteAuthorizationToken();
-  //         deleteMobileAuthorizationToken();
-  //       }
-  //     },
-  //     function (error) {
-  //       console.log(JSON.stringify(error, undefined, 2));
-  //     }
-  //   );
-  // };
 
   renderMap = {
     [STATE_INITIAL_LINKS]: {
@@ -261,20 +222,6 @@ export class MyAccountOverlay extends PureComponent {
       setRegisterFieldFalse();
     }
 
-    // if (state === STATE_FORGOT_PASSWORD) {
-    //     return (
-    //         <div
-    //             block="MyAccountOverlay"
-    //             elem="Action"
-    //             mods={ { state } }
-    //         >
-    //             <p block="MyAccountOverlay" elem="Heading">{ title }</p>
-    //             { render() }
-    //             { this.renderCloseBtn() }
-    //         </div>
-    //     );
-    // }
-
     return (
       <div
         block="MyAccountOverlayV1"
@@ -302,11 +249,6 @@ export class MyAccountOverlay extends PureComponent {
           {title}
         </p>
         {render()}
-        {/* {isSignIn
-           ? this.renderSocials("SignIn")
-           : isCreateAccount
-             ? this.renderSocials("Create")
-             : null} */}
         <div block="MyAccountOverlayV1" elem="Buttons">
           {isCreateAccount && (
             <div className="toggle-login-register">
@@ -968,82 +910,6 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
-  // facebook login dialog
-  // facebookLogin = () => {
-  //   const { onSignInSuccess, onSignInAttempt } = this.props;
-  //   window.FB.login(
-  //     function (response) {
-  //       if (response.authResponse) {
-  //         const authToken = response.authResponse.accessToken;
-  //         window.FB.api(
-  //           "/me?fields=first_name,last_name,email",
-  //           function (response) {
-  //             const social_token = authToken;
-  //             const payload = {
-  //               social_token,
-  //               firstname: response.first_name,
-  //               lastname: response.last_name,
-  //               email: response.email,
-  //               customer_telephone: null,
-  //               type: "facebook",
-  //               cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-  //             };
-  //             try {
-  //               onSignInAttempt();
-  //               onSignInSuccess(payload);
-  //             } catch (e) {
-  //               console.log("error", e);
-  //               deleteAuthorizationToken();
-  //               deleteMobileAuthorizationToken();
-  //             }
-  //           }
-  //         );
-  //       } else {
-  //         console.log("User cancelled login or did not fully authorize.");
-  //       }
-  //     },
-  //     {
-  //       scope: "email",
-  //       return_scopes: true,
-  //     }
-  //   );
-  // };
-
-  //Social logins rendering
-  // renderSocials(renderer) {
-  //   // change mods after api integration
-  //   return (
-  //     <div
-  //       block="MyAccountOverlay"
-  //       elem="SSO"
-  //       mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
-  //     >
-  //       <div block="MyAccountOverlay-SSO" elem="title">
-  //         {renderer === "SignIn"
-  //           ? __("OR SIGN IN WITH")
-  //           : __("OR REGISTER IN WITH")}
-  //       </div>
-  //       <div block="MyAccountOverlay-SSO" elem="Buttons">
-  //         <button
-  //           block="MyAccountOverlay-SSO-Buttons"
-  //           elem="Facebook"
-  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
-  //           onClick={this.facebookLogin}
-  //         >
-  //           {__("FACEBOOK")}
-  //         </button>
-  //         <button
-  //           id="g-signin2"
-  //           block="MyAccountOverlay-SSO-Buttons"
-  //           elem="Google"
-  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-  //         >
-  //           {__("GOOGLE")}
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
   renderInitialLinks() {
     const { updateAccountViewState } = this.props;
     const { isArabic } = this.state;
@@ -1237,7 +1103,6 @@ export class MyAccountOverlay extends PureComponent {
                   : failedRegistrationData.phoneWithoutCode
               }
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
-              // autocomplete="email"
               maxLength={this.getUserIdentifierMaxLength()}
               validation={["notEmpty", this.getValidationForUserIdentifier()]}
               onChange={this.setUserIdentifierType.bind(this)}
