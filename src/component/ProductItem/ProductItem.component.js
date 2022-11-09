@@ -426,7 +426,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = link;
+      urlWithQueryID = url ? url : link ? link: link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender

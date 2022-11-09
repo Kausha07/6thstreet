@@ -191,7 +191,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   viewAllBtn() {
     const { withViewAll= true, widgetID ="", products=[],product={} } = this.props;
-    let defaultPathName = `viewall/?q=${widgetID?.replace('vue_','')}`; 
+    let defaultPathName = `/viewall/?q=${widgetID?.replace('vue_','')}`; 
     const linkTo = {
       pathname: product?.sku ? defaultPathName.concat(`&product_id=${product.sku}`) : defaultPathName,
       state: {
