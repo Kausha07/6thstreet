@@ -498,6 +498,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderOOSMessage(){
+    return(
+      <span block="CartItem" elem="NotAvailable">
+      {__("Not available")}
+    </span>
+    )
+  }
+
   renderContent() {
     const {
       isLikeTable,
@@ -529,7 +537,7 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? null : <>{this.renderProductPrice()}</>}
+        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {edd_info &&
           edd_info.is_enable &&

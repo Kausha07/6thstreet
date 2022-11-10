@@ -29,6 +29,11 @@
   margin: 0;
   font-weight: var(--fw-regular);
   min-height: 140px;
+  &-NotAvailable {
+    font-size: 14px;
+    // font-weight: var(--fw-demi);
+    color: var(--Cardinal);
+  }
   .AdditionShippingInformation {
     font-family: "Avenir Next";
     font-size: 12px;
@@ -95,13 +100,6 @@
         left: 14px;
       }
     }
-  }
-
-  &-NotAvailable {
-    font-size: 16px;
-    bottom: -10px;
-    font-weight: var(--fw-demi);
-    color: var(--Cardinal);
   }
 
   &-Link {
