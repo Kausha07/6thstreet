@@ -160,6 +160,11 @@ export class ContactHelp extends PureComponent {
                 <Link to="/return-information">{__("Return Policy")}</Link>
               </button>
             </li>
+            <li block="MyAccountTabListItem">
+              <button block="MyAccountTabListItem" elem="Button" role="link">
+                <Link to="/privacy-policy">{__("Privacy Policy")}</Link>
+              </button>
+            </li>
           </ul>
         ) : (
           ""
