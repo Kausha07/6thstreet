@@ -119,6 +119,10 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
+    if (isMobile.any()) {
+      document.body.style.position = "fixed";
+    }
+
     // gapi.load("auth2", () => {
     //   this.authRef.current = gapi.auth2.init();
     //   this.attachSigninFunction(document.getElementById("g-signin2"));
@@ -160,6 +164,11 @@ export class MyAccountOverlay extends PureComponent {
 
   componentDidUpdate() {
     this.validateAndSendEvent();
+  }
+  componentWillUnmount() {
+    if (isMobile.any()) {
+      document.body.style.position = "static";
+    }
   }
   renderMap = {
     [STATE_INITIAL_LINKS]: {
