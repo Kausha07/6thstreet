@@ -40,9 +40,9 @@ export class About extends PureComponent {
                حفزّ نفسك على التمرين مع أروع الماركات الرياضية مثل <u><Link to={`/nike.html`} >نايك</Link></u>, <u><Link to={`/adidas.html`} >أديداس</Link></u>, <u><Link to={`/skechers.html`} >سكتشرز</Link></u> واون.<br /><br/>
 
                أما إذا كنت تبحث عن إطلالات أنيقة لمناسباتك المختلفة، اكتشف تشكيلة من التصاميم الخالدة التي لا تزول موضتها من <u><Link to={`/tommy-hilfiger.html`} >تومي هيلفيغر</Link></u> و<u><Link to={`/calvin-klein.html`} >كالفن كلاين</Link></u> ولإطلالة عملية عصرية اختر ما يناسبك من <u><Link to={`/tommy-hilfiger.html`} >ترينديول</Link></u>.<br/><br/>
+               هل تبحث عن تجربة تسوق ممتعة؟ تعال وقم بزيارة المتجر الفيجيتال الأول في دول مجلس التعاون الخليجي في دبي هيلز مول. مساحة مبتكرة تقنيًا تجمع بين تجربتي التسوق الإلكتروني والتسوق الواقعي مع التصفح عبر الإنترنت وغرف القياس الذكية.<br/><br/>
 
-               يحرص فريق 6 ستريت على تقديم كل ما هو جديد ومميّز في عالم الموضة والجمال من خلال تجربة تسوق استثنائية، <br /> <br />
-               ولذلك تم افتتاح متجر 6 ستريت "الفيجيتال" وهو الأول من نوعه في دول الخليج العربي.<br /> <br />
+               يحرص فريق 6 ستريت على تقديم كل ما هو جديد ومميّز في عالم الموضة والجمال من خلال تجربة تسوق استثنائية.<br /> <br />
 
                   {/* At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />  */}
               </p>
@@ -58,11 +58,11 @@ export class About extends PureComponent {
 
                 <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
 
-                <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers<br /><br />
+                <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers.<br /><br />
 
-                At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />
+                <i>Looking for an immersive shopping experience?</i> Come visit GCC’s first phygital store at Dubai Hills Mall. An innovative tech-led space that combines the best of both online & offline shopping with online browsing & smart fitting rooms.<br/><br/>
 
-                We’re also home to GCC’s first phygital store. </p>
+                At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. </p>
             </>
         )
     }
