@@ -293,7 +293,7 @@ class PDPAddToCart extends PureComponent {
 
     if (
       sizeObject.sizeTypes !== undefined &&
-      sizeObject.sizeTypes.length !== 0
+      sizeObject.sizeTypes.length !== 0 && sizeObject.sizeCodes.length > 1
     ) {
       return (
         <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
