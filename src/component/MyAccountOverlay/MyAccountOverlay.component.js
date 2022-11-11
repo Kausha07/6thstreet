@@ -167,7 +167,7 @@ export class MyAccountOverlay extends PureComponent {
   }
   componentWillUnmount() {
     if (isMobile.any()) {
-      document.body.style.position = "static";
+      document.body.style.position = "";
     }
   }
   renderMap = {
