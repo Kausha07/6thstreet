@@ -226,10 +226,11 @@
         }
       }
 
+
       .MyAccountTabListItem {
         button {
           text-align: right;
-          padding-right: 0.5rem;
+          padding-right: 50px;
           padding-left: 0;
 
           &:before {
@@ -250,6 +251,13 @@
           }
         }
       }
+
+      .PolicyBtn{
+        button{
+        padding-right: 0.5rem;
+        }
+      }
+
     }
   }
 }
