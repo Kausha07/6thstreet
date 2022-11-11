@@ -236,7 +236,6 @@ export class MyAccountAddressPopupContainer extends PureComponent {
   }
 
   handleCreateAddress(address) {
-    console.log("handleCreateAddress")
     const { showCards, addAddress } = this.props;
     const { newAddress } = this.getNewAddressField(address);
     const apiResult = addAddress(newAddress);
