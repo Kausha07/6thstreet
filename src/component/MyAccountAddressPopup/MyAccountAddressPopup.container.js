@@ -25,7 +25,8 @@ import { capitalize } from "Util/App";
 import { fetchMutation } from "Util/Request";
 
 import MyAccountAddressPopup from "./MyAccountAddressPopup.component";
-import { ADDRESS_POPUP_ID } from "./MyAccountAddressPopup.config";
+import { ADDRESS_POPUP_ID, ADD_ADDRESS } from "./MyAccountAddressPopup.config";
+import { showPopup } from "Store/Popup/Popup.action";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -59,6 +60,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(showNotification(type, message)),
   setAddressLoadingStatus: (status) =>
     dispatch(setAddressLoadingStatus(status)),
+  showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
@@ -207,8 +209,15 @@ export class MyAccountAddressPopupContainer extends PureComponent {
       payload: {
         address: { id, default_billing, default_shipping },
       },
+      showPopup,
       removeAddress,
     } = this.props;
+
+    showPopup({
+      action: ADD_ADDRESS,
+      title: __("Add new address"),
+      address: {},
+    });
 
     if (default_shipping || default_billing) {
       this.setState({ isLoading: true });
@@ -227,6 +236,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
   }
 
   handleCreateAddress(address) {
+    console.log("handleCreateAddress")
     const { showCards, addAddress } = this.props;
     const { newAddress } = this.getNewAddressField(address);
     const apiResult = addAddress(newAddress);
