@@ -17,7 +17,6 @@ import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
 import Field from "SourceComponent/Field";
 import Form from "SourceComponent/Form";
-import Loader from "SourceComponent/Loader";
 import Overlay from "SourceComponent/Overlay";
 import PhoneCountryCodeField from "Component/PhoneCountryCodeField";
 import { PHONE_CODES } from "Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config";
@@ -29,13 +28,8 @@ import { ThreeDots, Oval } from "react-loader-spinner";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Link from "Component/Link";
-import {
-  deleteAuthorizationToken,
-  deleteMobileAuthorizationToken,
-} from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
+
 import Image from "Component/Image";
-import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -122,45 +116,8 @@ export class MyAccountOverlay extends PureComponent {
     if (isMobile.any()) {
       document.body.style.position = "fixed";
     }
-
-    // gapi.load("auth2", () => {
-    //   this.authRef.current = gapi.auth2.init();
-    //   this.attachSigninFunction(document.getElementById("g-signin2"));
-    // });
   }
-  // attachSigninFunction = (element) => {
-  //   this.authRef.current.attachClickHandler(
-  //     element,
-  //     {},
-  //     async (googleUser) => {
-  //       const { onSignInSuccess, onSignInAttempt } = this.props;
-  //       const profile = googleUser?.getBasicProfile();
-  //       const social_token = googleUser?.getAuthResponse()?.id_token;
-  //       const fullName = profile?.getName()?.split(" ");
-  //       const email = profile?.getEmail();
-  //       const payload = {
-  //         social_token,
-  //         firstname: fullName[0],
-  //         lastname: fullName[1],
-  //         email,
-  //         customer_telephone: null,
-  //         type: "google",
-  //         cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-  //       };
-  //       try {
-  //         onSignInAttempt();
-  //         onSignInSuccess(payload);
-  //       } catch (e) {
-  //         console.log("error", e);
-  //         deleteAuthorizationToken();
-  //         deleteMobileAuthorizationToken();
-  //       }
-  //     },
-  //     function (error) {
-  //       console.log(JSON.stringify(error, undefined, 2));
-  //     }
-  //   );
-  // };
+  
 
   componentDidUpdate() {
     this.validateAndSendEvent();
@@ -234,19 +191,7 @@ export class MyAccountOverlay extends PureComponent {
       setRegisterFieldFalse();
     }
 
-    // if (state === STATE_FORGOT_PASSWORD) {
-    //     return (
-    //         <div
-    //             block="MyAccountOverlay"
-    //             elem="Action"
-    //             mods={ { state } }
-    //         >
-    //             <p block="MyAccountOverlay" elem="Heading">{ title }</p>
-    //             { render() }
-    //             { this.renderCloseBtn() }
-    //         </div>
-    //     );
-    // }
+    
 
     return (
       <div block="MyAccountOverlay" elem="Action" mods={{ state }}>
@@ -303,11 +248,7 @@ export class MyAccountOverlay extends PureComponent {
           {title}
         </p>
         {render()}
-        {/* {isSignIn
-           ? this.renderSocials("SignIn")
-           : isCreateAccount
-           ? this.renderSocials("Create")
-           : null} */}
+        
         {this.renderCloseBtn()}
       </div>
     );
@@ -478,7 +419,7 @@ export class MyAccountOverlay extends PureComponent {
             </button>
           </div>
         </div>
-        {/* <Form onSubmitSuccess={(e) => console.log("hello")}> */}
+        
         <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
           <input
             type="number"
@@ -490,7 +431,7 @@ export class MyAccountOverlay extends PureComponent {
             onKeyPress={(e) => isNumber(e)}
           />
         </div>
-        {/* </Form> */}
+        
         <div
           block="VerifyPhone"
           elem="ErrMessage"
@@ -791,82 +732,7 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
 
-  // facebook login dialog
-  // facebookLogin = () => {
-  //   const { onSignInSuccess, onSignInAttempt } = this.props;
-  //   window.FB.login(
-  //     function (response) {
-  //       if (response.authResponse) {
-  //         const authToken = response.authResponse.accessToken;
-  //         window.FB.api(
-  //           "/me?fields=first_name,last_name,email",
-  //           function (response) {
-  //             const social_token = authToken;
-  //             const payload = {
-  //               social_token,
-  //               firstname: response.first_name,
-  //               lastname: response.last_name,
-  //               email: response.email,
-  //               customer_telephone: null,
-  //               type: "facebook",
-  //               cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-  //             };
-  //             try {
-  //               onSignInAttempt();
-  //               onSignInSuccess(payload);
-  //             } catch (e) {
-  //               console.log("error", e);
-  //               deleteAuthorizationToken();
-  //               deleteMobileAuthorizationToken();
-  //             }
-  //           }
-  //         );
-  //       } else {
-  //         console.log("User cancelled login or did not fully authorize.");
-  //       }
-  //     },
-  //     {
-  //       scope: "email",
-  //       return_scopes: true,
-  //     }
-  //   );
-  // };
-
-  //Social logins rendering
-  // renderSocials(renderer) {
-  //   // change mods after api integration
-  //   return (
-  //     <div
-  //       block="MyAccountOverlay"
-  //       elem="SSO"
-  //       mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
-  //     >
-  //       <div block="MyAccountOverlay-SSO" elem="title">
-  //         {renderer === "SignIn"
-  //           ? __("OR SIGN IN WITH")
-  //           : __("OR REGISTER IN WITH")}
-  //       </div>
-  //       <div block="MyAccountOverlay-SSO" elem="Buttons">
-  //         <button
-  //           block="MyAccountOverlay-SSO-Buttons"
-  //           elem="Facebook"
-  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
-  //           onClick={this.facebookLogin}
-  //         >
-  //           {__("FACEBOOK")}
-  //         </button>
-  //         <button
-  //           id="g-signin2"
-  //           block="MyAccountOverlay-SSO-Buttons"
-  //           elem="Google"
-  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-  //         >
-  //           {__("GOOGLE")}
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  
   renderInitialLinks() {
     return (
       <ul className="logInScreenLinks">
