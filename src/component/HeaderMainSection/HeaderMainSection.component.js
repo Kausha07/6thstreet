@@ -205,7 +205,7 @@ class HeaderMainSection extends NavigationAbstract {
       clearInterval(this.interval);
       this.interval = setInterval(this.tick, delay);
     }
-    if (isLive !== prevProps.isLive && is_live_party_enabled) {
+    if ((isLive !== prevProps.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled) {
       this.renderFAB();
     }
   }
