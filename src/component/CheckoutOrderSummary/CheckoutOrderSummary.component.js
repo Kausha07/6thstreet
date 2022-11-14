@@ -236,7 +236,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">
             {this.renderPriceLine(grandTotal, __("Total"), {}, true)}
-            <span>{__("(Taxes included)")}</span>
           </div>
         </ul>
       </div>
