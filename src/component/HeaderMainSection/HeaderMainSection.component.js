@@ -253,7 +253,7 @@ class HeaderMainSection extends NavigationAbstract {
       showPLPSearch) &&
       isMobile.any() ? null : (
       <HeaderGenders
-        key="genders"       //check this logic for header genders
+        key="genders"
         isMobile
         changeMenuGender={changeMenuGender}
       />

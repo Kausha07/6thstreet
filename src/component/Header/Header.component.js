@@ -126,7 +126,7 @@ export class Header extends PureComponent {
         location.pathname.match(/checkout|cart/) ||
         (isMobile &&
           location.pathname.match(
-            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/
+            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products|privacy-policy/
           ))
       ) {
         chatElem.classList.add("hidden");
@@ -190,7 +190,7 @@ export class Header extends PureComponent {
         <header block="Header" mods={{ name }} id="headerTop">
           {isMobile &&
           location.pathname.match(
-            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/
+            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products|privacy-policy/
           )
             ? null
             : this.renderHeaderSections()}
