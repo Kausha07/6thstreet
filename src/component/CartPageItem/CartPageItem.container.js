@@ -147,9 +147,15 @@ export class CartItemContainer extends PureComponent {
   }
 
   getMaxQuantity() {
-    const { stock_item: { max_sale_qty } = {} } =
-      this.getCurrentProduct() || {};
-    return max_sale_qty || DEFAULT_MAX_PRODUCTS;
+    const {
+      item: { availableQty = 0 },
+    } = this.props;
+    const max_sale_qty =
+    availableQty === 0 ? availableQty :
+      availableQty >= DEFAULT_MAX_PRODUCTS
+        ? DEFAULT_MAX_PRODUCTS
+        : availableQty;
+    return max_sale_qty;
   }
 
   setStateNotLoading = () => {
