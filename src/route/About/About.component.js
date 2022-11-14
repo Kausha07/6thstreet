@@ -42,7 +42,7 @@ export class About extends PureComponent {
                أما إذا كنت تبحث عن إطلالات أنيقة لمناسباتك المختلفة، اكتشف تشكيلة من التصاميم الخالدة التي لا تزول موضتها من <u><Link to={`/tommy-hilfiger.html`} >تومي هيلفيغر</Link></u> و<u><Link to={`/calvin-klein.html`} >كالفن كلاين</Link></u> ولإطلالة عملية عصرية اختر ما يناسبك من <u><Link to={`/tommy-hilfiger.html`} >ترينديول</Link></u>.<br/><br/>
                هل تبحث عن تجربة تسوق ممتعة؟ تعال وقم بزيارة المتجر الفيجيتال الأول في دول مجلس التعاون الخليجي في دبي هيلز مول. مساحة مبتكرة تقنيًا تجمع بين تجربتي التسوق الإلكتروني والتسوق الواقعي مع التصفح عبر الإنترنت وغرف القياس الذكية.<br/><br/>
 
-               يحرص فريق 6 ستريت على تقديم كل ما هو جديد ومميّز في عالم الموضة والجمال من خلال تجربة تسوق استثنائية.<br /> <br />
+               في 6ستريت ، نشجعك أن تعيش بشكل أفضل ونؤمن بأن الإعتناء بإطلالتك ستكون الخطوة الأولى لذلك. <br/><br/>
 
                   {/* At 6thStreet, we encourage you to live your best life and we think looking your best is a great place to start. <br /><br />  */}
               </p>
@@ -56,7 +56,7 @@ export class About extends PureComponent {
 
                 We are an elevated fashion and lifestyle destination committed to styling GCC’s GEN NOW to WOW. We deliver on-trend shoes, bags, outfits, beauty essentials and accessories right at your doorstep in the UAE, KSA, Kuwait, Oman, Qatar & Bahrain. We believe in looking like a million bucks, not spending it – which is why we bring to you over 1200+ global brands at the most accessible prices. <br /> <br />
 
-                <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u> and <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
+                <i>Off to the gym?</i> Performance sportswear from <u><Link to={`/nike.html`} >Nike</Link></u>, <u><Link to={`/adidas.html`} >Adidas</Link></u>, <u><Link to={`/skechers.html`} >Skechers</Link></u> and On will power up your routine.<br /><br />
 
                 <i>Date night tonight?</i> Get elegant outfits from <u><Link to={`/tommy-hilfiger.html`} >Tommy Hilfiger</Link></u>, <u><Link to={`/calvin-klein.html`} >Calvin Klein</Link></u> or <u><Link to={`/trendyol.html`} >Trendyol</Link></u>. Complete your look with shoes & accessories from <u><Link to={`/charles-keith.html`} >Charles & Keith</Link></u>, <u><Link to={`/dune-london.html`} >Dune London</Link></u> and <u><Link to={`/aldo.html`} >Aldo</Link></u> and add finishing touches from our exclusive selection of fragrances designed by top influencers.<br /><br />
 
@@ -320,7 +320,7 @@ renderSliderWithLabels() {
                 </div>
                 {
                   isArabic ? (
-                    <h2 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>{__("The 6thStreet.com experience")} <b>{__("6thStreet")}</b></h2>
+                    <h2 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>تجربة تسوق مميّزة على <b>6 ستريت</b></h2>
                   ) : (
                     <h2 block="aboutuswrapper" elem="heading" className="experience6thStreet" mods={{ isArabic }}>The <b>6thStreet.com</b> experience</h2>
                   )
@@ -333,7 +333,7 @@ renderSliderWithLabels() {
 
                 {
                   isArabic ? (
-                    <h2 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>{__("Brands")} <b>{__("We love")}</b> </h2>
+                    <h2 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}><b>ماركات </b>الكل يحبها </h2>
                   ) : (
                     <h2 block="aboutuswrapper" elem="heading" className="brandsWeLove" mods={{ isArabic }}>Brands <b>We love</b> </h2>
                   )
