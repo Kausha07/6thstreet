@@ -43,6 +43,7 @@ import EmptyCardIcon from "./icons/cart.svg";
 
 import "./CartPage.style";
 
+import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 export class CartPage extends PureComponent {
   constructor(props) {
     super(props);
@@ -804,7 +805,7 @@ export class CartPage extends PureComponent {
           {__("Time to add some awesome stuff to your shopping bag")}
         </p>
         <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`}>
+          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`} onClick={()=> window.pageType = TYPE_HOME}>
             <span block="ExploreNowBtn" elem="ExploreButtonText">
               {__("Explore now")}
             </span>

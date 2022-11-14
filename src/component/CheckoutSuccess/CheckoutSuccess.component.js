@@ -26,6 +26,7 @@ import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import Image from "Component/Image";
+import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -934,7 +935,10 @@ export class CheckoutSuccess extends PureComponent {
           block="CheckoutSuccess"
           elem="ContinueButton"
           to="/"
-          onClick={() => this.sendMOEEvents(EVENT_MOE_CONTINUE_SHOPPING)}
+          onClick={() => {
+            window.pageType = TYPE_HOME;
+            this.sendMOEEvents(EVENT_MOE_CONTINUE_SHOPPING);
+          }}
         >
           <button block="primary">{__("Continue shopping")}</button>
         </Link>
