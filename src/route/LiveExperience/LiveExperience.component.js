@@ -61,12 +61,18 @@ export class LiveExperience extends PureComponent {
     this.renderUpcomingParty();
 
     this.renderArchivedParty();
+    if(isMobile.any()){
+      document.querySelector(".HeaderMainSection").style.display= "none";
+    }
   }
 
   componentDidUpdate() {
     this.renderLiveParty();
   }
 
+  componentWillUnmount() {
+    document.querySelector(".HeaderMainSection").style.display = "flex";
+  }
   renderLiveParty = async () => {};
   renderUpcomingParty = () => {};
   renderArchivedParty = () => {};
