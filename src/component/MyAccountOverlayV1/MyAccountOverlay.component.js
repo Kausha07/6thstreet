@@ -460,7 +460,7 @@ export class MyAccountOverlay extends PureComponent {
             {__("Verification code has been sent to")}
           </div>
           <div block="VerifyPhone-TextV1" elem="PhoneV1">
-            <button onClick={() => console.log("change mobile number")}>
+            <button>
               {isLoading ? (
                 <Oval
                   color="#333"
