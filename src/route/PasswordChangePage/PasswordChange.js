@@ -60,7 +60,7 @@ export function PasswordChange(props) {
 
     function onPasswordSuccess(fields) {
         console.log("test new password flow 1")
-        const { resetPassword, location, showNotification } = this.props;
+        const { resetPassword, location, showNotification } = props;
         const { passwordReset: password } = fields;
         const token = getQueryParam('token', location);
         console.log("test new password flow 2")
