@@ -35,23 +35,18 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export class PasswordChangePageContainer extends SourcePasswordChangePageContainer {
   onPasswordSuccess(fields) {
-    console.log("test old password flow 1")
     const { resetPassword, location, showNotification } = this.props;
     const { passwordReset: password } = fields;
     const token = getQueryParam("token", location);
-    console.log("test old password flow 2")
     resetPassword({ newPassword: password, resetToken: token }).then(
       (response) => {
-        console.log("test old password flow 3")
         switch (typeof response) {
           case "string":
-            console.log("test old password flow 4")
             showNotification("error", __(response));
             this.sendGTMEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);
             this.sendMOEEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);
             break;
           case "boolean":
-            console.log("test old password flow 5")
             showNotification(
               "success",
               __("Password has been successfully updated!")
@@ -64,7 +59,6 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
 
             break;
           default:
-            console.log("test old password flow 6")
             showNotification("error", __("Something Went Wrong"));
             this.sendGTMEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);
             this.sendMOEEvents(EVENT_FORGOT_PASSWORD_RESET_FAIL);

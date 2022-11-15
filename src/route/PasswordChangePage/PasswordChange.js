@@ -59,22 +59,18 @@ export function PasswordChange(props) {
     }, [newPassword, repeatPassword]);
 
     function onPasswordSuccess(fields) {
-        console.log("test new password flow 1")
         const { resetPassword, location, showNotification } = props;
         const { passwordReset: password } = fields;
         const token = getQueryParam('token', location);
-        console.log("test new password flow 2")
+
         resetPassword({ newPassword: password, resetToken: token }).then(
             (response) => {
-                console.log("test new password flow 3")
                 switch (typeof response) {
                     case 'string':
-                        console.log("test new password flow 4")
                         showNotification('error', __(response));
 
                         break;
                     case 'boolean':
-                        console.log("test new password flow 5")
                         showNotification('success', __('Password has been successfully updated!'));
                         setTimeout(() => {
                             window.location.href = '/';
@@ -82,7 +78,6 @@ export function PasswordChange(props) {
 
                         break;
                     default:
-                        console.log("test new password flow 6")
                         showNotification('error', __('Something Went Wrong'));
 
                         break;
