@@ -10,7 +10,7 @@
  */
 import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
 import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
-import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.config";
+import { DEFAULT_MAX_PRODUCTS } from "../../util/Common/index";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
