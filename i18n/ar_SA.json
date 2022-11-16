@@ -281,7 +281,6 @@
     "Make default": "تلقائي",
     "Save address": "حفظ العنوان",
     "Current Password": null,
-    "Save": null,
     "Shop by product": "تسوق حسب المُنتج",
     "Carrier method: ": "طريقة الشحن",
     "Rate: ": "التقييم:",
@@ -897,7 +896,7 @@
     "Load More": "تحميل المزيد",
     "Loading...": "تحميل",
     "LIVE NOW": "بث مباشر",
-    "LIVE" : "مباش",
+    "LIVE": "مباش",
     "Dispatched": "تم الإرسال",
     "In Transit": "مرحلة انتقالية",
     "Select a size up for the right fit": "يفضل اختيار مقاس أكبر لنتيجة أفضل",
@@ -1151,5 +1150,15 @@
     "I already have an account.": "لدي حساب بالفعل",
     "Account with %s already exist": "الحساب مع %s موجود بالفعل",
     "Invalid OTP or OTP expired.": "رمز التحقق غير متاح أو انتهت صلاحيته",
-    "Account with phone number does not exist": "الحساب مع رقم الهاتف غير متوفر"
+    "Account with phone number does not exist": "الحساب مع رقم الهاتف غير متوفر",
+    "Reset Password": "إعادة تعيين كلمة المرور",
+    "You have requested to change your password. If you didn't initiated this process, please contact our customer service.": "لقد طلبت تغيير كلمة المرور الخاصة بك. إذا لم تطلب ذلك، فيرجى الاتصال بخدمة العملاء.",
+    "At least one uppercase letter": "ما لا يقل عن حرف كبير واحد",
+    "At least one digit": "على الأقل رقم واحد",
+    "At least 8 character in length": "ما لا يقل عن 8 أحرف",
+    "By resetting your password you agree with our": "من خلال إعادة تعيين كلمة المرور الخاصة بك ، فإنك توافق على",
+    "Terms & Conditions": "البنود والشروط",
+    "Repeat password": "اعد كلمة المرور",
+    "Save": "حفظ",
+    "and": "و"
 }

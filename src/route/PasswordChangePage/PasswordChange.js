@@ -96,8 +96,7 @@ export function PasswordChange(props) {
                 >
                     <Loader isLoading={isLoading} />
                     <h1>{__('Reset Password')}</h1>
-                    <p>{__(`You have requested to change your password. If you didn't initiated 
-                            this process, please contact our customer service.`)}</p>
+                    <p>{__(`You have requested to change your password. If you didn't initiated this process, please contact our customer service.`)}</p>
                     <Form
                         key="reset-password"
                         onSubmit={onPasswordAttempt}
@@ -106,7 +105,7 @@ export function PasswordChange(props) {
                     >
                         <Field
                             type="password"
-                            placeholder={__('NEW PASSWORD')}
+                            placeholder={__('New password')}
                             id="passwordReset"
                             name="passwordReset"
                             autocomplete="new-password"
@@ -116,7 +115,7 @@ export function PasswordChange(props) {
                         />
                         <Field
                             type="password"
-                            placeholder={__('REPEAT PASSWORD')}
+                            placeholder={__('Repeat password')}
                             id="passwordResetConfirm"
                             name="passwordResetConfirm"
                             autocomplete="new-password"
@@ -130,7 +129,7 @@ export function PasswordChange(props) {
                                     <img src={isAtleastOneCapital ? successTick : errorCross} alt="error" />
                                 </span>
                                 <span className={!isAtleastOneCapital ? "error" : "succuss"}>
-                                    {__("Atleast one uppercase letter")}
+                                    {__("At least one uppercase letter")}
                                 </span>
                             </div>
                             <div className='msg'>
@@ -138,7 +137,7 @@ export function PasswordChange(props) {
                                     <img src={isAtleastOneDigit ? successTick : errorCross} alt="error" />
                                 </span>
                                 <span className={!isAtleastOneDigit ? "error" : "succuss"}>
-                                    {__("Atleast one digit")}
+                                    {__("At least one digit")}
                                 </span>
                             </div>
                             <div className='msg'>
@@ -146,16 +145,16 @@ export function PasswordChange(props) {
                                     <img src={newPassword && newPassword.length >= PasswordLengthRequired ? successTick : errorCross} alt="error" />
                                 </span>
                                 <span className={newPassword && newPassword.length >= PasswordLengthRequired ? "succuss" : "error"}>
-                                    {__("Atleast 8 character in length")}
+                                    {__("At least 8 character in length")}
                                 </span>
                             </div>
                         </div>
                         <div>
                             <p className='terms-conditions'>
-                                {__('By resetting your password you agree with our ')}
-                                <span>{__('Terms & Conditions ')} </span>
-                                {__('and ')}
-                                <span>{__('Privacy Policy ')}</span>
+                                {__('By resetting your password you agree with our')}
+                                <span className='underlined'>{__('Terms & Conditions')} </span>
+                                {__('and')}
+                                <span className='underlined'>{__('Privacy Policy')}</span>
                             </p>
                         </div>
                         <div className="save-btn">
