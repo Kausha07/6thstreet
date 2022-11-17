@@ -319,7 +319,9 @@ export class CartItem extends PureComponent {
       handleChangeQuantity,
       item: { qty },
     } = this.props;
-
+    if(maxSaleQuantity === 0){
+      return null;
+    }
     const { isArabic, isNotAvailble } = this.state;
 
     const qtyList = Array.from(
