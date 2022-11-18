@@ -107,7 +107,7 @@
             flex-direction: column;
             align-items: center;
             @include mobile {
-                margin-top: 30px;
+                margin-top: 0px;
             }
             &Icon {
                 width: 90px;
