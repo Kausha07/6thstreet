@@ -15,6 +15,61 @@ export class MyAccountCancelCreateItem extends SourceComponent {
     displayDiscountPercentage: true,
   };
 
+  onQuantityChange = (quantity, itemId) => {
+    const { onQuantitySelection } = this.props;
+    onQuantitySelection(parseInt(quantity), itemId);
+  };
+
+  isItemSelected = (item_id, item,maxSaleQuantity) => {
+    const {
+      cancelableQty = {},
+    } = this.props;
+    const selectedValue =
+    cancelableQty[item_id]
+      ? cancelableQty[item_id].quantity === item
+      : maxSaleQuantity === item;
+    return selectedValue;
+  };
+
+  renderQuantitySelection = (maxSaleQuantity) => {
+    const {
+      minSaleQuantity = 1,
+      item: { item_id },
+      cancelableQty = {},
+      isArabic
+    } = this.props;
+
+    const qtyList = Array.from(
+      { length: maxSaleQuantity - minSaleQuantity + 1 },
+      (v, k) => k + minSaleQuantity
+    );
+    const itemValue = cancelableQty[item_id]
+      ? cancelableQty[item_id].quantity
+      : maxSaleQuantity;
+    return (
+      <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+        <select
+          value={itemValue}
+          onChange={(e) => this.onQuantityChange(e.target.value, item_id)}
+        >
+          {qtyList.map((item, index) => {
+            return (
+              <option
+                key={index}
+                selected={this.isItemSelected(item_id,item,maxSaleQuantity)}
+                block="CartItem"
+                elem="QuantityOption"
+                value={item}
+              >
+                {item}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  };
+
   renderDetails() {
     const {
       displayDiscountPercentage,
@@ -53,9 +108,9 @@ export class MyAccountCancelCreateItem extends SourceComponent {
             </p>
           )}
           {!!qty && (
-            <p>
-              {__("Qty: ")}
-              <span>{+qty}</span>
+            <p block="Quantity">
+            {__("Qty: ")}
+            {this.renderQuantitySelection(+qty)}
             </p>
           )}
           {!!size && (

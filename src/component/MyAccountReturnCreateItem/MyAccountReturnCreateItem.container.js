@@ -253,15 +253,13 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         if (results.length > 0) {
           if (isSelected) {
             this.getAvailableProducts(results[0], results, isSelected);
-            onClick(item_id, isSelected, results[0]);
           } else {
             this.getAvailableProducts(results[0], results, isSelected);
-            onClick(item_id, isSelected, null);
           }
           this.setSizeData(results[0]);
         }
       })
-
+      onClick(item_id, isSelected);
       return { isSelected };
     });
   }
