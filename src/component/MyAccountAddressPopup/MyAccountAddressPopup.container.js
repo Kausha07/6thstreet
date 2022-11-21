@@ -161,12 +161,12 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     setAddressLoadingStatus(true);
     if (!validationResult) {
       showNotification("error", __("Something went wrong."));
+      setAddressLoadingStatus(false);
     }
 
     validationResult.then((response) => {
       const { success } = response;
 
-      setAddressLoadingStatus(false);
       if (success) {
         const elmnts = document.getElementsByClassName("MyAccount-Heading");
 
@@ -180,7 +180,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
 
         return this.handleCreateAddress(address);
       }
-
+      setAddressLoadingStatus(false);
       return this.handleValidationError(response);
     });
   }
