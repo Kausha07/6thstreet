@@ -376,6 +376,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       street: {
         value: street,
         validation: ["notEmpty"],
+        maxLength : 420,
         placeholder: __("Street Address"),
         ...clearValue,
       },
