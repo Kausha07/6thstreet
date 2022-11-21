@@ -1,113 +1,60 @@
-import { PureComponent } from 'react';
+import { PureComponent } from "react";
 import "./SliderAboutPage.style";
-
 import Link from "Component/Link";
 import Image from "Component/Image";
-
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
-import CA from "./asets/CA.png";
-import globe from "./asets/globe.png";
-import returns from "./asets/return.png";
-import store from "./asets/store.png";
-import tabby from "./asets/tabby.png";
-
 export class SliderAboutPage extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.cmpRef = React.createRef();
-        this.scrollerRef = React.createRef();
-        this.itemRef = React.createRef();
-        this.state = {
-          isArabic: isArabic(),
-          isMobile: isMobile.any(),
-        };
-      }
+  constructor(props) {
+    super(props);
+    this.cmpRef = React.createRef();
+    this.scrollerRef = React.createRef();
+    this.itemRef = React.createRef();
+    this.state = {
+      isArabic: isArabic(),
+      isMobile: isMobile.any(),
+      isTablet: isMobile.tablet(),
+      screenWidth: window.innerWidth,
+      minusWidth: 690,
+    };
+  }
 
-experienceData = {
-    index: 0,
-    promotion_name: "Men-EN",
-    tag: "Home-FreshStyle",
-    Datas:[
-        {
-            height: 475,
-            imglink: globe,
-            url: "https://i.postimg.cc/Vrbszcbd/globe.png",
-            text: "Trends from around the world",
-            ArabicText: "أبرز صيحات الموضة",
-            textDescription: "1200+ international brands to browse",
-            textDescriptionArabic: "أكثر من 1200 ماركة عالمية",
-            link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
-            width: 84
-        },
-        {
-            height: 475,
-            imglink: returns,
-            url: "https://i.postimg.cc/5Qd40kwp/return.png",
-            text: "Not feeling your purchase?",
-            ArabicText: "سياسة الإرجاع",
-            textDescription: "Return it within 100 days. No-questions-asked.",
-            textDescriptionArabic: "في حال لم تكن راضياً عن طلبك، يمكن إرجاع المنتج خلال 100 يوم",
-            link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
-            width: 84
-        },
-        {
-          height: 475,
-          imglink: tabby,
-          url: "https://i.postimg.cc/Vrbszcbd/globe.png",
-          text: "Can’t pay it all right now?",
-          ArabicText: "تسوق الآن وادفع لاحقاً",
-          textDescription: "Shop now & pay later in 4 easy monthly installments",
-          textDescriptionArabic: "قم بتقسيط مشترياتك على أربعة أقساط شهرية",
-          link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
-          width: 84
-        },
-        {
-            height: 475,
-            imglink: CA,
-            url: "https://i.postimg.cc/McHKrB60/CA.png",
-            text: "Spend more & redeem! ",
-            ArabicText: "تسوق أكثر واسترد نقاطك",
-            textDescription: "Earn points by linking your Club Apparel account",
-            textDescriptionArabic: "جمّع نقاط مكافآت بربط حسابك مع حساب كلوب أباريل الخاص بك",
-            link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
-            width: 84
-        },
-        {
-            height: 475,
-            imglink: store,
-            url: "https://i.postimg.cc/LqW6ds5c/store.png",
-            text: "In-store experience without the hassle?",
-            ArabicText: "تسوق واستلم بنفسك",
-            textDescription: "Buy online, pick-up in store with Click & Collect",
-            textDescriptionArabic: "تسوق أونلاين واستلم طلبك بنفسك من المتجر ",
-            link: "/catalogsearch/result/?q=%2B&qid=88b49e11f7414c75016a8915fef6e978&p=0&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bbrand_name%5D%5B0%5D=Berastogi+%40+CCC&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
-            width: 84
-        },        
-    ],
-    type: "bannerSliderWithLabel",
-    isHomePage: true
-}
-
-handleContainerScroll = (event) => {
+  handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
     if (this.scrollerRef && this.scrollerRef.current) {
       this.scrollerRef.current.scrollLeft = target.scrollLeft;
     }
-};
+  };
 
-renderScrollbar = () => {
-    const items = this.experienceData.Datas;
-    const { minusWidth} = this.props;
+  handleScroll = (event) => {
+    const target = event.nativeEvent.target;
+    const prentComponent = [...this.cmpRef.current.childNodes].filter(
+      (node) => node.className == "SliderWithLabelWrapper"
+    )[0];
+    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
+  };
+  checkWidth() {
+    const { screenWidth, minusWidth } = this.state;
+    if (screenWidth > 1500) {
+      this.setState({ minusWidth: 590 });
+    } else if (screenWidth < 1400) {
+      this.setState({ minusWidth: 660 });
+    }
+  }
+  renderScrollbar = () => {
+    const { sliderItems = [] } = this.props;
+    const items = sliderItems;
+    this.checkWidth();
+    const { minusWidth } = this.state;
+
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
         items.length +
       items.length * 7 * 2 -
       minusWidth
     }px`;
-    // const width = `${900}px`;
 
     return (
       <div
@@ -123,111 +70,132 @@ renderScrollbar = () => {
         <div block="Outer" style={{ width: width }} elem="Inner"></div>
       </div>
     );
-};
+  };
 
-handleScroll = (event) => {
-    const target = event.nativeEvent.target;
-    const prentComponent = [...this.cmpRef.current.childNodes].filter(
-      (node) => node.className == "SliderWithExperienceWrapper"
-    )[0];
-    prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
-};
+  renderSliderWithLabel = (item, i) => {
+    const {
+      link,
+      text,
+      url,
+      plp_config,
+      height,
+      width,
+      text_align,
+      textDescription,
+      imglink,
+      ArabicText,
+      textDescriptionArabic,
+    } = item;
 
-//   for experience section cards  //
+    const { isArabic, isMobile, isTablet } = this.state;
+    const { sliderType } = this.props;
+    let parseLink = link;
+    const wd = `${width.toString()}px`;
+    const ht = `${height.toString()}px`;
 
-renderSliderForCards = (item, i) => {
-  const { link, text, url, plp_config, height, width, text_align, textDescription, imglink, ArabicText, textDescriptionArabic } = item;
-  const { isArabic } = this.state;
-  let parseLink = link;
-  const wd = `${width.toString()}px`;
-  const ht = `${height.toString()}px`;
-  const { isMobile } = this.state;
-  return (
+    return (
       <div
-        block="SliderWithExperiences"
+        block={`${sliderType}Item SliderWithLabel`}
         mods={{ isArabic }}
         ref={this.itemRef}
         key={i * 11}
       >
-        <div className="sliderwithexpclass">
-          
-          { isMobile ? (
-            <div className='imgwrapperdiv'>            
-            <Image
-            lazyLoad={true}
-            src={imglink}
-            alt={text}
-            block="Image"
-            style={{ maxWidth: "50px", width: "50px", minWidth: "50px" }}
-            />
+        {sliderType === "AboutBrandSlider" && (
+          <div className="AboutBrandOuterBox">
+            <Link
+              to={`${link}`}
+              key={i * 10}
+              block="SliderImage"
+              elem="Link"
+              data-banner-type="sliderWithLabel"
+              data-promotion-name={
+                item.promotion_name ? item.promotion_name : ""
+              }
+              data-tag={item.tag ? item.tag : ""}
+            >
+              <div className="SliderImage">
+                <Image
+                  lazyLoad={true}
+                  src={url}
+                  alt={text || "Brand Image"}
+                  block="Image"
+                />
+              </div>
+            </Link>
+            {text ? (
+              <div block="SliderText" style={{ textAlign: text_align }}>
+                {text}
+              </div>
+            ) : null}
+          </div>
+        )}
+        {sliderType === "ExperienceSlider" && (
+          <div className="ExperienceOuterBox">
+            <div className="SliderImage">
+              <Image
+                lazyLoad={true}
+                src={imglink}
+                alt={text}
+                block="Image"
+                style={
+                  isMobile
+                    ? { maxWidth: "50px", width: "50px", minWidth: "50px" }
+                    : { maxWidth: wd, width: "84px", minWidth: "84px" }
+                }
+              />
             </div>
-          ) : (
-            <div className='imgwrapperdiv'>            
-            <Image
-            lazyLoad={true}
-            src={imglink}
-            alt={text}
-            block="Image"
-            style={{ maxWidth: wd, width: "84px", minWidth: "84px" }}
-            />
-            </div>
-          )}
 
-          {isArabic ? (
             <div block="SliderText" style={{ textAlign: text_align }}>
-              {ArabicText}
+              {isArabic ? ArabicText : text}
             </div>
-          ) : (
-            <div block="SliderText" style={{ textAlign: text_align }}>
-              {text}
-            </div>
-          )}
 
-          {isArabic ? (
-            <div block="SliderTextDescri" style={{ textAlign: text_align }}>
-              {textDescriptionArabic}
+            <div
+              block="SliderTextDescription"
+              style={{ textAlign: text_align }}
+            >
+              {isArabic ? textDescriptionArabic : textDescription}
             </div>
-          ) : (
-            <div block="SliderTextDescri" style={{ textAlign: text_align }}>
-              {textDescription}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
-}
+  };
 
-renderSliderExperience() {
-    const cardsData = this.experienceData.Datas;
+  renderSliderWithLabels() {
+    const { sliderItems } = this.props;
+    const sliderItemsList = sliderItems || [];
 
     return (
-        <DragScroll
-            data={{ rootClass: "SliderWithExperienceWrapper", ref: this.cmpRef }}
+      <DragScroll
+        data={{ rootClass: `SliderWithLabelWrapper`, ref: this.cmpRef }}
+      >
+        <div
+          block="SliderWithLabelWrapper"
+          id="SliderWithLabelWrapper"
+          ref={this.cmpRef}
+          onScroll={this.handleContainerScroll}
         >
-            <div
-            block="SliderWithExperienceWrapper"
-            id="SliderWithExperienceWrapper"
-            ref={this.cmpRef}
-            onScroll={this.handleContainerScroll}
-            >
-            <div className="SliderHelperE"></div>
-            {cardsData.map(this.renderSliderForCards)}
-            <div className="SliderHelperE"></div>
-            <div className='SliderHelperET'></div>
-            </div>
-            {this.renderScrollbar()}
-        </DragScroll>
-    )
-}
-
-render() {
-    return (
-        <div block="renderSliderExperienceWrapper">
-            { this.renderSliderExperience() }
+          <div className="SliderHelper"></div>
+          {sliderItemsList.map(this.renderSliderWithLabel)}
+          <div className="SliderHelper"></div>
         </div>
-    )
-}
+        {this.renderScrollbar()}
+      </DragScroll>
+    );
+  }
 
+  render() {
+    const { sliderType, sliderItems } = this.props;
+
+    return (
+      <div
+        block="DynamicContentSliderWithLabel"
+        id={`DynamicContentSliderWithLabel${sliderType}`}
+      >
+        {sliderItems && this.renderSliderWithLabels()}
+      </div>
+    );
+  }
 }
 
 export default SliderAboutPage;
