@@ -166,6 +166,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     validationResult.then((response) => {
       const { success } = response;
 
+      setAddressLoadingStatus(false);
       if (success) {
         const elmnts = document.getElementsByClassName("MyAccount-Heading");
 
