@@ -65,13 +65,16 @@
 
             &.ExperienceSliderItem {
                 min-height: 330px;
+                min-width: 270px;
 
                 @include tablet {
                     min-height: 220px;
+                    min-width: 190px;
                 }
 
                 @include mobile {
                     min-height: 220px;
+                    min-width: 190px;
                 }
 
                 .ExperienceOuterBox {
@@ -95,17 +98,7 @@
                     }
 
                     .SliderImage {
-                        min-width: 270px;
-
-                        @include tablet {
-                            min-width: 190px;
-                        }
-
-                        @include mobile {
-                            min-width: 190px;
-                        }
-
-
+                        
                         img {
                             width: 84px;
                             max-width: 84px;
@@ -155,20 +148,20 @@
             }
 
             &.AboutBrandSliderItem {
+                min-width: 238px;
+
+                @include tablet {
+                    min-width: 163px;
+                }
+
+                @include mobile {
+                    min-width: 41vw;
+                }
 
                 .AboutBrandOuterBox {
 
                     .SliderImage {
-                        min-width: 238px;
-
-                        @include tablet {
-                            min-width: 163px;
-                        }
-
-                        @include mobile {
-                            min-width: 41vw;
-                        }
-
+                        
                         img {
                             width: 100%;
                             height: 100%;
