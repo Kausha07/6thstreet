@@ -85,7 +85,7 @@ class ProductImpressionEvent extends BaseEvent {
       event: "productImpression",
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
-        product: formattedImpressions,
+        impressions: formattedImpressions,
       },
     });
   }
