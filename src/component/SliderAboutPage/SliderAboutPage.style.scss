@@ -98,7 +98,17 @@
                     }
 
                     .SliderImage {
-                        
+
+                        min-width: 270px;
+
+                        @include tablet {
+                            min-width: 190px;
+                        }
+
+                        @include mobile {
+                            min-width: 190px;
+                        }
+
                         img {
                             width: 84px;
                             max-width: 84px;
@@ -161,7 +171,16 @@
                 .AboutBrandOuterBox {
 
                     .SliderImage {
-                        
+                        min-width: 238px;
+
+                        @include tablet {
+                            min-width: 163px;
+                        }
+
+                        @include mobile {
+                            min-width: 41vw;
+                        }
+
                         img {
                             width: 100%;
                             height: 100%;
