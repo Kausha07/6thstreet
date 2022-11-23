@@ -80,13 +80,12 @@ export class CartPage extends PureComponent {
 
   componentDidMount() {
     const {
-      totals: { subtotal, currency_code },
+      totals: { currency_code, total },
       getTabbyInstallment,
     } = this.props;
     const script = document.createElement("script");
     script.src = "https://checkout.tabby.ai/tabby-promo.js";
     document.body.appendChild(script);
-    const total = subtotal;
     getTabbyInstallment(total)
       .then((response) => {
         if (response?.value) {
@@ -107,11 +106,10 @@ export class CartPage extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      totals: { subtotal, currency_code },
+      totals: { currency_code, total },
       getTabbyInstallment,
     } = this.props;
-    if (prevProps?.totals?.subtotal !== subtotal) {
-      const total = subtotal;
+    if (prevProps?.totals?.total !== total) {
       getTabbyInstallment(total)
         .then((response) => {
           if (response?.value) {
@@ -287,6 +285,7 @@ export class CartPage extends PureComponent {
       bodyElt.removeAttribute("style");
     }
   };
+
   handleRemoveCode = (e) => {
     e.stopPropagation();
     this.props.removeCouponFromCart();
