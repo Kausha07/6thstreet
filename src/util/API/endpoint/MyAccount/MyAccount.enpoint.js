@@ -33,3 +33,5 @@ export const updateCustomerData = (data) => MobileAPI.put(
 export const getOrders = (limit, offset = 0) => MobileAPI.get(
     `/orders?offset=${offset}&limit=${limit}`,
 ) || {};
+
+export const subscribeToNewsletter = (email) => MobileAPI.post('/newsletter/subscribe', email);

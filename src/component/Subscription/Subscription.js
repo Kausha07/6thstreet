@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { isArabic } from "Util/App";
+import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccount/MyAccount.enpoint";
+
 import "./Subscription.style.scss";
 
 export default function Subscription() {
@@ -15,6 +17,11 @@ export default function Subscription() {
     } else if (isEmail(email)) {
       setEmailValidated(true);
     }
+  };
+
+  const HandleSubscription = async () => {
+    const response = await subscribeToNewsletter({ email: email });
+    console.log("test response", response, " response status", response.status);
   };
 
   return (
@@ -47,7 +54,9 @@ export default function Subscription() {
               </span>
             ) : null}
           </div>
-          <button className="submitBtn">{__("Submit")}</button>
+          <button className="submitBtn" onClick={() => HandleSubscription()}>
+            {__("Submit")}
+          </button>
         </div>
       </div>
     </div>
