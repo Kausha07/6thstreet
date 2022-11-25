@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { isArabic } from "Util/App";
+import { useDispatch } from "react-redux";
+import { showNotification } from "Store/Notification/Notification.action";
 import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccount/MyAccount.enpoint";
 
 import "./Subscription.style.scss";
@@ -19,9 +21,35 @@ export default function Subscription() {
     }
   };
 
-  const HandleSubscription = async () => {
-    const response = await subscribeToNewsletter({ email: email });
-    console.log("test response", response, " response status", response.status);
+  const dispatch = useDispatch();
+
+  const HandleSubscription = async (dispatch) => {
+    try {
+      const response = await subscribeToNewsletter({ email: email });
+
+      if (
+        response &&
+        response.status &&
+        response.data &&
+        response.data.message
+      ) {
+        if (typeof response.data.message === "string") {
+          const messageString = response.data.message;
+          dispatch(showNotification("success", messageString));
+        }
+      }
+      if (response && !response.status && response.data) {
+        if (typeof response.data.message === "string") {
+          dispatch(showNotification("success", response.data));
+        }
+      }
+    } catch (error) {
+      if (typeof error === "string") {
+        dispatch(showNotification("error", error));
+      } else {
+        dispatch(showNotification("error", "some error occurred"));
+      }
+    }
   };
 
   return (
@@ -54,7 +82,10 @@ export default function Subscription() {
               </span>
             ) : null}
           </div>
-          <button className="submitBtn" onClick={() => HandleSubscription()}>
+          <button
+            className="submitBtn"
+            onClick={() => HandleSubscription(dispatch)}
+          >
             {__("Submit")}
           </button>
         </div>
