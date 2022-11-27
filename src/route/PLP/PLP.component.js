@@ -87,13 +87,21 @@ export class PLP extends PureComponent {
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
+  resetSortData = () => {
+    if(isMobile.any()){
+      this.setState({
+        isSortByOverlayOpen : false,
+        selectedSortOption : 'recommended'
+      })
+    }
+  }
 
   renderPLPDetails() {
     return <PLPDetails {...this.props} />;
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} resetSortData={this.resetSortData} />;
   }
 
   renderPLPSortBy() {
@@ -146,25 +154,6 @@ export class PLP extends PureComponent {
         renderMySignInPopup={this.showMyAccountPopup}
       />
     );
-  };
-
-  hideSortByOverlay = (e) => {
-    e.stopPropagation();
-    this.setState({
-      isSortByOverlayOpen: false,
-    });
-    if (!this.state.isSortByOverlayOpen) {
-      const bodyElt = document.querySelector("body");
-      bodyElt.removeAttribute("style");
-    }
-  };
-
-  closeSortByOverlay = () => {
-    this.setState({
-      isSortByOverlayOpen: false,
-    });
-    const bodyElt = document.querySelector("body");
-    bodyElt.removeAttribute("style");
   };
 
   showCouponDetial = (e) => {
@@ -297,7 +286,8 @@ export class PLP extends PureComponent {
                       value={facet_value}
                       onClick={() => {
                         this.setState({
-                          selectedSortOption: facet_value
+                          selectedSortOption: facet_value,
+                          isSortByOverlayOpen:false
                         },()=>{
                           handleCallback(facet_key, facet_value, true, true)
                         })
