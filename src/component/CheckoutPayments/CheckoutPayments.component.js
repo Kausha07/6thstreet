@@ -81,7 +81,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const { isArabic } = this.state;
     new window.TabbyCard({
       selector: '#tabbyCard',
-      currency: currency_code.toString(),
+      currency: currency_code?.toString(),
       price: total,
       installmentsCount: 4,
       lang: isArabic ? "ar" : "en",
