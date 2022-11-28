@@ -135,6 +135,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       prevPaymentMethods: paymentMethods,
       paymentMethod,
       isTabbyInstallmentAvailable: false,
+      saveCard: null,
     };
   }
 
@@ -457,7 +458,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 "CREDIT_CART_TOKEN",
                 FIVE_MINUTES_IN_SECONDS
               );
-              if (isSignedIn()) {
+              if (isSignedIn() && saveCard) {
                 showSuccessMessage(__("Credit card successfully added"));
               }
 
