@@ -27,7 +27,14 @@
         margin-left: 8px;
       }
       .errorMsg {
+        padding-top: 10px;
+        .infoIcon {
+          padding-top: 4px;
+          width: 14px;
+          height: 14px;
+        }
         color: red;
+        font-size: 13px;
       }
     }
 

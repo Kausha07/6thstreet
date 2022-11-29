@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "Store/Notification/Notification.action";
 import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccount/MyAccount.enpoint";
 
+import InfoIcon from "./ImagesAndIcons/info.svg";
 import "./Subscription.style.scss";
 
 export default function Subscription() {
@@ -29,7 +30,7 @@ export default function Subscription() {
 
       if (
         response &&
-        response.status &&
+        response.success &&
         response.data &&
         response.data.message
       ) {
@@ -37,10 +38,9 @@ export default function Subscription() {
           const messageString = response.data.message;
           dispatch(showNotification("success", messageString));
         }
-      }
-      if (response && !response.status && response.data) {
-        if (typeof response.data.message === "string") {
-          dispatch(showNotification("success", response.data));
+      } else if (response && !response.success && response.data) {
+        if (typeof response.data === "string") {
+          dispatch(showNotification("error", response.data));
         }
       }
     } catch (error) {
@@ -78,6 +78,7 @@ export default function Subscription() {
             />
             {!!!emailValidated && email.length ? (
               <span className="errorMsg">
+                <img className="infoIcon" src={InfoIcon} alt="info" />
                 {__("Please fill in a valid email address")}
               </span>
             ) : null}
