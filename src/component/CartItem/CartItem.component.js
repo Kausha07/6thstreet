@@ -319,8 +319,10 @@ export class CartItem extends PureComponent {
       handleChangeQuantity,
       item: { qty },
     } = this.props;
-
-    const { isArabic } = this.state;
+    if(maxSaleQuantity === 0){
+      return null;
+    }
+    const { isArabic, isNotAvailble } = this.state;
 
     const qtyList = Array.from(
       { length: maxSaleQuantity - minSaleQuantity + 1 },
@@ -331,7 +333,7 @@ export class CartItem extends PureComponent {
       <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
         <select
           value={qty}
-          onChange={(e) => this.onQuantityChange(e.target.value)}
+          onChange={(e) => isNotAvailble ? {} : this.onQuantityChange(e.target.value)}
         >
           {qtyList.map((item, index) => {
             return (

@@ -711,7 +711,7 @@ export class CartItem extends PureComponent {
       },
       toggleCartItemQuantityPopup,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, isNotAvailble } = this.state;
     return (
       <div block="CartPageItem" elem="ColSizeQty" mods={{ isArabic }}>
         {color && (
@@ -726,7 +726,7 @@ export class CartItem extends PureComponent {
         <span
           block="CartItem-ColSizeQty"
           elem="Qty"
-          onClick={() => toggleCartItemQuantityPopup()}
+          onClick={() => isNotAvailble ? {}: toggleCartItemQuantityPopup()}
         >
           <span>{__("Qty:")}</span>
           <span>{qty}</span>
