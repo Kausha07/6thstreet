@@ -11,6 +11,12 @@ import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import ProductItem from "Component/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import {
+  VUE_PAGE_VIEW
+} from "Util/Event";
+import { getUUID } from "Util/Auth";
+import { setPrevPath } from "Store/PLP/PLP.action";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -25,6 +31,7 @@ const VuePLP = (props) => {
   const [state, setState] = useState(stateObj);
 
   const gender = useSelector((state) => state.AppState.gender);
+  const prevPath = useSelector((state) => state.PLP.prevPath);
   //dispatch
   const dispatch = useDispatch();
 
@@ -92,7 +99,22 @@ const VuePLP = (props) => {
   };
 
   useEffect(() => {
+    console.log("prevPath",prevPath)
     updateBreadcrumbs();
+    dispatch(setPrevPath(prevPath));
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "vue_plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: prevPath ? prevPath : null,
+        url: window.location.href,
+      },
+    });
   }, []);
 
   useEffect(() => {

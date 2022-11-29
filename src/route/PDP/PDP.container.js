@@ -123,7 +123,7 @@ export class PDPContainer extends PureComponent {
     super(props);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {
       requestPdpWidgetData,
       pdpWidgetsData=[],
@@ -293,6 +293,7 @@ export class PDPContainer extends PureComponent {
   }
 
   componentWillUnmount() {
+    this.props.resetProduct();
     document
       .querySelectorAll("script[type='application/ld+json']")
       .forEach((node) => node.remove());
