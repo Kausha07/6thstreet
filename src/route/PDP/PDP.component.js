@@ -21,6 +21,7 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
+import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -28,6 +29,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  getTabbyInstallment: (price) =>
+    CheckoutDispatcher.getTabbyInstallment(dispatch, price),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
 });
@@ -68,6 +71,31 @@ class PDP extends PureComponent {
 
   onSignIn = () => {
     this.closePopup();
+  };
+
+  addTabbyPromo = (total, currency_code) => {
+    const { isArabic } = this.state;
+    new window.TabbyPromo({
+      selector: "#TabbyPromo",
+      currency: currency_code?.toString(),
+      price: total,
+      installmentsCount: 4,
+      lang: isArabic ? "ar" : "en",
+      source: "product",
+    });
+  };
+
+  TabbyInstallment = (defPrice, currency) => {
+    const { getTabbyInstallment } = this.props;
+    getTabbyInstallment(defPrice)
+      .then((response) => {
+        if (response?.value) {
+          this.addTabbyPromo(defPrice, currency);
+        } else {
+          document.getElementById("TabbyPromo").classList.add("d-none");
+        }
+      }, this._handleError)
+      .catch(() => {});
   };
 
   renderVueHits() {
@@ -114,6 +142,7 @@ class PDP extends PureComponent {
       <PDPMainSection
         renderMySignInPopup={this.showMyAccountPopup}
         {...this.props}
+        TabbyInstallment={this.TabbyInstallment}
       />
     );
   }

@@ -445,7 +445,7 @@ class ProductItem extends PureComponent {
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {this.renderOutOfStock()}   
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
