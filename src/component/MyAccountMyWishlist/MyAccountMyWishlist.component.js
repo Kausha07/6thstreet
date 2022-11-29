@@ -30,6 +30,7 @@ class MyAccountMyWishlist extends PureComponent {
           key={wishlist_item_id}
           product={product}
           pageType="wishlist"
+          wishlist_item_id={wishlist_item_id}
         />
       </div>
     );

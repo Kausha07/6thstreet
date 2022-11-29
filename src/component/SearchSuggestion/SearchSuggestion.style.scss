@@ -201,7 +201,10 @@
 
     @include desktop() {
       ul {
-        flex-wrap: wrap;
+        overflow-x: auto;
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
     }
   }

@@ -134,8 +134,8 @@ export class MyAccount extends SourceMyAccount {
           {column.title}
         </h4>
         <div block="FooterMain" elem="Nav">
-          {column.items.map((items) => (
-            <Fragment key="last_main_footer_column">
+          {column.items.map((items, i) => (
+            <Fragment key={`last_main_footer_column_${i}`}>
               <div block="FooterMain" elem="WrapperFirst">
                 <div block="MobileFooterMain">
                   <Link to={items.app_onclick} key={items.id_app}>

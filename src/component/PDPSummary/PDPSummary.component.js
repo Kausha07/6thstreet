@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import Link from "Component/Link";
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
@@ -33,8 +33,9 @@ import Image from "Component/Image";
 import "./PDPSummary.style";
 import Event, {
   EVENT_GTM_EDD_VISIBILITY,
-  EVENT_MOE_TABBY_LEARN_MORE_CLICK,
-  EVENT_MOE_EDD_VISIBILITY,
+  EVENT_TABBY_LEARN_MORE_CLICK,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_MOE_EDD_VISIBILITY
 } from "Util/Event";
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -179,6 +180,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { price },
       TabbyInstallment,
+      product,
       addressCityData,
     } = this.props;
     const script = document.createElement("script");
@@ -196,10 +198,12 @@ class PDPSummary extends PureComponent {
       countryCode: countryCode,
       cityResponse: addressCityData,
     });
+    this.setState({
+      alsoAvailable: product["6s_also_available"]
+    })
   }
   componentDidUpdate(prevProps) {
     const {
-      // getTabbyInstallment,
       product: { cross_border = 0, price },
       edd_info,
       defaultShippingAddress,
@@ -299,6 +303,7 @@ class PDPSummary extends PureComponent {
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
       });
     }
+    
     return {derivedState:Object.keys(derivedState).length ? derivedState : null,
       intlEddResponseState:intlEddResponse};
   }
@@ -380,9 +385,9 @@ class PDPSummary extends PureComponent {
     return (
       <ul>
         {isArea ? (
-          selectedCityArea.map((area) => {
+          selectedCityArea.map((area, index) => {
             return (
-              <li id={area} onClick={() => this.handleAreaSelection(area)}>
+              <li key={index} id={area} onClick={() => this.handleAreaSelection(area)}>
                 <button
                   block={`CountrySwitcher`}
                   elem="CountryBtn"
@@ -413,6 +418,7 @@ class PDPSummary extends PureComponent {
         {Object.values(cityResponse).map((city) => {
           return (
             <li
+            key={city.city_id}
               id={city.city_id}
               onClick={() => this.handleCitySelection(city)}
             >
@@ -879,14 +885,14 @@ class PDPSummary extends PureComponent {
       : fixedColor;
 
     return (
-      <>
+      <Fragment key={color}>
         <span
           block="PDPSummary"
           elem="ProductColor"
           style={{ backgroundColor: prodColor }}
         />
         {color}
-      </>
+      </Fragment>
     );
   }
 
@@ -957,7 +963,6 @@ class PDPSummary extends PureComponent {
       renderMySignInPopup,
     } = this.props;
     const { alsoAvailable } = this.state;
-
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
@@ -972,11 +977,11 @@ class PDPSummary extends PureComponent {
 
     return null;
   }
-  sendMoEImpressions() {
+  sendImpressions() {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_MOE_TABBY_LEARN_MORE_CLICK, {
+    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -984,12 +989,18 @@ class PDPSummary extends PureComponent {
       product_url: url ? url : "",
       app6thstreet_platform: "Web",
     });
+    const eventData = {
+      name: EVENT_TABBY_LEARN_MORE_CLICK,
+      action: EVENT_TABBY_LEARN_MORE_CLICK,
+      product_name: name,
+      product_id: sku,
+    };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
   }
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendMoEImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
       </>
     );
   }

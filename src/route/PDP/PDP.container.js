@@ -177,13 +177,36 @@ export class PDPContainer extends PureComponent {
         price,
         categories,
         categories_without_path,
+        size_eu,
+        size_uk,
+        size_us,
+        stock_qty,
+        in_stock,
       },
       brandImg,
       config,
       country,
       product,
     } = this.props;
-
+    let outOfStockProduct;
+    if (size_us && size_uk && size_eu) {
+      outOfStockProduct =
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    } else {
+      outOfStockProduct =
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    }
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
@@ -249,7 +272,9 @@ export class PDPContainer extends PureComponent {
           "@type": "Offer",
           priceCurrency: currency || "",
           price: specialPrice || "",
-          availability: "https://schema.org/InStock",
+          availability: !outOfStockProduct
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
           url: url || "",
         },
       },

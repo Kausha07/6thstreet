@@ -212,7 +212,7 @@ class HeaderSearch extends PureComponent {
               mods={{ isArabic }}
               type="submit"
             >
-              <Image lazyLoad={true} src={searchPng} alt="search" />
+              <Image lazyLoad={true} src={searchPng} alt="searchIcon" />
             </button>
           )}
 
@@ -231,7 +231,7 @@ class HeaderSearch extends PureComponent {
             <Image
               lazyLoad={false}
               src={Clear}
-              alt="Clear button"
+              alt="close-black"
               style={{ top: "2px" }}
             />
           </button>

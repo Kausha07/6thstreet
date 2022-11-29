@@ -29,17 +29,20 @@ class CircleItemSliderSubPage extends PureComponent {
     }
 
     render() {
-        let banner = this.props.bannerData.plp_config && this.props.bannerData.plp_config.banner
-        let url = banner.url
+        let banner = this.props?.bannerData.plp_config && this.props.bannerData.plp_config?.banner;
+        if(banner ===  undefined) {
+            return null;
+        }
+        let url = banner?.url
         let mWidth = (screen.width - 50).toString() + "px"
-        let mHeight = ((screen.width - 50) / banner.aspect_ratio).toString() + "px"
-        let isMobileWithImage = isMobile.any() && (banner.type === "image")
+        let mHeight = ((screen.width - 50) / banner?.aspect_ratio).toString() + "px"
+        let isMobileWithImage = isMobile.any() && (banner?.type === "image")
         return (
             <div block="CircleItemSliderSubPage">
                 <div block="CircleItemSliderSubPage-Video" >
                     {
-                        banner.type === "image" ?
-                            <img src={url} style={isMobile.any() && { height: mHeight, width: mWidth }} />
+                        banner?.type === "image" ?
+                            <img src={url} style={isMobile.any() && { height: mHeight, width: mWidth }} alt={"bannerImage"}/>
                             :
                             <video id="CircleItemSliderSubPage-Video" style={isMobile.any() && { height: mHeight, width: mWidth }}>
                                 <source src={url} type="video/mp4" />
@@ -47,8 +50,8 @@ class CircleItemSliderSubPage extends PureComponent {
                     }
                 </div>
                 <div block="CircleItemSliderSubPage-Discription">
-                    <h2 block="CircleItemSliderSubPage-Discription" elem="Title" mods={{ isArabic: isArabic() }}>{banner.title}</h2>
-                    <p block="CircleItemSliderSubPage-Discription" elem="Desc" mods={{ isArabic: isArabic() }}>{banner.description}</p>
+                    <h2 block="CircleItemSliderSubPage-Discription" elem="Title" mods={{ isArabic: isArabic() }}>{banner?.title}</h2>
+                    <p block="CircleItemSliderSubPage-Discription" elem="Desc" mods={{ isArabic: isArabic() }}>{banner?.description}</p>
                 </div>
 
             </div>

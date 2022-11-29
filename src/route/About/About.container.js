@@ -10,6 +10,7 @@ import { withRouter } from "react-router";
 import { setGender } from "Store/AppState/AppState.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
+import { updateMeta } from "Store/Meta/Meta.action";
 
 export const BreadcrumbsDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -32,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
     changeHeaderState: (state) =>
       dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
     setGender: (gender) => dispatch(setGender(gender)),
+    updateMeta: (meta) => dispatch(updateMeta(meta)),
 });
 
 export class AboutContainer extends PureComponent {
@@ -43,6 +45,7 @@ export class AboutContainer extends PureComponent {
         config: PropTypes.object.isRequired,
         breadcrumbs: PropTypes.array.isRequired,
         gender: PropTypes.string.isRequired,
+        updateMeta: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -63,10 +66,11 @@ export class AboutContainer extends PureComponent {
     componentDidMount() {
         const {
           location: { pathname },
+          updateMeta
         } = this.props;
 
         this.setState({ currentLocation: pathname });
-
+        updateMeta({ title: __("About 6THStreet") });
         this.updateBreadcrumbs();
     }
 

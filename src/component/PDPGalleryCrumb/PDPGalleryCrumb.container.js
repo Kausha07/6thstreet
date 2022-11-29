@@ -55,6 +55,7 @@ export class PDPGalleryCrumbContainer extends PureComponent {
   containerProps = () => ({
     ...this.getTypeAndOptions(),
     isActive: this.getIsActive(),
+    product:this.props.product
   });
 
   getVideoTypeOptions() {

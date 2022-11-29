@@ -8,21 +8,23 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import { v4 } from "uuid";
 import "./PLPFilterOption.style";
-import {
+import Event,{
   EVENT_MOE_PLP_FILTER,
-  EVENT_MOE_PLP_SORT,
-  EVENT_MOE_BRAND_SEARCH_FILTER,
-  EVENT_MOE_COLOR_SEARCH_FILTER,
-  EVENT_MOE_SIZES_SEARCH_FILTER,
-  EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
-  EVENT_MOE_DISCOUNT_FILTER_CLICK,
-  EVENT_MOE_PRICE_FILTER_CLICK,
-  EVENT_MOE_SORT_BY_DISCOUNT,
-  EVENT_MOE_SORT_BY_LATEST,
-  EVENT_MOE_SORT_BY_PRICE_HIGH,
-  EVENT_MOE_SORT_BY_PRICE_LOW,
-  EVENT_MOE_SORT_BY_RECOMMENDED,
-  EVENT_MOE_SET_PREFERENCES_GENDER,
+  EVENT_PLP_SORT,
+  EVENT_BRAND_SEARCH_FILTER,
+  EVENT_COLOR_SEARCH_FILTER,
+  EVENT_SIZES_SEARCH_FILTER,
+  EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER,
+  EVENT_DISCOUNT_FILTER_CLICK,
+  EVENT_PRICE_FILTER_CLICK,
+  EVENT_SORT_BY_DISCOUNT,
+  EVENT_SORT_BY_LATEST,
+  EVENT_SORT_BY_PRICE_HIGH,
+  EVENT_SORT_BY_PRICE_LOW,
+  EVENT_SORT_BY_RECOMMENDED,
+  EVENT_SET_PREFERENCES_GENDER,
+  EVENT_GTM_SORT,
+  EVENT_GTM_FILTER,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -65,19 +67,19 @@ class PLPFilterOption extends PureComponent {
     const { checked } = inputRef;
     const MoeFilterEvent =
       facet_key == "brand_name"
-        ? EVENT_MOE_BRAND_SEARCH_FILTER
+        ? EVENT_BRAND_SEARCH_FILTER
         : facet_key == "colorfamily"
-        ? EVENT_MOE_COLOR_SEARCH_FILTER
+        ? EVENT_COLOR_SEARCH_FILTER
         : facet_key == ("size_eu" || "size_us" || "size_uk")
-        ? EVENT_MOE_SIZES_SEARCH_FILTER
+        ? EVENT_SIZES_SEARCH_FILTER
         : facet_key == "categories_without_path"
-        ? EVENT_MOE_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
+        ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
         : facet_key == "discount"
-        ? EVENT_MOE_DISCOUNT_FILTER_CLICK
+        ? EVENT_DISCOUNT_FILTER_CLICK
         : facet_key == "gender"
-        ? EVENT_MOE_SET_PREFERENCES_GENDER
+        ? EVENT_SET_PREFERENCES_GENDER
         : facet_key.includes("price")
-        ? EVENT_MOE_PRICE_FILTER_CLICK
+        ? EVENT_PRICE_FILTER_CLICK
         : "";
 
     const sendMoeEvents = (event) => {
@@ -102,8 +104,8 @@ class PLPFilterOption extends PureComponent {
         let category_1 = checkCategories ? Categories_level.shift() : "";
         let category_2 = checkCategories ? Categories_level.shift() : "";
         let category_3 = checkCategories ? Categories_level.shift() : "";
-        console.log("CATEGORY", category_1, category_2, category_3);
-        Moengage.track_event(EVENT_MOE_PLP_SORT, {
+
+        Moengage.track_event(EVENT_PLP_SORT, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           sort_value: facet_value || "",
@@ -120,19 +122,20 @@ class PLPFilterOption extends PureComponent {
           app6thstreet_platform: "Web",
         });
         const sortEventType =
-          facet_value == "recommended"
-            ? EVENT_MOE_SORT_BY_RECOMMENDED
-            : facet_value == "latest"
-            ? EVENT_MOE_SORT_BY_LATEST
-            : facet_value == "discount"
-            ? EVENT_MOE_SORT_BY_DISCOUNT
-            : facet_value == "price_low"
-            ? EVENT_MOE_SORT_BY_PRICE_LOW
-            : facet_value == "price_high"
-            ? EVENT_MOE_SORT_BY_PRICE_HIGH
+          facet_value == __("recommended")
+            ? EVENT_SORT_BY_RECOMMENDED
+            : facet_value == __("latest")
+            ? EVENT_SORT_BY_LATEST
+            : facet_value == __("discount")
+            ? EVENT_SORT_BY_DISCOUNT
+            : facet_value == __("price_low")
+            ? EVENT_SORT_BY_PRICE_LOW
+            : facet_value == __("price_high")
+            ? EVENT_SORT_BY_PRICE_HIGH
             : "";
         if (sortEventType && sortEventType.length > 0) {
           sendMoeEvents(sortEventType);
+          Event.dispatch(EVENT_GTM_SORT, sortEventType);
         }
       } else {
         Moengage.track_event(EVENT_MOE_PLP_FILTER, {
@@ -144,6 +147,8 @@ class PLPFilterOption extends PureComponent {
         });
         if (MoeFilterEvent && MoeFilterEvent.length > 0) {
           sendMoeEvents(MoeFilterEvent);
+          const EventData = { name: MoeFilterEvent, value: facet_value };
+          Event.dispatch(EVENT_GTM_FILTER, EventData);
         }
       }
     }

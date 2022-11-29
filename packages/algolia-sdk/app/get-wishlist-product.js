@@ -16,12 +16,11 @@ export default function getWishlistProduct(idsArray, options = {}) {
 
   return new Promise((resolve, reject) => {
     index.getObjects(idsArray, (error, data) => {
-      let response = formatResult(data);
 
       if (error) {
         return reject(error);
       }
-      return resolve({ data: response });
+      return resolve({ data: data });
     });
   });
 }

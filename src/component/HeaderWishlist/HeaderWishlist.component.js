@@ -94,6 +94,8 @@ class HeaderWishlist extends PureComponent {
             },
           },
         }}
+        role="button"
+        aria-label="header-wishlist-icon"
       >
         <button
           onClick={this.routeChangeWishlist}

@@ -13,6 +13,9 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import VueQuery from "../../query/Vue.query";
 import CDN from "../../util/API/provider/CDN";
 import SearchSuggestion from "./SearchSuggestion.component";
+import { TRENDING_BRANDS_ENG, TRENDING_BRANDS_AR } from "../../util/Common/index";
+import { isArabic } from "Util/App";
+
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -88,6 +91,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingProducts: [],
       exploreMoreData: null,
       typingTimeout: 0,
+      isArabic: isArabic(),
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -96,7 +100,6 @@ export class SearchSuggestionContainer extends PureComponent {
     this.requestTrendingInformation();
     // this.requestTopSearches();
     this.requestRecentSearches();
-    this.getExploreMoreData();
   }
 
   async getPdpSearchWidgetData() {
@@ -168,6 +171,7 @@ export class SearchSuggestionContainer extends PureComponent {
       this.getPdpSearchWidgetData();
     }
     // this.getTrendingProducts();
+    this.requestJsonInfo();
     document.body.classList.add("isSuggestionOpen");
     const { location } = browserHistory;
     const { closeSearch } = this.props;
@@ -190,15 +194,30 @@ export class SearchSuggestionContainer extends PureComponent {
     document.body.classList.remove("isSuggestionOpen");
   }
 
-  getExploreMoreData = async () => {
-    // let device = isMobile.any() ? 'm' : 'd'
+  requestJsonInfo = async () =>{
     const { gender } = this.props;
     const locale = getLocaleFromUrl();
     let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
+    if(process.env.REACT_APP_FOR_JSON === "production") {
+      url = `resources/20190121/${locale}/search/search_${gender}.json`;
+    }
+    
     try {
       const resp = await CDN.get(url);
 
       if (resp) {
+        this.getExploreMoreData(resp);
+        this.getTrendingBrands(resp);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  getExploreMoreData = async (resp) => {
+
+      if (resp && resp.widgets) {
         let k = resp.widgets;
         let itemYouWant = null;
         k.forEach((item) => {
@@ -213,9 +232,20 @@ export class SearchSuggestionContainer extends PureComponent {
           exploreMoreData: itemYouWant,
         });
       }
-    } catch (error) {
-      console.error(error);
-    }
+  };
+
+  getTrendingBrands = async (resp) => {
+    const { isArabic } = this.state;
+
+      if (resp && resp.widgets) {
+        let k = resp.widgets;
+        let filterString = isArabic ? TRENDING_BRANDS_AR : TRENDING_BRANDS_ENG;
+        let trendingBrandsList = k.find((item) => item?.layout?.title === filterString)?.items || [];
+        this.setState({
+          trendingBrands: trendingBrandsList,
+        });
+      }
+    
   };
 
   async requestTrendingInformation() {
@@ -223,13 +253,13 @@ export class SearchSuggestionContainer extends PureComponent {
 
     try {
       const data = await Promise.all([
-        getStaticFile("search_trending_brands"),
+        // getStaticFile("search_trending_brands"),
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
       this.setState({
-        trendingBrands: data[0][gender],
-        trendingTags: data[1][gender],
+        // trendingBrands: data[0][gender],
+        trendingTags: data[0][gender],
       });
     } catch (e) {
       // eslint-disable-next-line no-console

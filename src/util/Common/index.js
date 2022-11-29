@@ -30,6 +30,14 @@ export const INTL_BRAND = isArabic()
   : ["trendyol", "koton"];
 export const INTL_BRAND_ARABIC = ["ترينديول", "كوتون"];
 
+export const YES = "Yes"
+
+export const YES_IN_ARABIC = "نعم"
+
+export const NO = "No"
+
+export const NO_IN_ARABIC = "لا"
+
 export const DEFAULT_MESSAGE = "Delivery by";
 
 export const DEFAULT_ARRIVING_MESSAGE = "Arriving by";
@@ -45,6 +53,9 @@ export const EDD_MESSAGE_ARABIC_TRANSLATION = {
   "Arriving by": "الوصول بواسطه",
   "Ready by": "جاهز في غضون"
 };
+
+export const TRENDING_BRANDS_ENG = "Trending brands";
+export const TRENDING_BRANDS_AR = "العلامات التجارية الأكثر رواجاً";
 
 export const SPECIAL_COLORS = {
   beige: "#f5f5dc",
@@ -448,9 +459,47 @@ export const getCardType = (cardNumber = "") => {
   }
 };
 
-export const camelCase=(str)=>{
+export const camelCase = (str) => {
   return str.toLowerCase()
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+export const getBambuserChannelID=(country)=>{
+  if(process.env.REACT_APP_BAMBUSER_ENV === "staging") {
+    switch (country) {
+      case "ae":
+        return "QfxqiD3TAwAWSQcoPTva";
+      case "sa":
+        return "3vYn5j0lmNq4H6juUyHo";
+      case "kw":
+        return "H2d8ao0cIDOSB0Mes0gS";
+      case "om":
+        return "GYKTtxynbwwnx8PERIls";
+      case "bh":
+        return "2YTiep0n0GzNSUpUhMF0";
+      case "qa":
+        return "m5QBkcoSL4IPgyMRZb0m";
+      default:
+        return "QfxqiD3TAwAWSQcoPTva";
+    }
+  } else {
+    switch (country) {
+      case "ae":
+        return "RQi9v57VXHIFetDai47q";
+      case "sa":
+        return "LSC8XG1YSbgdX6Adwds4";
+      case "kw":
+        return "SbFHRnzIUHdcORz2ELjd";
+      case "om":
+        return "JFEsZsxpy6mp1HaawJvH";
+      case "bh":
+        return "TvklSoghpVJPJttPB94u";
+      case "qa":
+        return "mLnmwfhhDQZa8OzDYmni";
+      default:
+        return "RQi9v57VXHIFetDai47q";
+    }
+  }
 }

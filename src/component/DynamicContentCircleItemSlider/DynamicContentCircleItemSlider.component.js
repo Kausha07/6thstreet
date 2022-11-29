@@ -1,7 +1,7 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 import "react-circular-carousel/dist/index.css";
 import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -9,11 +9,18 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentCircleItemSlider.style";
+
+import Config from "../../route/LiveExperience/LiveExperience.config";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+
 import Image from "Component/Image";
+import MobileAPI from "Util/API/provider/MobileAPI";
+import { getBambuserChannelID } from "../../util/Common/index";
+import { connect } from "react-redux";
 
 const settings = {
   lazyload: true,
@@ -35,6 +42,10 @@ const settings = {
   },
 };
 
+export const mapStateToProps = (state) => ({
+  is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+});
+
 class DynamicContentCircleItemSlider extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -50,27 +61,48 @@ class DynamicContentCircleItemSlider extends PureComponent {
   state = {
     isArabic: isArabic(),
     impressionSent: false,
-    livePartyItems: null,
+    livePartyItems: [],
   };
   componentDidMount() {
     this.registerViewPortEvent();
-    this.fetchLivePartyData();
+    
+
+    if(this.props.is_live_party_enabled && this.filterPromotionName())
+    {
+      this.getLiveLocation();
+    }
+  }
+
+  filterPromotionName = () =>{
+  const result = this.props.items.filter(item => item.promotion_name === "shopping_party");
+  return result.length;
   }
 
   fetchLivePartyData = () => {
-    const isStaging = process.env.REACT_APP_SPOCKEE_STAGING;
-    const apiUrl = `https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=${isStaging}`;
-    fetch(apiUrl)
-      .then((response) => response.json())
-
-      .then((data) => {
-        let newData = data.filter((val) => !val.m3u8URI);
-        this.setState({
-          livePartyItems: newData,
-        });
-      })
-      .catch((error) => console.error(error));
+    try {
+      MobileAPI.get(`bambuser/data/${Config.storeId}`).then((response) => {
+        if (
+          response &&
+          response.playlists &&
+          response.playlists[2] &&
+          response.playlists[2].shows
+        ) {
+          this.setState({
+            livePartyItems: response.playlists[2].shows,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  getLiveLocation() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    Config.storeId = getBambuserChannelID(country);
+    this.fetchLivePartyData();
+  }
 
   registerViewPortEvent() {
     let observer;
@@ -157,10 +189,73 @@ class DynamicContentCircleItemSlider extends PureComponent {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
+  LiveShopping = (item, i) => {
+    const { is_live_party_enabled } = this.props;
+    const { livePartyItems } = this.state;
+
+    return(
+      <Fragment>
+        {
+          is_live_party_enabled &&
+          livePartyItems.length &&
+              livePartyItems[0] !== null &&
+              livePartyItems[0].isLive
+                ? livePartyItems.map(this.renderLiveParty)
+                : this.renderDefaultLivePartyCircle(item)
+              
+            //  :null
+        }
+      </Fragment>
+    );
+    
+  };
+
   renderCircle = (item, i) => {
-    const { link, label, image_url, plp_config } = item;
+    const { link, label, image_url, plp_config, promotion_name } = item;
     const { isArabic } = this.state;
-    let newLink = formatCDNLink(link) + "&plp_config=true";
+    let newLink = link.includes("/store/") ?  formatCDNLink(link) : `${formatCDNLink(link)}&plp_config=true`;
+
+    // TODO: move to new component
+    return (
+      <Fragment key={i}>
+        {promotion_name !== "shopping_party" ? (
+          <div block="CircleSlider" mods={{ isArabic }} key={i}>
+            <Link
+              to={newLink}
+              key={i}
+              data-banner-type="circleItemSlider"
+              data-promotion-name={
+                item.promotion_name ? item.promotion_name : ""
+              }
+              data-tag={item.tag ? item.tag : ""}
+              onClick={() => {
+                this.clickLink(item);
+              }}
+            >
+              <div block="OuterCircle">
+                <div block="OuterCircle" elem="InnerCircle"></div>
+                <img
+                  src={image_url}
+                  alt={label}
+                  block="Image"
+                  width="70px"
+                  height="70px"
+                />
+              </div>
+            </Link>
+            <div block="CircleSliderLabel">{label}</div>
+          </div>
+        ) : (this.props.is_live_party_enabled &&
+          this.LiveShopping(item)
+        )}
+      </Fragment>
+    );
+  };
+
+  renderDefaultLivePartyCircle = (item, i) => {
+    const { link, label, image_url } = item;
+    const { isArabic } = this.state;
+    let newLink = formatCDNLink(link);
 
     // TODO: move to new component
 
@@ -194,9 +289,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   renderLiveParty = (item, i) => {
     // const { link, label, image_url, plp_config } = item;
-    let link = `/live-party?broadcastId=${item.id}`;
-    let label = item.name;
-    let image_url = item.mainImageURI;
+    let link = `/live-party`;
+    let label = item.title;
+    let image_url = item.curtains.pending.backgroundImage;
     const { isArabic } = this.state;
 
     // TODO: move to new component
@@ -217,7 +312,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             <div block="OuterCircle" elem="LiveParty"></div>
             <div block="OuterCircle" elem="LivePartyBackground"></div>
             <div block="OuterCircle" elem="LivePartyText">
-              LIVE
+              {__("LIVE")}
             </div>
             <img
               src={image_url}
@@ -228,7 +323,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             />
           </div>
         </Link>
-        <div block="CircleSliderLabel">{label}</div>
+        <div block="CircleSliderLabel">{__("Influencer")}</div>
       </div>
     );
   };
@@ -243,8 +338,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
-          {this.state.livePartyItems &&
-            this.state.livePartyItems.map(this.renderLiveParty)}
+
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>
@@ -274,4 +368,4 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 }
 
-export default DynamicContentCircleItemSlider;
+export default connect(mapStateToProps, null)(DynamicContentCircleItemSlider);

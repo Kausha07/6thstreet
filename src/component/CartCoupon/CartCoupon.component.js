@@ -2,10 +2,11 @@ import Field from "Component/Field";
 import Loader from "Component/Loader";
 import { CartCoupon as SourceCartCoupon } from "SourceComponent/CartCoupon/CartCoupon.component";
 import { isArabic } from "Util/App";
-import {
-  EVENT_MOE_REMOVE_COUPON,
-  EVENT_MOE_APPLY_COUPON_FAILED,
-  EVENT_MOE_APPLY_COUPON,
+import Event, {
+  EVENT_REMOVE_COUPON,
+  EVENT_APPLY_COUPON_FAILED,
+  EVENT_APPLY_COUPON,
+  EVENT_GTM_COUPON,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./CartCoupon.extended.style";
@@ -44,9 +45,19 @@ export class CartCoupon extends SourceCartCoupon {
       let apiResponse =
         (await this.props.applyCouponToCart(couponCode)) || null;
       if (apiResponse) {
-        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON_FAILED, couponCode);
+        this.sendMOEEvents(EVENT_APPLY_COUPON_FAILED, couponCode);
+        const eventData = {
+          name: EVENT_APPLY_COUPON_FAILED,
+          coupon: couponCode,
+        };
+        Event.dispatch(EVENT_GTM_COUPON, eventData);
       } else {
-        this.sendMOEEvents(EVENT_MOE_APPLY_COUPON, couponCode);
+        this.sendMOEEvents(EVENT_APPLY_COUPON, couponCode);
+        const eventData = {
+          name: EVENT_APPLY_COUPON,
+          coupon: couponCode,
+        };
+        Event.dispatch(EVENT_GTM_COUPON, eventData);
       }
       if (typeof apiResponse !== "string") {
         this.props.closePopup();
@@ -61,7 +72,9 @@ export class CartCoupon extends SourceCartCoupon {
     const { couponCode } = this.props;
     localStorage.removeItem("lastCouponCode");
     handleRemoveCouponFromCart();
-    this.sendMOEEvents(EVENT_MOE_REMOVE_COUPON, couponCode);
+    this.sendMOEEvents(EVENT_REMOVE_COUPON, couponCode);
+    const eventData = { name: EVENT_REMOVE_COUPON, coupon: couponCode };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
 
     // We need to reset input field. If we do it in applyCouponCode,
     // then it will disappear if code is incorrect. We want to avoid it

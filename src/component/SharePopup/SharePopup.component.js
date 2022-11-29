@@ -5,11 +5,12 @@ import { showNotification } from "Store/Notification/Notification.action";
 import Overlay from "SourceComponent/Overlay";
 import { Email, Link, WhatsApp, Facebook, Pinterest } from "Component/Icons";
 import { isArabic } from "Util/App";
-import {
-  EVENT_MOE_WHATSAPP_SHARE,
-  EVENT_MOE_FB_SHARE,
-  EVENT_MOE_PINTEREST_SHARE,
-  EVENT_MOE_MAIL_SHARE,
+import Event,{
+  EVENT_WHATSAPP_SHARE,
+  EVENT_FB_SHARE,
+  EVENT_PINTEREST_SHARE,
+  EVENT_MAIL_SHARE,
+  EVENT_GTM_PDP_TRACKING
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { SHARE_POPUP_ID } from "./SharePopup.config";
@@ -98,13 +99,13 @@ class SharePopup extends PureComponent {
     } = this.props;
     const MoeEvent =
       title == "WhatsApp"
-        ? EVENT_MOE_WHATSAPP_SHARE
+        ? EVENT_WHATSAPP_SHARE
         : title == "Facebook"
-        ? EVENT_MOE_FB_SHARE
+        ? EVENT_FB_SHARE
         : title == "Mail"
-        ? EVENT_MOE_MAIL_SHARE
+        ? EVENT_MAIL_SHARE
         : title == "Pinterest"
-        ? EVENT_MOE_PINTEREST_SHARE
+        ? EVENT_PINTEREST_SHARE
         : "";
     if (MoeEvent && MoeEvent.length > 0) {
       Moengage.track_event(MoeEvent, {
@@ -116,6 +117,13 @@ class SharePopup extends PureComponent {
         app6thstreet_platform: "Web",
       });
     }
+    const eventData = {
+      name: MoeEvent,
+      action: MoeEvent + "_click",
+      product_name: name,
+      product_id: sku,
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
   }
   renderShareButtons = () => {
     const {
