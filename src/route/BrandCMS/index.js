@@ -133,7 +133,11 @@ function BrandCMS(props) {
         name: __("Home"),
       },
     ];
-    setMeta({ title: BreadcrumbsName });
+    setMeta({
+      title: BreadcrumbsName
+        ? BreadcrumbsName
+        : "Shop Online @ 6thStreet.com for Men, Women & Kids across GCC",
+    });
     updateBreadcrumbs(breadcrumbs);
   };
 
