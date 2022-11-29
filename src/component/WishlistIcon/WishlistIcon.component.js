@@ -13,6 +13,8 @@ import Event, {
   EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
   EVENT_MOE_ADD_TO_WISHLIST,
   EVENT_MOE_REMOVE_FROM_WISHLIST,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
@@ -139,6 +141,13 @@ class WishlistIcon extends PureComponent {
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);
       renderMySignInPopup();
+      const popupEventData = {
+        name: EVENT_SIGN_IN_SCREEN_VIEWED,
+        category: "user_login",
+        action: EVENT_SIGN_IN_SCREEN_VIEWED,
+        popupSource: "Wishlist",
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
     }
     // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
     const priceObject = data.price[0];
@@ -171,7 +180,7 @@ class WishlistIcon extends PureComponent {
         },
       });
     }
-    const windowLocation= new URL(window.location.href);
+    const windowLocation = new URL(window.location.href);
     const parseProductUrl = windowLocation + data?.url_key + ".html";
 
     Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
@@ -183,15 +192,16 @@ class WishlistIcon extends PureComponent {
       subcategory: data.product_type_6s || "",
       color: data.color || "",
       brand_name: data.brand_name || "",
-      full_price: basePrice || data?.original_price ||"",
-      product_url: data?.url && data?.url !== null ? data.url : parseProductUrl || "",
+      full_price: basePrice || data?.original_price || "",
+      product_url:
+        data?.url && data?.url !== null ? data.url : parseProductUrl || "",
       currency: getCurrency() || "",
       gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : gender
         ? gender
         : "",
-      product_sku: data.config_sku || data.sku ||"",
+      product_sku: data.config_sku || data.sku || "",
       discounted_price: itemPrice || data?.itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",

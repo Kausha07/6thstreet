@@ -241,3 +241,5 @@ export const EVENT_CUSTOMER_SUPPORT_FREE_RETURN =
 export const EVENT_LANGUAGE_CHANGE = "language_change";
 export const EVENT_SIGN_IN_CTA_CLICK = "sign_in_cta_click";
 export const EVENT_CONTINUE_AS_GUEST = "continue_as_guest";
+export const EVENT_SIGN_IN_SCREEN_VIEWED = "sign_in_screen_viewed";
+export const EVENT_PAGE_LOAD = "page_load";

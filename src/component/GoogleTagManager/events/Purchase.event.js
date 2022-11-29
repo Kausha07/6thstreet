@@ -159,7 +159,6 @@ class PurchaseEvent extends BaseEvent {
       });
     }
   }
-  getMOEPurchaseDetails() {}
   /**
    * Get order information
    *

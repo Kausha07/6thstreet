@@ -13,13 +13,14 @@ import { setIsMobileTabActive } from "Store/MyAccount/MyAccount.action";
 import { TYPE_PRODUCT } from "Route/UrlRewrites/UrlRewrites.config";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
-import Event,{
+import Event, {
   EVENT_MOE_HOME_TAB_ICON,
   EVENT_MOE_BRANDS_TAB_ICON,
   EVENT_MOE_WISHLIST_TAB_ICON,
   EVENT_MOE_ACCOUNT_TAB_ICON,
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -43,7 +44,7 @@ class MobileBottomBar extends NavigationAbstract {
   };
 
   static defaultProps = {
-    setIsMobileTabActive: () => { },
+    setIsMobileTabActive: () => {},
     newMenuGender: "women",
   };
 
@@ -158,7 +159,7 @@ class MobileBottomBar extends NavigationAbstract {
       window.navigator.userAgent.match(/iPhone/) && window.outerHeight > "800"
     );
   }
-  
+
   sendMoeEvents(event) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -166,7 +167,15 @@ class MobileBottomBar extends NavigationAbstract {
       app6thstreet_platform: "Web",
     });
   }
-
+  sendPopupEvent(source) {
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: source,
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+  }
   renderHome() {
     const { history } = this.props;
     const { isHome, redirectHome, isCategoryMenu } = this.state;
@@ -253,6 +262,7 @@ class MobileBottomBar extends NavigationAbstract {
 
     const { isSignedIn } = this.props;
 
+    const popup_source = "Wishlist";
     this.setState({
       isWishlist:
         location.pathname === "/my-account/my-wishlist" && !isCategoryMenu,
@@ -268,6 +278,9 @@ class MobileBottomBar extends NavigationAbstract {
           onClick={() => {
             onClickHandle();
             this.sendMoeEvents(EVENT_MOE_WISHLIST_TAB_ICON);
+            {
+              !isSignedIn ? this.sendPopupEvent(popup_source) : null;
+            }
           }}
           key="wishlistButton"
           block="MobileBottomBar"
@@ -287,6 +300,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
     const { location, isSignedIn } = this.props;
+    const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });
 
@@ -300,6 +314,9 @@ class MobileBottomBar extends NavigationAbstract {
         action: EVENT_GTM_ACCOUNT_TAB_CLICK,
       };
       Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+      if (!isSignedIn) {
+        this.sendPopupEvent(popup_source);
+      }
     };
     return (
       <div key="account">
