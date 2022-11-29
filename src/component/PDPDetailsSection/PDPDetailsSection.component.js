@@ -28,6 +28,8 @@ import {
   NO,
   NO_IN_ARABIC,
 } from "../../util/Common/index";
+
+export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -62,7 +64,7 @@ class PDPDetailsSection extends PureComponent {
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
-    document.body.style.overflowX = 'visible';
+    document.body.style.overflowX = "visible";
   }
 
   renderShareButton() {
@@ -680,14 +682,14 @@ class PDPDetailsSection extends PureComponent {
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
       pdpWidgetsAPIData = [],
-      product
+      product,
     } = this.props;
     const { innerWidth: width } = window;
-    document.body.style.overflowX = 'clip';
+    document.body.style.overflowX = "clip";
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
-          {this.props?.product?.returnable ? (<div block="Seperator2" />) : (null)}
+          {this.props?.product?.returnable ? <div block="Seperator2" /> : null}
           <React.Fragment>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
@@ -751,11 +753,7 @@ class PDPDetailsSection extends PureComponent {
       toll_free: phone,
     };
   }
-  chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
-    }
-  }
+
   sendEvents(event) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -785,16 +783,16 @@ class PDPDetailsSection extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div
-              block="IconWrapper"
-              elem="Icon"
+            <a
               onClick={() => {
                 this.sendEvents(EVENT_MOE_CHAT);
-                this.chat();
               }}
+              href={`${WHATSAPP_LINK}`}
+              target="_blank"
+              rel="noreferrer"
             >
               <Chat />
-            </div>
+            </a>
             <p block="IconWrapper" elem="IconTitle">
               {__("Live Chat")}
             </p>
@@ -1007,71 +1005,63 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  
   renderReturnInfo() {
-
     const { isArabic } = this.state;
 
-    if(this.props.product.returnable === YES || ( this.props.product.returnable === YES_IN_ARABIC && isArabic )){
+    if (
+      this.props.product.returnable === YES ||
+      (this.props.product.returnable === YES_IN_ARABIC && isArabic)
+    ) {
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
-              {__("Return any unsatisfactory items within 100 days from receiving your order.")}
+            {__(
+              "Return any unsatisfactory items within 100 days from receiving your order."
+            )}
           </p>
         </div>
-      )
-    } else if (this.props.product.returnable === NO || ( this.props.product.returnable === NO_IN_ARABIC && isArabic ) ){
+      );
+    } else if (
+      this.props.product.returnable === NO ||
+      (this.props.product.returnable === NO_IN_ARABIC && isArabic)
+    ) {
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
             {__("Item cannot be returned.")}
           </p>
         </div>
-      )
-    } 
+      );
+    }
 
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
           {__(
-              "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
-            )}
+            "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
+          )}
         </p>
       </div>
-    )
-
+    );
   }
 
   renderShippingInfo() {
     let country = getCountryFromUrl();
-      let txt = {
-        AE: __(
-          "*Free delivery for orders above AED 200."
-        ),
-        SA: __(
-          "*Free delivery for orders above SAR 200."
-        ),
-        KW: __(
-          "*Free delivery for orders above KWD 20."
-        ),
-        QA: __(
-          "*Free delivery for orders above QAR 200."
-        ),
-        OM: __(
-          "*Free delivery for orders above OMR 20."
-        ),
-        BH: __(
-          "*Free delivery for orders above BHD 20."
-        ),
-      };
-  
+    let txt = {
+      AE: __("*Free delivery for orders above AED 200."),
+      SA: __("*Free delivery for orders above SAR 200."),
+      KW: __("*Free delivery for orders above KWD 20."),
+      QA: __("*Free delivery for orders above QAR 200."),
+      OM: __("*Free delivery for orders above OMR 20."),
+      BH: __("*Free delivery for orders above BHD 20."),
+    };
+
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold"
-            >
-              {txt[country]}
-            </b>
+          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+            {txt[country]}
+          </b>
           <br />
         </p>
         <div block="FindOutMore">
@@ -1082,15 +1072,13 @@ class PDPDetailsSection extends PureComponent {
           </Link>
         </div>
       </div>
-    )
+    );
   }
-  
-
 
   render() {
     const {
       product: { brand_name },
-      pdpWidgetsAPIData= []
+      pdpWidgetsAPIData = [],
     } = this.props;
     const { isMobile } = this.state;
     return (
@@ -1117,26 +1105,20 @@ class PDPDetailsSection extends PureComponent {
         </div>
         {isMobile ? null : this.renderSeperator()}
 
-        {
-          this.props?.product?.returnable ? (
-
-            <div block="AccordionWrapper">
-              <Accordion
-                mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-                title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
-                is_expanded={this.state.isExpanded["3"]}
-              >
-                {this.renderReturnInfo()}
-                {this.renderShippingInfo()}
-                {isMobile ? <br /> : null}
-              </Accordion>
-                {this.renderAccordionSeperator()}
-            </div>
-            
-          ) : (
-            null
-          )
-        }
+        {this.props?.product?.returnable ? (
+          <div block="AccordionWrapper">
+            <Accordion
+              mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+              title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
+              is_expanded={this.state.isExpanded["3"]}
+            >
+              {this.renderReturnInfo()}
+              {this.renderShippingInfo()}
+              {isMobile ? <br /> : null}
+            </Accordion>
+            {this.renderAccordionSeperator()}
+          </div>
+        ) : null}
 
         {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
