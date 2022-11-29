@@ -65,14 +65,14 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   sendImpressions() {
     const products = this.getProducts();
-    const items = products.map((item) => {
+    const items = products.map((item, index) => {
       let itemPrice = null;
       let basePrice = null;
-      if(item.price.length > 0) {
+      if (item.price.length > 0) {
         itemPrice =
-        item?.price[0][Object.keys(item?.price[0])[0]]["6s_special_price"];
-      basePrice =
-        item?.price[0][Object.keys(item?.price[0])[0]]["6s_base_price"];
+          item?.price[0][Object.keys(item?.price[0])[0]]["6s_special_price"];
+        basePrice =
+          item?.price[0][Object.keys(item?.price[0])[0]]["6s_base_price"];
       }
       return {
         id: item.sku,
@@ -83,6 +83,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         url: item.link,
         special_price: itemPrice,
         original_price: basePrice,
+        product_Position: index + 1,
       };
     });
     Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, items);
