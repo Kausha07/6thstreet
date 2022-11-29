@@ -83,9 +83,6 @@ export class CheckoutFail extends CheckoutSuccess {
       subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
     });
-    if (localStorage.hasOwnProperty("TT_Guest_Data")) {
-      localStorage.removeItem("TT_Guest_Data");
-    }
   }
 
   renderStatus() {

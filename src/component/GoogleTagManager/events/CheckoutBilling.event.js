@@ -42,17 +42,11 @@ class CheckoutBillingEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
         ? BrowserDatabase.getItem("TT_Data").mail
-        : BrowserDatabase.getItem("TT_Guest_Data") &&
-          BrowserDatabase.getItem("TT_Guest_Data")?.mail
-        ? BrowserDatabase.getItem("TT_Guest_Data").mail
         : null;
     const sha_phone =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
-        : BrowserDatabase.getItem("TT_Guest_Data") &&
-          BrowserDatabase.getItem("TT_Guest_Data")?.phone
-        ? BrowserDatabase.getItem("TT_Guest_Data").phone
         : null;
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;

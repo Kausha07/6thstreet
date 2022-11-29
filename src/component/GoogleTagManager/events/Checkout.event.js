@@ -38,17 +38,11 @@ class CheckoutEvent extends BaseEvent {
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
         ? BrowserDatabase.getItem("TT_Data").mail
-        : BrowserDatabase.getItem("TT_Guest_Data") &&
-          BrowserDatabase.getItem("TT_Guest_Data")?.mail
-        ? BrowserDatabase.getItem("TT_Guest_Data").mail
         : null;
     const sha_phone =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.phone
         ? BrowserDatabase.getItem("TT_Data").phone
-        : BrowserDatabase.getItem("TT_Guest_Data") &&
-          BrowserDatabase.getItem("TT_Guest_Data")?.phone
-        ? BrowserDatabase.getItem("TT_Guest_Data").phone
         : null;
     this.pushEventData({
       ...(step == 2 && {

@@ -19,7 +19,6 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { EVENT_MOE_GO_TO_PAYMENT } from "Util/Event";
-import { sha256 } from "js-sha256";
 
 import "./CheckoutShipping.style";
 
@@ -161,20 +160,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const formatPhoneNumber = phoneNumber.includes("+")
       ? phoneNumber.replace("+", "")
       : phoneNumber;
-    const customerEmail =
-      email && email.length > 0
-        ? email
-        : getformValue("guest_email") && getformValue("guest_email").length > 0
-        ? getformValue("guest_email")
-        : customer.email
-        ? customer.email
-        : null;
-    const TiktokData = {
-      mail:
-        customerEmail && customerEmail.length ? sha256(customerEmail) : null,
-      phone: phoneNumber && phoneNumber.length ? sha256(phoneNumber) : null,
-    };
-    BrowserDatabase.setItem(TiktokData, "TT_Guest_Data", 86400);
 
     if (items && items.length > 0) {
       let productName = [],
