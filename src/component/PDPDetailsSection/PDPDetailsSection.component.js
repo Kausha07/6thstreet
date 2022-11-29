@@ -4,7 +4,6 @@ import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
-import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
 import { PureComponent, Fragment } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -65,28 +64,6 @@ class PDPDetailsSection extends PureComponent {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
     document.body.style.overflowX = "visible";
-  }
-
-  renderShareButton() {
-    const url = new URL(window.location.href);
-    url.searchParams.append("utm_source", "pdp_share");
-    return (
-      <>
-        <div block="PDPDetailsSection" elem="ShareButtonContainer">
-          <ShareButton
-            block="PDPDetailsSection-ShareButtonContainer"
-            elem="ShareButton"
-            title={document.title}
-            text={`Hey check this out: ${document.title}`}
-            url={url.toString()}
-            mods={{ isArabic: isArabic() }}
-          >
-            <span>{__("Share")}</span>
-          </ShareButton>
-        </div>
-        {this.renderAccordionSeperator()}
-      </>
-    );
   }
 
   renderSizeAndFit() {
@@ -1100,7 +1077,6 @@ class PDPDetailsSection extends PureComponent {
             {this.renderDescription()}
           </Accordion>
           {this.renderAccordionSeperator()}
-          {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
         {isMobile ? null : this.renderSeperator()}

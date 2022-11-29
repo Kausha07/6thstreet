@@ -4,7 +4,6 @@ import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
-import ShareButton from "Component/ShareButton";
 import SearchIcon from "Component/Icons/Search";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -13,7 +12,6 @@ import { isArabic } from "Util/App";
 import browserHistory from "Util/History";
 import isMobile from "Util/Mobile";
 import "./PDPGallery.style";
-import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from "react-redux";
@@ -120,19 +118,6 @@ class PDPGallery extends PureComponent {
         pageType="pdp"
         data={product}
       />
-    );
-  }
-  renderShareButton() {
-    const url = new URL(window.location.href);
-    url.searchParams.append("utm_source", "pdp_share");
-    return (
-      <div block="ShareIcon">
-        <ShareButton
-          title={document.title}
-          text={`Hey! check this out: ${document.title}`}
-          url={url}
-        />
-      </div>
     );
   }
 

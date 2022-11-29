@@ -764,13 +764,6 @@ class PDPSummary extends PureComponent {
               {name}
             </span>
           </h1>
-
-          <ShareButton
-            title={document.title}
-            text={`Hey check this out: ${document.title}`}
-            url={url.href}
-            image={gallery_images[0] || fallbackImage}
-          />
         </div>
       );
     }
