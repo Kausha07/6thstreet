@@ -507,6 +507,7 @@ export class CartItem extends PureComponent {
         bundle_options,
         full_item_info: { cross_border = 0 },
         brand_name = "",
+        row_total,
       },
       intlEddResponse
     } = this.props;
@@ -528,7 +529,7 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
-        {this.renderColSizeQty()}
+        {row_total === 0 ? null : this.renderColSizeQty()}
         {isNotAvailble ? null : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {edd_info &&
@@ -537,7 +538,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
-        {this.renderActions()}
+        {row_total === 0 ? null : this.renderActions()}
       </figcaption>
     );
   }
