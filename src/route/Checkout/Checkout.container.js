@@ -1107,6 +1107,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (code === CHECKOUT_APPLE_PAY) {
           return false;
         }
+        if(response === "Invalid Coupon.") {
+          history.push({
+            pathname: "/cart",
+          });
+          return;
+        }
         this.resetCart();
       }
     } catch (e) {

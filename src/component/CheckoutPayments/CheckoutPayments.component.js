@@ -73,7 +73,9 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       totals: { total, currency_code },
     } = this.props;
     if (selectedPaymentCode === TABBY_ISTALLMENTS || prevProps?.totals?.total !== total) {
-      this.addTabbyCard(total, currency_code);
+      if(currency_code && total) {
+        this.addTabbyCard(total, currency_code);
+      }
     }
   }
 
