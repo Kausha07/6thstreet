@@ -226,6 +226,7 @@
         }
       }
 
+
       .MyAccountTabListItem {
         button {
           text-align: right;
@@ -250,6 +251,13 @@
           }
         }
       }
+
+      .PolicyBtn{
+        button{
+        padding-right: 0.5rem;
+        }
+      }
+
     }
   }
 }
