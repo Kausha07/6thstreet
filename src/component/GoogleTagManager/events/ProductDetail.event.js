@@ -8,7 +8,7 @@ import ProductHelper from "../utils";
 import BaseEvent from "./Base.event";
 
 export const SPAM_PROTECTION_TIMEOUT = 0;
-export const EVENT_EXECUTION_DELAY = 500;
+export const EVENT_EXECUTION_DELAY = 300;
 
 /**
  * Product detail push event

@@ -81,7 +81,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       price: itemPrice || "",
       brand: brand_name || "",
       category: product_type_6s || category,
-      varient: color || "",
+      variant: color || "",
       position: product_Position || "",
     });
     //this.sendBannerClickImpression(item);

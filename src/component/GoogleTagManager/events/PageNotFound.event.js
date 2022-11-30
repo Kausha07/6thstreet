@@ -14,7 +14,7 @@ import BaseEvent from "./Base.event";
  *
  * @type {number}
  */
-export const SPAM_PROTECTION_DELAY = 200;
+export const SPAM_PROTECTION_DELAY = 400;
 export const EVENT_HANDLE_DELAY = 700;
 
 class PageNotFoundEvent extends BaseEvent {
@@ -34,6 +34,9 @@ class PageNotFoundEvent extends BaseEvent {
     });
   }
   handler(EVENT_TYPE, url) {
+    if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
+      return;
+    }
     this.pushEventData({
       event: EVENT_TYPE,
       ecommerce: {

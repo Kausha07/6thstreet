@@ -116,7 +116,8 @@ export class PDPContainer extends PureComponent {
     currentLocation: "",
     pdpWidgetsAPIData: [],
     isPdpWidgetSet: false,
-    isArabic: isArabic()
+    isArabic: isArabic(),
+    eventSent: false,
   };
 
   constructor(props) {
@@ -126,8 +127,8 @@ export class PDPContainer extends PureComponent {
   componentDidMount() {
     const {
       requestPdpWidgetData,
-      pdpWidgetsData=[],
-      location: { pathname="" },
+      pdpWidgetsData = [],
+      location: { pathname = "" },
     } = this.props;
     this.requestProduct();
     if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
@@ -139,13 +140,23 @@ export class PDPContainer extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      product: { sku, brand_name: brandName } = {},
+      product: {
+        sku,
+        brand_name: brandName,
+        categories = {},
+        name,
+        url,
+        thumbnail_url,
+        product_type_6s,
+        price,
+        highlighted_attributes = [],
+      } = {},
       product,
       menuCategories = [],
       pdpWidgetsData = [],
     } = this.props;
-    const { productSku ="", isPdpWidgetSet=false } = this.state;
-    if(Object.keys(product).length) {
+    const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
+    if (Object.keys(product).length) {
       if (!isPdpWidgetSet && pdpWidgetsData.length !== 0) {
         this.getPdpWidgetsVueData();
         this.setState({
@@ -160,6 +171,79 @@ export class PDPContainer extends PureComponent {
       this.updateHeaderState();
       this.fetchClickAndCollectStores(brandName, sku);
       this.appendSchemaData();
+    }
+    const getDetails = highlighted_attributes.map((item) => ({
+      [item.key]: item.value,
+    }));
+    const productKeys = Object.assign({}, ...getDetails);
+    const specialPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_special_price"]
+        : null;
+    const originalPrice =
+      price && price[0]
+        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
+        : price && Object.keys(price)[0] !== "0"
+        ? price[Object.keys(price)[0]]["6s_base_price"]
+        : null;
+    const checkCategoryLevel = () => {
+      if (!categories) {
+        return "this category";
+      }
+      if (categories.level4 && categories.level4.length > 0) {
+        return categories.level4[0];
+      } else if (categories.level3 && categories.level3.length > 0) {
+        return categories.level3[0];
+      } else if (categories.level2 && categories.level2.length > 0) {
+        return categories.level2[0];
+      } else if (categories.level1 && categories.level1.length > 0) {
+        return categories.level1[0];
+      } else if (categories.level0 && categories.level0.length > 0) {
+        return categories.level0[0];
+      } else return "";
+    };
+    const categoryLevel =
+      product_type_6s && product_type_6s.length > 0
+        ? product_type_6s
+        : checkCategoryLevel().includes("///")
+        ? checkCategoryLevel().split("///").pop()
+        : "";
+    if (Object.keys(getDetails).length > 0 && !eventSent) {
+      Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+        product: {
+          name: productKeys.name,
+          id: sku,
+          price: specialPrice || originalPrice,
+          brand: productKeys?.brand_name,
+          category: categoryLevel || "",
+          variant: productKeys?.color || "",
+        },
+      });
+      const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+      Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        category: currentAppState.gender
+          ? currentAppState?.gender?.toUpperCase()
+          : "",
+        gender: currentAppState.gender
+          ? currentAppState?.gender?.toUpperCase()
+          : "",
+        subcategory: categoryLevel || product_type_6s,
+        color: productKeys?.color || "",
+        brand_name: productKeys?.brand_name || "",
+        full_price: originalPrice || "",
+        product_url: url,
+        currency: getCurrency() || "",
+        product_sku: sku || "",
+        discounted_price: specialPrice || "",
+        product_image_url: thumbnail_url || "",
+        product_name: name || "",
+        app6thstreet_platform: "Web",
+      });
+      this.setState({ eventSent: true });
     }
   }
   appendSchemaData() {
@@ -300,7 +384,11 @@ export class PDPContainer extends PureComponent {
   }
 
   getPdpWidgetsVueData() {
-    const { gender="", pdpWidgetsData=[], product: {sku = ""} = {} } = this.props;
+    const {
+      gender = "",
+      pdpWidgetsData = [],
+      product: { sku = "" } = {},
+    } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
@@ -314,14 +402,14 @@ export class PDPContainer extends PureComponent {
       let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
-        const defaultQueryPayload ={
+        const defaultQueryPayload = {
           userID,
           product_id: sku,
         };
-        if(type !== "vue_visually_similar_slider") {
-          defaultQueryPayload.gender= gender;
+        if (type !== "vue_visually_similar_slider") {
+          defaultQueryPayload.gender = gender;
         }
-        const payload = VueQuery.buildQuery(type, query, defaultQueryPayload );
+        const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
         promisesArray.push(fetchVueData(payload));
       });
       Promise.all(promisesArray)
@@ -389,7 +477,7 @@ export class PDPContainer extends PureComponent {
       nbHits,
       menuCategories,
     } = this.props;
-    const {isArabic} = this.state
+    const { isArabic } = this.state;
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
@@ -405,7 +493,8 @@ export class PDPContainer extends PureComponent {
         categoriesLastLevel.map(() => urlArray.push("/"));
       }
       const breadcrumbsMapped =
-        getBreadcrumbs(categoriesLastLevel, setGender, urlArray, isArabic) || [];
+        getBreadcrumbs(categoriesLastLevel, setGender, urlArray, isArabic) ||
+        [];
       const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
         acc.unshift(item);
 
@@ -423,78 +512,6 @@ export class PDPContainer extends PureComponent {
       updateBreadcrumbs(breadcrumbs);
       this.setState({ productSku: sku });
     }
-    const getDetails = highlighted_attributes.map((item) => ({
-      [item.key]: item.value,
-    }));
-    const productKeys = Object.assign({}, ...getDetails);
-    const specialPrice =
-      price && price[0]
-        ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
-        : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_special_price"]
-        : null;
-    const originalPrice =
-      price && price[0]
-        ? price[0][Object.keys(price[0])[0]]["6s_base_price"]
-        : price && Object.keys(price)[0] !== "0"
-        ? price[Object.keys(price)[0]]["6s_base_price"]
-        : null;
-    const checkCategoryLevel = () => {
-      if (!categories) {
-        return "this category";
-      }
-      if (categories.level4 && categories.level4.length > 0) {
-        return categories.level4[0];
-      } else if (categories.level3 && categories.level3.length > 0) {
-        return categories.level3[0];
-      } else if (categories.level2 && categories.level2.length > 0) {
-        return categories.level2[0];
-      } else if (categories.level1 && categories.level1.length > 0) {
-        return categories.level1[0];
-      } else if (categories.level0 && categories.level0.length > 0) {
-        return categories.level0[0];
-      } else return "";
-    };
-    const categoryLevel =
-      product_type_6s && product_type_6s.length > 0
-        ? product_type_6s
-        : checkCategoryLevel().includes("///")
-        ? checkCategoryLevel().split("///").pop()
-        : "";
-
-    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
-      product: {
-        name: productKeys.name,
-        id: sku,
-        price: specialPrice || originalPrice,
-        brand: productKeys?.brand_name,
-        category: categoryLevel,
-        varient: productKeys?.color || "",
-      },
-    });
-
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
-        ? currentAppState?.gender?.toUpperCase()
-        : "",
-      gender: currentAppState.gender
-        ? currentAppState?.gender?.toUpperCase()
-        : "",
-      subcategory: categoryLevel || product_type_6s,
-      color: productKeys?.color || "",
-      brand_name: productKeys?.brand_name || "",
-      full_price: originalPrice || "",
-      product_url: url,
-      currency: getCurrency() || "",
-      product_sku: sku || "",
-      discounted_price: specialPrice || "",
-      product_image_url: thumbnail_url || "",
-      product_name: name || "",
-      app6thstreet_platform: "Web",
-    });
   }
 
   setMetaData() {
@@ -612,7 +629,7 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
     } = this.props;
-    const { pdpWidgetsAPIData=[] } = this.state;
+    const { pdpWidgetsAPIData = [] } = this.state;
 
     // const { isLoading: isCategoryLoading } = this.state;
 
@@ -629,7 +646,7 @@ export class PDPContainer extends PureComponent {
   };
 
   render() {
-    const { product={} } = this.props;
+    const { product = {} } = this.props;
     const prodPrice =
       product?.price && product?.price[0]
         ? product?.price[0][Object.keys(product?.price[0])[0]][
