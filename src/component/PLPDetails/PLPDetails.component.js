@@ -58,7 +58,7 @@ class PLPDetails extends PureComponent {
           elem="BrandHTML"
           dangerouslySetInnerHTML={{ __html: brandDescription }}
         />
-        { brandDescription && !brandDescription.offsetHeight < 45 ? 
+        { brandDescription && brandDescription.length > 180 ? 
           <button onClick={this.handleClick}>
             {this.state.isToggleOn ? 'Read more' : 'Read less'}
           </button>
