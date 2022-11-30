@@ -1131,5 +1131,11 @@
     "*Free delivery for orders above QAR 200.": "*توصيل مجاني للطلبات بقيمة 200 ريال أو أكثر",
     "*Free delivery for orders above OMR 20.": "*توصيل مجاني للطلبات بقيمة 20 ريال أو أكثر",
     "*Free delivery for orders above BHD 20.": "*توصيل مجاني للطلبات بقيمة 20 دينار أو أكثر",
-    "Age": "سن"
+    "Age": "سن",
+    "Discount code": "رمز الكوبون",
+    "Promo codes": "رمز الكوبون",
+    "Select a Promo or type a Coupon code": "أدخل القسيمة أو الرمز الترويجي",
+    "Terms & Conditions": "البنود و الظروف",
+    "I Agree": "موافق",
+    "ENTER YOUR COUPON CODE": "أدخل رمز القسيمة الخاص بك"
 }

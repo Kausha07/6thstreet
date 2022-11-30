@@ -110,10 +110,15 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  getCouponList: () => CartDispatcher.getCoupon(dispatch),
+  applyCouponToCart: (couponCode) => CartDispatcher.applyCouponCode(dispatch, couponCode),
+  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
+  couponsItems: state.CartReducer.cartCoupons,
+  couponLists: state.CartReducer.cartCoupons,
   totals: state.CartReducer.cartTotals,
   cartItems: state.CartReducer.cartItems,
   processingRequest: state.CartReducer.processingRequest,
@@ -493,6 +498,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getKNETData();
     this.getQPayData();
     this.getTabbyData();
+    getCouponList();
   }
 
   componentDidUpdate(prevProps, prevState) {
