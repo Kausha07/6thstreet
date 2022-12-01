@@ -1113,10 +1113,12 @@
     "KNET Transaction Id": "رمز تعريف معاملة كي نت",
     "SUCCESS": "ناجح",
     "FAILED": "فشلت عملية الدفع",
-    "Age": "سن",
+    "Age": null,
     "Your shopping bag is empty.": "حقيبة التسوق الخاصة بك فارغة",
-    "Your shopping bag is empty.!": null,
+    "Your shopping bag is empty.!": "حقيبة التسوق الخاصة بك فارغة",
     "KNET": null,
-    "Continue Shopping": null,
-    "SHOPPING BAG ": null
+    "Continue Shopping": "استمر بالتسوق",
+    "SHOPPING BAG ": null,
+    " SHOPPING BAG ": null,
+    " Bag ": null
 }
