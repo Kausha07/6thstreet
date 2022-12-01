@@ -92,6 +92,7 @@ export class CheckoutFail extends CheckoutSuccess {
           lazyLoad={true}
           src={WarningImage}
           mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
+          alt={"WarningImage"}
         />
         <p>{__("Payment Failed")}</p>
       </div>

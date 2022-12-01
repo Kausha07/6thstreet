@@ -21,7 +21,7 @@ import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./ContactHelp.style";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_MOE_PHONE, EVENT_MOE_MAIL, EVENT_MOE_CHAT } from "Util/Event";
+import { EVENT_PHONE, EVENT_MAIL, EVENT_MOE_CHAT } from "Util/Event";
 
 export class ContactHelp extends PureComponent {
   static propTypes = {};
@@ -76,7 +76,7 @@ export class ContactHelp extends PureComponent {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
-                  this.sendEvents(EVENT_MOE_PHONE);
+                  this.sendEvents(EVENT_PHONE);
                 }}
               >
                 <Phone />
@@ -109,7 +109,7 @@ export class ContactHelp extends PureComponent {
                 href={`mailto:${EMAIL_LINK}`}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => this.sendEvents(EVENT_MOE_MAIL)}
+                onClick={() => this.sendEvents(EVENT_MAIL)}
               >
                 <Email />
               </a>

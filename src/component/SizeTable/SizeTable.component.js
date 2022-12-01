@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import { PureComponent, Fragment } from "react";
 
 import { isArabic } from "Util/App";
 
@@ -120,7 +120,7 @@ export class SizeTable extends PureComponent {
     }
 
     return (
-      <tr>
+      <tr key={i}>
         <td mix={{ block: "SizeTable", elem: "TableCell" }}>{size}</td>
         <td mix={{ block: "SizeTable", elem: "TableCell" }}>{bust}</td>
         <td mix={{ block: "SizeTable", elem: "TableCell" }}>{waist}</td>
@@ -522,7 +522,7 @@ export class SizeTable extends PureComponent {
     const innerRows = this.renderInnerRows(data);
 
     return (
-      <>
+      <Fragment key={i}>
         <tr key={i}>
           <td
             colSpan="5"
@@ -532,7 +532,7 @@ export class SizeTable extends PureComponent {
           </td>
         </tr>
         {innerRows}
-      </>
+      </Fragment>
     );
   };
   renderKidsClothingRows() {

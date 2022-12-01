@@ -135,6 +135,7 @@ class MyAccountOrderView extends PureComponent {
         : item?.edd;
     return (
       <MyAccountOrderViewItem
+        key={item.item_id}
         item={item}
         setEddEventSent={this.setEddEventSent}
         eddEventSent={eddEventSent}
@@ -204,6 +205,7 @@ class MyAccountOrderView extends PureComponent {
           <Image
             src={StatusImage}
             mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
+            alt={title ? title : "Warning-image"}
           />
           <p>{title}</p>
         </div>
@@ -299,6 +301,7 @@ class MyAccountOrderView extends PureComponent {
         <Image
           src={TruckImage}
           mix={{ block: "MyAccountOrderView", elem: "TruckImage" }}
+          alt={"Truckimage"}
         />
         <p>
           {
@@ -362,6 +365,7 @@ class MyAccountOrderView extends PureComponent {
             elem: "AccordionTitleImage",
             mods: { isArabic: isArabic() },
           }}
+          alt={title ? title : "AccordionTitleImage"}
         />
         <h3>
           {title}
@@ -440,7 +444,7 @@ class MyAccountOrderView extends PureComponent {
         </div>
         <div block="MyAccountOrderListItem" elem="StatusList">
           {Object.values(STATUS_LABELS).map((label, index) => (
-            <div block={index === 2 ? "EddDiv" : ""}>
+            <div block={index === 2 ? "EddDiv" : ""} key={index}>
               <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label}
               </p>

@@ -38,7 +38,6 @@ export class CartDispatcher {
     if ((!cartId || isNewCart) && createNewCart) {
       try {
         const { data: requestedCartId = null } = await createCart(cart_id);
-
         if (!requestedCartId) {
           dispatch(
             showNotification(
@@ -174,8 +173,12 @@ export class CartDispatcher {
     thumbnail_url,
     url,
     itemPrice,
-    searchQueryId = null
+    searchQueryId = null,
+    cartIdURL,
+    liveparty
   ) {
+    if (cartIdURL) dispatch(setCartId(cartIdURL));
+
     const {
       Cart: { cartId },
     } = getStore().getState();
@@ -226,8 +229,7 @@ export class CartDispatcher {
       );
       let updateCartID = cartId || newCartId;
       await this.getCartTotals(dispatch, updateCartID);
-
-      return !data ? response : null;
+      return (liveparty ? response  : !data ? response : null);
     } catch (e) {
       Logger.log(e);
       if (e) {

@@ -75,15 +75,15 @@ class HeaderTopBar extends NavigationAbstract {
     // TODO: find out what is this, render here
     let country = getCountryFromUrl();
     let txt = {
-      AE: __("FREE SHIPPING OVER AED99"),
+      AE: __("FREE SHIPPING OVER AED199"),
       SA: __("FREE SHIPPING OVER SAR199"),
-      KW: __("FREE SHIPPING OVER KWD16.5"),
+      KW: __("FREE SHIPPING OVER KWD20"),
       QA: __("FREE SHIPPING OVER QAR199"),
       OM: __("FREE SHIPPING OVER OMR20"),
       BH: __("FREE SHIPPING OVER BHD20.5"),
     };
     return (
-      <div className="customVerticalSlider">
+      <div className="customVerticalSlider" key="cms-block">
         <div className="carouselItemInner">
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("800+ GLOBAL BRANDS")}

@@ -9,7 +9,11 @@ import {
   setLanguageForWelcome,
 } from "Store/AppState/AppState.action";
 import LanguageSwitcher from "./LanguageSwitcher.component";
-import { EVENT_MOE_SET_LANGUAGE } from "Util/Event";
+import Event, {
+  EVENT_MOE_SET_LANGUAGE,
+  EVENT_LANGUAGE_CHANGE,
+  EVENT_GTM_TOP_NAV_CLICK,
+} from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import Loader from "Component/Loader";
 
@@ -34,9 +38,16 @@ export class LanguageSwitcherContainer extends PureComponent {
   containerFunctions = {
     onLanguageSelect: this.onLanguageSelect.bind(this),
   };
+
   state = {
     isLoad: false,
   };
+
+  timer = null;
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
 
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
@@ -46,20 +57,27 @@ export class LanguageSwitcherContainer extends PureComponent {
       language: value.toUpperCase() || "",
       app6thstreet_platform: "Web",
     });
+
+    const eventData = {
+      name: EVENT_LANGUAGE_CHANGE,
+      value: value.toUpperCase(),
+    };
+    Event.dispatch(EVENT_GTM_TOP_NAV_CLICK, eventData);
+
     const pageUrl = new URL(window.location.href);
     if (
       window.location.href.includes("en-") ||
       window.location.href.includes("ar-")
     ) {
       if (location.pathname.match(/my-account/)) {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href
             .replace(language.toLowerCase(), value, location.href)
             .split("/my-account")[0];
         }, 1000);
-      }else if (location.pathname.match(/viewall/)) {
-        setTimeout(() => {
+      } else if (location.pathname.match(/viewall/)) {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href
             .replace(language.toLowerCase(), value, location.href)
@@ -67,7 +85,7 @@ export class LanguageSwitcherContainer extends PureComponent {
         }, 1000);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
         const pagePath = pageUrl.origin;
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(
             language.toLowerCase(),
@@ -81,7 +99,7 @@ export class LanguageSwitcherContainer extends PureComponent {
         pageUrl.pathname !== "/catalogsearch/result/"
       ) {
         const pagePath = pageUrl.origin + pageUrl.pathname;
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(
             language.toLowerCase(),
@@ -90,7 +108,7 @@ export class LanguageSwitcherContainer extends PureComponent {
           );
         }, 1000);
       } else {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href.replace(
             language.toLowerCase(),
@@ -102,6 +120,9 @@ export class LanguageSwitcherContainer extends PureComponent {
     } else {
       this.props.setLanguageForWelcome(value);
     }
+    this.timer = setTimeout(() => {
+      this.setState({ isLoad: false });
+    }, 1000);
   }
 
   containerProps = () => {

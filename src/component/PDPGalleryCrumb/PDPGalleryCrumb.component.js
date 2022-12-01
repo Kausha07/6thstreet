@@ -35,13 +35,14 @@ class PDPGalleryCrumb extends PureComponent {
   renderImage() {
     const {
       options: { src },
+      product : { name }
     } = this.props;
     if (src.includes("http")) {
-      return <Image lazyLoad={false} src={src} />;
+      return <Image lazyLoad={false} src={src} alt={name ? name : "product-name"} />;
     } else {
       return (
         <div block="staticDiv">
-          <img src={src} className="staticImg" />
+          <img src={src} className="staticImg" alt={name ? name : "product-name"} />
         </div>
       );
     }

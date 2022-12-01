@@ -133,6 +133,7 @@ class DynamicContentTwiceBanner extends PureComponent {
           lazyLoad={true}
           src={url}
           className="BannerImage"
+          alt={item.promotion_name ? item.promotion_name : "BannerImage"}
         // style={{ maxWidth: width, maxHeight: height }}
         />
       </Link>

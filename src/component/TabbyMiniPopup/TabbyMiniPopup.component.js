@@ -85,7 +85,7 @@ class TabbyMiniPopup extends PureComponent {
         <h4>{__("Split your purchase into equal monthly installments")}</h4>
         <div block="TabbyMiniPopup" elem="Columns">
           <div block="TabbyMiniPopup" elem="Column">
-            {TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row))}
+            {TABBY_ROW_DATA.map((row, index) => this.renderTabbyPopupRow(row, index))}
           </div>
         </div>
         <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -101,7 +101,7 @@ class TabbyMiniPopup extends PureComponent {
         <h4>{__("Split into 4 equal monthly payments")}</h4>
         <div block="TabbyMiniPopup" elem="Columns">
           <div block="TabbyMiniPopup" elem="Column">
-            {TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row))}
+            {TABBY_ROW_DATA.map((row, index) => this.renderTabbyPopupRow(row, index))}
           </div>
         </div>
         <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -122,7 +122,7 @@ class TabbyMiniPopup extends PureComponent {
             )}
           </div>
           <div block="TabbyMiniPopup" elem="Column">
-            {TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row))}
+            {TABBY_ROW_DATA.map((row, index) => this.renderTabbyPopupRow(row, index))}
           </div>
         </div>
         <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -132,11 +132,11 @@ class TabbyMiniPopup extends PureComponent {
     );
   }
 
-  renderTabbyPopupRow(row) {
+  renderTabbyPopupRow(row, index) {
     const { img, title, text } = row;
 
     return (
-      <div block="TabbyMiniPopup" elem="Row">
+      <div block="TabbyMiniPopup" elem="Row" key={index}>
         <Image lazyLoad={true} src={img} alt="icon" />
         <div block="TabbyMiniPopup" elem="RowText">
           <h5>{title}</h5>
@@ -148,7 +148,7 @@ class TabbyMiniPopup extends PureComponent {
 
   renderTabbyPopupSubRow(text, index) {
     return (
-      <div block="TabbyMiniPopup" elem="SubRow">
+      <div block="TabbyMiniPopup" elem="SubRow" key={index}>
         <div block="TabbyMiniPopup" elem="SubRowCircle">
           {index + 1}
         </div>

@@ -44,6 +44,24 @@ import {
   STATE_VERIFY_NUMBER,
   STATE_INITIAL_LINKS,
 } from "./MyAccountOverlay.config";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import Event, {
+  EVENT_LOGIN,
+  EVENT_LOGIN_FAILED,
+  EVENT_MOE_REGISTER,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_UP_FAIL,
+  EVENT_SIGN_UP,
+  EVENT_OTP_VERIFICATION_SUCCESSFUL,
+  EVENT_OTP_VERIFICATION_FAILED,
+  EVENT_PASSWORD_RESET_LINK_SENT,
+  EVENT_LOGIN_TAB_CLICK,
+  EVENT_LOGIN_DETAILS_ENTERED,
+  EVENT_FORGOT_PASSWORD_CLICK,
+  EVENT_REGISTER_TAB_CLICK,
+  EVENT_REGISTERATION_DETAILS_ENTERED,
+  EVENT_RESEND_VERIFICATION_CODE,
+} from "Util/Event";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -134,6 +152,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     onCreateAccountClick: this.onCreateAccountClick.bind(this),
     onVisible: this.onVisible.bind(this),
     OtpErrorClear: this.OtpErrorClear.bind(this),
+    sendGTMEvents: this.sendGTMEvents.bind(this),
   };
 
   constructor(props) {
@@ -141,6 +160,8 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     this.state = this.redirectOrGetState(props);
   }
+
+  timer = null;
 
   static getDerivedStateFromProps(props, state) {
     const { isSignedIn, isPasswordForgotSend, showNotification, isPopup } =
@@ -193,8 +214,72 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     return Object.keys(stateToBeUpdated).length ? stateToBeUpdated : null;
   }
+
+  sendMOEEvents(event) {
+    Moengage.track_event(event, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+  }
+
+  sendGTMEvents(event, message) {
+    const { otpAttempt, customerLoginData, customerRegisterData } = this.state;
+    const eventCategory = () => {
+      if (
+        event == EVENT_LOGIN ||
+        event == EVENT_LOGIN_FAILED ||
+        event == EVENT_LOGIN_TAB_CLICK ||
+        event == EVENT_LOGIN_DETAILS_ENTERED ||
+        event == EVENT_FORGOT_PASSWORD_CLICK ||
+        event == EVENT_PASSWORD_RESET_LINK_SENT
+      ) {
+        return "user_login";
+      } else if (
+        event == EVENT_REGISTER_TAB_CLICK ||
+        event == EVENT_REGISTERATION_DETAILS_ENTERED ||
+        event == EVENT_SIGN_UP_FAIL ||
+        event == EVENT_SIGN_UP
+      ) {
+        return "sign_up";
+      } else if (
+        event == EVENT_OTP_VERIFICATION_SUCCESSFUL ||
+        event == EVENT_OTP_VERIFICATION_FAILED
+      ) {
+        if (Object.entries(customerRegisterData)?.length) {
+          return "sign_up";
+        } else if (Object.entries(customerLoginData)?.length) {
+          return "user_login";
+        } else {
+          return event;
+        }
+      } else {
+        return event;
+      }
+    };
+    const EventDetails = {
+      name: event,
+      action: event,
+      category:
+        event == EVENT_RESEND_VERIFICATION_CODE ? message : eventCategory(),
+      ...((event == EVENT_LOGIN_DETAILS_ENTERED || event == EVENT_LOGIN) && {
+        loginMode: message,
+      }),
+      ...((event == EVENT_OTP_VERIFICATION_SUCCESSFUL ||
+        event == EVENT_LOGIN) && {
+        attemptNumber: otpAttempt,
+      }),
+      ...((event == EVENT_LOGIN_FAILED ||
+        event == EVENT_SIGN_UP_FAIL ||
+        event == EVENT_OTP_VERIFICATION_FAILED) && {
+        failReason: message,
+      }),
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, EventDetails);
+  }
+
   handleBackBtn = () => {
-    const { closePopup,isVuePLP } = this.props;
+    const { closePopup, isVuePLP } = this.props;
     const getCurrentState = this.state.state;
     const { location } = browserHistory;
     if (isMobile.any() && !isVuePLP) {
@@ -209,6 +294,10 @@ export class MyAccountOverlayContainer extends PureComponent {
         }
       };
     }
+  };
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -251,6 +340,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       customerRegisterData: {},
       customerLoginData: {},
       otpError: "",
+      otpAttempt: 1,
     };
 
     // if customer got here from forgot-password
@@ -282,15 +372,43 @@ export class MyAccountOverlayContainer extends PureComponent {
     return state;
   };
 
+  addMOEDetails() {
+    this.timer = setTimeout(() => {
+      if (BrowserDatabase.getItem("customer")) {
+        const customerDetail = BrowserDatabase.getItem("customer");
+        if (customerDetail.email && customerDetail.email.length) {
+          Moengage.add_email(customerDetail.email);
+        }
+        if (customerDetail.firstname && customerDetail.firstname.length) {
+          Moengage.add_first_name(customerDetail.firstname);
+        }
+        if (customerDetail.lastname && customerDetail.lastname.length) {
+          Moengage.add_last_name(customerDetail.lastname);
+        }
+        if (customerDetail.phone && customerDetail.phone.length) {
+          Moengage.add_mobile(customerDetail.phone);
+        }
+      }
+    }, 5000);
+  }
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
+    const { otpAttempt } = this.state;
     try {
       await signIn(fields);
       onSignIn();
+      if (fields?.email) {
+        Moengage.add_unique_user_id(fields?.email);
+      }
       this.checkForOrder();
+      this.sendMOEEvents(EVENT_LOGIN);
+      this.sendGTMEvents(EVENT_LOGIN, "Email");
+      this.addMOEDetails();
     } catch (e) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       showNotification("error", e.message);
+      this.sendMOEEvents(EVENT_LOGIN_FAILED);
+      this.sendGTMEvents(EVENT_LOGIN_FAILED, e.message);
     }
   }
 
@@ -322,6 +440,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     const { email } = fields;
     const phoneNumber = `${countryCode}${email}`;
     const { showError } = this.props;
+    const { otpAttempt } = this.state;
     try {
       const { success, error } = await sendOTP({
         phone: phoneNumber,
@@ -333,11 +452,16 @@ export class MyAccountOverlayContainer extends PureComponent {
           state: STATE_VERIFY_NUMBER,
         });
       } else {
+        this.setState({ otpAttempt: otpAttempt + 1 });
+        if (STATE_SIGN_IN) {
+          this.sendGTMEvents(EVENT_LOGIN_FAILED, error);
+          this.sendMOEEvents(EVENT_LOGIN_FAILED);
+        }
         showError(error);
       }
       this.setState({ isLoading: false });
     } catch (error) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       console.error("error while sending OTP", error);
     }
   }
@@ -351,7 +475,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     const inputValue = field.target.value;
     try {
       const { createAccountNew, loginAccount } = this.props;
-      const { customerLoginData, customerRegisterData } = this.state;
+      const { customerLoginData, customerRegisterData, otpAttempt } =
+        this.state;
       if (
         inputValue?.length === 5 &&
         (Object.entries(customerRegisterData)?.length ||
@@ -372,12 +497,28 @@ export class MyAccountOverlayContainer extends PureComponent {
           };
           response = await loginAccount(payload);
         }
-        const { success } = response;
+        const { success, data } = response;
         if (success) {
           const { signInOTP, showNotification } = this.props;
+          if (Object.entries(customerLoginData)?.length) {
+            this.sendGTMEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_LOGIN);
+            this.sendGTMEvents(EVENT_LOGIN, "Mobile");
+          }
+          if (Object.entries(customerRegisterData)?.length) {
+            this.sendGTMEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
+            this.sendMOEEvents(EVENT_MOE_REGISTER);
+            this.sendGTMEvents(EVENT_SIGN_UP);
+          }
           try {
             await signInOTP(response);
+            if (data?.user?.email) {
+              Moengage.add_unique_user_id(data?.user?.email);
+            }
             this.checkForOrder();
+            this.addMOEDetails();
           } catch (e) {
             this.setState({ isLoading: false });
             showNotification("error", e.message);
@@ -390,12 +531,27 @@ export class MyAccountOverlayContainer extends PureComponent {
         }
         if (typeof response === "string") {
           // showError(response);
-          this.setState({ otpError: response });
+          this.setState({
+            otpError: response,
+            otpAttempt: otpAttempt + 1,
+          });
+          this.sendGTMEvents(EVENT_OTP_VERIFICATION_FAILED, response);
         }
         this.setState({ isLoading: false });
       }
     } catch (err) {
-      this.setState({ isLoading: false });
+      const { otpAttempt, customerRegisterData, customerLoginData } =
+        this.state;
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
+      this.sendGTMEvents(EVENT_OTP_VERIFICATION_FAILED, err);
+      if (Object.entries(customerRegisterData)?.length) {
+        this.sendGTMEvents(EVENT_SIGN_UP_FAIL, err);
+        this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
+      }
+      if (Object.entries(customerLoginData)?.length) {
+        this.sendGTMEvents(EVENT_LOGIN_FAILED, err);
+        this.sendMOEEvents(EVENT_LOGIN_FAILED);
+      }
       console.error("Error while creating customer", err);
     }
   }
@@ -417,6 +573,8 @@ export class MyAccountOverlayContainer extends PureComponent {
         });
         if (success) {
           showNotification("success", __("OTP sent successfully"));
+          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "sign_up");
+          this.sendMOEEvents(EVENT_RESEND_VERIFICATION_CODE);
         } else if (error) {
           showNotification("error", error);
         }
@@ -428,6 +586,8 @@ export class MyAccountOverlayContainer extends PureComponent {
         });
         if (success) {
           showNotification("success", __("OTP sent successfully"));
+          this.sendGTMEvents(EVENT_RESEND_VERIFICATION_CODE, "user_login");
+          this.sendMOEEvents(EVENT_RESEND_VERIFICATION_CODE);
         } else if (error) {
           showNotification("error", error);
         }
@@ -441,7 +601,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async onCreateAccountSuccess(fields, countryCode) {
     const { showError } = this.props;
-
+    const { otpAttempt } = this.state;
     const { password, email, fullname, gender, phone } = fields;
     const phoneNumber = `${countryCode}${phone}`;
     const customerData = {
@@ -462,22 +622,34 @@ export class MyAccountOverlayContainer extends PureComponent {
           state: STATE_VERIFY_NUMBER,
         });
       } else {
+        this.setState({ otpAttempt: otpAttempt + 1 });
+        this.sendGTMEvents(
+          EVENT_SIGN_UP_FAIL,
+          "Account with same phone number already exist"
+        );
+        this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
         showError(error);
       }
       this.setState({ isLoading: false });
     } catch (error) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
+      this.sendGTMEvents(EVENT_SIGN_UP_FAIL, error);
+      this.sendMOEEvents(EVENT_SIGN_UP_FAIL);
       console.error("error while sending OTP", error);
     }
   }
 
   onForgotPasswordSuccess(fields) {
-    const { forgotPassword,  showNotification } = this.props;
+    const { forgotPassword, showNotification } = this.props;
 
     forgotPassword(fields).then((res) => {
-      if(typeof(res) === "string"){
-        showNotification('error', __(res));
+      if (typeof res === "string") {
+        showNotification("error", __(res));
+        this.stopLoading();
+        return;
       }
+      this.sendGTMEvents(EVENT_PASSWORD_RESET_LINK_SENT);
+      this.sendMOEEvents(EVENT_PASSWORD_RESET_LINK_SENT);
       this.setState({ state: STATE_FORGOT_PASSWORD_SUCCESS });
       this.stopLoading();
     }, this.stopLoading);
@@ -517,7 +689,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();
     this.setState({ state: STATE_SIGN_IN });
-
+    this.sendGTMEvents(EVENT_LOGIN_TAB_CLICK);
+    this.sendMOEEvents(EVENT_LOGIN_TAB_CLICK);
     setHeaderState({
       name: CUSTOMER_ACCOUNT,
       title: __("Sign in"),
@@ -529,7 +702,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();
     this.setState({ state: STATE_CREATE_ACCOUNT });
-
+    this.sendGTMEvents(EVENT_REGISTER_TAB_CLICK);
+    this.sendMOEEvents(EVENT_REGISTER_TAB_CLICK);
     setHeaderState({
       name: CUSTOMER_SUB_ACCOUNT,
       title: __("Create account"),
@@ -539,7 +713,6 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   onCreateAccountClick() {
     const { setHeaderState } = this.props;
-
     this.setState({ state: STATE_CREATE_ACCOUNT });
 
     setHeaderState({

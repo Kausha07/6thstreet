@@ -13,6 +13,7 @@ import PDP from "Store/PDP/PDP.reducer";
 import PLP from "Store/PLP/PLP.reducer";
 import LiveParty from "Store/LiveParty/LiveParty.reducer";
 import SearchSuggestions from "Store/SearchSuggestions/SearchSuggestions.reducer";
+import BrandCms from "Store/BrandCms/BrandCms.reducer";
 import * as Sentry from "@sentry/react";
 
 class App extends SourceApp {
@@ -28,6 +29,7 @@ class App extends SourceApp {
     store.injectReducer("PDP", PDP);
     store.injectReducer("SearchSuggestions", SearchSuggestions);
     store.injectReducer("LiveParty", LiveParty);
+    store.injectReducer("BrandCms", BrandCms)
 
     return store;
   }

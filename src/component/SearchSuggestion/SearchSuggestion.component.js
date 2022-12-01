@@ -7,6 +7,7 @@ import { PureComponent } from "react";
 import { withRouter } from "react-router";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   getGenderInArabic,
   getHighlightedText,
@@ -63,6 +64,7 @@ class SearchSuggestion extends PureComponent {
   static defaultProps = {
     hideActiveOverlay: () => {},
   };
+  ref = React.createRef();
 
   state = {
     isArabic: isArabic(),
@@ -255,12 +257,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search, eventType) => {
+  onSearchQueryClick = (search) => {
     const { closeSearch, setPrevPath } = this.props;
     this.logRecentSearches(search);
-    if (eventType) {
-      Event.dispatch(eventType);
-    }
     setPrevPath(window.location.href);
     closeSearch();
   };
@@ -357,7 +356,7 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  renderQuerySuggestion = (querySuggestions) => {
+  renderQuerySuggestion = (querySuggestions, i) => {
     const { query, label } = querySuggestions;
     const { searchString, products = [] } = this.props;
     const gender =
@@ -390,6 +389,7 @@ class SearchSuggestion extends PureComponent {
           app6thstreet_platform: "Web",
         });
       }
+      this.onSearchQueryClick(query)
     };
     const suggestionContent = () => {
       if (products?.length === 1 && fetchSKU) {
@@ -397,6 +397,7 @@ class SearchSuggestion extends PureComponent {
           <Link
             to={fetchSKU?.url}
             onClick={() => suggestionEventDipatch(query)}
+            key={i}
           >
             <div className="suggestion-details-box text-capitalize">
               {getHighlightedText(query, searchString)}
@@ -410,6 +411,7 @@ class SearchSuggestion extends PureComponent {
               pathname: this.getCatalogUrl(query, gender),
             }}
             onClick={() => suggestionEventDipatch(query)}
+            key={i}
           >
             <div className="suggestion-details-box">
               {getHighlightedText(label, searchString)}
@@ -528,7 +530,7 @@ class SearchSuggestion extends PureComponent {
             <Image
               lazyLoad={true}
               src={thumbnail_url}
-              alt="Product Image"
+              alt={ name ? name : "Product Image"}
               block="SearchProduct"
               elem="Image"
             />
@@ -753,9 +755,11 @@ class SearchSuggestion extends PureComponent {
     return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+        <DragScroll data={{ rootClass: "TrandingBrands", ref: this.ref }}>
+        <ul id="TrandingBrands" block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }} ref={this.ref}>
           {trendingBrands.map(this.renderTrendingBrand)}
         </ul>
+        </DragScroll>
       </div>
     ) : null;
   }

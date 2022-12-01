@@ -3,7 +3,6 @@
     //width: calc(100% - 250px);
     .InlineFilterContainer {
       height: 95px;
-      margin: 0px 0px 30px 0px;
       padding: 8px 0px;
       &-InlineSizeCont {
         height: 145px;
@@ -141,7 +140,7 @@ main {
     .ContentWrapper {
       & > .PLPDetails {
         @include mobile() {
-          padding-top: 60px;
+          padding-top: 60px ;
         }
       }
     }

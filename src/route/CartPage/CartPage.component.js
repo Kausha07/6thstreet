@@ -504,6 +504,7 @@ export class CartPage extends PureComponent {
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
           onClick={onCheckoutButtonClick}
+          id="ProceedToCheckoutButton"
         >
           <span />
           {__("Proceed to Checkout")}
@@ -878,7 +879,7 @@ export class CartPage extends PureComponent {
         {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
         <div block="CartPage" elem="EmptyCartImg">
           {/* <image src={EmptyCardIcon}/> */}
-          <Image src={EmptyCardIcon} />
+          <Image src={EmptyCardIcon} alt={"cart-icon"} />
         </div>
         <p block="CartPage" elem="EmptyCartTextDec">
           {__("Your shopping bag is empty.")}

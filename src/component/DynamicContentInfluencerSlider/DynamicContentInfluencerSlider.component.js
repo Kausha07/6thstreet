@@ -85,7 +85,7 @@ class DynamicContentCircleInfluencerSlider extends PureComponent {
         // TODO: move to new component
 
         return (
-            <div block="CircleSlider">
+            <div block="CircleSlider" key={i}>
 
                 <Link
                   to={ formatCDNLink(link) }

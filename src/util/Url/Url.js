@@ -76,7 +76,11 @@ export const setCrossSubdomainCookie = (
   const path = "path=/;";
   const url = location.host;
   const domain = `domain=${url.substr(url.indexOf("."))};`;
-  document.cookie = assign + expires + path + domain;
+  if(domain !== "domain=.local.localhost:3000;") {
+    document.cookie = assign + expires + path + domain;
+  } else {
+    document.cookie = assign + expires + path + "domain=local.localhost;";
+  }
 };
 
 export const getCookie = (name) => {
