@@ -13,6 +13,7 @@ import {
     STATE_SUCCESS,
     STATE_VERIFY
 } from './MyAccountClubApparelOverlay.config';
+import { showNotification } from "Store/Notification/Notification.action";
 
 export const mapStateToProps = (_state) => ({
     customer: _state.MyAccountReducer.customer,
@@ -23,7 +24,8 @@ export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
     verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
-    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id)
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
 });
 
 export class MyAccountClubApparelOverlayContainer extends PureComponent {
@@ -31,7 +33,8 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
-        customer: customerType
+        customer: customerType,
+        showNotification : PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -69,7 +72,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     };
 
     linkAccount(fields) {
-        const { customer: { id }, linkAccount, linkedNumber } = this.props;
+        const { customer: { id }, linkAccount, linkedNumber, showNotification } = this.props;
         const { phone, countryPhoneCode = '' } = fields;
         const formattedPhone = `00${countryPhoneCode.substr(1)}${phone}`;
         this.setState({ isLoading: true });
@@ -88,6 +91,10 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
                     const { data: { memberId } = {} } = response;
 
                     if (memberId) {
+                        showNotification(
+                            "success",
+                            __("OTP sent successfully")
+                        );
                         this.setState({
                             state: STATE_VERIFY,
                             countryPhoneCode,
@@ -95,7 +102,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
                             phone: formattedPhone,
                             isLoading: false
                         });
-                    } else {
+                    } else {                       
                         this.setState({
                             state: STATE_NOT_SUCCESS,
                             isLoading: false
