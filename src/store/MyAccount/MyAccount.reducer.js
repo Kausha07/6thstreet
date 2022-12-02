@@ -16,7 +16,8 @@ import {
   SET_EDD_RESPONSE,
   SET_INTL_EDD_RESPONSE,
   SET_PDP_EDD_ADDRESS,
-  SET_CITIES_DATA
+  SET_CITIES_DATA,
+  SET_ADDRESS_LOADER,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -33,7 +34,8 @@ export const initialState = {
   eddResponse: null,
   intlEddResponse: {},
   EddAddress: null,
-  addressCityData: []
+  addressCityData: [],
+  addressLoader: true,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -48,7 +50,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     EddAddress,
     PdpEddAddress,
     defaultEddResponse,
-    citiesData
+    citiesData,
   } = action;
 
   switch (action.type) {
@@ -76,7 +78,7 @@ export const MyAccountReducer = (state = initialState, action) => {
     case SET_CITIES_DATA:
       return {
         ...state,
-        addressCityData: citiesData
+        addressCityData: citiesData,
       };
     case SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS:
       return {
@@ -87,7 +89,7 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         eddResponse: eddResponse,
-        EddAddress: EddAddress
+        EddAddress: EddAddress,
       };
     case SET_INTL_EDD_RESPONSE:
       return {
@@ -98,7 +100,7 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         pdpEddAddressSelected: PdpEddAddress,
-        defaultEddResponse: defaultEddResponse
+        defaultEddResponse: defaultEddResponse,
       };
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
       return {
@@ -117,16 +119,16 @@ export const MyAccountReducer = (state = initialState, action) => {
       const data =
         firstname || lastname
           ? {
-            ...customer,
-            firstname:
-              firstname.indexOf(" ") > 0
-                ? firstname.substr(0, firstname.indexOf(" "))
-                : firstname,
-            lastname:
-              firstname.indexOf(" ") > 0
-                ? firstname.substr(firstname.indexOf(" ") + 1)
-                : lastname,
-          }
+              ...customer,
+              firstname:
+                firstname.indexOf(" ") > 0
+                  ? firstname.substr(0, firstname.indexOf(" "))
+                  : firstname,
+              lastname:
+                firstname.indexOf(" ") > 0
+                  ? firstname.substr(firstname.indexOf(" ") + 1)
+                  : lastname,
+            }
           : customer;
 
       BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);
@@ -142,6 +144,12 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         mobileTabActive: isActive,
+      };
+    case SET_ADDRESS_LOADER:
+      const { addressLoader } = action;
+      return {
+        ...state,
+        addressLoader,
       };
 
     default:

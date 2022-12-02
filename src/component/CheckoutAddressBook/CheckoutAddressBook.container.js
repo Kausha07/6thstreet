@@ -66,8 +66,33 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
 
   componentDidMount() {
     const { onAddressSelect } = this.props;
-    const {selectedAddressId} = this.state
+    const { selectedAddressId } = this.state;
     onAddressSelect(selectedAddressId);
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      onAddressSelect,
+      requestCustomerData,
+      isSignedIn,
+      customer,
+      addresses,
+    } = this.props;
+    const { selectedAddressId: prevSelectedAddressId } = prevState;
+    const { selectedAddressId } = this.state;
+    if (isSignedIn && !Object.keys(customer).length) {
+      requestCustomerData();
+    }
+    if (selectedAddressId !== prevSelectedAddressId) {
+      onAddressSelect(selectedAddressId);
+      this.estimateShipping(selectedAddressId);
+    }
+    if (
+      prevProps.addresses !== addresses &&
+      addresses.length == 1 &&
+      selectedAddressId !== 0
+    ) {
+      this.estimateShipping(selectedAddressId);
+    }
   }
 
   static getDerivedStateFromProps(props, state) {
