@@ -467,13 +467,12 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "shipping"),
           __("Shipping")
         )}
-        {this.renderPriceLine(
-          cashOnDeliveryFee ??
+        {cashOnDeliveryFee ? this.renderPriceLine(
             getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"
             ? __("Cash on Receiving Fee")
             : __("Cash on Delivery Fee")
-        )}
+        ) : null}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
           __("Store Credit")
