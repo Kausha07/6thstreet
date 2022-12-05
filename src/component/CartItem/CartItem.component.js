@@ -317,7 +317,7 @@ export class CartItem extends PureComponent {
       minSaleQuantity,
       maxSaleQuantity,
       handleChangeQuantity,
-      item: { qty },
+      item: { qty, row_total },
     } = this.props;
 
     const { isArabic } = this.state;
@@ -326,6 +326,22 @@ export class CartItem extends PureComponent {
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
+
+    if(row_total === 0 && qty) {
+      return (
+        <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+          <select value={qty}>
+                <option
+                  block="CartItem"
+                  elem="QuantityOption"
+                  value={qty}
+                >
+                  {qty}
+                </option>
+          </select>
+        </div>
+      );
+    }
 
     return (
       <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
@@ -529,7 +545,7 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
-        {row_total === 0 ? null : this.renderColSizeQty()}
+        {this.renderColSizeQty()}
         {isNotAvailble ? null : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {edd_info &&
