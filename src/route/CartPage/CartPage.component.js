@@ -973,7 +973,6 @@ export class CartPage extends PureComponent {
                 : null}
             </div>
             <div className="PDPWidgets-cart">
-              
             {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
               : null}
