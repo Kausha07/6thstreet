@@ -901,8 +901,8 @@ export class CartPage extends PureComponent {
       totals: { total, items = [], extension_attributes, discount },
       isLoading,
       processingRequest,
-      cartWidgetApiData,
-      youMayAlsoLikeData,
+      cartWidgetApiData = [],
+      youMayAlsoLikeData = [],
     } = this.props;
     const { isArabic } = this.state;
     const { country } = JSON.parse(
@@ -928,7 +928,7 @@ export class CartPage extends PureComponent {
               : null}
           </div>
           <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.lenght !== 0
+            {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
               : null}
           </div>
@@ -948,7 +948,7 @@ export class CartPage extends PureComponent {
               : null}
           </div>
           <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.lenght !== 0
+            {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
               : null}
           </div>
@@ -973,7 +973,8 @@ export class CartPage extends PureComponent {
                 : null}
             </div>
             <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.lenght !== 0
+              
+            {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
               : null}
           </div>
@@ -991,7 +992,7 @@ export class CartPage extends PureComponent {
               : null}
           </div>
           <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.lenght !== 0
+            {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
               : null}
           </div>
