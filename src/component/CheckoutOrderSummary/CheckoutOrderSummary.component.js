@@ -399,12 +399,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "tax"),
               __("Tax")
             )}
-            {this.renderPriceLine(
-              cashOnDeliveryFee ??
+            {cashOnDeliveryFee ? this.renderPriceLine(
               getDiscountFromTotals(totals, "msp_cashondelivery"),
 
               getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery")
-            )}
+            ) : null}
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">
             {this.renderPriceLine(grandTotal, __("Total"), {}, true)}
