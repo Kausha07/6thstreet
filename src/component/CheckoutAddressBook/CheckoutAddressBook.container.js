@@ -50,7 +50,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   };
 
   static _getDefaultAddressId(props) {
-    const { customer, isBilling } = props;
+    const { customer, isBilling, shippingAddress } = props;
     const defaultKey = isBilling ? "default_billing" : "default_shipping";
     const { [defaultKey]: defaultAddressId, addresses } = customer;
 
@@ -58,6 +58,14 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       return +defaultAddressId;
     }
     if (addresses && addresses.length) {
+      if(isBilling && shippingAddress && shippingAddress.address_id) {
+        const { address_id } = shippingAddress;
+        if(address_id){
+          return address_id;
+        }else {
+          return addresses[0].id;
+        }
+      }
       return addresses[0].id;
     }
 
