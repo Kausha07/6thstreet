@@ -277,6 +277,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       selectedCustomerAddressId,
       checkClickAndCollect,
       isPaymentLoading,
+      addressLoader,
     } = this.props;
     const { isSignedIn } = this.state;
     const selectedAddress = addresses.filter(
@@ -299,13 +300,17 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     } else {
       this.setState({ isButtondisabled: false });
     }
-
+    const isLoading = !isSignedIn
+      ? isPaymentLoading
+      : !isPaymentLoading && !addressLoader
+      ? false
+      : true;
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
         <button
           type="submit"
           block="Button button primary medium"
-          disabled={isPaymentLoading}
+          disabled={isLoading}
           onClick={() => this.sendMOEEvents()}
         >
           {checkClickAndCollect() ? "Next" : __("Deliver to this address")}

@@ -11,6 +11,7 @@ import {
   setIntlEddResponse,
   setDefaultEddAddress,
   setCitiesData,
+  setAddressLoader,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -155,6 +156,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           dispatch(setCustomerDefaultShippingAddress(null));
         }
         dispatch(setCustomerAddressData(response.data));
+        dispatch(setAddressLoader(false));
       }
     });
     const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};

@@ -73,7 +73,9 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       totals: { total, currency_code },
     } = this.props;
     if (selectedPaymentCode === TABBY_ISTALLMENTS || prevProps?.totals?.total !== total) {
-      this.addTabbyCard(total, currency_code);
+      if(currency_code && total) {
+        this.addTabbyCard(total, currency_code);
+      }
     }
   }
 
@@ -81,7 +83,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const { isArabic } = this.state;
     new window.TabbyCard({
       selector: '#tabbyCard',
-      currency: currency_code.toString(),
+      currency: currency_code?.toString(),
       price: total,
       installmentsCount: 4,
       lang: isArabic ? "ar" : "en",

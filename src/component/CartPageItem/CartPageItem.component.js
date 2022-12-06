@@ -711,7 +711,7 @@ export class CartItem extends PureComponent {
       },
       toggleCartItemQuantityPopup,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, isNotAvailble } = this.state;
     return (
       <div block="CartPageItem" elem="ColSizeQty" mods={{ isArabic }}>
         {color && (
@@ -726,7 +726,7 @@ export class CartItem extends PureComponent {
         <span
           block="CartItem-ColSizeQty"
           elem="Qty"
-          onClick={() => toggleCartItemQuantityPopup()}
+          onClick={() => isNotAvailble ? {}: toggleCartItemQuantityPopup()}
         >
           <span>{__("Qty:")}</span>
           <span>{qty}</span>
@@ -847,6 +847,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderOOSMessage(){
+    return(
+      <span block="CartItem" elem="NotAvailable">
+      {__("Not available")}
+    </span>
+    )
+  }
+
   renderContent() {
     const {
       isLikeTable,
@@ -875,7 +883,7 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {!isNotAvailble && <>{this.renderProductPrice()}</>}
+        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
         {edd_info &&

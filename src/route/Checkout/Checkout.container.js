@@ -61,7 +61,7 @@ import {
   DEFAULT_READY_MESSAGE,
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
-
+import Loader from "Component/Loader";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 
@@ -95,7 +95,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatch,
       paymentId,
       qpaymethod,
-      (KNETpay=true)
+      (KNETpay = true)
     ),
 
   capturePayment: (paymentId, orderId) =>
@@ -110,10 +110,16 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  getCouponList: () => CartDispatcher.getCoupon(dispatch),
+  applyCouponToCart: (couponCode) =>
+    CartDispatcher.applyCouponCode(dispatch, couponCode),
+  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
+  couponsItems: state.CartReducer.cartCoupons,
+  couponLists: state.CartReducer.cartCoupons,
   totals: state.CartReducer.cartTotals,
   cartItems: state.CartReducer.cartItems,
   processingRequest: state.CartReducer.processingRequest,
@@ -132,6 +138,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
+  addressLoader: state.MyAccountReducer.addressLoader,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -216,9 +223,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       QPayOrderDetails: null,
       KNETOrderDetails: null,
       KnetDetails: {},
+      addressLoader: true,
     };
   }
-
+  static getDerivedStateFromProps(props) {
+    const { addressLoader } = props;
+    return {
+      addressLoader,
+    };
+  }
   refreshCart = async () => {
     const { updateTotals, cartId, removeBinPromotion } = this.props;
     await removeBinPromotion();
@@ -292,8 +305,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
         this.setState({ PaymentRedirect: true });
 
-        const { getPaymentAuthorization, capturePayment, cancelOrder, getPaymentAuthorizationKNET } =
-          this.props;
+        const {
+          getPaymentAuthorization,
+          capturePayment,
+          cancelOrder,
+          getPaymentAuthorizationKNET,
+        } = this.props;
 
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")
@@ -312,9 +329,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           localStorage.removeItem("Shipping_Address");
 
-
           const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
-
 
           this.setState({ KNETOrderDetails: order });
 
@@ -326,7 +341,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse = await capturePayment(paymentId, order_id);
               if (cResponse) {
-                const { bank_reference, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
+                const {
+                  bank_reference,
+                  requested_on,
+                  amount,
+                  currency,
+                  knet_payment_id,
+                  knet_transaction_id,
+                } = cResponse;
                 this.setState({
                   KnetDetails: {
                     bank_reference: bank_reference,
@@ -356,7 +378,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse = await capturePayment(paymentId, order_id);
               if (cResponse) {
-                const { pun, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
+                const {
+                  pun,
+                  requested_on,
+                  amount,
+                  currency,
+                  knet_payment_id,
+                  knet_transaction_id,
+                } = cResponse;
                 this.setState({
                   KnetDetails: {
                     PUN: pun,
@@ -493,6 +522,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getKNETData();
     this.getQPayData();
     this.getTabbyData();
+    getCouponList();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -614,7 +644,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         totals,
         step: this.getCheckoutStepNumber(),
       });
-      if (this.getCheckoutStepNumber() == "2"){
+      if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
       }
     }
@@ -711,20 +741,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     saveAddressInformation(addressInformation).then((res) => {
       const data = res.data;
-      if(!data){
+      if (!data) {
         showErrorNotification(res);
         setTimeout(() => {
           window.location = "/";
         }, 1500);
       } else {
         const { totals } = data;
-  
+
         BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
-  
+
         this.setState({
           paymentTotals: totals,
         });
-  
+
         this.getPaymentMethods();
       }
     }, this._handleError);
@@ -801,7 +831,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cross_border === 1) ||
           cross_border === 1;
         const intlEddObj = intlEddResponse["checkout"]?.find(
-          ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+          ({ vendor }) =>
+            vendor.toLowerCase() === brand_name.toString().toLowerCase()
         );
         eddItems.push({
           sku: sku,
@@ -890,7 +921,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY || code === KNET_PAY) {
+    } else if (
+      code === TABBY_ISTALLMENTS ||
+      code === CHECKOUT_QPAY ||
+      code === KNET_PAY
+    ) {
       this.placeOrder(code, data, paymentInformation, finalEdd, eddItems);
     } else {
       this.placeOrder(code, data, null, finalEdd, eddItems);
@@ -1022,8 +1057,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               window.open(`${href}`, "_self");
 
               //return true;
-            } else if(code === KNET_PAY) {
-
+            } else if (code === KNET_PAY) {
               const { shippingAddress } = this.state;
               this.setState({
                 order_id,
@@ -1048,8 +1082,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 JSON.stringify(shippingAddress)
               );
               window.open(`${href}`, "_self");
-
-          } else {
+            } else {
               if (code === CARD) {
                 const { saveCreditCard, newCardVisible } = this.props;
                 const { creditCardData } = this.state;
@@ -1100,6 +1133,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({ isLoading: false });
         if (code === CHECKOUT_APPLE_PAY) {
           return false;
+        }
+        if (response === "Invalid Coupon.") {
+          history.push({
+            pathname: "/cart",
+          });
+          return;
         }
         this.resetCart();
       }
@@ -1280,8 +1319,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   render() {
-    const { isClickAndCollect } = this.state;
-    return (
+    const { isClickAndCollect, addressLoader } = this.state;
+    const { isSignedIn } = this.props;
+    return addressLoader && isSignedIn ? (
+    <Loader isLoading={addressLoader} />
+    ) : (
       <Checkout
         {...this.props}
         {...this.state}

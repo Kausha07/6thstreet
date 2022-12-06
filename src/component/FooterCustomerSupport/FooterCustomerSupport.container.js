@@ -39,7 +39,7 @@ export class FooterCustomerSupportContainer extends PureComponent {
             contactLabel,
             isContactEmail,
             openHoursLabel,
-            phone: phone.indexOf('00') === 0 ? phone.replace('00', '+') : phone
+            phone: phone ? ((phone.includes("00") && phone.indexOf("00") === 0) ? phone.replace("00", "+") : phone) : "",
         };
     };
 
@@ -50,28 +50,43 @@ export class FooterCustomerSupportContainer extends PureComponent {
             language
         } = this.props;
 
-        const {
-            contact_information: {
-                email: isEmailSupported,
-                phone: isPhoneSupported
-            },
-            contact_using: {
-                text: {
-                    [language]: contactLabel
-                } = {},
-                type: contactType
-            } = {},
-            opening_hours: {
-                [language]: openHoursLabel
-            },
-            toll_free: phone
-        } = countries[country];
+        let isEmailSupported = false;
+        let isPhoneSupported = false;
+        let contactLabel = {};
+        let openHoursLabel = "";
+        let phone = "";
+
+        if (countries[country]) {
+            if (countries[country].contact_information) {
+                if (countries[country].contact_information.email) {
+                    isEmailSupported = countries[country].contact_information.email;
+                }
+                if (countries[country].contact_information.phone) {
+                    isPhoneSupported = countries[country].contact_information.phone;
+                }
+            }
+            if (countries[country].contact_using &&
+                countries[country].contact_using.options &&
+                countries[country].contact_using.options.text
+            ) {
+                contactLabel = countries[country].contact_using.options.text;
+            }
+            if (countries[country].opening_hours) {
+                if (language === 'en') {
+                    openHoursLabel = countries[country].opening_hours.en;
+                } else if (language === 'ar') {
+                    openHoursLabel = countries[country].opening_hours.ar;
+                }
+            }
+            if (countries[country].toll_free) {
+                phone = countries[country].toll_free;
+            }
+        }
 
         return {
             isEmailSupported,
             isPhoneSupported,
             contactLabel,
-            isContactEmail: contactType === 'email',
             openHoursLabel,
             phone
         };
@@ -80,8 +95,8 @@ export class FooterCustomerSupportContainer extends PureComponent {
     render() {
         return (
             <FooterCustomerSupport
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
+                {...this.containerFunctions}
+                {...this.containerProps()}
             />
         );
     }

@@ -14,7 +14,7 @@ export const BreadcrumbsDispatcher = import(
 );
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import BrandCmsDispatcher from "Store/BrandCms/BrandCms.dispatcher";
-
+import { updateMeta } from "Store/Meta/Meta.action";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
@@ -31,6 +31,7 @@ export const mapDispatchToProps = (dispatch) => ({
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update(breadcrumbs, dispatch)
     ),
+  setMeta: (meta) => dispatch(updateMeta(meta)),
 });
 
 function BrandCMS(props) {
@@ -84,7 +85,6 @@ function BrandCMS(props) {
       setStoreWidgets(brandCmsData);
       setIsLoading(isBrandCmsLoading);
     } else {
-      
       try {
         setIsLoading(true);
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: true });
@@ -94,7 +94,9 @@ function BrandCMS(props) {
         });
         dispatch({ type: "SET_BRAND_CMS_DATA", data: widgetData });
         dispatch({ type: "SET_BRAND_CMS_LOADING", isBrandCmsLoading: false });
-        (Array.isArray(widgetData) && widgetData?.length > 0) ? setStoreWidgets(widgetData) : setStoreWidgets([]);
+        Array.isArray(widgetData) && widgetData?.length > 0
+          ? setStoreWidgets(widgetData)
+          : setStoreWidgets([]);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
@@ -103,27 +105,23 @@ function BrandCMS(props) {
         setIsLoading(false);
       }
     }
-    
   };
 
-  const renderWidget = () => {    
+  const renderWidget = () => {
     const { tagName = "" } = getTagName();
-    let widgetData =[];
-    if(tagName && storeWidgets){
-      widgetData =  (storeWidgets.filter(
+    let widgetData = [];
+    if (tagName && storeWidgets) {
+      widgetData = storeWidgets.filter(
         (item) => item?.tag?.toLowerCase() === tagName.toLowerCase()
-      ));
+      );
       setWidgets(widgetData);
-    }else{
+    } else {
       setWidgets([]);
     }
-
-    
   };
-  
 
   const updateBreadcrumbs = () => {
-    const { updateBreadcrumbs } = props;
+    const { updateBreadcrumbs, setMeta } = props;
     const { BreadcrumbsName } = getTagName();
     const breadcrumbs = [
       {
@@ -135,20 +133,23 @@ function BrandCMS(props) {
         name: __("Home"),
       },
     ];
-
+    setMeta({
+      title: BreadcrumbsName
+        ? BreadcrumbsName
+        : "Shop Online @ 6thStreet.com for Men, Women & Kids across GCC",
+    });
     updateBreadcrumbs(breadcrumbs);
   };
 
   useEffect(() => {
     getWidgets();
     renderWidget();
-
   }, []);
 
-  useEffect(() => {  
+  useEffect(() => {
     renderWidget();
     updateBreadcrumbs();
-  }, [storeWidgets,location.pathname]);
+  }, [storeWidgets, location.pathname]);
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />;
@@ -156,7 +157,7 @@ function BrandCMS(props) {
     return <NoMatch />;
   }
 
-  return (    
+  return (
     <main block="BrandCMS">
       <ContentWrapper label={__("BrandBy_Huge_DiscountCMS Page")}>
         {showPopup && (
@@ -166,7 +167,7 @@ function BrandCMS(props) {
             isPopup
           />
         )}
-        
+
         {!isLoading && widgets?.length > 0 && (
           <DynamicContent
             gender={gender}

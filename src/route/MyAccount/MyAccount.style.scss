@@ -226,6 +226,7 @@
         }
       }
 
+
       .MyAccountTabListItem {
         button {
           text-align: right;
@@ -250,6 +251,13 @@
           }
         }
       }
+
+      .PolicyBtn{
+        button{
+        padding-right: 0.5rem;
+        }
+      }
+
     }
   }
 }
@@ -407,7 +415,7 @@
         text-align: center;
       }
 
-      button {
+      button,.chat-button {
         border-radius: 8px;
         background-color: #000000;
         width: 100%;

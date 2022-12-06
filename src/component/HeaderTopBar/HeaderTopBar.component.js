@@ -86,7 +86,7 @@ class HeaderTopBar extends NavigationAbstract {
       <div className="customVerticalSlider" key="cms-block">
         <div className="carouselItemInner">
           <div block="HeaderTopBar" elem="CmsBlock">
-            {__("800+ GLOBAL BRANDS")}
+            {__("1200+ GLOBAL BRANDS")}
           </div>
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("100-DAY FREE RETURNS")}

@@ -16,8 +16,9 @@ export const SET_CUSTOMER_DEFAULT_SHIPPING_ADDRESS = "SET_CUSTOMER_DEFAULT_SHIPP
 export const SET_ADDRESS_LOADING_STATUS = "SET_ADDRESS_LOADING_STATUS";
 export const SET_EDD_RESPONSE = "SET_EDD_RESPONSE";
 export const SET_INTL_EDD_RESPONSE = "SET_INTL_EDD_RESPONSE";
-export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS"
-export const SET_CITIES_DATA = "SET_CITIES_DATA"
+export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS";
+export const SET_CITIES_DATA = "SET_CITIES_DATA";
+export const SET_ADDRESS_LOADER = "SET_ADDRESS_LOADER";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -41,7 +42,7 @@ export const setCustomerAddressData = (addresses) => ({
 
 export const setCitiesData = (citiesData) => ({
   type: SET_CITIES_DATA,
-  citiesData
+  citiesData,
 });
 
 export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
@@ -52,16 +53,21 @@ export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
 export const setEddResponse = (eddResponse, EddAddress) => ({
   type: SET_EDD_RESPONSE,
   eddResponse,
-  EddAddress
+  EddAddress,
 });
 
 export const setIntlEddResponse = (eddResponse) => ({
   type: SET_INTL_EDD_RESPONSE,
-  eddResponse
+  eddResponse,
 });
 
 export const setDefaultEddAddress = (defaultEddResponse, PdpEddAddress) => ({
   type: SET_PDP_EDD_ADDRESS,
   defaultEddResponse,
-  PdpEddAddress
+  PdpEddAddress,
+});
+
+export const setAddressLoader = (addressLoader) => ({
+  type: SET_ADDRESS_LOADER,
+  addressLoader,
 });
