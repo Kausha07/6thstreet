@@ -1193,6 +1193,9 @@
         border: 1px solid var(--black-color);
       }
     }
+    .Field-Message {
+      font-size: 1.01rem;
+    }
   }
 
   &-PhoneNumber {
@@ -1382,12 +1385,12 @@
       border-bottom: 0.5px solid #d1d3d4;
       border-left: 0.5px solid #d1d3d4;
       border-radius: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 26px;
 
       .Field-Message {
         margin: 15px 0 0;
-        font-size: 12px;
-        line-height: 12px;
+        font-size: 1.01rem;
+        line-height: 15px;
         position: absolute;
         left: -100px;
       }
