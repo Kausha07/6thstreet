@@ -831,13 +831,26 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   onSignInChange = (invalidFields = []) => {
-    this.setState({ isSignInValidated: invalidFields.length === 0 });
+    const { isOTP } = this.state;
+    if (!isOTP) {
+      this.setState({ isSignInValidated: invalidFields.length === 0 });
+    }
+    return;
   };
 
   setUserIdentifierType(value) {
+    const { countryCode } = this.state;
     if (!ENABLE_OTP_LOGIN) {
       return;
     }
+
+    const customerCountry = Object.keys(PHONE_CODES).find(
+      (key) => PHONE_CODES[key] === countryCode
+    );
+
+    const validPhoneLength = COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+      ? "9"
+      : "8";
 
     const regex = /[a-zA-Z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g;
 
@@ -856,6 +869,15 @@ export class MyAccountOverlay extends PureComponent {
       this.setState({
         isOTP: true,
       });
+      if (validPhoneLength == value.length) {
+        this.setState({
+          isSignInValidated: true,
+        });
+      } else {
+        this.setState({
+          isSignInValidated: false,
+        });
+      }
     }
   }
 
