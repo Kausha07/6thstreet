@@ -65,6 +65,12 @@
       max-width: 100%;
     }
   }
+  &-ExploreMore{
+    h2 {
+      text-align: left !important;
+      padding: 0px 20px 20px 10px !important;
+    }
+  }
   h2 {
     // border-top: 1px solid var(--light-gray);
     font-size: 20px;
