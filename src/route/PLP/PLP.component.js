@@ -69,6 +69,7 @@ export class PLP extends PureComponent {
     }
     return (
       <MyAccountOverlay
+        openSignInDirectly={true}
         closePopup={this.closePopup}
         onSignIn={this.onSignIn}
         isPopup

@@ -117,9 +117,9 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   static defaultProps = {
     isCheckout: false,
-    onSignIn: () => { },
-    goToPreviousHeaderState: () => { },
-    closePopup: () => { },
+    onSignIn: () => {},
+    goToPreviousHeaderState: () => {},
+    closePopup: () => {},
   };
 
   containerFunctions = {
@@ -243,13 +243,16 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
   }
   redirectOrGetState = (props) => {
-    const { showOverlay, setHeaderState, isPasswordForgotSend } = props;
+    const { showOverlay, setHeaderState, isPasswordForgotSend, openSignInDirectly } = props;
 
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
 
-    const getDeviceState = STATE_INITIAL_LINKS;
+    const getDeviceState = openSignInDirectly
+      ? STATE_SIGN_IN
+      : STATE_INITIAL_LINKS;
+
     const state = {
       state: getDeviceState,
       // eslint-disable-next-line react/no-unused-state
@@ -657,12 +660,12 @@ export class MyAccountOverlayContainer extends PureComponent {
     if (redirectTo && redirectTo === "RedirectToMyOrders") {
       this.setState({
         shouldRedirectToMyOrders: true,
-      })
+      });
     }
     if (redirectTo && redirectTo === "RedirectToMyReturns") {
       this.setState({
         shouldRedirectToMyReturns: true,
-      })
+      });
     }
   }
 
