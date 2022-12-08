@@ -129,6 +129,12 @@ export class MyAccountOverlay extends PureComponent {
     registerDetailsEntered: false,
   };
 
+  componentDidMount() {
+    if (isMobile.any()) {
+      document.body.style.position = "fixed";
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (
       this.state.otpTimer === 0 &&
@@ -168,6 +174,9 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   componentWillUnmount() {
+    if (isMobile.any()) {
+      document.body.style.position = "static";
+    }
     if (this.timer != null && this.state.isTimerEnabled) {
       clearInterval(this.timer);
     }
@@ -196,7 +205,7 @@ export class MyAccountOverlay extends PureComponent {
       title: __("Let's get personal"),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -518,10 +527,7 @@ export class MyAccountOverlay extends PureComponent {
             strokeWidthSecondary={3}
           />
         </div>
-        <div
-          block="VerifyPhone"
-          elem="ResendCodeV1"
-        >
+        <div block="VerifyPhone" elem="ResendCodeV1">
           {this.state.otpTimer > 0 && <span>0:{this.state.otpTimer} -</span>}
           <button
             onClick={() => {
@@ -935,7 +941,8 @@ export class MyAccountOverlay extends PureComponent {
           </button>
         </li>
         <div>
-          <li className="MyAccountTabListItem hover-list-item"
+          <li
+            className="MyAccountTabListItem hover-list-item"
             onClick={() => {
               updateAccountViewState(STATE_SIGN_IN, "RedirectToMyOrders");
             }}
@@ -954,7 +961,8 @@ export class MyAccountOverlay extends PureComponent {
               </div>
             </a>
           </li>
-          <li className="MyAccountTabListItem"
+          <li
+            className="MyAccountTabListItem"
             onClick={() => {
               updateAccountViewState(STATE_SIGN_IN, "RedirectToMyReturns");
             }}
@@ -1093,8 +1101,9 @@ export class MyAccountOverlay extends PureComponent {
             )}
             <Field
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
-              placeholder={`${ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              placeholder={`${
+                ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
+              }*`}
               id="email"
               name="email"
               value={
