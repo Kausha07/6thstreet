@@ -41,7 +41,11 @@
             }
         }
     }
-    
+    .SortContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .SortOverlay{
         background-color: black;
         position: fixed;
@@ -50,14 +54,15 @@
         z-index: 9;
         bottom: 92px;
         border-radius: 20px;
-        margin: 0px 84px;
         color: #FFFFFF;
         display: flex;
         justify-content: center;
         align-items: center;
         &-CenterLine{
+            width: 3px;
+            height: 20px;
             img{
-            width: 4px !important;
+            width: 3px !important;
             height: 20px !important;
          }
         }
