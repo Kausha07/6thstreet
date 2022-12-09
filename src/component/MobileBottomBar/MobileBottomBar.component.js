@@ -124,7 +124,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderAccountPopUp = () => {
     const { isPopup } = this.state;
     const popUpElement = (
-      <MyAccountOverlay isPopup={isPopup} closePopup={this.closePopup} />
+      <MyAccountOverlay openSignInDirectly={true} isPopup={isPopup} closePopup={this.closePopup} />
     );
 
     this.setState({ accountPopUp: popUpElement });
