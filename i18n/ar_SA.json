@@ -1130,5 +1130,7 @@
     "*Free delivery for orders above QAR 200.": "*توصيل مجاني للطلبات بقيمة 200 ريال أو أكثر",
     "*Free delivery for orders above OMR 20.": "*توصيل مجاني للطلبات بقيمة 20 ريال أو أكثر",
     "*Free delivery for orders above BHD 20.": "*توصيل مجاني للطلبات بقيمة 20 دينار أو أكثر",
-    "Age": "سن"
+    "Age": "سن",
+    "Sort": "فرز",
+    "Filter": "منقي"
 }
