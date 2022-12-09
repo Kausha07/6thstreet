@@ -1079,8 +1079,10 @@ export class MyAccountOverlay extends PureComponent {
     } = this.state;
     if (failedRegistrationData && failedRegistrationData.phoneWithoutCode) {
       this.onSignInChange();
+      this.setUserIdentifierType(failedRegistrationData.phoneWithoutCode);
       this.setState({
         isOTP: true,
+        isSignInValidated:true,
       });
     }
     this.setState({
