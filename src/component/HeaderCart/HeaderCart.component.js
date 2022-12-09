@@ -134,11 +134,7 @@ class HeaderCart extends PureComponent {
       totals: { items = [] },
     } = this.props;
 
-    const itemQuantityArray = items.map((item) => item.qty);
-    const totalQuantity = itemQuantityArray.reduce(
-      (qty, nextQty) => qty + nextQty,
-      0
-    );
+    const totalQuantity = items.length;
 
     if (totalQuantity && totalQuantity !== 0) {
       return (
