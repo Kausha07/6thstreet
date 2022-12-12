@@ -637,6 +637,7 @@ export class MyAccountOverlay extends PureComponent {
       IsUserRegisteredBase(userName);
       this.setState({
         failedRegistrationData: { phoneWithoutCode: phoneNumber },
+        isOTP: true,
       });
     }
   }
@@ -843,6 +844,10 @@ export class MyAccountOverlay extends PureComponent {
     if (!ENABLE_OTP_LOGIN) {
       return;
     }
+
+    this.setState({
+      failedRegistrationData: { phoneWithoutCode: null },
+    });
 
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
@@ -1078,12 +1083,12 @@ export class MyAccountOverlay extends PureComponent {
       failedRegistrationData,
     } = this.state;
     if (failedRegistrationData && failedRegistrationData.phoneWithoutCode) {
-      this.onSignInChange();
-      this.setUserIdentifierType(failedRegistrationData.phoneWithoutCode);
-      this.setState({
-        isOTP: true,
-        isSignInValidated:true,
-      });
+      const validMobileLength = this.getUserIdentifierCreateMaxLength();
+      if (validMobileLength == failedRegistrationData.phoneWithoutCode.length) {
+        this.setState({
+          isSignInValidated: true,
+        });
+      }
     }
     this.setState({
       isCreateValidated: false,
