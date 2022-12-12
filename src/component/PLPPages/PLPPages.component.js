@@ -180,12 +180,14 @@ class PLPPages extends PureComponent {
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
     const inlineFilterList = this.getInlineFilterList(filters);
+    
     const keyLabel = {
       discount: __("Discount"),
       colorfamily: __("Colors"),
       sizes: __("Sizes"),
       age: __("Age"),
     };
+
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;
     const filterIndex = index === 0 || !requiredPages ? null : index;
