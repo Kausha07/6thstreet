@@ -942,6 +942,7 @@ export class CartPage extends PureComponent {
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
           {this.renderEmptyCartPage()}
+          <div block="Empty-cart-spacing"></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
               ? this.renderRecentlyViewSlider()
@@ -985,6 +986,7 @@ export class CartPage extends PureComponent {
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
           {this.renderEmptyCartPage()}
+          <div block="Empty-cart-spacing"></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
               ? this.renderRecentlyViewSlider()
