@@ -41,7 +41,7 @@ class PLPPages extends PureComponent {
       firstPageLoad: false,
       pageScrollHeight: 0,
       activeSliderImage: 0,
-      defaultSizeCode: "size_uk",
+      defaultSizeCode: "size_eu",
       prevProductSku: "",
       loadedLastProduct: false,
     };
@@ -163,17 +163,33 @@ class PLPPages extends PureComponent {
     const categoryLevelName = "categories.level1";
     const genderName = "gender";
     const CategoryName = "categories_without_path";
+    const sortName = "sort";
     const removedFilter = [
       brandsCategoryName,
       categoryLevelName,
       genderName,
       CategoryName,
       stockName,
+      sortName
     ];
-    const updatedFilter = deepCopy(filters);
+    const sizeOptions = ['size_eu','size_uk','size_us']
+    const options = this.getRequestOptions()
+    let updatedFilter = deepCopy(filters);
     removedFilter.map((key) => {
       delete updatedFilter[key];
     });
+    Object.keys(filters).map((key)=>{
+      if(Object.keys(options).includes(key)){
+        delete updatedFilter[key];
+      }else{
+        sizeOptions.map((size)=>{
+          if(Object.keys(options).includes(size)){
+            delete updatedFilter['sizes']
+          }
+        })
+      }
+    })
+    updatedFilter = {stock:"stock",...updatedFilter}
     return updatedFilter;
   };
 
@@ -183,7 +199,7 @@ class PLPPages extends PureComponent {
     
     const keyLabel = {
       discount: __("Discount"),
-      colorfamily: __("Colors"),
+      colorfamily: __("Colours"),
       sizes: __("Sizes"),
       age: __("Age"),
     };
@@ -199,7 +215,7 @@ class PLPPages extends PureComponent {
     const filterKey = Object.keys(inlineFilterList)[filterIndex];
     const finalFilterKey =
       filterKey && filterKey.includes("price")
-        ? __("Price")
+        ? __("Price Range")
         : keyLabel[filterKey];
     return { shouldRender, filterIndex, inlineFilterList, finalFilterKey };
   };
@@ -216,7 +232,7 @@ class PLPPages extends PureComponent {
 
   renderSizeQuickFilter = () => {
     const { defaultSizeCode, activeSliderImage } = this.state;
-    const sizeData = ["size_uk", "size_eu", "size_us"];
+    const sizeData = ["size_eu", "size_uk", "size_us"];
     const sizeLabel = {
       size_uk: __("Size UK"),
       size_eu: __("Size EU"),
