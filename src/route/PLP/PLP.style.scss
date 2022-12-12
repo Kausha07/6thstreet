@@ -50,8 +50,8 @@
     .SortOverlay{
         background-color: black;
         position: fixed;
-        height: 40px;
-        width: 170px;
+        height: 36px;
+        width: 240px;
         z-index: 9;
         bottom: 92px;
         border-radius: 20px;
@@ -85,6 +85,18 @@
             .HighlightOval{
             right: 62%;
             }
+            .CommonBlock{
+                .title {
+                    left: 16px;
+                    right: unset;
+                  }
+            }
+            .CommonBlock:nth-child(3){
+                .title {
+                    right: 0px;
+                    left: unset;
+                }
+            }
         }
     }
     .CommonBlock{
@@ -101,10 +113,13 @@
             font-size: 13px;
             font-weight: var(--fw-demi);
             line-height: 16px;
+            right: 16px;
           }
     }
     .CommonBlock:nth-child(3){
-        margin-left:5px ;
+        .title {
+            left: 0px;
+        }
     }
     @include mobile {
         padding-top: 0;

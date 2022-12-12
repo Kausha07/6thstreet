@@ -259,7 +259,7 @@ export class PLP extends PureComponent {
         </div>
         <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
-          <span block="title">{__("Filter")}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
+          <span block="title">{__("Filter")}{" "}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
         </div>
       </div>
       </div>
