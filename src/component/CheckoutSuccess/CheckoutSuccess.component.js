@@ -264,8 +264,10 @@ export class CheckoutSuccess extends PureComponent {
   renderMyAccountPopup() {
     const { showPopup, popupEvent } = this.state;
     const {
-      billingAddress: { guest_email: email },
+      billingAddress
     } = this.props;
+
+    const email = billingAddress?.guest_email;
 
     if (!showPopup) {
       return null;
@@ -1089,11 +1091,12 @@ export class CheckoutSuccess extends PureComponent {
   renderDetails() {
     const {
       customer,
-      billingAddress: { guest_email },
+      billingAddress,
       paymentMethod,
       incrementID,
       initialTotals,
     } = this.props;
+    const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
     const pagePathName = new URL(window.location.href).pathname;
