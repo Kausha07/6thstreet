@@ -86,7 +86,7 @@ class PLPFilters extends PureComponent {
       if (!activeFilter) {
         return {
           isOpen: activeOverlay === "PLPFilter",
-          activeFilter: Object.keys(filters)[0],
+          activeFilter: Object.keys(filters)[1],
           activeFilters: activeFilters,
         };
       }
