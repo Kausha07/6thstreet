@@ -51,14 +51,16 @@
         background-color: black;
         position: fixed;
         height: 36px;
-        width: 240px;
+        min-width: 210px;
+        max-width: 240px;
         z-index: 9;
         bottom: 92px;
         border-radius: 20px;
         color: #FFFFFF;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        padding: 0 18px;
         &-CenterLine{
             width: 3px;
             height: 20px;
@@ -85,42 +87,56 @@
             .HighlightOval{
             right: 62%;
             }
-            .CommonBlock{
-                .title {
-                    left: 16px;
-                    right: unset;
-                  }
-            }
-            .CommonBlock:nth-child(3){
-                .title {
-                    right: 0px;
-                    left: unset;
+            .title {
+                right: -10px;
+                left: unset;
+              }
+              .leftSortContainer{
+                .CommonBlock{
+                    &-RefineImg{
+                        margin-right: -15px;
+                        margin-left: unset;
+                    }
+                    .title{
+                        margin-right: 0px;
+                        right: unset;
+                    }
                 }
+            }
+        }
+    }
+    .leftSortContainer{
+        width: 56%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .CommonBlock{
+            width: 72%;
+            .title{
+                margin-left: 0px;
+                left: unset;
             }
         }
     }
     .CommonBlock{
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
-        width: 42%;
+        width: 34%;
         &-RefineImg{
             height: 9px !important;
             width: 15px !important;
+            margin-left: -15px;
         }
         .title {
             color: #FFFFFF;
             font-size: 13px;
             font-weight: var(--fw-demi);
             line-height: 16px;
-            right: 16px;
+            left: -10px;
           }
     }
-    .CommonBlock:nth-child(3){
-        .title {
-            left: 0px;
-        }
-    }
+
     @include mobile {
         padding-top: 0;
     }

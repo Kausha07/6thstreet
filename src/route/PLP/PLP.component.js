@@ -254,12 +254,14 @@ export class PLP extends PureComponent {
           <img src={sort} alt="sort" />
           <span block="title">{__("Sort")}</span>
         </div>
+        <div block = "leftSortContainer">
         <div block="SortOverlay" elem="CenterLine">
           <img src={Line} alt="line" />
         </div>
         <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
           <span block="title">{__("Filter")}{" "}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
+        </div>
         </div>
       </div>
       </div>
