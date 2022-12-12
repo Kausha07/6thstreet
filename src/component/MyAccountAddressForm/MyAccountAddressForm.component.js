@@ -244,7 +244,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
                 autocomplete: 'none',
-                isDisabled: true
+                isDisabled: true,
+                disabled: true,
             },
             telephone: {
                 validation: ['notEmpty', this.getValidationForTelephone()],
