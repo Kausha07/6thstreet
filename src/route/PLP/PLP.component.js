@@ -41,6 +41,16 @@ export class PLP extends PureComponent {
     this.sortByOverlay = createRef();
   }
 
+  static getDerivedStateFromProps(props) {
+    const { filters = {} } = props;
+    if (isMobile.any() && filters['sort']) {
+      const selectedFilter = Object.values(filters['sort'].data).filter(({is_selected}) => is_selected)
+        return {
+          selectedSortOption: selectedFilter.length > 0 ? selectedFilter[0].facet_value : 'recommended'
+        };
+    }
+  }
+
   componentDidMount() {
     let bannerData = localStorage.getItem("bannerData");
     let bannerUrl = localStorage.getItem("CircleBannerUrl");
