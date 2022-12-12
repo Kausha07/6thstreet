@@ -61,7 +61,6 @@ class HeaderWishlist extends PureComponent {
     }
     return (
       <MyAccountOverlay
-        openSignInDirectly={true}
         closePopup={this.closePopup}
         onSignIn={this.onSignIn}
         isPopup

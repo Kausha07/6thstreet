@@ -243,15 +243,15 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
   }
   redirectOrGetState = (props) => {
-    const { showOverlay, setHeaderState, isPasswordForgotSend, openSignInDirectly } = props;
+    const { showOverlay, setHeaderState, isPasswordForgotSend, showMyAccountMenuPopUp } = props;
 
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
 
-    const getDeviceState = openSignInDirectly
-      ? STATE_SIGN_IN
-      : STATE_INITIAL_LINKS;
+    const getDeviceState = showMyAccountMenuPopUp
+      ? STATE_INITIAL_LINKS 
+      : STATE_SIGN_IN;
 
     const state = {
       state: getDeviceState,

@@ -107,6 +107,7 @@ class HeaderAccount extends PureComponent {
 
     return (
       <MyAccountOverlay
+        showMyAccountMenuPopUp={true}
         closePopup={this.closePopup}
         onSignIn={this.onSignIn}
         isPopup
@@ -152,7 +153,7 @@ class HeaderAccount extends PureComponent {
               ? this.redirectToAccount()
               : this.showMyAccountPopup(),
               this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
-              sendGTMEvent();
+            sendGTMEvent();
           }}
         >
           <label htmlFor="Account">

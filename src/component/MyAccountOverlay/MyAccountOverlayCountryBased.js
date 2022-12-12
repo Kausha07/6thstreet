@@ -9,7 +9,7 @@ export default function MyAccountOverlay({
   email,
   setRegisterFieldFalse,
   registerField,
-  openSignInDirectly,
+  showMyAccountMenuPopUp,
 }) {
   const newSigninSignupVersionEnabled = useSelector(
     (state) => state.AppConfig.newSigninSignupVersionEnabled
@@ -23,7 +23,7 @@ export default function MyAccountOverlay({
         email={email}
         setRegisterFieldFalse={setRegisterFieldFalse}
         registerField={registerField}
-        openSignInDirectly={openSignInDirectly}
+        showMyAccountMenuPopUp={showMyAccountMenuPopUp}
       />
     );
   } else {
