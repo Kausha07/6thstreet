@@ -4,7 +4,9 @@
   --ca-thunder-color: #231f20;
   --overlay-black-color: rgba(0, 0, 0, 0.7);
 }
-
+.NotificationList{
+  z-index: 999999;
+}
 .MyAccountClubApparelOverlay {
   background-color: var(--overlay-black-color);
   .LinkAccountLogo {
