@@ -220,6 +220,20 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     })
   }
 
+  handleApplyCode = async () => {
+    const { couponCode } = this.state;
+    this.setLoader(true);
+    try{            
+        let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
+        if (typeof apiResponse !== "string") {
+        }
+        this.setLoader(false);
+    }
+    catch(error){
+        console.error(error);
+    }
+  }
+
   renderDiscountCode() {
     const {
       totals: { coupon_code },
@@ -253,7 +267,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 }
               </div>
               {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
-              {this.state?.isTermsAndConditionspopupOpen && <CartCouponTermsAndConditions TermsAndConditions={this.state} hideTermsAndConditions={this.hideTermsAndConditions} /> }
             </>
             :
             <>
@@ -271,7 +284,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                   <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} setLoader={this.setLoader}/>
                   {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
-                  {this.state?.isTermsAndConditionspopupOpen && <CartCouponTermsAndConditions TermsAndConditions={this.state} hideTermsAndConditions={this.hideTermsAndConditions} /> }
+                  {this.state?.isTermsAndConditionspopupOpen && 
+                    <CartCouponTermsAndConditions
+                      TermsAndConditions={this.state}
+                      hideTermsAndConditions={this.hideTermsAndConditions}
+                      hideDetail={this.hideCouponDetial}
+                      handleApplyCode={this.handleApplyCode}
+                    />
+                  }
                 </div>
               <Loader isLoading={isLoading} />
               </div>

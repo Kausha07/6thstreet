@@ -77,6 +77,7 @@ export class CartPage extends PureComponent {
     pageLoaded: true,
     couponModuleStatus: false,
     isMobile: isMobile.any() || isMobile.tablet(),
+    isLoading: false,
   };
 
   static defaultProps = {
@@ -325,13 +326,31 @@ export class CartPage extends PureComponent {
       });
     }
   };
+  setLoader = (currLoaderState) => {
+    this.setState({
+      isLoading: currLoaderState
+    })
+  }
+  handleApplyCode = async () => {
+    const { couponCode } = this.state;
+    this.setLoader(true);
+    try{            
+        let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
+        if (typeof apiResponse !== "string") {
+        }
+        this.setLoader(false);
+    }
+    catch(error){
+        console.error(error);
+    }
+  }
   renderDiscountCode() {
     const {
       totals: { coupon_code },
       couponsItems = [],
     } = this.props;
     const isOpen = false;
-    const { isArabic, isMobile }= this.state;
+    const { isArabic, isMobile, isLoading }= this.state;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -382,12 +401,6 @@ export class CartPage extends PureComponent {
                 showTermsAndConditions={this.showTermsAndConditions}
               />
             )}
-            {this.state?.isTermsAndConditionspopupOpen && (
-              <CartCouponTermsAndConditions
-                TermsAndConditions={this.state}
-                hideTermsAndConditions={this.hideTermsAndConditions}
-                />
-              )}
           </>
         ) : (
           <>
@@ -426,9 +439,12 @@ export class CartPage extends PureComponent {
                   <CartCouponTermsAndConditions
                     TermsAndConditions={this.state}
                     hideTermsAndConditions={this.hideTermsAndConditions}
+                    hideDetail={this.hideCouponDetial}
+                    handleApplyCode={this.handleApplyCode}
                   />
                 )}
               </div>
+              <Loader isLoading={isLoading} />
             </div>
           </>
         )}
