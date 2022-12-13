@@ -226,12 +226,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       addressLoader: true,
     };
   }
-  static getDerivedStateFromProps(props) {
-    const { addressLoader } = props;
-    return {
-      addressLoader,
-    };
-  }
+
   refreshCart = async () => {
     const { updateTotals, cartId, removeBinPromotion } = this.props;
     await removeBinPromotion();
@@ -1319,8 +1314,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   render() {
-    const { isClickAndCollect, addressLoader } = this.state;
-    const { isSignedIn } = this.props;
+    const { isClickAndCollect } = this.state;
+    const { isSignedIn, addressLoader } = this.props;
     return addressLoader && isSignedIn ? (
     <Loader isLoading={addressLoader} />
     ) : (

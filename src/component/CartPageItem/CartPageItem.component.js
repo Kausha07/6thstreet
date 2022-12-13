@@ -79,6 +79,7 @@ export class CartItem extends PureComponent {
     dragOpenEl: "",
     intlEddResponseState:{},
     isSignedIn: this.props.isSignedIn,
+    setDraggable: true,
   };
 
   static defaultProps = {
@@ -371,6 +372,9 @@ export class CartItem extends PureComponent {
   };
 
   onMouseMove = (evt) => {
+    if(!this.state.setDraggable){
+      return;
+    }
     const dragChange = evt.clientX - this.state.dragStartX;
     const leftOrRight =
       evt.clientX > this.state.dragStartX
@@ -561,6 +565,16 @@ export class CartItem extends PureComponent {
   renderWrapper() {
     // TODO: implement shared-transition here?
 
+    const {
+      item: {
+        row_total
+      },
+    } = this.props;
+
+    if(row_total === 0){
+      this.setState({setDraggable : false})
+    }
+
     return (
       <div block="swipeableItem" ref={this.cartItemRef}>
         {this.state.isSignedIn ? (
@@ -711,7 +725,7 @@ export class CartItem extends PureComponent {
       },
       toggleCartItemQuantityPopup,
     } = this.props;
-    const { isArabic, isNotAvailble } = this.state;
+    const { isArabic, setDraggable, isNotAvailble } = this.state;
     return (
       <div block="CartPageItem" elem="ColSizeQty" mods={{ isArabic }}>
         {color && (
@@ -726,7 +740,7 @@ export class CartItem extends PureComponent {
         <span
           block="CartItem-ColSizeQty"
           elem="Qty"
-          onClick={() => isNotAvailble ? {}: toggleCartItemQuantityPopup()}
+          onClick={() => !isNotAvailble && setDraggable ? toggleCartItemQuantityPopup() : null}
         >
           <span>{__("Qty:")}</span>
           <span>{qty}</span>
@@ -864,6 +878,7 @@ export class CartItem extends PureComponent {
         bundle_options,
         full_item_info: { cross_border = 0 },
         brand_name = "",
+        row_total
       },
       intlEddResponse
     } = this.props;
@@ -876,7 +891,7 @@ export class CartItem extends PureComponent {
 
     return (
       <figcaption block="CartPageItem" elem="Content" mods={{ isLikeTable }}>
-        {this.handleSwipe()}
+        {row_total === 0 ? null : this.handleSwipe()}
         {this.renderBrandName()}
         {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}

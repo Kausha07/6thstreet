@@ -896,92 +896,6 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping() {
-    let country = getCountryFromUrl();
-    let txt = {
-      AE: __(
-        "Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."
-      ),
-      SA: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200."
-      ),
-      KW: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20."
-      ),
-      QA: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200."
-      ),
-      OM: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."
-      ),
-      BH: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20."
-      ),
-    };
-    return (
-      <div>
-        <p>
-          {" "}
-          {txt[country]}
-          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-            {" "}
-            {__("More info")}
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
-  renderShippingAndFreeReturns() {
-    if (this.props.product.is_returnable === 1) {
-      return (
-        <div>
-          <p>
-            {__("100 days free return available. Shop freely.")}
-            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-              {" "}
-              {__("More info")}
-            </Link>
-          </p>
-        </div>
-      );
-    }
-
-    if (this.props.product.is_returnable === 0) {
-      return (
-        <div>
-          <p>
-            {__("Not eligible for return.")}
-            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-              {" "}
-              {__("More info")}
-            </Link>
-          </p>
-        </div>
-      );
-    }
-
-    // if(this.props.product.is_returnable === "NO"){
-    //   return(
-    //     <div>check check check</div>
-    //   )
-    // }
-
-    return (
-      <div>
-        <p>
-          {__(
-            "Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery."
-          )}
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-            {" "}
-            {__("More info")}
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
   renderReturnInfo() {
     const { isArabic } = this.state;
 
@@ -1023,25 +937,61 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShippingInfo() {
-    let country = getCountryFromUrl();
-    let txt = {
-      AE: __("*Free delivery for orders above AED 200."),
-      SA: __("*Free delivery for orders above SAR 200."),
-      KW: __("*Free delivery for orders above KWD 20."),
-      QA: __("*Free delivery for orders above QAR 200."),
-      OM: __("*Free delivery for orders above OMR 20."),
-      BH: __("*Free delivery for orders above BHD 20."),
-    };
+
+    if(this.props.country && this.props.config && this.props.config.countries) {
+
+    let country_name = getCountryFromUrl();
+    const { isArabic } = this.state;
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+
+    let free_return_amount = 200;
+    if( countries[country] && countries[country].free_return_amount){
+      free_return_amount = countries[country].free_return_amount;
+    }
+
+      let txt_common = __("*Free delivery for orders above");
+
+      let txt_diff = {
+        AE: __(
+          "AED"
+        ),
+        SA: __(
+          "SAR"
+        ),
+        KW: __(
+          "KWD"
+        ),
+        QA: __(
+          "QAR"
+        ),
+        OM: __(
+          "OMR"
+        ),
+        BH: __(
+          "BHD"
+        ),
+      };
 
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
-            {txt[country]}
-          </b>
+        {
+            isArabic ? (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${free_return_amount} ${txt_diff[country_name]}`}
+              </b>
+            ) : (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${txt_diff[country_name]} ${free_return_amount}`}
+              </b>
+            )
+          }
           <br />
         </p>
-        <div block="FindOutMore">
+        <div block="FindOutMore" mods={{ isArabic }}>
           <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>
             <span block="FindOutMore" elem="ButtonText">
               {__("Find Out More")}
@@ -1049,7 +999,8 @@ class PDPDetailsSection extends PureComponent {
           </Link>
         </div>
       </div>
-    );
+    )
+    }
   }
 
   render() {

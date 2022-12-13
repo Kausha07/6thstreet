@@ -13,7 +13,9 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
             onItemClick,
             onResolutionChange,
             onReasonChange,
-            resolutions
+            resolutions,
+            handleChangeQuantity,
+            quantityObj
         } = this.props;
 
         return (
@@ -21,6 +23,8 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
                 <MyAccountCancelCreateItem
                     item={item}
                     onClick={onItemClick}
+                    cancelableQty={quantityObj}
+                    handleChangeQuantity={handleChangeQuantity}
                     onResolutionChange={onResolutionChange}
                     onReasonChange={onReasonChange}
                     resolutions={resolutions}

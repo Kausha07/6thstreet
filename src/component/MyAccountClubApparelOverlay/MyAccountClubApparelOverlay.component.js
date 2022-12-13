@@ -67,6 +67,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
     this.state = {
       selectedCountry: country,      
+      isArabic: isArabic()
     };
   }
   componentDidUpdate() {
