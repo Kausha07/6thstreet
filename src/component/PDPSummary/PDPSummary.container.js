@@ -6,6 +6,7 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 
 import PDPSummary from "./PDPSummary.component";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
+import { setBrandInfoData } from "Store/PDP/PDP.action";
 
 import Algolia from "Util/API/provider/Algolia";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -26,6 +27,7 @@ export const mapDispatchToProps = (_dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
   setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
+  setBrandInfoData: (data) => _dispatch(setBrandInfoData(data)),
 });
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
@@ -88,7 +90,7 @@ export class PDPSummaryContainer extends PureComponent {
   }
 
   async getBrandDetails() {
-    const { product: { brand_name } } = this.props;
+    const { product: { brand_name }, setBrandInfoData } = this.props;
     if(brand_name) {
       try {
       const data = await new Algolia({
@@ -98,6 +100,7 @@ export class PDPSummaryContainer extends PureComponent {
           query: brand_name,
           limit: 1,
         });
+      setBrandInfoData(data?.hits[0]?.url_path)
       this.setState({
         url_path: data?.hits[0]?.url_path
       });
