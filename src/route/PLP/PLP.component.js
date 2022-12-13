@@ -256,7 +256,8 @@ export class PLP extends PureComponent {
 
   renderSortFilterOverlay = () => {
     const { isArabic } = this.state;
-    const filterCount = this.getFilterCount() 
+    const filterCount = this.getFilterCount();
+    const isFilter =  filterCount === 0
     return (
       <div block = "SortContainer">
       <div block="SortOverlay" mods={{isArabic}}>
@@ -268,7 +269,7 @@ export class PLP extends PureComponent {
         <div block="SortOverlay" elem="CenterLine">
           <img src={Line} alt="line" />
         </div>
-        <div block="CommonBlock" onClick={()=> this.handleFilterClick()}>
+        <div block="CommonBlock" mods={{isFilter}} onClick={()=> this.handleFilterClick()}>
           <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
           <span block="title">{__("Filter")}{" "}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
         </div>

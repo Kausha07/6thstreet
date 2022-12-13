@@ -54,7 +54,7 @@
         min-width: 210px;
         max-width: 240px;
         z-index: 9;
-        bottom: 73px;
+        bottom: 94px;
         border-radius: 20px;
         color: #FFFFFF;
         display: flex;
@@ -93,6 +93,12 @@
               }
               .leftSortContainer{
                 .CommonBlock{
+                    &_isFilter{
+                        .title{
+                            right: -22px !important;
+                            left: unset;
+                        }
+                    }
                     &-RefineImg{
                         margin-right: -15px;
                         margin-left: unset;
@@ -112,6 +118,11 @@
         align-items: center;
         .CommonBlock{
             width: 72%;
+            &_isFilter{
+                .title{
+                    left: -22px !important;
+                }
+            }
             .title{
                 margin-left: 0px;
                 left: unset;
