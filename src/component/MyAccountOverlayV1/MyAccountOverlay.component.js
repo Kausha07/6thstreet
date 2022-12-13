@@ -269,6 +269,7 @@ export class MyAccountOverlay extends PureComponent {
                   handleSignIn(e);
                   this.setState({
                     failedRegistrationData: {},
+                    countryCode: PHONE_CODES[getCountryFromUrl()],
                   });
                 }}
                 className="register-login-btn"
@@ -284,7 +285,13 @@ export class MyAccountOverlay extends PureComponent {
               </span>
               {
                 <button
-                  onClick={handleCreateAccount}
+                  onClick={(e) => {
+                    handleCreateAccount(e);
+                    this.setState({
+                      countryCode: PHONE_CODES[getCountryFromUrl()],
+                    });
+                  }}
+
                   className="register-login-btn"
                 >
                   {__("Register")}
