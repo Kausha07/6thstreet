@@ -62,7 +62,7 @@ export class LiveExperience extends PureComponent {
 
     this.renderArchivedParty();
     if(isMobile.any()){
-      document.querySelector(".HeaderMainSection").style.display= "none";
+      document.querySelector(".HeaderGenders").style.display= "none";
     }
   }
 
@@ -71,7 +71,7 @@ export class LiveExperience extends PureComponent {
   }
 
   componentWillUnmount() {
-    document.querySelector(".HeaderMainSection").style.display = "flex";
+    document.querySelector(".HeaderGenders").style.display = "flex";
   }
   renderLiveParty = async () => {};
   renderUpcomingParty = () => {};
