@@ -643,6 +643,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
         step: this.getCheckoutStepNumber(),
+        payment_code: null,
       });
       if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
@@ -795,12 +796,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      totals,
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
     let eddItems = [];
+    Event.dispatch(EVENT_GTM_CHECKOUT, {
+      totals,
+      step: 3,
+      payment_code: code ? code : null,
+    });
     if (edd_info?.is_enable && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {
