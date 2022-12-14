@@ -21,13 +21,23 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import isMobile from "Util/Mobile";
 import "./Header.style";
 
+import Config from "../../route/LiveExperience/LiveExperience.config";
+import { getBambuserChannelID } from "../../util/Common/index";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
+
 export const mapStateToProps = (state) => {
-  return { checkoutDetails: state.CartReducer.checkoutDetails };
+  return { checkoutDetails: state.CartReducer.checkoutDetails,
+    isLive : state.LiveParty.isLive,
+    is_live_party_enabled: state.AppConfig.is_live_party_enabled,};
+  
 };
 export const mapDispatchToProps = (dispatch) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+    requestLiveShoppingInfo : (options) =>
+    LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
 });
 export class Header extends PureComponent {
   static propTypes = {
@@ -43,12 +53,49 @@ export class Header extends PureComponent {
     type: null,
   };
 
-  componentDidMount() {
-    const { delay } = this.state;
-    this.timer = setInterval(this.tick, delay);
+  requestLiveShoppingInfo() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
+    const { requestLiveShoppingInfo } = this.props;
+    Config.storeId = getBambuserChannelID(country);
+    if(requestLiveShoppingInfo) {
+      requestLiveShoppingInfo({
+      storeId: Config.storeId,
+      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
+    });
+    }
   }
 
-  componentDidUpdate(prevState) {
+  renderFAB = () => {
+    (function (d, t, i, w) {
+      window.__bfwId = w;
+      if (d.getElementById(i) && window.__bfwInit) return window.__bfwInit();
+      if (d.getElementById(i)) return;
+      var s,
+        ss = d.getElementsByTagName(t)[0];
+      s = d.createElement(t);
+      s.id = i;
+      s.src = "https://lcx-widgets.bambuser.com/embed.js";
+      ss.parentNode.insertBefore(s, ss);
+    })(
+      document,
+      "script",
+      "bambuser-liveshopping-widget",
+      "cSgglVM5Uu6haazakKgm"
+    );
+  };
+
+  componentDidMount() {
+    const { delay } = this.state;
+    const { isLive, is_live_party_enabled } = this.props;
+    this.timer = setInterval(this.tick, delay);
+    if(is_live_party_enabled )
+    {
+      this.requestLiveShoppingInfo();
+    }  
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     // const { delay, type,isMobile } = this.state;
     // if (prevState !== delay) {
     //   clearInterval(this.timer);
@@ -61,6 +108,24 @@ export class Header extends PureComponent {
     //     showPDPSearch(false);
     //   }
     // }
+
+    const { isLive, is_live_party_enabled } = this.props;
+    const Exceptionalpath = ["/cart", "/checkout"];
+
+    if(Exceptionalpath.includes(location.pathname))
+    {
+      const chatElem = document.querySelector("[data-widget-id='cSgglVM5Uu6haazakKgm']")
+      if(chatElem)
+      {
+        chatElem.remove();
+      }
+      return; 
+    }
+    
+    if ((isLive !== prevProps.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled){
+      this.renderFAB();
+    }
+    
   }
 
   componentWillUnmount() {
@@ -203,3 +268,4 @@ export class Header extends PureComponent {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
+
