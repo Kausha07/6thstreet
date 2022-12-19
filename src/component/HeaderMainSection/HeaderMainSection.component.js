@@ -422,6 +422,7 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
+            renderMySignInPopup={this.showMyAccountPopup}
           />
         </div>
       );
