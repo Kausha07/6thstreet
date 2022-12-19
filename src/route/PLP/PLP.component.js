@@ -189,7 +189,7 @@ export class PLP extends PureComponent {
         .split("/");
       if (getCategoryLevel.length > 1) {
         const footerHtml =
-          footerContent.data?.[0][getCategoryLevel[0]][getCategoryLevel[1]];
+          footerContent.data?.[0]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]];
         const contentDescription = isArabic ? "descriptionAR" : "descriptionEN";
         if (footerHtml && footerHtml?.[contentDescription]) {
           return (
