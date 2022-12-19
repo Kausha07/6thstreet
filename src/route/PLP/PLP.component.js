@@ -18,6 +18,8 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
+import Logger from "Util/Logger";
+import CDN from "../../util/API/provider/CDN";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -34,7 +36,11 @@ export class PLP extends PureComponent {
       circleBannerUrl: null,
       activeFilters: {},
       isArabic: isArabic(),
+      footerContent: {},
+      isToggleOn: true,
     };
+    this.getContent();
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -51,6 +57,27 @@ export class PLP extends PureComponent {
   componentWillUnmount() {
     const { resetPLPData } = this.props;
     // resetPLPData();
+  }
+
+  getContent = async () => {
+    try {
+      const resp = await CDN.get(
+        "resources/20191010_staging/pages/plp_footer_content.json"
+      );
+      if (resp) {
+        this.setState({
+          footerContent: resp,
+        });
+      }
+    } catch (e) {
+      Logger.log(e);
+    }
+  };
+
+  handleClick() {
+    this.setState((prevState) => ({
+      isToggleOn: !prevState.isToggleOn,
+    }));
   }
 
   showMyAccountPopup = () => {
@@ -152,6 +179,49 @@ export class PLP extends PureComponent {
     );
   };
 
+  renderFooterContent() {
+    const { footerContent, isArabic, isToggleOn } = this.state;
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html") && footerContent.data?.[0]) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      if (getCategoryLevel.length > 1) {
+        const footerHtml =
+          footerContent.data?.[0][getCategoryLevel[0]][getCategoryLevel[1]];
+        const contentDescription = isArabic ? "descriptionAR" : "descriptionEN";
+        if (footerHtml && footerHtml?.[contentDescription]) {
+          return (
+            <>
+              <div className="PLP-FooterWrapper">
+                <div
+                  className={
+                    isToggleOn
+                      ? "PLP-FooterContainer loadMore"
+                      : "PLP-FooterContainer loadLess"
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: footerHtml?.[contentDescription],
+                  }}
+                />
+                {footerHtml?.[contentDescription].length > 180 ? (
+                  <div className="loadMoreBtn">
+                    <button onClick={this.handleClick}>
+                      {isToggleOn ? "Read more" : "Read less"}
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          );
+        }
+      }
+    }
+  }
+
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
@@ -185,6 +255,7 @@ export class PLP extends PureComponent {
               )}
             </div>
           </ContentWrapper>
+          {!isMobile.any() && this.renderFooterContent()}
         </main>
       );
     }
