@@ -267,6 +267,7 @@
         }
         .disableBtn {
           color: var(--gray-color);
+          cursor: not-allowed;
         }
       }
 
@@ -306,6 +307,7 @@
       }
       .disableBtn {
         color: var(--gray-color);
+        cursor: not-allowed;
       }
     }
 

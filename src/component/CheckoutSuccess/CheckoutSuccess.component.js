@@ -342,7 +342,12 @@ export class CheckoutSuccess extends PureComponent {
                 disabled={this.state.otpTimer > 0}
               >
                 {this.state.otpTimer > 0 ? (
-                  <span>00 : {this.state.otpTimer} </span>
+                  <span>
+                    00 :
+                    {this.state.otpTimer < 10
+                      ? ` 0${this.state.otpTimer}`
+                      : ` ${this.state.otpTimer}`}
+                  </span>
                 ) : (
                   __("Resend Code")
                 )}
@@ -352,6 +357,7 @@ export class CheckoutSuccess extends PureComponent {
               <span>{__("Problems with verification code?")}</span>
               {!isVerifyEmailViewState ? (
                 <button
+                  disabled={this.state.otpTimer > 0}
                   className={
                     this.state.otpTimer > 0
                       ? "disableBtn VerifyEmailBtn"
@@ -367,6 +373,7 @@ export class CheckoutSuccess extends PureComponent {
                 </button>
               ) : (
                 <button
+                  disabled={this.state.otpTimer > 0}
                   className={
                     this.state.otpTimer > 0
                       ? "disableBtn VerifyEmailBtn"
