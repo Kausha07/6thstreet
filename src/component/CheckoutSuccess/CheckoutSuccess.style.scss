@@ -164,13 +164,13 @@
       width: 100vw;
 
       &-Text {
-        font-family: var(--avenir-demi-font);
         margin: 0 60px;
         display: grid;
 
         &-Title {
           font-size: 18px;
-          font-weight: var(--fw-demi);
+          font-weight: var(--fw-bold);
+          font-family: "Avenir Next Demi Bold";
           text-transform: capitalize;
           margin: 0px 0 20px;
         }
@@ -178,6 +178,7 @@
         &-Message {
           color: #4a4a4a;
           font-size: 14px;
+          font-family: "Avenir Next Medium";
         }
 
         &-SubTitle {
@@ -188,11 +189,13 @@
 
         &-Phone {
           margin-bottom: 50px;
-
+          font-size: 14px;
+          color: #4a4a4a;
           button {
             text-decoration: underline !important;
             height: fit-content;
             direction: ltr;
+            font-family: "Avenir Next Medium";
           }
         }
       }
@@ -259,7 +262,6 @@
           font-size: 15px;
           margin-top: 0;
           text-transform: capitalize;
-          text-decoration: underline;
           color: var(--black-color);
           width: unset;
         }
@@ -295,11 +297,6 @@
     .VerifyEmail {
       display: flex;
       flex-direction: column;
-      margin: auto;
-      padding: 10px 40px 5px 40px;
-      border-radius: 8px;
-      background-color: #f0efef;
-      width: fit-content;
 
       .VerifyEmailBtn {
         font-size: smaller;

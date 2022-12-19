@@ -93,7 +93,6 @@ export class CheckoutSuccess extends PureComponent {
     ) {
       this.OtpTimerFunction();
     }
-
   }
 
   OtpTimerFunction() {
@@ -266,14 +265,14 @@ export class CheckoutSuccess extends PureComponent {
 
     return (
       <>
-        {!isSignedInState && guestAutoSignIn && (
+        {!isSignedInState && guestAutoSignIn ? (
           <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
             <div block="VerifyPhone" elem="Text">
               <span block="VerifyPhone" elem="Text-Title">
-                {__("Please Verify your Number")}
+                {__("Please enter verification code")}
               </span>
               <div block="VerifyPhone" elem="Text-Message">
-                {__("Verification code has been sent to")}
+                {__("To sign in and track your order")}
               </div>
               <div block="VerifyPhone" elem="Text-Phone">
                 {isLoading ? (
@@ -301,11 +300,11 @@ export class CheckoutSuccess extends PureComponent {
                 id="otp"
                 onKeyPress={(e) => isNumber(e)}
                 onChange={(e) =>
-                  onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)}
+                  onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)
+                }
               />
             </div>
-            {
-              otpError &&
+            {otpError && (
               <div
                 block="VerifyPhone"
                 elem="ErrMessage"
@@ -313,7 +312,7 @@ export class CheckoutSuccess extends PureComponent {
               >
                 {__(otpError)}
               </div>
-            }
+            )}
             <div
               block="VerifyPhone"
               elem="OtpLoader"
@@ -334,7 +333,6 @@ export class CheckoutSuccess extends PureComponent {
               elem="ResendCode"
               mods={{ isVerifying: !isLoading }}
             >
-              <span>{this.state.otpTimer > 0 && <span>0:{this.state.otpTimer} -</span>}</span>
               <button
                 onClick={() => {
                   onResendCode();
@@ -343,7 +341,11 @@ export class CheckoutSuccess extends PureComponent {
                 className={this.state.otpTimer > 0 ? "disableBtn" : ""}
                 disabled={this.state.otpTimer > 0}
               >
-                {__("Resend Code")}
+                {this.state.otpTimer > 0 ? (
+                  <span>00 : {this.state.otpTimer} </span>
+                ) : (
+                  __("Resend Code")
+                )}
               </button>
             </div>
             <div className="VerifyEmail">
@@ -381,20 +383,21 @@ export class CheckoutSuccess extends PureComponent {
               )}
             </div>
           </div>
-        )}
-        <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
-          <div block="TrackOrder" elem="Text">
-            <span block="TrackOrder" elem="Text-Title">
-              {__("track your order")}
-            </span>
-            <span block="TrackOrder" elem="Text-SubTitle">
-              {__("sign in to access your account and track your order")}
-            </span>
+        ) : (
+          <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
+            <div block="TrackOrder" elem="Text">
+              <span block="TrackOrder" elem="Text-Title">
+                {__("track your order")}
+              </span>
+              <span block="TrackOrder" elem="Text-SubTitle">
+                {__("sign in to access your account and track your order")}
+              </span>
+            </div>
+            <button block="secondary" onClick={this.showMyAccountPopup}>
+              {__("sign in")}
+            </button>
           </div>
-          <button block="secondary" onClick={this.showMyAccountPopup}>
-            {__("sign in")}
-          </button>
-        </div>
+        )}
       </>
     );
   }
@@ -607,7 +610,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"
             ? __("Cash on Receiving Fee")
             : __("Cash on Delivery Fee")
@@ -1052,17 +1055,17 @@ export class CheckoutSuccess extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
-                customer_balance_amount,
-                __("Store Credit"),
-                { isStoreCredit: true }
-              )
+                  customer_balance_amount,
+                  __("Store Credit"),
+                  { isStoreCredit: true }
+                )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                club_apparel_amount,
-                __("Club Apparel Redemption"),
-                { isClubApparel: true }
-              )
+                  club_apparel_amount,
+                  __("Club Apparel Redemption"),
+                  { isClubApparel: true }
+                )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
@@ -1072,11 +1075,11 @@ export class CheckoutSuccess extends PureComponent {
               : null}
             {parseFloat(msp_cod_amount) !== 0
               ? this.renderPriceLineQPAY(
-                msp_cod_amount,
-                getCountryFromUrl() === "QA"
-                  ? __("Cash on Receiving")
-                  : __("Cash on Delivery")
-              )
+                  msp_cod_amount,
+                  getCountryFromUrl() === "QA"
+                    ? __("Cash on Receiving")
+                    : __("Cash on Delivery")
+                )
               : null}
             {this.renderPriceLineQPAY(
               grandTotal,
@@ -1130,7 +1133,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
-            paymentMethod?.code === "tabby_installments"
+          paymentMethod?.code === "tabby_installments"
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}
