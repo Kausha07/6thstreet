@@ -83,9 +83,9 @@ export class CheckoutSuccess extends PureComponent {
     if (
       this.state.otpTimer === 0 &&
       this.state.isTimerEnabled &&
-      this.timer != null
+      this.timerInterval != null
     ) {
-      clearInterval(this.timer);
+      clearInterval(this.timerInterval);
     }
     if (
       prevProps.selectedCard != this.props.selectedCard &&
@@ -96,10 +96,13 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   OtpTimerFunction() {
+    if(this.timerInterval != null){
+      clearInterval(this.timerInterval);
+    }
     this.setState({
       otpTimer: 15,
     });
-    this.timer = setInterval(() => {
+    this.timerInterval = setInterval(() => {
       this.setState({
         otpTimer: this.state.otpTimer - 1,
         isTimerEnabled: true,
@@ -109,8 +112,8 @@ export class CheckoutSuccess extends PureComponent {
   componentWillUnmount() {
     const { setCheckoutDetails } = this.props;
     setCheckoutDetails(false);
-    if (this.timer != null && this.state.isTimerEnabled) {
-      clearInterval(this.timer);
+    if (this.timerInterval != null && this.state.isTimerEnabled) {
+      clearInterval(this.timerInterval);
     }
   }
   tick = () => {
