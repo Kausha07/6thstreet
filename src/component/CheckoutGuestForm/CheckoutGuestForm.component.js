@@ -83,7 +83,6 @@ export class CheckoutGuestForm extends FieldForm {
 
     return (
       <MyAccountOverlay
-        showMyAccountMenuPopUp={true}
         closePopup={this.closePopup}
         onSignIn={this.onSignIn}
         isPopup
