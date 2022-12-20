@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { isArabic } from "Util/App";
+import Link from "Component/Link";
 import {
   mapDispatchToProps as sourceMapDispatchToProps,
   mapStateToProps,
@@ -189,9 +190,13 @@ export function PasswordChange(props) {
             <div>
               <p className="terms-conditions">
                 {__("By resetting your password you agree with our")}
-                <span className="underlined">{__("Terms & Conditions")} </span>
+                <Link to={`/disclaimer`}>
+                  <span className="underlined">{__("Terms & Conditions")}</span>
+                </Link>
                 {__("and")}
-                <span className="underlined">{__("Privacy Policy")}</span>
+                <Link to={`/privacy-policy`}>
+                  <span className="underlined">{__("Privacy Policy")}</span>
+                </Link>
               </p>
             </div>
             <div className="save-btn">
