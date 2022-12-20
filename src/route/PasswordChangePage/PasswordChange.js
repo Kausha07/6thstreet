@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
+import { isArabic } from "Util/App";
 import {
   mapDispatchToProps as sourceMapDispatchToProps,
   mapStateToProps,
@@ -30,7 +31,7 @@ export function PasswordChange(props) {
   const AtleastOneCapitalRegex = /[A-Z][A-Z]*/;
   const AtleastOneDigitRegex = /\d/;
   const PasswordLengthRequired = 8;
-
+  const isArabicStyle = isArabic();
   useEffect(() => {
     if (AtleastOneCapitalRegex.test(newPassword)) {
       setIsAtleastOneCapital(true);
@@ -100,7 +101,11 @@ export function PasswordChange(props) {
       >
         <ContentWrapper
           mix={{ block: "PasswordChangePageV1" }}
-          wrapperMix={{ block: "PasswordChangePageV1", elem: "Wrapper" }}
+          wrapperMix={{
+            block: "PasswordChangePageV1",
+            elem: "Wrapper",
+            mods: { isArabicStyle },
+          }}
           label={__("Password Change Actions")}
         >
           <Loader isLoading={isLoading} />
