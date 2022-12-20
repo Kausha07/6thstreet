@@ -13,6 +13,7 @@ import Form from "Component/Form";
 import Loader from "Component/Loader";
 import successTick from "./IconsAndImages/successTick.png";
 import errorCross from "./IconsAndImages/errorCross.png";
+import PasswordChangeSuccessPage from "./PasswordChangeSuccessPage";
 import "./PasswordChange.style.scss";
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -79,9 +80,7 @@ export function PasswordChange(props) {
               "success",
               __("Password has been successfully updated!")
             );
-            setTimeout(() => {
-              window.location.href = "/";
-            }, "4000");
+            return <PasswordChangeSuccessPage />;
 
             break;
           default:
