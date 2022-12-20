@@ -922,11 +922,13 @@ export class CartPage extends PureComponent {
           {this.renderMySignInPopup()}
           {this.renderHeading()}
           {this.renderEmptyCartPageForMobile()}
+          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
               ? this.renderRecentlyViewSlider()
               : null}
           </div>
+          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
           <div className="PDPWidgets-cart">
             {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
@@ -968,11 +970,13 @@ export class CartPage extends PureComponent {
             {this.renderMySignInPopup()}
             {this.renderHeading()}
             {this.renderEmptyCartPageForMobile()}
+            <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
                 ? this.renderRecentlyViewSlider()
                 : null}
             </div>
+            <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
             <div className="PDPWidgets-cart">
             {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
