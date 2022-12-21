@@ -119,6 +119,10 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
+    const { email } = this.props;
+    if (email) {
+      this.setState({ isOTP: false });
+    }
     // gapi.load("auth2", () => {
     //   this.authRef.current = gapi.auth2.init();
     //   this.attachSigninFunction(document.getElementById("g-signin2"));
@@ -927,7 +931,7 @@ export class MyAccountOverlay extends PureComponent {
               }*`}
               id="email"
               name="email"
-              value={!ENABLE_OTP_LOGIN && !isOTP ? email : null}
+              value={email && !isOTP ? email : null}
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
               // autocomplete="email"
               maxLength={this.getUserIdentifierMaxLength()}

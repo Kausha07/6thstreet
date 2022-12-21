@@ -133,6 +133,12 @@ export class MyAccountOverlay extends PureComponent {
     if (isMobile.any()) {
       document.body.style.position = "fixed";
     }
+    const { email } = this.props;
+    if (email) {
+      this.setState({
+        isOTP: false,
+      });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -291,7 +297,6 @@ export class MyAccountOverlay extends PureComponent {
                       countryCode: PHONE_CODES[getCountryFromUrl()],
                     });
                   }}
-
                   className="register-login-btn"
                 >
                   {__("Register")}
@@ -1143,9 +1148,9 @@ export class MyAccountOverlay extends PureComponent {
               id="email"
               name="email"
               value={
-                failedRegistrationData.email
-                  ? failedRegistrationData.email
-                  : failedRegistrationData.phoneWithoutCode
+                failedRegistrationData.phoneWithoutCode
+                  ? failedRegistrationData.phoneWithoutCode
+                  : email
               }
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
               maxLength={this.getUserIdentifierMaxLength()}
