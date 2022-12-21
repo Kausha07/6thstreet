@@ -150,6 +150,7 @@
       display: grid;
 
       @include mobile() {
+        text-align: left;
         padding: 0px 30px;
       }
 
