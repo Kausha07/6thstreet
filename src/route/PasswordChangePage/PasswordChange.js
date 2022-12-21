@@ -30,6 +30,7 @@ export function PasswordChange(props) {
   const [isAtleastOneCapital, setIsAtleastOneCapital] = useState(false);
   const [isAtleastOneDigit, setIsatleastOneDigit] = useState(false);
   const [isSavePasswordDisabled, setIsSavePasswordDisabled] = useState(true);
+  const [isPasswordSuccessfull, setIsPasswordSuccessfull] = useState(false);
   const AtleastOneCapitalRegex = /[A-Z][A-Z]*/;
   const AtleastOneDigitRegex = /\d/;
   const PasswordLengthRequired = 8;
@@ -81,7 +82,7 @@ export function PasswordChange(props) {
               "success",
               __("Password has been successfully updated!")
             );
-            return <PasswordChangeSuccessPage />;
+            setIsPasswordSuccessfull(true);
 
             break;
           default:
@@ -93,7 +94,11 @@ export function PasswordChange(props) {
     );
   }
 
-  return (
+  return isPasswordSuccessfull ? (
+    <>
+      <PasswordChangeSuccessPage />
+    </>
+  ) : (
     <>
       <main
         block="PasswordChangePageV1"
