@@ -21,11 +21,6 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import isMobile from "Util/Mobile";
 import "./Header.style";
 
-import Config from "../../route/LiveExperience/LiveExperience.config";
-import { getBambuserChannelID } from "../../util/Common/index";
-import VueIntegrationQueries from "Query/vueIntegration.query";
-import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
-
 export const mapStateToProps = (state) => {
   return { checkoutDetails: state.CartReducer.checkoutDetails,
     isLive : state.LiveParty.isLive,
@@ -36,8 +31,6 @@ export const mapDispatchToProps = (dispatch) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
-    requestLiveShoppingInfo : (options) =>
-    LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
 });
 export class Header extends PureComponent {
   static propTypes = {
@@ -52,19 +45,6 @@ export class Header extends PureComponent {
     delay: 150,
     type: null,
   };
-
-  requestLiveShoppingInfo() {
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const [lang, country] = locale && locale.split("-");
-    const { requestLiveShoppingInfo } = this.props;
-    Config.storeId = getBambuserChannelID(country);
-    if(requestLiveShoppingInfo) {
-      requestLiveShoppingInfo({
-      storeId: Config.storeId,
-      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
-    });
-    }
-  }
 
   renderFAB = () => {
     (function (d, t, i, w) {
@@ -87,12 +67,7 @@ export class Header extends PureComponent {
 
   componentDidMount() {
     const { delay } = this.state;
-    const { isLive, is_live_party_enabled } = this.props;
     this.timer = setInterval(this.tick, delay);
-    if(is_live_party_enabled )
-    {
-      this.requestLiveShoppingInfo();
-    }  
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -110,9 +85,9 @@ export class Header extends PureComponent {
     // }
 
     const { isLive, is_live_party_enabled } = this.props;
-    const Exceptionalpath = ["/cart", "/checkout"];
+    const Exceptionalpath = ["/cart", "/checkout", "/live-party"];
 
-    if(Exceptionalpath.includes(location.pathname))
+    if(Exceptionalpath.includes(location.pathname) || !isLive)
     {
       const chatElem = document.querySelector("[data-widget-id='cSgglVM5Uu6haazakKgm']")
       if(chatElem)

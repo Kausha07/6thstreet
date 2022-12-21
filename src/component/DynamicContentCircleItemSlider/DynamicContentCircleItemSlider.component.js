@@ -18,9 +18,10 @@ import {
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 import Image from "Component/Image";
-import MobileAPI from "Util/API/provider/MobileAPI";
 import { getBambuserChannelID } from "../../util/Common/index";
 import { connect } from "react-redux";
+import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
+import { getPartyInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint"
 
 const settings = {
   lazyload: true,
@@ -44,6 +45,10 @@ const settings = {
 
 export const mapStateToProps = (state) => ({
   is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+});
+export const mapDispatchToProps = (dispatch) => ({
+    requestLiveShoppingInfo : (options) =>
+    LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
 });
 
 class DynamicContentCircleItemSlider extends PureComponent {
@@ -79,8 +84,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
+    const { requestLiveShoppingInfo } = this.props;
     try {
-      MobileAPI.get(`bambuser/data/${Config.storeId}`).then((response) => {
+      getPartyInfo({storeId: Config.storeId}).then((response) => {
         if (
           response &&
           response.playlists &&
@@ -89,6 +95,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
         ) {
           this.setState({
             livePartyItems: response.playlists[2].shows,
+          });
+          requestLiveShoppingInfo({
+            storeId: Config.storeId
           });
         }
       });
@@ -368,4 +377,4 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, null)(DynamicContentCircleItemSlider);
+export default connect(mapStateToProps, mapDispatchToProps)(DynamicContentCircleItemSlider);

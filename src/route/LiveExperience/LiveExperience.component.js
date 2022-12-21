@@ -16,7 +16,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { getStore } from "Store";
-import MobileAPI from "Util/API/provider/MobileAPI";
+import { getProductInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint"
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -242,7 +242,7 @@ export class LiveExperience extends PureComponent {
 
   getProductDetails = async (id) => {
     try {
-      return MobileAPI.get(`bambuser/products/${id}`).then(
+      return getProductInfo({id}).then(
         async ({ publicUrl }) => {
           const { pathname: urlParam } = new URL(publicUrl);
           const { requestProduct } = this.props;

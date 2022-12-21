@@ -36,10 +36,11 @@ export class LivePartyDispatcher {
       dispatch(setLivePartyLoading(false));
       if (response && response.playlists && response.playlists[2] && response.playlists[2].shows && response.playlists[2].shows[0]) {
         dispatch(setLivePartyData(response.playlists[2].shows[0]));
-
-        if(response.playlists[2].shows[0].isLive)
         dispatch(setLivePartyIsLive(response.playlists[2].shows[0].isLive));
        
+      }
+      else{
+        dispatch(setLivePartyIsLive(false));
       }
     } catch (e) {
       dispatch(setLivePartyLoading(false));
