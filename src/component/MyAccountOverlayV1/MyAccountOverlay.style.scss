@@ -451,6 +451,8 @@
         @include desktop() {
           padding: 48px 67px 33px 67px;
           height: 550px;
+          font-weight: normal;
+          font-size: 12px;
         }
 
         @include mobile() {

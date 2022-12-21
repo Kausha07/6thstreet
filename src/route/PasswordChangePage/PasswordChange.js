@@ -192,7 +192,8 @@ export function PasswordChange(props) {
                 </span>
               </div>
             </div>
-            <div>
+            {/* commenting the below code as it has to released in next release as enhancement */}
+            {/* <div>
               <p className="terms-conditions">
                 {__("By resetting your password you agree with our")}
                 <Link to={`/disclaimer`}>
@@ -203,7 +204,7 @@ export function PasswordChange(props) {
                   <span className="underlined">{__("Privacy Policy")}</span>
                 </Link>
               </p>
-            </div>
+            </div> */}
             <div className="save-btn">
               <button
                 type="submit"
