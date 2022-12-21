@@ -271,10 +271,6 @@
         }
       }
 
-      @include before-desktop() {
-        background-color: #ffffff;
-      }
-
       & form {
         padding: 15px 60px 0px 60px;
       }
