@@ -420,32 +420,42 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
   }
 
-  onResendCode() {
+  async onResendCode(isVerifyEmailViewState) {
     const { sendVerificationCode, showNotification } = this.props;
     const { phone = "" } = this.state;
     const countryCodeLastChar = 4;
     const countryCode = phone.slice(1, countryCodeLastChar);
     const mobile = phone.slice(countryCodeLastChar);
-    sendVerificationCode({ mobile: phone, countryCode }).then((response) => {
-      if (!response.error) {
-        showNotification(
-          "success",
-          __("Verification code was successfully re-sent")
-        );
-      } else {
-        if (response.data) {
-          // eslint-disable-next-line max-len
+    try {
+      if (isVerifyEmailViewState) {
+        const response = await sendOTPViaEmail({
+          mobile: phone,
+          flag: "login",
+        });
+        if (!response.error) {
           showNotification(
-            "info",
-            __(
-              "Please wait %s before re-sending the request",
-              response.data.timeout
-            )
+            "success",
+            __("Verification code was successfully re-sent")
           );
         }
-        showNotification("error", response.error);
+      } else {
+        sendVerificationCode({ mobile: phone, countryCode }).then(
+          (response) => {
+            if (!response.error) {
+              showNotification(
+                "success",
+                __("Verification code was successfully re-sent")
+              );
+            } else {
+              showNotification("error", response.error);
+            }
+          },
+          this._handleError
+        );
       }
-    }, this._handleError);
+    } catch (error) {
+      console.error("error while sending OTP", error);
+    }
   }
 
   changeActiveTab(activeTab) {

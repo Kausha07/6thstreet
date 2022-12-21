@@ -344,7 +344,7 @@ export class CheckoutSuccess extends PureComponent {
             >
               <button
                 onClick={() => {
-                  onResendCode();
+                  onResendCode(isVerifyEmailViewState);
                   this.OtpTimerFunction();
                   this.otpInput.current.value = "";
                   OtpErrorClear();
