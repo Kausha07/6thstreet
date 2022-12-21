@@ -32,6 +32,10 @@ import Event, { EVENT_GTM_PURCHASE } from "Util/Event";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
 
 export class CheckoutSuccess extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.otpInput = React.createRef();
+  }
   static propTypes = {
     initialTotals: TotalsType.isRequired,
     shippingAddress: PropTypes.object.isRequired,
@@ -96,7 +100,7 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   OtpTimerFunction() {
-    if(this.timerInterval != null){
+    if (this.timerInterval != null) {
       clearInterval(this.timerInterval);
     }
     this.setState({
@@ -187,6 +191,7 @@ export class CheckoutSuccess extends PureComponent {
       sendOTPOnMailOrPhone,
       email,
       otpError,
+      OtpErrorClear,
     } = this.props;
     const { isArabic, isPhoneVerification, otp, isVerifyEmailViewState } =
       this.state;
@@ -305,6 +310,7 @@ export class CheckoutSuccess extends PureComponent {
                 onChange={(e) =>
                   onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)
                 }
+                ref={this.otpInput}
               />
             </div>
             {otpError && (
@@ -340,6 +346,8 @@ export class CheckoutSuccess extends PureComponent {
                 onClick={() => {
                   onResendCode();
                   this.OtpTimerFunction();
+                  this.otpInput.current.value = "";
+                  OtpErrorClear();
                 }}
                 className={this.state.otpTimer > 0 ? "disableBtn" : ""}
                 disabled={this.state.otpTimer > 0}
@@ -370,6 +378,8 @@ export class CheckoutSuccess extends PureComponent {
                     this.setState({ isVerifyEmailViewState: true });
                     sendOTPOnMailOrPhone(true);
                     this.OtpTimerFunction();
+                    this.otpInput.current.value = "";
+                    OtpErrorClear();
                   }}
                 >
                   {__("Verify with E-mail")}
@@ -386,6 +396,8 @@ export class CheckoutSuccess extends PureComponent {
                     this.setState({ isVerifyEmailViewState: false });
                     sendOTPOnMailOrPhone(false);
                     this.OtpTimerFunction();
+                    this.otpInput.current.value = "";
+                    OtpErrorClear();
                   }}
                 >
                   {__("Verify with Phone")}

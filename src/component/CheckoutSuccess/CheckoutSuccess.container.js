@@ -123,6 +123,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this),
     onGuestAutoSignIn: this.onGuestAutoSignIn.bind(this),
     sendOTPOnMailOrPhone: this.sendOTPOnMailOrPhone.bind(this),
+    OtpErrorClear: this.OtpErrorClear.bind(this),
   };
 
   constructor(props) {
@@ -372,7 +373,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         }
         if (response && typeof response === "string") {
           this.setState({
-            otpError: response
+            otpError: response,
           });
           showNotification("error", response);
         }
@@ -471,6 +472,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       name: CUSTOMER_ACCOUNT_PAGE,
       onBackClick: () => history.push("/"),
     });
+  }
+
+  OtpErrorClear() {
+    this.setState({ otpError: "" });
   }
 
   render() {
