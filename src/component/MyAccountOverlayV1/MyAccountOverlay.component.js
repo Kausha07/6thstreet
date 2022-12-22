@@ -127,6 +127,7 @@ export class MyAccountOverlay extends PureComponent {
     eventSent: false,
     otpAttempt: 1,
     registerDetailsEntered: false,
+    emailFromCheckoutPage: null,
   };
 
   componentDidMount() {
@@ -137,6 +138,7 @@ export class MyAccountOverlay extends PureComponent {
     if (email) {
       this.setState({
         isOTP: false,
+        emailFromCheckoutPage: email,
       });
     }
   }
@@ -470,6 +472,11 @@ export class MyAccountOverlay extends PureComponent {
         return evt.preventDefault();
       }
     };
+    if (this.state.emailFromCheckoutPage) {
+      this.setState({
+        emailFromCheckoutPage: null,
+      });
+    }
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <MyAccountAutoDetectOTP updateOTP={updateOTP} />
@@ -1150,7 +1157,7 @@ export class MyAccountOverlay extends PureComponent {
               value={
                 failedRegistrationData.phoneWithoutCode
                   ? failedRegistrationData.phoneWithoutCode
-                  : email
+                  : this.state.emailFromCheckoutPage
               }
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
               maxLength={this.getUserIdentifierMaxLength()}
