@@ -86,5 +86,10 @@ export class LivePartyDispatcher {
       dispatch(setArchivedPartyLoading(false));
     }
   }
+
+  async setIsLive(value, dispatch)
+  {
+    dispatch(setLivePartyIsLive(value));
+  }
 }
 export default new LivePartyDispatcher();

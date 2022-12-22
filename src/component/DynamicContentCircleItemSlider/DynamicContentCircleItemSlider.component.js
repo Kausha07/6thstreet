@@ -47,8 +47,8 @@ export const mapStateToProps = (state) => ({
   is_live_party_enabled: state.AppConfig.is_live_party_enabled,
 });
 export const mapDispatchToProps = (dispatch) => ({
-    requestLiveShoppingInfo : (options) =>
-    LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
+  setIsLive : (options) =>
+    LivePartyDispatcher.setIsLive(options, dispatch),
 });
 
 class DynamicContentCircleItemSlider extends PureComponent {
@@ -84,7 +84,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
-    const { requestLiveShoppingInfo } = this.props;
+    const { setIsLive } = this.props;
     try {
       getPartyInfo({storeId: Config.storeId}).then((response) => {
         if (
@@ -96,9 +96,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
           this.setState({
             livePartyItems: response.playlists[2].shows,
           });
-          requestLiveShoppingInfo({
-            storeId: Config.storeId
-          });
+          setIsLive(
+            response.playlists[2].shows[0].isLive
+          );
+        }
+        else{
+          setIsLive(
+            false
+          );
         }
       });
     } catch (error) {
