@@ -252,6 +252,7 @@
       }
 
       &-ResendCode {
+        direction: ltr;
         &_isVerifying {
           display: block;
           margin: 40px 0px 40px 0px;
