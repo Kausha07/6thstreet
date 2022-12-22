@@ -1,4 +1,5 @@
 import MobileAPI from "../../provider/MobileAPI";
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 export const validateShippingAddress = ({ address }) =>
   MobileAPI.post("/validate-address", address) || {};
@@ -65,3 +66,6 @@ export const getCardType = (bin) =>
 
 export const verifyUserPhone = ({ data }) =>
   MobileAPI.put("/otp/verify", data) || {};
+
+export const getOrderData = (order_id) => 
+  MagentoAPI.get(`orders/${order_id}`) || {};

@@ -16,6 +16,13 @@ import {
   CAPTURED_STATUS,
   DETAILS_STEP,
   SHIPPING_STEP,
+  STATUS_AUTHORIZED,
+  STATUS_CAPTURED,
+  STATUS_DECLINED,
+  STATUS_CANCELED,
+  STATUS_PENDING,
+  SUCCESS,
+  FAILED,
 } from "Route/Checkout/Checkout.config";
 import {
   BILLING_STEP,
@@ -61,6 +68,7 @@ import {
   DEFAULT_READY_MESSAGE,
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
+import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import Loader from "Component/Loader";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
@@ -261,7 +269,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         verifyPayment(tabbyPaymentId).then(async (data) => {
           if (data) {
             localStorage.removeItem("Shipping_Address");
-            const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+            const responseData = await getOrderData(order_id);
+            const order = responseData?.data;
             this.setState({ QPayOrderDetails: order });
 
             const { status } = data;
@@ -296,10 +305,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
       const now = new Date();
       if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
-      }
-      if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
         this.setState({ PaymentRedirect: true });
-
         const {
           getPaymentAuthorization,
           capturePayment,
@@ -317,18 +323,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationKNET(id, false, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
 
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+          const responseData = await getOrderData(order_id);          
+          const order = responseData?.data;
 
           this.setState({ KNETOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -348,7 +351,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   KnetDetails: {
                     bank_reference: bank_reference,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                     amount: amount,
                     currency: currency,
                     knet_payment_id: knet_payment_id,
@@ -362,9 +365,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -386,7 +389,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                     knet_payment_id: knet_payment_id,
                     knet_transaction_id: knet_transaction_id,
@@ -430,18 +433,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationQPay(id, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
-
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+          const responseData = await getOrderData(order_id);
+          const order = responseData?.data;
 
           this.setState({ QPayOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -454,7 +453,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   QPayDetails: {
                     PUN: pun,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                   },
                 });
               }
@@ -464,9 +463,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -481,7 +480,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                   },
                 });
@@ -1235,7 +1234,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (response) {
         const { status, id: paymentId = "" } = response;
 
-        if (status === "Authorized") {
+        if (status === STATUS_AUTHORIZED) {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
@@ -1256,7 +1255,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
 
-        if (status === "Declined") {
+        if (status === STATUS_DECLINED) {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isLoading: false, isFailed: true });
           hideActiveOverlay();
