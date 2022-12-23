@@ -69,7 +69,7 @@ export function PasswordChange(props) {
     const { resetPassword, location, showNotification } = props;
     const { passwordReset: password } = fields;
     const token = getQueryParam("token", location);
-
+    setLoading(true);
     resetPassword({ newPassword: password, resetToken: token }).then(
       (response) => {
         switch (typeof response) {
@@ -90,6 +90,7 @@ export function PasswordChange(props) {
 
             break;
         }
+        setLoading(false);
       }
     );
   }
@@ -209,7 +210,7 @@ export function PasswordChange(props) {
               <button
                 type="submit"
                 className={isSavePasswordDisabled ? "disabled-btn" : ""}
-                disabled={isSavePasswordDisabled}
+                disabled={isSavePasswordDisabled || isLoading}
               >
                 {__("Save")}
               </button>

@@ -16,7 +16,10 @@ export default function PasswordChangeSuccessPage() {
             "You can now use the new password to access your 6thStreet account."
           )}
         </p>
-        <div className="ThankYouBlock">
+        <div
+          className="ThankYouBlock"
+          onClick={() => (window.location.href = "/")}
+        >
           <p className="ThankYouText">{__("Thank you")}</p>
         </div>
       </div>
