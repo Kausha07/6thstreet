@@ -91,7 +91,9 @@ export class CheckoutSuccess extends PureComponent {
     ) {
       clearInterval(this.timerInterval);
     }
-    if (
+    if (getCountryFromUrl() === "QA" && prevProps.totals != this.props.totals) {
+      this.OtpTimerFunction();
+    } else if (
       prevProps.selectedCard != this.props.selectedCard &&
       prevProps.totals != this.props.totals
     ) {
