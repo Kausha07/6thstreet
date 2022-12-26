@@ -147,6 +147,9 @@
 
     &-TextV1 {
       text-align: left;
+      &_isArabic {
+        text-align: right;
+      }
       font-family: var(--avenir-demi-font);
       display: grid;
 

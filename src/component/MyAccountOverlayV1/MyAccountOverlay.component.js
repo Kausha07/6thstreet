@@ -480,7 +480,7 @@ export class MyAccountOverlay extends PureComponent {
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <MyAccountAutoDetectOTP updateOTP={updateOTP} />
-        <div block="VerifyPhone" elem="TextV1">
+        <div mix={{ block: "VerifyPhone", elem: "TextV1", mods: { isArabic } }}>
           <div block="VerifyPhone-TextV1" elem="TitleV1">
             {__("Enter Verification Code")}
           </div>
