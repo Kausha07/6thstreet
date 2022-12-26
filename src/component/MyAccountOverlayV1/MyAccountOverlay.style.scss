@@ -146,6 +146,7 @@
     height: auto;
 
     &-TextV1 {
+      text-align: left;
       font-family: var(--avenir-demi-font);
       display: grid;
 
@@ -1179,6 +1180,7 @@
   }
 
   &-RegisterSubHeading {
+    text-align: left;
     display: block;
     margin: 16px auto 20px auto;
     padding: 4px auto;
