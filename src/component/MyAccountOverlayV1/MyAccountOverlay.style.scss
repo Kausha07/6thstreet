@@ -1184,6 +1184,9 @@
 
   &-RegisterSubHeading {
     text-align: left;
+    &_isArabic {
+      text-align: right;
+    }
     display: block;
     margin: 16px auto 20px auto;
     padding: 4px auto;

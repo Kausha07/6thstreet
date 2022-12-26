@@ -719,7 +719,13 @@ export class MyAccountOverlay extends PureComponent {
         isValidateOnChange
         parentCallback={this.onCreateChange}
       >
-        <span block="MyAccountOverlayV1" elem="RegisterSubHeading">
+        <span
+          mix={{
+            block: "MyAccountOverlayV1",
+            elem: "RegisterSubHeading",
+            mods: { isArabic },
+          }}
+        >
           {__("Register for a unique shopping experience")}
         </span>
         <div>
