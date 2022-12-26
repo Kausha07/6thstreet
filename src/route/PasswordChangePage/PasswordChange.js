@@ -35,22 +35,6 @@ export function PasswordChange(props) {
   const AtleastOneDigitRegex = /\d/;
   const PasswordLengthRequired = 8;
   const isArabicStyle = isArabic();
-  useEffect(() => {
-    if (AtleastOneCapitalRegex.test(newPassword)) {
-      setIsAtleastOneCapital(true);
-    } else if (!AtleastOneCapitalRegex.test(newPassword)) {
-      setIsAtleastOneCapital(false);
-    }
-    if (AtleastOneDigitRegex.test(newPassword)) {
-      setIsatleastOneDigit(true);
-    } else if (!AtleastOneDigitRegex.test(newPassword)) {
-      setIsatleastOneDigit(false);
-    }
-    if (newPassword === null || newPassword.length === 0) {
-      setIsatleastOneDigit(false);
-      setIsAtleastOneCapital(false);
-    }
-  }, [newPassword]);
 
   useEffect(() => {
     if (
@@ -64,6 +48,24 @@ export function PasswordChange(props) {
       setIsSavePasswordDisabled(true);
     }
   }, [newPassword, repeatPassword]);
+
+  function onNewPasswordChange(password) {
+    if (AtleastOneCapitalRegex.test(password)) {
+      setIsAtleastOneCapital(true);
+    } else if (!AtleastOneCapitalRegex.test(password)) {
+      setIsAtleastOneCapital(false);
+    }
+    if (AtleastOneDigitRegex.test(password)) {
+      setIsatleastOneDigit(true);
+    } else if (!AtleastOneDigitRegex.test(password)) {
+      setIsatleastOneDigit(false);
+    }
+    if (newPassword === null || password.length === 0) {
+      setIsatleastOneDigit(false);
+      setIsAtleastOneCapital(false);
+    }
+    setNewPassword(password);
+  }
 
   function onPasswordSuccess(fields) {
     const { resetPassword, location, showNotification } = props;
@@ -135,7 +137,7 @@ export function PasswordChange(props) {
               autocomplete="new-password"
               validation={["notEmpty", "password"]}
               value={newPassword}
-              onChange={(password) => setNewPassword(password)}
+              onChange={(password) => onNewPasswordChange(password)}
             />
             <Field
               type="password"
