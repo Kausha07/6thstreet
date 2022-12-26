@@ -350,4 +350,77 @@
         margin-bottom: 150px;
         // width: 800px;
     }
+    .OTPVerifyContainer{
+        background-color: var(--lightest-gray);
+        padding: 30px 0;
+        text-align: center;
+        .OTPVerify-Text{
+            &-Title{
+                font-size: 16px;
+    font-weight: var(--fw-demi);
+    text-transform: capitalize;
+    margin-bottom: 10px;
+            }
+            &-Message{
+                color: #606060;
+                font-size: 13px;
+            }
+            &-Phone {
+                width: 100%;
+                button {
+                  text-decoration: underline;
+                  margin-top: -5px;
+                  font-weight: var(--fw-demi);
+                }
+              }
+        }
+        .OTPVerify{
+            &-Code {
+                input {
+                  text-align: center;
+                  width: calc(100% - 15px);
+                  background-color: transparent;
+                  border: 0;
+                  letter-spacing: 15px;
+                  font-size: 27px;
+                  margin-left: 15px;
+                  caret-color: transparent;
+                }
+              }
+    
+              &-ResendCode {
+                button {
+                  font-weight: var(--fw-regular);
+                  color: #606060;
+                  font-size: 14px;
+                  margin-top: 10px;
+                  text-transform: capitalize;
+                }
+              }
+        }
+        button {
+            height: 40px;
+            margin-top: 32px;
+            width: 60%;
+            border-radius: 5px;
+    
+            &.secondary {
+              margin-top: 12px !important;
+              background-color: #ffffff;
+              font-size: 12px;
+              &:hover {
+                background-color: #000000;
+              }
+            }
+    
+            &.primary {
+              border-radius: 10px;
+              width: 70%;
+    
+              &:hover {
+                background-color: #ffffff;
+              }
+            }
+          }
+    }
 }
