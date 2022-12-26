@@ -36,6 +36,7 @@ import Event, {
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
+import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
 
 export class CheckoutSuccess extends PureComponent {
   constructor(props) {
@@ -74,7 +75,7 @@ export class CheckoutSuccess extends PureComponent {
     wasLoaded: false,
     otp: null,
     isVerifyEmailViewState: false,
-    otpTimer: 15,
+    otpTimer: SECONDS_TO_RESEND_OTP,
     isTimerEnabled: false,
   };
 
@@ -112,7 +113,7 @@ export class CheckoutSuccess extends PureComponent {
       clearInterval(this.timerInterval);
     }
     this.setState({
-      otpTimer: 15,
+      otpTimer: SECONDS_TO_RESEND_OTP,
     });
     this.timerInterval = setInterval(() => {
       this.setState({
