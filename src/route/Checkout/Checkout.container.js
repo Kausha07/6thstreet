@@ -216,6 +216,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       QPayOrderDetails: null,
       KNETOrderDetails: null,
       KnetDetails: {},
+      guestAutoSignIn: false,
     };
   }
 
@@ -936,6 +937,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           if (success || response_code === 200 || http_response_code === 202) {
             localStorage.removeItem("lastCouponCode");
+            if (response && response.data && response.data.guest_auto_sign_in) {
+              this.setState({ guestAutoSignIn: response.data.guest_auto_sign_in });
+            }
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
@@ -1058,7 +1062,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -1213,7 +1217,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
