@@ -22,8 +22,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.updateCustomerData(dispatch, customer),
   showSuccessNotification: (message) =>
     dispatch(showNotification("success", message)),
-  showErrorNotification: (error) =>
-    dispatch(showNotification("error", error[0].message)),
+  showErrorNotification: (error) => dispatch(showNotification("error", error)),
   sendVerificationCode: (phone) =>
     CheckoutDispatcher.sendVerificationCode(dispatch, phone),
   verifyUserPhone: (code) => CheckoutDispatcher.verifyUserPhone(dispatch, code),
@@ -47,6 +46,9 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     updatePhoneNumber: this.updatePhoneNumber.bind(this),
     onVerifySuccess: this.onVerifySuccess.bind(this),
     sendOTP: this.sendOTP.bind(this),
+    resendOTP: this.resendOTP.bind(this),
+    updatedCustomerDetails: this.updatedCustomerDetails.bind(this),
+    renderOTPField: this.renderOTPField.bind(this),
   };
 
   constructor(props) {
@@ -61,12 +63,18 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       gender,
       phoneCountryCode: "",
       customerUpdatedPhone: phone,
-      isPhoneVerified: false,
+      showOTPField: false,
+      updatedCustomerDetails: {},
+      resendOTPNumber: false,
     };
   }
 
   togglePasswordForm(isShowPassword) {
     this.setState({ isShowPassword });
+  }
+
+  renderOTPField(value) {
+    this.setState({ showOTPField: value });
   }
 
   setGender(gender) {
@@ -94,6 +102,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       isLoading,
       phoneCountryCode,
       customerUpdatedPhone,
+      showOTPField,
     } = this.state;
 
     return {
@@ -103,8 +112,14 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       country,
       phoneCountryCode,
       customerUpdatedPhone,
+      showOTPField,
     };
   };
+
+  resendOTP() {
+    this.setState({ resendOTPNumber: true });
+    this.sendOTP();
+  }
 
   sendOTP() {
     const {
@@ -112,21 +127,31 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       showSuccessNotification,
       showErrorNotification,
     } = this.props;
-    const { customerUpdatedPhone } = this.state;
+    const { customerUpdatedPhone, resendOTPNumber } = this.state;
     const countryCode = customerUpdatedPhone
       ? customerUpdatedPhone.slice(0, "4")
       : null;
     const phoneNumber = customerUpdatedPhone
       ? customerUpdatedPhone.slice("4")
       : null;
+    this.setState({ isLoading: true });
     sendVerificationCode({
       mobile: phoneNumber,
       countryCode: countryCode,
     }).then((response) => {
       if (response.success) {
-        showSuccessNotification("OTP has been sent to " + customerUpdatedPhone);
+        if (resendOTPNumber) {
+          showSuccessNotification(
+            "OTP has been resent to " + customerUpdatedPhone
+          );
+        } else {
+          showSuccessNotification(
+            "OTP has been sent to " + customerUpdatedPhone
+          );
+        }
+        this.setState({ isLoading: false, showOTPField: true });
       } else {
-        console.log("response.error", response.error);
+        this.setState({ isLoading: false });
         showErrorNotification(response.error);
       }
     }, this._handleError);
@@ -135,7 +160,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
   onVerifySuccess(fields) {
     const { verifyUserPhone, showSuccessNotification, showErrorNotification } =
       this.props;
-    const { customerUpdatedPhone } = this.state;
+    const { customerUpdatedPhone, updatedCustomerDetails } = this.state;
+    this.setState({ isLoading: true });
     if (customerUpdatedPhone) {
       const mobile = customerUpdatedPhone.slice("4");
       const countryCode = customerUpdatedPhone.slice(0, "4");
@@ -143,11 +169,15 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
         (response) => {
           if (response.success) {
-            this.setState({ isPhoneVerified: true });
             showSuccessNotification(__("Phone was successfully verified"));
-            // this.saveCustomer(fields);
-            console.log("Fields", fields);
+            if (
+              updatedCustomerDetails &&
+              Object.keys(updatedCustomerDetails).length > 0
+            ) {
+              this.saveCustomer(updatedCustomerDetails);
+            }
           } else {
+            this.setState({ isLoading: false });
             showErrorNotification(
               __("Wrong Verification Code. Please re-enter")
             );
@@ -156,6 +186,10 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         this._handleError
       );
     }
+  }
+
+  updatedCustomerDetails(fields) {
+    this.setState({ updatedCustomerDetails: fields });
   }
 
   async saveCustomer(customer) {
@@ -188,9 +222,11 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         gender: GetGender || "",
         app6thstreet_platform: "Web",
       });
+      this.setState({ showOTPField: false, isLoading: false });
       showSuccessNotification(__("Your information was successfully updated!"));
     } catch (e) {
-      showErrorNotification(e);
+      this.setState({ isLoading: false });
+      showErrorNotification(e[0].message ? e[0].message : e);
     }
 
     this.setState({ isLoading: false });

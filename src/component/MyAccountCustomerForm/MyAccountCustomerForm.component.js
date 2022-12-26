@@ -15,6 +15,7 @@ import { isArabic } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { getCountryFromUrl } from 'Util/Url';
 import Form from "Component/Form";
+import { createRef } from "react";
 
 import "./MyAccountCustomerForm.style";
 
@@ -32,10 +33,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     country: PropTypes.string.isRequired,
     updatePhoneNumber: PropTypes.func.isRequired,
     onVerifySuccess: PropTypes.func.isRequired,
+    updatedCustomerDetails: PropTypes.func.isRequired,
+    renderOTPField: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
+    this.phoneNumberField = createRef();
+    this.focusPhoneInput = this.focusPhoneInput.bind(this);
     const {
       customer: { gender, phone },
     } = props;
@@ -48,7 +53,6 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             (key) => PHONE_CODES[key] === phone.substr("0", "4")
           )
         : getCountryFromUrl(),
-      verifyOTPField: false,
     };
   }
 
@@ -58,21 +62,16 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
       customer: { phone },
       customerUpdatedPhone = "",
       sendOTP,
+      updatedCustomerDetails,
+      renderOTPField,
     } = this.props;
-    const countryCode = customerUpdatedPhone
-      ? customerUpdatedPhone.slice(0, "4")
-      : null;
-    const phoneNumber = customerUpdatedPhone
-      ? customerUpdatedPhone.slice("4")
-      : null;
     if (phone == customerUpdatedPhone) {
-      this.setState({ verifyOTPField: false });
+      renderOTPField(false);
       onSave(fields);
     } else {
-      this.setState({ verifyOTPField: true });
-      sendOTP(fields);
+      sendOTP();
+      updatedCustomerDetails(fields);
     }
-    //onSave(fields);
   };
 
   componentDidMount() {
@@ -122,9 +121,6 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
       },
       dob: {
         render: this.renderBirthDay.bind(this),
-      },
-      otp: {
-        render: this.renderOTPSection.bind(this),
       },
     };
   }
@@ -283,19 +279,27 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     });
   };
 
+  focusPhoneInput() {
+    const { renderOTPField } = this.props;
+    const inputRef = this.phoneNumberField?.current?.props?.formRef?.current;
+    renderOTPField(false);
+    if (inputRef) {
+      setTimeout(() => {
+        inputRef.focus();
+      }, 200);
+    }
+  }
+
   renderOTPSection() {
-    const {
-      customer: { phone } = {},
-      customerUpdatedPhone,
-      onVerifySuccess,
-    } = this.props;
-    const { verifyOTPField } = this.state;
-    if (verifyOTPField) {
+    const { customerUpdatedPhone, onVerifySuccess, showOTPField, resendOTP } =
+      this.props;
+    //console.log("HEY", this.phoneNumberField);
+    if (showOTPField) {
       return (
         <div
           mix={{
             block: "OTPVerifyContainer",
-            //   mods: { isArabic, isPhoneVerification }
+            mods: { isArabic },
           }}
         >
           <div block="OTPVerify" elem="Text">
@@ -306,20 +310,13 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
               {__("Verification code has been sent to")}
             </div>
             <div block="OTPVerify-Text" elem="Phone">
-              <button
-                //onClick={toggleChangePhonePopup}
-                disabled
-              >
+              <button onClick={this.focusPhoneInput}>
                 {customerUpdatedPhone}
               </button>
             </div>
           </div>
           <Form onSubmitSuccess={onVerifySuccess}>
-            <div
-              block="OTPVerify"
-              elem="Code"
-              //mods={{ isArabic }}
-            >
+            <div block="OTPVerify" elem="Code" mods={{ isArabic }}>
               <Field
                 maxlength="5"
                 type="text"
@@ -333,9 +330,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             </button>
           </Form>
           <div block="OTPVerify" elem="ResendCode">
-            <button
-            //onClick={onResendCode}
-            >
+            <button onClick={resendOTP}>
               {__("Resend Verification Code")}
             </button>
           </div>
@@ -365,7 +360,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
   renderPhone() {
     const { isArabic } = this.state;
-    const { updatePhoneNumber, phoneCountryCode } = this.props;
+    const { updatePhoneNumber, phoneCountryCode, showOTPField } = this.props;
     const customerPhoneData = this.getCustomerPhone();
     return (
       <div
@@ -385,7 +380,9 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
           placeholder={__("Phone number")}
           value={customerPhoneData.customerPhone}
           validation={["notEmpty", this.getValidationForTelephone()]}
+          ref={this.phoneNumberField}
           onChange={(val) => updatePhoneNumber(phoneCountryCode, val)}
+          disabled={showOTPField}
         />
       </div>
     );
@@ -454,15 +451,18 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
   }
 
   renderActions() {
-    return (
-      <button
-        type="submit"
-        block="Button"
-        mix={{ block: "MyAccount", elem: "Button" }}
-      >
-        {__("Save customer")}
-      </button>
-    );
+    const { showOTPField } = this.props;
+    if (!showOTPField) {
+      return (
+        <button
+          type="submit"
+          block="Button"
+          mix={{ block: "MyAccount", elem: "Button" }}
+        >
+          {__("Save customer")}
+        </button>
+      );
+    }
   }
 
   render() {
@@ -473,6 +473,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         {super.render()}
         {this.renderPasswordForm()}
         {this.renderLoader()}
+        {this.renderOTPSection()}
       </div>
     );
   }
