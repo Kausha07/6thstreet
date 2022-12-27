@@ -118,13 +118,6 @@ export class MyAccountOverlay extends PureComponent {
     registerDetailsEntered: false,
   };
 
-  componentDidMount() {
-    const { email } = this.props;
-    if (email) {
-      this.setState({ isOTP: false });
-    }
-  }
-
   componentDidUpdate() {
     this.validateAndSendEvent();
   }
@@ -894,7 +887,7 @@ export class MyAccountOverlay extends PureComponent {
               }*`}
               id="email"
               name="email"
-              value={email && !isOTP ? email : null}
+              value={!ENABLE_OTP_LOGIN && !isOTP ? email : null}
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
               // autocomplete="email"
               maxLength={this.getUserIdentifierMaxLength()}
