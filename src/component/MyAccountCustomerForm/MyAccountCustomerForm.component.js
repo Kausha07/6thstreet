@@ -293,6 +293,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
   renderOTPSection() {
     const { customerUpdatedPhone, onVerifySuccess, showOTPField, resendOTP } =
       this.props;
+      const { isArabic } = this.state;
     if (showOTPField) {
       return (
         <div
