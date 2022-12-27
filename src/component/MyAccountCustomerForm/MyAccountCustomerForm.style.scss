@@ -389,6 +389,9 @@
             &_isArabic{
                 input{
                     padding-right: 30px;
+                    @include mobile() {
+                        padding-right: 15px;
+                    }
                 }
             }
           input {
