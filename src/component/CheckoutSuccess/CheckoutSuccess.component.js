@@ -82,6 +82,7 @@ export class CheckoutSuccess extends PureComponent {
   componentDidMount() {
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
+    this.OtpTimerFunction();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -97,14 +98,6 @@ export class CheckoutSuccess extends PureComponent {
       this.timerInterval != null
     ) {
       clearInterval(this.timerInterval);
-    }
-    if (getCountryFromUrl() === "QA" && prevProps.totals != this.props.totals) {
-      this.OtpTimerFunction();
-    } else if (
-      prevProps.selectedCard != this.props.selectedCard &&
-      prevProps.totals != this.props.totals
-    ) {
-      this.OtpTimerFunction();
     }
   }
 
