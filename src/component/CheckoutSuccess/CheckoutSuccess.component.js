@@ -471,6 +471,7 @@ export class CheckoutSuccess extends PureComponent {
         onSignIn={this.onSignIn}
         email={email}
         isPopup
+        redirectToMyOrdersPage
       />
     );
   }

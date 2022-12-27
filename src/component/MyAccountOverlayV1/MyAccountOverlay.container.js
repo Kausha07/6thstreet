@@ -316,7 +316,8 @@ export class MyAccountOverlayContainer extends PureComponent {
   checkForOrder() {
     const orderId = BrowserDatabase.getItem("ORDER_ID") || null;
     const { shouldRedirectToMyOrders, shouldRedirectToMyReturns } = this.state;
-    if (shouldRedirectToMyOrders) {
+    const { redirectToMyOrdersPage } = this.props;
+    if (shouldRedirectToMyOrders || redirectToMyOrdersPage) {
       history.push(`/my-account/my-orders`);
     }
     if (shouldRedirectToMyReturns) {
