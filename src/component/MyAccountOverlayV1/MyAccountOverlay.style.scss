@@ -154,7 +154,6 @@
       display: grid;
 
       @include mobile() {
-        text-align: left;
         padding: 0px 30px;
       }
 
@@ -1187,6 +1186,8 @@
     &_isArabic {
       text-align: right;
     }
+    font-size: 12px;
+    font-weight: normal;
     display: block;
     margin: 16px auto 20px auto;
     padding: 4px auto;
