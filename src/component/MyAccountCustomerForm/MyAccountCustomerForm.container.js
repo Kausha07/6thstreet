@@ -66,7 +66,14 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       showOTPField: false,
       updatedCustomerDetails: {},
       resendOTPNumber: false,
+      OTPSentNumber:"",
+      OTPTimeOutBreak: false,
     };
+  }
+  timer = null;
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   }
 
   togglePasswordForm(isShowPassword) {
@@ -103,6 +110,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       phoneCountryCode,
       customerUpdatedPhone,
       showOTPField,
+      OTPSentNumber,
+      OTPTimeOutBreak,
     } = this.state;
 
     return {
@@ -113,6 +122,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       phoneCountryCode,
       customerUpdatedPhone,
       showOTPField,
+      OTPSentNumber,
+      OTPTimeOutBreak,
     };
   };
 
@@ -140,6 +151,11 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       countryCode: countryCode,
     }).then((response) => {
       if (response.success) {
+        const sentNumber = `${countryCode}${phoneNumber}`;
+        this.setState({ OTPSentNumber: sentNumber, OTPTimeOutBreak: true });
+        this.timer = setTimeout(() => {
+          this.setState({ OTPTimeOutBreak: false });
+        }, 10000);
         if (resendOTPNumber) {
           showSuccessNotification(
             "OTP has been resent to " + customerUpdatedPhone

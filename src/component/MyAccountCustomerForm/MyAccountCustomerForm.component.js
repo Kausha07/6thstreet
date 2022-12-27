@@ -40,6 +40,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
   constructor(props) {
     super(props);
     this.phoneNumberField = createRef();
+    this.otpField = createRef();
     this.focusPhoneInput = this.focusPhoneInput.bind(this);
     const {
       customer: { gender, phone },
@@ -64,7 +65,13 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
       sendOTP,
       updatedCustomerDetails,
       renderOTPField,
+      OTPSentNumber,
+      OTPTimeOutBreak
     } = this.props;
+    if (OTPTimeOutBreak && OTPSentNumber == customerUpdatedPhone) {
+      renderOTPField(true);
+      return;
+    }
     if (phone == customerUpdatedPhone) {
       renderOTPField(false);
       onSave(fields);
@@ -290,10 +297,17 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
   }
 
+  resetOTPInput() {
+    const OtpRef = this.otpField?.current?.state;
+    if (OtpRef) {
+      OtpRef.value = "";
+    }
+  }
+
   renderOTPSection() {
     const { customerUpdatedPhone, onVerifySuccess, showOTPField, resendOTP } =
       this.props;
-      const { isArabic } = this.state;
+    const { isArabic } = this.state;
     if (showOTPField) {
       return (
         <div
@@ -323,6 +337,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 placeholder="_____"
                 name="otp"
                 id="otp"
+                ref={this.otpField}
               />
             </div>
             <button block="primary" type="submit">
@@ -330,7 +345,12 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             </button>
           </Form>
           <div block="OTPVerify" elem="ResendCode">
-            <button onClick={resendOTP}>
+            <button
+              onClick={() => {
+                resendOTP();
+                this.resetOTPInput();
+              }}
+            >
               {__("Resend Verification Code")}
             </button>
           </div>
