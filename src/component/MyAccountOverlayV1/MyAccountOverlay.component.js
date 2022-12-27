@@ -870,10 +870,6 @@ export class MyAccountOverlay extends PureComponent {
       return;
     }
 
-    this.setState({
-      failedRegistrationData: { phoneWithoutCode: null },
-    });
-
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
     );
