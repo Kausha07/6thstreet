@@ -243,6 +243,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     const {
       onClick,
       item: { item_id, config_product_id, also_available },
+      isExchange
     } = this.props;
     this.setState(({ isSelected: prevIsSelected }) => {
       const isSelected = !prevIsSelected;
@@ -261,7 +262,9 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
           this.setSizeData(results[0]);
         }
       })
-
+      if(!isExchange){
+      onClick(item_id, isSelected);
+      }
       return { isSelected };
     });
   }

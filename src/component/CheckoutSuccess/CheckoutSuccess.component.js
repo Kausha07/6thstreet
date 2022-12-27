@@ -27,12 +27,16 @@ import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
+import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
   EVENT_PHONE,
   EVENT_MAIL,
   EVENT_MOE_CHAT,
+  EVENT_SIGN_IN_CTA_CLICK,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
@@ -77,6 +81,8 @@ export class CheckoutSuccess extends PureComponent {
     isVerifyEmailViewState: false,
     otpTimer: SECONDS_TO_RESEND_OTP,
     isTimerEnabled: false,
+    eventSent: false,
+    popupEvent: false,
   };
 
   componentDidMount() {
@@ -449,15 +455,32 @@ export class CheckoutSuccess extends PureComponent {
   };
 
   renderMyAccountPopup() {
-    const { showPopup } = this.state;
+    const { showPopup, popupEvent } = this.state;
     const {
-      billingAddress: { guest_email: email },
+      billingAddress
     } = this.props;
+
+    const email = billingAddress?.guest_email;
 
     if (!showPopup) {
       return null;
     }
-
+    if (showPopup && !popupEvent) {
+      const eventDetails = {
+        name: EVENT_SIGN_IN_CTA_CLICK,
+        action: EVENT_SIGN_IN_CTA_CLICK,
+        category: "thank_you",
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
+      const popupEventData = {
+        name: EVENT_SIGN_IN_SCREEN_VIEWED,
+        category: "user_login",
+        action: EVENT_SIGN_IN_SCREEN_VIEWED,
+        popupSource: "Sign In CTA",
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+      this.setState({ popupEvent: true });
+    }
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}
@@ -477,7 +500,7 @@ export class CheckoutSuccess extends PureComponent {
   };
 
   closePopup = () => {
-    this.setState({ showPopup: false });
+    this.setState({ showPopup: false, popupEvent: false });
   };
 
   renderItem = (item) => {
@@ -487,7 +510,7 @@ export class CheckoutSuccess extends PureComponent {
       intlEddResponse,
       isFailed,
       edd_info,
-      paymentMethod
+      paymentMethod,
     } = this.props;
 
     return (
@@ -533,7 +556,6 @@ export class CheckoutSuccess extends PureComponent {
         </div>
       );
     } else if (paymentMethod?.code === "checkout_knet") {
-      
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
@@ -554,7 +576,6 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-    
     } else {
       const {
         initialTotals: { items = [], quote_currency_code },
@@ -661,13 +682,12 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "shipping"),
           __("Shipping")
         )}
-        {this.renderPriceLine(
-          cashOnDeliveryFee ??
+        {cashOnDeliveryFee ? this.renderPriceLine(
             getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"
             ? __("Cash on Receiving Fee")
             : __("Cash on Delivery Fee")
-        )}
+        ) : null}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
           __("Store Credit")
@@ -844,21 +864,30 @@ export class CheckoutSuccess extends PureComponent {
 
   renderKnetStatus = () => {
     const { KnetDetails } = this.props;
-    const { status} = KnetDetails;
-    if(status === "SUCCESS"){
-      return  __("SUCCESS");
-    }else if (status === "FAILED"){
+    const { status } = KnetDetails;
+    if (status === "SUCCESS") {
+      return __("SUCCESS");
+    } else if (status === "FAILED") {
       return __("FAILED");
     }
-  }
+  };
 
   renderKNETPaymentType = () => {
     const { KnetDetails, paymentMethod } = this.props;
     const { isArabic } = this.state;
-     const { amount, bank_reference, currency, date, knet_payment_id, knet_transaction_id, status} = KnetDetails;
+    const {
+      amount,
+      bank_reference,
+      currency,
+      date,
+      knet_payment_id,
+      knet_transaction_id,
+      status,
+    } = KnetDetails;
     return (
       <>
-        <br /><br />
+        <br />
+        <br />
         {paymentMethod?.code === "checkout_knet" && KnetDetails && (
           <>
             {KnetDetails?.knet_payment_id && (
@@ -868,7 +897,8 @@ export class CheckoutSuccess extends PureComponent {
                   {__("KNET Payment Id")}
                 </div>
                 {KnetDetails?.knet_payment_id}
-                <br /><br />{" "}
+                <br />
+                <br />{" "}
               </>
             )}
 
@@ -879,7 +909,8 @@ export class CheckoutSuccess extends PureComponent {
                   {__("KNET Transaction Id")}
                 </div>
                 {KnetDetails?.knet_transaction_id}
-                <br /><br />{" "}
+                <br />
+                <br />{" "}
               </>
             )}
 
@@ -890,24 +921,27 @@ export class CheckoutSuccess extends PureComponent {
                   {__("Amount")}
                 </div>
                 {currency} {KnetDetails?.amount}
-                <br /><br />{" "}
+                <br />
+                <br />{" "}
               </>
             )}
             <div block="PaymentType" elem="Title">
               {__("Status")}
             </div>
             {isArabic ? this.renderKnetStatus() : status}
-            <br /><br />
+            <br />
+            <br />
             <div block="PaymentType" elem="Title">
               {__("Date")}
             </div>
             {date}
-            <br /><br />
+            <br />
+            <br />
           </>
         )}
       </>
-    )
-  }
+    );
+  };
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
@@ -920,7 +954,9 @@ export class CheckoutSuccess extends PureComponent {
             {__("Payment")}
           </div>
           {this.renderPaymentTypeContent()}
-          {paymentMethod?.code === "checkout_knet" ? this.renderKNETPaymentType() : null}
+          {paymentMethod?.code === "checkout_knet"
+            ? this.renderKNETPaymentType()
+            : null}
           <p></p>
           {paymentMethod?.code === "checkout_qpay" && QPAY_DETAILS && (
             <>
@@ -1076,8 +1112,7 @@ export class CheckoutSuccess extends PureComponent {
       }
     } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
-    }
-    else if (paymentMethod?.code?.match(/knet/)) {
+    } else if (paymentMethod?.code?.match(/knet/)) {
       this.setState({ paymentTitle: __("KNET") });
     }
 
@@ -1128,7 +1163,10 @@ export class CheckoutSuccess extends PureComponent {
           block="CheckoutSuccess"
           elem="ContinueButton"
           to="/"
-          onClick={() => this.sendMOEEvents(EVENT_MOE_CONTINUE_SHOPPING)}
+          onClick={() => {
+            window.pageType = TYPE_HOME;
+            this.sendMOEEvents(EVENT_MOE_CONTINUE_SHOPPING);
+          }}
         >
           <button block="primary">{__("Continue shopping")}</button>
         </Link>
@@ -1247,14 +1285,16 @@ export class CheckoutSuccess extends PureComponent {
   renderDetails() {
     const {
       customer,
-      billingAddress: { guest_email, phone },
+      billingAddress,
       paymentMethod,
       incrementID,
       initialTotals,
     } = this.props;
+    const guest_email = billingAddress?.guest_email;
+    const { eventSent } = this.state;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
     const pagePathName = new URL(window.location.href).pathname;
-    if (pagePathName !== "/checkout/error") {
+    if (pagePathName !== "/checkout/error" && !eventSent) {
       if (
         paymentMethod?.code === "checkout_qpay" ||
         paymentMethod?.code === "tabby_installments" ||
@@ -1270,6 +1310,7 @@ export class CheckoutSuccess extends PureComponent {
           totals: initialTotals,
         });
       }
+      this.setState({ eventSent: true });
     }
     localStorage.removeItem("cartProducts");
     return (
@@ -1280,7 +1321,7 @@ export class CheckoutSuccess extends PureComponent {
             customer.email ? customer.email : guest_email
           )}
           {this.renderPhoneVerified()}
-          {this.renderTrackOrder(phone)}
+          {this.renderTrackOrder()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}

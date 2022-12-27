@@ -188,7 +188,7 @@ class ProductItem extends PureComponent {
       price: itemPrice,
       brand: brand_name,
       category: product_type_6s || categoryLevel,
-      varient: color || "",
+      variant: color || "",
       position: product_Position || "",
     });
     if (queryID) {
@@ -426,7 +426,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = link;
+      urlWithQueryID = url ? url : link ? link: link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -445,7 +445,7 @@ class ProductItem extends PureComponent {
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {this.renderOutOfStock()}   
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}

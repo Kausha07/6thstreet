@@ -14,6 +14,7 @@ import Event, {
   EVENT_MOE_ACCOUNT_TAB_ICON,
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -143,12 +144,29 @@ class HeaderAccount extends PureComponent {
         ? `${customer.firstname} ${customer.lastname}`
         : __("Login/Register");
     const sendGTMEvent = () => {
-      const eventData = {
-        name: EVENT_GTM_ACCOUNT_TAB_CLICK,
-        category: "top_navigation_menu",
-        action: EVENT_GTM_ACCOUNT_TAB_CLICK,
-      };
-      Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+      if (isFooter) {
+        const popupEventData = {
+          name: EVENT_SIGN_IN_SCREEN_VIEWED,
+          category: "user_login",
+          action: EVENT_SIGN_IN_SCREEN_VIEWED,
+          popupSource: "Footer Menu",
+        };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+      } else {
+        const eventData = {
+          name: EVENT_GTM_ACCOUNT_TAB_CLICK,
+          category: "top_navigation_menu",
+          action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+        };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+        const popupEventData = {
+          name: EVENT_SIGN_IN_SCREEN_VIEWED,
+          category: "user_login",
+          action: EVENT_SIGN_IN_SCREEN_VIEWED,
+          popupSource: "Account Icon",
+        };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+      }
     };
     return (
       <div block="HeaderAccount" elem="ButtonWrapper">

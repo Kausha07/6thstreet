@@ -1,22 +1,13 @@
-.couponDetailPopup {
+.couponTermsAndConditionsPopup {
     left: 0px;
     right: 0;
     bottom: 0;
     top: 0;
     position: fixed;
-    z-index: 100;
+    z-index: 200;
     background-color: rgba(0, 0, 0, 0.5);
-    // .couponDetailPopupOverlay {
-    //     background-color: rgba(0, 0, 0, 0.5);
-    //     left: 0;
-    //     right: 0;
-    //     top: 0;
-    //     bottom: 0;
-    //     position: fixed;
-    //     z-index: 94;
-    //     cursor: pointer;
-    // }
-    .couponDetailOverlay {
+
+    .couponTermsAndConditionsOverlay {
         left: 0;
         right: 0;
         position: fixed;
@@ -24,34 +15,31 @@
         position: absolute;
         top: 50%;
         transform: translate(-50%, -50%);
+
         @include mobile {
             position: fixed;
             top: 0;
             transform: none;
         }
-
     }
-    .couponDetialPopupBlock {
+    .couponTermsAndConditionsPopupBlock {
         z-index: 92;
-        max-width: 560px;
+        max-width: 450px;
         margin: 0 auto;
         background: #FFFFFF;
         border-radius: 16px;
         padding: 42px 30px;
-        .couponItemCode {
-            color: #28D9AA !important;
+        .couponTermsAndConditionsPopupTitle {
+            color: #28D9AA;
             font-family: "Avenir Next";
-            font-size: 20px !important;
+            font-size: 26px !important;
             font-weight: 600 !important;
             letter-spacing: 0;
-            line-height: 27px;
+            line-height: 30px;
             margin-bottom: 30px;
             border-radius: 30px 30px 0 0;
-            @include mobile {
-                margin-left: 0 !important;
-            }
         }
-        .closePopupbtn {
+        .couponTermsAndConditionsPopupCloseButton {
             cursor: pointer;
             float: right;
             padding: 0;
@@ -70,8 +58,27 @@
             span {
                 display: none;
             }
+
             &_isArabic {
                 float: left;
+            }
+        }
+
+        .couponTermsAndConditionsPopupTitlesWrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .couponTermsAndConditionsPopupTitles {
+                text-transform: none;
+                font-family: "Avenir Next";
+                font-size: 26px !important;
+                font-weight: 600 !important;
+                letter-spacing: 0;
+                line-height: 30px;
+                margin: auto;
+                margin-bottom: 30px;
+                border-radius: 30px 30px 0 0;
             }
         }
         .couponItemName {
@@ -81,11 +88,8 @@
             letter-spacing: 0;
             line-height: 19px;
             margin-bottom: 30px;
-            @include mobile {
-                margin-left: 0 !important;
-            }
         }
-        .couponItemDes {
+        .couponItemTermsAndConditionsDes {
             color: #8D8D8D;
             font-family: "Avenir Next";
             font-size: 14px;
@@ -93,21 +97,25 @@
             line-height: 19px;
             margin-bottom: 30px;
             white-space: pre-line;
-            @include mobile {
-                margin-left: 0 !important;
-            }
+            margin-left: 0 !important;
+            overflow: scroll;
         }
 
         .couponItemDesLink {
             text-decoration: underline;
-            @include mobile {
-                margin-left: 0 !important;
-            }
         }
 
-        .couponItemDesLinkP {
-            @include mobile {
-                margin-left: 0 !important;
+        .couponTermsAndConditionsPopupIAgreeButtonWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .couponTermsAndConditionsPopupIAgreeButton {
+                height: 50px;
+                width: 315px;
+                border-radius: 6px;
+                background-color: #000000;
+                color: white;
             }
         }
 
@@ -124,4 +132,4 @@
             border-radius: 30px 30px 0 0;
         }
     }
-}
+} 

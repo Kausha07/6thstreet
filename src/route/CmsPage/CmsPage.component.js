@@ -15,6 +15,8 @@ export class CmsPage extends SourceCmsPage {
       return "FAQ";
     } else if (location.pathname.match(/shipping-policy/)) {
       return "Shipping Policy";
+    } else if (location.pathname.match(/privacy-policy/)) {
+      return "Privacy Policy";
     } else {
       return "Return Policy";
     }

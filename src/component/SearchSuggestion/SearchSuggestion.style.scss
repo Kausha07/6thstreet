@@ -54,7 +54,7 @@
       // max-height: 100vh;
       max-height: calc(100vh - 160px);
       overflow-y: auto;
-      padding: 20px 0;
+      padding: 82px 0;
       padding-top: 0;
       position: absolute;
     }
@@ -99,6 +99,7 @@
         height: auto;
         margin-right: 7.92px;
         a {
+          text-decoration: none;
           &:hover {
             text-decoration: none;
           }
@@ -209,6 +210,9 @@
     }
   }
 
+  .recommendedForYou{
+    padding: 0 20px 0 10px !important;
+  }
   .TrandingTags,
   .TopSearches,
   .RecentSearches,

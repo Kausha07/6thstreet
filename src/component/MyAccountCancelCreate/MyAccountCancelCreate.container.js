@@ -24,8 +24,9 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         incrementId: null,
         items: [],
         resolutions : [],
-        resolutionId:null
-    };
+        resolutionId:null,
+        quantityObj: {},
+};
 
     componentDidMount() {
         this._isMounted = true;
@@ -36,6 +37,16 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    handleChangeQuantity(quantity, itemId) {
+        const {
+          quantityObj: { [itemId]: item },
+        } = this.state;
+    
+        this.setState(({ quantityObj }) => ({
+          quantityObj: { ...quantityObj, [itemId]: { ...item, quantity } },
+        }));
+      }
 
     getReturnableItems() {
         const orderId = this.getOrderId();
@@ -76,7 +87,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
             items,
             incrementId,
             orderId, 
-            resolutionId
+            resolutionId,
+            quantityObj
         } = this.state;
         const resolutionIdPass =  resolutionId -1 
         const payload = {
@@ -86,7 +98,9 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
 
                 return {
                     item_id: order_item_id,
-                    qty: qty_to_cancel,
+                    qty:  Object.keys(quantityObj).length > 0 && quantityObj[order_item_id]
+                    ? quantityObj[order_item_id].quantity
+                    : qty_to_cancel,
                     reason: reasonId
                 };
             }),

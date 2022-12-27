@@ -1,4 +1,4 @@
-import Event, { EVENT_GTM_AUTHENTICATION } from "Util/Event";
+import Event, { EVENT_PAGE_LOAD } from "Util/Event";
 import BaseEvent from "./Base.event";
 
 /**
@@ -13,14 +13,14 @@ import BaseEvent from "./Base.event";
  * @type {number}
  */
 export const SPAM_PROTECTION_DELAY = 200;
-export const EVENT_HANDLE_DELAY = 2000;
-export const URL_REWRITE = "url-rewrite";
+export const EVENT_HANDLE_DELAY = 700;
+
 /**
  * GTM PWA Impression Event
  *
  * Called when customer see banners on home page
  */
-class AutheneticationEvent extends BaseEvent {
+class PageLoadEvent extends BaseEvent {
   /**
    * Set base event call delay
    *
@@ -32,32 +32,20 @@ class AutheneticationEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_AUTHENTICATION, (data) => {
-      this.handle(data);
+    Event.observer(EVENT_PAGE_LOAD, () => {
+      this.handle();
     });
   }
 
-  handler(data) {
+  handler() {
     this.pushEventData({
-      event: data.name,
-      eventCategory: data.category ? data.category : data.name,
-      eventAction: data.action ? data.action : data.name,
-      ...(data.failReason && { failReason: data.failReason }),
-      ...(data.loginMode && { loginMode: data.loginMode }),
-      ...(data.attemptNumber && { attemptNumber: data.attemptNumber }),
-      ...(data.popupSource && { PopupSource: data.popupSource }),
+      eventCategory: "Home",
+      eventAction: "page_load",
       UserType:
-        data.name == "login"
-          ? "Logged In"
-          : this.getCustomerId().toString().length > 0
-          ? "Logged In"
-          : "Logged Out",
-      CustomerID: this.getCustomerId(),
-      PageType: this.getPageType(),
+        this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       ClientID: this.getGAID(),
     });
   }
-
   getCustomerId() {
     return this.isSignedIn()
       ? this.getAppState().MyAccountReducer.customer.id || ""
@@ -92,20 +80,6 @@ class AutheneticationEvent extends BaseEvent {
       return "";
     }
   }
-
-  getPageType() {
-    const { urlRewrite, currentRouteName } = window;
-    if (currentRouteName === URL_REWRITE) {
-      if (typeof urlRewrite === "undefined") {
-        return "";
-      }
-      if (urlRewrite.notFound) {
-        return "notfound";
-      }
-      return (urlRewrite.type || "").toLowerCase();
-    }
-    return (currentRouteName || "").toLowerCase();
-  }
 }
 
-export default AutheneticationEvent;
+export default PageLoadEvent;

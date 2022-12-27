@@ -40,7 +40,7 @@ export class CheckoutFail extends CheckoutSuccess {
       productQty = [],
       productCategory = [],
       productItemPrice = [];
-      items?.forEach((item) => {
+    items?.forEach((item) => {
       let productKeys = item?.full_item_info;
       productName.push(productKeys?.name);
       productColor.push(productKeys?.color);

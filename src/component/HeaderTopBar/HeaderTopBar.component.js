@@ -8,6 +8,8 @@ import LanguageSwitcher from "Component/LanguageSwitcher";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
+import { connect } from "react-redux";
 
 import "./HeaderTopBar.style";
 
@@ -21,9 +23,16 @@ const settings = {
   autoplayTimeout: 3000,
   speed: 1000,
 };
+
+export const mapStateToProps = (state) => ({
+  config: state.AppConfig.config,
+  country: state.AppState.country,
+})
 class HeaderTopBar extends NavigationAbstract {
   static propTypes = {
     location: PropTypes.object.isRequired,
+    config: PropTypes.object.isRequired,
+    country: PropTypes.string.isRequired,
   };
 
   stateMap = {
@@ -38,6 +47,7 @@ class HeaderTopBar extends NavigationAbstract {
     isOnMobile: false,
     pageYOffset: 0,
     isHidden: false,
+    isArabic: isArabic(),
   };
 
   renderMap = {
@@ -71,22 +81,62 @@ class HeaderTopBar extends NavigationAbstract {
     });
   };
 
+  renderShippingInfo() {
+    if(this.props.country && this.props.config && this.props.config.countries) {
+    let country_name = getCountryFromUrl();
+    const { isArabic } = this.state;
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+    let free_return_amount = 200;
+    if( countries[country] && countries[country].free_return_amount){
+      free_return_amount = countries[country].free_return_amount;
+    }
+    let txt_common = __("FREE SHIPPING OVER");
+    let txt_diff = {
+        AE: __(
+          "AED"
+        ),
+        SA: __(
+          "SAR"
+        ),
+        KW: __(
+          "KWD"
+        ),
+        QA: __(
+          "QAR"
+        ),
+        OM: __(
+          "OMR"
+        ),
+        BH: __(
+          "BHD"
+        ),
+      };
+  
+    return (
+      <>
+        {
+            isArabic ? (
+                `${txt_common} ${free_return_amount} ${txt_diff[country_name]}`
+            ) : (
+                `${txt_common} ${txt_diff[country_name]} ${free_return_amount}`
+            )
+          }
+      </>
+    )
+    }
+  }
+
   renderCmsBlock() {
     // TODO: find out what is this, render here
     let country = getCountryFromUrl();
-    let txt = {
-      AE: __("FREE SHIPPING OVER AED199"),
-      SA: __("FREE SHIPPING OVER SAR199"),
-      KW: __("FREE SHIPPING OVER KWD20"),
-      QA: __("FREE SHIPPING OVER QAR199"),
-      OM: __("FREE SHIPPING OVER OMR20"),
-      BH: __("FREE SHIPPING OVER BHD20.5"),
-    };
     return (
       <div className="customVerticalSlider" key="cms-block">
         <div className="carouselItemInner">
           <div block="HeaderTopBar" elem="CmsBlock">
-            {__("800+ GLOBAL BRANDS")}
+            {__("1200+ GLOBAL BRANDS")}
           </div>
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("100-DAY FREE RETURNS")}
@@ -96,7 +146,7 @@ class HeaderTopBar extends NavigationAbstract {
           </div>
           {country ? (
             <div block="HeaderTopBar" elem="CmsBlock">
-              {txt[country]}
+              {this.renderShippingInfo()}
             </div>
           ) : (
             " "
@@ -166,4 +216,4 @@ class HeaderTopBar extends NavigationAbstract {
   }
 }
 
-export default withRouter(HeaderTopBar);
+export default withRouter(connect(mapStateToProps)(HeaderTopBar));

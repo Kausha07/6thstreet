@@ -14,6 +14,7 @@ export const validatePasswordMatch = ({ value }, { password }) => {
     const { current: { value: passwordValue } } = password || { current: {} };
     return value === passwordValue;
 };
+export const onlyCharacters = ({value}) => value.trim().match(/^([a-zA-Z]+\s)*[a-zA-Z]+$/);
 
 export default {
     email: {
@@ -51,5 +52,9 @@ export default {
     password_match: {
         validate: validatePasswordMatch,
         message: __('Password does not match.')
+    },
+    onlyCharacters: {
+        validate: onlyCharacters,
+        message: __('This field should contain only alphabets')
     }
 };

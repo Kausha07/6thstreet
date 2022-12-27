@@ -63,6 +63,7 @@ import {
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
+export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
     super(props);
@@ -173,15 +174,11 @@ export class MyAccount extends SourceMyAccount {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK  && {screen_name: "Return List"}),
+      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {
+        screen_name: "Return List",
+      }),
       app6thstreet_platform: "Web",
     });
-  }
-
-  chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
-    }
   }
 
   handleTabChange(key) {
@@ -362,7 +359,8 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
-    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
+    const isPickUpAddress =
+      pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
@@ -446,14 +444,17 @@ export class MyAccount extends SourceMyAccount {
             <div block="CardsContainer">
               <Image block="CardsIcon" src={contactHelp} alt={"box"} />
               <div block="CardTitle"> {__("Customer Support")} </div>
-              <button
+              <a
                 onClick={() => {
-                  this.chat();
                   this.sendEvents(EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
                 }}
+                className="chat-button"
+                href={`${WHATSAPP_LINK}`}
+                target="_blank"
+                rel="noreferrer"
               >
                 {__("Live Chat")}
-              </button>
+              </a>
             </div>
           </div>
           <MyAccountTabList

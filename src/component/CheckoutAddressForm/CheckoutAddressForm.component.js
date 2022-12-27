@@ -91,6 +91,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     fieldMap.street = {
       ...street,
+      maxLength: 420,
       onChange: (value) => this.onChange("street", value),
     };
 
@@ -107,6 +108,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           guest_email: {
             placeholder: __("Email"),
             validation: ["notEmpty", "email"],
+            maxLength: 100,
             type: "email",
             value: guest_email || customer?.email || "",
           },

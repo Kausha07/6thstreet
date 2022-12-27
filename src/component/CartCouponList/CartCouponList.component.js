@@ -3,16 +3,31 @@ import { PureComponent } from 'react';
 import "./CartCouponList.style";
 import { isArabic } from 'Util/App';
 import CartCouponDetail from 'Component/CartCouponDetail'
+import Loader from "Component/Loader";
 export class CartCouponList extends PureComponent {
     constructor(props) {
         super(props);
     }
+    state= {
+        isLoading : false,
+    }
 
-    handleApplyCode = async (couponCode) => {        
+    handleApplyCode = async (couponCode) => {
+        const { setLoader } = this.props
+        if(setLoader) {
+            setLoader(true)
+        }else {
+            this.setState({isLoading:true});
+        }
         try{            
             let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
             if (typeof apiResponse !== "string") {
                 this.props.closePopup();
+            }
+            if(setLoader) {
+                setLoader(false)
+            }else {
+                this.setState({isLoading:false});
             }
         }
         catch(error){
@@ -49,11 +64,12 @@ export class CartCouponList extends PureComponent {
         )
     }
     render() {
-
+        const { isLoading } = this.state;
         return (
             <>
                 <ul block="CouponLists">
                     {this.renderCouponItems()}
+                    <Loader isLoading={isLoading} />
                 </ul>
                 
             </>

@@ -1,3 +1,17 @@
+## Pre-requisites and Steps to launch the app in the local environment.
+
+# Pre-requisites
+1. Operating system should be either mac or ubuntu version should be <18, unfortunately scandipwa package doesn't support legacy dependencies on windows os.
+2. Node version should be 14.xx.xx only and NPM version should be 6.xx.xx
+
+# Steps to lauch the app on local server
+1. Clone the repo in your system
+2. Install the node
+3. Execute the command `npm i` to install all the dependencies
+4. Execute the command `npm start` to lauch the app
+
+***************************************************************************
+
 1. Add `gender` to global state
 2. Replace PDP and PLP context
 

@@ -112,7 +112,6 @@ export class CartOverlay extends PureComponent {
       <dl block="CartOverlay" elem="Total" mods={{ isArabic }}>
         <dt>
           {__("Subtotal ")}
-          <span>{__("(Taxes Included) ")}</span>
         </dt>
         <dd>{this.renderPriceLine(subtotal)}</dd>
       </dl>

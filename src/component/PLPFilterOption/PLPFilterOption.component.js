@@ -36,6 +36,7 @@ class PLPFilterOption extends PureComponent {
     parentCallback: PropTypes.func,
     updateFilters: PropTypes.func,
     setDefaultFilters: PropTypes.func,
+    toggleOptionList: PropTypes.func,
   };
 
   static defaultProps = {
@@ -44,6 +45,7 @@ class PLPFilterOption extends PureComponent {
     parentCallback: () => {},
     updateFilters: () => {},
     setDefaultFilters: () => {},
+    toggleOptionList: () => {},
   };
 
   fieldRef = createRef();
@@ -61,6 +63,7 @@ class PLPFilterOption extends PureComponent {
     const {
       option: { facet_value, facet_key },
       parentCallback,
+      toggleOptionList,
       isRadio,
     } = this.props;
     const inputRef = this.optionRef.current.children[0].children[0];
@@ -153,6 +156,7 @@ class PLPFilterOption extends PureComponent {
       }
     }
     parentCallback(facet_key, facet_value, checked, isRadio);
+    toggleOptionList()
   };
 
   renderField() {
