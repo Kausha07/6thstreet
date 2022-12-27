@@ -293,7 +293,6 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
   renderOTPSection() {
     const { customerUpdatedPhone, onVerifySuccess, showOTPField, resendOTP } =
       this.props;
-    //console.log("HEY", this.phoneNumberField);
     if (showOTPField) {
       return (
         <div
