@@ -18,6 +18,7 @@ import {
   SET_PDP_EDD_ADDRESS,
   SET_CITIES_DATA,
   SET_ADDRESS_LOADER,
+  SET_IS_CURRENT_TAB_ACTIVE,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -36,6 +37,7 @@ export const initialState = {
   EddAddress: null,
   addressCityData: [],
   addressLoader: true,
+  currentTabActive: true,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -145,6 +147,15 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         mobileTabActive: isActive,
       };
+
+    case SET_IS_CURRENT_TAB_ACTIVE:
+      const { currentTab } = action;
+
+      return {
+        ...state,
+        currentTabActive: currentTab,
+      };
+
     case SET_ADDRESS_LOADER:
       const { addressLoader } = action;
       return {
