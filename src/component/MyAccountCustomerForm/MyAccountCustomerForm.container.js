@@ -9,12 +9,13 @@ import { customerType } from 'Type/Account';
 import { EVENT_MOE_UPDATE_PROFILE } from "Util/Event";
 import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
-
+import isMobile from "Util/Mobile";
 import MyAccountCustomerForm from "./MyAccountCustomerForm.component";
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   country: state.AppState.country,
+  currentTabActive: state.MyAccountReducer.currentTabActive,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -35,6 +36,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     showErrorNotification: PropTypes.func.isRequired,
     showSuccessNotification: PropTypes.func.isRequired,
     country: PropTypes.string.isRequired,
+    currentTabActive: PropTypes.bool.isRequired,
   };
 
   containerFunctions = {
@@ -66,6 +68,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       updatedCustomerDetails: {},
       OTPSentNumber: "",
       OTPTimeOutBreak: false,
+      isMobile: isMobile.any(),
     };
   }
   timer = null;
@@ -238,6 +241,11 @@ export class MyAccountCustomerFormContainer extends PureComponent {
   }
 
   render() {
+    const { currentTabActive } = this.props;
+    const { isMobile } = this.state;
+    if (isMobile && !currentTabActive) {
+      this.setState({ showOTPField: false });
+    }
     return (
       <MyAccountCustomerForm
         {...this.containerFunctions}
