@@ -22,7 +22,7 @@ export const CUSTOMER_ACCOUNT_OVERLAY_KEY = 'customer_account';
 export const STATE_INITIAL_LINKS = 'initialLinks';
 
 export const ENABLE_OTP_LOGIN = true;
-export const SECONDS_TO_RESEND_OTP = 15;
+export const SECONDS_TO_RESEND_OTP = 30;
 
 // available SSO providers 
 export const SSO_LOGIN_PROVIDERS = [];
