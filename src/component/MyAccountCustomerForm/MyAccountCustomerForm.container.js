@@ -46,7 +46,6 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     updatePhoneNumber: this.updatePhoneNumber.bind(this),
     onVerifySuccess: this.onVerifySuccess.bind(this),
     sendOTP: this.sendOTP.bind(this),
-    resendOTP: this.resendOTP.bind(this),
     updatedCustomerDetails: this.updatedCustomerDetails.bind(this),
     renderOTPField: this.renderOTPField.bind(this),
   };
@@ -65,8 +64,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       customerUpdatedPhone: phone,
       showOTPField: false,
       updatedCustomerDetails: {},
-      resendOTPNumber: false,
-      OTPSentNumber:"",
+      OTPSentNumber: "",
       OTPTimeOutBreak: false,
     };
   }
@@ -127,18 +125,13 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     };
   };
 
-  resendOTP() {
-    this.setState({ resendOTPNumber: true });
-    this.sendOTP();
-  }
-
   sendOTP() {
     const {
       sendVerificationCode,
       showSuccessNotification,
       showErrorNotification,
     } = this.props;
-    const { customerUpdatedPhone, resendOTPNumber } = this.state;
+    const { customerUpdatedPhone } = this.state;
     const countryCode = customerUpdatedPhone
       ? customerUpdatedPhone.slice(0, "4")
       : null;
@@ -156,15 +149,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         this.timer = setTimeout(() => {
           this.setState({ OTPTimeOutBreak: false });
         }, 10000);
-        if (resendOTPNumber) {
-          showSuccessNotification(
-            "OTP has been resent to " + customerUpdatedPhone
-          );
-        } else {
-          showSuccessNotification(
-            "OTP has been sent to " + customerUpdatedPhone
-          );
-        }
+        showSuccessNotification(__("OTP sent successfully"));
         this.setState({ isLoading: false, showOTPField: true });
       } else {
         this.setState({ isLoading: false });

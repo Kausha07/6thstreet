@@ -405,36 +405,28 @@
             caret-color: transparent;
           }
         }
-  
-        &-ResendCode {
-          button {
-            font-weight: var(--fw-regular);
-            color: #606060;
-            font-size: 14px;
-            margin-top: 10px;
-            text-transform: capitalize;
-          }
-        }
       }
       button {
         height: 40px;
         margin-top: 32px;
-        width: 60%;
-        border-radius: 5px;
+        width: 400px;
+        max-width: 70%;
+        border-radius: 10px;
   
         &.secondary {
           margin-top: 12px !important;
-          background-color: #ffffff;
-          font-size: 12px;
+          background-color: #f6f6f6;
+          &[disabled]{
+            opacity: 0.25;
+            cursor: not-allowed;
+          }
           &:hover {
-            background-color: #000000;
+            background-color: #fff;
+            color: #000;
           }
         }
   
         &.primary {
-          border-radius: 10px;
-          width: 70%;
-  
           &:hover {
             background-color: #ffffff;
           }

@@ -305,8 +305,13 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
   }
 
   renderOTPSection() {
-    const { customerUpdatedPhone, onVerifySuccess, showOTPField, resendOTP } =
-      this.props;
+    const {
+      customerUpdatedPhone,
+      onVerifySuccess,
+      showOTPField,
+      sendOTP,
+      OTPTimeOutBreak,
+    } = this.props;
     const { isArabic } = this.state;
     if (showOTPField) {
       return (
@@ -337,6 +342,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 placeholder="_____"
                 name="otp"
                 id="otp"
+                pattern="[0-9]*"
                 ref={this.otpField}
               />
             </div>
@@ -347,9 +353,11 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
           <div block="OTPVerify" elem="ResendCode">
             <button
               onClick={() => {
-                resendOTP();
+                sendOTP();
                 this.resetOTPInput();
               }}
+              block="secondary"
+              disabled={OTPTimeOutBreak}
             >
               {__("Resend Verification Code")}
             </button>
