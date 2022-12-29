@@ -151,7 +151,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         this.setState({ OTPSentNumber: sentNumber, OTPTimeOutBreak: true });
         this.timer = setTimeout(() => {
           this.setState({ OTPTimeOutBreak: false });
-        }, 10000);
+        }, 15000);
         showSuccessNotification(__("OTP sent successfully"));
         this.setState({ isLoading: false, showOTPField: true });
       } else {
