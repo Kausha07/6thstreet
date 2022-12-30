@@ -279,6 +279,11 @@ export class MyAccountOverlay extends PureComponent {
                     failedRegistrationData: {},
                     countryCode: PHONE_CODES[getCountryFromUrl()],
                   });
+                  if (this.state.emailFromCheckoutPage) {
+                    this.setState({
+                      emailFromCheckoutPage: null,
+                    });
+                  }
                 }}
                 className="register-login-btn"
               >
