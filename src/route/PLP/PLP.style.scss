@@ -103,7 +103,7 @@
     &-FooterContainer {
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);
-      margin: auto;
+      margin: auto auto 60px;
       &.loadMore {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -111,24 +111,85 @@
         -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
       }
-  
+      p{
+        margin-bottom: 10px;
+        line-height: 1.6;
+      }
       h3 {
         font-size: 21px;
       }
       a {
         text-decoration: underline;
+        font-weight: 500;
         & + a{
             margin-left: 0;
         }
       }
+      li{
+        &.noListStyle{
+          padding-left: 0;
+          &::before{
+            display: none;
+          }
+        }
+      }
       .shopby-list {
         margin: 25px 0;
+        padding-left: 0;
         & > li {
-          font-size: 20px;
-          font-weight: bold;
+          font-size: 18px;
+          font-weight: 600;
+          margin:25px 0 15px;
+        }
+        ul{
+          padding-left: 15px;
+          b{
+            font-weight: 600;
+          }
+            &.shopBy-Grid{
+            padding: 40px 0;
+            margin: 40px 0;
+            background: #fff;
+            text-align: center;
+             & > li{
+                &.shopByGrid-List{
+
+                  &::before{
+                    display: none;
+                  }
+                  display: inline-block;
+                  vertical-align: top;
+                  max-width:30%;
+                  min-width: 10%;
+                  text-align: left;
+                  padding-left: 0;
+                  margin: 0 6%;
+                }
+                .shopBy-column{
+                  h4{
+                    font-weight: 600;
+                    margin: 15px 0;
+                  }
+                  ul{
+                    padding-left: 0;
+                    &>li{
+                      padding-left: 0;
+                      list-style-type: disc;
+                      list-style-position: inside;
+                      &::before{
+                        display: none;
+                      }
+                    }
+                  }
+                }
+              }  
+                
+          }
+          
         }
         .shopBy-inner {
           padding-left: 20px;
+          overflow: hidden;
           li {
             line-height: 1.8;
           }
