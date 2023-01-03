@@ -5,6 +5,10 @@
   }
   
   .MyAccountCustomerForm {
+    @include desktop() {
+      display: flex;
+      flex-wrap: wrap;
+    }
     display: grid;
     grid-auto-flow: row;
     margin-bottom: 100px;
@@ -16,6 +20,9 @@
       min-height: 470px;
     }
     form {
+      @include desktop() {
+        flex:auto
+      }
       input {
         text-transform: none;
         &::placeholder {
@@ -182,6 +189,9 @@
       }
     }
     .MyAccountPasswordForm {
+      @include desktop() {
+        flex:0 0 40%;
+      }
       @include mobile() {
         background: $white;
         height: 100%;
@@ -192,6 +202,9 @@
       }
       form {
         height: 75vh;
+        @include desktop() {
+          height: auto;
+        }
       }
       &-Title {
         display: inline-flex;
@@ -353,6 +366,9 @@
       // width: 800px;
     }
     .OTPVerifyContainer {
+      @include desktop() {
+        flex:0 0 100%;
+      }
       background-color: var(--lightest-gray);
       padding: 30px 0;
       text-align: center;
