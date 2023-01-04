@@ -335,6 +335,49 @@ export class CheckoutSuccess extends PureComponent {
     );
   };
 
+  renderItemKnet = (item) => {
+    const { isFailed } = this.props;
+    let country_name = getCountryFromUrl();
+    let txt_diff = {
+      AE: __("AED"),
+      SA: __("SAR"),
+      KW: __("KWD"),
+      QA: __("QAR"),
+      OM: __("OMR"),
+      BH: __("BHD"),
+    };
+    const currencyCode = txt_diff[country_name];
+    const formattedCartItem = {
+      item_id: item.item_id,
+      product: {
+          name: item.name,
+          type_id: item.product_type,
+          thumbnail: {
+              url: item.thumbnail
+          },
+      },
+      row_total: item.price || 0,
+      sku: item.sku,
+      qty: Math.round(item.qty_ordered),
+      optionValue: item?.product_options?.info_buyRequest?.options?.US || item?.product_options?.info_buyRequest?.options?.EU || item?.product_options?.info_buyRequest?.options?.UK,
+      thumbnail_url: item.thumbnail,
+      basePrice: item.base_original_price,
+      brand_name: item.brand_name,
+      currency: currencyCode,
+      full_item_info: item,
+    };
+    return (
+      <SuccessCheckoutItem
+        key={formattedCartItem.item_id}
+        item={formattedCartItem}
+        currency_code={formattedCartItem.currency}
+        isEditing
+        isFailed={isFailed}
+        isLikeTable
+      />
+    )
+  }
+
   renderTotalsItems() {
     const { paymentMethod } = this.props;
     if (
@@ -378,7 +421,7 @@ export class CheckoutSuccess extends PureComponent {
               .filter(
                 ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
               )
-              .map(this.renderItem)}
+              .map(this.renderItemKnet)}
           </ul>
         </div>
       );
