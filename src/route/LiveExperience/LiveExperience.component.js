@@ -16,7 +16,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { getStore } from "Store";
-import MobileAPI from "Util/API/provider/MobileAPI";
+import { getProductInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint"
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -61,12 +61,18 @@ export class LiveExperience extends PureComponent {
     this.renderUpcomingParty();
 
     this.renderArchivedParty();
+    if(isMobile.any()){
+      document.querySelector(".HeaderGenders").style.display= "none";
+    }
   }
 
   componentDidUpdate() {
     this.renderLiveParty();
   }
 
+  componentWillUnmount() {
+    document.querySelector(".HeaderGenders").style.display = "flex";
+  }
   renderLiveParty = async () => {};
   renderUpcomingParty = () => {};
   renderArchivedParty = () => {};
@@ -242,7 +248,7 @@ export class LiveExperience extends PureComponent {
 
   getProductDetails = async (id) => {
     try {
-      return MobileAPI.get(`bambuser/products/${id}`).then(
+      return getProductInfo({id}).then(
         async ({ publicUrl }) => {
           const { pathname: urlParam } = new URL(publicUrl);
           const { requestProduct } = this.props;
@@ -566,6 +572,7 @@ export class LiveExperience extends PureComponent {
     window.initBambuserLiveShopping({
       showId: bId,
       type: "overlay",
+      disableClickOutsideBehavior: true,
     });
   };
 
