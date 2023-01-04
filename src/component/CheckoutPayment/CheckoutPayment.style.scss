@@ -42,15 +42,8 @@
         &_qpay {
             img {
                 width: 40px !important;
-                filter: invert(50%);
             }
         }
-        // &_tabby {
-        //     img {
-        //         width: 40px !important;
-        //         // filter: invert(50%);
-        //     }
-        // }
     }
     &-MethodQPay {
         display: flex;
@@ -79,14 +72,6 @@
             img {
                 filter: invert(100%) brightness(20);
             }
-            // .CheckoutPayment-Method {
-            //     &_tabby {
-            //         img {
-            //             filter: none;
-            //             // filter: invert(50%);
-            //         }
-            //     }
-            // }
             p {
                 color: $white;
             }
