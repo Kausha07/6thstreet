@@ -566,6 +566,7 @@ export class LiveExperience extends PureComponent {
     window.initBambuserLiveShopping({
       showId: bId,
       type: "overlay",
+      disableClickOutsideBehavior: true,
     });
   };
 
