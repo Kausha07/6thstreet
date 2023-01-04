@@ -31,7 +31,7 @@ export const LivePartyReducer = (state = getInitialState(), action) => {
       };
 
       case SET_LIVE_PARTY_ISLIVE:
-      const { data : isLive = {} } = action;
+      const { data : isLive } = action;
       return {
         ...state,
         isLive,
