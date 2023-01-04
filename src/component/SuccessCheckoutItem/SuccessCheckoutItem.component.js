@@ -216,12 +216,10 @@ export class SuccessCheckoutItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="SuccessCheckoutItem" elem="ColSizeQty" mods={{ isArabic }}>
-          {color ? (
-            <span>
-              {" "}
-              {__("Color: ")} {color}
-            </span>
-          ) : null}
+          <span>
+            {" "}
+            {__("Color: ")} {color}
+          </span>
 
           <span>
             | {__("Size:")} {optionValue}
