@@ -176,12 +176,10 @@ class PDPSummary extends PureComponent {
     }
   };
 
-  componentDidMount() {
+  getTabbyResponse = () =>{
     const {
       product: { price },
-      TabbyInstallment,
-      product,
-      addressCityData,
+      TabbyInstallment
     } = this.props;
     const script = document.createElement("script");
     script.src = "https://checkout.tabby.ai/tabby-promo.js";
@@ -192,7 +190,14 @@ class PDPSummary extends PureComponent {
       const { default: defPrice } = priceData;
       TabbyInstallment(defPrice,currency);
     }
+  }
 
+  componentDidMount() {
+    const {
+      product,
+      addressCityData,
+    } = this.props;
+    this.getTabbyResponse();
     const countryCode = getCountryFromUrl();
     this.setState({
       countryCode: countryCode,
@@ -993,7 +998,7 @@ class PDPSummary extends PureComponent {
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendImpressions()}>{this.getTabbyResponse}</div>
       </>
     );
   }
