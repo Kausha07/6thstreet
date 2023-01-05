@@ -56,6 +56,11 @@ export class LiveExperience extends PureComponent {
       this.onClickPartyPlay(this.props.livepartyId);
     }
 
+    if(this.props.FABautoplayLiveShopping)
+    {
+      this.onClickPartyPlay(this.props.FABautoplayLiveShopping);
+    }
+
     this.renderLiveParty();
 
     this.renderUpcomingParty();
