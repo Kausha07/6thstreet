@@ -122,6 +122,16 @@ class MobileBottomBar extends NavigationAbstract {
     });
   };
 
+  renderAccountMenuPopUp = () => {
+    const { isPopup } = this.state;
+    const popUpElement = (
+      <MyAccountOverlay showMyAccountMenuPopUp={true} isPopup={isPopup} closePopup={this.closePopup} />
+    );
+
+    this.setState({ accountPopUp: popUpElement });
+    return popUpElement;
+  }
+
   renderAccountPopUp = () => {
     const { isPopup } = this.state;
     const popUpElement = (
@@ -305,7 +315,7 @@ class MobileBottomBar extends NavigationAbstract {
     this.setState({ isAccount: location.pathname === "/my-account" });
 
     const onClickHandle = !isSignedIn
-      ? this.renderAccountPopUp
+      ? this.renderAccountMenuPopUp
       : this.routeChangeAccount;
     const sendGTMEvent = () => {
       const eventData = {

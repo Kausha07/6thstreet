@@ -169,7 +169,7 @@ export class Checkout extends SourceCheckout {
 
     if (
       prevState?.paymentInformation?.paymentMethod?.code !==
-        paymentInformation?.paymentMethod?.code &&
+      paymentInformation?.paymentMethod?.code &&
       paymentInformationUpdated
     ) {
       this.setState({ paymentInformation: paymentInformationUpdated });
@@ -558,6 +558,7 @@ export class Checkout extends SourceCheckout {
 
   renderDetailsStep() {
     const {
+      guestAutoSignIn,
       orderID,
       shippingAddress,
       incrementID,
@@ -595,6 +596,7 @@ export class Checkout extends SourceCheckout {
           order={QPayOrderDetails ? QPayOrderDetails : KNETOrderDetails}
           KnetDetails={KnetDetails}
           KNETOrderDetails={KNETOrderDetails}
+          guestAutoSignIn={guestAutoSignIn}
         />
       );
     }

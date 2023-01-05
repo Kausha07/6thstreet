@@ -27,23 +27,23 @@ export class FieldInput extends SourceFieldInput {
     };
 
     static defaultProps = {
-        formRef: () => {}
+        formRef: () => { }
     };
 
     toggleMask(e) {
         e.persist();
         const { formRef } = this.props;
         try {
-            if(formRef?.current?.type === "password"){
+            if (formRef?.current?.type === "password") {
                 formRef.current.type = "text";
-                e.target.innerText = __("Mask");
+                e.target.innerText = __("Hide");
             }
-            else if(formRef?.current?.type === "text"){
+            else if (formRef?.current?.type === "text") {
                 formRef.current.type = "password";
                 e.target.innerText = __("Show");
             }
         }
-        catch(err) {
+        catch (err) {
             console.error(err);
         }
     }
@@ -59,25 +59,25 @@ export class FieldInput extends SourceFieldInput {
         return (
             <>
                 {
-                    type===PASSWORD_TYPE && !!!isDisabled
-                    ?
-                    <span
-                        block="Mask"
-                        mods={{
-                            isArabic: isArabic(),
-                        }}
-                        role="button"
-                        onClick={ this.toggleMask.bind(this) }
-                    >
-                        { __("Show") }
-                    </span>
-                    :
-                    null
+                    type === PASSWORD_TYPE && !!!isDisabled
+                        ?
+                        <span
+                            block="Mask"
+                            mods={{
+                                isArabic: isArabic(),
+                            }}
+                            role="button"
+                            onClick={this.toggleMask.bind(this)}
+                        >
+                            {__("Show")}
+                        </span>
+                        :
+                        null
                 }
                 <input
-                    type={ type }
-                    ref={ formRef }
-                    { ...validProps }
+                    type={type}
+                    ref={formRef}
+                    {...validProps}
                 />
             </>
         );
