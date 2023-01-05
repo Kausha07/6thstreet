@@ -119,6 +119,50 @@ export class MyAccountOverlay extends PureComponent {
     registerDetailsEntered: false,
   };
 
+  componentDidMount() {
+    if (isMobile.any()) {
+      document.body.style.position = "fixed";
+    }
+
+    // gapi.load("auth2", () => {
+    //   this.authRef.current = gapi.auth2.init();
+    //   this.attachSigninFunction(document.getElementById("g-signin2"));
+    // });
+  }
+  // attachSigninFunction = (element) => {
+  //   this.authRef.current.attachClickHandler(
+  //     element,
+  //     {},
+  //     async (googleUser) => {
+  //       const { onSignInSuccess, onSignInAttempt } = this.props;
+  //       const profile = googleUser?.getBasicProfile();
+  //       const social_token = googleUser?.getAuthResponse()?.id_token;
+  //       const fullName = profile?.getName()?.split(" ");
+  //       const email = profile?.getEmail();
+  //       const payload = {
+  //         social_token,
+  //         firstname: fullName[0],
+  //         lastname: fullName[1],
+  //         email,
+  //         customer_telephone: null,
+  //         type: "google",
+  //         cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+  //       };
+  //       try {
+  //         onSignInAttempt();
+  //         onSignInSuccess(payload);
+  //       } catch (e) {
+  //         console.log("error", e);
+  //         deleteAuthorizationToken();
+  //         deleteMobileAuthorizationToken();
+  //       }
+  //     },
+  //     function (error) {
+  //       console.log(JSON.stringify(error, undefined, 2));
+  //     }
+  //   );
+  // };
+
   componentDidUpdate() {
     this.validateAndSendEvent();
   }
