@@ -145,6 +145,8 @@ class HeaderMainSection extends NavigationAbstract {
     // });
   };
 
+
+
   componentDidMount() {
     if (isMobile.any()) {
       this.setState({ showSearch: true });
@@ -153,8 +155,7 @@ class HeaderMainSection extends NavigationAbstract {
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
   }
-
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { delay } = this.state;
     if (prevState !== delay) {
       clearInterval(this.interval);
@@ -202,7 +203,10 @@ class HeaderMainSection extends NavigationAbstract {
     if (matchPath(location.pathname, "/cart")) {
       return TYPE_CART;
     }
-    if (matchPath(location.pathname, "/viewall") || location.search.includes("?q=")) {
+    if (
+      matchPath(location.pathname, "/viewall") ||
+      location.search.includes("?q=")
+    ) {
       return TYPE_CATEGORY;
     }
     return window.pageType;
@@ -223,7 +227,7 @@ class HeaderMainSection extends NavigationAbstract {
   renderAccount() {
     const isFooter = false;
 
-    return <HeaderAccount key="account"  isFooter={isFooter} isMobile />;
+    return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
   }
 
   renderCart() {
@@ -267,9 +271,8 @@ class HeaderMainSection extends NavigationAbstract {
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
-        
-        return <HeaderLogo key="logo" />;
 
+        return <HeaderLogo key="logo" />;
       } else if (this.isPLP() && !showPLPSearch) {
         this.setMainContentPadding("150px");
 
@@ -308,9 +311,9 @@ class HeaderMainSection extends NavigationAbstract {
       case "home":
         history.push("/home.html");
         break;
-        case "all":
-          history.push("/");
-          break;
+      case "all":
+        history.push("/");
+        break;
       default:
         history.push("/");
     }
@@ -350,7 +353,7 @@ class HeaderMainSection extends NavigationAbstract {
   hideSearchBar = () => {
     this.setState({
       showSearch: false,
-      showPLPSearch: false
+      showPLPSearch: false,
     });
   };
 
@@ -469,3 +472,4 @@ class HeaderMainSection extends NavigationAbstract {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection)
 );
+
