@@ -36,7 +36,7 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
-
+import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
 
 import ClubApparel from "./icons/club-apparel.png";
@@ -811,7 +811,7 @@ export class CartPage extends PureComponent {
                 position={1}
                 product={item}
                 renderMySignInPopup={this.showPopup}
-                key={3}
+                key={v4()}
                 page="cart"
                 pageType="cart"
                 isVueData={true}
@@ -861,12 +861,13 @@ export class CartPage extends PureComponent {
         <div className="mt-2 EmptyMessage">
           {__("Your shopping bag is empty.")}
         </div>
-        {/* <p>
-          <Link to="/">
-            <strong> {__("Click Here")} </strong>
+        <div block="ExploreNowBtn">
+          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/women.html`}>
+            <span block="ExploreNowBtn" elem="ExploreButtonText">
+              {__("Continue Shopping")}
+            </span>
           </Link>
-          {__("to continue shopping.")}
-        </p> */}
+        </div>
       </div>
     );
   }
