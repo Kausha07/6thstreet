@@ -51,9 +51,9 @@ export const mapDispatchToProps = (dispatch) => ({
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
-  requestCustomerData: (login) =>
+  requestCustomerData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.requestCustomerData(dispatch,login)
+      dispatcher.requestCustomerData(dispatch)
     ),
   logout: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -123,7 +123,7 @@ export class HomePageContainer extends PureComponent {
           getMobileAuthorizationToken() === mobileToken &&
           getAuthorizationToken() === authToken
         ) {
-          requestCustomerData(true);
+          requestCustomerData();
         } else {
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
