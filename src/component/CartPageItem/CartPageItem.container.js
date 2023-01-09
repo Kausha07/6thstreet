@@ -144,7 +144,7 @@ export class CartItemContainer extends PureComponent {
             }
           });
         } else {
-          Object.values(entry.areas_ar).filter((cityArea, index) => {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
             if (cityArea === area) {
               areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
             }
