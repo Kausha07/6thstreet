@@ -95,7 +95,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     return { finalArea, finalCity };
   };
-  setEDDresultData = (response, finalRes, dispatch) => {
+  setEDDresultData = (response, finalRes, dispatch, login) => {
     if (Object.values(response.data).length > 0 && finalRes.length > 0) {
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
@@ -156,10 +156,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       if (response.data) {
         if (addressCityData.length === 0) {
           AppConfigDispatcher.getCities().then((resp) => {
-            this.setEDDresultData(response, resp.data, dispatch);
+            this.setEDDresultData(response, resp.data, dispatch, login);
           });
         } else {
-          this.setEDDresultData(response, addressCityData, dispatch);
+          this.setEDDresultData(response, addressCityData, dispatch, login);
         }
         dispatch(setCustomerAddressData(response.data));
         dispatch(setAddressLoader(false));
