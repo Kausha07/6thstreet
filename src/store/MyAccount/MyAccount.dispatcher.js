@@ -182,30 +182,33 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const getPhoneNumberFromCookie = getCookie("customerPrimaryPhone")
           ? getCookie("customerPrimaryPhone")
           : null;
-        if (customer_data?.phone) {
-          dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
-          BrowserDatabase.setItem(
-            { ...stateCustomer, ...data },
-            CUSTOMER,
-            ONE_MONTH_IN_SECONDS,
-          );
-        } else {
-          dispatch(
-            updateCustomerDetails({
-              ...stateCustomer,
-              ...data,
+        dispatch(
+          updateCustomerDetails({
+            ...stateCustomer,
+            ...data,
+            ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
-          );
-          BrowserDatabase.setItem(
-            { ...stateCustomer, ...data, phone: getPhoneNumberFromCookie },
-            CUSTOMER,
-            ONE_MONTH_IN_SECONDS,
-          );
-        }
+          }),
+        );
+        BrowserDatabase.setItem(
+          {
+            ...stateCustomer,
+            ...data,
+            ...(getPhoneNumberFromCookie && {
+              phone: getPhoneNumberFromCookie,
+            }),
+          },
+          CUSTOMER,
+          ONE_MONTH_IN_SECONDS,
+        );
         const TiktokData = {
           mail: customer_data?.email ? sha256(customer_data?.email) : null,
-          phone: customer_data?.phone ? sha256(customer_data?.phone) : null,
+          phone: customer_data?.phone
+            ? sha256(customer_data?.phone)
+            : getPhoneNumberFromCookie
+            ? sha256(getPhoneNumberFromCookie)
+            : null,
         };
         BrowserDatabase.setItem(TiktokData, "TT_Data", ONE_MONTH_IN_SECONDS);
         //after login dispatching custom event
