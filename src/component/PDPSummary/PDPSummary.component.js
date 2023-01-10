@@ -37,6 +37,7 @@ import Event, {
   EVENT_GTM_PDP_TRACKING,
   EVENT_MOE_EDD_VISIBILITY
 } from "Util/Event";
+import { TabbyPromoURL } from "./Config";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -182,7 +183,7 @@ class PDPSummary extends PureComponent {
       TabbyInstallment
     } = this.props;
     const script = document.createElement("script");
-    script.src = "https://checkout.tabby.ai/tabby-promo.js";
+    script.src = TabbyPromoURL;
     document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
