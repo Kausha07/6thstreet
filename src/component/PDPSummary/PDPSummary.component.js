@@ -37,7 +37,7 @@ import Event, {
   EVENT_GTM_PDP_TRACKING,
   EVENT_MOE_EDD_VISIBILITY
 } from "Util/Event";
-import { TabbyPromoURL } from "./Config";
+import { TabbyPromoURL } from "./config";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
