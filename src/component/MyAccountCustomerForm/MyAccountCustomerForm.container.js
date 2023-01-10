@@ -11,6 +11,7 @@ import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import isMobile from "Util/Mobile";
 import MyAccountCustomerForm from "./MyAccountCustomerForm.component";
+import { setCrossSubdomainCookie } from "Util/Url/Url";
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
@@ -220,6 +221,11 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         gender,
         phone: phoneCountryCode + phone,
       });
+      setCrossSubdomainCookie(
+        "customerPrimaryPhone",
+        phoneCountryCode + phone,
+        "30",
+      );
       Moengage.track_event(EVENT_MOE_UPDATE_PROFILE, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
