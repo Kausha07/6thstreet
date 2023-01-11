@@ -121,6 +121,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         };
         this.estimateDefaultEddResponse(dispatch, request);
         dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      } else if (sessionStorage.getItem("EddAddressReq")) {
+        const response = sessionStorage.getItem("EddAddressRes")
+          ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+          : null;
+        const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+        dispatch(setEddResponse(response, request));
       } else {
         if (!login) {
           const { country_code, city, area } = response.data[0];
@@ -142,6 +148,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           dispatch(setCustomerDefaultShippingAddress(null));
         }
       }
+    } else if (sessionStorage.getItem("EddAddressReq")) {
+      const response = sessionStorage.getItem("EddAddressRes")
+        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+        : null;
+      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      dispatch(setEddResponse(response, request));
+      dispatch(setCustomerDefaultShippingAddress(null));
     } else {
       dispatch(setEddResponse(null, null));
       dispatch(setCustomerDefaultShippingAddress(null));
