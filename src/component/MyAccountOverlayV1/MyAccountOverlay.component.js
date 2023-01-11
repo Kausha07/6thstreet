@@ -1027,7 +1027,7 @@ export class MyAccountOverlay extends PureComponent {
                   src={ReturnIcon}
                   className="options-icon"
                 />
-                <span className="link-text">{__("My Returns")}</span>
+                <span className="link-text">{__("Return/Exchange")}</span>
               </div>
               <div className="icon-forward">
                 {isArabic ? <ChevronLeft /> : <ChevronRight />}
