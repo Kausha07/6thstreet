@@ -9,7 +9,10 @@ import HeaderMenu from "Component/HeaderMenu";
 import HeaderWishlist from "Component/HeaderWishlist";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
-import { setIsMobileTabActive } from "Store/MyAccount/MyAccount.action";
+import {
+  setIsMobileTabActive,
+  setIsCurrentTabActive,
+} from "Store/MyAccount/MyAccount.action";
 import { TYPE_PRODUCT } from "Route/UrlRewrites/UrlRewrites.config";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -32,6 +35,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value)),
+  setCurrentTabActive: (value) => dispatch(setIsCurrentTabActive(value)),
 });
 
 class MobileBottomBar extends NavigationAbstract {
@@ -41,10 +45,12 @@ class MobileBottomBar extends NavigationAbstract {
     setIsMobileTabActive: PropTypes.func,
     isSignedIn: PropTypes.bool.isRequired,
     newMenuGender: PropTypes.string,
+    setIsCurrentTabActive: PropTypes.func,
   };
 
   static defaultProps = {
     setIsMobileTabActive: () => {},
+    setIsCurrentTabActive: () => {},
     newMenuGender: "women",
   };
 
@@ -122,6 +128,16 @@ class MobileBottomBar extends NavigationAbstract {
     });
   };
 
+  renderAccountMenuPopUp = () => {
+    const { isPopup } = this.state;
+    const popUpElement = (
+      <MyAccountOverlay showMyAccountMenuPopUp={true} isPopup={isPopup} closePopup={this.closePopup} />
+    );
+
+    this.setState({ accountPopUp: popUpElement });
+    return popUpElement;
+  }
+
   renderAccountPopUp = () => {
     const { isPopup } = this.state;
     const popUpElement = (
@@ -133,18 +149,20 @@ class MobileBottomBar extends NavigationAbstract {
   };
 
   routeChangeAccount = () => {
-    const { history, setMobileTabActive } = this.props;
+    const { history, setMobileTabActive, setCurrentTabActive } = this.props;
 
     setMobileTabActive(false);
+    setCurrentTabActive(false);
     this.closePopup();
 
     return history.push("/my-account");
   };
 
   routeChangeWishlist = () => {
-    const { history, setMobileTabActive } = this.props;
+    const { history, setMobileTabActive, setCurrentTabActive } = this.props;
 
     setMobileTabActive(true);
+    setCurrentTabActive(true);
     this.closePopup();
 
     return history.push("/my-account/my-wishlist");
@@ -305,7 +323,7 @@ class MobileBottomBar extends NavigationAbstract {
     this.setState({ isAccount: location.pathname === "/my-account" });
 
     const onClickHandle = !isSignedIn
-      ? this.renderAccountPopUp
+      ? this.renderAccountMenuPopUp
       : this.routeChangeAccount;
     const sendGTMEvent = () => {
       const eventData = {

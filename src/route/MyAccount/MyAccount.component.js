@@ -82,6 +82,7 @@ export class MyAccount extends SourceMyAccount {
     isSignedIn: PropTypes.bool.isRequired,
     mobileTabActive: PropTypes.bool.isRequired,
     setMobileTabActive: PropTypes.func.isRequired,
+    setCurrentTabActive: PropTypes.func.isRequired,
   };
 
   state = {
@@ -182,9 +183,14 @@ export class MyAccount extends SourceMyAccount {
   }
 
   handleTabChange(key) {
-    const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
-
+    const {
+      changeActiveTab,
+      mobileTabActive,
+      setMobileTabActive,
+      setCurrentTabActive,
+    } = this.props;
     setMobileTabActive(!mobileTabActive);
+    setCurrentTabActive(true);
     changeActiveTab(key);
     const MoeEvent =
       key == "dashboard"
@@ -206,10 +212,16 @@ export class MyAccount extends SourceMyAccount {
   }
 
   openTabMenu() {
-    const { mobileTabActive, setMobileTabActive, history } = this.props;
+    const {
+      mobileTabActive,
+      setMobileTabActive,
+      setCurrentTabActive,
+      history,
+    } = this.props;
     // history.push("/my-account");
     history.goBack();
     setMobileTabActive(!mobileTabActive);
+    setCurrentTabActive(false);
   }
 
   handleClick(e) {
