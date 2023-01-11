@@ -354,7 +354,7 @@ class FieldMultiselect extends PureComponent {
         mods={{ UnSelectAll }}
         onClick={() => this.onDeselectAllCategory(category)}
       >
-        Unselect All
+        {__("Unselect All")}
       </div>
     );
   }
@@ -576,11 +576,11 @@ class FieldMultiselect extends PureComponent {
           type={type}
           id={"all" + initialFacetKey}
           name={initialFacetKey}
-          value={"all"}
+          value={__("all")}
           checked={checked}
         />
         <label block="PLPFilterOption" mods={{ allColor }} htmlFor={"all"}>
-          All
+          {__("All")}
           {!isMobile.any() && <span>{`(${product_count})`}</span>}
         </label>
       </li>
@@ -744,7 +744,7 @@ class FieldMultiselect extends PureComponent {
             {selected_filters_count === 0 && (
               <>
                 <li key={v4()} block="selectedListItem">
-                  All
+                  {__("All")}
                 </li>
               </>
             )}
