@@ -144,8 +144,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       : null;
     this.setState({ isLoading: true });
     sendVerificationCode({
-      mobile: phoneNumber,
-      countryCode: countryCode,
+      mobile: customerUpdatedPhone,
     }).then((response) => {
       if (response.success) {
         const sentNumber = `${countryCode}${phoneNumber}`;
@@ -171,25 +170,25 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       const mobile = customerUpdatedPhone.slice("4");
       const countryCode = customerUpdatedPhone.slice(0, "4");
       const { otp } = fields;
-      verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
+      verifyUserPhone({ mobile: customerUpdatedPhone, otp,}).then(
         (response) => {
-          if (response.success) {
-            showSuccessNotification(__("Phone was successfully verified"));
-            if (
-              updatedCustomerDetails &&
-              Object.keys(updatedCustomerDetails).length > 0
-            ) {
-              this.saveCustomer(updatedCustomerDetails);
-            }
-          } else {
-            this.setState({ isLoading: false });
-            showErrorNotification(
-              __("Wrong Verification Code. Please re-enter")
-            );
+        if (response.success) {
+          showSuccessNotification(__("Phone was successfully verified"));
+          if (
+            updatedCustomerDetails &&
+            Object.keys(updatedCustomerDetails).length > 0
+          ) {
+            this.saveCustomer(updatedCustomerDetails);
           }
-        },
-        this._handleError
-      );
+        } else {
+          this.setState({ isLoading: false });
+          showErrorNotification(
+            __("Wrong Verification Code. Please re-enter")
+          );
+        }
+      },
+      this._handleError
+    );
     }
   }
 
