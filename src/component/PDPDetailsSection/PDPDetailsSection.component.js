@@ -672,8 +672,7 @@ class PDPDetailsSection extends PureComponent {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
                 const widgetID = pdpWidgetsData[index]["type"];
-                const { data } = item;
-                if (data && data?.length > 0) {
+                if (item && item?.length > 0) {
                   return (
                     <Fragment key={index}>
                       <div
@@ -683,7 +682,7 @@ class PDPDetailsSection extends PureComponent {
                       >
                         <DynamicContentVueProductSliderContainer
                           widgetID={widgetID}
-                          products={data}
+                          products={item}
                           heading={heading}
                           isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
