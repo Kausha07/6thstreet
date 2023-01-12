@@ -41,6 +41,7 @@ import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { isArabic } from "Util/App";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -119,6 +120,7 @@ export class CartItemContainer extends PureComponent {
   state = {
     isLoading: false,
     showCartItemQuantityPopup: false,
+    isArabic: isArabic(),
   };
 
   handlers = [];
