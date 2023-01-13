@@ -23,6 +23,7 @@
         "imagemin-svgo": "^10.0.0",
         "js-sha256": "^0.9.0",
         "lerna": "^3.22.1",
+        "lottie-web": "^5.10.1",
         "node-cache": "^5.1.2",
         "normalize-scroll-left": "^0.2.1",
         "react-circular-carousel": "^1.0.4-0",

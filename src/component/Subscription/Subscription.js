@@ -6,11 +6,15 @@ import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccoun
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { EVENT_EMAIL_FOOTER_SUCCESS_CLICK } from "Util/Event";
 import InfoIcon from "./ImagesAndIcons/info.svg";
+import SendAnimation from "./ImagesAndIcons/SendAnimation.json";
+import lottie from "lottie-web";
+
 import "./Subscription.style.scss";
 
 export default function Subscription() {
   const [emailValidated, setEmailValidated] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [showSubmitText, setShowSubmitText] = useState(true);
   const [email, setEmail] = useState("");
   const isArabicValue = isArabic();
   const isEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -26,6 +30,15 @@ export default function Subscription() {
   };
 
   const dispatch = useDispatch();
+
+  function showSubmitAnimation() {
+    setShowSubmitText(false);
+    lottie.loadAnimation({
+      container: document.querySelector("#submit-subscription"),
+      animationData: SendAnimation,
+      loop: false,
+    });
+  }
 
   const HandleSubscription = async (dispatch) => {
     try {
@@ -47,6 +60,7 @@ export default function Subscription() {
             app6thstreet_platform: "Web",
             email: email || "",
           });
+          showSubmitAnimation();
         }
       } else if (response && !response.success && response.data) {
         if (typeof response.data === "string") {
@@ -85,7 +99,11 @@ export default function Subscription() {
               }
               placeholder={__("ENTER YOUR EMAIL")}
               type="email"
-              onChange={(e) => emailInputChange(e.target.value)}
+              onChange={(e) => {
+                lottie.destroy();
+                setShowSubmitText(true);
+                emailInputChange(e.target.value);
+              }}
             />
             {!!!emailValidated && email.length ? (
               <span className="errorMsg">
@@ -96,10 +114,13 @@ export default function Subscription() {
           </div>
           <button
             className="submitBtn"
-            onClick={() => HandleSubscription(dispatch)}
+            onClick={() => {
+              HandleSubscription(dispatch);
+            }}
             disabled={isSubmitDisabled}
+            id="submit-subscription"
           >
-            {__("Submit")}
+            {showSubmitText && __("Submit")}
           </button>
         </div>
       </div>
