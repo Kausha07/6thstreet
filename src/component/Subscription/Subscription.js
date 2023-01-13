@@ -10,6 +10,7 @@ import "./Subscription.style.scss";
 
 export default function Subscription() {
   const [emailValidated, setEmailValidated] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [email, setEmail] = useState("");
   const isArabicValue = isArabic();
   const isEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -20,6 +21,7 @@ export default function Subscription() {
       setEmailValidated(false);
     } else if (isEmail(email)) {
       setEmailValidated(true);
+      setIsSubmitDisabled(false);
     }
   };
 
@@ -27,6 +29,7 @@ export default function Subscription() {
 
   const HandleSubscription = async (dispatch) => {
     try {
+      setIsSubmitDisabled(true);
       const response = await subscribeToNewsletter({ email: email });
 
       if (
@@ -50,6 +53,7 @@ export default function Subscription() {
           dispatch(showNotification("error", response.data));
         }
       }
+      setIsSubmitDisabled(false);
     } catch (error) {
       if (typeof error === "string") {
         dispatch(showNotification("error", error));
@@ -93,6 +97,7 @@ export default function Subscription() {
           <button
             className="submitBtn"
             onClick={() => HandleSubscription(dispatch)}
+            disabled={isSubmitDisabled}
           >
             {__("Submit")}
           </button>
