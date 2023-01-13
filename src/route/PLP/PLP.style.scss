@@ -50,28 +50,28 @@
       .SortOverlay {
         .CommonBlock {
             left: unset !important;
-            right: 12px;
+            right: 20px;
           &:first-child {
-            right: 12px !important;
+            right: 16px !important;
             left: unset !important;
           }
           &:last-child {
             .title {
-              right: 6px !important ;
+              right: 8px !important ;
               left: unset !important;
             }
           }
           &_DualFilter {
-            right: 7px !important;
+            right: 11px !important;
             left: unset !important;
           }
           &_TripleFilter {
-            right: 3px !important;
+            right: 7px !important;
             left: unset !important;
           }
           .title{
             left: unset;
-            right: 6px !important;
+            right: 13px !important;
           }
         }
       }
@@ -103,20 +103,20 @@
     &_isFilter {
       min-width: 190px !important;
       .CommonBlock {
-        left: 12px;
+        left: 20px;
       }
     }
     &_isArabic {
       &_isFilter {
         .CommonBlock {
-          right: 12px;
+          right: 20px;
           left: unset;
         }
       }
     }
     img {
       height: 14px;
-      width: 22px;
+      width: 12px;
     }
   }
   .CommonBlock {
@@ -124,32 +124,32 @@
     justify-content: start;
     align-items: center;
     flex: 1;
-    left: 12px;
+    left: 16px;
 
     &-RefineImg {
       height: 9px !important;
-      width: 22px !important;
+      width: 16px !important;
     }
     &:first-child {
-      left: 12px;
+      left: 16px;
     }
     &:last-child {
       .title {
-        left: 6px !important ;
+        left: 8px !important ;
       }
     }
     &_DualFilter {
-      left: 7px !important;
+      left: 11px !important;
     }
     &_TripleFilter {
-      left: 3px !important;
+      left: 7px !important;
     }
     .title {
       color: #ffffff;
       font-size: 13px;
       font-weight: var(--fw-demi);
       line-height: 16px;
-      left: 6px;
+      left: 13px;
     }
   }
 
