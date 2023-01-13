@@ -3,7 +3,8 @@ import { isArabic } from "Util/App";
 import { useDispatch } from "react-redux";
 import { showNotification } from "Store/Notification/Notification.action";
 import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccount/MyAccount.enpoint";
-
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_EMAIL_FOOTER_SUCCESS_CLICK } from "Util/Event";
 import InfoIcon from "./ImagesAndIcons/info.svg";
 import "./Subscription.style.scss";
 
@@ -37,6 +38,12 @@ export default function Subscription() {
         if (typeof response.data.message === "string") {
           const messageString = response.data.message;
           dispatch(showNotification("success", messageString));
+          Moengage.track_event(EVENT_EMAIL_FOOTER_SUCCESS_CLICK, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            email: email || "",
+          });
         }
       } else if (response && !response.success && response.data) {
         if (typeof response.data === "string") {
