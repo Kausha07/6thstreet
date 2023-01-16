@@ -132,6 +132,11 @@ class HeaderTopBar extends NavigationAbstract {
   renderCmsBlock() {
     // TODO: find out what is this, render here
     let country = getCountryFromUrl();
+    const {
+      config: { countries },
+    } = this.props;
+    const isNoFreeDelivery = countries[country]?.no_free_delivery
+
     return (
       <div className="customVerticalSlider" key="cms-block">
         <div className="carouselItemInner">
@@ -144,13 +149,13 @@ class HeaderTopBar extends NavigationAbstract {
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("CLUB APPAREL REWARDS")}
           </div>
-          {country ? (
+          {isNoFreeDelivery ? (null) : (country ? (
             <div block="HeaderTopBar" elem="CmsBlock">
               {this.renderShippingInfo()}
             </div>
           ) : (
             " "
-          )}
+          ))}
           {getCountryFromUrl() === "QA" ? (
             <div block="HeaderTopBar" elem="CmsBlock">
               {__("CASH ON RECEIVING")}
