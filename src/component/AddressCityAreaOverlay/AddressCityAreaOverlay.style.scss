@@ -1,0 +1,308 @@
+.cityAreaPopup {
+    left: 0px;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    position: fixed;
+    z-index: 199;
+    background-color: rgba(0, 0, 0, 0.5);
+    .cityAreaOverlay {
+        left: 0;
+        right: 0;
+        position: fixed;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        @include mobile {
+            position: fixed;
+            top: 0;
+            transform: none;
+            width: fit-content;
+            height: fit-content;
+        }
+
+    }
+    .cityAreaPopupBlock {
+        z-index: 199;
+        z-index: 201;
+
+        max-width: 560px;
+        margin: 0 auto;
+        background: #FFFFFF;
+        padding: 30px 30px;
+        padding-top: 0;
+        overflow: hidden;
+
+        &-titleMeassage {
+            font-weight: 600;
+            width: 60vw;
+            
+            &_isOnFullScreen {
+                text-align: center;
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+        .couponItemCode {
+            color: #28D9AA !important;
+            font-family: "Avenir Next";
+            font-size: 20px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0;
+            line-height: 27px;
+            margin-bottom: 30px;
+            @include mobile {
+                margin-left: 0 !important;
+            }
+        }
+        .closePopupbtn {
+            cursor: pointer;
+            float: right;
+            padding: 0;
+            &:before {
+                content: "";
+                position: absolute;
+                top: 2px;
+                right: 5px;
+                display: inline-block;
+                padding: 1px;
+                background-image: url(/static/media/icon.12cc0c19.svg);
+                background-size: cover;
+                height: 16px;
+                width: 16px;
+            }
+            span {
+                display: none;
+            }
+            &_isArabic {
+                float: left;
+            }
+        }
+        .couponItemName {
+            color: #000000;
+            font-family: "Avenir Next";
+            font-size: 14px;
+            letter-spacing: 0;
+            line-height: 19px;
+            margin-bottom: 30px;
+            @include mobile {
+                margin-left: 0 !important;
+            }
+        }
+        .couponItemDes {
+            color: #8D8D8D;
+            font-family: "Avenir Next";
+            font-size: 14px;
+            letter-spacing: 0;
+            line-height: 19px;
+            margin-bottom: 30px;
+            white-space: pre-line;
+            @include mobile {
+                margin-left: 0 !important;
+            }
+        }
+
+        .couponItemDesLink {
+            text-decoration: underline;
+            @include mobile {
+                margin-left: 0 !important;
+            }
+        }
+
+        .couponItemDesLinkP {
+            @include mobile {
+                margin-left: 0 !important;
+            }
+        }
+
+        @include mobile {
+            margin: 0;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
+            max-height: 80vh;
+            // below code is for full screen search.....
+            &.active {
+                max-height: 100vh;
+                height: 100vh;
+            }
+            
+        }
+    }
+}
+
+.CityDrop {
+    display: block;
+    top: 10px;
+    height: auto;
+    overflow: scroll;
+    ul {
+      list-style: none;
+      text-align: center;
+      margin-top: 10px;
+      li::before {
+        content: "";
+      }
+      li {
+        display: inline-flex;
+        min-height: 42px;
+        width: 100%;
+        border-bottom: 1px solid #e6e6e6;
+        // padding: 0 40px;
+        padding: 0;
+        button {
+          display: flex;
+          margin-top: 0;
+          margin-left: 0px;
+          font-size: 13px;
+          width: 100%;
+          padding: 0;
+        }
+        button::before {
+          content: none;
+        }
+        button::after {
+          content: none;
+        }
+      }
+    }
+  }
+
+.overlayHeader {
+    position: sticky;
+    top: 0;
+    z-index:200;
+    background: white;
+    padding-top: 30px;
+    &_isOnFullScreen {
+        padding-top: 10px;
+    }
+}
+.citySearchInput {
+    padding: 9px 4px 9px 40px !important;
+    background: transparent url(./icons/search.svg) no-repeat 13px center;
+    background-color: #efefef;
+    margin-top: 20px;
+
+    ::-webkit-input-placeholder {
+        text-transform: none;
+    }
+
+    ::-webkit-input-placeholder {
+        text-transform: none;
+     }
+     
+     :-moz-placeholder { 
+        text-transform: none;
+     }
+     
+     ::-moz-placeholder {  
+        text-transform: none;
+     }
+     
+     :-ms-input-placeholder { 
+        text-transform: none;
+     }
+
+    @include mobile {
+        height: 36px !important;
+        border-radius: 10px;
+        border: none !important;
+    }
+}
+
+.CountrySwitcher {
+    &-CountryBtn {
+        text-transform: capitalize;
+
+
+    }
+
+    &_isArabic {
+        margin-right: 0px;
+        .cityAreaListLi {
+            margin-right: 0px !important;
+        }
+    }
+
+}
+
+.cityAreaListUl {
+    &_isArabic {
+        margin-right: 0px;
+        .cityAreaListLi {
+            margin-right: 0px !important;
+
+            &::before {
+                background: none !important;
+            }
+        }
+
+        .activeselectedclasa {
+            margin-right: 0px !important;
+            &::before {
+                background: none !important;
+            }
+        }
+
+        .abutton34 {
+            &::before {
+                background: none !important;
+            }
+        }
+    }
+}
+
+.abutton34 {
+    width: auto !important;
+    font-weight: var(--fw-bold) !important;
+    text-transform: capitalize;
+}
+
+.activeselectedclasa {
+    font-weight: var(--fw-bold) !important;
+    text-transform: capitalize;
+}
+
+.headerBackButton {
+    display: flex;
+    &-backButton {
+        background-image: url(/static/media/icon.b80036ae.svg);
+        width: 16px;
+        height: 22px;
+        background-size: 16px;
+        background-repeat: no-repeat;
+    }
+}
+
+
+.CartPagenewone {
+    &-BackArrow {
+        height: 19px;
+        position: absolute;
+        width: 19px;
+        z-index: 10;
+        &::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 4px;
+            transform: rotate( 135deg);
+            -webkit-transform: rotate( 135deg);
+            z-index: -9;
+            margin-top: 10px;
+        }
+        button {
+            height: 14px;
+            display: block;
+        }
+    }
+
+}
+

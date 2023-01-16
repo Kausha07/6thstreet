@@ -138,7 +138,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 selectOptions: this.getRegionsBasedOnLanguage(),
                 onChange: (regionId) => this.setState({ regionId }),
                 value: regionId,
-                placeholder: __('Area')
+                placeholder: __('Area'),
+                postCodeValue: this.state.regionId,
             }
         };
     }
@@ -259,7 +260,9 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 selectOptions: this.getCitiesBasedOnLanguage(),
                 type: 'select',
                 value: isShippingAddress ? shippingCity : city,
-                onChange: (city) => this.setState({ city, isLoading: true })
+                onChange: (city) => this.setState({ city, isLoading: true }),
+                citySelected: this.state.city,
+                popupType: "city",
             },
             ...this.getRegionFields(),
             postcode: {
