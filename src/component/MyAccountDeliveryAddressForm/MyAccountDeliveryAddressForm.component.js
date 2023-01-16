@@ -150,6 +150,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         placeholder: __("City area"),
         ...clearValue,
         onChange: this.copyValue,
+        areaSelected: this.state.area,
+        postCodeValue: this.state.postCodeValue,
       },
     };
   }
@@ -364,6 +366,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         selectOptions: this.getCitiesSelectOptions(),
         type: "select",
         onChange: this.onCityChange,
+        oncityClick: this.onCityChange,
+        citySelected: this.state.city,
+        popupType: "city",
       },
       country_id: {
         validation: ["notEmpty"],
