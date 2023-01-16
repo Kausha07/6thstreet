@@ -171,6 +171,11 @@
                     font-size: 13px;
                     font-weight: var(--fw-medium);
                 }
+                &-PriceCouponCode {
+                    font-size: 13px;
+                    font-weight: var(--fw-medium);
+                    color: #28D9AA;
+                }
             }
         }
     }
@@ -221,6 +226,221 @@
         position: absolute;
         &-Scale {
             top: 50%;
+        }
+    }
+}
+
+.wrapperCartCouponBlock {
+    .cartCouponBlock { 
+        margin: 0 18px;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+        border: 1px dashed #28D9AA;
+        border-radius: 6px;
+        background-color: #F4FFFC;
+        cursor: pointer;
+        .showCouponBtn {
+            color: #28D9AA;
+            font-family: "Avenir Next";
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0;
+            line-height: 40px;
+            text-align: center;
+            width: 100%;
+        }
+        .appliedCouponBlock {
+            padding: 10px 10px;
+            display: flex;
+            align-items: center;
+            .appliedCouponDetail {
+                .appliedCouponCode {
+                    color: #28D9AA;
+                    font-family: "Avenir Next";
+                    font-size: 13px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 18px;
+                    margin: 0 0;
+                    word-break: break-word;
+                }
+                .appliedCouponName {
+                    color: #4A4A4A;
+                    font-family: "Avenir Next";
+                    font-size: 12px;
+                    letter-spacing: 0;
+                    line-height: 16px;
+                    margin: 0 0 6px;
+                    word-wrap: break-word;
+                }
+                .appliedCouponViewBtn {
+                    height: auto;
+                    margin: 0;
+                    padding: 0;
+                    color: #4A4A4A;
+                    font-family: "Avenir Next";
+                    font-size: 12px;
+                    letter-spacing: 0;
+                    line-height: 16px;
+                    text-decoration: underline;
+                    text-transform: none;
+                    font-weight: normal;
+                }
+            }
+            .appliedCouponBtn {
+                margin-left: auto;
+                height: 34px;
+                text-transform: none;
+                cursor: pointer;
+                min-width: 80px;
+                &.remove {
+                    border-radius: 8px;
+                    background-color: #28D9AA;
+                    color: #FFFFFF;
+                    font-family: "Avenir Next";
+                    font-size: 13px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 18px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    &_isArabic {
+        .cartCouponBlock .appliedCouponBlock .appliedCouponBtn {
+            margin-left: initial;
+            margin-right: auto;
+        }
+    }
+
+    .couponPopupBlock {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: fixed;
+        z-Index: 200;
+        // overflow-Y: scroll;
+        // overflow-X: hidden;
+        background-color: rgba(0, 0, 0, 0.5);
+
+        .couponPopupContent {
+            max-width: 586px;
+            height: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin: 115px auto 80px;
+            margin-right: 0;
+            margin-top: 0;
+
+            background: #ffffff;
+            overflow: hidden;
+            // border-radius: 8px;
+            p {
+                color: #4A4A4A;
+                font-family: "Avenir Next";
+                font-size: 14px;
+                letter-spacing: 0;
+                line-height: 19px;
+                text-transform: none;
+                line-height: 19px;
+                font-weight: normal;
+                margin-left: 63px;
+            }
+
+            &_isArabic {
+                margin-left: 0;
+                margin-right: auto;
+                p {
+                    // padding-right: 10px;
+                    margin-right: 63px;
+                }
+
+                .couponInputBox{
+                    // padding-right: 10px;
+                    margin-right: 63px;
+                }
+            }
+
+            .couponInputBox{
+                width: 355px;
+                margin-left: 63px;
+                margin-top: 70px;
+                // border: 1px solid #DEDEDE;
+                @include mobile {
+                    margin-left: 0;
+                    width: auto;
+                    margin-top: 30px;
+                }
+            }
+
+            @include mobile {
+                margin: 0;
+                padding-left: 18px;
+                padding-right: 18px;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: auto;
+                max-height: 100vh;
+                // border-radius: 30px 30px 0 0;
+            }
+            .couponPopupTop {
+                color: #000000;
+                font-family: "Avenir Next";
+                font-size: 18px;
+                font-weight: 500;
+                letter-spacing: 1px;
+                line-height: 25px;
+                text-align: left;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                // padding-left: 10px;
+                padding-right: 10px;
+                letter-spacing: 2px;
+                margin-top: 39px;
+                margin-left: 63px;
+
+                @include mobile {
+                    padding-left: 0;
+                    padding-right: 0;
+                    margin-top: 29px;
+                }
+
+                &_isArabic {
+                    text-align: right;
+                    margin-right: 63px;
+                    padding-right: 0;
+                }
+
+                .closeCouponPopupBtn {
+                    cursor: pointer;
+                    float: right;
+                    @include mobile {
+                        float: left;
+                    }
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        top: 0px;
+                        right: 40px;
+                        display: inline-block;
+                        padding: 1px;
+                        background-image: url(/static/media/icon.12cc0c19.svg);
+                        background-size: cover;
+                        height: 20px;
+                        width: 20px;
+                    }
+                    // }
+                    padding: 0;
+                    span {
+                        display: none;
+                    }
+                }
+            }
         }
     }
 }

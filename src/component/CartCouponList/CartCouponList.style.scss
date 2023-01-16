@@ -6,12 +6,12 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 389px;
-    margin-left: 18px;
+    margin-left: 63px;
     padding-right: 14px;
     @include mobile {
         margin-left: 0;
         padding-right: 0;
-        max-height: 320px;
+        max-height: 100%;
     }
     &::-webkit-scrollbar {
         width: 4px;
@@ -32,11 +32,12 @@
         border: 1px dashed #28D9AA;
         border-radius: 6px;
         background-color: #F4FFFC;
+        max-width: 354px;
         &::before {
             display: none;
         }
         .couponItemBlock {
-            padding: 20px 15px;
+            padding: 15px 15px;
             display: flex;
             align-items: center;
             .couponItemDetail {
@@ -115,7 +116,40 @@
             @include desktop {
                 margin-left: initial;
                 padding-right: initial;
-                margin-right: 18px;
+                margin-right: 63px;
+                padding-left: 14px;
+            }
+            .couponListItem {
+                .couponItemBlock {
+                    .couponItemDetail {
+                        padding-left: 10px;
+                        padding-right: 0;
+                    }
+                    .couponItemBtn {
+                        margin-left: initial;
+                        margin-right: auto;
+                    }
+                }
+            }
+        }
+        .couponPopupTop .closeCouponPopupBtn {
+            float: left !important;
+            &::before {
+                left: 5px !important;
+                right: initial !important;
+            }
+        }
+    }
+}
+
+.wrapperCartCouponBlock {
+    &_isArabic {
+        .CouponLists {
+            
+            @include desktop {
+                margin-left: initial;
+                padding-right: initial;
+                margin-right: 63px;
                 padding-left: 14px;
             }
             .couponListItem {

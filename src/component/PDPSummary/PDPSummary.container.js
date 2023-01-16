@@ -23,8 +23,6 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-  getTabbyInstallment: (price) =>
-    CheckoutDispatcher.getTabbyInstallment(_dispatch, price),
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
   setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
@@ -50,6 +48,7 @@ export class PDPSummaryContainer extends PureComponent {
       addressCityData,
       estimateEddResponse,
       setEddResponse,
+      TabbyInstallment
     } = this.props;
     return {
       product,
@@ -63,12 +62,14 @@ export class PDPSummaryContainer extends PureComponent {
       addressCityData,
       estimateEddResponse,
       setEddResponse,
+      TabbyInstallment
     };
   };
 
   constructor(props) {
     super(props);
     this.getBrandDetails = this.getBrandDetails.bind(this);
+    
     this.state = {
       url_path: ""
     }

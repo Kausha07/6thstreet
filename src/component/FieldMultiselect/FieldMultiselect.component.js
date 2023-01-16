@@ -83,7 +83,7 @@ class FieldMultiselect extends PureComponent {
       showMore: false,
       showLess: false,
     };
-    this.toggelOptionList = this.toggelOptionList.bind(this);
+    this.toggleOptionList = this.toggleOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
   }
 
@@ -152,7 +152,7 @@ class FieldMultiselect extends PureComponent {
         this.filterDropdownRef &&
         !this.filterDropdownRef.current.contains(event.target)
       ) {
-        // this.onBlur();
+        this.onBlur();
       }
     }
   };
@@ -264,6 +264,7 @@ class FieldMultiselect extends PureComponent {
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
+        toggleOptionList={this.toggleOptionList}
       />
     );
   };
@@ -714,7 +715,7 @@ class FieldMultiselect extends PureComponent {
     changeActiveFilter(filter.category || filter.facet_key);
   };
 
-  toggelOptionList() {
+  toggleOptionList() {
     const { toggleOptionsList } = this.state;
 
     this.setState({
@@ -724,7 +725,7 @@ class FieldMultiselect extends PureComponent {
 
   onBlur = () => {
     // eslint-disable-next-line no-magic-numbers
-    this.toggelOptionList();
+    this.toggleOptionList();
   };
 
   renderOptionSelected() {
@@ -888,7 +889,7 @@ class FieldMultiselect extends PureComponent {
               mods: { isArabic },
             }}
             onClick={
-              isMobile.any() ? this.handleFilterChange : this.toggelOptionList
+              isMobile.any() ? this.handleFilterChange : this.toggleOptionList
             }
           >
             {placeholder}

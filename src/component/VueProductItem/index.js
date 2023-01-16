@@ -184,7 +184,7 @@ import {
         price: itemPrice,
         brand: brand_name,
         category: product_type_6s || categoryLevel,
-        varient: color || "",
+        variant: color || "",
         position: product_Position || "",
       });
       if (queryID) {

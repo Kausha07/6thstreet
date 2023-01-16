@@ -317,21 +317,39 @@ export class CartItem extends PureComponent {
       minSaleQuantity,
       maxSaleQuantity,
       handleChangeQuantity,
-      item: { qty },
+      item: { qty, row_total },
     } = this.props;
-
-    const { isArabic } = this.state;
+    if(maxSaleQuantity === 0){
+      return null;
+    }
+    const { isArabic, isNotAvailble } = this.state;
 
     const qtyList = Array.from(
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
 
+    if(row_total === 0 && qty) {
+      return (
+        <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+          <select value={qty}>
+                <option
+                  block="CartItem"
+                  elem="QuantityOption"
+                  value={qty}
+                >
+                  {qty}
+                </option>
+          </select>
+        </div>
+      );
+    }
+
     return (
       <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
         <select
           value={qty}
-          onChange={(e) => this.onQuantityChange(e.target.value)}
+          onChange={(e) => isNotAvailble ? {} : this.onQuantityChange(e.target.value)}
         >
           {qtyList.map((item, index) => {
             return (
@@ -498,6 +516,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderOOSMessage(){
+    return(
+      <span block="CartItem" elem="NotAvailable">
+      {__("Not available")}
+    </span>
+    )
+  }
+
   renderContent() {
     const {
       isLikeTable,
@@ -507,6 +533,7 @@ export class CartItem extends PureComponent {
         bundle_options,
         full_item_info: { cross_border = 0 },
         brand_name = "",
+        row_total,
       },
       intlEddResponse
     } = this.props;
@@ -529,7 +556,7 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? null : <>{this.renderProductPrice()}</>}
+        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {edd_info &&
           edd_info.is_enable &&
@@ -537,7 +564,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
-        {this.renderActions()}
+        {row_total === 0 ? null : this.renderActions()}
       </figcaption>
     );
   }

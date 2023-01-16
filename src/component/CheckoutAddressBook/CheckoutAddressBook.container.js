@@ -50,7 +50,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   };
 
   static _getDefaultAddressId(props) {
-    const { customer, isBilling } = props;
+    const { customer, isBilling, shippingAddress } = props;
     const defaultKey = isBilling ? "default_billing" : "default_shipping";
     const { [defaultKey]: defaultAddressId, addresses } = customer;
 
@@ -58,6 +58,14 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       return +defaultAddressId;
     }
     if (addresses && addresses.length) {
+      if(isBilling && shippingAddress && shippingAddress.address_id) {
+        const { address_id } = shippingAddress;
+        if(address_id){
+          return address_id;
+        }else {
+          return addresses[0].id;
+        }
+      }
       return addresses[0].id;
     }
 
@@ -66,8 +74,33 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
 
   componentDidMount() {
     const { onAddressSelect } = this.props;
-    const {selectedAddressId} = this.state
+    const { selectedAddressId } = this.state;
     onAddressSelect(selectedAddressId);
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      onAddressSelect,
+      requestCustomerData,
+      isSignedIn,
+      customer,
+      addresses,
+    } = this.props;
+    const { selectedAddressId: prevSelectedAddressId } = prevState;
+    const { selectedAddressId } = this.state;
+    if (isSignedIn && !Object.keys(customer).length) {
+      requestCustomerData();
+    }
+    if (selectedAddressId !== prevSelectedAddressId) {
+      onAddressSelect(selectedAddressId);
+      this.estimateShipping(selectedAddressId);
+    }
+    if (
+      prevProps.addresses !== addresses &&
+      addresses.length == 1 &&
+      selectedAddressId !== 0
+    ) {
+      this.estimateShipping(selectedAddressId);
+    }
   }
 
   static getDerivedStateFromProps(props, state) {

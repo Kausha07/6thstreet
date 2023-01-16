@@ -209,6 +209,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       edd_info,
       addressCityData,
       totals: { is_virtual },
+      shippingAddress,
     } = this.props;
 
     if (
@@ -223,6 +224,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       <>
         {this.renderAddressHeading()}
         <CheckoutAddressBook
+          shippingAddress={shippingAddress}
           edd_info={edd_info}
           addressCityData={addressCityData}
           addresses={addresses}
@@ -322,6 +324,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
           <Collapse isOpened={isDropdownOpen}>
             <CheckoutOrderSummary
               checkoutStep="BILLING_STEP"
+              {...this.props}
               totals={totals}
               cashOnDeliveryFee={cashOnDeliveryFee}
             />

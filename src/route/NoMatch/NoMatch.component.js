@@ -46,6 +46,7 @@ export class NoMatch extends PureComponent {
     gender: "",
     isArabic: isArabic(),
     notFoundWidgetData: [],
+    isLoading: true,
   };
 
   setLastTapItem = (item) => {
@@ -60,15 +61,20 @@ export class NoMatch extends PureComponent {
     this.cleanUpTransition();
     window.pageType = TYPE_NOTFOUND;
     this.requestNoMatchWidgetData();
-    Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
-    Moengage.track_event(EVENT_PAGE_NOT_FOUND, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      search_term: location.pathname || "",
-      app6thstreet_platform: "Web",
-    });
   }
-
+  componentDidUpdate() {
+    const { isLoading } = this.state;
+    if (isLoading) {
+      Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
+      Moengage.track_event(EVENT_PAGE_NOT_FOUND, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        search_term: location.pathname || "",
+        app6thstreet_platform: "Web",
+      });
+    }
+    this.setState({ isLoading: false });
+  }
   addTag() {
     const meta = document.createElement("meta");
     meta.name = "robots";
