@@ -21,6 +21,10 @@
         margin-right: 8px;
         border-radius: 6px;
         text-transform: none;
+
+        &:focus{
+          border: 1px solid black;
+        }
       }
       .arabicStyleInput {
         margin-right: 0px;
@@ -46,6 +50,9 @@
       font-size: 12px;
       width: 104px;
       border-radius: 6px;
+    }
+    .disabledBtn {
+      background-color: gray;
     }
   }
 }

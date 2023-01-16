@@ -23,6 +23,7 @@ export default function Subscription() {
     setEmail(email);
     if (!isEmail(email)) {
       setEmailValidated(false);
+      setIsSubmitDisabled(true);
     } else if (isEmail(email)) {
       setEmailValidated(true);
       setIsSubmitDisabled(false);
@@ -113,7 +114,7 @@ export default function Subscription() {
             ) : null}
           </div>
           <button
-            className="submitBtn"
+            className={isSubmitDisabled? "submitBtn disabledBtn" : "submitBtn"}
             onClick={() => {
               HandleSubscription(dispatch);
             }}
