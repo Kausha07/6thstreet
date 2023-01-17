@@ -14,11 +14,12 @@ export const validatePasswordMatch = ({ value }, { password }) => {
     const { current: { value: passwordValue } } = password || { current: {} };
     return value === passwordValue;
 };
+export const onlyCharacters = ({value}) => value.trim().match(/^([a-zA-Z]+\s)*[a-zA-Z]+$/);
 
 export default {
     email: {
         validate: validateEmail,
-        message: __('Email is invalid.')
+        message: __('Invalid email address')
     },
     emails: {
         validate: validateEmails,
@@ -38,11 +39,11 @@ export default {
     },
     telephone: {
         validate: validateTelephone,
-        message: __('Please verify if the phone number is correct')
+        message: __('Please ensure you input the correct mobile number')
     },
     telephoneAE: {
         validate: validateTelephoneAE,
-        message: __('Please verify if the phone number is correct')
+        message: __('Please ensure you input the correct mobile number')
     },
     notEmpty: {
         validate: isNotEmpty,
@@ -51,5 +52,9 @@ export default {
     password_match: {
         validate: validatePasswordMatch,
         message: __('Password does not match.')
+    },
+    onlyCharacters: {
+        validate: onlyCharacters,
+        message: __('This field should contain only alphabets')
     }
 };

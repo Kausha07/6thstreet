@@ -229,6 +229,7 @@ export class LiveExperienceContainer extends PureComponent {
     const livepartyId = getQueryParam("livepartyId", location);
     const cartId = getQueryParam("cartId", location);
     const token = getQueryParam("token", location);
+    const FABautoplayLiveShopping = getQueryParam("autoplayLiveShopping",location);
 
     let {
       live,
@@ -260,6 +261,7 @@ export class LiveExperienceContainer extends PureComponent {
       livepartyId,
       cartId,
       token,
+      FABautoplayLiveShopping,
     };
   };
 

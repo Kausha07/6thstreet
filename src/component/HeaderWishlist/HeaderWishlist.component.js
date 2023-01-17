@@ -4,7 +4,11 @@ import { withRouter } from "react-router";
 
 import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
-import { EVENT_MOE_WISHLIST_TAB_ICON } from "Util/Event";
+import Event, {
+  EVENT_MOE_WISHLIST_TAB_ICON,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_GTM_AUTHENTICATION,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./HeaderWishlist.style";
@@ -59,6 +63,13 @@ class HeaderWishlist extends PureComponent {
     if (!showPopup) {
       return null;
     }
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: "Wishlist",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}

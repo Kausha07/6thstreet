@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Group_157415" data-name="Group 157415" transform="translate(-18 -23)">
+    <rect id="Rectangle_25096" data-name="Rectangle 25096" width="24" height="24" transform="translate(18 23)" fill="none"/>
+    <g id="Group_157409" data-name="Group 157409" transform="translate(-944.385 10636.373)">
+      <g id="Rectangle_25095" data-name="Rectangle 25095" transform="translate(966 -10611)" fill="#fff" stroke="#000" stroke-width="0.8">
+        <rect width="14.356" height="16.89" rx="2" stroke="none"/>
+        <rect x="0.4" y="0.4" width="13.556" height="16.09" rx="1.6" fill="none"/>
+      </g>
+      <g id="Group_157408" data-name="Group 157408" transform="translate(973.338 -10603.745)">
+        <path id="shield" d="M13.425,2.96a.3.3,0,0,0-.349-.228,5.368,5.368,0,0,1-4.191-.857.294.294,0,0,0-.338,0,5.368,5.368,0,0,1-4.191.857A.295.295,0,0,0,4,3.02V7.747a5.382,5.382,0,0,0,2.239,4.366l2.3,1.653a.294.294,0,0,0,.343,0l2.3-1.653a5.382,5.382,0,0,0,2.239-4.366C13.431,3,13.429,2.98,13.425,2.96Z" transform="translate(-4 -1.821)" fill="#fff"/>
+        <path id="shield-2" data-name="shield" d="M9.834,6.611l-1.8,1.8L7.3,7.672a.295.295,0,0,0-.417.417l.943.943a.295.295,0,0,0,.417,0l2.009-2.009a.295.295,0,1,0-.421-.413ZM13.425,2.96a.3.3,0,0,0-.349-.228,5.368,5.368,0,0,1-4.191-.857.294.294,0,0,0-.338,0,5.368,5.368,0,0,1-4.191.857A.295.295,0,0,0,4,3.02V7.747a5.382,5.382,0,0,0,2.239,4.366l2.3,1.653a.294.294,0,0,0,.343,0l2.3-1.653a5.382,5.382,0,0,0,2.239-4.366V3.02A.291.291,0,0,0,13.425,2.96Zm-.583,4.787a4.792,4.792,0,0,1-1.993,3.887l-2.133,1.53L6.582,11.634A4.792,4.792,0,0,1,4.589,7.747V3.373a5.943,5.943,0,0,0,4.126-.9,5.946,5.946,0,0,0,4.126.9Z" transform="translate(-4 -1.821)" stroke="#000" stroke-width="0.2"/>
+      </g>
+      <g id="Group_157410" data-name="Group 157410" transform="translate(969.055 -10607.387)">
+        <line id="Line_547" data-name="Line 547" x2="6" fill="none" stroke="#000" stroke-linecap="round" stroke-width="0.9"/>
+        <line id="Line_548" data-name="Line 548" x2="2.445" transform="translate(0 3)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="0.9"/>
+      </g>
+    </g>
+  </g>
+</svg>

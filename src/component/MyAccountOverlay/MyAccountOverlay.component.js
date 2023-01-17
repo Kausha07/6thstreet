@@ -36,6 +36,7 @@ import {
 import BrowserDatabase from "Util/BrowserDatabase";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
+import PrivacyPolicy from "./icons/PrivacyPolicy.svg";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -119,6 +120,11 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
+    if (isMobile.any()) {
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    }
+
     // gapi.load("auth2", () => {
     //   this.authRef.current = gapi.auth2.init();
     //   this.attachSigninFunction(document.getElementById("g-signin2"));
@@ -160,6 +166,11 @@ export class MyAccountOverlay extends PureComponent {
 
   componentDidUpdate() {
     this.validateAndSendEvent();
+  }
+  componentWillUnmount() {
+    if (isMobile.any()) {
+      document.body.style.position = "";
+    }
   }
   renderMap = {
     [STATE_INITIAL_LINKS]: {
@@ -875,6 +886,12 @@ export class MyAccountOverlay extends PureComponent {
           <Link className="faq" to="/faq">
             {__("FAQs")}
           </Link>
+        </li>
+        <li block="MyAccountTabListItem PrivacyTab">
+          <div className="privacy_policy_icon">
+            <img src={PrivacyPolicy} alt="privacy-policy" />
+          </div>
+          <Link to="/privacy-policy">{__("Privacy Policy")}</Link>
         </li>
       </ul>
     );

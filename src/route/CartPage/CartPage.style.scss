@@ -757,7 +757,7 @@
             width: 100%;
         }
         .appliedCouponBlock {
-            padding: 20px 15px;
+            padding: 10px 10px;
             display: flex;
             align-items: center;
             .appliedCouponDetail {
@@ -768,7 +768,7 @@
                     font-weight: 600;
                     letter-spacing: 0;
                     line-height: 18px;
-                    margin: 0 0 6px;
+                    margin: 0 0;
                     word-break: break-word;
                 }
                 .appliedCouponName {
@@ -818,6 +818,9 @@
         .cartCouponBlock .appliedCouponBlock .appliedCouponBtn {
             margin-left: initial;
             margin-right: auto;
+            @include mobile {
+                right: 0;
+            }
         }
     }
     .couponPopupBlock {
@@ -828,14 +831,59 @@
         position: fixed;
         z-index: 9;
         background-color: rgba(0, 0, 0, 0.5);
+
         .couponPopupContent {
-            max-width: 660px;
+            max-width: 586px;
+            height: 100%;
             margin-left: auto;
             margin-right: auto;
             margin: 115px auto 80px;
+            margin-right: 0;
+            margin-top: 0;
+
             background: #ffffff;
             overflow: hidden;
-            border-radius: 8px;
+            p {
+                color: #4A4A4A;
+                font-family: "Avenir Next";
+                font-size: 14px;
+                letter-spacing: 0;
+                line-height: 19px;
+                text-transform: none;
+                line-height: 19px;
+                font-weight: normal;
+                margin-left: 63px;
+            }
+
+            &_isArabic {
+                margin-left: 0;
+                margin-right: auto;
+                p {
+                    // padding-right: 10px;
+                    margin-right: 63px;
+                }
+
+                .couponInputBox{
+                    // padding-right: 10px;
+                    margin-right: 63px;
+                    @include mobile {
+                        margin-right: 0;
+                    }
+                }
+            }
+
+            .couponInputBox{
+                width: 355px;
+                margin-left: 63px;
+                margin-top: 70px;
+                // border: 1px solid #DEDEDE;
+
+                @include mobile {
+                    margin-left: 0;
+                    width: auto;
+                    margin-top: 30px;
+                }
+            }
             @include mobile {
                 margin: 0;
                 padding-left: 18px;
@@ -845,33 +893,55 @@
                 right: 0;
                 bottom: 0;
                 overflow: auto;
-                max-height: 80vh;
-                border-radius: 30px 30px 0 0;
+                max-height: 100vh;
             }
+
             .couponPopupTop {
                 color: #000000;
                 font-family: "Avenir Next";
-                font-size: 12px;
-                font-weight: 600;
+                font-size: 18px;
+                font-weight: 500;
                 letter-spacing: 1px;
-                line-height: 50px;
-                text-align: center;
+                line-height: 25px;
+                text-align: left;
                 text-transform: uppercase;
                 margin-bottom: 10px;
-                padding-left: 10px;
                 padding-right: 10px;
+                letter-spacing: 2px;
+                margin-top: 39px;
+                margin-left: 63px;
+
                 @include mobile {
                     padding-left: 0;
                     padding-right: 0;
+                    margin-top: 29px;
+                    font-size: 14px;
+                    letter-spacing: 1px;
                 }
+
+                &_isArabic {
+                    text-align: right;
+                    margin-right: 63px;
+                    @include mobile {
+                        margin-right: 0;
+                    }
+                    padding-right: 0;
+                }
+
                 .closeCouponPopupBtn {
                     cursor: pointer;
                     float: right;
+                    @include mobile {
+                        float: left;
+                    }
                     &:before {
                         content: "";
                         position: absolute;
-                        top: 16px;
-                        right: 5px;
+                        top: 0px;
+                        right: 40px;
+                        @include mobile {
+                            right: 40px !important; 
+                        }
                         display: inline-block;
                         padding: 1px;
                         background-image: url(/static/media/icon.12cc0c19.svg);

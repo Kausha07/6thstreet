@@ -293,7 +293,7 @@ class PDPAddToCart extends PureComponent {
 
     if (
       sizeObject.sizeTypes !== undefined &&
-      sizeObject.sizeTypes.length !== 0
+      sizeObject.sizeTypes.length !== 0 && sizeObject.sizeCodes.length > 1
     ) {
       return (
         <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
@@ -452,7 +452,7 @@ class PDPAddToCart extends PureComponent {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (notifyMeEmail.length === 0 || !emailRegex.test(notifyMeEmail)) {
-      showAlertNotification(__("That looks like an invalid email address"));
+      showAlertNotification(__("Please Enter a valid Email Id"));
       return;
     }
     sendNotifyMeEmail(notifyMeEmail);

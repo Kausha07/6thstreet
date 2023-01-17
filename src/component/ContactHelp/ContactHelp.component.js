@@ -23,6 +23,8 @@ import "./ContactHelp.style";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { EVENT_PHONE, EVENT_MAIL, EVENT_MOE_CHAT } from "Util/Event";
 
+
+export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 export class ContactHelp extends PureComponent {
   static propTypes = {};
 
@@ -51,11 +53,7 @@ export class ContactHelp extends PureComponent {
       // toll_free,
     };
   }
-  chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
-    }
-  }
+
   sendEvents(event) {
     Moengage.track_event(event, {
       country: getCountryFromUrl().toUpperCase(),
@@ -88,16 +86,16 @@ export class ContactHelp extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div
-              block="IconWrapper"
-              elem="Icon"
+            <a
               onClick={() => {
-                this.chat();
                 this.sendEvents(EVENT_MOE_CHAT);
               }}
+              href={`${WHATSAPP_LINK}`}
+              target="_blank"
+              rel="noreferrer"
             >
               <Chat />
-            </div>
+            </a>
             <p block="IconWrapper" elem="IconTitle">
               {__("Live Chat")}
             </p>
@@ -150,14 +148,19 @@ export class ContactHelp extends PureComponent {
                 <Link to="/faq">{__("FAQs")}</Link>
               </button>
             </li>
-            <li block="MyAccountTabListItem">
+            <li block="MyAccountTabListItem PolicyBtn">
               <button block="MyAccountTabListItem" elem="Button" role="link">
                 <Link to="/shipping-policy">{__("Shipping Policy")}</Link>
               </button>
             </li>
-            <li block="MyAccountTabListItem">
+            <li block="MyAccountTabListItem PolicyBtn">
               <button block="MyAccountTabListItem" elem="Button" role="link">
                 <Link to="/return-information">{__("Return Policy")}</Link>
+              </button>
+            </li>
+            <li block="MyAccountTabListItem PolicyBtn">
+              <button block="MyAccountTabListItem" elem="Button" role="link">
+                <Link to="/privacy-policy">{__("Privacy Policy")}</Link>
               </button>
             </li>
           </ul>

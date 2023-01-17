@@ -1,7 +1,9 @@
 /* eslint-disable import/no-cycle, @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
+import MyAccountDispatcher, {
+  CUSTOMER,
+} from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
@@ -31,6 +33,7 @@ import {
   EVENT_GTM_TOP_NAV_CLICK,
   EVENT_GTM_CUSTOMER_SUPPORT,
   EVENT_GTM_CHECKOUT_BILLING,
+  EVENT_PAGE_LOAD,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -76,6 +79,7 @@ import AutheneticationEvent from "./events/Authentication.event";
 import TopNavigationEvent from "./events/TopNavigation.event";
 import CustomerSupportEvent from "./events/CustomerSupport.event";
 import CheckoutBillingEvent from "./events/CheckoutBilling.event";
+import PageLoadEvent from "./events/PageLoad.event";
 import Scripts from "./Scripts";
 
 /**
@@ -183,6 +187,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
+    [EVENT_PAGE_LOAD]: PageLoadEvent,
   };
 
   /**
@@ -408,12 +413,14 @@ class GoogleTagManager extends PureComponent {
    */
 
   processDataPush(event, data) {
+    const isCustomerStatus =
+      this.props.state.MyAccountReducer.isSignedIn || false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType: null,
+        UserType: isCustomerStatus ? "Logged In" : "Logged Out",
         CustomerID: null,
         PageType: null,
         SearchTerm: null,

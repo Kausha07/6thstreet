@@ -129,7 +129,7 @@ class Price extends PureComponent {
       return null;
     }
 
-    if (basePrice === specialPrice || !specialPrice) {
+    if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
       return this.renderBasePrice();
     }
     return (

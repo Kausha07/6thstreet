@@ -14,7 +14,10 @@ import "./PLP.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
 import Loader from "Component/Loader";
-
+import Event, {
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+} from "Util/Event";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -41,7 +44,7 @@ export class PLP extends PureComponent {
       let banner = JSON.parse(bannerData);
       this.setState({
         bannerData: banner,
-        circleBannerUrl: bannerUrl
+        circleBannerUrl: bannerUrl,
       });
     }
   }
@@ -51,7 +54,17 @@ export class PLP extends PureComponent {
   }
 
   showMyAccountPopup = () => {
+    const { showPopup } = this.state;
     this.setState({ showPopup: true });
+    if (showPopup) {
+      const popupEventData = {
+        name: EVENT_SIGN_IN_SCREEN_VIEWED,
+        category: "user_login",
+        action: EVENT_SIGN_IN_SCREEN_VIEWED,
+        popupSource: "Wishlist",
+      };
+      Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+    }
   };
 
   closePopup = () => {
@@ -84,7 +97,6 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-
     return <PLPFilters {...this.props} isPLPSortBy={false} />;
   }
 
@@ -105,7 +117,7 @@ export class PLP extends PureComponent {
   }
 
   renderBanner() {
-    let isFromCircleItemSlider = window.location.href.includes('plp_config');
+    let isFromCircleItemSlider = window.location.href.includes("plp_config");
 
     if (this.state.bannerData && isFromCircleItemSlider)
       return (
@@ -143,43 +155,42 @@ export class PLP extends PureComponent {
   render() {
     const { signInPopUp } = this.state;
     const { isArabic } = this.state;
-    const {pages, isLoading} = this.props;
-    if(!isLoading && (!pages["0"] || pages["0"].length === 0 || pages.undefined)){
-      return (
-        <NoMatch/>
-      )
+    const { pages, isLoading } = this.props;
+    if (
+      !isLoading &&
+      (!pages["0"] || pages["0"].length === 0 || pages.undefined)
+    ) {
+      return <NoMatch />;
     }
-    if (      
+    if (
       (pages.undefined && pages.undefined.length > 0) ||
       (pages["0"] && pages["0"].length > 0)
     ) {
-      
-    return (
-      <main block="PLP" id="plp-main-scroll-id">
-        <ContentWrapper label={__("Product List Page")}>
-          {this.renderMySignInPopup()}
-          {this.renderPLPDetails()}
-          {this.state.bannerData && this.renderBanner()}
-          {this.renderPLPWidget()}
-          <div>
-
-
-            <div block="Products" elem="Wrapper">
-              {this.renderPLPFilters()}
-              {this.renderPLPPages()}
-
+      return (
+        <main block="PLP" id="plp-main-scroll-id">
+          <ContentWrapper label={__("Product List Page")}>
+            {this.renderMySignInPopup()}
+            {this.renderPLPDetails()}
+            {this.state.bannerData && this.renderBanner()}
+            {this.renderPLPWidget()}
+            <div>
+              <div block="Products" elem="Wrapper">
+                {this.renderPLPFilters()}
+                {this.renderPLPPages()}
+              </div>
+              {!isMobile.any() && (
+                <div block="SortBy" mods={{ isArabic }}>
+                  {this.renderPLPSortBy()}
+                </div>
+              )}
             </div>
-            {
-              !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
-            }
-
-          </div>
-        </ContentWrapper>
-      </main>
-      )}
-
-      return  <Loader isLoading={isLoading} />
+          </ContentWrapper>
+        </main>
+      );
     }
+
+    return <Loader isLoading={isLoading} />;
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PLP);

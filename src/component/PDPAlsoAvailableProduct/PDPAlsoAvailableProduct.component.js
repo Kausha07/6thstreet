@@ -67,11 +67,6 @@ class PDPAlsoAvailableProduct extends PureComponent {
     );
   }
 
-  alsoAvailableClick = () => {
-    const { setIsLoading } = this.props;
-
-    setIsLoading(true);
-  };
 
   renderLink() {
     const {
@@ -89,7 +84,6 @@ class PDPAlsoAvailableProduct extends PureComponent {
     return (
       <Link
         to={linkTo}
-        onClick={this.alsoAvailableClick}
         block="PDPAlsoAvailableProduct"
         elem="Link"
       >

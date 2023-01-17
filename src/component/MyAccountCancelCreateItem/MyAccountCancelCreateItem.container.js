@@ -8,10 +8,17 @@ import {
 
 import MyAccountCancelCreateItem from './MyAccountCancelCreateItem.component';
 export class MyAccountCancelCreateItemContainer extends SourceComponent {
+
+    onQuantitySelection(quantity, itemId) {
+        const { handleChangeQuantity } = this.props
+        handleChangeQuantity(quantity, itemId)
+      }
+
     render() {
-        const { country } = this.props;
+        const { country,cancelableQty } = this.props;
         return (
             <MyAccountCancelCreateItem
+              cancelableQty={cancelableQty}
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

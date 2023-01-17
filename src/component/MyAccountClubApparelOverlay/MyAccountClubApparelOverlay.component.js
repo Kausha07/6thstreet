@@ -67,6 +67,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
     this.state = {
       selectedCountry: country,      
+      isArabic: isArabic()
     };
   }
   componentDidUpdate() {
@@ -242,6 +243,15 @@ class MyAccountClubApparelOverlay extends PureComponent {
     );
   }
 
+  onResendButtonClick() {
+    
+    const { linkAccount, phone } = this.props;
+    const fields = { phone : phone.replace("00", ""), countryPhoneCode : '' };
+    
+    linkAccount(fields);
+
+  }
+
   renderVerify() {
     const { verifyOtp, phone, error } = this.props;
     const { isButtonDisabled, otpValue } = this.state;
@@ -272,10 +282,14 @@ class MyAccountClubApparelOverlay extends PureComponent {
           >
             {__("Verify number")}
           </button>
-          <button block="MyAccountClubApparelOverlay" elem="VerifyResend">
+        </Form>
+          <button
+          block="MyAccountClubApparelOverlay" 
+          elem="VerifyResend"
+          onClick={()=>{this.onResendButtonClick()}}
+          >
             {__("Resend Verification Code")}
           </button>
-        </Form>
       </div>
     );
   }

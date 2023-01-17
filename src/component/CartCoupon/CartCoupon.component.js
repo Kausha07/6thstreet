@@ -41,6 +41,10 @@ export class CartCoupon extends SourceCartCoupon {
   handleApplyCode = async (e, couponCode) => {
     e.stopPropagation();
 
+    this.setState({
+      enteredCouponCode: "",
+    });
+
     try {
       let apiResponse =
         (await this.props.applyCouponToCart(couponCode)) || null;
@@ -107,7 +111,7 @@ export class CartCoupon extends SourceCartCoupon {
           id="couponCode"
           name="couponCode"
           value={formattedCouponValue}
-          placeholder={__("Enter a Coupon or Discount Code")}
+          placeholder={__("ENTER YOUR COUPON CODE")}
           onChange={this.handleCouponCodeChange}
           mix={{ block: "CartCoupon", elem: "Input" }}
         />
@@ -122,7 +126,7 @@ export class CartCoupon extends SourceCartCoupon {
             this.handleApplyCode(e, formattedCouponValue);
           }}
         >
-          {__("Add")}
+          {__("Apply")}
         </button>
       </>
     );
