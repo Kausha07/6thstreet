@@ -157,11 +157,16 @@ class PLPAddToCart extends PureComponent {
 
       const filteredProductKeys = Object.keys(simple_products)
         .reduce((acc, key) => {
-          const {
-            size: { eu: productSize },
-          } = simple_products[key];
-          acc.push([size_eu.indexOf(productSize), key]);
-          return acc;
+          const simpleProducts = simple_products[key];
+          if(simpleProducts && simpleProducts.size){
+            const {
+              size: { eu: productSize },
+            } = simple_products[key];
+            acc.push([size_eu.indexOf(productSize), key]);
+            return acc;
+          }else{
+            return null;
+          }
         }, [])
         .sort((a, b) => {
           if (a[0] < b[0]) {
@@ -178,7 +183,7 @@ class PLPAddToCart extends PureComponent {
         }, []);
 
       const filteredProductSizeKeys = Object.keys(
-        product.simple_products[filteredProductKeys[0]].size || {}
+        product.simple_products[filteredProductKeys[0]]?.size || {}
       );
 
       let object = {
