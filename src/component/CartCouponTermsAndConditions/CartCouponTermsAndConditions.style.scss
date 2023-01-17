@@ -24,11 +24,13 @@
     }
     .couponTermsAndConditionsPopupBlock {
         z-index: 92;
-        max-width: 450px;
+        max-width: 500px;
         margin: 0 auto;
         background: #FFFFFF;
         border-radius: 16px;
         padding: 42px 30px;
+        max-height: 80vh;
+        overflow: scroll;
         .couponTermsAndConditionsPopupTitle {
             color: #28D9AA;
             font-family: "Avenir Next";
