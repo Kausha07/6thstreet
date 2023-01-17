@@ -86,7 +86,7 @@ class PLPFilters extends PureComponent {
       if (!activeFilter) {
         return {
           isOpen: activeOverlay === "PLPFilter",
-          activeFilter: Object.keys(filters)[0],
+          activeFilter: Object.keys(filters)[1],
           activeFilters: activeFilters,
         };
       }
@@ -232,7 +232,7 @@ class PLPFilters extends PureComponent {
       }
 
       if (filter[1]) {
-        if (filter[0] === "sort" && !isMobile.any()) {
+        if (filter[0] === "sort" ) {
           return
         }
         if (isMobile.any()) {
@@ -851,8 +851,8 @@ class PLPFilters extends PureComponent {
           )}
 
           {isOpen && isMobile.any()
-            ? this.renderPopupFilters()
-            : this.renderFilterButton()}
+            && this.renderPopupFilters()
+            }
           {!isMobile.any() && (
             <form block="PLPFilters" name="filters">
               {this.renderFilters()}
