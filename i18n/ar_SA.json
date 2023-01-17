@@ -897,7 +897,7 @@
     "Load More": "تحميل المزيد",
     "Loading...": "تحميل",
     "LIVE NOW": "بث مباشر",
-    "LIVE" : "مباش",
+    "LIVE": "مباش",
     "Dispatched": "تم الإرسال",
     "In Transit": "مرحلة انتقالية",
     "Select a size up for the right fit": "يفضل اختيار مقاس أكبر لنتيجة أفضل",
@@ -1165,5 +1165,17 @@
     "You can now use the new password to access your 6thStreet account.": " يمكنك الآن استخدام كلمة المرور الجديدة لتسجيل الدخول على موقع 6ستريت",
     "Thank you": "شكراً",
     "Please enter verification code": "الرجاء إدخال رمز التحقق",
-    "To sign in and track your order": "للتسجيل وتتبع طلبك "
+    "To sign in and track your order": "للتسجيل وتتبع طلبك ",
+    "BrandBy_Huge_DiscountCMS Page": null,
+    "Colors": "الألوان",
+    "This field should contain only alphabets": null,
+    "Sort": "فرز",
+    "Filter": "تصفية",
+    "SORT BY": "صنف حسب",
+    "recommended": null,
+    "latest": null,
+    "discount": null,
+    "price_low": null,
+    "price_high": null,
+    "KNET": null
 }
