@@ -128,6 +128,7 @@ export class MyAccountOverlay extends PureComponent {
     otpAttempt: 1,
     registerDetailsEntered: false,
     emailFromCheckoutPage: null,
+    phoneInSignin: null,
   };
 
   componentDidMount() {
@@ -875,6 +876,10 @@ export class MyAccountOverlay extends PureComponent {
       return;
     }
 
+    this.setState({
+      phoneInSignin: value,
+    });
+
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
     );
@@ -1147,11 +1152,26 @@ export class MyAccountOverlay extends PureComponent {
             {isOTP && ENABLE_OTP_LOGIN && (
               <PhoneCountryCodeField
                 label={countryLabel}
-                onSelect={(value) =>
+                onSelect={(value) => {
                   this.setState({
                     countryCode: value,
-                  })
-                }
+                  });
+                  const customerCountry = Object.keys(PHONE_CODES).find(
+                    (key) => PHONE_CODES[key] === value
+                  );
+                  const validMobileLength = COUNTRY_CODES_FOR_PHONE_VALIDATION[
+                    customerCountry
+                  ]
+                    ? "9"
+                    : "8";
+                  validMobileLength == this.state.phoneInSignin.length
+                    ? this.setState({
+                        isSignInValidated: true,
+                      })
+                    : this.setState({
+                        isSignInValidated: false,
+                      });
+                }}
               />
             )}
             <Field
