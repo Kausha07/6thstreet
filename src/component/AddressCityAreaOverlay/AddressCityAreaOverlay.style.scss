@@ -186,6 +186,10 @@
     background: transparent url(./icons/search.svg) no-repeat 13px center;
     background-color: #efefef;
     margin-top: 20px;
+    &_isArabic {
+        padding: 9px 27px 9px 4px !important;
+        background: transparent url(./icons/search.svg) no-repeat right;
+    }
 
     ::-webkit-input-placeholder {
         text-transform: none;

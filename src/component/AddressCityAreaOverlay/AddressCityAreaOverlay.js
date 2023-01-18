@@ -122,10 +122,12 @@ class AddressCityAreaOverlay extends PureComponent {
     }
 
     renderCitySearch() {
+        const { isArabic } = this.state;
         return(
             <>
                 <input
                     block="citySearchInput"
+                    mods={{ isArabic }}
                     type="search"
                     value={this.state.searchInput}
                     onClick={(e) => this.addclass100vh(e)}
