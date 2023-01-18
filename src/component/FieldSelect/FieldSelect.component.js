@@ -156,7 +156,7 @@ export class FieldSelect extends SourceFieldSelect {
         
         return (
 
-            isMobile ? (
+            isMobile && (popupType === "city" || popupType === "area") ? (
                 <>
                     {showCityPopup ? (
                         <AddressCityAreaOverlay 

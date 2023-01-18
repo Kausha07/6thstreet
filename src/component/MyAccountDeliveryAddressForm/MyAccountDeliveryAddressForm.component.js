@@ -152,6 +152,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         onChange: this.copyValue,
         areaSelected: this.state.area,
         postCodeValue: this.state.postCodeValue,
+        popupType: "area",
       },
     };
   }

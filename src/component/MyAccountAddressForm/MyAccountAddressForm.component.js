@@ -140,6 +140,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 value: regionId,
                 placeholder: __('Area'),
                 postCodeValue: this.state.regionId,
+                popupType: "area",
             }
         };
     }
