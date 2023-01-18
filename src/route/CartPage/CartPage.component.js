@@ -828,6 +828,7 @@ export class CartPage extends PureComponent {
         elem="Slider"
         mods={{ largeScreen: width > 1440 }}
       >
+        <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
         <DynamicContentVueProductSliderContainer
           widgetID={"vue_recently_viewed_slider"}
           heading={ __("Recently Viewed")}
@@ -849,6 +850,7 @@ export class CartPage extends PureComponent {
     document.body.style.overflowX = "hidden";
     return (
       <>
+      <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
       <h2 class="cartAlsoLikeHeading">{__("You May Also Like")}</h2>
       <div block="PLPPage">
         <ul block="ProductItems">
@@ -970,13 +972,11 @@ export class CartPage extends PureComponent {
           {this.renderMySignInPopup()}
           {this.renderHeading()}
           {this.renderEmptyCartPageForMobile()}
-          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
               ? this.renderRecentlyViewSlider()
               : null}
           </div>
-          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
           <div className="PDPWidgets-cart">
             {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
@@ -1018,13 +1018,13 @@ export class CartPage extends PureComponent {
             {this.renderMySignInPopup()}
             {this.renderHeading()}
             {this.renderEmptyCartPageForMobile()}
-            <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
+       
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
                 ? this.renderRecentlyViewSlider()
                 : null}
             </div>
-            <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
+            
             <div className="PDPWidgets-cart">
             {youMayAlsoLikeData.length !== 0
               ? this.renderYouMayAlsoLikeSlider()
