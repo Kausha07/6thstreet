@@ -132,7 +132,7 @@ class AddressCityAreaOverlay extends PureComponent {
                     onChange={(e) => this.handleSearchChange(e)}
                     onFocus={(e) => this.handleOnFocus(e)}
                     autoComplete="off"
-                    placeholder="Search..."
+                    placeholder={ __("Search...") }
                 />
             </>
         )
