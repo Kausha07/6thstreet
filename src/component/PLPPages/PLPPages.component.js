@@ -163,12 +163,14 @@ class PLPPages extends PureComponent {
     const categoryLevelName = "categories.level1";
     const genderName = "gender";
     const CategoryName = "categories_without_path";
+    const sortName = "sort";
     const removedFilter = [
       brandsCategoryName,
       categoryLevelName,
       genderName,
       CategoryName,
       stockName,
+      sortName
     ];
     const sizeOptions = ['size_eu','size_uk','size_us']
     const options = this.getRequestOptions()
@@ -194,6 +196,7 @@ class PLPPages extends PureComponent {
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
     const inlineFilterList = this.getInlineFilterList(filters);
+    
     const keyLabel = {
       discount: __("Discount"),
       colorfamily: __("Colours"),
@@ -201,6 +204,7 @@ class PLPPages extends PureComponent {
       sort: __("Sort by"),
       age: __("Age"),
     };
+
     const requiredPages =
       pages && pages.length > 0 && pages[0].products.length > 9;
     const filterIndex = index === 0 || !requiredPages ? null : index;

@@ -6,6 +6,7 @@ import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
 import Loader from "Component/Loader";
 import "./SearchPage.style";
+import "../PLP/PLP.style";
 
 import NoMatch from "Route/NoMatch";
 
@@ -34,7 +35,7 @@ class SearchPage extends PLP {
       options: { q },
       pages,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic,isSortByOverlayOpen } = this.state;
     // if (isLoading) {
     //   return (
     //     <>
@@ -60,14 +61,20 @@ class SearchPage extends PLP {
               {this.renderMySignInPopup()}
               {this.renderPLPDetails()}
               {this.state.bannerData && this.renderBanner()}
+              {isMobile.any() && this.renderSortFilterOverlay()}
+              {isMobile.any() &&
+                isSortByOverlayOpen &&
+                this.renderSortByOverlay()}
               <div>
                 <div block="Products" elem="Wrapper">
                   {this.renderPLPFilters()}
                   {this.renderPLPPages()}
                 </div>
-                {
-                  !isMobile.any() && <div block="SortBy" mods={{ isArabic }}>{this.renderPLPSortBy()}</div>
-                }
+                {!isMobile.any() && (
+                  <div block="SortBy" mods={{ isArabic }}>
+                    {this.renderPLPSortBy()}
+                  </div>
+                )}
               </div>
               {this.renderSearchNotFound()}
             </ContentWrapper>

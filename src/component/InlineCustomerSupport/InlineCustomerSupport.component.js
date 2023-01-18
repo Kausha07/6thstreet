@@ -18,6 +18,7 @@ import Event, {
 } from "Util/Event";
 import Loader from "Component/Loader";
 import "./InlineCustomerSupport.style";
+import { getCountryFromUrl } from "Util/Url/Url";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -181,7 +182,7 @@ class InlineCustomerSupport extends PureComponent {
     const { isExpanded, isArabic } = this.state;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
-
+    const countryCode = getCountryFromUrl();
     const rootURL = this.getRootURL() || "";
     const changeRoute = (url) => {
       this.setState({ isLoad: true });
@@ -284,7 +285,7 @@ class InlineCustomerSupport extends PureComponent {
                   }}
                   //to={`${rootURL}/shipping-policy`}
                 >
-                  {__("Free Delivery on min. order")}
+                  {countryCode === "KW"? __("Shipping Policy") : __("Free Delivery on min. order")}
                 </button>
               </div>
             </div>

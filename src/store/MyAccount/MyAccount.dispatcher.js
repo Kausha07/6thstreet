@@ -95,6 +95,71 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     return { finalArea, finalCity };
   };
+  setEDDresultData = (response, finalRes, dispatch, login) => {
+    if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+      const defaultShippingAddress = Object.values(response.data).filter(
+        (address) => {
+          return address.default_shipping === true;
+        }
+      );
+      if (
+        defaultShippingAddress &&
+        Object.values(defaultShippingAddress).length > 0
+      ) {
+        const { country_code, city, area } = defaultShippingAddress[0];
+        const { finalCity, finalArea } = this.getArabicCityArea(
+          city,
+          area,
+          finalRes
+        );
+        let request = {
+          country: country_code,
+          city: isArabic() ? finalCity : city,
+          area: isArabic() ? finalArea : area,
+          courier: null,
+          source: null,
+        };
+        this.estimateDefaultEddResponse(dispatch, request);
+        dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      } else if (sessionStorage.getItem("EddAddressReq")) {
+        const response = sessionStorage.getItem("EddAddressRes")
+          ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+          : null;
+        const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+        dispatch(setEddResponse(response, request));
+      } else {
+        if (!login) {
+          const { country_code, city, area } = response.data[0];
+          const { finalCity, finalArea } = this.getArabicCityArea(
+            city,
+            area,
+            finalRes
+          );
+          let request = {
+            country: country_code,
+            city: isArabic() ? finalCity : city,
+            area: isArabic() ? finalArea : area,
+            courier: null,
+            source: null,
+          };
+          this.estimateDefaultEddResponse(dispatch, request);
+        } else {
+          dispatch(setEddResponse(null, null));
+          dispatch(setCustomerDefaultShippingAddress(null));
+        }
+      }
+    } else if (sessionStorage.getItem("EddAddressReq")) {
+      const response = sessionStorage.getItem("EddAddressRes")
+        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+        : null;
+      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      dispatch(setEddResponse(response, request));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    } else {
+      dispatch(setEddResponse(null, null));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    }
+  };
   requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     const {
@@ -102,58 +167,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     } = getStore().getState();
     getShippingAddresses().then(async (response) => {
       if (response.data) {
-        let finalRes = addressCityData;
-        if (Object.values(response.data).length > 0 && finalRes.length > 0) {
-          const defaultShippingAddress = Object.values(response.data).filter(
-            (address) => {
-              return address.default_shipping === true;
-            },
-          );
-          if (
-            defaultShippingAddress &&
-            Object.values(defaultShippingAddress).length > 0
-          ) {
-            const { country_code, city, area } = defaultShippingAddress[0];
-            const { finalCity, finalArea } = this.getArabicCityArea(
-              city,
-              area,
-              finalRes,
-            );
-            let request = {
-              country: country_code,
-              city: isArabic() ? finalCity : city,
-              area: isArabic() ? finalArea : area,
-              courier: null,
-              source: null,
-            };
-            this.estimateDefaultEddResponse(dispatch, request);
-            dispatch(
-              setCustomerDefaultShippingAddress(defaultShippingAddress[0]),
-            );
-          } else {
-            if (!login) {
-              const { country_code, city, area } = response.data[0];
-              const { finalCity, finalArea } = this.getArabicCityArea(
-                city,
-                area,
-                finalRes,
-              );
-              let request = {
-                country: country_code,
-                city: isArabic() ? finalCity : city,
-                area: isArabic() ? finalArea : area,
-                courier: null,
-                source: null,
-              };
-              this.estimateDefaultEddResponse(dispatch, request);
-            } else {
-              dispatch(setEddResponse(null, null));
-              dispatch(setCustomerDefaultShippingAddress(null));
-            }
-          }
+        if (addressCityData.length === 0) {
+          AppConfigDispatcher.getCities().then((resp) => {
+            this.setEDDresultData(response, resp.data, dispatch, login);
+          });
         } else {
-          dispatch(setEddResponse(null, null));
-          dispatch(setCustomerDefaultShippingAddress(null));
+          this.setEDDresultData(response, addressCityData, dispatch, login);
         }
         dispatch(setCustomerAddressData(response.data));
         dispatch(setAddressLoader(false));
