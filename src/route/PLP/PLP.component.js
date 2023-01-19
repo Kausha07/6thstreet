@@ -9,7 +9,6 @@ import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-// import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
@@ -60,18 +59,27 @@ export class PLP extends PureComponent {
   }
 
   getContent = async () => {
-    try {
-      const resp = await CDN.get(
-        "resources/20191010_staging/pages/plp_footer_content.json"
-      );
-      if (resp) {
-        this.setState({
-          footerContent: resp,
-        });
+    const pagePathName = new URL(window.location.href).pathname;
+    const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+    const contentCategory = getCategoryLevel && getCategoryLevel !== "all" ? getCategoryLevel[0] : null;
+    if(contentCategory){
+      try {
+        const resp = await CDN.get(
+          `resources/20191010_staging/pages/plp_footer_${contentCategory}.json`
+        );
+        if (resp) {
+          this.setState({
+            footerContent: resp,
+          });
+        }
+      } catch (e) {
+        Logger.log(e);
       }
-    } catch (e) {
-      Logger.log(e);
     }
+    
   };
 
   handleClick() {
@@ -179,6 +187,7 @@ export class PLP extends PureComponent {
     );
   };
 
+
   renderFooterContent() {
     const { footerContent, isArabic, isToggleOn } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
@@ -187,48 +196,44 @@ export class PLP extends PureComponent {
         .split(".html")[0]
         .substring(1)
         .split("/");
-        if (getCategoryLevel.length > 1) {
-          const footerHtml =
-            getCategoryLevel.length == 2
-              ? footerContent.data?.[0]?.[getCategoryLevel[0]]?.[
-                  getCategoryLevel[1]
-                ]
-              : getCategoryLevel.length == 3
-              ? footerContent.data?.[0]?.[getCategoryLevel[0]]?.[
-                  getCategoryLevel[1]
-                ]?.[getCategoryLevel[2]]
-              : null;
-          const contentDescription = isArabic
-            ? "descriptionAR"
-            : "descriptionEN";
-          if (footerHtml && footerHtml?.[contentDescription]) {
-            return (
-              <>
-                <div className="PLP-FooterWrapper">
-                  <div
-                    className={
-                      isToggleOn
-                        ? "PLP-FooterContainer loadMore"
-                        : "PLP-FooterContainer loadLess"
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html: footerHtml?.[contentDescription],
-                    }}
-                  />
-                  {footerHtml?.[contentDescription].length > 180 ? (
-                    <div className="loadMoreBtn">
-                      <button onClick={this.handleClick}>
-                        {isToggleOn ? "Read more" : "Read less"}
-                      </button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </>
-            );
-          }
+      if (getCategoryLevel.length > 1) {
+        const footerHtml =
+          getCategoryLevel.length == 2
+            ? footerContent.data?.[0]?.[getCategoryLevel[1]]
+            : getCategoryLevel.length == 3
+            ? footerContent.data?.[0]?.[
+                getCategoryLevel[1]
+              ]?.[getCategoryLevel[2]]
+            : null;
+        const contentDescription = isArabic ? "ar" : "en";
+        if (footerHtml && footerHtml?.[contentDescription]) {
+          return (
+            <>
+              <div block="PLP-FooterWrapper" mods={{isArabic}}>
+                <div
+                  className={
+                    isToggleOn
+                      ? "PLP-FooterContainer loadMore"
+                      : "PLP-FooterContainer loadLess"
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: footerHtml?.[contentDescription],
+                  }}
+                />
+                {footerHtml?.[contentDescription].length > 180 ? (
+                  <div className="loadMoreBtn">
+                    <button onClick={this.handleClick}>
+                      {isToggleOn ? __("Read more") : __("Read less")}
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          );
         }
+      }
     }
   }
 
