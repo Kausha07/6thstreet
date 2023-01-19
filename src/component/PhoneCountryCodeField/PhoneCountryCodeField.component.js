@@ -65,17 +65,17 @@ class PhoneCountryCodeField extends PureComponent {
         const value = this.renderCurrentPhoneCode(selectedCountry);
 
         const countries = Object.keys(PHONE_CODES);
-
+        const { countryCode, currentPhoneCodeCountry } = this.props;
         return (
             <div block="PhoneCountryCodeField" mods={ { isArabic } }>
-                <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
+                <CountryMiniFlag mods={ { isArabic } } label={ currentPhoneCodeCountry || selectedCountry } />
                 <Field
                   type="select"
                   id="countryPhoneCode"
                   name="countryPhoneCode"
                   onChange={ this.handleSelectChange }
                   selectOptions={ countries.map(this.renderOption) }
-                  value={ value || '' }
+                  value={ countryCode || value || '' }
                 />
             </div>
         );
