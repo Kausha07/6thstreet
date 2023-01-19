@@ -122,6 +122,7 @@ export class MyAccountOverlay extends PureComponent {
   componentDidMount() {
     if (isMobile.any()) {
       document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     }
 
     // gapi.load("auth2", () => {

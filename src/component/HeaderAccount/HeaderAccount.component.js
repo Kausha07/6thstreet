@@ -89,7 +89,7 @@ class HeaderAccount extends PureComponent {
   };
 
   renderMyAccountPopup() {
-    const { isSignedIn } = this.props;
+    const { isSignedIn, showMySignInPopUp } = this.props;
     const { showPopup, showPopupSignedIn } = this.state;
 
     if (!showPopup) {
@@ -105,8 +105,18 @@ class HeaderAccount extends PureComponent {
         </ClickOutside>
       );
     }
+    if(showMySignInPopUp){
+      return (
+        <MyAccountOverlay
+          closePopup={this.closePopup}
+          onSignIn={this.onSignIn}
+          isPopup
+        />
+      );
+    }
     return (
       <MyAccountOverlay
+        showMyAccountMenuPopUp={true}
         closePopup={this.closePopup}
         onSignIn={this.onSignIn}
         isPopup

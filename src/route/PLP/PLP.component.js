@@ -7,9 +7,12 @@ import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
-import { PureComponent } from "react";
+import { PureComponent, createRef } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
+// import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
+import { PLPContainer } from "./PLP.container";
 import "./PLP.style";
+import "../../component/CartCouponDetail/CartCouponDetail.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
 import Loader from "Component/Loader";
@@ -19,6 +22,9 @@ import Event, {
 } from "Util/Event";
 import Logger from "Util/Logger";
 import CDN from "../../util/API/provider/CDN";
+import sort from "./icons/sort.svg";
+import refine from "./icons/refine.svg";
+import Line from "./icons/Line.svg";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -37,9 +43,20 @@ export class PLP extends PureComponent {
       isArabic: isArabic(),
       footerContent: {},
       isToggleOn: true,
+      isSortByOverlayOpen: false,
+      selectedSortOption : 'recommended'
     };
-    this.getContent();
-    this.handleClick = this.handleClick.bind(this);
+    this.sortByOverlay = createRef();
+  }
+
+  static getDerivedStateFromProps(props) {
+    const { filters = {} } = props;
+    if (isMobile.any() && filters['sort']) {
+      const selectedFilter = Object.values(filters['sort'].data).filter(({is_selected}) => is_selected)
+        return {
+          selectedSortOption: selectedFilter.length > 0 ? selectedFilter[0].facet_value : 'recommended'
+        };
+    }
   }
 
   componentDidMount() {
@@ -52,9 +69,11 @@ export class PLP extends PureComponent {
         circleBannerUrl: bannerUrl,
       });
     }
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
   componentWillUnmount() {
     const { resetPLPData } = this.props;
+    window.removeEventListener("mousedown", this.outsideCouponPopupClick);
     // resetPLPData();
   }
 
@@ -126,13 +145,21 @@ export class PLP extends PureComponent {
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
+  resetSortData = () => {
+    if(isMobile.any()){
+      this.setState({
+        isSortByOverlayOpen : false,
+        selectedSortOption : 'recommended'
+      })
+    }
+  }
 
   renderPLPDetails() {
     return <PLPDetails {...this.props} />;
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} resetSortData={this.resetSortData} />;
   }
 
   renderPLPSortBy() {
@@ -187,7 +214,6 @@ export class PLP extends PureComponent {
     );
   };
 
-
   renderFooterContent() {
     const { footerContent, isArabic, isToggleOn } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
@@ -236,10 +262,163 @@ export class PLP extends PureComponent {
       }
     }
   }
+  
+  showCouponDetial = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isSortByOverlayOpen: true,
+    });
+
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  };
+
+  handleFilterClick = () => {
+    const { showOverlay } = this.props;
+    showOverlay("PLPFilter");
+  };
+
+  outsideCouponPopupClick = (e) => {
+    if (
+      this.state.isSortByOverlayOpen &&
+      this.sortByOverlay.current &&
+      !this.sortByOverlay.current.contains(e.target)
+    ) {
+      this.setState({
+        isSortByOverlayOpen: false,
+      });
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  };
+
+  getActiveFilter = () => {
+    const newActiveFilters = Object.entries(this.props.filters).reduce(
+      (acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
+
+          if (selected_filters_count !== 0) {
+            if (filter[0] === "sizes") {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  this.props
+                );
+
+                acc = { ...acc, [size[0]]: mappedSizeData };
+
+                return acc;
+              }, []);
+
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+              };
+            }
+          }
+
+          return acc;
+        }
+      },
+      {}
+    );
+    return newActiveFilters;
+  };
+
+  getFilterCount() {
+    // const { activeFilters = {} } = this.props;
+    let activeFilters = this.getActiveFilter();
+    let { count } = activeFilters
+      ? Object.entries(activeFilters).reduce(
+        (prev, [_key, value]) => ({
+          count: prev.count + value.length,
+        }),
+        { count: 0 }
+      )
+      : { count: 0 };
+    Object.keys(activeFilters).length > 0 &&
+      Object.keys(activeFilters).map((key) => {
+        if (key === "categories.level1") {
+          count = count - 1;
+        }
+      });
+    const displayCount = count;
+    return displayCount;
+  }
+
+  renderSortFilterOverlay = () => {
+    const { isArabic } = this.state;
+    const filterCount = this.getFilterCount();
+    const isFilter =  filterCount === 0
+    const DualFilter = filterCount.toString().length === 2
+    const TripleFilter = filterCount.toString().length === 3
+    return (
+      <div block = "SortContainer" mods={{isArabic}}>
+      <div block="SortOverlay" mods={{isFilter}}>
+        <div block="CommonBlock" onClick={(e) => this.showCouponDetial(e)}>
+          <img src={sort} alt="sort" />
+          <span block="title">{__("Sort")}</span>
+        </div>
+        <div block="SortOverlay" elem="CenterLine">
+          <img src={Line} alt="line" />
+        </div>
+        <div block="CommonBlock" mods={{DualFilter,TripleFilter}} onClick={()=> this.handleFilterClick()}>
+          <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
+          <span block="title">{__("Filter")}{" "}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
+        </div>
+      </div>
+      </div>
+    );
+  };
+
+  renderSortByOverlay = () => {
+    const {filters, handleCallback} = this.props
+    const {selectedSortOption, isArabic} = this.state
+    return (
+      <div block="couponDetailPopup" mods={{isArabic}}>
+        <div block="couponDetailOverlay">
+          <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
+            <p block="couponItemCode">
+              {__("SORT BY")}
+            </p>
+            {filters && Object.values(filters['sort'].data).map((filter,index)=>{
+              const {facet_value, facet_key, label, is_selected} = filter
+                return (
+                  <>
+                    <p
+                      block="couponItemName"
+                      mix = {{block :"couponItemName",elem : (is_selected || selectedSortOption === facet_value) ? "SortSelected" : ""}}
+                      id={facet_value + facet_key}
+                      name={facet_key}
+                      value={facet_value}
+                      onClick={() => {
+                        this.setState({
+                          selectedSortOption: facet_value,
+                          isSortByOverlayOpen:false
+                        },()=>{
+                          handleCallback(facet_key, facet_value, true, true)
+                        })
+                      }}
+                    >
+                      {label}
+                    </p>
+                    <hr />
+                  </>
+                );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   render() {
-    const { signInPopUp } = this.state;
-    const { isArabic } = this.state;
+    const { isArabic, isSortByOverlayOpen } = this.state;
     const { pages, isLoading } = this.props;
     if (
       !isLoading &&
@@ -258,6 +437,10 @@ export class PLP extends PureComponent {
             {this.renderPLPDetails()}
             {this.state.bannerData && this.renderBanner()}
             {this.renderPLPWidget()}
+            {isMobile.any() && this.renderSortFilterOverlay()}
+            {isMobile.any() &&
+              isSortByOverlayOpen &&
+              this.renderSortByOverlay()}
             <div>
               <div block="Products" elem="Wrapper">
                 {this.renderPLPFilters()}
