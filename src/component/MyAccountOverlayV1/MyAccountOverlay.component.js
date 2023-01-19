@@ -484,6 +484,7 @@ export class MyAccountOverlay extends PureComponent {
         emailFromCheckoutPage: null,
       });
     }
+    this.setState({ phoneInSignin: false });
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <MyAccountAutoDetectOTP updateOTP={updateOTP} />
