@@ -1,35 +1,25 @@
 import { searchParams } from "./config";
-
+import { getIndex } from "./utils";
 export default function getBrands(gender = "", options = {}) {
-  const { index } = options;
+  const { index, client, env } = options;
+  let indexName = getIndex("en-ae", env);
+
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
-    newSearchParams.hitsPerPage = 0;
-    newSearchParams.facets = ["brand_name", "url"];
-    newSearchParams.facetFilters = [[`gender: ${gender}`]];
-
-    index.search({ query: "", ...newSearchParams }, (err, data = {}) => {
+    const queries = [];
+    queries.push({
+      indexName:indexName,
+      params: {
+        ...newSearchParams,
+        facetFilters: [[`gender: ${gender}`],[`in_stock:1`]],
+      },
+    });
+    client.search(queries, (err, res = {}) => {
+      const brands = res?.results[0]?.facets["brand_name"]
       if (err) {
         return reject(err);
       }
-      const brandNamesObj = data.facets.brand_name;
-      let brands = [];
-
-      if (!brandNamesObj) {
-        return resolve({ data: brands });
-      }
-
-      Object.keys(brandNamesObj).forEach((item) => {
-        brands = [
-          ...brands,
-          {
-            name: item,
-            count: brandNamesObj[item],
-          },
-        ];
-      });
-
-      return resolve({ data: brands });
-    });
+      return resolve({ data: Object.keys(brands) });
+    })
   });
 }

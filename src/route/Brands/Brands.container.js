@@ -61,7 +61,7 @@ class BrandsContainer extends PureComponent {
     brandMapping: [],
     isArabic: isArabic(),
     type: "",
-    brandWidgetData: []
+    brandWidgetData: [],
   };
 
   containerFunctions = {
@@ -101,7 +101,6 @@ class BrandsContainer extends PureComponent {
     const genderTab = isArabic ? this.getGenderInAR(brandType) : brandType;
 
     //this.requestBrandMapping();
-    //this.requestBrands(brandType);
     this.setState({ type: genderTab });
     this.requestShopByBrandWidgetData(brandType);
     this.requestShopbyBrands(brandType);
@@ -124,7 +123,7 @@ class BrandsContainer extends PureComponent {
     const { isArabic } = this.state;
     let gender = brandType;
     if (brandType == "") {
-      gender = "all"
+      gender = "all";
     }
     const devicePrefix = this.getDevicePrefix();
     if (gender) {
@@ -152,11 +151,9 @@ class BrandsContainer extends PureComponent {
       .then((response) => response.json())
       .then((data) => {
         let ret = {};
-        this.setState(
-          {
-            brandMapping: data.brands,
-          }
-        );
+        this.setState({
+          brandMapping: data.brands,
+        });
       });
   }
 
@@ -193,7 +190,6 @@ class BrandsContainer extends PureComponent {
     // setQueryParams({ type: brandType }, location, history);
     // this.requestBrands(genderType);
 
-
     let gender = isArabic ? this.getGenderInEn(brandType) : brandType;
     gender
       ? history.push(`/${gender}/shop-by-brands`)
@@ -203,14 +199,15 @@ class BrandsContainer extends PureComponent {
     this.setState({ type: brandType });
   }
 
-  async requestShopbyBrands(brandType = "") {
+  async requestShopbyBrands(gender) {
     try {
+      const activeBrandsList = await this.requestBrands(gender);
+
       const brandResponse = await new Algolia({
         index: "brands_info",
       }).getShopByBrands({
         query: "",
-        limit: 800,
-        gender: brandType
+        limit: 800
       });
       let totalBrands = [];
       brandResponse.map((brand) => {
@@ -234,8 +231,24 @@ class BrandsContainer extends PureComponent {
           }
         }
       );
+      const activeBrands = []
+      sortedBrands.map((data) => {
+        let filteredbrand = []
+        let combinedArr = []
+        Object.values(data[1]).filter((brand) => {
+          const {name} = brand
+          if(activeBrandsList.includes(name)){
+            filteredbrand.push(brand);
+          }
+        });
+        if(filteredbrand.length > 0){
+          combinedArr.push(data[0])
+          combinedArr.push(filteredbrand)
+          activeBrands.push(combinedArr)
+        }
+      });
       this.setState({
-        brands: sortedBrands,
+        brands: activeBrands,
         isLoading: false,
       });
     } catch (e) {
@@ -244,31 +257,13 @@ class BrandsContainer extends PureComponent {
     }
   }
 
-  requestBrands(brandType = "") {
+  async requestBrands(gender) {
     const { showErrorNotification } = this.props;
     this.setState({ isLoading: true });
-    this._brandRequest = new Algolia()
-      .getBrands(brandType)
+    return new Algolia()
+      .getBrands(gender)
       .then((data) => {
-        const groupedBrands = groupByName(data) || {};
-        // This sort places numeric brands to the end of the list
-        const sortedBrands = Object.entries(groupedBrands).sort(
-          ([letter1], [letter2]) => {
-            if (letter1 === "0-9") {
-              return 1;
-            }
-
-            if (letter2 === "0-9") {
-              return -1;
-            }
-
-            return letter1 - letter2;
-          }
-        );
-        this.setState({
-          brands: sortedBrands,
-          isLoading: false,
-        });
+        return data;
       })
       .catch((error) => showErrorNotification(error));
   }
@@ -286,7 +281,7 @@ class BrandsContainer extends PureComponent {
       isLoading,
       brandMapping,
       type,
-      brandWidgetData
+      brandWidgetData,
     };
   };
 
@@ -295,35 +290,38 @@ class BrandsContainer extends PureComponent {
     setMeta({
       title: __("Brands | 6thStreet"),
       keywords: __("brands"),
-      description: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-        ),
+      description:
+        getCountryFromUrl() === "QA"
+          ? __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
+            )
+          : __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+            ),
       twitter_title: __("Brands | 6thStreet"),
-      twitter_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-        ),
+      twitter_desc:
+        getCountryFromUrl() === "QA"
+          ? __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
+            )
+          : __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+            ),
       og_title: __("Brands | 6thStreet"),
-      og_desc: getCountryFromUrl() === 'QA' ? __(
-        // eslint-disable-next-line max-len
-        "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
-      )
-        :
-        __(
-          // eslint-disable-next-line max-len
-          "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
-        ),
+      og_desc:
+        getCountryFromUrl() === "QA"
+          ? __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free Receiving ✯ Cash On Receiving ✯ 100% original brands | 6thStreet."
+            )
+          : __(
+              // eslint-disable-next-line max-len
+              "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+            ),
     });
   }
 
