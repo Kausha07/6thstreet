@@ -7,6 +7,7 @@
     font-size: 14px;
     font-family: "Avenir Next";
     letter-spacing: -0.35px;
+    font-weight: 500;
   }
 
   .formContainer {
@@ -32,13 +33,14 @@
       }
       .errorMsg {
         padding-top: 10px;
+        display: flex;
+        gap: 3px;
+        color: red;
+        font-size: 13px;
         .infoIcon {
-          padding-top: 4px;
           width: 14px;
           height: 14px;
         }
-        color: red;
-        font-size: 13px;
       }
     }
 
@@ -50,6 +52,7 @@
       font-size: 12px;
       width: 104px;
       border-radius: 6px;
+      padding: 10px;
     }
     .disabledBtn {
       background-color: gray;
