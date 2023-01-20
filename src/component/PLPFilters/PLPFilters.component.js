@@ -826,9 +826,7 @@ class PLPFilters extends PureComponent {
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>
             {count ? __("Results for ") : null}
-            {count && !category_title ? (
-              "Available Products"
-            ) : (
+            {count && !category_title ? __("Available Products") : (
                 <h1 className="categoryTitle">{__(category_title)}</h1>
               )}
           </div>
@@ -866,9 +864,7 @@ class PLPFilters extends PureComponent {
               <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
                 <span>{count}</span>
                 {count ? __("Results for ") : null}
-                {count && !category_title ? (
-                  "Available Products"
-                ) : (
+                {count && !category_title ? __("Available Products") : (
                     <h1 className="categoryTitle">{__(category_title)}</h1>
                   )}
               </div>
