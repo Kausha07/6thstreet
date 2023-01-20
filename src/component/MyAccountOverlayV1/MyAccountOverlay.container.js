@@ -167,7 +167,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {...this.redirectOrGetState(props), validateCaptcha:false};
+    this.state = this.redirectOrGetState(props);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -808,7 +808,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     const { setHeaderState } = this.props;
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();
-    this.setState({ state: STATE_SIGN_IN, validateCaptcha : false });
+    this.setState({ state: STATE_SIGN_IN });
 
     setHeaderState({
       name: CUSTOMER_ACCOUNT,

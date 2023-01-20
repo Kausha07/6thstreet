@@ -78,7 +78,6 @@ import {
   SECONDS_TO_RESEND_OTP,
 } from "./MyAccountOverlay.config";
 import "./MyAccountOverlay.style";
-import ReCAPTCHA from "react-google-recaptcha";
 
 export class MyAccountOverlay extends PureComponent {
   constructor(props) {
