@@ -161,7 +161,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     this.state = this.redirectOrGetState(props);
   }
 
-  timer = null;
 
   static getDerivedStateFromProps(props, state) {
     const { isSignedIn, isPasswordForgotSend, showNotification, isPopup } =
@@ -296,9 +295,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
   };
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
 
   componentDidUpdate(prevProps, prevState) {
     const { isSignedIn: prevIsSignedIn } = prevProps;
@@ -372,25 +368,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     return state;
   };
 
-  addMOEDetails() {
-    this.timer = setTimeout(() => {
-      if (BrowserDatabase.getItem("customer")) {
-        const customerDetail = BrowserDatabase.getItem("customer");
-        if (customerDetail.email && customerDetail.email.length) {
-          Moengage.add_email(customerDetail.email);
-        }
-        if (customerDetail.firstname && customerDetail.firstname.length) {
-          Moengage.add_first_name(customerDetail.firstname);
-        }
-        if (customerDetail.lastname && customerDetail.lastname.length) {
-          Moengage.add_last_name(customerDetail.lastname);
-        }
-        if (customerDetail.phone && customerDetail.phone.length) {
-          Moengage.add_mobile(customerDetail.phone);
-        }
-      }
-    }, 5000);
-  }
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
     const { otpAttempt } = this.state;
@@ -400,7 +377,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       this.checkForOrder();
       this.sendMOEEvents(EVENT_LOGIN);
       this.sendGTMEvents(EVENT_LOGIN, "Email");
-      this.addMOEDetails();
     } catch (e) {
       this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       showNotification("error", e.message);
@@ -508,11 +484,30 @@ export class MyAccountOverlayContainer extends PureComponent {
             this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
             this.sendMOEEvents(EVENT_REGISTER);
             this.sendGTMEvents(EVENT_SIGN_UP);
+            if(customerRegisterData?.name){
+              const firstName = customerRegisterData.name.indexOf(" ") > 0
+              ? customerRegisterData.name.substr(0, customerRegisterData.name.indexOf(" "))
+              : customerRegisterData.name;
+              const lastName = customerRegisterData?.name.indexOf(" ") > 0
+              ? customerRegisterData?.name.substr(customerRegisterData?.name.indexOf(" ") + 1)
+              : "";
+              if (firstName){
+                Moengage.add_first_name(firstName);
+              }
+              if (lastName){
+                Moengage.add_last_name(lastName);
+              }
+            }
+            if(customerRegisterData?.contact_no){
+              Moengage.add_mobile(customerRegisterData.contact_no);
+            }
+            if(customerRegisterData?.email){
+              Moengage.add_email(customerRegisterData.email);
+            }
           }
           try {
             await signInOTP(response);
             this.checkForOrder();
-            this.addMOEDetails();
           } catch (e) {
             this.setState({ isLoading: false });
             showNotification("error", e.message);
