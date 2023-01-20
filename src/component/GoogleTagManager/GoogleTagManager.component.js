@@ -30,6 +30,7 @@ import {
   EVENT_GTM_FILTER,
   EVENT_GTM_PDP_TRACKING,
   EVENT_GTM_AUTHENTICATION,
+  EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_GTM_TOP_NAV_CLICK,
   EVENT_GTM_CUSTOMER_SUPPORT,
   EVENT_GTM_CHECKOUT_BILLING,
@@ -76,6 +77,7 @@ import SortEvent from "./events/Sort.event";
 import FilterEvent from "./events/Filter.event";
 import PDPTrackingEvent from "./events/PDPTracking.event";
 import AutheneticationEvent from "./events/Authentication.event";
+import AuthenticationV1Event from "./events/AuthenticationV1.event";
 import TopNavigationEvent from "./events/TopNavigation.event";
 import CustomerSupportEvent from "./events/CustomerSupport.event";
 import CheckoutBillingEvent from "./events/CheckoutBilling.event";
@@ -184,6 +186,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_FILTER]: FilterEvent,
     [EVENT_GTM_PDP_TRACKING]: PDPTrackingEvent,
     [EVENT_GTM_AUTHENTICATION]: AutheneticationEvent,
+    [EVENT_GTM_NEW_AUTHENTICATION]: AuthenticationV1Event,
     [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,

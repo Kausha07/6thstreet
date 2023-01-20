@@ -42,6 +42,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   language: state.AppState.language,
   payload: state.PopupReducer.popupPayload,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -146,6 +147,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     customer: customerType,
     country: PropTypes.string.isRequired,
     language: PropTypes.string.isRequired,
+    newSignUpEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

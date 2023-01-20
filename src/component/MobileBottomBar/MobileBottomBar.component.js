@@ -20,17 +20,21 @@ import Event, {
   EVENT_MOE_HOME_TAB_ICON,
   EVENT_MOE_BRANDS_TAB_ICON,
   EVENT_MOE_WISHLIST_TAB_ICON,
-  EVENT_MOE_ACCOUNT_TAB_ICON,
+  EVENT_ACCOUNT_TAB_ICON,
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_WISHLIST_ICON_CLICK,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./MobileBottomBar.style.scss";
 
+
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -46,6 +50,7 @@ class MobileBottomBar extends NavigationAbstract {
     isSignedIn: PropTypes.bool.isRequired,
     newMenuGender: PropTypes.string,
     setIsCurrentTabActive: PropTypes.func,
+    newSignUpEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -179,11 +184,20 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      app6thstreet_platform: "Web",
-    });
+    const {newSignUpEnabled} = this.props;
+    if (event == EVENT_MOE_WISHLIST_TAB_ICON && newSignUpEnabled){
+      const eventData = {
+        name: EVENT_WISHLIST_ICON_CLICK,
+        screen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    }else{
+      Moengage.track_event(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    }
   }
   sendPopupEvent(source) {
     const popupEventData = {
@@ -315,9 +329,27 @@ class MobileBottomBar extends NavigationAbstract {
     );
   }
 
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
-    const { location, isSignedIn } = this.props;
+    const { location, isSignedIn, newSignUpEnabled } = this.props;
     const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });
@@ -325,15 +357,24 @@ class MobileBottomBar extends NavigationAbstract {
     const onClickHandle = !isSignedIn
       ? this.renderAccountMenuPopUp
       : this.routeChangeAccount;
+
     const sendGTMEvent = () => {
-      const eventData = {
-        name: EVENT_GTM_ACCOUNT_TAB_CLICK,
-        category: "top_navigation_menu",
-        action: EVENT_GTM_ACCOUNT_TAB_CLICK,
-      };
-      Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
-      if (!isSignedIn) {
-        this.sendPopupEvent(popup_source);
+      if (newSignUpEnabled) {
+        const eventData = {
+          name: EVENT_ACCOUNT_TAB_ICON,
+          screen: this.getPageType() || "",
+        };
+        Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+      } else {
+        const eventData = {
+          name: EVENT_GTM_ACCOUNT_TAB_CLICK,
+          category: "top_navigation_menu",
+          action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+        };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+        if (!isSignedIn) {
+          this.sendPopupEvent(popup_source);
+        }
       }
     };
     return (
@@ -341,7 +382,7 @@ class MobileBottomBar extends NavigationAbstract {
         <button
           onClick={() => {
             onClickHandle();
-            this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
+            this.sendMoeEvents(EVENT_ACCOUNT_TAB_ICON);
             sendGTMEvent();
           }}
           key="accountButton"

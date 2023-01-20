@@ -48,7 +48,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Event, {
   EVENT_LOGIN,
   EVENT_LOGIN_FAILED,
-  EVENT_MOE_REGISTER,
+  EVENT_REGISTER,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_UP_FAIL,
   EVENT_SIGN_UP,
@@ -397,9 +397,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     try {
       await signIn(fields);
       onSignIn();
-      if (fields?.email) {
-        Moengage.add_unique_user_id(fields?.email);
-      }
       this.checkForOrder();
       this.sendMOEEvents(EVENT_LOGIN);
       this.sendGTMEvents(EVENT_LOGIN, "Email");
@@ -509,14 +506,11 @@ export class MyAccountOverlayContainer extends PureComponent {
           if (Object.entries(customerRegisterData)?.length) {
             this.sendGTMEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
             this.sendMOEEvents(EVENT_OTP_VERIFICATION_SUCCESSFUL);
-            this.sendMOEEvents(EVENT_MOE_REGISTER);
+            this.sendMOEEvents(EVENT_REGISTER);
             this.sendGTMEvents(EVENT_SIGN_UP);
           }
           try {
             await signInOTP(response);
-            if (data?.user?.email) {
-              Moengage.add_unique_user_id(data?.user?.email);
-            }
             this.checkForOrder();
             this.addMOEDetails();
           } catch (e) {

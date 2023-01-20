@@ -48,7 +48,23 @@ import {
   STATE_SIGN_IN,
   STATE_VERIFY_NUMBER,
   STATE_INITIAL_LINKS,
+  STATE_MENU,
 } from "./MyAccountOverlay.config";
+import Event, {
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_LOGIN,
+  EVENT_LOGIN_FAILED,
+  EVENT_REGISTER,
+  EVENT_REGISTER_FAILED,
+  EVENT_VERIFICATION_CODE_SCREEN_VIEW,
+  EVENT_OTP_VERIFY,
+  EVENT_OTP_VERIFY_FAILED,
+  EVENT_RESET_YOUR_PASSWORD_SUCCESS,
+  EVENT_RESET_YOUR_PASSWORD_FAILED,
+  EVENT_FORGOT_PASSWORD_SCREEN_VIEW,
+  EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW,
+  EVENT_ACCOUNT_TAB_ICON,
+} from "Util/Event";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -143,12 +159,15 @@ export class MyAccountOverlayContainer extends PureComponent {
     updateOTP: this.updateOTP.bind(this),
     sendOTPOnMailOrPhone: this.sendOTPOnMailOrPhone.bind(this),
     IsUserRegisteredBase: this.IsUserRegisteredBase.bind(this),
+    sendEvents: this.sendEvents.bind(this),
+    setPrevScreenState: this.setPrevScreenState.bind(this),
+    setCurrentOverlayState: this.setCurrentOverlayState.bind(this),
   };
 
   constructor(props) {
     super(props);
 
-    this.state = this.redirectOrGetState(props);
+    this.state = {...this.redirectOrGetState(props), validateCaptcha:false};
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -270,6 +289,8 @@ export class MyAccountOverlayContainer extends PureComponent {
       shouldRedirectToMyOrders: false,
       shouldRedirectToMyReturns: false,
       otpAttempt: 1,
+      prevOverlayState: "",
+      currentOverlayState:"",
     };
 
     // if customer got here from forgot-password
@@ -301,15 +322,77 @@ export class MyAccountOverlayContainer extends PureComponent {
     return state;
   };
 
+  setPrevScreenState(screen) {
+    this.setState({
+      prevOverlayState: screen,
+    });
+  }
+  setCurrentOverlayState(screen) {
+    this.setState({
+      currentOverlayState: screen,
+    });
+  }
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
+  sendEvents(event, data={}) {
+    const { prevOverlayState, currentOverlayState, customerRegisterData } =
+      this.state;
+    const screenName =
+      currentOverlayState == STATE_INITIAL_LINKS
+        ? STATE_MENU
+        : currentOverlayState;
+    const prevScreenName =
+      event == EVENT_ACCOUNT_TAB_ICON
+        ? this.getPageType()
+        : prevOverlayState == STATE_INITIAL_LINKS
+        ? STATE_MENU
+        : prevOverlayState
+        ? prevOverlayState
+        : this.getPageType();
+    const eventData = {
+      name: event,
+      screen: screenName || "",
+      prevScreen: prevScreenName,
+      ...(data?.failedReason && { failedReason: data?.failedReason }),
+      ...(data?.mode && { loginMode: data?.mode }),
+      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
+      ...(data?.email && { email: data?.email }),
+      ...(data?.gender && { gender: data?.gender }),
+      ...(data?.phone && { phone: data?.phone }),
+    };
+    Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+  }
+
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
     try {
       await signIn(fields);
       onSignIn();
+      const eventAdditionalData ={mode : "Email", isPhone: false}
+      this.sendEvents(EVENT_LOGIN, eventAdditionalData);
       this.checkForOrder();
     } catch (e) {
       this.setState({ isLoading: false });
       showNotification("error", e.message);
+      const eventAdditionalData = { failedReason: e.message, mode: "Email" };
+      this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
     }
   }
 
@@ -360,13 +443,16 @@ export class MyAccountOverlayContainer extends PureComponent {
           customerLoginData: { phoneNumber: phoneNumber },
           state: STATE_VERIFY_NUMBER,
         });
+        this.sendEvents(EVENT_VERIFICATION_CODE_SCREEN_VIEW);
       } else {
         if (code && code === "AUT-04" && error && typeof error === "string") {
+          const eventAdditionalData = { failedReason: error, mode: "Phone" };
           if (error == "Account with phone number does not exist") {
             showError(__("Account with phone number does not exist"));
           } else {
             showError(__(error));
           }
+          this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
         }
       }
       this.setState({ isLoading: false });
@@ -424,6 +510,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   async OTPFieldChange(field, isVerifyEmailViewState) {
     this.setState({ otpError: "" });
+    const { prevOverlayState } = this.state;
     const inputValue = field.target.value;
     try {
       const { createAccountNew, loginAccount } = this.props;
@@ -460,10 +547,65 @@ export class MyAccountOverlayContainer extends PureComponent {
         const { success } = response;
         if (success) {
           const { signInOTP, showNotification } = this.props;
+          this.sendEvents(EVENT_OTP_VERIFY);
+          if (Object.entries(customerRegisterData)?.length) {
+            const eventAdditionalData = {
+              email: customerRegisterData?.email
+                ? customerRegisterData?.email
+                : "",
+              gender:
+                customerRegisterData?.gender == "1"
+                  ? "Male"
+                  : customerRegisterData?.gender == "2"
+                  ? "Female"
+                  : "Prefer Not to say",
+              phone: customerRegisterData?.contact_no
+                ? customerRegisterData?.contact_no
+                : "",
+            };
+            if(customerRegisterData?.name){
+              const firstName = customerRegisterData.name.indexOf(" ") > 0
+              ? customerRegisterData.name.substr(0, customerRegisterData.name.indexOf(" "))
+              : customerRegisterData.name;
+              const lastName = customerRegisterData?.name.indexOf(" ") > 0
+              ? customerRegisterData?.name.substr(customerRegisterData?.name.indexOf(" ") + 1)
+              : "";
+              if (firstName){
+                Moengage.add_first_name(firstName);
+              }
+              if (lastName){
+                Moengage.add_last_name(lastName);
+              }
+            }
+            if(customerRegisterData?.contact_no){
+              Moengage.add_mobile(customerRegisterData.contact_no);
+            }
+            if(customerRegisterData?.email){
+              Moengage.add_email(customerRegisterData.email);
+            }
+            this.sendEvents(EVENT_REGISTER, eventAdditionalData);
+          }
+          if (Object.entries(customerLoginData)?.length) {
+            const eventAdditionalData = { mode: "Phone", isPhone: true };
+            this.sendEvents(EVENT_LOGIN, eventAdditionalData);
+          }
           try {
             await signInOTP(response);
             this.checkForOrder();
           } catch (e) {
+            const eventAdditionalData = { failedReason: e, mode: "Phone" };
+            if (
+              Object.entries(customerRegisterData)?.length &&
+              prevOverlayState !== STATE_SIGN_IN
+            ) {
+              this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
+            }
+            if (
+              Object.entries(customerLoginData)?.length &&
+              prevOverlayState !== STATE_CREATE_ACCOUNT
+            ) {
+              this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
+            }
             this.setState({ isLoading: false });
             showNotification("error", e.message);
           }
@@ -478,12 +620,41 @@ export class MyAccountOverlayContainer extends PureComponent {
             otpError: response,
             otpAttempt: otpAttempt + 1,
           });
+          const eventAdditionalData = { failedReason: response, mode: "Phone" };
+          this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+          if (
+            Object.entries(customerRegisterData)?.length &&
+            prevOverlayState !== STATE_SIGN_IN
+          ) {
+            this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
+          }
+          if (
+            Object.entries(customerLoginData)?.length &&
+            prevOverlayState !== STATE_CREATE_ACCOUNT
+          ) {
+            this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
+          }
         }
         this.setState({ isLoading: false });
       }
     } catch (err) {
-      const { otpAttempt } = this.state;
+      const { otpAttempt, customerLoginData, customerRegisterData } =
+        this.state;
+      const eventAdditionalData = { failedReason: err, mode: "Phone" };
+      this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
       this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
+      if (
+        Object.entries(customerRegisterData)?.length &&
+        prevOverlayState !== STATE_SIGN_IN
+      ) {
+        this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
+      }
+      if (
+        Object.entries(customerLoginData)?.length &&
+        prevOverlayState !== STATE_CREATE_ACCOUNT
+      ) {
+        this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
+      }
       console.error("Error while creating customer", err);
     }
   }
@@ -554,6 +725,10 @@ export class MyAccountOverlayContainer extends PureComponent {
         isArabic()
           ? showError(__("Account with %s already exist", email))
           : showError(__(`Account with ${email} already exist`));
+        const eventAdditionalData = {
+          failedReason: "Account with same email already exist",
+        };
+        this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
       } else {
         const { success, error } = await sendOTP({
           phone: phoneNumber,
@@ -564,11 +739,14 @@ export class MyAccountOverlayContainer extends PureComponent {
             customerRegisterData: customerData,
             state: STATE_VERIFY_NUMBER,
           });
+          this.sendEvents(EVENT_VERIFICATION_CODE_SCREEN_VIEW);
         } else {
           if (error === "Account with same phone number already exist") {
             this.updateAccountViewState(STATE_SIGN_IN);
           }
+          const eventAdditionalData = { failedReason: error };
           showError(error);
+          this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
         }
       }
       this.setState({ isLoading: false });
@@ -579,16 +757,20 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onForgotPasswordSuccess(fields) {
-    const { forgotPassword, showNotification } = this.props;
+    const { forgotPassword, showNotification,sendEvents } = this.props;
 
     forgotPassword(fields).then((res) => {
       if (typeof res === "string") {
+        const eventAdditionalData = {failedReason: res};
         showNotification("error", __(res));
         this.stopLoading();
+        this.sendEvents(EVENT_RESET_YOUR_PASSWORD_FAILED, eventAdditionalData);
         return;
       }
+      this.sendEvents(EVENT_RESET_YOUR_PASSWORD_SUCCESS);
       this.setState({ state: STATE_FORGOT_PASSWORD_SUCCESS });
       this.stopLoading();
+      this.sendEvents(EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW);
     }, this.stopLoading);
   }
 
@@ -619,13 +801,14 @@ export class MyAccountOverlayContainer extends PureComponent {
       title: __("Forgot password"),
       onBackClick: () => this.handleSignIn(e),
     });
+    this.sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
   }
 
   handleSignIn(e) {
     const { setHeaderState } = this.props;
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();
-    this.setState({ state: STATE_SIGN_IN });
+    this.setState({ state: STATE_SIGN_IN, validateCaptcha : false });
 
     setHeaderState({
       name: CUSTOMER_ACCOUNT,
