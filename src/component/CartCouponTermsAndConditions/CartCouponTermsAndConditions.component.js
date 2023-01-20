@@ -28,8 +28,17 @@ class CartCouponTermsAndConditions extends PureComponent {
     }
 
     couponTermsAndConditionsPopup = (e) => {
+        const { handleApplyCode, hideTermsAndConditions, hideDetail } = this.props;
         e.stopPropagation()
-        this.props.hideTermsAndConditions(e);
+        if(handleApplyCode) {
+            handleApplyCode()
+        }
+        if(hideTermsAndConditions) {
+            hideTermsAndConditions(e);
+        }
+        if (hideDetail) {
+            hideDetail(e);
+        }
       }
 
     render() {

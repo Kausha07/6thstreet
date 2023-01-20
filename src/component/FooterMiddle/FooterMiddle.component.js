@@ -57,6 +57,7 @@ class FooterMiddle extends PureComponent {
         return (
         <div block="FooterMiddle" elem="FooterAccount">
             <HeaderAccount
+              showMySignInPopUp={true}
               isFooter={ isFooter }
               handleFooterIsAccountOpen={ handleFooterIsAccountOpen }
               key="account"

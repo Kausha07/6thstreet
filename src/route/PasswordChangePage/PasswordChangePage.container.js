@@ -38,7 +38,6 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
     const { resetPassword, location, showNotification } = this.props;
     const { passwordReset: password } = fields;
     const token = getQueryParam("token", location);
-
     resetPassword({ newPassword: password, resetToken: token }).then(
       (response) => {
         switch (typeof response) {

@@ -505,3 +505,5 @@ export const getBambuserChannelID=(country)=>{
     }
   }
 }
+
+export const DecimalCountries = ["KW", 'OM', 'BH'];

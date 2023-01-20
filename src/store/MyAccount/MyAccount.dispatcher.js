@@ -57,7 +57,7 @@ import { updateGuestUserEmail } from "./MyAccount.action";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import { isArabic } from "Util/App";
 import { sha256 } from "js-sha256";
-
+import { getCookie } from "Util/Url/Url";
 export {
   CUSTOMER,
   ONE_MONTH_IN_SECONDS,
@@ -87,13 +87,78 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             if (index === parseInt(engAreaIndex[0])) {
               return area;
             }
-          }
+          },
         );
         finalArea = arabicArea[0];
         finalCity = finalResp[0].city_ar;
       }
     }
     return { finalArea, finalCity };
+  };
+  setEDDresultData = (response, finalRes, dispatch, login) => {
+    if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+      const defaultShippingAddress = Object.values(response.data).filter(
+        (address) => {
+          return address.default_shipping === true;
+        }
+      );
+      if (
+        defaultShippingAddress &&
+        Object.values(defaultShippingAddress).length > 0
+      ) {
+        const { country_code, city, area } = defaultShippingAddress[0];
+        const { finalCity, finalArea } = this.getArabicCityArea(
+          city,
+          area,
+          finalRes
+        );
+        let request = {
+          country: country_code,
+          city: isArabic() ? finalCity : city,
+          area: isArabic() ? finalArea : area,
+          courier: null,
+          source: null,
+        };
+        this.estimateDefaultEddResponse(dispatch, request);
+        dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      } else if (sessionStorage.getItem("EddAddressReq")) {
+        const response = sessionStorage.getItem("EddAddressRes")
+          ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+          : null;
+        const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+        dispatch(setEddResponse(response, request));
+      } else {
+        if (!login) {
+          const { country_code, city, area } = response.data[0];
+          const { finalCity, finalArea } = this.getArabicCityArea(
+            city,
+            area,
+            finalRes
+          );
+          let request = {
+            country: country_code,
+            city: isArabic() ? finalCity : city,
+            area: isArabic() ? finalArea : area,
+            courier: null,
+            source: null,
+          };
+          this.estimateDefaultEddResponse(dispatch, request);
+        } else {
+          dispatch(setEddResponse(null, null));
+          dispatch(setCustomerDefaultShippingAddress(null));
+        }
+      }
+    } else if (sessionStorage.getItem("EddAddressReq")) {
+      const response = sessionStorage.getItem("EddAddressRes")
+        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+        : null;
+      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      dispatch(setEddResponse(response, request));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    } else {
+      dispatch(setEddResponse(null, null));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    }
   };
   requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
@@ -102,58 +167,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     } = getStore().getState();
     getShippingAddresses().then(async (response) => {
       if (response.data) {
-        let finalRes = addressCityData;
-        if (Object.values(response.data).length > 0 && finalRes.length > 0) {
-          const defaultShippingAddress = Object.values(response.data).filter(
-            (address) => {
-              return address.default_shipping === true;
-            }
-          );
-          if (
-            defaultShippingAddress &&
-            Object.values(defaultShippingAddress).length > 0
-          ) {
-            const { country_code, city, area } = defaultShippingAddress[0];
-            const { finalCity, finalArea } = this.getArabicCityArea(
-              city,
-              area,
-              finalRes
-            );
-            let request = {
-              country: country_code,
-              city: isArabic() ? finalCity : city,
-              area: isArabic() ? finalArea : area,
-              courier: null,
-              source: null,
-            };
-            this.estimateDefaultEddResponse(dispatch, request);
-            dispatch(
-              setCustomerDefaultShippingAddress(defaultShippingAddress[0])
-            );
-          } else {
-            if (!login) {
-              const { country_code, city, area } = response.data[0];
-              const { finalCity, finalArea } = this.getArabicCityArea(
-                city,
-                area,
-                finalRes
-              );
-              let request = {
-                country: country_code,
-                city: isArabic() ? finalCity : city,
-                area: isArabic() ? finalArea : area,
-                courier: null,
-                source: null,
-              };
-              this.estimateDefaultEddResponse(dispatch, request);
-            } else {
-              dispatch(setEddResponse(null, null));
-              dispatch(setCustomerDefaultShippingAddress(null));
-            }
-          }
+        if (addressCityData.length === 0) {
+          AppConfigDispatcher.getCities().then((resp) => {
+            this.setEDDresultData(response, resp.data, dispatch, login);
+          });
         } else {
-          dispatch(setEddResponse(null, null));
-          dispatch(setCustomerDefaultShippingAddress(null));
+          this.setEDDresultData(response, addressCityData, dispatch, login);
         }
         dispatch(setCustomerAddressData(response.data));
         dispatch(setAddressLoader(false));
@@ -178,17 +197,37 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               ? firstname.substr(firstname.indexOf(" ") + 1)
               : lastname,
         };
-
-        dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
-        BrowserDatabase.setItem(
-          { ...stateCustomer, ...data },
-          CUSTOMER,
-          ONE_MONTH_IN_SECONDS
-        );
         const customer_data = { ...stateCustomer, ...data };
+        const getPhoneNumberFromCookie = getCookie("customerPrimaryPhone")
+          ? getCookie("customerPrimaryPhone")
+          : null;
+        dispatch(
+          updateCustomerDetails({
+            ...stateCustomer,
+            ...data,
+            ...(getPhoneNumberFromCookie && {
+              phone: getPhoneNumberFromCookie,
+            }),
+          }),
+        );
+        BrowserDatabase.setItem(
+          {
+            ...stateCustomer,
+            ...data,
+            ...(getPhoneNumberFromCookie && {
+              phone: getPhoneNumberFromCookie,
+            }),
+          },
+          CUSTOMER,
+          ONE_MONTH_IN_SECONDS,
+        );
         const TiktokData = {
           mail: customer_data?.email ? sha256(customer_data?.email) : null,
-          phone: customer_data?.phone ? sha256(customer_data?.phone) : null,
+          phone: customer_data?.phone
+            ? sha256(customer_data?.phone)
+            : getPhoneNumberFromCookie
+            ? sha256(getPhoneNumberFromCookie)
+            : null,
         };
         BrowserDatabase.setItem(TiktokData, "TT_Data", ONE_MONTH_IN_SECONDS);
         //after login dispatching custom event
@@ -213,7 +252,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       },
       () => {
         window.location.reload();
-      }
+      },
     );
   }
 
@@ -236,7 +275,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     BrowserDatabase.deleteItem(CUSTOMER);
     localStorage.removeItem("RmaId");
     BrowserDatabase.deleteItem("TT_Data");
-
+    setCrossSubdomainCookie("customerPrimaryPhone", "", 1, true);
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
@@ -355,7 +394,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       options;
 
     const phoneAttribute = custom_attributes?.filter(
-      ({ attribute_code }) => attribute_code === "contact_no"
+      ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
@@ -397,11 +436,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               username,
               password,
               cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            }
+            },
       );
 
     const phoneAttribute = custom_attributes?.filter(
-      ({ attribute_code }) => attribute_code === "contact_no"
+      ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
@@ -455,7 +494,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice
+        itemPrice,
       );
     });
   }
@@ -463,10 +502,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   setCustomAttributes(dispatch, custom_attributes) {
     const customer = BrowserDatabase.getItem(CUSTOMER) || {};
     const phoneAttribute = custom_attributes.filter(
-      ({ attribute_code }) => attribute_code === "contact_no"
+      ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isVerifiedAttribute = custom_attributes.filter(
-      ({ attribute_code }) => attribute_code === "is_mobile_otp_verified"
+      ({ attribute_code }) => attribute_code === "is_mobile_otp_verified",
     );
 
     const { value: phoneNumber } =
@@ -475,9 +514,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       isVerifiedAttribute && isVerifiedAttribute[0]
         ? isVerifiedAttribute[0]
         : { value: false };
-
+    setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
     dispatch(
-      updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified })
+      updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }),
     );
   }
 
@@ -504,13 +543,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             if (request["intl_vendors"]) {
               sessionStorage.setItem(
                 "IntlEddAddressRes",
-                JSON.stringify(response.result)
+                JSON.stringify(response.result),
               );
             } else {
               sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
               sessionStorage.setItem(
                 "EddAddressRes",
-                JSON.stringify(response.result)
+                JSON.stringify(response.result),
               );
             }
           }

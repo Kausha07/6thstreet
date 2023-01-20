@@ -25,7 +25,9 @@ import browserHistory from "Util/History";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import {
+  fetchConsolidatedVueData,
+} from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
 import { getUUIDToken } from "Util/Auth";
@@ -393,13 +395,14 @@ export class PDPContainer extends PureComponent {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
       const userID = customer && customer.id ? customer.id : null;
-      const query = {
-        filters: [],
-        num_results: 50,
-        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      const madUUid = userData?.USER_DATA?.deviceUuid || getUUIDToken()
+      const vuePayload = {
+        user_id: userID,
+        product_id: sku,
+        mad_uuid: madUUid,
+        widget_type:[]
       };
 
-      let promisesArray = [];
       pdpWidgetsData.forEach((element) => {
         const { type } = element;
         const defaultQueryPayload = {
@@ -409,16 +412,16 @@ export class PDPContainer extends PureComponent {
         if (type !== "vue_visually_similar_slider") {
           defaultQueryPayload.gender = gender;
         }
-        const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
-        promisesArray.push(fetchVueData(payload));
-      });
-      Promise.all(promisesArray)
-        .then((resp) => {
-          this.setState({ pdpWidgetsAPIData: resp });
-        })
-        .catch((err) => {
-          console.err(err);
+        vuePayload['widget_type'].push({
+          number_result: 50,
+          type,
+          filters: VueQuery.buildFilters({filters: []}, defaultQueryPayload),
         });
+      });
+      const vueResp = fetchConsolidatedVueData(vuePayload)
+      vueResp.then((resp)=>{
+        this.setState({ pdpWidgetsAPIData: resp.data });
+      })
     }
   }
 
