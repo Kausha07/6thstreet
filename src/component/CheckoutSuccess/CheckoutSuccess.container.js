@@ -24,6 +24,11 @@ import {
   sendOTP,
   sendOTPViaEmail,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import Event, {
+  EVENT_OTP_VERIFY,
+  EVENT_OTP_VERIFY_FAILED,
+  EVENT_GTM_NEW_AUTHENTICATION,
+} from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
@@ -45,8 +50,9 @@ export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   config: state.AppConfig.config,
   eddResponse: state.MyAccountReducer.eddResponse,
-  intlEddResponse:state.MyAccountReducer.intlEddResponse,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -98,6 +104,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     getMember: PropTypes.func.isRequired,
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
+    newSignUpEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -126,6 +133,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     onGuestAutoSignIn: this.onGuestAutoSignIn.bind(this),
     sendOTPOnMailOrPhone: this.sendOTPOnMailOrPhone.bind(this),
     OtpErrorClear: this.OtpErrorClear.bind(this),
+    sendEvents: this.sendEvents.bind(this),
   };
 
   constructor(props) {
@@ -289,9 +297,27 @@ export class CheckoutSuccessContainer extends PureComponent {
     this.setState({ phone: phonecode + phone });
   }
 
+  sendEvents(name, data = {}) {
+    const {newSignUpEnabled} = this.props;
+    const eventData = {
+      name: name,
+      screen: "checkout",
+      prevScreen: "checkout",
+      ...(data.failedReason && { failedReason: data?.failedReason }),
+    };
+    if (newSignUpEnabled){
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    }
+  }
+
   onVerifySuccess(fields) {
-    const { verifyUserPhone, isSignedIn, orderID, showNotification } =
-      this.props;
+    const {
+      verifyUserPhone,
+      isSignedIn,
+      orderID,
+      showNotification,
+      newSignUpEnabled,
+    } = this.props;
 
     const { phone } = this.state;
     if (phone) {
@@ -308,8 +334,17 @@ export class CheckoutSuccessContainer extends PureComponent {
                 "success",
                 __("Phone was successfully verified")
               );
+              if (newSignUpEnabled) {
+                this.sendEvents(EVENT_OTP_VERIFY);
+              }
               this.setState({ isMobileVerification: false });
             } else {
+              if (newSignUpEnabled) {
+                const eventAdditionalData = {
+                  failedReason: "Wrong Verification Code. Please re-enter",
+                };
+                this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+              }
               showNotification(
                 "error",
                 __("Wrong Verification Code. Please re-enter")
@@ -326,9 +361,19 @@ export class CheckoutSuccessContainer extends PureComponent {
           order_id: orderID,
         }).then((response) => {
           if (response.success) {
+            if (newSignUpEnabled) {
+              this.sendEvents(EVENT_OTP_VERIFY);
+            }
             this.setState({ isPhoneVerified: true });
             this.setState({ isMobileVerification: false });
           } else {
+            if (newSignUpEnabled) {
+              const eventAdditionalData = {
+                failedReason:
+                  "Verification failed. Please enter valid verification code",
+              };
+              this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+            }
             showNotification(
               "error",
               __("Verification failed. Please enter valid verification code")
@@ -343,7 +388,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     const { phone, email } = this.state;
     try {
       if (otp.length === 5) {
-        const { loginAccount, showNotification } = this.props;
+        const { loginAccount, showNotification, newSignUpEnabled } = this.props;
         this.setState({ isLoading: true });
         let payload;
         if (shouldLoginWithOtpOnEmail) {
@@ -362,6 +407,9 @@ export class CheckoutSuccessContainer extends PureComponent {
         const response = await loginAccount(payload);
         if (response.success) {
           const { signInOTP } = this.props;
+          if (newSignUpEnabled) {
+            this.sendEvents(EVENT_OTP_VERIFY);
+          }
           try {
             await signInOTP(response);
             history.push("/my-account/my-orders");
@@ -378,12 +426,25 @@ export class CheckoutSuccessContainer extends PureComponent {
             otpError: response,
           });
           showNotification("error", response);
+          if (newSignUpEnabled) {
+            const eventAdditionalData = {
+              failedReason: response,
+            };
+            this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+          }
         }
         this.setState({ isLoading: false });
       }
     } catch (err) {
+      const {newSignUpEnabled} = this.props;
       this.setState({ isLoading: false });
       console.error("Error while creating customer", err);
+      if (newSignUpEnabled) {
+        const eventAdditionalData = {
+          failedReason: err ? err : "Error while creating customer",
+        };
+        this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+      }
     }
   }
 

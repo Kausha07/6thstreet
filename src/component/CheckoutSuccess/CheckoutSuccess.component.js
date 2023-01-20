@@ -37,6 +37,11 @@ import Event, {
   EVENT_SIGN_IN_CTA_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_LOGIN_CLICK,
+  EVENT_VERIFICATION_CODE_SCREEN_VIEW,
+  EVENT_RESEND_OTP_CLICK,
+  EVENT_OTP_VERIFY_WITH_EMAIL,
+  EVENT_OTP_VERIFY_WITH_PHONE,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
@@ -77,12 +82,15 @@ export class CheckoutSuccess extends PureComponent {
     delay: 1000,
     successHidden: false,
     wasLoaded: false,
+    eventSent: false,
+    popupEvent: false,
     otp: null,
     isVerifyEmailViewState: false,
     otpTimer: SECONDS_TO_RESEND_OTP,
     isTimerEnabled: false,
     eventSent: false,
     popupEvent: false,
+    verifyScreenEventSent: false,
   };
 
   componentDidMount() {
@@ -200,9 +208,15 @@ export class CheckoutSuccess extends PureComponent {
       email,
       otpError,
       OtpErrorClear,
+      sendEvents,
     } = this.props;
-    const { isArabic, isPhoneVerification, otp, isVerifyEmailViewState } =
-      this.state;
+    const {
+      isArabic,
+      isPhoneVerification,
+      otp,
+      isVerifyEmailViewState,
+      verifyScreenEventSent,
+    } = this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
     const isNumber = (evt) => {
@@ -218,6 +232,16 @@ export class CheckoutSuccess extends PureComponent {
     };
     const isSignedInState = isSignedInFn();
 
+    if (
+      (!isSignedInState && guestAutoSignIn && !verifyScreenEventSent) ||
+      (!isPhoneVerified &&
+        isVerificationCodeSent &&
+        isSignedIn &&
+        !verifyScreenEventSent)
+    ) {
+      sendEvents(EVENT_VERIFICATION_CODE_SCREEN_VIEW);
+      this.setState({ verifyScreenEventSent: true });
+    }
     if (!isPhoneVerified && isVerificationCodeSent && isSignedIn) {
       return (
         <div
@@ -251,7 +275,12 @@ export class CheckoutSuccess extends PureComponent {
             </button>
           </Form>
           <div block="TrackOrder" elem="ResendCode">
-            <button onClick={onResendCode}>
+            <button
+              onClick={() => {
+                onResendCode();
+                sendEvents(EVENT_RESEND_OTP_CLICK);
+              }}
+            >
               {__("Resend Verification Code")}
             </button>
           </div>
@@ -356,6 +385,7 @@ export class CheckoutSuccess extends PureComponent {
                   this.OtpTimerFunction();
                   this.otpInput.current.value = "";
                   OtpErrorClear();
+                  sendEvents(EVENT_RESEND_OTP_CLICK);
                 }}
                 className={this.state.otpTimer > 0 ? "disableBtn" : ""}
                 disabled={this.state.otpTimer > 0}
@@ -388,6 +418,7 @@ export class CheckoutSuccess extends PureComponent {
                     this.OtpTimerFunction();
                     this.otpInput.current.value = "";
                     OtpErrorClear();
+                    sendEvents(EVENT_OTP_VERIFY_WITH_EMAIL);
                   }}
                 >
                   {__("Verify with E-mail")}
@@ -406,6 +437,7 @@ export class CheckoutSuccess extends PureComponent {
                     this.OtpTimerFunction();
                     this.otpInput.current.value = "";
                     OtpErrorClear();
+                    sendEvents(EVENT_OTP_VERIFY_WITH_PHONE);
                   }}
                 >
                   {__("Verify with Phone")}
@@ -423,7 +455,13 @@ export class CheckoutSuccess extends PureComponent {
                 {__("sign in to access your account and track your order")}
               </span>
             </div>
-            <button block="secondary" onClick={this.showMyAccountPopup}>
+            <button
+              block="secondary"
+              onClick={() => {
+                this.showMyAccountPopup();
+                sendEvents(EVENT_LOGIN_CLICK);
+              }}
+            >
               {__("sign in")}
             </button>
           </div>
@@ -456,16 +494,14 @@ export class CheckoutSuccess extends PureComponent {
 
   renderMyAccountPopup() {
     const { showPopup, popupEvent } = this.state;
-    const {
-      billingAddress
-    } = this.props;
+    const { billingAddress, newSignUpEnabled } = this.props;
 
     const email = billingAddress?.guest_email;
 
     if (!showPopup) {
       return null;
     }
-    if (showPopup && !popupEvent) {
+    if (showPopup && !popupEvent && !newSignUpEnabled) {
       const eventDetails = {
         name: EVENT_SIGN_IN_CTA_CLICK,
         action: EVENT_SIGN_IN_CTA_CLICK,

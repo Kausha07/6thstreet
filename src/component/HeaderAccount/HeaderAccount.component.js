@@ -11,7 +11,8 @@ import isMobile from "Util/Mobile";
 import { SMS_LINK } from "./HeaderAccount.config";
 import "./HeaderAccount.style";
 import Event, {
-  EVENT_MOE_ACCOUNT_TAB_ICON,
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_ACCOUNT_TAB_ICON,
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
@@ -105,7 +106,7 @@ class HeaderAccount extends PureComponent {
         </ClickOutside>
       );
     }
-    if(showMySignInPopUp){
+    if (showMySignInPopUp) {
       return (
         <MyAccountOverlay
           closePopup={this.closePopup}
@@ -125,18 +126,40 @@ class HeaderAccount extends PureComponent {
   }
 
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      app6thstreet_platform: "Web",
-    });
+    const {newSignUpEnabled} = this.props;
+    if (event !== EVENT_ACCOUNT_TAB_ICON && !newSignUpEnabled){
+      Moengage.track_event(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    }
   }
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   renderAccountButton() {
-    const { isSignedIn, customer, isBottomBar, isFooter } = this.props;
+    const { isSignedIn, customer, isBottomBar, isFooter, newSignUpEnabled } =
+      this.props;
 
     if (isBottomBar) {
       return;
-      // return <label htmlFor="Account">{__("Account")}</label>;
     }
 
     const accountButtonText =
@@ -144,28 +167,36 @@ class HeaderAccount extends PureComponent {
         ? `${customer.firstname} ${customer.lastname}`
         : __("Login/Register");
     const sendGTMEvent = () => {
-      if (isFooter) {
-        const popupEventData = {
-          name: EVENT_SIGN_IN_SCREEN_VIEWED,
-          category: "user_login",
-          action: EVENT_SIGN_IN_SCREEN_VIEWED,
-          popupSource: "Footer Menu",
-        };
-        Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
-      } else {
+      if (newSignUpEnabled) {
         const eventData = {
-          name: EVENT_GTM_ACCOUNT_TAB_CLICK,
-          category: "top_navigation_menu",
-          action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+          name: EVENT_ACCOUNT_TAB_ICON,
+          screen: isFooter ? "Footer" : this.getPageType(),
         };
-        Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
-        const popupEventData = {
-          name: EVENT_SIGN_IN_SCREEN_VIEWED,
-          category: "user_login",
-          action: EVENT_SIGN_IN_SCREEN_VIEWED,
-          popupSource: "Account Icon",
-        };
-        Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+        Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+      } else {
+        if (isFooter) {
+          const popupEventData = {
+            name: EVENT_SIGN_IN_SCREEN_VIEWED,
+            category: "user_login",
+            action: EVENT_SIGN_IN_SCREEN_VIEWED,
+            popupSource: "Footer Menu",
+          };
+          Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+        } else {
+          const eventData = {
+            name: EVENT_GTM_ACCOUNT_TAB_CLICK,
+            category: "top_navigation_menu",
+            action: EVENT_GTM_ACCOUNT_TAB_CLICK,
+          };
+          Event.dispatch(EVENT_GTM_AUTHENTICATION, eventData);
+          const popupEventData = {
+            name: EVENT_SIGN_IN_SCREEN_VIEWED,
+            category: "user_login",
+            action: EVENT_SIGN_IN_SCREEN_VIEWED,
+            popupSource: "Account Icon",
+          };
+          Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+        }
       }
     };
     return (
@@ -178,7 +209,7 @@ class HeaderAccount extends PureComponent {
             isFooter && isSignedIn
               ? this.redirectToAccount()
               : this.showMyAccountPopup(),
-              this.sendMoeEvents(EVENT_MOE_ACCOUNT_TAB_ICON);
+              this.sendMoeEvents(EVENT_ACCOUNT_TAB_ICON);
             sendGTMEvent();
           }}
         >
