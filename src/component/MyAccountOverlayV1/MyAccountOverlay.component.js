@@ -42,6 +42,25 @@ import {
   deleteMobileAuthorizationToken,
 } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import {
+  EVENT_LOGIN_CLICK,
+  EVENT_REGISTER_CLICK,
+  EVENT_GUEST_ORDERS_CLICK,
+  EVENT_GUEST_RETURNS_CLICK,
+  EVENT_RETURN_POLICY_CLICK,
+  EVENT_SHIPPING_POLICY_CLICK,
+  EVENT_FAQ_CLICK,
+  EVENT_TYPE_USERNAME,
+  EVENT_TYPE_PASSWORD,
+  EVENT_FORGOT_PASSWORD_CLICK,
+  EVENT_SIGN_IN_BUTTON_CLICK,
+  EVENT_TYPE_PHONE_NUMBER,
+  EVENT_TYPE_NAME,
+  EVENT_TYPE_EMAIL_ID,
+  EVENT_RESEND_OTP_CLICK,
+  EVENT_OTP_VERIFY_WITH_EMAIL,
+  EVENT_OTP_VERIFY_WITH_PHONE,
+} from "Util/Event";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import {
@@ -134,7 +153,8 @@ export class MyAccountOverlay extends PureComponent {
     if (isMobile.any()) {
       document.body.style.position = "fixed";
     }
-    const { email } = this.props;
+    const { email, setCurrentOverlayState } = this.props;
+    setCurrentOverlayState(this.props?.state);
     if (email) {
       this.setState({
         isOTP: false,
@@ -144,6 +164,7 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { setPrevScreenState, setCurrentOverlayState } = this.props;
     if (
       this.state.otpTimer === 0 &&
       this.state.isTimerEnabled &&
@@ -166,6 +187,10 @@ export class MyAccountOverlay extends PureComponent {
       prevProps.customerLoginData != this.customerLoginData
     ) {
       this.OtpTimerFunction();
+    }
+    setCurrentOverlayState(this.props?.state);
+    if (prevProps.state !== this.props.state) {
+      setPrevScreenState(prevProps.state);
     }
   }
 
@@ -229,6 +254,7 @@ export class MyAccountOverlay extends PureComponent {
       onCreateAccountClick,
       setRegisterFieldFalse,
       registerField,
+      sendEvents,
     } = this.props;
     const { render, title } = this.renderMap[state];
     const { isArabic } = this.state;
@@ -275,6 +301,7 @@ export class MyAccountOverlay extends PureComponent {
               <button
                 onClick={(e) => {
                   handleSignIn(e);
+                  sendEvents(EVENT_LOGIN_CLICK);
                   this.setState({
                     failedRegistrationData: {},
                     countryCode: PHONE_CODES[getCountryFromUrl()],
@@ -300,6 +327,7 @@ export class MyAccountOverlay extends PureComponent {
                 <button
                   onClick={(e) => {
                     handleCreateAccount(e);
+                    sendEvents(EVENT_REGISTER_CLICK);
                     this.setState({
                       countryCode: PHONE_CODES[getCountryFromUrl()],
                     });
@@ -396,6 +424,7 @@ export class MyAccountOverlay extends PureComponent {
       onForgotPasswordSuccess,
       onFormError,
       isLoading,
+      sendEvents,
     } = this.props;
     const { isForgotValidated } = this.state;
     this.setState({ isSignInValidated: false });
@@ -420,6 +449,7 @@ export class MyAccountOverlay extends PureComponent {
           placeholder={`${__("EMAIL")}*`}
           autocomplete="email"
           validation={["notEmpty", "email"]}
+          onFocus={() => sendEvents(EVENT_TYPE_EMAIL_ID)}
         />
         <div
           block="MyAccountOverlayV1"
@@ -458,6 +488,7 @@ export class MyAccountOverlay extends PureComponent {
       updateOTP,
       OTP,
       sendOTPOnMailOrPhone,
+      sendEvents
     } = this.props;
     const {
       isArabic,
@@ -560,6 +591,7 @@ export class MyAccountOverlay extends PureComponent {
               resendOTP(isVerifyEmailViewState);
               this.OtpTimerFunction();
               this.otpInput.current.value = "";
+              sendEvents(EVENT_RESEND_OTP_CLICK);
             }}
             className={this.state.otpTimer > 0 ? "disableBtn" : ""}
             disabled={this.state.otpTimer > 0}
@@ -586,6 +618,7 @@ export class MyAccountOverlay extends PureComponent {
                   sendOTPOnMailOrPhone(true);
                   this.otpInput.current.value = "";
                   OtpErrorClear();
+                  sendEvents(EVENT_OTP_VERIFY_WITH_EMAIL);
                 }}
               >
                 {__("Verify with E-mail")}
@@ -604,6 +637,7 @@ export class MyAccountOverlay extends PureComponent {
                   sendOTPOnMailOrPhone(false);
                   this.otpInput.current.value = "";
                   OtpErrorClear();
+                  sendEvents(EVENT_OTP_VERIFY_WITH_PHONE);
                 }}
               >
                 {__("Verify with Phone")}
@@ -685,6 +719,7 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       OtpErrorClear,
       customerLoginData,
+      sendEvents,
     } = this.props;
     const { focusedElement } = this.state;
     const { gender, isChecked, isArabic, isCreateValidated, countryCode } =
@@ -763,7 +798,10 @@ export class MyAccountOverlay extends PureComponent {
                   "number",
                   this.getValidationForUserIdentifierCreate(),
                 ]}
-                onFocus={this.onFocus}
+                onFocus={() => {
+                  this.onFocus();
+                  sendEvents(EVENT_TYPE_PHONE_NUMBER);
+                }}
                 onBlur={this.onBlur}
                 onChange={this.IsUserRegisteredWithPhone.bind(this)}
                 value={customerLoginData.phoneWithoutCode}
@@ -779,6 +817,7 @@ export class MyAccountOverlay extends PureComponent {
               name="fullname"
               autoComplete="fullname"
               validation={["notEmpty"]}
+              onFocus={() => sendEvents(EVENT_TYPE_NAME)}
             />
           </fieldset>
           <fieldset block="MyAccountOverlayV1" elem="Gender">
@@ -820,6 +859,7 @@ export class MyAccountOverlay extends PureComponent {
               name="email"
               autoComplete="email"
               validation={["notEmpty", "email"]}
+              onFocus={() => sendEvents(EVENT_TYPE_EMAIL_ID)}
             />
             <Field
               type="password"
@@ -827,6 +867,7 @@ export class MyAccountOverlay extends PureComponent {
               id="password"
               name="password"
               autoComplete="new-password"
+              onFocus={() => sendEvents(EVENT_TYPE_PASSWORD)}
               validation={[
                 "notEmpty",
                 "password",
@@ -970,7 +1011,7 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   renderInitialLinks() {
-    const { updateAccountViewState } = this.props;
+    const { updateAccountViewState, sendEvents } = this.props;
     const { isArabic } = this.state;
     return (
       <ul block="logInScreenLinks">
@@ -980,6 +1021,7 @@ export class MyAccountOverlay extends PureComponent {
             className="btn"
             onClick={() => {
               updateAccountViewState(STATE_SIGN_IN);
+              sendEvents(EVENT_LOGIN_CLICK);
             }}
           >
             {__("Login")}
@@ -988,6 +1030,7 @@ export class MyAccountOverlay extends PureComponent {
             className="btn register-btn"
             onClick={() => {
               updateAccountViewState(STATE_CREATE_ACCOUNT);
+              sendEvents(EVENT_REGISTER_CLICK);
             }}
           >
             {__("Register")}
@@ -998,6 +1041,7 @@ export class MyAccountOverlay extends PureComponent {
             className="MyAccountTabListItem hover-list-item"
             onClick={() => {
               updateAccountViewState(STATE_SIGN_IN, "RedirectToMyOrders");
+              sendEvents(EVENT_GUEST_ORDERS_CLICK);
             }}
           >
             <a className="list-item-link">
@@ -1018,6 +1062,7 @@ export class MyAccountOverlay extends PureComponent {
             className="MyAccountTabListItem"
             onClick={() => {
               updateAccountViewState(STATE_SIGN_IN, "RedirectToMyReturns");
+              sendEvents(EVENT_GUEST_RETURNS_CLICK);
             }}
           >
             <a className="list-item-link">
@@ -1039,7 +1084,10 @@ export class MyAccountOverlay extends PureComponent {
           <Link
             className="list-item-link"
             to="/return-information"
-            onClick={this.closePopup.bind(this)}
+            onClick={() => {
+              this.closePopup.bind(this);
+              sendEvents(EVENT_RETURN_POLICY_CLICK);
+            }}
           >
             <div className="item-pill">
               <div className="options-icon">
@@ -1056,7 +1104,10 @@ export class MyAccountOverlay extends PureComponent {
           <Link
             className="list-item-link"
             to="/shipping-policy"
-            onClick={this.closePopup.bind(this)}
+            onClick={() => {
+              this.closePopup.bind(this);
+              sendEvents(EVENT_SHIPPING_POLICY_CLICK);
+            }}
           >
             <div className="item-pill">
               <div className="options-icon">
@@ -1073,7 +1124,10 @@ export class MyAccountOverlay extends PureComponent {
           <Link
             className="list-item-link"
             to="/faq"
-            onClick={this.closePopup.bind(this)}
+            onClick={() => {
+              this.closePopup.bind(this);
+              sendEvents(EVENT_FAQ_CLICK);
+            }}
           >
             <div className="item-pill">
               <Info width={25} />
@@ -1099,6 +1153,7 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       onFormError,
       handleForgotPassword,
+      sendEvents,
     } = this.props;
     const {
       isArabic,
@@ -1172,6 +1227,7 @@ export class MyAccountOverlay extends PureComponent {
               onChange={this.setUserIdentifierType.bind(this)}
               onFocus={() => {
                 this.onFocus();
+                sendEvents(EVENT_TYPE_USERNAME);
               }}
               onBlur={this.onBlur}
               onPaste={() => {
@@ -1188,6 +1244,7 @@ export class MyAccountOverlay extends PureComponent {
                 id="password"
                 name="password"
                 autocomplete="current-password"
+                onFocus={() => sendEvents(EVENT_TYPE_PASSWORD)}
                 validation={this.getValidationForPassword()}
                 mix={{
                   block: "Password",
@@ -1211,6 +1268,7 @@ export class MyAccountOverlay extends PureComponent {
               mods: { isArabic },
             }}
             onClick={(e) => {
+              sendEvents(EVENT_FORGOT_PASSWORD_CLICK);
               handleForgotPassword(e);
             }}
           >
@@ -1233,6 +1291,7 @@ export class MyAccountOverlay extends PureComponent {
               block: "MyAccountOverlayV1",
               elem: isLoading ? "LoadingButton" : "",
             }}
+            onClick={() =>sendEvents(EVENT_SIGN_IN_BUTTON_CLICK)}
           >
             {!isLoading ? (
               __("Sign In")

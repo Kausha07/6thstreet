@@ -125,23 +125,6 @@ export class CartOverlayContainer extends PureComponent {
       );
     }
   }
-  getPageType() {
-    const { urlRewrite, currentRouteName } = window;
-
-    if (currentRouteName === "url-rewrite") {
-      if (typeof urlRewrite === "undefined") {
-        return "";
-      }
-
-      if (urlRewrite.notFound) {
-        return "notfound";
-      }
-
-      return (urlRewrite.type || "").toLowerCase();
-    }
-
-    return (currentRouteName || "").toLowerCase();
-  }
   sendBeginCheckoutEvent() {
     const {
       totals: {

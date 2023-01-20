@@ -12,6 +12,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export const mapStateToProps = (state) => ({
   items: state.WishlistReducer.items,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 class WishlistIconContainer extends PureComponent {
@@ -21,6 +22,7 @@ class WishlistIconContainer extends PureComponent {
     removeFromWishlist: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     pageType: PropTypes.string.isRequired,
+    newSignUpEnabled: PropTypes.bool
   };
 
   render() {

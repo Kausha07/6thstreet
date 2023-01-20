@@ -20,6 +20,7 @@ export const STATE_CONFIRM_EMAIL = 'confirmEmail';
 export const STATE_VERIFY_NUMBER = "otpVerification";
 export const CUSTOMER_ACCOUNT_OVERLAY_KEY = 'customer_account';
 export const STATE_INITIAL_LINKS = 'initialLinks';
+export const STATE_MENU = "menu";
 
 export const ENABLE_OTP_LOGIN = true;
 export const SECONDS_TO_RESEND_OTP = 30;

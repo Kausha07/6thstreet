@@ -15,6 +15,7 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (_state) => ({
     clubApparel: _state.ClubApparelReducer.clubApparel,
     is_exchange_enabled: _state.AppConfig.is_exchange_enabled,
+    newSignUpEnabled: _state.AppConfig.newSigninSignupVersionEnabled
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -28,7 +29,8 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         hideOverlay: PropTypes.func.isRequired,
         logout: PropTypes.func.isRequired,
-        onHide: PropTypes.func.isRequired
+        onHide: PropTypes.func.isRequired,
+        newSignUpEnabled:PropTypes.bool
     };
 
     containerFunctions = {
