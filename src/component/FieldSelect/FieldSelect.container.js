@@ -96,7 +96,6 @@ export class FieldSelectContainer extends SourceFieldSelectContainer {
     }
 
     handleSelectExpand() {
-        this.setState({showCityPopup: true})
         this.setState(({ isSelectExpanded }) => ({ isSelectExpanded: !isSelectExpanded }));
     }
 }
