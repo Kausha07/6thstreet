@@ -10,7 +10,8 @@ import Event,{
   EVENT_FB_SHARE,
   EVENT_PINTEREST_SHARE,
   EVENT_MAIL_SHARE,
-  EVENT_GTM_PDP_TRACKING
+  EVENT_GTM_PDP_TRACKING,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { SHARE_POPUP_ID } from "./SharePopup.config";
@@ -108,7 +109,7 @@ class SharePopup extends PureComponent {
         ? EVENT_PINTEREST_SHARE
         : "";
     if (MoeEvent && MoeEvent.length > 0) {
-      Moengage.track_event(MoeEvent, {
+      MOE_trackEvent(MoeEvent, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         product_name: name ? name : "",

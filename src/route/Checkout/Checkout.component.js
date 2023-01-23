@@ -35,6 +35,7 @@ import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_CONTINUE_AS_GUEST,
+  MOE_trackEvent
 } from "Util/Event";
 
 import {
@@ -498,7 +499,7 @@ export class Checkout extends SourceCheckout {
       category: "checkout",
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
-    Moengage.track_event(EVENT_CONTINUE_AS_GUEST, {
+    MOE_trackEvent(EVENT_CONTINUE_AS_GUEST, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

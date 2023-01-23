@@ -33,7 +33,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
 } from "../CheckoutPayments/CheckoutPayments.config";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent } from "Util/Event";
 import Applepay from "./icons/apple.png";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -164,7 +164,7 @@ class MyAccountOrderView extends PureComponent {
     );
   }
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: "OrderDetails",

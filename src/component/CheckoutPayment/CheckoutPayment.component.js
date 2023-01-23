@@ -10,7 +10,7 @@ import { paymentMethodType } from "Type/Checkout";
 import { isArabic } from "Util/App";
 import { getCountryFromUrl,getLanguageFromUrl } from "Util/Url/";
 import Image from "Component/Image";
-import {EVENT_MOE_ADD_PAYMENT_INFO} from "Util/Event"
+import {EVENT_MOE_ADD_PAYMENT_INFO, MOE_trackEvent} from "Util/Event"
 import { PAYMENTS_DATA } from "./CheckoutPayment.config";
 import tabbyAr from "./icons/tabby-logo-black-ar@2x.png";
 
@@ -47,7 +47,7 @@ export class CheckoutPayment extends PureComponent {
           : (method == "tabby_installments")
           ? "Tabby - Installments"
           : method;
-      Moengage.track_event(EVENT_MOE_ADD_PAYMENT_INFO, {
+      MOE_trackEvent(EVENT_MOE_ADD_PAYMENT_INFO, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         subtotal_amount: subtotal,

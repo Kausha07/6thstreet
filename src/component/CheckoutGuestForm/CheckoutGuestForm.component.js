@@ -20,6 +20,7 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_CTA_CLICK,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -117,7 +118,7 @@ export class CheckoutGuestForm extends FieldForm {
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
 
-    Moengage.track_event(EVENT_SIGN_IN_CTA_CLICK, {
+    MOE_trackEvent(EVENT_SIGN_IN_CTA_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

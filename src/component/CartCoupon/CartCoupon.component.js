@@ -7,6 +7,7 @@ import Event, {
   EVENT_APPLY_COUPON_FAILED,
   EVENT_APPLY_COUPON,
   EVENT_GTM_COUPON,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./CartCoupon.extended.style";
@@ -30,7 +31,7 @@ export class CartCoupon extends SourceCartCoupon {
   };
 
   sendMOEEvents(event, coupon) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       coupon_code: coupon || "",

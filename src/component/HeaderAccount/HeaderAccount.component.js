@@ -16,6 +16,7 @@ import Event, {
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -128,7 +129,7 @@ class HeaderAccount extends PureComponent {
   sendMoeEvents(event) {
     const {newSignUpEnabled} = this.props;
     if (event !== EVENT_ACCOUNT_TAB_ICON && !newSignUpEnabled){
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",

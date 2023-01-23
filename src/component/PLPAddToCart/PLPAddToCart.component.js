@@ -16,6 +16,7 @@ import Event, {
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -532,7 +533,7 @@ class PLPAddToCart extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
