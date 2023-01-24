@@ -3,7 +3,7 @@ import "./CareemPay.style";
 import { careemPayCreateInvoice } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 
 
-function CareemPay() {
+function CareemPay({ continueAsGuest, isSignedIn }) {
     const [funShouldRun, setFunShouldRun] = useState(true);
 
   const addCareemPayScripts = () => {
@@ -98,10 +98,10 @@ function CareemPay() {
   return (
     <>
       <div block="Seperator3">{/* or */} </div>
-      <div block="orTextdiv">or</div>
+      {isSignedIn ? null : <div block="orTextdiv">or</div>}
       <div className="carrrmPayWrapperDiv">
         <br />
-        <br />
+        <h3>1-click Checkout</h3>
         <div className="carremPayInnerDiv">
           <button id="careemBtn" className="careemBtnCss">
             checkout
