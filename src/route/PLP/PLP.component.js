@@ -22,9 +22,11 @@ import Event, {
 } from "Util/Event";
 import Logger from "Util/Logger";
 import CDN from "../../util/API/provider/CDN";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
+import { getCountryFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -46,6 +48,8 @@ export class PLP extends PureComponent {
       isSortByOverlayOpen: false,
       selectedSortOption : 'recommended'
     };
+    this.getContent();
+    this.handleClick = this.handleClick.bind(this);
     this.sortByOverlay = createRef();
   }
 
@@ -89,6 +93,9 @@ export class PLP extends PureComponent {
         const resp = await CDN.get(
           `resources/20191010_staging/pages/plp_footer_${contentCategory}.json`
         );
+        // const resp = await getStaticFile(`plp_footer_${contentCategory}`, {
+        //   $FILE_NAME: `pages/plp_footer_${contentCategory}.json`,
+        // });
         if (resp) {
           this.setState({
             footerContent: resp,
@@ -227,15 +234,37 @@ export class PLP extends PureComponent {
           getCategoryLevel.length == 2
             ? footerContent.data?.[0]?.[getCategoryLevel[1]]
             : getCategoryLevel.length == 3
-            ? footerContent.data?.[0]?.[
-                getCategoryLevel[1]
-              ]?.[getCategoryLevel[2]]
+            ? footerContent.data?.[0]?.[getCategoryLevel[1]]?.[
+                getCategoryLevel[2]
+              ]
             : null;
         const contentDescription = isArabic ? "ar" : "en";
+        const countryName =
+        getCountryFromUrl() == "AE"
+          ? __("UAE")
+          : getCountryFromUrl() == "SA"
+          ? __("Saudi Arabia")
+          : getCountryFromUrl() == "KW"
+          ? __("Kuwait")
+          : getCountryFromUrl() == "OM"
+          ? __("Oman")
+          : getCountryFromUrl() == "BH"
+          ? __("Bahrain")
+          : getCountryFromUrl() == "QA"
+          ? __("Qatar")
+          : __("Country");
+      
         if (footerHtml && footerHtml?.[contentDescription]) {
+          const footerContentDesc = footerHtml[contentDescription];
+          const updatedContent = footerContentDesc.includes(
+            "6sCountryName"
+          )
+            ? footerContentDesc.replace("6sCountryName", countryName)
+            : footerContentDesc;
+          
           return (
             <>
-              <div block="PLP-FooterWrapper" mods={{isArabic}}>
+              <div block="PLP-FooterWrapper" mods={{ isArabic }}>
                 <div
                   className={
                     isToggleOn
@@ -243,14 +272,23 @@ export class PLP extends PureComponent {
                       : "PLP-FooterContainer loadLess"
                   }
                   dangerouslySetInnerHTML={{
-                    __html: footerHtml?.[contentDescription],
+                    __html: updatedContent,
                   }}
                 />
-                {footerHtml?.[contentDescription].length > 180 ? (
-                  <div className="loadMoreBtn">
-                    <button onClick={this.handleClick}>
-                      {isToggleOn ? __("Read more") : __("Read less")}
-                    </button>
+                {footerContentDesc.length > 180 ? (
+                  <div className="loadMore-section">
+                    <div
+                      className={
+                        isToggleOn
+                          ? "loadMore-Overlay show"
+                          : "loadMore-Overlay"
+                      }
+                    ></div>
+                    <div className="loadMoreBtn">
+                      <button onClick={this.handleClick}>
+                        {isToggleOn ? __("Read more") : __("Read less")}
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   ""
@@ -453,7 +491,7 @@ export class PLP extends PureComponent {
               )}
             </div>
           </ContentWrapper>
-          {!isMobile.any() && this.renderFooterContent()}
+          {this.renderFooterContent()}
         </main>
       );
     }

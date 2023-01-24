@@ -243,11 +243,29 @@
 }
 .PLP{
   &-FooterWrapper {
+    @include mobile {
+      display: none;
+    }
     background: #f8fafb;
     margin: 40px 0 -82px;
     color: #000;
     overflow: hidden;
     padding-bottom: 40px;
+    .loadMore-section{
+      position: relative;
+      .loadMore-Overlay{
+        display: none;
+        &.show{
+          display: block;
+          position: absolute;
+          box-shadow:  0 -30px 50px 12px rgba(248, 250, 251, 0.8%);
+          top: -15px;
+          width: 100%;
+          left: 0;
+          height: 80px;
+        }
+      }
+    }
     .loadMoreBtn {
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);
@@ -307,12 +325,12 @@
     }
   }
   &-FooterContent {
-    margin: 50px 0;
+    margin: 50px 0 0;
   }
   &-FooterContainer {
     width: var(--main-container-width-dsk);
     max-width: var(--container-max-width);
-    margin: auto auto 60px;
+    margin: auto auto 10px;
     &.loadMore {
       overflow: hidden;
       text-overflow: ellipsis;
