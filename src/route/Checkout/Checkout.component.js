@@ -695,7 +695,7 @@ export class Checkout extends SourceCheckout {
           </div>
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
-        { isCareemPayEnabled && !continueAsGuest  ? (
+        { isCareemPayEnabled ? (
             <CareemPay 
               continueAsGuest={continueAsGuest}
               isSignedIn={isSignedIn}

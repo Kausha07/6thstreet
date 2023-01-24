@@ -4,7 +4,6 @@ import { careemPayCreateInvoice } from "Util/API/endpoint/Checkout/Checkout.endp
 
 
 function CareemPay({ continueAsGuest, isSignedIn }) {
-    const [funShouldRun, setFunShouldRun] = useState(true);
 
   const addCareemPayScripts = () => {
     const script = document.createElement("script");
@@ -85,15 +84,21 @@ function CareemPay({ continueAsGuest, isSignedIn }) {
   };
 
   useEffect(() => {
+    window.addEventListener("careempayready", () => {
+      CareemPayfun();
+    });
     addCareemPayScripts();
   }, []);
 
   useEffect(() => {
-    if (window.CareemPay && funShouldRun) {
+    if (window.CareemPay) {
       CareemPayfun();
-      setFunShouldRun(false);
     }
-  });
+  },[continueAsGuest, isSignedIn]);
+
+  if(continueAsGuest) {
+    return null;
+  }
 
   return (
     <>
