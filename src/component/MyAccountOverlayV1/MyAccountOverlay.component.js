@@ -1169,7 +1169,7 @@ export class MyAccountOverlay extends PureComponent {
                     this.setState({
                       currentPhoneCodeCountry: customerCountry, 
                     })
-                  validMobileLength == this.state.phoneInSignin.length
+                  validMobileLength == this.state.phoneInSignin?.length
                     ? this.setState({
                         isSignInValidated: true,
                       })
