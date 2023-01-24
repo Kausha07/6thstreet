@@ -419,6 +419,7 @@
         margin: 40px 0;
         background: #fff;
         text-align: center;
+        border-radius: 10px;
           a{
             text-decoration: none;
             font-weight: 400;
@@ -454,6 +455,15 @@
           }
         }
       } 
+    }
+    .bgWhite{
+      padding: 30px;
+      background: #fff;
+      margin-top: 30px;
+      border-radius: 10px;
+      & >h2:first-child{
+        margin-top: 0;
+      }
     }
   }
 }
