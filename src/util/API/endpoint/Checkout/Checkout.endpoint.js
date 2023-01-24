@@ -65,3 +65,6 @@ export const getCardType = (bin) =>
 
 export const verifyUserPhone = ({ data }) =>
   MobileAPI.put("/otp/verify", data) || {};
+
+export const careemPayCreateInvoice = ({data}) => 
+  MobileAPI.post(`/careem/invoice/create`, data) || {}
