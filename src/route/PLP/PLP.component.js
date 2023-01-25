@@ -21,7 +21,6 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import Logger from "Util/Logger";
-import CDN from "../../util/API/provider/CDN";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
@@ -83,26 +82,36 @@ export class PLP extends PureComponent {
 
   getContent = async () => {
     const pagePathName = new URL(window.location.href).pathname;
-    const getCategoryLevel = pagePathName
+    if (pagePathName.includes(".html")) {
+      const getCategoryLevel = pagePathName
         .split(".html")[0]
         .substring(1)
         .split("/");
-    const contentCategory = getCategoryLevel && getCategoryLevel !== "all" ? getCategoryLevel[0] : null;
-    if(contentCategory){
-      try {
-        const resp = await getStaticFile(`plp_footer_${contentCategory}`, {
-          $FILE_NAME: `pages/plp_footer_${contentCategory}.json`,
-        });
-        if (resp) {
-          this.setState({
-            footerContent: resp,
+      const contentFileName =
+        getCategoryLevel?.[0] == "women"
+          ? "plp_footer_women"
+          : getCategoryLevel?.[0] == "men"
+          ? "plp_footer_men"
+          : getCategoryLevel?.[0] == "kids"
+          ? "plp_footer_kids"
+          : getCategoryLevel?.[0] == "home"
+          ? "plp_footer_home"
+          : null;
+      if (contentFileName && getCategoryLevel?.length > 1) {
+        try {
+          const resp = await getStaticFile(contentFileName, {
+            $FILE_NAME: `pages/${contentFileName}.json`,
           });
+          if (resp) {
+            this.setState({
+              footerContent: resp,
+            });
+          }
+        } catch (e) {
+          Logger.log(e);
         }
-      } catch (e) {
-        Logger.log(e);
       }
     }
-    
   };
 
   handleClick() {
