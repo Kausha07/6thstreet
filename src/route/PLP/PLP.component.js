@@ -226,7 +226,6 @@ export class PLP extends PureComponent {
         .split(".html")[0]
         .substring(1)
         .split("/");
-        console.log("getCategoryLevel", getCategoryLevel)
       if (getCategoryLevel.length > 1) {
         const footerHtml =
           getCategoryLevel.length == 2
@@ -236,7 +235,6 @@ export class PLP extends PureComponent {
                 getCategoryLevel[2]
               ]
             : null;
-            console.log("footerContent",footerHtml);
         const contentDescription = isArabic ? "ar" : "en";
         const countryName =
         getCountryFromUrl() == "AE"
