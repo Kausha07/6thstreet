@@ -1,8 +1,8 @@
 import MoEngage from "react-moengage";
 
-export const MOE_trackEvent = (name, { options }) => {
+export const MOE_trackEvent = (name, options) => {
   if (MoEngage.moe && window.Moengage) {
-    Moengage.track_event(name, { options });
+    Moengage.track_event(name, options);
   }
 };
 export const MOE_AddFirstName = (firstName) => {
