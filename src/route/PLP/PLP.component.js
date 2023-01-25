@@ -90,12 +90,9 @@ export class PLP extends PureComponent {
     const contentCategory = getCategoryLevel && getCategoryLevel !== "all" ? getCategoryLevel[0] : null;
     if(contentCategory){
       try {
-        const resp = await CDN.get(
-          `resources/20191010_staging/pages/plp_footer_${contentCategory}.json`
-        );
-        // const resp = await getStaticFile(`plp_footer_${contentCategory}`, {
-        //   $FILE_NAME: `pages/plp_footer_${contentCategory}.json`,
-        // });
+        const resp = await getStaticFile(`plp_footer_${contentCategory}`, {
+          $FILE_NAME: `pages/plp_footer_${contentCategory}.json`,
+        });
         if (resp) {
           this.setState({
             footerContent: resp,
@@ -224,20 +221,22 @@ export class PLP extends PureComponent {
   renderFooterContent() {
     const { footerContent, isArabic, isToggleOn } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
-    if (pagePathName.includes(".html") && footerContent.data?.[0]) {
+    if (pagePathName.includes(".html") && footerContent?.[0]) {
       const getCategoryLevel = pagePathName
         .split(".html")[0]
         .substring(1)
         .split("/");
+        console.log("getCategoryLevel", getCategoryLevel)
       if (getCategoryLevel.length > 1) {
         const footerHtml =
           getCategoryLevel.length == 2
-            ? footerContent.data?.[0]?.[getCategoryLevel[1]]
+            ? footerContent?.[0]?.[getCategoryLevel[1]]
             : getCategoryLevel.length == 3
-            ? footerContent.data?.[0]?.[getCategoryLevel[1]]?.[
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[
                 getCategoryLevel[2]
               ]
             : null;
+            console.log("footerContent",footerHtml);
         const contentDescription = isArabic ? "ar" : "en";
         const countryName =
         getCountryFromUrl() == "AE"
