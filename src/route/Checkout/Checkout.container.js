@@ -46,7 +46,8 @@ import Event, {
   EVENT_MOE_ADD_PAYMENT_INFO,
   EVENT_MOE_EDD_TRACK_ON_ORDER,
   EVENT_GTM_CHECKOUT_BILLING,
-  MOE_trackEvent
+  MOE_trackEvent,
+  MOE_AddUniqueID
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -792,12 +793,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      isSignedIn
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
     let eddItems = [];
+    
+    if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
+      MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
+    }
     if (edd_info?.is_enable && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {

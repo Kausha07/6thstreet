@@ -61,7 +61,6 @@ import Event, {
   EVENT_OTP_VERIFY_FAILED,
   EVENT_RESET_YOUR_PASSWORD_SUCCESS,
   EVENT_RESET_YOUR_PASSWORD_FAILED,
-  EVENT_FORGOT_PASSWORD_SCREEN_VIEW,
   EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW,
   EVENT_ACCOUNT_TAB_ICON,
   MOE_AddFirstName,
@@ -805,7 +804,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       title: __("Forgot password"),
       onBackClick: () => this.handleSignIn(e),
     });
-    this.sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
   }
 
   handleSignIn(e) {
