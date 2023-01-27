@@ -121,7 +121,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPDetails() {
-    return <PLPDetails {...this.props} />;
+    return <PLPDetails {...this.props} isBannerData = {this.state.bannerData} />;
   }
 
   renderPLPFilters() {

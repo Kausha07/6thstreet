@@ -26,11 +26,12 @@ export class PLPDetailsContainer extends PureComponent {
 
   containerProps = () => {
     // isDisabled: this._getIsDisabled()
-    const { brandDescription, brandImg, brandName } = this.props;
+    const { brandDescription, brandImg, brandName, isBannerData } = this.props;
     return {
       brandDescription,
       brandImg,
       brandName,
+      isBannerData
     };
   };
 

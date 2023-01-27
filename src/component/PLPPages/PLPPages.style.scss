@@ -139,8 +139,13 @@ main {
   &.PLP {
     .ContentWrapper {
       & > .PLPDetails {
+        &_isBanner {
+          @include mobile() {
+            padding-top: 50px !important;
+          }
+        }
         @include mobile() {
-          padding-top: 50px ;
+          padding-top: 22px;
         }
       }
     }

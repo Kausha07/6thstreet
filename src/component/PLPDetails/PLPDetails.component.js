@@ -111,8 +111,11 @@ class PLPDetails extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isBannerData } = this.props;
+    let isFromCircleItemSlider = window.location.href.includes("plp_config");
+    const isBanner = isBannerData && isFromCircleItemSlider ? true : false
     return (
-      <div block="PLPDetails" mods={{ isArabic }}>
+      <div block="PLPDetails" mods={{ isArabic, isBanner}}>
         {this.renderContent()}
       </div>
     );
