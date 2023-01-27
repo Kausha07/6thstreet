@@ -243,14 +243,15 @@
 }
 .PLP{
   &-FooterWrapper {
-    @include mobile {
-      display: none;
-    }
     background: #f8fafb;
     margin: 40px 0 -82px;
     color: #000;
     overflow: hidden;
     padding-bottom: 40px;
+    @include mobile {
+      margin: 40px 0 0;
+      padding-bottom: 100px;
+    }
     .loadMore-section{
       position: relative;
       .loadMore-Overlay{
@@ -270,11 +271,15 @@
       width: var(--main-container-width-dsk);
       max-width: var(--container-max-width);
       margin: 0 auto 20px;
+      @include mobile {
+        width: 90%;
+        max-width: 90%;
+      }
       button {
         border: 1px solid #000;
         border-radius: 5px;
         padding: 7px 20px;
-        margin: 20px 0;
+        margin: 0;
         background: #fff;
         height: 45px;
         text-transform: uppercase;
@@ -302,6 +307,9 @@
         }
         .shopBy-Grid{
           padding: 40px 80px 40px 40px;
+          @include mobile{
+            padding: 20px 0px;
+          }
         }
         .shopByGrid-List {
           tr{
@@ -331,6 +339,10 @@
     width: var(--main-container-width-dsk);
     max-width: var(--container-max-width);
     margin: auto auto 10px;
+    @include mobile {
+      width: 90%;
+      max-width: 90%;
+    }
     &.loadMore {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -381,12 +393,18 @@
         list-style-type: none;
         list-style-position: inside;
         padding-left: 3.25rem;
+        @include mobile{
+          padding-left: 2.25rem;
+        }
         &::before{
           position: absolute;
           left: 1em;
           top: 0.07em;
           content: '\2022';
           padding-right: 1.1225em;
+          @include mobile{
+            left: 0.5em;
+          }
         }
       }
       ul {
@@ -397,6 +415,10 @@
       }
       .shopByGrid-List{
         width: 100%;
+        @include mobile{
+          white-space: nowrap;
+          width: auto;
+        }
         tr{
           &:nth-child(even){
             background-color: unset;
@@ -412,6 +434,11 @@
               font-weight: 600;
             }
           }
+          td{
+            @include mobile{
+              padding: 10px 25px;
+            }
+          }
         }
       }
       .shopBy-Grid {
@@ -420,6 +447,11 @@
         background: #fff;
         text-align: center;
         border-radius: 10px;
+        @include mobile{
+          overflow: scroll;
+          padding: 20px 0px;
+          margin: 20px 0;
+        }
           a{
             text-decoration: none;
             font-weight: 400;
@@ -447,9 +479,15 @@
       .shopBy-inner {
         padding-left: 20px;
         overflow: hidden;
+        @include mobile{
+          padding-left: 10px;
+        }
         li {
           line-height: 1.8;
           margin: 10px 0;
+          @include mobile{
+            padding-left: 2.25rem;
+          }
           &:last-child{
             margin-bottom: 20px;
           }
@@ -461,6 +499,9 @@
       background: #fff;
       margin-top: 30px;
       border-radius: 10px;
+      @include mobile {
+        padding: 20px 15px;
+      }
       & >h2:first-child{
         margin-top: 0;
       }
