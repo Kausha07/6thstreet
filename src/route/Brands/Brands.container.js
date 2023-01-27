@@ -225,8 +225,8 @@ class BrandsContainer extends PureComponent {
         let filteredbrand = [];
         let combinedArr = [];
         Object.values(data[1]).filter((brand) => {
-          const { name } = brand;
-          if (activeBrandsList.includes(name)) {
+          const { name , name_ar} = brand;
+          if (activeBrandsList.includes(name) || activeBrandsList.includes(name_ar)) {
             filteredbrand.push(brand);
           }
         });
