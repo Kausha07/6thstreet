@@ -97,7 +97,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
             livePartyItems: response.playlists[2].shows,
           });
           setIsLive(
-            response.playlists[2].shows[0].isLive
+            response?.playlists[2]?.shows[0]?.isLive
           );
         }
         else{
