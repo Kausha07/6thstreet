@@ -4,6 +4,10 @@
     align-items: center;
     @include mobile{
         display: block;
+        margin-bottom: 0px;
+        &-Video{
+         margin-bottom: 20px;
+        }
     }
     video{
         margin: 0 auto;

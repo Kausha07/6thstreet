@@ -168,7 +168,16 @@ export class PLP extends PureComponent {
   }
 
   renderPLPDetails() {
-    return <PLPDetails {...this.props} />;
+    const { plpWidgetData } = this.props
+    const isBannerData = this.state.bannerData ? true : false;
+    const isFromCircleItemSlider = window.location.href.includes("plp_config");
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+    const widget = plpWidgetData?.filter((item) => item.tag == tagName);
+    return <PLPDetails {...this.props} isBannerData = {isBannerData && isFromCircleItemSlider} isWidgetData ={widget && widget.length !== 0} />;
   }
 
   renderPLPFilters() {
