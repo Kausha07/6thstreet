@@ -69,20 +69,20 @@ class BrandsContainer extends PureComponent {
   getGenderInAR = (gender) => {
     switch (gender) {
       case "men":
-        return "الرجال";
+        return "رجال";
       case "women":
-        return "النساء";
+        return "نساء";
       case "kids":
-        return "الأطفال";
+        return "أطفال";
     }
   };
   getGenderInEn = (gender) => {
     switch (gender) {
-      case "الرجال":
+      case "رجال":
         return "men";
-      case "النساء":
+      case "نساء":
         return "women";
-      case "الأطفال":
+      case "أطفال":
         return "kids";
     }
   };
@@ -97,7 +97,7 @@ class BrandsContainer extends PureComponent {
     const genderTab = isArabic ? this.getGenderInAR(brandType) : brandType;
     this.setState({ type: genderTab });
     this.requestShopByBrandWidgetData(brandType);
-    this.requestShopbyBrands(brandType);
+    this.requestShopbyBrands(genderTab);
     this.updateBreadcrumbs();
     this.updateHeaderState();
     this.setMetaData();
@@ -185,7 +185,7 @@ class BrandsContainer extends PureComponent {
       ? history.push(`/${gender}/shop-by-brands`)
       : history.push(`/shop-by-brands`);
     this.requestShopByBrandWidgetData(gender);
-    this.requestShopbyBrands(gender);
+    this.requestShopbyBrands(brandType);
     this.setState({ type: brandType });
   }
 
