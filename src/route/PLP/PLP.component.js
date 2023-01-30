@@ -240,26 +240,18 @@ export class PLP extends PureComponent {
           getCategoryLevel.length == 2
             ? footerContent?.[0]?.[getCategoryLevel[1]]
             : getCategoryLevel.length == 3
-            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[
-                getCategoryLevel[2]
-              ]
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[getCategoryLevel[2]]
             : null;
         const contentDescription = isArabic ? "ar" : "en";
-        const countryName =
-        getCountryFromUrl() == "AE"
-          ? __("UAE")
-          : getCountryFromUrl() == "SA"
-          ? __("Saudi Arabia")
-          : getCountryFromUrl() == "KW"
-          ? __("Kuwait")
-          : getCountryFromUrl() == "OM"
-          ? __("Oman")
-          : getCountryFromUrl() == "BH"
-          ? __("Bahrain")
-          : getCountryFromUrl() == "QA"
-          ? __("Qatar")
-          : __("Country");
-      
+        const storeMap = {
+          AE: isArabic ? "الإمارات" : "UAE",
+          SA: isArabic ? "السعودية" : "Saudi Arabia",
+          KW: isArabic ? "الكويت" : "Kuwait",
+          OM: isArabic ? "سلطنة عمان" : "Oman",
+          BH: isArabic ? "البحرين" : "Bahrain",
+          QA: isArabic ? "قطر" : "Qatar",
+        };
+        const countryName = storeMap[getCountryFromUrl().toUpperCase()] || "";
         if (footerHtml && footerHtml?.[contentDescription]) {
           const footerContentDesc = footerHtml[contentDescription];
           const updatedContent = footerContentDesc.includes(
@@ -306,7 +298,7 @@ export class PLP extends PureComponent {
       }
     }
   }
-  
+
   showCouponDetial = (e) => {
     e.stopPropagation();
     this.setState({
