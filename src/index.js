@@ -26,7 +26,7 @@ import App from "Component/App";
 
 const history = createBrowserHistory();
 
-const pattern = /HeadlessChrome/i; 
+const pattern = /bot/i; 
 window.__DEV__ = process.env.NODE_ENV === "development";
 window.__useragent__ = navigator.userAgent;
 window.__isBOT__ = pattern.test(navigator.userAgent);
