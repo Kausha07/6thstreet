@@ -19,6 +19,7 @@ import Event, {
   EVENT_GTM_PRODUCT_DETAIL,
   VUE_PAGE_VIEW,
   EVENT_MOE_PRODUCT_DETAIL,
+  MOE_trackEvent
 } from "Util/Event";
 import PDP from "./PDP.component";
 import browserHistory from "Util/History";
@@ -224,7 +225,7 @@ export class PDPContainer extends PureComponent {
         },
       });
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
+      MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender

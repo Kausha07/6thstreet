@@ -26,7 +26,7 @@ import {
 import { TotalsType } from "Type/MiniCart";
 import { isSignedIn } from "Util/Auth";
 import history from "Util/History";
-import { EVENT_MOE_VIEW_BAG, EVENT_MOE_BEGIN_CHECKOUT } from "Util/Event";
+import { EVENT_MOE_VIEW_BAG, EVENT_MOE_BEGIN_CHECKOUT, MOE_trackEvent } from "Util/Event";
 import CartOverlay from "./CartOverlay.component";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -110,7 +110,7 @@ export class CartOverlayContainer extends PureComponent {
       isCheckoutAvailable,
       showNotification,
     } = this.props;
-    Moengage.track_event(EVENT_MOE_VIEW_BAG, {
+    MOE_trackEvent(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
@@ -169,7 +169,7 @@ export class CartOverlayContainer extends PureComponent {
       productCategory.push(productKeys?.original_price);
       productItemPrice.push(productKeys?.itemPrice);
     });
-    Moengage.track_event(EVENT_MOE_BEGIN_CHECKOUT, {
+    MOE_trackEvent(EVENT_MOE_BEGIN_CHECKOUT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

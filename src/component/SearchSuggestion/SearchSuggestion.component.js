@@ -29,6 +29,7 @@ import Event, {
   EVENT_MOE_TRENDING_BRANDS_CLICK,
   EVENT_MOE_TRENDING_TAGS_CLICK,
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -266,7 +267,7 @@ class SearchSuggestion extends PureComponent {
 
   handleProductClick = (product) => {
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
-    Moengage.track_event(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
+    MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: product?.name || "",
@@ -279,7 +280,7 @@ class SearchSuggestion extends PureComponent {
   handleBrandsClick = (brandItem) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
-    Moengage.track_event(EVENT_MOE_BRANDS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_BRANDS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: brandItem || "",
@@ -292,7 +293,7 @@ class SearchSuggestion extends PureComponent {
   handleTrendingBrandsClick = (brandName) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
-    Moengage.track_event(EVENT_MOE_TRENDING_BRANDS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_TRENDING_BRANDS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: brandName || "",
@@ -305,7 +306,7 @@ class SearchSuggestion extends PureComponent {
   handleTrendingTagsClick = (label) => {
     const { closeSearch, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
-    Moengage.track_event(EVENT_MOE_TRENDING_TAGS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_TRENDING_TAGS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: label || "",
@@ -374,7 +375,7 @@ class SearchSuggestion extends PureComponent {
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
         Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
-        Moengage.track_event(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
+        MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
@@ -382,7 +383,7 @@ class SearchSuggestion extends PureComponent {
         });
       } else {
         Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
-        Moengage.track_event(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
+        MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
@@ -848,7 +849,7 @@ class SearchSuggestion extends PureComponent {
           }}
           onClick={() => {
             Event.dispatch(EVENT_CLICK_TOP_SEARCHES_CLICK, search);
-            Moengage.track_event(EVENT_CLICK_TOP_SEARCHES_CLICK, {
+            MOE_trackEvent(EVENT_CLICK_TOP_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
               search_term: search || "",
@@ -937,7 +938,7 @@ class SearchSuggestion extends PureComponent {
           }
           onClick={() => {
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
-            Moengage.track_event(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
+            MOE_trackEvent(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
               search_term: name || "",

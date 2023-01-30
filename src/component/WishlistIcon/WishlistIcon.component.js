@@ -17,6 +17,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
   EVENT_WISHLIST_ICON_CLICK,
   EVENT_GTM_NEW_AUTHENTICATION,
+  MOE_trackEvent
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
@@ -102,7 +103,7 @@ class WishlistIcon extends PureComponent {
       const itemPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_special_price"]
         : "";
-      Moengage.track_event(EVENT_MOE_REMOVE_FROM_WISHLIST, {
+      MOE_trackEvent(EVENT_MOE_REMOVE_FROM_WISHLIST, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -172,7 +173,7 @@ class WishlistIcon extends PureComponent {
       : "";
     if (pageType == "search") {
       Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data?.name);
-      Moengage.track_event(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
+      MOE_trackEvent(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -196,7 +197,7 @@ class WishlistIcon extends PureComponent {
     const windowLocation = new URL(window.location.href);
     const parseProductUrl = windowLocation + data?.url_key + ".html";
 
-    Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
+    MOE_trackEvent(EVENT_MOE_ADD_TO_WISHLIST, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

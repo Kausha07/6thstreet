@@ -26,6 +26,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_WISHLIST_ICON_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -192,7 +193,7 @@ class MobileBottomBar extends NavigationAbstract {
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     }else{
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",

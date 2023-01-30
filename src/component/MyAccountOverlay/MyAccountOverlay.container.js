@@ -61,6 +61,11 @@ import Event, {
   EVENT_REGISTER_TAB_CLICK,
   EVENT_REGISTERATION_DETAILS_ENTERED,
   EVENT_RESEND_VERIFICATION_CODE,
+  MOE_trackEvent,
+  MOE_AddFirstName,
+  MOE_addLastName,
+  MOE_addEmail,
+  MOE_addMobile
 } from "Util/Event";
 
 export const MyAccountDispatcher = import(
@@ -215,7 +220,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -492,17 +497,17 @@ export class MyAccountOverlayContainer extends PureComponent {
               ? customerRegisterData?.name.substr(customerRegisterData?.name.indexOf(" ") + 1)
               : "";
               if (firstName){
-                Moengage.add_first_name(firstName);
+                MOE_AddFirstName(firstName);
               }
               if (lastName){
-                Moengage.add_last_name(lastName);
+                MOE_addLastName(lastName);
               }
             }
             if(customerRegisterData?.contact_no){
-              Moengage.add_mobile(customerRegisterData.contact_no);
+              MOE_addMobile(customerRegisterData.contact_no);
             }
             if(customerRegisterData?.email){
-              Moengage.add_email(customerRegisterData.email);
+              MOE_addEmail(customerRegisterData.email);
             }
           }
           try {

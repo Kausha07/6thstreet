@@ -15,6 +15,7 @@ import Event, {
   EVENT_MORE_FROM_THIS_BRAND_CLICK,
   EVENT_GTM_PDP_TRACKING,
   EVENT_EXPAND_PRODUCT_DETAILS,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -731,7 +732,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
