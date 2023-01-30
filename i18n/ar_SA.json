@@ -1180,6 +1180,8 @@
     "discount": null,
     "price_low": null,
     "price_high": null,
-    "KNET": null,
-    "Read less": "إقرأ أقل"
+    "Read less": "إقرأ أقل",
+    "SELECT A CITY": "حدد المدينة",
+    "SELECT AN AREA": "حدد المنطقة",
+    "Search...": " ابحث..."
 }
