@@ -20,9 +20,12 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
+import Logger from "Util/Logger";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
+import { getCountryFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -39,9 +42,13 @@ export class PLP extends PureComponent {
       circleBannerUrl: null,
       activeFilters: {},
       isArabic: isArabic(),
+      footerContent: {},
+      isToggleOn: true,
       isSortByOverlayOpen: false,
       selectedSortOption : 'recommended'
     };
+    this.getContent();
+    this.handleClick = this.handleClick.bind(this);
     this.sortByOverlay = createRef();
   }
 
@@ -71,6 +78,46 @@ export class PLP extends PureComponent {
     const { resetPLPData } = this.props;
     window.removeEventListener("mousedown", this.outsideCouponPopupClick);
     // resetPLPData();
+  }
+
+  getContent = async () => {
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html")) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      const contentFileName =
+        getCategoryLevel?.[0] == "women"
+          ? "plp_footer_women"
+          : getCategoryLevel?.[0] == "men"
+          ? "plp_footer_men"
+          : getCategoryLevel?.[0] == "kids"
+          ? "plp_footer_kids"
+          : getCategoryLevel?.[0] == "home"
+          ? "plp_footer_home"
+          : null;
+      if (contentFileName && getCategoryLevel?.length > 1) {
+        try {
+          const resp = await getStaticFile(contentFileName, {
+            $FILE_NAME: `pages/${contentFileName}.json`,
+          });
+          if (resp) {
+            this.setState({
+              footerContent: resp,
+            });
+          }
+        } catch (e) {
+          Logger.log(e);
+        }
+      }
+    }
+  };
+
+  handleClick() {
+    this.setState((prevState) => ({
+      isToggleOn: !prevState.isToggleOn,
+    }));
   }
 
   showMyAccountPopup = () => {
@@ -180,6 +227,86 @@ export class PLP extends PureComponent {
     );
   };
 
+  renderFooterContent() {
+    const { footerContent, isArabic, isToggleOn } = this.state;
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html") && footerContent?.[0]) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      if (getCategoryLevel.length > 1) {
+        const footerHtml =
+          getCategoryLevel.length == 2
+            ? footerContent?.[0]?.[getCategoryLevel[1]]
+            : getCategoryLevel.length == 3
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[
+                getCategoryLevel[2]
+              ]
+            : null;
+        const contentDescription = isArabic ? "ar" : "en";
+        const countryName =
+        getCountryFromUrl() == "AE"
+          ? __("UAE")
+          : getCountryFromUrl() == "SA"
+          ? __("Saudi Arabia")
+          : getCountryFromUrl() == "KW"
+          ? __("Kuwait")
+          : getCountryFromUrl() == "OM"
+          ? __("Oman")
+          : getCountryFromUrl() == "BH"
+          ? __("Bahrain")
+          : getCountryFromUrl() == "QA"
+          ? __("Qatar")
+          : __("Country");
+      
+        if (footerHtml && footerHtml?.[contentDescription]) {
+          const footerContentDesc = footerHtml[contentDescription];
+          const updatedContent = footerContentDesc.includes(
+            "currentEmiratesName"
+          )
+            ? footerContentDesc.replaceAll("currentEmiratesName", countryName)
+            : footerContentDesc;
+          
+          return (
+            <>
+              <div block="PLP-FooterWrapper" mods={{ isArabic }}>
+                <div
+                  className={
+                    isToggleOn
+                      ? "PLP-FooterContainer loadMore"
+                      : "PLP-FooterContainer loadLess"
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: updatedContent,
+                  }}
+                />
+                {footerContentDesc.length > 180 ? (
+                  <div className="loadMore-section">
+                    <div
+                      className={
+                        isToggleOn
+                          ? "loadMore-Overlay show"
+                          : "loadMore-Overlay"
+                      }
+                    ></div>
+                    <div className="loadMoreBtn">
+                      <button onClick={this.handleClick}>
+                        {isToggleOn ? __("Read more") : __("Read less")}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          );
+        }
+      }
+    }
+  }
+  
   showCouponDetial = (e) => {
     e.stopPropagation();
     this.setState({
@@ -370,6 +497,7 @@ export class PLP extends PureComponent {
               )}
             </div>
           </ContentWrapper>
+          {this.renderFooterContent()}
         </main>
       );
     }
