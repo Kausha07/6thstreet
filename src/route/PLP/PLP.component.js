@@ -263,9 +263,9 @@ export class PLP extends PureComponent {
         if (footerHtml && footerHtml?.[contentDescription]) {
           const footerContentDesc = footerHtml[contentDescription];
           const updatedContent = footerContentDesc.includes(
-            "6sCountryName"
+            "currentEmiratesName"
           )
-            ? footerContentDesc.replace("6sCountryName", countryName)
+            ? footerContentDesc.replace("currentEmiratesName", countryName)
             : footerContentDesc;
           
           return (
