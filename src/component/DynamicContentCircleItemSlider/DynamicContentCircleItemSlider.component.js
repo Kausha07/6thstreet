@@ -213,7 +213,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           is_live_party_enabled &&
           livePartyItems.length &&
               livePartyItems[0] !== null &&
-              livePartyItems[0].isLive
+              livePartyItems[0]?.isLive
                 ? livePartyItems.map(this.renderLiveParty)
                 : this.renderDefaultLivePartyCircle(item)
               
