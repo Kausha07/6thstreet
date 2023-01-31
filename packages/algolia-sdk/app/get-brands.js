@@ -16,7 +16,7 @@ export default function getBrands(gender = "", options = {}) {
       if (err) {
         return reject(err);
       }
-      return resolve({ data: brands ? Object.keys(brands) : {} });
+      return resolve({ data: brands ? Object.keys(brands) : [] });
     })
   });
 }
