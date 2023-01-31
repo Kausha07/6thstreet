@@ -240,7 +240,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             },
             phonecode: {
                 type: 'text',
-                label: <CountryMiniFlag label={ countryId } />,
+                label: <div style={{paddingLeft: "10px"}}> <CountryMiniFlag label={ countryId } /> </div>,
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
                 autocomplete: 'none',
