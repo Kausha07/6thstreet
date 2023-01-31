@@ -131,9 +131,7 @@ const UrlRewrites = (props) => {
         }
       } else if (window.pageType === "CMS_PAGE") {
         history.push(`${pathname}`);
-      } else {
-        history.push(`${pathname}?${query}`);
-      }
+      } 
     }
   }, [state.query]);
 
