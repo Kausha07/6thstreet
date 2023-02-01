@@ -1,3 +1,5 @@
+import { memo } from "react";
+import { TYPE_CATEGORY, TYPE_PRODUCT, TYPE_CMS_PAGE } from "Util/Common/config";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import {
   CATEGORY,
@@ -6,49 +8,23 @@ import {
   PDP as PRODUCT_PAGE,
 } from "Component/Header/Header.config";
 import Loader from "Component/Loader";
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
 import CmsPage from "Route/CmsPage";
 import NoMatch from "Route/NoMatch";
 import PDP from "Route/PDP";
 import PLP from "Route/PLP";
-import {
-  TYPE_CATEGORY,
-  TYPE_CMS_PAGE,
-  TYPE_PRODUCT,
-} from "./UrlRewrites.config";
 import "./UrlRewrites.style";
 
-class UrlRewrites extends PureComponent {
-  constructor(props) {
-    super(props);
-    window.history.scrollRestoration = "manual";
-  }
-
-  static propTypes = {
-    type: PropTypes.string,
-    id: PropTypes.number,
-    sku: PropTypes.string,
-    isLoading: PropTypes.bool.isRequired,
-  };
-
-  static defaultProps = {
-    type: "",
-    id: -1,
-    sku: "",
-  };
-
-  typeMap = {
-    [TYPE_CATEGORY]: this.renderCategory.bind(this),
-    [TYPE_CMS_PAGE]: this.renderCmsPage.bind(this),
-    [TYPE_PRODUCT]: this.renderPDP.bind(this),
-  };
-
-  render404;
-
-  renderPDP() {
-    const { id, string_sku, brandDescription, brandImg, brandName } =
-      this.props;
+function UrlRewrite({
+  id,
+  string_sku,
+  brandDescription,
+  brandImg,
+  brandName,
+  query,
+  type,
+  isLoading,
+}) {
+  const renderPDP = () => {
     return (
       <GTMRouteWrapper route={PRODUCT_PAGE}>
         <PDP
@@ -60,10 +36,9 @@ class UrlRewrites extends PureComponent {
         />
       </GTMRouteWrapper>
     );
-  }
+  };
 
-  renderCategory() {
-    const { brandDescription, brandImg, brandName, query } = this.props;
+  const renderCategory = () => {
     return (
       <GTMRouteWrapper route={CATEGORY}>
         <PLP
@@ -71,30 +46,29 @@ class UrlRewrites extends PureComponent {
           brandImg={brandImg}
           brandName={brandName}
           query={query}
+          location={location}
         />
       </GTMRouteWrapper>
     );
-  }
+  };
 
-  renderCmsPage() {
-    const { id } = this.props;
-
+  const renderCmsPage = () => {
     return (
       <GTMRouteWrapper route={CMS_PAGE}>
         <CmsPage pageIds={id} />
       </GTMRouteWrapper>
     );
-  }
+  };
 
-  render() {
-    const { type, isLoading } = this.props;
-
-    this.render404 = () => (
+  const render404 = () => {
+    return (
       <GTMRouteWrapper route={NOT_FOUND}>
-        <NoMatch {...this.props} />
+        <NoMatch />
       </GTMRouteWrapper>
     );
+  };
 
+  const renderFunction = () => {
     if (isLoading) {
       return (
         <>
@@ -102,15 +76,23 @@ class UrlRewrites extends PureComponent {
           <Loader isLoading={isLoading} />
         </>
       );
+    } else if (type === TYPE_CATEGORY) {
+      return renderCategory();
+    } else if (type === TYPE_CMS_PAGE) {
+      return renderCmsPage();
+    } else if (type === TYPE_PRODUCT) {
+      return renderPDP();
+    } else {
+      return render404();
     }
-    const renderFunction = this.typeMap[type] || this.render404;
+  };
 
-    return (
-      <div block="UrlRewrites" id="UrlRewrites">
-        {renderFunction()}
-      </div>
-    );
-  }
+  return (
+    <div block="UrlRewrites" id="UrlRewrites">
+      {renderFunction()}
+    </div>
+  );
 }
 
+const UrlRewrites = memo(UrlRewrite);
 export default UrlRewrites;

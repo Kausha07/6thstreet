@@ -44,7 +44,7 @@ import {
 import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
+import { TYPE_CATEGORY } from "Util/Common/config";
 import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */

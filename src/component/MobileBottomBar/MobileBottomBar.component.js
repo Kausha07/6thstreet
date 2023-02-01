@@ -13,7 +13,7 @@ import {
   setIsMobileTabActive,
   setIsCurrentTabActive,
 } from "Store/MyAccount/MyAccount.action";
-import { TYPE_PRODUCT } from "Route/UrlRewrites/UrlRewrites.config";
+import { TYPE_PRODUCT } from "Util/Common/config";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import Event, {

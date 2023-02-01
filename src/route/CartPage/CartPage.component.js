@@ -46,7 +46,7 @@ import ProductItem from "Component/ProductItem";
 import "./CartPage.style";
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 
-import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
+import { TYPE_HOME } from "Util/Common/config";
 export class CartPage extends PureComponent {
   constructor(props) {
     super(props);

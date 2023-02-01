@@ -19,7 +19,7 @@ import {
   TYPE_CATEGORY,
   TYPE_HOME,
   TYPE_PRODUCT,
-} from "Route/UrlRewrites/UrlRewrites.config";
+} from "Util/Common/config";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
