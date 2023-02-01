@@ -27,7 +27,7 @@ import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
 import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
-import { TYPE_HOME } from "Util/Common/config";
+import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,

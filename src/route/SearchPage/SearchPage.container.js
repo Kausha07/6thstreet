@@ -11,7 +11,7 @@ import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { getUUID } from "Util/Auth";
 import { VUE_PAGE_VIEW } from "Util/Event";
 import SearchPage from "./SearchPage.component";
-import { TYPE_CATEGORY } from "Util/Common/config";
+import { TYPE_CATEGORY } from "../../route/UrlRewrites/UrlRewrites.config";
 import browserHistory from "Util/History";
 import { getCountryFromUrl } from "Util/Url/Url";
 
