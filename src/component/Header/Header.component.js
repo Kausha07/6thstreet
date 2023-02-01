@@ -16,7 +16,7 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT,
   TYPE_NOTFOUND,
-} from "Util/Common/config";
+} from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import isMobile from "Util/Mobile";
 import "./Header.style";

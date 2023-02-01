@@ -7,7 +7,7 @@ import {
   TYPE_CATEGORY,
   TYPE_CMS_PAGE,
   TYPE_PRODUCT,
-} from "Util/Common/config";
+} from "Route/UrlRewrites/UrlRewrites.config";
 import CA from "./icons/CA.svg";
 import COD from "./icons/COD.svg";
 import mastercard from "./icons/mastercard.svg";

@@ -6,7 +6,7 @@ import { Product } from "Util/API/endpoint/Product/Product.type";
 import PDPGallery from "./PDPGallery.component";
 import {
   TYPE_HOME,
-} from 'Util/Common/config';
+} from 'Route/UrlRewrites/UrlRewrites.config';
 export const mapStateToProps = (state) => ({
   currentIndex: state.PDP.imageIndex,
   isLoading: state.PDP.isLoading,
