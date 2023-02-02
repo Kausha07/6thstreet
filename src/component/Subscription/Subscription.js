@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "Store/Notification/Notification.action";
 import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_EMAIL_FOOTER_SUCCESS_CLICK } from "Util/Event";
+import { EVENT_EMAIL_FOOTER_SUCCESS_CLICK, MOE_trackEvent } from "Util/Event";
 import InfoIcon from "./ImagesAndIcons/info.svg";
 import SendAnimation from "./ImagesAndIcons/SendAnimation.json";
 import lottie from "lottie-web";
@@ -55,7 +55,7 @@ export default function Subscription() {
         if (typeof response.data.message === "string") {
           const messageString = response.data.message;
           dispatch(showNotification("success", messageString));
-          Moengage.track_event(EVENT_EMAIL_FOOTER_SUCCESS_CLICK, {
+          MOE_trackEvent(EVENT_EMAIL_FOOTER_SUCCESS_CLICK, {
             country: getCountryFromUrl().toUpperCase(),
             language: getLanguageFromUrl().toUpperCase(),
             app6thstreet_platform: "Web",
