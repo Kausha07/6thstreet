@@ -33,7 +33,8 @@ import Event, {
   VUE_REMOVE_FROM_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
-  EVENT_MOE_REMOVE_FROM_CART_FAILED
+  EVENT_MOE_REMOVE_FROM_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
@@ -368,7 +369,7 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

@@ -35,8 +35,10 @@ import Event, {
   EVENT_GTM_EDD_VISIBILITY,
   EVENT_TABBY_LEARN_MORE_CLICK,
   EVENT_GTM_PDP_TRACKING,
-  EVENT_MOE_EDD_VISIBILITY
+  EVENT_MOE_EDD_VISIBILITY,
+  MOE_trackEvent
 } from "Util/Event";
+import { TabbyPromoURL } from "./config";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -80,9 +82,9 @@ class PDPSummary extends PureComponent {
             }
           });
         } else {
-          Object.values(entry.areas_ar).filter((cityArea) => {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
             if (cityArea === area) {
-              areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
             }
           });
         }
@@ -176,15 +178,13 @@ class PDPSummary extends PureComponent {
     }
   };
 
-  componentDidMount() {
+  getTabbyResponse = () =>{
     const {
       product: { price },
-      TabbyInstallment,
-      product,
-      addressCityData,
+      TabbyInstallment
     } = this.props;
     const script = document.createElement("script");
-    script.src = "https://checkout.tabby.ai/tabby-promo.js";
+    script.src = TabbyPromoURL;
     document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -192,7 +192,14 @@ class PDPSummary extends PureComponent {
       const { default: defPrice } = priceData;
       TabbyInstallment(defPrice,currency);
     }
+  }
 
+  componentDidMount() {
+    const {
+      product,
+      addressCityData,
+    } = this.props;
+    this.getTabbyResponse();
     const countryCode = getCountryFromUrl();
     this.setState({
       countryCode: countryCode,
@@ -234,7 +241,7 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
-        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+        MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           edd_status: edd_info.has_pdp,
@@ -349,7 +356,7 @@ class PDPSummary extends PureComponent {
       },
       page: "pdp",
     });
-    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+    MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       edd_status: edd_info.has_pdp,
@@ -974,7 +981,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
+    MOE_trackEvent(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -993,7 +1000,7 @@ class PDPSummary extends PureComponent {
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendImpressions()}>{this.getTabbyResponse}</div>
       </>
     );
   }

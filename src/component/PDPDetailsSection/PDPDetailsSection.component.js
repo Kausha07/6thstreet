@@ -15,6 +15,7 @@ import Event, {
   EVENT_MORE_FROM_THIS_BRAND_CLICK,
   EVENT_GTM_PDP_TRACKING,
   EVENT_EXPAND_PRODUCT_DETAILS,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -672,8 +673,7 @@ class PDPDetailsSection extends PureComponent {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
                 const widgetID = pdpWidgetsData[index]["type"];
-                const { data } = item;
-                if (data && data?.length > 0) {
+                if (item && item?.length > 0) {
                   return (
                     <Fragment key={index}>
                       <div
@@ -683,7 +683,7 @@ class PDPDetailsSection extends PureComponent {
                       >
                         <DynamicContentVueProductSliderContainer
                           widgetID={widgetID}
-                          products={data}
+                          products={item}
                           heading={heading}
                           isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
@@ -732,7 +732,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

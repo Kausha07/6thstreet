@@ -17,6 +17,7 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 // import { getStore } from "Store";
+import browserHistory from "Util/History";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
   hideActiveOverlay,
@@ -25,8 +26,7 @@ import {
 import { CartItemType } from "Type/MiniCart";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-// import Algolia from "Util/API/provider/Algolia";
-// import { getUUIDToken } from 'Util/Auth';
+import { isSignedIn } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
@@ -34,11 +34,15 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
   EVENT_MOE_REMOVE_FROM_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import CartPageItem from "./CartPageItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { setEddResponse } from "Store/MyAccount/MyAccount.action";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { isArabic } from "Util/App";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -49,12 +53,18 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   eddResponse: state.MyAccountReducer.eddResponse,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
+  setEddResponse: (response, request) =>
+    dispatch(setEddResponse(response, request)),
   addProduct: (options) =>
     CartDispatcher.then(({ default: dispatcher }) =>
       dispatcher.addProductToCart(dispatch, options)
@@ -111,6 +121,7 @@ export class CartItemContainer extends PureComponent {
   state = {
     isLoading: false,
     showCartItemQuantityPopup: false,
+    isArabic: isArabic(),
   };
 
   handlers = [];
@@ -121,6 +132,99 @@ export class CartItemContainer extends PureComponent {
     getCurrentProduct: this.getCurrentProduct.bind(this),
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
   };
+
+  getIdFromCityArea = (addressCityData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    const { isArabic } = this.state;
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        }
+      }
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  getCityAreaFromStorage = (addressCityData, countryCode) => {
+    const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+    const { city, area } = sessionData;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    let data = { area: areaEntry, city: cityEntry, country: countryCode };
+    this.getEddResponse(data, false);
+  };
+
+  getCityAreaFromDefault = (addressCityData, countryCode) => {
+    const { defaultShippingAddress } = this.props;
+    const { area, city } = defaultShippingAddress;
+    const { cityEntry, areaEntry } = this.getIdFromCityArea(
+      addressCityData,
+      city,
+      area
+    );
+    let data = { area: areaEntry, city: cityEntry, country: countryCode };
+    this.getEddResponse(data, false);
+  };
+
+  getEddResponse = (data, type) => {
+    const { estimateEddResponse } = this.props;
+    const { area, city, country } = data;
+
+    let request = {
+      country: country,
+      city: city,
+      area: area,
+      courier: null,
+      source: null,
+    };
+    estimateEddResponse(request, type);
+  };
+
+  validateEddStatus = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress, addressCityData, setEddResponse } =
+      this.props;
+    if (isSignedIn() && defaultShippingAddress) {
+      this.getCityAreaFromDefault(addressCityData, countryCode);
+    } else if (
+      isSignedIn() &&
+      !defaultShippingAddress &&
+      sessionStorage.getItem("EddAddressReq")
+    ) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else if (!isSignedIn() && sessionStorage.getItem("EddAddressReq")) {
+      this.getCityAreaFromStorage(addressCityData, countryCode);
+    } else {
+      setEddResponse(null, null);
+    }
+  };
+  componentDidMount() {
+    let prevLocation;
+    let finalPrevLocation;
+    browserHistory.listen((nextLocation) => {
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+      if (finalPrevLocation && finalPrevLocation.pathname === "/checkout") {
+        this.validateEddStatus();
+      }
+    });
+  }
 
   componentWillUnmount() {
     if (this.handlers.length) {
@@ -151,8 +255,9 @@ export class CartItemContainer extends PureComponent {
       item: { availableQty = 0 },
     } = this.props;
     const max_sale_qty =
-    availableQty === 0 ? availableQty :
-      availableQty >= DEFAULT_MAX_PRODUCTS
+      availableQty === 0
+        ? availableQty
+        : availableQty >= DEFAULT_MAX_PRODUCTS
         ? DEFAULT_MAX_PRODUCTS
         : availableQty;
     return max_sale_qty;
@@ -362,7 +467,7 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

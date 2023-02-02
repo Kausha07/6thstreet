@@ -49,7 +49,12 @@ import {
 } from "Util/Auth";
 import { getStore } from "Store";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_GENERAL_INIT,
+  VUE_PAGE_VIEW,
+  MOE_AddUniqueID,
+  MOE_destroySession,
+} from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
@@ -95,6 +100,71 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     return { finalArea, finalCity };
   };
+  setEDDresultData = (response, finalRes, dispatch, login) => {
+    if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+      const defaultShippingAddress = Object.values(response.data).filter(
+        (address) => {
+          return address.default_shipping === true;
+        }
+      );
+      if (
+        defaultShippingAddress &&
+        Object.values(defaultShippingAddress).length > 0
+      ) {
+        const { country_code, city, area } = defaultShippingAddress[0];
+        const { finalCity, finalArea } = this.getArabicCityArea(
+          city,
+          area,
+          finalRes
+        );
+        let request = {
+          country: country_code,
+          city: isArabic() ? finalCity : city,
+          area: isArabic() ? finalArea : area,
+          courier: null,
+          source: null,
+        };
+        this.estimateDefaultEddResponse(dispatch, request);
+        dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
+      } else if (sessionStorage.getItem("EddAddressReq")) {
+        const response = sessionStorage.getItem("EddAddressRes")
+          ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+          : null;
+        const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+        dispatch(setEddResponse(response, request));
+      } else {
+        if (!login) {
+          const { country_code, city, area } = response.data[0];
+          const { finalCity, finalArea } = this.getArabicCityArea(
+            city,
+            area,
+            finalRes
+          );
+          let request = {
+            country: country_code,
+            city: isArabic() ? finalCity : city,
+            area: isArabic() ? finalArea : area,
+            courier: null,
+            source: null,
+          };
+          this.estimateDefaultEddResponse(dispatch, request);
+        } else {
+          dispatch(setEddResponse(null, null));
+          dispatch(setCustomerDefaultShippingAddress(null));
+        }
+      }
+    } else if (sessionStorage.getItem("EddAddressReq")) {
+      const response = sessionStorage.getItem("EddAddressRes")
+        ? JSON.parse(sessionStorage.getItem("EddAddressRes"))
+        : null;
+      const request = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+      dispatch(setEddResponse(response, request));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    } else {
+      dispatch(setEddResponse(null, null));
+      dispatch(setCustomerDefaultShippingAddress(null));
+    }
+  };
   requestCustomerData(dispatch, login = false) {
     const query = MyAccountQuery.getCustomerQuery();
     const {
@@ -102,58 +172,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     } = getStore().getState();
     getShippingAddresses().then(async (response) => {
       if (response.data) {
-        let finalRes = addressCityData;
-        if (Object.values(response.data).length > 0 && finalRes.length > 0) {
-          const defaultShippingAddress = Object.values(response.data).filter(
-            (address) => {
-              return address.default_shipping === true;
-            },
-          );
-          if (
-            defaultShippingAddress &&
-            Object.values(defaultShippingAddress).length > 0
-          ) {
-            const { country_code, city, area } = defaultShippingAddress[0];
-            const { finalCity, finalArea } = this.getArabicCityArea(
-              city,
-              area,
-              finalRes,
-            );
-            let request = {
-              country: country_code,
-              city: isArabic() ? finalCity : city,
-              area: isArabic() ? finalArea : area,
-              courier: null,
-              source: null,
-            };
-            this.estimateDefaultEddResponse(dispatch, request);
-            dispatch(
-              setCustomerDefaultShippingAddress(defaultShippingAddress[0]),
-            );
-          } else {
-            if (!login) {
-              const { country_code, city, area } = response.data[0];
-              const { finalCity, finalArea } = this.getArabicCityArea(
-                city,
-                area,
-                finalRes,
-              );
-              let request = {
-                country: country_code,
-                city: isArabic() ? finalCity : city,
-                area: isArabic() ? finalArea : area,
-                courier: null,
-                source: null,
-              };
-              this.estimateDefaultEddResponse(dispatch, request);
-            } else {
-              dispatch(setEddResponse(null, null));
-              dispatch(setCustomerDefaultShippingAddress(null));
-            }
-          }
+        if (addressCityData.length === 0) {
+          AppConfigDispatcher.getCities().then((resp) => {
+            this.setEDDresultData(response, resp.data, dispatch, login);
+          });
         } else {
-          dispatch(setEddResponse(null, null));
-          dispatch(setCustomerDefaultShippingAddress(null));
+          this.setEDDresultData(response, addressCityData, dispatch, login);
         }
         dispatch(setCustomerAddressData(response.data));
         dispatch(setAddressLoader(false));
@@ -262,7 +286,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setClubApparel(getClubApparelInitialState()));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
-    Moengage.destroy_session();
+    MOE_destroySession();
 
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
@@ -371,16 +395,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   // handleMobileAuthCommonBlockOTP(){}
 
   async handleMobileAuthorizationOTP(dispatch, options) {
-    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
-      options;
-
+    const {
+      data: { token, t, user, user: { custom_attributes, gender, id } } = {},
+    } = options;
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
-
+    if (user?.email) {
+      MOE_AddUniqueID(user?.email);
+    }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
     setAuthorizationToken(t);
@@ -414,12 +440,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-              username,
-              password,
-              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            },
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
       );
-
+    if (options?.email){
+       MOE_AddUniqueID(options?.email);
+    }
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
@@ -488,7 +516,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const isVerifiedAttribute = custom_attributes.filter(
       ({ attribute_code }) => attribute_code === "is_mobile_otp_verified",
     );
-
     const { value: phoneNumber } =
       phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
     const { value: isVerified } =
@@ -583,7 +610,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   resetPassword(data) {
-    //return resetPasswordWithToken({ ...data, email: BrowserDatabase.getItem(RESET_EMAIL) });
     return resetPasswordWithToken({ ...data, email: "" });
   }
 

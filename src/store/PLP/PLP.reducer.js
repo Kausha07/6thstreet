@@ -141,7 +141,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
         options: requestedOptions = {},
         isInitial,
       } = action;
-      const { page: initialPage } = requestedOptions;
+      const { page: initialPage = 0 } = requestedOptions;
       return {
         ...state,
         filters: filters,

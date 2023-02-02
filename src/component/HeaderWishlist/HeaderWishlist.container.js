@@ -9,7 +9,8 @@ import HeaderWishlist from './HeaderWishlist.component';
 export const mapStateToProps = (_state) => ({
     isSignedIn: _state.MyAccountReducer.isSignedIn,
     language: _state.AppState.language,
-    wishListItems: _state.WishlistReducer.items
+    wishListItems: _state.WishlistReducer.items,
+    newSignUpEnabled: _state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -20,7 +21,8 @@ export class HeaderWishlistContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
         isWishlist: PropTypes.bool,
-        language: PropTypes.string.isRequired
+        language: PropTypes.string.isRequired,
+        newSignUpEnabled: PropTypes.bool
     };
 
     static defaultProps = {

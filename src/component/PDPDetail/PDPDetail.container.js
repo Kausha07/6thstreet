@@ -6,6 +6,8 @@ import PDPDetail from "./PDPDetail.component";
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
+  brandInfoData : _state.PDP.brandInfoData,
+  brand_url: _state.PLP.brand_url,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -25,11 +27,13 @@ export class PDPDetailContainer extends PureComponent {
 
   containerProps = () => {
     // isDisabled: this._getIsDisabled()
-    const { brandDescription, brandImg, brandName } = this.props;
+    const { brandDescription, brandImg, brandName, brand_url, brandInfoData } = this.props;
     return {
       brandDescription,
       brandImg,
       brandName,
+      brand_url,
+      brandInfoData
     };
   };
 

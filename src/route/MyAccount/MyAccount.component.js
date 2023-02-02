@@ -51,15 +51,18 @@ import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
 import { ADD_ADDRESS } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
-import {
-  EVENT_MOE_ACCOUNT_ORDERS_CLICK,
-  EVENT_MOE_ACCOUNT_RETURNS_CLICK,
-  EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK,
-  EVENT_MOE_ACCOUNT_PROFILE_CLICK,
-  EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
-  EVENT_MOE_ACCOUNT_SETTINGS_CLICK,
-  EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
-  EVENT_MOE_RETURN_AN_ITEM_CLICK
+import Event, {
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_ACCOUNT_ORDERS_CLICK,
+  EVENT_ACCOUNT_RETURNS_CLICK,
+  EVENT_ACCOUNT_ADDRESS_BOOK_CLICK,
+  EVENT_ACCOUNT_PROFILE_CLICK,
+  EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
+  EVENT_ACCOUNT_SETTINGS_CLICK,
+  EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
+  EVENT_MOE_RETURN_AN_ITEM_CLICK,
+  EVENT_ACCOUNT_PAYMENT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -172,14 +175,41 @@ export class MyAccount extends SourceMyAccount {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {
-        screen_name: "Return List",
-      }),
-      app6thstreet_platform: "Web",
-    });
+    const { newSignUpEnabled } = this.props;
+    if (newSignUpEnabled) {
+      const eventData = {
+        name: event,
+        prevScreen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    } else {
+      MOE_trackEvent(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {
+          screen_name: "Return List",
+        }),
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 
   handleTabChange(key) {
@@ -194,19 +224,21 @@ export class MyAccount extends SourceMyAccount {
     changeActiveTab(key);
     const MoeEvent =
       key == "dashboard"
-        ? EVENT_MOE_ACCOUNT_PROFILE_CLICK
+        ? EVENT_ACCOUNT_PROFILE_CLICK
         : key == "my-orders"
-        ? EVENT_MOE_ACCOUNT_ORDERS_CLICK
+        ? EVENT_ACCOUNT_ORDERS_CLICK
         : key == "settings"
-        ? EVENT_MOE_ACCOUNT_SETTINGS_CLICK
+        ? EVENT_ACCOUNT_SETTINGS_CLICK
         : key == "address-book"
-        ? EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK
+        ? EVENT_ACCOUNT_ADDRESS_BOOK_CLICK
         : key == "return-item"
-        ? EVENT_MOE_ACCOUNT_RETURNS_CLICK
+        ? EVENT_ACCOUNT_RETURNS_CLICK
         : key == "club-apparel"
-        ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
+        ? EVENT_ACCOUNT_CLUB_APPAREL_CLICK
+        : key == "wallet-payments"
+        ? EVENT_ACCOUNT_PAYMENT_CLICK
         : "";
-    if (MoeEvent && MoeEvent.length > 0) {
+    if (MoeEvent) {
       this.sendEvents(MoeEvent);
     }
   }
@@ -346,8 +378,6 @@ export class MyAccount extends SourceMyAccount {
       : { ...tabMap, ...returnState, ...tabMap2 };
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
-    // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
-    // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
     let hiddenTabContent, hiddenTabList;
     if (showProfileMenu) {
       hiddenTabList = "Active";
@@ -458,7 +488,7 @@ export class MyAccount extends SourceMyAccount {
               <div block="CardTitle"> {__("Customer Support")} </div>
               <a
                 onClick={() => {
-                  this.sendEvents(EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                  this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
                 }}
                 className="chat-button"
                 href={`${WHATSAPP_LINK}`}

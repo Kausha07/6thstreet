@@ -15,6 +15,7 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   language: state.AppState.language,
   customer: state.MyAccountReducer.customer,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled
 });
 
 export class HeaderAccountContainer extends PureComponent {
@@ -23,6 +24,7 @@ export class HeaderAccountContainer extends PureComponent {
     isAccount: PropTypes.bool,
     language: PropTypes.string.isRequired,
     customer: customerType,
+    newSignUpEnabled: PropTypes.bool,
     requestCustomerData: PropTypes.func,
     handleFooterIsAccountOpen: PropTypes.func,
     isFooter: PropTypes.bool,

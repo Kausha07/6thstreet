@@ -7,10 +7,12 @@ import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
-import { PureComponent } from "react";
+import { PureComponent, createRef } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
+import { PLPContainer } from "./PLP.container";
 import "./PLP.style";
+import "../../component/CartCouponDetail/CartCouponDetail.style";
 import { connect } from "react-redux";
 import NoMatch from "Route/NoMatch";
 import Loader from "Component/Loader";
@@ -18,6 +20,12 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
+import Logger from "Util/Logger";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import sort from "./icons/sort.svg";
+import refine from "./icons/refine.svg";
+import Line from "./icons/Line.svg";
+import { getCountryFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -34,7 +42,24 @@ export class PLP extends PureComponent {
       circleBannerUrl: null,
       activeFilters: {},
       isArabic: isArabic(),
+      footerContent: {},
+      isToggleOn: true,
+      isSortByOverlayOpen: false,
+      selectedSortOption : 'recommended'
     };
+    this.getContent();
+    this.handleClick = this.handleClick.bind(this);
+    this.sortByOverlay = createRef();
+  }
+
+  static getDerivedStateFromProps(props) {
+    const { filters = {} } = props;
+    if (isMobile.any() && filters['sort']) {
+      const selectedFilter = Object.values(filters['sort'].data).filter(({is_selected}) => is_selected)
+        return {
+          selectedSortOption: selectedFilter.length > 0 ? selectedFilter[0].facet_value : 'recommended'
+        };
+    }
   }
 
   componentDidMount() {
@@ -47,10 +72,52 @@ export class PLP extends PureComponent {
         circleBannerUrl: bannerUrl,
       });
     }
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
   }
   componentWillUnmount() {
     const { resetPLPData } = this.props;
+    window.removeEventListener("mousedown", this.outsideCouponPopupClick);
     // resetPLPData();
+  }
+
+  getContent = async () => {
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html")) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      const contentFileName =
+        getCategoryLevel?.[0] == "women"
+          ? "plp_footer_women"
+          : getCategoryLevel?.[0] == "men"
+          ? "plp_footer_men"
+          : getCategoryLevel?.[0] == "kids"
+          ? "plp_footer_kids"
+          : getCategoryLevel?.[0] == "home"
+          ? "plp_footer_home"
+          : null;
+      if (contentFileName && getCategoryLevel?.length > 1) {
+        try {
+          const resp = await getStaticFile(contentFileName, {
+            $FILE_NAME: `pages/${contentFileName}.json`,
+          });
+          if (resp) {
+            this.setState({
+              footerContent: resp,
+            });
+          }
+        } catch (e) {
+          Logger.log(e);
+        }
+      }
+    }
+  };
+
+  handleClick() {
+    this.setState((prevState) => ({
+      isToggleOn: !prevState.isToggleOn,
+    }));
   }
 
   showMyAccountPopup = () => {
@@ -91,13 +158,30 @@ export class PLP extends PureComponent {
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
+  resetSortData = () => {
+    if(isMobile.any()){
+      this.setState({
+        isSortByOverlayOpen : false,
+        selectedSortOption : 'recommended'
+      })
+    }
+  }
 
   renderPLPDetails() {
-    return <PLPDetails {...this.props} />;
+    const { plpWidgetData } = this.props
+    const isBannerData = this.state.bannerData ? true : false;
+    const isFromCircleItemSlider = window.location.href.includes("plp_config");
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+    const widget = plpWidgetData?.filter((item) => item.tag == tagName);
+    return <PLPDetails {...this.props} isBannerData = {isBannerData && isFromCircleItemSlider} isWidgetData ={widget && widget.length !== 0} />;
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} isPLPSortBy={false} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} resetSortData={this.resetSortData} />;
   }
 
   renderPLPSortBy() {
@@ -152,9 +236,234 @@ export class PLP extends PureComponent {
     );
   };
 
-  render() {
-    const { signInPopUp } = this.state;
+  renderFooterContent() {
+    const { footerContent, isArabic, isToggleOn } = this.state;
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html") && footerContent?.[0]) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      if (getCategoryLevel.length > 1) {
+        const footerHtml =
+          getCategoryLevel.length == 2
+            ? footerContent?.[0]?.[getCategoryLevel[1]]
+            : getCategoryLevel.length == 3
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[getCategoryLevel[2]]
+            : null;
+        const contentDescription = isArabic ? "ar" : "en";
+        const storeMap = {
+          AE: isArabic ? "الإمارات" : "UAE",
+          SA: isArabic ? "السعودية" : "Saudi Arabia",
+          KW: isArabic ? "الكويت" : "Kuwait",
+          OM: isArabic ? "سلطنة عمان" : "Oman",
+          BH: isArabic ? "البحرين" : "Bahrain",
+          QA: isArabic ? "قطر" : "Qatar",
+        };
+        const countryName = storeMap[getCountryFromUrl().toUpperCase()] || "";
+        if (footerHtml && footerHtml?.[contentDescription]) {
+          const footerContentDesc = footerHtml[contentDescription];
+          const updatedContent = footerContentDesc.includes(
+            "currentEmiratesName"
+          )
+            ? footerContentDesc.replaceAll("currentEmiratesName", countryName)
+            : footerContentDesc;
+          
+          return (
+            <>
+              <div block="PLP-FooterWrapper" mods={{ isArabic }}>
+                <div
+                  className={
+                    isToggleOn
+                      ? "PLP-FooterContainer loadMore"
+                      : "PLP-FooterContainer loadLess"
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: updatedContent,
+                  }}
+                />
+                {footerContentDesc.length > 180 ? (
+                  <div className="loadMore-section">
+                    <div
+                      className={
+                        isToggleOn
+                          ? "loadMore-Overlay show"
+                          : "loadMore-Overlay"
+                      }
+                    ></div>
+                    <div className="loadMoreBtn">
+                      <button onClick={this.handleClick}>
+                        {isToggleOn ? __("Read more") : __("Read less")}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          );
+        }
+      }
+    }
+  }
+
+  showCouponDetial = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isSortByOverlayOpen: true,
+    });
+
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  };
+
+  handleFilterClick = () => {
+    const { showOverlay } = this.props;
+    showOverlay("PLPFilter");
+  };
+
+  outsideCouponPopupClick = (e) => {
+    if (
+      this.state.isSortByOverlayOpen &&
+      this.sortByOverlay.current &&
+      !this.sortByOverlay.current.contains(e.target)
+    ) {
+      this.setState({
+        isSortByOverlayOpen: false,
+      });
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  };
+
+  getActiveFilter = () => {
+    const newActiveFilters = Object.entries(this.props.filters).reduce(
+      (acc, filter) => {
+        if (filter[1]) {
+          const { selected_filters_count, data = {} } = filter[1];
+
+          if (selected_filters_count !== 0) {
+            if (filter[0] === "sizes") {
+              const mappedData = Object.entries(data).reduce((acc, size) => {
+                const { subcategories } = size[1];
+                const mappedSizeData = PLPContainer.mapData(
+                  subcategories,
+                  filter[0],
+                  this.props
+                );
+
+                acc = { ...acc, [size[0]]: mappedSizeData };
+
+                return acc;
+              }, []);
+
+              acc = { ...acc, ...mappedData };
+            } else {
+              acc = {
+                ...acc,
+                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+              };
+            }
+          }
+
+          return acc;
+        }
+      },
+      {}
+    );
+    return newActiveFilters;
+  };
+
+  getFilterCount() {
+    // const { activeFilters = {} } = this.props;
+    let activeFilters = this.getActiveFilter();
+    let { count } = activeFilters
+      ? Object.entries(activeFilters).reduce(
+        (prev, [_key, value]) => ({
+          count: prev.count + value.length,
+        }),
+        { count: 0 }
+      )
+      : { count: 0 };
+    Object.keys(activeFilters).length > 0 &&
+      Object.keys(activeFilters).map((key) => {
+        if (key === "categories.level1") {
+          count = count - 1;
+        }
+      });
+    const displayCount = count;
+    return displayCount;
+  }
+
+  renderSortFilterOverlay = () => {
     const { isArabic } = this.state;
+    const filterCount = this.getFilterCount();
+    const isFilter =  filterCount === 0
+    const DualFilter = filterCount.toString().length === 2
+    const TripleFilter = filterCount.toString().length === 3
+    return (
+      <div block = "SortContainer" mods={{isArabic}}>
+      <div block="SortOverlay" mods={{isFilter}}>
+        <div block="CommonBlock" onClick={(e) => this.showCouponDetial(e)}>
+          <img src={sort} alt="sort" />
+          <span block="title">{__("Sort")}</span>
+        </div>
+        <div block="SortOverlay" elem="CenterLine">
+          <img src={Line} alt="line" />
+        </div>
+        <div block="CommonBlock" mods={{DualFilter,TripleFilter}} onClick={()=> this.handleFilterClick()}>
+          <img src={refine} alt="refine" block="CommonBlock" elem="RefineImg" />
+          <span block="title">{__("Filter")}{" "}{this.getFilterCount() > 0 && `(${filterCount})`}</span>
+        </div>
+      </div>
+      </div>
+    );
+  };
+
+  renderSortByOverlay = () => {
+    const {filters, handleCallback} = this.props
+    const {selectedSortOption, isArabic} = this.state
+    return (
+      <div block="couponDetailPopup" mods={{isArabic}}>
+        <div block="couponDetailOverlay">
+          <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
+            <p block="couponItemCode">
+              {__("SORT BY")}
+            </p>
+            {filters && Object.values(filters['sort'].data).map((filter,index)=>{
+              const {facet_value, facet_key, label, is_selected} = filter
+                return (
+                  <>
+                    <p
+                      block="couponItemName"
+                      mix = {{block :"couponItemName",elem : (is_selected || selectedSortOption === facet_value) ? "SortSelected" : ""}}
+                      id={facet_value + facet_key}
+                      name={facet_key}
+                      value={facet_value}
+                      onClick={() => {
+                        this.setState({
+                          selectedSortOption: facet_value,
+                          isSortByOverlayOpen:false
+                        },()=>{
+                          handleCallback(facet_key, facet_value, true, true)
+                        })
+                      }}
+                    >
+                      {label}
+                    </p>
+                    <hr />
+                  </>
+                );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  render() {
+    const { isArabic, isSortByOverlayOpen } = this.state;
     const { pages, isLoading } = this.props;
     if (
       !isLoading &&
@@ -173,6 +482,10 @@ export class PLP extends PureComponent {
             {this.renderPLPDetails()}
             {this.state.bannerData && this.renderBanner()}
             {this.renderPLPWidget()}
+            {isMobile.any() && this.renderSortFilterOverlay()}
+            {isMobile.any() &&
+              isSortByOverlayOpen &&
+              this.renderSortByOverlay()}
             <div>
               <div block="Products" elem="Wrapper">
                 {this.renderPLPFilters()}
@@ -185,6 +498,7 @@ export class PLP extends PureComponent {
               )}
             </div>
           </ContentWrapper>
+          {this.renderFooterContent()}
         </main>
       );
     }

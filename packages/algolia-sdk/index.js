@@ -62,7 +62,7 @@ const AlgoliaSDK = {
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
   getMultiProducts: (idsArray) => getMultiProducts(idsArray, { index: AlgoliaSDK.index }),
-  getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
+  getBrands: (gender) => getBrands(gender, { client: AlgoliaSDK.client,index: AlgoliaSDK.index , env: AlgoliaSDK.env}),
   getWishlistProduct: (idsArray) =>
     getWishlistProduct(idsArray, { index: AlgoliaSDK.index }),
   getProductBySku: (params) =>

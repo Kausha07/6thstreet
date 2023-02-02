@@ -12,6 +12,7 @@ import {
   EVENT_MOE_SELECT_RETURN_RESOLUTION,
   EVENT_MOE_SELECT_RETURN_REASON,
   EVENT_MOE_SUBMIT_RETURN_REQUEST,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -133,7 +134,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
   }
 
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
