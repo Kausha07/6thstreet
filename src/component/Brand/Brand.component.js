@@ -56,11 +56,11 @@ class Brand extends PureComponent {
     if (type) {
       if (type === "kids") {
         requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
-      } else if (type === "النساء") {
+      } else if (type === "نساء") {
         requestedGender = "نساء";
-      } else if (type === "الرجال") {
+      } else if (type === "رجال") {
         requestedGender = "رجال";
-      } else if (type === "الأطفال") {
+      } else if (type === "أطفال") {
         requestedGender = "أولاد,بنات";
       } else {
         requestedGender = type;
@@ -68,22 +68,22 @@ class Brand extends PureComponent {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
     }
 
     return (
