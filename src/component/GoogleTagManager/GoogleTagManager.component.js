@@ -83,6 +83,7 @@ import CustomerSupportEvent from "./events/CustomerSupport.event";
 import CheckoutBillingEvent from "./events/CheckoutBilling.event";
 import PageLoadEvent from "./events/PageLoad.event";
 import Scripts from "./Scripts";
+import MoEngage from "react-moengage";
 
 /**
  * Event list
@@ -296,6 +297,10 @@ class GoogleTagManager extends PureComponent {
    */
   componentDidMount() {
     this.initialize();
+    MoEngage.init(process.env.REACT_APP_MOE_ID, {
+      debugLogs: process.env.REACT_APP_MOE_LOGS,
+      swPath: process.env.PUBLIC_URL + "/serviceworker.js",
+    });
   }
 
   /**

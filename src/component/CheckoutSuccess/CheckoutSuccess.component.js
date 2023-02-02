@@ -42,6 +42,7 @@ import Event, {
   EVENT_RESEND_OTP_CLICK,
   EVENT_OTP_VERIFY_WITH_EMAIL,
   EVENT_OTP_VERIFY_WITH_PHONE,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
@@ -1227,7 +1228,7 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

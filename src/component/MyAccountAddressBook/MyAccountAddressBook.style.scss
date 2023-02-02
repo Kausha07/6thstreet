@@ -10,6 +10,9 @@
     @include tablet{
         margin-top: 594px;
     }
+    @include mobile {
+        background: white;
+    }
     &-backBtn {
         position: absolute;
         width: 20px;

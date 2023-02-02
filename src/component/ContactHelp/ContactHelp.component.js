@@ -21,7 +21,7 @@ import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./ContactHelp.style";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { EVENT_PHONE, EVENT_MAIL, EVENT_MOE_CHAT } from "Util/Event";
+import { EVENT_PHONE, EVENT_MAIL, EVENT_MOE_CHAT, MOE_trackEvent } from "Util/Event";
 
 
 export const WHATSAPP_LINK = "https://wa.me/9718003852633";
@@ -55,7 +55,7 @@ export class ContactHelp extends PureComponent {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

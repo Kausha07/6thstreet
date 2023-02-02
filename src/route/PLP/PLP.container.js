@@ -31,6 +31,7 @@ import Event, {
   EVENT_GTM_IMPRESSIONS_PLP,
   VUE_PAGE_VIEW,
   EVENT_MOE_VIEW_PLP_ITEMS,
+  MOE_trackEvent
 } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -313,7 +314,7 @@ export class PLPContainer extends PureComponent {
     let category_2 = checkCategories ? Categories_level.shift() : "";
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
-    Moengage.track_event(EVENT_MOE_VIEW_PLP_ITEMS, {
+    MOE_trackEvent(EVENT_MOE_VIEW_PLP_ITEMS, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       ...(category_1 && { category_level_1: category_1 }),

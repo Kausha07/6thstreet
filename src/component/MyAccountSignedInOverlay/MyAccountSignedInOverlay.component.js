@@ -22,6 +22,7 @@ import Event, {
   EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_ACCOUNT_PAYMENT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -51,7 +52,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     } else {
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",

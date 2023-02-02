@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK } from "Util/Event";
+import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -365,7 +365,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     
-    Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",

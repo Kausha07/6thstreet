@@ -97,7 +97,7 @@ export class Header extends PureComponent {
       return; 
     }
     
-    if (isLive && (isLive !== prevProps.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled){
+    if (isLive && (isLive !== prevProps?.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled){
       this.renderFAB();
     }
     

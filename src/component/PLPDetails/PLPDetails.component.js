@@ -111,8 +111,13 @@ class PLPDetails extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isBannerData, isWidgetData,brandDescription, brandName} = this.props;
+    const isBanner =
+      isBannerData || (brandDescription && brandName) || isWidgetData
+        ? true
+        : false;
     return (
-      <div block="PLPDetails" mods={{ isArabic }}>
+      <div block="PLPDetails" mods={{ isArabic, isBanner }}>
         {this.renderContent()}
       </div>
     );

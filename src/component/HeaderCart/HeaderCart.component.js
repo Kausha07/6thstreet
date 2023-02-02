@@ -7,7 +7,7 @@ import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./HeaderCart.style";
-import { EVENT_MOE_GO_TO_BAG } from "Util/Event";
+import { EVENT_MOE_GO_TO_BAG, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 
@@ -148,7 +148,7 @@ class HeaderCart extends PureComponent {
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType(),

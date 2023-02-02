@@ -29,7 +29,7 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import { EVENT_MOE_VIEW_CART_ITEMS } from "Util/Event";
+import { EVENT_MOE_VIEW_CART_ITEMS, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
@@ -188,7 +188,7 @@ export class CartPage extends PureComponent {
       productItemPrice.push(productKeys?.itemPrice);
     });
     if (pageLoaded) {
-      Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS, {
+      MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         brand_name: productBrand.length > 0 ? productBrand : "",

@@ -34,6 +34,7 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
   EVENT_MOE_REMOVE_FROM_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import CartPageItem from "./CartPageItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -466,7 +467,7 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

@@ -1,4 +1,4 @@
-import Event, { EVENT_GTM_NEW_AUTHENTICATION, EVENT_WISHLIST_ICON_CLICK } from "Util/Event";
+import Event, { EVENT_GTM_NEW_AUTHENTICATION, EVENT_WISHLIST_ICON_CLICK, MOE_trackEvent } from "Util/Event";
 import BaseEvent from "./Base.event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 /**
@@ -60,7 +60,7 @@ class AuthenticationV1Event extends BaseEvent {
         eventAction: EVENT_WISHLIST_ICON_CLICK,
       }),
     });
-    Moengage.track_event(data?.name, {
+    MOE_trackEvent(data?.name, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       isLoggedIn:
