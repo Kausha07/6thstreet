@@ -1076,6 +1076,7 @@ export class CheckoutSuccess extends PureComponent {
               <p></p>
             </>
           )}
+          {paymentMethod?.code === "careem_pay" ? ("Careem Pay") : null}
         </div>
       </>
     );

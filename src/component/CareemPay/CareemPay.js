@@ -1,16 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./CareemPay.style";
 import { careemPayCreateInvoice } from "Util/API/endpoint/Checkout/Checkout.endpoint";
+import MagentoAPI from "Util/API/provider/MagentoAPI";
+import {
+  SUCCESS,
+  FAILURE,
+  guestUserAddress,
+  loggedInUserAddress,
+} from "./CareemPay.config";
 
 
-function CareemPay({ continueAsGuest, isSignedIn }) {
+function CareemPay({
+  continueAsGuest,
+  isSignedIn,
+  createOrder,
+  setDetailsStep,
+  orderID,
+  setLoading,
+  setIsFailed,
+  resetCart,
+  setShippingAddressCareem,
+  setProcessingLoader,
+  setPaymentinfoCareemPay,
+}) {
 
   const addCareemPayScripts = () => {
-    const script = document.createElement("script");
-    script.src = "https://dist.cpay.me/latest/merchant-sdk.esm.js";
-    script.defer = true;
-    document.body.appendChild(script);
-
     const script2 = document.createElement("script");
     script2.src = "https://dist.cpay.me/latest/merchant-sdk.js";
     script2.defer = true;
@@ -28,27 +42,43 @@ function CareemPay({ continueAsGuest, isSignedIn }) {
     }
   }
 
-  const createCareemPayOrder =() => {
-    const { createOrder } = this.props;
-    
+  async function createCareemPayOrder() {
     try {
-      const code = "careem_pay"
-      createOrder(code).then((response) => {
-        if (
-          response
-        ) {
-            const order = response;
-            console.log(order);
-            localStorage.removeItem("CART_ID_CACHE_KEY");
-            localStorage.removeItem("CART_ITEMS_CACHE_KEY");
-            return response;
+      const code = "careem_pay";
+      const response = await createOrder(code);
+      if(response) {        
+        const orderidd = response?.data?.order_id;
+        const increment_id = response?.data?.increment_id;
+        const orderStatus = response?.data?.success;
+
+        setDetailsStep(orderidd, increment_id);
+
+        if(orderStatus) {
+          const getOrderById=() => {return MagentoAPI.get(`orders/${orderidd}`);}
+          const resp = await getOrderById();          
+          if(resp) {
+            if(isSignedIn) {
+              const adddress1 = guestUserAddress;
+              setShippingAddressCareem(adddress1);
+            }else {
+              const adddress2 = guestUserAddress;
+              setShippingAddressCareem(adddress2);
+            }
+          }
+          resetCart();
         }
-      });
+      }
+      setShippingAddressCareem(guestUserAddress);
+      setProcessingLoader(false);
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
   }
 
+  const goToResult=() =>{
+    console.log('goToResult:');
+  }
+  
   const CareemPayfun = () => {
     const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
     const cartId = cart.data;
@@ -64,10 +94,16 @@ function CareemPay({ continueAsGuest, isSignedIn }) {
         requester: (e) => getCareemPayInvoice(data),
         onComplete: (status) => {
           console.log(`Checkout completed with status: ${status}`);
-          if (status === "success") {
+          setProcessingLoader(true);
+          setPaymentinfoCareemPay("careem_pay");
+          if (status === SUCCESS) {
+            createCareemPayOrder();
+          }else if(status === FAILURE){
+            setIsFailed(true)
             createCareemPayOrder();
           }
-          //goToResult(); // navigate to the result page
+          goToResult();  //navigate to the result page
+          
         },
         onError: (e) => {
           console.error("something went wrong", e);
@@ -102,8 +138,14 @@ function CareemPay({ continueAsGuest, isSignedIn }) {
 
   return (
     <>
-      <div block="Seperator3">{/* or */} </div>
-      {isSignedIn ? null : <div block="orTextdiv">or</div>}
+      {isSignedIn ? null : (
+        <div className="dashedWerapper">
+          <div className="dashed">
+            <span>or</span>
+          </div>
+        </div>
+      )
+      }
       <div className="carrrmPayWrapperDiv">
         <br />
         <h3>1-click Checkout</h3>

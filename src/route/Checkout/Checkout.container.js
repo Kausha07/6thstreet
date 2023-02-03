@@ -173,6 +173,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     updateCreditCardData: this.updateCreditCardData.bind(this),
     setBillingStep: this.setBillingStep.bind(this),
     setTabbyURL: this.setTabbyURL.bind(this),
+    setIsFailed: this.setIsFailed.bind(this),
+    setShippingAddressCareem: this.setShippingAddressCareem.bind(this),
   };
 
   //   showOverlay() {
@@ -672,6 +674,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   setTabbyURL(UrlTabby) {
     this.setState({ tabbyURL: UrlTabby });
   }
+  setIsFailed (currentState){
+    this.setState({ isFailed: currentState });
+  }
   saveLastOrder(totals) {
     this.setState({ lastOrder: totals });
   }
@@ -1149,6 +1154,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.resetCart();
       // this._handleError(e);
     }
+  }
+
+  setShippingAddressCareem(shippingAddress) {
+    this.setState({ shippingAddress: shippingAddress });
   }
 
   setDetailsStep(orderID, incrementID) {

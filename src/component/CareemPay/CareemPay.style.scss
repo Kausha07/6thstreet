@@ -12,17 +12,27 @@
   margin: auto;
 }
 
-.Seperator3 {
-  background-color: #efefef;
-  height: 1px;
+.dashedWerapper {
+  background: #fff;
+  padding-bottom: 10px;
 }
 
-.orTextdiv {
-  width: 100%;
+.dashed {
+  border-bottom: 1px solid #efefef;
   text-align: center;
-  background-color: #ffffff;
+  height: 10px;
+  // margin-bottom: 10px;
+}
+
+.dashed span {
+  background: #fff;
+  padding: 0 5px;
 }
 
 .careemBtnCss {
   border-radius: 0;
+}
+
+.cpay-checkout-modal {
+  position: fixed;
 }
