@@ -136,4 +136,16 @@ module.exports = (app) => {
             }
         })
     );
+
+    // Proxy Catalogue API (bypass CORS)
+    app.use(
+        '/catalogue/',
+        proxy({
+            target: process.env.REACT_APP_CATALOGUE_URL,
+            changeOrigin: true,
+            pathRewrite: {
+                '/catalogue/': '/'
+            }
+        })
+    );
 };
