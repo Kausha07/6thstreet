@@ -69,3 +69,6 @@ export const verifyUserPhone = ({ data }) =>
 
 export const getOrderData = (order_id) => 
   MagentoAPI.get(`orders/${order_id}`) || {};
+  
+export const careemPayCreateInvoice = ({data}) => 
+  MobileAPI.post(`/careem/invoice/create`, data) || {}

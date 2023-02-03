@@ -12,6 +12,7 @@ import ContentWrapper from "Component/ContentWrapper";
 import CreditCardPopup from "Component/CreditCardPopup";
 import HeaderLogo from "Component/HeaderLogo";
 import PropTypes from "prop-types";
+import CareemPay from "../../component/CareemPay/CareemPay";
 import Popup from "SourceComponent/Popup";
 import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.component";
 import { TotalsType } from "Type/MiniCart";
@@ -51,6 +52,8 @@ export const mapDispatchToProps = (dispatch) => ({
   showError: (message) => dispatch(showNotification("error", message)),
   estimateEddResponse: (code) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, code),
+  createOrder: (code, additional_data, eddItems) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
 });
 
 export class Checkout extends SourceCheckout {
@@ -87,6 +90,8 @@ export class Checkout extends SourceCheckout {
     isOpen: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     binInfo: {},
+    isCareemPayEnabled: true,
+    processingLoader: false,
   };
   getArabicCityArea = (city, area) => {
     const { addressCityData } = this.props;
@@ -295,12 +300,24 @@ export class Checkout extends SourceCheckout {
     this.setState({ cashOnDeliveryFee: fee });
   };
 
+  setProcessingLoader=(curretStste)=>{
+    this.setState({ processingLoader: curretStste});    
+  }
+
+  setPaymentinfoCareemPay= (payMethod) => {
+    const { paymentInformation } = this.state;
+    const newPaymentInformation = {...paymentInformation, paymentMethod: {code: payMethod}}
+    this.setState({ paymentInformation: newPaymentInformation });
+  }
+
   renderLoader() {
     const { isLoading, checkoutStep, PaymentRedirect } = this.props;
+    const { processingLoader } = this.state;
 
     if (
       (checkoutStep === BILLING_STEP && isLoading) ||
-      (checkoutStep === SHIPPING_STEP && PaymentRedirect)
+      (checkoutStep === SHIPPING_STEP && PaymentRedirect) ||
+      processingLoader
     ) {
       return (
         <div block="CheckoutSuccess">
@@ -635,9 +652,16 @@ export class Checkout extends SourceCheckout {
       isLoading,
       isClickAndCollect,
       handleClickNCollectPayment,
+      createOrder,
+      setDetailsStep,
+      orderID,
+      setIsFailed,
+      resetCart,
+      setShippingAddressCareem,
     } = this.props;
 
-    const { continueAsGuest, isArabic } = this.state;
+    const { continueAsGuest, isArabic, isCareemPayEnabled, isMobile } = this.state;
+    const country_codes = getCountryFromUrl();
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
@@ -691,6 +715,22 @@ export class Checkout extends SourceCheckout {
           </div>
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
+        {/* Currently Careem Pay is only available for EN-AE Desktop site. */}
+        { (isCareemPayEnabled && !isArabic && !isMobile && country_codes === "AE") ? (
+            <CareemPay 
+              continueAsGuest={continueAsGuest}
+              isSignedIn={isSignedIn}
+              createOrder={createOrder}
+              setDetailsStep={setDetailsStep}
+              orderID={orderID}
+              setLoading={setLoading}
+              setIsFailed={setIsFailed}
+              resetCart={resetCart}
+              setShippingAddressCareem={setShippingAddressCareem}
+              setProcessingLoader={this.setProcessingLoader}
+              setPaymentinfoCareemPay={this.setPaymentinfoCareemPay}
+            />
+          ) : null}
         {isSignedIn ? renderCheckoutShipping : null}
         {continueAsGuest || isSignedIn
           ? null
