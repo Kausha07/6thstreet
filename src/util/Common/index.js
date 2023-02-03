@@ -6,6 +6,8 @@ export const CONST_TEN = 10;
 
 export const CONST_HUNDRED = 100;
 
+export const DEFAULT_MAX_PRODUCTS = 10;
+
 export const appendOrdinalSuffix = (number) => {
   const mod10x = number % CONST_TEN;
   const mod100x = number % CONST_HUNDRED;
@@ -503,3 +505,5 @@ export const getBambuserChannelID=(country)=>{
     }
   }
 }
+
+export const DecimalCountries = ["KW", 'OM', 'BH'];

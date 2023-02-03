@@ -26,6 +26,7 @@ import Event, {
   EVENT_FORGOT_PASSWORD_RESET_SUCCESS,
   EVENT_FORGOT_PASSWORD_RESET_FAIL,
   EVENT_GTM_AUTHENTICATION,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 export const mapDispatchToProps = (dispatch) => ({
@@ -38,7 +39,6 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
     const { resetPassword, location, showNotification } = this.props;
     const { passwordReset: password } = fields;
     const token = getQueryParam("token", location);
-
     resetPassword({ newPassword: password, resetToken: token }).then(
       (response) => {
         switch (typeof response) {
@@ -77,7 +77,7 @@ export class PasswordChangePageContainer extends SourcePasswordChangePageContain
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

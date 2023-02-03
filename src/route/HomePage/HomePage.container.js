@@ -20,6 +20,7 @@ import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import browserHistory from "Util/History";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
+import Event, { EVENT_PAGE_LOAD } from "Util/Event";
 
 import {
   deleteAuthorizationToken,
@@ -50,9 +51,9 @@ export const mapDispatchToProps = (dispatch) => ({
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
-  requestCustomerData: () =>
+  requestCustomerData: (login) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.requestCustomerData(dispatch)
+      dispatcher.requestCustomerData(dispatch,login)
     ),
   logout: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -122,7 +123,7 @@ export class HomePageContainer extends PureComponent {
           getMobileAuthorizationToken() === mobileToken &&
           getAuthorizationToken() === authToken
         ) {
-          requestCustomerData();
+          requestCustomerData(true);
         } else {
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
@@ -147,6 +148,7 @@ export class HomePageContainer extends PureComponent {
     this.setMetaData(gender);
     this.requestDynamicContent(true, gender);
     this.setSchemaJSON();
+    Event.dispatch(EVENT_PAGE_LOAD);
   }
 
   requestCustomerData() {

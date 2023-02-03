@@ -4,7 +4,14 @@ import { withRouter } from "react-router";
 
 import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
-import { EVENT_MOE_WISHLIST_TAB_ICON } from "Util/Event";
+import Event, {
+  EVENT_MOE_WISHLIST_TAB_ICON,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_WISHLIST_ICON_CLICK,
+  EVENT_GTM_NEW_AUTHENTICATION,
+  MOE_trackEvent
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 import "./HeaderWishlist.style";
@@ -31,20 +38,44 @@ class HeaderWishlist extends PureComponent {
   };
 
   routeChangeWishlist = () => {
-    const { history, isSignedIn, showNotification } = this.props;
-
-    Moengage.track_event(EVENT_MOE_WISHLIST_TAB_ICON, {
+    const { history, isSignedIn, showNotification, newSignUpEnabled } =
+      this.props;
+    MOE_trackEvent(EVENT_MOE_WISHLIST_TAB_ICON, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
-
+    if (newSignUpEnabled) {
+      const eventData = {
+        name: EVENT_WISHLIST_ICON_CLICK,
+        screen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    }
     if (isSignedIn) {
       history.push("/my-account/my-wishlist");
     } else {
       this.setState({ showPopup: true });
     }
   };
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
 
   closePopup = () => {
     this.setState({ signInPopUp: "", showPopup: false });
@@ -59,6 +90,13 @@ class HeaderWishlist extends PureComponent {
     if (!showPopup) {
       return null;
     }
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: "Wishlist",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
     return (
       <MyAccountOverlay
         closePopup={this.closePopup}

@@ -13,6 +13,9 @@ import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import { getCountryFromUrl } from "Util/Url/Url";
+import CartCouponList from "Component/CartCouponList";
+import CartCouponDetail from 'Component/CartCouponDetail';
+import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 
 import Delivery from "./icons/delivery-truck.png";
 
@@ -23,9 +26,37 @@ export const mapStateToProps = (state) => ({
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
+  constructor(props) {
+    super(props);
+    this.cartCouponPopup = React.createRef();
+  }
   state = {
     isArabic: isArabic(),
+    TermsAndConditions: "",
+    isTermsAndConditionspopupOpen:false,
+    isCouponPopupOpen: false,
+    couponCode: "",
+    couponName: "",
+    couponDescription: "",
+    isCouponDetialPopupOpen: false,
+    couponModuleStatus: false,
+    isMobile: isMobile.any() || isMobile.tablet(),
+    isLoading: false,
   };
+
+  componentDidMount() {
+    window.addEventListener("mousedown", this.outsideCouponPopupClick);
+  }
+
+  outsideCouponPopupClick = e => {
+    if (this.state.isCouponPopupOpen && this.cartCouponPopup.current && !this.cartCouponPopup.current.contains(e.target)) {
+      this.setState({
+        isCouponPopupOpen: false
+      })
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
 
   renderItemSuffix() {
     const {
@@ -122,6 +153,153 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     );
   }
 
+  closeCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: false
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.removeAttribute("style");
+  }
+  openCouponPopup = () => {
+    this.setState({
+      isCouponPopupOpen: true
+    })
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  }
+
+  showCouponDetial = (e, coupon) => {
+    e.stopPropagation()
+    this.setState({
+      couponCode: coupon.code,
+      couponName: coupon.name,
+      couponDescription: coupon.description,
+      TermsAndConditions: coupon.term_and_cond,
+      isCouponDetialPopupOpen: true
+    })
+  
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.overflow = "hidden";
+  
+  }
+
+  showTermsAndConditions = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isTermsAndConditionspopupOpen: true,
+      // isCouponDetialPopupOpen: false
+    })
+  }
+  
+  hideTermsAndConditions = (e) => {
+    e.stopPropagation();
+    this.setState({
+      isTermsAndConditionspopupOpen: false
+    })
+  }
+
+  hideCouponDetial = (e) => {
+    e.stopPropagation()
+    this.setState({
+      isCouponDetialPopupOpen: false
+    })
+    if (!this.state.isCouponPopupOpen) {
+      const bodyElt = document.querySelector("body");
+      bodyElt.removeAttribute("style");
+    }
+  }
+
+  handleRemoveCode = (e) => {
+    e.stopPropagation()
+    this.props.removeCouponFromCart()
+  }
+
+  setLoader = (currLoaderState) => {
+    this.setState({
+      isLoading: currLoaderState
+    })
+  }
+
+  handleApplyCode = async () => {
+    const { couponCode } = this.state;
+    this.setLoader(true);
+    try{            
+        let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
+        if (typeof apiResponse !== "string") {
+        }
+        this.setLoader(false);
+    }
+    catch(error){
+        console.error(error);
+    }
+  }
+
+  renderDiscountCode() {
+    const {
+      totals: { coupon_code },
+      couponsItems = [], couponLists= []
+    } = this.props;
+    const isOpen = false;
+    const { isArabic, isMobile, isLoading } = this.state;
+    const promoCount = Object.keys(couponsItems).length;
+    let appliedCoupon = {};
+    if (couponsItems) {
+      appliedCoupon = couponsItems.find(function (coupon) {
+        return coupon.code == coupon_code
+      })
+    }
+  
+    return (
+        <div block="wrapperCartCouponBlock" mods={{ isArabic }}>{
+          (!this.state?.isCouponPopupOpen) ?
+            <>
+              <div block="cartCouponBlock" mods={{ isArabic }}>
+                {
+                  coupon_code ?
+                    <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
+                      <div block="appliedCouponDetail">
+                        <p block="appliedCouponCode">{appliedCoupon ? appliedCoupon?.code : coupon_code}</p>
+                      </div>
+                      <button block="appliedCouponBtn remove" onClick={(e) => { this.handleRemoveCode(e) }}>{__("Remove")}</button>
+                    </div>
+                    :
+                    <button onClick={this.openCouponPopup} block="showCouponBtn">{__("Enter coupon or promo code")}</button>
+                }
+              </div>
+              {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
+            </>
+            :
+            <>
+              <div block="couponPopupBlock">
+                <div block="couponPopupContent" ref={this.cartCouponPopup} mods={{ isArabic }}>
+                  <div block="couponPopupTop" mods={{isArabic}}>
+                  {isMobile ? __("Discount code") : __("Promo codes")}
+                    <button onClick={this.closeCouponPopup} block="closeCouponPopupBtn">
+                      <span>Close</span>
+                    </button>
+                  </div>
+                    {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
+                    <div block="couponInputBox">
+                      <CartCoupon couponCode={coupon_code} closePopup={this.closeCouponPopup} />
+                    </div>
+                  <CartCouponList couponCode={coupon_code} closePopup={this.closeCouponPopup} showDetail={this.showCouponDetial} {...this.props} setLoader={this.setLoader}/>
+                  {this.state?.isCouponDetialPopupOpen && <CartCouponDetail couponDetail={this.state} hideDetail={this.hideCouponDetial} showTermsAndConditions={this.showTermsAndConditions}/>}
+                  {this.state?.isTermsAndConditionspopupOpen && 
+                    <CartCouponTermsAndConditions
+                      TermsAndConditions={this.state}
+                      hideTermsAndConditions={this.hideTermsAndConditions}
+                      hideDetail={this.hideCouponDetial}
+                      handleApplyCode={this.handleApplyCode}
+                    />
+                  }
+                </div>
+              <Loader isLoading={isLoading} />
+              </div>
+            </>
+        }</div>
+    );
+  }
+
   renderCartCoupon() {
     const {
       totals: { coupon_code },
@@ -170,6 +348,20 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     } = this.props;
     const finalPrice = getFinalPrice(price, currency_code);
 
+    if(name === "Coupon Code"){
+      return (
+        <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
+          <strong block="CheckoutOrderSummary" elem="Text">
+            {name}
+          </strong>
+          <strong block="CheckoutOrderSummary" elem="PriceCouponCode">
+            {`- ${parseFloat(price) || price === 0 ? currency_code : ""
+              } ${Math.abs(finalPrice)}`}
+          </strong>
+        </li>
+      );
+    }
+
     return (
       <li block="CheckoutOrderSummary" elem="SummaryItem" mods={mods}>
         <strong block="CheckoutOrderSummary" elem="Text">
@@ -216,7 +408,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Discount")) : null}
+            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
 
 
             {this.renderPriceLine(
@@ -227,16 +419,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "tax"),
               __("Tax")
             )}
-            {this.renderPriceLine(
-              cashOnDeliveryFee ??
+            {cashOnDeliveryFee ? this.renderPriceLine(
               getDiscountFromTotals(totals, "msp_cashondelivery"),
 
               getCountryFromUrl() === 'QA' ? __("Cash on Receiving") : __("Cash on Delivery")
-            )}
+            ) : null}
           </div>
           <div block="CheckoutOrderSummary" elem="Totals">
             {this.renderPriceLine(grandTotal, __("Total"), {}, true)}
-            <span>{__("(Taxes included)")}</span>
           </div>
         </ul>
       </div>
@@ -245,13 +435,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
   render() {
     const { processingRequest } = this.props;
+    const { isMobile } = this.state;
+
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
         {/* <Loader isLoading={processingRequest} /> */}
         {this.renderHeading()}
         {this.renderItems()}
         {this.renderToggleableDiscountOptions()}
-        {this.renderCartCoupon()}
+        {/* {this.renderCartCoupon()} */}
+        {isMobile ? "" : this.renderDiscountCode()}
         {this.renderPromo()}
         {this.renderTotals()}
       </article>

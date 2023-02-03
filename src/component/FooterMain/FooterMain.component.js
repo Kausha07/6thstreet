@@ -30,6 +30,7 @@ import Event, {
   EVENT_DISCLAIMER_CLICK,
   EVENT_ABOUT6S_CLICK,
   EVENT_GTM_FOOTER,
+  MOE_trackEvent
 } from "Util/Event";
 import Loader from "Component/Loader";
 import "./FooterMain.style";
@@ -156,7 +157,7 @@ class FooterMain extends PureComponent {
     },
   ];
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

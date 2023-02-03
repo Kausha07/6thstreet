@@ -13,6 +13,7 @@ import Event, {
   EVENT_MOE_SET_LANGUAGE,
   EVENT_LANGUAGE_CHANGE,
   EVENT_GTM_TOP_NAV_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import Loader from "Component/Loader";
@@ -52,7 +53,7 @@ export class LanguageSwitcherContainer extends PureComponent {
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
     this.setState({ isLoad: true });
-    Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
+    MOE_trackEvent(EVENT_MOE_SET_LANGUAGE, {
       country: getCountryFromUrl().toUpperCase(),
       language: value.toUpperCase() || "",
       app6thstreet_platform: "Web",

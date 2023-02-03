@@ -7,14 +7,17 @@
         &-Select {
             height: 60px;
             padding-left: 40px;
-            padding-right: 30px;
+            padding-right: 10px;
 
             @include mobile {
                 font-size: 12px;
             }
         }
     }
-
+    .FieldSelect::after {
+        right: 10px;
+    }
+    
     @include desktop() {
         height: 88px;
     }

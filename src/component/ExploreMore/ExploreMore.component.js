@@ -6,13 +6,11 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import Event, {
-    EVENT_CLICK_RECENT_SEARCHES_CLICK,
-    EVENT_EXPLORE_MORE_SEARCH_CLICK
+    EVENT_EXPLORE_MORE_SEARCH_CLICK,
+    MOE_trackEvent
 } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
-import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
-import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./ExploreMore.style";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -44,7 +42,7 @@ class ExploreMore extends PureComponent {
 
     onclick = (item) => {
         Event.dispatch(EVENT_EXPLORE_MORE_SEARCH_CLICK, item?.tag ? item?.tag : item);
-        Moengage.track_event(EVENT_EXPLORE_MORE_SEARCH_CLICK, {
+        MOE_trackEvent(EVENT_EXPLORE_MORE_SEARCH_CLICK, {
             country: getCountryFromUrl().toUpperCase(),
             language: getLanguageFromUrl().toUpperCase(),
             search_term: item?.tag ? item?.tag : item || "",
@@ -170,7 +168,7 @@ class ExploreMore extends PureComponent {
         return (
             <>
                 {this.props.data.header && title && (
-                    <DynamicContentHeader header={this.props.data.header} />
+                    <h2>{__(title)}</h2>
                 )}
 
                 <div block="DynamicContentGrid" elem="Grid" style={style}>
@@ -190,6 +188,7 @@ class ExploreMore extends PureComponent {
             <div
                 ref={setRef}
                 block="DynamicContentGrid"
+                mix = {{block : "DynamicContentGrid", elem : "ExploreMore"}}
                 id={`DynamicContentGrid${index}`}
             >
                 {this.renderGrid()}

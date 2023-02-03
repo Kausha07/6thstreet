@@ -24,6 +24,7 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -188,7 +189,7 @@ class ProductItem extends PureComponent {
       price: itemPrice,
       brand: brand_name,
       category: product_type_6s || categoryLevel,
-      varient: color || "",
+      variant: color || "",
       position: product_Position || "",
     });
     if (queryID) {
@@ -200,7 +201,7 @@ class ProductItem extends PureComponent {
       });
     }
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -445,7 +446,7 @@ class ProductItem extends PureComponent {
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {this.renderOutOfStock()}   
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
@@ -474,7 +475,7 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {!isMobile.any() && pageType !== "vuePlp" && this.renderAddToCartOnHover()}
+        {!isMobile.any() && pageType !== "vuePlp" && pageType !== "cart" && this.renderAddToCartOnHover()}
       </li>
     );
   }

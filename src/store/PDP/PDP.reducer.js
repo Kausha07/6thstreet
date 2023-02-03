@@ -4,7 +4,8 @@ import {
     SET_PDP_GALLERY_IMAGE_INDEX,
     SET_PDP_LOADING,
     SET_PDP_CLICK_AND_COLLECT,
-    SET_DISPLAY_SEARCH
+    SET_DISPLAY_SEARCH,
+    SET_BRAND_INFO_DATA
 } from './PDP.action';
 
 export const getInitialState = () => ({
@@ -13,7 +14,8 @@ export const getInitialState = () => ({
     imageIndex: 0, // positive numbers - gallery, negative numbers - special cases, i.e. video = -1
     clickAndCollectStores: [],
     isLoading: true,
-    displaySearch: false
+    displaySearch: false,
+    brandInfoData: ''
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
@@ -35,7 +37,7 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 product,
                 options,
                 nbHits,
-                isLoading:false,
+                isLoading:true,
             };
 
         case SET_PDP_GALLERY_IMAGE_INDEX:
@@ -51,6 +53,13 @@ export const PDPReducer = (state = getInitialState(), action) => {
             return {
                 ...state,
                 clickAndCollectStores
+            };
+
+        case SET_BRAND_INFO_DATA:
+            const { data } = action;
+            return {
+                ...state,
+                brandInfoData: data,
             };
 
         case SET_PDP_LOADING:

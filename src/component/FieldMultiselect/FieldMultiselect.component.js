@@ -27,7 +27,8 @@ import Event,{
   EVENT_SIZES_SEARCH_FOCUS,
   EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
   EVENT_SET_PREFERENCES_GENDER,
-  EVENT_GTM_FILTER
+  EVENT_GTM_FILTER,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -83,7 +84,7 @@ class FieldMultiselect extends PureComponent {
       showMore: false,
       showLess: false,
     };
-    this.toggelOptionList = this.toggelOptionList.bind(this);
+    this.toggleOptionList = this.toggleOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
   }
 
@@ -152,7 +153,7 @@ class FieldMultiselect extends PureComponent {
         this.filterDropdownRef &&
         !this.filterDropdownRef.current.contains(event.target)
       ) {
-        // this.onBlur();
+        this.onBlur();
       }
     }
   };
@@ -264,6 +265,7 @@ class FieldMultiselect extends PureComponent {
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
+        toggleOptionList={this.toggleOptionList}
       />
     );
   };
@@ -275,7 +277,7 @@ class FieldMultiselect extends PureComponent {
     const facet_value = e.target.getAttribute("name");
     const checked = e.target.getAttribute("value") === "false" ? true : false;
     if (!isMobile.any() && checked) {
-      Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+      MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
@@ -283,7 +285,7 @@ class FieldMultiselect extends PureComponent {
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
-        Moengage.track_event(EVENT_SIZES_SEARCH_FILTER, {
+        MOE_trackEvent(EVENT_SIZES_SEARCH_FILTER, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
@@ -353,7 +355,7 @@ class FieldMultiselect extends PureComponent {
         mods={{ UnSelectAll }}
         onClick={() => this.onDeselectAllCategory(category)}
       >
-        Unselect All
+        {__("Unselect All")}
       </div>
     );
   }
@@ -374,7 +376,7 @@ class FieldMultiselect extends PureComponent {
         : category == "gender" 
         ? EVENT_SET_PREFERENCES_GENDER
         : "";
-    Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+    MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       filter_type: category || "",
@@ -382,7 +384,7 @@ class FieldMultiselect extends PureComponent {
       app6thstreet_platform: "Web",
     });
     if (MoeFilterEvent && MoeFilterEvent.length > 0) {
-      Moengage.track_event(MoeFilterEvent, {
+      MOE_trackEvent(MoeFilterEvent, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
@@ -575,11 +577,11 @@ class FieldMultiselect extends PureComponent {
           type={type}
           id={"all" + initialFacetKey}
           name={initialFacetKey}
-          value={"all"}
+          value={__("all")}
           checked={checked}
         />
         <label block="PLPFilterOption" mods={{ allColor }} htmlFor={"all"}>
-          All
+          {__("All")}
           {!isMobile.any() && <span>{`(${product_count})`}</span>}
         </label>
       </li>
@@ -587,7 +589,7 @@ class FieldMultiselect extends PureComponent {
   }
 
   sendMoeEvents (event, value){
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -714,7 +716,7 @@ class FieldMultiselect extends PureComponent {
     changeActiveFilter(filter.category || filter.facet_key);
   };
 
-  toggelOptionList() {
+  toggleOptionList() {
     const { toggleOptionsList } = this.state;
 
     this.setState({
@@ -724,7 +726,7 @@ class FieldMultiselect extends PureComponent {
 
   onBlur = () => {
     // eslint-disable-next-line no-magic-numbers
-    this.toggelOptionList();
+    this.toggleOptionList();
   };
 
   renderOptionSelected() {
@@ -743,7 +745,7 @@ class FieldMultiselect extends PureComponent {
             {selected_filters_count === 0 && (
               <>
                 <li key={v4()} block="selectedListItem">
-                  All
+                  {__("All")}
                 </li>
               </>
             )}
@@ -888,7 +890,7 @@ class FieldMultiselect extends PureComponent {
               mods: { isArabic },
             }}
             onClick={
-              isMobile.any() ? this.handleFilterChange : this.toggelOptionList
+              isMobile.any() ? this.handleFilterChange : this.toggleOptionList
             }
           >
             {placeholder}

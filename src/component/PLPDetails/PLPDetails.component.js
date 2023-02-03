@@ -58,7 +58,7 @@ class PLPDetails extends PureComponent {
           elem="BrandHTML"
           dangerouslySetInnerHTML={{ __html: brandDescription }}
         />
-        { brandDescription && !brandDescription.offsetHeight < 45 ? 
+        { brandDescription && brandDescription.length > 180 ? 
           <button onClick={this.handleClick}>
             {this.state.isToggleOn ? 'Read more' : 'Read less'}
           </button>
@@ -111,8 +111,13 @@ class PLPDetails extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { isBannerData, isWidgetData,brandDescription, brandName} = this.props;
+    const isBanner =
+      isBannerData || (brandDescription && brandName) || isWidgetData
+        ? true
+        : false;
     return (
-      <div block="PLPDetails" mods={{ isArabic }}>
+      <div block="PLPDetails" mods={{ isArabic, isBanner }}>
         {this.renderContent()}
       </div>
     );

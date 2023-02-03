@@ -35,8 +35,10 @@ import Event, {
   EVENT_GTM_EDD_VISIBILITY,
   EVENT_TABBY_LEARN_MORE_CLICK,
   EVENT_GTM_PDP_TRACKING,
-  EVENT_MOE_EDD_VISIBILITY
+  EVENT_MOE_EDD_VISIBILITY,
+  MOE_trackEvent
 } from "Util/Event";
+import { TabbyPromoURL } from "./config";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -80,9 +82,9 @@ class PDPSummary extends PureComponent {
             }
           });
         } else {
-          Object.values(entry.areas_ar).filter((cityArea) => {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
             if (cityArea === area) {
-              areaEntry = isArabic ? entry.areas[index] : entry.areas_ar[index];
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
             }
           });
         }
@@ -176,48 +178,28 @@ class PDPSummary extends PureComponent {
     }
   };
 
-  addTabbyPromo = (total, currency_code) => {
-    const { isArabic } = this.state;
-    new window.TabbyPromo({
-      selector: "#TabbyPromo",
-      currency: currency_code.toString(),
-      price: total,
-      installmentsCount: 4,
-      lang: isArabic ? "ar" : "en",
-      source: "product",
-    });
-  };
-
-  componentDidMount() {
+  getTabbyResponse = () =>{
     const {
       product: { price },
-      product,
-      getTabbyInstallment,
-      addressCityData,
+      TabbyInstallment
     } = this.props;
     const script = document.createElement("script");
-    script.src = "https://checkout.tabby.ai/tabby-promo.js";
+    script.src = TabbyPromoURL;
     document.body.appendChild(script);
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
-
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
       const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            this.addTabbyPromo(defPrice, currency);
-          }
-          else{
-            document.getElementById("TabbyPromo").classList.add("d-none");
-          }
-        }, this._handleError)
-        .catch(() => {});
+      TabbyInstallment(defPrice,currency);
     }
+  }
 
+  componentDidMount() {
+    const {
+      product,
+      addressCityData,
+    } = this.props;
+    this.getTabbyResponse();
     const countryCode = getCountryFromUrl();
     this.setState({
       countryCode: countryCode,
@@ -229,7 +211,6 @@ class PDPSummary extends PureComponent {
   }
   componentDidUpdate(prevProps) {
     const {
-      getTabbyInstallment,
       product: { cross_border = 0, price },
       edd_info,
       defaultShippingAddress,
@@ -238,25 +219,6 @@ class PDPSummary extends PureComponent {
     const countryCode = getCountryFromUrl();
 
     const { eddEventSent } = this.state;
-
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-      getTabbyInstallment(defPrice)
-        .then((response) => {
-          if (response?.value) {
-            this.addTabbyPromo(defPrice, currency);
-          }
-          else{
-            document.getElementById("TabbyPromo").classList.add("d-none");
-          }
-        }, this._handleError)
-        .catch(() => {});
-    }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
@@ -279,7 +241,7 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
-        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+        MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           edd_status: edd_info.has_pdp,
@@ -394,7 +356,7 @@ class PDPSummary extends PureComponent {
       },
       page: "pdp",
     });
-    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+    MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       edd_status: edd_info.has_pdp,
@@ -764,13 +726,6 @@ class PDPSummary extends PureComponent {
               {name}
             </span>
           </h1>
-
-          <ShareButton
-            title={document.title}
-            text={`Hey check this out: ${document.title}`}
-            url={url.href}
-            image={gallery_images[0] || fallbackImage}
-          />
         </div>
       );
     }
@@ -1026,7 +981,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
+    MOE_trackEvent(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -1045,7 +1000,7 @@ class PDPSummary extends PureComponent {
   renderTabby() {
     return (
       <>
-        <div id="TabbyPromo" onClick={() => this.sendImpressions()}></div>
+        <div id="TabbyPromo" onClick={() => this.sendImpressions()}>{this.getTabbyResponse}</div>
       </>
     );
   }

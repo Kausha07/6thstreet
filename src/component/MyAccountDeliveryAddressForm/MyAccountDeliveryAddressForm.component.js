@@ -150,6 +150,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         placeholder: __("City area"),
         ...clearValue,
         onChange: this.copyValue,
+        areaSelected: this.state.area,
+        postCodeValue: this.state.postCodeValue,
+        popupType: "area",
       },
     };
   }
@@ -336,13 +339,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         checked: defaultChecked,
       },
       firstname: {
-        validation: ["notEmpty"],
+        validation: ["notEmpty", "onlyCharacters"],
+        maxLength: 40,
         value: firstname,
         placeholder: __("First Name"),
         autocomplete: "on",
       },
       lastname: {
-        validation: ["notEmpty"],
+        validation: ["notEmpty", "onlyCharacters"],
+        maxLength: 40,
         placeholder: __("Last Name"),
         value: lastname,
       },
@@ -352,7 +357,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         maxLength: this.getPhoneNumberMaxLength(),
         placeholder: __("Phone Number"),
         value: this.cutPhoneCode(phone),
-        type: "phone",
+        type: "text",
         ...clearValue,
       },
       city: {
@@ -362,6 +367,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         selectOptions: this.getCitiesSelectOptions(),
         type: "select",
         onChange: this.onCityChange,
+        oncityClick: this.onCityChange,
+        citySelected: this.state.city,
+        popupType: "city",
       },
       country_id: {
         validation: ["notEmpty"],
@@ -376,6 +384,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       street: {
         value: street,
         validation: ["notEmpty"],
+        maxLength : 420,
         placeholder: __("Street Address"),
         ...clearValue,
       },

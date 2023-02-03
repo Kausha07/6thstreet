@@ -34,7 +34,7 @@ import { Store } from "../Icons";
 import "./CartPageItem.extended.style";
 import "./CartPageItem.style";
 import Price from "Component/Price";
-import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT } from "Util/Event";
+import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT,MOE_trackEvent } from "Util/Event";
 import WishlistIcon from "Component/WishlistIcon";
 import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -79,6 +79,7 @@ export class CartItem extends PureComponent {
     dragOpenEl: "",
     intlEddResponseState:{},
     isSignedIn: this.props.isSignedIn,
+    setDraggable: true,
   };
 
   static defaultProps = {
@@ -371,6 +372,9 @@ export class CartItem extends PureComponent {
   };
 
   onMouseMove = (evt) => {
+    if(!this.state.setDraggable){
+      return;
+    }
     const dragChange = evt.clientX - this.state.dragStartX;
     const leftOrRight =
       evt.clientX > this.state.dragStartX
@@ -561,6 +565,16 @@ export class CartItem extends PureComponent {
   renderWrapper() {
     // TODO: implement shared-transition here?
 
+    const {
+      item: {
+        row_total
+      },
+    } = this.props;
+
+    if(row_total === 0){
+      this.setState({setDraggable : false})
+    }
+
     return (
       <div block="swipeableItem" ref={this.cartItemRef}>
         {this.state.isSignedIn ? (
@@ -711,7 +725,7 @@ export class CartItem extends PureComponent {
       },
       toggleCartItemQuantityPopup,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, setDraggable, isNotAvailble } = this.state;
     return (
       <div block="CartPageItem" elem="ColSizeQty" mods={{ isArabic }}>
         {color && (
@@ -726,7 +740,7 @@ export class CartItem extends PureComponent {
         <span
           block="CartItem-ColSizeQty"
           elem="Qty"
-          onClick={() => toggleCartItemQuantityPopup()}
+          onClick={() => !isNotAvailble && setDraggable ? toggleCartItemQuantityPopup() : null}
         >
           <span>{__("Qty:")}</span>
           <span>{qty}</span>
@@ -847,6 +861,14 @@ export class CartItem extends PureComponent {
     );
   }
 
+  renderOOSMessage(){
+    return(
+      <span block="CartItem" elem="NotAvailable">
+      {__("Not available")}
+    </span>
+    )
+  }
+
   renderContent() {
     const {
       isLikeTable,
@@ -856,6 +878,7 @@ export class CartItem extends PureComponent {
         bundle_options,
         full_item_info: { cross_border = 0 },
         brand_name = "",
+        row_total
       },
       intlEddResponse
     } = this.props;
@@ -868,14 +891,14 @@ export class CartItem extends PureComponent {
 
     return (
       <figcaption block="CartPageItem" elem="Content" mods={{ isLikeTable }}>
-        {this.handleSwipe()}
+        {row_total === 0 ? null : this.handleSwipe()}
         {this.renderBrandName()}
         {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {!isNotAvailble && <>{this.renderProductPrice()}</>}
+        {isNotAvailble ? this.renderOOSMessage() : <>{this.renderProductPrice()}</>}
         {this.renderClickAndCollectStoreName()}
         {this.renderActions()}
         {edd_info &&
@@ -911,7 +934,7 @@ export class CartItem extends PureComponent {
         },
       },
     } = this.props;
-    Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
+    MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brand_name || "",

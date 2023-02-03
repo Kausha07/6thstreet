@@ -20,9 +20,11 @@ export class WishlistDispatcher {
 
     try {
       const items2 = await MobileAPI.get(`/wishlist?new=1`);
-      const {
-        data: { product_ids },
-      } = items2;
+
+      let product_ids = [];
+      if (items2 && items2.status === 200 && items2.data && items2.data.product_ids) {
+        product_ids = items2.data.product_ids;
+      }
 
       if (product_ids) {
         let productIdsArr = [];

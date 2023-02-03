@@ -9,7 +9,7 @@ import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import WelcomeScreen from './WelcomeScreen.component';
 import isMobile from "Util/Mobile";
-import { EVENT_MOE_SET_COUNTRY } from "Util/Event";
+import { EVENT_MOE_SET_COUNTRY, MOE_trackEvent } from "Util/Event";
 import { getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -47,7 +47,7 @@ class WelcomeScreenContainer extends PureComponent {
     };
 
     onCountrySelect(value) {
-        Moengage.track_event(EVENT_MOE_SET_COUNTRY, {
+        MOE_trackEvent(EVENT_MOE_SET_COUNTRY, {
             country: value.toUpperCase() || "",
             language: getLanguageFromUrl().toUpperCase(),
             app6thstreet_platform: "Web",

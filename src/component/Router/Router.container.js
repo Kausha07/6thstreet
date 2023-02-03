@@ -63,9 +63,9 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.estimateEddResponse(dispatch, request, type)
     ),
   setLanguage: (value) => dispatch(setLanguage(value)),
-  requestCustomerData: () =>
+  requestCustomerData: (login) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.requestCustomerData(dispatch)
+      dispatcher.requestCustomerData(dispatch,login)
     ),
   getCitiesData: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -139,7 +139,7 @@ export class RouterContainer extends SourceRouterContainer {
           getMobileAuthorizationToken() === mobileToken &&
           getAuthorizationToken() === authToken
         ) {
-          requestCustomerData();
+          requestCustomerData(true);
         } else {
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
@@ -148,7 +148,6 @@ export class RouterContainer extends SourceRouterContainer {
       } else {
         setMobileAuthorizationToken(mobileToken);
         setAuthorizationToken(authToken);
-
         requestCustomerData().then(() => {
           window.location.reload();
         });

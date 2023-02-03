@@ -16,6 +16,13 @@ import {
   CAPTURED_STATUS,
   DETAILS_STEP,
   SHIPPING_STEP,
+  STATUS_AUTHORIZED,
+  STATUS_CAPTURED,
+  STATUS_DECLINED,
+  STATUS_CANCELED,
+  STATUS_PENDING,
+  SUCCESS,
+  FAILED,
 } from "Route/Checkout/Checkout.config";
 import {
   BILLING_STEP,
@@ -46,6 +53,8 @@ import Event, {
   EVENT_MOE_ADD_PAYMENT_INFO,
   EVENT_MOE_EDD_TRACK_ON_ORDER,
   EVENT_GTM_CHECKOUT_BILLING,
+  MOE_trackEvent,
+  MOE_AddUniqueID
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -61,7 +70,8 @@ import {
   DEFAULT_READY_MESSAGE,
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
-
+import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
+import Loader from "Component/Loader";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 
@@ -95,7 +105,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatch,
       paymentId,
       qpaymethod,
-      (KNETpay=true)
+      (KNETpay = true)
     ),
 
   capturePayment: (paymentId, orderId) =>
@@ -110,10 +120,16 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  getCouponList: () => CartDispatcher.getCoupon(dispatch),
+  applyCouponToCart: (couponCode) =>
+    CartDispatcher.applyCouponCode(dispatch, couponCode),
+  removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
+  couponsItems: state.CartReducer.cartCoupons,
+  couponLists: state.CartReducer.cartCoupons,
   totals: state.CartReducer.cartTotals,
   cartItems: state.CartReducer.cartItems,
   processingRequest: state.CartReducer.processingRequest,
@@ -132,6 +148,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
+  addressLoader: state.MyAccountReducer.addressLoader,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -216,6 +233,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       QPayOrderDetails: null,
       KNETOrderDetails: null,
       KnetDetails: {},
+      guestAutoSignIn: false,
+      addressLoader: true,
     };
   }
 
@@ -253,7 +272,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         verifyPayment(tabbyPaymentId).then(async (data) => {
           if (data) {
             localStorage.removeItem("Shipping_Address");
-            const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+            const responseData = await getOrderData(order_id);
+            const order = responseData?.data;
             this.setState({ QPayOrderDetails: order });
 
             const { status } = data;
@@ -288,12 +308,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
       const now = new Date();
       if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
-      }
-      if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
         this.setState({ PaymentRedirect: true });
-
-        const { getPaymentAuthorization, capturePayment, cancelOrder, getPaymentAuthorizationKNET } =
-          this.props;
+        const {
+          getPaymentAuthorization,
+          capturePayment,
+          cancelOrder,
+          getPaymentAuthorizationKNET,
+        } = this.props;
 
         const ShippingAddress = JSON.parse(
           localStorage.getItem("Shipping_Address")
@@ -305,20 +326,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationKNET(id, false, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
 
-
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
-
+          const responseData = await getOrderData(order_id);          
+          const order = responseData?.data;
 
           this.setState({ KNETOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -326,12 +342,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse = await capturePayment(paymentId, order_id);
               if (cResponse) {
-                const { bank_reference, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
+                const {
+                  bank_reference,
+                  requested_on,
+                  amount,
+                  currency,
+                  knet_payment_id,
+                  knet_transaction_id,
+                } = cResponse;
                 this.setState({
                   KnetDetails: {
                     bank_reference: bank_reference,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                     amount: amount,
                     currency: currency,
                     knet_payment_id: knet_payment_id,
@@ -345,9 +368,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -356,13 +379,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse = await capturePayment(paymentId, order_id);
               if (cResponse) {
-                const { pun, requested_on, amount, currency, knet_payment_id, knet_transaction_id } = cResponse;
+                const {
+                  pun,
+                  requested_on,
+                  amount,
+                  currency,
+                  knet_payment_id,
+                  knet_transaction_id,
+                } = cResponse;
                 this.setState({
                   KnetDetails: {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                     knet_payment_id: knet_payment_id,
                     knet_transaction_id: knet_transaction_id,
@@ -406,18 +436,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationQPay(id, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
-
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+          const responseData = await getOrderData(order_id);
+          const order = responseData?.data;
 
           this.setState({ QPayOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -430,7 +456,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   QPayDetails: {
                     PUN: pun,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                   },
                 });
               }
@@ -440,9 +466,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -457,7 +483,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                   },
                 });
@@ -493,6 +519,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getKNETData();
     this.getQPayData();
     this.getTabbyData();
+    getCouponList();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -614,7 +641,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         totals,
         step: this.getCheckoutStepNumber(),
       });
-      if (this.getCheckoutStepNumber() == "2"){
+      if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
       }
     }
@@ -711,20 +738,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     saveAddressInformation(addressInformation).then((res) => {
       const data = res.data;
-      if(!data){
+      if (!data) {
         showErrorNotification(res);
         setTimeout(() => {
           window.location = "/";
         }, 1500);
       } else {
         const { totals } = data;
-  
+
         BrowserDatabase.setItem(totals, PAYMENT_TOTALS, ONE_MONTH_IN_SECONDS);
-  
+
         this.setState({
           paymentTotals: totals,
         });
-  
+
         this.getPaymentMethods();
       }
     }, this._handleError);
@@ -765,12 +792,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      isSignedIn
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     let data = {};
     let eddItems = [];
+    
+    if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
+      MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
+    }
     if (edd_info?.is_enable && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {
@@ -801,7 +833,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cross_border === 1) ||
           cross_border === 1;
         const intlEddObj = intlEddResponse["checkout"]?.find(
-          ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+          ({ vendor }) =>
+            vendor.toLowerCase() === brand_name.toString().toLowerCase()
         );
         eddItems.push({
           sku: sku,
@@ -890,7 +923,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === CHECKOUT_QPAY || code === KNET_PAY) {
+    } else if (
+      code === TABBY_ISTALLMENTS ||
+      code === CHECKOUT_QPAY ||
+      code === KNET_PAY
+    ) {
       this.placeOrder(code, data, paymentInformation, finalEdd, eddItems);
     } else {
       this.placeOrder(code, data, null, finalEdd, eddItems);
@@ -915,7 +952,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
             edd_date: finalEdd,
           });
-          Moengage.track_event(EVENT_MOE_EDD_TRACK_ON_ORDER, {
+          MOE_trackEvent(EVENT_MOE_EDD_TRACK_ON_ORDER, {
             country: getCountryFromUrl().toUpperCase(),
             language: getLanguageFromUrl().toUpperCase(),
             edd_date: finalEdd,
@@ -936,6 +973,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           if (success || response_code === 200 || http_response_code === 202) {
             localStorage.removeItem("lastCouponCode");
+            if (response && response.data && response.data.guest_auto_sign_in) {
+              this.setState({ guestAutoSignIn: response.data.guest_auto_sign_in });
+            }
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
@@ -1022,8 +1062,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               window.open(`${href}`, "_self");
 
               //return true;
-            } else if(code === KNET_PAY) {
-
+            } else if (code === KNET_PAY) {
               const { shippingAddress } = this.state;
               this.setState({
                 order_id,
@@ -1048,8 +1087,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 JSON.stringify(shippingAddress)
               );
               window.open(`${href}`, "_self");
-
-          } else {
+            } else {
               if (code === CARD) {
                 const { saveCreditCard, newCardVisible } = this.props;
                 const { creditCardData } = this.state;
@@ -1058,7 +1096,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -1100,6 +1138,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({ isLoading: false });
         if (code === CHECKOUT_APPLE_PAY) {
           return false;
+        }
+        if (response === "Invalid Coupon.") {
+          history.push({
+            pathname: "/cart",
+          });
+          return;
         }
         this.resetCart();
       }
@@ -1201,7 +1245,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (response) {
         const { status, id: paymentId = "" } = response;
 
-        if (status === "Authorized") {
+        if (status === STATUS_AUTHORIZED) {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
@@ -1213,7 +1257,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
@@ -1222,7 +1266,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
 
-        if (status === "Declined") {
+        if (status === STATUS_DECLINED) {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isLoading: false, isFailed: true });
           hideActiveOverlay();
@@ -1281,7 +1325,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
   render() {
     const { isClickAndCollect } = this.state;
-    return (
+    const { isSignedIn, addressLoader } = this.props;
+    return addressLoader && isSignedIn ? (
+    <Loader isLoading={addressLoader} />
+    ) : (
       <Checkout
         {...this.props}
         {...this.state}

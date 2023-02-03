@@ -28,7 +28,7 @@ import isMobile from "Util/Mobile";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import DynamicContent from "Component/DynamicContent";
-import Event, { EVENT_PAGE_NOT_FOUND } from "Util/Event";
+import Event, { EVENT_PAGE_NOT_FOUND, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = () => ({});
@@ -46,6 +46,7 @@ export class NoMatch extends PureComponent {
     gender: "",
     isArabic: isArabic(),
     notFoundWidgetData: [],
+    isLoading: true,
   };
 
   setLastTapItem = (item) => {
@@ -60,15 +61,20 @@ export class NoMatch extends PureComponent {
     this.cleanUpTransition();
     window.pageType = TYPE_NOTFOUND;
     this.requestNoMatchWidgetData();
-    Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
-    Moengage.track_event(EVENT_PAGE_NOT_FOUND, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      search_term: location.pathname || "",
-      app6thstreet_platform: "Web",
-    });
   }
-
+  componentDidUpdate() {
+    const { isLoading } = this.state;
+    if (isLoading) {
+      Event.dispatch(EVENT_PAGE_NOT_FOUND, location.pathname || "");
+      MOE_trackEvent(EVENT_PAGE_NOT_FOUND, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        search_term: location.pathname || "",
+        app6thstreet_platform: "Web",
+      });
+    }
+    this.setState({ isLoading: false });
+  }
   addTag() {
     const meta = document.createElement("meta");
     meta.name = "robots";

@@ -4,7 +4,6 @@ import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
-import ShareButton from "Component/ShareButton";
 import PropTypes from "prop-types";
 import { PureComponent, Fragment } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -16,6 +15,7 @@ import Event, {
   EVENT_MORE_FROM_THIS_BRAND_CLICK,
   EVENT_GTM_PDP_TRACKING,
   EVENT_EXPAND_PRODUCT_DETAILS,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -28,6 +28,8 @@ import {
   NO,
   NO_IN_ARABIC,
 } from "../../util/Common/index";
+
+export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -62,29 +64,7 @@ class PDPDetailsSection extends PureComponent {
   componentWillUnmount() {
     localStorage.removeItem("PRODUCT_SKU");
     localStorage.removeItem("PRODUCT_CATEGORY");
-    document.body.style.overflowX = 'visible';
-  }
-
-  renderShareButton() {
-    const url = new URL(window.location.href);
-    url.searchParams.append("utm_source", "pdp_share");
-    return (
-      <>
-        <div block="PDPDetailsSection" elem="ShareButtonContainer">
-          <ShareButton
-            block="PDPDetailsSection-ShareButtonContainer"
-            elem="ShareButton"
-            title={document.title}
-            text={`Hey check this out: ${document.title}`}
-            url={url.toString()}
-            mods={{ isArabic: isArabic() }}
-          >
-            <span>{__("Share")}</span>
-          </ShareButton>
-        </div>
-        {this.renderAccordionSeperator()}
-      </>
-    );
+    document.body.style.overflowX = "visible";
   }
 
   renderSizeAndFit() {
@@ -680,21 +660,20 @@ class PDPDetailsSection extends PureComponent {
       renderMySignInPopup,
       product: { sku = null, categories_without_path = [] },
       pdpWidgetsAPIData = [],
-      product
+      product,
     } = this.props;
     const { innerWidth: width } = window;
-    document.body.style.overflowX = 'clip';
+    document.body.style.overflowX = "clip";
     if (pdpWidgetsData?.length > 0 && pdpWidgetsAPIData?.length > 0) {
       return (
         <>
-          {this.props?.product?.returnable ? (<div block="Seperator2" />) : (null)}
+          {this.props?.product?.returnable ? <div block="Seperator2" /> : null}
           <React.Fragment>
             {pdpWidgetsAPIData?.map((item, index) => {
               if (typeof item === "object" && Object.keys(item)?.length > 0) {
                 const { title: heading } = pdpWidgetsData[index]["layout"];
                 const widgetID = pdpWidgetsData[index]["type"];
-                const { data } = item;
-                if (data && data?.length > 0) {
+                if (item && item?.length > 0) {
                   return (
                     <Fragment key={index}>
                       <div
@@ -704,7 +683,7 @@ class PDPDetailsSection extends PureComponent {
                       >
                         <DynamicContentVueProductSliderContainer
                           widgetID={widgetID}
-                          products={data}
+                          products={item}
                           heading={heading}
                           isHome={false}
                           renderMySignInPopup={renderMySignInPopup}
@@ -751,13 +730,9 @@ class PDPDetailsSection extends PureComponent {
       toll_free: phone,
     };
   }
-  chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
-    }
-  }
+
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -785,16 +760,16 @@ class PDPDetailsSection extends PureComponent {
           </div>
           <div block="divider"></div>
           <div block="IconWrapper">
-            <div
-              block="IconWrapper"
-              elem="Icon"
+            <a
               onClick={() => {
                 this.sendEvents(EVENT_MOE_CHAT);
-                this.chat();
               }}
+              href={`${WHATSAPP_LINK}`}
+              target="_blank"
+              rel="noreferrer"
             >
               <Chat />
-            </div>
+            </a>
             <p block="IconWrapper" elem="IconTitle">
               {__("Live Chat")}
             </p>
@@ -921,160 +896,102 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderShipping() {
-    let country = getCountryFromUrl();
-    let txt = {
-      AE: __(
-        "Shipments will be delivered within 3-5 days for most of the areas. Free delivery for orders above AED 100."
-      ),
-      SA: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above SAR 200."
-      ),
-      KW: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above KWD 20."
-      ),
-      QA: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above QAR 200."
-      ),
-      OM: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above OMR 20."
-      ),
-      BH: __(
-        "Shipments will be delivered within 5-7 days for most of the areas. Free delivery for orders above BHD 20."
-      ),
-    };
-    return (
-      <div>
-        <p>
-          {" "}
-          {txt[country]}
-          <Link to={`/shipping-policy`} className="MoreDetailsLinkStyle">
-            {" "}
-            {__("More info")}
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
-  renderShippingAndFreeReturns() {
-    if (this.props.product.is_returnable === 1) {
-      return (
-        <div>
-          <p>
-            {__("100 days free return available. Shop freely.")}
-            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-              {" "}
-              {__("More info")}
-            </Link>
-          </p>
-        </div>
-      );
-    }
-
-    if (this.props.product.is_returnable === 0) {
-      return (
-        <div>
-          <p>
-            {__("Not eligible for return.")}
-            <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-              {" "}
-              {__("More info")}
-            </Link>
-          </p>
-        </div>
-      );
-    }
-
-    // if(this.props.product.is_returnable === "NO"){
-    //   return(
-    //     <div>check check check</div>
-    //   )
-    // }
-
-    return (
-      <div>
-        <p>
-          {__(
-            "Returns available through customer care for unused product only if the product is defective, damaged or wrong item is delivered within 15 days of delivery."
-          )}
-          <Link to={`/return-information`} className="MoreDetailsLinkStyle">
-            {" "}
-            {__("More info")}
-          </Link>
-        </p>
-      </div>
-    );
-  }
-
-  
   renderReturnInfo() {
-
     const { isArabic } = this.state;
 
-    if(this.props.product.returnable === YES || ( this.props.product.returnable === YES_IN_ARABIC && isArabic )){
+    if (
+      this.props.product.returnable === YES ||
+      (this.props.product.returnable === YES_IN_ARABIC && isArabic)
+    ) {
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
-              {__("Return any unsatisfactory items within 100 days from receiving your order.")}
+            {__(
+              "Return any unsatisfactory items within 100 days from receiving your order."
+            )}
           </p>
         </div>
-      )
-    } else if (this.props.product.returnable === NO || ( this.props.product.returnable === NO_IN_ARABIC && isArabic ) ){
+      );
+    } else if (
+      this.props.product.returnable === NO ||
+      (this.props.product.returnable === NO_IN_ARABIC && isArabic)
+    ) {
       return (
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
             {__("Item cannot be returned.")}
           </p>
         </div>
-      )
-    } 
+      );
+    }
 
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
           {__(
-              "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
-            )}
+            "Returns are available through customer care within 15 days of receiving the order only if the product is not used, defective, damaged or wrong item has been delivered."
+          )}
         </p>
       </div>
-    )
-
+    );
   }
 
   renderShippingInfo() {
-    let country = getCountryFromUrl();
-      let txt = {
+
+    if(this.props.country && this.props.config && this.props.config.countries) {
+
+    let country_name = getCountryFromUrl();
+    const { isArabic } = this.state;
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+
+    let free_return_amount = 200;
+    if( countries[country] && countries[country].free_return_amount){
+      free_return_amount = countries[country].free_return_amount;
+    }
+
+      let txt_common = __("*Free delivery for orders above");
+
+      let txt_diff = {
         AE: __(
-          "*Free delivery for orders above AED 200."
+          "AED"
         ),
         SA: __(
-          "*Free delivery for orders above SAR 200."
+          "SAR"
         ),
         KW: __(
-          "*Free delivery for orders above KWD 20."
+          "KWD"
         ),
         QA: __(
-          "*Free delivery for orders above QAR 200."
+          "QAR"
         ),
         OM: __(
-          "*Free delivery for orders above OMR 20."
+          "OMR"
         ),
         BH: __(
-          "*Free delivery for orders above BHD 20."
+          "BHD"
         ),
       };
-  
+
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-          <b block="shippingAndFreeReturns" elem="infoShippingFeeBold"
-            >
-              {txt[country]}
-            </b>
+        {
+            isArabic ? (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${free_return_amount} ${txt_diff[country_name]}`}
+              </b>
+            ) : (
+              <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
+                {`${txt_common} ${txt_diff[country_name]} ${free_return_amount}`}
+              </b>
+            )
+          }
           <br />
         </p>
-        <div block="FindOutMore">
+        <div block="FindOutMore" mods={{ isArabic }}>
           <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>
             <span block="FindOutMore" elem="ButtonText">
               {__("Find Out More")}
@@ -1083,14 +1000,13 @@ class PDPDetailsSection extends PureComponent {
         </div>
       </div>
     )
+    }
   }
-  
-
 
   render() {
     const {
       product: { brand_name },
-      pdpWidgetsAPIData= []
+      pdpWidgetsAPIData = [],
     } = this.props;
     const { isMobile } = this.state;
     return (
@@ -1112,31 +1028,24 @@ class PDPDetailsSection extends PureComponent {
             {this.renderDescription()}
           </Accordion>
           {this.renderAccordionSeperator()}
-          {/* {this.renderShareButton()} */}
           {isMobile ? this.renderAboutBrand() : ""}
         </div>
         {isMobile ? null : this.renderSeperator()}
 
-        {
-          this.props?.product?.returnable ? (
-
-            <div block="AccordionWrapper">
-              <Accordion
-                mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-                title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
-                is_expanded={this.state.isExpanded["3"]}
-              >
-                {this.renderReturnInfo()}
-                {this.renderShippingInfo()}
-                {isMobile ? <br /> : null}
-              </Accordion>
-                {this.renderAccordionSeperator()}
-            </div>
-            
-          ) : (
-            null
-          )
-        }
+        {this.props?.product?.returnable ? (
+          <div block="AccordionWrapper">
+            <Accordion
+              mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+              title={isMobile ? __("Return Policy") : __("RETURN POLICY")}
+              is_expanded={this.state.isExpanded["3"]}
+            >
+              {this.renderReturnInfo()}
+              {this.renderShippingInfo()}
+              {isMobile ? <br /> : null}
+            </Accordion>
+            {this.renderAccordionSeperator()}
+          </div>
+        ) : null}
 
         {pdpWidgetsAPIData?.length > 0 ? (
           <div block="PDPWidgets">{this.renderPdpWidgets()}</div>

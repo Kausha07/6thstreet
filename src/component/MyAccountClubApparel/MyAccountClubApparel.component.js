@@ -224,15 +224,30 @@ class MyAccountClubApparel extends PureComponent {
           {__(
             "For more details, please refer to the FAQs on the Club Apparel Mobile App or view "
           )}
-          <a href="http://www.clubapparel.com/terms&amp;conditions.html">
-            {__("Club Apparel Terms and Conditions")}
-          </a>
+
+          {/*Redirect links to arabic-page  */}
+          {this.state.isArabic ? (
+            <a href="http://www.clubapparel.com/terms&amp;conditions-arabic.html">
+              {__("Club Apparel Terms and Conditions")}
+            </a>
+          ) : (
+            <a href="http://www.clubapparel.com/terms&amp;conditions.html">
+              {__("Club Apparel Terms and Conditions")}
+            </a>
+          )}
         </p>
         <p>
           {__("You can also view the ")}
-          <a href="http://www.clubapparel.com/privacy-policy.html">
-            {__("Club Apparel Privacy Policy")}
-          </a>
+          {/*Redirect links to arabic-page  */}
+          {this.state.isArabic ? (
+            <a href="http://www.clubapparel.com/privacy-policy-arabic.html">
+              {__("Club Apparel Privacy Policy")}
+            </a>
+          ) : (
+            <a href="http://www.clubapparel.com/privacy-policy.html">
+              {__("Club Apparel Privacy Policy")}
+            </a>
+          )}
           {__(" for any additional information.")}
         </p>
       </div>
@@ -248,9 +263,16 @@ class MyAccountClubApparel extends PureComponent {
           {__(
             "To be rewarded for 6thStreet purchases, you must have a 6thStreet account and you must be a Club Apparel Member. You need to link your Club Apparel account to your 6thStreet account. If you are not a Club Apparel member, you can download the Club Apparel App and Register from "
           )}
-          <a href="http://www.clubapparel.com/ca-rewards/rewards.html">
-            {__("here.")}
-          </a>
+         {/*Redirect links to arabic-page  */}
+         {this.state.isArabic ? (
+            <a href="http://www.clubapparel.com/ca-rewards/rewards.html">
+              {__("here.")}
+            </a>
+          ) : (
+            <a href="http://www.clubapparel.com/ca-rewards/rewards.html">
+              {__("here.")}
+            </a>
+          )}
         </p>
         <p>
           {__(
@@ -266,18 +288,32 @@ class MyAccountClubApparel extends PureComponent {
           {__(
             "Your Club Apparel Membership Tier defines the amount of points you will collect on your purchase. To know more about the tiers, please refer to "
           )}
-          <a href="http://www.clubapparel.com/CA-Tiers-Info.html">
-            {__("Club Apparel Tiers")}
-          </a>
+          {/*Redirect links to arabic-page  */}
+          {this.state.isArabic ? (
+            <a href="http://www.clubapparel.com/CA-Tiers-Info.html">
+              {__("Club Apparel Tiers")}
+            </a>
+          ) : (
+            <a href="http://www.clubapparel.com/CA-Tiers-Info.html">
+              {__("Club Apparel Tiers")}
+            </a>
+          )}
           {__(" details.")}
         </p>
         <p>
           {__(
             "Club Apparel also provides special bonus points and brand points during promotions and events. To know more about the Special Points, please refer to "
           )}
-          <a href="http://www.clubapparel.com/brands-terms&amp;conditions.html">
-            {__("Club Apparel Special Points Terms and Conditions.")}
-          </a>
+           {/*Redirect links to arabic-page  */}
+           {this.state.isArabic ? (
+            <a href="http://www.clubapparel.com/brand-terms&amp;conditions-arabic.html">
+              {__("Club Apparel Special Points Terms and Conditions.")}
+            </a>
+          ) : (
+            <a href="http://www.clubapparel.com/brands-terms&amp;conditions.html">
+              {__("Club Apparel Special Points Terms and Conditions.")}
+            </a>
+          )}
         </p>
       </div>
     );

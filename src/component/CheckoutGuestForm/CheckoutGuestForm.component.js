@@ -19,6 +19,8 @@ import Image from "Component/Image";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_CTA_CLICK,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -76,7 +78,6 @@ export class CheckoutGuestForm extends FieldForm {
 
   renderMyAccountPopup() {
     const { showPopup } = this.state;
-
     if (!showPopup) {
       return null;
     }
@@ -109,7 +110,15 @@ export class CheckoutGuestForm extends FieldForm {
       category: "checkout",
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
-    Moengage.track_event(EVENT_SIGN_IN_CTA_CLICK, {
+    const popupEventData = {
+      name: EVENT_SIGN_IN_SCREEN_VIEWED,
+      category: "user_login",
+      action: EVENT_SIGN_IN_SCREEN_VIEWED,
+      popupSource: "Sign In CTA",
+    };
+    Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+
+    MOE_trackEvent(EVENT_SIGN_IN_CTA_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

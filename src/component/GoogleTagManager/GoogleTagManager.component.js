@@ -1,7 +1,9 @@
 /* eslint-disable import/no-cycle, @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
+import MyAccountDispatcher, {
+  CUSTOMER,
+} from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
@@ -28,9 +30,11 @@ import {
   EVENT_GTM_FILTER,
   EVENT_GTM_PDP_TRACKING,
   EVENT_GTM_AUTHENTICATION,
+  EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_GTM_TOP_NAV_CLICK,
   EVENT_GTM_CUSTOMER_SUPPORT,
   EVENT_GTM_CHECKOUT_BILLING,
+  EVENT_PAGE_LOAD,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -73,10 +77,13 @@ import SortEvent from "./events/Sort.event";
 import FilterEvent from "./events/Filter.event";
 import PDPTrackingEvent from "./events/PDPTracking.event";
 import AutheneticationEvent from "./events/Authentication.event";
+import AuthenticationV1Event from "./events/AuthenticationV1.event";
 import TopNavigationEvent from "./events/TopNavigation.event";
 import CustomerSupportEvent from "./events/CustomerSupport.event";
 import CheckoutBillingEvent from "./events/CheckoutBilling.event";
+import PageLoadEvent from "./events/PageLoad.event";
 import Scripts from "./Scripts";
+import MoEngage from "react-moengage";
 
 /**
  * Event list
@@ -180,9 +187,11 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_FILTER]: FilterEvent,
     [EVENT_GTM_PDP_TRACKING]: PDPTrackingEvent,
     [EVENT_GTM_AUTHENTICATION]: AutheneticationEvent,
+    [EVENT_GTM_NEW_AUTHENTICATION]: AuthenticationV1Event,
     [EVENT_GTM_TOP_NAV_CLICK]: TopNavigationEvent,
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
+    [EVENT_PAGE_LOAD]: PageLoadEvent,
   };
 
   /**
@@ -288,6 +297,10 @@ class GoogleTagManager extends PureComponent {
    */
   componentDidMount() {
     this.initialize();
+    MoEngage.init(process.env.REACT_APP_MOE_ID, {
+      debugLogs: process.env.REACT_APP_MOE_LOGS,
+      swPath: process.env.PUBLIC_URL + "/serviceworker.js",
+    });
   }
 
   /**
@@ -408,12 +421,14 @@ class GoogleTagManager extends PureComponent {
    */
 
   processDataPush(event, data) {
+    const isCustomerStatus =
+      this.props.state.MyAccountReducer.isSignedIn || false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType: null,
+        UserType: isCustomerStatus ? "Logged In" : "Logged Out",
         CustomerID: null,
         PageType: null,
         SearchTerm: null,

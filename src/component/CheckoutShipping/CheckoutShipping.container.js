@@ -43,6 +43,7 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
+  addressLoader: state.MyAccountReducer.addressLoader,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {

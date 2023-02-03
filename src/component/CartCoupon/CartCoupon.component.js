@@ -7,6 +7,7 @@ import Event, {
   EVENT_APPLY_COUPON_FAILED,
   EVENT_APPLY_COUPON,
   EVENT_GTM_COUPON,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./CartCoupon.extended.style";
@@ -30,7 +31,7 @@ export class CartCoupon extends SourceCartCoupon {
   };
 
   sendMOEEvents(event, coupon) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       coupon_code: coupon || "",
@@ -40,6 +41,10 @@ export class CartCoupon extends SourceCartCoupon {
 
   handleApplyCode = async (e, couponCode) => {
     e.stopPropagation();
+
+    this.setState({
+      enteredCouponCode: "",
+    });
 
     try {
       let apiResponse =
@@ -107,7 +112,7 @@ export class CartCoupon extends SourceCartCoupon {
           id="couponCode"
           name="couponCode"
           value={formattedCouponValue}
-          placeholder={__("Enter a Coupon or Discount Code")}
+          placeholder={__("ENTER YOUR COUPON CODE")}
           onChange={this.handleCouponCodeChange}
           mix={{ block: "CartCoupon", elem: "Input" }}
         />
@@ -122,7 +127,7 @@ export class CartCoupon extends SourceCartCoupon {
             this.handleApplyCode(e, formattedCouponValue);
           }}
         >
-          {__("Add")}
+          {__("Apply")}
         </button>
       </>
     );

@@ -4,7 +4,6 @@ import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
-import ShareButton from "Component/ShareButton";
 import SearchIcon from "Component/Icons/Search";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -13,13 +12,12 @@ import { isArabic } from "Util/App";
 import browserHistory from "Util/History";
 import isMobile from "Util/Mobile";
 import "./PDPGallery.style";
-import videoIcon from "./icons/video.svg";
 import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from "react-redux";
 import HomeIcon from "Component/Icons/Home/home.png";
 import { setPDPGaleryImage } from "Store/PDP/PDP.action";
-import { EVENT_MOE_PDP_IMAGE_SCROLL } from "Util/Event";
+import { EVENT_MOE_PDP_IMAGE_SCROLL, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -120,19 +118,6 @@ class PDPGallery extends PureComponent {
         pageType="pdp"
         data={product}
       />
-    );
-  }
-  renderShareButton() {
-    const url = new URL(window.location.href);
-    url.searchParams.append("utm_source", "pdp_share");
-    return (
-      <div block="ShareIcon">
-        <ShareButton
-          title={document.title}
-          text={`Hey! check this out: ${document.title}`}
-          url={url}
-        />
-      </div>
     );
   }
 
@@ -483,7 +468,7 @@ class PDPGallery extends PureComponent {
         ? checkCategoryLevel().split("///").pop()
         : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_PDP_IMAGE_SCROLL, {
+    MOE_trackEvent(EVENT_MOE_PDP_IMAGE_SCROLL, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

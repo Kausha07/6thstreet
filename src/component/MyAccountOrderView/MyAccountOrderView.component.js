@@ -33,7 +33,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
 } from "../CheckoutPayments/CheckoutPayments.config";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent } from "Util/Event";
 import Applepay from "./icons/apple.png";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -164,7 +164,7 @@ class MyAccountOrderView extends PureComponent {
     );
   }
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: "OrderDetails",
@@ -398,6 +398,7 @@ class MyAccountOrderView extends PureComponent {
     const displayStatusBar = this.shouldDisplayBar(status);
     const {
       order: { is_exchange_order: exchangeCount },
+      edd_info
     } = this.props;
     if (!displayStatusBar) {
       return null;
@@ -449,7 +450,8 @@ class MyAccountOrderView extends PureComponent {
                 {label}
               </p>
               {index === 2 &&
-                !crossBorder &&
+              edd_info &&
+              edd_info.is_enable &&
                 this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(

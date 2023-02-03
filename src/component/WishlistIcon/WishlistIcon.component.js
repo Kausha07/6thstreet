@@ -13,6 +13,11 @@ import Event, {
   EVENT_CLICK_SEARCH_WISH_LIST_CLICK,
   EVENT_MOE_ADD_TO_WISHLIST,
   EVENT_MOE_REMOVE_FROM_WISHLIST,
+  EVENT_GTM_AUTHENTICATION,
+  EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_WISHLIST_ICON_CLICK,
+  EVENT_GTM_NEW_AUTHENTICATION,
+  MOE_trackEvent
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
@@ -32,6 +37,7 @@ class WishlistIcon extends PureComponent {
 
   state = {
     skuFromProps: "",
+    isIconDisabled: false,
   };
 
   static getDerivedStateFromProps(props) {
@@ -43,6 +49,10 @@ class WishlistIcon extends PureComponent {
   }
 
   handleClick = () => {
+    this.setState({isIconDisabled: true})
+    setTimeout(() => {
+      this.setState({isIconDisabled: false})
+    }, 1000);
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
     const {
       addToWishlist,
@@ -52,6 +62,7 @@ class WishlistIcon extends PureComponent {
       pageType,
       renderMySignInPopup,
       swipeWishlist = false,
+      newSignUpEnabled,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -61,9 +72,15 @@ class WishlistIcon extends PureComponent {
     );
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+    if (newSignUpEnabled) {
+      const eventData = {
+        name: EVENT_WISHLIST_ICON_CLICK,
+        screen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    }
     if (wishListItem) {
       const { wishlist_item_id, product } = wishListItem;
-      //removeFromWishlist(wishlist_item_id);
       if (swipeWishlist) {
         renderMySignInPopup();
       } else {
@@ -86,7 +103,7 @@ class WishlistIcon extends PureComponent {
       const itemPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_special_price"]
         : "";
-      Moengage.track_event(EVENT_MOE_REMOVE_FROM_WISHLIST, {
+      MOE_trackEvent(EVENT_MOE_REMOVE_FROM_WISHLIST, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -106,8 +123,6 @@ class WishlistIcon extends PureComponent {
         product_image_url: wishListItem.product?.thumbnail_url || "",
         product_name: wishListItem.product?.name || "",
         app6thstreet_platform: "Web",
-        // subcategory: Yet to add,
-        // color: Yet to add,
       });
 
       if (userID) {
@@ -139,8 +154,16 @@ class WishlistIcon extends PureComponent {
     } else {
       localStorage.setItem("Wishlist_Item", skuFromProps);
       renderMySignInPopup();
+      if(!newSignUpEnabled){
+        const popupEventData = {
+          name: EVENT_SIGN_IN_SCREEN_VIEWED,
+          category: "user_login",
+          action: EVENT_SIGN_IN_SCREEN_VIEWED,
+          popupSource: "Wishlist",
+        };
+        Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
+      }
     }
-    // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
     const priceObject = data.price[0];
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
@@ -150,7 +173,7 @@ class WishlistIcon extends PureComponent {
       : "";
     if (pageType == "search") {
       Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data?.name);
-      Moengage.track_event(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
+      MOE_trackEvent(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -171,10 +194,10 @@ class WishlistIcon extends PureComponent {
         },
       });
     }
-    const windowLocation= new URL(window.location.href);
+    const windowLocation = new URL(window.location.href);
     const parseProductUrl = windowLocation + data?.url_key + ".html";
 
-    Moengage.track_event(EVENT_MOE_ADD_TO_WISHLIST, {
+    MOE_trackEvent(EVENT_MOE_ADD_TO_WISHLIST, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -183,15 +206,16 @@ class WishlistIcon extends PureComponent {
       subcategory: data.product_type_6s || "",
       color: data.color || "",
       brand_name: data.brand_name || "",
-      full_price: basePrice || data?.original_price ||"",
-      product_url: data?.url && data?.url !== null ? data.url : parseProductUrl || "",
+      full_price: basePrice || data?.original_price || "",
+      product_url:
+        data?.url && data?.url !== null ? data.url : parseProductUrl || "",
       currency: getCurrency() || "",
       gender: currentAppState.gender
         ? currentAppState.gender.toUpperCase()
         : gender
         ? gender
         : "",
-      product_sku: data.config_sku || data.sku ||"",
+      product_sku: data.config_sku || data.sku || "",
       discounted_price: itemPrice || data?.itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",
@@ -216,6 +240,24 @@ class WishlistIcon extends PureComponent {
       });
     }
   };
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
 
   isBlack = (item) => {
     const { skuFromProps } = this.state;

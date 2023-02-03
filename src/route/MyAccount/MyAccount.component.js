@@ -51,18 +51,22 @@ import calogo from "./icons/calogo.png";
 import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
 import { ADD_ADDRESS } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
-import {
-  EVENT_MOE_ACCOUNT_ORDERS_CLICK,
-  EVENT_MOE_ACCOUNT_RETURNS_CLICK,
-  EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK,
-  EVENT_MOE_ACCOUNT_PROFILE_CLICK,
-  EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
-  EVENT_MOE_ACCOUNT_SETTINGS_CLICK,
-  EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
-  EVENT_MOE_RETURN_AN_ITEM_CLICK
+import Event, {
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_ACCOUNT_ORDERS_CLICK,
+  EVENT_ACCOUNT_RETURNS_CLICK,
+  EVENT_ACCOUNT_ADDRESS_BOOK_CLICK,
+  EVENT_ACCOUNT_PROFILE_CLICK,
+  EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
+  EVENT_ACCOUNT_SETTINGS_CLICK,
+  EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
+  EVENT_MOE_RETURN_AN_ITEM_CLICK,
+  EVENT_ACCOUNT_PAYMENT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
+export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
     super(props);
@@ -81,6 +85,7 @@ export class MyAccount extends SourceMyAccount {
     isSignedIn: PropTypes.bool.isRequired,
     mobileTabActive: PropTypes.bool.isRequired,
     setMobileTabActive: PropTypes.func.isRequired,
+    setCurrentTabActive: PropTypes.func.isRequired,
   };
 
   state = {
@@ -170,49 +175,85 @@ export class MyAccount extends SourceMyAccount {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK  && {screen_name: "Return List"}),
-      app6thstreet_platform: "Web",
-    });
-  }
-
-  chat() {
-    if (document.querySelector(".ori-cursor-ptr")) {
-      document.querySelector(".ori-cursor-ptr").click();
+    const { newSignUpEnabled } = this.props;
+    if (newSignUpEnabled) {
+      const eventData = {
+        name: event,
+        prevScreen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    } else {
+      MOE_trackEvent(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {
+          screen_name: "Return List",
+        }),
+        app6thstreet_platform: "Web",
+      });
     }
   }
 
-  handleTabChange(key) {
-    const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
 
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
+  handleTabChange(key) {
+    const {
+      changeActiveTab,
+      mobileTabActive,
+      setMobileTabActive,
+      setCurrentTabActive,
+    } = this.props;
     setMobileTabActive(!mobileTabActive);
+    setCurrentTabActive(true);
     changeActiveTab(key);
     const MoeEvent =
       key == "dashboard"
-        ? EVENT_MOE_ACCOUNT_PROFILE_CLICK
+        ? EVENT_ACCOUNT_PROFILE_CLICK
         : key == "my-orders"
-        ? EVENT_MOE_ACCOUNT_ORDERS_CLICK
+        ? EVENT_ACCOUNT_ORDERS_CLICK
         : key == "settings"
-        ? EVENT_MOE_ACCOUNT_SETTINGS_CLICK
+        ? EVENT_ACCOUNT_SETTINGS_CLICK
         : key == "address-book"
-        ? EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK
+        ? EVENT_ACCOUNT_ADDRESS_BOOK_CLICK
         : key == "return-item"
-        ? EVENT_MOE_ACCOUNT_RETURNS_CLICK
+        ? EVENT_ACCOUNT_RETURNS_CLICK
         : key == "club-apparel"
-        ? EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK
+        ? EVENT_ACCOUNT_CLUB_APPAREL_CLICK
+        : key == "wallet-payments"
+        ? EVENT_ACCOUNT_PAYMENT_CLICK
         : "";
-    if (MoeEvent && MoeEvent.length > 0) {
+    if (MoeEvent) {
       this.sendEvents(MoeEvent);
     }
   }
 
   openTabMenu() {
-    const { mobileTabActive, setMobileTabActive, history } = this.props;
+    const {
+      mobileTabActive,
+      setMobileTabActive,
+      setCurrentTabActive,
+      history,
+    } = this.props;
     // history.push("/my-account");
     history.goBack();
     setMobileTabActive(!mobileTabActive);
+    setCurrentTabActive(false);
   }
 
   handleClick(e) {
@@ -337,8 +378,6 @@ export class MyAccount extends SourceMyAccount {
       : { ...tabMap, ...returnState, ...tabMap2 };
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
-    // let hiddenTabContent = mobileTabActive ? "Active" : "Hidden";
-    // let hiddenTabList = mobileTabActive ? "Hidden" : "Active";
     let hiddenTabContent, hiddenTabList;
     if (showProfileMenu) {
       hiddenTabList = "Active";
@@ -362,7 +401,8 @@ export class MyAccount extends SourceMyAccount {
     }
     const { name, alternativePageName, alternateName } = finalTab;
     const isCancel = pathname.includes("/return-item/cancel");
-    const isPickUpAddress = pathname === "/my-account/return-item/pick-up-address";
+    const isPickUpAddress =
+      pathname === "/my-account/return-item/pick-up-address";
     const customer = BrowserDatabase.getItem("customer");
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
@@ -446,14 +486,17 @@ export class MyAccount extends SourceMyAccount {
             <div block="CardsContainer">
               <Image block="CardsIcon" src={contactHelp} alt={"box"} />
               <div block="CardTitle"> {__("Customer Support")} </div>
-              <button
+              <a
                 onClick={() => {
-                  this.chat();
-                  this.sendEvents(EVENT_MOE_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                  this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
                 }}
+                className="chat-button"
+                href={`${WHATSAPP_LINK}`}
+                target="_blank"
+                rel="noreferrer"
               >
                 {__("Live Chat")}
-              </button>
+              </a>
             </div>
           </div>
           <MyAccountTabList

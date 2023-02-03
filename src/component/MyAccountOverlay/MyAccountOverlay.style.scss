@@ -384,9 +384,9 @@
           text-align: center;
         }
       }
-      &_initialLinks{
-        .MyAccountOverlayOuter{
-          .signInQuote{
+      &_initialLinks {
+        .MyAccountOverlayOuter {
+          .signInQuote {
             @include mobile() {
               opacity: 1;
               visibility: visible;
@@ -456,9 +456,18 @@
                   background-image: url(../../route/MyAccount/icons/faq.png);
                 }
               }
-              a {
-              }
             }
+            .privacy_policy_icon {
+              display: flex;
+              width: 32px;
+              align-items: center;
+            }
+          }
+          .PrivacyTab {
+            display: flex;
+            padding-left: 18px;
+            padding-right: 18px;
+            direction: ltr;
           }
         }
       }
@@ -632,7 +641,7 @@
   &-Buttons {
     display: flex;
     margin: 30px 90px;
-    @include mobile(){
+    @include mobile() {
       justify-content: center;
     }
     // @include mobile() {
@@ -795,7 +804,7 @@
 
     &_isCreateAccountButton {
       margin-top: 24px;
-      @include mobile(){
+      @include mobile() {
         margin-bottom: 25px;
       }
       &::after {
@@ -1355,7 +1364,7 @@
       height: 0;
       opacity: 0;
       margin: 0;
-      transition: height .4s ease-out, margin .4s ease-out; 
+      transition: height 0.4s ease-out, margin 0.4s ease-out;
       position: relative;
       text-align: center;
       width: 100%;
@@ -1366,7 +1375,7 @@
         margin: auto;
         line-height: 28px;
         font-weight: 600;
-        span{
+        span {
           color: #ec694f;
         }
       }

@@ -16,9 +16,14 @@ import Event, {
   VUE_CAROUSEL_CLICK,
 } from "Util/Event";
 import { parseURL } from "Util/Url";
+import { setPDPData } from "Store/PDP/PDP.action";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  setPDPData: (response, options) => dispatch(setPDPData(response, options)),
 });
 
 class DynamicContentVueProductSliderItem extends PureComponent {
@@ -43,7 +48,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       posofreco,
       sourceProdID,
       sourceCatgID,
-      index
+      index,
+      setPDPData
     } = this.props;
     const { category, sku, link, price } = data;
     let destProdID = sku;
@@ -63,7 +69,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           uuid: getUUID(),
           referrer: window.location.href,
           url: link ? link : null,
-          widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+          widgetID: VueIntegrationQueries.getWidgetTypeMapped(
+            widgetID,
+            pageType
+          ),
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
           destProdID: destProdID,
@@ -74,9 +83,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       });
       Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
       this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
-
-    }
-    catch (e) {
+      setPDPData({}, {});
+    } catch (e) {
       Logger.log(e);
     }
 
@@ -142,7 +150,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (data?.url) {
       newLink = data.url;
     }
-    let productTag = this.props.data.product_tag ? this.props.data.product_tag : ""
+    let productTag = this.props.data.product_tag
+      ? this.props.data.product_tag
+      : "";
 
     return (
       <div
@@ -172,25 +182,22 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           <span id="productName">{name}</span>
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
-          {
-            productTag ?
-              this.renderProductTag(productTag)
-              :
-              this.renderIsNew(is_new_in)
-          }
-        </Link >
+          {productTag
+            ? this.renderProductTag(productTag)
+            : this.renderIsNew(is_new_in)}
+        </Link>
         <WishlistIcon
           renderMySignInPopup={renderMySignInPopup}
           sku={sku}
           data={data}
           pageType={pageType}
         />
-      </div >
+      </div>
     );
   }
 }
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(DynamicContentVueProductSliderItem);

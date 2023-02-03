@@ -8,6 +8,7 @@ import { MINI_CARDS } from './CreditCard.config';
 import secure from './icons/secure.png';
 import Field from 'Component/Field';
 import { isArabic } from "Util/App";
+import cardValidator from 'card-validator';
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
@@ -107,10 +108,41 @@ class CreditCard extends PureComponent {
         });
     };
 
+    expDateValidator2(isMonth, value) {
+        const { expMonth, expYear } = this.state;
+
+        if(isMonth && expYear === '') {
+            // When the user enters the month
+            if (!cardValidator.expirationMonth(value).isValid) {
+                return __("Card exp month is not valid");
+            } else {
+                return __("Card exp year is not valid");
+            }
+        } else if (isMonth && expYear.length === 2) {
+            // when user try to edit month
+            if (!cardValidator.expirationMonth(value).isValid) {
+                return __("Card exp month is not valid");
+            } else if (!cardValidator.expirationYear(expYear).isValid){
+                return __("Card exp year is not valid");
+            }else {
+                return null;
+            }
+        } else if ((!isMonth && expMonth === "") || (!isMonth && expMonth.length === 2)) {
+            // when user enters year before month OR after entering month enters a year value
+            if (!cardValidator.expirationMonth(expMonth).isValid) {
+                return __("Card exp month is not valid");
+            } else if (!cardValidator.expirationYear(value).isValid){
+                return __("Card exp year is not valid");
+            }else {
+                return null;
+            }
+        } 
+    }
+
     handleExpDateChange = (value, isMonth) => {
         const { setCreditCardData, expDateValidator } = this.props;
         const { expMonth, expYear, expDateFilled } = this.state;
-        const message = expDateValidator(isMonth, value);
+        const message = this.expDateValidator2(isMonth, value);
         const key = isMonth ? 'expMonth' : 'expYear';
 
         setCreditCardData({ [key]: value });
@@ -121,7 +153,7 @@ class CreditCard extends PureComponent {
             if (value.length === 2 && expYear.length === 2) {
                 this.setState({ expDateFilled: true });
                 return;
-            } else if (value.length === 2) {
+            } else if (value.length === 2 && value >= 1 && value <= 12) { 
                 let yearInput = document.getElementById("expDataYY");
                 if (yearInput) {
                     yearInput.focus();
