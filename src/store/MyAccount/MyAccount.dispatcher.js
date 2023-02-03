@@ -49,7 +49,12 @@ import {
 } from "Util/Auth";
 import { getStore } from "Store";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_GENERAL_INIT,
+  VUE_PAGE_VIEW,
+  MOE_AddUniqueID,
+  MOE_destroySession,
+} from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
@@ -281,7 +286,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setClubApparel(getClubApparelInitialState()));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
-    Moengage.destroy_session();
+    MOE_destroySession();
 
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
@@ -390,16 +395,18 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   // handleMobileAuthCommonBlockOTP(){}
 
   async handleMobileAuthorizationOTP(dispatch, options) {
-    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
-      options;
-
+    const {
+      data: { token, t, user, user: { custom_attributes, gender, id } } = {},
+    } = options;
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
-
+    if (user?.email) {
+      MOE_AddUniqueID(user?.email);
+    }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
     setAuthorizationToken(t);
@@ -433,12 +440,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-              username,
-              password,
-              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-            },
+            username,
+            password,
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+          }
       );
-
+    if (options?.email){
+       MOE_AddUniqueID(options?.email);
+    }
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
@@ -507,7 +516,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const isVerifiedAttribute = custom_attributes.filter(
       ({ attribute_code }) => attribute_code === "is_mobile_otp_verified",
     );
-
     const { value: phoneNumber } =
       phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
     const { value: isVerified } =
@@ -602,7 +610,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   resetPassword(data) {
-    //return resetPasswordWithToken({ ...data, email: BrowserDatabase.getItem(RESET_EMAIL) });
     return resetPasswordWithToken({ ...data, email: "" });
   }
 

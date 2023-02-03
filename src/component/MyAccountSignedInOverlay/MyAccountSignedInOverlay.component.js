@@ -14,12 +14,15 @@ import LogoutIcon from "./icons/logout.png";
 import ReturnIcon from "./icons/return.svg";
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
 import "./MyAccountSignedInOverlay.style";
-import {
-  EVENT_MOE_ACCOUNT_ORDERS_CLICK,
-  EVENT_MOE_ACCOUNT_RETURNS_CLICK,
-  EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK,
-  EVENT_MOE_ACCOUNT_PROFILE_CLICK,
-  EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK,
+import Event, {
+  EVENT_ACCOUNT_ORDERS_CLICK,
+  EVENT_ACCOUNT_RETURNS_CLICK,
+  EVENT_ACCOUNT_ADDRESS_BOOK_CLICK,
+  EVENT_ACCOUNT_PROFILE_CLICK,
+  EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
+  EVENT_GTM_NEW_AUTHENTICATION,
+  EVENT_ACCOUNT_PAYMENT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -40,12 +43,39 @@ export class MyAccountSignedInOverlay extends PureComponent {
     isArabic: isArabic(),
   };
 
-  sendMoeEvents(event) {
-    Moengage.track_event(event, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      app6thstreet_platform: "Web",
-    });
+  sendEvents(event) {
+    const { newSignUpEnabled } = this.props;
+    if (newSignUpEnabled) {
+      const eventData = {
+        name: event,
+        prevScreen: this.getPageType() || "",
+      };
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    } else {
+      MOE_trackEvent(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
+
+  getPageType() {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === "url-rewrite") {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 
   renderMyAccountLink() {
@@ -54,7 +84,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkAccount"
         to="/my-account/dashboard"
-        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_PROFILE_CLICK)}
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_PROFILE_CLICK)}
       >
         <AccountIcon />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
@@ -70,7 +100,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkHistory"
         to="/my-account/my-orders"
-        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_ORDERS_CLICK)}
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_ORDERS_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -86,13 +116,13 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderReturnAnItemLink() {
-    const {is_exchange_enabled = false} = this.props
+    const { is_exchange_enabled = false } = this.props;
     return (
       <Link
         block="MyAccountSignedInOverlay"
         elem="ReturnAnItem"
         to="/my-account/return-item"
-        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_RETURNS_CLICK)}
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_RETURNS_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -101,7 +131,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           alt={"returnIcon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {is_exchange_enabled ? __("My Return/Exchange"):  __("My Returns")}
+          {is_exchange_enabled ? __("My Return/Exchange") : __("My Returns")}
         </span>
       </Link>
     );
@@ -122,7 +152,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkClub"
         to="/my-account/club-apparel"
-        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_CLUB_APPAREL_CLICK)}
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_CLUB_APPAREL_CLICK)}
       >
         <Image
           lazyLoad={true}
@@ -164,13 +194,13 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkDelivery"
         to="/my-account/address-book"
-        onClick= {()=> this.sendMoeEvents(EVENT_MOE_ACCOUNT_ADDRESS_BOOK_CLICK)}
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_ADDRESS_BOOK_CLICK)}
       >
         <Image
           lazyLoad={true}
           src={AddressIcon}
           mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={ "addressIcon" }
+          alt={"addressIcon"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("My Address Book")}
@@ -185,6 +215,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         block="MyAccountSignedInOverlay"
         elem="LinkDelivery"
         to="/my-account/wallet-payments"
+        onClick={() => this.sendEvents(EVENT_ACCOUNT_PAYMENT_CLICK)}
       >
         <Image
           lazyLoad={true}

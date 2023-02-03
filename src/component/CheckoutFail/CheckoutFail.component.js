@@ -1,7 +1,7 @@
 import { CheckoutSuccess } from "Component/CheckoutSuccess/CheckoutSuccess.component";
 import Image from "Component/Image";
 import WarningImage from "Component/MyAccountOrderView/icons/warning.png";
-import { EVENT_MOE_ECOMMERCE_PURCHASE_FAILED } from "Util/Event";
+import { EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -57,7 +57,7 @@ export class CheckoutFail extends CheckoutSuccess {
       productCategory.push(productKeys?.original_price);
       productItemPrice.push(productKeys?.itemPrice);
     });
-    Moengage.track_event(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
+    MOE_trackEvent(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

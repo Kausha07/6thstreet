@@ -14,6 +14,7 @@ import { BRANDTITLE } from "Component/SizeTable/SizeTable.config.js";
 import Event, {
   EVENT_GO_TO_SIZE_CHART,
   EVENT_GTM_PDP_TRACKING,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -88,7 +89,7 @@ class PDPSizeGuide extends PureComponent {
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    Moengage.track_event(EVENT_GO_TO_SIZE_CHART, {
+    MOE_trackEvent(EVENT_GO_TO_SIZE_CHART, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       currency: getCurrency() || "",

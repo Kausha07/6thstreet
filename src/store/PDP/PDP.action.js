@@ -3,6 +3,7 @@ export const SET_PDP_LOADING = 'SET_PDP_LOADING';
 export const SET_DISPLAY_SEARCH = 'SET_DISPLAY_SEARCH'
 export const SET_PDP_GALLERY_IMAGE_INDEX = 'SET_PDP_GALLERY_IMAGE_INDEX';
 export const SET_PDP_CLICK_AND_COLLECT = 'SET_PDP_CLICK_AND_COLLECT';
+export const SET_BRAND_INFO_DATA = 'SET_BRAND_INFO_DATA';
 
 export const setPDPGaleryImage = (imageIndex) => ({
     type: SET_PDP_GALLERY_IMAGE_INDEX,
@@ -17,6 +18,11 @@ export const setPDPShowSearch = (displaySearch) => ({
 export const setPDPLoading = (isLoading) => ({
     type: SET_PDP_LOADING,
     isLoading
+});
+
+export const setBrandInfoData = (data) => ({
+    type: SET_BRAND_INFO_DATA,
+    data
 });
 
 export const setPDPData = (

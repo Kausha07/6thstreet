@@ -5,7 +5,7 @@ import { Brand as BrandType } from "Util/API/endpoint/Brands/Brands.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import "./Brand.style";
-import { EVENT_MOE_GO_TO_BRAND } from "Util/Event";
+import { EVENT_MOE_GO_TO_BRAND, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -33,7 +33,7 @@ class Brand extends PureComponent {
   
   sendMoeEvent(brandName) {
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_GO_TO_BRAND, {
+    MOE_trackEvent(EVENT_MOE_GO_TO_BRAND, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brandName || "",

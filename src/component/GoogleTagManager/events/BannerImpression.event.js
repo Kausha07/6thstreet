@@ -1,8 +1,9 @@
-import Event, {
+import Event,  {
   EVENT_PROMOTION_IMPRESSION,
   EVENT_CLICK_PROMOTION_IMPRESSION,
   EVENT_MOE_PROMOTION_IMPRESSION,
-  EVENT_MOE_PROMOTION_CLICK
+  EVENT_MOE_PROMOTION_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -107,7 +108,7 @@ class BannerImpressionEvent extends BaseEvent {
     const currentPageType = this.getPageType() || "";
 
     if (document.readyState == ("complete" || "interactive")) {
-      Moengage.track_event(MoeEventType, {
+      MOE_trackEvent(MoeEventType, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         promotion_id: promoID.length == 1 ? promoID.toString() : promoID,

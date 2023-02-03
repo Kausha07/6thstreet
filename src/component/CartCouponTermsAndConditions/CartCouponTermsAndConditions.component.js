@@ -43,11 +43,18 @@ class CartCouponTermsAndConditions extends PureComponent {
 
     render() {
         const { isArabic, isMobile } = this.state;
+        const { hideTermsAndConditions } = this.props;
 
         return (
             <div block="couponTermsAndConditionsPopup">
                 <div block="couponTermsAndConditionsOverlay">
-                    <div block="couponTermsAndConditionsPopupBlock" ref={this.couponTermsAndConditionsPopupRef}>                    
+                    <div block="couponTermsAndConditionsPopupBlock" ref={this.couponTermsAndConditionsPopupRef}> 
+                        <div className="closebuttonDiv">
+                            <button 
+                                onClick={(e)=>{hideTermsAndConditions(e)}} 
+                                block="closePopupbtn" mods={{isArabic}}><span>Close</span>
+                            </button>
+                        </div>                   
                         <div block="couponTermsAndConditionsPopupTitlesWrapper">
                             <h2 block="couponTermsAndConditionsPopupTitles">
                                 {__("Terms & Conditions")}
@@ -57,7 +64,7 @@ class CartCouponTermsAndConditions extends PureComponent {
                         <div block="couponTermsAndConditionsPopupIAgreeButtonWrapper">
                             <button onClick={(e)=>{this.couponTermsAndConditionsPopup(e)}} block="couponTermsAndConditionsPopupIAgreeButton"
                             >
-                                {__("I Agree")}
+                                {__("Apply Coupon")}
                             </button>
                         </div>
                     </div>

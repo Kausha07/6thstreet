@@ -25,6 +25,7 @@ import Event,{
   EVENT_SET_PREFERENCES_GENDER,
   EVENT_GTM_SORT,
   EVENT_GTM_FILTER,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -86,7 +87,7 @@ class PLPFilterOption extends PureComponent {
         : "";
 
     const sendMoeEvents = (event) => {
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
@@ -108,7 +109,7 @@ class PLPFilterOption extends PureComponent {
         let category_2 = checkCategories ? Categories_level.shift() : "";
         let category_3 = checkCategories ? Categories_level.shift() : "";
 
-        Moengage.track_event(EVENT_PLP_SORT, {
+        MOE_trackEvent(EVENT_PLP_SORT, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           sort_value: facet_value || "",
@@ -141,7 +142,7 @@ class PLPFilterOption extends PureComponent {
           Event.dispatch(EVENT_GTM_SORT, sortEventType);
         }
       } else {
-        Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+        MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           filter_type: facet_key || "",
