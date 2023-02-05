@@ -1,31 +1,33 @@
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import PropTypes from "prop-types";
+
+import { TYPES_ARRAY } from "./Brands.config";
+import { HistoryType, LocationType } from "Type/Common";
+import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
+
 import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
-import { HistoryType, LocationType } from "Type/Common";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
+
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import { getQueryParam, setQueryParams } from "Util/Url";
 import { getCountryFromUrl } from "Util/Url/Url";
+import isMobile from "Util/Mobile";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import CatalogueAPI from "Util/API/provider/CatalogueAPI";
+
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import Brands from "./Brands.component";
-import { TYPES_ARRAY } from "./Brands.config";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
-import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import BrowserDatabase from "Util/BrowserDatabase";
-import isMobile from "Util/Mobile";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = () => ({});
 
@@ -114,9 +116,6 @@ class BrandsContainer extends PureComponent {
     this.setMetaData();
   }
 
-  requestBrandMapping = () => {
-    let brandMapping = this.getBrandMappingData();
-  };
   setLastTapItem = (item) => {
     this.props.setLastTapItemOnHome(item);
   };
@@ -148,18 +147,6 @@ class BrandsContainer extends PureComponent {
     } else {
       this.setState({ brandWidgetData: [] });
     }
-  }
-
-  getBrandMappingData() {
-    const apiUrl = "/cdn/config/brandswithUrl.json";
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        let ret = {};
-        this.setState({
-          brandMapping: data.brands,
-        });
-      });
   }
 
   updateHeaderState() {
@@ -210,18 +197,8 @@ class BrandsContainer extends PureComponent {
   async requestShopbyBrands(gender) {
     try {
       const activeBrandsList = await this.requestBrands(gender);
-
-      const brandResponse = await new Algolia({
-        index: "brands_info",
-      }).getShopByBrands({
-        query: "",
-        limit: 800,
-      });
-      let totalBrands = [];
-      brandResponse.map((brand) => {
-        totalBrands = [...totalBrands, ...brand.hits];
-      });
-      const groupedBrands = groupByName(totalBrands) || {};
+      const brandResponse = await CatalogueAPI.get()
+      const groupedBrands = groupByName(brandResponse.result) || {};
       const sortedBrands = Object.entries(groupedBrands).sort(
         ([letter1], [letter2]) => {
           if (letter1 === "0-9") {
