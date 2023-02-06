@@ -50,7 +50,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
   state = {
     isTabbyInstallmentAvailable: false,
-    settingLoaderState: false,
+    loaderSelectPayMethod: false,
   };
 
   componentDidMount() {
@@ -153,7 +153,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
     this.setState({
       selectedPaymentCode: code,
-      settingLoaderState: true,
+      loaderSelectPayMethod: true,
     });
 
     onPaymentMethodSelect(code);
@@ -164,7 +164,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         finishPaymentRequest();
         // removeBinPromotion();
         resetBinApply();
-        this.setState({ settingLoaderState: false})
+        this.setState({ loaderSelectPayMethod: false})
       })
       .catch(() => {
         const { showError } = this.props;

@@ -547,10 +547,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   };
 
   render() {
-    const { settingLoaderState } = this.props;
+    const { loaderSelectPayMethod } = this.props;
     return (
       <div block="CheckoutPayments" dir={this.state.isArabic ? "rtl" : "ltr"}>
-        <Loader isLoading={settingLoaderState} />
+        <Loader isLoading={loaderSelectPayMethod} />
         {this.renderContent()}
         {this.renderTabbyPopup()}
       </div>
