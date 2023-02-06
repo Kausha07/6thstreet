@@ -28,6 +28,7 @@ import Whatsapp from "./icons/whatsapp.svg";
 import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
+import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -1077,7 +1078,7 @@ export class CheckoutSuccess extends PureComponent {
               <p></p>
             </>
           )}
-          {paymentMethod?.code === "careem_pay" ? ("Careem Pay") : null}
+          {paymentMethod?.code === CAREEM_PAY ? ("Careem Pay") : null}
         </div>
       </>
     );

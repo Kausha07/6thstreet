@@ -7,6 +7,7 @@ import {
   FAILURE,
   guestUserAddress,
   loggedInUserAddress,
+  CAREEM_PAY,
 } from "./CareemPay.config";
 
 
@@ -25,10 +26,10 @@ function CareemPay({
 }) {
 
   const addCareemPayScripts = () => {
-    const script2 = document.createElement("script");
-    script2.src = "https://dist.cpay.me/latest/merchant-sdk.js";
-    script2.defer = true;
-    document.body.appendChild(script2);
+    const script = document.createElement("script");
+    script.src = "https://dist.cpay.me/latest/merchant-sdk.js";
+    script.defer = true;
+    document.body.appendChild(script);
   };
 
   async function getCareemPayInvoice(data) {
@@ -44,7 +45,7 @@ function CareemPay({
 
   async function createCareemPayOrder() {
     try {
-      const code = "careem_pay";
+      const code = CAREEM_PAY;
       const response = await createOrder(code);
       if(response) {        
         const orderidd = response?.data?.order_id;
@@ -95,7 +96,7 @@ function CareemPay({
         onComplete: (status) => {
           console.log(`Checkout completed with status: ${status}`);
           setProcessingLoader(true);
-          setPaymentinfoCareemPay("careem_pay");
+          setPaymentinfoCareemPay(CAREEM_PAY);
           if (status === SUCCESS) {
             createCareemPayOrder();
           }else if(status === FAILURE){

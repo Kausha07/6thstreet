@@ -3,7 +3,7 @@ export const CREATED_STATUS = 'CREATED';
 
 export const SUCCESS = 'success';
 export const FAILURE = 'failure';
-
+export const CAREEM_PAY = "careem_pay";
 
 export const guestUserAddress = {
     "guest_email": "Pratik99@gmail.com",
