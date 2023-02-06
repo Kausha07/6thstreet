@@ -70,7 +70,20 @@ export class LanguageSwitcherContainer extends PureComponent {
       window.location.href.includes("en-") ||
       window.location.href.includes("ar-")
     ) {
-      if (location.pathname.match(/my-account/)) {
+      if (
+        pageUrl.pathname === "/influencer.html/Collection" ||
+        pageUrl.pathname === "/influencer.html/Store"
+      ) {
+        const pagePath = pageUrl.origin + pageUrl.pathname + pageUrl.search;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else if (location.pathname.match(/my-account/)) {
         this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href

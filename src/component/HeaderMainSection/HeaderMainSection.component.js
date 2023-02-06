@@ -132,7 +132,7 @@ class HeaderMainSection extends NavigationAbstract {
         {this.renderAccount()}
         {this.renderCart()}
         {this.renderWishlist()}
-        {!this.props.location.pathname.includes("influencer") && this.renderSearchIcon()}
+        {gender !== "influencer" && this.renderSearchIcon()}
       </div>
     );
   }

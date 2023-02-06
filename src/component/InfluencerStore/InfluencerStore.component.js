@@ -1,7 +1,306 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
 
-const InfluencerStore = (props) =>{
-    return(<>Work in progress</>);
-}
+import { getEnvIDForInfluencer } from "Util/Common/index";
+import WebUrlParser from "Util/API/helper/WebUrlParser";
+import { formatCDNLink } from "Util/Url";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getQueryParam } from "Util/Url";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import {
+  getInfluencerInfo,
+  getFollowedInfluencer,
+  followUnfollowInfluencer,
+} from "Util/API/endpoint/Influencer/Influencer.endpoint";
 
-export default InfluencerStore;
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+
+import ShareButton from "Component/ShareButton";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import PLP from "Route/PLP";
+import ContentWrapper from "Component/ContentWrapper";
+import Link from "Component/Link";
+
+import "./InfluencerStore.style";
+
+export const BreadcrumbsDispatcher = import(
+  "Store/Breadcrumbs/Breadcrumbs.dispatcher"
+);
+export const mapDispatchToProps = (dispatch) => ({
+  resetPLPData: (options) => PLPDispatcher.resetPLPData(dispatch),
+});
+export const mapStateToProps = (state) => ({
+  isSignedIn: state.MyAccountReducer.isSignedIn,
+});
+
+const InfluencerStore = (props) => {
+  const [storeInfo, setStoreInfo] = useState(undefined);
+  const [influencerName, setInfluencerName] = useState("");
+  const [influencerId, setInfluencerId] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [algoliaQuery, setAlgoliaQuery] = useState("");
+  const [followingList, setFollowingList] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    return () => {
+      props.resetPLPData();
+    };
+  }, []);
+
+  useEffect(() => {
+    getStoreInfo();
+    updateBreadcrumbs();
+    WebUrlParser.setPage("0");
+    if (props.isSignedIn) {
+      getFollowingList();
+    }
+  }, [influencerName]);
+
+  const updateBreadcrumbs = () => {
+    const breadcrumbs = [
+      {
+        url: "",
+        name: __("%s Store", influencerName),
+      },
+      {
+        url: "/influencer.html",
+        name: __("Influencer"),
+      },
+    ];
+
+    BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.update(breadcrumbs, dispatch)
+    );
+  };
+
+  const updateFollowingList = (influencerID, follow) => {
+    const temp = [...followingList];
+    if (follow) {
+      const newarr = temp.filter((listID) => listID !== influencerID);
+      setFollowingList(newarr);
+    } else {
+      temp.push(influencerID);
+      setFollowingList(temp);
+    }
+  };
+
+  const getFollowingList = async () => {
+    try {
+      getFollowedInfluencer().then((resp) => {
+        setFollowingList(resp);
+      });
+    } catch (err) {
+      console.error("Influencer error", err);
+    }
+  };
+
+  const getStoreInfo = () => {
+    const influencer_id = getQueryParam("influencerID", location);
+    const envID = getEnvIDForInfluencer();
+    const locale = getLocaleFromUrl();
+
+    setInfluencerId(influencer_id);
+    try {
+      getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
+        if (resp) {
+          setAlgoliaQuery(resp["algolia_query"]["categories.level2"]);
+          setInfluencerName(resp?.influencer_name);
+          setStoreInfo(resp);
+        }
+      });
+    } catch (error) {
+      console.error("Influencer Store error", error);
+    }
+  };
+
+  const showMyAccountPopup = () => {
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const onSignIn = () => {
+    closePopup();
+  };
+
+  const renderMySignInPopup = () => {
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay closePopup={closePopup} onSignIn={onSignIn} isPopup />
+    );
+  };
+
+  const GTLsection = (block, i) => {
+    const {
+      id: influncer_collection_id,
+      link,
+      products,
+      thumbnail_url,
+      title,
+    } = block;
+
+    return (
+      <li key={influncer_collection_id} block="spckItem">
+        <div block="eventImage">
+          <Link
+            to={formatCDNLink(
+              `./Collection?influencerCollectionID=${influncer_collection_id}&influencerID=${influencerId}`
+            )}
+            key={i}
+            data-banner-type="influencer_slider_banner"
+            data-promotion-name={
+              block.promotion_name ? item.promotion_name : ""
+            }
+            data-tag={block.tag ? block.tag : ""}
+          >
+            <img src={thumbnail_url} alt="get_the_look_collection" />
+          </Link>
+        </div>
+      </li>
+    );
+  };
+
+  const renderBannerAnimation = () => {
+    return <div block="AnimationWrapper"></div>;
+  };
+
+  const renderGetTheLookSection = (storeInfoItem) => {
+    const { collections } = storeInfoItem;
+
+    if (collections && collections.length > 0) {
+      return (
+        <div>
+          <ul block="spckItems">{collections.map(GTLsection)}</ul>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const storePageProducts = () => {
+    document.body.style.overflowX = "hidden";
+
+    if (algoliaQuery !== undefined) {
+      return <PLP />;
+    }
+  };
+  const followUnfollow = (influencerID, follow) => {
+    if (!props.isSignedIn) {
+      showMyAccountPopup();
+    } else {
+      const payload = {
+        influencerId: influencerID,
+        following: !follow,
+      };
+      followUnfollowInfluencer(payload).then((resp) => {
+        updateFollowingList(influencerID, follow);
+      });
+    }
+  };
+
+  const renderMainSection = (storeInfoItem) => {
+    const { image_url, influencer_name, store_link, collections, id } =
+      storeInfoItem;
+    const collectionCount = collections && collections.length;
+    const isFollowed =
+      followingList &&
+      followingList.length > 0 &&
+      followingList.includes(influencerId);
+    const url = new URL(window.location.href);
+    url.searchParams.append("utm_source", "influencerStore_share");
+    const product = {
+      name: influencer_name,
+      sku: id,
+      url: store_link,
+    };
+
+    return (
+      <div block="spck-main">
+        <div block="mainImage">
+          <img src={image_url} alt="Influencer_banner"></img>
+        </div>
+        <div block="Influencer_info_block">
+          <h1>{influencer_name}</h1>
+          {collectionCount !== 0 && <p>{collectionCount} Looks</p>}
+
+          <div block="shareandfollowButton">
+            {!isMobile.any() && (
+              <div block=" ShareAndWishlistButtonContainer divDesign">
+                <ShareButton
+                  product={product}
+                  title={document.title}
+                  text={__("Hey check this out: %s", document.title)}
+                  url={url.href}
+                  image={image_url}
+                />
+              </div>
+            )}
+
+            {isFollowed ? (
+              <button
+                block="followingButton"
+                mods={{ isArabic: isArabic() }}
+                onClick={() => followUnfollow(influencerId, true)}
+              >
+                {__("Following")}
+              </button>
+            ) : (
+              <button
+                block="followButton"
+                mods={{ isArabic: isArabic() }}
+                onClick={() => followUnfollow(influencerId, false)}
+              >
+                {__("Follow")}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderStorePage = (storeInfoItem) => {
+    return (
+      <>
+        {renderMainSection(storeInfoItem)}
+        {renderGetTheLookSection(storeInfoItem)}
+        {storePageProducts()}
+      </>
+    );
+  };
+  const renderMain = () => {
+    return (
+      <>
+        {storeInfo === undefined
+          ? renderBannerAnimation()
+          : renderStorePage(storeInfo)}
+      </>
+    );
+  };
+
+  return (
+    <main block="InfluencerStore">
+      <ContentWrapper
+        mix={{ block: "InfluencerStore" }}
+        wrapperMix={{
+          block: "InfluencerStore",
+          elem: "Wrapper",
+        }}
+        label={__("InfluencerStore")}
+      >
+        {renderMySignInPopup()}
+        {renderMain()}
+      </ContentWrapper>
+    </main>
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InfluencerStore);

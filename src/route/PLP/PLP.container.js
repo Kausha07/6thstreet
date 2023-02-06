@@ -25,6 +25,10 @@ import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import { getInfluencerInfo } from "Util/API/endpoint/Influencer/Influencer.endpoint";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getEnvIDForInfluencer } from  "../../util/Common/index";
+import { getQueryParam } from "Util/Url";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
@@ -141,7 +145,33 @@ export class PLPContainer extends PureComponent {
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions();
+    let options;
+    if (window.location.pathname.includes("influencer")) {
+      const influencer_id = getQueryParam("influencerID", location);
+      let resp;
+      const envID = getEnvIDForInfluencer();
+      const locale = getLocaleFromUrl();
+      resp = await getInfluencerInfo(influencer_id, envID, locale).then((response) => {
+        return response;
+      });
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      let algoliaQuery =
+        resp &&
+        resp["algolia_query"] &&
+        resp["algolia_query"]["categories.level2"];
+      let params = {
+        q: "",
+      };
+      if(!Object.keys(parsedParams).includes("page"))
+      {
+        params["page"] = "0";
+      }
+      params["categories.level2"] = algoliaQuery;
+      const finalParams = {...parsedParams, ...params};
+      options = finalParams;
+    } else {
+      options = PLPContainer.getRequestOptions();
+    }
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -841,7 +871,7 @@ export class PLPContainer extends PureComponent {
       menuCategories,
     } = this.props;
     const {isArabic} = this.state
-    if (query) {
+    if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
