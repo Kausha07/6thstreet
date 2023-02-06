@@ -869,6 +869,7 @@ export class PLPContainer extends PureComponent {
       options: { q: query },
       options,
       menuCategories,
+      gender
     } = this.props;
     const {isArabic} = this.state
     if (query && gender !== "influencer") {
