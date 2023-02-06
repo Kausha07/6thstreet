@@ -23,6 +23,7 @@ import "./Header.style";
 
 export const mapStateToProps = (state) => {
   return { checkoutDetails: state.CartReducer.checkoutDetails,
+    gender: state.AppState.gender,
     isLive : state.LiveParty.isLive,
     is_live_party_enabled: state.AppConfig.is_live_party_enabled,};
   
@@ -137,6 +138,7 @@ export class Header extends PureComponent {
     MobileBottomBar,
   ];
   headerSectionsTwo = [HeaderTopBar, HeaderMainSection, HeaderBottomBar];
+  headerSectionsThree = [HeaderTopBar, HeaderMainSection];
 
   getIsCheckout = () => {
     const { isMobile } = this.state;
@@ -208,6 +210,11 @@ export class Header extends PureComponent {
 
     if (isMobile && checkoutDetails) {
       return null;
+    }
+
+    if(this.props.gender === "influencer")
+    {
+      return this.headerSectionsThree.map(this.renderSection);
     }
 
     if (hideHeaderFooter) {

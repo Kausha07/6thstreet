@@ -131,6 +131,8 @@ class HeaderMainSection extends NavigationAbstract {
         {this.renderWishlist()}
         {this.renderAccount()}
         {this.renderCart()}
+        {this.renderWishlist()}
+        {!this.props.location.pathname.includes("influencer") && this.renderSearchIcon()}
       </div>
     );
   }
