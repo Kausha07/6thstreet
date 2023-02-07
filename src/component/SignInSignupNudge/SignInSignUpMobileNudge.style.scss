@@ -1,0 +1,37 @@
+.mobile-nudge-container {
+  background-color: #000000;
+  opacity: 0.72;
+  z-index: 99999;
+  position: fixed;
+  bottom: 150px;
+  border-radius: 8px;
+  width: 90%;
+  text-align: center;
+  color: #fff;
+  display: block;
+  margin: 5%;
+  direction: ltr;
+  text-align: left;
+  padding: 16px 20px;
+  .nudge-heading {
+    position: relative;
+    color: white;
+    font-family: "Avenir Next";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    .close-btn {
+      float: right;
+    }
+  }
+  .nudge-content {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Avenir Next";
+    .underlined {
+      text-decoration: underline;
+      padding-right: 3px;
+    }
+  }
+}
