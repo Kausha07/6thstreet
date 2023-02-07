@@ -23,17 +23,23 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
+  edd_info: state.AppConfig.edd_info,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
   setMinicartOpen: (isMinicartOpen = false) =>
@@ -559,6 +565,52 @@ class PLPAddToCart extends PureComponent {
     });
   }
 
+  getSelectedCityAreaCountry = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress } = this.props;
+    const sessionData = sessionStorage.getItem("EddAddressReq");
+    let city = "";
+    let area = "";
+    if(sessionData) {
+       let data = JSON.parse(sessionData);
+       city = data.city;
+       area = data.area;
+    } else if(defaultShippingAddress) {
+      city = defaultShippingAddress.city;
+      area = defaultShippingAddress.area;
+    }
+    return {city, area, countryCode};
+  };
+
+  callEstimateEddAPI = (sku, intl_vendor) => {
+    const { estimateEddResponse, edd_info } = this.props;
+    const {city, area, countryCode} = this.getSelectedCityAreaCountry();
+    let apiCallRequired = false;
+    if(city && area && countryCode) {
+      let request = {
+        country: countryCode,
+        city: city,
+        area: area,
+        courier: null,
+        source: null,
+      };
+      if(edd_info?.has_item_level) {
+        let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+        request.intl_vendors=null;
+        let items = [];
+        items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+        if(items.indexOf(sku)<0) {
+          apiCallRequired = true;
+          items.push({ sku : sku, intl_vendor: intl_vendor});
+        }
+        request.items = items;
+      }
+      if(apiCallRequired) {
+        estimateEddResponse(request, true);
+      }
+    }
+  }
+
   addToCart(isClickAndCollect = false) {
     const {
       product: {
@@ -575,11 +627,13 @@ class PLPAddToCart extends PureComponent {
         objectID,
         product_type_6s,
         simple_products,
+        intl_vendor=null
       },
       addProductToCart,
       showNotification,
       prevPath = null,
       product,
+      edd_info
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -645,6 +699,9 @@ class PLPAddToCart extends PureComponent {
         } else {
           this.afterAddToCart(true, {});
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.callEstimateEddAPI(selectedSizeCode, intl_vendor);
+          }
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -702,6 +759,9 @@ class PLPAddToCart extends PureComponent {
           this.afterAddToCart(false);
         } else {
           this.afterAddToCart(true);
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.callEstimateEddAPI(selectedSizeCode, intl_vendor);
+          }
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {

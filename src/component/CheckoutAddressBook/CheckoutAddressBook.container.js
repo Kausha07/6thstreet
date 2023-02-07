@@ -13,6 +13,8 @@ import { showPopup } from "Store/Popup/Popup.action";
 import { customerType } from "Type/Account";
 import CheckoutAddressBook from "./CheckoutAddressBook.component";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -161,6 +163,13 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
           courier: null,
           source: null,
         };
+        if(edd_info?.has_item_level) {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+          request.intl_vendors=null;
+          let items = [];
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+          request.items = items;
+        }
         estimateEddResponse(request, false);
       }
     } else {

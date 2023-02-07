@@ -23,7 +23,7 @@ import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
 import StrikeThrough from "./icons/strike-through.png";
 import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png";
-
+import { connect } from "react-redux";
 class PDPAddToCart extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -43,6 +43,7 @@ class PDPAddToCart extends PureComponent {
     stores: PropTypes.object.isRequired,
     togglePDPClickAndCollectPopup: PropTypes.func.isRequired,
     customer: customerType,
+    callEstimateEddAPI: PropTypes.func.isRequired
   };
 
   state = {
@@ -204,14 +205,19 @@ class PDPAddToCart extends PureComponent {
     };
 
     const isCurrentSizeSelected = selectedSizeCode === code;
+    const { edd_info } = this.props;
 
     return (
       <div
         block="PDPAddToCart-SizeSelector"
         elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
         onClick={() => {
-          if (!notifyMeLoading && !notifyMeSuccess)
+          if (!notifyMeLoading && !notifyMeSuccess) {
             onSizeSelect({ target: { value: code } });
+            if(edd_info && edd_info?.is_enable && edd_info?.has_pdp && edd_info?.has_item_level) {
+              this.props.callEstimateEddAPI(null, code);
+            }
+          }
         }}
       >
         <input
@@ -670,4 +676,8 @@ class PDPAddToCart extends PureComponent {
   }
 }
 
-export default PDPAddToCart;
+export const mapStateToProps = (state) => ({
+  edd_info: state.AppConfig.edd_info,
+});
+
+export default connect(mapStateToProps)(PDPAddToCart);

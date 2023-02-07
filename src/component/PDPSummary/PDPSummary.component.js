@@ -38,6 +38,7 @@ import Event, {
   EVENT_MOE_EDD_VISIBILITY
 } from "Util/Event";
 import { TabbyPromoURL } from "./config";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -92,6 +93,7 @@ class PDPSummary extends PureComponent {
     return { cityEntry, areaEntry };
   };
 
+  // Set city area when it is stored in session, this function will be invoked incase of refresh
   getCityAreaFromStorage = (addressCityData, countryCode) => {
     const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
     const { city, area } = sessionData;
@@ -117,7 +119,8 @@ class PDPSummary extends PureComponent {
   };
 
   getCityAreaFromDefault = (addressCityData, countryCode) => {
-    const { defaultShippingAddress } = this.props;
+    const { defaultShippingAddress, product: {simple_products = {}, intl_vendor=null} } = this.props;
+    let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
     const { area, city } = defaultShippingAddress;
     const { cityEntry, areaEntry } = this.getIdFromCityArea(
       addressCityData,
@@ -135,14 +138,24 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
-        this.getEddResponse(data, false);
+        if(edd_info?.has_item_level) {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+          data.intl_vendors=null;
+          let items = [];
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+          items.push({ sku : sku, intl_vendor: intl_vendor});
+          data.items = items;
+        }
+        estimateEddResponse(data, true);
       }
     );
   };
-
+// To fetch edd from api
   getEddResponse = (data, type) => {
-    const { estimateEddResponse } = this.props;
+    const { estimateEddResponse, edd_info } = this.props;
     const { area, city, country } = data;
+    const { simple_products = {}, intl_vendor = null} = this.props.product;
+    let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
 
     let request = {
       country: country,
@@ -151,9 +164,18 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
+    if(edd_info?.has_item_level) {
+      let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+      request.intl_vendors=null;
+      let items = [];
+      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+      items.push({ sku : sku, intl_vendor: intl_vendor});
+      request.items = items;
+    }
     estimateEddResponse(request, type);
   };
 
+  // It will decide which criteria to be called setting reducer and session
   validateEddStatus = () => {
     const countryCode = getCountryFromUrl();
     const { defaultShippingAddress, addressCityData, setEddResponse } =
@@ -335,10 +357,31 @@ class PDPSummary extends PureComponent {
     });
   };
 
+  callEstimateEddAPI = (area = null, sku=null) => {
+    const { selectedCity, countryCode, selectedArea } = this.state;
+    const { estimateEddResponse, edd_info } = this.props;
+    const {simple_products={}, intl_vendor=null} = this.props.product;
+    sku = sku ? sku : Object.keys(simple_products)[0];
+    let request = {
+      country: countryCode,
+      city: selectedCity,
+      area: area ? area : selectedArea,
+      courier: null,
+      source: null,
+    };
+    if(edd_info?.has_item_level) {
+      let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+      request.intl_vendors=null;
+      let items = [];
+      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+      if(items.indexOf(sku)<0) items.push({ sku : sku, intl_vendor: intl_vendor});
+      request.items = items;
+    }
+    estimateEddResponse(request, true);
+  }
+
   handleAreaSelection = (area) => {
-    const { selectedCity, countryCode } = this.state;
-    const { estimateEddResponse, defaultShippingAddress, edd_info } =
-      this.props;
+    const { defaultShippingAddress, edd_info } =this.props;
     this.setState({
       selectedAreaId: area,
       selectedArea: area,
@@ -363,14 +406,7 @@ class PDPSummary extends PureComponent {
       default_edd_status: default_edd,
       app6thstreet_platform: "Web",
     });
-    let request = {
-      country: countryCode,
-      city: selectedCity,
-      area: area,
-      courier: null,
-      source: null,
-    };
-    estimateEddResponse(request, true);
+    this.callEstimateEddAPI(area);
     document.body.style.overflow = "visible";
   };
 
@@ -487,13 +523,77 @@ class PDPSummary extends PureComponent {
       </div>
     );
   }
-  renderSelectCity(crossBorder) {
+
+  formatEddMessage(crossBorder){
+    let actualEddMess = "";
     const {
       edd_info,
-      product: { brand_name = "" },
+      product: { brand_name = "", simple_products = {} },
       eddResponse,
       intlEddResponse,
     } = this.props;
+    const { isArabic } = this.state;
+    let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
+    if(edd_info?.has_item_level) {
+      if (eddResponse && isObject(eddResponse) && eddResponse["pdp"]) {
+        eddResponse["pdp"].filter((data) => {
+          if (data.sku == sku  && data.feature_flag_status == 1) {
+            actualEddMess = isArabic
+              ? data.edd_message_ar
+              : data.edd_message_en;
+          }
+        })
+      } else {
+        const isIntlBrand = crossBorder && edd_info && edd_info.has_cross_border_enabled;
+        const { defaultEddMess } = getDefaultEddMessage(
+          edd_info.default_message,
+          0,
+          crossBorder
+        );
+        actualEddMess = isIntlBrand ? "" : defaultEddMess;
+      }
+    } else {
+      const isIntlBrand =
+        ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
+        crossBorder) && edd_info && edd_info.has_cross_border_enabled; // To check whether it is international product or not deciding based on brand_name
+      const intlEddObj = intlEddResponse["pdp"]?.find(
+        ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+      );
+      const intlEddMess = intlEddObj
+        ? isArabic
+          ? intlEddObj["edd_message_ar"]
+          : intlEddObj["edd_message_en"]
+        : isIntlBrand
+        ? isArabic
+          ? intlEddResponse["pdp"][0]["edd_message_ar"]
+          : intlEddResponse["pdp"][0]["edd_message_en"]
+        : "";
+
+      if (eddResponse && isObject(eddResponse)) {
+        if (isIntlBrand) { // For gcc, cross_border=1, but brand not from [trendyol, kotton]
+          actualEddMess = intlEddMess;
+        } else {
+          Object.values(eddResponse).filter((entry) => {
+            if (entry.source === "pdp" && entry.featute_flag_status === 1) {
+              actualEddMess = isArabic
+                ? entry.edd_message_ar
+                : entry.edd_message_en;
+            }
+          });
+        }
+      } else {
+        const { defaultEddMess } = getDefaultEddMessage(
+          edd_info.default_message,
+          0,
+          crossBorder
+        );
+        actualEddMess = isIntlBrand ? intlEddMess : defaultEddMess;
+      }
+    }
+    return actualEddMess;
+  }
+
+  renderSelectCity(crossBorder) {
     const {
       showCityDropdown,
       showAreaDropDown,
@@ -503,55 +603,7 @@ class PDPSummary extends PureComponent {
       isMobile,
       isArabic,
     } = this.state;
-    const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
-      crossBorder) && edd_info && edd_info.has_cross_border_enabled;
-    const intlEddObj = intlEddResponse["pdp"]?.find(
-      ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
-    );
-    const intlEddMess = intlEddObj
-      ? isArabic
-        ? intlEddObj["edd_message_ar"]
-        : intlEddObj["edd_message_en"]
-      : isIntlBrand
-      ? isArabic
-        ? intlEddResponse["pdp"][0]["edd_message_ar"]
-        : intlEddResponse["pdp"][0]["edd_message_en"]
-      : "";
-    let actualEddMess = "";
-    let actualEdd = "";
-    if (eddResponse) {
-      if (isObject(eddResponse)) {
-        if (isIntlBrand) {
-          actualEddMess = intlEddMess;
-        } else {
-          Object.values(eddResponse).filter((entry) => {
-            if (entry.source === "pdp" && entry.featute_flag_status === 1) {
-              actualEddMess = isArabic
-                ? entry.edd_message_ar
-                : entry.edd_message_en;
-              actualEdd = entry.edd_date;
-            }
-          });
-        }
-      } else {
-        const { defaultEddMess, defaultEdd } = getDefaultEddMessage(
-          edd_info.default_message,
-          0,
-          crossBorder
-        );
-        actualEddMess = isIntlBrand ? intlEddMess : defaultEddMess;
-        actualEdd = defaultEdd;
-      }
-    } else {
-      const { defaultEddMess, defaultEdd } = getDefaultEddMessage(
-        edd_info.default_message,
-        0,
-        crossBorder
-      );
-      actualEddMess = isIntlBrand ? intlEddMess : defaultEddMess;
-      actualEdd = defaultEdd;
-    }
+    let actualEddMess = this.formatEddMessage(crossBorder);
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
@@ -903,6 +955,7 @@ class PDPSummary extends PureComponent {
       <>
         {/* <div block="Seperator" /> */}
         <PDPAddToCart
+          callEstimateEddAPI={this.callEstimateEddAPI}
           simple_products={simple_products}
           setStockAvailability={this.setStockAvailability}
           setSize={this.setSize}

@@ -103,6 +103,7 @@ export class PDPAddToCartContainer extends PureComponent {
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
     setSize: PropTypes.func.isRequired,
+    callEstimateEddAPI: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -125,6 +126,7 @@ export class PDPAddToCartContainer extends PureComponent {
       this.togglePDPClickAndCollectPopup.bind(this),
     selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this),
     confirmClickAndCollect: this.confirmClickAndCollect.bind(this),
+    callEstimateEddAPI: this.props.callEstimateEddAPI
   };
 
   constructor(props) {

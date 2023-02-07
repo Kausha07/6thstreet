@@ -182,7 +182,7 @@ export class CartItemContainer extends PureComponent {
   };
 
   getEddResponse = (data, type) => {
-    const { estimateEddResponse } = this.props;
+    const { estimateEddResponse, edd_info } = this.props;
     const { area, city, country } = data;
 
     let request = {
@@ -192,6 +192,13 @@ export class CartItemContainer extends PureComponent {
       courier: null,
       source: null,
     };
+    if(edd_info?.has_item_level) {
+      let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+      request.intl_vendors=null;
+      let items = [];
+      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+      request.items = items;
+    }
     estimateEddResponse(request, type);
   };
 

@@ -21,6 +21,7 @@ import { VUE_PLACE_ORDER } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint";
 import { camelCase } from "Util/Common";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -257,7 +258,13 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
               request["area"] = postcode;
               request["city"] = city;
             }
-
+            if(edd_info?.has_item_level) {
+              let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+              request.intl_vendors=null;
+              let items = [];
+              items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+              request.items = items;
+            }
             estimateEddResponse(request, false);
           }
         }
@@ -345,7 +352,13 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             request["area"] = postcode;
             request["city"] = city;
           }
-
+          if(edd_info?.has_item_level) {
+            let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+            request.intl_vendors=null;
+            let items = [];
+            items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+            request.items = items;
+          }
           estimateEddResponse(request, false);
         }
       }

@@ -303,12 +303,12 @@ export class SuccessCheckoutItem extends PureComponent {
       </figcaption>
     );
   }
-  renderEdd = (crossBorder) => {
-    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "" }, intlEddResponse } = this.props;
 
+  formatEddMessage = () => {
     const { isArabic } = this.state;
     let actualEddMess = "";
-    let actualEdd = "";
+    const { item: { sku } } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "" }, intlEddResponse } = this.props;
     const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
     const {
       defaultEddDateString,
@@ -316,45 +316,69 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
-    const isIntlBrand = ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
-    const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase());
-    const intlEddMess = intlEddObj
-      ? isArabic
-        ? intlEddObj["edd_message_ar"]
-        : intlEddObj["edd_message_en"]
-      : isIntlBrand
-      ? isArabic
-        ? intlEddResponse["thankyou"][0]["edd_message_ar"]
-        : intlEddResponse["thankyou"][0]["edd_message_en"]
-      : "";
     let itemEddMessage = extension_attributes?.click_to_collect_store ? DEFAULT_READY_MESSAGE : DEFAULT_ARRIVING_MESSAGE
     let customDefaultMess = isArabic
       ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
       : itemEddMessage;
-    if (eddResponse) {
-      if (isObject(eddResponse)) {
-        if (isIntlBrand) {
-          actualEddMess = intlEddMess
-        } else {
-          Object.values(eddResponse).filter((entry) => {
-            if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+    if(edd_info.has_item_level) {
+      if (eddResponse) {
+        if (isObject(eddResponse) && eddResponse["thankyou"]) {
+          eddResponse["thankyou"].filter((data) => {
+            if (data.sku === sku && data.feature_flag_status === 1) {
               if (extension_attributes?.click_to_collect_store) {
                 actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
               } else {
                 actualEddMess = isArabic
-                  ? entry.edd_message_ar
-                  : entry.edd_message_en;
-                actualEdd = entry.edd_date;
+                  ? data.edd_message_ar
+                  : data.edd_message_en;
               }
             }
           });
+        } else {
+          actualEddMess = isIntlBrand ? "" : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         }
-      } else {
-        actualEddMess = isIntlBrand ? intlEddMess : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        actualEdd = defaultEddDateString;
+      }
+    } else {
+      const isIntlBrand = ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
+      const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase());
+      const intlEddMess = intlEddObj
+        ? isArabic
+          ? intlEddObj["edd_message_ar"]
+          : intlEddObj["edd_message_en"]
+        : isIntlBrand
+        ? isArabic
+          ? intlEddResponse["thankyou"][0]["edd_message_ar"]
+          : intlEddResponse["thankyou"][0]["edd_message_en"]
+        : "";
+      
+      if (eddResponse) {
+        if (isObject(eddResponse)) {
+          if (isIntlBrand) {
+            actualEddMess = intlEddMess
+          } else {
+            Object.values(eddResponse).filter((entry) => {
+              if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+                if (extension_attributes?.click_to_collect_store) {
+                  actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+                } else {
+                  actualEddMess = isArabic
+                    ? entry.edd_message_ar
+                    : entry.edd_message_en;
+                }
+              }
+            });
+          }
+        } else {
+          actualEddMess = isIntlBrand ? intlEddMess : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        }
       }
     }
+    return actualEddMess;
+  }
 
+  renderEdd = (crossBorder) => {
+    const { item: { extension_attributes } } = this.props;
+    let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;
     }
