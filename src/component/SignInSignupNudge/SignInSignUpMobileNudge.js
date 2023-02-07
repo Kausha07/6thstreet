@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import isMobile from "Util/Mobile";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./SignInSignUpMobileNudge.style.scss";
@@ -32,11 +33,14 @@ export default function SignInSignUpMobileNudge() {
           showRegisterScreen={isRegisterScreen}
         />
       )}
-      {isNudgeVisible ? (
+      {isNudgeVisible && isMobile.any() ? (
         <div className="mobile-nudge-container">
           <p className="nudge-heading">
             Welcome to 6thstreet
-            <span className="close-btn" onClick={() => setShowNudge(false)}>
+            <span
+              className="close-btn"
+              onClick={() => setIsNudgeVisible(false)}
+            >
               X
             </span>
           </p>
