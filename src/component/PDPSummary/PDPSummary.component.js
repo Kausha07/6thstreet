@@ -614,7 +614,7 @@ class PDPSummary extends PureComponent {
     let splitKey = DEFAULT_SPLIT_KEY;
     let EddMessMargin = selectedAreaId ? true : false;
     return (
-      <div block="EddParentWrapper" elem={{ isIntlBrand }}>
+      <div block="EddParentWrapper" >
         <div block="EddWrapper">
           {actualEddMess && (
             <div
