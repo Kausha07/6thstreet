@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import isMobile from "Util/Mobile";
+import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./SignInSignUpMobileNudge.style.scss";
@@ -31,7 +32,9 @@ export default function SignInSignUpMobileNudge() {
     } else if (lastNudgeShownTimeValue < new Date()) {
       setIsOneDayCompleted(true);
     }
-    localStorage.setItem("lastNudgeShownTime", new Date());
+    if (!isSignedIn()) {
+      localStorage.setItem("lastNudgeShownTime", new Date());
+    }
   }, []);
 
   return (
@@ -46,6 +49,7 @@ export default function SignInSignUpMobileNudge() {
       )}
       {isNudgeVisible &&
       isMobile.any() &&
+      !isSignedIn() &&
       (firstNudgeRender || isOneDayCompleted) ? (
         <div className="mobile-nudge-container">
           <p className="nudge-heading">

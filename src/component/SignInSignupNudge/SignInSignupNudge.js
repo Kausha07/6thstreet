@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./SignInSignupNudge.style.scss";
@@ -32,7 +33,7 @@ export default function SignInSignupNudge() {
           showRegisterScreen={isRegisterScreen}
         />
       )}
-      {isNudgeVisible ? (
+      {isNudgeVisible && !isSignedIn() ? (
         <div>
           <div className="nudge-container">
             <div className="nudge-arrow-container">
