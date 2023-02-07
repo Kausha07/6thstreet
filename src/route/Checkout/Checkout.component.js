@@ -54,6 +54,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.estimateEddResponse(dispatch, code),
   createOrder: (code, additional_data, eddItems) =>
     CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
+  showErrorNotification: (error) => dispatch(showNotification("error", error)),
 });
 
 export class Checkout extends SourceCheckout {
@@ -658,6 +659,7 @@ export class Checkout extends SourceCheckout {
       setIsFailed,
       resetCart,
       setShippingAddressCareem,
+      showErrorNotification,
     } = this.props;
 
     const { continueAsGuest, isArabic, isCareemPayEnabled, isMobile } = this.state;
@@ -729,6 +731,7 @@ export class Checkout extends SourceCheckout {
               setShippingAddressCareem={setShippingAddressCareem}
               setProcessingLoader={this.setProcessingLoader}
               setPaymentinfoCareemPay={this.setPaymentinfoCareemPay}
+              showErrorNotification={showErrorNotification}
             />
           ) : null}
         {isSignedIn ? renderCheckoutShipping : null}

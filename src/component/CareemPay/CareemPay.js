@@ -23,7 +23,10 @@ function CareemPay({
   setShippingAddressCareem,
   setProcessingLoader,
   setPaymentinfoCareemPay,
+  showErrorNotification,
 }) {
+
+  const [isCareemCreateOrder, setIsCaremCreateOrder] = useState(false);
 
   const addCareemPayScripts = () => {
     const script = document.createElement("script");
@@ -52,23 +55,30 @@ function CareemPay({
         const increment_id = response?.data?.increment_id;
         const orderStatus = response?.data?.success;
 
-        setDetailsStep(orderidd, increment_id);
-
+        
         if(orderStatus) {     
+          setDetailsStep(orderidd, increment_id);
           const resp = await getOrderData(orderidd);    
           if(resp) {
+            const { billing_address } = resp?.data;
             if(isSignedIn) {
-              const adddress1 = guestUserAddress;
+              const adddress1 = billing_address;
               setShippingAddressCareem(adddress1);
             }else {
-              const adddress2 = guestUserAddress;
+              const adddress2 = billing_address;
               setShippingAddressCareem(adddress2);
             }
           }
           resetCart();
+        }else {
+          // if Payment is successful on careem pay modal but 
+          // Create-order2 API fails or not able to place order in Magento.
+          // currently in this case backend sending us "qty not available" message in response.
+          showErrorNotification(response);
+          setShippingAddressCareem(guestUserAddress);
+          setDetailsStep(orderidd, increment_id);
         }
       }
-      setShippingAddressCareem(guestUserAddress);
       setProcessingLoader(false);
     } catch (error) {
         console.error(error);
@@ -97,10 +107,10 @@ function CareemPay({
           setProcessingLoader(true);
           setPaymentinfoCareemPay(CAREEM_PAY);
           if (status === SUCCESS) {
-            createCareemPayOrder();
+            setIsCaremCreateOrder(true);
           }else if(status === FAILURE){
             setIsFailed(true)
-            createCareemPayOrder();
+            setIsCaremCreateOrder(true);
           }
           goToResult();  //navigate to the result page
           
@@ -126,6 +136,12 @@ function CareemPay({
     addCareemPayScripts();
   }, []);
 
+  useEffect(() => {
+    if(isCareemCreateOrder) {
+      createCareemPayOrder();
+    }
+  }, [isCareemCreateOrder]);
+  
   useEffect(() => {
     if (window.CareemPay) {
       CareemPayfun();
