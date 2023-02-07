@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./CareemPay.style";
 import { careemPayCreateInvoice } from "Util/API/endpoint/Checkout/Checkout.endpoint";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
+import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   SUCCESS,
   FAILURE,
@@ -54,9 +54,8 @@ function CareemPay({
 
         setDetailsStep(orderidd, increment_id);
 
-        if(orderStatus) {
-          const getOrderById=() => {return MagentoAPI.get(`orders/${orderidd}`);}
-          const resp = await getOrderById();          
+        if(orderStatus) {     
+          const resp = await getOrderData(orderidd);    
           if(resp) {
             if(isSignedIn) {
               const adddress1 = guestUserAddress;
@@ -82,7 +81,7 @@ function CareemPay({
   
   const CareemPayfun = () => {
     const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
-    const cartId = cart.data;
+    const cartId = cart?.data;
     const data = { cart_id: cartId };
 
     const cpay = window?.CareemPay({
