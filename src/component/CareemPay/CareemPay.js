@@ -85,7 +85,7 @@ function CareemPay({
     const data = { cart_id: cartId };
 
     const cpay = window?.CareemPay({
-      env: "sandbox", // 'sandbox' or 'production'
+      env: process.env.REACT_APP_CAREEM_PAY_ENV, // 'sandbox' or 'production'
     });
 
     try {
