@@ -9,6 +9,8 @@ export default function SignInSignUpMobileNudge() {
   const [isNudgeVisible, setIsNudgeVisible] = useState(true);
   const [showSignInSignUpPopUp, setShowSignInSignUpPopUp] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
+  const [firstNudgeRender, setFirstNudgeRender] = useState(false);
+  const [isOneDayCompleted, setIsOneDayCompleted] = useState(false);
   let timer;
 
   useEffect(() => {
@@ -22,6 +24,15 @@ export default function SignInSignUpMobileNudge() {
       clearInterval(timer);
     }
   });
+  useEffect(() => {
+    const lastNudgeShownTimeValue = localStorage.getItem("lastNudgeShownTime");
+    if (!lastNudgeShownTimeValue) {
+      setFirstNudgeRender(true);
+    } else if (lastNudgeShownTimeValue < new Date()) {
+      setIsOneDayCompleted(true);
+    }
+    localStorage.setItem("lastNudgeShownTime", new Date());
+  }, []);
 
   return (
     <>
@@ -33,7 +44,9 @@ export default function SignInSignUpMobileNudge() {
           showRegisterScreen={isRegisterScreen}
         />
       )}
-      {isNudgeVisible && isMobile.any() ? (
+      {isNudgeVisible &&
+      isMobile.any() &&
+      (firstNudgeRender || isOneDayCompleted) ? (
         <div className="mobile-nudge-container">
           <p className="nudge-heading">
             Welcome to 6thstreet
@@ -69,7 +82,6 @@ export default function SignInSignUpMobileNudge() {
           </p>
         </div>
       ) : null}
-      ;
     </>
   );
 }
