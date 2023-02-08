@@ -29,9 +29,14 @@ function CareemPay({
   const [isCareemCreateOrder, setIsCaremCreateOrder] = useState(false);
 
   const addCareemPayScripts = () => {
+    const checkSript = document.getElementById("CareemPayScript");
+    if(checkSript){
+      return;
+    }
     const script = document.createElement("script");
     script.src = "https://dist.cpay.me/latest/merchant-sdk.js";
     script.defer = true;
+    script.id = "CareemPayScript";
     document.body.appendChild(script);
   };
 
@@ -63,6 +68,7 @@ function CareemPay({
             const { billing_address } = resp?.data;
             if(billing_address) {
               setShippingAddressCareem(billing_address);
+              setPaymentinfoCareemPay(CAREEM_PAY, {...billing_address, guest_email: billing_address?.email});
             }else {
               showErrorNotification("Billing address not available.");
             }

@@ -305,10 +305,15 @@ export class Checkout extends SourceCheckout {
     this.setState({ processingLoader: curretStste});    
   }
 
-  setPaymentinfoCareemPay= (payMethod) => {
+  setPaymentinfoCareemPay= (payMethod, billingAddress) => {
     const { paymentInformation } = this.state;
-    const newPaymentInformation = {...paymentInformation, paymentMethod: {code: payMethod}}
-    this.setState({ paymentInformation: newPaymentInformation });
+    if(billingAddress){
+      const newPaymentInformation = {...paymentInformation, billing_address: billingAddress};
+      this.setState({ paymentInformation: newPaymentInformation });
+    }else {
+      const newPaymentInformation = {...paymentInformation, paymentMethod: {code: payMethod}}
+      this.setState({ paymentInformation: newPaymentInformation });
+    }
   }
 
   renderLoader() {
