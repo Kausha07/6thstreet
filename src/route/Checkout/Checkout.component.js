@@ -36,7 +36,8 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_CONTINUE_AS_GUEST,
 } from "Util/Event";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import {
   CARD,
   FREE,
@@ -129,29 +130,24 @@ export class Checkout extends SourceCheckout {
       const defaultAddress = addresses.find(
         ({ default_shipping }) => default_shipping === true
       );
-      if (defaultAddress) {
-        const { city, area, country_code } = defaultAddress;
-        const { finalCity, finalArea } = this.getArabicCityArea(city, area);
-        let request = {
-          country: country_code,
-          city: isArabic() ? finalCity : city,
-          area: isArabic() ? finalArea : area,
-          courier: null,
-          source: null,
-        };
-        estimateEddResponse(request, false);
-      } else {
-        const { city, area, country_code } = addresses[0];
-        const { finalCity, finalArea } = this.getArabicCityArea(city, area);
-        let request = {
-          country: country_code,
-          city: isArabic() ? finalCity : city,
-          area: isArabic() ? finalArea : area,
-          courier: null,
-          source: null,
-        };
-        estimateEddResponse(request, false);
+
+      const { city, area, country_code } = defaultAddress ? defaultAddress : addresses[0];
+      const { finalCity, finalArea } = this.getArabicCityArea(city, area);
+      let request = {
+        country: country_code,
+        city: isArabic() ? finalCity : city,
+        area: isArabic() ? finalArea : area,
+        courier: null,
+        source: null,
+      };
+      if(edd_info?.has_item_level) {
+        let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+        request.intl_vendors=null;
+        let items = [];
+        items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+        request.items = items;
       }
+      estimateEddResponse(request, false);
     }
   }
 
