@@ -304,7 +304,7 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
-  formatEddMessage = () => {
+  formatEddMessage = (crossBorder) => {
     const { isArabic } = this.state;
     let actualEddMess = "";
     const { item: { sku } } = this.props;
