@@ -61,12 +61,10 @@ function CareemPay({
           const resp = await getOrderData(orderidd);    
           if(resp) {
             const { billing_address } = resp?.data;
-            if(isSignedIn) {
-              const adddress1 = billing_address;
-              setShippingAddressCareem(adddress1);
+            if(billing_address) {
+              setShippingAddressCareem(billing_address);
             }else {
-              const adddress2 = billing_address;
-              setShippingAddressCareem(adddress2);
+              showErrorNotification("Billing address not available.");
             }
           }
           resetCart();
