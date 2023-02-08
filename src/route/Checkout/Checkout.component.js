@@ -718,7 +718,7 @@ export class Checkout extends SourceCheckout {
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
         {/* Currently Careem Pay is only available for EN-AE Desktop site. */}
-        { (isCareemPayEnabled && !isArabic && !isMobile && country_codes === "AE") ? (
+        { (isCareemPayEnabled && !isArabic && country_codes === "AE") ? (
             <CareemPay 
               continueAsGuest={continueAsGuest}
               isSignedIn={isSignedIn}
