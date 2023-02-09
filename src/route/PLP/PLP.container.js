@@ -29,6 +29,11 @@ import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import CatalogueAPI from "Util/API/provider/CatalogueAPI";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Logger from "Util/Logger";
+import Algolia from "Util/API/provider/Algolia";
 
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
@@ -37,16 +42,12 @@ import { setPLPLoading, setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
-import CatalogueAPI from "Util/API/provider/CatalogueAPI";
-import { getLocaleFromUrl } from "Util/Url/Url";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import Logger from "Util/Logger";
-
 import {
   updatePLPInitialFilters,
   setPrevPath,
   setBrandurl,
 } from "Store/PLP/PLP.action";
+
 import VueIntegrationQueries from "Query/vueIntegration.query";
 
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
@@ -72,6 +73,8 @@ export const mapStateToProps = (state) => ({
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
+  catalogue_from_algolia:
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -256,6 +259,7 @@ export class PLPContainer extends PureComponent {
 
     return mappedData;
   }
+
   constructor(props) {
     super(props);
     let prevLocation;
@@ -357,9 +361,10 @@ export class PLPContainer extends PureComponent {
     });
     this.setState({ categoryloaded: false });
   }
+
   componentDidMount() {
-    const { menuCategories = [], prevPath = null, impressions } = this.props;
-    const { isArabic, categoryloaded } = this.state;
+    const { menuCategories = [], prevPath = null,
+      impressions, catalogue_from_algolia } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -383,7 +388,9 @@ export class PLPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
     }
-    this.getBrandDetails();
+    catalogue_from_algolia
+      ? this.getBrandDetailsByAloglia()
+      : this.getBrandDetailsByCatalogueApi()
   }
 
   getCategory() {
@@ -699,6 +706,31 @@ export class PLPContainer extends PureComponent {
       brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
     });
     this.props.setBrandurl(resp?.result[0]?.url_path);
+  }
+
+  async getBrandDetailsByAloglia() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home']
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    if (exceptionalBrand.includes(brandName)) {
+      return null;
+    }
+    const data = await new Algolia({
+      index: "brands_info",
+    }).getBrandsDetails({
+      query: brandName,
+      limit: 1,
+    });
+    this.setState({
+      brandDescription: isArabic()
+        ? data?.hits[0]?.description_ar
+        : data?.hits[0]?.description,
+      brandImg: data?.hits[0]?.image,
+      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+    });
+    this.props.setBrandurl(data?.hits[0]?.url_path);
   }
 
   updateFiltersState(activeFilters) {
