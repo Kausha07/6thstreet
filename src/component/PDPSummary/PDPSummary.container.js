@@ -2,14 +2,15 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 
 import PropTypes from "prop-types";
-import { Product } from "Util/API/endpoint/Product/Product.type";
 
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import { setBrandInfoData } from "Store/PDP/PDP.action";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
+import { Product } from "Util/API/endpoint/Product/Product.type";
 import CatalogueAPI from "Util/API/provider/CatalogueAPI";
+import Algolia from "Util/API/provider/Algolia";
 
 import PDPSummary from "./PDPSummary.component";
 
@@ -23,6 +24,8 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
   brandButtonClick: state.PDP.brandButtonClick,
+  catalogue_from_algolia:
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -73,10 +76,14 @@ export class PDPSummaryContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.getBrandDetails = this.getBrandDetails.bind(this);
     this.state = {
-      url_path: ""
+      url_path: "",
+      isFetchFromAlgolia: this.props.catalogue_from_algolia
     }
+    this.getBrandDetails =
+      this.props.catalogue_from_algolia
+        ? this.getBrandDetailsByAlgolia.bind(this)
+        : this.getBrandDetailsCatalogueAPI.bind(this);
   }
 
   componentDidMount() {
@@ -92,7 +99,7 @@ export class PDPSummaryContainer extends PureComponent {
     clickBrandButton(true);
   }
 
-  async getBrandDetails() {
+  async getBrandDetailsCatalogueAPI() {
     const { product: { brand_name }, setBrandInfoData } = this.props;
     if (brand_name) {
       try {
@@ -102,6 +109,28 @@ export class PDPSummaryContainer extends PureComponent {
           url_path: resp?.result[0].url_path
         });
       } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
+  async getBrandDetailsByAlgolia() {
+    const { product: { brand_name }, setBrandInfoData } = this.props;
+    if (brand_name) {
+      try {
+        const data = await new Algolia({
+          index: "brands_info",
+        })
+          .getBrandsDetails({
+            query: brand_name,
+            limit: 1,
+          });
+        setBrandInfoData(data?.hits[0]?.url_path)
+        this.setState({
+          url_path: data?.hits[0]?.url_path
+        });
+      }
+      catch (err) {
         console.error(err);
       }
     }
