@@ -833,7 +833,6 @@ export class MyAccountOverlay extends PureComponent {
                 "onlyCharacters",
               ]}
               onFocus={() => sendEvents(EVENT_TYPE_NAME)}
-              
               maxLength= {40}
             />
           </fieldset>
