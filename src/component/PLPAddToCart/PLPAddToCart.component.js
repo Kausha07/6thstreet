@@ -583,7 +583,7 @@ class PLPAddToCart extends PureComponent {
   };
 
   callEstimateEddAPI = (sku, international_vendor, cross_border) => {
-    const { estimateEddResponse, edd_info, cross_border= 0 } = this.props;
+    const { estimateEddResponse, edd_info } = this.props;
     const {city, area, countryCode} = this.getSelectedCityAreaCountry();
     let apiCallRequired = false;
     if(city && area && countryCode) {
