@@ -132,10 +132,13 @@ const InfluencerSearch = (props) => {
     const { masterTrendingInfo, selectedGender, influencerSearchText } = props;
     const lowerInfluencerSearchText = influencerSearchText.toLowerCase();
     const sliderContent =
-      masterTrendingInfo?.superstars?.[selectedGender]?.data[0]?.items;
+      masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;
     const filteredSliderContent = sliderContent?.filter((val) => {
       if (
         val?.collection?.title
+          ?.toLowerCase()
+          .includes(lowerInfluencerSearchText) ||
+        val?.influencer?.influencer_name
           ?.toLowerCase()
           .includes(lowerInfluencerSearchText)
       ) {
@@ -143,9 +146,9 @@ const InfluencerSearch = (props) => {
       }
     });
     const allInfluencerContent =
-      allInfluencersList?.influencers?.superstars[selectedGender];
+      allInfluencersList?.influencers?.superstars?.[selectedGender];
     const filteredAllInfluencerContent = allInfluencerContent?.filter((val) => {
-      const fullName = val.name + " " + val.family_name;
+      const fullName = val?.name + " " + val?.family_name;
       if (
         val?.influencer_name
           ?.toLowerCase()
