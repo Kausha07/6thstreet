@@ -215,7 +215,18 @@ class PDPAddToCart extends PureComponent {
           if (!notifyMeLoading && !notifyMeSuccess) {
             onSizeSelect({ target: { value: code } });
             if(edd_info && edd_info?.is_enable && edd_info?.has_pdp && edd_info?.has_item_level) {
-              this.props.callEstimateEddAPI(null, code);
+              let new_item = true;
+              const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
+              if(sessionData) {
+                sessionData?.items?.map((obj)=> {
+                  if(obj.sku==code) {
+                    new_item= false;
+                  }
+                })
+              }
+              if(new_item) {
+                this.props.callEstimateEddAPI(null, code);
+              }
             }
           }
         }}

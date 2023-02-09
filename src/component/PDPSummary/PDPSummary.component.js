@@ -119,7 +119,7 @@ class PDPSummary extends PureComponent {
   };
 
   getCityAreaFromDefault = (addressCityData, countryCode) => {
-    const { defaultShippingAddress, product: {simple_products = {}, intl_vendor=null} } = this.props;
+    const { defaultShippingAddress, product: {simple_products = {}, international_vendor=null, cross_border = 0}, edd_info, estimateEddResponse } = this.props;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
     const { area, city } = defaultShippingAddress;
     const { cityEntry, areaEntry } = this.getIdFromCityArea(
@@ -142,8 +142,8 @@ class PDPSummary extends PureComponent {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           data.intl_vendors=null;
           let items = [];
-          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
-          items.push({ sku : sku, intl_vendor: intl_vendor});
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}))
+          items.push({ sku : sku, intl_vendor: cross_border ? international_vendor : null});
           data.items = items;
         }
         estimateEddResponse(data, true);
@@ -154,7 +154,7 @@ class PDPSummary extends PureComponent {
   getEddResponse = (data, type) => {
     const { estimateEddResponse, edd_info } = this.props;
     const { area, city, country } = data;
-    const { simple_products = {}, intl_vendor = null} = this.props.product;
+    const { simple_products = {}, international_vendor = null, cross_border = 0} = this.props.product;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
 
     let request = {
@@ -168,8 +168,8 @@ class PDPSummary extends PureComponent {
       let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
       request.intl_vendors=null;
       let items = [];
-      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
-      items.push({ sku : sku, intl_vendor: intl_vendor});
+      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null }))
+      items.push({ sku : sku, intl_vendor: cross_border ? international_vendor : null});
       request.items = items;
     }
     estimateEddResponse(request, type);
@@ -276,6 +276,16 @@ class PDPSummary extends PureComponent {
         });
       }
     }
+    if(edd_info &&
+      edd_info.is_enable &&
+      edd_info.has_pdp && !eddEventSent && cross_border==1 && edd_info.has_item_level) {
+        if (addressCityData?.length > 0) {
+          this.validateEddStatus(countryCode);
+          this.setState({
+            eddEventSent: true,
+          });
+        }
+    }
     if (
       prevAddressCitiesData &&
       addressCityData &&
@@ -360,24 +370,26 @@ class PDPSummary extends PureComponent {
   callEstimateEddAPI = (area = null, sku=null) => {
     const { selectedCity, countryCode, selectedArea } = this.state;
     const { estimateEddResponse, edd_info } = this.props;
-    const {simple_products={}, intl_vendor=null} = this.props.product;
+    const {simple_products={}, international_vendor=null, cross_border=0} = this.props.product;
     sku = sku ? sku : Object.keys(simple_products)[0];
-    let request = {
-      country: countryCode,
-      city: selectedCity,
-      area: area ? area : selectedArea,
-      courier: null,
-      source: null,
-    };
-    if(edd_info?.has_item_level) {
-      let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
-      request.intl_vendors=null;
-      let items = [];
-      items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
-      if(items.indexOf(sku)<0) items.push({ sku : sku, intl_vendor: intl_vendor});
-      request.items = items;
+    if(selectedCity && (selectedArea || area)) {
+      let request = {
+        country: countryCode,
+        city: selectedCity,
+        area: area ? area : selectedArea,
+        courier: null,
+        source: null,
+      };
+      if(edd_info?.has_item_level) {
+        let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+        request.intl_vendors=null;
+        let items = [];
+        items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}));
+        if(items.indexOf(sku)<0) { items.push({ sku : sku, intl_vendor: cross_border ? international_vendor: null}); }
+        request.items = items;
+      }
+      estimateEddResponse(request, true);
     }
-    estimateEddResponse(request, true);
   }
 
   handleAreaSelection = (area) => {
@@ -603,6 +615,7 @@ class PDPSummary extends PureComponent {
       isMobile,
       isArabic,
     } = this.state;
+    const { edd_info } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
@@ -636,7 +649,7 @@ class PDPSummary extends PureComponent {
               <span>{actualEddMess.split(splitKey)[1]}</span>
             </div>
           )}
-          {!crossBorder && (
+          {((!crossBorder && !edd_info.has_item_level) || edd_info.has_item_level ) && (
             <>
               {selectedAreaId ? (
                 <div
@@ -1091,7 +1104,7 @@ class PDPSummary extends PureComponent {
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0)  || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0 && !edd_info.has_item_level)  || cross_border === 0 || edd_info.has_item_level) &&
           this.renderSelectCity(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {/* <div block="Seperator" /> */}

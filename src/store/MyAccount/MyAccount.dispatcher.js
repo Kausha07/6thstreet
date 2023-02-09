@@ -64,6 +64,8 @@ export {
 } from "SourceStore/MyAccount/MyAccount.dispatcher";
 export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
+import { getCountryFromUrl } from "Util/Url";
+import {CART_ITEMS_CACHE_KEY} from "../Cart/Cart.reducer";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
@@ -102,6 +104,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           return address.default_shipping === true;
         }
       );
+      const countryCode = getCountryFromUrl();
       if (
         defaultShippingAddress &&
         Object.values(defaultShippingAddress).length > 0
@@ -119,6 +122,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           courier: null,
           source: null,
         };
+        if(countryCode == "SA") {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+          request.intl_vendors=null;
+          let items = [];
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}));
+          request.items = items;
+        }
         this.estimateDefaultEddResponse(dispatch, request);
         dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
       } else if (sessionStorage.getItem("EddAddressReq")) {
@@ -142,6 +152,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             courier: null,
             source: null,
           };
+          if(countryCode == "SA") {
+            let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+            request.intl_vendors=null;
+            let items = [];
+            items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}));
+            request.items = items;
+          }
           this.estimateDefaultEddResponse(dispatch, request);
         } else {
           dispatch(setEddResponse(null, null));
@@ -532,7 +549,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   setGuestUserEmail(dispatch, email) {
     dispatch(updateGuestUserEmail(email));
   }
-
+// type --> false for call from checkout because we don't need to save this data for other pages it should be true 
   estimateEddResponse(dispatch, request, type) {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {

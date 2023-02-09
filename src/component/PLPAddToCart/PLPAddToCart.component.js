@@ -582,8 +582,8 @@ class PLPAddToCart extends PureComponent {
     return {city, area, countryCode};
   };
 
-  callEstimateEddAPI = (sku, intl_vendor) => {
-    const { estimateEddResponse, edd_info } = this.props;
+  callEstimateEddAPI = (sku, international_vendor, cross_border) => {
+    const { estimateEddResponse, edd_info, cross_border= 0 } = this.props;
     const {city, area, countryCode} = this.getSelectedCityAreaCountry();
     let apiCallRequired = false;
     if(city && area && countryCode) {
@@ -598,10 +598,10 @@ class PLPAddToCart extends PureComponent {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
         let items = [];
-        items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.intl_vendor}))
+        items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}))
         if(items.indexOf(sku)<0) {
           apiCallRequired = true;
-          items.push({ sku : sku, intl_vendor: intl_vendor});
+          items.push({ sku : sku, intl_vendor: cross_border ? international_vendor : null});
         }
         request.items = items;
       }
@@ -627,7 +627,8 @@ class PLPAddToCart extends PureComponent {
         objectID,
         product_type_6s,
         simple_products,
-        intl_vendor=null
+        international_vendor=null,
+        cross_border = 0
       },
       addProductToCart,
       showNotification,
@@ -700,7 +701,7 @@ class PLPAddToCart extends PureComponent {
           this.afterAddToCart(true, {});
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
           if(edd_info && edd_info.is_enable && edd_info.has_item_level){
-            this.callEstimateEddAPI(selectedSizeCode, intl_vendor);
+            this.callEstimateEddAPI(selectedSizeCode, international_vendor, cross_border);
           }
         }
       });
@@ -760,7 +761,7 @@ class PLPAddToCart extends PureComponent {
         } else {
           this.afterAddToCart(true);
           if(edd_info && edd_info.is_enable && edd_info.has_item_level){
-            this.callEstimateEddAPI(selectedSizeCode, intl_vendor);
+            this.callEstimateEddAPI(selectedSizeCode, international_vendor, cross_border);
           }
         }
       });
