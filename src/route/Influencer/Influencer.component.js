@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createRef } from "react";
 import { connect } from "react-redux";
 
 import {
@@ -38,11 +38,20 @@ const Influencer = (props) => {
   const [followingList, setFollowingList] = useState([]);
   const [index, setIndex] = useState(0);
   const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
-  setFollowingList;
+  const searchWrapperRef = createRef();
+  const refineWrapperRef = createRef();
 
   useEffect(() => {
     trendingInfo();
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", closePopupOnOutsideClick);
+
+    return () => {
+      window.removeEventListener("mousedown", closePopupOnOutsideClick);
+    };
+  }, [searchWrapperRef, refineWrapperRef]);
 
   useEffect(() => {
     if (props.isSignedIn) {
@@ -68,6 +77,25 @@ const Influencer = (props) => {
     } else {
       tempFollowingList.push(influencerID);
       setFollowingList(tempFollowingList);
+    }
+  };
+
+  const closePopupOnOutsideClick = (e) => {
+    if (
+      isSearchButtonClicked &&
+      searchWrapperRef.current &&
+      !searchWrapperRef.current.contains(e.target)
+    ) {
+      setIsSearchButtonClicked(false);
+      setInfluencerSearchText("");
+    }
+
+    if (
+      isRefineButtonClicked &&
+      refineWrapperRef.current &&
+      !refineWrapperRef.current.contains(e.target)
+    ) {
+      setRefine(false);
     }
   };
 
@@ -177,7 +205,7 @@ const Influencer = (props) => {
 
   const renderRefine = () => {
     return (
-      <div block="refineButton-div" elem="Refine">
+      <div block="refineButton-div" elem="Refine" ref={refineWrapperRef}>
         <button block="refine-button" onClick={handleRefineButtonClick}>
           <img
             block="refineImage"
@@ -243,33 +271,37 @@ const Influencer = (props) => {
     setInfluencerSearchText(e.target.value);
   };
 
-  const handleSearchButtonClick = () => {
-    setIsSearchButtonClicked(!isSearchButtonClicked);
+  const handleSearchButtonClick = (e) => {
+    e.stopPropagation();
+    setIsSearchButtonClicked(true);
   };
 
   const renderInfluencerSearch = () => {
     return (
       <div block="influencerSearch">
         <img block="searchIcon" src={Search} mods={{ isArabic: isArabic() }} />
-        <input
-          type="text"
-          block="influencerSearchInput"
-          mods={{ isArabic: isArabic() }}
-          id="influencerSearch"
-          placeholder={__("Search collections, influencers etc...")}
-          onClick={handleSearchButtonClick}
-          onChange={handleSearchInfluencerText}
-        />
-        {isSearchButtonClicked ? (
-          <InfluencerSearch
-            followingList={followingList}
-            selectedGender={selectedGender}
-            masterTrendingInfo={masterTrendingInfo}
-            influencerSearchText={influencerSearchText}
-            updateFollowingList={updateFollowingList}
-            renderMySignInPopup={showMyAccountPopup}
+        <div ref={searchWrapperRef}>
+          <input
+            type="text"
+            block="influencerSearchInput"
+            mods={{ isArabic: isArabic() }}
+            value={influencerSearchText}
+            id="influencerSearch"
+            placeholder={__("Search collections, influencers etc...")}
+            onClick={(e) => handleSearchButtonClick(e)}
+            onChange={handleSearchInfluencerText}
           />
-        ) : null}
+          {isSearchButtonClicked ? (
+            <InfluencerSearch
+              followingList={followingList}
+              selectedGender={selectedGender}
+              masterTrendingInfo={masterTrendingInfo}
+              influencerSearchText={influencerSearchText}
+              updateFollowingList={updateFollowingList}
+              renderMySignInPopup={showMyAccountPopup}
+            />
+          ) : null}
+        </div>
       </div>
     );
   };
