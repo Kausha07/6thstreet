@@ -799,12 +799,12 @@ export class MyAccountOverlay extends PureComponent {
                 }
               />
               <Field
-                type="phone"
+                type="text"
                 placeholder={__("PHONE NUMBER*")}
                 id="phone"
                 name="phone"
-                autoComplete="phone"
-                maxLength={this.getUserIdentifierCreateMaxLength()}
+                autoComplete="off"
+                maxLength={this.getUserIdentifierMaxLength()}
                 validation={[
                   "notEmpty",
                   "number",
@@ -828,8 +828,13 @@ export class MyAccountOverlay extends PureComponent {
               id="fullname"
               name="fullname"
               autoComplete="fullname"
-              validation={["notEmpty"]}
+              validation={[
+                "notEmpty",
+                "onlyCharacters",
+              ]}
               onFocus={() => sendEvents(EVENT_TYPE_NAME)}
+              
+              maxLength= {40}
             />
           </fieldset>
           <fieldset block="MyAccountOverlayV1" elem="Gender">
