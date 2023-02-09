@@ -804,7 +804,7 @@ export class MyAccountOverlay extends PureComponent {
                 id="phone"
                 name="phone"
                 autoComplete="off"
-                maxLength={this.getUserIdentifierMaxLength()}
+                maxLength={this.getUserIdentifierCreateMaxLength()}
                 validation={[
                   "notEmpty",
                   "number",
