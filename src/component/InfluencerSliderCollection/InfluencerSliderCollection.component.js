@@ -39,6 +39,7 @@ const InfluencerSliderCollection = (props) => {
       name,
     } = item.influencer;
     const newLink = `influencer.html/Collection?influencerCollectionID=${influncer_collection_id}&influencerID=${influencer_id}`;
+    const { selectedGender } = props;
     return (
       <div key={`${influencer_id}+${i}`} block="spck-influencer-slider">
         <div block="mainImage">
@@ -59,7 +60,7 @@ const InfluencerSliderCollection = (props) => {
         <div block="Influencer_Shop" mods={{ isArabic: isArabic() }}>
           <Link
             to={formatCDNLink(
-              `influencer.html/Store?influencerID=${influencer_id}`
+              `influencer.html/Store?influencerID=${influencer_id}&selectedGender=${selectedGender}`
             )}
             key={influencer_id + "Influencer_Shop"}
             data-banner-type="influencer_slider_influencerImage"

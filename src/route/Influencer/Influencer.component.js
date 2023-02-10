@@ -140,7 +140,11 @@ const Influencer = (props) => {
     return (
       <div key={`${type}+${i}-${selectedGender}`}>
         {type === "influencer_slider_collection" ? (
-          <InfluencerSliderCollection item={item} cartIcon={cartIcon} />
+          <InfluencerSliderCollection
+            item={item}
+            cartIcon={cartIcon}
+            selectedGender={selectedGender}
+          />
         ) : (
           <InfluencerTilesCollection
             item={item}
@@ -149,6 +153,7 @@ const Influencer = (props) => {
             updateFollowingList={updateFollowingList}
             renderMySignInPopup={showMyAccountPopup}
             buttonSignedIn={buttonSignedIn}
+            selectedGender={selectedGender}
           />
         )}
       </div>

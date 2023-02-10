@@ -52,12 +52,13 @@ const InfluencerFollowing = (props) => {
       followingList &&
       followingList.length > 0 &&
       followingList.includes(influencerId);
+    const { selectedGender } = props;
     if (image_url) {
       return (
         <span key={`${influencerId}+${i}`}>
           <Link
             to={formatCDNLink(
-              `influencer.html/Store?influencerID=${influencerId}`
+              `influencer.html/Store?influencerID=${influencerId}&selectedGender=${selectedGender}`
             )}
             key={i}
             data-banner-type="influencer_following_tab"

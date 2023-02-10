@@ -79,12 +79,13 @@ const InfluencerTilesCollection = (props) => {
       followingList &&
       followingList.length > 0 &&
       followingList.includes(influencerId);
+    const { selectedGender } = props;
     if (image_url) {
       return (
         <span key={`${influencerId}+${i}`}>
           <Link
             to={formatCDNLink(
-              `influencer.html/Store?influencerID=${influencerId}`
+              `influencer.html/Store?influencerID=${influencerId}&selectedGender=${selectedGender}`
             )}
             key={`${influencerId}+${i}`}
             data-banner-type="influencer_tile"

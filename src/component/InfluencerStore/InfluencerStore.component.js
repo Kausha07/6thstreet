@@ -41,6 +41,7 @@ const InfluencerStore = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [algoliaQuery, setAlgoliaQuery] = useState("");
   const [followingList, setFollowingList] = useState([]);
+  const [selectedGender, setSelectedGender] = useState("WOMEN");
 
   const dispatch = useDispatch();
 
@@ -99,10 +100,12 @@ const InfluencerStore = (props) => {
 
   const getStoreInfo = () => {
     const influencer_id = getQueryParam("influencerID", location);
+    const gender = getQueryParam("selectedGender", location);
     const envID = getEnvIDForInfluencer();
     const locale = getLocaleFromUrl();
 
     setInfluencerId(influencer_id);
+    setSelectedGender(gender);
     try {
       getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
         if (resp) {
@@ -176,7 +179,7 @@ const InfluencerStore = (props) => {
   };
 
   const renderGetTheLookSection = (storeInfoItem) => {
-    const { collections } = storeInfoItem;
+    const collections = storeInfoItem?.audience?.[selectedGender]?.collections;
 
     if (collections && collections.length > 0) {
       return (

@@ -58,12 +58,13 @@ const InfluencerSearch = (props) => {
       followingList &&
       followingList.length > 0 &&
       followingList.includes(influencerId);
+    const { selectedGender } = props;
     if (image_url) {
       return (
         <div key={influencerId} className="influencerOnSearch">
           <Link
             to={formatCDNLink(
-              `influencer.html/Store?influencerID=${influencerId}`
+              `influencer.html/Store?influencerID=${influencerId}&selectedGender=${selectedGender}`
             )}
             key={i}
             data-banner-type="influencer_slider_banner"
