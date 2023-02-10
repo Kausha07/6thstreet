@@ -5,6 +5,7 @@
         & > .PLPDetails {
           @include mobile() {
             padding-top: 0px;
+            margin-bottom: 0;
           }
         }
       }
@@ -162,78 +163,117 @@
     }
   }
 
-  .spckItems {
+  .getTheLookSection {
     margin: 50px 0 10px 0;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    width: 100%;
-    justify-content: flex-start;
 
-    padding-bottom: 20px;
-    @include desktop {
-      max-height: 520px;
-    }
-    @include mobile {
-      max-height: 350px;
+    .GTLheading {
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      word-spacing: 3px;
+      font-size: 18px;
+      margin-bottom: 0;
+      font-weight: 500;
     }
 
-    &::-webkit-scrollbar {
-      width: 80%;
-      height: 3px;
-    }
+    .spckItems {
+      margin: 35px 0 10px 0;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      width: 100%;
+      justify-content: flex-start;
 
-    &::-webkit-scrollbar-thumb {
-      background: black;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #dcdcdc;
-      margin-left: 350px;
-      margin-right: 350px;
-    }
-
-    // For Internet Explorer
-    & {
-      scrollbar-face-color: #585757;
-      scrollbar-track-color: #dcdcdc;
-    }
-
-    .spckItem {
-      position: relative;
-      width: 400px;
-      box-sizing: border-box;
-      margin: 0;
-      list-style: none;
-      padding: 0;
-      margin-right: 15px;
-      margin-bottom: 40px;
-
+      padding-bottom: 20px;
       @include desktop {
-        min-height: 450px;
-        object-fit: cover;
+        max-height: 520px;
+      }
+      @include mobile {
+        max-height: 350px;
       }
 
-      &::before {
-        display: none;
+      &::-webkit-scrollbar {
+        width: 80%;
+        height: 3px;
       }
 
-      .eventImage {
-        img {
-          height: 450px;
-          width: 400px;
+      &::-webkit-scrollbar-thumb {
+        background: black;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #dcdcdc;
+        margin-left: 350px;
+        margin-right: 350px;
+      }
+
+      // For Internet Explorer
+      & {
+        scrollbar-face-color: #585757;
+        scrollbar-track-color: #dcdcdc;
+      }
+
+      .spckItem {
+        position: relative;
+        width: 400px;
+        box-sizing: border-box;
+        margin: 0;
+        list-style: none;
+        padding: 0;
+        margin-right: 15px;
+        margin-bottom: 40px;
+
+        @include desktop {
+          min-height: 450px;
           object-fit: cover;
         }
-      }
 
-      @include mobile {
+        &::before {
+          display: none;
+        }
+
         .eventImage {
           img {
-            max-height: 350px;
-            width: 300px;
+            height: 450px;
+            width: 400px;
             object-fit: cover;
           }
         }
+
+        &_isArabic {
+          &:first-child {
+            margin-right: 0;
+          }
+        }
+
+        @include mobile {
+          .eventImage {
+            img {
+              max-height: 350px;
+              width: 300px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .storeProducts {
+    margin-top: 70px;
+    .storeProductHeading {
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      word-spacing: 3px;
+      font-size: 18px;
+      margin-bottom: 0;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    @include mobile {
+      margin-top: 50px;
+      .storeProductHeading {
+        margin-bottom: 0;
       }
     }
   }
@@ -260,24 +300,6 @@
       bottom: 0;
       background-image: inherit;
       animation: move 1s linear infinite;
-    }
-  }
-}
-
-.Influencer_Products {
-  margin-top: 30px;
-
-  .PLPPage {
-    ul {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-gap: 19.7px 28.6px;
-
-      @include mobile() {
-        grid-template-columns: repeat(2, 1fr);
-        margin: 0;
-        grid-gap: 29px 4px;
-      }
     }
   }
 }

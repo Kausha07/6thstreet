@@ -147,7 +147,11 @@ const InfluencerStore = (props) => {
     } = block;
 
     return (
-      <li key={influncer_collection_id} block="spckItem">
+      <li
+        key={influncer_collection_id}
+        block="spckItem"
+        mods={{ isArabic: isArabic() }}
+      >
         <div block="eventImage">
           <Link
             to={formatCDNLink(
@@ -176,7 +180,8 @@ const InfluencerStore = (props) => {
 
     if (collections && collections.length > 0) {
       return (
-        <div>
+        <div block="getTheLookSection">
+          <h3 block="GTLheading">{__("Get the look")}</h3>
           <ul block="spckItems">{collections.map(GTLsection)}</ul>
         </div>
       );
@@ -189,7 +194,12 @@ const InfluencerStore = (props) => {
     document.body.style.overflowX = "hidden";
 
     if (algoliaQuery !== undefined) {
-      return <PLP />;
+      return (
+        <div block="storeProducts">
+          <h3 block="storeProductHeading">{__("My top picks")}</h3>
+          <PLP />
+        </div>
+      );
     }
   };
   const followUnfollow = (influencerID, follow) => {
