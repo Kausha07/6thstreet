@@ -19,7 +19,7 @@ import { isArabic } from "Util/App";
 import { getCountryFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import CatalogueAPI from "Util/API/provider/CatalogueAPI";
+import { getAllBrands } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
 
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import Brands from "./Brands.component";
@@ -197,47 +197,49 @@ class BrandsContainer extends PureComponent {
   async requestShopbyBrands(gender) {
     try {
       const activeBrandsList = await this.requestBrands(gender);
-      const brandResponse = await CatalogueAPI.get()
-      const groupedBrands = groupByName(brandResponse.result) || {};
-      const sortedBrands = Object.entries(groupedBrands).sort(
-        ([letter1], [letter2]) => {
-          if (letter1 === "0-9") {
-            return 1;
-          }
-          if (letter2 === "0-9") {
-            return -1;
-          }
-          if (letter1 !== letter2) {
-            if (letter1 < letter2) {
-              return -1;
+        getAllBrands().then((brandResponse)=>{
+          const groupedBrands = groupByName(brandResponse.result) || {};
+          const sortedBrands = Object.entries(groupedBrands).sort(
+            ([letter1], [letter2]) => {
+              if (letter1 === "0-9") {
+                return 1;
+              }
+              if (letter2 === "0-9") {
+                return -1;
+              }
+              if (letter1 !== letter2) {
+                if (letter1 < letter2) {
+                  return -1;
+                }
+                return 1;
+              }
             }
-            return 1;
-          }
-        }
-      );
-      const activeBrands = [];
-      sortedBrands.map((data) => {
-        let filteredbrand = [];
-        let combinedArr = [];
-        Object.values(data[1]).filter((brand) => {
-          const { name, name_ar } = brand;
-          if (
-            activeBrandsList.includes(name) ||
-            activeBrandsList.includes(name_ar)
-          ) {
-            filteredbrand.push(brand);
-          }
-        });
-        if (filteredbrand.length > 0) {
-          combinedArr.push(data[0]);
-          combinedArr.push(filteredbrand);
-          activeBrands.push(combinedArr);
-        }
-      });
-      this.setState({
-        brands: activeBrands,
-        isLoading: false,
-      });
+          );
+          const activeBrands = [];
+          sortedBrands.map((data) => {
+            let filteredbrand = [];
+            let combinedArr = [];
+            Object.values(data[1]).filter((brand) => {
+              const { name, name_ar } = brand;
+              if (
+                activeBrandsList.includes(name) ||
+                activeBrandsList.includes(name_ar)
+              ) {
+                filteredbrand.push(brand);
+              }
+            });
+            if (filteredbrand.length > 0) {
+              combinedArr.push(data[0]);
+              combinedArr.push(filteredbrand);
+              activeBrands.push(combinedArr);
+            }
+          });
+          this.setState({
+            brands: activeBrands,
+            isLoading: false,
+          });
+        })
+      
     } catch (e) {
       this.setState({ brands: [] });
       console.error(e);

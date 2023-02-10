@@ -9,8 +9,8 @@ import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 import { Product } from "Util/API/endpoint/Product/Product.type";
-import CatalogueAPI from "Util/API/provider/CatalogueAPI";
 import Algolia from "Util/API/provider/Algolia";
+import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
 
 import PDPSummary from "./PDPSummary.component";
 
@@ -103,13 +103,14 @@ export class PDPSummaryContainer extends PureComponent {
     const { product: { brand_name }, setBrandInfoData } = this.props;
     if (brand_name) {
       try {
-        const resp = await CatalogueAPI.get(brand_name);
-        setBrandInfoData(resp?.result[0].url_path)
+        getBrandInfoByName(brand_name).then((resp)=>{
+          setBrandInfoData(resp?.result[0].url_path)
         this.setState({
           url_path: resp?.result[0].url_path
         });
+        })
       } catch (err) {
-        console.error(err);
+        console.error("There is an issue while fetching brand information.",err);
       }
     }
   }
@@ -131,7 +132,7 @@ export class PDPSummaryContainer extends PureComponent {
         });
       }
       catch (err) {
-        console.error(err);
+        console.error("There is an issue while fetching brand information.",err);
       }
     }
   }

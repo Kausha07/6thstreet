@@ -40,6 +40,7 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
 import Algolia from "Util/API/provider/Algolia";
+import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
 
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
@@ -703,15 +704,21 @@ export class PLPContainer extends PureComponent {
     if (exceptionalBrand.includes(brandName)) {
       return null;
     }
-    const resp = await CatalogueAPI.get(brandName);
-    this.setState({
-      brandDescription: isArabic()
-        ? resp?.result[0]?.description_ar
-        : resp?.result[0]?.description,
-      brandImg: resp?.result[0]?.image,
-      brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
-    });
-    this.props.setBrandurl(resp?.result[0]?.url_path);
+    try {
+      getBrandInfoByName(brand_name).then((resp) => {
+        setBrandInfoData(resp?.result[0].url_path)
+        this.setState({
+          brandDescription: isArabic()
+            ? resp?.result[0]?.description_ar
+            : resp?.result[0]?.description,
+          brandImg: resp?.result[0]?.image,
+          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
+        });
+        this.props.setBrandurl(resp?.result[0]?.url_path);
+      })
+    } catch (err) {
+      console.error("There is an issue while fetching brand information.", err);
+    }
   }
 
   async getBrandDetailsByAloglia() {
