@@ -26,6 +26,11 @@ const InfluencerTilesCollection = (props) => {
     const itemsToShow = influencerItemToShow;
     const { totalItems } = props;
     let progressWidth = (itemsToShow * 100) / totalItems;
+    let disablebtn = false;
+
+    if (itemsToShow === totalItems) {
+      disablebtn = true;
+    }
     return (
       <div block="Product-LoadMore">
         <div>
@@ -43,7 +48,7 @@ const InfluencerTilesCollection = (props) => {
           </div>
         </div>
         <div block="LoadMore">
-          <button block="button" onClick={handleLoadMore}>
+          <button block="button" onClick={handleLoadMore} disabled={disablebtn}>
             {__("Load More")}
           </button>
         </div>
