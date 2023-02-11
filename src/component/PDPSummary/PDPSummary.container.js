@@ -100,10 +100,10 @@ export class PDPSummaryContainer extends PureComponent {
   }
 
   async getBrandDetailsCatalogueAPI() {
-    const { product: { brand_name }, setBrandInfoData } = this.props;
-    if (brand_name) {
+    const { product: { brandName }, setBrandInfoData } = this.props;
+    if (brandName) {
       try {
-        getBrandInfoByName(brand_name).then((resp)=>{
+        getBrandInfoByName(brandName).then((resp)=>{
           setBrandInfoData(resp?.result[0].url_path)
         this.setState({
           url_path: resp?.result[0].url_path
