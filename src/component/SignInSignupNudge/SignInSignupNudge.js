@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { isSignedIn } from "Util/Auth";
+import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./SignInSignupNudge.style.scss";
@@ -11,6 +12,7 @@ export default function SignInSignupNudge() {
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
 
   let timer;
+  const isArabicValue = isArabic();
   useEffect(() => {
     timer = setTimeout(() => {
       setNudgeTimer(() => nudgeTimer - 1);
@@ -43,7 +45,13 @@ export default function SignInSignupNudge() {
         <div>
           <div className="nudge-container">
             <div className="nudge-arrow-container">
-              <div className="nudge-arrow">{/* this is nudge */}</div>
+              <div
+                className={
+                  isArabicValue ? "nudge-arrow invert-arrow" : "nudge-arrow"
+                }
+              >
+                {/* this is nudge */}
+              </div>
             </div>
 
             <div className="nudge-content">

@@ -12,10 +12,13 @@
     filter: drop-shadow(0 0 12px black);
     .nudge-arrow {
       clip-path: polygon(50% 30%, 0 100%, 100% 100%);
-      left: 70px;
+      left: 69px;
       width: 33px;
       height: 20px;
       background-color: white;
+    }
+    .invert-arrow {
+      right: 65px;
     }
   }
 
