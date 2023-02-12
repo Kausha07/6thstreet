@@ -53,7 +53,7 @@ export default function SignInSignUpMobileNudge() {
       (firstNudgeRender || isOneDayCompleted) ? (
         <div className="mobile-nudge-container">
           <p className="nudge-heading">
-            Welcome to 6thstreet
+            {__("Welcome to 6thstreet")}
             <span
               className="close-btn"
               onClick={() => setIsNudgeVisible(false)}
@@ -62,7 +62,7 @@ export default function SignInSignUpMobileNudge() {
             </span>
           </p>
           <p className="nudge-content">
-            To know about our new arrivals & exclusive offers,{" "}
+            {__("To know about our new arrivals & exclusive offers,")}
             <span
               className="underlined"
               onClick={() => {
@@ -70,9 +70,9 @@ export default function SignInSignUpMobileNudge() {
                 setShowSignInSignUpPopUp(true);
               }}
             >
-              Sign in
+              {__("Sign in")}
             </span>
-            or{" "}
+            {__("or")}{" "}
             <span
               className="underlined"
               onClick={() => {
@@ -81,7 +81,7 @@ export default function SignInSignUpMobileNudge() {
                 setIsNudgeVisible(false);
               }}
             >
-              create account
+              {__("create account")}
             </span>
           </p>
         </div>
