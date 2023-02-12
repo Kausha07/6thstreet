@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import isMobile from "Util/Mobile";
 import { isSignedIn } from "Util/Auth";
+import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./SignInSignUpMobileNudge.style.scss";
@@ -13,6 +14,7 @@ export default function SignInSignUpMobileNudge() {
   const [firstNudgeRender, setFirstNudgeRender] = useState(false);
   const [isOneDayCompleted, setIsOneDayCompleted] = useState(false);
   let timer;
+  const isArabicValue = isArabic();
 
   useEffect(() => {
     timer = setTimeout(() => {
@@ -51,11 +53,17 @@ export default function SignInSignUpMobileNudge() {
       isMobile.any() &&
       !isSignedIn() &&
       (firstNudgeRender || isOneDayCompleted) ? (
-        <div className="mobile-nudge-container">
+        <div
+          className={
+            isArabicValue
+              ? "mobile-nudge-container invert-text"
+              : "mobile-nudge-container"
+          }
+        >
           <p className="nudge-heading">
             {__("Welcome to 6thstreet")}
             <span
-              className="close-btn"
+              className={isArabicValue ? "close-btn invert-cross" : "close-btn"}
               onClick={() => setIsNudgeVisible(false)}
             >
               X
