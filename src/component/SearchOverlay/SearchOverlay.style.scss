@@ -13,13 +13,82 @@
     --DustyGray: #9b9b9b;
 }
 
-.CartOverlay {
+.RecentSearches {
+    margin-bottom: 21px;
+
+    ul {
+        &::before {
+            display: none;
+        }
+
+        display: flex;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    li {
+        &::before {
+            display: none;
+        }
+
+        margin-top: 0;
+        margin-right: 14px;
+
+        @include mobile {
+            margin-right: 8px;
+        }
+
+        @include tablet {
+            margin-right: 8px;
+        }
+    }
+
+    h2 {
+        line-height: 40px;
+    }
+
+    @include before-desktop() {
+        ul {
+            overflow-x: auto;
+        }
+    }
+
+    @include desktop() {
+        ul {
+            flex-wrap: wrap;
+        }
+    }
+}
+
+.RecentSearches {
+
+    &-searchList {
+        li {
+            padding-left: 0px !important;
+        }
+
+        &_isArabic {
+            li {
+                &:first-of-type {
+                    margin-right: 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.SearchOverlay {
     text-transform: initial;
 
+    @include desktop {
+        width: 385px;
+        height: auto !important;
+    }
 
     @include after-mobile {
         position: absolute;
-        top: 30px;
         right: -150px;
         padding: 0;
         width: var(--cart-overlay-width);
@@ -30,92 +99,6 @@
         }
     }
 
-    &-Promo {
-        &Block {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-            height: 40px;
-            background: var(--cart-page-promo-background);
-
-            @include mobile {
-                padding: 1rem;
-                border: 0;
-                border-bottom: 1px solid var(--primary-divider-color);
-            }
-
-            span:nth-child(2) {
-                font-weight: var(--fw-bold);
-            }
-
-            span:last-child {
-                font-weight: var(--fw-demi);
-                color: var(--color-green-cyan);
-                letter-spacing: -0.1px;
-                text-transform: capitalize;
-            }
-        }
-
-        &FreeShipping {
-            a {
-                text-decoration: underline;
-            }
-        }
-
-        &Image {
-            width: 46px;
-            margin-right: 0.5rem;
-
-            @include mobile {
-                width: 36px;
-            }
-        }
-
-        strong {
-            margin: 0 5px;
-        }
-
-        &Text {
-            font-size: 12px;
-            display: inline;
-            flex-wrap: wrap;
-            line-height: 20px;
-            align-items: center;
-            width: 100%;
-            text-align: center;
-
-            .Image {
-                overflow: inherit !important;
-
-                .LazyLoad-wrapper {
-                    img {
-                        width: 20px !important;
-                        height: auto !important;
-                        margin-right: 5px;
-                        float: left;
-                        margin-top: 5px;
-                    }
-                }
-            }
-
-            @include mobile {
-                font-size: 11px;
-            }
-
-            &_isArabic {
-                .Image {
-                    .LazyLoad-wrapper {
-                        img {
-                            margin-right: unset;
-                            margin-left: 5px;
-                            float: right;
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     &-Wrapper {
         .Image {
@@ -125,19 +108,14 @@
         }
     }
 
-    &-Currency {
-        font-weight: var(--fw-bold);
-    }
-
-    &-FreeDelivery {
-        color: var(--color-green-cyan);
-        font-weight: var(--fw-bold);
-    }
 
     &::before {
+        display: none !important;
+
         @include after-mobile {
             content: "";
             position: absolute;
+            list-style-type: none !important;
             height: 1px;
             width: 70px;
             z-index: 900;
@@ -164,27 +142,24 @@
     }
 
     &-ItemCount {
-        height: 50px;
         color: #000000;
         font-family: "Avenir Next";
         font-size: 18px;
         font-weight: var(--fw-medium);
         letter-spacing: 2px;
         line-height: 25px;
-        padding: 33px 20px 10px 20px;
+        padding: 10px 20px 10px 20px;
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
+        align-items: left;
 
         div {
-            display: flex;
-            font-size: 15px;
+            font-size: 12px;
             font-weight: var(--fw-demi);
-            text-transform: uppercase !important;
 
             div {
                 font-weight: var(--fw-light);
-                padding-left: 7px;
                 padding-right: 5px;
             }
         }
@@ -192,116 +167,24 @@
         span:last-of-type {
             @include close-button;
             --header-color: #ffffff;
-            padding-right: 10px;
-            top: -18px;
+        }
+
+        .moreDataLink {
+            text-align: left;
+            text-decoration: underline;
+            font-size: 12px;
+            font-weight: bold;
+            position: left;
         }
     }
 
     &-ItemCount,
-    &-Promo,
-    &-Total dt,
     &-Empty {
         font-weight: var(--fw-regular);
     }
 
     &_isVisible {
-        @include after-mobile {
-        }
-    }
-
-    &-Actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-    }
-
-    &-CheckoutButton {
-        color: #ffffff;
-        background-color: var(--OutrageousOrange);
-        box-shadow: 0 1px 4px var(--BlackOpacityOf6);
-
-        @include mobile {
-            width: 100%;
-            display: block;
-            text-align: center;
-        }
-
-        @include after-mobile {
-            text-align: center;
-        }
-
-        &_isDisabled {
-            opacity: 0.5;
-        }
-    }
-
-    &-CartButton {
-        border: 2px solid #000000;
-        color: #000000 !important;
-        width: 124px !important;
-        background-color: #ffffff !important;
-        font-size: 12px;
-        font-weight: var(--fw-bold);
-        text-transform: uppercase;
-
-        @include mobile {
-            display: none;
-        }
-    }
-
-    &-CartButton:hover {
-        text-decoration: none;
-    }
-
-    &-CheckoutButton,
-    &-CartButton {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 12px;
-        font-weight: var(--fw-bold);
-        border-radius: 6px;
-        background-color: #000000;
-        height: 50px;
-        width: 200px;
-        color: #ffffff;
-        font-family: "Avenir Next";
-        letter-spacing: 0;
-        line-height: 15px;
-        text-align: center;
-    }
-
-    &-Promo,
-    &-Total {
-        min-height: 4rem;
-
-        @include after-mobile {
-            min-height: 3rem;
-        }
-    }
-
-    &-Promo {
-        padding: 1rem;
-        text-align: center;
-        background: var(--cart-overlay-promo-background);
-        margin-bottom: 0;
-        color: #4a4a4a;
-        font-size: 12px;
-
-        @include mobile {
-            border-bottom: 1px solid var(--cart-overlay-divider-background);
-            border-top: 1px solid var(--expandable-content-color);
-        }
-
-        @include after-mobile {
-            padding: 0 20px 10px 20px;
-            background: #ffffff;
-        }
-
-        strong {
-            margin: 0 5px;
-        }
+        @include after-mobile {}
     }
 
     &-Items {
@@ -335,68 +218,12 @@
         }
     }
 
-    &-Total,
-    &-Discount,
-    &-Tax {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px 0 20px;
-        font-size: 18px;
-
-        dt {
-            color: #000000;
-            font-family: "Avenir Next";
-            font-size: 15px;
-            letter-spacing: 0;
-            line-height: 20px;
-
-            span {
-                color: #9b9b9b;
-                font-family: "Avenir Next";
-                font-size: 12px;
-                letter-spacing: 0;
-                line-height: 16px;
-            }
-        }
-
-        @include after-mobile {
-            font-size: 14px;
-        }
-    }
-
-    &-Total {
-        font-weight: var(--fw-light);
-
-        dd {
-            font-weight: var(--fw-bold);
-            font-size: 18px;
-            letter-spacing: 0;
-            line-height: 25px;
-        }
-
-        &_isArabic {
-            dt {
-                display: grid;
-                grid-template-columns: auto auto;
-                grid-column-gap: 10px;
-            }
-        }
-    }
-
     &-Empty {
         font-size: 15px;
         font-weight: var(--fw-light);
         text-align: center;
         letter-spacing: 0.75px;
         padding: 20px 0;
-    }
-
-    &-DiscountCoupon {
-        &::after {
-            content: ":";
-            font-weight: var(--fw-regular);
-        }
     }
 }
 
@@ -417,10 +244,259 @@
     }
 }
 
-div.CartOverlay.Overlay {
-    width: 375px;
+div.SearchOverlay.Overlay {
+    width: 573px;
+    height: auto;
     opacity: 1;
     border-radius: 12px;
     background-color: #ffffff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.suggestionBlocks {
+    display: flex;
+    flex-direction: row;
+
+    .productDetailsLayout {
+        a {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            text-decoration: none;
+        }
+    }
+
+    .imagesLayouts {
+        img {
+            width: 95px;
+            height: 99px;
+        }
+    }
+
+    .SearchProduct {
+        &-Brand {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        &-ProductName {
+            width: 200px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .moreDataLink {
+        position: absolute;
+        bottom: 14px;
+        left: 2px;
+        cursor: pointer;
+    }
+
+    .SearchSuggestion {
+        &::before {
+            display: none;
+            list-style-type: none;
+        }
+    }
+}
+
+.SearchSuggestion {
+    position: absolute;
+    width: 100%;
+
+    &-Item {
+        margin: 15px;
+
+        ul {
+            margin-bottom: 50px;
+
+            li {
+                display: flex;
+                flex-direction: row;
+                padding: 0px;
+                justify-content: space-between;
+
+                &::before {
+                    display: none;
+                }
+
+
+                a {
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &-Recommended {
+        margin-top: 15px;
+        margin-left: 15px;
+        margin-right: 15px;
+
+        &::before {
+            display: none;
+        }
+
+        .productContentLayoutLink {
+            list-style-type: none !important;
+        }
+
+        ul {
+            &::before {
+                display: none;
+            }
+
+            width: 300px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: scroll;
+
+            &::-webkit-scrollbar {
+                width: 1px;
+            }
+
+            li {
+                &::before {
+                    display: none;
+                }
+
+                margin-bottom: -20px;
+
+                &:first-child {
+                    margin-top: 0px !important;
+                }
+
+                padding-left: 0px;
+                width: 245.39px;
+                height: auto;
+                margin-right: 7.92px;
+
+                a {
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+
+        @include before-desktop {
+            margin-bottom: 15px;
+        }
+    }
+
+    ul {
+        ::before {
+            content: unset;
+        }
+
+        li {
+            padding: 0;
+            font-size: 15px;
+            margin-bottom: 0;
+
+            @include before-desktop() {
+                font-size: 12px;
+            }
+        }
+
+        a {
+            color: var(--link-dark-gray);
+            width: 100%;
+            display: block;
+            text-decoration: none;
+
+
+            .suggestion-details-box {
+                display: flex;
+                justify-content: space-between;
+
+                span {
+                    position: relative;
+                }
+
+                div {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+
+    h2 {
+        font-size: 17px;
+        text-transform: none;
+        margin: 0;
+        color: #000000;
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+}
+
+.TrandingBrands {
+    ul {
+        &::before {
+            display: none;
+        }
+
+        display: grid;
+        grid-template-columns: 80px 80px 80px;
+        grid-template-rows: 120px 120px 120px;
+        grid-gap: 5px;
+    }
+
+    li {
+        padding-left: 0px !important;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    img {
+        @include desktop {
+            width: 80px !important;
+            height: 120px !important;
+            border-radius: 4px;
+            opacity: 1;
+        }
+    }
+
+    .SearchSuggestion {
+        &-TrandingImage {
+            width: 80px;
+            height: 120px;
+            border: none;
+            border-radius: 5px;
+            margin: 0px;
+            position: relative;
+
+            div {
+                position: absolute !important;
+                bottom: 2px;
+                font-size: 9px;
+                left: 20%;
+                line-height: 9px;
+            }
+        }
+    }
+}
+
+.NothingFound {
+    .spacingBlock {
+        margin: 50px;
+    }
+}
+
+.spacingBlock {
+    &_isArabic {
+        margin: 37px;
+    }
 }
