@@ -1,3 +1,13 @@
+import PropTypes from "prop-types";
+import { createRef } from "react";
+import { connect } from "react-redux";
+import { matchPath, withRouter } from "react-router";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from "Util/Mobile";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import Form from "Component/Form";
+import SearchOverlay from "Component/SearchOverlay";
 import HeaderAccount from "Component/HeaderAccount";
 import HeaderCart from "Component/HeaderCart";
 import HeaderGenders from "Component/HeaderGenders";
@@ -8,10 +18,6 @@ import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSi
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PropTypes from "prop-types";
-import { createRef } from "react";
-import { connect } from "react-redux";
-import { matchPath, withRouter } from "react-router";
 import {
   TYPE_ACCOUNT,
   TYPE_BRAND,
@@ -20,11 +26,10 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT,
 } from "Route/UrlRewrites/UrlRewrites.config";
-import { isArabic } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
-import isMobile from "Util/Mobile";
 import "./HeaderMainSection.style";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import Clear from "./icons/close-black.png";
+import searchIcon from "./icons/search-black.svg";
+
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
@@ -64,6 +69,7 @@ class HeaderMainSection extends NavigationAbstract {
       signInPopUp: "",
       showPopup: false,
       isMobile: isMobile.any(),
+      isPopup : false,
     };
 
     this.headerSearchRef = createRef();
@@ -83,7 +89,6 @@ class HeaderMainSection extends NavigationAbstract {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
     leftContainer: this.renderLeftContainer.bind(this),
-    // search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
 
@@ -127,9 +132,7 @@ class HeaderMainSection extends NavigationAbstract {
       />
     );
   }
-  // state = {
 
-  // };
 
   handleScroll = () => {
     // return
@@ -226,7 +229,6 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderAccount() {
     const isFooter = false;
-
     return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
   }
 
@@ -250,7 +252,6 @@ class HeaderMainSection extends NavigationAbstract {
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
-
     return (this.isPLP() ||
       this.isPDP() ||
       this.getPageType() === TYPE_BRAND ||
@@ -267,7 +268,6 @@ class HeaderMainSection extends NavigationAbstract {
   renderLogo() {
     const { isArabic, showPLPSearch } = this.state;
     const { changeMenuGender } = this.props;
-
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
@@ -289,15 +289,12 @@ class HeaderMainSection extends NavigationAbstract {
         );
       }
     }
-
     this.setMainContentPadding("150px");
-
     return <HeaderLogo key="logo" />;
   }
 
   backFromPLP = () => {
     const { history, chosenGender } = this.props;
-
     switch (chosenGender) {
       case "women":
         history.push("/women.html");
@@ -366,25 +363,75 @@ class HeaderMainSection extends NavigationAbstract {
     document.body.style.overflow = "visible";
   };
 
+  cancelSearch = () => {
+    this.setState({
+      search : ""
+    })
+  }
+
+  onSearchChange = (e) => {
+    this.setState({
+      search : e.target.value
+    })
+  }
+
+  renderSearchOverlay = () => {
+    const {isPopup} = this.state;
+    this.setState({isPopup : !isPopup});
+  }
+
+  closePopup = () => {
+    const { hideActiveOverlay } = this.props;
+    hideActiveOverlay();
+    this.setState({ isOpen: false });
+  }
+
   renderSearchIcon() {
-    const { isArabic, showPLPSearch } = this.state;
+    const { isArabic, showPLPSearch, search, isPopup } = this.state;
     if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
       return null;
     }
     return (
-      <div block="SearchIcon" mods={{ isArabic: isArabic }}>
-        <button
-          block="SearchIcon"
-          onClick={
-            isMobile.any()
-              ? this.handlePLPSearchClick.bind(this)
-              : this.handleSearchClick.bind(this)
-          }
-          elem="Button"
-          aria-label="PLP Search Button"
-          role="button"
-        ></button>
-      </div>
+      <>
+        <div mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
+          <div block="SearchIcon">
+            <div>
+              <img
+                lazyLoad={true}
+                id="searchIconImage"
+                src={searchIcon}
+                alt="searchIcon"
+              />
+            </div>
+            <Form block="searchFrom">
+              <input
+                id="search-field"
+                ref={this.headerSearchRef}
+                name="search"
+                type="text"
+                autocomplete="off"
+                autoCorrect="off"
+                spellCheck="false"
+                placeholder={
+                  isMobile.any() || isMobile.tablet()
+                    ? __("What are you looking for?")
+                    : __("Search for items, brands, inspiration and styles")
+                }
+                onChange={(e) => this.onSearchChange(e)}
+                value={search}
+              />
+            </Form>
+            <div block="clear-button" onClick={this.cancelSearch}>
+              <img src={Clear} alt="crossIcon" />
+            </div>
+          </div>
+          <div id="overlay-sections">
+            {isPopup ? (
+              <SearchOverlay isPopup={isPopup} closePopup={this.closePopup} />
+            ) : null}
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -425,7 +472,6 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
-            renderMySignInPopup={this.showMyAccountPopup}
           />
         </div>
       );
@@ -472,4 +518,3 @@ class HeaderMainSection extends NavigationAbstract {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection)
 );
-
