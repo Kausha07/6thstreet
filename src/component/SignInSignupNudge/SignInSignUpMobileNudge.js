@@ -15,6 +15,7 @@ export default function SignInSignUpMobileNudge() {
   const [isOneDayCompleted, setIsOneDayCompleted] = useState(false);
   let timer;
   const isArabicValue = isArabic();
+  const miliSecsInADay = 86400000;
 
   useEffect(() => {
     timer = setTimeout(() => {
@@ -31,11 +32,10 @@ export default function SignInSignUpMobileNudge() {
     const lastNudgeShownTimeValue = localStorage.getItem("lastNudgeShownTime");
     if (!lastNudgeShownTimeValue) {
       setFirstNudgeRender(true);
-    } else if (lastNudgeShownTimeValue < new Date()) {
+      localStorage.setItem("lastNudgeShownTime", Date.now());
+    } else if (Date.now() - lastNudgeShownTimeValue >= miliSecsInADay) {
       setIsOneDayCompleted(true);
-    }
-    if (!isSignedIn()) {
-      localStorage.setItem("lastNudgeShownTime", new Date());
+      localStorage.setItem("lastNudgeShownTime", Date.now());
     }
   }, []);
 
