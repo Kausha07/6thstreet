@@ -797,7 +797,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = this.state;
     let data = {};
     let eddItems = [];
-    if (edd_info?.is_enable && cartItems) {
+    if (edd_info?.is_enable && !edd_info.has_item_level && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {
           cross_border = 0,
@@ -873,6 +873,41 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             : cross_border === 1
             ? international_vendor
             : null,
+        });
+      });
+    }
+    if (edd_info?.is_enable && edd_info.has_item_level && cartItems) {
+      cartItems.map(({ full_item_info }) => {
+        const {
+          cross_border = 0,
+          sku,
+          extension_attributes,
+        } = full_item_info;
+        const defaultDay = extension_attributes?.click_to_collect_store
+          ? edd_info.ctc_message
+          : edd_info.default_message;
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(defaultDay);
+        let itemEddMessage = extension_attributes?.click_to_collect_store
+          ? DEFAULT_READY_MESSAGE
+          : DEFAULT_MESSAGE;
+        let customDefaultMess = isArabic()
+          ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+          : itemEddMessage;
+        const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        eddItems.push({
+          sku: sku,
+          edd_date:
+            edd_info && extension_attributes?.click_to_collect_store
+              ? defaultEddDateString
+              : finalEdd,
+          cross_border: cross_border,
+          edd_message_en: actualEddMess,
+          edd_message_ar: actualEddMess,
         });
       });
     }

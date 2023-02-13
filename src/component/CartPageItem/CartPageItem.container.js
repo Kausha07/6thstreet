@@ -42,6 +42,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { isArabic } from "Util/App";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
