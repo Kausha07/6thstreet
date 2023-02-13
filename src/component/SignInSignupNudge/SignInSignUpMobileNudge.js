@@ -60,38 +60,51 @@ export default function SignInSignUpMobileNudge() {
               : "mobile-nudge-container"
           }
         >
-          <p className="nudge-heading">
-            {__("Welcome to 6thstreet")}
-            <span
-              className={isArabicValue ? "close-btn invert-cross" : "close-btn"}
-              onClick={() => setIsNudgeVisible(false)}
+          <div className="content-container">
+            <p className="nudge-heading">
+              {__("Welcome to 6thstreet")}
+              <span
+                className={
+                  isArabicValue ? "close-btn invert-cross" : "close-btn"
+                }
+                onClick={() => setIsNudgeVisible(false)}
+              >
+                X
+              </span>
+            </p>
+            <p className="nudge-content">
+              {__("To know about our new arrivals & exclusive offers,")}
+              <span
+                className="underlined"
+                onClick={() => {
+                  setIsNudgeVisible(false);
+                  setShowSignInSignUpPopUp(true);
+                }}
+              >
+                {__("Sign in")}
+              </span>
+              {__("or")}{" "}
+              <span
+                className="underlined"
+                onClick={() => {
+                  setIsRegisterScreen(true);
+                  setShowSignInSignUpPopUp(true);
+                  setIsNudgeVisible(false);
+                }}
+              >
+                {__("create account")}
+              </span>
+            </p>
+          </div>
+          <div className="nudge-arrow-container">
+            <div
+              className={
+                isArabicValue ? "nudge-arrow invert-arrow" : "nudge-arrow"
+              }
             >
-              X
-            </span>
-          </p>
-          <p className="nudge-content">
-            {__("To know about our new arrivals & exclusive offers,")}
-            <span
-              className="underlined"
-              onClick={() => {
-                setIsNudgeVisible(false);
-                setShowSignInSignUpPopUp(true);
-              }}
-            >
-              {__("Sign in")}
-            </span>
-            {__("or")}{" "}
-            <span
-              className="underlined"
-              onClick={() => {
-                setIsRegisterScreen(true);
-                setShowSignInSignUpPopUp(true);
-                setIsNudgeVisible(false);
-              }}
-            >
-              {__("create account")}
-            </span>
-          </p>
+              {/* this is nudge */}
+            </div>
+          </div>
         </div>
       ) : null}
     </>

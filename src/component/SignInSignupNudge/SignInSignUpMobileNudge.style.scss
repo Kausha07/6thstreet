@@ -1,39 +1,58 @@
 .mobile-nudge-container {
-  background-color: #000000;
   opacity: 0.72;
   z-index: 99999;
   position: fixed;
-  bottom: 150px;
-  border-radius: 8px;
-  width: 90%;
-  text-align: center;
-  color: #fff;
+  bottom: 60px;
   display: block;
-  margin: 5%;
   text-align: left;
-  padding: 16px 20px;
-  .nudge-heading {
-    position: relative;
-    color: white;
-    font-family: "Avenir Next";
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 22px;
-    .close-btn {
-      float: right;
+  .nudge-arrow-container {
+    filter: drop-shadow(0 0 12px black);
+    .nudge-arrow {
+      position: absolute;
+      clip-path: polygon(100% 0, 0 0, 50% 100%);
+      top: 0px;
+      right: 23px;
+      width: 33px;
+      height: 20px;
+      background-color: #000000;
+      border: 1px solid #000000;
     }
-    .invert-cross {
-      float: left;
+    .invert-arrow {
+      right: unset;
+      left: 23px;
     }
   }
-  .nudge-content {
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: "Avenir Next";
-    .underlined {
-      text-decoration: underline;
-      padding-right: 3px;
+  .content-container {
+    background-color: #000000;
+    border: 1px solid #000000;
+    margin: 0 3%;
+    padding: 16px 20px;
+    border-radius: 8px;
+    width: 94%;
+    color: #fff;
+    .nudge-heading {
+      position: relative;
+      color: white;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+      .close-btn {
+        float: right;
+      }
+      .invert-cross {
+        float: left;
+      }
+    }
+    .nudge-content {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: "Avenir Next";
+      .underlined {
+        text-decoration: underline;
+        padding-right: 3px;
+      }
     }
   }
 }
