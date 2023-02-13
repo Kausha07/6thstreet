@@ -64,7 +64,7 @@ const InfluencerStore = (props) => {
     const breadcrumbs = [
       {
         url: "",
-        name: __("%s Store", influencerName),
+        name: __("%s's Store", influencerName),
       },
       {
         url: "/influencer.html",

@@ -58,7 +58,7 @@ const InfluencerCollection = (props) => {
     const breadcrumbs = [
       {
         url: "",
-        name: __("%s Collection", influencerName),
+        name: __("%s's Collection", influencerName),
       },
       {
         url: "/influencer.html",
