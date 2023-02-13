@@ -32,13 +32,15 @@ export default function SignInSignUpMobileNudge() {
     const lastNudgeShownTimeValue = localStorage.getItem("lastNudgeShownTime");
     if (!lastNudgeShownTimeValue) {
       setFirstNudgeRender(true);
-      localStorage.setItem("lastNudgeShownTime", Date.now());
     } else if (Date.now() - lastNudgeShownTimeValue >= miliSecsInADay) {
       setIsOneDayCompleted(true);
-      localStorage.setItem("lastNudgeShownTime", Date.now());
     }
   }, []);
 
+  const closeNudge = () => {
+    localStorage.setItem("lastNudgeShownTime", Date.now());
+    setIsNudgeVisible(false);
+  };
   return (
     <>
       {showSignInSignUpPopUp && (
@@ -67,7 +69,7 @@ export default function SignInSignUpMobileNudge() {
                 className={
                   isArabicValue ? "close-btn invert-cross" : "close-btn"
                 }
-                onClick={() => setIsNudgeVisible(false)}
+                onClick={closeNudge}
               >
                 X
               </span>
