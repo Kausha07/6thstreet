@@ -14,7 +14,7 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 import { appendWithStoreCode } from "Util/Url";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+// import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 import Header from "./Header.component";
 
