@@ -3,6 +3,7 @@ import isMobile from "Util/Mobile";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import NudgeCross from "./ImagesAndIcons/nudgeCross.svg";
 
 import "./SignInSignUpMobileNudge.style.scss";
 
@@ -71,7 +72,7 @@ export default function SignInSignUpMobileNudge() {
                 }
                 onClick={closeNudge}
               >
-                X
+                <img onClick={closeNudge} src={NudgeCross} alt="close" />
               </span>
             </p>
             <p className="nudge-content">
