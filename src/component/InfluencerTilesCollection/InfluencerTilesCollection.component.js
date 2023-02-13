@@ -35,7 +35,7 @@ const InfluencerTilesCollection = (props) => {
       <div block="Product-LoadMore">
         <div>
           <div block="Product-Loaded-Info" mods={{ isArabic: isArabic() }}>
-            {__("You’ve viewed %s of %s influencer", itemsToShow, totalItems)}
+            {__("You’ve viewed %s of %s Influencers", itemsToShow, totalItems)}
           </div>
 
           <div block="Product-ProgressBar">
