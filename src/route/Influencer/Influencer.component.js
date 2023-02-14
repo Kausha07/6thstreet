@@ -253,7 +253,7 @@ const Influencer = (props) => {
 
         {!isMobile.any() && isRefineButtonClicked ? (
           <div block="refineFilter">
-            <ul>
+            <ul  onClick={handleRefineButtonClick}>
               <li>
                 <div>
                   <input
