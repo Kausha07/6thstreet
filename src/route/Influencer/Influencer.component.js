@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
   getTrendingInfo,
   getFollowedInfluencer,
+  followUnfollowInfluencer,
 } from "Util/API/endpoint/Influencer/Influencer.endpoint";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
@@ -38,6 +39,8 @@ const Influencer = (props) => {
   const [followingList, setFollowingList] = useState([]);
   const [index, setIndex] = useState(0);
   const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
+  const [tempInfluencerID, setTempInfluencerID] = useState(null);
+  const [payload, setPayload] = useState({});
   const searchWrapperRef = createRef();
   const refineWrapperRef = createRef();
 
@@ -56,6 +59,8 @@ const Influencer = (props) => {
   useEffect(() => {
     if (props.isSignedIn) {
       getFollowingList();
+    } else {
+      setFollowingList([]);
     }
   }, [props.isSignedIn, loggedIn]);
 
@@ -119,6 +124,22 @@ const Influencer = (props) => {
     try {
       getFollowedInfluencer().then((resp) => {
         setFollowingList(resp);
+
+        if (tempInfluencerID !== null) {
+          const influencerID = payload.influencerId;
+          const follow = payload.following;
+
+          const payload_ = {
+            influencerId: influencerID,
+            following: !follow,
+          };
+
+          followUnfollowInfluencer(payload_).then((res) => {
+            const arr = [...resp];
+            arr.push(tempInfluencerID);
+            setFollowingList(arr);
+          });
+        }
       });
     } catch (err) {
       console.error(
@@ -126,6 +147,15 @@ const Influencer = (props) => {
         err
       );
     }
+  };
+
+  const guestUser = (influencerID, follow) => {
+    setTempInfluencerID(influencerID);
+    const payload = {
+      influencerId: influencerID,
+      following: follow,
+    };
+    setPayload(payload);
   };
 
   const renderBannerAnimation = () => {
@@ -154,6 +184,7 @@ const Influencer = (props) => {
             renderMySignInPopup={showMyAccountPopup}
             buttonSignedIn={buttonSignedIn}
             selectedGender={selectedGender}
+            guestUser={guestUser}
           />
         )}
       </div>
@@ -304,6 +335,7 @@ const Influencer = (props) => {
               influencerSearchText={influencerSearchText}
               updateFollowingList={updateFollowingList}
               renderMySignInPopup={showMyAccountPopup}
+              guestUser={guestUser}
             />
           ) : null}
         </div>

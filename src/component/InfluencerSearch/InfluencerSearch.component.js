@@ -31,9 +31,10 @@ const InfluencerSearch = (props) => {
   }, []);
 
   const followUnfollow = (influencerID, follow) => {
-    const { updateFollowingList, renderMySignInPopup } = props;
+    const { updateFollowingList, renderMySignInPopup, guestUser } = props;
     if (!isSignedIn()) {
       renderMySignInPopup();
+      guestUser(influencerID, follow);
     } else {
       const payload = {
         influencerId: influencerID,

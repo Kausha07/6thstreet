@@ -57,11 +57,17 @@ const InfluencerTilesCollection = (props) => {
   };
 
   const followUnfollow = (influencerID, follow) => {
-    const { updateFollowingList, renderMySignInPopup, buttonSignedIn } = props;
+    const {
+      updateFollowingList,
+      renderMySignInPopup,
+      buttonSignedIn,
+      guestUser,
+    } = props;
     if (!isSignedIn()) {
       renderMySignInPopup();
+      guestUser(influencerID, follow);
     } else {
-      buttonSignedIn();
+      buttonSignedIn(true);
       const payload = {
         influencerId: influencerID,
         following: !follow,

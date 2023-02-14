@@ -42,23 +42,31 @@ const InfluencerStore = (props) => {
   const [algoliaQuery, setAlgoliaQuery] = useState("");
   const [followingList, setFollowingList] = useState([]);
   const [selectedGender, setSelectedGender] = useState("WOMEN");
+  const [tempInfluencerID, setTempInfluencerID] = useState(null);
+  const [payload, setPayload] = useState({});
+  const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    WebUrlParser.setPage("0");
+    getStoreInfo();
     return () => {
       props.resetPLPData();
     };
   }, []);
 
   useEffect(() => {
-    getStoreInfo();
     updateBreadcrumbs();
-    WebUrlParser.setPage("0");
+  }, [influencerName]);
+
+  useEffect(() => {
     if (props.isSignedIn) {
       getFollowingList();
+    } else {
+      setFollowingList([]);
     }
-  }, [influencerName]);
+  }, [props.isSignedIn, loggedIn]);
 
   const updateBreadcrumbs = () => {
     const breadcrumbs = [
@@ -92,6 +100,19 @@ const InfluencerStore = (props) => {
     try {
       getFollowedInfluencer().then((resp) => {
         setFollowingList(resp);
+        if (tempInfluencerID !== null) {
+          const influencerID = payload.influencerId;
+          const follow = payload.following;
+          const payload_ = {
+            influencerId: influencerID,
+            following: !follow,
+          };
+          followUnfollowInfluencer(payload_).then((res) => {
+            const arr = [...resp];
+            arr.push(tempInfluencerID);
+            setFollowingList(arr);
+          });
+        }
       });
     } catch (err) {
       console.error("Influencer error", err);
@@ -205,10 +226,26 @@ const InfluencerStore = (props) => {
       );
     }
   };
+
+  const buttonSignedIn = (val) => {
+    setLoggedIn(val);
+  };
+
+  const guestUser = (influencerID, follow) => {
+    setTempInfluencerID(influencerID);
+    const payload = {
+      influencerId: influencerID,
+      following: follow,
+    };
+    setPayload(payload);
+  };
+
   const followUnfollow = (influencerID, follow) => {
     if (!props.isSignedIn) {
       showMyAccountPopup();
+      guestUser(influencerID, follow);
     } else {
+      buttonSignedIn(true);
       const payload = {
         influencerId: influencerID,
         following: !follow,
