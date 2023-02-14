@@ -1,32 +1,19 @@
 .nudge-container {
   width: 173px;
   height: 100px;
-
   display: flex;
   flex-direction: column;
   left: -73px;
-
+  top: 20px;
   z-index: 100;
   position: absolute;
-  .nudge-arrow-container {
-    filter: drop-shadow(0 0 12px black);
-    .nudge-arrow {
-      clip-path: polygon(50% 30%, 0 100%, 100% 100%);
-      left: 69px;
-      width: 33px;
-      height: 20px;
-      background-color: white;
-    }
-    .invert-arrow {
-      right: 65px;
-    }
-  }
 
   .nudge-content {
-    padding: 14.37px 16px;
+    padding: 14px 16px;
     border-radius: 6px;
-    box-shadow: 0px 0px 10px #00000029;
+    box-shadow: 0px 0px 40px #00000029;
     background-color: white;
+    position: relative;
     .signin {
       width: 141px;
       height: 32px;
@@ -46,5 +33,18 @@
         color: #f96446;
       }
     }
+  }
+
+  .nudge-content::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 0px;
+    left: 50%;
+    top: 5px;
+    border: 20px solid transparent;
+    border-top: 0;
+    border-bottom: 20px solid #ffffff;
+    transform: translate(-50%, calc(-100% - 5px));
   }
 }
