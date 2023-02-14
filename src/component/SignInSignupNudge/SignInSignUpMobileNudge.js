@@ -86,7 +86,7 @@ export default function SignInSignUpMobileNudge() {
               >
                 {__("Sign in")}
               </span>
-              {__("or")}{" "}
+              {__("or")}
               <span
                 className="underlined"
                 onClick={() => {

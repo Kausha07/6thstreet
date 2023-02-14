@@ -3,7 +3,7 @@
   height: 100px;
   display: flex;
   flex-direction: column;
-  left: -73px;
+  right: -68px;
   top: 20px;
   z-index: 100;
   position: absolute;
@@ -30,6 +30,7 @@
       .register {
         cursor: pointer;
         padding-left: 3px;
+        padding-right: 3px;
         color: #f96446;
       }
     }
@@ -47,4 +48,9 @@
     border-bottom: 20px solid #ffffff;
     transform: translate(-50%, calc(-100% - 5px));
   }
+}
+
+.arabic-alignment {
+  right: unset;
+  left: -68px;
 }

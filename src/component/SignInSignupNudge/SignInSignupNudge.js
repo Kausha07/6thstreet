@@ -43,7 +43,13 @@ export default function SignInSignupNudge() {
         window.location.pathname == "/kids.html" ||
         window.location.pathname == "/home.html") ? (
         <div>
-          <div className="nudge-container">
+          <div
+            className={
+              isArabicValue
+                ? "nudge-container arabic-alignment"
+                : "nudge-container"
+            }
+          >
             <div className="nudge-content">
               <button
                 className="signin"
