@@ -19,13 +19,21 @@ import Loader from "Component/Loader";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_SORT_BY_DISCOUNT,
+  EVENT_SORT_BY_LATEST,
+  EVENT_SORT_BY_PRICE_HIGH,
+  EVENT_SORT_BY_PRICE_LOW,
+  EVENT_SORT_BY_RECOMMENDED,
+  EVENT_GTM_SORT,
+  MOE_trackEvent,
+  EVENT_MOE_PLP_FILTER
 } from "Util/Event";
 import Logger from "Util/Logger";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -420,6 +428,43 @@ export class PLP extends PureComponent {
       </div>
     );
   };
+  
+  sendTrackingEvent = (facet_key, facet_value) => {
+    const sendMoeEvents = (event) => {
+      MOE_trackEvent(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    };
+
+    if(facet_key == "sort") {
+      const sortEventType =
+        facet_value == __("recommended")
+          ? EVENT_SORT_BY_RECOMMENDED
+          : facet_value == __("latest")
+          ? EVENT_SORT_BY_LATEST
+          : facet_value == __("discount")
+          ? EVENT_SORT_BY_DISCOUNT
+          : facet_value == __("price_low")
+          ? EVENT_SORT_BY_PRICE_LOW
+          : facet_value == __("price_high")
+          ? EVENT_SORT_BY_PRICE_HIGH
+          : "";
+      if (sortEventType && sortEventType.length > 0) {
+        sendMoeEvents(sortEventType);
+        Event.dispatch(EVENT_GTM_SORT, sortEventType);
+      }
+    } else {
+      MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        filter_type: facet_key || "",
+        filter_value: facet_value || "",
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
 
   renderSortByOverlay = () => {
     const {filters, handleCallback} = this.props
@@ -447,6 +492,7 @@ export class PLP extends PureComponent {
                           isSortByOverlayOpen:false
                         },()=>{
                           handleCallback(facet_key, facet_value, true, true)
+                          this.sendTrackingEvent(facet_key, facet_value);
                         })
                       }}
                     >
