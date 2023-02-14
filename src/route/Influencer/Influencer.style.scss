@@ -40,12 +40,22 @@
     font-family: inherit;
     margin-left: 5px;
     width: 96px;
+    padding-left: 33px;
     text-transform: capitalize;
     font-weight: 600;
     height: 32px !important;
+    img {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 7px;
+      left: 12px;
+      right: 10px;
+    }
     @include mobile {
-      height: 25px !important;
+      height: 25px;
       width: 80px;
+      padding-left: 24px;
       font-size: 13px;
       img {
         position: absolute;
