@@ -91,16 +91,20 @@ const InfluencerCollection = (props) => {
         }
       });
     } catch (error) {
-      console.error("Error while fetching Influencer info on Influencer's Collection page", err);
+      console.error(
+        "Error while fetching Influencer info on Influencer's Collection page",
+        err
+      );
     }
   };
 
   useEffect(() => {
     WebUrlParser.setPage("0");
+    document.body.scrollTo(0, 0);
 
-    return () =>{
+    return () => {
       props.resetPLPData();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -321,7 +325,7 @@ const InfluencerCollection = (props) => {
                 <ShareButton
                   product={product}
                   title={document.title}
-                  text={__("Hey check this out: %s",document.title)}
+                  text={__("Hey check this out: %s", document.title)}
                   url={pageURL.href}
                   image={image_url}
                 />
