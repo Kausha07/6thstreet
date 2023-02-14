@@ -180,7 +180,14 @@ const InfluencerSearch = (props) => {
           <h3>{__("Influencer")}</h3>
           {filteredAllInfluencerContent &&
           filteredAllInfluencerContent.length > 0 ? (
-            <ul className="influencer_spckItems">
+            <ul
+              block={
+                "influencer_spckItems " +
+                (filteredAllInfluencerContent?.length !== 1
+                  ? "showDivider"
+                  : null)
+              }
+            >
               {filteredAllInfluencerContent?.map(renderInfluencer)}
             </ul>
           ) : (
