@@ -315,7 +315,7 @@ export class CartOverlay extends PureComponent {
   }
 
   render() {
-    const { onVisible, isHidden, hideActiveOverlay, closePopup } = this.props;
+    const { onVisible, isHidden, hideActiveOverlay, closePopup, totals } = this.props;
     const { isArabic, isPopup } = this.state;
 
     return (
@@ -334,7 +334,7 @@ export class CartOverlay extends PureComponent {
           mix={{ block: "CartOverlay", mods: { isArabic, isPopup } }}
         >
           {this.renderItemCount()}
-          <CartNudge />
+          { totals?.items?.length > 0 && <CartNudge /> }
           {this.renderCartItems()}
           {this.renderTotals()}
           {this.renderShipping()}
