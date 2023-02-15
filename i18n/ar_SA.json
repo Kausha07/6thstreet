@@ -1183,5 +1183,8 @@
     "Read less": "إقرأ أقل",
     "SELECT A CITY": "حدد المدينة",
     "SELECT AN AREA": "حدد المنطقة",
-    "Search...": " ابحث..."
+    "Search...": " ابحث...",
+    "Ooops... It's gone!": "عذراً... لم يعد متوفراً!",
+    "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
+    "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة"
 }
