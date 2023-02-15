@@ -971,17 +971,20 @@ export class CartPage extends PureComponent {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderMySignInPopup()}
-          {this.renderHeading()}
-          {this.renderEmptyCartPageForMobile()}
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {this.renderHeading()}
+            {this.renderEmptyCartPageForMobile()}
+            
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -990,19 +993,21 @@ export class CartPage extends PureComponent {
     if (!cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
-          {/* {this.renderHeading()} */}
-          {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {/* {this.renderHeading()} */}
+            {this.renderMySignInPopup()}
+            {this.renderEmptyCartPage()}
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -1017,20 +1022,23 @@ export class CartPage extends PureComponent {
         return (
           <div block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderMySignInPopup()}
-            {this.renderHeading()}
-            {this.renderEmptyCartPageForMobile()}
-       
-            <div className="PDPWidgets-cart">
-              {cartWidgetApiData.length !== 0
-                ? this.renderRecentlyViewSlider()
-                : null}
-            </div>
+            <div className="sidePadding">
+              {this.renderHeading()}
+              {this.renderEmptyCartPageForMobile()}
             
-            <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
-          </div>
+       
+              <div className="PDPWidgets-cart">
+                {cartWidgetApiData.length !== 0
+                  ? this.renderRecentlyViewSlider()
+                  : null}
+              </div>
+            
+              <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+              </div>
+            </div>
           </div>
         );
       }
@@ -1038,17 +1046,19 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {this.renderEmptyCartPage()}
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
