@@ -50,6 +50,7 @@ const InfluencerStore = (props) => {
 
   useEffect(() => {
     WebUrlParser.setPage("0");
+    document.body.scrollTo(0, 0);
     getStoreInfo();
     return () => {
       props.resetPLPData();
