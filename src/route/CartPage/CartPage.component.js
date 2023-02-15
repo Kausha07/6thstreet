@@ -35,6 +35,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
+import CartNudge from "./CartNudges/CartNudge"
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -1095,11 +1096,16 @@ export class CartPage extends PureComponent {
               showOverflow,
             }}
           >
-            {this.renderHeading()}
-            {this.renderCartItems()}
-            {this.renderCrossSellProducts()}
-            {this.renderDiscountCode()}
-            {this.renderPromo()}
+            <div className="sidePadding">
+              {this.renderHeading()}
+            </div>
+            <CartNudge />
+            <div className="sidePadding">
+              {this.renderCartItems()}
+              {this.renderCrossSellProducts()}
+              {this.renderDiscountCode()}
+              {this.renderPromo()}
+            </div>
           </div>
           <div
             ref={this.dynamicHeight}

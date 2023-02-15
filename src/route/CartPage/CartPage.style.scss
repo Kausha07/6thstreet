@@ -454,9 +454,8 @@
             &_showOverflow {
                 margin-bottom: 124px !important;
             }
-            &:first-child {
+            .sidePadding{
                 padding: 0 16px;
-                // padding-bottom: 280px; // disabling it for PWA-2642
             }
         }
         &_isArabic {
