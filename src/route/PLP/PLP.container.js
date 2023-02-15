@@ -46,6 +46,9 @@ import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
 import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Logger from "Util/Logger";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -154,6 +157,7 @@ export class PLPContainer extends PureComponent {
     prevProductSku: "",
     activeFilters: {},
     categoryloaded: false,
+    metaContent: null,
   };
 
   containerFunctions = {
@@ -255,6 +259,7 @@ export class PLPContainer extends PureComponent {
     super(props);
     let prevLocation;
     let finalPrevLocation;
+    this.getStaticMetaContent();
     browserHistory.listen((nextLocation) => {
       let locationArr = ["/men.html", "/women.html", "/kids.html", "/home.html"];
       finalPrevLocation = prevLocation;
@@ -279,6 +284,24 @@ export class PLPContainer extends PureComponent {
     }
     this.setMetaData();
   }
+
+  getStaticMetaContent = async () => {
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html")) {
+        try {
+          const resp = await getStaticFile("plp_meta", {
+            $FILE_NAME: `pages/plp_meta.json`,
+          });
+          if (resp) {
+            this.setState({
+              metaContent: resp?.[0],
+            });
+          }
+        } catch (e) {
+          Logger.log(e);
+        }
+    }
+  };
 
   getInitialOptions = (options) => {
     const optionArr = ["categories.level1", "page", "q", "visibility_catalog"];
@@ -866,11 +889,10 @@ export class PLPContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-    const { brandDescription, brandName } = this.state;
+    const { brandDescription, brandName, metaContent } = this.state;
     if (!q) {
       return;
     }
-
     const pagePathName = new URL(window.location.href).pathname;
     const checkBrandPage = pagePathName.includes(".html")
       ? pagePathName.split(".html").join("").split("/")
@@ -879,14 +901,34 @@ export class PLPContainer extends PureComponent {
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
-    const breadcrumbs = location.pathname
-      .split(".html")[0]
-      .substring(1)
-      .split("/");
+    const breadcrumbs = location.pathname.split(".html")[0].substring(1).split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
-
+    const getCategoryLevel = pagePathName.includes(".html")
+      ? pagePathName.split(".html")[0].substring(1).split("/")
+      : null;
+    const locale = getLocaleFromUrl();
+    const staticMetaData =
+      getCategoryLevel.length == 5 && metaContent
+        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+          ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
+        : getCategoryLevel.length == 4 && metaContent
+        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+          ]?.[getCategoryLevel[3]]
+        : getCategoryLevel.length == 3 && metaContent
+        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+          ]
+        : getCategoryLevel.length == 2 && metaContent
+        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
+        : getCategoryLevel.length == 1 && metaContent
+        ? metaContent?.[locale]?.[getCategoryLevel[0]]
+        : null;
     const PLPMetaTitle =
-      brandName && checkBrandPage.length < 3
+      staticMetaData && staticMetaData?.title
+        ? staticMetaData.title
+        : brandName && checkBrandPage.length < 3
         ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
@@ -895,7 +937,9 @@ export class PLPContainer extends PureComponent {
         : __("%s | 6thStreet.com %s", categoryName, countryName);
 
     const PLPMetaDesc =
-      brandName && checkBrandPage.length < 3
+      staticMetaData && staticMetaData?.desc
+        ? staticMetaData.desc
+        : brandName && checkBrandPage.length < 3
         ? __(
             "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             brandName,
