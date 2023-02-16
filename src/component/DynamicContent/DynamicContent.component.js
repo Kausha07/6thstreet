@@ -2,9 +2,9 @@
 import { PureComponent, lazy, Suspense } from 'react';
 
 import { PRODUCT_SLIDER_TYPE } from "Component/DynamicContent/DynamicContent.config";
-const DynamicContentBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentBanner' */ "Component/DynamicContentBanner"));
-const DynamicContentCircleItemSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentCircleItemSlider' */ "Component/DynamicContentCircleItemSlider"));
-const DynamicContentFullWidthBannerSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentFullWidthBannerSlider' */ "Component/DynamicContentFullWidthBannerSlider"));
+// const DynamicContentBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentBanner' */ "Component/DynamicContentBanner"));
+// const DynamicContentCircleItemSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentCircleItemSlider' */ "Component/DynamicContentCircleItemSlider"));
+// const DynamicContentFullWidthBannerSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentFullWidthBannerSlider' */ "Component/DynamicContentFullWidthBannerSlider"));
 const DynamicContentGrid = lazy(() => import(/* webpackChunkName: 'DynamicContentGrid' */ "Component/DynamicContentGrid"));
 const DynamicContentMainBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentMainBanner' */ "Component/DynamicContentMainBanner"));
 const DynamicContentProductSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentProductSlider' */ "Component/DynamicContentProductSlider"));
@@ -13,9 +13,9 @@ const DynamicContentSliderWithLabel = lazy(() => import(/* webpackChunkName: 'Dy
 const DynamicContentTwiceBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentTwiceBanner' */ "Component/DynamicContentTwiceBanner"));
 const DynamicContentVueSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentVueSlider' */ "Component/DynamicContentVueSlider"));
 
-// import DynamicContentBanner from "Component/DynamicContentBanner";
-// import DynamicContentCircleItemSlider from "Component/DynamicContentCircleItemSlider";
-// import DynamicContentFullWidthBannerSlider from "Component/DynamicContentFullWidthBannerSlider";
+import DynamicContentBanner from "Component/DynamicContentBanner";
+import DynamicContentCircleItemSlider from "Component/DynamicContentCircleItemSlider";
+import DynamicContentFullWidthBannerSlider from "Component/DynamicContentFullWidthBannerSlider";
 // import DynamicContentGrid from "Component/DynamicContentGrid";
 // import DynamicContentMainBanner from "Component/DynamicContentMainBanner";
 // import DynamicContentProductSlider from "Component/DynamicContentProductSlider";
@@ -46,6 +46,7 @@ class DynamicContent extends PureComponent {
     impressions: [],
     sliderImpressionCount: 0,
     shouldLoad: window.__isBot__ || false ,
+    isPreLoad: false,
   };
 
   componentDidMount() {
@@ -74,6 +75,10 @@ class DynamicContent extends PureComponent {
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
   };
+
+  setPreload = (flag) => {
+    this.setState({ isPreLoad : flag })
+  }
   isCheckTwiceBanner = (block) => {
     let isValid = false;
     if (block.header) {
@@ -86,9 +91,10 @@ class DynamicContent extends PureComponent {
   renderBlock = (block, i) => {
     console.log("i====>",i,this.state.shouldLoad , (i > 5 && !!this.state.shouldLoad === false));
     if(i > 5 && !!this.state.shouldLoad === false ) return null;
-    console.log("render=======>",i);
+   
     const { type, ...restProps } = block;
     const { promotion_name, tag, items } = block;
+    console.log("render=======>",i, block);
     let vueSliderType = [
       "vue_browsing_history_slider",
       "vue_trending_slider",
@@ -120,9 +126,11 @@ class DynamicContent extends PureComponent {
           tag={tag}
           type={type}
           widgetID={type}
-          key={i}
+          key={`${type} - ${i}`}
           isHomePage={true}
           index={i}
+          setPreload={this.setPreload}
+          isPreLoad={this.state.isPreLoad}
         />
       );
     } else {
@@ -146,7 +154,7 @@ class DynamicContent extends PureComponent {
       };
     }
     return (
-      // <Suspense  fallback={<div>Loading…</div>}>
+      // <Suspense  fallback={""}>
       <Component
         ref={this.comprefs[i]}
         {...restProps}
@@ -159,6 +167,8 @@ class DynamicContent extends PureComponent {
         isHomePage={true}
         index={i}
         widgetID={type}
+        setPreload={this.setPreload}
+        isPreLoad={this.state.isPreLoad}
       />
       // </Suspense>
     );
@@ -185,9 +195,9 @@ class DynamicContent extends PureComponent {
   render() {
     return (
       <div block="DynamicContent">
-        <Suspense  fallback={<div>Loading…</div>}>
+        {/* <Suspense  fallback={<div>Loading…</div>}> */}
         {this.renderBlocks()}
-        </Suspense>
+        {/* </Suspense> */}
         {/* {this.sendImpressions()} */}
       </div>
     );

@@ -4,6 +4,7 @@ import TinySlider from "tiny-slider-react";
 import Link from "Component/Link";
 // import { getUUID } from "Util/Auth";
 import { formatCDNLink } from "Util/Url";
+import { preloadImg } from "Util/DOM";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -55,6 +56,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   componentDidMount() {
     this.registerViewPortEvent();
+    this.preloadImage();
   }
 
   registerViewPortEvent() {
@@ -139,7 +141,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   renderSlider() {
     const { items = [] } = this.props;
     const { activeSlide } = this.state;
-    // const items = [];
+    // const items = []; 
 
     return (
       <>
@@ -149,6 +151,16 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         </TinySlider>
       </>
     );
+  }
+
+  preloadImage() {
+    const { items, isPreload, setPreload } = this.props;
+    if(!isPreload &&  items && items.length ) {
+      console.log("preloadImgUrl ====> ",items[0]?.url, items);
+      // set ispreload = true
+      preloadImg(items[0]?.url);
+      setPreload && setPreload(true);
+    }
   }
 
   render() {
