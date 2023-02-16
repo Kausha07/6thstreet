@@ -8,6 +8,7 @@ import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
   setEddResponse,
+  setEddResponseForPDP,
   setIntlEddResponse,
   setDefaultEddAddress,
   setCitiesData,
@@ -548,6 +549,26 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
   setGuestUserEmail(dispatch, email) {
     dispatch(updateGuestUserEmail(email));
+  }
+  estimateEddResponseForPDP(dispatch, request){
+    try {
+      MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+        if (response.success) {
+          dispatch(setEddResponseForPDP(response?.result, request));
+          sessionStorage.setItem(
+            "EddAddressResForPDP",
+            JSON.stringify(response?.result),
+          );
+          sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+        } else {
+          dispatch(setEddResponseForPDP({}, request));
+          sessionStorage.removeItem("EddAddressResForPDP");
+        }
+      });
+    } catch (error) {
+      dispatch(setEddResponseForPDP(null, request));
+      sessionStorage.removeItem("EddAddressResForPDP");
+    }
   }
 // type --> false for call from checkout because we don't need to save this data for other pages it should be true 
   estimateEddResponse(dispatch, request, type) {

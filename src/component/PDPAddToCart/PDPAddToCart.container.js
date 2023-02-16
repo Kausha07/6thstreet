@@ -37,6 +37,8 @@ import PDPAddToCart from "./PDPAddToCart.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { setEddResponse } from "Store/MyAccount/MyAccount.action";
+import { isObject } from "Util/API/helper/Object";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -46,6 +48,9 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
   prevPath: state.PLP.prevPath,
+  edd_info: state.AppConfig.edd_info,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -84,6 +89,7 @@ export const mapDispatchToProps = (dispatch) => ({
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+  setEddResponse: (response,request) => dispatch(setEddResponse(response,request)),
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -102,8 +108,7 @@ export class PDPAddToCartContainer extends PureComponent {
     guestUserEmail: PropTypes.string,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
-    setSize: PropTypes.func.isRequired,
-    callEstimateEddAPI: PropTypes.func.isRequired
+    setSize: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -125,8 +130,7 @@ export class PDPAddToCartContainer extends PureComponent {
     togglePDPClickAndCollectPopup:
       this.togglePDPClickAndCollectPopup.bind(this),
     selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this),
-    confirmClickAndCollect: this.confirmClickAndCollect.bind(this),
-    callEstimateEddAPI: this.props.callEstimateEddAPI
+    confirmClickAndCollect: this.confirmClickAndCollect.bind(this)
   };
 
   constructor(props) {
@@ -469,6 +473,39 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
+  addOrUpdateEddResponse() {
+    let {eddResponse, eddResponseForPDP } = this.props;
+    let sku = this.state.selectedSizeCode;
+    let new_item = true;
+    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
+      eddResponse["pdp"].map(eddVal => {
+        if(eddVal.sku == sku) {
+          new_item = false;
+        }
+      })
+    }
+    if(new_item && eddResponseForPDP && isObject(eddResponseForPDP) && Object.keys(eddResponseForPDP).length) {
+      let obj = eddResponse && isObject(eddResponse) ? JSON.parse(JSON.stringify(eddResponse)) : {};
+      Object.keys(eddResponseForPDP).map(page => {
+        eddResponseForPDP[page].map(eddVal => {
+          if(eddVal.sku == sku) {
+            if(obj[page]!=undefined) {
+              obj[page].push(eddVal);
+            }else {
+              obj[page] = [eddVal];
+            }
+          }
+        })
+      })
+      sessionStorage.setItem(
+        "EddAddressRes",
+        JSON.stringify(obj),
+      );
+      this.props.setEddResponse(obj, eddRequest);
+    }
+  }
+
   addToCart(isClickAndCollect = false) {
     const {
       product: {
@@ -490,6 +527,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
       prevPath = null,
+      edd_info
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
     if (!price[0]) {
@@ -555,6 +593,9 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.addOrUpdateEddResponse()
+          }
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
         }
       });
@@ -621,6 +662,9 @@ export class PDPAddToCartContainer extends PureComponent {
             isClickAndCollect: !!isClickAndCollect,
           });
         } else {
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.addOrUpdateEddResponse()
+          }
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,

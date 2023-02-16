@@ -375,6 +375,33 @@ export class CartItemContainer extends PureComponent {
     });
   }
 
+  removeEddData(sku) {
+    const { edd_info, eddResponse } = this.props;
+    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    if(edd_info && edd_info.is_enable && edd_info.has_item_level && eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length) {
+      let obj = {};
+      Object.keys(eddResponse).map(page => {
+        if(eddResponse[page] && eddResponse[page].length) {
+          obj[page] = [];
+          eddResponse[page].map((eddVal, i) => {
+            if(eddVal.sku != sku) {
+              obj[page].push(eddVal);
+            }
+          })
+          if(obj[page].length==0){
+            delete obj[page];
+          }
+        }
+      })
+      if(obj && Object.keys(obj).length==0){
+        this.props.setEddResponse(null, eddRequest);
+      } else {
+        sessionStorage.setItem("EddAddressRes", obj);
+        this.props.setEddResponse(obj, JSON.parse(eddRequest));
+      }
+    }
+  }
+
   /**
    * @return {void}
    */
@@ -405,6 +432,7 @@ export class CartItemContainer extends PureComponent {
         .then((data) => {
           this.setStateNotLoading();
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+          this.removeEddData(sku);
         })
         .catch(() => {
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);

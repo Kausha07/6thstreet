@@ -42,8 +42,7 @@ class PDPAddToCart extends PureComponent {
     setStockAvailability: PropTypes.func.isRequired,
     stores: PropTypes.object.isRequired,
     togglePDPClickAndCollectPopup: PropTypes.func.isRequired,
-    customer: customerType,
-    callEstimateEddAPI: PropTypes.func.isRequired
+    customer: customerType
   };
 
   state = {
@@ -214,21 +213,6 @@ class PDPAddToCart extends PureComponent {
         onClick={() => {
           if (!notifyMeLoading && !notifyMeSuccess) {
             onSizeSelect({ target: { value: code } });
-            if(edd_info && edd_info?.is_enable && edd_info?.has_pdp && edd_info?.has_item_level) {
-              let new_item = true;
-              
-              if(sessionStorage.getItem("EddAddressReq")) {
-                const sessionData = JSON.parse(sessionStorage.getItem("EddAddressReq"));
-                sessionData?.items?.map((obj)=> {
-                  if(obj.sku==code) {
-                    new_item= false;
-                  }
-                })
-              }
-              if(new_item) {
-                this.props.callEstimateEddAPI(null, code);
-              }
-            }
           }
         }}
       >

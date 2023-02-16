@@ -43,6 +43,7 @@ import "./CartItem.extended.style";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
+  eddResponse: state.MyAccountReducer.eddResponse,
 });
 
 export class CartItem extends PureComponent {
@@ -435,7 +436,6 @@ export class CartItem extends PureComponent {
         ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
         : itemEddMessage;
     if(edd_info.has_item_level) {
-      const isIntlBrand = crossBorder &&  edd_info &&  edd_info.has_cross_border_enabled;
 
       if (eddResponse && isObject(eddResponse) && eddResponse["cart"]) {
         eddResponse["cart"].filter((data) => {

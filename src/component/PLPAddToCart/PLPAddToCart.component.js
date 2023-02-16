@@ -25,6 +25,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { isObject } from "Util/API/helper/Object";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -33,6 +34,7 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   edd_info: state.AppConfig.edd_info,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  eddResponse: state.MyAccountReducer.eddResponse
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -583,9 +585,9 @@ class PLPAddToCart extends PureComponent {
   };
 
   callEstimateEddAPI = (sku, international_vendor, cross_border) => {
-    const { estimateEddResponse, edd_info } = this.props;
+    const { estimateEddResponse, edd_info, eddResponse } = this.props;
     const {city, area, countryCode} = this.getSelectedCityAreaCountry();
-    let apiCallRequired = false;
+    let new_item = true;
     if(city && area && countryCode) {
       let request = {
         country: countryCode,
@@ -594,18 +596,19 @@ class PLPAddToCart extends PureComponent {
         courier: null,
         source: null,
       };
-      if(edd_info?.has_item_level) {
+      if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
+        eddResponse["pdp"].map(eddVal => {
+          if(eddVal.sku == sku) {
+            new_item = false;
+          }
+        })
+      }
+      if(edd_info?.has_item_level && new_item) {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
         let items = [];
         items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}))
-        if(items.indexOf(sku)<0) {
-          apiCallRequired = true;
-          items.push({ sku : sku, intl_vendor: cross_border ? international_vendor : null});
-        }
         request.items = items;
-      }
-      if(apiCallRequired) {
         estimateEddResponse(request, true);
       }
     }

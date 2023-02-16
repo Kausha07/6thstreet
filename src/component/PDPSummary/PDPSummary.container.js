@@ -17,6 +17,7 @@ export const mapStateToProps = (state) => ({
   brand_url: state.PLP.brand_url,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   eddResponse: state.MyAccountReducer.eddResponse,
+  eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
   intlEddResponse:state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
@@ -25,6 +26,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
+  estimateEddResponseForPDP: (request) =>
+    MyAccountDispatcher.estimateEddResponseForPDP(_dispatch, request),
   setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
 });
 export class PDPSummaryContainer extends PureComponent {
@@ -43,11 +46,14 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      eddResponseForPDP,
       intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,
+      estimateEddResponseForPDP,
       setEddResponse,
+      setEddResponseForPDP,
       TabbyInstallment
     } = this.props;
     return {
@@ -57,11 +63,14 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      eddResponseForPDP,
       intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,
+      estimateEddResponseForPDP,
       setEddResponse,
+      setEddResponseForPDP,
       TabbyInstallment
     };
   };
