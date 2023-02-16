@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createRef } from "react";
 import { connect, useDispatch } from "react-redux";
 
 import { getEnvIDForInfluencer } from "Util/Common/index";
@@ -16,7 +16,8 @@ import {
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 
-import ShareButton from "Component/ShareButton";
+import share from "Component/Icons/Share/icon.svg";
+import SocialMediaOverlay from "Component/SocialMediaOverlay/index";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import PLP from "Route/PLP";
 import ContentWrapper from "Component/ContentWrapper";
@@ -45,6 +46,8 @@ const InfluencerStore = (props) => {
   const [tempInfluencerID, setTempInfluencerID] = useState(null);
   const [payload, setPayload] = useState({});
   const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
+  const [shareButtonClicked, setShareButtonClicked] = useState(false);
+  const shareMediaRef = createRef();
 
   const dispatch = useDispatch();
 
@@ -60,6 +63,13 @@ const InfluencerStore = (props) => {
   useEffect(() => {
     updateBreadcrumbs();
   }, [influencerName]);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", closePopupOnOutsideClick);
+    return () => {
+      window.removeEventListener("mousedown", closePopupOnOutsideClick);
+    };
+  }, [shareMediaRef]);
 
   useEffect(() => {
     if (props.isSignedIn) {
@@ -257,6 +267,20 @@ const InfluencerStore = (props) => {
     }
   };
 
+  const handleShareStore = () => {
+    setShareButtonClicked(!shareButtonClicked);
+  };
+
+  const closePopupOnOutsideClick = (e) => {
+    if (
+      shareButtonClicked &&
+      shareMediaRef.current &&
+      !shareMediaRef.current.contains(e.target)
+    ) {
+      setShareButtonClicked(false);
+    }
+  };
+
   const renderMainSection = (storeInfoItem) => {
     const { image_url, influencer_name, store_link, collections, id } =
       storeInfoItem;
@@ -282,18 +306,28 @@ const InfluencerStore = (props) => {
           <h1>{influencer_name}</h1>
           {collectionCount !== 0 && <p>{collectionCount} Looks</p>}
 
-          <div block="shareandfollowButton">
-            {!isMobile.any() && (
-              <div block=" ShareAndWishlistButtonContainer divDesign">
-                <ShareButton
-                  product={product}
-                  title={document.title}
-                  text={__("Hey check this out: %s", document.title)}
-                  url={url.href}
-                  image={image_url}
-                />
-              </div>
-            )}
+          <div block="shareandfollowButton" ref={shareMediaRef}>
+            <button
+              block="shareButton"
+              onClick={handleShareStore}
+              mods={{ isArabic: isArabic() }}
+            >
+              <img
+                block="shareIcon"
+                mods={{ isArabic: isArabic() }}
+                src={share}
+              />
+              {__("Share Store")}
+            </button>
+            {shareButtonClicked ? (
+              <SocialMediaOverlay
+                title={document.title}
+                text={__("Hey check this out: %s", document.title)}
+                url={url.href}
+                image={image_url}
+                product={product}
+              />
+            ) : null}
 
             {isFollowed ? (
               <button

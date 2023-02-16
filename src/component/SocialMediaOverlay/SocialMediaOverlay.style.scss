@@ -1,0 +1,54 @@
+.storeBlock {
+  left: -227px;
+  top: 27px;
+}
+
+.collectionBlock {
+  left: -476px;
+  top: 33px;
+
+  &_isArabic {
+    left: initial;
+    right: -480px;
+    text-align: right;
+  }
+}
+
+.shareBlock {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 427px;
+  background-color: #ffffff;
+  text-align: left;
+  padding: 33px 21px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  z-index: 9;
+
+  .h3 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 25px;
+    margin-top: 0;
+    margin-bottom: 36px;
+    &_isArabic {
+      text-align: right;
+    }
+  }
+
+  .Overlay {
+    &-ButtonsContainer {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      button {
+        background-color: #f6f6f6;
+        height: 60px;
+        width: 60px;
+        border-radius: 100%;
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createRef } from "react";
 import { useDispatch, connect } from "react-redux";
 import { v4 } from "uuid";
 
@@ -8,15 +8,17 @@ import { getQueryParam } from "Util/Url";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
+import { isArabic } from "Util/App";
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 
 import ContentWrapper from "Component/ContentWrapper";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import ProductItem from "Component/ProductItem";
-import ShareButton from "Component/ShareButton";
 import ProductLoad from "Component/PLPLoadMore";
 import PLPPagePlaceholder from "Component/PLPPagePlaceholder";
+import SocialMediaOverlay from "Component/SocialMediaOverlay/SocialMediaOverlay.component";
+import share from "Component/Icons/Share/icon.svg";
 
 import "./InfluencerCollection.style";
 import soundOn from "./icons/sound_on.png";
@@ -53,6 +55,7 @@ const InfluencerCollection = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shareButtonClicked, setShareButtonClicked] = useState(false);
   const [pageKeyFromState, setPageKeyFromState] = useState(0);
+  const shareMediaRef = createRef();
 
   const updateBreadcrumbs = () => {
     const breadcrumbs = [
@@ -106,6 +109,13 @@ const InfluencerCollection = (props) => {
       props.resetPLPData();
     };
   }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", closePopupOnOutsideClick);
+    return () => {
+      window.removeEventListener("mousedown", closePopupOnOutsideClick);
+    };
+  }, [shareMediaRef]);
 
   useEffect(() => {
     getInfluencerData();
@@ -168,6 +178,20 @@ const InfluencerCollection = (props) => {
   const check = (item) => {
     if (item.id === `${collectionId}`) {
       return item;
+    }
+  };
+
+  const handleShareStore = () => {
+    setShareButtonClicked(!shareButtonClicked);
+  };
+
+  const closePopupOnOutsideClick = (e) => {
+    if (
+      shareButtonClicked &&
+      shareMediaRef.current &&
+      !shareMediaRef.current.contains(e.target)
+    ) {
+      setShareButtonClicked(false);
     }
   };
 
@@ -319,18 +343,25 @@ const InfluencerCollection = (props) => {
             )}
 
           <p>{description}</p>
-          <div block="shareButtonDesign">
-            {!isMobile.any() && (
-              <div block=" ShareAndWishlistButtonContainer divDesign">
-                <ShareButton
-                  product={product}
-                  title={document.title}
-                  text={__("Hey check this out: %s", document.title)}
-                  url={pageURL.href}
-                  image={image_url}
-                />
-              </div>
-            )}
+          <div block="shareButtonDesign" ref={shareMediaRef}>
+            <button
+              block="shareButton"
+              onClick={handleShareStore}
+              mods={{ isArabic: isArabic() }}
+            >
+              {" "}
+              <img src={share} />
+              {__("Share Collection")}{" "}
+            </button>
+            {shareButtonClicked ? (
+              <SocialMediaOverlay
+                title={document.title}
+                text={`Hey check this out: ${document.title}`}
+                url={pageURL.href}
+                image={image_url}
+                product={product}
+              />
+            ) : null}
           </div>
         </div>
       </div>
