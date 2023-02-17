@@ -62,6 +62,7 @@ import {
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
 import Loader from "Component/Loader";
+import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 
@@ -139,6 +140,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   addressLoader: state.MyAccountReducer.addressLoader,
+  eddResponse: state.MyAccountReducer.eddResponse
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -791,6 +793,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      eddResponse
     } = this.props;
     const {
       shippingAddress: { email },
@@ -898,13 +901,28 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         let customDefaultMess = isArabic()
           ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
           : itemEddMessage;
-        const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        let actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        let finalEddForLineItem = null;
+        if (eddResponse && isObject(eddResponse) && eddResponse["thankyou"]) {
+          eddResponse["thankyou"].filter((data) => {
+            if (data.sku == sku && data.feature_flag_status === 1) {
+              if (extension_attributes?.click_to_collect_store) {
+                actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+              } else {
+                finalEddForLineItem = data.edd_date;
+                actualEddMess = isArabic()
+                  ? data.edd_message_ar
+                  : data.edd_message_en;
+              }
+            }
+          });
+        }
         eddItems.push({
           sku: sku,
           edd_date:
             edd_info && extension_attributes?.click_to_collect_store
               ? defaultEddDateString
-              : finalEdd,
+              : finalEddForLineItem,
           cross_border: cross_border,
           edd_message_en: actualEddMess,
           edd_message_ar: actualEddMess,
