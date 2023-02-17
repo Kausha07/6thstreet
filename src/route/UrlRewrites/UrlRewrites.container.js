@@ -290,7 +290,6 @@ export class UrlRewritesContainer extends PureComponent {
   };
 
   render() {
-    console.log("inside urlRewrites==========>")
     return (
       <UrlRewrites {...this.containerFunctions} {...this.containerProps()} />
     );

@@ -141,7 +141,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   renderSlider() {
     const { items = [] } = this.props;
     const { activeSlide } = this.state;
-    // const items = []; 
+    // const items = [];
 
     return (
       <>
