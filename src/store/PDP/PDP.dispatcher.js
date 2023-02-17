@@ -58,7 +58,12 @@ export class PDPDispatcher {
     getProductDetailsById(locale, options.id).then((data) => {
       const tempResponse = {}
       tempResponse['data'] = this.formatData(data)
-      tempResponse['nbHits'] = 1;
+      if(typeof data === 'object' ){
+        tempResponse['nbHits'] = 1;
+      }else if(typeof data === 'string') {
+        tempResponse['nbHits'] = 0;
+        tempResponse['data'] = {};
+      }
       dispatch(setPDPData(tempResponse, options));
       dispatch(setPDPLoading(false));
       return tempResponse
