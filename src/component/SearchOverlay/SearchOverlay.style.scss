@@ -235,9 +235,6 @@
 }
 
 .Overlay {
-    &_isVisible {
-        overflow: auto;
-    }
 
     &_isInstant {
         pointer-events: all;
