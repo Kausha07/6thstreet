@@ -565,7 +565,6 @@ export class CartPage extends PureComponent {
       this.setState({ isOOSProducts: true })
     }
     
-    onCheckoutButtonClick();
   }
 
   renderButtons() {
@@ -580,7 +579,7 @@ export class CartPage extends PureComponent {
           elem="CheckoutButton"
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
-          onClick={()=>{this.handleProceedTockButton()}}
+          onClick={(e)=>{onCheckoutButtonClick(e); this.handleProceedTockButton()}}
           id="ProceedToCheckoutButton"
         >
           <span />
