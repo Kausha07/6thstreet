@@ -6,8 +6,7 @@ import { subscribeToNewsletter } from "./../../../src/util/API/endpoint/MyAccoun
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { EVENT_EMAIL_FOOTER_SUCCESS_CLICK, MOE_trackEvent } from "Util/Event";
 import InfoIcon from "./ImagesAndIcons/info.svg";
-import SendAnimation from "./ImagesAndIcons/SendAnimation.json";
-import lottie from "lottie-web";
+import SendSuccessfully from "./ImagesAndIcons/SendSuccessfully.gif";
 
 import "./Subscription.style.scss";
 
@@ -32,15 +31,6 @@ export default function Subscription() {
 
   const dispatch = useDispatch();
 
-  function showSubmitAnimation() {
-    setShowSubmitText(false);
-    lottie.loadAnimation({
-      container: document.querySelector("#submit-subscription"),
-      animationData: SendAnimation,
-      loop: false,
-    });
-  }
-
   const HandleSubscription = async (dispatch) => {
     try {
       setIsSubmitDisabled(true);
@@ -61,7 +51,10 @@ export default function Subscription() {
             app6thstreet_platform: "Web",
             email: email || "",
           });
-          showSubmitAnimation();
+          setShowSubmitText(false);
+          setTimeout(() => {
+            setShowSubmitText(true);
+          }, 2000);
         }
       } else if (response && !response.success && response.data) {
         if (typeof response.data === "string") {
@@ -101,7 +94,6 @@ export default function Subscription() {
               placeholder={__("ENTER YOUR EMAIL")}
               type="email"
               onChange={(e) => {
-                lottie.destroy();
                 setShowSubmitText(true);
                 emailInputChange(e.target.value);
               }}
@@ -114,14 +106,22 @@ export default function Subscription() {
             ) : null}
           </div>
           <button
-            className={isSubmitDisabled? "submitBtn disabledBtn" : "submitBtn"}
+            className={isSubmitDisabled ? "submitBtn disabledBtn" : "submitBtn"}
             onClick={() => {
               HandleSubscription(dispatch);
             }}
             disabled={isSubmitDisabled}
             id="submit-subscription"
           >
-            {showSubmitText && __("Submit")}
+            {showSubmitText ? (
+              __("Submit")
+            ) : (
+              <img
+                className="submit-animation"
+                src={SendSuccessfully}
+                alt="submit"
+              />
+            )}
           </button>
         </div>
       </div>

@@ -23,7 +23,7 @@
         border-radius: 6px;
         text-transform: none;
 
-        &:focus{
+        &:focus {
           border: 1px solid black;
         }
       }
@@ -52,7 +52,11 @@
       font-size: 12px;
       width: 104px;
       border-radius: 6px;
-      padding: 10px;
+      .submit-animation {
+        width: 65px;
+        height: 34px;
+        margin: auto;
+      }
     }
     .disabledBtn {
       background-color: gray;
