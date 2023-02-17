@@ -126,6 +126,7 @@ export class PDPDispatcher {
       tempResponse['data'] = this.formatData(data)
       tempResponse['nbHits'] = 1;
       dispatch(setPDPData(tempResponse, options));
+      return tempResponse
     }).catch((error) => {
       Logger.log(error);
       // Needed, so PDP container sets "isLoading" to false
