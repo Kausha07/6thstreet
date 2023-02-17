@@ -3,14 +3,18 @@ import { store } from "../../../store/index";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher"
 
 // eslint-disable-next-line
-export const doFetch = async (url, options,  checkUser=false) => {
+export const doFetch = async (url, options,  checkUser=false, isCareemPay=false) => {
     try {
         const response = await fetch(url, options);
         const { ok, status } = response;
         const regExpUrl = /verify|send/;
 
         if (!ok && !url.match(regExpUrl)) {
-            const error = getErrorMsg(response);
+            const error = getErrorMsg(response, isCareemPay);
+
+            if(isCareemPay) {
+                return error;
+            }
 
             if(status === 412 && checkUser) {
                 MyAccountDispatcher.logout(null, store.dispatch)

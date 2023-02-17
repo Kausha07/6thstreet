@@ -671,7 +671,7 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
-            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          {(incrementID || incrementID != undefined) ? `${__("Order")} #${incrementID} ${__("Details")}` : "Order Details"}
           </div>
           <ul block="TotalItems" elem="Items">
             {items.map((item) => (
@@ -884,6 +884,10 @@ export class CheckoutSuccess extends PureComponent {
         country_id,
       },
     } = this.props;
+
+    if(!firstname || !lastname || !postcode || !country_id || !city) {
+      return null;
+    }
     return (
       <div block="Address">
         <div block="Address" elem="Title">

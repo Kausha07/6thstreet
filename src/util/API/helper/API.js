@@ -16,9 +16,13 @@ export const getErrSource = (json) => {
     return data;
 };
 
-export const getErrorMsg = async (res) => {
+export const getErrorMsg = async (res, isCareemPay=false) => {
     try {
         const json = await res.json();
+        
+        if(isCareemPay) {
+            return json;
+        }
         const data = getErrSource(json);
 
         if (typeof data === 'string') {

@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
+import { getStore } from "Store";
 import "./CareemPay.style";
 import { careemPayCreateInvoice } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
+import { createOrderCareemPay } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   SUCCESS,
   FAILURE,
@@ -14,7 +16,6 @@ import {
 function CareemPay({
   continueAsGuest,
   isSignedIn,
-  createOrder,
   setDetailsStep,
   orderID,
   setLoading,
@@ -24,6 +25,8 @@ function CareemPay({
   setProcessingLoader,
   setPaymentinfoCareemPay,
   showErrorNotification,
+  setCareemPayInfo,
+  setCareemPayStatus,
 }) {
 
   const [isCareemCreateOrder, setIsCaremCreateOrder] = useState(false);
@@ -54,13 +57,24 @@ function CareemPay({
   async function createCareemPayOrder() {
     try {
       const code = CAREEM_PAY;
-      const response = await createOrder(code);
-      if(response) {        
+      const {
+        Cart: { cartId },
+      } = getStore().getState();
+      const data = {
+        cart_id: cartId,
+        edd_items: [],
+        payment: {
+          method: code,
+          data: {},
+        },
+      }
+      const response = await createOrderCareemPay({ data });
+      if(response) {
         const orderidd = response?.data?.order_id;
         const increment_id = response?.data?.increment_id;
         const orderStatus = response?.data?.success;
 
-        
+
         if(orderStatus) {     
           setDetailsStep(orderidd, increment_id);
           const resp = await getOrderData(orderidd);    
@@ -78,8 +92,12 @@ function CareemPay({
           // if Payment is successful on careem pay modal but 
           // Create-order2 API fails or not able to place order in Magento.
           // currently in this case backend sending us "qty not available" message in response.
-          showErrorNotification(response);
-          setShippingAddressCareem(guestUserAddress);
+
+          setIsFailed(true);
+          const careemPayInfo = { isCreateOrderFail: true, messageTitle:response?.data, messageDetails:response?.message }
+          setCareemPayInfo(careemPayInfo);
+
+          showErrorNotification(response?.data);
           setDetailsStep(orderidd, increment_id);
         }
       }
@@ -112,9 +130,11 @@ function CareemPay({
           setPaymentinfoCareemPay(CAREEM_PAY);
           if (status === SUCCESS) {
             setIsCaremCreateOrder(true);
+            setCareemPayStatus(SUCCESS);
           }else if(status === FAILURE){
             setIsFailed(true)
             setIsCaremCreateOrder(true);
+            setCareemPayStatus(FAILURE);
           }
           goToResult();  //navigate to the result page
           

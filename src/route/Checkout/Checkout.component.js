@@ -93,6 +93,8 @@ export class Checkout extends SourceCheckout {
     binInfo: {},
     isCareemPayEnabled: true,
     processingLoader: false,
+    careemPayInfo:{},
+    careemPayStatus: "",
   };
   getArabicCityArea = (city, area) => {
     const { addressCityData } = this.props;
@@ -314,6 +316,14 @@ export class Checkout extends SourceCheckout {
       const newPaymentInformation = {...paymentInformation, paymentMethod: {code: payMethod}}
       this.setState({ paymentInformation: newPaymentInformation });
     }
+  }
+
+  setCareemPayInfo = (careemPayInfo) => {
+    this.setState({ careemPayInfo: careemPayInfo });
+  }
+
+  setCareemPayStatus = (careemPayStatus) => {
+    this.setState({ careemPayStatus: careemPayStatus });
   }
 
   renderLoader() {
@@ -599,6 +609,8 @@ export class Checkout extends SourceCheckout {
     const {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
+      careemPayInfo,
+      careemPayStatus,
     } = this.state;
     this.setState({ isSuccess: true });
 
@@ -640,6 +652,8 @@ export class Checkout extends SourceCheckout {
         order={QPayOrderDetails ? QPayOrderDetails : KNETOrderDetails}
         KnetDetails={KnetDetails}
         KNETOrderDetails={KNETOrderDetails}
+        careemPayInfo={careemPayInfo}
+        careemPayStatus={careemPayStatus}
       />
     );
   }
@@ -737,6 +751,8 @@ export class Checkout extends SourceCheckout {
               setProcessingLoader={this.setProcessingLoader}
               setPaymentinfoCareemPay={this.setPaymentinfoCareemPay}
               showErrorNotification={showErrorNotification}
+              setCareemPayInfo={this.setCareemPayInfo}
+              setCareemPayStatus={this.setCareemPayStatus}
             />
           ) : null}
         {isSignedIn ? renderCheckoutShipping : null}
