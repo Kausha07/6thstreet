@@ -9,6 +9,8 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import { getEnvIDForInfluencer } from "../../util/Common/index";
 
 import Link from "Component/Link";
+import Heart from "Component/Icons/EmptyInfluencer/Group.svg";
+
 import "./InfluencerFollowing.style";
 
 const InfluencerFollowing = (props) => {
@@ -43,6 +45,44 @@ const InfluencerFollowing = (props) => {
         updateFollowingList(influencerID, follow);
       });
     }
+  };
+
+  const renderPopUp = () => {
+    const { renderMySignInPopup } = props;
+    if (!isSignedIn()) {
+      renderMySignInPopup();
+    }
+  };
+
+  const renderEmptyInfluencer = () => {
+    return (
+      <div block="center">
+        <div block="emptyInfluencer">
+          <img src={Heart} alt="heart.svg" block="heartImage"></img>
+          <h3 block="emptyInfluencerHeading">{__("Nothing here.")}</h3>
+          <p block="emptyInfluencerDescription">
+            {__("You are currently following no influencers.")}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderFollowingForGuestUser = () => {
+    return (
+      <div block="center">
+        <div block="followingForGuestUser">
+          <img src={Heart} alt="heart.svg" block="heartImage"></img>
+          <h3 block="heading">{__("Nothing here.")}</h3>
+          <p block="description">
+            {__("You have to be logged in to see your favourite influencers.")}
+          </p>
+          <button block="signInButton" onClick={renderPopUp}>
+            {__("SIGN IN OR REGISTER")}
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const renderTile = (item, i) => {
@@ -113,15 +153,27 @@ const InfluencerFollowing = (props) => {
 
     return (
       <div>
-        {followingInfluencerInfo === undefined ? (
-          renderBannerAnimation()
+        {!isSignedIn() ? (
+          renderFollowingForGuestUser()
         ) : (
-          <div block="influencer_tiles">
-            <ul block="influencer_tiles_spckItems">
-              {followingInfluencerInfo.length > 0 &&
-                followingInfluencerInfo?.map(renderTile)}
-            </ul>
-          </div>
+          <>
+            {followingInfluencerInfo === undefined ? (
+              renderBannerAnimation()
+            ) : (
+              <>
+                {followingInfluencerInfo?.length === 0 ? (
+                  renderEmptyInfluencer()
+                ) : (
+                  <div block="influencer_tiles">
+                    <ul block="influencer_tiles_spckItems">
+                      {followingInfluencerInfo.length > 0 &&
+                        followingInfluencerInfo?.map(renderTile)}
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     );

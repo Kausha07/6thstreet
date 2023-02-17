@@ -253,7 +253,7 @@ const Influencer = (props) => {
 
         {!isMobile.any() && isRefineButtonClicked ? (
           <div block="refineFilter">
-            <ul  onClick={handleRefineButtonClick}>
+            <ul onClick={handleRefineButtonClick}>
               <li>
                 <div>
                   <input
@@ -361,9 +361,6 @@ const Influencer = (props) => {
             onClick={() => {
               setShowFollowing(true);
               setShowTrending(false);
-              if (!props.isSignedIn) {
-                showMyAccountPopup();
-              }
             }}
           >
             {__("Following")}
