@@ -31,7 +31,6 @@ import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
 
-console.log("Inside Router ========>")
 const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
 const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
 const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Route/UrlRewrites"));

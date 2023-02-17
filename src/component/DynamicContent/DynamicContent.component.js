@@ -51,9 +51,7 @@ class DynamicContent extends PureComponent {
 
   componentDidMount() {
     window.addEventListener("scroll", () => { 
-      console.log("scroll is triggered....========>");
       if(!this.state.shouldLoad) {
-        console.log("scroll is triggered....========>", true);
         this.setState({ shouldLoad: true })
       }
     }, {
@@ -89,12 +87,11 @@ class DynamicContent extends PureComponent {
     return isValid;
   };
   renderBlock = (block, i) => {
-    console.log("i====>",i,this.state.shouldLoad , (i > 5 && !!this.state.shouldLoad === false));
     if(i > 5 && !!this.state.shouldLoad === false ) return null;
    
     const { type, ...restProps } = block;
     const { promotion_name, tag, items } = block;
-    console.log("render=======>",i, block);
+
     let vueSliderType = [
       "vue_browsing_history_slider",
       "vue_trending_slider",
@@ -154,7 +151,6 @@ class DynamicContent extends PureComponent {
       };
     }
     return (
-      // <Suspense  fallback={""}>
       <Component
         ref={this.comprefs[i]}
         {...restProps}
@@ -170,7 +166,6 @@ class DynamicContent extends PureComponent {
         setPreload={this.setPreload}
         isPreLoad={this.state.isPreLoad}
       />
-      // </Suspense>
     );
   };
 
@@ -195,9 +190,7 @@ class DynamicContent extends PureComponent {
   render() {
     return (
       <div block="DynamicContent">
-        {/* <Suspense  fallback={<div>Loading…</div>}> */}
         {this.renderBlocks()}
-        {/* </Suspense> */}
         {/* {this.sendImpressions()} */}
       </div>
     );

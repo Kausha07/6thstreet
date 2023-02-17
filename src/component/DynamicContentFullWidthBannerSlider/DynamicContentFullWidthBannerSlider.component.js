@@ -156,8 +156,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   preloadImage() {
     const { items, isPreload, setPreload } = this.props;
     if(!isPreload &&  items && items.length ) {
-      console.log("preloadImgUrl ====> ",items[0]?.url, items);
-      // set ispreload = true
       preloadImg(items[0]?.url);
       setPreload && setPreload(true);
     }
