@@ -26,7 +26,8 @@ import Event, {
   EVENT_SORT_BY_RECOMMENDED,
   EVENT_GTM_SORT,
   MOE_trackEvent,
-  EVENT_MOE_PLP_FILTER
+  EVENT_MOE_PLP_FILTER,
+  EVENT_PLP_SORT
 } from "Util/Event";
 import Logger from "Util/Logger";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
@@ -321,6 +322,14 @@ export class PLP extends PureComponent {
     this.setState({
       isSortByOverlayOpen: true,
     });
+    
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    Event.dispatch(EVENT_GTM_SORT, EVENT_PLP_SORT);
 
     const bodyElt = document.querySelector("body");
     bodyElt.style.overflow = "hidden";
@@ -466,6 +475,15 @@ export class PLP extends PureComponent {
     }
   }
 
+  sendSortByTrackingEvent = () =>{
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+    Event.dispatch(EVENT_GTM_SORT,EVENT_PLP_SORT);
+  }
+
   renderSortByOverlay = () => {
     const {filters, handleCallback} = this.props
     const {selectedSortOption, isArabic} = this.state
@@ -473,7 +491,7 @@ export class PLP extends PureComponent {
       <div block="couponDetailPopup" mods={{isArabic}}>
         <div block="couponDetailOverlay">
           <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
-            <p block="couponItemCode">
+            <p block="couponItemCode" onClick={this.sendSortByTrackingEvent}>
               {__("SORT BY")}
             </p>
             {filters && Object.values(filters['sort'].data).map((filter,index)=>{
