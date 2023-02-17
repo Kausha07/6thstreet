@@ -250,9 +250,6 @@ const InfluencerCollection = (props) => {
 
   const renderCollectionProducts = ([key, page], i) => {
     const { products, isPlaceholder, isFirst = false } = page;
-
-    document.body.style.overflowX = "hidden";
-
     if (isMobile.any() && isPlaceholder) {
       return (
         <PLPPagePlaceholder

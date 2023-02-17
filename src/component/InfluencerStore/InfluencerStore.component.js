@@ -226,8 +226,6 @@ const InfluencerStore = (props) => {
   };
 
   const storePageProducts = () => {
-    document.body.style.overflowX = "hidden";
-
     if (algoliaQuery !== undefined) {
       return (
         <div block="storeProducts">
