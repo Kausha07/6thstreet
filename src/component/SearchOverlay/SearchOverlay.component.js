@@ -254,7 +254,7 @@ export class SearchOverlay extends PureComponent {
           {suggestionEnabled ? this.renderQuerySuggestions() : null}
           {!isEmpty && !inNothingFound && querySuggestions.length > 1 && (
             <div block="moreDataLink" onClick={this.SeeAllButtonClick}>
-              {__(`See all ${search}`)}
+              {__(`See all "${search}"`)}
             </div>
           )}
         </div>
@@ -396,14 +396,14 @@ export class SearchOverlay extends PureComponent {
     const { isArabic } = this.state;
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
-        <h2>{__("Recent searches")}</h2>
+        <h2>{__("Recent search")}</h2>
         <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
           {recentSearches.map(this.renderRecentSearch)}
         </ul>
       </div>
     ) : (
       <div>
-        <h2>{__("Recent searches")}</h2>
+        <h2>{__("Recent search")}</h2>
         <div>{__("No Recent Searches available")}</div>
       </div>
     );
@@ -479,7 +479,7 @@ export class SearchOverlay extends PureComponent {
       <div block="NothingFound">
         <div block="suggestionBlocks">
           <div block="QuerySuggestionBlock">
-            <h2>{__("SUGGETIONS")}</h2>
+            <h2>{__("SUGGESTIONS")}</h2>
             <p>{__("No Suggestions")}</p>
           </div>
           <div block="spacingBlock"></div>
