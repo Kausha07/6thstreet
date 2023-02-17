@@ -926,6 +926,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           cross_border: cross_border,
           edd_message_en: actualEddMess,
           edd_message_ar: actualEddMess,
+          intl_vendors:null
         });
       });
     }
