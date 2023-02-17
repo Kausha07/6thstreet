@@ -28,6 +28,7 @@ class MobileAPI {
             ...payload({ body: JSON.stringify(body) })
         };
 
+        // In Careem Pay order API, in error case we need both the data and message field. - API format is also changes in this case.
         if(body?.payment?.method === CAREEM_PAY ){
             const isCareemPay = true;
             return doFetch(url, options, true, isCareemPay);

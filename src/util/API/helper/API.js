@@ -20,6 +20,7 @@ export const getErrorMsg = async (res, isCareemPay=false) => {
     try {
         const json = await res.json();
         
+        // In Careem Pay order API, in error case we need both the data and message field. - API format is also changes in this case. 
         if(isCareemPay) {
             return json;
         }
