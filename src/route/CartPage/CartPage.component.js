@@ -215,6 +215,19 @@ export class CartPage extends PureComponent {
     }
   }
 
+  fitlerItemArr = ( items = [] ) => {
+    let filterArrOne =[];
+    let filterArrTwo = [];
+    items.map((item)=>{
+      if(item?.availableQty === 0 || item?.availableQty < item?.qty){
+        filterArrOne.push(item);
+      }else {
+        filterArrTwo.push(item);
+      }
+    });
+    return [ ...filterArrTwo, ...filterArrOne ];
+  }
+
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -228,9 +241,10 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
+    const cartItems = this.fitlerItemArr(items);
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
-        {items.map((item) => (
+        {cartItems.map((item) => (
           <CartPageItem
             key={item.item_id}
             item={item}
