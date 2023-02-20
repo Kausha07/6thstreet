@@ -43,6 +43,7 @@ const Influencer = (props) => {
   const [payload, setPayload] = useState({});
   const searchWrapperRef = createRef();
   const refineWrapperRef = createRef();
+  const mobileRefineWrapperRef = createRef();
 
   useEffect(() => {
     trendingInfo();
@@ -50,11 +51,10 @@ const Influencer = (props) => {
 
   useEffect(() => {
     window.addEventListener("mousedown", closePopupOnOutsideClick);
-
     return () => {
       window.removeEventListener("mousedown", closePopupOnOutsideClick);
     };
-  }, [searchWrapperRef, refineWrapperRef]);
+  }, [searchWrapperRef, refineWrapperRef, mobileRefineWrapperRef]);
 
   useEffect(() => {
     if (props.isSignedIn) {
@@ -67,6 +67,16 @@ const Influencer = (props) => {
   useEffect(() => {
     setIndex(masterTrendingInfo?.superstars?.[selectedGender]?.data.length);
   }, [selectedGender]);
+
+  useEffect(() => {
+    const html = document.getElementsByTagName("html")[0];
+    if (isRefineButtonClicked && isMobile.any()) {
+      html.style.overflow = "hidden";
+    }
+    return () => {
+      html.style.overflow = "auto";
+    };
+  }, [isRefineButtonClicked]);
 
   const buttonSignedIn = (val) => {
     setLoggedIn(val);
@@ -99,6 +109,13 @@ const Influencer = (props) => {
       isRefineButtonClicked &&
       refineWrapperRef.current &&
       !refineWrapperRef.current.contains(e.target)
+    ) {
+      setRefine(false);
+    }
+    if (
+      isRefineButtonClicked &&
+      mobileRefineWrapperRef.current &&
+      !mobileRefineWrapperRef.current.contains(e.target)
     ) {
       setRefine(false);
     }
@@ -240,9 +257,10 @@ const Influencer = (props) => {
   };
 
   const renderRefine = () => {
+    const genderArray = ["Women", "Men", "Kids"];
     return (
       <div block="refineButton-div" elem="Refine" ref={refineWrapperRef}>
-        <button block="refine-button" onClick={handleRefineButtonClick}>
+        <button block="refineButton" onClick={handleRefineButtonClick}>
           <img
             block="refineImage"
             mods={{ isArabic: isArabic() }}
@@ -253,7 +271,11 @@ const Influencer = (props) => {
 
         {!isMobile.any() && isRefineButtonClicked ? (
           <div block="refineFilter">
-            <ul block="ul" onClick={handleRefineButtonClick}  mods={{ isArabic: isArabic() }}>
+            <ul
+              block="ul"
+              onClick={handleRefineButtonClick}
+              mods={{ isArabic: isArabic() }}
+            >
               <li>
                 <div>
                   <input
@@ -298,7 +320,52 @@ const Influencer = (props) => {
               </li>
             </ul>
           </div>
-        ) : null}
+        ) : (
+          isMobile.any() &&
+          isRefineButtonClicked && (
+            <div block="refinePopupInfluencer">
+              <div block="refineOverlayInfluencer">
+                <div
+                  block="refineDetailBlockInfluencer"
+                  ref={mobileRefineWrapperRef}
+                >
+                  <p block="refineButtonHeading">{__("BROWSE BY")}</p>
+                  {genderArray.map((val, index) => {
+                    return (
+                      <div block="refineButtonForMobile" key={val + index}>
+                        <p
+                          block="refineItemNameInfluencer"
+                          mix={{
+                            block: "refineItemNameInfluencer",
+                            elem:
+                              selectedGender === val.toUpperCase()
+                                ? "refineSelected"
+                                : null,
+                          }}
+                          id={val + index}
+                          name={val}
+                          value={val}
+                          onClick={() => {
+                            setSelectedGender(val.toUpperCase());
+                            setRefine(false);
+                          }}
+                          key={index}
+                        >
+                          {val === "Women"
+                            ? __("Women")
+                            : val === "Men"
+                            ? __("Men")
+                            : val === "Kids" && __("Kids")}
+                        </p>
+                        <div block="hr"></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </div>
     );
   };
