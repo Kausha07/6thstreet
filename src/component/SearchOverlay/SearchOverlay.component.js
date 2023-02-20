@@ -254,7 +254,7 @@ export class SearchOverlay extends PureComponent {
           {suggestionEnabled ? this.renderQuerySuggestions() : null}
           {!isEmpty && !inNothingFound && querySuggestions.length > 1 && (
             <div block="moreDataLink" onClick={this.SeeAllButtonClick}>
-              {__(`See all "${search}"`)}
+              {__(`See all`) + ` "${search}"`}
             </div>
           )}
         </div>
