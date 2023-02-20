@@ -21,10 +21,10 @@ export default function CartNudge() {
         />
       )}
       <div className="cart-nudge-container">
-        <div className="gif">
-          <img src={ShoppingGif} alt="shop" />
-        </div>
-        <div>
+        <div className="content-close">
+          <div className="gif">
+            <img src={ShoppingGif} alt="shop" />
+          </div>
           <p className="content">
             {__("Login to 6thStreet app to synchronize your shopping bag.")}
             <span
