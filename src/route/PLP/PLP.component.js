@@ -27,7 +27,9 @@ import Event, {
   EVENT_GTM_SORT,
   MOE_trackEvent,
   EVENT_MOE_PLP_FILTER,
-  EVENT_PLP_SORT
+  EVENT_PLP_SORT,
+  EVENT_MOE_PLP_FILTER_CLICK,
+  EVENT_GTM_FILTER
 } from "Util/Event";
 import Logger from "Util/Logger";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
@@ -338,6 +340,16 @@ export class PLP extends PureComponent {
   handleFilterClick = () => {
     const { showOverlay } = this.props;
     showOverlay("PLPFilter");
+
+    MOE_trackEvent(EVENT_MOE_PLP_FILTER_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    const eventData = {name: EVENT_MOE_PLP_FILTER_CLICK, value: ""};
+    Event.dispatch(EVENT_GTM_FILTER, eventData);
+  
   };
 
   outsideCouponPopupClick = (e) => {
