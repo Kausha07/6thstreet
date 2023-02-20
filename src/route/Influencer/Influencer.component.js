@@ -253,7 +253,7 @@ const Influencer = (props) => {
 
         {!isMobile.any() && isRefineButtonClicked ? (
           <div block="refineFilter">
-            <ul onClick={handleRefineButtonClick}>
+            <ul block="ul" onClick={handleRefineButtonClick}  mods={{ isArabic: isArabic() }}>
               <li>
                 <div>
                   <input
@@ -303,6 +303,10 @@ const Influencer = (props) => {
     );
   };
 
+  const closeSearchMobilePopUp = () => {
+    setIsSearchButtonClicked(false);
+  };
+
   const handleSearchInfluencerText = (e) => {
     setInfluencerSearchText(e.target.value);
   };
@@ -336,6 +340,7 @@ const Influencer = (props) => {
               updateFollowingList={updateFollowingList}
               renderMySignInPopup={showMyAccountPopup}
               guestUser={guestUser}
+              closeSearchMobilePopUp={closeSearchMobilePopUp}
             />
           ) : null}
         </div>
@@ -345,29 +350,37 @@ const Influencer = (props) => {
 
   const renderHeader = () => {
     return (
-      <div block="header">
-        <div block="trending_following_buttons">
-          <button
-            block={"button_style " + (showTrending ? "active" : null)}
-            onClick={() => {
-              setShowTrending(true);
-              setShowFollowing(false);
-            }}
-          >
-            {__("Trending")}
-          </button>
-          <button
-            block={"button_style " + (showFollowing ? "active" : null)}
-            onClick={() => {
-              setShowFollowing(true);
-              setShowTrending(false);
-            }}
-          >
-            {__("Following")}
-          </button>
+      <div block="headerMain">
+        <div block="header">
+          <div block="trending_following_buttons">
+            <button
+              block={"button_style " + (showTrending ? "active" : null)}
+              onClick={() => {
+                setShowTrending(true);
+                setShowFollowing(false);
+              }}
+            >
+              {__("Trending")}
+            </button>
+            <button
+              block={"button_style " + (showFollowing ? "active" : null)}
+              onClick={() => {
+                setShowFollowing(true);
+                setShowTrending(false);
+              }}
+            >
+              {__("Following")}
+            </button>
+          </div>
+          {!isMobile.any() && (
+            <div className="influencerSearch">{renderInfluencerSearch()}</div>
+          )}
+          <div block="Refine">{renderRefine()}</div>
         </div>
-        <div className="influencerSearch">{renderInfluencerSearch()}</div>
-        <div block="Refine">{renderRefine()}</div>
+
+        {isMobile.any() && (
+          <div className="influencerSearch">{renderInfluencerSearch()}</div>
+        )}
       </div>
     );
   };
@@ -382,10 +395,12 @@ const Influencer = (props) => {
         }}
         label={__("Influencer")}
       >
-        {renderMySignInPopup()}
         {renderHeader()}
-        {showTrending && navigateTrending()}
-        {showFollowing && navigateFollowing()}
+        <div block="trendingBlock">
+          {renderMySignInPopup()}
+          {showTrending && navigateTrending()}
+          {showFollowing && navigateFollowing()}
+        </div>
       </ContentWrapper>
     </main>
   );

@@ -7,12 +7,17 @@ import { getAllInfluencers } from "Util/API/endpoint/Influencer/Influencer.endpo
 import { getLocaleFromUrl } from "Util/Url/Url";
 import { getEnvIDForInfluencer } from "../../util/Common/index";
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import Search from "../../component/Icons/Search/icon.svg";
 
 import Link from "Component/Link";
+import HeaderLogo from "Component/HeaderLogo";
 import "./InfluencerSearch.style.scss";
 
 const InfluencerSearch = (props) => {
   const [allInfluencersList, setAllInfluencersList] = useState([]);
+  const [onPageinfluencerSearchText, setOnPageInfluencerSearchText] =
+    useState("");
 
   const getInfluencers = () => {
     const locale = getLocaleFromUrl();
@@ -130,7 +135,117 @@ const InfluencerSearch = (props) => {
     );
   };
 
-  const renderSearchBlock = () => {
+  const closeSearchPopUp = () => {
+    const { closeSearchMobilePopUp } = props;
+    closeSearchMobilePopUp();
+  };
+
+  const handleSearchInfluencerText = (e) => {
+    setOnPageInfluencerSearchText(e.target.value);
+  };
+
+  const renderSearchForMobile = () => {
+    const { masterTrendingInfo, selectedGender } = props;
+    const lowerInfluencerSearchText = onPageinfluencerSearchText?.toLowerCase();
+    const sliderContent =
+      masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;
+    const filteredSliderContent = sliderContent?.filter((val) => {
+      if (
+        val?.collection?.title
+          ?.toLowerCase()
+          .includes(lowerInfluencerSearchText) ||
+        val?.influencer?.influencer_name
+          ?.toLowerCase()
+          .includes(lowerInfluencerSearchText)
+      ) {
+        return val;
+      }
+    });
+    const allInfluencerContent =
+      allInfluencersList?.influencers?.superstars?.[selectedGender];
+    const filteredAllInfluencerContent = allInfluencerContent?.filter((val) => {
+      const fullName = val?.name + " " + val?.family_name;
+      if (
+        val?.influencer_name
+          ?.toLowerCase()
+          .includes(lowerInfluencerSearchText) ||
+        fullName?.toLowerCase().includes(lowerInfluencerSearchText)
+      ) {
+        return val;
+      }
+    });
+    return (
+      <div className="searchBlockForMobile" mods={{ isArabic: isArabic() }}>
+        <div block="mobileSearchHeader">
+          <HeaderLogo key="logo" />
+          <div block="inputOnpage">
+            <img
+              block="searchIconOnPage"
+              src={Search}
+              mods={{ isArabic: isArabic() }}
+            />
+            <input
+              type="text"
+              block="influencerSearchInputForMobile"
+              mods={{ isArabic: isArabic() }}
+              id="influencerSearch"
+              placeholder={__("Search collections, influencers etc...")}
+              onChange={handleSearchInfluencerText}
+            />
+            <p
+              onClick={closeSearchPopUp}
+              block="cancelButton"
+              mods={{ isArabic: isArabic() }}
+            >
+              {__("Cancel")}
+            </p>
+          </div>
+        </div>
+
+        <div className="collectionSlider">
+          {masterTrendingInfo?.superstars?.[selectedGender]?.data[0].type ===
+          "influencer_slider_collection" ? (
+            <>
+              <h3>{__("Collection")}</h3>
+              {filteredSliderContent && filteredSliderContent.length > 0 ? (
+                <ul className="spckItems">
+                  {filteredSliderContent.map(renderSliderCollection)}
+                </ul>
+              ) : (
+                <h2>
+                  {__(`No results found for ${onPageinfluencerSearchText}`)}
+                </h2>
+              )}
+            </>
+          ) : null}
+
+          <h3>{__("Influencer")}</h3>
+          {filteredAllInfluencerContent &&
+          filteredAllInfluencerContent.length > 0 ? (
+            <ul
+              block={
+                "influencer_spckItems " +
+                (filteredAllInfluencerContent?.length !== 1 &&
+                !isMobile.any() &&
+                !isMobile.tablet()
+                  ? "showDivider "
+                  : null) +
+                (!isMobile.any()
+                  ? " influencer_spckItemsForDesktop"
+                  : " influencer_spckItemsForMobile")
+              }
+            >
+              {filteredAllInfluencerContent?.map(renderInfluencer)}
+            </ul>
+          ) : (
+            <h2>{__(`No results found for ${onPageinfluencerSearchText}`)}</h2>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderSearchForDesktop = () => {
     const { masterTrendingInfo, selectedGender, influencerSearchText } = props;
     const lowerInfluencerSearchText = influencerSearchText.toLowerCase();
     const sliderContent =
@@ -183,9 +298,14 @@ const InfluencerSearch = (props) => {
             <ul
               block={
                 "influencer_spckItems " +
-                (filteredAllInfluencerContent?.length !== 1
-                  ? "showDivider"
-                  : null)
+                (filteredAllInfluencerContent?.length !== 1 &&
+                !isMobile.any() &&
+                !isMobile.tablet()
+                  ? "showDivider "
+                  : null) +
+                (!isMobile.any()
+                  ? " influencer_spckItemsForDesktop"
+                  : " influencer_spckItemsForMobile")
               }
             >
               {filteredAllInfluencerContent?.map(renderInfluencer)}
@@ -195,6 +315,16 @@ const InfluencerSearch = (props) => {
           )}
         </div>
       </div>
+    );
+  };
+
+  const renderSearchBlock = () => {
+    return (
+      <>
+        {!isMobile.any()
+          ? renderSearchForDesktop()
+          : isMobile.any() && renderSearchForMobile()}
+      </>
     );
   };
   return <div>{renderSearchBlock()}</div>;

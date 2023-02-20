@@ -411,7 +411,7 @@ main {
       }
     }
   }
-
+  
   .moveUpGenders {
     @include mobile {
       top: 48px;
@@ -421,12 +421,10 @@ main {
       padding-top: 10px;
       padding-bottom: 18px;
     }
-
     @include tablet {
       top: 50px;
     }
   }
-
   .moveDownGenders {
     @include mobile {
       top: 100px;
@@ -436,12 +434,10 @@ main {
       padding-top: 10px;
       padding-bottom: 18px;
     }
-
     @include tablet {
       top: 100px;
     }
   }
-
   .HeaderGenders {
     @include mobile {
       &_isMobile {

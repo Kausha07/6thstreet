@@ -798,8 +798,9 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { showPLPSearch } = this.state;
+    const { signInPopUp, showPLPSearch } = this.state;
     const { displaySearch, gender } = this.props;
+    const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>

@@ -11,170 +11,263 @@
   ::-webkit-scrollbar {
     display: none;
   }
+  @include tablet {
+    width: 400px;
+  }
+}
 
-  .collectionSlider {
-    margin-top: 5px;
-    height: 100%;
-    overflow-y: auto;
-    h3 {
-      text-transform: uppercase;
-      margin-top: 0 !important;
-      letter-spacing: 1px;
-      font-size: 14px;
+.searchBlockForMobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  z-index: 99;
+  background-color: #ffffff;
+  overflow: auto;
+  padding: 30px 10px;
+
+  .mobileSearchHeader {
+    position: fixed;
+    width: 95%;
+    display: flex;
+    background-color: #ffffff;
+    z-index: 99;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inputOnpage {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .cancelButton {
+      &_isArabic {
+        margin-left: 15px;
+      }
     }
-    h2 {
-      text-transform: initial;
-      margin-top: 0 !important;
-      letter-spacing: 1px;
-      font-size: 15px;
-      font-weight: 500;
-      padding-bottom: 20px;
-      color: #808080;
+  }
+
+  .searchIconOnPage {
+    position: absolute;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    top: 12px;
+    left: 11px;
+
+    &_isArabic {
+      left: initial;
+      right: 15px;
+    }
+  }
+
+  .influencerSearchInputForMobile {
+    height: 40px;
+    width: 82%;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    text-transform: initial;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding-left: 35px;
+    &_isArabic {
+      margin-left: 2px;
+      padding-right: 35px;
+    }
+  }
+}
+.collectionSlider {
+  margin-top: 5px;
+  height: 100%;
+  overflow-y: auto;
+  h3 {
+    text-transform: uppercase;
+    margin-top: 0 !important;
+    letter-spacing: 1px;
+    font-size: 14px;
+  }
+  h2 {
+    text-transform: initial;
+    margin-top: 0 !important;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 20px;
+    color: #808080;
+  }
+
+  .spckItems {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    justify-content: flex-start;
+    &::-webkit-scrollbar {
+      display: none;
     }
 
-    .spckItems {
-      margin: 10px 0;
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      width: 100%;
-      justify-content: flex-start;
-      &::-webkit-scrollbar {
+    .spckItem {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      box-sizing: border-box;
+      margin: 0;
+      list-style: none;
+      padding: 0;
+      margin-right: 8px;
+      margin-bottom: 16px;
+
+      &::before {
         display: none;
       }
 
+      .eventImage {
+        img {
+          width: 170px;
+          height: 170px;
+          object-fit: cover;
+        }
+        .sliderTitle {
+          position: absolute;
+          bottom: 14px;
+          margin-left: 8px;
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 700;
+          text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 1);
+        }
+      }
+    }
+  }
+
+  .showDivider {
+    background: linear-gradient(#ddd, #ddd) center/2px 100% no-repeat;
+    background-position: 50% 0, 0 0;
+  }
+
+  .influencer_spckItemsForMobile {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .influencer_spckItemsForDesktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .influencer_spckItems {
+    display: grid;
+    grid-gap: 16px;
+
+    @include tablet {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .influencerOnSearch {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      a {
+        text-decoration: none;
+      }
       .spckItem {
-        position: relative;
-        width: 170px;
-        height: 170px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         box-sizing: border-box;
         margin: 0;
         list-style: none;
-        padding: 0;
-        margin-right: 8px;
-        margin-bottom: 16px;
+        padding: 0 8px;
 
         &::before {
           display: none;
         }
 
-        .eventImage {
+        .influencerImage {
           img {
-            width: 170px;
-            height: 170px;
-            object-fit: cover;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
           }
-          .sliderTitle {
-            position: absolute;
-            bottom: 14px;
-            margin-left: 8px;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 700;
-            text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 1);
+        }
+        .influencerInfo {
+          display: flex;
+          flex-direction: column;
+          margin-left: 10px;
+          width: 120px;
+
+          &_isArabic {
+            margin-left: initial;
+            margin-right: 10px;
+          }
+
+          h3,
+          p {
+            margin-bottom: 0px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          @include mobile {
+            width: 160px;
           }
         }
       }
-    }
+      .followUnfollowButton {
+        position: absolute;
+        right: 10px;
 
-    .showDivider {
-      background: linear-gradient(#ddd, #ddd) center/2px 100% no-repeat;
-      background-position: 50% 0, 0 0;
-    }
-
-    .influencer_spckItems {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: 16px;
-
-      .influencerOnSearch {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        a {
-          text-decoration: none;
+        &_isArabic {
+          right: initial;
+          left: 10px;
         }
-        .spckItem {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          box-sizing: border-box;
-          margin: 0;
-          list-style: none;
-          padding: 0 8px;
 
-          &::before {
-            display: none;
-          }
-
-          .influencerImage {
-            img {
-              height: 50px;
-              width: 50px;
-              border-radius: 50%;
-            }
-          }
-          .influencerInfo {
-            display: flex;
-            flex-direction: column;
-            margin-left: 10px;
-            width: 120px;
-
-            &_isArabic {
-              margin-left: initial;
-              margin-right: 10px;
-            }
-
-            h3,
-            p {
-              margin-bottom: 0px;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
-            }
-          }
+        .followingButton {
+          padding: 0 !important;
+          height: 28px !important;
+          width: 82px;
+          font-size: 10px;
+          text-transform: capitalize;
+          border-radius: 10px;
+          color: #ffffff;
+          background-color: #000000 !important;
         }
-        .followUnfollowButton {
-          position: absolute;
+
+        .followButton {
+          padding: 0 !important;
+          height: 28px !important;
+          width: 82px;
+          border: 1px solid #000000;
+          text-transform: capitalize;
+          border-radius: 10px;
+          font-size: 10px;
+          color: #000000;
+        }
+
+        @include mobile {
+          bottom: 23%;
           right: 10px;
+
+          .followingButton,
+          .followButton {
+            width: 65px;
+          }
 
           &_isArabic {
             right: initial;
             left: 10px;
           }
-
-          .followingButton {
-            padding: 0 !important;
-            height: 28px !important;
-            width: 82px;
-            font-size: 10px;
-            border-radius: 10px;
-            color: #ffffff;
-            background-color: #000000 !important;
-          }
-
-          .followButton {
-            padding: 0 !important;
-            height: 28px !important;
-            width: 82px;
-            border: 1px solid #000000;
-            border-radius: 10px;
-            font-size: 10px;
-            color: #000000;
-          }
-
-          @include mobile {
-            bottom: 7%;
-
-            .followingButton,
-            .followButton {
-              height: 22px !important;
-              width: 65px;
-              font-size: 8px;
-            }
-          }
         }
       }
     }
+  }
+
+  @include mobile {
+    margin-top: 110px;
   }
 }
