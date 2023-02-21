@@ -138,7 +138,7 @@ export class Header extends PureComponent {
     MobileBottomBar,
   ];
   headerSectionsTwo = [HeaderTopBar, HeaderMainSection, HeaderBottomBar];
-  headerSectionsThree = [HeaderTopBar, HeaderMainSection];
+  headerSectionsThree = [HeaderTopBar, HeaderMainSection, MobileBottomBar];
 
   getIsCheckout = () => {
     const { isMobile } = this.state;
