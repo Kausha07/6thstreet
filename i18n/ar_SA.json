@@ -425,7 +425,7 @@
     "Trending tags": null,
     "Trending products": null,
     "Top searches": null,
-    "Recent searches": null,
+    "Recent search": "البحث الأخير",
     "Color: ": "اللون",
     "Qty: ": "الكمية",
     "Size: ": "القياس",
@@ -440,7 +440,6 @@
     "Buy now and pay after delivery": "اشتر الآن وادفع بعد التوصيل",
     "Sounds good? Select Pay after delivery at checkout.": "اختر الدفع بعد التوصيل عند إكمال الطلب",
     "Total, ": "المبلغ الإجمالي: ",
-    "Products: ": null,
     "Delivered on ": null,
     " item": "مُنتج ",
     " items": "المُنتجات ",
@@ -1183,5 +1182,10 @@
     "Read less": "إقرأ أقل",
     "SELECT A CITY": "حدد المدينة",
     "SELECT AN AREA": "حدد المنطقة",
-    "Search...": " ابحث..."
+    "Search...": " ابحث...",
+    "SUGGESTIONS": "اقتراحات",
+    "See all": "انظرالكل",
+    "No Recent Searches": "لا توجد عمليات بحث حديثة",
+    "No Suggestions": "بدون اقتراحات",
+    "Search for brands..." : "ابحث عن الماركات..."
 }
