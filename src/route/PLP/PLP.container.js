@@ -705,8 +705,7 @@ export class PLPContainer extends PureComponent {
       return null;
     }
     try {
-      getBrandInfoByName(brand_name).then((resp) => {
-        setBrandInfoData(resp?.result[0].url_path)
+      getBrandInfoByName(brandName).then((resp) => {
         this.setState({
           brandDescription: isArabic()
             ? resp?.result[0]?.description_ar
