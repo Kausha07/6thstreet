@@ -30,6 +30,7 @@ import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import Link from "Component/Link";
+import Image from "Component/Image";
 import ClickOutside from "Component/ClickOutside";
 import { SEARCH_OVERLAY } from "Component/Header/Header.config";
 import "./SearchOverlay.style";
@@ -252,7 +253,7 @@ export class SearchOverlay extends PureComponent {
         <div block="QuerySuggestionBlock">
           <h2>{__("SUGGESTIONS")}</h2>
           {suggestionEnabled ? this.renderQuerySuggestions() : null}
-          {!isEmpty && !inNothingFound && querySuggestions.length > 1 && (
+          {!isEmpty && !inNothingFound && (
             <div block="moreDataLink" onClick={this.SeeAllButtonClick}>
               {__(`See all`) + ` "${search}"`}
             </div>
@@ -320,7 +321,7 @@ export class SearchOverlay extends PureComponent {
             elem="ProductLinks"
           >
             <div block="imagesLayouts">
-              <img
+              <Image
                 lazyLoad={true}
                 src={thumbnail_url}
                 alt={name ? name : "Product Image"}

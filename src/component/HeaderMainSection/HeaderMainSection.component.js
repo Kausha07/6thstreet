@@ -613,16 +613,18 @@ class HeaderMainSection extends NavigationAbstract {
                 placeholder={
                   isMobile.any() || isMobile.tablet()
                     ? __("What are you looking for?")
-                    : __("Search for items, brands, inspiration and styles")
+                    : __("Search for brands...")
                 }
                 onChange={(e) => this.onSearchChange(e)}
                 onFocus={this.onFocus}
                 value={search}
               />
             </Form>
-            <div block="clear-button" onClick={this.cancelSearch}>
-              <img src={Clear} alt="clear-black.png" />
-            </div>
+            { isPopup && (
+              <div block="clear-button" onClick={this.cancelSearch}>
+                <img src={Clear} alt="clear-black.png" />
+              </div>
+            )}
           </div>
           <div id="overlay-sections">
             {isPopup ? (

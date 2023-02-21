@@ -54,6 +54,7 @@
 
     h2 {
         line-height: 40px;
+        text-align: initial;
     }
 
     @include before-desktop() {
@@ -272,8 +273,8 @@ div.SearchOverlay.Overlay {
 
     .imagesLayouts {
         img {
-            width: 95px;
-            height: 99px;
+            width: 95px !important;
+            height: 99px !important;
         }
     }
 
@@ -490,6 +491,9 @@ div.SearchOverlay.Overlay {
             border-radius: 5px;
             margin: 0px;
             position: relative;
+            &::before {
+                background-image: url(/static/media/fallback.bf804003.png);
+            }
 
             div {
                 position: absolute !important;
