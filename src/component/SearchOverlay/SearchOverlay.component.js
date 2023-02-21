@@ -31,6 +31,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 import Link from "Component/Link";
 import Image from "Component/Image";
+import Price from "Component/Price";
 import ClickOutside from "Component/ClickOutside";
 import { SEARCH_OVERLAY } from "Component/Header/Header.config";
 import "./SearchOverlay.style";
@@ -248,13 +249,14 @@ export class SearchOverlay extends PureComponent {
       inNothingFound,
       search,
     } = this.props;
+    const { isArabic } = this.state;
     return (
       <div block="suggestionBlocks">
         <div block="QuerySuggestionBlock">
           <h2>{__("SUGGESTIONS")}</h2>
           {suggestionEnabled ? this.renderQuerySuggestions() : null}
           {!isEmpty && !inNothingFound && (
-            <div block="moreDataLink" onClick={this.SeeAllButtonClick}>
+            <div block="moreDataLink" mods={{isArabic}} onClick={this.SeeAllButtonClick}>
               {__(`See all`) + ` "${search}"`}
             </div>
           )}
@@ -277,7 +279,7 @@ export class SearchOverlay extends PureComponent {
         basePrice !== specialPrice;
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
-          <div>{priceObj?.[currency]?.["default_formated"]}</div>
+          <div><Price price={price} renderSpecialPrice={false} /></div>
         </div>
       );
     }

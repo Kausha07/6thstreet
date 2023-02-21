@@ -132,7 +132,7 @@ main {
   }
 
   #searchIconImage {
-    margin: 8px 5px;
+    margin: 11px 5px;
     opacity: 1;
   }
 
@@ -147,7 +147,6 @@ main {
     padding-left: 0px;
     letter-spacing: var(--unnamed-character-spacing-0);
     color: var(--unnamed-color-000000);
-    text-align: left;
     font: normal normal normal 15px/20px Avenir Next;
     letter-spacing: 0px;
     color: #000000;
@@ -564,14 +563,13 @@ main {
   }
   #searchIconImage {
     width: 17px;
-    height: 24px;
     opacity: 1;
     margin-left: 14px;
     margin-right: 10px;
   }
 }
 #overlay-sections {
-  margin-top: -28px !important;
+  margin-top: -23px !important;
 }
 .HeaderSearchSection {
   @include mobile {

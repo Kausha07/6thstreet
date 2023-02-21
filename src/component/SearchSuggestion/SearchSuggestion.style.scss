@@ -88,7 +88,8 @@
 
     ul {
       display: flex;
-      overflow: scroll;
+      overflow-x : hidden;
+      overflow-y : scroll;
       &::-webkit-scrollbar {
         width: 1px;
     }
