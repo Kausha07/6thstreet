@@ -56,6 +56,7 @@ export default function SignInSignupNudge() {
                 onClick={() => {
                   setIsNudgeVisible(false);
                   setShowSignInSignUpPopUp(true);
+                  setIsRegisterScreen(false);
                 }}
               >
                 {__("sign in")}
