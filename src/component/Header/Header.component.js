@@ -139,6 +139,7 @@ export class Header extends PureComponent {
   ];
   headerSectionsTwo = [HeaderTopBar, HeaderMainSection, HeaderBottomBar];
   headerSectionsThree = [HeaderTopBar, HeaderMainSection, MobileBottomBar];
+  headerSectionsFour = [HeaderTopBar, HeaderMainSection];
 
   getIsCheckout = () => {
     const { isMobile } = this.state;
@@ -203,6 +204,7 @@ export class Header extends PureComponent {
     const isCheckout = this.getIsCheckout();
     const hideHeaderFooter = this.getHideHeaderFooter();
     const { isMobile } = this.state;
+    const pathNamesIncludesArrow = ["/influencer.html/Collection", "/influencer.html/Store"];
 
     if (isCheckout && !checkoutDetails) {
       return null;
@@ -214,6 +216,10 @@ export class Header extends PureComponent {
 
     if(this.props.gender === "influencer")
     {
+      if(pathNamesIncludesArrow.includes(location.pathname))
+      {
+        return this.headerSectionsFour.map(this.renderSection);
+      }
       return this.headerSectionsThree.map(this.renderSection);
     }
 
