@@ -255,7 +255,7 @@ export class SearchOverlay extends PureComponent {
         <div block="QuerySuggestionBlock">
           <h2>{__("SUGGESTIONS")}</h2>
           {suggestionEnabled ? this.renderQuerySuggestions() : null}
-          {!isEmpty && !inNothingFound && (
+          {!isEmpty && (
             <div block="moreDataLink" mods={{isArabic}} onClick={this.SeeAllButtonClick}>
               {__(`See all`) + ` "${search}"`}
             </div>
@@ -301,6 +301,7 @@ export class SearchOverlay extends PureComponent {
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
     const { closePopup } = this.props;
+    const { isArabic } = this.state;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
@@ -314,7 +315,7 @@ export class SearchOverlay extends PureComponent {
       ? url?.split("&")[0] + `&p=0&dFR[gender][0]=${genderInURL}`
       : url;
     return (
-      <li key={v4()} block="productContentLayoutLink">
+      <li key={v4()} block="productContentLayoutLink"  mods={{ isArabic }} >
         <div block="productDetailsLayout">
           <Link
             to={parseLink ? parseLink : "#"}
@@ -322,7 +323,7 @@ export class SearchOverlay extends PureComponent {
             block="productsDetailsLink"
             elem="ProductLinks"
           >
-            <div block="imagesLayouts">
+            <div block="imagesLayouts" mods={{isArabic}}>
               <Image
                 lazyLoad={true}
                 src={thumbnail_url}
@@ -348,8 +349,9 @@ export class SearchOverlay extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
+    const { isArabic } = this.state;
     return (
-      <div block="SearchSuggestion" elem="Recommended">
+      <div block="SearchSuggestion" elem="Recommended" mods={{isArabic}}>
         <h2>{__("Products")}</h2>
         <ul>{products.slice(0, 3).map(this.renderProduct)}</ul>
       </div>

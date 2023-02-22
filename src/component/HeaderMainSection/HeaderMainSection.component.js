@@ -17,6 +17,7 @@ import Event, {
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 
+import { getStore } from "Store";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import {
   hideActiveOverlay,
@@ -595,6 +596,7 @@ class HeaderMainSection extends NavigationAbstract {
                 id="searchIconImage"
                 src={searchIcon}
                 alt="searchIcon"
+                mods={{ isArabic }}
               />
             </div>
             <Form block="searchFrom" 

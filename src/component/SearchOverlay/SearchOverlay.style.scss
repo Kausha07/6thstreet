@@ -281,6 +281,9 @@ div.SearchOverlay.Overlay {
             width: 95px !important;
             height: 99px !important;
         }
+        &_isArabic {
+            margin-right: 0px;
+        }
     }
 
     .SearchProduct {
@@ -329,7 +332,7 @@ div.SearchOverlay.Overlay {
         bottom: 14px;
         left: 2px;
         &_isArabic {
-            left: 0px;
+            left: 77px;
             text-align: right;
         }
         cursor: pointer;
@@ -394,6 +397,13 @@ div.SearchOverlay.Overlay {
 
         .productContentLayoutLink {
             list-style-type: none !important;
+            &_isArabic {
+                ul {
+                    li {
+                        margin-right: 0px !important;
+                    }
+                }
+            }
         }
 
         ul {
@@ -431,6 +441,14 @@ div.SearchOverlay.Overlay {
                     &:hover {
                         text-decoration: none;
                     }
+                }
+            }
+        }
+
+        &_isArabic {
+            ul {
+                li {
+                    margin-right: 0px;
                 }
             }
         }
@@ -549,6 +567,6 @@ div.SearchOverlay.Overlay {
 
 .spacingBlock {
     &_isArabic {
-        margin: 37px;
+        margin: 0px;
     }
 }

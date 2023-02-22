@@ -107,6 +107,14 @@
       }
     }
 
+    &_isArabic {
+      ul {
+        li {
+          margin-right: 0px;
+        }
+      };
+    }
+
     @include before-desktop {
       margin-bottom: 15px;
     }
