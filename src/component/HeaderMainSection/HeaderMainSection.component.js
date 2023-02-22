@@ -45,6 +45,7 @@ import {
   TYPE_CATEGORY,
   TYPE_HOME,
   TYPE_PRODUCT,
+  TYPE_INFLUENCER,
 } from "Route/UrlRewrites/UrlRewrites.config";
 import Clear from "./icons/close-black.png";
 import searchIcon from "./icons/search-black.svg";

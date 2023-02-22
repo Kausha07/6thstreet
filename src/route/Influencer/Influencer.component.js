@@ -47,6 +47,9 @@ const Influencer = (props) => {
 
   useEffect(() => {
     trendingInfo();
+    return () => {
+      window.pageType = undefined;
+    };
   }, []);
 
   useEffect(() => {
