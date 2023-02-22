@@ -114,10 +114,10 @@ class HeaderGenders extends PureComponent {
 
         return (
             <div
-                block="GenderButton"
-                elem="Container"
-                key={key}
-                mods={{ isArabic: isArabic() }}
+              block="GenderButton"
+              elem="Container"
+              key={ key }
+              mods={{isArabic: isArabic()}}
             >
                 <GenderButton
                     gender={gender}

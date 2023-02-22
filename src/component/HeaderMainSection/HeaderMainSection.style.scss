@@ -459,10 +459,25 @@ main {
         padding-right: 10px;
       }
 
+      &_isArabic {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
       .GenderButton-Container {
         display: flex;
         justify-content: center;
         width: 33.33%;
+        &:last-child {
+          width: 35% !important;
+        }
+
+        &_isArabic {
+          &:last-child {
+            width: 45% !important;
+            margin-right: 15px;
+          }
+        }
 
         &:last-child {
           width: 35% !important;
