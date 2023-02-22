@@ -157,9 +157,14 @@ class HeaderAccount extends PureComponent {
   }
 
   renderAccountButton() {
-    const { isSignedIn, customer, isBottomBar, isFooter, newSignUpEnabled } =
-      this.props;
-
+    const {
+      isSignedIn,
+      customer,
+      isBottomBar,
+      isFooter,
+      newSignUpEnabled,
+      showNudge,
+    } = this.props;
     if (isBottomBar) {
       return;
     }
@@ -219,7 +224,7 @@ class HeaderAccount extends PureComponent {
             <span>{accountButtonText}</span>
           </label>
         </button>
-        <SignInSignupNudge />
+        {showNudge && <SignInSignupNudge />}
         {this.renderMyAccountPopup()}
       </div>
     );

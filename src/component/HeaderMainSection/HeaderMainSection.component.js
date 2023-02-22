@@ -145,8 +145,6 @@ class HeaderMainSection extends NavigationAbstract {
     // });
   };
 
-
-
   componentDidMount() {
     if (isMobile.any()) {
       this.setState({ showSearch: true });
@@ -227,7 +225,9 @@ class HeaderMainSection extends NavigationAbstract {
   renderAccount() {
     const isFooter = false;
 
-    return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
+    return (
+      <HeaderAccount key="account" isFooter={isFooter} isMobile showNudge />
+    );
   }
 
   renderCart() {
@@ -472,4 +472,3 @@ class HeaderMainSection extends NavigationAbstract {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(HeaderMainSection)
 );
-
