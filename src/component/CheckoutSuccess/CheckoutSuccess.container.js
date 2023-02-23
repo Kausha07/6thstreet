@@ -34,7 +34,7 @@ import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
-
+import { Config } from "Util/API/endpoint/Config/Config.type";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -53,6 +53,7 @@ export const mapStateToProps = (state) => ({
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
+  config: Config.isRequired,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -105,6 +106,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
     newSignUpEnabled: PropTypes.bool,
+    country: PropTypes.string,
   };
 
   static defaultProps = {
@@ -249,7 +251,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed } = this.props;
+    const { isFailed, country } = this.props;
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -257,6 +259,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isFailed,
       isMobileVerification,
+      country
     };
   };
 

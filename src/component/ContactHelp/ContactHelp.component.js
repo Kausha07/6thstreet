@@ -11,10 +11,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import {
-  EMAIL_LINK,
-  TEL_LINK,
-} from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
 import { PureComponent } from "react";
@@ -24,7 +20,6 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { EVENT_PHONE, EVENT_MAIL, EVENT_MOE_CHAT, MOE_trackEvent } from "Util/Event";
 
 
-export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 export class ContactHelp extends PureComponent {
   static propTypes = {};
 
@@ -45,11 +40,15 @@ export class ContactHelp extends PureComponent {
 
     const {
       opening_hours: { [language]: openHoursLabel },
+      contact_using: {
+        options: { phone },
+      },
       // toll_free: phone,
     } = countries[country];
 
     return {
       openHoursLabel,
+      phone
       // toll_free,
     };
   }
@@ -63,14 +62,17 @@ export class ContactHelp extends PureComponent {
   }
   renderContactUs() {
     const { config } = this.props;
-    const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    const { openHoursLabel, toll_free,phone } = this.getCountryConfigs();
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(" ", "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : "";
     return (
       <div block="ContactUs">
         <div block="ContactUs" elem="Icons">
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
               <a
-                href={`tel:${TEL_LINK}`}
+                href={`tel:${updatedPhoneLink}`}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
@@ -90,7 +92,7 @@ export class ContactHelp extends PureComponent {
               onClick={() => {
                 this.sendEvents(EVENT_MOE_CHAT);
               }}
-              href={`${WHATSAPP_LINK}`}
+              href={`${whatsappChat}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -104,7 +106,7 @@ export class ContactHelp extends PureComponent {
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
               <a
-                href={`mailto:${EMAIL_LINK}`}
+                href={`mailto:${config?.support_email}`}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => this.sendEvents(EVENT_MAIL)}

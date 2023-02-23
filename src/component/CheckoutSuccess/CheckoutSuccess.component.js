@@ -14,7 +14,6 @@ import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getDiscountFromTotals, isArabic, getCurrency } from "Util/App";
-import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
 import Call from "./icons/call.svg";
@@ -114,6 +113,23 @@ export class CheckoutSuccess extends PureComponent {
     ) {
       clearInterval(this.timerInterval);
     }
+  }
+
+  getCountryConfigs() {
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+
+    const {
+      contact_using: {
+        options: { phone },
+      },
+    } = countries[country];
+
+    return {
+      phone
+    };
   }
 
   OtpTimerFunction() {
@@ -787,12 +803,16 @@ export class CheckoutSuccess extends PureComponent {
 
   renderContact = () => {
     const { isArabic } = this.state;
-
+    const {config} = this.props;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(" ", "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
+    const { phone } = this.getCountryConfigs();
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
         <div block="ContactInfo" elem="Links">
           <a
-            href={`tel:${TEL_LINK}`}
+            href={`tel:${updatedPhoneLink}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_PHONE)}
@@ -807,7 +827,7 @@ export class CheckoutSuccess extends PureComponent {
             </div>
           </a>
           <a
-            href={`mailto:${EMAIL_LINK}`}
+            href={`mailto:${config?.support_email}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_MAIL)}
@@ -822,7 +842,7 @@ export class CheckoutSuccess extends PureComponent {
             </div>
           </a>
           <a
-            href={`${WHATSAPP_LINK}`}
+            href={`${whatsappChat}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_MOE_CHAT)}
