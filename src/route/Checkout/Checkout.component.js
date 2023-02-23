@@ -679,6 +679,9 @@ export class Checkout extends SourceCheckout {
       resetCart,
       setShippingAddressCareem,
       showErrorNotification,
+      checkoutTotals: {
+        total = 0,
+      },
     } = this.props;
 
     const { continueAsGuest, isArabic, isCareemPayEnabled, isMobile } = this.state;
@@ -737,7 +740,7 @@ export class Checkout extends SourceCheckout {
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
         {/* Currently Careem Pay is only available for EN-AE Desktop site. */}
-        { (isCareemPayEnabled && !isArabic && country_codes === "AE") ? (
+        { (isCareemPayEnabled && !isArabic && country_codes === "AE" && total != 0) ? (
             <CareemPay 
               continueAsGuest={continueAsGuest}
               isSignedIn={isSignedIn}
