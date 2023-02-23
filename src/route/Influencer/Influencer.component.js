@@ -42,6 +42,7 @@ const Influencer = (props) => {
   const [tempInfluencerID, setTempInfluencerID] = useState(null);
   const [payload, setPayload] = useState({});
   const searchWrapperRef = createRef();
+  const mobileSearchWrapperRef = createRef();
   const refineWrapperRef = createRef();
   const mobileRefineWrapperRef = createRef();
 
@@ -260,10 +261,12 @@ const Influencer = (props) => {
   };
 
   const renderRefine = () => {
-    const genderArray = ["Women", "Men", "Kids"];
     return (
-      <div block="refineButton-div" elem="Refine" ref={refineWrapperRef}>
-        <button block="refineButton" onClick={handleRefineButtonClick}>
+      <div block="refineButton-div" elem="Refine">
+        <button
+          block="refineButton"
+          onClick={(e) => handleRefineButtonClick(e)}
+        >
           <img
             block="refineImage"
             mods={{ isArabic: isArabic() }}
@@ -273,10 +276,10 @@ const Influencer = (props) => {
         </button>
 
         {!isMobile.any() && isRefineButtonClicked ? (
-          <div block="refineFilter">
+          <div block="refineFilter" ref={refineWrapperRef}>
             <ul
               block="ul"
-              onClick={handleRefineButtonClick}
+              onClick={(e) => handleRefineButtonClick(e)}
               mods={{ isArabic: isArabic() }}
             >
               <li>
@@ -323,52 +326,7 @@ const Influencer = (props) => {
               </li>
             </ul>
           </div>
-        ) : (
-          isMobile.any() &&
-          isRefineButtonClicked && (
-            <div block="refinePopupInfluencer">
-              <div block="refineOverlayInfluencer">
-                <div
-                  block="refineDetailBlockInfluencer"
-                  ref={mobileRefineWrapperRef}
-                >
-                  <p block="refineButtonHeading">{__("BROWSE BY")}</p>
-                  {genderArray.map((val, index) => {
-                    return (
-                      <div block="refineButtonForMobile" key={val + index}>
-                        <p
-                          block="refineItemNameInfluencer"
-                          mix={{
-                            block: "refineItemNameInfluencer",
-                            elem:
-                              selectedGender === val.toUpperCase()
-                                ? "refineSelected"
-                                : null,
-                          }}
-                          id={val + index}
-                          name={val}
-                          value={val}
-                          onClick={() => {
-                            setSelectedGender(val.toUpperCase());
-                            setRefine(false);
-                          }}
-                          key={index}
-                        >
-                          {val === "Women"
-                            ? __("Women")
-                            : val === "Men"
-                            ? __("Men")
-                            : val === "Kids" && __("Kids")}
-                        </p>
-                        <div block="hr"></div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )
-        )}
+        ) : null}
       </div>
     );
   };
@@ -390,7 +348,7 @@ const Influencer = (props) => {
     return (
       <div block="influencerSearch">
         <img block="searchIcon" src={Search} mods={{ isArabic: isArabic() }} />
-        <div ref={searchWrapperRef}>
+        <div ref={!isMobile.any() ? searchWrapperRef : mobileSearchWrapperRef}>
           <input
             type="text"
             block="influencerSearchInput"
@@ -401,7 +359,7 @@ const Influencer = (props) => {
             onClick={(e) => handleSearchButtonClick(e)}
             onChange={handleSearchInfluencerText}
           />
-          {isSearchButtonClicked ? (
+          {isSearchButtonClicked && !isMobile.any() ? (
             <InfluencerSearch
               followingList={followingList}
               selectedGender={selectedGender}
@@ -455,8 +413,72 @@ const Influencer = (props) => {
     );
   };
 
+  const renderMsite = () => {
+    const genderArray = ["Women", "Men", "Kids"];
+    return (
+      <>
+        {isMobile.any() && isRefineButtonClicked && (
+          <div block="refinePopupInfluencer">
+            <div block="refineOverlayInfluencer">
+              <div
+                block="refineDetailBlockInfluencer"
+                ref={mobileRefineWrapperRef}
+              >
+                <p block="refineButtonHeading">{__("BROWSE BY")}</p>
+                {genderArray.map((val, index) => {
+                  return (
+                    <div block="refineButtonForMobile" key={val + index}>
+                      <p
+                        block="refineItemNameInfluencer"
+                        mix={{
+                          block: "refineItemNameInfluencer",
+                          elem:
+                            selectedGender === val.toUpperCase()
+                              ? "refineSelected"
+                              : null,
+                        }}
+                        id={val + index}
+                        name={val}
+                        value={val}
+                        onClick={() => {
+                          setSelectedGender(val.toUpperCase());
+                          setRefine(false);
+                        }}
+                        key={index}
+                      >
+                        {val === "Women"
+                          ? __("Women")
+                          : val === "Men"
+                          ? __("Men")
+                          : val === "Kids" && __("Kids")}
+                      </p>
+                      <div block="hr"></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <main block="Influencer">
+      {renderMsite()}
+      {isSearchButtonClicked && isMobile.any() && (
+        <InfluencerSearch
+          followingList={followingList}
+          selectedGender={selectedGender}
+          masterTrendingInfo={masterTrendingInfo}
+          influencerSearchText={influencerSearchText}
+          updateFollowingList={updateFollowingList}
+          renderMySignInPopup={showMyAccountPopup}
+          guestUser={guestUser}
+          closeSearchMobilePopUp={closeSearchMobilePopUp}
+        />
+      )}
       <ContentWrapper
         mix={{ block: "Influencer" }}
         wrapperMix={{
