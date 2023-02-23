@@ -60,6 +60,7 @@ import {
   EVENT_RESEND_OTP_CLICK,
   EVENT_OTP_VERIFY_WITH_EMAIL,
   EVENT_OTP_VERIFY_WITH_PHONE,
+  EVENT_FORGOT_PASSWORD_SCREEN_VIEW
 } from "Util/Event";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
@@ -147,6 +148,8 @@ export class MyAccountOverlay extends PureComponent {
     otpAttempt: 1,
     registerDetailsEntered: false,
     emailFromCheckoutPage: null,
+    currentScreen: "",
+    prevScreen: "",
   };
 
   componentDidMount() {
@@ -189,8 +192,10 @@ export class MyAccountOverlay extends PureComponent {
       this.OtpTimerFunction();
     }
     setCurrentOverlayState(this.props?.state);
+    this.setState({currentScreen: this.props?.state });
     if (prevProps.state !== this.props.state) {
       setPrevScreenState(prevProps.state);
+      this.setState({prevScreen: prevProps.state});
     }
   }
 
@@ -426,8 +431,15 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       sendEvents,
     } = this.props;
-    const { isForgotValidated } = this.state;
+    const { isForgotValidated, currentScreen, prevScreen } = this.state;
     this.setState({ isSignInValidated: false });
+    if (
+      currentScreen == STATE_FORGOT_PASSWORD &&
+      prevScreen !== STATE_FORGOT_PASSWORD
+    ) {
+      sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
+    }
+    
     return (
       <Form
         key="forgot-password"

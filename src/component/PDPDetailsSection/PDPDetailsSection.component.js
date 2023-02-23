@@ -15,6 +15,7 @@ import Event, {
   EVENT_MORE_FROM_THIS_BRAND_CLICK,
   EVENT_GTM_PDP_TRACKING,
   EVENT_EXPAND_PRODUCT_DETAILS,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -731,7 +732,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -945,6 +946,7 @@ class PDPDetailsSection extends PureComponent {
       config: { countries },
       country,
     } = this.props;
+    const isFreeDelivery = countries[country]?.free_delivery
 
     let free_return_amount = 200;
     if( countries[country] && countries[country].free_return_amount){
@@ -977,8 +979,8 @@ class PDPDetailsSection extends PureComponent {
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-        {
-            isArabic ? (
+        {   isFreeDelivery ? 
+            (isArabic ? (
               <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
                 {`${txt_common} ${free_return_amount} ${txt_diff[country_name]}`}
               </b>
@@ -986,9 +988,9 @@ class PDPDetailsSection extends PureComponent {
               <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
                 {`${txt_common} ${txt_diff[country_name]} ${free_return_amount}`}
               </b>
-            )
+            )) : (null)
           }
-          <br />
+          {isFreeDelivery ? <br /> : null}
         </p>
         <div block="FindOutMore" mods={{ isArabic }}>
           <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>

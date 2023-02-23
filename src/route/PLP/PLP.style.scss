@@ -2,7 +2,7 @@
 .SearchPage {
   padding-top: 15px;
   // padding-top: 60px;
-  margin-bottom: 82px;
+  margin-bottom: 64px;
   .couponDetailPopup {
     z-index: 99999 !important;
     .couponDetialPopupBlock {
@@ -85,7 +85,7 @@
     width: 218px;
     max-width: 240px;
     z-index: 9;
-    bottom: 92px;
+    bottom: 62px;
     border-radius: 20px;
     color: #ffffff;
     display: flex;
@@ -239,5 +239,272 @@
     grid-gap: 51px;
     padding-top: 17px;
     grid-gap: 52px;
+  }
+}
+.PLP{
+  &-FooterWrapper {
+    background: #f8fafb;
+    margin: 40px 0 -82px;
+    color: #000;
+    overflow: hidden;
+    padding-bottom: 40px;
+    @include mobile {
+      margin: 40px 0 0;
+      padding-bottom: 100px;
+    }
+    .loadMore-section{
+      position: relative;
+      .loadMore-Overlay{
+        display: none;
+        &.show{
+          display: block;
+          position: absolute;
+          box-shadow:  0 -35px 50px 12px rgba(248, 250, 251, 0.8%);
+          top: 0px;
+          width: 100%;
+          left: 0;
+          height: 80px;
+        }
+      }
+    }
+    .loadMoreBtn {
+      width: var(--main-container-width-dsk);
+      max-width: var(--container-max-width);
+      margin: 0 auto 20px;
+      @include mobile {
+        width: 90%;
+        max-width: 90%;
+      }
+      button {
+        border: 1px solid #000;
+        border-radius: 5px;
+        padding: 7px 20px;
+        margin: 0;
+        background: #fff;
+        height: 45px;
+        text-transform: uppercase;
+      }
+    }
+    &_isArabic{
+      direction: rtl;
+      .PLP-FooterContainer{
+        .shopby-list{
+        h3, &> li{
+          padding-left: 0;
+          padding-right: 3.25rem;
+          &::before{
+            left: auto;
+            right: 1rem;
+            padding-right: 0;
+            padding-left: 1.1225em;
+          }
+        }
+        .shopBy-inner{
+          li{
+            padding-left: 0;
+            padding-right: 3.25rem;
+          }
+        }
+        .shopBy-Grid{
+          padding: 40px 80px 40px 40px;
+          @include mobile{
+            padding: 20px 0px;
+          }
+        }
+        .shopByGrid-List {
+          tr{
+            th,td{
+              text-align: right;
+            }
+  
+          }
+  
+        }
+      }
+      li{
+        &::before{
+          padding-left: 1.1225rem;
+          right: 0;
+          left: auto;
+        }
+      }
+      }
+      
+    }
+  }
+  &-FooterContent {
+    margin: 50px 0 0;
+  }
+  &-FooterContainer {
+    width: var(--main-container-width-dsk);
+    max-width: var(--container-max-width);
+    margin: auto auto 10px;
+    @include mobile {
+      width: 90%;
+      max-width: 90%;
+    }
+    &.loadMore {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+    }
+    p {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    h2 {
+      font-size: 21px;
+      text-transform: none;
+      font-weight: var(--fw-demi);
+      letter-spacing: -0.61px;
+      margin-top: 2.3rem;
+      margin-bottom: 1.5rem;
+    }
+    a {
+      text-decoration: underline;
+      font-weight: 400;
+      &.bold{
+        font-weight: 600;
+      }
+      & + a {
+        margin-left: 0;
+      }
+    }
+    b {
+      font-weight: 600;
+    }
+    li {
+      &.noListStyle {
+        padding-left: 0;
+        &::before {
+          display: none;
+        }
+      }
+    }
+    .shopby-list {
+      margin: 25px 0;
+      padding-left: 0;
+      & > li, h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 25px 0 15px;
+        list-style-type: none;
+        list-style-position: inside;
+        padding-left: 3.25rem;
+        @include mobile{
+          padding-left: 2.25rem;
+        }
+        &::before{
+          position: absolute;
+          left: 1em;
+          top: 0.07em;
+          content: '\2022';
+          padding-right: 1.1225em;
+          @include mobile{
+            left: 0.5em;
+          }
+        }
+      }
+      ul {
+        padding-left: 15px;
+        b {
+          font-weight: 600;
+        }
+      }
+      .shopByGrid-List{
+        width: 100%;
+        @include mobile{
+          white-space: nowrap;
+          width: auto;
+        }
+        tr{
+          &:nth-child(even){
+            background-color: unset;
+          }
+          th{
+            text-align: left;
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 14px;
+            padding-left: 28px;
+            font-weight: 600;
+            a{
+              font-weight: 600;
+            }
+          }
+          td{
+            @include mobile{
+              padding: 10px 25px;
+            }
+          }
+        }
+      }
+      .shopBy-Grid {
+        padding: 40px 40px 40px 80px;
+        margin: 40px 0;
+        background: #fff;
+        text-align: center;
+        border-radius: 10px;
+        @include mobile{
+          overflow: scroll;
+          padding: 20px 0px;
+          margin: 20px 0;
+        }
+          a{
+            text-decoration: none;
+            font-weight: 400;
+            text-transform: capitalize;
+          }
+          .shopBy-column {
+            h4 {
+              font-weight: 600;
+              margin: 15px 0;
+            }
+            ul {
+              padding-left: 0;
+              & > li {
+                padding-left: 0;
+                list-style-type: disc;
+                list-style-position: inside;
+                line-height: 1.6;
+                &::before {
+                  display: none;
+                }
+              }
+            }
+          }
+      }
+      .shopBy-inner {
+        padding-left: 20px;
+        overflow: hidden;
+        @include mobile{
+          padding-left: 10px;
+        }
+        li {
+          line-height: 1.8;
+          margin: 10px 0;
+          @include mobile{
+            padding-left: 2.25rem;
+          }
+          &:last-child{
+            margin-bottom: 20px;
+          }
+        }
+      } 
+    }
+    .bgWhite{
+      padding: 30px;
+      background: #fff;
+      margin-top: 30px;
+      border-radius: 10px;
+      @include mobile {
+        padding: 20px 15px;
+      }
+      & >h2:first-child{
+        margin-top: 0;
+      }
+    }
   }
 }

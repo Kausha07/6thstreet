@@ -8,7 +8,7 @@ import "./HeaderLogo.style";
 import logo from "./logo/6thstreet_logo.png";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import Event,{ EVENT_TOP_NAV_DEFAULT,EVENT_GTM_TOP_NAV_CLICK } from "Util/Event";
+import Event,{ EVENT_TOP_NAV_DEFAULT,EVENT_GTM_TOP_NAV_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class HeaderLogo extends PureComponent {
@@ -28,7 +28,7 @@ class HeaderLogo extends PureComponent {
       : "home";
     setGender();
     setPrevPath(path);
-    Moengage.track_event(EVENT_TOP_NAV_DEFAULT, {
+    MOE_trackEvent(EVENT_TOP_NAV_DEFAULT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType(),

@@ -15,6 +15,8 @@ module.exports = {
         'fonts.gstatic.com',
         'apparel.oriserve.com',
         'sentry.io',
+        'sdk-01.moengage.com',
+        'moengage.com',
         /\.(ttf|tiff|woff|woff2|jpeg|png|webp)$/i
     ],
 };

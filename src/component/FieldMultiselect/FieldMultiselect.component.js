@@ -27,7 +27,8 @@ import Event,{
   EVENT_SIZES_SEARCH_FOCUS,
   EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
   EVENT_SET_PREFERENCES_GENDER,
-  EVENT_GTM_FILTER
+  EVENT_GTM_FILTER,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -276,7 +277,7 @@ class FieldMultiselect extends PureComponent {
     const facet_value = e.target.getAttribute("name");
     const checked = e.target.getAttribute("value") === "false" ? true : false;
     if (!isMobile.any() && checked) {
-      Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+      MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
@@ -284,7 +285,7 @@ class FieldMultiselect extends PureComponent {
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
-        Moengage.track_event(EVENT_SIZES_SEARCH_FILTER, {
+        MOE_trackEvent(EVENT_SIZES_SEARCH_FILTER, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
@@ -375,7 +376,7 @@ class FieldMultiselect extends PureComponent {
         : category == "gender" 
         ? EVENT_SET_PREFERENCES_GENDER
         : "";
-    Moengage.track_event(EVENT_MOE_PLP_FILTER, {
+    MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       filter_type: category || "",
@@ -383,7 +384,7 @@ class FieldMultiselect extends PureComponent {
       app6thstreet_platform: "Web",
     });
     if (MoeFilterEvent && MoeFilterEvent.length > 0) {
-      Moengage.track_event(MoeFilterEvent, {
+      MOE_trackEvent(MoeFilterEvent, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
@@ -588,7 +589,7 @@ class FieldMultiselect extends PureComponent {
   }
 
   sendMoeEvents (event, value){
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

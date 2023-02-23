@@ -36,9 +36,9 @@
     "Women": "النساء",
     "Men": "الرجال",
     "Kids": "لأطفال",
-    "women": "النساء",
-    "men": "الرجال",
-    "kids": "الأطفال",
+    "women": "نساء",
+    "men": "رجال",
+    "kids": "أطفال",
     "Brands A-Z": "الماركات",
     "New version available!": "تتوفر نسخة جديدة",
     "Page not found": "الصفحة غير موجودة",
@@ -379,7 +379,7 @@
     "You can create an account after checkout.": "يمكنك إنشاء حساب بعد إنهاء طلبك.",
     "Order Placed": "تم الطلب",
     "Coupon Code": "رمز الكوبون",
-    "Apply Coupon": "تطبيق الكوبون",
+    "Apply Coupon": "طبق الكوبون",
     "Deliver to this address": "التوصيل لهذا العنوان",
     "New address": "عنوان جديد",
     "Delivering to": "التوصيل إلى",
@@ -1179,5 +1179,9 @@
     "latest": null,
     "discount": null,
     "price_low": null,
-    "price_high": null
+    "price_high": null,
+    "Read less": "إقرأ أقل",
+    "SELECT A CITY": "حدد المدينة",
+    "SELECT AN AREA": "حدد المنطقة",
+    "Search...": " ابحث..."
 }

@@ -35,7 +35,8 @@ import Event, {
   EVENT_GTM_EDD_VISIBILITY,
   EVENT_TABBY_LEARN_MORE_CLICK,
   EVENT_GTM_PDP_TRACKING,
-  EVENT_MOE_EDD_VISIBILITY
+  EVENT_MOE_EDD_VISIBILITY,
+  MOE_trackEvent
 } from "Util/Event";
 import { TabbyPromoURL } from "./config";
 class PDPSummary extends PureComponent {
@@ -240,7 +241,7 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
-        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+        MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           edd_status: edd_info.has_pdp,
@@ -355,7 +356,7 @@ class PDPSummary extends PureComponent {
       },
       page: "pdp",
     });
-    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+    MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       edd_status: edd_info.has_pdp,
@@ -980,7 +981,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
+    MOE_trackEvent(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",

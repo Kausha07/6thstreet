@@ -19,10 +19,24 @@ import Loader from "Component/Loader";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_SORT_BY_DISCOUNT,
+  EVENT_SORT_BY_LATEST,
+  EVENT_SORT_BY_PRICE_HIGH,
+  EVENT_SORT_BY_PRICE_LOW,
+  EVENT_SORT_BY_RECOMMENDED,
+  EVENT_GTM_SORT,
+  MOE_trackEvent,
+  EVENT_MOE_PLP_FILTER,
+  EVENT_PLP_SORT,
+  EVENT_MOE_PLP_FILTER_CLICK,
+  EVENT_GTM_FILTER
 } from "Util/Event";
+import Logger from "Util/Logger";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
@@ -39,9 +53,13 @@ export class PLP extends PureComponent {
       circleBannerUrl: null,
       activeFilters: {},
       isArabic: isArabic(),
+      footerContent: {},
+      isToggleOn: true,
       isSortByOverlayOpen: false,
       selectedSortOption : 'recommended'
     };
+    this.getContent();
+    this.handleClick = this.handleClick.bind(this);
     this.sortByOverlay = createRef();
   }
 
@@ -71,6 +89,46 @@ export class PLP extends PureComponent {
     const { resetPLPData } = this.props;
     window.removeEventListener("mousedown", this.outsideCouponPopupClick);
     // resetPLPData();
+  }
+
+  getContent = async () => {
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html")) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      const contentFileName =
+        getCategoryLevel?.[0] == "women"
+          ? "plp_footer_women"
+          : getCategoryLevel?.[0] == "men"
+          ? "plp_footer_men"
+          : getCategoryLevel?.[0] == "kids"
+          ? "plp_footer_kids"
+          : getCategoryLevel?.[0] == "home"
+          ? "plp_footer_home"
+          : null;
+      if (contentFileName && getCategoryLevel?.length > 1) {
+        try {
+          const resp = await getStaticFile(contentFileName, {
+            $FILE_NAME: `pages/${contentFileName}.json`,
+          });
+          if (resp) {
+            this.setState({
+              footerContent: resp,
+            });
+          }
+        } catch (e) {
+          Logger.log(e);
+        }
+      }
+    }
+  };
+
+  handleClick() {
+    this.setState((prevState) => ({
+      isToggleOn: !prevState.isToggleOn,
+    }));
   }
 
   showMyAccountPopup = () => {
@@ -121,7 +179,16 @@ export class PLP extends PureComponent {
   }
 
   renderPLPDetails() {
-    return <PLPDetails {...this.props} />;
+    const { plpWidgetData } = this.props
+    const isBannerData = this.state.bannerData ? true : false;
+    const isFromCircleItemSlider = window.location.href.includes("plp_config");
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+    const widget = plpWidgetData?.filter((item) => item.tag == tagName);
+    return <PLPDetails {...this.props} isBannerData = {isBannerData && isFromCircleItemSlider} isWidgetData ={widget && widget.length !== 0} />;
   }
 
   renderPLPFilters() {
@@ -180,11 +247,91 @@ export class PLP extends PureComponent {
     );
   };
 
+  renderFooterContent() {
+    const { footerContent, isArabic, isToggleOn } = this.state;
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html") && footerContent?.[0]) {
+      const getCategoryLevel = pagePathName
+        .split(".html")[0]
+        .substring(1)
+        .split("/");
+      if (getCategoryLevel.length > 1) {
+        const footerHtml =
+          getCategoryLevel.length == 2
+            ? footerContent?.[0]?.[getCategoryLevel[1]]
+            : getCategoryLevel.length == 3
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[getCategoryLevel[2]]
+            : null;
+        const contentDescription = isArabic ? "ar" : "en";
+        const storeMap = {
+          AE: isArabic ? "الإمارات" : "UAE",
+          SA: isArabic ? "السعودية" : "Saudi Arabia",
+          KW: isArabic ? "الكويت" : "Kuwait",
+          OM: isArabic ? "سلطنة عمان" : "Oman",
+          BH: isArabic ? "البحرين" : "Bahrain",
+          QA: isArabic ? "قطر" : "Qatar",
+        };
+        const countryName = storeMap[getCountryFromUrl().toUpperCase()] || "";
+        if (footerHtml && footerHtml?.[contentDescription]) {
+          const footerContentDesc = footerHtml[contentDescription];
+          const updatedContent = footerContentDesc.includes(
+            "currentEmiratesName"
+          )
+            ? footerContentDesc.replaceAll("currentEmiratesName", countryName)
+            : footerContentDesc;
+          
+          return (
+            <>
+              <div block="PLP-FooterWrapper" mods={{ isArabic }}>
+                <div
+                  className={
+                    isToggleOn
+                      ? "PLP-FooterContainer loadMore"
+                      : "PLP-FooterContainer loadLess"
+                  }
+                  dangerouslySetInnerHTML={{
+                    __html: updatedContent,
+                  }}
+                />
+                {footerContentDesc.length > 180 ? (
+                  <div className="loadMore-section">
+                    <div
+                      className={
+                        isToggleOn
+                          ? "loadMore-Overlay show"
+                          : "loadMore-Overlay"
+                      }
+                    ></div>
+                    <div className="loadMoreBtn">
+                      <button onClick={this.handleClick}>
+                        {isToggleOn ? __("Read more") : __("Read less")}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          );
+        }
+      }
+    }
+  }
+
   showCouponDetial = (e) => {
     e.stopPropagation();
     this.setState({
       isSortByOverlayOpen: true,
     });
+    
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    Event.dispatch(EVENT_GTM_SORT, EVENT_PLP_SORT);
 
     const bodyElt = document.querySelector("body");
     bodyElt.style.overflow = "hidden";
@@ -193,6 +340,16 @@ export class PLP extends PureComponent {
   handleFilterClick = () => {
     const { showOverlay } = this.props;
     showOverlay("PLPFilter");
+
+    MOE_trackEvent(EVENT_MOE_PLP_FILTER_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    const eventData = {name: EVENT_MOE_PLP_FILTER_CLICK, value: ""};
+    Event.dispatch(EVENT_GTM_FILTER, eventData);
+  
   };
 
   outsideCouponPopupClick = (e) => {
@@ -292,6 +449,52 @@ export class PLP extends PureComponent {
       </div>
     );
   };
+  
+  sendTrackingEvent = (facet_key, facet_value) => {
+    const sendMoeEvents = (event) => {
+      MOE_trackEvent(event, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+      });
+    };
+
+    if(facet_key == "sort") {
+      const sortEventType =
+        facet_value == __("recommended")
+          ? EVENT_SORT_BY_RECOMMENDED
+          : facet_value == __("latest")
+          ? EVENT_SORT_BY_LATEST
+          : facet_value == __("discount")
+          ? EVENT_SORT_BY_DISCOUNT
+          : facet_value == __("price_low")
+          ? EVENT_SORT_BY_PRICE_LOW
+          : facet_value == __("price_high")
+          ? EVENT_SORT_BY_PRICE_HIGH
+          : "";
+      if (sortEventType && sortEventType.length > 0) {
+        sendMoeEvents(sortEventType);
+        Event.dispatch(EVENT_GTM_SORT, sortEventType);
+      }
+    } else {
+      MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        filter_type: facet_key || "",
+        filter_value: facet_value || "",
+        app6thstreet_platform: "Web",
+      });
+    }
+  }
+
+  sendSortByTrackingEvent = () =>{
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+    Event.dispatch(EVENT_GTM_SORT,EVENT_PLP_SORT);
+  }
 
   renderSortByOverlay = () => {
     const {filters, handleCallback} = this.props
@@ -300,7 +503,7 @@ export class PLP extends PureComponent {
       <div block="couponDetailPopup" mods={{isArabic}}>
         <div block="couponDetailOverlay">
           <div block="couponDetialPopupBlock" ref={this.sortByOverlay}>
-            <p block="couponItemCode">
+            <p block="couponItemCode" onClick={this.sendSortByTrackingEvent}>
               {__("SORT BY")}
             </p>
             {filters && Object.values(filters['sort'].data).map((filter,index)=>{
@@ -319,6 +522,7 @@ export class PLP extends PureComponent {
                           isSortByOverlayOpen:false
                         },()=>{
                           handleCallback(facet_key, facet_value, true, true)
+                          this.sendTrackingEvent(facet_key, facet_value);
                         })
                       }}
                     >
@@ -370,6 +574,7 @@ export class PLP extends PureComponent {
               )}
             </div>
           </ContentWrapper>
+          {this.renderFooterContent()}
         </main>
       );
     }

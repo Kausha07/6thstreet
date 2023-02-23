@@ -26,7 +26,7 @@ import pencil from "./icons/edit_btn.png";
 import trash from "./icons/trash.png";
 
 import "./MyAccountAddressTable.style";
-import { EVENT_MOE_EDIT_ADDRESS_CLICK } from "Util/Event";
+import { EVENT_MOE_EDIT_ADDRESS_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountAddressTable extends KeyValueTable {
@@ -62,7 +62,7 @@ export class MyAccountAddressTable extends KeyValueTable {
   onEdit = () => {
     const { onEditClick ,title } = this.props;
     onEditClick();
-    Moengage.track_event(EVENT_MOE_EDIT_ADDRESS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_EDIT_ADDRESS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: "Address Book",

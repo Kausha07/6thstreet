@@ -122,6 +122,7 @@ export const EVENT_FB_SHARE = "facebook_share_icon";
 export const EVENT_PINTEREST_SHARE = "pinterest_share_icon";
 export const EVENT_MOE_VIEW_PLP_ITEMS = "view_plp_items";
 export const EVENT_MOE_PLP_FILTER = "plp_filter";
+export const EVENT_MOE_PLP_FILTER_CLICK = "plp_filter_click";
 export const EVENT_MOE_SET_LANGUAGE = "set_language";
 export const EVENT_MOE_SET_COUNTRY = "set_country";
 export const EVENT_TABBY_LEARN_MORE_CLICK = "tabby_learn_more_click";

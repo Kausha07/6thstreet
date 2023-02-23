@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK } from "Util/Event";
+import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -365,7 +365,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     
-    Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
@@ -694,12 +694,23 @@ class PLPFilters extends PureComponent {
     );
   }
 
+  sendMoeEvents = () => {
+
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    Event.dispatch(EVENT_GTM_SORT,EVENT_PLP_SORT);
+  }
+
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
     const { handleCallback, filters } = this.props;
     return (
-      <div block="SortBy" key={index} mods={{ isArabic }}>
+      <div block="SortBy" key={index} mods={{ isArabic }} onClick={this.sendMoeEvents}>
         <PLPFilter
           key={key}
           filter={filter}

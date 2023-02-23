@@ -91,7 +91,7 @@ class MyAccountMobileHeader extends PureComponent {
         const { isClubApparel } = this.state;
 
         return !isClubApparel ? (
-            <div block="MyAccountMobileHeader">
+            <div block="MyAccountMobileHeader" id='MyAccountMobileHeader'>
                 { isHiddenTabContent
                     ? this.renderTabOptionHeader()
                     : this.renderStoreCredits() }

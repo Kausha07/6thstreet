@@ -11,6 +11,7 @@ import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPay
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
+import Loader from "Component/Loader";
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -546,8 +547,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   };
 
   render() {
+    const { loaderSelectPayMethod } = this.props;
     return (
       <div block="CheckoutPayments" dir={this.state.isArabic ? "rtl" : "ltr"}>
+        <Loader isLoading={loaderSelectPayMethod} />
         {this.renderContent()}
         {this.renderTabbyPopup()}
       </div>

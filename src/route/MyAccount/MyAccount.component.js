@@ -62,6 +62,7 @@ import Event, {
   EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
   EVENT_MOE_RETURN_AN_ITEM_CLICK,
   EVENT_ACCOUNT_PAYMENT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -182,7 +183,7 @@ export class MyAccount extends SourceMyAccount {
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     } else {
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         ...(event == EVENT_MOE_RETURN_AN_ITEM_CLICK && {

@@ -6,7 +6,7 @@ import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm
 import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
-import { EVENT_MOE_UPDATE_PROFILE } from "Util/Event";
+import { EVENT_MOE_UPDATE_PROFILE, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import isMobile from "Util/Mobile";
@@ -225,7 +225,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         phoneCountryCode + phone,
         "30",
       );
-      Moengage.track_event(EVENT_MOE_UPDATE_PROFILE, {
+      MOE_trackEvent(EVENT_MOE_UPDATE_PROFILE, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         gender: GetGender || "",

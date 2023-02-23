@@ -61,9 +61,12 @@ import Event, {
   EVENT_OTP_VERIFY_FAILED,
   EVENT_RESET_YOUR_PASSWORD_SUCCESS,
   EVENT_RESET_YOUR_PASSWORD_FAILED,
-  EVENT_FORGOT_PASSWORD_SCREEN_VIEW,
   EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW,
   EVENT_ACCOUNT_TAB_ICON,
+  MOE_AddFirstName,
+  MOE_addLastName,
+  MOE_addEmail,
+  MOE_addMobile
 } from "Util/Event";
 
 export const MyAccountDispatcher = import(
@@ -571,17 +574,17 @@ export class MyAccountOverlayContainer extends PureComponent {
               ? customerRegisterData?.name.substr(customerRegisterData?.name.indexOf(" ") + 1)
               : "";
               if (firstName){
-                Moengage.add_first_name(firstName);
+                MOE_AddFirstName(firstName);
               }
               if (lastName){
-                Moengage.add_last_name(lastName);
+                MOE_addLastName(lastName);
               }
             }
             if(customerRegisterData?.contact_no){
-              Moengage.add_mobile(customerRegisterData.contact_no);
+              MOE_addMobile(customerRegisterData.contact_no);
             }
             if(customerRegisterData?.email){
-              Moengage.add_email(customerRegisterData.email);
+              MOE_addEmail(customerRegisterData.email);
             }
             this.sendEvents(EVENT_REGISTER, eventAdditionalData);
           }
@@ -801,7 +804,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       title: __("Forgot password"),
       onBackClick: () => this.handleSignIn(e),
     });
-    this.sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
   }
 
   handleSignIn(e) {

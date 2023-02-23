@@ -49,7 +49,12 @@ import {
 } from "Util/Auth";
 import { getStore } from "Store";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_GENERAL_INIT,
+  VUE_PAGE_VIEW,
+  MOE_AddUniqueID,
+  MOE_destroySession,
+} from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
@@ -281,7 +286,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setClubApparel(getClubApparelInitialState()));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
-    Moengage.destroy_session();
+    MOE_destroySession();
 
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
@@ -400,7 +405,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
     if (user?.email) {
-      Moengage.add_unique_user_id(user?.email);
+      MOE_AddUniqueID(user?.email);
     }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
@@ -441,7 +446,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           }
       );
     if (options?.email){
-       Moengage.add_unique_user_id(options?.email);
+       MOE_AddUniqueID(options?.email);
     }
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",

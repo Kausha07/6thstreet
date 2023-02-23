@@ -34,7 +34,7 @@ import { Store } from "../Icons";
 import "./CartPageItem.extended.style";
 import "./CartPageItem.style";
 import Price from "Component/Price";
-import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT } from "Util/Event";
+import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT,MOE_trackEvent } from "Util/Event";
 import WishlistIcon from "Component/WishlistIcon";
 import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -934,7 +934,7 @@ export class CartItem extends PureComponent {
         },
       },
     } = this.props;
-    Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
+    MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brand_name || "",
