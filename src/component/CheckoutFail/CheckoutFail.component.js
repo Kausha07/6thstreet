@@ -6,7 +6,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import "./CheckoutFail.style";
-import { SUCCESS } from "Component/CareemPay/CareemPay.config";
+import { SUCCESS, FAILURE } from "Component/CareemPay/CareemPay.config";
 
 export class CheckoutFail extends CheckoutSuccess {
   componentWillUnmount() {
@@ -105,7 +105,11 @@ export class CheckoutFail extends CheckoutSuccess {
   }
 
   renderEdgeCaseMessage() {
-    const { careemPayInfo } = this.props;
+    const { careemPayInfo, careemPayStatus } = this.props;
+
+    if(careemPayStatus === FAILURE) {
+      return null;
+    }
 
     if(careemPayInfo && careemPayInfo.messageTitle && careemPayInfo.messageDetails ) {
       return (
