@@ -804,7 +804,7 @@ export class CheckoutSuccess extends PureComponent {
   renderContact = () => {
     const { isArabic } = this.state;
     const {config} = this.props;
-    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(" ", "") : null;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
     const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     const { phone } = this.getCountryConfigs();
     const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
