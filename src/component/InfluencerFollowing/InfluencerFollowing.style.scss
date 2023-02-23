@@ -211,7 +211,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  // margin: 70px auto 150px auto;
   width: 286px;
   text-align: center;
   .heartImage {
@@ -221,14 +220,14 @@
   .heading {
     font-size: 25px;
     letter-spacing: 1px;
-    text-transform: capitalize;
   }
   .signInButton {
     background-color: #000000;
     font-size: 12px;
     color: #ffffff;
     border-radius: 6px;
-    margin-top: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     text-transform: uppercase;
   }
 
@@ -263,7 +262,6 @@
   .emptyInfluencerHeading {
     font-size: 25px;
     letter-spacing: 1px;
-    text-transform: capitalize;
   }
 
   @include mobile {
