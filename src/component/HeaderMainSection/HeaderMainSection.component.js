@@ -94,6 +94,7 @@ class HeaderMainSection extends NavigationAbstract {
       isMobile: isMobile.any(),
       isPopup : false,
       recentSearches: [],
+      searchBarClick : false
     };
     this.searchRef = createRef();
     this.inputRef = createRef();
@@ -390,7 +391,8 @@ class HeaderMainSection extends NavigationAbstract {
 
   cancelSearch = () => {
     this.setState({
-      search : ""
+      search : "",
+      searchBarClick : false,
     })
   }
 
@@ -427,7 +429,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderSearchOverlay = () => {
     const {isPopup} = this.state;
-    this.setState({isPopup : !isPopup});
+    this.setState({isPopup : !isPopup, searchBarClick : true});
   }
 
   closeSearchPopup = () => {
@@ -582,7 +584,7 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderSearchIcon() {
-    const { isArabic, showPLPSearch, search, isPopup } = this.state;
+    const { isArabic, showPLPSearch, search, isPopup, searchBarClick } = this.state;
     if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
       return null;
     }
@@ -615,7 +617,7 @@ class HeaderMainSection extends NavigationAbstract {
                 placeholder={
                   isMobile.any() || isMobile.tablet()
                     ? __("What are you looking for?")
-                    : __("Search for brands...")
+                    : (!isPopup  || !searchBarClick) && __("Search for brands...")
                 }
                 onChange={(e) => this.onSearchChange(e)}
                 onFocus={this.onFocus}
