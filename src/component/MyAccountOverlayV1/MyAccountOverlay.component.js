@@ -488,7 +488,7 @@ export class MyAccountOverlay extends PureComponent {
       updateOTP,
       OTP,
       sendOTPOnMailOrPhone,
-      sendEvents
+      sendEvents,
     } = this.props;
     const {
       isArabic,
@@ -868,12 +868,7 @@ export class MyAccountOverlay extends PureComponent {
               name="password"
               autoComplete="new-password"
               onFocus={() => sendEvents(EVENT_TYPE_PASSWORD)}
-              validation={[
-                "notEmpty",
-                "password",
-                "containNumber",
-                "containCapitalize",
-              ]}
+              validation={["notEmpty", "password"]}
             />
           </fieldset>
           <div
@@ -1291,7 +1286,7 @@ export class MyAccountOverlay extends PureComponent {
               block: "MyAccountOverlayV1",
               elem: isLoading ? "LoadingButton" : "",
             }}
-            onClick={() =>sendEvents(EVENT_SIGN_IN_BUTTON_CLICK)}
+            onClick={() => sendEvents(EVENT_SIGN_IN_BUTTON_CLICK)}
           >
             {!isLoading ? (
               __("Sign In")
