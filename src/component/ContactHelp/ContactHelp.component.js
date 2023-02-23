@@ -63,7 +63,7 @@ export class ContactHelp extends PureComponent {
   renderContactUs() {
     const { config } = this.props;
     const { openHoursLabel, toll_free,phone } = this.getCountryConfigs();
-    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(" ", "") : null;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
     const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     const updatedPhoneLink = phone ? phone.replaceAll(" ","") : "";
     return (

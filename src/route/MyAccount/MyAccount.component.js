@@ -407,7 +407,7 @@ export class MyAccount extends SourceMyAccount {
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     const payloadKey = Object.keys(payload)[0];
-    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(" ", "") : null;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
     const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     return (
       <ContentWrapper

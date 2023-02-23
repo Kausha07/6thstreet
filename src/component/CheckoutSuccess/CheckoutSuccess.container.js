@@ -53,7 +53,8 @@ export const mapStateToProps = (state) => ({
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
-  config: Config.isRequired,
+  config: state.AppConfig.config,
+  country: state.AppState.country,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -106,7 +107,8 @@ export class CheckoutSuccessContainer extends PureComponent {
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
     newSignUpEnabled: PropTypes.bool,
-    country: PropTypes.string,
+    config: Config.isRequired,
+    country: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
