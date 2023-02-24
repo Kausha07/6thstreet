@@ -104,10 +104,12 @@ export class PDPSummaryContainer extends PureComponent {
     if (brand_name) {
       try {
         getBrandInfoByName(brand_name).then((resp)=>{
-          setBrandInfoData(resp?.result[0].url_path)
-        this.setState({
-          url_path: resp?.result[0].url_path
-        });
+          if(resp?.success && resp?.result != null ) {
+            setBrandInfoData(resp?.result[0].url_path)
+            this.setState({
+              url_path: resp?.result[0].url_path
+            });
+          }
         })
       } catch (err) {
         console.error("There is an issue while fetching brand information.",err);
