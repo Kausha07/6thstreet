@@ -885,6 +885,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           cross_border = 0,
           sku,
           extension_attributes,
+          international_vendor = null
         } = full_item_info;
         const defaultDay = extension_attributes?.click_to_collect_store
           ? edd_info.ctc_message
@@ -926,7 +927,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           cross_border: cross_border,
           edd_message_en: actualEddMess,
           edd_message_ar: actualEddMess,
-          intl_vendors:null
+          intl_vendors: cross_border && international_vendor ? international_vendor : null
         });
       });
     }
