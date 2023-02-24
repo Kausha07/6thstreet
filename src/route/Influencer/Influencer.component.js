@@ -34,6 +34,8 @@ const Influencer = (props) => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [isRefineButtonClicked, setRefine] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [isMoileRefineButtonClicked, setIsMoileRefineButtonClicked] =
+    useState(false);
   const [influencerSearchText, setInfluencerSearchText] = useState("");
   const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
   const [followingList, setFollowingList] = useState([]);
@@ -74,13 +76,13 @@ const Influencer = (props) => {
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
-    if (isRefineButtonClicked && isMobile.any()) {
+    if (isMoileRefineButtonClicked && isMobile.any()) {
       html.style.overflow = "hidden";
     }
     return () => {
       html.style.overflow = "auto";
     };
-  }, [isRefineButtonClicked]);
+  }, [isMoileRefineButtonClicked]);
 
   const buttonSignedIn = (val) => {
     setLoggedIn(val);
@@ -117,11 +119,11 @@ const Influencer = (props) => {
       setRefine(false);
     }
     if (
-      isRefineButtonClicked &&
+      isMoileRefineButtonClicked &&
       mobileRefineWrapperRef.current &&
       !mobileRefineWrapperRef.current.contains(e.target)
     ) {
-      setRefine(false);
+      setIsMoileRefineButtonClicked(false);
     }
   };
 
@@ -262,7 +264,7 @@ const Influencer = (props) => {
 
   const renderRefine = () => {
     return (
-      <div block="refineButton-div" elem="Refine">
+      <div block="refineButton-div" elem="Refine" ref={refineWrapperRef}>
         <button
           block="refineButton"
           onClick={(e) => handleRefineButtonClick(e)}
@@ -276,7 +278,7 @@ const Influencer = (props) => {
         </button>
 
         {!isMobile.any() && isRefineButtonClicked ? (
-          <div block="refineFilter" ref={refineWrapperRef}>
+          <div block="refineFilter">
             <ul
               block="ul"
               onClick={(e) => handleRefineButtonClick(e)}
@@ -403,7 +405,11 @@ const Influencer = (props) => {
           {!isMobile.any() && (
             <div className="influencerSearch">{renderInfluencerSearch()}</div>
           )}
-          <div block="Refine">{renderRefine()}</div>
+          {!isMobile.any() ? (
+            <div block="Refine">{renderRefine()}</div>
+          ) : (
+            isMobile.any() && <div block="Refine">{renderMsiteRefine()}</div>
+          )}
         </div>
 
         {isMobile.any() && (
@@ -413,11 +419,33 @@ const Influencer = (props) => {
     );
   };
 
+  const handleMobileRefineButtonClick = () => {
+    setIsMoileRefineButtonClicked(!isMoileRefineButtonClicked);
+  };
+
+  const renderMsiteRefine = () => {
+    return (
+      <div block="refineButton-div" elem="Refine">
+        <button
+          block="refineButton"
+          onClick={(e) => handleMobileRefineButtonClick(e)}
+        >
+          <img
+            block="refineImage"
+            mods={{ isArabic: isArabic() }}
+            src={Refine}
+          />
+          {__("refine")}
+        </button>
+      </div>
+    );
+  };
+
   const renderMsite = () => {
     const genderArray = ["Women", "Men", "Kids"];
     return (
       <>
-        {isMobile.any() && isRefineButtonClicked && (
+        {isMobile.any() && isMoileRefineButtonClicked && (
           <div block="refinePopupInfluencer">
             <div block="refineOverlayInfluencer">
               <div
@@ -442,7 +470,7 @@ const Influencer = (props) => {
                         value={val}
                         onClick={() => {
                           setSelectedGender(val.toUpperCase());
-                          setRefine(false);
+                          setIsMoileRefineButtonClicked(false);
                         }}
                         key={index}
                       >
@@ -466,19 +494,6 @@ const Influencer = (props) => {
 
   return (
     <main block="Influencer">
-      {renderMsite()}
-      {isSearchButtonClicked && isMobile.any() && (
-        <InfluencerSearch
-          followingList={followingList}
-          selectedGender={selectedGender}
-          masterTrendingInfo={masterTrendingInfo}
-          influencerSearchText={influencerSearchText}
-          updateFollowingList={updateFollowingList}
-          renderMySignInPopup={showMyAccountPopup}
-          guestUser={guestUser}
-          closeSearchMobilePopUp={closeSearchMobilePopUp}
-        />
-      )}
       <ContentWrapper
         mix={{ block: "Influencer" }}
         wrapperMix={{
@@ -488,6 +503,19 @@ const Influencer = (props) => {
         label={__("Influencer")}
       >
         {renderHeader()}
+        {renderMsite()}
+        {isSearchButtonClicked && isMobile.any() && (
+          <InfluencerSearch
+            followingList={followingList}
+            selectedGender={selectedGender}
+            masterTrendingInfo={masterTrendingInfo}
+            influencerSearchText={influencerSearchText}
+            updateFollowingList={updateFollowingList}
+            renderMySignInPopup={showMyAccountPopup}
+            guestUser={guestUser}
+            closeSearchMobilePopUp={closeSearchMobilePopUp}
+          />
+        )}
         <div block="trendingBlock">
           {renderMySignInPopup()}
           {showTrending && navigateTrending()}
