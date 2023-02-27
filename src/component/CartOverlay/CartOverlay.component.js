@@ -64,17 +64,17 @@ export class CartOverlay extends PureComponent {
     return `${quote_currency_code} ${parseFloat(price).toFixed(decimals)}`;
   }
 
-  fitlerItemArr = ( items = [] ) => {
-    let filterArrOne =[];
-    let filterArrTwo = [];
+  fitlerOutOfStokItems = ( items = [] ) => {
+    let avibaleProducts = [];
+    let outOfStokProducts =[];
     items.map((item)=>{
       if(item?.availableQty === 0 || item?.availableQty < item?.qty){
-        filterArrOne.push(item);
+        outOfStokProducts.push(item);
       }else {
-        filterArrTwo.push(item);
+        avibaleProducts.push(item);
       }
     });
-    return [ ...filterArrTwo, ...filterArrOne ];
+    return [ ...avibaleProducts, ... outOfStokProducts ];
   }
 
   renderCartItems() {
@@ -87,7 +87,7 @@ export class CartOverlay extends PureComponent {
       return this.renderNoCartItems();
     }
 
-    const cartItems = this.fitlerItemArr(items);
+    const cartItems = this.fitlerOutOfStokItems(items);
 
     return (
       <ul block="CartOverlay" elem="Items" aria-label="List of items in cart">
