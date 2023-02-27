@@ -2,7 +2,7 @@ import CatalogueAPI from 'Util/API/provider/CatalogueAPI'
 
 export const getBrandInfoByName = (brandName) => CatalogueAPI.get(
     `brands`
-    + `?name=${brandName}`
+    + `?name=${encodeURIComponent(brandName)}`
 ) || {};
 
 export const getAllBrands = () => CatalogueAPI.get(
