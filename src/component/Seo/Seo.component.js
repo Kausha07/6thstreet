@@ -25,9 +25,9 @@ export class Seo extends PureComponent {
         const { setMeta, metaData: { canonical_url: canonicalUrl }, metaData } = this.props;
         const { origin = '', pathname = '' } = location || {};
         const urlWithoutParams =
-            pathname !== "/catalogsearch/result/"
-                ? `${origin}${pathname}`
-                : `${origin}${"/"}`;
+            pathname === "/catalogsearch/result/" || pathname === "/viewall/"
+                ? `${origin}${"/"}`
+                : `${origin}${pathname}`;
         if (urlWithoutParams && canonicalUrl !== urlWithoutParams) {
             const hreflangs = this.renderHreflangs();
 
