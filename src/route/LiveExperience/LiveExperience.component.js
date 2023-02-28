@@ -1,39 +1,52 @@
 import { PureComponent } from "react";
 import Countdown from "react-countdown";
-import ContentWrapper from "Component/ContentWrapper";
+
+import { getStore } from "Store";
+
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
+import { fetchQuery } from "Util/Request";
+import { getProductInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint";
+import BrowserDatabase from "Util/BrowserDatabase";
+
+import ContentWrapper from "Component/ContentWrapper";
+import Search from "Component/Icons/Search/icon.svg";
+
+import UrlRewritesQuery from "Query/UrlRewrites.query";
+import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+
 import "./LiveExperience.style.scss";
-import cartIcon from "./icons/cart-icon.png";
 import timerIcon from "./icons/timer.png";
 import calenderIcon from "./icons/calendar.svg";
 import playbtn from "./icons/player.svg";
-import Refine from "../../component/Icons/Refine/icon.png";
-import { isArabic } from "Util/App";
-import UrlRewritesQuery from "Query/UrlRewrites.query";
-import { fetchQuery } from "Util/Request";
-
-import BrowserDatabase from "Util/BrowserDatabase";
-import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
-import VueIntegrationQueries from "Query/vueIntegration.query";
-import { getStore } from "Store";
-import { getProductInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint"
-
 export class LiveExperience extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       url: null,
-      month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ],
+      month: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
       isLive: false,
       archivedItemToShow: 9,
       isRefineButtonClicked: false,
       influencerSearchText: "",
       isArabic: isArabic(),
       ProductDetails: {},
-      ProductDetailsObj:{},
-      itemIdArr:{},
+      ProductDetailsObj: {},
+      itemIdArr: {},
       item_id: null,
       filterCount: -1,
     };
@@ -56,8 +69,7 @@ export class LiveExperience extends PureComponent {
       this.onClickPartyPlay(this.props.livepartyId);
     }
 
-    if(this.props.FABautoplayLiveShopping)
-    {
+    if (this.props.FABautoplayLiveShopping) {
       this.onClickPartyPlay(this.props.FABautoplayLiveShopping);
     }
 
@@ -66,8 +78,8 @@ export class LiveExperience extends PureComponent {
     this.renderUpcomingParty();
 
     this.renderArchivedParty();
-    if(isMobile.any()){
-      document.querySelector(".HeaderGenders").style.display= "none";
+    if (isMobile.any()) {
+      document.querySelector(".HeaderGenders").style.display = "none";
     }
   }
 
@@ -106,7 +118,8 @@ export class LiveExperience extends PureComponent {
         if (val.title.toLowerCase().includes(lowerInfluencerSearchText)) {
           return val;
         }
-      }).map(this.renderArchivedGridBlock);
+      })
+      .map(this.renderArchivedGridBlock);
     this.setState({ filterCount: FilteredContent.length });
     return FilteredContent;
   }
@@ -150,7 +163,10 @@ export class LiveExperience extends PureComponent {
                 ) : (
                   <div block="eventStart-calender">
                     <img src={calenderIcon} alt="calenderIcon" />
-                    <div block="calenderFormatter" mods={{ isArabic }}>{` ${d.getDate()}-${
+                    <div
+                      block="calenderFormatter"
+                      mods={{ isArabic }}
+                    >{` ${d.getDate()}-${
                       this.state.month[d.getMonth()]
                     } at ${d.toLocaleString("en-US", {
                       hour: "numeric",
@@ -200,7 +216,10 @@ export class LiveExperience extends PureComponent {
             ) : (
               <div block="eventStart-calender">
                 <img src={calenderIcon} alt="calenderIcon" />
-                <div block="calenderFormatter" mods={{ isArabic }}>{`${d.getDate()}-${
+                <div
+                  block="calenderFormatter"
+                  mods={{ isArabic }}
+                >{`${d.getDate()}-${
                   this.state.month[d.getMonth()]
                 } at ${d.toLocaleString("en-US", {
                   hour: "numeric",
@@ -253,21 +272,19 @@ export class LiveExperience extends PureComponent {
 
   getProductDetails = async (id) => {
     try {
-      return getProductInfo({id}).then(
-        async ({ publicUrl }) => {
-          const { pathname: urlParam } = new URL(publicUrl);
-          const { requestProduct } = this.props;
-          const { urlResolver } = await fetchQuery(
-            UrlRewritesQuery.getQuery({ urlParam })
-          );
-          if (urlResolver) {
-            const { id } = urlResolver;
-            return requestProduct({ options: { id } }).then((response) => {
-              return response;
-            });
-          }
+      return getProductInfo({ id }).then(async ({ publicUrl }) => {
+        const { pathname: urlParam } = new URL(publicUrl);
+        const { requestProduct } = this.props;
+        const { urlResolver } = await fetchQuery(
+          UrlRewritesQuery.getQuery({ urlParam })
+        );
+        if (urlResolver) {
+          const { id } = urlResolver;
+          return requestProduct({ options: { id } }).then((response) => {
+            return response;
+          });
         }
-      );
+      });
     } catch (error) {
       console.error(error);
     }
@@ -400,7 +417,11 @@ export class LiveExperience extends PureComponent {
             const {
               data: { item_id },
             } = res;
-            this.setState({ item_id: item_id, cartId: cartId,itemIdArr :{...this.state.itemIdArr,[addedItem.sku]:item_id }});
+            this.setState({
+              item_id: item_id,
+              cartId: cartId,
+              itemIdArr: { ...this.state.itemIdArr, [addedItem.sku]: item_id },
+            });
             callback(true); // item successfully added to cart
           })
           .catch((error) => {
@@ -421,53 +442,59 @@ export class LiveExperience extends PureComponent {
       player.on(player.EVENT.UPDATE_ITEM_IN_CART, (updatedItem, callback) => {
         const { item_id, ProductDetailsObj, itemIdArr } = this.state;
         let productQuantity = null;
-        const isUpdatedItemCount = Object.values(ProductDetailsObj).filter((obj) => {
-          let filteredProductCount = null;
-          Object.keys(obj.simple_products).filter((objSku) => {
-            if (objSku === updatedItem.sku) {
-              filteredProductCount = obj.simple_products[objSku].quantity;
-            }
-          });
-          if(filteredProductCount){
-            productQuantity = +filteredProductCount
-          }
-          return filteredProductCount;
-        });
-        if (updatedItem.quantity > 0) {
-          if(updatedItem.quantity < 11 && updatedItem.quantity <= productQuantity) {
-            this.UpdateProductsInCart(updatedItem, currency)
-            .then(() => {
-              // cart update was successful
-              callback(true);
-            })
-            .catch(function (error) {
-              if (error.type === "out-of-stock") {
-                callback({
-                  success: false,
-                  reason: "out-of-stock",
-                });
-              } else {
-                callback(false);
+        const isUpdatedItemCount = Object.values(ProductDetailsObj).filter(
+          (obj) => {
+            let filteredProductCount = null;
+            Object.keys(obj.simple_products).filter((objSku) => {
+              if (objSku === updatedItem.sku) {
+                filteredProductCount = obj.simple_products[objSku].quantity;
               }
             });
-          }else if(updatedItem.quantity > productQuantity){
+            if (filteredProductCount) {
+              productQuantity = +filteredProductCount;
+            }
+            return filteredProductCount;
+          }
+        );
+        if (updatedItem.quantity > 0) {
+          if (
+            updatedItem.quantity < 11 &&
+            updatedItem.quantity <= productQuantity
+          ) {
+            this.UpdateProductsInCart(updatedItem, currency)
+              .then(() => {
+                // cart update was successful
+                callback(true);
+              })
+              .catch(function (error) {
+                if (error.type === "out-of-stock") {
+                  callback({
+                    success: false,
+                    reason: "out-of-stock",
+                  });
+                } else {
+                  callback(false);
+                }
+              });
+          } else if (updatedItem.quantity > productQuantity) {
             callback({
               success: false,
               reason: "custom-error",
-              message: "Some products or selected quantities are no longer available",
+              message:
+                "Some products or selected quantities are no longer available",
             });
-          }else {
+          } else {
             callback({
               success: false,
               reason: "custom-error",
-              message: "You have exceeded the maximum limit to add this product",
+              message:
+                "You have exceeded the maximum limit to add this product",
             });
           }
         }
 
         if (updatedItem.quantity === 0) {
-          this.removeProducts(
-            itemIdArr[updatedItem.sku])
+          this.removeProducts(itemIdArr[updatedItem.sku])
             .then(() => {
               // successfully deleted item
               callback(true);
@@ -600,26 +627,14 @@ export class LiveExperience extends PureComponent {
 
     return (
       <div block="refineButton-div" elem="Refine" mods={{ isArabic }}>
-        {isRefineButtonClicked ? (
-          <input
-            type="text"
-            block="influencerSearchInput"
-            mods={{ isArabic }}
-            placeholder={__("Search for Influencer's title")}
-            onChange={this.handleSearchInfluencerText}
-          />
-        ) : (
-          ""
-        )}
-        <button
-          block="refine-button"
+        <img block="searchImage" mods={{ isArabic }} src={Search} />
+        <input
+          type="text"
+          block="influencerSearchInput"
           mods={{ isArabic }}
-          onClick={this.handleRefineButtonClick}
-        >
-          {" "}
-          <img block="refineImage" mods={{ isArabic }} src={Refine} />{" "}
-          {__("Search")}
-        </button>
+          placeholder={__("Search for Influencer's title")}
+          onChange={this.handleSearchInfluencerText}
+        />
       </div>
     );
   }
