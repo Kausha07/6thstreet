@@ -36,6 +36,7 @@ import {
 import BrowserDatabase from "Util/BrowserDatabase";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
+import PrivacyPolicy from "./icons/PrivacyPolicy.svg";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -53,6 +54,7 @@ import {
   EVENT_FORGOT_PASSWORD_CLICK,
   EVENT_LOGIN_DETAILS_ENTERED,
   EVENT_REGISTERATION_DETAILS_ENTERED,
+  MOE_trackEvent
 } from "Util/Event";
 import "./MyAccountOverlay.style";
 
@@ -121,6 +123,7 @@ export class MyAccountOverlay extends PureComponent {
   componentDidMount() {
     if (isMobile.any()) {
       document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     }
 
     // gapi.load("auth2", () => {
@@ -210,7 +213,7 @@ export class MyAccountOverlay extends PureComponent {
     }
   }
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -884,6 +887,12 @@ export class MyAccountOverlay extends PureComponent {
           <Link className="faq" to="/faq">
             {__("FAQs")}
           </Link>
+        </li>
+        <li block="MyAccountTabListItem PrivacyTab">
+          <div className="privacy_policy_icon">
+            <img src={PrivacyPolicy} alt="privacy-policy" />
+          </div>
+          <Link to="/privacy-policy">{__("Privacy Policy")}</Link>
         </li>
       </ul>
     );

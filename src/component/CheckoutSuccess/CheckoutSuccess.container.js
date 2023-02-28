@@ -12,7 +12,6 @@ import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
 import { updateMeta } from "Store/Meta/Meta.action";
-import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
@@ -21,6 +20,15 @@ import { customerType } from "Type/Account";
 import { TotalsType } from "Type/MiniCart";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUID, getUUIDToken } from "Util/Auth";
+import {
+  sendOTP,
+  sendOTPViaEmail,
+} from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import Event, {
+  EVENT_OTP_VERIFY,
+  EVENT_OTP_VERIFY_FAILED,
+  EVENT_GTM_NEW_AUTHENTICATION,
+} from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
@@ -29,6 +37,9 @@ import CheckoutSuccess from "./CheckoutSuccess.component";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
+);
+export const MyAccountDispatcher = import(
+  "Store/MyAccount/MyAccount.dispatcher"
 );
 
 export const mapStateToProps = (state) => ({
@@ -39,8 +50,9 @@ export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   config: state.AppConfig.config,
   eddResponse: state.MyAccountReducer.eddResponse,
-  intlEddResponse:state.MyAccountReducer.intlEddResponse,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,6 +76,14 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+  loginAccount: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.loginAccount(options, dispatch)
+    ),
+  signInOTP: (options) =>
+    MyAccountDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.signInOTP(options, dispatch)
+    ),
   setCheckoutDetails: (checkoutDetails) =>
     CartDispatcher.setCheckoutStep(dispatch, checkoutDetails),
 });
@@ -84,6 +104,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     getMember: PropTypes.func.isRequired,
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
+    newSignUpEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -97,6 +118,9 @@ export class CheckoutSuccessContainer extends PureComponent {
     isPhoneVerified: false,
     isChangePhonePopupOpen: false,
     isMobileVerification: false,
+    isLoading: false,
+    email: null,
+    otpError: "",
   };
 
   containerFunctions = {
@@ -106,6 +130,10 @@ export class CheckoutSuccessContainer extends PureComponent {
     onResendCode: this.onResendCode.bind(this),
     changePhone: this.changePhone.bind(this),
     toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this),
+    onGuestAutoSignIn: this.onGuestAutoSignIn.bind(this),
+    sendOTPOnMailOrPhone: this.sendOTPOnMailOrPhone.bind(this),
+    OtpErrorClear: this.OtpErrorClear.bind(this),
+    sendEvents: this.sendEvents.bind(this),
   };
 
   constructor(props) {
@@ -269,9 +297,27 @@ export class CheckoutSuccessContainer extends PureComponent {
     this.setState({ phone: phonecode + phone });
   }
 
+  sendEvents(name, data = {}) {
+    const {newSignUpEnabled} = this.props;
+    const eventData = {
+      name: name,
+      screen: "checkout",
+      prevScreen: "checkout",
+      ...(data.failedReason && { failedReason: data?.failedReason }),
+    };
+    if (newSignUpEnabled){
+      Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
+    }
+  }
+
   onVerifySuccess(fields) {
-    const { verifyUserPhone, isSignedIn, orderID, showNotification } =
-      this.props;
+    const {
+      verifyUserPhone,
+      isSignedIn,
+      orderID,
+      showNotification,
+      newSignUpEnabled,
+    } = this.props;
 
     const { phone } = this.state;
     if (phone) {
@@ -288,8 +334,17 @@ export class CheckoutSuccessContainer extends PureComponent {
                 "success",
                 __("Phone was successfully verified")
               );
+              if (newSignUpEnabled) {
+                this.sendEvents(EVENT_OTP_VERIFY);
+              }
               this.setState({ isMobileVerification: false });
             } else {
+              if (newSignUpEnabled) {
+                const eventAdditionalData = {
+                  failedReason: "Wrong Verification Code. Please re-enter",
+                };
+                this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+              }
               showNotification(
                 "error",
                 __("Wrong Verification Code. Please re-enter")
@@ -306,9 +361,19 @@ export class CheckoutSuccessContainer extends PureComponent {
           order_id: orderID,
         }).then((response) => {
           if (response.success) {
+            if (newSignUpEnabled) {
+              this.sendEvents(EVENT_OTP_VERIFY);
+            }
             this.setState({ isPhoneVerified: true });
             this.setState({ isMobileVerification: false });
           } else {
+            if (newSignUpEnabled) {
+              const eventAdditionalData = {
+                failedReason:
+                  "Verification failed. Please enter valid verification code",
+              };
+              this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+            }
             showNotification(
               "error",
               __("Verification failed. Please enter valid verification code")
@@ -319,32 +384,141 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
   }
 
-  onResendCode() {
+  async onGuestAutoSignIn(otp, shouldLoginWithOtpOnEmail) {
+    const { phone, email } = this.state;
+    try {
+      if (otp.length === 5) {
+        const { loginAccount, showNotification, newSignUpEnabled } = this.props;
+        this.setState({ isLoading: true });
+        let payload;
+        if (shouldLoginWithOtpOnEmail) {
+          payload = {
+            password: otp,
+            email_otp: true,
+            username: email,
+          };
+        } else {
+          payload = {
+            password: otp,
+            is_phone: true,
+            username: phone,
+          };
+        }
+        const response = await loginAccount(payload);
+        if (response.success) {
+          const { signInOTP } = this.props;
+          if (newSignUpEnabled) {
+            this.sendEvents(EVENT_OTP_VERIFY);
+          }
+          try {
+            await signInOTP(response);
+            history.push("/my-account/my-orders");
+          } catch (e) {
+            this.setState({ isLoading: false });
+            showNotification("error", e.message);
+          }
+          this.setState({
+            isLoading: false,
+          });
+        }
+        if (response && typeof response === "string") {
+          this.setState({
+            otpError: response,
+          });
+          showNotification("error", response);
+          if (newSignUpEnabled) {
+            const eventAdditionalData = {
+              failedReason: response,
+            };
+            this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+          }
+        }
+        this.setState({ isLoading: false });
+      }
+    } catch (err) {
+      const {newSignUpEnabled} = this.props;
+      this.setState({ isLoading: false });
+      console.error("Error while creating customer", err);
+      if (newSignUpEnabled) {
+        const eventAdditionalData = {
+          failedReason: err ? err : "Error while creating customer",
+        };
+        this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
+      }
+    }
+  }
+
+  async sendOTPOnMailOrPhone(shouldLoginWithOtpOnEmail) {
+    const { phone } = this.state;
+    const { showNotification } = this.props;
+    try {
+      let response;
+      this.setState({ isLoading: true });
+      if (shouldLoginWithOtpOnEmail) {
+        response = await sendOTPViaEmail({
+          mobile: phone,
+          flag: "login",
+        });
+        if (response && response.email_id) {
+          this.setState({
+            email: response.email_id,
+          });
+        }
+      } else {
+        response = await sendOTP({
+          phone: phone,
+          flag: "login",
+        });
+      }
+      if (response && response.error) {
+        const { error } = response;
+        if (typeof error === "string") {
+          showNotification("error", response.error);
+        }
+      }
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+      console.error("error while sending OTP", error);
+    }
+  }
+
+  async onResendCode(isVerifyEmailViewState) {
     const { sendVerificationCode, showNotification } = this.props;
     const { phone = "" } = this.state;
     const countryCodeLastChar = 4;
     const countryCode = phone.slice(1, countryCodeLastChar);
     const mobile = phone.slice(countryCodeLastChar);
-    sendVerificationCode({ mobile, countryCode }).then((response) => {
-      if (!response.error) {
-        showNotification(
-          "success",
-          __("Verification code was successfully re-sent")
-        );
-      } else {
-        if (response.data) {
-          // eslint-disable-next-line max-len
+    try {
+      if (isVerifyEmailViewState) {
+        const response = await sendOTPViaEmail({
+          mobile: phone,
+          flag: "login",
+        });
+        if (!response.error) {
           showNotification(
-            "info",
-            __(
-              "Please wait %s before re-sending the request",
-              response.data.timeout
-            )
+            "success",
+            __("Verification code was successfully re-sent")
           );
         }
-        showNotification("error", response.error);
+      } else {
+        sendVerificationCode({ mobile: phone, countryCode }).then(
+          (response) => {
+            if (!response.error) {
+              showNotification(
+                "success",
+                __("Verification code was successfully re-sent")
+              );
+            } else {
+              showNotification("error", response.error);
+            }
+          },
+          this._handleError
+        );
       }
-    }, this._handleError);
+    } catch (error) {
+      console.error("error while sending OTP", error);
+    }
   }
 
   changeActiveTab(activeTab) {
@@ -371,6 +545,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       name: CUSTOMER_ACCOUNT_PAGE,
       onBackClick: () => history.push("/"),
     });
+  }
+
+  OtpErrorClear() {
+    this.setState({ otpError: "" });
   }
 
   render() {

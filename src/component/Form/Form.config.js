@@ -19,7 +19,7 @@ export const onlyCharacters = ({value}) => value.trim().match(/^([a-zA-Z]+\s)*[a
 export default {
     email: {
         validate: validateEmail,
-        message: __('Email is invalid.')
+        message: __('Invalid email address')
     },
     emails: {
         validate: validateEmails,
@@ -39,11 +39,11 @@ export default {
     },
     telephone: {
         validate: validateTelephone,
-        message: __('Please verify if the phone number is correct')
+        message: __('Please ensure you input the correct mobile number')
     },
     telephoneAE: {
         validate: validateTelephoneAE,
-        message: __('Please verify if the phone number is correct')
+        message: __('Please ensure you input the correct mobile number')
     },
     notEmpty: {
         validate: isNotEmpty,

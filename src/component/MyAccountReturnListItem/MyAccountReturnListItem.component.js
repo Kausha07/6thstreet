@@ -3,7 +3,7 @@ import { PureComponent } from "react";
 
 import Link from "Component/Link";
 import { Return } from "Util/API/endpoint/Return/Return.type";
-import { EVENT_MOE_RETURN_REQUEST_CLICK } from "Util/Event";
+import { EVENT_MOE_RETURN_REQUEST_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import "./MyAccountReturnListItem.style";
 
@@ -62,7 +62,7 @@ class MyAccountReturnListItem extends PureComponent {
   }
 
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

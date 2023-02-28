@@ -317,7 +317,7 @@ export class CartItem extends PureComponent {
       minSaleQuantity,
       maxSaleQuantity,
       handleChangeQuantity,
-      item: { qty },
+      item: { qty, row_total },
     } = this.props;
     if(maxSaleQuantity === 0){
       return null;
@@ -328,6 +328,22 @@ export class CartItem extends PureComponent {
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
+
+    if(row_total === 0 && qty) {
+      return (
+        <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
+          <select value={qty}>
+                <option
+                  block="CartItem"
+                  elem="QuantityOption"
+                  value={qty}
+                >
+                  {qty}
+                </option>
+          </select>
+        </div>
+      );
+    }
 
     return (
       <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
@@ -517,6 +533,7 @@ export class CartItem extends PureComponent {
         bundle_options,
         full_item_info: { cross_border = 0 },
         brand_name = "",
+        row_total,
       },
       intlEddResponse
     } = this.props;
@@ -547,7 +564,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
-        {this.renderActions()}
+        {row_total === 0 ? null : this.renderActions()}
       </figcaption>
     );
   }

@@ -132,8 +132,9 @@ export class PLPFiltersContainer extends PureComponent {
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query, handleResetFilter } = this.props;
+    const { query, handleResetFilter, resetSortData } = this.props;
     handleResetFilter()
+    resetSortData();
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
       WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);

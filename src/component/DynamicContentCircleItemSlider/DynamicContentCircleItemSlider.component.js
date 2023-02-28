@@ -18,9 +18,10 @@ import {
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 import Image from "Component/Image";
-import MobileAPI from "Util/API/provider/MobileAPI";
 import { getBambuserChannelID } from "../../util/Common/index";
 import { connect } from "react-redux";
+import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
+import { getPartyInfo } from "Util/API/endpoint/LiveParty/LiveParty.endpoint"
 
 const settings = {
   lazyload: true,
@@ -44,6 +45,10 @@ const settings = {
 
 export const mapStateToProps = (state) => ({
   is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+});
+export const mapDispatchToProps = (dispatch) => ({
+  setIsLive : (options) =>
+    LivePartyDispatcher.setIsLive(options, dispatch),
 });
 
 class DynamicContentCircleItemSlider extends PureComponent {
@@ -79,8 +84,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 
   fetchLivePartyData = () => {
+    const { setIsLive } = this.props;
     try {
-      MobileAPI.get(`bambuser/data/${Config.storeId}`).then((response) => {
+      getPartyInfo({storeId: Config.storeId}).then((response) => {
         if (
           response &&
           response.playlists &&
@@ -90,6 +96,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
           this.setState({
             livePartyItems: response.playlists[2].shows,
           });
+          setIsLive(
+            response?.playlists[2]?.shows[0]?.isLive
+          );
+        }
+        else{
+          setIsLive(
+            false
+          );
         }
       });
     } catch (error) {
@@ -199,7 +213,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           is_live_party_enabled &&
           livePartyItems.length &&
               livePartyItems[0] !== null &&
-              livePartyItems[0].isLive
+              livePartyItems[0]?.isLive
                 ? livePartyItems.map(this.renderLiveParty)
                 : this.renderDefaultLivePartyCircle(item)
               
@@ -368,4 +382,4 @@ class DynamicContentCircleItemSlider extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, null)(DynamicContentCircleItemSlider);
+export default connect(mapStateToProps, mapDispatchToProps)(DynamicContentCircleItemSlider);

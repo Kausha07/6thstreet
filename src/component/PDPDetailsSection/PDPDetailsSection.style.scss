@@ -756,6 +756,9 @@
   align-items: center;
   margin: 10px 0;
   // padding-bottom: 100px;
+  &_isArabic {
+    justify-content: right;
+  }
   &-MoreButton {
     height: 30px;
     width: 125px;

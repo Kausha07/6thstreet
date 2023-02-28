@@ -1,6 +1,7 @@
 import { ENTER_KEY_CODE } from 'Component/Field/Field.config';
 import { FieldSelectContainer as SourceFieldSelectContainer } from 'SourceComponent/FieldSelect/FieldSelect.container';
-
+import { isArabic } from "Util/App";
+import { AddressCityAreaOverlay } from 'Component/AddressCityAreaOverlay/AddressCityAreaOverlay';
 import {
     A_KEY_CODE,
     a_KEY_CODE,
@@ -9,6 +10,28 @@ import {
 } from './FieldSelect.config';
 
 export class FieldSelectContainer extends SourceFieldSelectContainer {
+    static defaultProps = {
+        selectOptions: [],
+        formRef: () => {},
+        onChange: () => {},
+        oncityClick: () => {},
+        citySelected: null,
+        popupType: "",
+        postCodeValue: null,
+    };
+    state = {
+        isArabic: isArabic(),
+        showPopupField: false,
+        showCityPopup: false,
+    };
+    containerFunctions = {
+        handleSelectExpand: this.handleSelectExpand.bind(this),
+        handleSelectExpandedExpand: this.handleSelectExpandedExpand.bind(this),
+        handleSelectListOptionClick: this.handleSelectListOptionClick.bind(this),
+        handleSelectListKeyPress: this.handleSelectListKeyPress.bind(this),
+        handleShowCityPopup: this.handleShowCityPopup.bind(this),
+    };
+
     handleSelectListKeyPress(event) {
         const { isSelectExpanded } = this.state;
         const { selectOptions, onChange, id: selectId } = this.props;
@@ -47,6 +70,33 @@ export class FieldSelectContainer extends SourceFieldSelectContainer {
                 selectedElement.focus();
             }
         });
+    }
+    containerProps = () => {
+        const {
+            valueIndex,
+            searchString,
+            isSelectExpanded,
+            isArabic,
+            showPopupField,
+            showCityPopup,
+        } = this.state;
+
+        return {
+            selectOptions: this.sortSelectOptions(),
+            valueIndex,
+            searchString,
+            isSelectExpanded,
+            isArabic,
+            showPopupField,
+            showCityPopup,
+        };
+    };
+    handleShowCityPopup(e) {
+        this.setState({showCityPopup: !this.state.showCityPopup})
+    }
+
+    handleSelectExpand() {
+        this.setState(({ isSelectExpanded }) => ({ isSelectExpanded: !isSelectExpanded }));
     }
 }
 

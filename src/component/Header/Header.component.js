@@ -22,7 +22,10 @@ import isMobile from "Util/Mobile";
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
-  return { checkoutDetails: state.CartReducer.checkoutDetails };
+  return { checkoutDetails: state.CartReducer.checkoutDetails,
+    isLive : state.LiveParty.isLive,
+    is_live_party_enabled: state.AppConfig.is_live_party_enabled,};
+  
 };
 export const mapDispatchToProps = (dispatch) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
@@ -43,12 +46,31 @@ export class Header extends PureComponent {
     type: null,
   };
 
+  renderFAB = () => {
+    (function (d, t, i, w) {
+      window.__bfwId = w;
+      if (d.getElementById(i) && window.__bfwInit) return window.__bfwInit();
+      if (d.getElementById(i)) return;
+      var s,
+        ss = d.getElementsByTagName(t)[0];
+      s = d.createElement(t);
+      s.id = i;
+      s.src = "https://lcx-widgets.bambuser.com/embed.js";
+      ss.parentNode.insertBefore(s, ss);
+    })(
+      document,
+      "script",
+      "bambuser-liveshopping-widget",
+      "cSgglVM5Uu6haazakKgm"
+    );
+  };
+
   componentDidMount() {
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     // const { delay, type,isMobile } = this.state;
     // if (prevState !== delay) {
     //   clearInterval(this.timer);
@@ -61,6 +83,24 @@ export class Header extends PureComponent {
     //     showPDPSearch(false);
     //   }
     // }
+
+    const { isLive, is_live_party_enabled } = this.props;
+    const Exceptionalpath = ["/cart", "/checkout", "/live-party"];
+
+    if(Exceptionalpath.includes(location.pathname) || !isLive)
+    {
+      const chatElem = document.querySelector("[data-widget-id='cSgglVM5Uu6haazakKgm']")
+      if(chatElem)
+      {
+        chatElem.remove();
+      }
+      return; 
+    }
+    
+    if (isLive && (isLive !== prevProps?.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled){
+      this.renderFAB();
+    }
+    
   }
 
   componentWillUnmount() {
@@ -126,7 +166,7 @@ export class Header extends PureComponent {
         location.pathname.match(/checkout|cart/) ||
         (isMobile &&
           location.pathname.match(
-            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/
+            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products|privacy-policy/
           ))
       ) {
         chatElem.classList.add("hidden");
@@ -190,7 +230,7 @@ export class Header extends PureComponent {
         <header block="Header" mods={{ name }} id="headerTop">
           {isMobile &&
           location.pathname.match(
-            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products/
+            /faq|shipping-policy|return-information|private-sales|reward-points|about-apparel-group|try-again-later|liked-products|privacy-policy/
           )
             ? null
             : this.renderHeaderSections()}
@@ -203,3 +243,4 @@ export class Header extends PureComponent {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
+

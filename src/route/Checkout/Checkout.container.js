@@ -16,6 +16,13 @@ import {
   CAPTURED_STATUS,
   DETAILS_STEP,
   SHIPPING_STEP,
+  STATUS_AUTHORIZED,
+  STATUS_CAPTURED,
+  STATUS_DECLINED,
+  STATUS_CANCELED,
+  STATUS_PENDING,
+  SUCCESS,
+  FAILED,
 } from "Route/Checkout/Checkout.config";
 import {
   BILLING_STEP,
@@ -46,6 +53,8 @@ import Event, {
   EVENT_MOE_ADD_PAYMENT_INFO,
   EVENT_MOE_EDD_TRACK_ON_ORDER,
   EVENT_GTM_CHECKOUT_BILLING,
+  MOE_trackEvent,
+  MOE_AddUniqueID
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -61,6 +70,7 @@ import {
   DEFAULT_READY_MESSAGE,
 } from "../../util/Common/index";
 import { getDefaultEddDate } from "Util/Date/index";
+import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import Loader from "Component/Loader";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
@@ -223,15 +233,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       QPayOrderDetails: null,
       KNETOrderDetails: null,
       KnetDetails: {},
+      guestAutoSignIn: false,
       addressLoader: true,
     };
   }
-  static getDerivedStateFromProps(props) {
-    const { addressLoader } = props;
-    return {
-      addressLoader,
-    };
-  }
+
   refreshCart = async () => {
     const { updateTotals, cartId, removeBinPromotion } = this.props;
     await removeBinPromotion();
@@ -266,7 +272,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         verifyPayment(tabbyPaymentId).then(async (data) => {
           if (data) {
             localStorage.removeItem("Shipping_Address");
-            const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+            const responseData = await getOrderData(order_id);
+            const order = responseData?.data;
             this.setState({ QPayOrderDetails: order });
 
             const { status } = data;
@@ -301,10 +308,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
       const now = new Date();
       if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
-      }
-      if (KNET_CHECK && now.getTime() < KNET_CHECK?.expiry) {
         this.setState({ PaymentRedirect: true });
-
         const {
           getPaymentAuthorization,
           capturePayment,
@@ -322,18 +326,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationKNET(id, false, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
 
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+          const responseData = await getOrderData(order_id);          
+          const order = responseData?.data;
 
           this.setState({ KNETOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -353,7 +354,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   KnetDetails: {
                     bank_reference: bank_reference,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                     amount: amount,
                     currency: currency,
                     knet_payment_id: knet_payment_id,
@@ -367,9 +368,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -391,7 +392,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                     knet_payment_id: knet_payment_id,
                     knet_transaction_id: knet_transaction_id,
@@ -435,18 +436,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const response = await getPaymentAuthorizationQPay(id, true);
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-          localStorage.removeItem("Shipping_Address");
-
           const { status, id: paymentId = "" } = response;
-
           localStorage.removeItem("Shipping_Address");
-
-          const { data: order } = await MagentoAPI.get(`orders/${order_id}`);
+          const responseData = await getOrderData(order_id);
+          const order = responseData?.data;
 
           this.setState({ QPayOrderDetails: order });
 
-          if (status === "Authorized" || status === "Captured") {
+          if (status === STATUS_AUTHORIZED || status === STATUS_CAPTURED) {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
@@ -459,7 +456,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   QPayDetails: {
                     PUN: pun,
                     date: requested_on,
-                    status: "SUCCESS",
+                    status: SUCCESS,
                   },
                 });
               }
@@ -469,9 +466,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
 
           if (
-            status === "Declined" ||
-            status === "Canceled" ||
-            status === "Pending"
+            status === STATUS_DECLINED ||
+            status === STATUS_CANCELED ||
+            status === STATUS_PENDING
           ) {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
@@ -486,7 +483,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     PUN: pun,
                     date: requested_on,
                     amount: `${currency} ${amount}`,
-                    status: "FAILED",
+                    status: FAILED,
                     Payment_ID: paymentId,
                   },
                 });
@@ -797,6 +794,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       intlEddResponse,
       edd_info,
       totals,
+      isSignedIn
     } = this.props;
     const {
       shippingAddress: { email },
@@ -808,6 +806,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       step: 3,
       payment_code: code ? code : null,
     });
+    
+    if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
+      MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
+    }
     if (edd_info?.is_enable && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {
@@ -957,7 +959,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           Event.dispatch(EVENT_GTM_EDD_TRACK_ON_ORDER, {
             edd_date: finalEdd,
           });
-          Moengage.track_event(EVENT_MOE_EDD_TRACK_ON_ORDER, {
+          MOE_trackEvent(EVENT_MOE_EDD_TRACK_ON_ORDER, {
             country: getCountryFromUrl().toUpperCase(),
             language: getLanguageFromUrl().toUpperCase(),
             edd_date: finalEdd,
@@ -978,6 +980,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           if (success || response_code === 200 || http_response_code === 202) {
             localStorage.removeItem("lastCouponCode");
+            if (response && response.data && response.data.guest_auto_sign_in) {
+              this.setState({ guestAutoSignIn: response.data.guest_auto_sign_in });
+            }
             this.setState({ isLoading: false });
             if (code === CHECKOUT_APPLE_PAY) {
               this.setState({
@@ -1098,7 +1103,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: creditCardData.email,
                     paymentId: id,
                   })
-                    .then(() => {})
+                    .then(() => { })
                     .catch(() => {
                       showErrorNotification(
                         __("Something went wrong! Please, try again!")
@@ -1247,7 +1252,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (response) {
         const { status, id: paymentId = "" } = response;
 
-        if (status === "Authorized") {
+        if (status === STATUS_AUTHORIZED) {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
@@ -1259,7 +1264,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           hideActiveOverlay();
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {})
+              .then(() => { })
               .catch(() => {
                 showErrorNotification(
                   __("Something went wrong! Please, try again!")
@@ -1268,7 +1273,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
 
-        if (status === "Declined") {
+        if (status === STATUS_DECLINED) {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isLoading: false, isFailed: true });
           hideActiveOverlay();
@@ -1326,8 +1331,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   render() {
-    const { isClickAndCollect, addressLoader } = this.state;
-    const { isSignedIn } = this.props;
+    const { isClickAndCollect } = this.state;
+    const { isSignedIn, addressLoader } = this.props;
     return addressLoader && isSignedIn ? (
     <Loader isLoading={addressLoader} />
     ) : (

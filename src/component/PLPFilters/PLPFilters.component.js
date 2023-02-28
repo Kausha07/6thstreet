@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK } from "Util/Event";
+import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -86,7 +86,7 @@ class PLPFilters extends PureComponent {
       if (!activeFilter) {
         return {
           isOpen: activeOverlay === "PLPFilter",
-          activeFilter: Object.keys(filters)[0],
+          activeFilter: Object.keys(filters)[1],
           activeFilters: activeFilters,
         };
       }
@@ -232,7 +232,7 @@ class PLPFilters extends PureComponent {
       }
 
       if (filter[1]) {
-        if (filter[0] === "sort" && !isMobile.any()) {
+        if (filter[0] === "sort" ) {
           return
         }
         if (isMobile.any()) {
@@ -365,7 +365,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     
-    Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
@@ -694,12 +694,23 @@ class PLPFilters extends PureComponent {
     );
   }
 
+  sendMoeEvents = () => {
+
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    Event.dispatch(EVENT_GTM_SORT,EVENT_PLP_SORT);
+  }
+
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
     const { handleCallback, filters } = this.props;
     return (
-      <div block="SortBy" key={index} mods={{ isArabic }}>
+      <div block="SortBy" key={index} mods={{ isArabic }} onClick={this.sendMoeEvents}>
         <PLPFilter
           key={key}
           filter={filter}
@@ -826,9 +837,7 @@ class PLPFilters extends PureComponent {
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>
             {count ? __("Results for ") : null}
-            {count && !category_title ? (
-              "Available Products"
-            ) : (
+            {count && !category_title ? __("Available Products") : (
                 <h1 className="categoryTitle">{__(category_title)}</h1>
               )}
           </div>
@@ -851,8 +860,8 @@ class PLPFilters extends PureComponent {
           )}
 
           {isOpen && isMobile.any()
-            ? this.renderPopupFilters()
-            : this.renderFilterButton()}
+            && this.renderPopupFilters()
+            }
           {!isMobile.any() && (
             <form block="PLPFilters" name="filters">
               {this.renderFilters()}
@@ -866,9 +875,7 @@ class PLPFilters extends PureComponent {
               <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
                 <span>{count}</span>
                 {count ? __("Results for ") : null}
-                {count && !category_title ? (
-                  "Available Products"
-                ) : (
+                {count && !category_title ? __("Available Products") : (
                     <h1 className="categoryTitle">{__(category_title)}</h1>
                   )}
               </div>

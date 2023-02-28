@@ -18,7 +18,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { EVENT_MOE_GO_TO_PAYMENT } from "Util/Event";
+import { EVENT_MOE_GO_TO_PAYMENT, MOE_trackEvent } from "Util/Event";
 
 import "./CheckoutShipping.style";
 
@@ -194,7 +194,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         productItemPrice.push(productKeys?.itemPrice);
       });
 
-      Moengage.track_event(EVENT_MOE_GO_TO_PAYMENT, {
+      MOE_trackEvent(EVENT_MOE_GO_TO_PAYMENT, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender

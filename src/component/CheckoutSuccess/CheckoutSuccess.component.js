@@ -25,6 +25,7 @@ import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "../../style/icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
+import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import Event, {
@@ -36,10 +37,22 @@ import Event, {
   EVENT_SIGN_IN_CTA_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  EVENT_LOGIN_CLICK,
+  EVENT_VERIFICATION_CODE_SCREEN_VIEW,
+  EVENT_RESEND_OTP_CLICK,
+  EVENT_OTP_VERIFY_WITH_EMAIL,
+  EVENT_OTP_VERIFY_WITH_PHONE,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn as isSignedInFn } from "Util/Auth";
+import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
 
 export class CheckoutSuccess extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.otpInput = React.createRef();
+  }
   static propTypes = {
     initialTotals: TotalsType.isRequired,
     shippingAddress: PropTypes.object.isRequired,
@@ -72,24 +85,57 @@ export class CheckoutSuccess extends PureComponent {
     wasLoaded: false,
     eventSent: false,
     popupEvent: false,
+    otp: null,
+    isVerifyEmailViewState: false,
+    otpTimer: SECONDS_TO_RESEND_OTP,
+    isTimerEnabled: false,
+    eventSent: false,
+    popupEvent: false,
+    verifyScreenEventSent: false,
   };
 
   componentDidMount() {
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
+    this.OtpTimerFunction();
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { delay } = this.state;
     if (prevState !== delay) {
       clearInterval(this.interval);
       this.interval = setInterval(this.tick, delay);
     }
+
+    if (
+      this.state.otpTimer === 0 &&
+      this.state.isTimerEnabled &&
+      this.timerInterval != null
+    ) {
+      clearInterval(this.timerInterval);
+    }
   }
 
+  OtpTimerFunction() {
+    if (this.timerInterval != null) {
+      clearInterval(this.timerInterval);
+    }
+    this.setState({
+      otpTimer: SECONDS_TO_RESEND_OTP,
+    });
+    this.timerInterval = setInterval(() => {
+      this.setState({
+        otpTimer: this.state.otpTimer - 1,
+        isTimerEnabled: true,
+      });
+    }, 1000);
+  }
   componentWillUnmount() {
     const { setCheckoutDetails } = this.props;
     setCheckoutDetails(false);
+    if (this.timerInterval != null && this.state.isTimerEnabled) {
+      clearInterval(this.timerInterval);
+    }
   }
   tick = () => {
     const { wasLoaded, successHidden } = this.state;
@@ -156,11 +202,47 @@ export class CheckoutSuccess extends PureComponent {
       toggleChangePhonePopup,
       phone,
       isVerificationCodeSent,
+      guestAutoSignIn,
+      onGuestAutoSignIn,
+      isLoading,
+      sendOTPOnMailOrPhone,
+      email,
+      otpError,
+      OtpErrorClear,
+      sendEvents,
     } = this.props;
-    const { isArabic, isPhoneVerification } = this.state;
+    const {
+      isArabic,
+      isPhoneVerification,
+      otp,
+      isVerifyEmailViewState,
+      verifyScreenEventSent,
+    } = this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
+    const isNumber = (evt) => {
+      const invalidChars = ["-", "+", "e", "E", "."];
+      const abc = evt.target.value;
+      if (invalidChars.includes(evt.key)) {
+        evt.preventDefault();
+        return false;
+      }
+      if (abc.length > 4) {
+        return evt.preventDefault();
+      }
+    };
+    const isSignedInState = isSignedInFn();
 
+    if (
+      (!isSignedInState && guestAutoSignIn && !verifyScreenEventSent) ||
+      (!isPhoneVerified &&
+        isVerificationCodeSent &&
+        isSignedIn &&
+        !verifyScreenEventSent)
+    ) {
+      sendEvents(EVENT_VERIFICATION_CODE_SCREEN_VIEW);
+      this.setState({ verifyScreenEventSent: true });
+    }
     if (!isPhoneVerified && isVerificationCodeSent && isSignedIn) {
       return (
         <div
@@ -194,7 +276,12 @@ export class CheckoutSuccess extends PureComponent {
             </button>
           </Form>
           <div block="TrackOrder" elem="ResendCode">
-            <button onClick={onResendCode}>
+            <button
+              onClick={() => {
+                onResendCode();
+                sendEvents(EVENT_RESEND_OTP_CLICK);
+              }}
+            >
               {__("Resend Verification Code")}
             </button>
           </div>
@@ -223,19 +310,164 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     return (
-      <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
-        <div block="TrackOrder" elem="Text">
-          <span block="TrackOrder" elem="Text-Title">
-            {__("track your order")}
-          </span>
-          <span block="TrackOrder" elem="Text-SubTitle">
-            {__("sign in to access your account and track your order")}
-          </span>
-        </div>
-        <button block="secondary" onClick={() => this.showMyAccountPopup()}>
-          {__("sign in")}
-        </button>
-      </div>
+      <>
+        {!isSignedInState && guestAutoSignIn ? (
+          <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
+            <div block="VerifyPhone" elem="Text">
+              <span block="VerifyPhone" elem="Text-Title">
+                {__("Please enter verification code")}
+              </span>
+              <div block="VerifyPhone" elem="Text-Message">
+                {__("To sign in and track your order")}
+              </div>
+              <div block="VerifyPhone" elem="Text-Phone">
+                {isLoading ? (
+                  <Oval
+                    color="#333"
+                    secondaryColor="#333"
+                    height={30}
+                    width={"100%"}
+                    strokeWidth={3}
+                    strokeWidthSecondary={3}
+                  />
+                ) : isVerifyEmailViewState ? (
+                  <button>{`${email}`}</button>
+                ) : (
+                  <button>{`${countryCode} ${phoneNumber}`}</button>
+                )}
+              </div>
+            </div>
+            <div block="VerifyPhone" elem="Code" mods={{ isArabic }}>
+              <input
+                type="number"
+                placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
+                name="otp"
+                disabled={isLoading}
+                id="otp"
+                onKeyPress={(e) => isNumber(e)}
+                onChange={(e) =>
+                  onGuestAutoSignIn(e.target.value, isVerifyEmailViewState)
+                }
+                ref={this.otpInput}
+              />
+            </div>
+            {otpError && (
+              <div
+                block="VerifyPhone"
+                elem="ErrMessage"
+                mods={{ isValidated: otpError.length !== 0 }}
+              >
+                {__(otpError)}
+              </div>
+            )}
+            <div
+              block="VerifyPhone"
+              elem="OtpLoader"
+              mods={{ isSubmitted: isLoading }}
+            >
+              <Oval
+                color="#333"
+                secondaryColor="#333"
+                height={38}
+                width={"100%"}
+                strokeWidth={3}
+                strokeWidthSecondary={3}
+              />
+            </div>
+
+            <div
+              block="VerifyPhone"
+              elem="ResendCode"
+              mods={{ isVerifying: !isLoading }}
+            >
+              <button
+                onClick={() => {
+                  onResendCode(isVerifyEmailViewState);
+                  this.OtpTimerFunction();
+                  this.otpInput.current.value = "";
+                  OtpErrorClear();
+                  sendEvents(EVENT_RESEND_OTP_CLICK);
+                }}
+                className={this.state.otpTimer > 0 ? "disableBtn" : ""}
+                disabled={this.state.otpTimer > 0}
+              >
+                {this.state.otpTimer > 0 ? (
+                  <span>
+                    00 :
+                    {this.state.otpTimer < 10
+                      ? ` 0${this.state.otpTimer}`
+                      : ` ${this.state.otpTimer}`}
+                  </span>
+                ) : (
+                  __("Resend Code")
+                )}
+              </button>
+            </div>
+            <div className="VerifyEmail">
+              <span>{__("Problems with verification code?")}</span>
+              {!isVerifyEmailViewState ? (
+                <button
+                  disabled={this.state.otpTimer > 0}
+                  className={
+                    this.state.otpTimer > 0
+                      ? "disableBtn VerifyEmailBtn"
+                      : "VerifyEmailBtn"
+                  }
+                  onClick={() => {
+                    this.setState({ isVerifyEmailViewState: true });
+                    sendOTPOnMailOrPhone(true);
+                    this.OtpTimerFunction();
+                    this.otpInput.current.value = "";
+                    OtpErrorClear();
+                    sendEvents(EVENT_OTP_VERIFY_WITH_EMAIL);
+                  }}
+                >
+                  {__("Verify with E-mail")}
+                </button>
+              ) : (
+                <button
+                  disabled={this.state.otpTimer > 0}
+                  className={
+                    this.state.otpTimer > 0
+                      ? "disableBtn VerifyEmailBtn"
+                      : "VerifyEmailBtn"
+                  }
+                  onClick={() => {
+                    this.setState({ isVerifyEmailViewState: false });
+                    sendOTPOnMailOrPhone(false);
+                    this.OtpTimerFunction();
+                    this.otpInput.current.value = "";
+                    OtpErrorClear();
+                    sendEvents(EVENT_OTP_VERIFY_WITH_PHONE);
+                  }}
+                >
+                  {__("Verify with Phone")}
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div mix={{ block: "TrackOrder", mods: { isArabic } }}>
+            <div block="TrackOrder" elem="Text">
+              <span block="TrackOrder" elem="Text-Title">
+                {__("track your order")}
+              </span>
+              <span block="TrackOrder" elem="Text-SubTitle">
+                {__("sign in to access your account and track your order")}
+              </span>
+            </div>
+            <button
+              block="secondary"
+              onClick={() => {
+                this.showMyAccountPopup();
+                sendEvents(EVENT_LOGIN_CLICK);
+              }}
+            >
+              {__("sign in")}
+            </button>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -263,14 +495,14 @@ export class CheckoutSuccess extends PureComponent {
 
   renderMyAccountPopup() {
     const { showPopup, popupEvent } = this.state;
-    const {
-      billingAddress: { guest_email: email },
-    } = this.props;
+    const { billingAddress, newSignUpEnabled } = this.props;
+
+    const email = billingAddress?.guest_email;
 
     if (!showPopup) {
       return null;
     }
-    if (showPopup && !popupEvent) {
+    if (showPopup && !popupEvent && !newSignUpEnabled) {
       const eventDetails = {
         name: EVENT_SIGN_IN_CTA_CLICK,
         action: EVENT_SIGN_IN_CTA_CLICK,
@@ -292,6 +524,7 @@ export class CheckoutSuccess extends PureComponent {
         onSignIn={this.onSignIn}
         email={email}
         isPopup
+        redirectToMyOrdersPage
       />
     );
   }
@@ -332,6 +565,49 @@ export class CheckoutSuccess extends PureComponent {
       />
     );
   };
+
+  renderItemKnet = (item) => {
+    const { isFailed } = this.props;
+    let country_name = getCountryFromUrl();
+    let txt_diff = {
+      AE: __("AED"),
+      SA: __("SAR"),
+      KW: __("KWD"),
+      QA: __("QAR"),
+      OM: __("OMR"),
+      BH: __("BHD"),
+    };
+    const currencyCode = txt_diff[country_name];
+    const formattedCartItem = {
+      item_id: item.item_id,
+      product: {
+          name: item.name,
+          type_id: item.product_type,
+          thumbnail: {
+              url: item.thumbnail
+          },
+      },
+      row_total: item.price || 0,
+      sku: item.sku,
+      qty: Math.round(item.qty_ordered),
+      optionValue: item?.product_options?.info_buyRequest?.options?.US || item?.product_options?.info_buyRequest?.options?.EU || item?.product_options?.info_buyRequest?.options?.UK,
+      thumbnail_url: item.thumbnail,
+      basePrice: item.base_original_price,
+      brand_name: item.brand_name,
+      currency: currencyCode,
+      full_item_info: item,
+    };
+    return (
+      <SuccessCheckoutItem
+        key={formattedCartItem.item_id}
+        item={formattedCartItem}
+        currency_code={formattedCartItem.currency}
+        isEditing
+        isFailed={isFailed}
+        isLikeTable
+      />
+    )
+  }
 
   renderTotalsItems() {
     const { paymentMethod } = this.props;
@@ -376,7 +652,7 @@ export class CheckoutSuccess extends PureComponent {
               .filter(
                 ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
               )
-              .map(this.renderItem)}
+              .map(this.renderItemKnet)}
           </ul>
         </div>
       );
@@ -952,7 +1228,7 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -1089,11 +1365,12 @@ export class CheckoutSuccess extends PureComponent {
   renderDetails() {
     const {
       customer,
-      billingAddress: { guest_email },
+      billingAddress,
       paymentMethod,
       incrementID,
       initialTotals,
     } = this.props;
+    const guest_email = billingAddress?.guest_email;
     const { eventSent } = this.state;
     let dispatchedObj = JSON.parse(localStorage.getItem("cartProducts"));
     const pagePathName = new URL(window.location.href).pathname;
