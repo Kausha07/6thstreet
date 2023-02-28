@@ -1012,18 +1012,6 @@ export class MyAccountOverlay extends PureComponent {
     return [];
   }
 
-  getUserIdentifierMaxLength() {
-    const { countryCode, isOTP } = this.state;
-    if (!ENABLE_OTP_LOGIN || !isOTP) {
-      return null;
-    }
-    const customerCountry = Object.keys(PHONE_CODES).find(
-      (key) => PHONE_CODES[key] === countryCode
-    );
-
-    return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
-  }
-
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
 
@@ -1265,7 +1253,7 @@ export class MyAccountOverlay extends PureComponent {
                   : this.state.emailFromCheckoutPage
               }
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
-              maxLength={this.getUserIdentifierMaxLength()}
+              maxLength={40}
               validation={["notEmpty", this.getValidationForUserIdentifier()]}
               onChange={this.setUserIdentifierType.bind(this)}
               onFocus={() => {
