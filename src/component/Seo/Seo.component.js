@@ -23,7 +23,10 @@ export class Seo extends PureComponent {
 
     renderCanonicals() {
         const { setMeta, metaData: { canonical_url: canonicalUrl }, metaData } = this.props;
-        const { origin = '', pathname = '' } = location || {};
+        let { origin = '', pathname = '' } = location || {};
+        if(pathname === "/naturaliser.html") { // For duplicate indexed urls letting bot knows to permanently redirect
+            pathname = "/naturalizer.html";
+        }
         const urlWithoutParams =
             pathname === "/catalogsearch/result/" || pathname === "/viewall/"
                 ? `${origin}${"/"}`
