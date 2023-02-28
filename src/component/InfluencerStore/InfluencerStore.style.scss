@@ -2,6 +2,7 @@
   main {
     &.PLP {
       .ContentWrapper {
+        margin: 0px !important;
         & > .PLPDetails {
           @include mobile() {
             padding-top: 0px;
@@ -161,6 +162,9 @@
   .getTheLookSection {
     margin: 50px 0 10px 0;
 
+    @include mobile {
+      margin: 30px 0 10px 0;
+    }
     .GTLheading {
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -184,6 +188,7 @@
       }
       @include mobile {
         max-height: 350px;
+        margin: 27px 0 10px 0;
       }
 
       &::-webkit-scrollbar {
@@ -266,7 +271,7 @@
     }
 
     @include mobile {
-      margin-top: 50px;
+      margin-top: 30px;
       .storeProductHeading {
         margin-bottom: 0;
       }

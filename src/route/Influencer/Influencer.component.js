@@ -34,7 +34,7 @@ const Influencer = (props) => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [isRefineButtonClicked, setRefine] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [isMoileRefineButtonClicked, setIsMoileRefineButtonClicked] =
+  const [isMobileRefineButtonClicked, setIsMobileRefineButtonClicked] =
     useState(false);
   const [influencerSearchText, setInfluencerSearchText] = useState("");
   const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
@@ -76,13 +76,13 @@ const Influencer = (props) => {
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
-    if (isMoileRefineButtonClicked && isMobile.any()) {
+    if (isMobileRefineButtonClicked && isMobile.any()) {
       html.style.overflow = "hidden";
     }
     return () => {
       html.style.overflow = "auto";
     };
-  }, [isMoileRefineButtonClicked]);
+  }, [isMobileRefineButtonClicked]);
 
   const buttonSignedIn = (val) => {
     setLoggedIn(val);
@@ -119,11 +119,11 @@ const Influencer = (props) => {
       setRefine(false);
     }
     if (
-      isMoileRefineButtonClicked &&
+      isMobileRefineButtonClicked &&
       mobileRefineWrapperRef.current &&
       !mobileRefineWrapperRef.current.contains(e.target)
     ) {
-      setIsMoileRefineButtonClicked(false);
+      setIsMobileRefineButtonClicked(false);
     }
   };
 
@@ -420,7 +420,7 @@ const Influencer = (props) => {
   };
 
   const handleMobileRefineButtonClick = () => {
-    setIsMoileRefineButtonClicked(!isMoileRefineButtonClicked);
+    setIsMobileRefineButtonClicked(!isMobileRefineButtonClicked);
   };
 
   const renderMsiteRefine = () => {
@@ -445,7 +445,7 @@ const Influencer = (props) => {
     const genderArray = ["Women", "Men", "Kids"];
     return (
       <>
-        {isMobile.any() && isMoileRefineButtonClicked && (
+        {isMobile.any() && isMobileRefineButtonClicked && (
           <div block="refinePopupInfluencer">
             <div block="refineOverlayInfluencer">
               <div
@@ -470,7 +470,7 @@ const Influencer = (props) => {
                         value={val}
                         onClick={() => {
                           setSelectedGender(val.toUpperCase());
-                          setIsMoileRefineButtonClicked(false);
+                          setIsMobileRefineButtonClicked(false);
                         }}
                         key={index}
                       >
