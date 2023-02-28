@@ -52,7 +52,7 @@ class InfluencerEvent extends BaseEvent {
         ...(data?.influencer_id && { influencer_id: data?.influencer_id }),
         ...(data?.gender && { gender: data?.gender }),
         ...(data?.name && { name: data?.name }),
-        ...(data?.influncer_collection_id && { influncer_collection_id: data?.influncer_collection_id }),
+        ...(data?.collection_id && { collection_id: data?.collection_id }),
         ...(data?.link && { link: data?.link }),
       });
       MOE_trackEvent(data?.EventName, {
@@ -63,7 +63,7 @@ class InfluencerEvent extends BaseEvent {
         ...(data?.influencer_id && { influencer_id: data?.influencer_id }),
         ...(data?.gender && { gender: data?.gender }),
         ...(data?.name && { name: data?.name }),
-        ...(data?.influncer_collection_id && { influncer_collection_id: data?.influncer_collection_id }),
+        ...(data?.collection_id && { collection_id: data?.collection_id }),
         ...(data?.link && { link: data?.link }),
       });
     }

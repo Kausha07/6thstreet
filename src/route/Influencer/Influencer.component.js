@@ -297,13 +297,7 @@ const Influencer = (props) => {
       EventName: EVENT_INFLUENCER_REFINE_CLICK,
     };
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
-    if (isRefineButtonClicked) {
-      const eventData = {
-        EventName: EVENT_INFLUENCER_REFINE_GENDER_CLICK,
-        gender: selectedGender,
-      };
-      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
-    }
+
   };
 
   const handleGender = (gender) => {

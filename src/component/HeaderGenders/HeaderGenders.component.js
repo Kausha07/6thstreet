@@ -95,8 +95,9 @@ class HeaderGenders extends PureComponent {
         this.setState({ isUnsetStyle });
     };
 
-    MoenangeInfluencerHomeScreen = (currentContentGender) => {
-        if (currentContentGender === "influencer") {
+    MoenangeInfluencerHomeScreen = (key) => {
+
+        if (key.match("influencer")) {
           const eventData = {
             EventName: EVENT_INFLUENCER_HOME_SCREEN_VIEW,
           };
@@ -131,7 +132,7 @@ class HeaderGenders extends PureComponent {
               elem="Container"
               key={ key }
               mods={{isArabic: isArabic()}}
-              onClick={()=>{ this.MoenangeInfluencerHomeScreen(currentContentGender)}}
+              onClick={()=>{ this.MoenangeInfluencerHomeScreen(key)}}
             >
                 <GenderButton
                     gender={gender}
