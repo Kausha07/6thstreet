@@ -7,6 +7,12 @@ import { isSignedIn } from "Util/Auth";
 import { followUnfollowInfluencer } from "Util/API/endpoint/Influencer/Influencer.endpoint";
 import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
 import { isArabic } from "Util/App";
+import Event, {
+  EVENT_INFLUENCER_DETAIL_CLICK,
+  EVENT_FOLLOW_INFLUENCER_CLICK,
+  EVENT_UNFOLLOW_INFLUENCER_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 
 import Link from "Component/Link";
 import "./InfluencerTilesCollection.style";

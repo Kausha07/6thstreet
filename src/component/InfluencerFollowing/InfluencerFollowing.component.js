@@ -7,6 +7,11 @@ import { followUnfollowInfluencer } from "Util/API/endpoint/Influencer/Influence
 import { getAllInfluencers } from "Util/API/endpoint/Influencer/Influencer.endpoint";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import { getEnvIDForInfluencer } from "../../util/Common/index";
+import Event, {
+  EVENT_FOLLOW_INFLUENCER_CLICK,
+  EVENT_UNFOLLOW_INFLUENCER_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 
 import Link from "Component/Link";
 import Heart from "Component/Icons/EmptyInfluencer/Group.svg";

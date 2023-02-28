@@ -9,6 +9,10 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
+import Event,  {
+  EVENT_SHARE_COLLECTION_CLICK,
+  EVENT_GTM_INFLUENCER
+} from "Util/Event";
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
@@ -199,6 +203,11 @@ const InfluencerCollection = (props) => {
 
   const handleShareStore = () => {
     setShareButtonClicked(!shareButtonClicked);
+
+    const eventData = {
+      EventName : EVENT_SHARE_COLLECTION_CLICK
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const closePopupOnOutsideClick = (e) => {

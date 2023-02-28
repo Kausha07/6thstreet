@@ -3,6 +3,10 @@ import TinySlider from "tiny-slider-react";
 
 import { formatCDNLink } from "Util/Url";
 import { isArabic } from "Util/App";
+import Event, {
+  EVENT_COLLECTION_DETAIL_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 
 import Link from "Component/Link";
 import "./InfluencerSliderCollection.style";
@@ -59,6 +63,20 @@ const InfluencerSliderCollection = (props) => {
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
+  const MoenangeTrackingCollectionDetail = (
+    influencer_id,
+    influncer_collection_id,
+    influencer_name
+  ) => {
+    const eventData = {
+      EventName: EVENT_COLLECTION_DETAIL_CLICK,
+      collection_id: influncer_collection_id,
+      name: influencer_name,
+      influencer_id: influencer_id,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
+  
   const renderSlide = (item, i) => {
     const {
       algolia_query,
@@ -80,7 +98,17 @@ const InfluencerSliderCollection = (props) => {
     } = item.influencer;
     const newLink = `influencer.html/Collection?influencerCollectionID=${influncer_collection_id}&influencerID=${influencer_id}`;
     return (
-      <div key={`${influencer_id}+${i}`} block="spck-influencer-slider">
+      <div
+        key={`${influencer_id}+${i}`}
+        block="spck-influencer-slider"
+        onClick={() => {
+          MoenangeTrackingCollectionDetail(
+            influencer_id,
+            influncer_collection_id,
+            influencer_name
+          );
+        }}
+      >
         <div block="mainImage">
           <Link
             to={formatCDNLink(newLink)}

@@ -9,6 +9,12 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App/App";
 import { getEnvIDForInfluencer } from "../../util/Common/index";
+import Event, {
+  EVENT_INFLUENCER_REFINE_CLICK,
+  EVENT_INFLUENCER_REFINE_GENDER_CLICK,
+  EVENT_INFLUENCER_SEARCH_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 
 import ContentWrapper from "Component/ContentWrapper";
 import InfluencerTilesCollection from "Component/InfluencerTilesCollection/InfluencerTilesCollection.component";
@@ -291,6 +297,13 @@ const Influencer = (props) => {
       EventName: EVENT_INFLUENCER_REFINE_CLICK,
     };
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    if (isRefineButtonClicked) {
+      const eventData = {
+        EventName: EVENT_INFLUENCER_REFINE_GENDER_CLICK,
+        gender: selectedGender,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    }
   };
 
   const handleGender = (gender) => {
@@ -402,6 +415,11 @@ const Influencer = (props) => {
   const handleSearchButtonClick = (e) => {
     e.stopPropagation();
     setIsSearchButtonClicked(true);
+
+    const eventData = {
+      EventName: EVENT_INFLUENCER_SEARCH_CLICK,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderInfluencerSearch = () => {

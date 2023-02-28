@@ -8,6 +8,12 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import { getEnvIDForInfluencer } from "../../util/Common/index";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Event, {
+  EVENT_INFLUENCER_SEARCH_CLICK,
+  EVENT_FOLLOW_INFLUENCER_CLICK,
+  EVENT_UNFOLLOW_INFLUENCER_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 import Search from "../../component/Icons/Search/icon.svg";
 
 import Link from "Component/Link";
@@ -61,7 +67,7 @@ const InfluencerSearch = (props) => {
 
     if (follow) {
       const eventData = {
-        EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
+        name: EVENT_UNFOLLOW_INFLUENCER_CLICK,
         influencer_id: influencerID,
       };
       Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
@@ -72,15 +78,7 @@ const InfluencerSearch = (props) => {
       };
       Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
     }
-  };
-
-  const MoenangeInfluencerTrackingClick = (influencerId, influencer_name) => {
-    const eventData = {
-      EventName: EVENT_INFLUENCER_DETAIL_CLICK,
-      influencer_id: influencerId,
-      name: influencer_name,
-    };
-    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    
   };
 
   const renderInfluencer = (item, i) => {
@@ -173,6 +171,13 @@ const InfluencerSearch = (props) => {
     setOnPageInfluencerSearchText(e.target.value);
   };
 
+  const influencerSearchEventTracking = () => {
+    const eventData = {
+      EventName: EVENT_INFLUENCER_SEARCH_CLICK,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
+
   const renderSearchForMobile = () => {
     const lowerInfluencerSearchText = onPageinfluencerSearchText?.toLowerCase();
     const sliderContent =
@@ -206,7 +211,7 @@ const InfluencerSearch = (props) => {
       <div className="searchBlockForMobile" mods={{ isArabic: isArabic() }}>
         <div block="mobileSearchHeader">
           <HeaderLogo key="logo" />
-          <div block="inputOnpage">
+          <div block="inputOnpage" onClick={influencerSearchEventTracking}>
             <img
               block="searchIconOnPage"
               src={Search}

@@ -7,6 +7,11 @@ import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
+import Event,  {
+    EVENT_INFLUENCER_HOME_SCREEN_VIEW,
+    EVENT_GTM_INFLUENCER
+  } from "Util/Event";
+
 
 export const mapStateToProps = (state) => (
     {
@@ -90,6 +95,14 @@ class HeaderGenders extends PureComponent {
         this.setState({ isUnsetStyle });
     };
 
+    MoenangeInfluencerHomeScreen = (currentContentGender) => {
+        if (currentContentGender === "influencer") {
+          const eventData = {
+            EventName: EVENT_INFLUENCER_HOME_SCREEN_VIEW,
+          };
+          Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+        }
+    }
 
     renderGender = (gender) => {
         const { key } = gender;
@@ -118,6 +131,7 @@ class HeaderGenders extends PureComponent {
               elem="Container"
               key={ key }
               mods={{isArabic: isArabic()}}
+              onClick={()=>{ this.MoenangeInfluencerHomeScreen(currentContentGender)}}
             >
                 <GenderButton
                     gender={gender}

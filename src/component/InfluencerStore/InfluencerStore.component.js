@@ -296,7 +296,7 @@ const InfluencerStore = (props) => {
       followUnfollowInfluencer(payload).then((resp) => {
         updateFollowingList(influencerID, follow);
       });
-    }
+    } 
     if (follow) {
       const eventData = {
         EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
@@ -312,8 +312,14 @@ const InfluencerStore = (props) => {
     }
   };
 
-  const handleShareStore = () => {
+  const handleShareStore = (store_link) => {
     setShareButtonClicked(!shareButtonClicked);
+    const eventData = {
+      EventName: EVENT_SHARE_STORE_CLICK,
+      link: store_link,
+      influencer_id: influencerId,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const closePopupOnOutsideClick = (e) => {
@@ -354,7 +360,9 @@ const InfluencerStore = (props) => {
           <div block="shareandfollowButton" ref={shareMediaRef}>
             <button
               block="shareButton"
-              onClick={handleShareStore}
+              onClick={() => {
+                handleShareStore(store_link);
+              }}
               mods={{ isArabic: isArabic() }}
             >
               <img
