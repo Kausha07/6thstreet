@@ -1,6 +1,5 @@
 // import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
-import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
@@ -29,7 +28,6 @@ import {
   NO_IN_ARABIC,
 } from "../../util/Common/index";
 
-export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -740,7 +738,10 @@ class PDPDetailsSection extends PureComponent {
   }
   renderContactUs() {
     const { config } = this.props;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    const updatedPhoneLink = toll_free ? toll_free.replaceAll(" ","") : null;
     return (
       <div block="ContactUs">
         <div block="ContactUs" elem="Icons">
@@ -750,7 +751,7 @@ class PDPDetailsSection extends PureComponent {
               elem="Icon"
               onClick={() => this.sendEvents(EVENT_PHONE)}
             >
-              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+              <a href={`tel:${updatedPhoneLink}`} target="_blank" rel="noreferrer">
                 <Phone />
               </a>
             </div>
@@ -764,7 +765,7 @@ class PDPDetailsSection extends PureComponent {
               onClick={() => {
                 this.sendEvents(EVENT_MOE_CHAT);
               }}
-              href={`${WHATSAPP_LINK}`}
+              href={`${whatsappChat}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -781,7 +782,7 @@ class PDPDetailsSection extends PureComponent {
               elem="Icon"
               onClick={() => this.sendEvents(EVENT_MAIL)}
             >
-              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+              <a href={`mailto:${config?.support_email}`} target="_blank" rel="noreferrer">
                 <Email />
               </a>
             </div>

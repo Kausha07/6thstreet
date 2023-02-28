@@ -32,6 +32,7 @@ import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
 export { BreadcrumbsDispatcher, MyAccountDispatcher };
 import { customerType } from "Type/Account";
 import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.type";
+import { Config } from "Util/API/endpoint/Config/Config.type";
 
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
@@ -43,6 +44,7 @@ export const mapStateToProps = (state) => ({
   language: state.AppState.language,
   payload: state.PopupReducer.popupPayload,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
+  config: state.AppConfig.config,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -148,6 +150,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     country: PropTypes.string.isRequired,
     language: PropTypes.string.isRequired,
     newSignUpEnabled: PropTypes.bool,
+    config: Config.isRequired,
   };
 
   static defaultProps = {
