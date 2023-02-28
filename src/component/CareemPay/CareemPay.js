@@ -188,7 +188,7 @@ function CareemPay({
       }
       <div className="carrrmPayWrapperDiv">
         <br />
-        <h3>1-Click Checkout</h3>
+        <h3>One-Click Checkout</h3>
         <div className="carremPayInnerDiv">
           <button id="careemBtn" className="careemBtnCss">
             checkout
