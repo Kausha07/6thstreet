@@ -55,6 +55,11 @@ export default function SignInSignUpMobileNudge() {
       {isNudgeVisible &&
       isMobile.any() &&
       !isSignedIn() &&
+      (window.location.pathname == "/" ||
+        window.location.pathname == "/women.html" ||
+        window.location.pathname == "/men.html" ||
+        window.location.pathname == "/kids.html" ||
+        window.location.pathname == "/home.html") &&
       (firstNudgeRender || isOneDayCompleted) ? (
         <div
           className={
