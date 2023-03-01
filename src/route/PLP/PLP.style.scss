@@ -288,6 +288,15 @@
     &_isArabic{
       direction: rtl;
       .PLP-FooterContainer{
+        li{
+          padding-left: 0;
+          padding-right: 3.25rem;
+        }
+        li,h3 {
+          &.noListStyle {
+            padding-right: 0 !important;
+          }
+        }
         .shopby-list{
         h3, &> li{
           padding-left: 0;
@@ -375,7 +384,7 @@
     b {
       font-weight: 600;
     }
-    li {
+    li,h3 {
       &.noListStyle {
         padding-left: 0;
         &::before {
@@ -499,6 +508,7 @@
       background: #fff;
       margin-top: 30px;
       border-radius: 10px;
+      margin-bottom: 25px;
       @include mobile {
         padding: 20px 15px;
       }

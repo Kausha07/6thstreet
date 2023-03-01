@@ -640,6 +640,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
         step: this.getCheckoutStepNumber(),
+        payment_code: null,
       });
       if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
@@ -792,6 +793,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      totals,
       isSignedIn
     } = this.props;
     const {
@@ -799,6 +801,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = this.state;
     let data = {};
     let eddItems = [];
+    Event.dispatch(EVENT_GTM_CHECKOUT, {
+      totals,
+      step: 3,
+      payment_code: code ? code : null,
+    });
     
     if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
       MOE_AddUniqueID(paymentInformation.billing_address.guest_email);

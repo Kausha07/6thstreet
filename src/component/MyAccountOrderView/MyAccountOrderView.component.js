@@ -95,6 +95,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAddress = (title, address) => {
     const { getCountryNameById } = this.props;
+    const { isArabic } = this.state;
     const {
       firstname,
       middlename,
@@ -112,7 +113,7 @@ class MyAccountOrderView extends PureComponent {
         <p>{`${firstname} ${middlename || ""} ${lastname}`.trim()}</p>
         <p block="Address" elem="Street">{`${street} ${postcode}`}</p>
         <p>{`${city} - ${getCountryNameById(country_id)}`}</p>
-        <p>{`${telephone}`}</p>
+        <p className={isArabic ? "telephone":""}>{`${telephone}`}</p>
       </div>
     );
   };

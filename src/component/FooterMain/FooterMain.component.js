@@ -13,6 +13,7 @@ import snapchat from "./icons/snapchat.svg";
 import tiktok from "./icons/tiktok.svg";
 import youtube from "./icons/youtube.svg";
 import Image from "Component/Image";
+import Subscription from "./../../component/Subscription/Subscription";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Event, {
   EVENT_INSTA_FOLLOW,
@@ -131,13 +132,7 @@ class FooterMain extends PureComponent {
           app_gallery:
             "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg",
           gallery_onclick: "https://appgallery.huawei.com/#/app/C102324663",
-          header: isArabic() ? (
-            <h4>شاركونا الآن</h4>
-          ) : (
-            <h4>
-              <span>Join</span> the <span>community!</span>
-            </h4>
-          ),
+          header: <Subscription />,
           id_facebook: "Facebook1",
           facebook_href: "https://www.facebook.com/shop6thstreet/",
           id_insta: "Insta1",
@@ -186,19 +181,20 @@ class FooterMain extends PureComponent {
                 const changeRoute = (value) => {
                   const eventName =
                     value == __("Consumer Rights")
-                    ? EVENT_CONSUMER_RIGHTS_CLICK
-                    : value ==  __("Disclaimer")
-                    ? EVENT_DISCLAIMER_CLICK
-                    : value ==  __("Privacy Policy")
-                    ? EVENT_PRIVACY_POLICY_CLICK
-                    : value ==  __("Shipping Information")
-                    ? EVENT_SHIPPING_INFO_CLICK
-                    : value ==  __("Returns Information")
-                    ? EVENT_RETURN_INFO_CLICK
-                    : value ==  __("Feedback")
-                    ? EVENT_FEEDBACK_CLICK
-                    : value.type == "div" && value.props.className ==  __("About")
-                    ? EVENT_ABOUT6S_CLICK
+                      ? EVENT_CONSUMER_RIGHTS_CLICK
+                      : value == __("Disclaimer")
+                      ? EVENT_DISCLAIMER_CLICK
+                      : value == __("Privacy Policy")
+                      ? EVENT_PRIVACY_POLICY_CLICK
+                      : value == __("Shipping Information")
+                      ? EVENT_SHIPPING_INFO_CLICK
+                      : value == __("Returns Information")
+                      ? EVENT_RETURN_INFO_CLICK
+                      : value == __("Feedback")
+                      ? EVENT_FEEDBACK_CLICK
+                      : value.type == "div" &&
+                        value.props.className == __("About")
+                      ? EVENT_ABOUT6S_CLICK
                       : "";
                   if (eventName && eventName.length > 0) {
                     this.setState({ isLoad: true });
@@ -237,7 +233,7 @@ class FooterMain extends PureComponent {
         <div block="FooterMain" elem="LastColumn" key={column.title}>
           <h4>{column.title}</h4>
           <div block="FooterMain" elem="Nav">
-            {column.items.map((items,i) => (
+            {column.items.map((items, i) => (
               <Fragment key={`last_main_footer_column${i}`}>
                 <div block="FooterMain" elem="WrapperFirst">
                   <Link to={items.app_onclick} key={items.id_app}>
@@ -277,7 +273,7 @@ class FooterMain extends PureComponent {
       .map((column, index) => (
         <div block="FooterMain" elem="SocialColumn" key={index}>
           <div block="FooterMain" elem="SocialLinks">
-            {column.items.map((items,i) => (
+            {column.items.map((items, i) => (
               <Fragment key={`last_main_footer_column_${i}`}>
                 <div block="FooterMain" elem="SocialTitle">
                   {items.header}

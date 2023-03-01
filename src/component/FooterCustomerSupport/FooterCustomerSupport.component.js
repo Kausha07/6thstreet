@@ -41,7 +41,7 @@ class FooterCustomerSupport extends PureComponent {
 
   renderPhone = () => {
     const { isPhoneSupported, phone } = this.props;
-
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
     if (!isPhoneSupported) {
       return null;
     }
@@ -50,7 +50,7 @@ class FooterCustomerSupport extends PureComponent {
       <a
         block="FooterCustomerSupport"
         elem="Phone"
-        href={`tel:${phone}`}
+        href={`tel:${updatedPhoneLink}`}
         onClick={() => {
           this.sendEvents(EVENT_PHONE);
         }}
