@@ -105,9 +105,6 @@ function CareemPay({
     }
   }
 
-  const goToResult=() =>{
-    console.log('goToResult:');
-  }
   
   const CareemPayfun = () => {
     const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
@@ -123,7 +120,6 @@ function CareemPay({
         el: "careemBtn",
         requester: (e) => getCareemPayInvoice(data),
         onComplete: (status) => {
-          console.log(`Checkout completed with status: ${status}`);
           setProcessingLoader(true);
           setPaymentinfoCareemPay(CAREEM_PAY);
           if (status === SUCCESS) {
@@ -134,7 +130,6 @@ function CareemPay({
             setIsCaremCreateOrder(true);
             setCareemPayStatus(FAILURE);
           }
-          goToResult();  //navigate to the result page
           
         },
         onError: (e) => {
@@ -142,12 +137,11 @@ function CareemPay({
           //handleError(e);
         },
         onClose: () => {
-          console.log("user has closed the modal");
           //sendAnalytics();
         },
       });
     } catch (error) {
-      console.log("check", error);
+      console.error("something went wrong at cpay.autostrap", error);
     }
   };
 
