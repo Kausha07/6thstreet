@@ -12,6 +12,8 @@ import Event, {
   EVENT_INFLUENCER_SEARCH_CLICK,
   EVENT_FOLLOW_INFLUENCER_CLICK,
   EVENT_UNFOLLOW_INFLUENCER_CLICK,
+  EVENT_COLLECTION_DETAIL_CLICK,
+  EVENT_INFLUENCER_DETAIL_CLICK,
   EVENT_GTM_INFLUENCER,
 } from "Util/Event";
 import Search from "../../component/Icons/Search/icon.svg";
@@ -67,7 +69,7 @@ const InfluencerSearch = (props) => {
 
     if (follow) {
       const eventData = {
-        name: EVENT_UNFOLLOW_INFLUENCER_CLICK,
+        EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
         influencer_id: influencerID,
       };
       Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
@@ -79,6 +81,15 @@ const InfluencerSearch = (props) => {
       Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
     }
     
+  };
+
+  const MoenangeInfluencerTrackingClick = (influencerId, influencer_name) => {
+    const eventData = {
+      EventName: EVENT_INFLUENCER_DETAIL_CLICK,
+      influencer_id: influencerId,
+      name: influencer_name,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderInfluencer = (item, i) => {
@@ -105,7 +116,12 @@ const InfluencerSearch = (props) => {
             data-promotion-name={item.promotion_name ? item.promotion_name : ""}
             data-tag={item.tag ? block.tag : ""}
           >
-            <div key={influencerId}>
+            <div
+              key={influencerId}
+              onClick={() => {
+                MoenangeInfluencerTrackingClick(influencerId, influencer_name);
+              }}
+            >
               <li block="spckItem" id={influencerId}>
                 <div block="influencerImage">
                   <img src={image_url} alt={influencer_name} />
@@ -141,13 +157,36 @@ const InfluencerSearch = (props) => {
     }
   };
 
+  const MoenangeTrackingCollectionDetail = (
+    influencer_id,
+    influncer_collection_id,
+    influencer_name
+  ) => {
+    const eventData = {
+      EventName: EVENT_COLLECTION_DETAIL_CLICK,
+      collection_id: influncer_collection_id,
+      name: influencer_name,
+      influencer_id: influencer_id,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
+
   const renderSliderCollection = (item, i) => {
     const { id: influencerId, image_url, influencer_name } = item?.influencer;
     const { id: collectionId, thumbnail_url, title } = item?.collection;
 
     return (
       <li key={collectionId} className="spckItem">
-        <div className="eventImage">
+        <div
+          className="eventImage"
+          onClick={() => {
+            MoenangeTrackingCollectionDetail(
+              influencerId,
+              collectionId,
+              influencer_name
+            );
+          }}
+        >
           <Link
             to={`influencer.html/Collection?influencerCollectionID=${collectionId}&influencerID=${influencerId}`}
             key={i}
