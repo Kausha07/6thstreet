@@ -702,27 +702,33 @@
     position: absolute;
     width: 15px;
     height: 15px;
-    top: 12px;
+    top: 11px;
     left: 15px;
     z-index: 1;
     &_isArabic {
         left: initial;
         right: 15px;
     }
+    @include mobile{
+        top: 12px;
+    }
 }
 .influencerSearchInput {
     height: 36px;
-    width : 800px;
+    width: 720px;
     border-radius: 8px;
     padding-left: 40px;
     background-color : #f5f5f5;
     text-transform: initial;
+    margin-right: 150px;
     border : none !important;
     outline: none !important;
     font-size: 14px;
     &_isArabic{
         padding-left: 0;
         padding-right: 40px;
+        margin-right: initial;
+        margin-left: 150px;
     }
     @include mobile{
         height: 40px;

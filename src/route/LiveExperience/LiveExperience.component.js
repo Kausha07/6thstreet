@@ -632,7 +632,7 @@ export class LiveExperience extends PureComponent {
           type="text"
           block="influencerSearchInput"
           mods={{ isArabic }}
-          placeholder={__("Search for Influencer's title")}
+          placeholder={__("Search for Videos")}
           onChange={this.handleSearchInfluencerText}
         />
       </div>
