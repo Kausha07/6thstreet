@@ -378,6 +378,26 @@ const Influencer = (props) => {
     );
   };
 
+  const renderInfluencerSearchForMobile = () => {
+    return (
+      <div block="influencerSearch">
+        <img block="searchIcon" src={Search} mods={{ isArabic: isArabic() }} />
+        <div ref={!isMobile.any() ? searchWrapperRef : mobileSearchWrapperRef}>
+          <input
+            type="text"
+            block="influencerSearchInput"
+            mods={{ isArabic: isArabic() }}
+            value={influencerSearchText}
+            id="influencerSearch"
+            placeholder={__("Search collections, influencers etc...")}
+            onClick={(e) => handleSearchButtonClick(e)}
+            autocomplete="off"
+          />
+        </div>
+      </div>
+    );
+  };
+
   const renderHeader = () => {
     return (
       <div block="headerMain">
@@ -413,7 +433,9 @@ const Influencer = (props) => {
         </div>
 
         {isMobile.any() && (
-          <div className="influencerSearch">{renderInfluencerSearch()}</div>
+          <div className="influencerSearch">
+            {renderInfluencerSearchForMobile()}
+          </div>
         )}
       </div>
     );
