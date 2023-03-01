@@ -7,8 +7,6 @@ import { createOrderCareemPay } from "Util/API/endpoint/Checkout/Checkout.endpoi
 import {
   SUCCESS,
   FAILURE,
-  guestUserAddress,
-  loggedInUserAddress,
   CAREEM_PAY,
 } from "./CareemPay.config";
 
