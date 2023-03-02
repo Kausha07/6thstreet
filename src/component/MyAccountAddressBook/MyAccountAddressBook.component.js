@@ -142,8 +142,10 @@ export class MyAccountAddressBook extends PureComponent {
       ({ default_billing }) => !default_billing
     );
     const sortedAddresses = [...defaultAddress, ...simpleAddresses];
-
-    return sortedAddresses.map(this.renderAddress);
+    const localeAddress = sortedAddresses.filter(
+      ({ country_code }) => country_code === getCountryFromUrl().toUpperCase()
+    )
+    return localeAddress.map(this.renderAddress);
   }
 
   render() {
