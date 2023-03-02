@@ -149,6 +149,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   addressLoader: state.MyAccountReducer.addressLoader,
+  config: state.AppConfig.config,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {

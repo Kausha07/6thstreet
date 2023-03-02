@@ -682,10 +682,14 @@ export class Checkout extends SourceCheckout {
       checkoutTotals: {
         total = 0,
       },
+      config: { countries },
     } = this.props;
 
-    const { continueAsGuest, isArabic, isCareemPayEnabled, isMobile } = this.state;
-    const country_codes = getCountryFromUrl();
+    const { continueAsGuest, isArabic } = this.state;
+    const country_code = getCountryFromUrl();
+    const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
+    const lang = isArabic ? "ar" : "en";
+    const isCareemPayEnabled = isCareemPayAvailable[lang];
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
@@ -740,7 +744,7 @@ export class Checkout extends SourceCheckout {
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
         {/* Currently Careem Pay is only available for EN-AE Desktop site. */}
-        { (isCareemPayEnabled && !isArabic && country_codes === "AE" && total != 0) ? (
+        { (isCareemPayEnabled && total != 0) ? (
             <CareemPay 
               continueAsGuest={continueAsGuest}
               isSignedIn={isSignedIn}
