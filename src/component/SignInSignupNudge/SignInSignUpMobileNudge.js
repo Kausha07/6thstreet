@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import isMobile from "Util/Mobile";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
@@ -6,6 +6,24 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import NudgeCross from "./ImagesAndIcons/nudgeCross.svg";
 
 import "./SignInSignUpMobileNudge.style.scss";
+
+function useOnClickOutside(ref, handler) {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+    //can be optimized further by wrapping handeler in useCallback
+  }, [ref, handler]);
+}
 
 export default function SignInSignUpMobileNudge() {
   const [nudgeTimer, setNudgeTimer] = useState(7);
@@ -16,6 +34,7 @@ export default function SignInSignUpMobileNudge() {
   const [isOneDayCompleted, setIsOneDayCompleted] = useState(false);
   let timer;
   const isArabicValue = isArabic();
+  const mobileNudgeRef = useRef();
   const miliSecsInADay = 86400000;
 
   useEffect(() => {
@@ -37,6 +56,8 @@ export default function SignInSignUpMobileNudge() {
       setIsOneDayCompleted(true);
     }
   }, []);
+
+  useOnClickOutside(mobileNudgeRef, () => setIsNudgeVisible(false));
 
   const closeNudge = () => {
     localStorage.setItem("lastNudgeShownTime", Date.now());
@@ -67,6 +88,7 @@ export default function SignInSignUpMobileNudge() {
               ? "mobile-nudge-container invert-text"
               : "mobile-nudge-container"
           }
+          ref={mobileNudgeRef}
         >
           <div className="content-container">
             <p className="nudge-heading">
