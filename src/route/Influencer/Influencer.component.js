@@ -569,6 +569,8 @@ const Influencer = (props) => {
                         onClick={() => {
                           influencerSelectedGender(val.toUpperCase());
                           setIsMobileRefineButtonClicked(false);
+                          handleGender(val.toUpperCase());
+                          setRefine(false);
                         }}
                         key={index}
                       >
