@@ -10,10 +10,11 @@ export class FieldSelect extends SourceFieldSelect {
 
     componentDidMount() {
         const { id } = this.props;
+        const { isMobile } = this.state;
         
         var selector = document.getElementById(id);
 
-        if(selector) {
+        if(selector && (id === "city" || id === "region_string" || id === "region_id") && isMobile) {
 
             selector.addEventListener('mousedown', function(event){
             if (event.preventDefault) {
