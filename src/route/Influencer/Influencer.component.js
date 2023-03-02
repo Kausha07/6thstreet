@@ -387,11 +387,11 @@ const Influencer = (props) => {
             type="text"
             block="influencerSearchInput"
             mods={{ isArabic: isArabic() }}
-            value={influencerSearchText}
             id="influencerSearch"
             placeholder={__("Search collections, influencers etc...")}
             onClick={(e) => handleSearchButtonClick(e)}
             autocomplete="off"
+            readOnly
           />
         </div>
       </div>
