@@ -900,22 +900,39 @@ export class CartPage extends PureComponent {
 
   renderEmptyCartPage() {
     const { isArabic } = this.state;
-
+    // style={{ display: "flex" }}
     return (
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
         {/* <div block="CartPage" elem="EmptyCartIcon"> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          <Image src={EmptyCardIcon} />
-        </div>
-        <div className="mt-2 EmptyMessage">
-          {__("Your shopping bag is empty.")}
-        </div>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/women.html`}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
+        <div style={{ display: "flex" }}>
+          <div block="CartPage" elem="EmptyCartImg">
+            <Image src={EmptyCardIcon} />
+          </div>
+          <div>
+            <div className="mt-2 EmptyMessage">
+              {__("Your shopping bag is empty!")}
+            </div>
+            <span>
+              {__("Continue shopping or login to view your saved bag")}
             </span>
-          </Link>
+              <div block="ExploreNowBtn" >
+                <Link
+                  block="ExploreNowBtn"
+                  elem="ExploreButton"
+                  to={`/women.html`}
+                >
+                  <span block="ExploreNowBtn" elem="ExploreButtonText" >
+                    {__("Continue Shopping")}
+                  </span>
+                </Link>
+                <div block="ExploreNowBtn"
+                  elem="SignInButton">
+                  <button block="ExploreNowBtn" elem="SignInBtnText">
+                    {__("Sign In")}
+                  </button>
+                </div>
+              </div>
+          </div>
         </div>
       </div>
     );
