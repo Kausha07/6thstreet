@@ -717,7 +717,32 @@ export class PLPContainer extends PureComponent {
       .split(".html")[0]
       .substring(1)
       .split("/")?.[0];
-    if(exceptionalBrand.includes(brandName)){
+    if (exceptionalBrand.includes(brandName)) {
+      return null;
+    }
+    try {
+      getBrandInfoByName(brandName).then((resp) => {
+        this.setState({
+          brandDescription: isArabic()
+            ? resp?.result?.[0]?.description_ar
+            : resp?.result?.[0]?.description,
+          brandImg: resp?.result?.[0]?.image,
+          brandName: isArabic() ? resp?.result?.[0]?.name_ar : resp?.result?.[0]?.name,
+        });
+        this.props.setBrandurl(resp?.result?.[0]?.url_path);
+      })
+    } catch (err) {
+      console.error("There is an issue while fetching brand information.", err);
+    }
+  }
+
+  async getBrandDetailsByAloglia() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home']
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    if (exceptionalBrand.includes(brandName)) {
       return null;
     }
     const data = await new Algolia({
