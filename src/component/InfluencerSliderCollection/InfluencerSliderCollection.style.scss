@@ -41,12 +41,15 @@
     }
 
     @include mobile {
+      justify-content: space-between;
+      width: 100%;
       left: 0;
+      right: 2%;
       bottom: 9%;
       padding: 15px;
 
       &_isArabic {
-        padding: 15px 0;
+        left: initial;
       }
     }
     .inluencerImage {
@@ -68,6 +71,7 @@
       }
 
       @include mobile {
+        background-color: rgba(0, 0, 0, 0.7);
         height: 30px;
         img {
           width: 30px;
