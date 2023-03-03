@@ -58,33 +58,26 @@
 
     &-EmptyCartImg {
         @media (max-width: 767px) {
-            margin-top: 48px;
+            width: 118px;
         }
     }
 
-    &-EmptyCartText {
-        margin-top: 74px;
-
-        height: 20px;
-        width: 310px;
-        color: #000000;
-        font-family: "Avenir Next";
-        font-size: 30px;
-        font-weight: 600;
-        letter-spacing: -0.83px;
-        line-height: 20px;
-        text-align: center;
+    .EmptyCartText{
+        max-width: 186px;
+padding: auto ;
     }
     &-EmptyCartTextDec {
-        margin-top: 24px;
-        height: 44px;
         width: 325px;
         color: #000000;
         font-family: "Avenir Next";
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 0;
-        line-height: 22px;
-        text-align: center;
+        font-weight: 600;
+    }
+    .EmptyCartSubText{
+        font-family: "Avenir Next";
+        font-size: 11px;
+
     }
     &_isArabic {
         .CartPage-Wrapper {
@@ -976,7 +969,7 @@
         justify-content: center;
         border: 1px solid #000000;
         height: 52px;
-        width: 192px;
+        width: 170px;
         border-radius: 6px;
     }
     &-ExploreButtonText {
@@ -998,7 +991,7 @@
         justify-content: center;
         border: 1px solid #000000;
         height: 52px;
-        width: 192px;
+        width: 170px;
         border-radius: 6px;
         background-color: #000000;
     }

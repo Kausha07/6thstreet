@@ -943,20 +943,31 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          {/* <image src={EmptyCardIcon}/> */}
-          <Image src={EmptyCardIcon} alt={"cart-icon"} />
+        <div style={{display:"flex", gap:"24px", marginBottom:"24px", alignItems:"center"}}>
+          <div block="CartPage" elem="EmptyCartImg">
+            <Image src={EmptyCardIcon} alt={"cart-icon"} />
+          </div>
+          <div className="EmptyCartText">
+            <p block="CartPage" elem="EmptyCartTextDec">
+            {__("Your shopping bag is empty.")}
+            </p>
+            <span className="EmptyCartSubText">
+              {__("Continue shopping or login to view your saved bag")}
+            </span>
+          </div>
+        
         </div>
-        <p block="CartPage" elem="EmptyCartTextDec">
-          {__("Your shopping bag is empty.")}
-        </p>
         <div block="ExploreNowBtn">
           <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`} onClick={()=> window.pageType = TYPE_HOME}>
             <span block="ExploreNowBtn" elem="ExploreButtonText">
               {__("Continue Shopping")}
             </span>
           </Link>
+          <div block="ExploreNowBtn" elem="SignInButton">
+            <button block="ExploreNowBtn" elem="SignInBtnText">
+              {__("Sign In")}
+            </button>
+          </div>
         </div>
       </div>
     );
