@@ -122,7 +122,7 @@ export default function SignInSignUpMobileNudge() {
                   setIsNudgeVisible(false);
                 }}
               >
-                {__("create account")}
+                {__("Register")}
               </span>
             </p>
           </div>
