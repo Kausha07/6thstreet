@@ -182,8 +182,12 @@ function CareemPay({
         <br />
         <h3>One-Click Checkout</h3>
         <div className="carremPayInnerDiv">
-          <button id="careemBtn" className="careemBtnCss">
-            checkout
+          <button
+            id="careemBtn"
+            className="careemBtnCss"
+            data-radius="2px"
+          >
+            Checkout
           </button>
         </div>
         <br />
