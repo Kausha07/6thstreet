@@ -25,6 +25,7 @@ import {
   sendOTPViaEmail,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import Event, {
+  EVENT_LOGIN,
   EVENT_OTP_VERIFY,
   EVENT_OTP_VERIFY_FAILED,
   EVENT_GTM_NEW_AUTHENTICATION,
@@ -309,6 +310,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       screen: "checkout",
       prevScreen: "checkout",
       ...(data.failedReason && { failedReason: data?.failedReason }),
+      ...(data?.mode && { loginMode: data?.mode }),
+      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
     };
     if (newSignUpEnabled){
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
@@ -414,7 +417,11 @@ export class CheckoutSuccessContainer extends PureComponent {
           const { signInOTP } = this.props;
           if (newSignUpEnabled) {
             this.sendEvents(EVENT_OTP_VERIFY);
-          }
+            const eventAdditionalData = shouldLoginWithOtpOnEmail
+              ? { mode: "Email", isPhone: false }
+              : { mode: "Phone", isPhone: true };
+            this.sendEvents(EVENT_LOGIN, eventAdditionalData);
+          }          
           try {
             await signInOTP(response);
             history.push("/my-account/my-orders");
