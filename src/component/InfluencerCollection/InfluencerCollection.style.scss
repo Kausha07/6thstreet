@@ -105,25 +105,34 @@
 
       button {
         position: absolute;
-        right: 10px;
-        bottom: 10px;
+        right: 25px;
+        bottom: 25px;
+        background-color: #e2e2e2;
+        height: 40px;
+        width: 40px;
+        border-radius: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
-          height: 30px !important;
-          width: 30px !important;
+          height: 25px ;
+          width: 25px;
           border-radius: 50%;
           border: none !important;
           min-height: 0 !important;
-          filter: invert(100%);
         }
 
         @include mobile {
-          bottom: 0%;
-          right: -3px;
+          bottom: 10px;
+          right: 10px;
+          height: 30px;
+          width: 30px;
 
           img {
-            height: 25px !important;
-            width: 25px !important;
+            height: 20px ;
+            width: 20px;
           }
         }
       }
