@@ -91,7 +91,6 @@ export class Checkout extends SourceCheckout {
     isOpen: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     binInfo: {},
-    isCareemPayEnabled: true,
     processingLoader: false,
     careemPayInfo:{},
     careemPayStatus: "",
