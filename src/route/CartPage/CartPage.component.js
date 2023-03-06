@@ -34,7 +34,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
-
+import { RenderEmptyCartPage, RenderEmptyCartPageForMobile } from "./EmptyCart"
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -898,81 +898,6 @@ export class CartPage extends PureComponent {
     );
   }
 
-  renderEmptyCartPage() {
-    const { isArabic } = this.state;
-    // style={{ display: "flex" }}
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon"> */}
-        <div style={{ display: "flex" }}>
-          <div block="CartPage" elem="EmptyCartImg">
-            <Image src={EmptyCardIcon} />
-          </div>
-          <div>
-            <div className="mt-2 EmptyMessage">
-              {__("Your shopping bag is empty!")}
-            </div>
-            <span>
-              {__("Continue shopping or login to view your saved bag")}
-            </span>
-              <div block="ExploreNowBtn" >
-                <Link
-                  block="ExploreNowBtn"
-                  elem="ExploreButton"
-                  to={`/women.html`}
-                >
-                  <span block="ExploreNowBtn" elem="ExploreButtonText" >
-                    {__("Continue Shopping")}
-                  </span>
-                </Link>
-                <div block="ExploreNowBtn"
-                  elem="SignInButton">
-                  <button block="ExploreNowBtn" elem="SignInBtnText">
-                    {__("Sign In")}
-                  </button>
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderEmptyCartPageForMobile() {
-    const { isArabic } = this.state;
-
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        <div style={{display:"flex", gap:"24px", marginBottom:"24px", alignItems:"center"}}>
-          <div block="CartPage" elem="EmptyCartImg">
-            <Image src={EmptyCardIcon} alt={"cart-icon"} />
-          </div>
-          <div className="EmptyCartText">
-            <p block="CartPage" elem="EmptyCartTextDec">
-            {__("Your shopping bag is empty.")}
-            </p>
-            <span className="EmptyCartSubText">
-              {__("Continue shopping or login to view your saved bag")}
-            </span>
-          </div>
-        
-        </div>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`} onClick={()=> window.pageType = TYPE_HOME}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
-            </span>
-          </Link>
-          <div block="ExploreNowBtn" elem="SignInButton">
-            <button block="ExploreNowBtn" elem="SignInBtnText">
-              {__("Sign In")}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderDynamicContent() {
     const {
       totals = {},
@@ -999,7 +924,7 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderMySignInPopup()}
           {this.renderHeading()}
-          {this.renderEmptyCartPageForMobile()}
+          <RenderEmptyCartPageForMobile />
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
               ? this.renderRecentlyViewSlider()
@@ -1019,7 +944,7 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
+          <RenderEmptyCartPage />
           <div block="Empty-cart-spacing"></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
@@ -1045,7 +970,7 @@ export class CartPage extends PureComponent {
           <div block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderMySignInPopup()}
             {this.renderHeading()}
-            {this.renderEmptyCartPageForMobile()}
+            <RenderEmptyCartPageForMobile />
        
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
@@ -1065,7 +990,7 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
+          <RenderEmptyCartPage />
           <div block="Empty-cart-spacing"></div>
           <div className="PDPWidgets-cart">
             {cartWidgetApiData.length !== 0
