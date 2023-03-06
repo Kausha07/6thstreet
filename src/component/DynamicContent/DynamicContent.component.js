@@ -1,29 +1,16 @@
 // import PropTypes from 'prop-types';
-import { PureComponent, lazy, Suspense } from 'react';
-
 import { PRODUCT_SLIDER_TYPE } from "Component/DynamicContent/DynamicContent.config";
-// const DynamicContentBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentBanner' */ "Component/DynamicContentBanner"));
-// const DynamicContentCircleItemSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentCircleItemSlider' */ "Component/DynamicContentCircleItemSlider"));
-// const DynamicContentFullWidthBannerSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentFullWidthBannerSlider' */ "Component/DynamicContentFullWidthBannerSlider"));
-const DynamicContentGrid = lazy(() => import(/* webpackChunkName: 'DynamicContentGrid' */ "Component/DynamicContentGrid"));
-const DynamicContentMainBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentMainBanner' */ "Component/DynamicContentMainBanner"));
-const DynamicContentProductSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentProductSlider' */ "Component/DynamicContentProductSlider"));
-const DynamicContentRichContentBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentRichContentBanner' */ "Component/DynamicContentRichContentBanner"));
-const DynamicContentSliderWithLabel = lazy(() => import(/* webpackChunkName: 'DynamicContentSliderWithLabel' */ "Component/DynamicContentSliderWithLabel"));
-const DynamicContentTwiceBanner = lazy(() => import(/* webpackChunkName: 'DynamicContentTwiceBanner' */ "Component/DynamicContentTwiceBanner"));
-const DynamicContentVueSlider = lazy(() => import(/* webpackChunkName: 'DynamicContentVueSlider' */ "Component/DynamicContentVueSlider"));
-
 import DynamicContentBanner from "Component/DynamicContentBanner";
 import DynamicContentCircleItemSlider from "Component/DynamicContentCircleItemSlider";
 import DynamicContentFullWidthBannerSlider from "Component/DynamicContentFullWidthBannerSlider";
-// import DynamicContentGrid from "Component/DynamicContentGrid";
-// import DynamicContentMainBanner from "Component/DynamicContentMainBanner";
-// import DynamicContentProductSlider from "Component/DynamicContentProductSlider";
-// import DynamicContentRichContentBanner from "Component/DynamicContentRichContentBanner";
-// import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
-// import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
-// import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
-
+import DynamicContentGrid from "Component/DynamicContentGrid";
+import DynamicContentMainBanner from "Component/DynamicContentMainBanner";
+import DynamicContentProductSlider from "Component/DynamicContentProductSlider";
+import DynamicContentRichContentBanner from "Component/DynamicContentRichContentBanner";
+import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
+import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
+import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
+import { PureComponent } from "react";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
 import isMobile from "Util/Mobile";
@@ -45,19 +32,7 @@ class DynamicContent extends PureComponent {
   state = {
     impressions: [],
     sliderImpressionCount: 0,
-    shouldLoad: window.__isBot__ || false ,
-    isPreLoad: false,
   };
-
-  componentDidMount() {
-    window.addEventListener("scroll", () => { 
-      if(!this.state.shouldLoad) {
-        this.setState({ shouldLoad: true })
-      }
-    }, {
-      passive: true
-  });
-  }
 
   renderMap = {
     banner: DynamicContentBanner,
@@ -73,10 +48,6 @@ class DynamicContent extends PureComponent {
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
   };
-
-  setPreload = (flag) => {
-    this.setState({ isPreLoad : flag })
-  }
   isCheckTwiceBanner = (block) => {
     let isValid = false;
     if (block.header) {
@@ -87,11 +58,8 @@ class DynamicContent extends PureComponent {
     return isValid;
   };
   renderBlock = (block, i) => {
-    if(i > 5 && !!this.state.shouldLoad === false ) return null;
-   
     const { type, ...restProps } = block;
     const { promotion_name, tag, items } = block;
-
     let vueSliderType = [
       "vue_browsing_history_slider",
       "vue_trending_slider",
@@ -123,11 +91,9 @@ class DynamicContent extends PureComponent {
           tag={tag}
           type={type}
           widgetID={type}
-          key={`${type} - ${i}`}
+          key={i}
           isHomePage={true}
           index={i}
-          setPreload={this.setPreload}
-          isPreLoad={this.state.isPreLoad}
         />
       );
     } else {
@@ -163,8 +129,6 @@ class DynamicContent extends PureComponent {
         isHomePage={true}
         index={i}
         widgetID={type}
-        setPreload={this.setPreload}
-        isPreLoad={this.state.isPreLoad}
       />
     );
   };
