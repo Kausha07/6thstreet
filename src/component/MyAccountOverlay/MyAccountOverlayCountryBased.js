@@ -20,7 +20,7 @@ export default function MyAccountOverlay({
   );
   if (newSigninSignupVersionEnabled) {
     return (
-      <Suspense fallback={<div>Loading...</div>} >
+      <Suspense>
         <MyAccountOverlayContainerV1
           closePopup={closePopup}
           onSignIn={onSignIn}
@@ -35,7 +35,7 @@ export default function MyAccountOverlay({
     );
   } else {
     return (
-      <Suspense fallback={<div>Loading...</div>} >
+      <Suspense>
         <MyAccountOverlayContainerV0
           closePopup={closePopup}
           onSignIn={onSignIn}

@@ -397,7 +397,7 @@ export class Router extends SourceRouter {
 
   renderWelcomeHomePage() {
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <WelcomeHomePage />
       </Suspense>
     );
@@ -409,7 +409,7 @@ export class Router extends SourceRouter {
       <div block="PageWrapper" mods={{ isArabic }}>
         {this.renderItemsOfType(BEFORE_ITEMS_TYPE)}
         <div block="PageWrapper" elem="Content">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense>
             {this.renderMainItems()}
           </Suspense>
         </div>
