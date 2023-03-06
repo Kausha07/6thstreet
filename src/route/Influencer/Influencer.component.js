@@ -443,6 +443,10 @@ const Influencer = (props) => {
 
   const handleMobileRefineButtonClick = () => {
     setIsMobileRefineButtonClicked(!isMobileRefineButtonClicked);
+    const eventData = {
+      EventName: EVENT_INFLUENCER_REFINE_CLICK,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderMsiteRefine = () => {
