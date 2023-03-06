@@ -583,6 +583,12 @@ class HeaderMainSection extends NavigationAbstract {
     this.closePopup();
   };
 
+  ClearSearch = () => {
+    this.setState({
+      search : "",
+    });
+  };
+  
   renderSearchIcon() {
     const { isArabic, showPLPSearch, search, isPopup, searchBarClick } = this.state;
     if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
@@ -631,8 +637,12 @@ class HeaderMainSection extends NavigationAbstract {
             )}
           </div>
           <div id="overlay-sections">
-            {isPopup ? (
-              <SearchOverlay isPopup={isPopup} search={this.state.search} closePopup={this.closePopup} />
+            {isPopup ? (<SearchOverlay
+                isPopup={isPopup}
+                search={this.state.search}
+                closePopup={this.closePopup}
+                ClearSearch={this.ClearSearch}
+              />
             ) : null}
           </div>
         </div>

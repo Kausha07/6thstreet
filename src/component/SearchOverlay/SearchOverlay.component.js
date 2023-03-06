@@ -24,6 +24,7 @@ import Event, {
   EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK,
   EVENT_GTM_SEARCH,
   EVENT_GTM_VIEW_SEARCH_RESULTS,
+  MOE_trackEvent,
 } from "Util/Event";
 
 import { getStore } from "Store";
@@ -174,7 +175,7 @@ export class SearchOverlay extends PureComponent {
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
         Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
-        Moengage.track_event(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
+        MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
@@ -182,7 +183,7 @@ export class SearchOverlay extends PureComponent {
         });
       } else {
         Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
-        Moengage.track_event(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
+        MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
@@ -288,7 +289,7 @@ export class SearchOverlay extends PureComponent {
 
   handleProductClick = (product) => {
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
-    Moengage.track_event(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
+    MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: product?.name || "",
@@ -380,7 +381,7 @@ export class SearchOverlay extends PureComponent {
           }
           onClick={() => {
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
-            Moengage.track_event(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
+            MOE_trackEvent(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
               search_term: name || "",
@@ -417,7 +418,7 @@ export class SearchOverlay extends PureComponent {
   handleTrendingBrandsClick = (brandName) => {
     const { closePopup, setPrevPath } = this.props;
     Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
-    Moengage.track_event(EVENT_MOE_TRENDING_BRANDS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_TRENDING_BRANDS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: brandName || "",
@@ -515,7 +516,7 @@ export class SearchOverlay extends PureComponent {
   };
 
   SeeAllButtonClick = async () => {
-    const { search } = this.props;
+    const { search, closePopup } = this.props;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
       ? encodeURIComponent(search)
@@ -550,7 +551,7 @@ export class SearchOverlay extends PureComponent {
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearches(search);
         Event.dispatch(EVENT_GTM_SEARCH, search);
-        Moengage.track_event(EVENT_GTM_VIEW_SEARCH_RESULTS, {
+        MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: search || "",
@@ -601,6 +602,7 @@ export class SearchOverlay extends PureComponent {
         });
       }
     }
+    closePopup();
   };
 
   renderContent = () => {
