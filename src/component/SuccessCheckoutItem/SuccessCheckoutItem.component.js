@@ -267,7 +267,8 @@ export class SuccessCheckoutItem extends PureComponent {
         customizable_options,
         bundle_options,
         full_item_info: { cross_border = 0 },
-        brand_name = ""
+        brand_name = "",
+        international_vendor=null
       },
       edd_info,
       isFailed,
@@ -275,7 +276,7 @@ export class SuccessCheckoutItem extends PureComponent {
       intlEddResponse
     } = this.props;
     const isIntlBrand =
-    ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
+    ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1) ||
     cross_border === 1) && edd_info && edd_info.has_cross_border_enabled ;
 
     return (
@@ -304,7 +305,7 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
   renderEdd = (crossBorder) => {
-    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "" }, intlEddResponse } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "", international_vendor }, intlEddResponse } = this.props;
 
     const { isArabic } = this.state;
     let actualEddMess = "";
@@ -316,8 +317,8 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
-    const isIntlBrand = ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
-    const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase());
+    const isIntlBrand = ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
+    const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase());
     const intlEddMess = intlEddObj
       ? isArabic
         ? intlEddObj["edd_message_ar"]

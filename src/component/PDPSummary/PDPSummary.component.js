@@ -491,7 +491,7 @@ class PDPSummary extends PureComponent {
   renderSelectCity(crossBorder) {
     const {
       edd_info,
-      product: { brand_name = "" },
+      product: { brand_name = "", international_vendor=null },
       eddResponse,
       intlEddResponse,
     } = this.props;
@@ -505,10 +505,10 @@ class PDPSummary extends PureComponent {
       isArabic,
     } = this.state;
     const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
+      (( edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
       crossBorder) && edd_info && edd_info.has_cross_border_enabled;
     const intlEddObj = intlEddResponse["pdp"]?.find(
-      ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+      ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
     );
     const intlEddMess = intlEddObj
       ? isArabic
@@ -1016,13 +1016,13 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "" },
+      product: { cross_border = 0, brand_name = "", international_vendor=null },
       edd_info,
       intlEddResponse
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
+      ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1) ||
       cross_border === 1) && edd_info && edd_info.has_cross_border_enabled;
 
     return (

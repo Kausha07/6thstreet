@@ -35,12 +35,13 @@ export class MyAccountOrderViewItem extends SourceComponent {
         cross_border = 0,
         ctc_store_name = "",
         int_shipment = "0",
+        international_vendor = null
       } = {},
       status,
       paymentMethod,
     } = this.props;
     const isIntlBrand =
-      (((INTL_BRAND.includes(brand_name.toString().toLowerCase()) &&
+      (((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
         parseInt(cross_border) === 1) ||
         parseInt(cross_border) === 1) &&
         edd_info &&
@@ -130,7 +131,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       setEddEventSent,
       eddEventSent,
       edd_info,
-      item: { edd_msg_color, brand_name = "", ctc_store_name },
+      item: { edd_msg_color, brand_name = "", ctc_store_name, international_vendor = null },
       intlEddResponse,
     } = this.props;
     let actualEddMess = "";
@@ -148,12 +149,12 @@ export class MyAccountOrderViewItem extends SourceComponent {
         ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
         : DEFAULT_READY_MESSAGE;
       const isIntlBrand =
-        ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
+        ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
           crossBorder) &&
         edd_info &&
         edd_info.has_cross_border_enabled;
       const intlEddObj = intlEddResponse["thankyou"]?.find(
-        ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+        ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
       const intlEddMess = intlEddObj
         ? isArabic()
