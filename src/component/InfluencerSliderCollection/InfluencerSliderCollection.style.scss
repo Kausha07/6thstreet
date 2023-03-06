@@ -42,7 +42,7 @@
 
     @include mobile {
       justify-content: space-between;
-      width: 100%;
+      width: 90%;
       left: 0;
       right: 2%;
       bottom: 9%;
@@ -50,6 +50,7 @@
 
       &_isArabic {
         left: initial;
+        right: 10%;
       }
     }
     .inluencerImage {
@@ -72,15 +73,17 @@
 
       @include mobile {
         background-color: rgba(0, 0, 0, 0.7);
-        height: 30px;
+        height: 36px;
         img {
-          width: 30px;
-          height: 30px;
+          width: 36px;
+          height: 36px;
           border-radius: 50%;
         }
         p {
-          padding: 0 8px;
-          font-size: 12px;
+          padding: 0 10px;
+          font-size: 10px;
+          width: 72px;
+          word-break: break-word;
         }
       }
     }
@@ -111,7 +114,7 @@
         margin-right: 10px;
       }
       @include mobile {
-        height: 30px;
+        height: 36px;
         img {
           width: 20px;
           height: 20px;
@@ -133,12 +136,10 @@
     padding: 0 0 20px 40px;
 
     &_isArabic {
-      right: 0px;
+      right: 34px;
       padding: 0 40px 20px 0;
     }
     @include mobile {
-      // width: 100%;
-      // left: 0;
       padding: 15px;
     }
 
@@ -161,6 +162,15 @@
 
 .tns-outer {
   direction: ltr;
+  button[data-action="stop"] {
+    display: none;
+  }
+  button[data-action="start"] {
+    display: none;
+  }
+  .tns-liveregion {
+    display: none;
+  }
 }
 
 .tns-nav {

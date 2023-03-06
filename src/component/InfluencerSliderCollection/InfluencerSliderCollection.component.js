@@ -15,7 +15,34 @@ const InfluencerSliderCollection = (props) => {
     nav: true,
     loop: true,
     navPosition: "bottom",
-    autoplay: false,
+    autoplay: true,
+    responsive: {
+      1024: {
+        items: 1,
+      },
+      420: {
+        items: 1,
+        gutter: 20,
+      },
+      300: {
+        items: 1.2,
+        gutter: 20,
+      },
+    },
+  };
+
+  const MoenangeTrackingCollectionDetail = (
+    influencer_id,
+    influncer_collection_id,
+    influencer_name
+  ) => {
+    const eventData = {
+      EventName: EVENT_COLLECTION_DETAIL_CLICK,
+      collection_id: influncer_collection_id,
+      name: influencer_name,
+      influencer_id: influencer_id,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderSlide = (item, i) => {
