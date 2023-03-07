@@ -163,6 +163,10 @@
         }
         &_isArabic {
             float: left;
+            &:before {
+                right: -15px;
+                top: 7px;
+            }
         }
     }
 }
