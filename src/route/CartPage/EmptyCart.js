@@ -19,7 +19,7 @@ export function RenderEmptyCartPage() {
       )}
 
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        <div style={{ display: "flex" }}>
+        <div className="EmptyCartContainer" >
           <div block="CartPage" elem="EmptyCartImg">
             <Image src={EmptyCardIcon} />
           </div>
@@ -74,12 +74,7 @@ export function RenderEmptyCartPageForMobile() {
       )}
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
         <div
-          style={{
-            display: "flex",
-            gap: "24px",
-            marginBottom: "24px",
-            alignItems: "center",
-          }}
+        className="EmptyCartContainerMobile"
         >
           <div block="CartPage" elem="EmptyCartImg">
             <Image src={EmptyCardIcon} alt={"cart-icon"} />

@@ -55,6 +55,15 @@
             display: none;
         }
     }
+    .EmptyCartContainer{
+        display: flex;
+    }
+    .EmptyCartContainerMobile{
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        margin-bottom: 24px;
+    }
 
     &-EmptyCartImg {
         @media (max-width: 767px) {
