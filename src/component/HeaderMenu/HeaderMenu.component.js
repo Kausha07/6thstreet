@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
-import { EVENT_MOE_CATEGORIES_TAB_ICON, MOE_trackEvent} from "Util/Event";
+import { EVENT_MOE_CATEGORIES_TAB_ICON, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Menu from "Component/Menu";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
@@ -45,7 +45,7 @@ class HeaderMenu extends PureComponent {
     const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome } =
       this.props;
 
-    if (gender === "home_beauty_women") {
+    if (gender === "home_beauty_women" || gender === "influencer") {
       setGender("women");
     }
     MOE_trackEvent(EVENT_MOE_CATEGORIES_TAB_ICON, {
@@ -57,7 +57,11 @@ class HeaderMenu extends PureComponent {
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
     browserHistory.push(
-      `/${gender === "home_beauty_women" ? "women" : gender}.html`
+      `/${
+        gender === "home_beauty_women" || gender === "influencer"
+          ? "women"
+          : gender
+      }.html`
     );
   };
 
