@@ -630,7 +630,7 @@ export class LiveExperience extends PureComponent {
         <img block="searchImage" mods={{ isArabic }} src={Search} />
         <input
           type="text"
-          block="influencerSearchInput"
+          block="liveExperienceSearchInput"
           mods={{ isArabic }}
           placeholder={__("Search for Videos")}
           onChange={this.handleSearchInfluencerText}
