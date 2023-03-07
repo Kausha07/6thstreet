@@ -26,7 +26,7 @@ function useOnClickOutside(ref, handler) {
 }
 
 export default function SignInSignUpMobileNudge() {
-  const [nudgeTimer, setNudgeTimer] = useState(7);
+  const [nudgeTimer, setNudgeTimer] = useState(15);
   const [isNudgeVisible, setIsNudgeVisible] = useState(true);
   const [showSignInSignUpPopUp, setShowSignInSignUpPopUp] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);

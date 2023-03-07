@@ -6,7 +6,7 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import "./SignInSignupNudge.style.scss";
 
 export default function SignInSignupNudge() {
-  const [nudgeTimer, setNudgeTimer] = useState(7);
+  const [nudgeTimer, setNudgeTimer] = useState(15);
   const [isNudgeVisible, setIsNudgeVisible] = useState(true);
   const [showSignInSignUpPopUp, setShowSignInSignUpPopUp] = useState(false);
   const [isRegisterScreen, setIsRegisterScreen] = useState(false);
