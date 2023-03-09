@@ -596,7 +596,19 @@ class HeaderMainSection extends NavigationAbstract {
     }
     return (
       <>
-        <div mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
+        { isMobile.any() ? <div block="SearchIcon" mods={{ isArabic: isArabic }}>
+        <button
+          block="SearchIcon"
+          onClick={
+            isMobile.any()
+              ? this.handlePLPSearchClick.bind(this)
+              : this.handleSearchClick.bind(this)
+          }
+          elem="Button"
+          aria-label="PLP Search Button"
+          role="button"
+        ></button>
+      </div> : <div mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
           <div block="SearchIcon">
             <div>
               <img
@@ -645,7 +657,7 @@ class HeaderMainSection extends NavigationAbstract {
               />
             ) : null}
           </div>
-        </div>
+        </div>}
       </>
     );
   }

@@ -122,13 +122,26 @@ main {
     img {
       cursor: pointer;
     }
-    display: flex;
-    border: 1px solid #D1D3D4;
-    border-radius: 8px;
-    opacity: 1;
-    width: 250px;
-    height: 40px;
-    margin-bottom : 28px;
+
+    &-Button {
+      content: "";
+      background: url(./icons/search-black.svg) no-repeat;
+      background-size: 24px;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      position: relative;
+    }
+    @include desktop {
+      display: flex;
+      border: 1px solid #D1D3D4;
+      border-radius: 8px;
+      opacity: 1;
+      width: 250px;
+      height: 40px;
+      margin-bottom : 28px;
+
+    }
   }
 
   #searchIconImage {
