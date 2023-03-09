@@ -5,6 +5,8 @@ import { EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, MOE_trackEvent } from "Util/Event"
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
+import "./CheckoutFail.style";
+import { SUCCESS, FAILURE } from "Component/CareemPay/CareemPay.config";
 
 export class CheckoutFail extends CheckoutSuccess {
   componentWillUnmount() {
@@ -86,6 +88,8 @@ export class CheckoutFail extends CheckoutSuccess {
   }
 
   renderStatus() {
+    const { careemPayStatus } = this.props;
+
     return (
       <div block="MyAccountOrderView" elem="StatusFailed">
         <Image
@@ -94,18 +98,48 @@ export class CheckoutFail extends CheckoutSuccess {
           mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
           alt={"WarningImage"}
         />
-        <p>{__("Payment Failed")}</p>
+        {(careemPayStatus === SUCCESS) ? <p>{__("Order Failed")}</p> : <p>{__("Payment Failed")}</p>}
+        
+      </div>
+    );
+  }
+
+  renderEdgeCaseMessage() {
+    const { careemPayInfo, careemPayStatus } = this.props;
+
+    if(careemPayStatus === FAILURE) {
+      return null;
+    }
+
+    if(careemPayInfo && careemPayInfo.messageTitle && careemPayInfo.messageDetails ) {
+      return (
+        <div block="alertMessage">
+          <h3>{careemPayInfo?.messageTitle}</h3>
+          <p>{careemPayInfo?.messageDetails}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div block="alertMessage">
+        <h3>{__("The ordered product is currently out of stock.")}</h3>
+        <p>{__("If  amount is deducted from your account  it will be refunded within 5 working days.")}</p>
       </div>
     );
   }
 
   renderDetails() {
-    const { paymentMethod } = this.props;
+    const { paymentMethod, careemPayInfo, careemPayStatus } = this.props;
+    let isEdgeCase = false;
+    if(careemPayInfo && careemPayInfo.isCreateOrderFail) {
+      isEdgeCase = true;
+    }
     localStorage.removeItem("cartProducts");
     return (
       <div block="CheckoutSuccess">
         <div block="CheckoutSuccess" elem="Details">
           {this.renderStatus()}
+          {isEdgeCase ? this.renderEdgeCaseMessage() : null}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderDeliveryOption()}
