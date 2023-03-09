@@ -81,7 +81,7 @@ export function RenderEmptyCartPageForMobile() {
           </div>
           <div className="EmptyCartText">
             <p block="CartPage" elem="EmptyCartTextDec">
-              {__("Your shopping bag is empty.")}
+              {__("Your shopping bag is empty!")}
             </p>
             <span className="EmptyCartSubText">
               {__("Continue shopping or login to view your saved bag")}

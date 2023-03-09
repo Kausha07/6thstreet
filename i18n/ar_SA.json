@@ -1109,7 +1109,7 @@
     "SUCCESS": "ناجح",
     "FAILED": "فشلت عملية الدفع",
     "Your shopping bag is empty.": "حقيبة التسوق الخاصة بك فارغة",
-    "Your shopping bag is empty.!": "حقيبة التسوق الخاصة بك فارغة",
+    "Your shopping bag is empty!": "!حقيبة التسوق الخاصة بك فارغة",
     "KNET": null,
     "Continue Shopping": "متابعة التسوق",
     "RETURN POLICY": "سياسة الإرجاع",
@@ -1186,5 +1186,6 @@
     "Read less": "إقرأ أقل",
     "SELECT A CITY": "حدد المدينة",
     "SELECT AN AREA": "حدد المنطقة",
-    "Search...": " ابحث..."
+    "Search...": " ابحث...",
+    "Continue shopping or login to view your saved bag": "تابع التسوق أو قم بتسجيل الدخول لعرض سلة تسوقك المحفوظة"
 }
