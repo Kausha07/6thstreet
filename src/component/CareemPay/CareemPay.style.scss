@@ -1,0 +1,39 @@
+.carrrmPayWrapperDiv {
+  width: 100%;
+  background-color: #ffffff;
+  text-align: center;
+  h3 {
+    margin-top: auto;
+  }
+}
+
+.carremPayInnerDiv {
+  width: fit-content;
+  margin: auto;
+  max-width: 80%;
+}
+
+.dashedWerapper {
+  background: #fff;
+  padding-bottom: 10px;
+}
+
+.dashed {
+  border-bottom: 1px solid #efefef;
+  text-align: center;
+  height: 10px;
+  // margin-bottom: 10px;
+}
+
+.dashed span {
+  background: #fff;
+  padding: 0 5px;
+}
+
+.careemBtnCss {
+  border-radius: 0;
+}
+
+.cpay-checkout-modal {
+  position: fixed;
+}

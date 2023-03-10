@@ -3,6 +3,7 @@ import { getMobileAuthorizationToken } from "Util/Auth";
 
 import { doFetch } from '../helper/Fetch';
 import { getQueryParam } from "Util/Url";
+import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 
 class MobileAPI {
     async _fetch(method, relativeURL, body = {}) {
@@ -26,6 +27,12 @@ class MobileAPI {
             },
             ...payload({ body: JSON.stringify(body) })
         };
+
+        // In Careem Pay order API, in error case we need both the data and message field. - API format is also changes in this case.
+        if(body?.payment?.method === CAREEM_PAY ){
+            const isCareemPay = true;
+            return doFetch(url, options, true, isCareemPay);
+        }
 
         return doFetch(url, options, true);
     }
