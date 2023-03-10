@@ -32,6 +32,7 @@ import {
 } from "Component/Icons";
 import OrdersIcon from "./icons/cat-menu.svg";
 import ReturnIcon from "./icons/return.svg";
+import HeartIcon from "./icons/heart-regular.svg";
 import { ThreeDots, Oval } from "react-loader-spinner";
 import MyAccountAutoDetectOTP from "./MyAccountAutoDetectOTP";
 import { isArabic } from "Util/App";
@@ -1084,6 +1085,26 @@ export class MyAccountOverlay extends PureComponent {
                   className="options-icon"
                 />
                 <span className="link-text">{__("Return/Exchange")}</span>
+              </div>
+              <div className="icon-forward">
+                {isArabic ? <ChevronLeft /> : <ChevronRight />}
+              </div>
+            </a>
+          </li>
+          <li
+            className="MyAccountTabListItem hover-list-item"
+            onClick={() => {
+              updateAccountViewState(STATE_SIGN_IN, "RedirectToMyWishlist");
+            }}
+          >
+            <a className="list-item-link">
+              <div className="item-pill">
+                <Image
+                  lazyLoad={true}
+                  src={HeartIcon}
+                  className="options-icon"
+                />
+                <span className="link-text">{__("My Wishlist")}</span>
               </div>
               <div className="icon-forward">
                 {isArabic ? <ChevronLeft /> : <ChevronRight />}
