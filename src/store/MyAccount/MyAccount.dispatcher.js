@@ -101,7 +101,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     return { finalArea, finalCity };
   };
   setEDDresultData = (response, finalRes, dispatch, login) => {
-    if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+    if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
           return address.default_shipping === true;

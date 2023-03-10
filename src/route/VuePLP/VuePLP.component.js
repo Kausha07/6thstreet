@@ -9,15 +9,24 @@ import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import { getLastOrder } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import ProductItem from "Component/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import {
-  VUE_PAGE_VIEW
-} from "Util/Event";
+import { VUE_PAGE_VIEW } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import { setPrevPath } from "Store/PLP/PLP.action";
-
+import { isSignedIn } from "Util/Auth";
+import { MOBILE_AUTH_TOKEN } from "Util/Auth";
+import {
+  TOP_PICKS_SLIDER,
+  RECENTLY_VIEWED_SLIDER,
+  STYLE_IT_SLIDER,
+  VISUALLY_SIMILAR_SLIDER,
+  VUE_VISUALLY_SIMILAR_SLIDER,
+  VUE_STYLE_IT_SLIDER,
+  VUE_RECENTLY_VIEWED_SLIDER,
+} from "./VuePLP.config";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -26,9 +35,14 @@ const VuePLP = (props) => {
   const stateObj = {
     vueRecommendation: props?.location?.state?.vueProducts || [],
     showPopup: false,
+    isSignedIn: isSignedIn(),
   };
 
   const [state, setState] = useState(stateObj);
+  const [lastOrderSku, setLastOrderSku] = useState([]);
+  const [payloadQuery, setPayloadQuery] = useState("");
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [topPicksReqSent, setTopPicksReqSent] = useState(false);
 
   const gender = useSelector((state) => state.AppState.gender);
   const prevPath = useSelector((state) => state.PLP.prevPath);
@@ -64,9 +78,56 @@ const VuePLP = (props) => {
     closePopup();
   };
 
+  const lastOrder = () => {
+    let userToken = BrowserDatabase.getItem(MOBILE_AUTH_TOKEN) || "";
+    if (
+      params &&
+      (params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
+      state.isSignedIn &&
+      !params.product_id
+    ) {
+      if (userToken) {
+        const orderKey = {
+          "Content-Type": "application/json",
+          "x-api-token": userToken,
+        };
+        getLastOrder(orderKey)
+          .then((resp) => {
+            if (resp.items && Object.entries(resp.items).length) {
+              let productSKU = [];
+              resp.items.forEach((item) => {
+                productSKU.push(item.config_sku);
+              });
+              setLastOrderSku(productSKU);
+            } else {
+              setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+            }
+          })
+          .catch((err) => {
+            console.error("Last order error", err);
+            setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+          });
+      } else {
+        setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+      }
+    }
+  };
+
+  const getRandomSku = () => {
+    if (lastOrderSku.length == 0 || !state.isSignedIn) {
+      setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+      return null;
+    } else if (lastOrderSku.length > 1) {
+      const random = Math.floor(Math.random() * lastOrderSku.length);
+      return lastOrderSku[random];
+    } else {
+      return lastOrderSku[0];
+    }
+  };
+
   const request = async () => {
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const vueSliderType = `vue_${q}`;
+    const vueSliderType = payloadQuery ? `vue_${payloadQuery}` : `vue_${q}`;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
@@ -74,11 +135,20 @@ const VuePLP = (props) => {
       num_results: 50,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
+    const handleProductID = params?.product_id
+      ? params.product_id
+      : (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
+          vueSliderType == VUE_STYLE_IT_SLIDER) &&
+        lastOrderSku.length &&
+        state.isSignedIn
+      ? getRandomSku()
+      : "";
+
     const defaultQueryPayload = {
       userID,
-      product_id: params?.product_id || "",
+      product_id: handleProductID,
     };
-    if (vueSliderType !== "vue_visually_similar_slider") {
+    if (vueSliderType !== VUE_VISUALLY_SIMILAR_SLIDER) {
       defaultQueryPayload.gender = gender;
     }
     const payload = VueQuery.buildQuery(
@@ -86,20 +156,53 @@ const VuePLP = (props) => {
       query,
       defaultQueryPayload
     );
-    fetchVueData(payload)
-      .then((resp) => {
-        setState({
-          ...state,
-          vueRecommendation: resp.data,
-        });
-      })
-      .catch((err) => {
-        console.error("fetchVueData error", err);
-      });
+    if (
+      vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
+      vueSliderType == VUE_STYLE_IT_SLIDER
+    ) {
+      if (handleProductID) {
+        fetchVueData(payload)
+          .then((resp) => {
+            if (!resp.data || Object.entries(resp.data).length < 1) {
+              setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+            }
+            setState({
+              ...state,
+              vueRecommendation: resp.data,
+            });
+          })
+          .catch((err) => {
+            console.error("fetchVueData error", err);
+          });
+      } else {
+        if (vueSliderType !== VUE_RECENTLY_VIEWED_SLIDER) {
+          setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+        }
+      }
+    } else {
+      if (!topPicksReqSent) {
+        fetchVueData(payload)
+          .then((resp) => {
+            if (
+              vueSliderType == VUE_RECENTLY_VIEWED_SLIDER &&
+              (!resp.data || Object.entries(resp.data).length <= 1)
+            ) {
+              setPayloadQuery(TOP_PICKS_SLIDER);
+              setTopPicksReqSent(true);
+            }
+            setState({
+              ...state,
+              vueRecommendation: resp.data,
+            });
+          })
+          .catch((err) => {
+            console.error("fetchVueData error", err);
+          });
+      }
+    }
   };
 
   useEffect(() => {
-    console.log("prevPath",prevPath)
     updateBreadcrumbs();
     dispatch(setPrevPath(prevPath));
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -115,31 +218,40 @@ const VuePLP = (props) => {
         url: window.location.href,
       },
     });
+    if (state.isSignedIn) {
+      lastOrder();
+    }
+    setIsPageLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (state?.vueRecommendation?.length === 0) {
+    if (
+      state?.vueRecommendation?.length === 0 &&
+      state.isSignedIn &&
+      isPageLoaded
+    ) {
       request();
     }
-  }, [state?.vueRecommendation]);
+    if (state?.vueRecommendation?.length === 0 && !state.isSignedIn) {
+      request();
+    }
+  }, [state?.vueRecommendation, lastOrderSku, payloadQuery]);
 
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
-      case "style_it_slider":
+      case STYLE_IT_SLIDER:
         return __("Style It With");
-      case "visually_similar_slider":
+      case VISUALLY_SIMILAR_SLIDER:
         return __("You May Also Like");
-      case "recently_viewed_slider":
+      case RECENTLY_VIEWED_SLIDER:
         return __("Recently Viewed");
-      case "top_picks_slider":
+      case TOP_PICKS_SLIDER:
         return __("You May Like");
     }
   };
 
   const updateBreadcrumbs = () => {
-    let breadCrumbName = q
-        ? fetchBreadCrumbsName(q)
-      : "Available products";
+    let breadCrumbName = q ? fetchBreadCrumbsName(q) : "Available products";
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update([{ name: breadCrumbName }], dispatch)
     );
