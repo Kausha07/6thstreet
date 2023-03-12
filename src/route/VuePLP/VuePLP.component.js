@@ -43,6 +43,7 @@ const VuePLP = (props) => {
   const [payloadQuery, setPayloadQuery] = useState("");
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [topPicksReqSent, setTopPicksReqSent] = useState(false);
+  const [firstSKUCallSent, setFirstSKUCallSent] = useState(false);
 
   const gender = useSelector((state) => state.AppState.gender);
   const prevPath = useSelector((state) => state.PLP.prevPath);
@@ -114,14 +115,23 @@ const VuePLP = (props) => {
   };
 
   const getRandomSku = () => {
-    if (lastOrderSku.length == 0 || !state.isSignedIn) {
-      setPayloadQuery(RECENTLY_VIEWED_SLIDER);
-      return null;
+    let randomSkuObj = {};
+    let lastOrderArray = lastOrderSku;
+    if (lastOrderArray.length == 0 || !state.isSignedIn) {
+      return {};
     } else if (lastOrderSku.length > 1) {
-      const random = Math.floor(Math.random() * lastOrderSku.length);
-      return lastOrderSku[random];
+      const random = Math.floor(Math.random() * lastOrderArray.length);
+      randomSkuObj.first_product = lastOrderArray[random];
+      const index = lastOrderArray.indexOf(lastOrderArray[random]);
+      if (index > -1) {
+        lastOrderArray.splice(index, 1);
+        const secondRandom = Math.floor(Math.random() * lastOrderArray.length);
+        randomSkuObj.second_product = lastOrderArray[secondRandom];
+      }
+      return randomSkuObj;
     } else {
-      return lastOrderSku[0];
+      randomSkuObj.first_product = lastOrderArray[0];
+      return randomSkuObj;
     }
   };
 
@@ -135,15 +145,20 @@ const VuePLP = (props) => {
       num_results: 50,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
+    let handleRandomSKU = getRandomSku();
     const handleProductID = params?.product_id
       ? params.product_id
       : (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
           vueSliderType == VUE_STYLE_IT_SLIDER) &&
-        lastOrderSku.length &&
-        state.isSignedIn
-      ? getRandomSku()
+        handleRandomSKU?.first_product &&
+        !firstSKUCallSent
+      ? handleRandomSKU?.first_product
+      : (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
+          vueSliderType == VUE_STYLE_IT_SLIDER) &&
+        handleRandomSKU?.second_product &&
+        firstSKUCallSent
+      ? handleRandomSKU?.second_product
       : "";
-
     const defaultQueryPayload = {
       userID,
       product_id: handleProductID,
@@ -164,7 +179,11 @@ const VuePLP = (props) => {
         fetchVueData(payload)
           .then((resp) => {
             if (!resp.data || Object.entries(resp.data).length < 1) {
-              setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+              if (firstSKUCallSent) {
+                setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+              } else {
+                setFirstSKUCallSent(true);
+              }
             }
             setState({
               ...state,
@@ -226,16 +245,20 @@ const VuePLP = (props) => {
 
   useEffect(() => {
     if (
-      state?.vueRecommendation?.length === 0 &&
+      (state?.vueRecommendation?.length === 0 ||
+        state?.vueRecommendation == undefined) &&
       state.isSignedIn &&
-      isPageLoaded
+      (isPageLoaded ||
+        // ((params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
+        //   params.product_id)
+        params.product_id)
     ) {
       request();
     }
     if (state?.vueRecommendation?.length === 0 && !state.isSignedIn) {
       request();
     }
-  }, [state?.vueRecommendation, lastOrderSku, payloadQuery]);
+  }, [state?.vueRecommendation, lastOrderSku, payloadQuery, firstSKUCallSent]);
 
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
