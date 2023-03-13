@@ -881,8 +881,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
               ? null
               : actualEddMess,
-          intl_vendors: edd_info?.international_vendors?.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
-            ? international_vendor
+          intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
+            ? international_vendor : null)
             : null,
         });
       });

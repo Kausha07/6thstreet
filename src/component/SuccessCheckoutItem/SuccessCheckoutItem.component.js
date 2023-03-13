@@ -317,7 +317,7 @@ export class SuccessCheckoutItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
-    const isIntlBrand = ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
+    const isIntlBrand = ((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
     const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase());
     const intlEddMess = intlEddObj
       ? isArabic

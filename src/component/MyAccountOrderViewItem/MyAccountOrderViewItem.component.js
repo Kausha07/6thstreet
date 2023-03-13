@@ -41,7 +41,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       paymentMethod,
     } = this.props;
     const isIntlBrand =
-      (((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
+      (((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
         parseInt(cross_border) === 1) ||
         parseInt(cross_border) === 1) &&
         edd_info &&

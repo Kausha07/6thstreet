@@ -777,7 +777,7 @@ export class CartItem extends PureComponent {
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
     const isIntlBrand =
-      ( edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
+      (edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
       (crossBorder && edd_info && edd_info.has_cross_border_enabled);
     const intlEddObj = intlEddResponse["cart"]?.find(
       ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
@@ -884,9 +884,7 @@ export class CartItem extends PureComponent {
       intlEddResponse
     } = this.props;
     const { isNotAvailble } = this.state;
-    const isIntlBrand =
-      ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1) ||
-        cross_border === 1) &&
+    const isIntlBrand = (cross_border === 1) &&
       edd_info &&
       edd_info.has_cross_border_enabled;
 

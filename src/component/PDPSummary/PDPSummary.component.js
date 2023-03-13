@@ -505,7 +505,7 @@ class PDPSummary extends PureComponent {
       isArabic,
     } = this.state;
     const isIntlBrand =
-      (( edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
+      (( edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
       crossBorder) && edd_info && edd_info.has_cross_border_enabled;
     const intlEddObj = intlEddResponse["pdp"]?.find(
       ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()

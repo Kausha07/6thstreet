@@ -205,7 +205,7 @@ export class RouterContainer extends SourceRouterContainer {
       area: null,
       courier: null,
       source: null,
-      intl_vendors: edd_info?.international_vendors,
+      intl_vendors: edd_info.international_vendors ? edd_info.international_vendors: null,
     };
     estimateEddResponse(request, true);
   };
