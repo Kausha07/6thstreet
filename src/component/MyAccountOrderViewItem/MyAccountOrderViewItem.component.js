@@ -41,9 +41,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       paymentMethod,
     } = this.props;
     const isIntlBrand =
-      (((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
-        parseInt(cross_border) === 1) ||
-        parseInt(cross_border) === 1) &&
+      ( parseInt(cross_border) === 1 &&
         edd_info &&
         edd_info.has_cross_border_enabled) ||
       int_shipment === "1";
@@ -149,8 +147,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
         : DEFAULT_READY_MESSAGE;
       const isIntlBrand =
-        ((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
-          crossBorder) &&
+        crossBorder &&
         edd_info &&
         edd_info.has_cross_border_enabled;
       const intlEddObj = intlEddResponse["thankyou"]?.find(

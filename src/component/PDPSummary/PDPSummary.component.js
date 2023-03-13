@@ -505,8 +505,7 @@ class PDPSummary extends PureComponent {
       isArabic,
     } = this.state;
     const isIntlBrand =
-      (( edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
-      crossBorder) && edd_info && edd_info.has_cross_border_enabled;
+      crossBorder && edd_info && edd_info.has_cross_border_enabled;
     const intlEddObj = intlEddResponse["pdp"]?.find(
       ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
     );
@@ -1022,8 +1021,7 @@ class PDPSummary extends PureComponent {
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
-      ((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1) ||
-      cross_border === 1) && edd_info && edd_info.has_cross_border_enabled;
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
