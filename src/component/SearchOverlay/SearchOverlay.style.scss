@@ -156,8 +156,7 @@
         font-family: "Avenir Next";
         font-size: 18px;
         font-weight: var(--fw-medium);
-        letter-spacing: 2px;
-        line-height: 25px;
+        line-height: 20px;
         padding: 10px 20px;
         display: flex;
         flex-direction: column;
@@ -273,7 +272,7 @@ div.SearchOverlay.Overlay {
 
     .QuerySuggestionBlock {
         width: 194px;
-        height: 365px;
+        height: auto;
         opacity: 1;
 
         h2 {
@@ -281,17 +280,15 @@ div.SearchOverlay.Overlay {
             font-size: 14px;
             color: #000000;
             text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            margin-top: 0.8rem;
         }
     }
 
     .imagesLayouts {
-        margin-right: 8px;
         img {
             width: 95px !important;
             height: 99px !important;
-        }
-        &_isArabic {
-            margin-right: 0px;
         }
     }
 
@@ -311,13 +308,14 @@ div.SearchOverlay.Overlay {
         }
 
         &-Info {
+            padding: 0px 10px;
             .SearchProduct {
                 &-ProductName{
                     font-family: 'AvenirNext-Regular';
                     font-size:13px;
                     width: 165px;
                     height: 18px;
-                    text-align: left;
+                    text-align: initial;
                     letter-spacing: 0px;
                     color: #4A4A4A;
                     opacity: 1;
@@ -347,12 +345,7 @@ div.SearchOverlay.Overlay {
 
     .moreDataLink {
         position: absolute;
-        bottom: 14px;
-        left: 2px;
-        &_isArabic {
-            left: 77px;
-            text-align: right;
-        }
+        bottom: 0px;
         cursor: pointer;
     }
 
@@ -413,13 +406,15 @@ div.SearchOverlay.Overlay {
         
         h2 {
             font-family: "AvenirNext-DemiBold";
-            letter-spacing: 111;
             color: #000000;
             text-transform: uppercase;
+            margin-top: 0.8rem;
+            font-size: 14px;
+            letter-spacing: 0px;
+            padding: 0px 15px;
         }
         font-size: 14px;
-        margin-top: 15px;
-        margin-left: 38px;
+        margin-top: 0px;
 
         &::before {
             display: none;
@@ -444,6 +439,7 @@ div.SearchOverlay.Overlay {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            padding: 0px 10px 20px 10px;
 
             &::-webkit-scrollbar {
                 width: 1px;
@@ -545,10 +541,19 @@ div.SearchOverlay.Overlay {
 
         display: grid;
         grid-template-columns: 80px 80px 80px;
-        grid-template-rows: 120px 120px 120px;
+        grid-template-rows: 108px 108px 108px;
         grid-gap: 5px;
     }
 
+    h2 {
+        font-family: "AvenirNext-DemiBold";
+        font-size: 14px;
+        color: #000000;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        margin-top: 0.8rem;
+    }
+    
     li {
         padding-left: 0px !important;
 
@@ -560,7 +565,7 @@ div.SearchOverlay.Overlay {
     img {
         @include desktop {
             width: 80px !important;
-            height: 120px !important;
+            height: 80px !important;
             border-radius: 4px;
             opacity: 1;
         }
@@ -580,10 +585,12 @@ div.SearchOverlay.Overlay {
 
             div {
                 position: absolute !important;
-                bottom: 2px;
-                font-size: 9px;
-                left: 20%;
-                line-height: 9px;
+                font-size: 7px;
+                left: 27%;
+                line-height: 8px;
+                font-family: 'Avenir Next';
+                font-weight: 610;
+                text-transform: uppercase;
             }
         }
     }

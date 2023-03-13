@@ -105,7 +105,6 @@ main {
 
   .HeaderLogo {
     order: 0;
-    margin-right: 3% !important;
     @include mobile {
       position: fixed;
       top: 15px;
@@ -411,8 +410,8 @@ main {
         top: 100px;
         position: fixed;
         justify-content: center;
-        padding-left: 17.5%;
-        padding-right: 17.5%;
+        padding-left: 10.5%;
+        padding-right: 10.5%;
       }
 
       .GenderButton-Container {

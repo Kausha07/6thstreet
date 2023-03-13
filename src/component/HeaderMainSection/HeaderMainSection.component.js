@@ -12,6 +12,8 @@ import Event, {
   EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
   EVENT_GTM_SEARCH,
   EVENT_GTM_VIEW_SEARCH_RESULTS,
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -36,6 +38,7 @@ import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import "./HeaderMainSection.style";
+export const URL_REWRITE = "url-rewrite";
 
 import {
   TYPE_ACCOUNT,
@@ -241,6 +244,24 @@ class HeaderMainSection extends NavigationAbstract {
     return window.pageType;
   }
 
+  getPageTypeTracking = () => {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === URL_REWRITE) {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
+  }
+
   getCategory() {
     return BrowserDatabase.getItem("CATEGORY_NAME") || "";
   }
@@ -390,10 +411,19 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   cancelSearch = () => {
+    const { search } = this.state;
     this.setState({
       search : "",
       searchBarClick : false,
     })
+
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    MOE_trackEvent(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: search || "",
+      app6thstreet_platform: "Web",
+    });
   }
 
   onSearchChange = (e) => {
@@ -579,6 +609,15 @@ class HeaderMainSection extends NavigationAbstract {
     } = this.searchRef;
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
+
+    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageTypeTracking(),
+      app6thstreet_platform: "Web",
+    });
+
     this.onSearchSubmit();
     this.closePopup();
   };

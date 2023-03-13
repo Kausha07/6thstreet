@@ -233,11 +233,11 @@ export class SearchOverlay extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        {querySuggestions?.length > 0 ? (
+        {querySuggestions?.length > 1 ? (
           <ul>
             {querySuggestions?.slice(0, 5).map(this.renderQuerySuggestion)}
           </ul>
-        ) : null}
+        ) : <p>{__("No Suggestions")}</p>}
       </div>
     );
   }
@@ -404,15 +404,10 @@ export class SearchOverlay extends PureComponent {
       <div block="RecentSearches">
         <h2>{__("Recent search")}</h2>
         <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
-          {recentSearches.map(this.renderRecentSearch)}
+          {recentSearches?.map(this.renderRecentSearch)}
         </ul>
       </div>
-    ) : (
-      <div>
-        <h2>{__("Recent search")}</h2>
-        <div>{__("No Recent Searches available")}</div>
-      </div>
-    );
+    ) :null;
   };
 
   handleTrendingBrandsClick = (brandName) => {
@@ -480,13 +475,19 @@ export class SearchOverlay extends PureComponent {
   }
 
   renderNothingFound() {
-    const { searchString } = this.props;
+    const { isEmpty, search } = this.props;
+    const { isArabic } = this.state;
     return (
       <div block="NothingFound">
         <div block="suggestionBlocks">
           <div block="QuerySuggestionBlock">
             <h2>{__("SUGGESTIONS")}</h2>
             <p>{__("No Suggestions")}</p>
+            {!isEmpty && (
+            <div block="moreDataLink" mods={{isArabic}} onClick={this.SeeAllButtonClick}>
+              {__(`See all`) + ` "${search}"`}
+            </div>
+          )}
           </div>
           <div block="spacingBlock"></div>
           <div block="TredingProducts">{this.renderTrendingBrands()}</div>

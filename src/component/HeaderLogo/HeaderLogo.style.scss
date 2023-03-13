@@ -2,6 +2,10 @@
   // flex: 1;
   height: 34px;
   text-align: center;
+  &_isArabic {
+    margin-right: 0px;
+  }
+  margin-right: 20px;
 
   @include before-desktop {
     height: auto;
@@ -13,6 +17,11 @@
     .Image {
     height: 22px;
     // background-color: #ffffff;
+    .LazyLoad-wrapper {
+      img {
+        text-align: left;
+      }
+    }
 
     @include before-desktop {
       // display: block;
@@ -24,11 +33,10 @@
       width: 119px;
     }
     @include desktop {
-      width: 30%;
-      height: 34px;
+      height: 26px;
       margin-top: 0;
       padding: 0;
-      width: 204px;
+      width: 146px;
     }
   }
 }

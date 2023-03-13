@@ -20,13 +20,13 @@
     }
 
     @include desktop {
-      margin: 20px 12px;
+      margin: 20px 10px;
       &:first-child {
         padding-left: 0;
         margin-left: 0;
       }
       &:last-child {
-        padding-left: 0;
+        padding-left: 10;
         margin-right: 0;
       }
     }
@@ -38,7 +38,7 @@
         margin-left: 0;
       }
       &:last-child {
-        padding-left: 0;
+        padding-left: 10;
         margin-right: 0;
       }
     }
@@ -58,7 +58,7 @@
       height: 0;
       overflow: hidden;
       visibility: hidden;
-      width: 60px;
+      width: 46px;
     }
 
     &_isCurrentGender,
@@ -68,7 +68,7 @@
       font-size: 12px;
       transition-duration: unset;
       @include desktop {
-        font-size: 14px;
+        font-size: 12px;
       }
     }
 
