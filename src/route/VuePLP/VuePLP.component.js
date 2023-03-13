@@ -35,7 +35,6 @@ const VuePLP = (props) => {
   const stateObj = {
     vueRecommendation: props?.location?.state?.vueProducts || [],
     showPopup: false,
-    isSignedIn: isSignedIn(),
   };
 
   const [state, setState] = useState(stateObj);
@@ -45,6 +44,7 @@ const VuePLP = (props) => {
   const [topPicksReqSent, setTopPicksReqSent] = useState(false);
   const [firstSKUCallSent, setFirstSKUCallSent] = useState(false);
 
+  const signedIn = isSignedIn();
   const gender = useSelector((state) => state.AppState.gender);
   const prevPath = useSelector((state) => state.PLP.prevPath);
   //dispatch
@@ -84,7 +84,7 @@ const VuePLP = (props) => {
     if (
       params &&
       (params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
-      state.isSignedIn &&
+      signedIn &&
       !params.product_id
     ) {
       if (userToken) {
@@ -117,7 +117,7 @@ const VuePLP = (props) => {
   const getRandomSku = () => {
     let randomSkuObj = {};
     let lastOrderArray = lastOrderSku;
-    if (lastOrderArray.length == 0 || !state.isSignedIn) {
+    if (lastOrderArray.length == 0 || !signedIn) {
       return {};
     } else if (lastOrderSku.length > 1) {
       const random = Math.floor(Math.random() * lastOrderArray.length);
@@ -237,7 +237,7 @@ const VuePLP = (props) => {
         url: window.location.href,
       },
     });
-    if (state.isSignedIn) {
+    if (signedIn) {
       lastOrder();
     }
     setIsPageLoaded(true);
@@ -247,15 +247,12 @@ const VuePLP = (props) => {
     if (
       (state?.vueRecommendation?.length === 0 ||
         state?.vueRecommendation == undefined) &&
-      state.isSignedIn &&
-      (isPageLoaded ||
-        // ((params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
-        //   params.product_id)
-        params.product_id)
+      signedIn &&
+      (isPageLoaded || params.product_id)
     ) {
       request();
     }
-    if (state?.vueRecommendation?.length === 0 && !state.isSignedIn) {
+    if (state?.vueRecommendation?.length === 0 && !signedIn) {
       request();
     }
   }, [state?.vueRecommendation, lastOrderSku, payloadQuery, firstSKUCallSent]);
