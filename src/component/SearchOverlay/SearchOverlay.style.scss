@@ -15,10 +15,7 @@
 
 .RecentSearches {
     margin-bottom: 21px;
-    font: var(--unnamed-font-style-normal) normal bold 14px/19px var(--unnamed-font-family-avenir-next);
-    color: var(--unnamed-color-000000);
     text-align: left;
-    font: normal normal bold 14px/19px Avenir Next;
     letter-spacing: 1.56px;
     color: #000000;
     text-transform: uppercase;
@@ -53,7 +50,7 @@
     }
 
     h2 {
-        font-family: "AvenirNext-DemiBold";
+        font-family: "Avenir Next Demi Bold";
         font-size : 14px;
         color : #000000;
         text-transform: uppercase;
@@ -277,12 +274,13 @@ div.SearchOverlay.Overlay {
         opacity: 1;
 
         h2 {
-            font-family: "AvenirNext-DemiBold";
+            font-family: "Avenir Next Demi Bold";
             font-size: 14px;
             color: #000000;
             text-transform: uppercase;
             margin-bottom: 0.5rem;
             margin-top: 0.8rem;
+            letter-spacing: 1.56px;
         }
     }
 
@@ -295,7 +293,7 @@ div.SearchOverlay.Overlay {
 
     .SearchProduct {
         &-Brand {
-            font-family: 'AvenirNext-DemiBold';
+            font-family: 'Avenir Next Demi Bold';
             font-size: 14px;
             color :#000000;
             text-transform: uppercase;
@@ -312,7 +310,7 @@ div.SearchOverlay.Overlay {
             padding: 0px 10px;
             .SearchProduct {
                 &-ProductName{
-                    font-family: 'AvenirNext-Regular';
+                    font-family: 'Avenir Next Regular';
                     font-size:13px;
                     width: 165px;
                     height: 18px;
@@ -327,7 +325,7 @@ div.SearchOverlay.Overlay {
         }
         &-SpecialPriceCon{
             div {
-                font-family: 'AvenirNext-Bold';
+                font-family: 'Avenir Next Bold';
                 font-size: 12px;
                 color : #000000;
             }
@@ -363,7 +361,7 @@ div.SearchOverlay.Overlay {
     width: 100%;
     
     &-TrandingTag {
-        font-family: 'AvenierNext-Regular';
+        font-family: 'Avenier Next Regular';
         font-size : 13px;
         letter-spacing: var(--unnamed-character-spacing-0);
         text-align: center;
@@ -385,7 +383,7 @@ div.SearchOverlay.Overlay {
                 flex-direction: row;
                 padding: 0px;
                 justify-content: space-between;
-                font-family: 'AvenirNext-Regular';
+                font-family: 'Avenir Next Regular';
                 font-size: 14px;
                 color:#000000;
 
@@ -406,12 +404,12 @@ div.SearchOverlay.Overlay {
     &-Recommended {
         
         h2 {
-            font-family: "AvenirNext-DemiBold";
+            font-family: "Avenir Next Demi Bold";;
             color: #000000;
             text-transform: uppercase;
             margin-top: 0.8rem;
             font-size: 14px;
-            letter-spacing: 0px;
+            letter-spacing: 1.56px;
             padding: 0px 15px;
         }
         font-size: 14px;
@@ -525,7 +523,7 @@ div.SearchOverlay.Overlay {
     }
 
     h2 {
-        font-family: "AvenirNext";
+        font-family: "Avenir Next";
         text-transform: uppercase;
         font-weight: "Demi Bold";
         margin: 0;
@@ -547,12 +545,13 @@ div.SearchOverlay.Overlay {
     }
 
     h2 {
-        font-family: "AvenirNext-DemiBold";
+        font-family: "Avenir Next Demi Bold";
         font-size: 14px;
         color: #000000;
         text-transform: uppercase;
         margin-bottom: 0.5rem;
         margin-top: 0.8rem;
+        letter-spacing: 1.56px;
     }
     
     li {
