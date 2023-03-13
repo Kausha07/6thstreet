@@ -286,7 +286,7 @@ class InlineCustomerSupport extends PureComponent {
                   }}
                   //to={`${rootURL}/shipping-policy`}
                 >
-                  {countryCode === "KW"? __("Shipping Policy") : __("Free Delivery on min. order")}
+                  {countryCode === "KW"? __("FREE DELIVERY FOR ORDERS OVER 30 KWD") : __("Free Delivery on min. order")}
                 </button>
               </div>
             </div>
