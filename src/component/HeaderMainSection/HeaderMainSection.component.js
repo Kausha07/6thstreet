@@ -460,6 +460,13 @@ class HeaderMainSection extends NavigationAbstract {
   renderSearchOverlay = () => {
     const {isPopup} = this.state;
     this.setState({isPopup : !isPopup, searchBarClick : true});
+    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageTypeTracking(),
+      app6thstreet_platform: "Web",
+    });
   }
 
   closeSearchPopup = () => {
@@ -609,15 +616,6 @@ class HeaderMainSection extends NavigationAbstract {
     } = this.searchRef;
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
-
-    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
-    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      screen_name: this.getPageTypeTracking(),
-      app6thstreet_platform: "Web",
-    });
-
     this.onSearchSubmit();
     this.closePopup();
   };
