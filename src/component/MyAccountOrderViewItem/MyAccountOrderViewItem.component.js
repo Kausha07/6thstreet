@@ -149,7 +149,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
         ? EDD_MESSAGE_ARABIC_TRANSLATION[DEFAULT_READY_MESSAGE]
         : DEFAULT_READY_MESSAGE;
       const isIntlBrand =
-        ((edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
+        ((edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
           crossBorder) &&
         edd_info &&
         edd_info.has_cross_border_enabled;

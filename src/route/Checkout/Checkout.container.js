@@ -836,7 +836,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           : itemEddMessage;
         const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         const isIntlBrand =
-          (edd_info?.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
+          (edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) &&
             cross_border === 1) ||
           cross_border === 1;
         const intlEddObj = intlEddResponse["checkout"]?.find(
