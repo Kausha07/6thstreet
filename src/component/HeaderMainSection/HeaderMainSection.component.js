@@ -295,7 +295,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderGenderSwitcher() {
     const { changeMenuGender, activeOverlay, displaySearch } = this.props;
-    const { showPLPSearch } = this.state;
+    const { showPLPSearch, isArabic } = this.state;
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
@@ -308,6 +308,7 @@ class HeaderMainSection extends NavigationAbstract {
         key="genders"
         isMobile
         changeMenuGender={changeMenuGender}
+        mods={{isArabic}}
       />
     );
   }

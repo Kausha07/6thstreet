@@ -425,6 +425,7 @@ export class SearchOverlay extends PureComponent {
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url, link = "" } = brand;
+    const { isArabic } = this.state;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
@@ -448,7 +449,7 @@ export class SearchOverlay extends PureComponent {
         >
           <div block="SearchSuggestion" elem="TrandingImage">
             <img lazyLoad={true} src={image_url} alt="Trending" />
-            <div block="trendingLabels">{label}</div>
+            <div block="trendingLabels" mods={{ isArabic }}>{label}</div>
           </div>
         </Link>
       </li>
@@ -459,7 +460,7 @@ export class SearchOverlay extends PureComponent {
     const { trendingBrands = [] } = this.props;
     const { isArabic } = this.state;
     return trendingBrands.length > 0 ? (
-      <div block="TrandingBrands">
+      <div block="TrandingBrands" mods={{ isArabic }}>
         <h2>{__("Trending brands")}</h2>
         <ul
           id="TrandingBrands"
@@ -478,7 +479,7 @@ export class SearchOverlay extends PureComponent {
     const { isEmpty, search } = this.props;
     const { isArabic } = this.state;
     return (
-      <div block="NothingFound">
+      <div block="NothingFound" mods={{ isArabic }}>
         <div block="suggestionBlocks">
           <div block="QuerySuggestionBlock">
             <h2>{__("SUGGESTIONS")}</h2>

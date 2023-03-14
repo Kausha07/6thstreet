@@ -419,6 +419,14 @@ main {
         justify-content: center;
         width: 33.33%;
 
+        &_isArabic {
+          &:last-child{
+            &::before {
+              left: auto;
+              right : -21px;
+            }
+          }
+        }
         .GenderButton-Button {
           padding: 0 0px;
         }
