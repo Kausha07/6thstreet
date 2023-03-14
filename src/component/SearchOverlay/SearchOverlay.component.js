@@ -490,7 +490,7 @@ export class SearchOverlay extends PureComponent {
             </div>
           )}
           </div>
-          <div block="spacingBlock"></div>
+          <div block="spacingBlock" mods={{ isArabic }}></div>
           <div block="TredingProducts">{this.renderTrendingBrands()}</div>
         </div>
       </div>
@@ -663,7 +663,7 @@ export class SearchOverlay extends PureComponent {
           <div
             block="Overlay"
             ref={this.overlayRef}
-            mods={{ isVisible: isPopup }}
+            mods={{ isArabic, isVisible: isPopup }}
             mix={{ mix }}
           >
             {this.renderItemCount()}

@@ -136,13 +136,6 @@
         }
     }
 
-    &_isArabic {
-        &::before {
-            @include after-mobile {
-                left: -50px;
-            }
-        }
-    }
 
     &_isPopup {
         opacity: 0;
@@ -155,7 +148,7 @@
         font-size: 18px;
         font-weight: var(--fw-medium);
         line-height: 20px;
-        padding: 10px 20px;
+        padding: 32px 32px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -181,11 +174,22 @@
             font-size: 12px;
             font-weight: bold;
             position: left;
+            font-family: 'Avenir Next Medium';
+            letter-spacing: 0px;
+            opacity: 1;
+
         }
         .NothingFound {
-            margin : 0 9px;
-            &_isArabic {
-                margin: 0px 21px;
+            .moreDataLink {
+                margin-top: 50px;
+            }
+            .suggestionBlocks {
+                .spacingBlock {
+                    &_isArabic {
+                        width : 35px;
+                    }
+                    width: 35px;
+                }
             }
         }
     }
@@ -254,7 +258,7 @@
 }
 
 div.SearchOverlay.Overlay {
-    width: 545px;
+    width: 590px;
     height: auto;
     opacity: 1;
     border-radius: 12px;
@@ -275,18 +279,25 @@ div.SearchOverlay.Overlay {
     }
 
     .QuerySuggestionBlock {
-        width: 194px;
+        width: 186px;
         height: auto;
         opacity: 1;
 
         h2 {
-            font-family: "Avenir Next Demi Bold";
-            font-size: 14px;
+            font: normal normal bold 14px/19px 'Avenir Next';
             color: #000000;
             text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            margin-top: 0.8rem;
+            margin-bottom: 0px;
+            margin-top: 0px;
             letter-spacing: 1.56px;
+        }
+
+        p {
+            font: normal normal normal 14px/52px 'Avenir Next';
+            letter-spacing: 0px;
+            color: #000000;
+            opacity: 1;
+            margin-bottom: 40px;
         }
     }
 
@@ -306,7 +317,6 @@ div.SearchOverlay.Overlay {
         }
 
         &-ProductName {
-            width: 200px !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -349,6 +359,11 @@ div.SearchOverlay.Overlay {
     }
 
     .moreDataLink {
+        font-family: 'Avenir Next Medium';
+        font-size: 16px;
+        letter-spacing: 0px;
+        color: #000000;
+        opacity: 1;
         position: absolute;
         bottom: 0px;
         cursor: pointer;
@@ -359,6 +374,10 @@ div.SearchOverlay.Overlay {
             display: none;
             list-style-type: none;
         }
+    }
+
+    .spacingBlock {
+        width : 57px;
     }
 }
 
@@ -391,6 +410,7 @@ div.SearchOverlay.Overlay {
                 justify-content: space-between;
                 font-family: 'Avenir Next Regular';
                 font-size: 14px;
+                line-height: 16px;
                 color:#000000;
 
                 &::before {
@@ -408,18 +428,21 @@ div.SearchOverlay.Overlay {
     }
 
     &-Recommended {
+        width: 283px;
+        margin-left : 0px;
         
         h2 {
-            font-family: "Avenir Next Demi Bold";;
+            font: normal normal bold 14px/19px 'Avenir Next';
             color: #000000;
             text-transform: uppercase;
-            margin-top: 0.8rem;
-            font-size: 14px;
+            margin-top: 0px;
             letter-spacing: 1.56px;
-            padding: 0px 15px;
         }
         font-size: 14px;
         margin-top: 0px;
+        &_isArabic {
+            margin-left: 0px;
+        }
 
         &::before {
             display: none;
@@ -444,7 +467,6 @@ div.SearchOverlay.Overlay {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 0px 10px 20px 10px;
 
             &::-webkit-scrollbar {
                 width: 1px;
@@ -462,7 +484,7 @@ div.SearchOverlay.Overlay {
                 }
 
                 padding-left: 0px;
-                width: 288.39px;
+                width: 260.39px;
                 height: auto;
                 margin-right: 7.92px;
 
@@ -545,18 +567,18 @@ div.SearchOverlay.Overlay {
         }
 
         display: grid;
-        grid-template-columns: 80px 80px 80px;
-        grid-template-rows: 108px 108px 108px;
-        grid-gap: 5px;
+        grid-template-columns: 96px 96px 96px;
+        grid-template-rows: 130px 130px 130px;
+        grid-gap: 6px;
+        padding-top: 24px
     }
 
     h2 {
-        font-family: "Avenir Next Demi Bold";
-        font-size: 14px;
+        font: normal normal bold 14px/19px 'Avenir Next';
         color: #000000;
         text-transform: uppercase;
-        margin-bottom: 0.5rem;
-        margin-top: 0.8rem;
+        margin-bottom: 0px;
+        margin-top: 0px;
         letter-spacing: 1.56px;
     }
     
@@ -570,8 +592,8 @@ div.SearchOverlay.Overlay {
 
     img {
         @include desktop {
-            width: 80px !important;
-            height: 80px !important;
+            width: 96px !important;
+            height: 96px !important;
             border-radius: 4px;
             opacity: 1;
         }
@@ -579,8 +601,8 @@ div.SearchOverlay.Overlay {
 
     .SearchSuggestion {
         &-TrandingImage {
-            width: 80px;
-            height: 80px;
+            width: 96px;
+            height: 96px;
             border: none;
             border-radius: 5px;
             margin: 0px;
@@ -591,10 +613,12 @@ div.SearchOverlay.Overlay {
 
             div {
                 position: absolute !important;
-                font-size: 7px;
-                left: 27%;
+                text-align: center;
+                font-size: 9px;
+                left: 0%;
+                right: 0%;
                 line-height: 8px;
-                font-family: 'Avenir Next';
+                font-family: 'Avenir Next Medium';
                 font-weight: 610;
                 text-transform: uppercase;
             }
@@ -605,17 +629,5 @@ div.SearchOverlay.Overlay {
                 right: 27%;
             }
         }
-    }
-}
-
-.NothingFound {
-    .spacingBlock {
-        margin: 10px;
-    }
-}
-
-.spacingBlock {
-    &_isArabic {
-        margin: 0px;
     }
 }
