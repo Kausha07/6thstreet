@@ -76,12 +76,16 @@ export class CartOverlayContainer extends PureComponent {
     guest_checkout: true,
   };
 
-  state = { isEditing: false };
+  state = { 
+    isEditing: false,
+    isOosOverlayShow: false,
+  };
 
   containerFunctions = {
     changeHeaderState: this.changeHeaderState.bind(this),
     handleCheckoutClick: this.handleCheckoutClick.bind(this),
     handleViewBagClick: this.handleViewBagClick.bind(this),
+    handleOosOverlay: this.handleOosOverlay.bind(this),
   };
 
 
@@ -101,6 +105,10 @@ export class CartOverlayContainer extends PureComponent {
     }
 
     return (currentRouteName || "").toLowerCase();
+  }
+
+  handleOosOverlay(currentState) {
+    this.setState({isOosOverlayShow: currentState})
   }
 
   handleViewBagClick() {
@@ -227,6 +235,7 @@ export class CartOverlayContainer extends PureComponent {
         title: "Sign in",
       });
     } else {
+      this.handleOosOverlay(true);
       showNotification(
         "error",
         __("Some products or selected quantities are no longer available")

@@ -370,7 +370,6 @@ export class CartPage extends PureComponent {
         <RemoveOOS
           closeremoveOosOverlay={this.closeremoveOosOverlay}
           totals={totals}
-          updateTotals={updateTotals}
           isArabic={isArabic}
         />
     )

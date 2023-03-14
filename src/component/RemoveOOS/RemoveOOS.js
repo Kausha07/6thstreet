@@ -1,9 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import "./RemoveOOS.style";
 import red_broken_heart from "./red_broken_heart.png";
 import Image from "Component/Image";
 import { removeBulk } from "Util/API/endpoint/Cart/Cart.enpoint";
 import ClickOutside from 'Component/ClickOutside';
+import history from "Util/History";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+
+export const mapDispatchToProps = (dispatch) => ({
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+});
 
 function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
 
@@ -15,12 +22,23 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
         return acc;
     }, []);
 
-    async function removeOosBulk(items) {
+    const checkIsAvailableProducts = (items = {}) => Object.entries(items).reduce((acc, item) => {
+        if (item[1].availableQty != 0 || item[1].availableQty >= item[1].qty) {
+            const item1 = {...item[1], id: item[1].item_id}
+            acc.push(item1);            
+        }
+        return acc;
+    }, []);
+
+    async function removeOosBulk(items, availableItems) {
         const cart = JSON.parse(localStorage.getItem("CART_ID_CACHE_KEY"));
         const cartId = cart?.data;
         const response = await removeBulk(cartId, items)
         if(response) {
             const resp = updateTotals(cartId);
+            if(availableItems.length > 0) {
+                history.push("/cart")
+            }
         }
     }
 
@@ -31,9 +49,10 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
 
         if (items.length !== 0) {
             const mappedItems = checkProducts(items) || [];
+            const availableItems = checkIsAvailableProducts(items) || [];
 
             if(mappedItems) {
-                removeOosBulk(mappedItems);
+                removeOosBulk(mappedItems, availableItems);
             }
         }
 
@@ -94,4 +113,4 @@ function RemoveOOS({closeremoveOosOverlay, totals, updateTotals, isArabic}) {
   )
 }
 
-export default RemoveOOS;
+export default connect(null, mapDispatchToProps)(RemoveOOS);

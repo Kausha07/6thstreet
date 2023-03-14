@@ -24,6 +24,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./CartOverlay.style";
 import Delivery from "./icons/delivery-truck.png";
+import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -46,6 +47,7 @@ export class CartOverlay extends PureComponent {
   state = {
     isArabic: isArabic(),
     isPopup: false,
+    isOOSProducts: false,
   };
 
   componentDidMount() {
@@ -74,6 +76,11 @@ export class CartOverlay extends PureComponent {
         avibaleProducts.push(item);
       }
     });
+    
+    if(outOfStokProducts.length > 0){
+      this.setState({ isOOSProducts: true })
+    }
+      
     return [ ...avibaleProducts, ... outOfStokProducts ];
   }
 
@@ -328,9 +335,26 @@ export class CartOverlay extends PureComponent {
     );
   }
 
+  closeremoveOosOverlay =()=> {
+    const { handleOosOverlay } =  this.props;
+    handleOosOverlay(false);
+  }
+
+  renderRemoveOOS() {
+    const { totals } = this.props;
+    const { isArabic } = this.state;
+    return (
+        <RemoveOOS
+          closeremoveOosOverlay={this.closeremoveOosOverlay}
+          totals={totals}
+          isArabic={isArabic}
+        />
+    )
+  }
+
   render() {
-    const { onVisible, isHidden, hideActiveOverlay, closePopup } = this.props;
-    const { isArabic, isPopup } = this.state;
+    const { onVisible, isHidden, hideActiveOverlay, closePopup, isOosOverlayShow } = this.props;
+    const { isArabic, isPopup, isOOSProducts } = this.state;
 
     return (
       <>
@@ -354,6 +378,7 @@ export class CartOverlay extends PureComponent {
           {this.renderDiscount()}
           {this.renderActions()}
           {this.renderPromo()}
+          {(isOOSProducts && isOosOverlayShow) ? this.renderRemoveOOS() : null}
         </Overlay>
       </>
     );
