@@ -20,6 +20,11 @@
     }
   }
   .GenderButton {
+    &-Container {
+      &::before{
+        left : -12px;
+      }
+    }
     &-Button {
       height: auto;
       &_isCurrentGender {

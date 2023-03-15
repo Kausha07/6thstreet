@@ -18,8 +18,10 @@
     // background-color: #ffffff;
     .LazyLoad-wrapper {
       img {
-        width: 80% !important;
-        text-align: left;
+        &_isArabic {
+          width: 80% !important;
+          right: -12px;
+        }
       }
     }
 
@@ -37,6 +39,9 @@
       margin-top: 0;
       padding: 0;
       width: 146px;
+      &_isArabic {
+        margin-right: 0px !important;
+      }
     }
   }
 }

@@ -60,7 +60,7 @@ main {
     flex: 1;
     order: 2;
     &_isArabic {
-      left: -75px;
+      left: -29px;
     }
     @include desktop {
       z-index: 3;
@@ -103,6 +103,9 @@ main {
     flex: 1;
     order: 1;
     padding-bottom: 18px;
+    &_isArabic {
+      padding-bottom: 28px;
+    }
     padding-right: 20px;
   }
 
@@ -422,11 +425,18 @@ main {
         justify-content: center;
         width: 33.33%;
 
+        &:last-child{
+          &::before {
+            left: auto;
+            right : -11px;
+          }
+        }
+
         &_isArabic {
           &:last-child{
             &::before {
               left: auto;
-              right : -21px;
+              right : -7px;
             }
           }
         }

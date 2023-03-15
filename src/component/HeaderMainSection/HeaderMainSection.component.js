@@ -433,7 +433,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   onSearchChange = (e) => {
     const { search } = this.state;
-    this.setState({  search : e.target.value });
+    this.setState({  search : e.target.value, isPopup : true });
     const SearchValue = sessionStorage.getItem("Searched_value");
     const searchedQuery =
       typeof SearchValue == "object"
