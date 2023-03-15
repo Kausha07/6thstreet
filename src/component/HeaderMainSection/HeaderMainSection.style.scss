@@ -59,6 +59,9 @@ main {
     align-items: center;
     flex: 1;
     order: 2;
+    &_isArabic {
+      left: -75px;
+    }
     @include desktop {
       z-index: 3;
     }

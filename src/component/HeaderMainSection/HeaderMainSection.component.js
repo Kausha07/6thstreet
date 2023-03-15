@@ -121,11 +121,12 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderLeftContainer() {
+    const { isArabic } = this.state;
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
     return (
-      <div block="leftContainer" key="leftContainer">
+      <div block="leftContainer" key="leftContainer" mods={{ isArabic }}>
         {this.renderAccount()}
         {this.renderCart()}
         {this.renderWishlist()}
@@ -185,6 +186,9 @@ class HeaderMainSection extends NavigationAbstract {
     window.addEventListener("scroll", this.handleScroll);
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
+      sessionStorage.removeItem("Searched_value");
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -308,7 +312,7 @@ class HeaderMainSection extends NavigationAbstract {
         key="genders"
         isMobile
         changeMenuGender={changeMenuGender}
-        mods={{isArabic}}
+        mods={{ isArabic }}
       />
     );
   }
@@ -435,13 +439,15 @@ class HeaderMainSection extends NavigationAbstract {
       typeof SearchValue == "object"
         ? JSON.stringify(SearchValue)
         : SearchValue;
+    const inputValue = this.inputRef?.current?.value;
+    const inputValueLength = this.inputRef?.current?.value?.length;
     if (!SearchValue) {
       sessionStorage.setItem("Searched_value", " ");
     }
-    if (search.length > 0 && searchedQuery.length < search.length) {
-      sessionStorage.setItem("Searched_value", search);
+    if (inputValueLength > 0 && searchedQuery.length < inputValueLength) {
+      sessionStorage.setItem("Searched_value", inputValue);
     }
-    if (search?.length === 0) {
+    if (inputValueLength === 0) {
       Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue);
       MOE_trackEvent(EVENT_GTM_CLEAR_SEARCH, {
         country: getCountryFromUrl().toUpperCase(),

@@ -1,5 +1,6 @@
 .GenderButton {
   &-Link {
+    margin : 0px 8px;
     &:hover {
       text-shadow: 0 0 0.01px black;
     }
@@ -20,7 +21,6 @@
     }
 
     @include desktop {
-      margin: 20px 10px;
       &:first-child {
         padding-left: 0;
         margin-left: 0;
@@ -50,6 +50,7 @@
     font-size: 12px;
     padding: 0;
     pointer-events: all;
+    letter-spacing: 0.86px;
     z-index: 2;
     &::before {
       display: block;
@@ -58,14 +59,13 @@
       height: 0;
       overflow: hidden;
       visibility: hidden;
-      width: 46px;
     }
 
     &_isCurrentGender,
     &:hover {
       font-weight: var(--fw-bold);
       letter-spacing: 0;
-      font-size: 12px;
+      font-size: 13px;
       transition-duration: unset;
       @include desktop {
         font-size: 12px;
