@@ -2,6 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import isMobile from "Util/Mobile";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {
+  EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK,
+  EVENT_LOGIN_NUDGE_CLICK,
+  EVENT_REGISTER_NUDGE_CLICK,
+  MOE_trackEvent,
+} from "Util/Event";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import NudgeCross from "./ImagesAndIcons/nudgeCross.svg";
 
@@ -62,6 +69,11 @@ export default function SignInSignUpMobileNudge() {
   const closeNudge = () => {
     localStorage.setItem("lastNudgeShownTime", Date.now());
     setIsNudgeVisible(false);
+    MOE_trackEvent(EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "mSite Web",
+    });
   };
   return (
     <>
@@ -109,6 +121,11 @@ export default function SignInSignUpMobileNudge() {
                 onClick={() => {
                   setIsNudgeVisible(false);
                   setShowSignInSignUpPopUp(true);
+                  MOE_trackEvent(EVENT_LOGIN_NUDGE_CLICK, {
+                    country: getCountryFromUrl().toUpperCase(),
+                    language: getLanguageFromUrl().toUpperCase(),
+                    app6thstreet_platform: "mSite Web",
+                  });
                 }}
               >
                 {__("Sign in")}
@@ -120,6 +137,11 @@ export default function SignInSignUpMobileNudge() {
                   setIsRegisterScreen(true);
                   setShowSignInSignUpPopUp(true);
                   setIsNudgeVisible(false);
+                  MOE_trackEvent(EVENT_REGISTER_NUDGE_CLICK, {
+                    country: getCountryFromUrl().toUpperCase(),
+                    language: getLanguageFromUrl().toUpperCase(),
+                    app6thstreet_platform: "mSite Web",
+                  });
                 }}
               >
                 {__("Register")}

@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {
+  EVENT_LOGIN_NUDGE_CLICK,
+  EVENT_REGISTER_NUDGE_CLICK,
+  MOE_trackEvent,
+} from "Util/Event";
 
 import "./SignInSignupNudge.style.scss";
 
@@ -57,6 +63,11 @@ export default function SignInSignupNudge() {
                   setIsNudgeVisible(false);
                   setShowSignInSignUpPopUp(true);
                   setIsRegisterScreen(false);
+                  MOE_trackEvent(EVENT_LOGIN_NUDGE_CLICK, {
+                    country: getCountryFromUrl().toUpperCase(),
+                    language: getLanguageFromUrl().toUpperCase(),
+                    app6thstreet_platform: "Web",
+                  });
                 }}
               >
                 {__("sign in")}
@@ -69,6 +80,11 @@ export default function SignInSignupNudge() {
                     setIsRegisterScreen(true);
                     setShowSignInSignUpPopUp(true);
                     setIsNudgeVisible(false);
+                    MOE_trackEvent(EVENT_REGISTER_NUDGE_CLICK, {
+                      country: getCountryFromUrl().toUpperCase(),
+                      language: getLanguageFromUrl().toUpperCase(),
+                      app6thstreet_platform: "Web",
+                    });
                   }}
                 >
                   {__("Register")}
