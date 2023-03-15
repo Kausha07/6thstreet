@@ -14,7 +14,6 @@
 }
 
 .RecentSearches {
-    margin-bottom: 21px;
     text-align: left;
     letter-spacing: 1.56px;
     color: #000000;
@@ -38,7 +37,7 @@
         }
 
         margin-top: 0;
-        margin-right: 14px;
+        margin-right: 8px;
 
         @include mobile {
             margin-right: 8px;
@@ -56,6 +55,9 @@
         text-transform: uppercase;
         text-align: initial;
         letter-spacing: 1.56px;
+        margin-bottom: 24px;
+        margin-top: 0px;
+        padding-left: 7px;
     }
 
     @include before-desktop() {
@@ -75,7 +77,13 @@
 
     &-searchList {
         li {
+            margin-bottom: 0px;
             padding-left: 0px !important;
+            .SearchSuggestion {
+                &-TrandingTag {
+                    font-size: 13px;
+                }
+            }
         }
 
         &_isArabic {
@@ -98,13 +106,13 @@
 
     @include after-mobile {
         position: absolute;
-        right: -150px;
+        right: -170px;
         padding: 0;
         width: var(--cart-overlay-width);
 
         &_isArabic {
             right: unset;
-            left: -150px;
+            left: -170px;
         }
     }
 
@@ -129,7 +137,7 @@
             z-index: 900;
             margin-left: auto;
             margin-right: auto;
-            left: 2px;
+            left: 0;
             right: 0;
             text-align: center;
             background-color: #4a4a4a;
@@ -177,6 +185,12 @@
             font-family: 'Avenir Next Medium';
             letter-spacing: 0px;
             opacity: 1;
+            width: 140px;
+            height: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            text-overflow: ellipsis;
 
         }
         .NothingFound {
@@ -568,9 +582,9 @@ div.SearchOverlay.Overlay {
 
         display: grid;
         grid-template-columns: 96px 96px 96px;
-        grid-template-rows: 130px 130px 130px;
+        grid-template-rows: 124px 124px 124px;
         grid-gap: 6px;
-        padding-top: 24px
+        padding-top: 20px
     }
 
     h2 {
@@ -614,12 +628,12 @@ div.SearchOverlay.Overlay {
             div {
                 position: absolute !important;
                 text-align: center;
-                font-size: 9px;
+                font-size: 10px;
                 left: 0%;
                 right: 0%;
-                line-height: 8px;
-                font-family: 'Avenir Next Medium';
-                font-weight: 610;
+                line-height: 12px;
+                font-family: 'Avenir Next';
+                font-weight: 550;
                 text-transform: uppercase;
             }
         }

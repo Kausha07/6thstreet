@@ -428,12 +428,9 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   onSearchChange = (e) => {
-    this.setState({
-      search : e.target.value,
-      isPopup : true
-    })
-    const { search } = this.state
-    const SearchValue = sessionStorage.getItem("Searched_value") || null;
+    const { search } = this.state;
+    this.setState({  search : e.target.value });
+    const SearchValue = sessionStorage.getItem("Searched_value");
     const searchedQuery =
       typeof SearchValue == "object"
         ? JSON.stringify(SearchValue)
@@ -461,13 +458,6 @@ class HeaderMainSection extends NavigationAbstract {
   renderSearchOverlay = () => {
     const {isPopup} = this.state;
     this.setState({isPopup : !isPopup, searchBarClick : true});
-    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
-    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
-      country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
-      screen_name: this.getPageTypeTracking(),
-      app6thstreet_platform: "Web",
-    });
   }
 
   closeSearchPopup = () => {
@@ -622,13 +612,32 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   ClearSearch = () => {
+    const { search  } = this.state
     this.setState({
       search : "",
     });
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    MOE_trackEvent(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: search || "",
+      app6thstreet_platform: "Web",
+    });
   };
-  
+
+  SearchFieldClick = () => {
+    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageTypeTracking(),
+      app6thstreet_platform: "Web",
+    });
+  }
+
   renderSearchIcon() {
     const { isArabic, showPLPSearch, search, isPopup, searchBarClick } = this.state;
+    let recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
     if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
       return null;
     }
@@ -657,29 +666,31 @@ class HeaderMainSection extends NavigationAbstract {
                 mods={{ isArabic }}
               />
             </div>
-            <Form block="searchFrom" 
-            id="header-search"
-            onSubmit={this.onSubmit}
-            ref={this.searchRef}
-            autoComplete="off">
-              <input
-                id="search-field"
-                ref={this.inputRef}
-                name="search"
-                type="text"
-                autoComplete="off"
-                autoCorrect="off"
-                spellCheck="false"
-                placeholder={
-                  isMobile.any() || isMobile.tablet()
-                    ? __("What are you looking for?")
-                    : (!isPopup  || !searchBarClick) && __("Search for brands...")
-                }
-                onChange={(e) => this.onSearchChange(e)}
-                onFocus={this.onFocus}
-                value={search}
-              />
-            </Form>
+            <div onClick={this.SearchFieldClick}>
+              <Form block="searchFrom" 
+              id="header-search"
+              onSubmit={this.onSubmit}
+              ref={this.searchRef}
+              autoComplete="off">
+                <input
+                  id="search-field"
+                  ref={this.inputRef}
+                  name="search"
+                  type="text"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  placeholder={
+                    isMobile.any() || isMobile.tablet()
+                      ? __("What are you looking for?")
+                      : (!isPopup  || !searchBarClick) && __("Search for brands...")
+                  }
+                  onChange={this.onSearchChange}
+                  onFocus={this.onFocus}
+                  value={search}
+                />
+              </Form>
+            </div>
             { isPopup && (
               <div block="clear-button" onClick={this.cancelSearch}>
                 <img src={Clear} alt="clear-black.png" />
@@ -687,7 +698,7 @@ class HeaderMainSection extends NavigationAbstract {
             )}
           </div>
           <div id="overlay-sections">
-            {isPopup ? (<SearchOverlay
+            {(recentSearches.length > 0 || search.length > 2) && isPopup? (<SearchOverlay
                 isPopup={isPopup}
                 search={this.state.search}
                 closePopup={this.closePopup}
