@@ -40,9 +40,15 @@ const VuePLP = (props) => {
   const [state, setState] = useState(stateObj);
   const [lastOrderSku, setLastOrderSku] = useState([]);
   const [payloadQuery, setPayloadQuery] = useState("");
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [topPicksReqSent, setTopPicksReqSent] = useState(false);
-  const [firstSKUCallSent, setFirstSKUCallSent] = useState(false);
+  const [recentFirstProduct, setRecentFirstProduct] = useState("");
+  const [recentSecondProduct, setRecentSecondProduct] = useState("");
+  const [recentlyViewedCallSent, setRecentlyViewCallSent] = useState(false);
+  const [firstOrderCall, setFirstOrderCall] = useState(false);
+  const [secondOrderCall, setSecondOrderCall] = useState(false);
+  const [firstRecentCall, setFirstRecentCall] = useState(false);
+  const [noLastOrderSku, setNoLastOrderSku] = useState(false);
+  const [noRecentlyViewed, setNoRecentlyViewed] = useState(false);
 
   const signedIn = isSignedIn();
   const gender = useSelector((state) => state.AppState.gender);
@@ -101,32 +107,120 @@ const VuePLP = (props) => {
               });
               setLastOrderSku(productSKU);
             } else {
-              setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+              setNoLastOrderSku(true);
+              if (noRecentlyViewed) {
+                setPayloadQuery(TOP_PICKS_SLIDER);
+              }
             }
           })
           .catch((err) => {
+            setNoLastOrderSku(true);
+            if (noRecentlyViewed) {
+              setPayloadQuery(TOP_PICKS_SLIDER);
+            }
             console.error("Last order error", err);
-            setPayloadQuery(RECENTLY_VIEWED_SLIDER);
           });
       } else {
-        setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+        if (noRecentlyViewed) {
+          setPayloadQuery(TOP_PICKS_SLIDER);
+        }
+      }
+    } else {
+      if (noRecentlyViewed) {
+        setPayloadQuery(TOP_PICKS_SLIDER);
       }
     }
   };
 
+  const getRecentlyViewedSku = async () => {
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const vueSliderType = VUE_RECENTLY_VIEWED_SLIDER;
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const query = {
+      filters: [],
+      num_results: 50,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const defaultQueryPayload = {
+      userID,
+      product_id: "",
+    };
+    const payload = VueQuery.buildQuery(
+      vueSliderType,
+      query,
+      defaultQueryPayload
+    );
+    let recentProductsArr = [];
+    fetchVueData(payload)
+      .then((resp) => {
+        if (resp?.data && resp.data?.length > 0) {
+          resp?.data.forEach((product) => {
+            recentProductsArr.push(product?.sku);
+          });
+          if (recentProductsArr && recentProductsArr.length > 1) {
+            if (recentFirstProduct) {
+              return;
+            } else {
+              const random = Math.floor(
+                Math.random() * recentProductsArr.length
+              );
+              const setFirstProd = recentProductsArr[random];
+              setRecentFirstProduct(setFirstProd);
+              const index = recentProductsArr.indexOf(
+                recentProductsArr[random]
+              );
+              if (index > -1) {
+                recentProductsArr.splice(index, 1);
+              }
+            }
+            if (recentSecondProduct) {
+              return;
+            } else {
+              const secondRandom = Math.floor(
+                Math.random() * recentProductsArr.length
+              );
+              const setSecondProd = recentProductsArr[secondRandom];
+              setRecentSecondProduct(setSecondProd);
+            }
+          }
+        } else {
+          setNoRecentlyViewed(true);
+          if (noLastOrderSku || !signedIn) {
+            setPayloadQuery(TOP_PICKS_SLIDER);
+          }
+        }
+      })
+      .catch((err) => {
+        if (noLastOrderSku || !signedIn) {
+          setPayloadQuery(TOP_PICKS_SLIDER);
+        }
+        console.error("fetchVueData error", err);
+      });
+    setRecentlyViewCallSent(true);
+  };
+  let randomSkuObj = { first_product: "", second_product: "" };
   const getRandomSku = () => {
-    let randomSkuObj = {};
     let lastOrderArray = lastOrderSku;
-    if (lastOrderArray.length == 0 || !signedIn) {
-      return {};
-    } else if (lastOrderSku.length > 1) {
-      const random = Math.floor(Math.random() * lastOrderArray.length);
-      randomSkuObj.first_product = lastOrderArray[random];
-      const index = lastOrderArray.indexOf(lastOrderArray[random]);
-      if (index > -1) {
-        lastOrderArray.splice(index, 1);
+    if ((lastOrderArray && lastOrderArray.length == 0) || !signedIn) {
+      setNoLastOrderSku(true);
+      return;
+    } else if (lastOrderArray && lastOrderArray.length > 1) {
+      if (randomSkuObj.first_product.length) {
+        return;
+      } else {
+        const random = Math.floor(Math.random() * lastOrderArray.length);
+        randomSkuObj.first_product = lastOrderArray[random];
+        const index = lastOrderArray.indexOf(lastOrderArray[random]);
+        if (index > -1) {
+          lastOrderArray.splice(index, 1);
+        }
+      }
+      if (randomSkuObj.second_product.length) {
+        return;
+      } else {
         const secondRandom = Math.floor(Math.random() * lastOrderArray.length);
-        randomSkuObj.second_product = lastOrderArray[secondRandom];
+        randomSkuObj.second_product = lastOrderArray[secondRandom] || "";
       }
       return randomSkuObj;
     } else {
@@ -145,23 +239,10 @@ const VuePLP = (props) => {
       num_results: 50,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
-    let handleRandomSKU = getRandomSku();
-    const handleProductID = params?.product_id
-      ? params.product_id
-      : (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
-          vueSliderType == VUE_STYLE_IT_SLIDER) &&
-        handleRandomSKU?.first_product &&
-        !firstSKUCallSent
-      ? handleRandomSKU?.first_product
-      : (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
-          vueSliderType == VUE_STYLE_IT_SLIDER) &&
-        handleRandomSKU?.second_product &&
-        firstSKUCallSent
-      ? handleRandomSKU?.second_product
-      : "";
+    const handleRandomSKU = getRandomSku();
     const defaultQueryPayload = {
       userID,
-      product_id: handleProductID,
+      product_id: params?.product_id || "",
     };
     if (vueSliderType !== VUE_VISUALLY_SIMILAR_SLIDER) {
       defaultQueryPayload.gender = gender;
@@ -171,41 +252,87 @@ const VuePLP = (props) => {
       query,
       defaultQueryPayload
     );
+
     if (
-      vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER ||
-      vueSliderType == VUE_STYLE_IT_SLIDER
+      (vueSliderType == VUE_VISUALLY_SIMILAR_SLIDER && !params.product_id) ||
+      (vueSliderType == VUE_STYLE_IT_SLIDER && !params.product_id)
     ) {
-      if (handleProductID) {
-        fetchVueData(payload)
+      if (noLastOrderSku && noRecentlyViewed) {
+        setPayloadQuery(TOP_PICKS_SLIDER);
+      }
+      const handleRandomProd = () => {
+        if (!firstOrderCall && handleRandomSKU?.first_product) {
+          return handleRandomSKU?.first_product;
+        } else if (
+          firstOrderCall &&
+          handleRandomSKU?.second_product &&
+          !secondOrderCall
+        ) {
+          return handleRandomSKU?.second_product;
+        } else if (
+          firstOrderCall &&
+          secondOrderCall &&
+          !firstRecentCall &&
+          recentFirstProduct
+        ) {
+          return recentFirstProduct;
+        } else if (
+          firstOrderCall &&
+          secondOrderCall &&
+          firstRecentCall &&
+          recentSecondProduct
+        ) {
+          return recentSecondProduct;
+        } else {
+          return "";
+        }
+      };
+      const handleRandomProduct = handleRandomProd();
+      const dynamicQueryPayload = {
+        userID,
+        product_id: handleRandomProduct,
+      };
+      const dynamicPayload = VueQuery.buildQuery(
+        vueSliderType,
+        query,
+        dynamicQueryPayload
+      );
+      if (handleRandomProduct) {
+        fetchVueData(dynamicPayload)
           .then((resp) => {
-            if (!resp.data || Object.entries(resp.data).length < 1) {
-              if (firstSKUCallSent) {
-                setPayloadQuery(RECENTLY_VIEWED_SLIDER);
+            if (!resp.data) {
+              if (!firstOrderCall && signedIn) {
+                setFirstOrderCall(true);
+              } else if (firstOrderCall && !secondOrderCall && signedIn) {
+                setSecondOrderCall(true);
+              } else if (
+                firstOrderCall &&
+                secondOrderCall &&
+                !firstRecentCall
+              ) {
+                setFirstRecentCall(true);
+              } else if (firstOrderCall && secondOrderCall && firstRecentCall) {
+                setPayloadQuery(TOP_PICKS_SLIDER);
               } else {
-                setFirstSKUCallSent(true);
+                setPayloadQuery(TOP_PICKS_SLIDER);
               }
+            } else {
+              setState({
+                ...state,
+                vueRecommendation: resp.data,
+              });
             }
-            setState({
-              ...state,
-              vueRecommendation: resp.data,
-            });
           })
           .catch((err) => {
+            setPayloadQuery(TOP_PICKS_SLIDER);
             console.error("fetchVueData error", err);
           });
-      } else {
-        if (vueSliderType !== VUE_RECENTLY_VIEWED_SLIDER) {
-          setPayloadQuery(RECENTLY_VIEWED_SLIDER);
-        }
       }
     } else {
       if (!topPicksReqSent) {
         fetchVueData(payload)
           .then((resp) => {
-            if (
-              vueSliderType == VUE_RECENTLY_VIEWED_SLIDER &&
-              (!resp.data || Object.entries(resp.data).length <= 1)
-            ) {
+            if (!resp.data || resp.data.length == 0) {
               setPayloadQuery(TOP_PICKS_SLIDER);
               setTopPicksReqSent(true);
             }
@@ -237,26 +364,51 @@ const VuePLP = (props) => {
         url: window.location.href,
       },
     });
-    if (signedIn) {
+    if (!signedIn) {
+      setFirstOrderCall(true);
+      setSecondOrderCall(true);
+      setNoLastOrderSku(true);
+    }
+    if (
+      signedIn &&
+      (params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
+      !params.product_id
+    ) {
       lastOrder();
     }
-    setIsPageLoaded(true);
+    if (
+      (params.q == STYLE_IT_SLIDER || params.q == VISUALLY_SIMILAR_SLIDER) &&
+      !params.product_id &&
+      !recentlyViewedCallSent
+    ) {
+      getRecentlyViewedSku();
+    }
   }, []);
 
   useEffect(() => {
     if (
-      (state?.vueRecommendation?.length === 0 ||
-        state?.vueRecommendation == undefined) &&
-      signedIn &&
-      (isPageLoaded || params.product_id)
+      state?.vueRecommendation?.length === 0 ||
+      state?.vueRecommendation?.length === undefined
     ) {
       request();
     }
-    if (state?.vueRecommendation?.length === 0 && !signedIn) {
+  }, [
+    state?.vueRecommendation,
+    lastOrderSku,
+    firstOrderCall,
+    secondOrderCall,
+    firstRecentCall,
+    payloadQuery,
+    noRecentlyViewed,
+    noLastOrderSku,
+  ]);
+
+  useEffect(() => {
+    if (!signedIn) {
       request();
     }
-  }, [state?.vueRecommendation, lastOrderSku, payloadQuery, firstSKUCallSent]);
-
+  }, [recentFirstProduct]);
+  
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
       case STYLE_IT_SLIDER:
