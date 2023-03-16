@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import PropTypes from "prop-types";
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 import { Route } from "react-router-dom";
 import Breadcrumbs from "Component/Breadcrumbs";
 import CookiePopup from "Component/CookiePopup";
@@ -9,7 +9,7 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
-import NoMatch from "Route/NoMatch";
+// import NoMatch from "Route/NoMatch";
 
 import {
   BRANDS,
@@ -30,15 +30,24 @@ import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
-import LocaleWizard from "Route/LocaleWizard";
-import UrlRewrites from "Route/UrlRewrites";
-import VuePLP from "Route/VuePLP/VuePLP.component";
-import LiveExperience from "Route/LiveExperience";
-import About from "Route/About";
-import WelcomeHomePage from "Component/WelcomeHomePage";
-import BrandCMS from "Route/BrandCMS"
-import * as Sentry from '@sentry/react';
 
+const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
+const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
+const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Route/UrlRewrites"));
+const VuePLP = lazy(() => import(/* webpackChunkName: 'VuePLP' */ "Route/VuePLP/VuePLP.component"));
+const LiveExperience = lazy(() => import(/* webpackChunkName: 'LiveExperience' */ "Route/LiveExperience"));
+const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
+const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
+const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
+const Feedback = lazy(() => import(/* webpackChunkName: 'Feedback' */ "../../route/Feedback/Feedback.container"));
+// import LocaleWizard from "Route/LocaleWizard";
+// import UrlRewrites from "Route/UrlRewrites";
+// import VuePLP from "Route/VuePLP/VuePLP.component";
+// import LiveExperience from "Route/LiveExperience";
+// import About from "Route/About";
+// import WelcomeHomePage from "Component/WelcomeHomePage";
+// import BrandCMS from "Route/BrandCMS"
+import * as Sentry from '@sentry/react';
 import {
   CartPage,
   Checkout,
@@ -53,7 +62,8 @@ import {
   WishlistShared,
   withStoreRegex,
 } from "SourceComponent/Router/Router.component";
-import Feedback from "../../route/Feedback/Feedback.container";
+
+// import Feedback from "../../route/Feedback/Feedback.container";
 import {
   AFTER_ITEMS_TYPE,
   BEFORE_ITEMS_TYPE,
@@ -387,7 +397,9 @@ export class Router extends SourceRouter {
 
   renderWelcomeHomePage() {
     return (
-      <WelcomeHomePage />
+      <Suspense fallback={<div></div>}>
+        <WelcomeHomePage />
+      </Suspense>
     );
   }
 
@@ -397,7 +409,9 @@ export class Router extends SourceRouter {
       <div block="PageWrapper" mods={{ isArabic }}>
         {this.renderItemsOfType(BEFORE_ITEMS_TYPE)}
         <div block="PageWrapper" elem="Content">
-          {this.renderMainItems()}
+          <Suspense fallback={<div></div>}>
+            {this.renderMainItems()}
+          </Suspense>
         </div>
         {this.renderItemsOfType(AFTER_ITEMS_TYPE)}
       </div>
