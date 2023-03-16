@@ -270,5 +270,3 @@ export const EVENT_ACCOUNT_PAYMENT_CLICK = "account_payment_click";
 export const EVENT_WISHLIST_ICON_CLICK = "Wishlist_icon_click";
 export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
   "account_tooltip_close_button_click";
-export const EVENT_LOGIN_NUDGE_CLICK = "login_nudge_click";
-export const EVENT_REGISTER_NUDGE_CLICK = "register_nudge_click";

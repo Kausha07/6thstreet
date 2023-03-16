@@ -5,8 +5,8 @@ import { isArabic } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {
   EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK,
-  EVENT_LOGIN_NUDGE_CLICK,
-  EVENT_REGISTER_NUDGE_CLICK,
+  EVENT_LOGIN_CLICK,
+  EVENT_REGISTER_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
 import MyAccountOverlay from "Component/MyAccountOverlay";
@@ -121,10 +121,11 @@ export default function SignInSignUpMobileNudge() {
                 onClick={() => {
                   setIsNudgeVisible(false);
                   setShowSignInSignUpPopUp(true);
-                  MOE_trackEvent(EVENT_LOGIN_NUDGE_CLICK, {
+                  MOE_trackEvent(EVENT_LOGIN_CLICK, {
                     country: getCountryFromUrl().toUpperCase(),
                     language: getLanguageFromUrl().toUpperCase(),
                     app6thstreet_platform: "mSite Web",
+                    screenName: "Home_Account",
                   });
                 }}
               >
@@ -137,10 +138,11 @@ export default function SignInSignUpMobileNudge() {
                   setIsRegisterScreen(true);
                   setShowSignInSignUpPopUp(true);
                   setIsNudgeVisible(false);
-                  MOE_trackEvent(EVENT_REGISTER_NUDGE_CLICK, {
+                  MOE_trackEvent(EVENT_REGISTER_CLICK, {
                     country: getCountryFromUrl().toUpperCase(),
                     language: getLanguageFromUrl().toUpperCase(),
                     app6thstreet_platform: "mSite Web",
+                    screenName: "Home_Account",
                   });
                 }}
               >
