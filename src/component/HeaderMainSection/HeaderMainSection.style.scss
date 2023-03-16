@@ -150,7 +150,7 @@ main {
   }
 
   #searchIconImage {
-    margin: 11px 5px;
+    margin: 8px 12px;
     opacity: 1;
   }
 
@@ -165,10 +165,10 @@ main {
     padding-left: 0px;
     letter-spacing: var(--unnamed-character-spacing-0);
     color: var(--unnamed-color-000000);
-    font: normal normal normal 15px/20px Avenir Next;
+    font: normal normal normal 15px/20px 'Avenir Next';
     letter-spacing: 0px;
     color: #000000;
-    opacity: 0.6;
+    opacity: 1;
   }
 
   .clear-button {
@@ -595,9 +595,9 @@ main {
     margin-left: 22px;
   }
   #searchIconImage {
-    width: 17px;
+    width: 24px;
     opacity: 1;
-    margin-left: 14px;
+    margin-left: 12px;
     margin-right: 10px;
     &_isArabic {
       margin-left: 0px;
