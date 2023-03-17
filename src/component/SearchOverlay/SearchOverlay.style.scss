@@ -173,7 +173,6 @@
 
         span:last-of-type {
             @include close-button;
-            --header-color: #ffffff;
         }
 
         .moreDataLink {
@@ -181,7 +180,8 @@
             text-decoration: underline;
             font-size: 16px;
             position: left;
-            font-family: 'Avenir Next Medium';
+            font-family: 'Avenir Next';
+            font-weight: 500;
             letter-spacing: 0px;
             opacity: 1;
             width: 200px;
@@ -297,7 +297,7 @@ div.SearchOverlay.Overlay {
         opacity: 1;
 
         h2 {
-            font: normal normal bold 14px/19px 'Avenir Next', sans-serif;
+            font: normal normal 600 14px/19px 'Avenir Next', sans-serif;
             color: #000000;
             text-transform: uppercase;
             margin-bottom: 0px;
@@ -365,7 +365,7 @@ div.SearchOverlay.Overlay {
             }
             .Price-Wrapper {
                 .Price-Del {
-                    margin-right: 10px;
+                    margin-right: 3px;
                     font-weight: var(--fw-medium);
                 }
             }
@@ -377,7 +377,8 @@ div.SearchOverlay.Overlay {
     }
 
     .moreDataLink {
-        font-family: 'Avenir Next Medium';
+        font-family: 'Avenir Next';
+        font-weight: 500;
         font-size: 16px;
         letter-spacing: 0px;
         line-height: 22px;
@@ -405,12 +406,13 @@ div.SearchOverlay.Overlay {
     width: 100%;
     
     &-TrandingTag {
-        font-family: 'Avenier Next Regular';
+        font-family: 'Avenier Next';
         font-size : 13px;
-        letter-spacing: var(--unnamed-character-spacing-0);
+        letter-spacing: 0px;
         text-align: center;
         line-height: 40;
         color: #4A4A4A;
+        background-color: #F0F0F0;
         opacity: 1;
         text-transform: capitalize;
     }
@@ -451,7 +453,7 @@ div.SearchOverlay.Overlay {
         margin-left : 0px;
         
         h2 {
-            font: normal normal bold 14px/19px 'Avenir Next', sans-serif;
+            font: normal normal 600 14px/19px 'Avenir Next', sans-serif;
             color: #000000;
             text-transform: uppercase;
             margin-top: 0px;
@@ -593,7 +595,7 @@ div.SearchOverlay.Overlay {
     }
 
     h2 {
-        font: normal normal bold 14px/19px 'Avenir Next',sans-serif;
+        font: normal normal 600 14px/19px 'Avenir Next',sans-serif;
         color: #000000;
         text-transform: uppercase;
         margin-bottom: 0px;
@@ -638,7 +640,7 @@ div.SearchOverlay.Overlay {
                 right: 0%;
                 line-height: 11px;
                 font-family: 'Avenir Next';
-                font-weight: 500;
+                font-weight: 600;
                 text-transform: uppercase;
             }
         }
