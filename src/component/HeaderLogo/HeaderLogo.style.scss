@@ -1,6 +1,5 @@
 .HeaderLogo {
   // flex: 1;
-  height: 26.48px;
   text-align: initial;
   &_isArabic {
     margin-right: 0px;
@@ -23,6 +22,14 @@
           right: -12px;
         }
       }
+      .Image-Image {
+        left : -12px;
+      }
+      &_isArabic {
+        .Image-Image {
+          left : 12px;
+        }
+      }
     }
 
     @include before-desktop {
@@ -35,10 +42,10 @@
       width: 119px;
     }
     @include desktop {
-      height: 26px;
+      height: 31px;
       margin-top: 0;
       padding: 0;
-      width: 146px;
+      width: 180px;
       &_isArabic {
         margin-right: 0px !important;
       }

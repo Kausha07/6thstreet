@@ -53,6 +53,9 @@ main {
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
+  &_isArabic {
+    right: -18px;
+  }
   .leftContainer {
     display: flex;
     justify-content: flex-end;
@@ -60,7 +63,7 @@ main {
     flex: 1;
     order: 2;
     &_isArabic {
-      left: -29px;
+      left: -18px;
     }
     @include desktop {
       z-index: 3;
@@ -102,7 +105,7 @@ main {
     display: flex;
     flex: 1;
     order: 1;
-    padding-bottom: 18px;
+    padding-bottom: 15px;
     &_isArabic {
       padding-bottom: 28px;
     }
@@ -122,6 +125,13 @@ main {
       width: 90%;
     }
   }
+  .searchBlock {
+    margin-right: 25px;
+    &_isArabic {
+      margin-left: 25px;
+    }
+  }
+
   .SearchIcon {
     order: 2;
     img {
