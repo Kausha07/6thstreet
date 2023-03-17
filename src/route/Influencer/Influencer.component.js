@@ -2,7 +2,6 @@ import React, { useEffect, useState, createRef } from "react";
 import { connect } from "react-redux";
 
 import {
-  getTrendingInfo,
   getFollowedInfluencer,
   followUnfollowInfluencer,
 } from "Util/API/endpoint/Influencer/Influencer.endpoint";
@@ -18,6 +17,8 @@ import InfluencerFollowing from "Component/InfluencerFollowing/InfluencerFollowi
 import InfluencerSearch from "Component/InfluencerSearch/InfluencerSearch.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
+import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
+
 import "./Influencer.style.scss";
 import cartIcon from "./icons/cart-icon.png";
 import Refine from "../../component/Icons/Refine/icon.png";
@@ -25,11 +26,36 @@ import Search from "../../component/Icons/Search/icon.svg";
 
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  lastClickedInfluencer: state?.InfluencerReducer?.lastClickedInfluencer,
+  masterTrendingInfo: state?.InfluencerReducer?.masterTrendingInfo,
+  selectedGender: state?.InfluencerReducer?.selectedGender,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  setlastClickedInfluencer: (influencerID) =>
+    InfluencerDispatcher.lastClickedInfluencer(influencerID, dispatch),
+  influencerHomePage: (item) =>
+    InfluencerDispatcher.influencerHomePage(item, dispatch),
+  influencerSelectedGender: (gender) =>
+    InfluencerDispatcher.influencerSelectedGender(gender, dispatch),
+
+  influencerLastTilesData: (data) =>
+    InfluencerDispatcher.influencerLastTilesData(data, dispatch),
+  loadMoreButtonClicked: (data) =>
+    InfluencerDispatcher.loadMoreButtonClicked(data, dispatch),
 });
 
 const Influencer = (props) => {
-  const [masterTrendingInfo, setMasterTrendingInfo] = useState({});
-  const [selectedGender, setSelectedGender] = useState("WOMEN");
+  const {
+    isSignedIn,
+    masterTrendingInfo,
+    selectedGender,
+    lastClickedInfluencer,
+    influencerHomePage,
+    setlastClickedInfluencer,
+    influencerSelectedGender,
+    loadMoreButtonClicked,
+  } = props;
   const [showTrending, setShowTrending] = useState(true);
   const [showFollowing, setShowFollowing] = useState(false);
   const [isRefineButtonClicked, setRefine] = useState(false);
@@ -39,8 +65,7 @@ const Influencer = (props) => {
   const [influencerSearchText, setInfluencerSearchText] = useState("");
   const [isSearchButtonClicked, setIsSearchButtonClicked] = useState(false);
   const [followingList, setFollowingList] = useState([]);
-  const [index, setIndex] = useState(0);
-  const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
+  const [loggedIn, setLoggedIn] = useState(isSignedIn);
   const [tempInfluencerID, setTempInfluencerID] = useState(null);
   const [payload, setPayload] = useState({});
   const searchWrapperRef = createRef();
@@ -49,7 +74,18 @@ const Influencer = (props) => {
   const mobileRefineWrapperRef = createRef();
 
   useEffect(() => {
-    trendingInfo();
+    const locale = getLocaleFromUrl();
+    const envID = getEnvIDForInfluencer();
+    influencerHomePage({ locale, envID });
+    window.history.scrollRestoration = "manual";
+    let element = document.getElementById(lastClickedInfluencer);
+    if (element) {
+      setTimeout(() => {
+        window.focus();
+        element.style.scrollMarginTop = "180px";
+        element.scrollIntoView({ behavior: "smooth" });
+      }, 10);
+    }
     return () => {
       window.pageType = undefined;
     };
@@ -63,16 +99,12 @@ const Influencer = (props) => {
   }, [searchWrapperRef, refineWrapperRef, mobileRefineWrapperRef]);
 
   useEffect(() => {
-    if (props.isSignedIn) {
+    if (isSignedIn) {
       getFollowingList();
     } else {
       setFollowingList([]);
     }
-  }, [props.isSignedIn, loggedIn]);
-
-  useEffect(() => {
-    setIndex(masterTrendingInfo?.superstars?.[selectedGender]?.data.length);
-  }, [selectedGender]);
+  }, [isSignedIn, loggedIn]);
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
@@ -127,22 +159,6 @@ const Influencer = (props) => {
     }
   };
 
-  const trendingInfo = async () => {
-    const locale = getLocaleFromUrl();
-    const envID = getEnvIDForInfluencer();
-    try {
-      getTrendingInfo(locale, envID).then((resp) => {
-        setMasterTrendingInfo(resp);
-        setIndex(resp?.superstars?.[selectedGender]?.data.length);
-      });
-    } catch (err) {
-      console.error(
-        "Error while fetching Trending Info on Influencer's main page",
-        err
-      );
-    }
-  };
-
   const getFollowingList = async () => {
     try {
       getFollowedInfluencer().then((resp) => {
@@ -185,10 +201,17 @@ const Influencer = (props) => {
     return <div block="AnimationWrapper"></div>;
   };
 
+  const setLastTapItemInfluencer = (item) => {
+    setlastClickedInfluencer(item);
+  };
+
   const renderTrending = (item, i) => {
     const { type, items } = item;
+    const index =
+      masterTrendingInfo?.superstars?.[selectedGender]?.data?.length;
+
     const num =
-      masterTrendingInfo?.superstars?.[selectedGender]?.data[index - 1]?.items
+      masterTrendingInfo?.superstars?.[selectedGender]?.data?.[index - 1]?.items
         ?.length;
     return (
       <div key={`${type}+${i}-${selectedGender}`}>
@@ -196,7 +219,9 @@ const Influencer = (props) => {
           <InfluencerSliderCollection
             item={item}
             cartIcon={cartIcon}
+            setLastTapItem={setLastTapItemInfluencer}
             selectedGender={selectedGender}
+            index={i}
           />
         ) : (
           <InfluencerTilesCollection
@@ -206,8 +231,10 @@ const Influencer = (props) => {
             updateFollowingList={updateFollowingList}
             renderMySignInPopup={showMyAccountPopup}
             buttonSignedIn={buttonSignedIn}
+            setLastTapItem={setLastTapItemInfluencer}
             selectedGender={selectedGender}
             guestUser={guestUser}
+            index={i}
           />
         )}
       </div>
@@ -260,6 +287,28 @@ const Influencer = (props) => {
 
   const handleRefineButtonClick = () => {
     setRefine(!isRefineButtonClicked);
+    const eventData = {
+      EventName: EVENT_INFLUENCER_REFINE_CLICK,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
+
+  const handleGender = (gender) => {
+    influencerSelectedGender(gender);
+    const eventData = {
+      EventName: EVENT_INFLUENCER_REFINE_GENDER_CLICK,
+      gender: gender,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleLoadMore = () => {
+    loadMoreButtonClicked(false);
+    scrollToTop();
   };
 
   const renderRefine = () => {
@@ -292,7 +341,10 @@ const Influencer = (props) => {
                     id="women"
                     name="gender"
                     value="WOMEN"
-                    onChange={(e) => setSelectedGender(e.target.value)}
+                    onChange={(e) => {
+                      handleGender(e.target.value);
+                      handleLoadMore();
+                    }}
                     checked={selectedGender === "WOMEN"}
                   />
                   <label htmlFor="women">{__("Women")}</label>
@@ -306,7 +358,10 @@ const Influencer = (props) => {
                     id="men"
                     name="gender"
                     value="MEN"
-                    onChange={(e) => setSelectedGender(e.target.value)}
+                    onChange={(e) => {
+                      handleGender(e.target.value);
+                      handleLoadMore();
+                    }}
                     checked={selectedGender === "MEN"}
                   />
                   <label htmlFor="men">{__("Men")}</label>
@@ -320,7 +375,10 @@ const Influencer = (props) => {
                     id="kids"
                     name="gender"
                     value="KIDS"
-                    onChange={(e) => setSelectedGender(e.target.value)}
+                    onChange={(e) => {
+                      handleGender(e.target.value);
+                      handleLoadMore();
+                    }}
                     checked={selectedGender === "KIDS"}
                   />
                   <label htmlFor="kids">{__("Kids")}</label>
@@ -408,6 +466,7 @@ const Influencer = (props) => {
               onClick={() => {
                 setShowTrending(true);
                 setShowFollowing(false);
+                scrollToTop();
               }}
             >
               {__("Trending")}
@@ -417,6 +476,7 @@ const Influencer = (props) => {
               onClick={() => {
                 setShowFollowing(true);
                 setShowTrending(false);
+                scrollToTop();
               }}
             >
               {__("Following")}
@@ -495,7 +555,7 @@ const Influencer = (props) => {
                         name={val}
                         value={val}
                         onClick={() => {
-                          setSelectedGender(val.toUpperCase());
+                          influencerSelectedGender(val.toUpperCase());
                           setIsMobileRefineButtonClicked(false);
                         }}
                         key={index}
@@ -552,4 +612,4 @@ const Influencer = (props) => {
   );
 };
 
-export default connect(mapStateToProps, null)(Influencer);
+export default connect(mapStateToProps, mapDispatchToProps)(Influencer);

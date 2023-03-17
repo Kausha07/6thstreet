@@ -8,13 +8,20 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import { getQueryParam } from "Util/Url";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Event, {
+  EVENT_GET_THE_LOOK_CLICK,
+  EVENT_FOLLOW_INFLUENCER_CLICK,
+  EVENT_UNFOLLOW_INFLUENCER_CLICK,
+  EVENT_SHARE_STORE_CLICK,
+  EVENT_GTM_INFLUENCER,
+} from "Util/Event";
 import {
-  getInfluencerInfo,
   getFollowedInfluencer,
   followUnfollowInfluencer,
 } from "Util/API/endpoint/Influencer/Influencer.endpoint";
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
 
 import share from "Component/Icons/Share/icon.svg";
 import SocialMediaOverlay from "Component/SocialMediaOverlay/index";
@@ -28,27 +35,40 @@ import "./InfluencerStore.style";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
-export const mapDispatchToProps = (dispatch) => ({
-  resetPLPData: (options) => PLPDispatcher.resetPLPData(dispatch),
-});
+
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
+  influencerInfo: state?.InfluencerReducer?.influencerInfo,
+  influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
+  influencerName: state?.InfluencerReducer?.influencerName,
+  isInfluencerLoading: state?.InfluencerReducer?.isInfluencerLoading,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  resetPLPData: (options) => PLPDispatcher.resetPLPData(dispatch),
+  influencerStorePage: (item) =>
+    InfluencerDispatcher.influencerStorePage(item, dispatch),
 });
 
 const InfluencerStore = (props) => {
-  const [storeInfo, setStoreInfo] = useState(undefined);
-  const [influencerName, setInfluencerName] = useState("");
+  const {
+    influencerName,
+    isSignedIn,
+    resetPLPData,
+    influencerStorePage,
+    influencerAlgoliaQuery,
+    isInfluencerLoading,
+    influencerInfo,
+  } = props;
   const [influencerId, setInfluencerId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [algoliaQuery, setAlgoliaQuery] = useState("");
   const [followingList, setFollowingList] = useState([]);
   const [selectedGender, setSelectedGender] = useState("WOMEN");
   const [tempInfluencerID, setTempInfluencerID] = useState(null);
   const [payload, setPayload] = useState({});
-  const [loggedIn, setLoggedIn] = useState(props.isSignedIn);
+  const [loggedIn, setLoggedIn] = useState(isSignedIn);
   const [shareButtonClicked, setShareButtonClicked] = useState(false);
   const shareMediaRef = createRef();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,7 +76,7 @@ const InfluencerStore = (props) => {
     document.body.scrollTo(0, 0);
     getStoreInfo();
     return () => {
-      props.resetPLPData();
+      resetPLPData();
     };
   }, []);
 
@@ -72,12 +92,12 @@ const InfluencerStore = (props) => {
   }, [shareMediaRef]);
 
   useEffect(() => {
-    if (props.isSignedIn) {
+    if (isSignedIn) {
       getFollowingList();
     } else {
       setFollowingList([]);
     }
-  }, [props.isSignedIn, loggedIn]);
+  }, [isSignedIn, loggedIn]);
 
   const updateBreadcrumbs = () => {
     const breadcrumbs = [
@@ -135,20 +155,9 @@ const InfluencerStore = (props) => {
     const gender = getQueryParam("selectedGender", location);
     const envID = getEnvIDForInfluencer();
     const locale = getLocaleFromUrl();
-
     setInfluencerId(influencer_id);
     setSelectedGender(gender);
-    try {
-      getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
-        if (resp) {
-          setAlgoliaQuery(resp["algolia_query"]["categories.level2"]);
-          setInfluencerName(resp?.influencer_name);
-          setStoreInfo(resp);
-        }
-      });
-    } catch (error) {
-      console.error("Influencer Store error", error);
-    }
+    influencerStorePage({ influencer_id, envID, locale });
   };
 
   const showMyAccountPopup = () => {
@@ -171,6 +180,15 @@ const InfluencerStore = (props) => {
       <MyAccountOverlay closePopup={closePopup} onSignIn={onSignIn} isPopup />
     );
   };
+  const MoenangeGetTheLookSection = (influncer_collection_id) => {
+    const eventData = {
+      EventName: EVENT_GET_THE_LOOK_CLICK,
+      collection_id: influncer_collection_id,
+      name: influencerName,
+      influencer_id: influencerId,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+  };
 
   const GTLsection = (block, i) => {
     const {
@@ -187,7 +205,12 @@ const InfluencerStore = (props) => {
         block="spckItem"
         mods={{ isArabic: isArabic() }}
       >
-        <div block="eventImage">
+        <div
+          block="eventImage"
+          onClick={() => {
+            MoenangeGetTheLookSection(influncer_collection_id);
+          }}
+        >
           <Link
             to={formatCDNLink(
               `./Collection?influencerCollectionID=${influncer_collection_id}&influencerID=${influencerId}`
@@ -226,7 +249,7 @@ const InfluencerStore = (props) => {
   };
 
   const storePageProducts = () => {
-    if (algoliaQuery !== undefined) {
+    if (influencerAlgoliaQuery !== undefined) {
       return (
         <div block="storeProducts">
           <h3 block="storeProductHeading">{__("My top picks")}</h3>
@@ -250,7 +273,7 @@ const InfluencerStore = (props) => {
   };
 
   const followUnfollow = (influencerID, follow) => {
-    if (!props.isSignedIn) {
+    if (!isSignedIn) {
       showMyAccountPopup();
       guestUser(influencerID, follow);
     } else {
@@ -262,6 +285,19 @@ const InfluencerStore = (props) => {
       followUnfollowInfluencer(payload).then((resp) => {
         updateFollowingList(influencerID, follow);
       });
+    }
+    if (follow) {
+      const eventData = {
+        EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    } else {
+      const eventData = {
+        EventName: EVENT_FOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
     }
   };
 
@@ -362,9 +398,9 @@ const InfluencerStore = (props) => {
   const renderMain = () => {
     return (
       <>
-        {storeInfo === undefined
+        {isInfluencerLoading
           ? renderBannerAnimation()
-          : renderStorePage(storeInfo)}
+          : renderStorePage(influencerInfo)}
       </>
     );
   };

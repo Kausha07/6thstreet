@@ -30,6 +30,8 @@ const InfluencerSliderCollection = (props) => {
       },
     },
   };
+  
+  const { setLastTapItem, selectedGender, index, cartIcon } = props;
 
   const MoenangeTrackingCollectionDetail = (
     influencer_id,
@@ -42,11 +44,12 @@ const InfluencerSliderCollection = (props) => {
       name: influencer_name,
       influencer_id: influencer_id,
     };
+    setLastTapItem(`InfluencerSliderCollection-${selectedGender}-${index}`);
+
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderSlide = (item, i) => {
-    const { cartIcon } = props;
     const {
       algolia_query,
       description,
@@ -66,7 +69,6 @@ const InfluencerSliderCollection = (props) => {
       name,
     } = item.influencer;
     const newLink = `influencer.html/Collection?influencerCollectionID=${influncer_collection_id}&influencerID=${influencer_id}`;
-    const { selectedGender } = props;
     return (
       <div key={`${influencer_id}+${i}`} block="spck-influencer-slider">
         <div block="mainImage">
@@ -89,7 +91,7 @@ const InfluencerSliderCollection = (props) => {
             to={formatCDNLink(
               `influencer.html/Store?influencerID=${influencer_id}&selectedGender=${selectedGender}`
             )}
-            key={influencer_id + "Influencer_Shop"}
+            key={influencer_id + i + "Influencer_Shop"}
             data-banner-type="influencer_slider_influencerImage"
             data-promotion-name={item.promotion_name ? item.promotion_name : ""}
             data-tag={item.tag ? item.tag : ""}
@@ -102,7 +104,7 @@ const InfluencerSliderCollection = (props) => {
 
           <Link
             to={formatCDNLink(newLink)}
-            key={influencer_id}
+            key={influencer_id + i}
             data-banner-type="influencer_slider_influencerShop"
             data-promotion-name={item.promotion_name ? item.promotion_name : ""}
             data-tag={item.tag ? item.tag : ""}
@@ -130,7 +132,11 @@ const InfluencerSliderCollection = (props) => {
     );
   };
 
-  return <div> {renderSlider()}</div>;
+  return (
+    <div id={`InfluencerSliderCollection-${selectedGender}-${index}`}>
+      {renderSlider()}
+    </div>
+  );
 };
 
 export default InfluencerSliderCollection;

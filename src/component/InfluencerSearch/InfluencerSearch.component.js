@@ -15,6 +15,16 @@ import HeaderLogo from "Component/HeaderLogo";
 import "./InfluencerSearch.style.scss";
 
 const InfluencerSearch = (props) => {
+  const {
+    updateFollowingList,
+    renderMySignInPopup,
+    guestUser,
+    followingList,
+    selectedGender,
+    closeSearchMobilePopUp,
+    masterTrendingInfo,
+    influencerSearchText,
+  } = props;
   const [allInfluencersList, setAllInfluencersList] = useState([]);
   const [onPageinfluencerSearchText, setOnPageInfluencerSearchText] =
     useState("");
@@ -36,7 +46,6 @@ const InfluencerSearch = (props) => {
   }, []);
 
   const followUnfollow = (influencerID, follow) => {
-    const { updateFollowingList, renderMySignInPopup, guestUser } = props;
     if (!isSignedIn()) {
       renderMySignInPopup();
       guestUser(influencerID, follow);
@@ -49,6 +58,29 @@ const InfluencerSearch = (props) => {
         updateFollowingList(influencerID, follow);
       });
     }
+
+    if (follow) {
+      const eventData = {
+        EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    } else {
+      const eventData = {
+        EventName: EVENT_FOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    }
+  };
+
+  const MoenangeInfluencerTrackingClick = (influencerId, influencer_name) => {
+    const eventData = {
+      EventName: EVENT_INFLUENCER_DETAIL_CLICK,
+      influencer_id: influencerId,
+      name: influencer_name,
+    };
+    Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
   const renderInfluencer = (item, i) => {
@@ -59,12 +91,10 @@ const InfluencerSearch = (props) => {
       family_name,
       name,
     } = item;
-    const { followingList } = props;
     const isFollowed =
       followingList &&
       followingList.length > 0 &&
       followingList.includes(influencerId);
-    const { selectedGender } = props;
     if (image_url) {
       return (
         <div key={influencerId} className="influencerOnSearch">
@@ -136,7 +166,6 @@ const InfluencerSearch = (props) => {
   };
 
   const closeSearchPopUp = () => {
-    const { closeSearchMobilePopUp } = props;
     closeSearchMobilePopUp();
   };
 
@@ -145,7 +174,6 @@ const InfluencerSearch = (props) => {
   };
 
   const renderSearchForMobile = () => {
-    const { masterTrendingInfo, selectedGender } = props;
     const lowerInfluencerSearchText = onPageinfluencerSearchText?.toLowerCase();
     const sliderContent =
       masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;
@@ -246,7 +274,6 @@ const InfluencerSearch = (props) => {
   };
 
   const renderSearchForDesktop = () => {
-    const { masterTrendingInfo, selectedGender, influencerSearchText } = props;
     const lowerInfluencerSearchText = influencerSearchText.toLowerCase();
     const sliderContent =
       masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;

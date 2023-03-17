@@ -25,10 +25,7 @@ import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
-import { getInfluencerInfo } from "Util/API/endpoint/Influencer/Influencer.endpoint";
 import { getLocaleFromUrl } from "Util/Url/Url";
-import { getEnvIDForInfluencer } from  "../../util/Common/index";
-import { getQueryParam } from "Util/Url";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
@@ -72,6 +69,7 @@ export const mapStateToProps = (state) => ({
   plpWidgetData: state.PLP.plpWidgetData,
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
+  influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -144,21 +142,14 @@ export class PLPContainer extends PureComponent {
   }
 
   static async request(isPage, props) {
-    const { requestProductList, requestProductListPage } = props;
+    const {
+      requestProductList,
+      requestProductListPage,
+      influencerAlgoliaQuery,
+    } = props;
     let options;
     if (window.location.pathname.includes("influencer")) {
-      const influencer_id = getQueryParam("influencerID", location);
-      let resp;
-      const envID = getEnvIDForInfluencer();
-      const locale = getLocaleFromUrl();
-      resp = await getInfluencerInfo(influencer_id, envID, locale).then((response) => {
-        return response;
-      });
       const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-      let algoliaQuery =
-        resp &&
-        resp["algolia_query"] &&
-        resp["algolia_query"]["categories.level2"];
       let params = {
         q: "",
       };
@@ -166,8 +157,8 @@ export class PLPContainer extends PureComponent {
       {
         params["page"] = "0";
       }
-      params["categories.level2"] = algoliaQuery;
-      const finalParams = {...parsedParams, ...params};
+      params["categories.level2"] = influencerAlgoliaQuery;
+      const finalParams = { ...parsedParams, ...params };
       options = finalParams;
     } else {
       options = PLPContainer.getRequestOptions();
@@ -1102,3 +1093,4 @@ export class PLPContainer extends PureComponent {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(PLPContainer)
 );
+

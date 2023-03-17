@@ -14,6 +14,12 @@ import Heart from "Component/Icons/EmptyInfluencer/Group.svg";
 import "./InfluencerFollowing.style";
 
 const InfluencerFollowing = (props) => {
+  const {
+    updateFollowingList,
+    renderMySignInPopup,
+    followingList,
+    selectedGender,
+  } = props;
   const [allInfluencersList, setAllInfluencersList] = useState([]);
 
   useEffect(() => {
@@ -33,7 +39,6 @@ const InfluencerFollowing = (props) => {
   };
 
   const followUnfollow = (influencerID, follow) => {
-    const { updateFollowingList, renderMySignInPopup } = props;
     if (!isSignedIn()) {
       renderMySignInPopup();
     } else {
@@ -45,10 +50,23 @@ const InfluencerFollowing = (props) => {
         updateFollowingList(influencerID, follow);
       });
     }
+
+    if (follow) {
+      const eventData = {
+        EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    } else {
+      const eventData = {
+        EventName: EVENT_FOLLOW_INFLUENCER_CLICK,
+        influencer_id: influencerID,
+      };
+      Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
+    }
   };
 
   const renderPopUp = () => {
-    const { renderMySignInPopup } = props;
     if (!isSignedIn()) {
       renderMySignInPopup();
     }
@@ -87,12 +105,10 @@ const InfluencerFollowing = (props) => {
 
   const renderTile = (item, i) => {
     const { id: influencerId, image_url, influencer_name } = item;
-    const { followingList } = props;
     const isFollowed =
       followingList &&
       followingList.length > 0 &&
       followingList.includes(influencerId);
-    const { selectedGender } = props;
     if (image_url) {
       return (
         <span key={`${influencerId}+${i}`}>
@@ -144,7 +160,6 @@ const InfluencerFollowing = (props) => {
   };
 
   const renderTilesBlock = () => {
-    const { followingList, selectedGender } = props;
     const followingInfluencerInfo = allInfluencersList?.influencers?.superstars[
       selectedGender
     ].filter((val) => {
