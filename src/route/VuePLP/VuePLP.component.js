@@ -110,9 +110,6 @@ const VuePLP = (props) => {
               });
               setLastOrderSku(productSKU);
             } else {
-              if (resp.message) {
-                setPayloadQuery(TOP_PICKS_SLIDER);
-              }
               setNoLastOrderSku(true);
               if (noRecentlyViewed) {
                 setPayloadQuery(TOP_PICKS_SLIDER);
