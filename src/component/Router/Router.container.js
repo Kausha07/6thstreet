@@ -198,14 +198,14 @@ export class RouterContainer extends SourceRouterContainer {
   }
 
   getInternationalEdd = (countryCode) => {
-    const { estimateEddResponse } = this.props;
+    const { estimateEddResponse, edd_info } = this.props;
     let request = {
       country: countryCode,
       city: null,
       area: null,
       courier: null,
       source: null,
-      intl_vendors: isArabic() ? INTL_BRAND_ARABIC : INTL_BRAND,
+      intl_vendors: edd_info.international_vendors ? edd_info.international_vendors: null,
     };
     estimateEddResponse(request, true);
   };
