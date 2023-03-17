@@ -13,9 +13,10 @@
     align-items: center;
   }
     .Image {
-    height: 22px;
+    height: auto;
     // background-color: #ffffff;
     .LazyLoad-wrapper {
+      height: auto;
       img {
         &_isArabic {
           width: 80% !important;
@@ -23,12 +24,7 @@
         }
       }
       .Image-Image {
-        left : -12px;
-      }
-      &_isArabic {
-        .Image-Image {
-          left : 12px;
-        }
+        left : 0;
       }
     }
 
@@ -42,10 +38,11 @@
       width: 119px;
     }
     @include desktop {
-      height: 31px;
+      height: 26.48px;
       margin-top: 0;
       padding: 0;
-      width: 180px;
+      width: 160px;
+      overflow: initial;
       &_isArabic {
         margin-right: 0px !important;
       }

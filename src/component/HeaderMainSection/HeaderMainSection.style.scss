@@ -107,13 +107,18 @@ main {
     order: 1;
     padding-bottom: 15px;
     &_isArabic {
-      padding-bottom: 28px;
+      padding-bottom: 18px;
     }
     padding-right: 20px;
   }
 
   .HeaderLogo {
     order: 0;
+    padding-right: 56px;
+    &_isArabic {
+      padding-left: 56px;
+      padding-right:0px;
+    }
     @include mobile {
       position: fixed;
       top: 15px;
