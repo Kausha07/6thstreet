@@ -27,6 +27,8 @@ import {
   VUE_STYLE_IT_SLIDER,
   VUE_RECENTLY_VIEWED_SLIDER,
 } from "./VuePLP.config";
+import Loader from "Component/Loader";
+
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -49,6 +51,7 @@ const VuePLP = (props) => {
   const [firstRecentCall, setFirstRecentCall] = useState(false);
   const [noLastOrderSku, setNoLastOrderSku] = useState(false);
   const [noRecentlyViewed, setNoRecentlyViewed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const signedIn = isSignedIn();
   const gender = useSelector((state) => state.AppState.gender);
@@ -107,6 +110,9 @@ const VuePLP = (props) => {
               });
               setLastOrderSku(productSKU);
             } else {
+              if (resp.message) {
+                setPayloadQuery(TOP_PICKS_SLIDER);
+              }
               setNoLastOrderSku(true);
               if (noRecentlyViewed) {
                 setPayloadQuery(TOP_PICKS_SLIDER);
@@ -121,18 +127,19 @@ const VuePLP = (props) => {
             console.error("Last order error", err);
           });
       } else {
+        setNoLastOrderSku(true);
         if (noRecentlyViewed) {
           setPayloadQuery(TOP_PICKS_SLIDER);
         }
       }
     } else {
+      setNoLastOrderSku(true);
       if (noRecentlyViewed) {
         setPayloadQuery(TOP_PICKS_SLIDER);
       }
     }
   };
-
-  const getRecentlyViewedSku = async () => {
+  const getRecentlyViewedSku = () => {
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const vueSliderType = VUE_RECENTLY_VIEWED_SLIDER;
     const customer = BrowserDatabase.getItem("customer");
@@ -185,6 +192,7 @@ const VuePLP = (props) => {
             }
           }
         } else {
+          setIsLoading(true);
           setNoRecentlyViewed(true);
           if (noLastOrderSku || !signedIn) {
             setPayloadQuery(TOP_PICKS_SLIDER);
@@ -195,6 +203,7 @@ const VuePLP = (props) => {
         if (noLastOrderSku || !signedIn) {
           setPayloadQuery(TOP_PICKS_SLIDER);
         }
+        setIsLoading(false);
         console.error("fetchVueData error", err);
       });
     setRecentlyViewCallSent(true);
@@ -203,7 +212,6 @@ const VuePLP = (props) => {
   const getRandomSku = () => {
     let lastOrderArray = lastOrderSku;
     if ((lastOrderArray && lastOrderArray.length == 0) || !signedIn) {
-      setNoLastOrderSku(true);
       return;
     } else if (lastOrderArray && lastOrderArray.length > 1) {
       if (randomSkuObj.first_product.length) {
@@ -270,15 +278,13 @@ const VuePLP = (props) => {
         ) {
           return handleRandomSKU?.second_product;
         } else if (
-          firstOrderCall &&
-          secondOrderCall &&
+          ((firstOrderCall && secondOrderCall) || noLastOrderSku) &&
           !firstRecentCall &&
           recentFirstProduct
         ) {
           return recentFirstProduct;
         } else if (
-          firstOrderCall &&
-          secondOrderCall &&
+          ((firstOrderCall && secondOrderCall) || noLastOrderSku) &&
           firstRecentCall &&
           recentSecondProduct
         ) {
@@ -298,6 +304,7 @@ const VuePLP = (props) => {
         dynamicQueryPayload
       );
       if (handleRandomProduct) {
+        setIsLoading(true);
         fetchVueData(dynamicPayload)
           .then((resp) => {
             if (!resp.data) {
@@ -317,6 +324,7 @@ const VuePLP = (props) => {
                 setPayloadQuery(TOP_PICKS_SLIDER);
               }
             } else {
+              setIsLoading(false);
               setState({
                 ...state,
                 vueRecommendation: resp.data,
@@ -325,23 +333,29 @@ const VuePLP = (props) => {
           })
           .catch((err) => {
             setPayloadQuery(TOP_PICKS_SLIDER);
+            setIsLoading(false);
             console.error("fetchVueData error", err);
           });
       }
     } else {
       if (!topPicksReqSent) {
+        setIsLoading(true);
         fetchVueData(payload)
           .then((resp) => {
             if (!resp.data || resp.data.length == 0) {
               setPayloadQuery(TOP_PICKS_SLIDER);
-              setTopPicksReqSent(true);
+              setIsLoading(true);
+            } else {
+              setIsLoading(false);
+              setState({
+                ...state,
+                vueRecommendation: resp.data,
+              });
             }
-            setState({
-              ...state,
-              vueRecommendation: resp.data,
-            });
+            setTopPicksReqSent(true);
           })
           .catch((err) => {
+            setIsLoading(false);
             console.error("fetchVueData error", err);
           });
       }
@@ -349,6 +363,7 @@ const VuePLP = (props) => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     updateBreadcrumbs();
     dispatch(setPrevPath(prevPath));
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -404,11 +419,15 @@ const VuePLP = (props) => {
   ]);
 
   useEffect(() => {
-    if (!signedIn) {
+    if (
+      (state?.vueRecommendation?.length === 0 ||
+        state?.vueRecommendation?.length === undefined) &&
+      noLastOrderSku
+    ) {
       request();
     }
   }, [recentFirstProduct]);
-  
+
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
       case STYLE_IT_SLIDER:
@@ -467,33 +486,36 @@ const VuePLP = (props) => {
   };
 
   return (
-    <div block="UrlRewrites" id="UrlRewrites">
-      <main
-        block={"PLP"}
-        mix={{ block: "VuePLP", elem: "VuePLPContainer" }}
-        id="plp-main-scroll-id"
-      >
-        <ContentWrapper label={__("Product List Page")}>
-          {state.showPopup && (
-            <MyAccountOverlay
-              isVuePLP={true}
-              closePopup={closePopup}
-              onSignIn={onSignIn}
-              isPopup
-            />
-          )}
-          <div>
-            <div block="Products" elem="Wrapper">
-              <div block="PLPPagesContainer">
-                <div block="PLPPages Products-Lists" id="Products-Lists">
-                  {state.vueRecommendation ? renderPage() : null}
+    <>
+      <Loader isLoading={isLoading} />
+      <div block="UrlRewrites" id="UrlRewrites">
+        <main
+          block={"PLP"}
+          mix={{ block: "VuePLP", elem: "VuePLPContainer" }}
+          id="plp-main-scroll-id"
+        >
+          <ContentWrapper label={__("Product List Page")}>
+            {state.showPopup && (
+              <MyAccountOverlay
+                isVuePLP={true}
+                closePopup={closePopup}
+                onSignIn={onSignIn}
+                isPopup
+              />
+            )}
+            <div>
+              <div block="Products" elem="Wrapper">
+                <div block="PLPPagesContainer">
+                  <div block="PLPPages Products-Lists" id="Products-Lists">
+                    {state.vueRecommendation ? renderPage() : null}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ContentWrapper>
-      </main>
-    </div>
+          </ContentWrapper>
+        </main>
+      </div>
+    </>
   );
 };
 
