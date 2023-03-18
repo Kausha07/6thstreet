@@ -661,7 +661,7 @@ class HeaderMainSection extends NavigationAbstract {
           aria-label="PLP Search Button"
           role="button"
         ></button>
-      </div> : <div block="searchBlock" mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
+      </div> : <div id="searchBlock" mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
           <div block="SearchIcon">
             <div>
               <img

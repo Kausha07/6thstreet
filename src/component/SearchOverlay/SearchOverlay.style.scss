@@ -378,6 +378,8 @@ div.SearchOverlay.Overlay {
 
             .Price {
                 direction: ltr;
+                font-weight: var(--fw-bold);
+                font-size: 14px;
                 &_isArabic {
                     direction: rtl;
                 }
