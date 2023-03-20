@@ -1,6 +1,5 @@
 .HeaderWishlist {
   &:not(&_isBottomBar) {
-    margin-left: auto;
 
     label {
       display: none;
@@ -11,6 +10,7 @@
         height: auto;
         padding: 0;
       }
+
       &-Heart {
         display: inline-block;
 
@@ -86,8 +86,7 @@
       height: 29px;
       display: inline-block;
       font-size: 0;
-      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
-        brightness(90%) contrast(80%);
+      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
     }
 
     @include desktop {
@@ -99,8 +98,7 @@
     color: var(--active-button-header-color);
 
     &::before {
-      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
-        brightness(107%) contrast(95%);
+      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
     }
   }
 
