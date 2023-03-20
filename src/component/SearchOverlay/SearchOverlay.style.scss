@@ -386,6 +386,14 @@ div.SearchOverlay.Overlay {
                 &_isArabic {
                     direction: rtl;
                 }
+                span {
+                    del {
+                      color: #000000;
+                      text-decoration: line-through;
+                      padding-right: 5px;
+                      font-weight: var(--fw-regular);
+                    }
+                }
             &-Wrapper {
                 display: inline-block;
                 margin-right: 5px;

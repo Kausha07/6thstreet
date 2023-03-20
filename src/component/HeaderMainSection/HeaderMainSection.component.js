@@ -21,9 +21,7 @@ import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.cre
 
 import { getStore } from "Store";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import {
-  hideActiveOverlay,
-} from "Store/Overlay/Overlay.action";
+import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
 
 import Form from "Component/Form";
 import HeaderCart from "Component/HeaderCart";
@@ -47,6 +45,7 @@ import {
   TYPE_CATEGORY,
   TYPE_HOME,
   TYPE_PRODUCT,
+  TYPE_INFLUENCER,
 } from "Route/UrlRewrites/UrlRewrites.config";
 import Clear from "./icons/close-black.png";
 import searchIcon from "./icons/search-black.svg";
@@ -56,6 +55,7 @@ export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   chosenGender: state.AppState.gender,
   displaySearch: state.PDP.displaySearch,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -70,7 +70,7 @@ class HeaderMainSection extends NavigationAbstract {
     changeMenuGender: PropTypes.func,
     onSearchSubmit: PropTypes.func,
     history: HistoryType.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired
+    hideActiveOverlay: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -95,7 +95,7 @@ class HeaderMainSection extends NavigationAbstract {
       signInPopUp: "",
       showPopup: false,
       isMobile: isMobile.any(),
-      isPopup : false,
+      isPopup: false,
       recentSearches: [],
       searchBarClick : false
     };
@@ -114,23 +114,24 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderMap = {
-    gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    leftContainer: this.renderLeftContainer.bind(this),
+    gender: this.renderGenderSwitcher.bind(this),
+    rightContainer: this.renderRightContainer.bind(this),
     back: this.renderBack.bind(this),
   };
 
-  renderLeftContainer() {
+  renderRightContainer() {
+    const { gender } = this.props;
     const { isArabic } = this.state;
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
     return (
-      <div block="leftContainer" key="leftContainer" mods={{ isArabic }}>
+      <div block="rightContainer" key="rightContainer" mods={{ isArabic }}>
+        {gender !== "influencer" && this.renderSearchIcon()}
+        {this.renderWishlist()}
         {this.renderAccount()}
         {this.renderCart()}
-        {this.renderWishlist()}
-        {this.renderSearchIcon()}
       </div>
     );
   }
@@ -140,7 +141,12 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "",isPopup : false, showPopup: false, search:"" });
+    this.setState({
+      signInPopUp: "",
+      isPopup: false,
+      showPopup: false,
+      search: "",
+    });
   };
 
   onSignIn = () => {
@@ -162,7 +168,6 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
 
-
   handleScroll = () => {
     // return
     // if (!this.isPDP()) {
@@ -176,8 +181,6 @@ class HeaderMainSection extends NavigationAbstract {
     //   visible: isMobile && visible,
     // });
   };
-
-
 
   componentDidMount() {
     if (isMobile.any()) {
@@ -245,6 +248,9 @@ class HeaderMainSection extends NavigationAbstract {
     ) {
       return TYPE_CATEGORY;
     }
+    if (matchPath(location.pathname, "/influencer.html")) {
+      return TYPE_INFLUENCER;
+    }
     return window.pageType;
   }
 
@@ -280,7 +286,10 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderAccount() {
     const isFooter = false;
-    return <HeaderAccount key="account" isFooter={isFooter} isMobile />;
+
+    return (
+      <HeaderAccount key="account" isFooter={isFooter} isMobile showNudge />
+    );
   }
 
   renderCart() {
@@ -298,15 +307,20 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderGenderSwitcher() {
-    const { changeMenuGender, activeOverlay, displaySearch } = this.props;
+    const { changeMenuGender, activeOverlay } = this.props;
     const { showPLPSearch, isArabic } = this.state;
+    const pathNamesIncludesArrow = [
+      "/influencer.html/Collection",
+      "/influencer.html/Store",
+    ];
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
     return (this.isPLP() ||
       this.isPDP() ||
       this.getPageType() === TYPE_BRAND ||
-      showPLPSearch) &&
+      showPLPSearch ||
+      pathNamesIncludesArrow.includes(location.pathname)) &&
       isMobile.any() ? null : (
       <HeaderGenders
         key="genders"
@@ -371,10 +385,17 @@ class HeaderMainSection extends NavigationAbstract {
   renderBack() {
     const { history, displaySearch } = this.props;
     const { isArabic, showPLPSearch } = this.state;
+    const pathNamesIncludesArrow = [
+      "/influencer.html/Collection",
+      "/influencer.html/Store",
+    ];
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
-    return this.isPLP() || this.isPDP() || showPLPSearch ? (
+    return this.isPLP() ||
+      this.isPDP() ||
+      showPLPSearch ||
+      pathNamesIncludesArrow.includes(location.pathname) ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={history.goBack}>
           <p>{__("Back")}</p>
@@ -434,7 +455,7 @@ class HeaderMainSection extends NavigationAbstract {
   onSearchChange = (e) => {
     const { search } = this.state;
     this.setState({  search : e.target.value, isPopup : true });
-    const SearchValue = sessionStorage.getItem("Searched_value");
+    const SearchValue = sessionStorage.getItem("Searched_value") || null;
     const searchedQuery =
       typeof SearchValue == "object"
         ? JSON.stringify(SearchValue)
@@ -459,7 +480,7 @@ class HeaderMainSection extends NavigationAbstract {
         sessionStorage.removeItem("Searched_value");
       }
     }
-  }
+  };
 
   renderSearchOverlay = () => {
     const {isPopup} = this.state;
@@ -469,8 +490,8 @@ class HeaderMainSection extends NavigationAbstract {
   closeSearchPopup = () => {
     const { hideActiveOverlay } = this.props;
     hideActiveOverlay();
-    this.setState({ isOpen: false,showPopup: false });
-  }
+    this.setState({ isOpen: false, showPopup: false });
+  };
 
   checkForSKU = async (search) => {
     const config = {
@@ -513,11 +534,11 @@ class HeaderMainSection extends NavigationAbstract {
         JSON.stringify(tempRecentSearches.reverse())
       );
     }
-  }
+  };
 
-  onSearchSubmit = async() => {
+  onSearchSubmit = async () => {
     const { history } = this.props;
-    const { search,isArabic } = this.state;
+    const { search, isArabic } = this.state;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
       ? encodeURIComponent(search)
@@ -603,7 +624,7 @@ class HeaderMainSection extends NavigationAbstract {
         });
       }
     }
-  }
+  };
 
   onSubmit = () => {
     const {
@@ -776,9 +797,8 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { signInPopUp, showPLPSearch } = this.state;
-    const { displaySearch } = this.props;
-    const isPDPSearchVisible = this.isPDP() && displaySearch;
+    const { showPLPSearch } = this.state;
+    const { displaySearch, gender } = this.props;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>
@@ -791,7 +811,7 @@ class HeaderMainSection extends NavigationAbstract {
           {this.renderNavigationState()}
           {this.renderDesktopSearch()}
         </div>
-        {this.renderSearch()}
+        {gender !== "influencer" && this.renderSearch()}
       </>
     );
   }

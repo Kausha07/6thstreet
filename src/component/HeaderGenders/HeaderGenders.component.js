@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import { FlashAnimation } from "../Icons";
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
+
 
 
 export const mapStateToProps = (state) => (
@@ -26,7 +28,7 @@ class HeaderGenders extends PureComponent {
             curContGender: this.props.currentContentGender
 
         };
-      }
+    }
 
     static propTypes = {
         currentContentGender: PropTypes.string.isRequired,
@@ -37,12 +39,12 @@ class HeaderGenders extends PureComponent {
     };
 
     static defaultProps = {
-        changeMenuGender: () => {},
+        changeMenuGender: () => { },
         isMobile: false,
         isMenu: false
     };
 
-    
+
     genderList = [
         {
             label: `${__('All')}`,
@@ -63,9 +65,17 @@ class HeaderGenders extends PureComponent {
         {
             label: `${__('Home')}`,
             key: 'home'
+        },
+        {
+            label: `${__('Influencer')}`,
+            key: 'influencer',
+            icon: <img block="GenderIcon" src={FlashAnimation} alt="my-gif" />
         }
-     ];
-     getNewActiveMenuGender = (key) => {
+    ];
+    
+
+
+    getNewActiveMenuGender = (key) => {
         const { currentGenderButton } = this.state;
         if (currentGenderButton !== key) {
             this.setState({ currentGenderButton: key });
@@ -75,7 +85,7 @@ class HeaderGenders extends PureComponent {
     isCurrentGender(key) {
 
         let { currentContentGender } = this.props;
-        if (currentContentGender === '' && (key === 'women'|| key === 'all' )) {
+        if (currentContentGender === '' && (key === 'women' || key === 'all')) {
             return true;
         }
 
@@ -86,6 +96,8 @@ class HeaderGenders extends PureComponent {
         this.setState({ isUnsetStyle });
     };
 
+
+
     renderGender = (gender) => {
         const { key } = gender;
         const {
@@ -93,7 +105,6 @@ class HeaderGenders extends PureComponent {
             currentContentGender,
             isMenu
         } = this.props;
-
         if (key === 'home_beauty_women' && (!isMobile.any() || (isMobile.any() && isMenu))
         ) {
             return null;
@@ -110,21 +121,23 @@ class HeaderGenders extends PureComponent {
 
         return (
             <div
-              block="GenderButton"
-              elem="Container"
-              key={ key }
+                block="GenderButton"
+                elem="Container"
+                key={key}
+                mods={{ isArabic: isArabic() }}
+                onClick={() => { this.MoenangeInfluencerHomeScreen(key) }}
             >
                 <GenderButton
-                  gender={ gender }
-                  mix={ {
-                      block: 'HeaderGenders',
-                      elem: 'Button'
-                  } }
-                  handleUnsetStyle={ this.handleUnsetStyle }
-                  isUnsetStyle={ isUnsetStyle }
-                  isCurrentGender={ isCurrentGender }
-                  changeMenuGender={ changeMenuGender }
-                  getNewActiveMenuGender={ this.getNewActiveMenuGender }
+                    gender={gender}
+                    mix={{
+                        block: 'HeaderGenders',
+                        elem: 'Button'
+                    }}
+                    handleUnsetStyle={this.handleUnsetStyle}
+                    isUnsetStyle={isUnsetStyle}
+                    isCurrentGender={isCurrentGender}
+                    changeMenuGender={changeMenuGender}
+                    getNewActiveMenuGender={this.getNewActiveMenuGender}
                 />
             </div>
         );
@@ -133,32 +146,30 @@ class HeaderGenders extends PureComponent {
     renderGenders() {
         let countryList = ['BH'];
         let showAllStatus = countryList.includes(getCountryFromUrl());
-        
-        return this.genderList.map((value) =>{
-            
-            if(showAllStatus){
+
+        return this.genderList.map((value) => {
+            if (showAllStatus) {
                 return this.renderGender(value)
-                    
-            }else{
-                if(value.key !== "all"){
+            } else {
+                if (value.key !== "all") {
                     return (
                         this.renderGender(value)
                     )
-                } 
+                }
             }
-            
+
         })
     }
 
     render() {
         const { isArabic } = this.state;
         const { isMobile } = this.props;
-        
+
         return (
             <div
-              mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }
+                mix={{ block: `${this.props.currContentGender === "influencer" ? "moveUpGenders" : "moveDownGenders"} HeaderGenders`, mods: { isArabic, isMobile } }}
             >
-                { this.renderGenders() }
+                {this.renderGenders()}
             </div>
         );
     }
