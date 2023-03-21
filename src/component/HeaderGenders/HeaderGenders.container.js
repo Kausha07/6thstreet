@@ -42,13 +42,13 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (window.location.pathname.includes("home")) {
         this.props.setGender("home");
-      } else if (this.props.product.gender === "Women") {
+      } else if (this.props.product?.gender === "Women") {
         this.props.setGender("women");
-      } else if (this.props.product.gender === "Men") {
+      } else if (this.props.product?.gender === "Men") {
         this.props.setGender("men");
-      } else if (this.props.product.gender === "Kids") {
+      } else if (this.props.product?.gender === "Kids") {
         this.props.setGender("kids");
-      } else if (this.props.product.gender === "Home") {
+      } else if (this.props.product?.gender === "Home") {
         this.props.setGender("home");
       }
     }
