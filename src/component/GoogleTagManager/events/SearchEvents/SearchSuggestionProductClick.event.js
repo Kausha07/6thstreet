@@ -39,7 +39,7 @@ class SearchSuggestionProductClickEvent extends BaseEvent {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
-      eventAction: "'search result",
+      eventAction: "search result",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),

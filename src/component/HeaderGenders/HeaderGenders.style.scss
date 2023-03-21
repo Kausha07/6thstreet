@@ -1,6 +1,7 @@
 .HeaderGenders {
   display: flex;
-
+  justify-content: center;
+  
   @include before-desktop {
     display: none;
    @include desktop{
@@ -9,10 +10,9 @@
 
     .GenderButton {
       &-Button {
-        font-size: 12px;
+        font-size: 11px;
         letter-spacing: 0.5px;
         line-height: 16px;
-
         &_isCurrentGender {
           font-weight: var(--fw-bold);
         }

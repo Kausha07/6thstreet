@@ -1,0 +1,703 @@
+:root {
+    --cart-overlay-totals-background: var(--secondary-base-color);
+    --cart-overlay-divider-background: #d8d8d8;
+    --cart-overlay-promo-background: #ffffff;
+    --cart-overlay-width: 400px;
+
+    --White: #ffffff;
+    --Black: #000000;
+    --BlackOpacityOf6: #00000099;
+    --BlackOpacityOf1: #0000001a;
+    --Tundora: #4a4a4a;
+    --Iron: #d1d3d4;
+    --DustyGray: #9b9b9b;
+}
+
+.RecentSearches {
+    text-align: left;
+    letter-spacing: 1.56px;
+    color: #000000;
+    text-transform: uppercase;
+    opacity: 1;
+    ul {
+        &::before {
+            display: none;
+        }
+
+        display: flex;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    li {
+        &::before {
+            display: none;
+        }
+
+        margin-top: 0;
+        margin-right: 8px;
+
+        @include mobile {
+            margin-right: 8px;
+        }
+
+        @include tablet {
+            margin-right: 8px;
+        }
+    }
+
+    h2 {
+        font: normal normal 600 14px/19px 'Avenir Next', sans-serif;
+        color : #000000;
+        text-transform: uppercase;
+        text-align: initial;
+        letter-spacing: 1.56px;
+        margin-bottom: 24px;
+        margin-top: 0px;
+        padding-left: 7px;
+    }
+
+    @include before-desktop() {
+        ul {
+            overflow-x: auto;
+        }
+    }
+
+    @include desktop() {
+        ul {
+            flex-wrap: wrap;
+        }
+    }
+}
+
+.RecentSearches {
+
+    &-searchList {
+        li {
+            margin-bottom: 0px;
+            padding-left: 0px !important;
+            .SearchSuggestion {
+                &-TrandingTag {
+                    font-size: 13px;
+                }
+            }
+        }
+
+        &_isArabic {
+            li {
+                &:first-of-type {
+                    margin-right: 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.SearchOverlay {
+    text-transform: initial;
+
+    @include desktop {
+        width: 385px;
+        height: auto !important;
+    }
+
+    @include after-mobile {
+        position: absolute;
+        right: -170px;
+        padding: 0;
+        width: var(--cart-overlay-width);
+
+        &_isArabic {
+            right: unset;
+            left: -170px;
+        }
+    }
+
+
+    &-Wrapper {
+        .Image {
+            &-Image {
+                object-fit: cover;
+            }
+        }
+    }
+
+
+    &::before {
+
+        @include after-mobile {
+            content: "";
+            position: absolute;
+            list-style-type: none !important;
+            height: 1px;
+            width: 70px;
+            z-index: 900;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background-color: #4a4a4a;
+        }
+    }
+
+
+    &_isPopup {
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    &-ItemCount {
+        color: #000000;
+        font-family: 'Avenir Next';
+        font-size: 18px;
+        font-weight: var(--fw-medium);
+        line-height: 20px;
+        padding: 32px 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: left;
+
+        div {
+            font-size: 14px;
+            font-weight: var(--fw-demi);
+            .QuerySuggestionCount {
+                padding-left : 1px;
+                &_isArabic {
+                    padding-right: 1px;
+                }
+            }
+
+            div {
+                font-weight: var(--fw-light);
+            }
+        }
+
+        span:last-of-type {
+            @include close-button;
+        }
+
+        .moreDataLink {
+            text-align: initial;
+            text-decoration: underline;
+            font-size: 16px;
+            position: left;
+            font-family: 'Avenir Next';
+            font-weight: 500;
+            letter-spacing: 0px;
+            opacity: 1;
+            width: 200px;
+            height: 21px;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            text-overflow: ellipsis;
+
+        }
+        .NothingFound {
+            .moreDataLink {
+                margin-top: 50px;
+            }
+            .suggestionBlocks {
+                .spacingBlock {
+                    &_isArabic {
+                        width : 35px;
+                    }
+                    width: 35px;
+                }
+            }
+        }
+    }
+
+    &-ItemCount,
+    &-Empty {
+        font-weight: var(--fw-regular);
+    }
+
+    &_isVisible {
+        @include after-mobile {}
+    }
+
+    &-Items {
+        padding-bottom: 20px;
+        max-height: calc(60vh - 150px);
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+            border: 1px solid #d5d5d5;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #585757;
+            border-radius: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #dcdcdc;
+        }
+
+        .CartItem {
+            &-Content {
+                height: auto;
+            }
+
+            .Image-Image {
+                object-fit: cover;
+            }
+        }
+    }
+
+    &-Empty {
+        font-size: 15px;
+        font-weight: var(--fw-light);
+        text-align: center;
+        letter-spacing: 0.75px;
+        padding: 20px 0;
+    }
+}
+
+.Overlay {
+
+    &_isInstant {
+        pointer-events: all;
+        touch-action: pan-y;
+        opacity: 1;
+        z-index: 99;
+
+        @include desktop {
+            height: auto;
+        }
+    }
+}
+
+div.SearchOverlay.Overlay {
+    width: 590px;
+    height: auto;
+    opacity: 1;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.suggestionBlocks {
+    display: flex;
+    flex-direction: row;
+
+    .productDetailsLayout {
+        a {
+            display: flex;
+            flex-direction: row;
+            text-decoration: none;
+        }
+    }
+
+    .QuerySuggestionBlock {
+        width: 186px;
+        height: auto;
+        opacity: 1;
+
+        h2 {
+            font: normal normal 600 14px/19px 'Avenir Next', sans-serif;
+            color: #000000;
+            text-transform: uppercase;
+            margin-bottom: 0px;
+            margin-top: 0px;
+            letter-spacing: 1.56px;
+        }
+
+        p {
+            font: normal normal normal 14px/52px 'Avenir Next';
+            letter-spacing: 0px;
+            color: #000000;
+            opacity: 1;
+            margin-bottom: 40px;
+        }
+    }
+
+    .imagesLayouts {
+        img {
+            width: 95px !important;
+            height: 99px !important;
+        }
+    }
+
+    .SearchProduct {
+        &-Brand {
+            font-family: 'Avenir Next';
+            font-weight: 600;
+            font-size: 14px;
+            color :#000000;
+            line-height: 19px;
+            text-transform: uppercase;
+        }
+
+        &-ProductName {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &-Info {
+            padding: 0px 10px;
+            .SearchProduct {
+                &-ProductName{
+                    font-family: 'Avenir Next';
+                    font-size:13px;
+                    width: 165px;
+                    height: 18px;
+                    text-align: initial;
+                    letter-spacing: 0px;
+                    color: #4A4A4A;
+                    font-weight: 400;
+                    opacity: 1;
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                } 
+            }
+        }
+        &-SpecialPriceCon{
+            display: block;
+            font-family: 'Avenir Next', sans-serif;
+            text-align: initial;
+            &_isArabic {
+                text-align: right !important;
+            }
+            .SearchProduct {
+                &-PriceWrapper {
+                    display: inline-block;
+                    font-size: 14px;
+                    color: #d12228;
+                    font-weight: var(--fw-bold);
+                    @media (max-width: 450px) {
+                        font-size: 11px;
+                    }
+                .Price-Discount {
+                        margin-left: 3px;
+                    }
+                }
+            }
+
+            .Price {
+                direction: ltr;
+                font-size: 14px;
+                font-weight: var(--fw-demi);
+                color: var(--color-pure-black);
+                letter-spacing: 0;
+                line-height: 19px;
+                &_isArabic {
+                    direction: rtl;
+                }
+                span {
+                    del {
+                      color: #000000;
+                      text-decoration: line-through;
+                      padding-right: 5px;
+                      font-weight: var(--fw-regular);
+                    }
+                }
+            &-Wrapper {
+                display: inline-block;
+                margin-right: 5px;
+                margin-left: unset;
+            }
+        }
+        }
+        &-PriceWrapper {
+            color: #d12228;
+            font-weight: var(--fw-bold);
+        }
+    }
+
+    .moreDataLink {
+        font-family: 'Avenir Next';
+        font-weight: 500;
+        font-size: 16px;
+        letter-spacing: 0px;
+        line-height: 22px;
+        color: #000000;
+        opacity: 1;
+        position: absolute;
+        bottom: 0px;
+        cursor: pointer;
+    }
+
+    .SearchSuggestion {
+        &::before {
+            display: none;
+            list-style-type: none;
+        }
+    }
+
+    .spacingBlock {
+        width : 57px;
+    }
+}
+
+.SearchSuggestion {
+    position: absolute;
+    width: 100%;
+    
+    &-TrandingTag {
+        font-family: 'Avenir Next';
+        font-size : 13px;
+        letter-spacing: 0px;
+        text-align: center;
+        line-height: 40;
+        color: #4A4A4A;
+        background-color: #F0F0F0;
+        opacity: 1;
+        text-transform: capitalize;
+    }
+
+    &-Item {
+        @include desktop {
+            margin : 0px;
+        }
+        ul {
+            margin-bottom: 50px;
+
+            li {
+                display: flex;
+                flex-direction: row;
+                padding: 0px;
+                justify-content: space-between;
+                font-family: 'Avenir Next';
+                font-size: 14px;
+                line-height: 16px;
+                color:#000000;
+
+                &::before {
+                    display: none;
+                }
+
+
+                a {
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &-Recommended {
+
+        @include desktop {
+            width: 283px;
+            margin-left : 0px;
+            font-size: 14px;
+            margin-top: 0px;
+        }
+        
+        h2 {
+            font: normal normal 600 14px/19px 'Avenir Next', sans-serif;
+            color: #000000;
+            text-transform: uppercase;
+            margin-top: 0px;
+            letter-spacing: 1.56px;
+        }
+        &_isArabic {
+            margin-left: 0px;
+        }
+
+        &::before {
+            display: none;
+        }
+
+        .productContentLayoutLink {
+            list-style-type: none !important;
+            &_isArabic {
+                ul {
+                    li {
+                        margin-right: 0px !important;
+                    }
+                }
+            }
+        }
+
+        ul {
+            &::before {
+                display: none;
+            }
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            @include mobile {
+                display: flex;
+                flex-direction: row;
+                width: 1011px;
+                overflow: scroll;
+            }
+
+            &::-webkit-scrollbar {
+                width: 1px;
+            }
+
+            li {
+                &::before {
+                    display: none;
+                }
+
+                margin-bottom: -20px;
+
+                @include desktop {
+                    &:first-child {
+                        margin-top: 0px !important;
+                    }
+                }
+
+                padding-left: 0px;
+                width: 260.39px;
+                height: auto;
+                margin-right: 7.92px;
+
+                a {
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+
+        &_isArabic {
+            ul {
+                li {
+                    margin-right: 0px;
+                }
+            }
+        }
+
+        @include before-desktop {
+            margin-bottom: 15px;
+        }
+    }
+
+    ul {
+        ::before {
+            content: unset;
+        }
+
+        li {
+            padding: 0;
+            font-size: 15px;
+            margin-bottom: 0;
+
+            @include before-desktop() {
+                font-size: 12px;
+            }
+        }
+
+        a {
+            color: var(--link-dark-gray);
+            width: 100%;
+            display: block;
+            text-decoration: none;
+
+
+            .suggestion-details-box {
+                display: flex;
+                justify-content: space-between;
+
+                span {
+                    position: relative;
+                }
+
+                div {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+
+    h2 {
+        font-family: "Avenir Next";
+        text-transform: uppercase;
+        font-weight: "Demi Bold";
+        margin: 0;
+        color: #000000;
+        font-size: 14px;
+    }
+}
+
+.TrandingBrands {
+    ul {
+        &::before {
+            display: none;
+        }
+
+        display: grid;
+        grid-template-columns: 96px 96px 96px;
+        grid-template-rows: 124px 124px 124px;
+        grid-gap: 3px 6px;
+        padding-top: 20px
+    }
+
+    h2 {
+        font: normal normal 600 14px/19px 'Avenir Next',sans-serif;
+        color: #000000;
+        text-transform: uppercase;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        letter-spacing: 1.56px;
+    }
+    
+    li {
+        padding-left: 0px !important;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    img {
+        @include desktop {
+            width: 96px !important;
+            height: 96px !important;
+            border-radius: 4px;
+            opacity: 1;
+        }
+    }
+
+    .SearchSuggestion {
+        &-TrandingImage {
+            width: 96px;
+            height: 96px;
+            border: none;
+            border-radius: 5px;
+            margin: 0px;
+            position: relative;
+            &::before {
+                background-image: url(/static/media/fallback.bf804003.png);
+            }
+
+            div {
+                position: absolute !important;
+                text-align: center;
+                font-size: 10px;
+                left: 0%;
+                right: 0%;
+                line-height: 11px;
+                font-family: 'Avenir Next';
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+        }
+        .trendingLabels {
+            text-align: center;
+            &_isArabic {
+                right: 27%;
+            }
+        }
+    }
+}
