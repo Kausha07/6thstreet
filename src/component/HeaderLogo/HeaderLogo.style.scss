@@ -16,7 +16,9 @@
     height: auto;
     // background-color: #ffffff;
     .LazyLoad-wrapper {
-      height: auto;
+      @include desktop {
+        height: auto;
+      }
       img {
         &_isArabic {
           width: 80% !important;

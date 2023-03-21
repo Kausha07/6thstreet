@@ -1,6 +1,8 @@
 .HeaderWishlist {
   &:not(&_isBottomBar) {
-
+    @include mobile {
+      margin-left: auto;
+    }
     label {
       display: none;
     }

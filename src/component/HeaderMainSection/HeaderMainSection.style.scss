@@ -68,8 +68,9 @@ main {
     justify-content: space-between;
     align-items: center;
     flex: 1;
-
-
+    @include mobile {
+      justify-content: flex-end;
+    }
     @include desktop {
       z-index: 3;
     }
@@ -306,7 +307,7 @@ main {
         border: solid $black;
         border-width: 0 2px 2px 0;
         display: inline-block;
-        padding: 4px 0;
+        padding: 4px;
         transform: rotate(135deg);
         -webkit-transform: rotate(135deg);
       }
@@ -348,6 +349,17 @@ main {
         &-Count {
           top: 2px;
           right: -2px;
+        }
+        &_isArabic {
+          right: unset;
+          left: 20px;
+          .HeaderCart {
+            margin-left: 0 !important;
+            &-Button {
+              right: 5px;
+              left: unset;
+            }
+          }
         }
       }
     }

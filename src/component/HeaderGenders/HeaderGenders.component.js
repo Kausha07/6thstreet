@@ -8,10 +8,6 @@ import { FlashAnimation } from "../Icons";
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
-import Event, {
-    EVENT_INFLUENCER_HOME_SCREEN_VIEW,
-    EVENT_GTM_INFLUENCER
-} from "Util/Event";
 
 
 
@@ -101,15 +97,6 @@ class HeaderGenders extends PureComponent {
         this.setState({ isUnsetStyle });
     };
 
-    MoenangeInfluencerHomeScreen = (key) => {
-
-        if (key.match("influencer")) {
-            const eventData = {
-                EventName: EVENT_INFLUENCER_HOME_SCREEN_VIEW,
-            };
-            Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
-        }
-    }
 
     renderGender = (gender) => {
         const { key } = gender;
@@ -138,7 +125,6 @@ class HeaderGenders extends PureComponent {
                 elem="Container"
                 key={key}
                 mods={{ isArabic: isArabic() }}
-                onClick={() => { this.MoenangeInfluencerHomeScreen(key) }}
             >
                 <GenderButton
                     gender={gender}
