@@ -1,5 +1,4 @@
 import MoEngage from "react-moengage";
-import { isSignedIn } from "Util/Auth";
 
 export const MOE_trackEvent = (name, options) => {
   if (MoEngage.moe && window.Moengage) {
