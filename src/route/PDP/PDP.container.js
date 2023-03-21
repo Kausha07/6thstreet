@@ -31,7 +31,7 @@ import {
 } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
-import { getUUIDToken } from "Util/Auth";
+import { getUUIDToken ,isSignedIn} from "Util/Auth";
 import { isArabic } from "Util/App";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -244,6 +244,7 @@ export class PDPContainer extends PureComponent {
         discounted_price: specialPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name || "",
+        isLoggedIn: isSignedIn() || "",
         app6thstreet_platform: "Web",
       });
       this.setState({ eventSent: true });

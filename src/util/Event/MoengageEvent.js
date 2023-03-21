@@ -2,13 +2,8 @@ import MoEngage from "react-moengage";
 import { isSignedIn } from "Util/Auth";
 
 export const MOE_trackEvent = (name, options) => {
-  const attributes =
-    options?.isLoggedIn == undefined
-      ? { ...options, isLoggedIn: isSignedIn() }
-      : options;
-
   if (MoEngage.moe && window.Moengage) {
-    Moengage.track_event(name, attributes);
+    Moengage.track_event(name, options);
   }
 };
 export const MOE_AddFirstName = (firstName) => {

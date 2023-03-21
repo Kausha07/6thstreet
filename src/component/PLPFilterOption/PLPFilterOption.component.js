@@ -27,6 +27,7 @@ import Event,{
   EVENT_GTM_FILTER,
   MOE_trackEvent
 } from "Util/Event";
+import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class PLPFilterOption extends PureComponent {
@@ -147,6 +148,7 @@ class PLPFilterOption extends PureComponent {
           language: getLanguageFromUrl().toUpperCase(),
           filter_type: facet_key || "",
           filter_value: facet_value || "",
+          isLoggedIn: isSignedIn() || "",
           app6thstreet_platform: "Web",
         });
         if (MoeFilterEvent && MoeFilterEvent.length > 0) {
@@ -157,7 +159,7 @@ class PLPFilterOption extends PureComponent {
       }
     }
     parentCallback(facet_key, facet_value, checked, isRadio);
-    toggleOptionList()
+    toggleOptionList();
   };
 
   renderField() {

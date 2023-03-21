@@ -15,6 +15,7 @@ import Event, {
   EVENT_GTM_GO_TO_SEARCH,
   MOE_trackEvent
 } from "Util/Event";
+import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const URL_REWRITE = "url-rewrite";
@@ -82,6 +83,7 @@ class HeaderSearch extends PureComponent {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),
+        isLoggedIn: isSignedIn() || "",
         app6thstreet_platform: "Web",
       });
     }

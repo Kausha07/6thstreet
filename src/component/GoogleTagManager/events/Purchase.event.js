@@ -6,7 +6,7 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { roundPrice } from "Util/Price";
-
+import { isSignedIn } from "Util/Auth";
 import ProductHelper from "../utils";
 import BaseEvent from "./Base.event";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -154,6 +154,7 @@ class PurchaseEvent extends BaseEvent {
         size_id: productSizeOption.length > 0 ? productSizeOption : "",
         size: productSizeValue.length > 0 ? productSizeValue : "",
         subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+        isLoggedIn: isSignedIn() || "",
         app6thstreet_platform: "Web",
         //shipping: "",
         //value: "",

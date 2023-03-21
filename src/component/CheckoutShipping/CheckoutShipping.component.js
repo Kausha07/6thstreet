@@ -136,6 +136,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       selectedCustomerAddressId,
       customer,
     } = this.props;
+    const { isSignedIn } = this.state;
     const selectedAddress = addresses.filter(
       ({ id }) => id === selectedCustomerAddressId
     );
@@ -237,6 +238,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             ? getformValue("guest_email")
             : customer.email || "",
         phone: formatPhoneNumber,
+        isLoggedIn: isSignedIn || "",
         app6thstreet_platform: "Web",
       });
     }

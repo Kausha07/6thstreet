@@ -38,6 +38,7 @@ import PDPAddToCart from "./PDPAddToCart.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -428,14 +429,14 @@ export class PDPAddToCartContainer extends PureComponent {
 
   onSizeTypeSelect(type) {
     const {
-      product: {sku,name },
+      product: { sku, name },
     } = this.props;
     const eventData = {
       name: EVENT_SELECT_SIZE_TYPE,
       size_type: type.target.value,
       action: EVENT_SELECT_SIZE_TYPE,
       product_name: name, 
-      product_id: sku
+      product_id: sku,
     };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({
@@ -780,6 +781,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size: optionValue,
       quantity: 1,
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
+      isLoggedIn: isSignedIn() || "",
       app6thstreet_platform: "Web",
     });
   }
@@ -831,6 +833,7 @@ export class PDPAddToCartContainer extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
+      isLoggedIn: isSignedIn() || "",
       app6thstreet_platform: "Web",
     });
   }

@@ -24,6 +24,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -561,6 +562,7 @@ class PLPAddToCart extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn() || "",
       app6thstreet_platform: "Web",
     });
   }

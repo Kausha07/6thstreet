@@ -219,6 +219,7 @@ class WishlistIcon extends PureComponent {
       discounted_price: itemPrice || data?.itemPrice || "",
       product_image_url: data?.thumbnail_url || "",
       product_name: data?.name || "",
+      isLoggedIn: isSignedIn() || "",
       app6thstreet_platform: "Web",
     });
     if (userID) {

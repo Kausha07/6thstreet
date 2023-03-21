@@ -43,6 +43,7 @@ class HeaderWishlist extends PureComponent {
     MOE_trackEvent(EVENT_MOE_WISHLIST_TAB_ICON, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
+      isLoggedIn: isSignedIn || "",
       app6thstreet_platform: "Web",
     });
     if (newSignUpEnabled) {

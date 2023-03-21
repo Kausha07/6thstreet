@@ -41,6 +41,7 @@ import CartItem from "./CartItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -394,6 +395,7 @@ export class CartItemContainer extends PureComponent {
       size: size_value || "",
       quantity: qty || "",
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn() || "",
       app6thstreet_platform: "Web",
     });
   }
