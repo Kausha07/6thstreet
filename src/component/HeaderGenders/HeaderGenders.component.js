@@ -4,13 +4,9 @@ import { connect } from 'react-redux';
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
-import { FlashAnimation } from "../Icons";
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
-
-
-
 
 export const mapStateToProps = (state) => (
     {
@@ -66,16 +62,9 @@ class HeaderGenders extends PureComponent {
         {
             label: `${__('Home')}`,
             key: 'home'
-        },
-        {
-            label: `${__('Influencer')}`,
-            key: 'influencer',
-            icon: <img block="GenderIcon" src={FlashAnimation} alt="my-gif" />
         }
     ];
     
-
-
     getNewActiveMenuGender = (key) => {
         const { currentGenderButton } = this.state;
         if (currentGenderButton !== key) {

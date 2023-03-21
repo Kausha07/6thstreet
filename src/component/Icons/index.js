@@ -27,7 +27,7 @@ import Store from "./Store";
 import Phone from "./Phone";
 import Chat from "./Chat";
 import Email from "./Email";
-import FlashAnimation from "./Flash";
+
 
 export {
   Account,
@@ -59,5 +59,4 @@ export {
   Phone,
   Chat,
   Email,
-  FlashAnimation,
 };
