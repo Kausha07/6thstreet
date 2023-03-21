@@ -164,6 +164,12 @@
         div {
             font-size: 14px;
             font-weight: var(--fw-demi);
+            .QuerySuggestionCount {
+                padding-left : 1px;
+                &_isArabic {
+                    padding-right: 1px;
+                }
+            }
 
             div {
                 font-weight: var(--fw-light);

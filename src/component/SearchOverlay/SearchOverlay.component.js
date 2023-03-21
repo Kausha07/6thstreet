@@ -224,7 +224,7 @@ export class SearchOverlay extends PureComponent {
     return (
       <li>
         {suggestionContent()}
-        <div>{count}</div>
+        <div block="QuerySuggestionCount">{count}</div>
       </li>
     );
   };
