@@ -28,6 +28,7 @@ import Phone from "./Phone";
 import Chat from "./Chat";
 import Email from "./Email";
 
+
 export {
   Account,
   ChevronDown,
@@ -57,5 +58,5 @@ export {
   Store,
   Phone,
   Chat,
-  Email
+  Email,
 };

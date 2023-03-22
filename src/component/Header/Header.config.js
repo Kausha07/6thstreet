@@ -10,6 +10,7 @@ export const VIEWALL = "view_all";
 export const CART = "cart";
 export const PICK_UP_ADDRESS = "pick-up-address";
 export const CART_OVERLAY = "cart_overlay";
+export const SEARCH_OVERLAY = "search-overlay";
 export const CART_EDITING = "cart_editing";
 export const CHECKOUT = "checkout";
 export const CMS_PAGE = "cms_page";
