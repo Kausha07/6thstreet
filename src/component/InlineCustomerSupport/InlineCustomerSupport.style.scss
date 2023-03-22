@@ -77,7 +77,7 @@
 
     @include desktop {
       display: flex;
-      justify-content: center;
+      justify-content: inherit;
       align-items: center;
     }
 
@@ -113,7 +113,7 @@
       text-align: right !important;
 
       &::after {
-        right: 100px;
+        right: 65px;
       }
     }
   }
