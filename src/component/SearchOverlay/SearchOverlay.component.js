@@ -352,10 +352,16 @@ export class SearchOverlay extends PureComponent {
     const { products = [] } = this.props;
     const { isArabic } = this.state;
     return (
-      <div block="SearchSuggestion" elem="Recommended" mods={{isArabic}}>
-        <h2>{__("Products")}</h2>
-        <ul>{products.slice(0, 3).map(this.renderProduct)}</ul>
-      </div>
+      <>
+        {products.length > 0 ? (
+          <div block="SearchSuggestion" elem="Recommended" mods={{ isArabic }}>
+            <h2>{__("Products")}</h2>
+            <ul>{products.slice(0, 3).map(this.renderProduct)}</ul>
+          </div>
+        ) : (
+          <div block="TredingProducts">{this.renderTrendingBrands()}</div>
+        )}
+      </>
     );
   }
 
