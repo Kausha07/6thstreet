@@ -270,16 +270,21 @@ export class MyAccountOverlayContainer extends PureComponent {
       setHeaderState,
       isPasswordForgotSend,
       showMyAccountMenuPopUp,
+      showRegisterScreen,
     } = props;
 
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
 
-    const getDeviceState = showMyAccountMenuPopUp
-      ? STATE_INITIAL_LINKS
-      : STATE_SIGN_IN;
-
+    let getDeviceState;
+    if (showMyAccountMenuPopUp) {
+      getDeviceState = STATE_INITIAL_LINKS;
+    } else if (showRegisterScreen) {
+      getDeviceState = STATE_CREATE_ACCOUNT;
+    } else {
+      getDeviceState = STATE_SIGN_IN;
+    }
     const state = {
       state: getDeviceState,
       // eslint-disable-next-line react/no-unused-state

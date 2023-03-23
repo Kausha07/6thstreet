@@ -1,0 +1,34 @@
+.empty-cart-nudge-container {
+  height: 90px;
+  display: flex;
+  background-color: #f6f6f6;
+  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: space-between;
+
+  .content {
+    display: flex;
+    .gif {
+      width: 60px;
+      height: 60px;
+      padding-top: 8px;
+    }
+    .content-text {
+      margin: 12px auto;
+      font-size: 13px;
+      font-family: "Avenir Next";
+      line-height: 18px;
+      font-weight: 500;
+      padding-left: 4px;
+        .btnsSignInRegister {
+          padding: 0px;
+          line-height: 16px;
+          font-size: 12px;
+          font-weight: unset;
+          text-transform: none;
+          text-decoration: underline;
+          font-weight: 600;
+        }
+    }
+  }
+}

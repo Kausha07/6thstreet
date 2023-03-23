@@ -24,6 +24,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./CartOverlay.style";
 import Delivery from "./icons/delivery-truck.png";
+import MiniEmptyCartNudge from "./MiniEmptyCartNudge/MiniEmptyCartNudge";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -92,9 +93,12 @@ export class CartOverlay extends PureComponent {
 
   renderNoCartItems() {
     return (
-      <p block="CartOverlay" elem="Empty">
-        {__("You have no items in your shopping cart.")}
-      </p>
+      <>
+        <p block="CartOverlay" elem="Empty">
+          {__("You have no items in your shopping cart.")}
+        </p>
+        <MiniEmptyCartNudge />
+      </>
     );
   }
 
