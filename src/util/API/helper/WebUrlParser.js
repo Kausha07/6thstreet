@@ -165,7 +165,7 @@ const Parser = {
         // url.searchParams.split(sKey)[0]
       }
     });
-
+    window.scrollTo({ top: 0, behavior: "smooth" });
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case

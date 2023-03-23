@@ -324,7 +324,6 @@ class PLPFilters extends PureComponent {
       hideActiveOverlay();
       goToPreviousNavigationState();
     }
-    console.log("kiran3",filters);
     updatePLPInitialFilters(filters, null, null);
     this.setState({ isReset: true, defaultFilters: false });
 
@@ -338,7 +337,6 @@ class PLPFilters extends PureComponent {
     if (index > -1) {
       filterArray.splice(index, 1);
     }
-    console.log("kiran4", activeFilters)
     this.setState({
       activeFilters: {
         [initialFacetKey]: filterArray,
@@ -538,7 +536,6 @@ class PLPFilters extends PureComponent {
       },
       {}
     );
-    console.log("kiran", newActiveFilters)
     return newActiveFilters;
   };
 
@@ -560,7 +557,6 @@ class PLPFilters extends PureComponent {
         }
       });
     const displayCount = count;
-    console.log("kiran1", displayCount)
     return displayCount;
   }
 
