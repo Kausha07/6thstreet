@@ -22,6 +22,7 @@ import Event, {
   MOE_trackEvent,
 } from "Util/Event";
 import PDP from "./PDP.component";
+import { getQueryParam } from "Util/Url";
 import browserHistory from "Util/History";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
@@ -31,6 +32,13 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
 import { getUUIDToken } from "Util/Auth";
 import { isArabic } from "Util/App";
+import {
+  influencerStorePageBreadcrumbsText,
+  influencerCollectionPageBreadcrumbsText,
+  influencerStorePageURL,
+  influencerCollectionPageURL,
+} from "Component/InfluencerCollection/InfluencerCollection.config";
+
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -487,34 +495,55 @@ export class PDPContainer extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     if (nbHits === 1) {
-      let rawCategoriesLastLevel;
+      const rawCategoriesLastLevel =
+        categories[
+          Object.keys(categories)[Object.keys(categories).length - 1]
+        ]?.[0];
+      let isStore = false;
+      let isCollection = false;
+      let categoriesLastLevel;
       let influencerCategoryArr = [];
-      let influencerCategoryArrLength;
+      let influencerName = "";
+      let influencerID = "";
+      let collectionID = "";
+      let selectedGenderFromURL = "";
 
       if (gender === "influencer") {
-        influencerCategoryArrLength =
-          categories[Object.keys(categories)[2]]?.length;
-        for (let i = 0; i < influencerCategoryArrLength; i++) {
-          let val = categories[Object.keys(categories)[2]][i];
-          if (val.includes("Influencers")) {
-            influencerCategoryArr.push(val);
-            break;
-          }
+        influencerID = getQueryParam("influencerID", location);
+        collectionID = getQueryParam("influencerCollectionID", location);
+        influencerName = decodeURI(getQueryParam("influencerName", location));
+        selectedGenderFromURL = getQueryParam("selectedGender", location);
+        isStore = getQueryParam("isStore", location);
+        isCollection = getQueryParam("isCollection", location);
+
+        if (isStore === "true") {
+          influencerCategoryArr =
+            influencerStorePageBreadcrumbsText(influencerName);
+        } else if (isCollection === "true") {
+          influencerCategoryArr =
+            influencerCollectionPageBreadcrumbsText(influencerName);
         }
-        rawCategoriesLastLevel = influencerCategoryArr[0];
+        categoriesLastLevel = [...influencerCategoryArr];
       } else {
-        rawCategoriesLastLevel =
-          categories[
-            Object.keys(categories)[Object.keys(categories).length - 1]
-          ]?.[0];
+        categoriesLastLevel = rawCategoriesLastLevel
+          ? rawCategoriesLastLevel.split(" /// ")
+          : [];
       }
-      const categoriesLastLevel = rawCategoriesLastLevel
-        ? rawCategoriesLastLevel.split(" /// ")
-        : [];
 
-      let urlArray;
+      let urlArray = [];
       if (gender === "influencer") {
-        urlArray = [];
+        if (isStore === "true") {
+          urlArray = influencerStorePageURL(
+            influencerID,
+            selectedGenderFromURL
+          );
+        } else if (isCollection === "true") {
+          urlArray = influencerCollectionPageURL(
+            influencerID,
+            selectedGenderFromURL,
+            collectionID
+          );
+        }
       } else {
         urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories) || [];
       }

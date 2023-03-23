@@ -11,6 +11,7 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
 
 import ContentWrapper from "Component/ContentWrapper";
 import MyAccountOverlay from "Component/MyAccountOverlay";
@@ -33,7 +34,7 @@ export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
   productLoading: state.PLP.productLoading,
   meta: state.PLP.meta,
-  gender: state.AppState.gender,
+  selectedGender: state?.InfluencerReducer?.selectedGender,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -42,15 +43,30 @@ export const mapDispatchToProps = (dispatch, state) => ({
   requestProductListPage: (options) =>
     PLPDispatcher.requestProductListPage(options, dispatch),
   resetPLPData: (options) => PLPDispatcher.resetPLPData(dispatch),
+  setInfluencerName: (name) =>
+    InfluencerDispatcher.setInfluencerName(name, dispatch),
+  isCollectionPage: (val) =>
+    InfluencerDispatcher.isCollectionPage(val, dispatch),
+  isStorePage: (val) => InfluencerDispatcher.isStorePage(val, dispatch),
 });
 
 const InfluencerCollection = (props) => {
   const dispatch = useDispatch();
+  const {
+    setInfluencerName,
+    resetPLPData,
+    requestProductList,
+    requestProductListPage,
+    productLoading,
+    isCollectionPage,
+    isStorePage,
+    selectedGender,
+  } = props;
 
   const [influencerData, setInfluencerData] = useState({});
   const [collectionId, setCollectionID] = useState(null);
   const [influencerID, setInfluencerID] = useState(null);
-  const [influencerName, setInfluencerName] = useState("");
+  const [influencerName, setInfluencerNameOnPage] = useState("");
   const [muted, setMuted] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [shareButtonClicked, setShareButtonClicked] = useState(false);
@@ -64,8 +80,8 @@ const InfluencerCollection = (props) => {
         name: __("%s's Collection", influencerName),
       },
       {
-        url: "/influencer.html",
-        name: __("Store"),
+        url: `/influencer.html/Store?influencerID=${influencerID}&selectedGender=${selectedGender}`,
+        name: __("%s's Store", influencerName),
       },
       {
         url: "/influencer.html",
@@ -89,8 +105,11 @@ const InfluencerCollection = (props) => {
     try {
       getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
         if (resp) {
-          setInfluencerName(resp.influencer_name);
+          setInfluencerNameOnPage(resp?.influencer_name);
           setInfluencerData(resp);
+          setInfluencerName(resp?.influencer_name);
+          isCollectionPage(true);
+          isStorePage(false);
         }
       });
     } catch (error) {
@@ -106,7 +125,7 @@ const InfluencerCollection = (props) => {
     document.body.scrollTo(0, 0);
 
     return () => {
-      props.resetPLPData();
+      resetPLPData();
     };
   }, []);
 
@@ -154,15 +173,12 @@ const InfluencerCollection = (props) => {
   };
 
   const requestProduct = () => {
-    const { requestProductList } = props;
-
     if (collectionId !== null) {
       requestProductList({ options: getParams() });
     }
   };
 
   const requestProductListPage_ = () => {
-    const { requestProductListPage } = props;
     requestProductListPage({ options: getParams() });
   };
 
@@ -240,10 +256,7 @@ const InfluencerCollection = (props) => {
     }
     return (
       <div block="LoadMore" onClick={handlePageCount}>
-        <ProductLoad
-          pageKey={pageKeyFromState}
-          productLoad={props.productLoading}
-        />
+        <ProductLoad pageKey={pageKeyFromState} productLoad={productLoading} />
       </div>
     );
   };

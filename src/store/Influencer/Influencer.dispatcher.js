@@ -9,6 +9,8 @@ import {
   setAlgoliaQuery,
   setInfluencerName,
   setInfluencerInfo,
+  setIsCollectionPage,
+  setIsStorePage,
 } from "./Influencer.action";
 import {
   getTrendingInfo,
@@ -56,6 +58,18 @@ export class InfluencerDispatcher {
         err
       );
     }
+  }
+
+  setInfluencerName(name, dispatch) {
+    dispatch(setInfluencerName(name));
+  }
+
+  isStorePage(val, dispatch) {
+    dispatch(setIsStorePage(val));
+  }
+
+  isCollectionPage(val, dispatch) {
+    dispatch(setIsCollectionPage(val));
   }
 
   async loadMoreButtonClicked(data, dispatch) {

@@ -9,6 +9,8 @@ export const SET_INFLUENCER_PREVIOUS_SELECTED_GENDER =
 export const SET_ALGOLIA_QUERY = "SET_ALGOLIA_QUERY";
 export const SET_INFLUENCER_NAME = "SET_INFLUENCER_NAME";
 export const SET_INFLUENCER_INFO = "SET_INFLUENCER_INFO";
+export const SET_IS_COLLECTION_PAGE = "SET_IS_COLLECTION_PAGE";
+export const SET_IS_STORE_PAGE = "SET_IS_STORE_PAGE";
 
 export const setInfluencerLoading = (isLoading) => ({
   type: SET_INFLUENCER_LOADING,
@@ -58,4 +60,14 @@ export const setInfluencerName = (name) => ({
 export const setInfluencerInfo = (data) => ({
   type: SET_INFLUENCER_INFO,
   data,
+});
+
+export const setIsCollectionPage = (val) => ({
+  type: SET_IS_COLLECTION_PAGE,
+  val,
+});
+
+export const setIsStorePage = (val) => ({
+  type: SET_IS_STORE_PAGE,
+  val,
 });

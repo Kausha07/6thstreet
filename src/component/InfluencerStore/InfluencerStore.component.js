@@ -48,6 +48,11 @@ export const mapDispatchToProps = (dispatch) => ({
   resetPLPData: (options) => PLPDispatcher.resetPLPData(dispatch),
   influencerStorePage: (item) =>
     InfluencerDispatcher.influencerStorePage(item, dispatch),
+  influencerSelectedGender: (gender) =>
+    InfluencerDispatcher.influencerSelectedGender(gender, dispatch),
+  isStorePage: (val) => InfluencerDispatcher.isStorePage(val, dispatch),
+  isCollectionPage: (val) =>
+    InfluencerDispatcher.isCollectionPage(val, dispatch),
 });
 
 const InfluencerStore = (props) => {
@@ -59,6 +64,9 @@ const InfluencerStore = (props) => {
     influencerAlgoliaQuery,
     isInfluencerLoading,
     influencerInfo,
+    influencerSelectedGender,
+    isStorePage,
+    isCollectionPage,
   } = props;
   const [influencerId, setInfluencerId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -158,6 +166,9 @@ const InfluencerStore = (props) => {
     setInfluencerId(influencer_id);
     setSelectedGender(gender);
     influencerStorePage({ influencer_id, envID, locale });
+    influencerSelectedGender(gender);
+    isStorePage(true);
+    isCollectionPage(false);
   };
 
   const showMyAccountPopup = () => {

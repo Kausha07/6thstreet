@@ -22,6 +22,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -99,6 +100,19 @@ export class LanguageSwitcherContainer extends PureComponent {
         }, 1000);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
         const pagePath = pageUrl.origin;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else if (
+        window.pageType === "PRODUCT" &&
+        this.props.gender === "influencer"
+      ) {
+        const pagePath = pageUrl.origin + pageUrl.pathname + pageUrl.search;
         this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(

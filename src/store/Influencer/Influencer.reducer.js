@@ -9,6 +9,8 @@ import {
   SET_ALGOLIA_QUERY,
   SET_INFLUENCER_NAME,
   SET_INFLUENCER_INFO,
+  SET_IS_COLLECTION_PAGE,
+  SET_IS_STORE_PAGE,
 } from "./Influencer.action";
 
 export const getInitialState = () => ({
@@ -22,6 +24,8 @@ export const getInitialState = () => ({
   influencerInfo: {},
   influencerAlgoliaQuery: undefined,
   influencerName: "",
+  isStorePage: false,
+  isCollectionPage: false,
 });
 
 export const InfluencerReducer = (state = getInitialState(), action) => {
@@ -94,6 +98,20 @@ export const InfluencerReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         influencerName: name,
+      };
+
+    case SET_IS_COLLECTION_PAGE:
+      const { val: isCollectionPage } = action;
+      return {
+        ...state,
+        isCollectionPage,
+      };
+
+    case SET_IS_STORE_PAGE:
+      const { val: isStorePage } = action;
+      return {
+        ...state,
+        isStorePage,
       };
 
     default:

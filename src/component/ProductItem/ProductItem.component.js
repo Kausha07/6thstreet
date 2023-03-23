@@ -20,6 +20,7 @@ import { isArabic, getCurrency } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
+import { getQueryParam } from "Util/Url";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
@@ -39,6 +40,10 @@ var urlWithQueryID;
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   requestedOptions: state.PLP.options,
+  influencerName: state?.InfluencerReducer?.influencerName,
+  selectedGender: state?.InfluencerReducer?.selectedGender,
+  isStorePage: state?.InfluencerReducer?.isStorePage,
+  isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -404,6 +409,10 @@ class ProductItem extends PureComponent {
       qid,
       isVueData,
       prevPath = null,
+      influencerName,
+      selectedGender,
+      isStorePage,
+      isCollectionPage,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -443,10 +452,33 @@ class ProductItem extends PureComponent {
       },
     };
 
+    let influencerId = "";
+    let collectionId = "";
+    let influencerParseLink = "";
+    if (gender === "influencer") {
+      influencerId = getQueryParam("influencerID", location);
+      collectionId = getQueryParam("influencerCollectionID", location);
+      influencerParseLink =
+        parseLink +
+        `${parseLink.includes("?") ? "&" : "?"}` +
+        `influencerID=${influencerId}&influencerCollectionID=${collectionId}` +
+        `&influencerName=${influencerName}&selectedGender=${selectedGender}` +
+        `&isStore=${isStorePage}&isCollection=${isCollectionPage}`;
+    }
+
     return (
-      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
+      <Link
+        to={
+          gender === "influencer"
+            ? influencerParseLink
+            : isVueData
+            ? parseLink
+            : linkTo
+        }
+        onClick={this.handleClick}
+      >
         {this.renderImage()}
-        {this.renderOutOfStock()}   
+        {this.renderOutOfStock()}
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
@@ -475,7 +507,11 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {!isMobile.any() && pageType !== "vuePlp" && pageType !== "cart" && pageType !== "influencer" && this.renderAddToCartOnHover()}
+        {!isMobile.any() &&
+          pageType !== "vuePlp" &&
+          pageType !== "cart" &&
+          pageType !== "influencer" &&
+          this.renderAddToCartOnHover()}
       </li>
     );
   }
