@@ -354,7 +354,7 @@ export class PLPContainer extends PureComponent {
         : category_1
         ? category_1
         : "",
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     this.setState({ categoryloaded: false });

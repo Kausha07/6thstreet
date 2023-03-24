@@ -395,7 +395,7 @@ export class CartItemContainer extends PureComponent {
       size: size_value || "",
       quantity: qty || "",
       cart_id: getCartID || "",
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

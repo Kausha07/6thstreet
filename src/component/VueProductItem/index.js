@@ -213,7 +213,7 @@ import {
         discounted_price: itemPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name,
-        isLoggedIn: isSignedIn() || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       // this.sendBannerClickImpression(product);

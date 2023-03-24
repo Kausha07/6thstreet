@@ -148,7 +148,7 @@ class PLPFilterOption extends PureComponent {
           language: getLanguageFromUrl().toUpperCase(),
           filter_type: facet_key || "",
           filter_value: facet_value || "",
-          isLoggedIn: isSignedIn() || "",
+          isLoggedIn: isSignedIn(),
           app6thstreet_platform: "Web",
         });
         if (MoeFilterEvent && MoeFilterEvent.length > 0) {

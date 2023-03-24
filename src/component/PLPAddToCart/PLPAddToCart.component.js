@@ -562,7 +562,7 @@ class PLPAddToCart extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

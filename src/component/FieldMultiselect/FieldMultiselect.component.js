@@ -283,7 +283,7 @@ class FieldMultiselect extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
         filter_value: facet_value || "",
-        isLoggedIn: isSignedIn() || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
@@ -383,7 +383,7 @@ class FieldMultiselect extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       filter_type: category || "",
       filter_value: "All",
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     if (MoeFilterEvent && MoeFilterEvent.length > 0) {

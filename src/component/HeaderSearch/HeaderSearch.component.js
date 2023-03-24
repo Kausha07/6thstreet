@@ -83,7 +83,7 @@ class HeaderSearch extends PureComponent {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),
-        isLoggedIn: isSignedIn() || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
     }

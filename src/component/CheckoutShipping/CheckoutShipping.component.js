@@ -238,7 +238,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             ? getformValue("guest_email")
             : customer.email || "",
         phone: formatPhoneNumber,
-        isLoggedIn: isSignedIn || "",
+        isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
       });
     }

@@ -196,7 +196,7 @@ class MobileBottomBar extends NavigationAbstract {
       MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
-        isLoggedIn: isSignedIn || "",
+        isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
       });
     }

@@ -781,7 +781,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size: optionValue,
       quantity: 1,
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }
@@ -833,7 +833,7 @@ export class PDPAddToCartContainer extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
-      isLoggedIn: isSignedIn() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }
