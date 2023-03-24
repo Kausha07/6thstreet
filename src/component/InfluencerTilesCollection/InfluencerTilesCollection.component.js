@@ -241,10 +241,10 @@ const InfluencerTilesCollection = (props) => {
     }
     return (
       <div block="influencer_tiles" mods={{ isArabic: isArabic() }}>
-        <ul block="influencer_tiles_spckItems">
+        <ul block={`influencer_tiles_spckItems ${items.length ===2 && 'column_two'}`}>
           {isLoadMoreClicked &&
-          selectedGender === prevSelectedGender &&
-          items.length > 12
+            selectedGender === prevSelectedGender &&
+            items.length > 12
             ? influencerTilesData?.map(renderTile)
             : content.map(renderTile)}
         </ul>
@@ -252,8 +252,10 @@ const InfluencerTilesCollection = (props) => {
       </div>
     );
   };
+
   return <div>{renderTilesBlock()}</div>;
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
