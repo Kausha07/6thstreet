@@ -56,7 +56,10 @@
             }
         }
         &-Title {
-            display: none;
+            // display: none;
+            font-weight: var(--fw-bold);
+            display: block;
+            text-align: left;
         }
         &-Column {
             line-height: 30px;
@@ -71,7 +74,12 @@
                     text-align: center;
                 }
                 &-Button {
-                    margin-left: -30px;
+                    // margin-left: -30px;
+                    a{
+                        &:first-child {
+                            display: block;
+                        } 
+                    } 
                 }
             }
             &-Content {
@@ -109,9 +117,9 @@
             }
             &_isAllShow {
                 background-color: #ffffff;
-                left: 0;
-                position: absolute;
-                top: 0;
+                // left: 0;
+                // position: absolute;
+                // top: 0;
                 width: 100%;
                 .MenuGrid {
                     &-Column {

@@ -131,7 +131,7 @@ class MenuGrid extends PureComponent {
           {this.props.title}
           {/* {__("Shop by product")} */}
         </span>
-        {this.renderViewAllButton()}
+        
         <div
           mix={{
             block: "MenuGrid-Column",
@@ -142,6 +142,7 @@ class MenuGrid extends PureComponent {
           {this.renderDesktopButton()}
           {this.renderItems()}
         </div>
+        {this.renderViewAllButton()}
       </>
     );
   }
