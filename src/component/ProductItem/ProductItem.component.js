@@ -434,7 +434,11 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID;
+    let parseLink =
+      isVueData && new URL(urlWithQueryID) && new URL(urlWithQueryID).origin
+        ? urlWithQueryID.replace(new URL(urlWithQueryID).origin, "")
+        : urlWithQueryID;
+
     const linkTo = {
       pathname: parseLink,
       state: {
