@@ -340,14 +340,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       },
       firstname: {
         validation: ["notEmpty", "onlyCharacters"],
-        maxLength: 40,
+        maxLength: 25,
         value: firstname,
         placeholder: __("First Name"),
         autocomplete: "on",
       },
       lastname: {
         validation: ["notEmpty", "onlyCharacters"],
-        maxLength: 40,
+        maxLength: 25,
         placeholder: __("Last Name"),
         value: lastname,
       },

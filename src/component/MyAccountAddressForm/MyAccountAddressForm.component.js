@@ -232,13 +232,15 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 validation: ['notEmpty'],
                 type: 'hidden',
                 label: __('Delivering to'),
-                value: isShippingAddress ? firstname : customer?.firstname || ''
+                value: isShippingAddress ? firstname : customer?.firstname || '',
+                maxLength: 25
             },
             lastname: {
                 placeholder: __('Last Name'),
                 validation: ['notEmpty'],
                 type: 'hidden',
-                value: isShippingAddress ? lastname : customer?.lastname?.trim() || ''
+                value: isShippingAddress ? lastname : customer?.lastname?.trim() || '',
+                maxLength: 25
             },
             phonecode: {
                 type: 'text',

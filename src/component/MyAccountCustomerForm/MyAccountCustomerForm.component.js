@@ -162,6 +162,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
           id="full-name"
           placeholder={__("fullname")}
           value={`${fullName.firstName} ${fullName.lastName}`}
+          maxLength={50}
         />
       </div>
     );
