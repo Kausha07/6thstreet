@@ -51,10 +51,10 @@ main {
 }
 
 .HeaderMainSection {
-  display: flex;
-  flex-direction: row;
+  display: grid;
   justify-content: center;
   align-items: center;
+  grid-template-columns: 200px 1.5fr 1fr 0.5fr;
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -74,6 +74,11 @@ main {
     @include desktop {
       z-index: 3;
     }
+  }
+  .rightIcons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   @include mobile {
@@ -552,7 +557,6 @@ main {
   }
 
   @include desktop() {
-    display: flex;
     height: 84px;
     flex-direction: unset;
     padding: 0;
@@ -561,10 +565,6 @@ main {
     &_isMobile {
       display: block;
     }
-  }
-
-  @include desktop() {
-    display: flex;
   }
 
   .DesktopSearch {
@@ -655,20 +655,21 @@ main {
   }
 }
 
+.searchContainer {
+  @include mobile {
+    order: 2;
+  }
+}
+
 .SearchIcon {
   @include mobile {
-    margin-right: 56px;
+    margin-left: 56px;
     top: 4px;
 
     &_isArabic {
-      margin-right: 0;
-      margin-left: 56px !important;
+      margin-left: 0;
+      margin-right: 56px !important;
     }
-  }
-
-  &_isArabic {
-    margin-right: 0;
-    margin-left: 22px;
   }
 
   #searchIconImage {
