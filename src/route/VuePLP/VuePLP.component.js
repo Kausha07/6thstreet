@@ -360,7 +360,6 @@ const VuePLP = (props) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     updateBreadcrumbs();
     dispatch(setPrevPath(prevPath));
     const locale = VueIntegrationQueries.getLocaleFromUrl();
