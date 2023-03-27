@@ -5,6 +5,7 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import EmptyCardIcon from "./icons/cart.svg";
+import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 
 export function RenderEmptyCartPage() {
   const [showSignInPopUp, setShowSignInPopUp] = useState(false);
