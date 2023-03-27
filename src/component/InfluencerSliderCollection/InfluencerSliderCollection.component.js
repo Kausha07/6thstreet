@@ -30,7 +30,17 @@ const InfluencerSliderCollection = (props) => {
       },
     },
   };
-  
+
+  const settingsForOneSlide = {
+    lazyload: true,
+    mouseDrag: true,
+    touch: true,
+    nav: true,
+    loop: true,
+    navPosition: "bottom",
+    autoplay: true,
+  };
+
   const { setLastTapItem, selectedGender, index, cartIcon } = props;
 
   const MoenangeTrackingCollectionDetail = (
@@ -126,7 +136,9 @@ const InfluencerSliderCollection = (props) => {
     const { item } = props;
     const { type, items } = item;
     return (
-      <TinySlider settings={settings}>
+      <TinySlider
+        settings={items.length === 1 ? settingsForOneSlide : settings}
+      >
         {items.length > 0 && items?.map(renderSlide)}
       </TinySlider>
     );

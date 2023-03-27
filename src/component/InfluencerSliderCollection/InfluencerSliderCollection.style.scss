@@ -42,7 +42,7 @@
 
     @include mobile {
       justify-content: space-between;
-      width: 90%;
+      width: 95%;
       left: 0;
       right: 2%;
       bottom: 9%;
@@ -50,7 +50,8 @@
 
       &_isArabic {
         left: initial;
-        right: 10%;
+        right: 5%;
+        padding-left: 0;
       }
     }
     .inluencerImage {
@@ -137,10 +138,14 @@
 
     &_isArabic {
       right: 34px;
-      padding: 0 40px 20px 0;
+      padding: 0 10px 20px 0;
     }
     @include mobile {
       padding: 15px;
+
+      &_isArabic {
+        padding: 0 0px 20px 0;
+      }
     }
 
     .CollectionTitle {

@@ -420,8 +420,6 @@ main {
   .moveUpGenders {
     @include mobile {
       top: 48px;
-      padding-left: 17.5%;
-      padding-right: 17.5%;
       background-color: #ffffff;
       padding-top: 10px;
       padding-bottom: 18px;
@@ -433,8 +431,6 @@ main {
   .moveDownGenders {
     @include mobile {
       top: 100px;
-      padding-left: 17.5%;
-      padding-right: 17.5%;
       background-color: #ffffff;
       padding-top: 10px;
       padding-bottom: 18px;
@@ -455,41 +451,25 @@ main {
         margin-top: 0px;
         position: fixed;
         justify-content: center;
-        padding-left: 10.5%;
-        padding-right: 10.5%;
-      }
-
-      &_isArabic {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      &_isArabic {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 2%;
+        padding-right: 3.5%;
       }
 
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        width: 33.33%;
+        width: 16%;
+
         &:last-child {
-          width: 35% !important;
+          width: 25% !important;
         }
 
         &_isArabic {
+          width: 14%;
           &:last-child {
-            width: 45% !important;
-            margin-right: 15px;
+            width: 65% !important;
           }
-        }
-
-        &:last-child {
-          width: 35% !important;
-        }
-
-        &_isArabic {
-          &:last-child {
+          &:nth-last-child(2) {
             width: 45% !important;
           }
         }
@@ -510,7 +490,7 @@ main {
           }
         }
 
-        .GenderButton-Button {
+    .GenderButton-Button {
           padding: 0 0px;
         }
       }
