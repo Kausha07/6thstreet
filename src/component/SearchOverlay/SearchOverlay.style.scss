@@ -76,7 +76,8 @@
 
     &-searchList {
         li {
-            margin-bottom: 0px;
+            padding-bottom: 2px;
+            padding-top : 2px;
             padding-left: 0px !important;
             .SearchSuggestion {
                 &-TrandingTag {
