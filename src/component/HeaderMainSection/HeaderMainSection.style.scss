@@ -82,6 +82,7 @@ main {
   }
 
   @include mobile {
+    display: flex;
     &_showPLPSearch {
       &[data-visible="true"] {
         z-index: 9999 !important;
@@ -635,20 +636,14 @@ main {
   }
 }
 
-.searchContainer {
-  @include mobile {
-    order: 2;
-  }
-}
-
 .SearchIcon {
   @include mobile {
-    margin-left: 56px;
+    margin-left: 216px;
     top: 4px;
 
     &_isArabic {
       margin-left: 0;
-      margin-right: 56px !important;
+      margin-right: 216px !important;
     }
   }
 
