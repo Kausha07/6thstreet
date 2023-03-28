@@ -86,6 +86,7 @@ class InlineCustomerSupport extends PureComponent {
   renderPhone = () => {
     const { isPhoneSupported, phone } = this.props;
     const { isArabic } = this.state;
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
 
     if (!isPhoneSupported) {
       return null;
@@ -108,7 +109,7 @@ class InlineCustomerSupport extends PureComponent {
             block="InlineCustomerSupport"
             elem="Phone"
             mods={{ isArabic }}
-            href={`tel:${phone}`}
+            href={`tel:${updatedPhoneLink}`}
             onClick={() => this.sendGTMEvents(EVENT_PHONE)}
           >
             <bdi>{phone}</bdi>
@@ -285,7 +286,7 @@ class InlineCustomerSupport extends PureComponent {
                   }}
                   //to={`${rootURL}/shipping-policy`}
                 >
-                  {countryCode === "KW"? __("Shipping Policy") : __("Free Delivery on min. order")}
+                  {countryCode === "KW"? __("FREE DELIVERY FOR ORDERS OVER 30 KWD") : __("Free Delivery on min. order")}
                 </button>
               </div>
             </div>

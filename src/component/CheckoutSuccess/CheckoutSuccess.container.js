@@ -25,6 +25,7 @@ import {
   sendOTPViaEmail,
 } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import Event, {
+  EVENT_LOGIN,
   EVENT_OTP_VERIFY,
   EVENT_OTP_VERIFY_FAILED,
   EVENT_GTM_NEW_AUTHENTICATION,
@@ -34,7 +35,7 @@ import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
-
+import { Config } from "Util/API/endpoint/Config/Config.type";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -53,6 +54,8 @@ export const mapStateToProps = (state) => ({
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
+  config: state.AppConfig.config,
+  country: state.AppState.country,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -105,6 +108,8 @@ export class CheckoutSuccessContainer extends PureComponent {
     isSignedIn: PropTypes.bool.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
     newSignUpEnabled: PropTypes.bool,
+    config: Config.isRequired,
+    country: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -249,7 +254,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed } = this.props;
+    const { isFailed, country } = this.props;
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -257,6 +262,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isFailed,
       isMobileVerification,
+      country
     };
   };
 
@@ -304,6 +310,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       screen: "checkout",
       prevScreen: "checkout",
       ...(data.failedReason && { failedReason: data?.failedReason }),
+      ...(data?.mode && { loginMode: data?.mode }),
+      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
     };
     if (newSignUpEnabled){
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
@@ -409,7 +417,11 @@ export class CheckoutSuccessContainer extends PureComponent {
           const { signInOTP } = this.props;
           if (newSignUpEnabled) {
             this.sendEvents(EVENT_OTP_VERIFY);
-          }
+            const eventAdditionalData = shouldLoginWithOtpOnEmail
+              ? { mode: "Email", isPhone: false }
+              : { mode: "Phone", isPhone: true };
+            this.sendEvents(EVENT_LOGIN, eventAdditionalData);
+          }          
           try {
             await signInOTP(response);
             history.push("/my-account/my-orders");

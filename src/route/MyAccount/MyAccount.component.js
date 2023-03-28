@@ -66,7 +66,6 @@ import Event, {
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
-export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
     super(props);
@@ -370,6 +369,7 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       payload,
       is_exchange_enabled,
+      config
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
@@ -407,6 +407,8 @@ export class MyAccount extends SourceMyAccount {
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     const payloadKey = Object.keys(payload)[0];
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     return (
       <ContentWrapper
         label={__("My Account page")}
@@ -491,7 +493,7 @@ export class MyAccount extends SourceMyAccount {
                   this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
                 }}
                 className="chat-button"
-                href={`${WHATSAPP_LINK}`}
+                href={`${whatsappChat}`}
                 target="_blank"
                 rel="noreferrer"
               >

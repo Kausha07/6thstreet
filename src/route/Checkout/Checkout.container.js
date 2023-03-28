@@ -149,6 +149,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   addressLoader: state.MyAccountReducer.addressLoader,
+  config: state.AppConfig.config,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -183,6 +184,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     updateCreditCardData: this.updateCreditCardData.bind(this),
     setBillingStep: this.setBillingStep.bind(this),
     setTabbyURL: this.setTabbyURL.bind(this),
+    setIsFailed: this.setIsFailed.bind(this),
+    setShippingAddressCareem: this.setShippingAddressCareem.bind(this),
   };
 
   //   showOverlay() {
@@ -640,6 +643,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
         step: this.getCheckoutStepNumber(),
+        payment_code: null,
       });
       if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
@@ -672,6 +676,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
   setTabbyURL(UrlTabby) {
     this.setState({ tabbyURL: UrlTabby });
+  }
+  setIsFailed (currentState){
+    this.setState({ isFailed: currentState });
   }
   saveLastOrder(totals) {
     this.setState({ lastOrder: totals });
@@ -792,6 +799,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      totals,
       isSignedIn
     } = this.props;
     const {
@@ -799,6 +807,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = this.state;
     let data = {};
     let eddItems = [];
+    Event.dispatch(EVENT_GTM_CHECKOUT, {
+      totals,
+      step: 3,
+      payment_code: code ? code : null,
+    });
     
     if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
       MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
@@ -829,12 +842,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           : itemEddMessage;
         const actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
         const isIntlBrand =
-          (INTL_BRAND.includes(brand_name.toString().toLowerCase()) &&
-            cross_border === 1) ||
           cross_border === 1;
         const intlEddObj = intlEddResponse["checkout"]?.find(
           ({ vendor }) =>
-            vendor.toLowerCase() === brand_name.toString().toLowerCase()
+            vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
         );
         eddItems.push({
           sku: sku,
@@ -874,10 +885,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               : isIntlBrand && edd_info && !edd_info.has_cross_border_enabled
               ? null
               : actualEddMess,
-          intl_vendors: INTL_BRAND.includes(brand_name.toString().toLowerCase())
-            ? international_vendor
-            : cross_border === 1
-            ? international_vendor
+          intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
+            ? international_vendor : null)
             : null,
         });
       });
@@ -1155,6 +1164,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.resetCart();
       // this._handleError(e);
     }
+  }
+
+  setShippingAddressCareem(shippingAddress) {
+    this.setState({ shippingAddress: shippingAddress });
   }
 
   setDetailsStep(orderID, incrementID) {

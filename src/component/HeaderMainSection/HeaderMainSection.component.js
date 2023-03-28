@@ -1,17 +1,43 @@
-import HeaderAccount from "Component/HeaderAccount";
-import HeaderCart from "Component/HeaderCart";
-import HeaderGenders from "Component/HeaderGenders";
-import HeaderLogo from "Component/HeaderLogo";
-import HeaderSearch from "Component/HeaderSearch";
-import HeaderWishlist from "Component/HeaderWishlist";
-import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
-import MyAccountOverlay from "Component/MyAccountOverlay";
-import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PropTypes from "prop-types";
 import { createRef } from "react";
 import { connect } from "react-redux";
 import { matchPath, withRouter } from "react-router";
+import PropTypes from "prop-types";
+
+import Algolia from "Util/API/provider/Algolia";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import Event, {
+  EVENT_GTM_CLEAR_SEARCH,
+  EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW,
+  EVENT_GTM_SEARCH,
+  EVENT_GTM_VIEW_SEARCH_RESULTS,
+  EVENT_GTM_CANCEL_SEARCH,
+  EVENT_GTM_GO_TO_SEARCH,
+  MOE_trackEvent
+} from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+
+import { getStore } from "Store";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
+
+import Form from "Component/Form";
+import HeaderCart from "Component/HeaderCart";
+import HeaderLogo from "Component/HeaderLogo";
+import HeaderSearch from "Component/HeaderSearch";
+import HeaderGenders from "Component/HeaderGenders";
+import HeaderAccount from "Component/HeaderAccount";
+import HeaderWishlist from "Component/HeaderWishlist";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import SearchOverlay from "SourceComponent/SearchOverlay";
+import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import "./HeaderMainSection.style";
+export const URL_REWRITE = "url-rewrite";
+
 import {
   TYPE_ACCOUNT,
   TYPE_BRAND,
@@ -20,31 +46,35 @@ import {
   TYPE_HOME,
   TYPE_PRODUCT,
 } from "Route/UrlRewrites/UrlRewrites.config";
-import { isArabic } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
-import isMobile from "Util/Mobile";
-import "./HeaderMainSection.style";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import Clear from "./icons/close-black.png";
+import searchIcon from "./icons/search-black.svg";
+import { HistoryType } from "Type/Common";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   chosenGender: state.AppState.gender,
   displaySearch: state.PDP.displaySearch,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 class HeaderMainSection extends NavigationAbstract {
   static propTypes = {
     activeOverlay: PropTypes.string.isRequired,
     changeMenuGender: PropTypes.func,
+    onSearchSubmit: PropTypes.func,
+    history: HistoryType.isRequired,
+    hideActiveOverlay: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     changeMenuGender: () => {},
+    search: "",
   };
 
   constructor(props) {
@@ -64,9 +94,12 @@ class HeaderMainSection extends NavigationAbstract {
       signInPopUp: "",
       showPopup: false,
       isMobile: isMobile.any(),
+      isPopup: false,
+      recentSearches: [],
+      searchBarClick : false
     };
-
-    this.headerSearchRef = createRef();
+    this.searchRef = createRef();
+    this.inputRef = createRef();
   }
 
   stateMap = {
@@ -80,23 +113,24 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderMap = {
-    gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    leftContainer: this.renderLeftContainer.bind(this),
-    // search: this.renderSearch.bind(this),
+    gender: this.renderGenderSwitcher.bind(this),
+    rightContainer: this.renderRightContainer.bind(this),
     back: this.renderBack.bind(this),
   };
 
-  renderLeftContainer() {
+  renderRightContainer() {
+    const { gender } = this.props;
+    const { isArabic } = this.state;
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
     return (
-      <div block="leftContainer" key="leftContainer">
+      <div block="rightContainer" key="rightContainer" mods={{ isArabic }}>
+        {gender !== "influencer" && this.renderSearchIcon()}
+        {this.renderWishlist()}
         {this.renderAccount()}
         {this.renderCart()}
-        {this.renderWishlist()}
-        {this.renderSearchIcon()}
       </div>
     );
   }
@@ -106,7 +140,12 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "", showPopup: false });
+    this.setState({
+      signInPopUp: "",
+      isPopup: false,
+      showPopup: false,
+      search: "",
+    });
   };
 
   onSignIn = () => {
@@ -127,9 +166,6 @@ class HeaderMainSection extends NavigationAbstract {
       />
     );
   }
-  // state = {
-
-  // };
 
   handleScroll = () => {
     // return
@@ -152,7 +188,11 @@ class HeaderMainSection extends NavigationAbstract {
     window.addEventListener("scroll", this.handleScroll);
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
+      sessionStorage.removeItem("Searched_value");
+    }
   }
+
   componentDidUpdate(prevProps, prevState) {
     const { delay } = this.state;
     if (prevState !== delay) {
@@ -207,7 +247,28 @@ class HeaderMainSection extends NavigationAbstract {
     ) {
       return TYPE_CATEGORY;
     }
+    if (matchPath(location.pathname, "/influencer.html")) {
+      return TYPE_INFLUENCER;
+    }
     return window.pageType;
+  }
+
+  getPageTypeTracking = () => {
+    const { urlRewrite, currentRouteName } = window;
+
+    if (currentRouteName === URL_REWRITE) {
+      if (typeof urlRewrite === "undefined") {
+        return "";
+      }
+
+      if (urlRewrite.notFound) {
+        return "notfound";
+      }
+
+      return (urlRewrite.type || "").toLowerCase();
+    }
+
+    return (currentRouteName || "").toLowerCase();
   }
 
   getCategory() {
@@ -245,21 +306,26 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderGenderSwitcher() {
-    const { changeMenuGender, activeOverlay, displaySearch } = this.props;
-    const { showPLPSearch } = this.state;
+    const { changeMenuGender, activeOverlay } = this.props;
+    const { showPLPSearch, isArabic } = this.state;
+    const pathNamesIncludesArrow = [
+      "/influencer.html/Collection",
+      "/influencer.html/Store",
+    ];
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
-
     return (this.isPLP() ||
       this.isPDP() ||
       this.getPageType() === TYPE_BRAND ||
-      showPLPSearch) &&
+      showPLPSearch ||
+      pathNamesIncludesArrow.includes(location.pathname)) &&
       isMobile.any() ? null : (
       <HeaderGenders
         key="genders"
         isMobile
         changeMenuGender={changeMenuGender}
+        mods={{ isArabic }}
       />
     );
   }
@@ -267,7 +333,6 @@ class HeaderMainSection extends NavigationAbstract {
   renderLogo() {
     const { isArabic, showPLPSearch } = this.state;
     const { changeMenuGender } = this.props;
-
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
@@ -289,15 +354,12 @@ class HeaderMainSection extends NavigationAbstract {
         );
       }
     }
-
     this.setMainContentPadding("150px");
-
     return <HeaderLogo key="logo" />;
   }
 
   backFromPLP = () => {
     const { history, chosenGender } = this.props;
-
     switch (chosenGender) {
       case "women":
         history.push("/women.html");
@@ -322,10 +384,17 @@ class HeaderMainSection extends NavigationAbstract {
   renderBack() {
     const { history, displaySearch } = this.props;
     const { isArabic, showPLPSearch } = this.state;
+    const pathNamesIncludesArrow = [
+      "/influencer.html/Collection",
+      "/influencer.html/Store",
+    ];
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
-    return this.isPLP() || this.isPDP() || showPLPSearch ? (
+    return this.isPLP() ||
+      this.isPDP() ||
+      showPLPSearch ||
+      pathNamesIncludesArrow.includes(location.pathname) ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={history.goBack}>
           <p>{__("Back")}</p>
@@ -366,13 +435,241 @@ class HeaderMainSection extends NavigationAbstract {
     document.body.style.overflow = "visible";
   };
 
+  cancelSearch = () => {
+    const { search } = this.state;
+    this.setState({
+      search : "",
+      searchBarClick : false,
+    })
+
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    MOE_trackEvent(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: search || "",
+      app6thstreet_platform: "Web",
+    });
+  }
+
+  onSearchChange = (e) => {
+    const { search } = this.state;
+    this.setState({  search : e.target.value, isPopup : true });
+    const SearchValue = sessionStorage.getItem("Searched_value") || null;
+    const searchedQuery =
+      typeof SearchValue == "object"
+        ? JSON.stringify(SearchValue)
+        : SearchValue;
+    const inputValue = this.inputRef?.current?.value;
+    const inputValueLength = this.inputRef?.current?.value?.length;
+    if (!SearchValue) {
+      sessionStorage.setItem("Searched_value", " ");
+    }
+    if (inputValueLength > 0 && searchedQuery.length < inputValueLength) {
+      sessionStorage.setItem("Searched_value", inputValue);
+    }
+    if (inputValueLength === 0) {
+      Event.dispatch(EVENT_GTM_CLEAR_SEARCH, SearchValue);
+      MOE_trackEvent(EVENT_GTM_CLEAR_SEARCH, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        search_term: SearchValue || "",
+        app6thstreet_platform: "Web",
+      });
+      if (sessionStorage.hasOwnProperty("Searched_value")) {
+        sessionStorage.removeItem("Searched_value");
+      }
+    }
+  };
+
+  renderSearchOverlay = () => {
+    const {isPopup} = this.state;
+    this.setState({isPopup : !isPopup, searchBarClick : true});
+  }
+
+  closeSearchPopup = () => {
+    const { hideActiveOverlay } = this.props;
+    hideActiveOverlay();
+    this.setState({ isOpen: false, showPopup: false });
+  };
+
+  checkForSKU = async (search) => {
+    const config = {
+      q: search,
+      page: 0,
+      limit: 2,
+    };
+    const { data } = await new Algolia().getPLP(config);
+    if (data && data.length === 1) {
+      return data[0];
+    }
+    if (data.length === 0) {
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+    }
+    return null;
+  };
+
+  logRecentSearch = (searchQuery) => {
+    if (searchQuery.trim()) {
+      let recentSearches =
+        JSON.parse(localStorage.getItem("recentSearches")) || [];
+      let tempRecentSearches = [];
+      if (recentSearches) {
+        tempRecentSearches = [...recentSearches.reverse()];
+      }
+      tempRecentSearches = tempRecentSearches.filter(
+        (item) =>
+          item.name.toUpperCase().trim() !== searchQuery.toUpperCase().trim()
+      );
+      if (tempRecentSearches.length > 4) {
+        tempRecentSearches.shift();
+        tempRecentSearches.push({
+          name: searchQuery,
+        });
+      } else {
+        tempRecentSearches.push({ name: searchQuery });
+      }
+      localStorage.setItem(
+        "recentSearches",
+        JSON.stringify(tempRecentSearches.reverse())
+      );
+    }
+  };
+
+  onSearchSubmit = async () => {
+    const { history } = this.props;
+    const { search, isArabic } = this.state;
+    var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+    let finalSearch = search.match(invalid)
+      ? encodeURIComponent(search)
+      : search;
+    const filteredItem = await this.checkForSKU(search);
+    if (sessionStorage.hasOwnProperty("Searched_value")) {
+      sessionStorage.removeItem("Searched_value");
+    }
+    if (filteredItem) {
+      this.logRecentSearch(search);
+      history.push(filteredItem?.url.split(".com")[1]);
+    } else {
+      const {
+        AppState: { gender },
+      } = getStore().getState();
+      const PRODUCT_RESULT_LIMIT = 8;
+      const productData = await new Algolia().searchBy(
+        isArabic
+          ? {
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: getGenderInArabic(gender),
+              addAnalytics: true,
+            }
+          : {
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: true,
+            }
+      );
+      if (productData?.nbHits !== 0 && productData?.data.length > 0) {
+        this.logRecentSearch(search);
+        Event.dispatch(EVENT_GTM_SEARCH, search);
+        MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: search || "",
+          app6thstreet_platform: "Web",
+        });
+      }
+
+      const queryID = productData?.queryID ? productData?.queryID : null;
+      let requestedGender = gender;
+      let genderInURL;
+      if (isArabic) {
+        if (gender === "kids") {
+          genderInURL = "أولاد,بنات";
+        } else {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        }
+      } else {
+        if (gender === "kids") {
+          genderInURL = "Boy,Girl";
+        } else {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        }
+      }
+      if (gender !== "home" && gender !== "all") {
+        history.push({
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
+          state: { prevPath: window.location.href },
+        });
+      } else if (gender === "all") {
+        const allGender = isArabic()
+          ? "أولاد,بنات,نساء,رجال"
+          : "Men,Women,Kids,Boy,Girl";
+        history.push({
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
+          state: { prevPath: window.location.href },
+        });
+      } else {
+        history.push({
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}`,
+          state: { prevPath: window.location.href },
+        });
+      }
+    }
+  };
+
+  onSubmit = () => {
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    const submitBtn = children[1];
+    this.onSearchSubmit();
+    this.closePopup();
+  };
+
+  ClearSearch = () => {
+    const { search  } = this.state
+    this.setState({
+      search : "",
+    });
+    Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
+    MOE_trackEvent(EVENT_GTM_CANCEL_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      search_term: search || "",
+      app6thstreet_platform: "Web",
+    });
+  };
+
+  SearchFieldClick = () => {
+    Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
+    MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      screen_name: this.getPageTypeTracking(),
+      app6thstreet_platform: "Web",
+    });
+  }
+
   renderSearchIcon() {
-    const { isArabic, showPLPSearch } = this.state;
+    const { isArabic, showPLPSearch, search, isPopup, searchBarClick } = this.state;
+    let recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
     if ((isMobile.any() && !this.isPLP()) || showPLPSearch) {
       return null;
     }
     return (
-      <div block="SearchIcon" mods={{ isArabic: isArabic }}>
+      <>
+        { isMobile.any() ? <div block="SearchIcon" mods={{ isArabic: isArabic }}>
         <button
           block="SearchIcon"
           onClick={
@@ -384,7 +681,59 @@ class HeaderMainSection extends NavigationAbstract {
           aria-label="PLP Search Button"
           role="button"
         ></button>
-      </div>
+      </div> : <div id="searchBlock" mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
+          <div block="SearchIcon">
+            <div>
+              <img
+                lazyLoad={true}
+                id="searchIconImage"
+                src={searchIcon}
+                alt="searchIcon"
+                mods={{ isArabic }}
+              />
+            </div>
+            <div onClick={this.SearchFieldClick}>
+              <Form block="searchFrom" 
+              id="header-search"
+              onSubmit={this.onSubmit}
+              ref={this.searchRef}
+              autoComplete="off">
+                <input
+                  id="search-field"
+                  ref={this.inputRef}
+                  name="search"
+                  type="text"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  placeholder={
+                    isMobile.any() || isMobile.tablet()
+                      ? __("What are you looking for?")
+                      : (!isPopup  || !searchBarClick) && __("Search for brands...")
+                  }
+                  onChange={this.onSearchChange}
+                  onFocus={this.onFocus}
+                  value={search}
+                />
+              </Form>
+            </div>
+            { isPopup && (
+              <div block="clear-button" onClick={this.cancelSearch}>
+                <img src={Clear} alt="clear-black.png" />
+              </div>
+            )}
+          </div>
+          <div id="overlay-sections">
+            {(recentSearches.length > 0 || search.length > 2) && isPopup? (<SearchOverlay
+                isPopup={isPopup}
+                search={this.state.search}
+                closePopup={this.closePopup}
+                ClearSearch={this.ClearSearch}
+              />
+            ) : null}
+          </div>
+        </div>}
+      </>
     );
   }
 
@@ -425,7 +774,6 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
-            renderMySignInPopup={this.showMyAccountPopup}
           />
         </div>
       );
@@ -448,9 +796,8 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { signInPopUp, showPLPSearch } = this.state;
-    const { displaySearch } = this.props;
-    const isPDPSearchVisible = this.isPDP() && displaySearch;
+    const { showPLPSearch } = this.state;
+    const { displaySearch, gender } = this.props;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>
@@ -463,7 +810,7 @@ class HeaderMainSection extends NavigationAbstract {
           {this.renderNavigationState()}
           {this.renderDesktopSearch()}
         </div>
-        {this.renderSearch()}
+        {gender !== "influencer" && this.renderSearch()}
       </>
     );
   }

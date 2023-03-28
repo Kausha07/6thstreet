@@ -301,6 +301,7 @@ const filterOutCategoryValues = ({
   values = {},
   facetGender = {},
   queryGender = "",
+  lang = "en",
 }) => {
   const queryGenderValues = queryGender ? queryGender.split(",") : [];
   const facetGenderValues = Object.keys(facetGender);
@@ -324,7 +325,11 @@ Kids /// Baby Boy /// Shoes
 */
 
         if (VISIBLE_GENDERS.KIDS[genderValue]) {
-          return key.match(`Kids ///`);
+          if (lang === "ar") {
+            return key.match(`أطفال ///`);
+          } else {
+            return key.match(`Kids ///`);
+          }
         }
 
         if (VISIBLE_GENDERS.OTHER[genderValue]) {
@@ -336,7 +341,7 @@ Kids /// Baby Boy /// Shoes
     }
 
     // Remove "Outlet"
-    if (key.match("Outlet")) {
+    if (key.match("Outlet") || key.match("Influencers")) {
       keepValue = false;
     }
 
@@ -373,7 +378,8 @@ const isCategoryFacet = (facetKey) =>
   // Avoid processing 'categories.level0'
   facetKey.match(/categories\.level([1-9]\d*)/);
 const _formatFacets = ({ facets, queryParams }) => {
-  const { gender } = queryParams;
+  const { gender, locale } = queryParams;
+  const [lang] = locale.split("-");
 
   return Object.entries(facets).reduce((acc, [facetKey, facetValue]) => {
     if (isCategoryFacet(facetKey)) {
@@ -381,6 +387,7 @@ const _formatFacets = ({ facets, queryParams }) => {
         values: { ...facetValue },
         facetGender: facets.gender,
         queryGender: gender,
+        lang,
       });
 
       return acc;

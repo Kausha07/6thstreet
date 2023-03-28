@@ -8,8 +8,24 @@ export class FieldSelect extends SourceFieldSelect {
         isMobile: isMobile.any() || isMobile.tablet(),
     }
 
+    componentDidMount() {
+        const { id } = this.props;
+        const { isMobile } = this.state;
+        
+        var selector = document.getElementById(id);
+
+        if(selector && (id === "city" || id === "region_string" || id === "region_id") && isMobile) {
+
+            selector.addEventListener('mousedown', function(event){
+            if (event.preventDefault) {
+                event.preventDefault(); 
+            } 
+            });
+        }
+      }
+
     componentDidUpdate() {
-        const { showCityPopup, citySelected, postCodeValue } = this.props;
+        const { showCityPopup, citySelected, postCodeValue, id } = this.props;
 
         if(showCityPopup) {
             const elem = document.getElementById("mobileBottomBar");
@@ -55,7 +71,7 @@ export class FieldSelect extends SourceFieldSelect {
             skipValue,
             oncityClick,
             showCityPopup,
-            handleShowCityPopup
+            handleShowCityPopup,
         } = this.props;
 
         return (
@@ -66,10 +82,10 @@ export class FieldSelect extends SourceFieldSelect {
               ref={ formRef }
               name={ name }
               id={ id }
-              disabled={ true }
               tabIndex="0"
               value={ value || '' }
               onChange={ onChange }
+              className='selectCityArea'
               data-skip-value={ skipValue }
             >
                 { this.renderPlaceholderMobi() }
