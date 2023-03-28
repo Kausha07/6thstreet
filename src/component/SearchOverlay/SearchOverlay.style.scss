@@ -443,7 +443,6 @@ div.SearchOverlay.Overlay {
 .SearchSuggestion {
     position: absolute;
     width: 100%;
-    
     &-TrandingTag {
         font-family: 'Avenir Next';
         font-size : 13px;
@@ -454,6 +453,11 @@ div.SearchOverlay.Overlay {
         background-color: #F0F0F0;
         opacity: 1;
         text-transform: capitalize;
+        width : 515px;
+        white-space: nowrap;
+        overflow: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
     }
 
     &-Item {
