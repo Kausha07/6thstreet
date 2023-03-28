@@ -129,7 +129,6 @@ class MenuGrid extends PureComponent {
       <>
         <span block="MenuGrid" elem="Title">
           {this.props.title}
-          {/* {__("Shop by product")} */}
         </span>
         
         <div
