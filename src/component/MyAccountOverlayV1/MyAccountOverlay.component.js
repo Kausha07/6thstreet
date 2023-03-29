@@ -888,12 +888,7 @@ export class MyAccountOverlay extends PureComponent {
               name="password"
               autoComplete="new-password"
               onFocus={() => sendEvents(EVENT_TYPE_PASSWORD)}
-              validation={[
-                "notEmpty",
-                "password",
-                "containNumber",
-                "containCapitalize",
-              ]}
+              validation={["notEmpty", "password"]}
             />
           </fieldset>
           <div

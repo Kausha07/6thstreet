@@ -1182,7 +1182,7 @@
     "You have requested to change your password. If you didn't initiated this process, please contact our customer service.": "لقد طلبت تغيير كلمة المرور الخاصة بك. إذا لم تطلب ذلك، فيرجى الاتصال بخدمة العملاء.",
     "At least one uppercase letter": "ما لا يقل عن حرف كبير واحد",
     "At least one digit": "على الأقل رقم واحد",
-    "At least 8 character in length": "ما لا يقل عن 8 أحرف",
+    "At least 6 character in length": "ما لا يقل عن 6 أحرف",
     "By resetting your password you agree with our": "من خلال إعادة تعيين كلمة المرور الخاصة بك ، فإنك توافق على",
     "Repeat password": "اعد كلمة المرور",
     "Save": "حفظ",

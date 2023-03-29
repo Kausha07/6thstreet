@@ -27,19 +27,13 @@ export function PasswordChange(props) {
   const [isLoading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState(null);
   const [repeatPassword, setRepeatPassword] = useState(null);
-  const [isAtleastOneCapital, setIsAtleastOneCapital] = useState(false);
-  const [isAtleastOneDigit, setIsatleastOneDigit] = useState(false);
   const [isSavePasswordDisabled, setIsSavePasswordDisabled] = useState(true);
   const [isPasswordSuccessfull, setIsPasswordSuccessfull] = useState(false);
-  const AtleastOneCapitalRegex = /[A-Z][A-Z]*/;
-  const AtleastOneDigitRegex = /\d/;
-  const PasswordLengthRequired = 8;
+  const PasswordLengthRequired = 6;
   const isArabicStyle = isArabic();
 
   useEffect(() => {
     if (
-      isAtleastOneCapital &&
-      isAtleastOneDigit &&
       newPassword?.length >= PasswordLengthRequired &&
       newPassword === repeatPassword
     ) {
@@ -50,20 +44,6 @@ export function PasswordChange(props) {
   }, [newPassword, repeatPassword]);
 
   function onNewPasswordChange(password) {
-    if (AtleastOneCapitalRegex.test(password)) {
-      setIsAtleastOneCapital(true);
-    } else if (!AtleastOneCapitalRegex.test(password)) {
-      setIsAtleastOneCapital(false);
-    }
-    if (AtleastOneDigitRegex.test(password)) {
-      setIsatleastOneDigit(true);
-    } else if (!AtleastOneDigitRegex.test(password)) {
-      setIsatleastOneDigit(false);
-    }
-    if (newPassword === null || password.length === 0) {
-      setIsatleastOneDigit(false);
-      setIsAtleastOneCapital(false);
-    }
     setNewPassword(password);
   }
 
@@ -153,28 +133,6 @@ export function PasswordChange(props) {
               <div className="msg">
                 <span className="msgs-icon">
                   <img
-                    src={isAtleastOneCapital ? successTick : errorCross}
-                    alt="error"
-                  />
-                </span>
-                <span className={!isAtleastOneCapital ? "error" : "succuss"}>
-                  {__("At least one uppercase letter")}
-                </span>
-              </div>
-              <div className="msg">
-                <span className="msgs-icon">
-                  <img
-                    src={isAtleastOneDigit ? successTick : errorCross}
-                    alt="error"
-                  />
-                </span>
-                <span className={!isAtleastOneDigit ? "error" : "succuss"}>
-                  {__("At least one digit")}
-                </span>
-              </div>
-              <div className="msg">
-                <span className="msgs-icon">
-                  <img
                     src={
                       newPassword &&
                       newPassword.length >= PasswordLengthRequired
@@ -191,7 +149,7 @@ export function PasswordChange(props) {
                       : "error"
                   }
                 >
-                  {__("At least 8 character in length")}
+                  {__(`At least 6 character in length`)}
                 </span>
               </div>
             </div>
