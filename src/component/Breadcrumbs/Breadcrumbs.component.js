@@ -11,6 +11,7 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from "react-redux";
 
 import Breadcrumb from 'Component/Breadcrumb';
 import ContentWrapper from 'Component/ContentWrapper';
@@ -25,6 +26,11 @@ import './Breadcrumbs.extended.style';
  * Breadcrumbs
  * @class Breadcrumbs
  */
+
+export const mapStateToProps = (state) => ({
+    gender: state.AppState.gender,
+});
+
 export class Breadcrumbs extends PureComponent {
     static propTypes = {
         breadcrumbs: BreadcrumbsType.isRequired,
@@ -74,7 +80,7 @@ export class Breadcrumbs extends PureComponent {
         }
 
         return (
-            <ContentWrapper mix={ { block: 'Breadcrumbs' } } label={ __('Breadcrumbs (current location)...') }>
+            <ContentWrapper mix={ { block: `Breadcrumbs  ${this.props.gender === "influencer" ? "removeExtraSpaceForInfluencer" : "backToNormal"}` } } label={ __('Breadcrumbs (current location)...') }>
                 <nav aria-label="Breadcrumbs navigation">
                     <ul
                       block="Breadcrumbs"
@@ -94,4 +100,5 @@ export class Breadcrumbs extends PureComponent {
     }
 }
 
-export default Breadcrumbs;
+export default connect (mapStateToProps, null)(Breadcrumbs);
+

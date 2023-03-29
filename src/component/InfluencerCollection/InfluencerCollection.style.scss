@@ -1,0 +1,283 @@
+.InfluencerCollection {
+  @include desktop {
+    width: 76.389vw;
+    max-width: 1100px;
+    margin: 50px auto 0;
+  }
+
+  @include mobile {
+    padding-bottom: 40px !important;
+    margin: 15px auto;
+    padding-top: 20px;
+  }
+
+  .spck-main {
+    position: relative;
+    border-bottom: 1px solid #dddddd;
+
+    .mainImage {
+      width: 100%;
+
+      .backgroundImage {
+        @include desktop {
+          min-height: 540px;
+          object-fit: cover;
+        }
+
+        width: 100%;
+        max-height: 540px;
+        object-fit: cover;
+        object-position: 0% 25%;
+        border: 2px solid #ffffff;
+      }
+
+      .circle_image {
+        position: absolute;
+        bottom: -8%;
+        left: 45%;
+
+        img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          border: 2px solid #ffffff;
+        }
+
+        @include mobile {
+          bottom: -10%;
+          left: 39%;
+
+          img {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+          }
+        }
+      }
+
+      @include mobile {
+        width: 100%;
+        height: 300px;
+
+        img {
+          width: 100%;
+          height: 300px;
+        }
+      }
+    }
+
+    .mainVideo {
+      video {
+        @include desktop {
+          min-height: 540px;
+          object-fit: cover;
+        }
+
+        width: 100%;
+        max-height: 540px;
+        object-fit: cover;
+        object-position: 0 30%;
+      }
+
+      .circle_image {
+        position: absolute;
+        bottom: -8%;
+        left: 45%;
+
+        img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          border: 2px solid #ffffff;
+        }
+
+        @include mobile {
+          bottom: -14%;
+          left: 39%;
+
+          img {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+          }
+        }
+      }
+
+      button {
+        position: absolute;
+        right: 25px;
+        bottom: 25px;
+        background-color: #e2e2e2;
+        height: 40px;
+        width: 40px;
+        border-radius: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          height: 25px ;
+          width: 25px;
+          border-radius: 50%;
+          border: none !important;
+          min-height: 0 !important;
+        }
+
+        @include mobile {
+          bottom: 10px;
+          right: 10px;
+          height: 30px;
+          width: 30px;
+
+          img {
+            height: 20px ;
+            width: 20px;
+          }
+        }
+      }
+
+      @include mobile {
+        width: 100%;
+        height: 300px;
+
+        video {
+          width: 100%;
+          height: 300px;
+        }
+      }
+    }
+
+    .Influencer_info_block {
+      text-align: center;
+      margin: 55px auto;
+      width: 50%;
+
+      h1 {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 2rem;
+      }
+
+      p {
+        font-weight: 500;
+        margin: 0;
+
+        &:last-of-type {
+          color: #bbbbbb;
+        }
+      }
+
+      .shareButton {
+        border: 1px solid #000000;
+        border-radius: 10px;
+        background-color: #ffffff;
+        font-family: inherit;
+        margin: 0 auto;
+        margin-top: 15px;
+        text-transform: capitalize;
+        font-weight: 600;
+        height: 32px !important;
+        width: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+        &_isArabic {
+          img {
+            margin-right: initial;
+            margin-left: 10px;
+          }
+        }
+      }
+
+      @include mobile {
+        width: 80%;
+
+        h1 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+.AnimationWrapper {
+  width: 100%;
+  min-height: 300px;
+  background-image: linear-gradient(
+    to right,
+    #e2e2e2 calc(50%),
+    #dcdcdc 50%,
+    #e6e6e6 calc(50%)
+  );
+  background-size: 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(200% + 200px);
+    bottom: 0;
+    background-image: inherit;
+    animation: move 1s linear infinite;
+  }
+}
+
+.Influencer_Products {
+  margin-top: 30px;
+
+  .PLPPage {
+    ul {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 19.7px 28.6px;
+
+      @include mobile() {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0;
+        grid-gap: 29px 4px;
+      }
+    }
+  }
+}
+.shareButtonDesign {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  z-index: 9;
+  .ShareAndWishlistButtonContainer {
+    width: 32px !important;
+    .Share {
+      height: 40px;
+      width: 40px !important;
+      border-radius: 50%;
+      border: 1px solid black;
+      text-align: center;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 0 !important;
+
+      svg {
+        height: 25px;
+        width: 25x;
+        padding-right: 2px;
+      }
+    }
+  }
+}
+
+.LoadMore {
+  margin-bottom: 50px;
+}

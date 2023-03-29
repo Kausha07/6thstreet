@@ -1,0 +1,106 @@
+.storeBlock {
+  left: -227px;
+  top: 27px;
+
+  @include mobile {
+    left: -166px;
+  }
+
+  &_isArabic {
+    @include mobile {
+      left: initial;
+      right: -166px;
+      text-align: right;
+    }
+  }
+}
+
+.collectionBlock {
+  left: -476px;
+  top: 33px;
+
+  @include mobile {
+    left: -288px;
+  }
+
+  &_isArabic {
+    left: initial;
+    right: -480px;
+    text-align: right;
+
+    @include mobile {
+      right: -275px;
+    }
+  }
+}
+
+.shareBlock {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 427px;
+  background-color: #ffffff;
+  text-align: left;
+  padding: 33px 21px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  z-index: 9;
+
+  .h3 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 25px;
+    margin-top: 0;
+    margin-bottom: 36px;
+    &_isArabic {
+      text-align: right;
+    }
+  }
+
+  .Overlay {
+    &-ButtonsContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      button {
+        background-color: #f6f6f6;
+        height: 60px;
+        width: 60px;
+        border-radius: 100%;
+      }
+    }
+  }
+
+  @include mobile {
+    width: 275px;
+    padding: 23px 11px;
+    .h3 {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 20px;
+      margin-top: 0;
+      margin-bottom: 26px;
+    }
+    .Overlay {
+      &-ButtonsContainer {
+        padding-bottom: 10px;
+        align-items: center;
+        button {
+          background-color: #f6f6f6;
+          height: 35px;
+          width: 35px;
+          border-radius: 100%;
+          padding: 0;
+
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+    }
+  }
+}

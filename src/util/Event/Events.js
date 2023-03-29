@@ -82,6 +82,8 @@ export const EVENT_GTM_NEW_AUTHENTICATION = "gtm_new_signin_signup";
 export const EVENT_GTM_ACCOUNT_TAB_CLICK = "top_nav_account_click";
 export const EVENT_GTM_TOP_NAV_CLICK = "top_nav_click";
 export const EVENT_GTM_CUSTOMER_SUPPORT = "customer_support";
+//Influencer GTM Tracking Events
+export const EVENT_GTM_INFLUENCER = "gtm_influencer";
 
 //MOENGAGE EVENTS
 export const EVENT_MOE_PROMOTION_IMPRESSION = "view_promotion";
@@ -270,3 +272,15 @@ export const EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW =
   "forgot_password_success_screen_view";
 export const EVENT_ACCOUNT_PAYMENT_CLICK = "account_payment_click";
 export const EVENT_WISHLIST_ICON_CLICK = "Wishlist_icon_click";
+//influencer Tracking Events
+export const EVENT_INFLUENCER_HOME_SCREEN_VIEW = "influencer_home_screen_view";
+export const EVENT_INFLUENCER_SEARCH_CLICK = "influencer_search_click";
+export const EVENT_INFLUENCER_REFINE_CLICK = "influencer_refine_click";
+export const EVENT_INFLUENCER_REFINE_GENDER_CLICK = "influencer_refine_gender_click";
+export const EVENT_INFLUENCER_DETAIL_CLICK = "influencer_detail_click";
+export const EVENT_COLLECTION_DETAIL_CLICK = "collection_detail_click";
+export const EVENT_SHARE_COLLECTION_CLICK = "share_collection_click";
+export const EVENT_SHARE_STORE_CLICK = "share_store_click";
+export const EVENT_GET_THE_LOOK_CLICK = "get_the_look_click";
+export const EVENT_FOLLOW_INFLUENCER_CLICK = "follow_influencer_click";
+export const EVENT_UNFOLLOW_INFLUENCER_CLICK = "unfollow_influencer_click";

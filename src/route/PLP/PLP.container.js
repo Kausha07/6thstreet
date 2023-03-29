@@ -25,6 +25,7 @@ import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
+import { getLocaleFromUrl } from "Util/Url/Url";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
@@ -46,7 +47,6 @@ import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
 import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
-import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
 export const BreadcrumbsDispatcher = import(
@@ -68,6 +68,7 @@ export const mapStateToProps = (state) => ({
   plpWidgetData: state.PLP.plpWidgetData,
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
+  influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -140,8 +141,27 @@ export class PLPContainer extends PureComponent {
   }
 
   static async request(isPage, props) {
-    const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions();
+    const {
+      requestProductList,
+      requestProductListPage,
+      influencerAlgoliaQuery,
+    } = props;
+    let options;
+    if (window.location.pathname.includes("influencer")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      let params = {
+        q: "",
+      };
+      if(!Object.keys(parsedParams).includes("page"))
+      {
+        params["page"] = "0";
+      }
+      params["categories.level2"] = influencerAlgoliaQuery;
+      const finalParams = { ...parsedParams, ...params };
+      options = finalParams;
+    } else {
+      options = PLPContainer.getRequestOptions();
+    }
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -687,7 +707,32 @@ export class PLPContainer extends PureComponent {
       .split(".html")[0]
       .substring(1)
       .split("/")?.[0];
-    if(exceptionalBrand.includes(brandName)){
+    if (exceptionalBrand.includes(brandName)) {
+      return null;
+    }
+    try {
+      getBrandInfoByName(brandName).then((resp) => {
+        this.setState({
+          brandDescription: isArabic()
+            ? resp?.result?.[0]?.description_ar
+            : resp?.result?.[0]?.description,
+          brandImg: resp?.result?.[0]?.image,
+          brandName: isArabic() ? resp?.result?.[0]?.name_ar : resp?.result?.[0]?.name,
+        });
+        this.props.setBrandurl(resp?.result?.[0]?.url_path);
+      })
+    } catch (err) {
+      console.error("There is an issue while fetching brand information.", err);
+    }
+  }
+
+  async getBrandDetailsByAloglia() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home']
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    if (exceptionalBrand.includes(brandName)) {
       return null;
     }
     const data = await new Algolia({
@@ -839,9 +884,10 @@ export class PLPContainer extends PureComponent {
       options: { q: query },
       options,
       menuCategories,
+      gender
     } = this.props;
     const {isArabic} = this.state
-    if (query) {
+    if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
@@ -1046,3 +1092,4 @@ export class PLPContainer extends PureComponent {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(PLPContainer)
 );
+
