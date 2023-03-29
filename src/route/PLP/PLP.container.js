@@ -47,7 +47,6 @@ import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
 import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
-import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
 export const BreadcrumbsDispatcher = import(

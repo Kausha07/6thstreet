@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import { FlashAnimation } from "../Icons";
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
@@ -70,7 +71,8 @@ class HeaderGenders extends PureComponent {
         },
         {
             label: `${__('Influencer')}`,
-            key: 'influencer'
+            key: 'influencer',
+            icon: <img block="GenderIcon" src={FlashAnimation} alt="my-gif" />
         }
     ];
     
