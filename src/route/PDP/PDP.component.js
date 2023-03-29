@@ -11,7 +11,6 @@ import "./PDP.style";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import isMobile from "Util/Mobile";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { VUE_PAGE_VIEW } from "Util/Event";
@@ -187,26 +186,51 @@ class PDP extends PureComponent {
   }
 
   renderLabelAnimation() {
-    const { isLoading } = this.props;
     return (
       <>
         <div className="PDP-AnimationWrapper">
           <div block="PDP" elem="MainSection">
             <div block="animation" elem="Gallery">
               <div block="Gallery" elem="crumbs">
-                <div className="cards"></div>
-                <div className="cards"></div>
-                <div className="cards"></div>
-                <div className="cards"></div>
-                <div className="cards"></div>
+                <div block="card"></div>
+                <div block="card"></div>
+                <div block="card"></div>
+                <div block="card"></div>
+                <div block="card"></div>
               </div>
               <div block="Gallery" elem="image">
-                <div block="cards"></div>
+                <div block="card"></div>
               </div>
             </div>
 
             <div block="animation" elem="Summary">
-              <Loader isLoading={isLoading} />
+              <div block="icons">
+                <div block="miniCards card" ></div>
+                <div block="miniCards card"></div>
+              </div>
+              <div block="title summaryCard card"></div>
+              <div block="addToCartBtn summaryCard card"></div>
+            </div>
+          </div>
+          <div block="card PDP" elem="line"></div>
+          <div block="PDP" elem="detailsSection">
+              <div block="card title"></div>
+              <div block="Icons">
+                <div block="icons card"></div>
+                <div block="icons card"></div>
+              </div>
+              <div block="detailWrapper">
+                <div block="detailInner card"></div>
+                <div block="detailInner card"></div>
+              </div>
+              <div block="card detailWrapper" elem="Btn"></div>
+          </div>
+          <div block="card PDP" elem="line"></div>
+          <div block="PDP" elem="brandDetail">
+            <div block="card image"></div>
+            <div block="content">
+              <div block="card text"></div>
+              <div block="card moreBtn"></div>
             </div>
           </div>
         </div>
