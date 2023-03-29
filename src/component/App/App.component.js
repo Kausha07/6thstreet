@@ -12,6 +12,7 @@ import Cart from "Store/Cart/Cart.reducer";
 import PDP from "Store/PDP/PDP.reducer";
 import PLP from "Store/PLP/PLP.reducer";
 import LiveParty from "Store/LiveParty/LiveParty.reducer";
+import InfluencerReducer from "Store/Influencer/Influencer.reducer";
 import SearchSuggestions from "Store/SearchSuggestions/SearchSuggestions.reducer";
 import BrandCms from "Store/BrandCms/BrandCms.reducer";
 import * as Sentry from "@sentry/react";
@@ -29,7 +30,8 @@ class App extends SourceApp {
     store.injectReducer("PDP", PDP);
     store.injectReducer("SearchSuggestions", SearchSuggestions);
     store.injectReducer("LiveParty", LiveParty);
-    store.injectReducer("BrandCms", BrandCms)
+    store.injectReducer("InfluencerReducer", InfluencerReducer);
+    store.injectReducer("BrandCms", BrandCms);
 
     return store;
   }

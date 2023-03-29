@@ -51,10 +51,10 @@ main {
 }
 
 .HeaderMainSection {
-  display: flex;
-  flex-direction: row;
+  display: grid;
   justify-content: center;
   align-items: center;
+  grid-template-columns: 200px 1.5fr 1fr 0.5fr;
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -75,8 +75,14 @@ main {
       z-index: 3;
     }
   }
+  .rightIcons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   @include mobile {
+    display: flex;
     &_showPLPSearch {
       &[data-visible="true"] {
         z-index: 9999 !important;
@@ -411,37 +417,29 @@ main {
       }
     }
   }
-
+  
   .moveUpGenders {
     @include mobile {
       top: 48px;
-      padding-left: 17.5%;
-      padding-right: 17.5%;
       background-color: #ffffff;
       padding-top: 10px;
       padding-bottom: 18px;
     }
-
     @include tablet {
       top: 50px;
     }
   }
-
   .moveDownGenders {
     @include mobile {
       top: 100px;
-      padding-left: 17.5%;
-      padding-right: 17.5%;
       background-color: #ffffff;
       padding-top: 10px;
       padding-bottom: 18px;
     }
-
     @include tablet {
       top: 100px;
     }
   }
-
   .HeaderGenders {
     @include mobile {
       &_isMobile {
@@ -454,26 +452,25 @@ main {
         margin-top: 0px;
         position: fixed;
         justify-content: center;
-        padding-left: 10.5%;
-        padding-right: 10.5%;
-      }
-
-      &_isArabic {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 2%;
+        padding-right: 3.5%;
       }
 
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        width: 33.33%;
+        width: 16%;
 
         &:last-child {
-          width: 35% !important;
+          width: 25% !important;
         }
 
         &_isArabic {
+          width: 14%;
           &:last-child {
+            width: 65% !important;
+          }
+          &:nth-last-child(2) {
             width: 45% !important;
           }
         }
@@ -494,7 +491,7 @@ main {
           }
         }
 
-        .GenderButton-Button {
+    .GenderButton-Button {
           padding: 0 0px;
         }
       }
@@ -541,7 +538,6 @@ main {
   }
 
   @include desktop() {
-    display: flex;
     height: 84px;
     flex-direction: unset;
     padding: 0;
@@ -550,10 +546,6 @@ main {
     &_isMobile {
       display: block;
     }
-  }
-
-  @include desktop() {
-    display: flex;
   }
 
   .DesktopSearch {
@@ -646,18 +638,13 @@ main {
 
 .SearchIcon {
   @include mobile {
-    margin-right: 56px;
+    margin-left: 216px;
     top: 4px;
 
     &_isArabic {
-      margin-right: 0;
-      margin-left: 56px !important;
+      margin-left: 0;
+      margin-right: 216px !important;
     }
-  }
-
-  &_isArabic {
-    margin-right: 0;
-    margin-left: 22px;
   }
 
   #searchIconImage {

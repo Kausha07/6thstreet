@@ -8,6 +8,7 @@ import "./HeaderGenders.style";
 export const mapStateToProps = (state) => ({
   currentContentGender: state.AppState.gender,
   product: state.PDP.product,
+  gender: state.AppState.gender,
 });
 export const mapDispatchToProps = (dispatch) => ({
   setGender: (gender) => dispatch(setGender(gender)),
@@ -34,7 +35,9 @@ class HeaderGendersContainer extends PureComponent {
   setCurrentGender() {
     const { currentContentGender } = this.props;
     if (currentContentGender !== "all") {
-      if (window.location.pathname.includes("women")) {
+      if(this.props.gender === "influencer"){
+        this.props.setGender("influencer");
+      } else if (window.location.pathname.includes("women")) {
         this.props.setGender("women");
       } else if (window.location.pathname.includes("men")) {
         this.props.setGender("men");
@@ -42,6 +45,8 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (window.location.pathname.includes("home")) {
         this.props.setGender("home");
+      } else if (window.location.pathname.includes("influencer")) {
+        this.props.setGender("influencer");
       } else if (this.props.product.gender === "Women") {
         this.props.setGender("women");
       } else if (this.props.product.gender === "Men") {
@@ -50,6 +55,8 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (this.props.product.gender === "Home") {
         this.props.setGender("home");
+      } else if (this.props.product.gender === "Influencer") {
+        this.props.setGender("influencer");
       }
     }
   }
