@@ -267,6 +267,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     // dispatch(updateGuestUserEmail(""));
     deleteAuthorizationToken();
     deleteMobileAuthorizationToken();
+    dispatch(showNotification("success", __("You have been logged out")));
     dispatch(setCartId(null));
     dispatch(removeCartItems());
     dispatch(setCustomerDefaultShippingAddress(null));
@@ -285,7 +286,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
-    dispatch(showNotification("success", __("You have been logged out")));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
     MOE_destroySession();
