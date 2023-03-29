@@ -63,6 +63,7 @@ import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import { isArabic } from "Util/App";
 import { sha256 } from "js-sha256";
 import { getCookie } from "Util/Url/Url";
+import { showNotification } from "Store/Notification/Notification.action";
 export {
   CUSTOMER,
   ONE_MONTH_IN_SECONDS,
@@ -92,7 +93,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             if (index === parseInt(engAreaIndex[0])) {
               return area;
             }
-          },
+          }
         );
         finalArea = arabicArea[0];
         finalCity = finalResp[0].city_ar;
@@ -213,7 +214,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
-          }),
+          })
         );
         BrowserDatabase.setItem(
           {
@@ -224,7 +225,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             }),
           },
           CUSTOMER,
-          ONE_MONTH_IN_SECONDS,
+          ONE_MONTH_IN_SECONDS
         );
         const TiktokData = {
           mail: customer_data?.email ? sha256(customer_data?.email) : null,
@@ -257,7 +258,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       },
       () => {
         window.location.reload();
-      },
+      }
     );
   }
 
@@ -284,10 +285,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
+    dispatch(showNotification("success", __("You have been logged out")));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
     MOE_destroySession();
-
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
     window.dispatchEvent(loginEvent);
@@ -399,7 +400,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       data: { token, t, user, user: { custom_attributes, gender, id } } = {},
     } = options;
     const phoneAttribute = custom_attributes?.filter(
-      ({ attribute_code }) => attribute_code === "contact_no",
+      ({ attribute_code }) => attribute_code === "contact_no"
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
@@ -440,16 +441,16 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         options.hasOwnProperty("type")
           ? options
           : {
-            username,
-            password,
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          }
+              username,
+              password,
+              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+            }
       );
-    if (options?.email){
-       MOE_AddUniqueID(options?.email);
+    if (options?.email) {
+      MOE_AddUniqueID(options?.email);
     }
     const phoneAttribute = custom_attributes?.filter(
-      ({ attribute_code }) => attribute_code === "contact_no",
+      ({ attribute_code }) => attribute_code === "contact_no"
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
@@ -503,7 +504,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
+        itemPrice
       );
     });
   }
@@ -511,10 +512,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   setCustomAttributes(dispatch, custom_attributes) {
     const customer = BrowserDatabase.getItem(CUSTOMER) || {};
     const phoneAttribute = custom_attributes.filter(
-      ({ attribute_code }) => attribute_code === "contact_no",
+      ({ attribute_code }) => attribute_code === "contact_no"
     );
     const isVerifiedAttribute = custom_attributes.filter(
-      ({ attribute_code }) => attribute_code === "is_mobile_otp_verified",
+      ({ attribute_code }) => attribute_code === "is_mobile_otp_verified"
     );
     const { value: phoneNumber } =
       phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
@@ -524,7 +525,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         : { value: false };
     setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
     dispatch(
-      updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }),
+      updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified })
     );
   }
 
@@ -551,13 +552,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             if (request["intl_vendors"]) {
               sessionStorage.setItem(
                 "IntlEddAddressRes",
-                JSON.stringify(response.result),
+                JSON.stringify(response.result)
               );
             } else {
               sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
               sessionStorage.setItem(
                 "EddAddressRes",
-                JSON.stringify(response.result),
+                JSON.stringify(response.result)
               );
             }
           }
