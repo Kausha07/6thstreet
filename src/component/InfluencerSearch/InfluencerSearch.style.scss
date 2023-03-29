@@ -137,11 +137,16 @@
         .sliderTitle {
           position: absolute;
           bottom: 14px;
-          margin-left: 8px;
+          left: 6px;
           color: #ffffff;
           font-size: 16px;
           font-weight: 700;
           text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 1);
+
+          &_isArabic {
+            left: initial;
+            right: 6px;
+          }
         }
       }
     }

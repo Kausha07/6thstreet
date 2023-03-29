@@ -195,7 +195,9 @@ const InfluencerSearch = (props) => {
             data-tag={item.tag ? item.tag : ""}
           >
             <img src={thumbnail_url} alt="influencerSearch_slider_bannner" />
-            <p className="sliderTitle">{title}</p>
+            <p block="sliderTitle" mods={{ isArabic: isArabic() }}>
+              {title}
+            </p>
           </Link>
         </div>
       </li>
