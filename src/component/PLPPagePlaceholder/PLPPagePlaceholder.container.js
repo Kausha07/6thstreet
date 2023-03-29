@@ -8,6 +8,7 @@ import PLPPagePlaceholder from "./PLPPagePlaceholder.component";
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
+  gender: _state.AppState.gender,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -43,6 +44,10 @@ export class PLPPagePlaceholderContainer extends PureComponent {
       this.setState({ wasRequested: true });
       WebUrlParser.setPage(pageIndex);
     }
+    if(this.props.gender === "influencer" && window.location.pathname.includes("Collection"))
+    {
+      this.props.setPageVisibility(pageIndex);
+    } 
   }
 
   render() {

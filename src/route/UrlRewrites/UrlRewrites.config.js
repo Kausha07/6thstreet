@@ -6,3 +6,4 @@ export const TYPE_HOME = 'HOME';
 export const TYPE_BRAND = 'BRAND';
 export const TYPE_ACCOUNT = 'ACCOUNT';
 export const TYPE_CART = 'CART';
+export const TYPE_INFLUENCER = 'INFLUENCER';

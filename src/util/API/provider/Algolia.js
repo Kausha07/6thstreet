@@ -40,7 +40,14 @@ export class Algolia {
   }
 
   async getPLP(params = {}) {
-    const productCount = isMobile.any() ? 10 : 30;
+    let influencerCount = 0;
+    if(params["pageType"] && params["pageType"] === "InfluencerPage")
+    {
+      influencerCount = params["InfluencerProductCount"];
+      delete params["pageType"];
+      delete params["InfluencerProductCount"];
+    }
+    const productCount = isMobile.any() ? 10 : influencerCount !== 0 ? influencerCount :30 ;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
     } = getStore().getState();

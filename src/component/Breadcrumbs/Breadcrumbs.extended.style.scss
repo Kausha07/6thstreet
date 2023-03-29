@@ -18,6 +18,13 @@
   --breadcrumb-padding-main: 154px 0 0;
 }
 
+.removeExtraSpaceForInfluencer {
+  padding: 120px 0 0;
+}
+.backToNormal {
+  padding: var(--breadcrumb-padding-main);
+}
+
 .Breadcrumbs {
   --breadcrumbs-background: var(--breadcrumbs-background-main);
   --breadcrumbs-height: var(--breadcrumbs-height-main);
@@ -30,7 +37,6 @@
   width: 100%;
   margin: 0 auto;
   // padding: 154px 0 0;
-  padding: var(--breadcrumb-padding-main);
 
   $crumb-padding: 20px;
   $arrow-size: 5px;

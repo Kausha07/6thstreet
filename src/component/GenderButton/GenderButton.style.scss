@@ -12,6 +12,10 @@
     .GenderIcon {
       height: 25px;
       width: 25px;
+      @include mobile {
+        height: 20px;
+        width: 20px;
+      }
     }
   }
 
@@ -96,7 +100,6 @@
             }
           }
         }
-
         @include desktop {
           &:first-child {
             margin-left: 15px;
@@ -106,7 +109,6 @@
 
           &:last-child {
             margin-left: 0px;
-
             &::before {
               left: initial;
               right: -14px;

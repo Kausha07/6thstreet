@@ -80,17 +80,20 @@ export class PLPDispatcher {
       : "women";
 
     const devicePrefix = this.getDevicePrefix();
-    try {
-      const plpData = await getStaticFile(HOME_STATIC_FILE_KEY, {
-        $FILE_NAME: `${devicePrefix}${gender}_plp.json`,
-      });
-      if (Array.isArray(plpData)) {
-        dispatch(setPLPWidget(plpData));
+    if(gender !== "influencer")
+    {
+      try {
+        const plpData = await getStaticFile(HOME_STATIC_FILE_KEY, {
+          $FILE_NAME: `${devicePrefix}${gender}_plp.json`,
+        });
+        if (Array.isArray(plpData)) {
+          dispatch(setPLPWidget(plpData));
+        }
+      } catch (e) {
+        // TODO: handle error
+        Logger.log(e);
       }
-    } catch (e) {
-      // TODO: handle error
-      Logger.log(e);
-    }
+    } 
   }
 
   updatePlpWidgetData(payload, dispatch) {

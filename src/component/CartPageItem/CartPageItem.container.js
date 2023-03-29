@@ -479,7 +479,7 @@ export class CartItemContainer extends PureComponent {
       full_price: original_price || basePrice || "",
       product_url: url || "",
       currency: getCurrency() || "",
-      gender: currentAppState.gender.toUpperCase() || gender || "",
+      gender: currentAppState?.gender?.toUpperCase() || gender || "",
       product_sku: config_sku || item_id || "",
       discounted_price: itemPrice || price || "",
       product_image_url: thumbnail_url || "",

@@ -21,6 +21,7 @@ import browserHistory from "Util/History";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
 import Event, { EVENT_PAGE_LOAD } from "Util/Event";
+import Influencer from "../Influencer/index";
 
 import {
   deleteAuthorizationToken,
@@ -53,7 +54,7 @@ export const mapDispatchToProps = (dispatch) => ({
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
   requestCustomerData: (login) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
-      dispatcher.requestCustomerData(dispatch,login)
+      dispatcher.requestCustomerData(dispatch, login)
     ),
   logout: () =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
@@ -290,20 +291,18 @@ export class HomePageContainer extends PureComponent {
       // Only set loading if this is an update
       this.setState({ isLoading: true });
     }
-
-    // TODO commented thiss try catch block temp uncomment after development
-    try {
-      const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
-        $FILE_NAME: `${devicePrefix}${gender}.json`,
-      });
-
-      this.setState({
-        dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
-        isLoading: false,
-      });
-    } catch (e) {
-      // TODO: handle error
-      Logger.log(e);
+    if (gender !== "influencer") {
+      try {
+        const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
+          $FILE_NAME: `${devicePrefix}${gender}.json`,
+        });
+        this.setState({
+          dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
+          isLoading: false,
+        });
+      } catch (e) {
+        Logger.log(e);
+      }
     }
   }
 
@@ -343,6 +342,9 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
+    if (this.props.gender === "influencer") {
+      return <Influencer />;
+    }
     return (
       <HomePage
         {...this.containerFunctions}
