@@ -74,6 +74,10 @@ class BrandsContainer extends PureComponent {
         return "نساء";
       case "kids":
         return "أطفال";
+      case "Girl":
+        return "بنات";
+      case "Boy":
+        return "أولاد";
     }
   };
   getGenderInEn = (gender) => {
@@ -84,6 +88,10 @@ class BrandsContainer extends PureComponent {
         return "women";
       case "أطفال":
         return "kids";
+      case "بنات":
+        return "Girl";
+      case "أولاد":
+        return "Boy";
     }
   };
 
@@ -95,9 +103,12 @@ class BrandsContainer extends PureComponent {
       ? (brandType = "")
       : (brandType = location.pathname.split("/")[1]);
     const genderTab = isArabic ? this.getGenderInAR(brandType) : brandType;
+    const kidsGender = isArabic
+      ? `${this.getGenderInAR("Boy")},${this.getGenderInAR("Girl")}`
+      : "Boy,Girl";
     this.setState({ type: genderTab });
     this.requestShopByBrandWidgetData(brandType);
-    this.requestShopbyBrands(genderTab);
+    this.requestShopbyBrands(brandType === "kids" ? kidsGender : genderTab);
     this.updateBreadcrumbs();
     this.updateHeaderState();
     this.setMetaData();
@@ -181,11 +192,18 @@ class BrandsContainer extends PureComponent {
     const { isArabic } = this.state;
     const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
     let gender = isArabic ? this.getGenderInEn(brandType) : brandType;
+    const kidsGender = isArabic
+      ? `${this.getGenderInAR("Boy")},${this.getGenderInAR("Girl")}`
+      : "Boy,Girl";
     gender
       ? history.push(`/${gender}/shop-by-brands`)
       : history.push(`/shop-by-brands`);
     this.requestShopByBrandWidgetData(gender);
-    this.requestShopbyBrands(brandType);
+    this.requestShopbyBrands(
+      brandUrlParam === "kids" || brandUrlParam === "أطفال"
+        ? kidsGender
+        : brandType
+    );
     this.setState({ type: brandType });
   }
 
@@ -225,8 +243,11 @@ class BrandsContainer extends PureComponent {
         let filteredbrand = [];
         let combinedArr = [];
         Object.values(data[1]).filter((brand) => {
-          const { name , name_ar} = brand;
-          if (activeBrandsList.includes(name) || activeBrandsList.includes(name_ar)) {
+          const { name, name_ar } = brand;
+          if (
+            activeBrandsList.includes(name) ||
+            activeBrandsList.includes(name_ar)
+          ) {
             filteredbrand.push(brand);
           }
         });
