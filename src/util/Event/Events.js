@@ -270,3 +270,5 @@ export const EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW =
   "forgot_password_success_screen_view";
 export const EVENT_ACCOUNT_PAYMENT_CLICK = "account_payment_click";
 export const EVENT_WISHLIST_ICON_CLICK = "Wishlist_icon_click";
+export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
+  "account_tooltip_close_button_click";
