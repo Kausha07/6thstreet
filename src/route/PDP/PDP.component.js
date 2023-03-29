@@ -186,10 +186,38 @@ class PDP extends PureComponent {
     );
   }
 
+  renderLabelAnimation() {
+    const { isLoading } = this.props;
+    return (
+      <>
+        <div className="PDP-AnimationWrapper">
+          <div block="PDP" elem="MainSection">
+            <div block="animation" elem="Gallery">
+              <div block="Gallery" elem="crumbs">
+                <div className="cards"></div>
+                <div className="cards"></div>
+                <div className="cards"></div>
+                <div className="cards"></div>
+                <div className="cards"></div>
+              </div>
+              <div block="Gallery" elem="image">
+                <div block="cards"></div>
+              </div>
+            </div>
+
+            <div block="animation" elem="Summary">
+              <Loader isLoading={isLoading} />
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   render() {
     const { isLoading, product, nbHits } = this.props;
     if (isLoading) {
-      return <Loader isLoading={isLoading} />;
+      return this.renderLabelAnimation();
     } else if (!isLoading && nbHits > 0 && product) {
       return this.renderPDP();
     } else if (
@@ -199,7 +227,7 @@ class PDP extends PureComponent {
     ) {
       return <NoMatch />;
     } else {
-      return <div />;
+      return this.renderLabelAnimation();
     }
   }
 }
