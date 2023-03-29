@@ -22,10 +22,12 @@ import isMobile from "Util/Mobile";
 import "./Header.style";
 
 export const mapStateToProps = (state) => {
-  return { checkoutDetails: state.CartReducer.checkoutDetails,
-    isLive : state.LiveParty.isLive,
-    is_live_party_enabled: state.AppConfig.is_live_party_enabled,};
-  
+  return {
+    checkoutDetails: state.CartReducer.checkoutDetails,
+    gender: state.AppState.gender,
+    isLive: state.LiveParty.isLive,
+    is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+  };
 };
 export const mapDispatchToProps = (dispatch) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
@@ -96,11 +98,15 @@ export class Header extends PureComponent {
       }
       return; 
     }
-    
-    if (isLive && (isLive !== prevProps?.isLive || prevProps.location.pathname !== this.props.location.pathname) && is_live_party_enabled){
+
+    if (
+      isLive &&
+      (isLive !== prevProps?.isLive ||
+        prevProps.location.pathname !== this.props.location.pathname) &&
+      is_live_party_enabled
+    ) {
       this.renderFAB();
     }
-    
   }
 
   componentWillUnmount() {
@@ -137,6 +143,8 @@ export class Header extends PureComponent {
     MobileBottomBar,
   ];
   headerSectionsTwo = [HeaderTopBar, HeaderMainSection, HeaderBottomBar];
+  headerSectionsThree = [HeaderTopBar, HeaderMainSection, MobileBottomBar];
+  headerSectionsFour = [HeaderTopBar, HeaderMainSection];
 
   getIsCheckout = () => {
     const { isMobile } = this.state;
@@ -201,6 +209,10 @@ export class Header extends PureComponent {
     const isCheckout = this.getIsCheckout();
     const hideHeaderFooter = this.getHideHeaderFooter();
     const { isMobile } = this.state;
+    const pathNamesIncludesArrow = [
+      "/influencer.html/Collection",
+      "/influencer.html/Store",
+    ];
 
     if (isCheckout && !checkoutDetails) {
       return null;
@@ -212,6 +224,13 @@ export class Header extends PureComponent {
 
     if (hideHeaderFooter) {
       return this.headerSectionsTwo.map(this.renderSection);
+    }
+
+    if (this.props.gender === "influencer") {
+      if (pathNamesIncludesArrow.includes(location.pathname)) {
+        return this.headerSectionsFour.map(this.renderSection);
+      }
+      return this.headerSectionsThree.map(this.renderSection);
     }
 
     return this.headerSections.map(this.renderSection);
@@ -243,4 +262,3 @@ export class Header extends PureComponent {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));
-

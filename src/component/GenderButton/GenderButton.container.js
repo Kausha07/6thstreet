@@ -40,6 +40,7 @@ export class GenderButtonContainer extends PureComponent {
     gender: PropTypes.shape({
       label: PropTypes.string,
       key: PropTypes.string,
+      icon: PropTypes.instanceOf(Element),
     }).isRequired,
   };
 
@@ -56,13 +57,14 @@ export class GenderButtonContainer extends PureComponent {
 
   containerProps = () => {
     const {
-      gender: { label, key },
+      gender: { label, key, icon },
       isCurrentGender,
       isUnsetStyle,
     } = this.props;
 
     return {
       label,
+      icon,
       urlKey: key,
       isCurrentGender,
       isUnsetStyle,

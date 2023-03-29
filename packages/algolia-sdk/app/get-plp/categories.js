@@ -61,6 +61,7 @@ const _getCategoryLevel2Data = ({
     ...categoriesLevel3,
   };
 
+  let duplicatePreventArr = [];
   const queryValues = getQueryValues({ query, path: facetKey });
   let data = Object.entries(categoriesMerge).reduce(
     (acc, [key, productCount]) => {
@@ -79,8 +80,8 @@ const _getCategoryLevel2Data = ({
       if (l2 && categoriesWithoutPath && !categoriesWithoutPath[l2] && __DEV__) {
         console.warn("No categories_without_path for", l2);
       }
-
-      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2]) {
+      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2] && !duplicatePreventArr.includes(l2)) {
+        duplicatePreventArr.push(l2);
         if (!acc[l1]) {
           acc[l1] = {
             label: l1,
