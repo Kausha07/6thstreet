@@ -298,6 +298,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       OTP: undefined,
       shouldRedirectToMyOrders: false,
       shouldRedirectToMyReturns: false,
+      shouldRedirectToMyWishlist: false,
       otpAttempt: 1,
       prevOverlayState: "",
       currentOverlayState: "",
@@ -408,13 +409,16 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   checkForOrder() {
     const orderId = BrowserDatabase.getItem("ORDER_ID") || null;
-    const { shouldRedirectToMyOrders, shouldRedirectToMyReturns } = this.state;
+    const { shouldRedirectToMyOrders, shouldRedirectToMyReturns, shouldRedirectToMyWishlist } = this.state;
     const { redirectToMyOrdersPage } = this.props;
     if (shouldRedirectToMyOrders || redirectToMyOrdersPage) {
       history.push(`/my-account/my-orders`);
     }
     if (shouldRedirectToMyReturns) {
       history.push(`/my-account/return-item`);
+    }
+    if(shouldRedirectToMyWishlist){
+      history.push(`/my-account/my-wishlist`);
     }
 
     if (orderId) {
@@ -870,6 +874,11 @@ export class MyAccountOverlayContainer extends PureComponent {
     if (redirectTo && redirectTo === "RedirectToMyReturns") {
       this.setState({
         shouldRedirectToMyReturns: true,
+      });
+    }
+    if (redirectTo && redirectTo === "RedirectToMyWishlist") {
+      this.setState({
+        shouldRedirectToMyWishlist: true,
       });
     }
   }
