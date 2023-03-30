@@ -84,7 +84,8 @@ export function RenderEmptyCartPageForMobile() {
               {__("Your shopping bag is empty!")}
             </p>
             <span className="EmptyCartSubText">
-              {__("Continue shopping or login to view your saved bag")}
+              {!!!isSignedIn() &&
+                __("Continue shopping or login to view your saved bag")}
             </span>
           </div>
         </div>
