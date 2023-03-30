@@ -653,7 +653,7 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-    } else if (paymentMethod?.code === "checkout_knet") {
+    } else if (paymentMethod?.code === "checkout_knet" && order) {
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
