@@ -20,7 +20,7 @@ export function RenderEmptyCartPage() {
       )}
 
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        <div className="EmptyCartContainer" >
+        <div className="EmptyCartContainer">
           <div block="CartPage" elem="EmptyCartImg">
             <Image src={EmptyCardIcon} />
           </div>
@@ -29,7 +29,8 @@ export function RenderEmptyCartPage() {
               {__("Your shopping bag is empty!")}
             </div>
             <span>
-              {__("Continue shopping or login to view your saved bag")}
+              {!!!isSignedIn() &&
+                __("Continue shopping or login to view your saved bag")}
             </span>
             <div block="ExploreNowBtn">
               <Link
@@ -74,9 +75,7 @@ export function RenderEmptyCartPageForMobile() {
         />
       )}
       <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        <div
-        className="EmptyCartContainerMobile"
-        >
+        <div className="EmptyCartContainerMobile">
           <div block="CartPage" elem="EmptyCartImg">
             <Image src={EmptyCardIcon} alt={"cart-icon"} />
           </div>
