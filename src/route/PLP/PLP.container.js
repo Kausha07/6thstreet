@@ -144,7 +144,10 @@ export class PLPContainer extends PureComponent {
     const { requestProductList, requestProductListPage, influencerAlgoliaQuery,
     } = props;
     let options;
-    if (window.location.pathname.includes("influencer")) {
+    if (
+      window.location.pathname === "/influencer.html/Collection" ||
+      window.location.pathname === "/influencer.html/Store"
+    ) {
       const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
       let params = {
         q: "",
