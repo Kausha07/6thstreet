@@ -244,7 +244,7 @@ export class CartItem extends PureComponent {
 
   onDragStartMouse = (evt) => {
     const el = this.cartItemRef.current;
-    el.classList.add("active");
+    el?.classList?.add("active");
     this.setState({
       dragged: true,
       dragStartX: evt.clientX,
@@ -264,7 +264,7 @@ export class CartItem extends PureComponent {
       dragged: false,
     });
     const el = this.cartItemRef.current;
-    el.classList.remove("active");
+    el?.classList?.remove("active");
   };
   onDragEndTouch = (evt) => {
     const touch = evt.changedTouches[0];

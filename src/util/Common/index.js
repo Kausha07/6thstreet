@@ -507,3 +507,11 @@ export const getBambuserChannelID=(country)=>{
 }
 
 export const DecimalCountries = ["KW", 'OM', 'BH'];
+
+export const getEnvIDForInfluencer = () => {
+  if (process.env.REACT_APP_INFLUENCER_ENV === "staging") {
+    return "20191010_staging";
+  } else {
+    return "20190121";
+  }
+};

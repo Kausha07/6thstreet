@@ -51,6 +51,8 @@ export const getGenderInArabic = (gender) => {
       return "أطفال";
     case "home":
       return "منزل";
+    case "influencer":
+      return "مؤثر اجتماعي";
   }
 };
 
@@ -64,6 +66,8 @@ export const getGenderInEnglish = (gender) => {
       return "kids";
     case "المنزل":
       return "home";
+    case "مؤثر اجتماعي":
+      return "influencer";
   }
 };
 

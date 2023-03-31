@@ -827,10 +827,10 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount, filters } = this.props;
+    const { productsCount, filters, gender } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-    const category_title = this.renderCatPath().split("///").pop();
+    const category_title = gender !== "influencer" && this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
         <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
@@ -867,7 +867,7 @@ class PLPFilters extends PureComponent {
               {this.renderFilters()}
             </form>
           )}
-          {isMobile.any() && (
+          {gender !== "influencer" && isMobile.any() && (
             <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
               <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
                 {this.renderQuickFilters()}

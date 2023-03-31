@@ -25,6 +25,9 @@ import {
   LIVE_PARTY,
   ABOUT,
   STORE,
+  INFLUENCER,
+  INFLUENCER_COLLECTION,
+  INFLUENCER_STORE,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -40,6 +43,9 @@ const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
 const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
 const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
 const Feedback = lazy(() => import(/* webpackChunkName: 'Feedback' */ "../../route/Feedback/Feedback.container"));
+const Influencer = lazy(() => import(/* webpackChunkName: 'Influencer' */ "Route/Influencer"));
+const InfluencerCollection = lazy(() => import(/* webpackChunkName: 'InfluencerCollection' */ "Component/InfluencerCollection"));
+const InfluencerStore = lazy(() => import(/* webpackChunkName: 'InfluencerStore' */ "Component/InfluencerStore"));
 // import LocaleWizard from "Route/LocaleWizard";
 // import UrlRewrites from "Route/UrlRewrites";
 // import VuePLP from "Route/VuePLP/VuePLP.component";
@@ -106,7 +112,7 @@ export class Router extends SourceRouter {
   state = {
     ...SourceRouter.state,
     isArabic: false,
-    homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
+    homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html|influencer.html)/",
   };
 
 
@@ -321,6 +327,47 @@ export class Router extends SourceRouter {
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
               {this.props.is_live_party_enabled ? <LiveExperience {...props} /> : <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("influencer")}
+          exact
+          render={(props) => (
+            <GTMRouteWrapper route={INFLUENCER}>
+              <Influencer {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("influencer.html/collection")}
+          render={(props) => (
+            <GTMRouteWrapper route={INFLUENCER_COLLECTION}>
+              <InfluencerCollection {...props} />
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+
+      component: (
+        <SentryRoute
+          path={withStoreRegex("influencer.html/store")}
+          render={(props) => (
+            <GTMRouteWrapper route={INFLUENCER_STORE}>
+              <InfluencerStore {...props} />
             </GTMRouteWrapper>
           )}
         />

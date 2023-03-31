@@ -3,7 +3,7 @@
 import { getGenderInEnglish } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const getBreadcrumbs = (data = [], onClick, urlArray,isArabic) => data.reduce((acc, categoryLevel, idx) => {
     const transformedCategory = categoryLevel.replace(/-/g, ' ');
-    const levelFirstData = isArabic ? getGenderInEnglish(data[0].toLowerCase()) :data[0].toLowerCase()
+    const levelFirstData = isArabic ? getGenderInEnglish(data[0].toLowerCase()) :data[0].toLowerCase();
     acc.push({
         url: idx !== 0 ? urlArray[idx]:`/${levelFirstData}.html`,
         name: transformedCategory,
