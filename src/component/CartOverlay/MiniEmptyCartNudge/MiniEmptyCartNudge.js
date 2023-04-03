@@ -8,7 +8,6 @@ import "./MiniEmptyCartNudge.style.scss";
 
 export default function MiniEmptyCartNudge() {
   const [showSignInSignUpPopUp, setShowSignInSignUpPopUp] = useState(false);
-  const [isRegisterScreen, setIsRegisterScreen] = useState(false);
 
   return !isSignedIn() ? (
     <>
@@ -17,7 +16,6 @@ export default function MiniEmptyCartNudge() {
           closePopup={() => setShowSignInSignUpPopUp(false)}
           onSignIn={() => setShowSignInSignUpPopUp(false)}
           isPopup
-          showRegisterScreen={isRegisterScreen}
         />
       )}
       <div className="empty-cart-nudge-container">
@@ -33,21 +31,10 @@ export default function MiniEmptyCartNudge() {
               <button
                 onClick={() => {
                   setShowSignInSignUpPopUp(true);
-                  setIsRegisterScreen(false);
                 }}
                 className="btnsSignInRegister"
               >
-                {__("Sign in")}
-              </button>{" "}
-              {__("or")}{" "}
-              <button
-                onClick={() => {
-                  setShowSignInSignUpPopUp(true);
-                  setIsRegisterScreen(true);
-                }}
-                className="btnsSignInRegister"
-              >
-                {__("Register")}
+                {__("Login")}
               </button>
             </div>
           </div>

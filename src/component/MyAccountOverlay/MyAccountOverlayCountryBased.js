@@ -14,7 +14,6 @@ export default function MyAccountOverlay({
   registerField,
   showMyAccountMenuPopUp,
   redirectToMyOrdersPage,
-  showRegisterScreen,
 }) {
   const newSigninSignupVersionEnabled = useSelector(
     (state) => state.AppConfig.newSigninSignupVersionEnabled
@@ -31,7 +30,6 @@ export default function MyAccountOverlay({
           registerField={registerField}
           showMyAccountMenuPopUp={showMyAccountMenuPopUp}
           redirectToMyOrdersPage={redirectToMyOrdersPage}
-          showRegisterScreen={showRegisterScreen}
         />
       </Suspense>
     );

@@ -270,7 +270,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       setHeaderState,
       isPasswordForgotSend,
       showMyAccountMenuPopUp,
-      showRegisterScreen,
     } = props;
 
     const {
@@ -280,8 +279,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     let getDeviceState;
     if (showMyAccountMenuPopUp) {
       getDeviceState = STATE_INITIAL_LINKS;
-    } else if (showRegisterScreen) {
-      getDeviceState = STATE_CREATE_ACCOUNT;
     } else {
       getDeviceState = STATE_SIGN_IN;
     }
