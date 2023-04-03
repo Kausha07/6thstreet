@@ -24,19 +24,13 @@ export default function MiniEmptyCartNudge() {
             <img src={shopbag} alt="shop" />
           </div>
           <div className="content-text">
-            {__(
-              "Login to 6thStreet & continue shopping for your favourite items."
-            )}
-            <div>
-              <button
-                onClick={() => {
-                  setShowSignInSignUpPopUp(true);
-                }}
-                className="btnsSignInRegister"
-              >
-                {__("Login")}
-              </button>
-            </div>
+            <span
+              className="btnsSignInRegister"
+              onClick={() => setShowSignInSignUpPopUp(true)}
+            >
+              {__("Login")}{" "}
+            </span>
+            {__("to 6thStreet & continue shopping for your favourite items.")}
           </div>
         </div>
       </div>

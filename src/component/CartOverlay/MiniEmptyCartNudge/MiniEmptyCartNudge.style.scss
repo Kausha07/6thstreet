@@ -20,15 +20,16 @@
       line-height: 18px;
       font-weight: 500;
       padding-left: 4px;
-        .btnsSignInRegister {
-          padding: 0px;
-          line-height: 16px;
-          font-size: 12px;
-          font-weight: unset;
-          text-transform: none;
-          text-decoration: underline;
-          font-weight: 600;
-        }
+      .btnsSignInRegister {
+        cursor: pointer;
+        padding: 0px;
+        line-height: 16px;
+        font-size: 12px;
+        font-weight: unset;
+        text-transform: none;
+        text-decoration: underline;
+        font-weight: 600;
+      }
     }
   }
 }
