@@ -24,6 +24,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./CartOverlay.style";
 import Delivery from "./icons/delivery-truck.png";
+import CartNudge from "./../../route/CartPage/CartNudges/CartNudge";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -314,7 +315,7 @@ export class CartOverlay extends PureComponent {
   }
 
   render() {
-    const { onVisible, isHidden, hideActiveOverlay, closePopup } = this.props;
+    const { onVisible, isHidden, hideActiveOverlay, closePopup, totals } = this.props;
     const { isArabic, isPopup } = this.state;
 
     return (
@@ -333,6 +334,7 @@ export class CartOverlay extends PureComponent {
           mix={{ block: "CartOverlay", mods: { isArabic, isPopup } }}
         >
           {this.renderItemCount()}
+          { totals?.items?.length > 0 && <CartNudge /> }
           {this.renderCartItems()}
           {this.renderTotals()}
           {this.renderShipping()}

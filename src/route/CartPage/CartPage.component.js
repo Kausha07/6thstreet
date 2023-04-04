@@ -35,6 +35,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
+import CartNudge from "./CartNudges/CartNudge"
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -970,17 +971,20 @@ export class CartPage extends PureComponent {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderMySignInPopup()}
-          {this.renderHeading()}
-          {this.renderEmptyCartPageForMobile()}
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {this.renderHeading()}
+            {this.renderEmptyCartPageForMobile()}
+            
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -989,19 +993,21 @@ export class CartPage extends PureComponent {
     if (!cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
-          {/* {this.renderHeading()} */}
-          {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {/* {this.renderHeading()} */}
+            {this.renderMySignInPopup()}
+            {this.renderEmptyCartPage()}
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -1016,20 +1022,23 @@ export class CartPage extends PureComponent {
         return (
           <div block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderMySignInPopup()}
-            {this.renderHeading()}
-            {this.renderEmptyCartPageForMobile()}
-       
-            <div className="PDPWidgets-cart">
-              {cartWidgetApiData.length !== 0
-                ? this.renderRecentlyViewSlider()
-                : null}
-            </div>
+            <div className="sidePadding">
+              {this.renderHeading()}
+              {this.renderEmptyCartPageForMobile()}
             
-            <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
-          </div>
+       
+              <div className="PDPWidgets-cart">
+                {cartWidgetApiData.length !== 0
+                  ? this.renderRecentlyViewSlider()
+                  : null}
+              </div>
+            
+              <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+              </div>
+            </div>
           </div>
         );
       }
@@ -1037,17 +1046,19 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {this.renderEmptyCartPage()}
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -1095,11 +1106,16 @@ export class CartPage extends PureComponent {
               showOverflow,
             }}
           >
-            {this.renderHeading()}
-            {this.renderCartItems()}
-            {this.renderCrossSellProducts()}
-            {this.renderDiscountCode()}
-            {this.renderPromo()}
+            <div className="sidePadding">
+              {this.renderHeading()}
+            </div>
+            <CartNudge />
+            <div className="sidePadding">
+              {this.renderCartItems()}
+              {this.renderCrossSellProducts()}
+              {this.renderDiscountCode()}
+              {this.renderPromo()}
+            </div>
           </div>
           <div
             ref={this.dynamicHeight}
