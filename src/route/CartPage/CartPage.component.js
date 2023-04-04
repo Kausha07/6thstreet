@@ -36,6 +36,7 @@ import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
 import CartNudge from "./CartNudges/CartNudge"
+import { RenderEmptyCartPage, RenderEmptyCartPageForMobile } from "./EmptyCart"
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -899,53 +900,6 @@ export class CartPage extends PureComponent {
     );
   }
 
-  renderEmptyCartPage() {
-    const { isArabic } = this.state;
-
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon"> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          <Image src={EmptyCardIcon} />
-        </div>
-        <div className="mt-2 EmptyMessage">
-          {__("Your shopping bag is empty.")}
-        </div>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/women.html`}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
-            </span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  renderEmptyCartPageForMobile() {
-    const { isArabic } = this.state;
-
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          {/* <image src={EmptyCardIcon}/> */}
-          <Image src={EmptyCardIcon} alt={"cart-icon"} />
-        </div>
-        <p block="CartPage" elem="EmptyCartTextDec">
-          {__("Your shopping bag is empty.")}
-        </p>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`} onClick={()=> window.pageType = TYPE_HOME}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
-            </span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   renderDynamicContent() {
     const {
       totals = {},
@@ -973,8 +927,7 @@ export class CartPage extends PureComponent {
           {this.renderMySignInPopup()}
           <div className="sidePadding">
             {this.renderHeading()}
-            {this.renderEmptyCartPageForMobile()}
-            
+            <RenderEmptyCartPageForMobile />
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
                 ? this.renderRecentlyViewSlider()
@@ -996,7 +949,7 @@ export class CartPage extends PureComponent {
           <div className="sidePadding">
             {/* {this.renderHeading()} */}
             {this.renderMySignInPopup()}
-            {this.renderEmptyCartPage()}
+            <RenderEmptyCartPage />
             <div block="Empty-cart-spacing"></div>
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
@@ -1024,7 +977,7 @@ export class CartPage extends PureComponent {
             {this.renderMySignInPopup()}
             <div className="sidePadding">
               {this.renderHeading()}
-              {this.renderEmptyCartPageForMobile()}
+              <RenderEmptyCartPageForMobile />
             
        
               <div className="PDPWidgets-cart">
@@ -1047,7 +1000,7 @@ export class CartPage extends PureComponent {
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
           <div className="sidePadding">
-            {this.renderEmptyCartPage()}
+            <RenderEmptyCartPage />
             <div block="Empty-cart-spacing"></div>
             <div className="PDPWidgets-cart">
               {cartWidgetApiData.length !== 0
