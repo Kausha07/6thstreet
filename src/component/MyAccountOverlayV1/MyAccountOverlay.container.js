@@ -278,7 +278,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     } = history;
 
     let getDeviceState;
-    showRegisterScreen;
     if (showMyAccountMenuPopUp) {
       getDeviceState = STATE_INITIAL_LINKS;
     } else if (showRegisterScreen) {
