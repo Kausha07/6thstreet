@@ -471,19 +471,19 @@ export const camelCase = (str) => {
 export const getBambuserChannelID=(country)=>{
   switch (country) {
     case "ae":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
     case "sa":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_SA;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_SA;
     case "kw":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_KW;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_KW;
     case "om":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_OM;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_OM;
     case "bh":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_BH;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_BH;
     case "qa":
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_QA;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_QA;
     default:
-      return env.process.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
   }
 }
 
