@@ -313,6 +313,25 @@ export const translateArabicColor = (color = "") => {
     case "Black / White": {
       return "black_white";
     }
+    case "Ivory": {
+      return "عاجي";
+    }
+    case "Fuchsia": {
+      return "فوشي";
+    }
+    case "Magenta": {
+      return "ماجنتي";
+    }
+    case "Rose": {
+      return "زهري";
+    }
+    case "Mauve": {
+      return "موف";
+    }
+    case "عاجي": {
+      return "Ivory";
+    }
+
     default: {
       // eslint-disable-next-line no-undef
       const color_code = color.toLowerCase().replace(" ", "_");

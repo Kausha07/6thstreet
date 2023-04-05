@@ -239,6 +239,13 @@ class PLPFilterOption extends PureComponent {
     if (facet_key === "colorfamily") {
       const engColor = isArabic() ? translateArabicColor(label) : label;
       const fixedColor = engColor.toLowerCase().replace(/ /g, "_");
+      const newColors = {
+        Ivory: "ivory",
+        Rose: "rose",
+        Fuchsia: "fuchsia",
+        Magenta: "magenta",
+        Mauve: "mauve",
+      };
       const color = SPECIAL_COLORS[fixedColor]
         ? SPECIAL_COLORS[fixedColor]
         : fixedColor;
@@ -251,8 +258,16 @@ class PLPFilterOption extends PureComponent {
             elem="Color"
             style={{ backgroundColor: color }}
           />
-          {isArabic() && !isMobile.any() ? label : null}
-          {!isArabic() ? label : null}
+          {isArabic() && !isMobile.any()
+            ? !newColors[label]
+              ? label
+              : translateArabicColor(label)
+            : null}
+          {!isArabic()
+            ? !newColors[label]
+              ? label
+              : translateArabicColor(label)
+            : null}
           {product_count && this.renderCount()}
         </label>
       );
