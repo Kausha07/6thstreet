@@ -264,6 +264,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 onChange: (city) => this.setState({ city, isLoading: true }),
                 citySelected: this.state.city,
                 popupType: "city",
+                autocomplete: "new-password",
             },
             ...this.getRegionFields(),
             postcode: {

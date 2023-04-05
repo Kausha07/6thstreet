@@ -370,6 +370,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         oncityClick: this.onCityChange,
         citySelected: this.state.city,
         popupType: "city",
+        autocomplete: "new-password",
       },
       country_id: {
         validation: ["notEmpty"],
