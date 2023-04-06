@@ -32,10 +32,13 @@ const InfluencerSearch = (props) => {
     closeSearchMobilePopUp,
     masterTrendingInfo,
     influencerSearchText,
+    archived,
   } = props;
   const [allInfluencersList, setAllInfluencersList] = useState([]);
   const [onPageinfluencerSearchText, setOnPageInfluencerSearchText] =
     useState("");
+  const [isMobileOnPageSearchClicked, setIsMobileOnPageSearchClicked] =
+    useState(false);
 
   const getInfluencers = () => {
     const locale = getLocaleFromUrl();
@@ -80,7 +83,6 @@ const InfluencerSearch = (props) => {
       };
       Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
     }
-    
   };
 
   const MoenangeInfluencerTrackingClick = (influencerId, influencer_name) => {
@@ -171,6 +173,33 @@ const InfluencerSearch = (props) => {
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
 
+  const renderLiveShoppingVideosCollection = (item, i) => {
+    const { curtains, title, id } = item;
+    const imageSRC = curtains?.pending?.backgroundImage;
+
+    return (
+      <li key={id} className="spckItem">
+        <div className="eventImage">
+          <Link
+            to={`/live-party?influencerPageToLiveParty=${id}`}
+            key={i}
+            data-banner-type="influencerSearch_LiveShoppingVideos_slider_bannner"
+            data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+            data-tag={item.tag ? item.tag : ""}
+          >
+            <img
+              src={imageSRC}
+              alt="influencerSearch_LiveShoppingVideos_slider_bannner"
+            />
+            <p block="sliderTitleForVideos" mods={{ isArabic: isArabic() }}>
+              {title}
+            </p>
+          </Link>
+        </div>
+      </li>
+    );
+  };
+
   const renderSliderCollection = (item, i) => {
     const { id: influencerId, image_url, influencer_name } = item?.influencer;
     const { id: collectionId, thumbnail_url, title } = item?.collection;
@@ -206,6 +235,7 @@ const InfluencerSearch = (props) => {
 
   const closeSearchPopUp = () => {
     closeSearchMobilePopUp();
+    setIsMobileOnPageSearchClicked(false);
   };
 
   const handleSearchInfluencerText = (e) => {
@@ -248,6 +278,17 @@ const InfluencerSearch = (props) => {
         return val;
       }
     });
+    const slicedArchived =
+      isMobileOnPageSearchClicked && onPageinfluencerSearchText?.length > 0
+        ? [...archived]
+        : archived?.slice(0, 5);
+    const filteredSlicedArchived = slicedArchived
+      .filter((val) => {
+        if (val?.title?.toLowerCase().includes(lowerInfluencerSearchText)) {
+          return val;
+        }
+      })
+      .slice(0, 5);
     return (
       <div className="searchBlockForMobile" mods={{ isArabic: isArabic() }}>
         <div block="mobileSearchHeader">
@@ -263,8 +304,11 @@ const InfluencerSearch = (props) => {
               block="influencerSearchInputForMobile"
               mods={{ isArabic: isArabic() }}
               id="influencerSearch"
-              placeholder={__("Search collections, influencers etc...")}
+              placeholder={__("Search videos, collections, influencers etc...")}
               onChange={handleSearchInfluencerText}
+              onClick={() => {
+                setIsMobileOnPageSearchClicked(true);
+              }}
             />
             <p
               onClick={closeSearchPopUp}
@@ -277,6 +321,23 @@ const InfluencerSearch = (props) => {
         </div>
 
         <div className="collectionSlider">
+          {slicedArchived?.length > 0 ? (
+            <>
+              <h3>{__("Videos")}</h3>
+              {filteredSlicedArchived && filteredSlicedArchived?.length > 0 ? (
+                <ul className="spckItems">
+                  {filteredSlicedArchived?.map(
+                    renderLiveShoppingVideosCollection
+                  )}
+                </ul>
+              ) : (
+                <h2>
+                  {__(`No results found for ${onPageinfluencerSearchText}`)}
+                </h2>
+              )}
+            </>
+          ) : null}
+
           {masterTrendingInfo?.superstars?.[selectedGender]?.data[0].type ===
           "influencer_slider_collection" ? (
             <>
@@ -348,9 +409,33 @@ const InfluencerSearch = (props) => {
         return val;
       }
     });
+    const slicedArchived =
+      influencerSearchText?.length > 0 ? [...archived] : archived?.slice(0, 5);
+    const filteredSlicedArchived = slicedArchived
+      .filter((val) => {
+        if (val?.title?.toLowerCase().includes(lowerInfluencerSearchText)) {
+          return val;
+        }
+      })
+      .slice(0, 5);
     return (
       <div className="searchBlock">
         <div className="collectionSlider">
+          {slicedArchived?.length > 0 ? (
+            <>
+              <h3>{__("Videos")}</h3>
+              {filteredSlicedArchived && filteredSlicedArchived?.length > 0 ? (
+                <ul className="spckItems">
+                  {filteredSlicedArchived?.map(
+                    renderLiveShoppingVideosCollection
+                  )}
+                </ul>
+              ) : (
+                <h2>{__(`No results found for ${influencerSearchText}`)}</h2>
+              )}
+            </>
+          ) : null}
+
           {masterTrendingInfo?.superstars?.[selectedGender]?.data[0].type ===
           "influencer_slider_collection" ? (
             <>

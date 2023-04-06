@@ -73,6 +73,10 @@ export class LiveExperience extends PureComponent {
       this.onClickPartyPlay(this.props.FABautoplayLiveShopping);
     }
 
+    if (this.props.influencerPageToLiveParty) {
+      this.onClickPartyPlay(this.props.influencerPageToLiveParty);
+    }
+
     this.renderLiveParty();
 
     this.renderUpcomingParty();
@@ -541,62 +545,64 @@ export class LiveExperience extends PureComponent {
         event.products.forEach(async ({ id }) => {
           objectId = id;
           const yourProduct = await this.getProductDetails(id);
-          const {
-            brand_name,
-            description,
-            name,
-            price,
-            sku,
-            color,
-            gallery_images,
-            simple_products,
-          } = yourProduct.data;
-          this.setState({
-            ProductDetails: yourProduct.data,
-            ProductDetailsObj: {
-              ...this.state.ProductDetailsObj,
-              [yourProduct.data.sku]: yourProduct.data,
-            },
-          });
-          player.updateProduct(id, (productFactory) =>
-            productFactory.product((productDetailFactory) =>
-              productDetailFactory
-                .name(name)
-                .brandName(brand_name)
-                .description(description)
-                .sku(sku)
-                .defaultVariationIndex(0)
-                .variations((variationFactory) => [
-                  variationFactory()
-                    .attributes((attributeFactory) =>
-                      attributeFactory.colorName(color)
-                    )
-                    .imageUrls(gallery_images)
-                    .name(color)
-                    .sku(sku)
-                    .sizes((sizeFactory) =>
-                      Object.keys(simple_products).map((VarientSku) =>
-                        sizeFactory()
-                          .name(
-                            simple_products &&
-                              simple_products[VarientSku] &&
-                              simple_products[VarientSku].size &&
-                              simple_products[VarientSku].size.eu
-                              ? simple_products[VarientSku].size.eu
-                              : "null"
-                          )
-                          .inStock(simple_products[VarientSku].quantity > 0)
-                          .sku(VarientSku)
-                          .price((priceFactory) =>
-                            priceFactory
-                              .current(price[0][currency]["6s_special_price"])
-                              .original(price[0][currency]["6s_base_price"])
-                          )
+          if (yourProduct) {
+            const {
+              brand_name,
+              description,
+              name,
+              price,
+              sku,
+              color,
+              gallery_images,
+              simple_products,
+            } = yourProduct?.data;
+            this.setState({
+              ProductDetails: yourProduct?.data,
+              ProductDetailsObj: {
+                ...this.state.ProductDetailsObj,
+                [yourProduct.data.sku]: yourProduct?.data,
+              },
+            });
+            player.updateProduct(id, (productFactory) =>
+              productFactory.product((productDetailFactory) =>
+                productDetailFactory
+                  .name(name)
+                  .brandName(brand_name)
+                  .description(description)
+                  .sku(sku)
+                  .defaultVariationIndex(0)
+                  .variations((variationFactory) => [
+                    variationFactory()
+                      .attributes((attributeFactory) =>
+                        attributeFactory.colorName(color)
                       )
-                    ),
-                ])
-            )
-          );
+                      .imageUrls(gallery_images)
+                      .name(color)
+                      .sku(sku)
+                      .sizes((sizeFactory) =>
+                        Object.keys(simple_products).map((VarientSku) =>
+                          sizeFactory()
+                            .name(
+                              simple_products &&
+                                simple_products[VarientSku] &&
+                                simple_products[VarientSku].size &&
+                                simple_products[VarientSku].size.eu
+                                ? simple_products[VarientSku].size.eu
+                                : "null"
+                            )
+                            .inStock(simple_products[VarientSku].quantity > 0)
+                            .sku(VarientSku)
+                            .price((priceFactory) =>
+                              priceFactory
+                                .current(price[0][currency]["6s_special_price"])
+                                .original(price[0][currency]["6s_base_price"])
+                            )
+                        )
+                      ),
+                  ])
+              )
+            );
+          }
         });
       });
     };

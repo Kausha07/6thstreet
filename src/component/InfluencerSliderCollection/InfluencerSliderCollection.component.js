@@ -62,7 +62,7 @@ const InfluencerSliderCollection = (props) => {
 
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
-  
+
   const renderSlide = (item, i) => {
     const {
       algolia_query,
@@ -159,8 +159,10 @@ const InfluencerSliderCollection = (props) => {
   };
 
   return (
-    <div id={`InfluencerSliderCollection-${selectedGender}-${index}`}>
-      {renderSlider()}
+    <div block="influencerSlider">
+      <div id={`InfluencerSliderCollection-${selectedGender}-${index}`}>
+        {renderSlider()}
+      </div>
     </div>
   );
 };

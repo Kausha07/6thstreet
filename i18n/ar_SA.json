@@ -954,7 +954,7 @@
     "%s's Store": "%s متجر",
     "No results found for": "لا يوجد نتائج ل",
     "Share Store": "شارك المتجر",
-    "Search collections, influencers etc...": "ابحث عن المجموعات, المؤثرين, الخ...",
+    "Search videos, collections, influencers etc...": "البحث عن فيديوهات, مجموعات, مؤثرين اجتماعيين..الخ",
     "Results": "النتائج",
     "OUT OF STOCK": "نفذت الكمية",
     "%s | 6thStreet.com %s": "%s | 6thStreet.com %s",
@@ -1219,5 +1219,8 @@
     "See all": "انظرالكل",
     "No Recent Searches": "لا توجد عمليات بحث حديثة",
     "No Suggestions": "بدون اقتراحات",
-    "Search for brands..." : "ابحث عن الماركات..."
+    "Search for brands..." : "ابحث عن الماركات...",
+    "Videos": "فيديوهات",
+    "LATEST STYLING VIDEOS": "أحدث فيديوهات تنسيق الأزياء",
+    "LATEST STYLING VIDEOS BY INFLUENCERS": "أحدث فيديوهات المؤثرين في تنسيق أزياء"
 }

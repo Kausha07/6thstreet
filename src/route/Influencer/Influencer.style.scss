@@ -1,21 +1,36 @@
 .Influencer {
-  @include desktop {
-    width: 76.389vw;
-    max-width: 1100px;
-    margin: 130px auto 0;
+  width: 100%;
+  .LiveShoppingVideoSnapshots {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 200px;
+    @include mobile {
+      margin-top: 40px;
+    }
+    @include tablet {
+      margin-top: 60px;
+    }
   }
-  @include mobile {
-    padding-bottom: 40px;
-    margin: 0 auto;
-  }
-  @include tablet {
-    padding-top: 0;
+
+  .InfluencerWrapper {
+    @include desktop {
+      width: 76.389vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @include mobile {
+      padding-bottom: 40px;
+      margin: 0 auto;
+    }
+    @include tablet {
+      padding-top: 0;
+    }
   }
 
   .trendingBlock {
-    margin-top: 192px;
+    margin-top: 70px;
     @include mobile {
-      margin-top: 68px;
+      margin-top: 50px;
       padding: 0 10px;
     }
   }
@@ -45,17 +60,19 @@
   }
   .headerMain {
     position: fixed;
+    width: 100%;
     z-index: 9;
     background-color: #ffffff;
     top: 110px;
-    width: 76.389vw;
-    max-width: 1100px;
     padding: 20px 0;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     .header {
+      width: 76.389vw;
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -149,14 +166,21 @@
     }
 
     @include mobile {
-      width: 95vw;
-      margin-top: 15px;
+      width: 100vw;
+      margin-top: 10px;
       top: 77px;
       padding: 20px 10px;
+
+      .header {
+        width: 92vw;
+      }
     }
     @include tablet {
-      width: 93vw;
+      width: 100vw;
       top: 94px;
+      .header {
+        width: 92vw;
+      }
       .influencerSearch {
         .influencerSearchInput {
           width: 400px;

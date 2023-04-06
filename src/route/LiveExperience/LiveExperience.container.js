@@ -33,7 +33,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
 
-  requestLiveShoppingInfo : (options) =>
+  requestLiveShoppingInfo: (options) =>
     LivePartyDispatcher.requestLiveShoppingInfo(options, dispatch),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -120,17 +120,16 @@ export class LiveExperienceContainer extends PureComponent {
     this.setMetaData();
   }
 
-
   requestLiveShoppingInfo() {
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const [lang, country] = locale && locale.split("-");
     const { requestLiveShoppingInfo } = this.props;
     Config.storeId = getBambuserChannelID(country);
-    if(requestLiveShoppingInfo) {
+    if (requestLiveShoppingInfo) {
       requestLiveShoppingInfo({
-      storeId: Config.storeId,
-      isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
-    });
+        storeId: Config.storeId,
+        isStaging: process.env.REACT_APP_SPOCKEE_STAGING,
+      });
     }
   }
 
@@ -229,7 +228,14 @@ export class LiveExperienceContainer extends PureComponent {
     const livepartyId = getQueryParam("livepartyId", location);
     const cartId = getQueryParam("cartId", location);
     const token = getQueryParam("token", location);
-    const FABautoplayLiveShopping = getQueryParam("autoplayLiveShopping",location);
+    const FABautoplayLiveShopping = getQueryParam(
+      "autoplayLiveShopping",
+      location
+    );
+    const influencerPageToLiveParty = getQueryParam(
+      "influencerPageToLiveParty",
+      location
+    );
 
     let {
       live,
@@ -239,7 +245,7 @@ export class LiveExperienceContainer extends PureComponent {
       addProductToCart,
       updateProductInCart,
       removeProduct,
-      updateCartProducts
+      updateCartProducts,
     } = this.props;
     // Updating upcoming data to remove current broadCastId from it.
     let updatedUpcoming = upcoming.filter((val) => {
@@ -262,6 +268,7 @@ export class LiveExperienceContainer extends PureComponent {
       cartId,
       token,
       FABautoplayLiveShopping,
+      influencerPageToLiveParty,
     };
   };
 
