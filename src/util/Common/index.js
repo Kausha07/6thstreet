@@ -331,6 +331,33 @@ export const translateArabicColor = (color = "") => {
     case "عاجي": {
       return "Ivory";
     }
+    case "Mint": {
+      return "النعناع";
+    }
+    case "Navy Blue": {
+      return "الأزرق الداك";
+    }
+    case "Sand": {
+      return "رملي";
+    }
+    case "Teal": {
+      return "موف";
+    }
+    case "Transparent": {
+      return "شفاف";
+    }
+    case "Wine": {
+      return "نبيذي";
+    }
+    case "Coral": {
+      return "مرجاني";
+    }
+    case "Khaki": {
+      return "كاكي";
+    }
+    case "Light Honey": {
+      return "عسلي فاتح";
+    }
 
     default: {
       // eslint-disable-next-line no-undef

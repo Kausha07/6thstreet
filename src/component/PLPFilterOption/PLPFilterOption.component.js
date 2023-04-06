@@ -245,6 +245,14 @@ class PLPFilterOption extends PureComponent {
         Fuchsia: "fuchsia",
         Magenta: "magenta",
         Mauve: "mauve",
+        Mint: "mint",
+        "Navy Blue": "navy blue",
+        Sand: "sand",
+        Teal: "teal",
+        Transparent: "transparent",
+        Wine: "wine",
+        Coral : "coral",
+        "Light Honey" : "light honey",
       };
       const color = SPECIAL_COLORS[fixedColor]
         ? SPECIAL_COLORS[fixedColor]
@@ -259,14 +267,12 @@ class PLPFilterOption extends PureComponent {
             style={{ backgroundColor: color }}
           />
           {isArabic() && !isMobile.any()
-            ? !newColors[label]
+            ? (!newColors[label])
               ? label
               : translateArabicColor(label)
             : null}
           {!isArabic()
-            ? !newColors[label]
               ? label
-              : translateArabicColor(label)
             : null}
           {product_count && this.renderCount()}
         </label>
