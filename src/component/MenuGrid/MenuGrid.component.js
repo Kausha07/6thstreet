@@ -124,6 +124,7 @@ class MenuGrid extends PureComponent {
 
   renderSubcategories() {
     const { isArabic } = this.state;
+    const { items = [] } = this.props;
 
     return (
       <>
@@ -141,7 +142,7 @@ class MenuGrid extends PureComponent {
           {this.renderDesktopButton()}
           {this.renderItems()}
         </div>
-        {this.renderViewAllButton()}
+        {items.lenght > 0 ? this.renderViewAllButton(): null}
       </>
     );
   }
