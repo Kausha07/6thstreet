@@ -35,7 +35,7 @@ class HeaderGendersContainer extends PureComponent {
   setCurrentGender() {
     const { currentContentGender } = this.props;
     if (currentContentGender !== "all") {
-      if(this.props.gender === "influencer"){
+      if (this.props.gender === "influencer") {
         this.props.setGender("influencer");
       } else if (window.location.pathname.includes("women")) {
         this.props.setGender("women");
@@ -45,8 +45,11 @@ class HeaderGendersContainer extends PureComponent {
         this.props.setGender("kids");
       } else if (window.location.pathname.includes("home")) {
         this.props.setGender("home");
-      } else if (this.props.product?.gender === "Women") {
-      } else if (window.location.pathname.includes("influencer")) {
+      } else if (
+        window.location.pathname === "/influencer.html" ||
+        window.location.pathname === "/influencer.html/Store" ||
+        window.location.pathname === "/influencer.html/Collection"
+      ) {
         this.props.setGender("influencer");
       } else if (this.props.product?.gender === "Women") {
         this.props.setGender("women");
