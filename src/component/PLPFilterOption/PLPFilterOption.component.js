@@ -252,6 +252,7 @@ class PLPFilterOption extends PureComponent {
         Transparent: "transparent",
         Wine: "wine",
         Coral : "coral",
+        Khaki : "khaki",
         "Light Honey" : "light honey",
       };
       const color = SPECIAL_COLORS[fixedColor]
