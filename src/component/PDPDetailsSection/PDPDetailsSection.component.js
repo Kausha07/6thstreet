@@ -864,6 +864,11 @@ class PDPDetailsSection extends PureComponent {
       .toLowerCase();
     return `${url}.html`;
   };
+
+  scrollToTop = () => {
+    window.scrollTo(0,0);
+  }
+
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
@@ -872,7 +877,7 @@ class PDPDetailsSection extends PureComponent {
       action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
     };
     return (
-      <div block="FromBrand">
+      <div block="FromBrand" onClick={this.scrollToTop}>
         <Link
           block="FromBrand"
           elem="MoreButton"
