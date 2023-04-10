@@ -358,6 +358,81 @@ export const translateArabicColor = (color = "") => {
     case "Light Honey": {
       return "عسلي فاتح";
     }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Naughty Mauve": {
+      return "نوتي موف";
+    }
+    case "Pretty Kiss": {
+      return "بريتي كيس";
+    }
+    case "Stay Currant": {
+      return "ستاي كرانت";
+    }
+    case "Ultimate Wine": {
+      return "التيميت واين";
+    }
+    case "Chocolate": {
+      return "شوكولاتة";
+    }
+    case "Multicolour": {
+      return "متعدد الألوان";
+    }
+    case "Raspberry": {
+      return "توت";
+    }
+    case "Addiction": {
+      return "اديكشن";
+    }
+    case "Almond": {
+      return "ألموند";
+    }
+    case "Berry": {
+      return "كرزي";
+    }
+    case "Caramel": {
+      return "كارميل";
+    }
+    case "Everlasting Rum": {
+      return "ايفر لاستينغ رم";
+    }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Forever Scarlet": {
+      return "فوريفر سكارليت";
+    }
+    case "Heather": {
+      return "هيثر";
+    }
+    case "Leopard": {
+      return "فهد";
+    }
+    case "Light": {
+      return "فاتح";
+    }
+    case "Mahogany": {
+      return "ماهوغني";
+    }
+    case "Passion": {
+      return "باشون";
+    }
+    case "Pink Sapphire": {
+      return "سفير وردي";
+    }
+    case "Plum": {
+      return "برقوقي";
+    }
+    case "Porcelain": {
+      return "بورسلان";
+    }
+    case "Twilight": {
+      return "تويلايت";
+    }
+    case "Lightbeige": {
+      return "بيج فاتح";
+    }
 
     default: {
       // eslint-disable-next-line no-undef
