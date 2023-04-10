@@ -108,16 +108,16 @@ class AddressCityAreaOverlay extends PureComponent {
   
     }
 
-    addclass100vh(e) {
-      const elem = document.getElementById("cityAreaPopupBlockone");
-      elem.classList.add('active');
-    }
+    // addclass100vh(e) {
+    //   const elem = document.getElementById("cityAreaPopupBlockone");
+    //   elem.classList.add('active');
+    // }
 
     handleOnFocus(e) {
       e.stopPropagation();
       this.setState({ isOnFullScreen: true })
-      const elem = document.getElementById("cityAreaPopupBlockone");
-      elem.classList.add('active');
+      // const elem = document.getElementById("cityAreaPopupBlockone");
+      // elem.classList.add('active');
       
     }
 
@@ -130,7 +130,7 @@ class AddressCityAreaOverlay extends PureComponent {
                     mods={{ isArabic }}
                     type="search"
                     value={this.state.searchInput}
-                    onClick={(e) => this.addclass100vh(e)}
+                    // onClick={(e) => this.addclass100vh(e)}
                     onChange={(e) => this.handleSearchChange(e)}
                     onFocus={(e) => this.handleOnFocus(e)}
                     autoComplete="off"
@@ -179,13 +179,15 @@ class AddressCityAreaOverlay extends PureComponent {
                       id="cityAreaPopupBlockone"
                       
                     >   
-                        <div block="overlayHeader" mods={{ isOnFullScreen }}>
+                        <div block="overlayHeader" 
+                        // mods={{ isOnFullScreen }}
+                        >
                           {(!isSignedIn && isOnFullScreen ) ? this.renderBack() : null}
                           <>
                               <h4
                                 block="cityAreaPopupBlock"
                                 elem="titleMeassage"
-                                mods={{ isOnFullScreen }}
+                                // mods={{ isOnFullScreen }}
                               >
                                   {popupType === "city" ? __("SELECT A CITY") : __("SELECT AN AREA") }
                               </h4>
