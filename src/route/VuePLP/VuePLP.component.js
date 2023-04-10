@@ -305,16 +305,34 @@ const VuePLP = (props) => {
         fetchVueData(dynamicPayload)
           .then((resp) => {
             if (!resp.data) {
-              if (!firstOrderCall && signedIn) {
+              if (
+                !firstOrderCall &&
+                !secondOrderCall &&
+                !firstRecentCall &&
+                signedIn
+              ) {
                 setFirstOrderCall(true);
-              } else if (firstOrderCall && !secondOrderCall && signedIn) {
-                setSecondOrderCall(true);
+              } else if (
+                firstOrderCall &&
+                !secondOrderCall &&
+                !firstRecentCall &&
+                signedIn
+              ) {
+                if (noRecentlyViewed) {
+                  setPayloadQuery(TOP_PICKS_SLIDER);
+                } else {
+                  setSecondOrderCall(true);
+                }
               } else if (
                 firstOrderCall &&
                 secondOrderCall &&
                 !firstRecentCall
               ) {
-                setFirstRecentCall(true);
+                if (noRecentlyViewed) {
+                  setPayloadQuery(TOP_PICKS_SLIDER);
+                } else {
+                  setFirstRecentCall(true);
+                }
               } else if (firstOrderCall && secondOrderCall && firstRecentCall) {
                 setPayloadQuery(TOP_PICKS_SLIDER);
               } else {
