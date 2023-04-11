@@ -469,40 +469,21 @@ export const camelCase = (str) => {
 }
 
 export const getBambuserChannelID=(country)=>{
-  if(process.env.REACT_APP_BAMBUSER_ENV === "staging") {
-    switch (country) {
-      case "ae":
-        return "QfxqiD3TAwAWSQcoPTva";
-      case "sa":
-        return "3vYn5j0lmNq4H6juUyHo";
-      case "kw":
-        return "H2d8ao0cIDOSB0Mes0gS";
-      case "om":
-        return "GYKTtxynbwwnx8PERIls";
-      case "bh":
-        return "2YTiep0n0GzNSUpUhMF0";
-      case "qa":
-        return "m5QBkcoSL4IPgyMRZb0m";
-      default:
-        return "QfxqiD3TAwAWSQcoPTva";
-    }
-  } else {
-    switch (country) {
-      case "ae":
-        return "RQi9v57VXHIFetDai47q";
-      case "sa":
-        return "LSC8XG1YSbgdX6Adwds4";
-      case "kw":
-        return "SbFHRnzIUHdcORz2ELjd";
-      case "om":
-        return "JFEsZsxpy6mp1HaawJvH";
-      case "bh":
-        return "TvklSoghpVJPJttPB94u";
-      case "qa":
-        return "mLnmwfhhDQZa8OzDYmni";
-      default:
-        return "RQi9v57VXHIFetDai47q";
-    }
+  switch (country) {
+    case "ae":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
+    case "sa":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_SA;
+    case "kw":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_KW;
+    case "om":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_OM;
+    case "bh":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_BH;
+    case "qa":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_QA;
+    default:
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
   }
 }
 
