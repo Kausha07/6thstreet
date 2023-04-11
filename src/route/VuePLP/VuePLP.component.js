@@ -302,7 +302,11 @@ const VuePLP = (props) => {
         query,
         dynamicQueryPayload
       );
-      if (handleRandomProduct && requestNumber < 5) {
+      if (requestNumber > 4) {
+        setPayloadQuery(TOP_PICKS_SLIDER);
+        return;
+      }
+      if (handleRandomProduct) {
         setRequestNumber(requestNumber + 1);
         setIsLoading(true);
         fetchVueData(dynamicPayload)
