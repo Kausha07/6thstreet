@@ -142,7 +142,7 @@ class MenuGrid extends PureComponent {
           {this.renderDesktopButton()}
           {this.renderItems()}
         </div>
-        {items.lenght > 0 ? this.renderViewAllButton(): null}
+        {items && items.length >= 1 ? this.renderViewAllButton(): null}
       </>
     );
   }
