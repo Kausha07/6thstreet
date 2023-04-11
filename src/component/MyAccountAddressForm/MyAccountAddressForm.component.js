@@ -82,6 +82,10 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         };
     }
 
+    onCitySelected = (selectedCity) => {
+        this.setState({ city: selectedCity, isLoading: true })
+    }
+
     getCitiesBasedOnLanguage() {
         const { isArabic, cities = [] } = this.state;
 
@@ -265,6 +269,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 citySelected: this.state.city,
                 popupType: "city",
                 autocomplete: "new-password",
+                onCitySelected: this.onCitySelected,
             },
             ...this.getRegionFields(),
             postcode: {
