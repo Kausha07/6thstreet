@@ -51,6 +51,7 @@ const VuePLP = (props) => {
   const [firstRecentCall, setFirstRecentCall] = useState(false);
   const [noLastOrderSku, setNoLastOrderSku] = useState(false);
   const [noRecentlyViewed, setNoRecentlyViewed] = useState(false);
+  const [requestNumber, setRequestNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const signedIn = isSignedIn();
@@ -190,6 +191,7 @@ const VuePLP = (props) => {
           }
         } else {
           setIsLoading(true);
+          setFirstRecentCall(true);
           setNoRecentlyViewed(true);
           if (noLastOrderSku || !signedIn) {
             setPayloadQuery(TOP_PICKS_SLIDER);
@@ -300,7 +302,8 @@ const VuePLP = (props) => {
         query,
         dynamicQueryPayload
       );
-      if (handleRandomProduct) {
+      if (handleRandomProduct && requestNumber < 5) {
+        setRequestNumber(requestNumber + 1);
         setIsLoading(true);
         fetchVueData(dynamicPayload)
           .then((resp) => {
