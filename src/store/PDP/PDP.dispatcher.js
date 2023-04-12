@@ -3,7 +3,6 @@ import {
   setPDPClickAndCollect,
   setPDPLoading,
   setPDPShowSearch,
-  setBrandButtonClick
 } from "Store/PDP/PDP.action";
 import {
   sendNotifyMeEmail,
@@ -113,11 +112,6 @@ export class PDPDispatcher {
   async setPDPShowSearch(payload, dispatch) {
     const { displaySearch } = payload;
     dispatch(setPDPShowSearch(displaySearch));
-  }
-
-  async setBrandButtonClick(payload, dispatch) {
-    const { brandButtonClick } = payload;
-    dispatch(setBrandButtonClick(brandButtonClick));
   }
 }
 

@@ -5,8 +5,7 @@ import {
     SET_PDP_LOADING,
     SET_PDP_CLICK_AND_COLLECT,
     SET_DISPLAY_SEARCH,
-    SET_BRAND_INFO_DATA,
-    SET_BRAND_BUTTON_CLICK
+    SET_BRAND_INFO_DATA
 } from './PDP.action';
 
 export const getInitialState = () => ({
@@ -16,8 +15,7 @@ export const getInitialState = () => ({
     clickAndCollectStores: [],
     isLoading: true,
     displaySearch: false,
-    brandInfoData: '',
-    brandButtonClick : false,
+    brandInfoData: ''
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
@@ -80,14 +78,6 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 displaySearch
             };
 
-        case SET_BRAND_BUTTON_CLICK:
-            const { brandButtonClick } = action;
-
-            return {
-                ...state,
-                brandButtonClick
-            };
-    
         default:
             return state;
     }

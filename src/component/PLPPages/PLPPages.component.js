@@ -1,7 +1,6 @@
 import PLPPage from "Component/PLPPage";
 import PLPPagePlaceholder from "Component/PLPPagePlaceholder";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { PureComponent, Fragment } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import "./PLPPages.style";
@@ -16,11 +15,6 @@ import { isArabic } from "Util/App";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import PLPQuickFilter from "Component/PLPQuickFilter";
 import Field from "Component/Field";
-
-
-export const mapStateToProps = (state) => ({
-  brandButtonClick: state.PDP.brandButtonClick,
-});
 
 class PLPPages extends PureComponent {
   static propTypes = {
@@ -88,7 +82,7 @@ class PLPPages extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { activeFilters, prevProductSku, brandButtonClick } = this.props;
+    const { activeFilters, prevProductSku } = this.props;
     const {
       activeFilters: prevActiveFilters,
       prevProductSku: initialPrevProductSku,
@@ -125,17 +119,11 @@ class PLPPages extends PureComponent {
         if (isMobile.any() && element) {
           element.parentElement.style.scrollMarginTop = "0px";
         }
-        if (!brandButtonClick) {
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        } else {
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-        }
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
         this.setState({ loadedLastProduct: true });
       }
     }
@@ -746,4 +734,4 @@ class PLPPages extends PureComponent {
   }
 }
 
-export default withRouter(connect(mapStateToProps, null)(PLPPages));
+export default withRouter(PLPPages);
