@@ -32,7 +32,7 @@ import {
   import { withRouter } from "react-router";
   import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
   import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-  
+  import { isSignedIn } from "Util/Auth";
   //Global Variable for PLP AddToCart
   var urlWithQueryID;
   export const mapStateToProps = (state) => ({
@@ -213,6 +213,7 @@ import {
         discounted_price: itemPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name,
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       // this.sendBannerClickImpression(product);

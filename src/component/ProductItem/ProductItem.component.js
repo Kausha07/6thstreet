@@ -34,6 +34,7 @@ import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -222,6 +223,7 @@ class ProductItem extends PureComponent {
       discounted_price: itemPrice || "",
       product_image_url: thumbnail_url || "",
       product_name: name,
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     // this.sendBannerClickImpression(product);
@@ -443,7 +445,11 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID;
+    let parseLink =
+      isVueData && new URL(urlWithQueryID) && new URL(urlWithQueryID).origin
+        ? urlWithQueryID.replace(new URL(urlWithQueryID).origin, "")
+        : urlWithQueryID;
+
     const linkTo = {
       pathname: parseLink,
       state: {
@@ -490,7 +496,7 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
     const {
       product: { sku },
-      pageType
+      pageType,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;

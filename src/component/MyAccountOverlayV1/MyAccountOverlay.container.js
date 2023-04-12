@@ -204,10 +204,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       stateToBeUpdated.state = STATE_LOGGED_IN;
     }
 
-    if (myAccountState === STATE_LOGGED_IN && !isSignedIn) {
-      stateToBeUpdated.state = STATE_SIGN_IN;
-      showNotification("success", __("You are successfully logged out!"));
-    }
 
     if (isPasswordForgotSend !== currentIsPasswordForgotSend) {
       stateToBeUpdated.isLoading = false;
@@ -278,7 +274,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     } = history;
 
     let getDeviceState;
-    showRegisterScreen;
     if (showMyAccountMenuPopUp) {
       getDeviceState = STATE_INITIAL_LINKS;
     } else if (showRegisterScreen) {

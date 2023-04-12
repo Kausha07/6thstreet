@@ -37,7 +37,7 @@ import sort from "./icons/sort.svg";
 import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-
+import { isSignedIn } from "Util/Auth";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
@@ -482,6 +482,7 @@ export class PLP extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
         filter_value: facet_value || "",
+        isLoggedIn: isSignedIn() || "",
         app6thstreet_platform: "Web",
       });
     }

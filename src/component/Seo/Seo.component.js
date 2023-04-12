@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { LOCALES } from 'Util/Url/Url.config';
-import history from "Util/History";
 
 export const mapStateToProps = (state) => ({
     metaData: state.MetaReducer,
@@ -22,21 +21,9 @@ export class Seo extends PureComponent {
         currentLocale: PropTypes.string.isRequired
     };
 
-    componentDidUpdate(prevProps){
-        if(this.props.metaData.canonical_url != prevProps.metaData.canonical_url) {
-            let { pathname = '' } = location || {};
-            if(pathname === "/naturaliser.html") { // For duplicate indexed urls redirecting to actual url
-                history.push(`/naturalizer.html`);
-            }
-        }
-    }
-
     renderCanonicals() {
         const { setMeta, metaData: { canonical_url: canonicalUrl }, metaData } = this.props;
         let { origin = '', pathname = '' } = location || {};
-        if(pathname === "/naturaliser.html") { // For duplicate indexed urls letting bot knows to permanently redirect
-            pathname = "/naturalizer.html";
-        }
         const urlWithoutParams =
             pathname === "/catalogsearch/result/" || pathname === "/viewall/"
                 ? `${origin}${"/"}`
