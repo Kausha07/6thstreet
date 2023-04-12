@@ -102,7 +102,7 @@ class FooterMain extends PureComponent {
         },
         {
           name: __("Order Tracking"),
-          href: "https://6thstreet.clickpost.in/",
+          href: process.env.REACT_APP_CLICKPOST_URL
         },
         {
           name: __("FAQs"),

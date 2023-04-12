@@ -5,7 +5,7 @@ const serverTimings = require('server-timings');
 const cookieParser = require('cookie-parser');
 const proxy = require('./src/setupProxy');
 const path = require('path');
-
+const redirectPath = require('./redirectPath')
 const PORT = 3000;
 const app = express();
 function setCustomCacheControl(res, path) {
@@ -45,6 +45,9 @@ app.use(serveStatic(path.join(__dirname, 'build'), {
 app.get('*', (req, res) => {
     const { locale, gender="" } = req.cookies;
     const host =  !locale?"":process.env[`REACT_APP_HOST_${locale.replace("-", "_").toUpperCase()}`];
+    if(redirectPath.hasOwnProperty(req.path)){
+        return res.redirect(301, `${host}${redirectPath[req.path]}`);
+    }
     if(gender && req.path==="/"){
         return res.redirect(302, `${host}/${gender}`);
     }

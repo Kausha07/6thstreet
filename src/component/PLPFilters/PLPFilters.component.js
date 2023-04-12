@@ -511,7 +511,7 @@ class PLPFilters extends PureComponent {
             if (filter[0] === "sizes") {
               const mappedData = Object.entries(data).reduce((acc, size) => {
                 const { subcategories } = size[1];
-                const mappedSizeData = PLPContainer.mapData(
+                const mappedSizeData = PLPContainer?.mapData(
                   subcategories,
                   filter[0],
                   this.props
@@ -526,7 +526,7 @@ class PLPFilters extends PureComponent {
             } else {
               acc = {
                 ...acc,
-                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+                [filter[0]]: PLPContainer?.mapData(data, filter[0], this.props),
               };
             }
           }

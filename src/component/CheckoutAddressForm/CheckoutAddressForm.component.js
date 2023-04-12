@@ -102,6 +102,14 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       value: customerPhone,
     };
 
+    fieldMap.city = {
+      ...fieldMap.city,
+      onChange: (value) => {
+        this.onChange("city", value);
+        fieldMap?.city?.onCitySelected(value);
+      },
+    };
+
     const fFieldMap = isSignedIn
       ? fieldMap
       : {

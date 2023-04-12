@@ -233,7 +233,7 @@ export class SearchOverlay extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        {querySuggestions?.length > 1 ? (
+        {((querySuggestions?.length > 0) && (querySuggestions[0]?.count !== '') ) ? (
           <ul>
             {querySuggestions?.slice(0, 5).map(this.renderQuerySuggestion)}
           </ul>

@@ -630,9 +630,18 @@ class FieldMultiselect extends PureComponent {
         <input
           type="text"
           id={isMobile.any() ? currentActiveFilter : category}
-          placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
+          placeholder={
+            isMobile.any()
+              ? isArabic
+                ? "ابحث..."
+                : "Search..."
+              : isArabic
+              ? `بحث ${placeholder}`
+              : `Search ${placeholder}`
+          }
           onChange={(event) => this.handleFilterSearch(event)}
-          onFocus={(event) => this.sendMoeEvents(MoeFilterEvent, event.target.value)
+          onFocus={(event) =>
+            this.sendMoeEvents(MoeFilterEvent, event.target.value)
           }
         />
         {!isMobile.any() && (

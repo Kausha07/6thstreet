@@ -227,11 +227,11 @@ class MyAccountClubApparel extends PureComponent {
 
           {/*Redirect links to arabic-page  */}
           {this.state.isArabic ? (
-            <a href="http://www.clubapparel.com/terms&amp;conditions-arabic.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/terms&amp;conditions-arabic.html`}> 
               {__("Club Apparel Terms and Conditions")}
             </a>
           ) : (
-            <a href="http://www.clubapparel.com/terms&amp;conditions.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/terms&amp;conditions.html`}>
               {__("Club Apparel Terms and Conditions")}
             </a>
           )}
@@ -240,11 +240,11 @@ class MyAccountClubApparel extends PureComponent {
           {__("You can also view the ")}
           {/*Redirect links to arabic-page  */}
           {this.state.isArabic ? (
-            <a href="http://www.clubapparel.com/privacy-policy-arabic.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/privacy-policy-arabic.html`}>
               {__("Club Apparel Privacy Policy")}
             </a>
           ) : (
-            <a href="http://www.clubapparel.com/privacy-policy.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/privacy-policy.html`}>
               {__("Club Apparel Privacy Policy")}
             </a>
           )}
@@ -265,11 +265,11 @@ class MyAccountClubApparel extends PureComponent {
           )}
          {/*Redirect links to arabic-page  */}
          {this.state.isArabic ? (
-            <a href="http://www.clubapparel.com/ca-rewards/rewards.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/ca-rewards/rewards.html`}>
               {__("here.")}
             </a>
           ) : (
-            <a href="http://www.clubapparel.com/ca-rewards/rewards.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/ca-rewards/rewards.html`}>
               {__("here.")}
             </a>
           )}
@@ -290,11 +290,11 @@ class MyAccountClubApparel extends PureComponent {
           )}
           {/*Redirect links to arabic-page  */}
           {this.state.isArabic ? (
-            <a href="http://www.clubapparel.com/CA-Tiers-Info.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/CA-Tiers-Info.html`}>
               {__("Club Apparel Tiers")}
             </a>
           ) : (
-            <a href="http://www.clubapparel.com/CA-Tiers-Info.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/CA-Tiers-Info.html`}>
               {__("Club Apparel Tiers")}
             </a>
           )}
@@ -306,11 +306,11 @@ class MyAccountClubApparel extends PureComponent {
           )}
            {/*Redirect links to arabic-page  */}
            {this.state.isArabic ? (
-            <a href="http://www.clubapparel.com/brand-terms&amp;conditions-arabic.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/brand-terms&amp;conditions-arabic.html`}>
               {__("Club Apparel Special Points Terms and Conditions.")}
             </a>
           ) : (
-            <a href="http://www.clubapparel.com/brands-terms&amp;conditions.html">
+            <a href={`${process.env.REACT_APP_CLUB_APPAREL_URL}/brands-terms&amp;conditions.html`}>
               {__("Club Apparel Special Points Terms and Conditions.")}
             </a>
           )}

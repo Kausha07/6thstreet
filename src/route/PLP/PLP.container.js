@@ -25,7 +25,6 @@ import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
 import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
-import { getLocaleFromUrl } from "Util/Url/Url";
 import browserHistory from "Util/History";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
@@ -46,7 +45,8 @@ import isMobile from "Util/Mobile";
 import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
-import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
 import { isSignedIn } from "Util/Auth";
@@ -142,19 +142,18 @@ export class PLPContainer extends PureComponent {
   }
 
   static async request(isPage, props) {
-    const {
-      requestProductList,
-      requestProductListPage,
-      influencerAlgoliaQuery,
+    const { requestProductList, requestProductListPage, influencerAlgoliaQuery,
     } = props;
     let options;
-    if (window.location.pathname.includes("influencer")) {
+    if (
+      window.location.pathname === "/influencer.html/Collection" ||
+      window.location.pathname === "/influencer.html/Store"
+    ) {
       const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
       let params = {
         q: "",
       };
-      if(!Object.keys(parsedParams).includes("page"))
-      {
+      if (!Object.keys(parsedParams).includes("page")) {
         params["page"] = "0";
       }
       params["categories.level2"] = influencerAlgoliaQuery;
@@ -309,18 +308,18 @@ export class PLPContainer extends PureComponent {
   getStaticMetaContent = async () => {
     const pagePathName = new URL(window.location.href).pathname;
     if (pagePathName.includes(".html")) {
-        try {
-          const resp = await getStaticFile("plp_meta", {
-            $FILE_NAME: `pages/plp_meta.json`,
+      try {
+        const resp = await getStaticFile("plp_meta", {
+          $FILE_NAME: `pages/plp_meta.json`,
+        });
+        if (resp) {
+          this.setState({
+            metaContent: resp?.[0],
           });
-          if (resp) {
-            this.setState({
-              metaContent: resp?.[0],
-            });
-          }
-        } catch (e) {
-          Logger.log(e);
         }
+      } catch (e) {
+        Logger.log(e);
+      }
     }
   };
 
@@ -341,14 +340,14 @@ export class PLPContainer extends PureComponent {
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
       : requestedOptions["categories.level3"]
-      ? requestedOptions["categories.level3"]
-      : requestedOptions["categories.level2"]
-      ? requestedOptions["categories.level2"]
-      : requestedOptions["categories.level1"]
-      ? requestedOptions["categories.level1"]
-      : requestedOptions["categories.level0"]
-      ? requestedOptions["categories.level0"]
-      : "";
+        ? requestedOptions["categories.level3"]
+        : requestedOptions["categories.level2"]
+          ? requestedOptions["categories.level2"]
+          : requestedOptions["categories.level1"]
+            ? requestedOptions["categories.level1"]
+            : requestedOptions["categories.level0"]
+              ? requestedOptions["categories.level0"]
+              : "";
     const Categories_level =
       categorylevelPath && categorylevelPath.includes("///")
         ? categorylevelPath.replaceAll(" ", "").split("///")
@@ -368,13 +367,12 @@ export class PLPContainer extends PureComponent {
       plp_name: category_4
         ? category_4
         : category_3
-        ? category_3
-        : category_2
-        ? category_2
-        : category_1
-        ? category_1
-        : "",
-      isLoggedIn: isSignedIn(),
+          ? category_3
+          : category_2
+            ? category_2
+            : category_1
+              ? category_1
+              : "",
       app6thstreet_platform: "Web",
     });
     this.setState({ categoryloaded: false });
@@ -704,32 +702,7 @@ export class PLPContainer extends PureComponent {
   }
 
   async getBrandDetails() {
-    const exceptionalBrand = ['men','women','kids','home']
-    const brandName = location.pathname
-      .split(".html")[0]
-      .substring(1)
-      .split("/")?.[0];
-    if (exceptionalBrand.includes(brandName)) {
-      return null;
-    }
-    try {
-      getBrandInfoByName(brandName).then((resp) => {
-        this.setState({
-          brandDescription: isArabic()
-            ? resp?.result?.[0]?.description_ar
-            : resp?.result?.[0]?.description,
-          brandImg: resp?.result?.[0]?.image,
-          brandName: isArabic() ? resp?.result?.[0]?.name_ar : resp?.result?.[0]?.name,
-        });
-        this.props.setBrandurl(resp?.result?.[0]?.url_path);
-      })
-    } catch (err) {
-      console.error("There is an issue while fetching brand information.", err);
-    }
-  }
-
-  async getBrandDetailsByAloglia() {
-    const exceptionalBrand = ['men', 'women', 'kids', 'home']
+    const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
@@ -895,12 +868,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-        ? options["categories.level3"]
-        : options["categories.level2"]
-        ? options["categories.level2"]
-        : options["categories.level1"]
-        ? options["categories.level1"]
-        : options["q"];
+          ? options["categories.level3"]
+          : options["categories.level2"]
+            ? options["categories.level2"]
+            : options["categories.level1"]
+              ? options["categories.level1"]
+              : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -959,43 +932,43 @@ export class PLPContainer extends PureComponent {
     const staticMetaData =
       getCategoryLevel.length == 5 && metaContent
         ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
-            getCategoryLevel[2]
-          ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
+        getCategoryLevel[2]
+        ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
         : getCategoryLevel.length == 4 && metaContent
-        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
-            getCategoryLevel[2]
+          ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+          getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]
-        : getCategoryLevel.length == 3 && metaContent
-        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+          : getCategoryLevel.length == 3 && metaContent
+            ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
-          ]
-        : getCategoryLevel.length == 2 && metaContent
-        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
-        : getCategoryLevel.length == 1 && metaContent
-        ? metaContent?.[locale]?.[getCategoryLevel[0]]
-        : null;
+            ]
+            : getCategoryLevel.length == 2 && metaContent
+              ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
+              : getCategoryLevel.length == 1 && metaContent
+                ? metaContent?.[locale]?.[getCategoryLevel[0]]
+                : null;
     const PLPMetaTitle =
       staticMetaData && staticMetaData?.title
         ? staticMetaData.title
         : brandName && checkBrandPage.length < 3
-        ? __(
+          ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
             countryName
           )
-        : __("%s | 6thStreet.com %s", categoryName, countryName);
+          : __("%s | 6thStreet.com %s", categoryName, countryName);
 
     const PLPMetaDesc =
       staticMetaData && staticMetaData?.desc
         ? staticMetaData.desc
         : brandName && checkBrandPage.length < 3
-        ? __(
+          ? __(
             "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             brandName,
             countryName,
             brandName
           )
-        : __(
+          : __(
             "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
             categoryName,
             countryName,
@@ -1042,7 +1015,7 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay} =
+    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
     // isDisabled: this._getIsDisabled()
@@ -1068,14 +1041,14 @@ export class PLPContainer extends PureComponent {
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
       : requestedOptions["categories.level3"]
-      ? requestedOptions["categories.level3"]
-      : requestedOptions["categories.level2"]
-      ? requestedOptions["categories.level2"]
-      : requestedOptions["categories.level1"]
-      ? requestedOptions["categories.level1"]
-      : requestedOptions["categories.level0"]
-      ? requestedOptions["categories.level0"]
-      : "";
+        ? requestedOptions["categories.level3"]
+        : requestedOptions["categories.level2"]
+          ? requestedOptions["categories.level2"]
+          : requestedOptions["categories.level1"]
+            ? requestedOptions["categories.level1"]
+            : requestedOptions["categories.level0"]
+              ? requestedOptions["categories.level0"]
+              : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
     if (this.getIsLoading() == false && categoryloaded == true) {
@@ -1095,4 +1068,3 @@ export class PLPContainer extends PureComponent {
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(PLPContainer)
 );
-

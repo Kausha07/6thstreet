@@ -107,13 +107,13 @@
 
     @include after-mobile {
         position: absolute;
-        right: -170px;
+        right: -120px;
         padding: 0;
         width: var(--cart-overlay-width);
 
         &_isArabic {
             right: unset;
-            left: -170px;
+            left: -120px;
         }
     }
 

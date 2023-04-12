@@ -241,6 +241,47 @@ class PLPFilterOption extends PureComponent {
     if (facet_key === "colorfamily") {
       const engColor = isArabic() ? translateArabicColor(label) : label;
       const fixedColor = engColor.toLowerCase().replace(/ /g, "_");
+      const newColors = {
+        Ivory: "ivory",
+        Rose: "rose",
+        Fuchsia: "fuchsia",
+        Magenta: "magenta",
+        Mauve: "mauve",
+        Mint: "mint",
+        "Navy Blue": "navy blue",
+        Sand: "sand",
+        Teal: "teal",
+        Transparent: "transparent",
+        Wine: "wine",
+        Coral: "coral",
+        Khaki: "khaki",
+        "Light Honey": "light honey",
+        "Fancy Rose": "fancy rose",
+        "Naughty Mauve": "Naughty Mauve",
+        "Pretty Kiss": "Pretty Kiss",
+        "Stay Currant": "stay currant",
+        "Ultimate Wine": "ultimate wine",
+        Chocolate: "chocolate",
+        Multicolour: "Multicolour",
+        Raspberry: "Raspberry",
+        Addiction: "addiction",
+        Almond: "almond",
+        Berry: "berry",
+        Caramel: "caramel",
+        "Everlasting Rum": "everlasting rum",
+        "Fancy Rose": "fancy rose",
+        "Forever Scarlet": "forever scarlet",
+        Heather: "heather",
+        Leopard: "leopard",
+        Light: "light",
+        Mahogany: "mahogany",
+        Passion: "passion",
+        "Pink Sapphire": "pink sapphire",
+        Plum: "plum",
+        Porcelain: "porcelain",
+        Twilight: "twilight",
+        Lightbeige: "Lightbeige",
+      };
       const color = SPECIAL_COLORS[fixedColor]
         ? SPECIAL_COLORS[fixedColor]
         : fixedColor;
@@ -253,8 +294,14 @@ class PLPFilterOption extends PureComponent {
             elem="Color"
             style={{ backgroundColor: color }}
           />
-          {isArabic() && !isMobile.any() ? label : null}
-          {!isArabic() ? label : null}
+          {isArabic() && !isMobile.any()
+            ? (!newColors[label])
+              ? label
+              : translateArabicColor(label)
+            : null}
+          {!isArabic()
+              ? label
+            : null}
           {product_count && this.renderCount()}
         </label>
       );
