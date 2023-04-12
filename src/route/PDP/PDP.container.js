@@ -511,7 +511,9 @@ export class PDPContainer extends PureComponent {
       if (gender === "influencer") {
         influencerID = getQueryParam("influencerID", location);
         collectionID = getQueryParam("influencerCollectionID", location);
-        influencerName = decodeURI(getQueryParam("influencerName", location));
+        influencerName = decodeURI(
+          getQueryParam("influencerName", location)
+        ).trim();
         selectedGenderFromURL = getQueryParam("selectedGender", location);
         isStore = getQueryParam("isStore", location);
         isCollection = getQueryParam("isCollection", location);

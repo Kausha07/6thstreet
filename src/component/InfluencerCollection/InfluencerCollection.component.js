@@ -9,9 +9,9 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
-import Event,  {
+import Event, {
   EVENT_SHARE_COLLECTION_CLICK,
-  EVENT_GTM_INFLUENCER
+  EVENT_GTM_INFLUENCER,
 } from "Util/Event";
 
 import PLPDispatcher from "Store/PLP/PLP.dispatcher";
@@ -109,7 +109,7 @@ const InfluencerCollection = (props) => {
     try {
       getInfluencerInfo(influencer_id, envID, locale).then((resp) => {
         if (resp) {
-          setInfluencerNameOnPage(resp?.influencer_name);
+          setInfluencerNameOnPage(resp?.influencer_name.trim());
           setInfluencerData(resp);
           setInfluencerName(resp?.influencer_name);
           isCollectionPage(true);
@@ -205,7 +205,7 @@ const InfluencerCollection = (props) => {
     setShareButtonClicked(!shareButtonClicked);
 
     const eventData = {
-      EventName : EVENT_SHARE_COLLECTION_CLICK
+      EventName: EVENT_SHARE_COLLECTION_CLICK,
     };
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
   };
