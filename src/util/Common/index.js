@@ -313,6 +313,127 @@ export const translateArabicColor = (color = "") => {
     case "Black / White": {
       return "black_white";
     }
+    case "Ivory": {
+      return "عاجي";
+    }
+    case "Fuchsia": {
+      return "فوشي";
+    }
+    case "Magenta": {
+      return "ماجنتي";
+    }
+    case "Rose": {
+      return "زهري";
+    }
+    case "Mauve": {
+      return "موف";
+    }
+    case "عاجي": {
+      return "Ivory";
+    }
+    case "Mint": {
+      return "النعناع";
+    }
+    case "Navy Blue": {
+      return "الأزرق الداك";
+    }
+    case "Sand": {
+      return "رملي";
+    }
+    case "Teal": {
+      return "موف";
+    }
+    case "Transparent": {
+      return "شفاف";
+    }
+    case "Wine": {
+      return "نبيذي";
+    }
+    case "Coral": {
+      return "مرجاني";
+    }
+    case "Khaki": {
+      return "كاكي";
+    }
+    case "Light Honey": {
+      return "عسلي فاتح";
+    }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Naughty Mauve": {
+      return "نوتي موف";
+    }
+    case "Pretty Kiss": {
+      return "بريتي كيس";
+    }
+    case "Stay Currant": {
+      return "ستاي كرانت";
+    }
+    case "Ultimate Wine": {
+      return "التيميت واين";
+    }
+    case "Chocolate": {
+      return "شوكولاتة";
+    }
+    case "Multicolour": {
+      return "متعدد الألوان";
+    }
+    case "Raspberry": {
+      return "توت";
+    }
+    case "Addiction": {
+      return "اديكشن";
+    }
+    case "Almond": {
+      return "ألموند";
+    }
+    case "Berry": {
+      return "كرزي";
+    }
+    case "Caramel": {
+      return "كارميل";
+    }
+    case "Everlasting Rum": {
+      return "ايفر لاستينغ رم";
+    }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Forever Scarlet": {
+      return "فوريفر سكارليت";
+    }
+    case "Heather": {
+      return "هيثر";
+    }
+    case "Leopard": {
+      return "فهد";
+    }
+    case "Light": {
+      return "فاتح";
+    }
+    case "Mahogany": {
+      return "ماهوغني";
+    }
+    case "Passion": {
+      return "باشون";
+    }
+    case "Pink Sapphire": {
+      return "سفير وردي";
+    }
+    case "Plum": {
+      return "برقوقي";
+    }
+    case "Porcelain": {
+      return "بورسلان";
+    }
+    case "Twilight": {
+      return "تويلايت";
+    }
+    case "Lightbeige": {
+      return "بيج فاتح";
+    }
+
     default: {
       // eslint-disable-next-line no-undef
       const color_code = color.toLowerCase().replace(" ", "_");
