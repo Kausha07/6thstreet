@@ -128,11 +128,12 @@ class HeaderAccount extends PureComponent {
   }
 
   sendMoeEvents(event) {
-    const { newSignUpEnabled } = this.props;
+    const { newSignUpEnabled, isSignedIn } = this.props;
     if (event !== EVENT_ACCOUNT_TAB_ICON && !newSignUpEnabled) {
       MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
+        isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
       });
     }

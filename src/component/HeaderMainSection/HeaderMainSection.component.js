@@ -2,7 +2,6 @@ import { createRef } from "react";
 import { connect } from "react-redux";
 import { matchPath, withRouter } from "react-router";
 import PropTypes from "prop-types";
-
 import Algolia from "Util/API/provider/Algolia";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { isArabic } from "Util/App";
@@ -18,11 +17,9 @@ import Event, {
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-
 import { getStore } from "Store";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
-
 import Form from "Component/Form";
 import HeaderCart from "Component/HeaderCart";
 import HeaderLogo from "Component/HeaderLogo";
@@ -36,6 +33,7 @@ import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import "./HeaderMainSection.style";
+import { isSignedIn } from "Util/Auth";
 export const URL_REWRITE = "url-rewrite";
 
 import {
@@ -676,6 +674,7 @@ class HeaderMainSection extends NavigationAbstract {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageTypeTracking(),
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

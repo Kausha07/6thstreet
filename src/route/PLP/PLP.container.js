@@ -49,6 +49,7 @@ import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
+import { isSignedIn } from "Util/Auth";
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -860,7 +861,8 @@ export class PLPContainer extends PureComponent {
       menuCategories,
       gender
     } = this.props;
-    const { isArabic } = this.state
+
+    const {isArabic} = this.state;
     if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level4"]
@@ -1029,7 +1031,7 @@ export class PLPContainer extends PureComponent {
       pages,
       activeFilters,
       isLoading,
-      showOverlay
+      showOverlay,
     };
   };
 
