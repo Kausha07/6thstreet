@@ -63,6 +63,7 @@ import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import { isArabic } from "Util/App";
 import { sha256 } from "js-sha256";
 import { getCookie } from "Util/Url/Url";
+import { showNotification } from "Store/Notification/Notification.action";
 export {
   CUSTOMER,
   ONE_MONTH_IN_SECONDS,
@@ -266,6 +267,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     // dispatch(updateGuestUserEmail(""));
     deleteAuthorizationToken();
     deleteMobileAuthorizationToken();
+    dispatch(showNotification("success", __("You have been logged out")));
     dispatch(setCartId(null));
     dispatch(removeCartItems());
     dispatch(setCustomerDefaultShippingAddress(null));
