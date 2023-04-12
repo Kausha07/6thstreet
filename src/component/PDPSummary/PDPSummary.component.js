@@ -652,7 +652,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { name, brand_name, gallery_images = [] },
     } = this.props;
-    const { url_path, brandNameclick } = this.props;
+    const { url_path } = this.props;
     const { isArabic } = this.state;
     let gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -698,7 +698,6 @@ class PDPSummary extends PureComponent {
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
-                  onClick={ brandNameclick }
                   to={`/${url_path}.html?q=${encodeURIComponent(
                     brand_name
                   )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -710,7 +709,6 @@ class PDPSummary extends PureComponent {
               ) : (
                 <Link
                   className="pdpsummarylinkTagStyle"
-                  onClick={ brandNameclick }
                   to={`/${url_path}.html?q=${encodeURIComponent(
                     brand_name
                   )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -737,7 +735,6 @@ class PDPSummary extends PureComponent {
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
-              onClick={ brandNameclick }
               to={`/${url_path}.html?q=${encodeURIComponent(
                 brand_name
               )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -749,7 +746,6 @@ class PDPSummary extends PureComponent {
           ) : (
             <Link
               className="pdpsummarylinkTagStyle"
-              onClick={ brandNameclick }
               to={`/${url_path}.html?q=${encodeURIComponent(
                 brand_name
               )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(

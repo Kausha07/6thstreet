@@ -53,11 +53,6 @@ class PDPDetail extends PureComponent {
     return `${url}.html`;
   };
 
-
-  scrollToTop = () => {
-    window.scrollTo(0,0);
-  }
-  
   MoreAboutBrandClick = () => {
     const eventData = {
       name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
@@ -71,7 +66,7 @@ class PDPDetail extends PureComponent {
     const { brandName } = this.props;
     const url = this.getBrandUrl();
     return (
-      <div block="BrandDescription" onClick={this.scrollToTop}>
+      <div block="BrandDescription">
         <Link
           block="BrandDescription"
           elem="MoreButton"
