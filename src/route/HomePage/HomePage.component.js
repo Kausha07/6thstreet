@@ -5,6 +5,7 @@ import DynamicContent from "Component/DynamicContent";
 import LoginBlockContainer from "Component/LoginBlock";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import SignInSignUpMobileNudge from "../../component/SignInSignupNudge/SignInSignUpMobileNudge";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
@@ -138,6 +139,7 @@ class HomePage extends PureComponent {
     return (
       <main block="HomePage">
         {this.renderMySignInPopup()}
+        <SignInSignUpMobileNudge />
         {this.renderContent()}
       </main>
     );

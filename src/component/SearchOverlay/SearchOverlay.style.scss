@@ -76,8 +76,10 @@
 
     &-searchList {
         li {
-            margin-bottom: 0px;
+            padding-bottom: 2px;
+            padding-top : 2px;
             padding-left: 0px !important;
+            overflow: hidden;
             .SearchSuggestion {
                 &-TrandingTag {
                     font-size: 13px;
@@ -105,13 +107,13 @@
 
     @include after-mobile {
         position: absolute;
-        right: -170px;
+        right: -120px;
         padding: 0;
         width: var(--cart-overlay-width);
 
         &_isArabic {
             right: unset;
-            left: -170px;
+            left: -120px;
         }
     }
 
@@ -441,7 +443,6 @@ div.SearchOverlay.Overlay {
 .SearchSuggestion {
     position: absolute;
     width: 100%;
-    
     &-TrandingTag {
         font-family: 'Avenir Next';
         font-size : 13px;
@@ -452,6 +453,11 @@ div.SearchOverlay.Overlay {
         background-color: #F0F0F0;
         opacity: 1;
         text-transform: capitalize;
+        max-width : 515px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        justify-content:initial;
     }
 
     &-Item {

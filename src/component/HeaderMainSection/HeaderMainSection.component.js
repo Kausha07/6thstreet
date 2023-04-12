@@ -45,6 +45,7 @@ import {
   TYPE_CATEGORY,
   TYPE_HOME,
   TYPE_PRODUCT,
+  TYPE_INFLUENCER,
 } from "Route/UrlRewrites/UrlRewrites.config";
 import Clear from "./icons/close-black.png";
 import searchIcon from "./icons/search-black.svg";
@@ -115,22 +116,40 @@ class HeaderMainSection extends NavigationAbstract {
   renderMap = {
     logo: this.renderLogo.bind(this),
     gender: this.renderGenderSwitcher.bind(this),
-    rightContainer: this.renderRightContainer.bind(this),
+    searchContainer: this.renderSearchContainer.bind(this),
+    rightIconsContainer: this.renderRightIconsContainer.bind(this),
     back: this.renderBack.bind(this),
   };
 
-  renderRightContainer() {
+  renderRightIconsContainer() {
+    const { isArabic } = this.state;
+    if (this.isPDP() && isMobile.any()) {
+      return null;
+    }
+    return (
+      <div
+        block="rightIconsContainer"
+        key="rightIconsContainer"
+        mods={{ isArabic }}
+      >
+        <div block="rightIcons">
+          {this.renderWishlist()}
+          {this.renderAccount()}
+          {this.renderCart()}
+        </div>
+      </div>
+    );
+  }
+
+  renderSearchContainer() {
     const { gender } = this.props;
     const { isArabic } = this.state;
     if (this.isPDP() && isMobile.any()) {
       return null;
     }
     return (
-      <div block="rightContainer" key="rightContainer" mods={{ isArabic }}>
+      <div block="searchContainer" key="searchContainer" mods={{ isArabic }}>
         {gender !== "influencer" && this.renderSearchIcon()}
-        {this.renderWishlist()}
-        {this.renderAccount()}
-        {this.renderCart()}
       </div>
     );
   }
@@ -669,70 +688,82 @@ class HeaderMainSection extends NavigationAbstract {
     }
     return (
       <>
-        { isMobile.any() ? <div block="SearchIcon" mods={{ isArabic: isArabic }}>
-        <button
-          block="SearchIcon"
-          onClick={
-            isMobile.any()
-              ? this.handlePLPSearchClick.bind(this)
-              : this.handleSearchClick.bind(this)
-          }
-          elem="Button"
-          aria-label="PLP Search Button"
-          role="button"
-        ></button>
-      </div> : <div id="searchBlock" mods={{ isArabic: isArabic }} onClick={this.renderSearchOverlay}>
-          <div block="SearchIcon">
-            <div>
-              <img
-                lazyLoad={true}
-                id="searchIconImage"
-                src={searchIcon}
-                alt="searchIcon"
-                mods={{ isArabic }}
-              />
-            </div>
-            <div onClick={this.SearchFieldClick}>
-              <Form block="searchFrom" 
-              id="header-search"
-              onSubmit={this.onSubmit}
-              ref={this.searchRef}
-              autoComplete="off">
-                <input
-                  id="search-field"
-                  ref={this.inputRef}
-                  name="search"
-                  type="text"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck="false"
-                  placeholder={
-                    isMobile.any() || isMobile.tablet()
-                      ? __("What are you looking for?")
-                      : (!isPopup  || !searchBarClick) && __("Search for brands...")
-                  }
-                  onChange={this.onSearchChange}
-                  onFocus={this.onFocus}
-                  value={search}
+        {isMobile.any() ? (
+          <div block="SearchIcon" mods={{ isArabic: isArabic }}>
+            <button
+              block="SearchIcon"
+              onClick={
+                isMobile.any()
+                  ? this.handlePLPSearchClick.bind(this)
+                  : this.handleSearchClick.bind(this)
+              }
+              elem="Button"
+              aria-label="PLP Search Button"
+              role="button"
+            ></button>
+          </div>
+        ) : (
+          <div
+            id="searchBlock"
+            mods={{ isArabic: isArabic }}
+            onClick={this.renderSearchOverlay}
+          >
+            <div block="SearchIcon" mods={{ isArabic: isArabic }}>
+              <div>
+                <img
+                  lazyLoad={true}
+                  id="searchIconImage"
+                  src={searchIcon}
+                  alt="searchIcon"
+                  mods={{ isArabic }}
                 />
-              </Form>
-            </div>
-            { isPopup && (
-              <div block="clear-button" onClick={this.cancelSearch}>
-                <img src={Clear} alt="clear-black.png" />
               </div>
-            )}
+              <div onClick={this.SearchFieldClick}>
+                <Form
+                  block="searchFrom"
+                  id="header-search"
+                  onSubmit={this.onSubmit}
+                  ref={this.searchRef}
+                  autoComplete="off"
+                >
+                  <input
+                    id="search-field"
+                    ref={this.inputRef}
+                    name="search"
+                    type="text"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    placeholder={
+                      isMobile.any() || isMobile.tablet()
+                        ? __("What are you looking for?")
+                        : (!isPopup || !searchBarClick) &&
+                          __("Search for brands...")
+                    }
+                    onChange={this.onSearchChange}
+                    onFocus={this.onFocus}
+                    value={search}
+                  />
+                </Form>
+              </div>
+              {isPopup && (
+                <div block="clear-button" onClick={this.cancelSearch}>
+                  <img src={Clear} alt="clear-black.png" />
+                </div>
+              )}
+            </div>
+            <div id="overlay-sections">
+              {(recentSearches.length > 0 || search.length > 2) && isPopup ? (
+                <SearchOverlay
+                  isPopup={isPopup}
+                  search={this.state.search}
+                  closePopup={this.closePopup}
+                  ClearSearch={this.ClearSearch}
+                />
+              ) : null}
+            </div>
           </div>
-          <div id="overlay-sections">
-            {(recentSearches.length > 0 || search.length > 2) && isPopup? (<SearchOverlay
-                isPopup={isPopup}
-                search={this.state.search}
-                closePopup={this.closePopup}
-                ClearSearch={this.ClearSearch}
-              />
-            ) : null}
-          </div>
-        </div>}
+        )}
       </>
     );
   }
@@ -796,8 +827,9 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-    const { showPLPSearch } = this.state;
+    const { signInPopUp, showPLPSearch } = this.state;
     const { displaySearch, gender } = this.props;
+    const isPDPSearchVisible = this.isPDP() && displaySearch;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <>

@@ -55,36 +55,38 @@
             display: none;
         }
     }
+    .EmptyCartContainer{
+        display: flex;
+    }
+    .EmptyCartContainerMobile{
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        margin-bottom: 24px;
+    }
 
     &-EmptyCartImg {
         @media (max-width: 767px) {
-            margin-top: 48px;
+            width: 118px;
         }
     }
 
-    &-EmptyCartText {
-        margin-top: 74px;
-
-        height: 20px;
-        width: 310px;
-        color: #000000;
-        font-family: "Avenir Next";
-        font-size: 30px;
-        font-weight: 600;
-        letter-spacing: -0.83px;
-        line-height: 20px;
-        text-align: center;
+    .EmptyCartText{
+        max-width: 186px;
+padding: auto ;
     }
     &-EmptyCartTextDec {
-        margin-top: 24px;
-        height: 44px;
         width: 325px;
         color: #000000;
         font-family: "Avenir Next";
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 0;
-        line-height: 22px;
-        text-align: center;
+        font-weight: 600;
+    }
+    .EmptyCartSubText{
+        font-family: "Avenir Next";
+        font-size: 11px;
+
     }
     &_isArabic {
         .CartPage-Wrapper {
@@ -454,9 +456,8 @@
             &_showOverflow {
                 margin-bottom: 124px !important;
             }
-            &:first-child {
+            .sidePadding{
                 padding: 0 16px;
-                // padding-bottom: 280px; // disabling it for PWA-2642
             }
         }
         &_isArabic {
@@ -965,6 +966,7 @@
     justify-content: left;
     align-items: center;
     margin: 5px 0;
+    gap: 16px;
     @include desktop {
         margin-top: 33px;
     }
@@ -975,11 +977,33 @@
         justify-content: center;
         border: 1px solid #000000;
         height: 52px;
-        width: 192px;
+        width: 170px;
+        border-radius: 6px;
+    }
+    &-ExploreButtonText {
+        text-transform: none;
+        height: 15px;
+        color: #000000;
+        font-family: "Avenir Next";
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 15px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+    &-SignInButton {
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #000000;
+        height: 52px;
+        width: 170px;
         border-radius: 6px;
         background-color: #000000;
     }
-    &-ExploreButtonText {
+    &-SignInBtnText {
         text-transform: none;
         height: 15px;
         color: #ffffff;
@@ -1002,7 +1026,9 @@
 }
 
 .EmptyMessage {
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 25px;
 }
 
 .PDPWidgets-cart {

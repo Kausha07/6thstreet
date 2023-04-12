@@ -53,20 +53,25 @@ class PDPDetail extends PureComponent {
     return `${url}.html`;
   };
 
-  renderMoreFromBrand = () => {
-    const { brandName } = this.props;
-    const url = this.getBrandUrl();
+  MoreAboutBrandClick = () => {
     const eventData = {
       name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
       action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
     };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  
+  renderMoreFromBrand = () => {
+    const { brandName } = this.props;
+    const url = this.getBrandUrl();
     return (
       <div block="BrandDescription">
         <Link
           block="BrandDescription"
           elem="MoreButton"
           to={url}
-          onClick={() => Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData)}
+          onClick={this.MoreAboutBrandClick}
         >
           <span block="BrandDescription" elem="ButtonText">
             {__("More from this brand")}

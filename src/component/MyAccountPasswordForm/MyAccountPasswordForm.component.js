@@ -16,12 +16,12 @@ export class MyAccountPasswordForm extends SourceMyAccountPasswordForm {
             currentPassword: {
                 type: 'password',
                 placeholder: __('Current Password'),
-                validation: ['notEmpty']
+                validation: ['notEmpty', "password"]
             },
             newPassword: {
                 type: 'password',
                 placeholder: __('New password'),
-                validation: ['notEmpty']
+                validation: ['notEmpty', "password"]
             }
         };
     }

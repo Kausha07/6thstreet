@@ -511,7 +511,7 @@ class PLPFilters extends PureComponent {
             if (filter[0] === "sizes") {
               const mappedData = Object.entries(data).reduce((acc, size) => {
                 const { subcategories } = size[1];
-                const mappedSizeData = PLPContainer.mapData(
+                const mappedSizeData = PLPContainer?.mapData(
                   subcategories,
                   filter[0],
                   this.props
@@ -526,7 +526,7 @@ class PLPFilters extends PureComponent {
             } else {
               acc = {
                 ...acc,
-                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+                [filter[0]]: PLPContainer?.mapData(data, filter[0], this.props),
               };
             }
           }
@@ -827,10 +827,10 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount, filters } = this.props;
+    const { productsCount, filters, gender } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-    const category_title = this.renderCatPath().split("///").pop();
+    const category_title = gender !== "influencer" && this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
         <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
@@ -867,7 +867,7 @@ class PLPFilters extends PureComponent {
               {this.renderFilters()}
             </form>
           )}
-          {isMobile.any() && (
+          {gender !== "influencer" && isMobile.any() && (
             <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
               <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
                 {this.renderQuickFilters()}

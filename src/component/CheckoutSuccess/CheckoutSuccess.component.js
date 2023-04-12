@@ -627,10 +627,11 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderTotalsItems() {
-    const { paymentMethod } = this.props;
+    const { paymentMethod, order } = this.props;
+    console.log('prod =>', order, "=>", paymentMethod?.code );
     if (
-      paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments"
+      (paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments" ) && order
     ) {
       const {
         order: { status, unship = [], base_currency_code: currency },
@@ -652,7 +653,7 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-    } else if (paymentMethod?.code === "checkout_knet") {
+    } else if (paymentMethod?.code === "checkout_knet" && order) {
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
