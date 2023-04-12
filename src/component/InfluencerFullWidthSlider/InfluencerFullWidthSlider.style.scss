@@ -54,29 +54,31 @@
   .linearGradient1,
   .linearGradient2 {
     position: absolute;
-    width: 250px;
+    width: 180px;
     height: 510px;
     z-index: 2;
   }
   .linearGradient1 {
-    left: 0;
+    left: 5%;
     top: 0;
     background: linear-gradient(to right, #ffffff, transparent);
   }
   .linearGradient2 {
     right: 0;
     top: 0;
-    background: linear-gradient(to left, #ffffff, transparent);
+    background: linear-gradient(to right, transparent, #ffffff);
   }
 
   @include mobile {
     margin: 0;
+    .linearGradient1 {
+      left: 0;
+    }
     .linearGradient1,
     .linearGradient2 {
       width: 70px;
       height: 220px;
       z-index: 2;
-      top: 30%;
     }
   }
 }

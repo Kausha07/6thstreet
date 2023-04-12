@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Mousewheel } from "swiper";
+import { Autoplay } from "swiper";
 import "swiper/swiper-bundle.min.css";
 import { v4 } from "uuid";
 
@@ -45,8 +45,11 @@ const InfluencerFullWidthSlider = (props) => {
           loop={true}
           grabCursor={true}
           centeredSlides={true}
-          mousewheel={true}
-          modules={[Mousewheel]}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          modules={[Autoplay]}
           className="mySwiper"
           breakpoints={{
             1024: {
