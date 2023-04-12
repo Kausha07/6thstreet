@@ -11,6 +11,7 @@ import { setBrandInfoData } from "Store/PDP/PDP.action";
 import Algolia from "Util/API/provider/Algolia";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -21,6 +22,7 @@ export const mapStateToProps = (state) => ({
   intlEddResponse:state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
+  brandButtonClick: state.PDP.brandButtonClick,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -28,6 +30,8 @@ export const mapDispatchToProps = (_dispatch) => ({
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
   setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
   setBrandInfoData: (data) => _dispatch(setBrandInfoData(data)),
+  clickBrandButton: (brandButtonClick) =>
+    PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
 });
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
@@ -89,6 +93,11 @@ export class PDPSummaryContainer extends PureComponent {
     }
   }
 
+  brandNameclick = () => {
+    const { clickBrandButton } = this.props;
+    clickBrandButton(true);
+  }
+
   async getBrandDetails() {
     const { product: { brand_name }, setBrandInfoData } = this.props;
     if(brand_name) {
@@ -118,6 +127,7 @@ export class PDPSummaryContainer extends PureComponent {
         {...this.containerFunctions}
         {...this.containerProps()}
         url_path={url_path}
+        brandNameclick={ this.brandNameclick }
       />
     );
   }
