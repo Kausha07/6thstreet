@@ -1,54 +1,56 @@
-.fullWidthSlider {
-  direction: ltr;
-  margin: 0 -7% 0 -7%;
-  .headingBlock {
-    width: 76.389vw;
-    max-width: 1100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.headingBlock {
+  width: 76.389vw;
+  max-width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px auto 20px auto;
+  .heading {
+    text-align: left;
+    font: normal normal medium 16px/22px Avenir Next;
+    letter-spacing: 2.56px;
+    color: #000000;
+    opacity: 1;
+    text-transform: uppercase;
+    font-weight: 600;
+    &_isArabic {
+      letter-spacing: 0;
+    }
+  }
+  .button {
+    width: 100px;
+    height: 40px;
+    background: #f6f6f6 0% 0% no-repeat padding-box;
+    border-radius: 10px;
+    opacity: 1;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+  @include mobile {
+    width: 92vw;
     margin: 10px auto 20px;
     .heading {
-      text-align: left;
-      font: normal normal medium 16px/22px Avenir Next;
-      letter-spacing: 2.56px;
-      color: #000000;
-      opacity: 1;
-      text-transform: uppercase;
-      font-weight: 600;
+      font: normal normal medium 12px/16px Avenir Next;
+      letter-spacing: 0.96px;
       &_isArabic {
         letter-spacing: 0;
       }
     }
     .button {
-      width: 100px;
-      height: 40px;
-      background: #f6f6f6 0% 0% no-repeat padding-box;
-      border-radius: 10px;
-      opacity: 1;
-      text-transform: capitalize;
-      font-weight: 600;
-    }
-    @include mobile {
-      width: 92vw;
-      margin: 10px auto 20px;
-      .heading {
-        font: normal normal medium 12px/16px Avenir Next;
-        letter-spacing: 0.96px;
-        &_isArabic {
-          letter-spacing: 0;
-        }
-      }
-      .button {
-        height: 30px;
-        width: 95px;
-        font-size: 13px;
-      }
-    }
-    &_isArabic {
-      direction: rtl;
+      height: 30px;
+      width: 95px;
+      font-size: 13px;
     }
   }
+  &_isArabic {
+    direction: rtl;
+  }
+}
+
+.fullWidthSlider {
+  direction: ltr;
+  margin: 0 -60px 0 -160px;
+
   .linearGradient1,
   .linearGradient2 {
     position: absolute;
@@ -152,13 +154,22 @@
 }
 
 .swiper-slide-prev {
-  margin-right: 5%;
-  margin-left: -3%;
+  margin-right: 100px;
+  margin-left: -35px;
+
+  @include mobile {
+    margin-right: 30px;
+    margin-left: -30px;
+  }
 }
 
 .swiper-slide-next {
-  margin-left: 5%;
-  margin-right: -3%;
+  margin-left: 100px;
+  margin-right: -35px;
+  @include mobile {
+    margin-left: 30px;
+    margin-right: -30px;
+  }
 }
 
 .swiper-slide-active {

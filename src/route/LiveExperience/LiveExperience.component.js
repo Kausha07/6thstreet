@@ -650,6 +650,10 @@ export class LiveExperience extends PureComponent {
     let totalProducts = this.props.updatedArchived.length;
     let progressWidth = (archProducts * 100) / totalProducts;
     const { isArabic } = this.state;
+    let disablebtn = false;
+    if (archProducts === totalProducts) {
+      disablebtn = true;
+    }
 
     return (
       <>
@@ -657,24 +661,6 @@ export class LiveExperience extends PureComponent {
           <div></div>
         ) : (
           <main block="LiveShopping">
-            {/* <div block="catergoryBlockLayout" mods={{ isArabic }}>
-              <div block="GenderButton-Container">
-                <a href="/all.html">
-                  <button block="GenderButton-Button">{__("All")}</button>
-                </a>
-              </div>
-              <div block="GenderButton-Container">
-                <a href="/women.html">
-                  <button block="GenderButton-Button">{__("Women")}</button>
-                </a>
-              </div>
-              <div block="GenderButton-Container">
-                <a href="/men.html">
-                  <button block="GenderButton-Button">{__("Men")}</button>
-                </a>
-              </div>
-            </div> */}
-
             <ContentWrapper
               mix={{ block: "LiveShopping" }}
               wrapperMix={{
@@ -737,7 +723,7 @@ export class LiveExperience extends PureComponent {
                     <button
                       block="button"
                       onClick={this.handleLoadMore}
-                      // disabled={disablebtn || this.props.productLoad}
+                      disabled={disablebtn}
                       ref={this.buttonRef}
                     >
                       {__("Load More")}

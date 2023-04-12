@@ -3,7 +3,7 @@
   .LiveShoppingVideoSnapshots {
     width: 100%;
     overflow: hidden;
-    margin-top: 200px;
+    margin-top: 175px;
     @include mobile {
       margin-top: 40px;
     }
@@ -28,7 +28,7 @@
   }
 
   .trendingBlock {
-    margin-top: 70px;
+    margin-top: 50px;
     @include mobile {
       margin-top: 50px;
       padding: 0 10px;

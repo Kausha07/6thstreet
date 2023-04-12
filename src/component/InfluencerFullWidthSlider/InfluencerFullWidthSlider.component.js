@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel } from "swiper";
 import "swiper/swiper-bundle.min.css";
 import { v4 } from "uuid";
 
@@ -38,21 +39,14 @@ const InfluencerFullWidthSlider = (props) => {
   const renderSlider = () => {
     return (
       <div block="fullWidthSlider" mods={{ isArabic: isArabic() }}>
-        <div block="headingBlock" mods={{ isArabic: isArabic() }}>
-          <h2 block="heading" mods={{ isArabic: isArabic() }}>
-            {isMobile.any()
-              ? __("LATEST STYLING VIDEOS")
-              : __("LATEST STYLING VIDEOS BY INFLUENCERS")}
-          </h2>
-          <Link to="/live-party">
-            <button block="button">{__("View All")}</button>
-          </Link>
-        </div>
         <div block="linearGradient1"></div>
         <Swiper
+          direction={"horizontal"}
           loop={true}
           grabCursor={true}
           centeredSlides={true}
+          mousewheel={true}
+          modules={[Mousewheel]}
           className="mySwiper"
           breakpoints={{
             1024: {
@@ -77,7 +71,21 @@ const InfluencerFullWidthSlider = (props) => {
     );
   };
 
-  return <>{renderSlider()}</>;
+  return (
+    <>
+      <div block="headingBlock" mods={{ isArabic: isArabic() }}>
+        <h2 block="heading" mods={{ isArabic: isArabic() }}>
+          {isMobile.any()
+            ? __("LATEST STYLING VIDEOS")
+            : __("LATEST STYLING VIDEOS BY INFLUENCERS")}
+        </h2>
+        <Link to="/live-party">
+          <button block="button">{__("View All")}</button>
+        </Link>
+      </div>
+      {renderSlider()}
+    </>
+  );
 };
 
 export default InfluencerFullWidthSlider;
