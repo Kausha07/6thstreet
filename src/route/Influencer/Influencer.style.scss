@@ -152,6 +152,9 @@
           &_isArabic {
             margin-left: 2px;
           }
+          &::placeholder {
+            font-size: 12px;
+          }
         }
         @include tablet {
           height: 40px;

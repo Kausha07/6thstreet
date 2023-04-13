@@ -467,7 +467,7 @@ const Influencer = (props) => {
             block="influencerSearchInput"
             mods={{ isArabic: isArabic() }}
             id="influencerSearch"
-            placeholder={__("Search collections, influencers etc...")}
+            placeholder={__("Search videos, collections, influencers etc...")}
             onClick={(e) => handleSearchButtonClick(e)}
             autocomplete="off"
             readOnly

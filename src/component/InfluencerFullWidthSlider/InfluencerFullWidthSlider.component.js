@@ -52,8 +52,16 @@ const InfluencerFullWidthSlider = (props) => {
           modules={[Autoplay]}
           className="mySwiper"
           breakpoints={{
-            1024: {
+            1800: {
+              slidesPerView: 6,
+              loopedSlides: 3,
+            },
+            1400: {
               slidesPerView: 5,
+              loopedSlides: 3,
+            },
+            1024: {
+              slidesPerView: 4.5,
               loopedSlides: 3,
             },
             700: {
@@ -64,6 +72,9 @@ const InfluencerFullWidthSlider = (props) => {
             },
             300: {
               slidesPerView: 3,
+            },
+            200: {
+              slidesPerView: 1.8,
             },
           }}
         >
