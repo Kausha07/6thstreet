@@ -88,7 +88,7 @@ class PLPPages extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { activeFilters, prevProductSku, brandButtonClick } = this.props;
+    const { activeFilters, prevProductSku, brandButtonClick, clickBrandButton } = this.props;
     const {
       activeFilters: prevActiveFilters,
       prevProductSku: initialPrevProductSku,
@@ -135,6 +135,7 @@ class PLPPages extends PureComponent {
             top: 0,
             behavior: "smooth",
           });
+          clickBrandButton(false);
         }
         this.setState({ loadedLastProduct: true });
       }
