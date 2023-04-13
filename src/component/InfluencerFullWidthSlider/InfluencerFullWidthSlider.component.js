@@ -27,7 +27,7 @@ const InfluencerFullWidthSlider = (props) => {
                 <button block="playerButton">
                   <img src={PlayButton} />
                 </button>
-                <p block="title">{title}</p>
+                <p block="title" mods={{ isArabic: isArabic() }}>{title}</p>
               </div>
             </Link>
           </div>
