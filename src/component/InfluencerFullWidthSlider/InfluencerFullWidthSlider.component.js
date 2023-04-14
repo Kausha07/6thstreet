@@ -27,7 +27,9 @@ const InfluencerFullWidthSlider = (props) => {
                 <button block="playerButton">
                   <img src={PlayButton} />
                 </button>
-                <p block="title" mods={{ isArabic: isArabic() }}>{title}</p>
+                <p block="title" mods={{ isArabic: isArabic() }}>
+                  {title}
+                </p>
               </div>
             </Link>
           </div>
@@ -52,20 +54,13 @@ const InfluencerFullWidthSlider = (props) => {
           modules={[Autoplay]}
           className="mySwiper"
           breakpoints={{
-            1800: {
-              slidesPerView: 6,
-              loopedSlides: 3,
-            },
-            1400: {
-              slidesPerView: 5,
-              loopedSlides: 3,
-            },
             1024: {
-              slidesPerView: 4.5,
+              slidesPerView: 5,
               loopedSlides: 3,
             },
             700: {
               slidesPerView: 5,
+              loopedSlides: 3,
             },
             420: {
               slidesPerView: 3,
