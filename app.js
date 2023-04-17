@@ -17,7 +17,7 @@ function setCustomCacheControl(res, path) {
     }
 
     else {
-        res.append('cache-control', 'public, max-age=259200, must-revalidate');
+        res.append('cache-control', 'max-age=31536000, public');
     }
     // Prevent Click-Jacking
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
