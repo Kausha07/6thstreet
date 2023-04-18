@@ -1,5 +1,6 @@
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
 import PLPPages from "./PLPPages.component";
@@ -21,6 +22,8 @@ export const mapDispatchToProps = (_dispatch) => ({
   updatePLPInitialFilters: (filters, facet_key, facet_value) =>
     _dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
   setPrevProductSku: (sku) => _dispatch(setPrevProductSku(sku)),
+  clickBrandButton: (brandButtonClick) =>
+    PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
 });
 export class PLPPagesContainer extends PureComponent {
   static propTypes = {
@@ -221,13 +224,14 @@ export class PLPPagesContainer extends PureComponent {
 
   render() {
     const { impressions } = this.state;
-    const { prevPath = null } = this.props;
+    const { prevPath = null, clickBrandButton } = this.props;
     return (
       <PLPPages
         prevPath={prevPath}
         impressions={impressions}
         {...this.containerProps()}
         {...this.containerFunctions()}
+        clickBrandButton={ clickBrandButton }
       />
     );
   }

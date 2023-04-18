@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import PDPDetail from "./PDPDetail.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
@@ -12,6 +13,8 @@ export const mapStateToProps = (_state) => ({
 
 export const mapDispatchToProps = (_dispatch) => ({
   // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+  clickBrandButton: (brandButtonClick) =>
+    PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
 });
 
 export class PDPDetailContainer extends PureComponent {
@@ -37,9 +40,14 @@ export class PDPDetailContainer extends PureComponent {
     };
   };
 
+  brandNameclick = () => {
+    const { clickBrandButton } = this.props;
+    clickBrandButton(true);
+  }
+  
   render() {
     return (
-      <PDPDetail {...this.containerFunctions} {...this.containerProps()} />
+      <PDPDetail {...this.containerFunctions} {...this.containerProps()} brandNameclick={ this.brandNameclick } />
     );
   }
 }
