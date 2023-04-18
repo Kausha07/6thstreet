@@ -1,5 +1,6 @@
 require('dotenv-flow').config();
 const express = require('express');
+const compression = require('compression')
 var serveStatic = require('serve-static')
 const serverTimings = require('server-timings');
 const cookieParser = require('cookie-parser');
@@ -16,7 +17,7 @@ function setCustomCacheControl(res, path) {
     }
 
     else {
-        res.append('cache-control', 'public, max-age=259200, must-revalidate');
+        res.append('cache-control', 'max-age=31536000, public');
     }
     // Prevent Click-Jacking
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -30,7 +31,8 @@ function setCustomCacheControl(res, path) {
     // To convert http to https 'subDomains' to include subDomains also
     res.setHeader("Strict-Transport-Security", "max-age=15768000; includeSubDomains")
 }
-app.use(cookieParser())
+app.use(compression());
+app.use(cookieParser());
 app.use(serverTimings);
 proxy(app);
 
