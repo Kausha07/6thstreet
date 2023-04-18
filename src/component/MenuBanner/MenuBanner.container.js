@@ -15,7 +15,7 @@ class MenuBannerContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { image_url, link, toggleMobileMenuSideBar } = this.props;
+    const { image_url, link, description, button_label, toggleMobileMenuSideBar } = this.props;
 
     // format it to dynamic content style
     return {
@@ -23,6 +23,8 @@ class MenuBannerContainer extends PureComponent {
         {
           url: image_url,
           link,
+          description,
+          button_label
         },
       ],
       isMenu: true,
