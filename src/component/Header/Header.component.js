@@ -222,7 +222,7 @@ export class Header extends PureComponent {
       return null;
     }
 
-    if (hideHeaderFooter) {
+    if (hideHeaderFooter && location.pathname !== "/influencer.html") {
       return this.headerSectionsTwo.map(this.renderSection);
     }
 

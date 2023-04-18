@@ -111,7 +111,7 @@ const InfluencerStore = (props) => {
     const breadcrumbs = [
       {
         url: "",
-        name: __("%s's Store", influencerName),
+        name: __("%s's Store", influencerName.trim()),
       },
       {
         url: "/influencer.html",
@@ -296,7 +296,7 @@ const InfluencerStore = (props) => {
       followUnfollowInfluencer(payload).then((resp) => {
         updateFollowingList(influencerID, follow);
       });
-    } 
+    }
     if (follow) {
       const eventData = {
         EventName: EVENT_UNFOLLOW_INFLUENCER_CLICK,
