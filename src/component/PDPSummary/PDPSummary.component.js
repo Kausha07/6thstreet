@@ -270,7 +270,7 @@ class PDPSummary extends PureComponent {
       JSON.stringify(defaultShippingAddress) &&
       defaultShippingAddress
     ) {
-      let { country_code, area, city } = defaultShippingAddress;
+      const { country_code, area, city } = defaultShippingAddress;
 
       if (edd_info && edd_info.is_enable) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
