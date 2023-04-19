@@ -119,6 +119,7 @@ class DynamicContentBanner extends PureComponent {
     // }
 
     // TODO: calculate aspect ratio to ensure images not jumping.
+    const aspectRatio = width/height || 1;
     if (!link) {
       return (
         <>
@@ -152,7 +153,9 @@ class DynamicContentBanner extends PureComponent {
           lazyLoad={index === 21 || index === 35 ? false : true}
           src={url || image_url}
           block="Image"
-          style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
+          style= {isMobile.any() && width && height ? 
+            { width: `${window.innerWidth - 20}px`, height:`${(window.innerWidth - 40)/aspectRatio}px`}: 
+            { maxWidth: wd, height: ht, objectFit: "unset" }}
           alt={item.promotion_name ? item.promotion_name : "DynamicContentBannerImage"}
         />
 
