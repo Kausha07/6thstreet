@@ -151,34 +151,36 @@ class SharePopup extends PureComponent {
       ));
   };
 
+  componentDidMount() {
+    const { hideShareOverlay } = this.props;
+    document.addEventListener("click", hideShareOverlay, true);
+  }
+
+  componentWillUnmount() {
+    const { hideShareOverlay } = this.props;
+    document.removeEventListener("click", hideShareOverlay, true);
+  }
+
   render() {
-    const { hideShareOverlay, open, openShareOverlay } = this.props;
+    const { hideShareOverlay, open } = this.props;
     return (
-      <>
-      {
-        openShareOverlay && <div className="closeSharePopUp" onClick={() => hideShareOverlay()}>
-          {/* closes share popup */}
+      <Overlay
+        id={SHARE_POPUP_ID}
+        mix={{
+          block: "Overlay",
+          mods: {
+            isArabic: isArabic(),
+          },
+        }}
+        onHide={hideShareOverlay}
+        open={open}
+        isRenderInPortal={false}
+      >
+        <h3>{__("SHARE")}</h3>
+        <div block="Overlay" elem="ButtonsContainer">
+          {this.renderShareButtons()}
         </div>
-      }
-    
-        <Overlay
-          id={SHARE_POPUP_ID}
-          mix={{
-            block: "Overlay",
-            mods: {
-              isArabic: isArabic(),
-            },
-          }}
-          onHide={hideShareOverlay}
-          open={open}
-          isRenderInPortal={false}
-        >
-          <h3>{__("SHARE")}</h3>
-          <div block="Overlay" elem="ButtonsContainer">
-            {this.renderShareButtons()}
-          </div>
-        </Overlay>
-      </>
+      </Overlay>
     );
   }
 }
