@@ -9,6 +9,7 @@ import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
+import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
@@ -38,6 +39,7 @@ import { isSignedIn } from "Util/Auth";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
+var influencerPDPURL;
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   requestedOptions: state.PLP.options,
@@ -399,6 +401,7 @@ class ProductItem extends PureComponent {
           pageType={pageType}
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
+          influencerPDPURL={influencerPDPURL}
         />
       </div>
     );
@@ -461,7 +464,7 @@ class ProductItem extends PureComponent {
     let influencerId = "";
     let collectionId = "";
     let influencerParseLink = "";
-    if (gender === "influencer") {
+    if (influencerURL().includes(location.pathname)) {
       influencerId = getQueryParam("influencerID", location);
       collectionId = getQueryParam("influencerCollectionID", location);
       influencerParseLink =
@@ -470,13 +473,14 @@ class ProductItem extends PureComponent {
         `influencerID=${influencerId}&influencerCollectionID=${collectionId}` +
         `&influencerName=${influencerName}&selectedGender=${selectedGender}` +
         `&isStore=${isStorePage}&isCollection=${isCollectionPage}`;
+      influencerPDPURL = influencerParseLink;
     }
 
     return (
       <Link
         to={
-          gender === "influencer"
-            ? influencerParseLink
+          influencerURL().includes(location.pathname)
+            ? influencerPDPURL
             : isVueData
             ? parseLink
             : linkTo
@@ -516,7 +520,6 @@ class ProductItem extends PureComponent {
         {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
-          pageType !== "influencer" &&
           this.renderAddToCartOnHover()}
       </li>
     );

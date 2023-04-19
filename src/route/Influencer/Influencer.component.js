@@ -8,7 +8,7 @@ import {
 import { getLocaleFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App/App";
-import { getEnvIDForInfluencer } from "../../util/Common/index";
+import { getEnvIDForInfluencer, getBambuserChannelID } from "Util/Common/index";
 import Event, {
   EVENT_INFLUENCER_REFINE_CLICK,
   EVENT_INFLUENCER_REFINE_GENDER_CLICK,
@@ -21,9 +21,11 @@ import InfluencerTilesCollection from "Component/InfluencerTilesCollection/Influ
 import InfluencerSliderCollection from "Component/InfluencerSliderCollection/InfluencerSliderCollection.component";
 import InfluencerFollowing from "Component/InfluencerFollowing/InfluencerFollowing.component";
 import InfluencerSearch from "Component/InfluencerSearch/InfluencerSearch.component";
+import InfluencerFullWidthSlider from "Component/InfluencerFullWidthSlider/InfluencerFullWidthSlider.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import InfluencerDispatcher from "Store/Influencer/Influencer.dispatcher";
+import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
 
 import "./Influencer.style.scss";
 import cartIcon from "./icons/cart-icon.png";
@@ -35,6 +37,7 @@ export const mapStateToProps = (state) => ({
   lastClickedInfluencer: state?.InfluencerReducer?.lastClickedInfluencer,
   masterTrendingInfo: state?.InfluencerReducer?.masterTrendingInfo,
   selectedGender: state?.InfluencerReducer?.selectedGender,
+  archived: state?.LiveParty?.archived,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -44,11 +47,12 @@ export const mapDispatchToProps = (dispatch) => ({
     InfluencerDispatcher.influencerHomePage(item, dispatch),
   influencerSelectedGender: (gender) =>
     InfluencerDispatcher.influencerSelectedGender(gender, dispatch),
-
   influencerLastTilesData: (data) =>
     InfluencerDispatcher.influencerLastTilesData(data, dispatch),
   loadMoreButtonClicked: (data) =>
     InfluencerDispatcher.loadMoreButtonClicked(data, dispatch),
+  requestLiveShoppingInfo: (payload) =>
+    LivePartyDispatcher.requestLiveShoppingInfo(payload, dispatch),
 });
 
 const Influencer = (props) => {
@@ -61,6 +65,8 @@ const Influencer = (props) => {
     setlastClickedInfluencer,
     influencerSelectedGender,
     loadMoreButtonClicked,
+    requestLiveShoppingInfo,
+    archived,
   } = props;
   const [showTrending, setShowTrending] = useState(true);
   const [showFollowing, setShowFollowing] = useState(false);
@@ -82,7 +88,10 @@ const Influencer = (props) => {
   useEffect(() => {
     const locale = getLocaleFromUrl();
     const envID = getEnvIDForInfluencer();
+    const [lang, country] = locale && locale.split("-");
+    const storeId = getBambuserChannelID(country);
     influencerHomePage({ locale, envID });
+    requestLiveShoppingInfo({ storeId });
     window.history.scrollRestoration = "manual";
     let element = document.getElementById(lastClickedInfluencer);
     if (element) {
@@ -297,7 +306,6 @@ const Influencer = (props) => {
       EventName: EVENT_INFLUENCER_REFINE_CLICK,
     };
     Event.dispatch(EVENT_GTM_INFLUENCER, eventData);
-
   };
 
   const handleGender = (gender) => {
@@ -427,7 +435,7 @@ const Influencer = (props) => {
             mods={{ isArabic: isArabic() }}
             value={influencerSearchText}
             id="influencerSearch"
-            placeholder={__("Search collections, influencers etc...")}
+            placeholder={__("Search videos, collections, influencers etc...")}
             onClick={(e) => handleSearchButtonClick(e)}
             onChange={handleSearchInfluencerText}
           />
@@ -441,6 +449,7 @@ const Influencer = (props) => {
               renderMySignInPopup={showMyAccountPopup}
               guestUser={guestUser}
               closeSearchMobilePopUp={closeSearchMobilePopUp}
+              archived={archived}
             />
           ) : null}
         </div>
@@ -458,7 +467,7 @@ const Influencer = (props) => {
             block="influencerSearchInput"
             mods={{ isArabic: isArabic() }}
             id="influencerSearch"
-            placeholder={__("Search collections, influencers etc...")}
+            placeholder={__("Search videos, collections, influencers etc...")}
             onClick={(e) => handleSearchButtonClick(e)}
             autocomplete="off"
             readOnly
@@ -592,17 +601,26 @@ const Influencer = (props) => {
     );
   };
 
+  const renderSlider = (sliderData) => {
+    return <InfluencerFullWidthSlider archived={sliderData} />;
+  };
+
+  const renderLiveShoppingVideoSnapshots = () => {
+    let archivedSliced = archived?.slice(0, 8);
+    return (
+      <div block="LiveShoppingVideoSnapshots">
+        {archived?.length === 0
+          ? renderBannerAnimation()
+          : renderSlider(archivedSliced)}
+      </div>
+    );
+  };
+
   return (
     <main block="Influencer">
-      <ContentWrapper
-        mix={{ block: "Influencer" }}
-        wrapperMix={{
-          block: "Influencer",
-          elem: "Wrapper",
-        }}
-        label={__("Influencer")}
-      >
-        {renderHeader()}
+      {renderHeader()}
+      {showTrending && renderLiveShoppingVideoSnapshots()}
+      <div block="InfluencerWrapper">
         {renderMsite()}
         {isSearchButtonClicked && isMobile.any() && (
           <InfluencerSearch
@@ -614,14 +632,16 @@ const Influencer = (props) => {
             renderMySignInPopup={showMyAccountPopup}
             guestUser={guestUser}
             closeSearchMobilePopUp={closeSearchMobilePopUp}
+            archived={archived}
           />
         )}
         <div block="trendingBlock">
           {renderMySignInPopup()}
+
           {showTrending && navigateTrending()}
           {showFollowing && navigateFollowing()}
         </div>
-      </ContentWrapper>
+      </div>
     </main>
   );
 };

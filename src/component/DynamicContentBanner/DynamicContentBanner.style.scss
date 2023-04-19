@@ -34,6 +34,24 @@
             text-decoration: underline;
         }
     }
+    .BannerDesc{
+        width: 100%;
+        text-align: left;
+        font-weight: 400;
+        padding: 0 10px;
+        line-height: 1.4;
+        text-transform: none;
+    }
+    .BannerButton{
+        width: 100%;
+        text-align: left;
+        padding: 0 10px;
+        text-transform: none;
+        text-decoration: underline;
+        border:0;
+        height: auto;
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 860px) {

@@ -255,7 +255,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return data
-      ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+    ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
       ?.map((item) =>
         this.renderListItem({
           key: item.key,
@@ -864,25 +864,22 @@ class PDPDetailsSection extends PureComponent {
       .toLowerCase();
     return `${url}.html`;
   };
-  MoreAboutBrandClick = () => {
-    const eventData = {
-      name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
-      action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
-    };
-    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
+    const { brandNameclick } = this.props; 
+    const eventData = {
+      name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+      action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
+    };
     return (
-      <div block="FromBrand">
+      <div block="FromBrand" onClick={ brandNameclick }>
         <Link
           block="FromBrand"
           elem="MoreButton"
           to={url}
-          onClick={this.MoreAboutBrandClick}
+          onClick={() => Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData)}
         >
           <span block="FromBrand" elem="ButtonText">
             {__("More from this brand")}

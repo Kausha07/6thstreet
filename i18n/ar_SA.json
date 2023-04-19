@@ -954,7 +954,7 @@
     "%s's Store": "%s متجر",
     "No results found for": "لا يوجد نتائج ل",
     "Share Store": "شارك المتجر",
-    "Search collections, influencers etc...": "ابحث عن المجموعات, المؤثرين, الخ...",
+    "Search videos, collections, influencers etc...": "البحث عن فيديوهات, مجموعات, مؤثرين اجتماعيين..الخ",
     "Results": "النتائج",
     "OUT OF STOCK": "نفذت الكمية",
     "%s | 6thStreet.com %s": "%s | 6thStreet.com %s",
@@ -1223,5 +1223,8 @@
     "You have been logged out":"تم تسجيل الخروج من حسابك",
     "Login to 6thStreet app to synchronize your shopping bag.": "قم بتسجيل الدخول على تطبيق6thStreetلمزامنة حقيبة التسوق الخاصة بك.",
     "Continue shopping or login to view your saved bag": "تابع التسوق أو قم بتسجيل الدخول لعرض سلة تسوقك المحفوظة",
-    "to 6thStreet & continue shopping for your favourite items.": "على 6ستريت وتابع تسوق منتجاتك المفضلة "
+    "to 6thStreet & continue shopping for your favourite items.": "على 6ستريت وتابع تسوق منتجاتك المفضلة ",
+    "Videos": "فيديوهات",
+    "LATEST STYLING VIDEOS": "أحدث فيديوهات تنسيق الأزياء",
+    "LATEST STYLING VIDEOS BY INFLUENCERS": "أحدث فيديوهات المؤثرين في تنسيق أزياء"
 }
