@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useSelector } from "react-redux";
 import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import ShoppingGif from "../icons/shopping-bag.gif";
@@ -11,7 +12,11 @@ export default function CartNudge() {
   const [isNudgeVisible, setIsNudgeVisible] = useState(true);
   const [showSignInSignUpPopUp, setShowSignInSignUpPopUp] = useState(false);
 
-  return isNudgeVisible && !isSignedIn() ? (
+  const isSignInCartNudgeEnabled = useSelector(
+    (state) => state.AppConfig.isSignInCartNudgeEnabled
+  );
+
+  return isNudgeVisible && !isSignedIn() && isSignInCartNudgeEnabled ? (
     <>
       {showSignInSignUpPopUp && (
         <MyAccountOverlay
