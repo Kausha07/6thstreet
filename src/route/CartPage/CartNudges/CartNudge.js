@@ -26,7 +26,7 @@ export default function CartNudge() {
             <img src={ShoppingGif} alt="shop" />
           </div>
           <p className="content">
-            {__("Login to 6thStreet app to synchronize your shopping bag.")}
+            {__("Login to 6thStreet to synchronize your shopping bag.")}
             <span
               className="signin"
               onClick={() => setShowSignInSignUpPopUp(true)}
