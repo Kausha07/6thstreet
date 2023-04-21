@@ -21,6 +21,7 @@ export const mapStateToProps = (state) => ({
   intlEddResponse:state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
+  international_shipping_fee: state.AppConfig.international_shipping_fee
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -50,7 +51,8 @@ export class PDPSummaryContainer extends PureComponent {
       addressCityData,
       estimateEddResponse,
       setEddResponse,
-      TabbyInstallment
+      TabbyInstallment,
+      international_shipping_fee
     } = this.props;
     return {
       product,
@@ -64,7 +66,8 @@ export class PDPSummaryContainer extends PureComponent {
       addressCityData,
       estimateEddResponse,
       setEddResponse,
-      TabbyInstallment
+      TabbyInstallment,
+      international_shipping_fee
     };
   };
 

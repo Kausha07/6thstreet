@@ -77,6 +77,7 @@ export const mapStateToProps = (state) => {
     product: state.PDP.product,
     gender: state.AppState.gender,
     options: state.PDP.options,
+    international_shipping_fee: state.AppConfig.international_shipping_fee
   };
 };
 

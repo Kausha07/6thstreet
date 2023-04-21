@@ -1015,14 +1015,22 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "", international_vendor=null },
+      product: { cross_border = 0, brand_name = "", international_vendor=null, simple_products = {} },
       edd_info,
-      intlEddResponse
+      intlEddResponse,
+      international_shipping_fee
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
       cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
-
+    let inventory_level_cross_border = false;
+    if(typeof simple_products === 'object' && simple_products !== null) {
+      Object.values(simple_products).forEach(obj => {
+        if(obj.cross_border_qty && parseInt(obj.cross_border_qty) > 1) {
+          inventory_level_cross_border = true;
+        }
+      });
+    }
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
@@ -1039,7 +1047,7 @@ class PDPSummary extends PureComponent {
           edd_info.has_pdp &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0)  || cross_border === 0) &&
           this.renderSelectCity(cross_border === 1)}
-        {isIntlBrand && this.renderIntlTag()}
+        {inventory_level_cross_border && international_shipping_fee &&  this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}

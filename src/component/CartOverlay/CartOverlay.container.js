@@ -41,6 +41,7 @@ export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   guest_checkout: state.ConfigReducer.guest_checkout,
   currencyCode: state.ConfigReducer.default_display_currency_code,
+  international_shipping_fee: state.AppConfig.international_shipping_fee
 });
 
 export const mapDispatchToProps = (dispatch) => ({

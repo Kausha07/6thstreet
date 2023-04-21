@@ -934,6 +934,7 @@ class MyAccountOrderView extends PureComponent {
         store_credit_amount = 0,
         club_apparel_amount = 0,
         currency_code = getCurrency(),
+        international_shipping_amount = 0
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -945,6 +946,9 @@ class MyAccountOrderView extends PureComponent {
           <div block="MyAccountOrderView" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
             {this.renderPriceLine(shipping_amount, __("Shipping"), {
+              divider: true,
+            })}
+            {this.renderPriceLine(international_shipping_amount, __("International Shipping Fee"), {
               divider: true,
             })}
             {store_credit_amount !== 0
