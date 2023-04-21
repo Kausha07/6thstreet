@@ -87,6 +87,7 @@ export class PDPSummaryContainer extends PureComponent {
       this.getBrandDetails();
     }
     else {
+      this.getBrandDetails();
       this.setState({
         url_path: brand_url
       })
