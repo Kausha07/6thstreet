@@ -17,14 +17,14 @@ export const getBreadcrumbs = (data = [], onClick, urlArray,isArabic) => data.re
 export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories = []) => menuCategories.reduce((acc, category) => {
     if (category.label === categoriesLastLevel[1]) {
         const currentCategory = category.data[category.data.length - 1] || {};
-        acc.push('/', currentCategory.button.link);
+        acc.push('/', currentCategory?.button?.link);
 
         const { items = [] } = currentCategory;
 
         const mappedCategoryFirstLevel = items
             .reduce((acc, categoryFirst) => {
                 if (categoryFirst.label === categoriesLastLevel[2]) {
-                    acc.push(categoryFirst.link);
+                    acc.push(categoryFirst?.link);
                 }
 
                 return acc;
@@ -32,7 +32,7 @@ export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories = []) => m
 
         acc.push(mappedCategoryFirstLevel.length === 1
             ? mappedCategoryFirstLevel[0]
-            : currentCategory.button.link);
+            : currentCategory?.button?.link);
     }
 
     return acc;
