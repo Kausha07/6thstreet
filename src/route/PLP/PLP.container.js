@@ -190,6 +190,7 @@ export class PLPContainer extends PureComponent {
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
+    onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
   };
 
   resetPLPData() {
@@ -498,6 +499,7 @@ export class PLPContainer extends PureComponent {
         : null;
     if (!isRadio) {
       if (checked) {
+        // for selecting filter
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
           this.updateInitialFilters(
@@ -613,6 +615,41 @@ export class PLPContainer extends PureComponent {
       }
     });
   };
+
+  onLevelThreeCategoryPress(multiLevelData) {
+    const { filters, updatePLPInitialFilters } = this.props;
+    const { activeFilters = {} } = this.state;
+    const {facet_key, facet_value, is_selected} = multiLevelData;
+    let newFilterArray = filters;
+    let tempArray = [];
+    if(is_selected) {
+      tempArray  = [...activeFilters["categories_without_path"]];
+      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
+        if(tempArray.includes(sub_cat[0])){
+          const index = tempArray.indexOf(sub_cat[0]);
+          tempArray = tempArray.splice(index, 1);
+        }
+      });
+      Object.entries(newFilterArray).map((filter) => {
+        if (filter[0] === "categories_without_path") {
+            activeFilters[filter[0]] = [...tempArray];
+        }
+      });
+    }else {
+      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
+        tempArray.push(sub_cat[0]);
+      });
+      Object.entries(newFilterArray).map((filter) => {
+        if (filter[0] === "categories_without_path") {
+            activeFilters[filter[0]] = activeFilters[filter[0]] ? [...activeFilters[filter[0]], ...tempArray] : [...tempArray];
+        }
+      });
+    }
+    this.setState({
+      activeFilters,
+    });
+    this.handleCallback(facet_key, facet_value, !is_selected);
+  }
 
   onUnselectAllPress(category) {
     const { filters, updatePLPInitialFilters } = this.props;
@@ -840,6 +877,28 @@ export class PLPContainer extends PureComponent {
         },
         {}
       );
+      // activeFilters - adding L4 filters into active filters array, when the component get updated
+      const { categories_without_path = {} } = this.props.filters;
+      const { data = {} } = categories_without_path;
+      let tempArray = [];
+      if (data) {
+        Object.entries(data).map((entry) => {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[1] && subEntry[1].sub_subcategories) {
+              Object.entries(subEntry[1].sub_subcategories).map(
+                (sub_subEntry) => {
+                  if (sub_subEntry[1].is_selected === true) {
+                    tempArray.push(sub_subEntry[0]);
+                  }
+                }
+              );
+            }
+          });
+        });
+      }
+      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+        ? [...newActiveFilters["categories_without_path"], ...tempArray]
+        : [...tempArray];
       this.setState({
         activeFilters: newActiveFilters,
       });

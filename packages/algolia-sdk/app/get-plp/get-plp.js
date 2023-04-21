@@ -6,6 +6,7 @@ import {
   SIZE_FILTERS,
   VISIBLE_FILTERS,
   VISIBLE_GENDERS,
+  MORE_FILTERS,
 } from "../config";
 import { translate } from "../config/translations";
 import {
@@ -27,6 +28,7 @@ import { getQueryValues } from "../utils/query";
 import {
   makeCategoriesLevel1Filter,
   makeCategoriesWithoutPathFilter,
+  makeCategoriesMoreFilter,
 } from "./categories";
 
 const getPriceRangeData = ({ currency, lang }) => {
@@ -105,6 +107,14 @@ const filterKeys = ({ allFacets, keys }) => {
 
   return filteredKeys;
 };
+
+function getMoreFilters (facets, query ) {
+  const moreFilters = makeCategoriesMoreFilter({
+    facets,
+    query
+  })
+  return moreFilters;
+}
 
 function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
   const [lang, country] = locale.split("-");
@@ -555,8 +565,10 @@ function getPLP(URL, options = {}, params = {}) {
         query: queryParams,
         additionalFilter: false,
       });
+      const moreFilters = getMoreFilters(facets, queryParams);
 
       const output = {
+        moreFilters,
         facets,
         data: hits.map(formatNewInTag),
         filters,

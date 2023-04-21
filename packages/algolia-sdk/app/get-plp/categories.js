@@ -2,6 +2,7 @@ import { getQueryValues } from "../utils/query";
 import { sum } from "../utils/num";
 import { sortKeys } from "../utils/obj";
 import { translate } from "../config/translations";
+import { MORE_FILTERS } from "../config"
 
 /*
   Note
@@ -18,19 +19,49 @@ const _getLevelsFromCategoryKey = ({ key }) => {
   const l1 = levels[offset + 1];
   const l2 = levels[offset + 2];
   const l3 = levels[offset + 3];
+  const l4 = levels[offset + 4];
 
   return {
     l0,
     l1,
     l2,
     l3,
+    l4,
   };
 };
+
+const getOptions = (obj, queryValues) => {
+  const outputObj = {};
+  for (let key in obj) {
+    outputObj[key] = {
+      facet_key: "categories_without_path",
+      facet_value: key,
+      label: key,
+      product_count: obj[key],
+      is_selected: queryValues[key] ? true : false,
+    };
+  }
+  return {options: outputObj}
+}
+
+const getOptionsMoreFilters = (facets, queryValues) => {
+  const option = {};
+  MORE_FILTERS.map((item, index) => {
+    option[item] = facets[item];
+  });
+  for (let key in option ) {    
+    if(option[key] !== undefined) {
+      option[key] = getOptions(option[key], queryValues)
+    }
+  }
+  return option;
+}
 
 const _getCategoryLevel2Data = ({
   facetKey,
   categoriesLevel2,
   categoriesLevel3,
+  categoriesLevel4,
   categoriesWithoutPath,
   query,
 }) => {
@@ -59,9 +90,9 @@ const _getCategoryLevel2Data = ({
   const categoriesMerge = {
     ...categoriesLevel2,
     ...categoriesLevel3,
+    ...categoriesLevel4,
   };
 
-  let duplicatePreventArr = [];
   const queryValues = getQueryValues({ query, path: facetKey });
   let data = Object.entries(categoriesMerge).reduce(
     (acc, [key, productCount]) => {
@@ -72,6 +103,7 @@ const _getCategoryLevel2Data = ({
         l1,
         l2,
         l3,
+        l4,
       } = _getLevelsFromCategoryKey({ key });
       // let l2 = query["categories.level2"] ? l3Key : l2Key; code for l2 and l3 logic
       // let l1 = query["categories.level2"] ? l2Key : l1Key;
@@ -80,8 +112,7 @@ const _getCategoryLevel2Data = ({
       if (l2 && categoriesWithoutPath && !categoriesWithoutPath[l2] && __DEV__) {
         console.warn("No categories_without_path for", l2);
       }
-      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2] && !duplicatePreventArr.includes(l2)) {
-        duplicatePreventArr.push(l2);
+      if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2] ) {
         if (!acc[l1]) {
           acc[l1] = {
             label: l1,
@@ -102,7 +133,30 @@ const _getCategoryLevel2Data = ({
           label: l2,
           is_selected: false,
           product_count: categoriesWithoutPath[l2],
+          sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories},
         };
+
+        if(l3 && categoriesWithoutPath && categoriesWithoutPath[l3]) {
+          acc[l1].subcategories[l2].sub_subcategories[l3] = {
+            facet_value: l3,
+            facet_key: facetKey,
+            label: l3,
+            is_selected: false,
+            product_count: categoriesWithoutPath[l3],
+            category_level: "L3",
+            sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories[l3]?.sub_subcategories}
+          };
+          if(l4 && categoriesWithoutPath && categoriesWithoutPath[l4]) {
+                acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4] = {
+                facet_value: l4,
+                facet_key: facetKey,
+                label: l4,
+                is_selected: false,
+                product_count: categoriesWithoutPath[l4],
+                category_level: "L4",
+              } 
+          }
+        }
 
         // Mark selected filters, using the query params
         if (queryValues[l2]) {
@@ -111,6 +165,35 @@ const _getCategoryLevel2Data = ({
           }
           acc[l1].selected_filters_count += 1;
           acc[l1].subcategories[l2].is_selected = true;
+        }
+        // Mark selected filters, using the query params - for L3 categories
+        if(l3 && queryValues[l3]) {
+          if(acc[l1].selected_filters_count === 0) {
+            totalSelectedFiltersCount += 1;
+          }
+          acc[l1].selected_filters_count += 1;
+          if (
+            acc[l1] &&
+            acc[l1].subcategories[l2] &&
+            acc[l1].subcategories[l2].sub_subcategories[l3]
+          ) {
+            acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = true;
+          }
+        }
+        // Mark selected filters, using the query params - for L4 categories
+        if(l4 && queryValues[l4]) {
+          if(acc[l1].selected_filters_count === 0) {
+            totalSelectedFiltersCount += 1;
+          }
+          acc[l1].selected_filters_count += 1;
+          if (
+            acc[l1] &&
+            acc[l1].subcategories[l2] &&
+            acc[l1].subcategories[l2].sub_subcategories[l3] &&
+            acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4]
+          ) {
+            acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4].is_selected = true;
+          }
         }
       }
 
@@ -185,6 +268,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
     facetKey,
     categoriesLevel2: facets["categories.level2"],
     categoriesLevel3: facets["categories.level3"],
+    categoriesLevel4: facets["categories.level4"],
     categoriesWithoutPath: facets.categories_without_path,
     query,
   });
@@ -216,4 +300,13 @@ const makeCategoriesLevel1Filter = ({ facets, query }) => {
   };
 };
 
-export { makeCategoriesWithoutPathFilter, makeCategoriesLevel1Filter };
+const makeCategoriesMoreFilter = ({facets, query}) => {
+  const facetKey = "categories_without_path";
+  const queryValues = getQueryValues({ query, path: facetKey });
+  const moreFilters = {};
+  moreFilters.option = getOptionsMoreFilters(facets, queryValues);
+  moreFilters.moreFilters_selected_filters_count = 0;
+  return moreFilters;
+}
+
+export { makeCategoriesWithoutPathFilter, makeCategoriesLevel1Filter, makeCategoriesMoreFilter };

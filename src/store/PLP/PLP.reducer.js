@@ -137,6 +137,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
           meta = {},
           filters = {},
           finalFiltersData,
+          moreFilters = {},
         },
         options: requestedOptions = {},
         isInitial,
@@ -151,7 +152,8 @@ export const PLPReducer = (state = getInitialState(), action) => {
         pages: {
           [initialPage]: products,
         },
-        isLoading:false
+        isLoading:false,
+        moreFilters,
       };
 
     case SET_PLP_LOADING:

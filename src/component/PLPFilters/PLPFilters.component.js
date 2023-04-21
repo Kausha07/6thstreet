@@ -254,6 +254,7 @@ class PLPFilters extends PureComponent {
       isChecked,
       activeFilters,
       filters,
+      onLevelThreeCategoryPress,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -287,6 +288,7 @@ class PLPFilters extends PureComponent {
         setDefaultFilters={this.setDefaultFilters}
         defaultFilters={defaultFilters}
         isSortBy={false}
+        onLevelThreeCategoryPress={onLevelThreeCategoryPress}
       />
     );
   };

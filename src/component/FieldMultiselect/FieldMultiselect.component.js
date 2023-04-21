@@ -32,6 +32,7 @@ import Event,{
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -350,6 +351,9 @@ class FieldMultiselect extends PureComponent {
 
   renderUnselectButton(category) {
     let UnSelectAll = true;
+    if (category === "categories_without_path") {
+      return null;
+    }
     return (
       <div
         block="FieldMultiselect"
@@ -443,6 +447,90 @@ class FieldMultiselect extends PureComponent {
     });
   };
 
+  renderNestedMultiSelect = (isSearch) => {
+    const {
+      filter: { data = {} },
+      parentCallback,
+      onLevelThreeCategoryPress,
+      filter,
+    } = this.props;
+    let categoryLevelData = [];
+    const { searchFacetKey, searchKey, searchList } = this.state;
+
+    Object.entries(data).map((entry) => {
+      Object.entries(entry[1].subcategories).map((subEntry) => {
+        categoryLevelData.push(subEntry[1]);
+      });
+    });
+    if (isSearch) {
+      categoryLevelData = Object.values(searchList);
+    }
+    if (categoryLevelData.length > 0) {
+      return (
+        <>
+          {categoryLevelData?.map((multiLevelData) =>
+            multiLevelData &&
+            multiLevelData?.sub_subcategories &&
+            Object.keys(multiLevelData.sub_subcategories).length != 0 ? (
+              <FieldNestedMultiSelect
+                multiLevelData={multiLevelData}
+                parentCallback={parentCallback}
+                isSearch={isSearch}
+                searchList={searchList}
+                searchKey={searchKey}
+                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+                filter={filter}
+                onBlur={this.onBlur}
+              />
+            ) : null
+          )}
+        </>
+      );
+    }
+  };
+
+  renderNestedOptions = (isSearch) => {
+    const {
+      filter: { data = {} },
+      parentCallback,
+      onLevelThreeCategoryPress,
+      filter,
+    } = this.props;
+    let categoryLevelData = [];
+    const { searchFacetKey, searchKey, searchList } = this.state;
+
+    Object.entries(data).map((entry) => {
+      Object.entries(entry[1].subcategories).map((subEntry) => {
+        categoryLevelData.push(subEntry[1]);
+      });
+    });
+    if (isSearch) {
+      categoryLevelData = Object.values(searchList);
+    }
+    if (categoryLevelData.length > 0) {
+      return (
+        <>
+          {categoryLevelData?.map((multiLevelData) =>
+            multiLevelData &&
+            multiLevelData?.sub_subcategories &&
+            Object.keys(multiLevelData.sub_subcategories).length === 0 ? (
+              <FieldNestedMultiSelect
+                multiLevelData={multiLevelData}
+                parentCallback={parentCallback}
+                isSearch={isSearch}
+                searchList={searchList}
+                searchKey={searchKey}
+                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+                filter={filter}
+                onBlur={this.onBlur}
+              />
+            ) : null
+          )}
+        </>
+      );
+    }
+  };
+
   renderOptions() {
     const {
       filter: {
@@ -453,6 +541,7 @@ class FieldMultiselect extends PureComponent {
         label,
         selected_filters_count,
       },
+      filter,
       initialOptions,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
@@ -528,6 +617,23 @@ class FieldMultiselect extends PureComponent {
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
 
+    if (searchFacetKey === "categories_without_path" && searchKey != "") {
+      const isSearch = true;
+      return (
+        <ul className="multiselectUl">
+          {this.renderNestedMultiSelect(isSearch)}
+          {this.renderNestedOptions(isSearch)}
+        </ul>
+      );
+    }
+    if (filter.category === "categories_without_path") {
+      return (
+        <ul className="multiselectUl">
+          {this.renderNestedMultiSelect()}
+          {this.renderNestedOptions()}
+        </ul>
+      );
+    }
     return (
       <>
         <ul
@@ -704,6 +810,16 @@ class FieldMultiselect extends PureComponent {
             finalSearchedData[subEntry[0]] =
               entry[1].subcategories[subEntry[0]];
           }
+          Object.entries(subEntry[1].sub_subcategories).map(
+            (sub_subcategories) => {
+              if (
+                sub_subcategories[0].toLowerCase().includes(value.toLowerCase())
+              ) {
+                finalSearchedData[subEntry[0]] =
+                  entry[1].subcategories[subEntry[0]];
+              }
+            }
+          );
         });
       });
     } else {
@@ -738,6 +854,11 @@ class FieldMultiselect extends PureComponent {
 
   onBlur = () => {
     // eslint-disable-next-line no-magic-numbers
+    this.setState({
+      searchKey: "",
+      searchList: {},
+      searchFacetKey: "",
+    })
     this.toggleOptionList();
   };
 

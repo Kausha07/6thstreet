@@ -16,6 +16,9 @@ import { isArabic } from "Util/App";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import PLPQuickFilter from "Component/PLPQuickFilter";
 import Field from "Component/Field";
+import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
+import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
+import infoBold from "./icons/infoBold.svg";
 
 
 export const mapStateToProps = (state) => ({
@@ -50,6 +53,8 @@ class PLPPages extends PureComponent {
       defaultSizeCode: "size_eu",
       prevProductSku: "",
       loadedLastProduct: false,
+      selectedMoreFilter: "",
+      noMoreFilters: true,
     };
   }
 
@@ -424,6 +429,135 @@ class PLPPages extends PureComponent {
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
 
+  onClickRemoveMoreFilter = (val, value) => {
+    const { handleCallback } = this.props;
+    const { facet_key, facet_value } = val;
+    const { is_radio = false } = value;
+    handleCallback(facet_key, facet_value, false, is_radio);
+  };
+
+  renderSelectedFiltersLevelThree() {
+    const selectedFilters = this.props.filters;
+    const thisRef = this;
+    if (selectedFilters) {
+      return (
+        <>
+          {Object.values(selectedFilters).map(function (values, index) {
+            if (values && values.data) {
+              return Object.values(values.data).map(function (value, index) {
+                if (value.subcategories) {
+                  return Object.values(value.subcategories).map(function (
+                    val,
+                    index
+                  ) {
+                    if (val.sub_subcategories) {
+                      return Object.values(val.sub_subcategories).map(function (
+                        subVal,
+                        index
+                      ) {
+                        if (subVal.is_selected === true) {
+                          return (
+                            <li key={v4()}>
+                              {thisRef.renderButtonView(subVal.label, () =>
+                                thisRef.OnDeselectFilter(subVal, values)
+                              )}
+                            </li>
+                          );
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
+
+  renderSelectedFiltersLevelFour() {
+    const selectedFilters = this.props.filters;
+    const thisRef = this;
+    if (selectedFilters) {
+      return (
+        <>
+          {Object.values(selectedFilters).map(function (values, index) {
+            if (values && values.data) {
+              return Object.values(values.data).map(function (value, index) {
+                if (value.subcategories) {
+                  return Object.values(value.subcategories).map(function (
+                    val,
+                    index
+                  ) {
+                    if (val.sub_subcategories) {
+                      return Object.values(val.sub_subcategories).map(function (
+                        subVal,
+                        index
+                      ) {
+                        if (subVal.sub_subcategories) {
+                          return Object.values(subVal.sub_subcategories).map(
+                            function (leafValue, index) {
+                              if (leafValue.is_selected === true) {
+                                return (
+                                  <li key={v4()}>
+                                    {thisRef.renderButtonView(
+                                      leafValue.label,
+                                      () =>
+                                        thisRef.OnDeselectFilter(
+                                          leafValue,
+                                          values
+                                        )
+                                    )}
+                                  </li>
+                                );
+                              }
+                            }
+                          );
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
+
+  renderSelectedMoreFilters() {
+    const selectedMoreFilters = this.props.moreFilters;
+    const { option = {} } = selectedMoreFilters;
+    const thisRef = this;
+    if (selectedMoreFilters && option) {
+      return (
+        <>
+          {Object.values(option).map(function (values, index) {
+            if (values) {
+              return Object.values(values).map(function (value, index) {
+                if (value) {
+                  return Object.values(value).map(function (val, index) {
+                    if (val && val.is_selected === true) {
+                      return (
+                        <li key={v4()}>
+                          {thisRef.renderButtonView(val.label, () =>
+                            thisRef.onClickRemoveMoreFilter(val, values)
+                          )}
+                        </li>
+                      );
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
+
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
     const thisRef = this;
@@ -465,9 +599,113 @@ class PLPPages extends PureComponent {
               });
             }
           })}
+          {this.renderSelectedFiltersLevelThree()}
+          {this.renderSelectedFiltersLevelFour()}
+          {this.renderSelectedMoreFilters()}
         </ul>
       );
     }
+  }
+
+  handleMoreFilterChange = (selectedMoreFilter) => {
+    this.setState({ selectedMoreFilter: selectedMoreFilter });
+  };
+
+  optionsOfMoreFilters() {
+    const { selectedMoreFilter } = this.state;
+    const {
+      moreFilters: { option = {} },
+      handleCallback,
+    } = this.props;
+    if (
+      option &&
+      option[selectedMoreFilter] &&
+      option[selectedMoreFilter].options
+    ) {
+      const options = option[selectedMoreFilter]?.options;
+      return (
+        <>
+          <PLPOptionsMoreFilter
+            options={options}
+            handleCallback={handleCallback}
+          />
+        </>
+      );
+    }
+    return null;
+  }
+
+  renderMoreFiltersNotAvailable() {
+    const {
+      filters: { categories_without_path = {} },
+    } = this.props;
+
+    if (
+      categories_without_path &&
+      !categories_without_path.selected_filters_count &&
+      categories_without_path.selected_filters_count === 0 ||
+      categories_without_path &&
+      categories_without_path.selected_filters_count &&
+      categories_without_path.selected_filters_count > 1
+    ) {
+      return (
+        <>
+          <div block="moreFiltersNotAvailable">
+            <p>
+              <span block="moreFiltersNotAvailable" elem="titleNoMoreFilters">
+                {__("More Filters :")}
+              </span>
+              <span
+                block="moreFiltersNotAvailable"
+                elem="iconNoMoreFilters"
+                className="imgWrapperSpanMoreFilter"
+              >
+                <img
+                  src={infoBold}
+                  alt="infoBold"
+                  id={`infoBold`}
+                />
+              </span>
+              <span block="moreFiltersNotAvailable" elem="detailsNoMoreFilters">
+                {__("Select only one category to view more filters")}
+              </span>
+            </p>
+          </div>
+        </>
+      );
+    }
+    return null;
+  }
+
+  renderMoreFilters() {
+    const {
+      moreFilters: { option = {} },
+      filters: { categories_without_path = {} },
+    } = this.props;
+    const { selectedMoreFilter, noMoreFilters } = this.state;
+    const ListOFMoreFilters = Object.keys(option).filter(
+      (key) => option[key] !== undefined
+    );
+    if (
+      categories_without_path &&
+      !categories_without_path.selected_filters_count &&
+      categories_without_path.selected_filters_count === 0 ||
+      categories_without_path &&
+      categories_without_path.selected_filters_count &&
+      categories_without_path.selected_filters_count > 1
+    ) {
+      return <>{this.renderMoreFiltersNotAvailable()}</>;
+    }
+    return (
+      <>
+        <PLPMoreFilters
+          ListOFMoreFilters={ListOFMoreFilters}
+          handleMoreFilterChange={this.handleMoreFilterChange}
+          selectedMoreFilter={selectedMoreFilter}
+        />
+        {this.optionsOfMoreFilters()}
+      </>
+    );
   }
 
   toggleSortDropdown = () => {
@@ -733,6 +971,7 @@ class PLPPages extends PureComponent {
           {!isMobile.any() && !(pages[0]?.products.length === 0) && (
             <div block="ProductToolBar">
               <div block="ProductSelectedFilters">
+                {this.renderMoreFilters()}
                 {this.renderSelectedFilters()}
               </div>
             </div>
