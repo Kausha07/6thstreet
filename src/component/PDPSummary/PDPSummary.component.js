@@ -267,7 +267,8 @@ class PDPSummary extends PureComponent {
     }
     if (
       JSON.stringify(prevdefaultShippingAddress) !==
-      JSON.stringify(defaultShippingAddress)
+      JSON.stringify(defaultShippingAddress) &&
+      defaultShippingAddress
     ) {
       const { country_code, area, city } = defaultShippingAddress;
 
