@@ -155,6 +155,7 @@ class ShareButtonContainer extends PureComponent {
             showShareOverlay={this.showShareOverlay}
             hideShareOverlay={this.hideShareOverlay}
             openSharePopup={open}
+            openShareOverlay={openShareOverlay}
             product={product}
             {...rest}
           />

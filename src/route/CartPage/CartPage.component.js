@@ -44,6 +44,7 @@ import { Shipping } from "Component/Icons";
 import ClubApparel from "./icons/club-apparel.png";
 import EmptyCardIcon from "./icons/cart.svg";
 import ProductItem from "Component/ProductItem";
+import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
 
 import "./CartPage.style";
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
@@ -84,6 +85,7 @@ export class CartPage extends PureComponent {
     couponModuleStatus: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     isLoading: false,
+    isOOSProducts: false,
   };
 
   static defaultProps = {
@@ -215,6 +217,19 @@ export class CartPage extends PureComponent {
     }
   }
 
+  fitlerItemArr = ( items = [] ) => {
+    let filterArrOne =[];
+    let filterArrTwo = [];
+    items.map((item)=>{
+      if(item?.availableQty === 0 || item?.availableQty < item?.qty){
+        filterArrOne.push(item);
+      }else {
+        filterArrTwo.push(item);
+      }
+    });
+    return [ ...filterArrTwo, ...filterArrOne ];
+  }
+
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -228,9 +243,10 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
+    const cartItems = this.fitlerItemArr(items);
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
-        {items.map((item) => (
+        {cartItems.map((item) => (
           <CartPageItem
             key={item.item_id}
             item={item}
@@ -344,6 +360,23 @@ export class CartPage extends PureComponent {
         console.error(error);
     }
   }
+
+  closeremoveOosOverlay =(currstate)=> {
+    this.setState({isOOSProducts: currstate})
+  }
+
+  renderRemoveOOS() {
+    const { totals, updateTotals } = this.props;
+    const { isArabic } = this.state;
+    return (
+        <RemoveOOS
+          closeremoveOosOverlay={this.closeremoveOosOverlay}
+          totals={totals}
+          isArabic={isArabic}
+        />
+    )
+  }
+  
   renderDiscountCode() {
     const {
       totals: { coupon_code },
@@ -540,6 +573,15 @@ export class CartPage extends PureComponent {
     }
   }
 
+  handleProceedTockButton() {
+    const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+    if(!isCheckoutAvailable){
+      this.setState({ isOOSProducts: true })
+    }
+    
+  }
+
   renderButtons() {
     const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
 
@@ -552,7 +594,7 @@ export class CartPage extends PureComponent {
           elem="CheckoutButton"
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
-          onClick={onCheckoutButtonClick}
+          onClick={(e)=>{onCheckoutButtonClick(e); this.handleProceedTockButton()}}
           id="ProceedToCheckoutButton"
         >
           <span />
@@ -909,7 +951,7 @@ export class CartPage extends PureComponent {
       cartWidgetApiData = [],
       youMayAlsoLikeData = [],
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, isOOSProducts } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
@@ -1067,6 +1109,7 @@ export class CartPage extends PureComponent {
               {this.renderCartItems()}
               {this.renderCrossSellProducts()}
               {this.renderDiscountCode()}
+              {isOOSProducts ? this.renderRemoveOOS() : null}
               {this.renderPromo()}
             </div>
           </div>

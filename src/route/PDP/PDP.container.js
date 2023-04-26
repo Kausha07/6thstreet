@@ -11,6 +11,9 @@ import { setPDPLoading } from "Store/PDP/PDP.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getInfluencerInfo } from "Util/API/endpoint/Influencer/Influencer.endpoint";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getEnvIDForInfluencer } from "../../util/Common/index";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
@@ -30,7 +33,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { fetchConsolidatedVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
-import { getUUIDToken ,isSignedIn} from "Util/Auth";
+import { getUUIDToken, isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import {
   influencerStorePageBreadcrumbsText,
@@ -127,6 +130,7 @@ export class PDPContainer extends PureComponent {
     isPdpWidgetSet: false,
     isArabic: isArabic(),
     eventSent: false,
+    influencerName: "",
   };
 
   constructor(props) {
@@ -138,8 +142,13 @@ export class PDPContainer extends PureComponent {
       requestPdpWidgetData,
       pdpWidgetsData = [],
       location: { pathname = "" },
+      gender,
     } = this.props;
     this.requestProduct();
+    if (gender === "influencer") {
+      this.requestInfluencername();
+    }
+
     if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
       //request pdp widgets data only when not available in redux store.
       requestPdpWidgetData();
@@ -147,7 +156,18 @@ export class PDPContainer extends PureComponent {
     this.setState({ currentLocation: pathname });
   }
 
-  componentDidUpdate(prevProps) {
+  async requestInfluencername() {
+    const locale = getLocaleFromUrl();
+    const envID = getEnvIDForInfluencer();
+    const influencerID = getQueryParam("influencerID", location);
+    const response = await getInfluencerInfo(influencerID, envID, locale).then(
+      (resp) => {
+        this.setState({ influencerName: resp?.influencer_name });
+      }
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     const {
       product: {
         sku,
@@ -185,6 +205,12 @@ export class PDPContainer extends PureComponent {
       this.updateHeaderState();
       this.fetchClickAndCollectStores(brandName, sku);
       this.appendSchemaData();
+    }
+    if (
+      gender === "influencer" &&
+      prevState.influencerName !== this.state.influencerName
+    ) {
+      this.updateBreadcrumbs();
     }
     const getDetails = highlighted_attributes.map((item) => ({
       [item.key]: item.value,
@@ -494,7 +520,7 @@ export class PDPContainer extends PureComponent {
       menuCategories,
       gender,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, influencerName } = this.state;
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
@@ -504,7 +530,6 @@ export class PDPContainer extends PureComponent {
       let isCollection = false;
       let categoriesLastLevel;
       let influencerCategoryArr = [];
-      let influencerName = "";
       let influencerID = "";
       let collectionID = "";
       let selectedGenderFromURL = "";
@@ -512,9 +537,6 @@ export class PDPContainer extends PureComponent {
       if (gender === "influencer") {
         influencerID = getQueryParam("influencerID", location);
         collectionID = getQueryParam("influencerCollectionID", location);
-        influencerName = decodeURI(
-          getQueryParam("influencerName", location)
-        ).trim();
         selectedGenderFromURL = getQueryParam("selectedGender", location);
         isStore = getQueryParam("isStore", location);
         isCollection = getQueryParam("isCollection", location);
