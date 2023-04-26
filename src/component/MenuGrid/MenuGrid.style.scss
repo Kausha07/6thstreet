@@ -55,8 +55,10 @@
                 margin: 0;
             }
         }
-        &-Title {
-            display: none;
+        &-Title {            
+            font-weight: var(--fw-bold);
+            display: block;
+            text-align: left;
         }
         &-Column {
             line-height: 30px;
@@ -70,8 +72,12 @@
                     font-weight: var(--fw-bold);
                     text-align: center;
                 }
-                &-Button {
-                    margin-left: -30px;
+                &-Button {                    
+                    a{
+                        &:first-child {
+                            display: block;
+                        } 
+                    } 
                 }
             }
             &-Content {
@@ -91,7 +97,6 @@
                         margin: 16px;
                     }
                     .Image {
-                        // width: 80px;
                         padding-bottom: 16px!important;
                         &-Image {
                             border-radius: 50%;
@@ -108,10 +113,7 @@
                 }
             }
             &_isAllShow {
-                background-color: #ffffff;
-                left: 0;
-                position: absolute;
-                top: 0;
+                background-color: #ffffff;                
                 width: 100%;
                 .MenuGrid {
                     &-Column {

@@ -30,6 +30,7 @@ import Email from "./Email";
 import FlashAnimation from "./Flash";
 import Offer from "./Offer";
 import Coupon from "./Coupon";
+import PlayButton from "./PlayButton";
 
 
 export {
@@ -65,4 +66,5 @@ export {
   FlashAnimation,
   Offer,
   Coupon,
+  PlayButton,
 };

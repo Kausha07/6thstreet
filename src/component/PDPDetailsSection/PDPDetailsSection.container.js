@@ -2,6 +2,7 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import PDPDetailsSection from "./PDPDetailsSection.component";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -10,6 +11,12 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   language: state.AppState.language,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
+});
+
+
+export const mapDispatchToProps = (_dispatch) => ({
+  clickBrandButton: (brandButtonClick) =>
+    PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
 });
 
 export class PDPDetailsSectionContainer extends PureComponent {
@@ -48,9 +55,14 @@ export class PDPDetailsSectionContainer extends PureComponent {
     };
   };
 
+  brandNameclick = () => {
+    const { clickBrandButton } = this.props;
+    clickBrandButton(true);
+  }
+  
   render() {
-    return <PDPDetailsSection {...this.containerProps()} />;
+    return <PDPDetailsSection {...this.containerProps()} brandNameclick={ this.brandNameclick } />;
   }
 }
 
-export default connect(mapStateToProps, null)(PDPDetailsSectionContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PDPDetailsSectionContainer);

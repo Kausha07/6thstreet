@@ -6,6 +6,7 @@ import { ReturnResolutionType } from "Type/API";
 
 import MyAccountReturnCreateItem from "./MyAccountReturnCreateItem.component";
 import Algolia from "Util/API/provider/Algolia";
+import { isArabic } from "Util/App";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -38,6 +39,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     isSelected: false,
     sizeObject: {},
     insertedSizeStatus: false,
+    isArabic : isArabic(),
   };
 
   getAvailableProducts(product, productList = [], isSelected) {
@@ -270,13 +272,14 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { item, reasonId, exchangableQuantity,quantityObj,isArabic } = this.props;
+    const { item, reasonId, exchangableQuantity,quantityObj } = this.props;
     const {
       isSelected,
       isAlsoAvailable,
       availableProducts,
       alsoAvailable,
       sizeObject,
+      isArabic
     } = this.state;
 
     return {
