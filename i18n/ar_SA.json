@@ -802,7 +802,7 @@
     "worth of Club Apparel points for this purchase.": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
     "Link your Club Apparel account to earn ": " اربط حساب كلوب أباريل الخاص بك لتكسب ",
     "worth of points for this purchase. ": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
-    "Link now": null,
+    "Link now": "اربط الآن",
     "worth of points for this purchase.": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
     " Item": null,
     " Items": null,
@@ -1223,5 +1223,10 @@
     "You have been logged out":"تم تسجيل الخروج من حسابك",
     "Login to 6thStreet app to synchronize your shopping bag.": "قم بتسجيل الدخول على تطبيق6thStreetلمزامنة حقيبة التسوق الخاصة بك.",
     "Continue shopping or login to view your saved bag": "تابع التسوق أو قم بتسجيل الدخول لعرض سلة تسوقك المحفوظة",
-    "to 6thStreet & continue shopping for your favourite items.": "على 6ستريت وتابع تسوق منتجاتك المفضلة "
+    "to 6thStreet & continue shopping for your favourite items.": "على 6ستريت وتابع تسوق منتجاتك المفضلة ",
+    "ORDER DETAILS": "تفاصيل الطلب",
+    "Coupon savings": "توفير الكوبون",
+    "Your Offers": "عروضك",
+    "View details": "شاهد التفاصيل",
+    "Select": "حدد"
 }

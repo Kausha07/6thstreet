@@ -40,6 +40,7 @@ import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getCurrency } from "Util/App";
 
+import { Shipping } from "Component/Icons";
 /**
  * Cart and CartOverlay item
  * @class CartItem
@@ -836,6 +837,7 @@ export class CartItem extends PureComponent {
 
     return (
       <div block="AreaText" mods={{ isArabic }}>
+        <Shipping />
         {extension_attributes?.click_to_collect_store ? (
           <span>{splitReadyByKey}</span>
         ) : (

@@ -114,7 +114,7 @@ class Price extends PureComponent {
         </span>
       );
     } else {
-      return `-${discountPercentage}%`;
+      return `(-${discountPercentage}%)`;
     }
   }
 
@@ -138,6 +138,14 @@ class Price extends PureComponent {
           {renderSpecialPrice && this.renderSpecialPrice()}
           {isArabic && <>&nbsp;</>}
 
+          {!renderSpecialPrice ? (
+            <span block="SearchProduct" elem="PriceWrapper">
+              {this.renderDiscountSpecialPrice(true, specialPrice)}
+            </span>
+          ) : (
+            this.renderDiscountSpecialPrice(false)
+          )}
+
           <del block="Price" elem="Del">
             {this.renderBasePrice()}
           </del>
@@ -145,7 +153,6 @@ class Price extends PureComponent {
         {!renderSpecialPrice ? (
           <span block="SearchProduct" elem="PriceWrapper">
             {this.discountPercentage(basePrice, specialPrice)}
-            {this.renderDiscountSpecialPrice(true, specialPrice)}
           </span>
         ) : (
           this.renderDiscountSpecialPrice(false)
