@@ -452,43 +452,15 @@ main {
         margin-top: 0px;
         position: fixed;
         justify-content: center;
-        padding-left: 2%;
-        padding-right: 3.5%;
       }
 
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        width: 16%;
-
-        &:last-child {
-          width: 25% !important;
-        }
+        min-width: 14%;
 
         &_isArabic {
-          width: 14%;
-          &:last-child {
-            width: 65% !important;
-          }
-          &:nth-last-child(2) {
-            width: 45% !important;
-          }
-        }
-
-        &:last-child {
-          &::before {
-            left: auto;
-            right: -11px;
-          }
-        }
-
-        &_isArabic {
-          &:last-child {
-            &::before {
-              left: auto;
-              right: -7px;
-            }
-          }
+          min-width: 14%;
         }
 
     .GenderButton-Button {
