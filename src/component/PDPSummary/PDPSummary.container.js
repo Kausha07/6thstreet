@@ -82,7 +82,7 @@ export class PDPSummaryContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { brand_url } = this.props;
+    const { brand_url = "" } = this.props;
     this.getBrandDetails();
     this.setState({
       url_path: brand_url,
