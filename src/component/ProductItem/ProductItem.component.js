@@ -43,7 +43,6 @@ var influencerPDPURL;
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   requestedOptions: state.PLP.options,
-  influencerName: state?.InfluencerReducer?.influencerName,
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
@@ -414,7 +413,6 @@ class ProductItem extends PureComponent {
       qid,
       isVueData,
       prevPath = null,
-      influencerName,
       selectedGender,
       isStorePage,
       isCollectionPage,
@@ -471,7 +469,7 @@ class ProductItem extends PureComponent {
         parseLink +
         `${parseLink.includes("?") ? "&" : "?"}` +
         `influencerID=${influencerId}&influencerCollectionID=${collectionId}` +
-        `&influencerName=${influencerName}&selectedGender=${selectedGender}` +
+        `&selectedGender=${selectedGender}` +
         `&isStore=${isStorePage}&isCollection=${isCollectionPage}`;
       influencerPDPURL = influencerParseLink;
     }

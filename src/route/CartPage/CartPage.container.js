@@ -98,6 +98,7 @@ export const mapDispatchToProps = (dispatch) => ({
   removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   getTabbyInstallment: (price) =>
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
+  updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export class CartPageContainer extends PureComponent {
