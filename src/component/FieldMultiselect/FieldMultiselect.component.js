@@ -30,6 +30,7 @@ import Event,{
   EVENT_GTM_FILTER,
   MOE_trackEvent
 } from "Util/Event";
+import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 class FieldMultiselect extends PureComponent {
@@ -282,6 +283,7 @@ class FieldMultiselect extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         filter_type: facet_key || "",
         filter_value: facet_value || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       if (facet_key == ("size_eu" || "size_us" || "size_uk")) {
@@ -290,7 +292,7 @@ class FieldMultiselect extends PureComponent {
           language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
         });
-        const EventData = { name:EVENT_SIZES_SEARCH_FILTER, value: facet_value}
+        const EventData = { name:EVENT_SIZES_SEARCH_FILTER, value: facet_value};
         Event.dispatch(EVENT_GTM_FILTER, EventData);
       }
     }
@@ -373,7 +375,7 @@ class FieldMultiselect extends PureComponent {
         ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FILTER
         : category == "discount"
         ? EVENT_DISCOUNT_FILTER_CLICK
-        : category == "gender" 
+        : category == "gender"
         ? EVENT_SET_PREFERENCES_GENDER
         : "";
     MOE_trackEvent(EVENT_MOE_PLP_FILTER, {
@@ -381,6 +383,7 @@ class FieldMultiselect extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       filter_type: category || "",
       filter_value: "All",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     if (MoeFilterEvent && MoeFilterEvent.length > 0) {
@@ -389,7 +392,7 @@ class FieldMultiselect extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
-      const EventData = { name:MoeFilterEvent, value: "All"}
+      const EventData = { name:MoeFilterEvent, value: "All"};
       Event.dispatch(EVENT_GTM_FILTER, EventData);
     }
     onUnselectAllPress(category);
@@ -627,9 +630,18 @@ class FieldMultiselect extends PureComponent {
         <input
           type="text"
           id={isMobile.any() ? currentActiveFilter : category}
-          placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
+          placeholder={
+            isMobile.any()
+              ? isArabic
+                ? "ابحث..."
+                : "Search..."
+              : isArabic
+              ? `بحث ${placeholder}`
+              : `Search ${placeholder}`
+          }
           onChange={(event) => this.handleFilterSearch(event)}
-          onFocus={(event) => this.sendMoeEvents(MoeFilterEvent, event.target.value)
+          onFocus={(event) =>
+            this.sendMoeEvents(MoeFilterEvent, event.target.value)
           }
         />
         {!isMobile.any() && (

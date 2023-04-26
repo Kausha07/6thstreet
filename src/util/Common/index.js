@@ -313,6 +313,127 @@ export const translateArabicColor = (color = "") => {
     case "Black / White": {
       return "black_white";
     }
+    case "Ivory": {
+      return "عاجي";
+    }
+    case "Fuchsia": {
+      return "فوشي";
+    }
+    case "Magenta": {
+      return "ماجنتي";
+    }
+    case "Rose": {
+      return "زهري";
+    }
+    case "Mauve": {
+      return "موف";
+    }
+    case "عاجي": {
+      return "Ivory";
+    }
+    case "Mint": {
+      return "النعناع";
+    }
+    case "Navy Blue": {
+      return "الأزرق الداك";
+    }
+    case "Sand": {
+      return "رملي";
+    }
+    case "Teal": {
+      return "موف";
+    }
+    case "Transparent": {
+      return "شفاف";
+    }
+    case "Wine": {
+      return "نبيذي";
+    }
+    case "Coral": {
+      return "مرجاني";
+    }
+    case "Khaki": {
+      return "كاكي";
+    }
+    case "Light Honey": {
+      return "عسلي فاتح";
+    }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Naughty Mauve": {
+      return "نوتي موف";
+    }
+    case "Pretty Kiss": {
+      return "بريتي كيس";
+    }
+    case "Stay Currant": {
+      return "ستاي كرانت";
+    }
+    case "Ultimate Wine": {
+      return "التيميت واين";
+    }
+    case "Chocolate": {
+      return "شوكولاتة";
+    }
+    case "Multicolour": {
+      return "متعدد الألوان";
+    }
+    case "Raspberry": {
+      return "توت";
+    }
+    case "Addiction": {
+      return "اديكشن";
+    }
+    case "Almond": {
+      return "ألموند";
+    }
+    case "Berry": {
+      return "كرزي";
+    }
+    case "Caramel": {
+      return "كارميل";
+    }
+    case "Everlasting Rum": {
+      return "ايفر لاستينغ رم";
+    }
+    case "Fancy Rose": {
+      return "فانسي روز";
+    }
+    case "Forever Scarlet": {
+      return "فوريفر سكارليت";
+    }
+    case "Heather": {
+      return "هيثر";
+    }
+    case "Leopard": {
+      return "فهد";
+    }
+    case "Light": {
+      return "فاتح";
+    }
+    case "Mahogany": {
+      return "ماهوغني";
+    }
+    case "Passion": {
+      return "باشون";
+    }
+    case "Pink Sapphire": {
+      return "سفير وردي";
+    }
+    case "Plum": {
+      return "برقوقي";
+    }
+    case "Porcelain": {
+      return "بورسلان";
+    }
+    case "Twilight": {
+      return "تويلايت";
+    }
+    case "Lightbeige": {
+      return "بيج فاتح";
+    }
+
     default: {
       // eslint-disable-next-line no-undef
       const color_code = color.toLowerCase().replace(" ", "_");
@@ -469,49 +590,30 @@ export const camelCase = (str) => {
 }
 
 export const getBambuserChannelID=(country)=>{
-  if(process.env.REACT_APP_BAMBUSER_ENV === "staging") {
-    switch (country) {
-      case "ae":
-        return "QfxqiD3TAwAWSQcoPTva";
-      case "sa":
-        return "3vYn5j0lmNq4H6juUyHo";
-      case "kw":
-        return "H2d8ao0cIDOSB0Mes0gS";
-      case "om":
-        return "GYKTtxynbwwnx8PERIls";
-      case "bh":
-        return "2YTiep0n0GzNSUpUhMF0";
-      case "qa":
-        return "m5QBkcoSL4IPgyMRZb0m";
-      default:
-        return "QfxqiD3TAwAWSQcoPTva";
-    }
-  } else {
-    switch (country) {
-      case "ae":
-        return "RQi9v57VXHIFetDai47q";
-      case "sa":
-        return "LSC8XG1YSbgdX6Adwds4";
-      case "kw":
-        return "SbFHRnzIUHdcORz2ELjd";
-      case "om":
-        return "JFEsZsxpy6mp1HaawJvH";
-      case "bh":
-        return "TvklSoghpVJPJttPB94u";
-      case "qa":
-        return "mLnmwfhhDQZa8OzDYmni";
-      default:
-        return "RQi9v57VXHIFetDai47q";
-    }
+  switch (country) {
+    case "ae":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
+    case "sa":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_SA;
+    case "kw":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_KW;
+    case "om":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_OM;
+    case "bh":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_BH;
+    case "qa":
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_QA;
+    default:
+      return process.env.REACT_APP_BAMBUSER_CHANNEL_ID_AE;
   }
 }
 
 export const DecimalCountries = ["KW", 'OM', 'BH'];
 
 export const getEnvIDForInfluencer = () => {
-  if (process.env.REACT_APP_INFLUENCER_ENV === "staging") {
-    return "20191010_staging";
-  } else {
+  if (process.env.REACT_APP_INFLUENCER_ENV === "production") {
     return "20190121";
+  } else {
+    return "20191010_staging";
   }
 };

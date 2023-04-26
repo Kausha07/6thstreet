@@ -255,7 +255,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return data
-      ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+    ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
       ?.map((item) =>
         this.renderListItem({
           key: item.key,
@@ -864,15 +864,17 @@ class PDPDetailsSection extends PureComponent {
       .toLowerCase();
     return `${url}.html`;
   };
+
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
+    const { brandNameclick } = this.props; 
     const eventData = {
       name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
       action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
     };
     return (
-      <div block="FromBrand">
+      <div block="FromBrand" onClick={ brandNameclick }>
         <Link
           block="FromBrand"
           elem="MoreButton"

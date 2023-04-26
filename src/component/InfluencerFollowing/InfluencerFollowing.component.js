@@ -198,6 +198,6 @@ const InfluencerFollowing = (props) => {
       </div>
     );
   };
-  return <div>{renderTilesBlock()}</div>;
+  return <div block="followingTabBlock">{renderTilesBlock()}</div>;
 };
 export default InfluencerFollowing;

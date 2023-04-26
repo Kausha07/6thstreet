@@ -9,7 +9,7 @@ import isMobile from "Util/Mobile";
 import "./HeaderCart.style";
 import { EVENT_MOE_GO_TO_BAG, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-
+import { isSignedIn } from "Util/Auth";
 
 class HeaderCart extends PureComponent {
   static propTypes = {
@@ -152,6 +152,7 @@ class HeaderCart extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType(),
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

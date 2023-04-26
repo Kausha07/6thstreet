@@ -179,7 +179,9 @@ class AddressCityAreaOverlay extends PureComponent {
                       id="cityAreaPopupBlockone"
                       
                     >   
-                        <div block="overlayHeader" mods={{ isOnFullScreen }}>
+                        <div block="overlayHeader" 
+                          mods={{ isOnFullScreen }}
+                        >
                           {(!isSignedIn && isOnFullScreen ) ? this.renderBack() : null}
                           <>
                               <h4

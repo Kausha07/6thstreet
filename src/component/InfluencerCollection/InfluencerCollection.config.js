@@ -34,4 +34,12 @@ export const influencerCollectionPageURL = (
   ];
 };
 
+export const influencerURL = () => {
+  const influencerPathNames = [
+    "/influencer.html/Collection",
+    "/influencer.html/Store",
+  ];
+  return influencerPathNames;
+};
+
 export default influencerProductCount;

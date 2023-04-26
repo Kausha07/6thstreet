@@ -30,7 +30,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { fetchConsolidatedVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
-import { getUUIDToken } from "Util/Auth";
+import { getUUIDToken ,isSignedIn} from "Util/Auth";
 import { isArabic } from "Util/App";
 import {
   influencerStorePageBreadcrumbsText,
@@ -255,6 +255,7 @@ export class PDPContainer extends PureComponent {
         discounted_price: specialPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       this.setState({ eventSent: true });
@@ -511,7 +512,9 @@ export class PDPContainer extends PureComponent {
       if (gender === "influencer") {
         influencerID = getQueryParam("influencerID", location);
         collectionID = getQueryParam("influencerCollectionID", location);
-        influencerName = decodeURI(getQueryParam("influencerName", location));
+        influencerName = decodeURI(
+          getQueryParam("influencerName", location)
+        ).trim();
         selectedGenderFromURL = getQueryParam("selectedGender", location);
         isStore = getQueryParam("isStore", location);
         isCollection = getQueryParam("isCollection", location);

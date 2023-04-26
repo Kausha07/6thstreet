@@ -11,6 +11,7 @@ import { setMinicartOpen } from "Store/Cart/Cart.action";
 import { getUUID } from "Util/Auth";
 import { getStore } from "Store";
 import Image from "Component/Image";
+import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
@@ -24,6 +25,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -561,6 +563,7 @@ class PLPAddToCart extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }
@@ -776,6 +779,7 @@ class PLPAddToCart extends PureComponent {
 
   render() {
     const { sizeObject } = this.state;
+    const { influencerPDPURL } = this.props;
     return (
       <div block="PLPAddToCart">
         <div block="PLPAddToCart" elem="SizeSelector">
@@ -792,7 +796,14 @@ class PLPAddToCart extends PureComponent {
           ) : null}
         </div>
         {this.renderAddToCartButton()}
-        <a href={this.props.url} block="PLPAddToCart-ViewDetails">
+        <a
+          href={
+            influencerURL().includes(location.pathname)
+              ? influencerPDPURL
+              : this.props.url
+          }
+          block="PLPAddToCart-ViewDetails"
+        >
           {__("VIEW DETAILS")}
         </a>
       </div>

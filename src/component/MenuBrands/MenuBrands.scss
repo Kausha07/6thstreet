@@ -54,6 +54,10 @@
     @include before-desktop {
         &-ContentWrapper {
             margin-top: 20px;
+            .MenuBrands-Title {
+                text-align: left;
+                display: block;
+            }
             &-Brands {
                 display: flex;
                 margin-left: 5px;
