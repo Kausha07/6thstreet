@@ -24,6 +24,8 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./CartOverlay.style";
 import Delivery from "./icons/delivery-truck.png";
+import CartNudge from "./../../route/CartPage/CartNudges/CartNudge";
+import MiniEmptyCartNudge from "./MiniEmptyCartNudge/MiniEmptyCartNudge";
 import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
 
 export class CartOverlay extends PureComponent {
@@ -114,9 +116,12 @@ export class CartOverlay extends PureComponent {
 
   renderNoCartItems() {
     return (
-      <p block="CartOverlay" elem="Empty">
-        {__("You have no items in your shopping cart.")}
-      </p>
+      <>
+        <p block="CartOverlay" elem="Empty">
+          {__("You have no items in your shopping cart.")}
+        </p>
+        <MiniEmptyCartNudge />
+      </>
     );
   }
 
@@ -353,7 +358,7 @@ export class CartOverlay extends PureComponent {
   }
 
   render() {
-    const { onVisible, isHidden, hideActiveOverlay, closePopup, isOosOverlayShow } = this.props;
+    const { onVisible, isHidden, hideActiveOverlay, closePopup, totals, isOosOverlayShow } = this.props;
     const { isArabic, isPopup, isOOSProducts } = this.state;
 
     return (
@@ -372,6 +377,7 @@ export class CartOverlay extends PureComponent {
           mix={{ block: "CartOverlay", mods: { isArabic, isPopup } }}
         >
           {this.renderItemCount()}
+          { totals?.items?.length > 0 && <CartNudge /> }
           {this.renderCartItems()}
           {this.renderTotals()}
           {this.renderShipping()}
