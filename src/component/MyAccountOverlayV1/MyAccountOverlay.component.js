@@ -837,7 +837,7 @@ export class MyAccountOverlay extends PureComponent {
                 "onlyCharacters",
               ]}
               onFocus={() => sendEvents(EVENT_TYPE_NAME)}
-              maxLength= {40}
+              maxLength= {50}
             />
           </fieldset>
           <fieldset block="MyAccountOverlayV1" elem="Gender">

@@ -261,6 +261,8 @@ export class PLP extends PureComponent {
             ? footerContent?.[0]?.[getCategoryLevel[1]]
             : getCategoryLevel.length == 3
             ? footerContent?.[0]?.[getCategoryLevel[1]]?.[getCategoryLevel[2]]
+            : getCategoryLevel.length == 4 
+            ? footerContent?.[0]?.[getCategoryLevel[1]]?.[getCategoryLevel[2]]?.[getCategoryLevel[3]] 
             : null;
         const contentDescription = isArabic ? "ar" : "en";
         const storeMap = {

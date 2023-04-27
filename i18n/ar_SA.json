@@ -1220,8 +1220,8 @@
     "No Recent Searches": "لا توجد عمليات بحث حديثة",
     "No Suggestions": "بدون اقتراحات",
     "Search for brands..." : "ابحث عن الماركات...",
+    "Login to 6thStreet to synchronize your shopping bag.": "قم بتسجيل الدخول إلى موقع 6 ستريت لمزامنة حقيبة التسوق الخاصة بك",
     "You have been logged out":"تم تسجيل الخروج من حسابك",
-    "Login to 6thStreet app to synchronize your shopping bag.": "قم بتسجيل الدخول على تطبيق6thStreetلمزامنة حقيبة التسوق الخاصة بك.",
     "Continue shopping or login to view your saved bag": "تابع التسوق أو قم بتسجيل الدخول لعرض سلة تسوقك المحفوظة",
     "to 6thStreet & continue shopping for your favourite items.": "على 6ستريت وتابع تسوق منتجاتك المفضلة ",
     "ORDER DETAILS": "تفاصيل الطلب",
@@ -1231,5 +1231,8 @@
     "Select": "حدد",
     "Videos": "فيديوهات",
     "LATEST STYLING VIDEOS": "أحدث فيديوهات تنسيق الأزياء",
-    "LATEST STYLING VIDEOS BY INFLUENCERS": "أحدث فيديوهات المؤثرين في تنسيق أزياء"
+    "LATEST STYLING VIDEOS BY INFLUENCERS": "أحدث فيديوهات المؤثرين في تنسيق أزياء",
+    "Ooops... It's gone!": "عذراً... لم يعد متوفراً!",
+    "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
+    "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة"
 }

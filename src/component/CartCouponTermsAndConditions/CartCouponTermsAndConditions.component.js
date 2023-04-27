@@ -49,10 +49,10 @@ class CartCouponTermsAndConditions extends PureComponent {
             <div block="couponTermsAndConditionsPopup">
                 <div block="couponTermsAndConditionsOverlay">
                     <div block="couponTermsAndConditionsPopupBlock" ref={this.couponTermsAndConditionsPopupRef}> 
-                        <div className="closebuttonDiv">
+                        <div className="closebuttonWrapperDiv">
                             <button 
                                 onClick={(e)=>{hideTermsAndConditions(e)}} 
-                                block="closePopupbtn" mods={{isArabic}}><span>Close</span>
+                                block="closePopupbutton" mods={{isArabic}}><span>Close</span>
                             </button>
                         </div>                   
                         <div block="couponTermsAndConditionsPopupTitlesWrapper">

@@ -310,7 +310,7 @@ export class PLPContainer extends PureComponent {
     if (pagePathName.includes(".html")) {
       try {
         const resp = await getStaticFile("plp_meta", {
-          $FILE_NAME: `pages/plp_meta.json`,
+          $FILE_NAME: `plp_meta.json`,
         });
         if (resp) {
           this.setState({
@@ -928,24 +928,23 @@ export class PLPContainer extends PureComponent {
     const getCategoryLevel = pagePathName.includes(".html")
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
-    const locale = getLocaleFromUrl();
     const staticMetaData =
       getCategoryLevel.length == 5 && metaContent
-        ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+        ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
         getCategoryLevel[2]
         ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
         : getCategoryLevel.length == 4 && metaContent
-          ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+          ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
           getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]
           : getCategoryLevel.length == 3 && metaContent
-            ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
             ]
             : getCategoryLevel.length == 2 && metaContent
-              ? metaContent?.[locale]?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
+              ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
               : getCategoryLevel.length == 1 && metaContent
-                ? metaContent?.[locale]?.[getCategoryLevel[0]]
+                ? metaContent?.[getCategoryLevel[0]]
                 : null;
     const PLPMetaTitle =
       staticMetaData && staticMetaData?.title
