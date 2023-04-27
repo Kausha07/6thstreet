@@ -154,6 +154,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             source: null,
           };
           if(countryCode == "SA") {
+            request.country = "SA";
             let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
             request.intl_vendors=null;
             let items = [];
