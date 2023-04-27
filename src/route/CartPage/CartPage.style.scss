@@ -214,6 +214,11 @@
         font-weight: var(--fw-bold);
         border-radius: 6px;
         border: none;
+        &:hover,
+        &:focus {
+            --button-hover-background: #000000;
+            background-color: #000000;
+        }
         @include mobile {
             height: 40px;
             font-size: 14px;
