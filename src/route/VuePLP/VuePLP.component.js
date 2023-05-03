@@ -277,13 +277,17 @@ const VuePLP = (props) => {
         ) {
           return handleRandomSKU?.second_product;
         } else if (
-          ((firstOrderCall && secondOrderCall) || noLastOrderSku) &&
+          ((firstOrderCall &&
+            (secondOrderCall || !handleRandomSKU?.second_product)) ||
+            noLastOrderSku) &&
           !firstRecentCall &&
           recentFirstProduct
         ) {
           return recentFirstProduct;
         } else if (
-          ((firstOrderCall && secondOrderCall) || noLastOrderSku) &&
+          ((firstOrderCall &&
+            (secondOrderCall || !handleRandomSKU?.second_product)) ||
+            noLastOrderSku) &&
           firstRecentCall &&
           recentSecondProduct
         ) {

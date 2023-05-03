@@ -82,15 +82,11 @@ export class PDPSummaryContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const { brand_url } = this.props;
-    if (!brand_url) {
-      this.getBrandDetails();
-    }
-    else {
-      this.setState({
-        url_path: brand_url
-      })
-    }
+    const { brand_url = "" } = this.props;
+    this.getBrandDetails();
+    this.setState({
+      url_path: brand_url,
+    });
   }
 
   brandNameclick = () => {
