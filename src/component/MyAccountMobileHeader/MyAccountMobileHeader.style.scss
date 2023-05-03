@@ -92,6 +92,8 @@
   .MyAccountOverlay {
     &-StoreSwitcher {
       margin: 15px 10px 15px 0;
+      display: flex;
+      gap: 6px;
     }
   }
 }
