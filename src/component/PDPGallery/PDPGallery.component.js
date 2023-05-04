@@ -22,6 +22,9 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCurrency } from "Util/App";
+import fallbackImage from "../../style/icons/fallback.png";
+import { Share } from "../Icons";
+import { showNotification } from "Store/Notification/Notification.action";
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
 });
@@ -30,6 +33,10 @@ export const mapDispatchToProps = (dispatch) => ({
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
   setImageIndex: (index) => dispatch(setPDPGaleryImage(index)),
+  showSuccessNotification: (message) =>
+    dispatch(showNotification("success", message)),
+  showErrorNotification: (error) =>
+    dispatch(showNotification("error", error[0].message)),
 });
 
 class PDPGallery extends PureComponent {
@@ -552,6 +559,71 @@ class PDPGallery extends PureComponent {
     );
   }
 
+  copyToClipboard = async () => {
+    const { showSuccessNotification, showErrorNotification } = this.props;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showSuccessNotification(__("Link copied to clipboard"));
+    } catch (err) {
+      console.error(err);
+      showErrorNotification(__("Something went wrong! Please, try again!"));
+    }
+  };
+
+  renderShareButton() {
+    const {
+      product: { gallery_images, name },
+    } = this.props;
+    const url = new URL(window.location.href);
+    const navigatorShare = async () => {
+      console.log("Clicked");
+      
+      const blob = await fetch (gallery_images[0],{
+        mode: 'no-cors'
+   });
+      
+      const productData = {
+        title: document.title,
+        text: `Hey check this out: ${name}`,
+        url: url,
+        files: [
+          new File([blob], gallery_images[0] || fallbackImage, {
+            type: blob.type,
+          }),
+        ],
+      };
+      console.log("Product DAta",productData )
+      if (navigator.share) {
+        try {
+          const resp = await navigator.share(productData);
+          alert(resp);
+        } catch (err) {
+          alert("ERROR: ", err);
+        }
+      } else {
+        this.copyToClipboard();
+      }
+      if (navigator.canShare) {
+        alert("Can Share");
+      }
+      if (navigator.canShare(productData)) {
+        alert("Can Share productData");
+      }
+      if (!navigator.canShare) {
+        alert("No Share");
+      }
+    };
+    return (
+      <>
+        <div block="MobileShare">
+          <button onClick={navigatorShare} block="Share">
+            <Share block="Icon" />
+          </button>
+        </div>
+      </>
+    );
+  }
+
   render() {
     const { openGalleryOverlay, isArabic } = this.state;
     const { renderMySignInPopup } = this.props;
@@ -566,6 +638,7 @@ class PDPGallery extends PureComponent {
             <div block="OverlayIcons" mods={{ isArabic }}>
               {this.renderCartIcon()}
               {this.renderWishlistIcon()}
+              {this.renderShareButton()}
             </div>
           </>
         )}
