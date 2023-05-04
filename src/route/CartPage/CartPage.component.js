@@ -1131,6 +1131,7 @@ export class CartPage extends PureComponent {
         heading={__("Your WishList")}
         linkTo={"/my-account/my-wishlist"}
         sliderType="wishlist"
+        isVueData={false}
       />
     );
   };
@@ -1150,6 +1151,7 @@ export class CartPage extends PureComponent {
             },
           }}
           sliderType="LookingForThis"
+          isVueData={true}
         />
       );
     }

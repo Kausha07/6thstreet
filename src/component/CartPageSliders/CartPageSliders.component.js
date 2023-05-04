@@ -4,7 +4,7 @@ import Link from "Component/Link";
 import "./CartPageSliders.style.scss";
 
 const CartPageSliders = (props) => {
-  const { sliderProducts, heading, linkTo, sliderType } = props;
+  const { sliderProducts, heading, linkTo, sliderType, isVueData } = props;
 
   const renderSlider = () => {
     const slicedSliderProducts = sliderProducts?.slice(0, 5);
@@ -30,7 +30,7 @@ const CartPageSliders = (props) => {
                       key={v4()}
                       page="cart"
                       pageType="cartSlider"
-                      isVueData={false}
+                      isVueData={isVueData}
                     />
                     <button block="cartButton"> {__("Move to cart")}</button>
                   </div>
