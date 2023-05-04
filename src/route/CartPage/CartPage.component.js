@@ -51,6 +51,7 @@ import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions
 
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { Offer, Coupon } from "Component/Icons/index";
+import CartPageSliders from "Component/CartPageSliders/index.js";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -757,6 +758,8 @@ export class CartPage extends PureComponent {
           <div block="msiteScrollableBlock">
             {this.renderYourOffers()}
             {this.renderDiscountCode()}
+            {this.renderWishlistSlider()}
+            {this.renderLookingForThisSlider()}
             {this.renderTotal()}
           </div>
 
@@ -1119,6 +1122,41 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderWishlistSlider = () => {
+    const { wishListProducts } = this.props;
+
+    return (
+      <CartPageSliders
+        sliderProducts={wishListProducts}
+        heading={__("Your WishList")}
+        linkTo={"/my-account/my-wishlist"}
+        sliderType="wishlist"
+      />
+    );
+  };
+
+  renderLookingForThisSlider = () => {
+    const { lookingForThisData } = this.props;
+    if (lookingForThisData) {
+      return (
+        <CartPageSliders
+          sliderProducts={lookingForThisData}
+          heading={__("Looking for this?")}
+          linkTo={{
+            pathname: "/viewall/?q=vue_compact_style_it_slider",
+            state: {
+              vueProducts: lookingForThisData,
+              product_id: lookingForThisData.sku,
+            },
+          }}
+          sliderType="LookingForThis"
+        />
+      );
+    }
+
+    return null;
+  };
+
   renderDynamicContent() {
     const {
       totals = {},
@@ -1127,6 +1165,7 @@ export class CartPage extends PureComponent {
       processingRequest,
       cartWidgetApiData = [],
       youMayAlsoLikeData = [],
+      isSignedIn,
     } = this.props;
     const { isArabic, isOOSProducts } = this.state;
     const { country } = JSON.parse(
@@ -1288,6 +1327,14 @@ export class CartPage extends PureComponent {
               {this.renderTotals()}
             </div>
           </div>
+          {isSignedIn && !isMobiledev && (
+            <div block="cartPageSliders">
+              <div block="WishlistSlider">{this.renderWishlistSlider()}</div>
+              <div block="WishlistSlider">
+                {this.renderLookingForThisSlider()}
+              </div>
+            </div>
+          )}
         </ContentWrapper>
       </>
     );

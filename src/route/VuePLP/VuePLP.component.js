@@ -26,6 +26,7 @@ import {
   VUE_VISUALLY_SIMILAR_SLIDER,
   VUE_STYLE_IT_SLIDER,
   VUE_RECENTLY_VIEWED_SLIDER,
+  VUE_COMPACT_STYLE_IT_SLIDER,
 } from "./VuePLP.config";
 import Loader from "Component/Loader";
 
@@ -459,6 +460,8 @@ const VuePLP = (props) => {
         return __("Recently Viewed");
       case TOP_PICKS_SLIDER:
         return __("You May Like");
+      case VUE_COMPACT_STYLE_IT_SLIDER:
+        return __("Looking for this?");
     }
   };
 

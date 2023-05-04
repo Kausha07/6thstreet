@@ -52,7 +52,6 @@ import CartPage from "./CartPage.component";
 import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
-
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -77,6 +76,8 @@ export const mapStateToProps = (state) => {
     product: state.PDP.product,
     gender: state.AppState.gender,
     options: state.PDP.options,
+    wishListProducts: state.WishlistReducer.items,
+    totalsForProduct: state.CartReducer.cartItems,
   };
 };
 
@@ -131,6 +132,7 @@ export class CartPageContainer extends PureComponent {
     errorState: false,
     cartWidgetApiData: [],
     youMayAlsoLikeData: [],
+    lookingForThisData: [],
   };
 
   containerFunctions = {
@@ -184,6 +186,7 @@ export class CartPageContainer extends PureComponent {
 
     this.getCartWidgetsVueData();
     this.getCartYoumayAlsoLikeWidgetsVueData();
+    this.getCartLookingForThisVueData();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -269,6 +272,33 @@ export class CartPageContainer extends PureComponent {
       });
   }
 
+  getCartLookingForThisVueData() {
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const query = {
+      filters: [],
+      num_results: 50,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const type = "vue_compact_style_it_slider";
+    const defaultQueryPayload = {
+      userID,
+      product_id:
+        `${this.props.totalsForProduct?.[0]?.full_item_info?.config_sku}` ||
+        `${this.props.totals?.items?.[0]?.full_item_info?.config_sku}`,
+    };
+    const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
+    var promise = Promise.resolve(fetchVueData(payload));
+    promise
+      .then((resp) => {
+        this.setState({ lookingForThisData: resp.data });
+      })
+      .catch((err) => {
+        console.error("uncaught  errr", err);
+      });
+  }
+
   componentDidUpdate(prevProps) {
     const {
       changeHeaderState,
@@ -313,6 +343,14 @@ export class CartPageContainer extends PureComponent {
           __("Some products or selected quantities are no longer available")
         );
       }
+    }
+
+    if (
+      this.props.totals?.items?.[0]?.full_item_info?.config_sku !==
+        prevProps?.totals?.items?.[0]?.full_item_info?.config_sku ||
+      this.props.totals !== prevProps?.totals
+    ) {
+      this.getCartLookingForThisVueData();
     }
   }
 
@@ -396,12 +434,8 @@ export class CartPageContainer extends PureComponent {
   }
 
   onCheckoutButtonClick(e) {
-    const {
-      history,
-      guest_checkout,
-      showOverlay,
-      showNotification,
-    } = this.props;
+    const { history, guest_checkout, showOverlay, showNotification } =
+      this.props;
     const { isCheckoutAvailable } = this.state;
     if (isCheckoutAvailable) {
       // to prevent outside-click handler trigger
@@ -490,10 +524,10 @@ export class CartPageContainer extends PureComponent {
     });
   }
 
-
   render() {
     const cartWidgetApiData = this.state.cartWidgetApiData;
     const youMayAlsoLikeData = this.state.youMayAlsoLikeData;
+    const lookingForThisData = this.state.lookingForThisData;
     return cartWidgetApiData && youMayAlsoLikeData ? (
       <CartPage
         {...this.props}
@@ -501,6 +535,7 @@ export class CartPageContainer extends PureComponent {
         {...this.containerFunctions}
         cartWidgetApiData={cartWidgetApiData}
         youMayAlsoLikeData={youMayAlsoLikeData}
+        lookingForThisData={lookingForThisData}
         tabMap={tabMap}
       />
     ) : (

@@ -372,11 +372,19 @@ class ProductItem extends PureComponent {
     const {
       product: { price },
       page,
+      pageType,
     } = this.props;
-    if(!price || (Array.isArray(price) && !price[0])){
+    if (!price || (Array.isArray(price) && !price[0])) {
       return null;
     }
-    return <Price price={price} page={page} renderSpecialPrice={true} />;
+    return (
+      <Price
+        price={price}
+        page={page}
+        renderSpecialPrice={true}
+        pageType={pageType}
+      />
+    );
   }
 
   renderAddToCartOnHover() {
@@ -416,6 +424,7 @@ class ProductItem extends PureComponent {
       selectedGender,
       isStorePage,
       isCollectionPage,
+      pageType,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -486,7 +495,7 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {pageType !== "cartSlider" && this.renderOutOfStock()}
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
@@ -514,10 +523,12 @@ class ProductItem extends PureComponent {
       >
         {" "}
         {this.renderLabel()}
-        {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {pageType !== "cartSlider" && this.renderWishlistIcon()}
+        {this.renderLink()}{" "}
         {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
+          pageType !== "cartSlider" &&
           this.renderAddToCartOnHover()}
       </li>
     );

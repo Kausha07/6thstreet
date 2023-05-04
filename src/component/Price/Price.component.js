@@ -93,10 +93,18 @@ class Price extends PureComponent {
   }
 
   discountPercentage() {
-    const { basePrice, specialPrice, renderSpecialPrice, cart, country, showDiscountPercentage } = this.props;
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+      cart,
+      country,
+      showDiscountPercentage,
+      pageType,
+    } = this.props;
 
-    if (!showDiscountPercentage ) {
-      return null
+    if (!showDiscountPercentage) {
+      return null;
     }
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
@@ -114,12 +122,17 @@ class Price extends PureComponent {
         </span>
       );
     } else {
+      if (pageType === "cartSlider") {
+        return (
+          <span block="discountPercentageText">{`(-${discountPercentage}%)`}</span>
+        );
+      }
       return `(-${discountPercentage}%)`;
     }
   }
 
   renderPrice() {
-    const { basePrice, specialPrice, renderSpecialPrice } =
+    const { basePrice, specialPrice, renderSpecialPrice, pageType } =
       this.props;
     const { isArabic } = this.state;
 
@@ -132,11 +145,28 @@ class Price extends PureComponent {
     if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
       return this.renderBasePrice();
     }
+
+    if (pageType === "cartSlider") {
+      return (
+        <span block="Price" elem="Wrapper">
+          {renderSpecialPrice && this.renderSpecialPrice()}
+          {isArabic && <>&nbsp;</>}
+          <del block="Price" elem="Del">
+            {this.renderBasePrice()}
+          </del>
+
+          {this.discountPercentage()}
+        </span>
+      );
+    }
     return (
       <>
         <span block="Price" elem="Wrapper">
           {renderSpecialPrice && this.renderSpecialPrice()}
           {isArabic && <>&nbsp;</>}
+          <del block="Price" elem="Del">
+            {this.renderBasePrice()}
+          </del>
 
           {!renderSpecialPrice ? (
             <span block="SearchProduct" elem="PriceWrapper">
@@ -145,10 +175,6 @@ class Price extends PureComponent {
           ) : (
             this.renderDiscountSpecialPrice(false)
           )}
-
-          <del block="Price" elem="Del">
-            {this.renderBasePrice()}
-          </del>
         </span>
         {!renderSpecialPrice ? (
           <span block="SearchProduct" elem="PriceWrapper">

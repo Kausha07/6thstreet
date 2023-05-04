@@ -165,6 +165,7 @@ padding: auto ;
             }
 
             .msiteBottomFixed{
+                width: 100%;
                 position: fixed;
                 left: 0;
                 bottom: 0;
@@ -790,6 +791,7 @@ padding: auto ;
         width: 100%;
         background: var(--cart-page-gray-background);
         padding: 12px 15px;
+        margin-top: 20px;
 
         .OrderTotalsHeading{
             font-weight: 500;
@@ -1143,6 +1145,11 @@ padding: auto ;
                     }
                 }
             }
+        }
+    }
+    .cartPageSliders{
+        @include mobile{
+            padding: 0 15px;
         }
     }
 }

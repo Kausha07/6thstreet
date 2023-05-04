@@ -105,10 +105,7 @@
             }
             .Price {
                 text-align: right;
-                // flex-direction: row-reverse;
                 &-Wrapper {
-                    display: inline-flex;
-                    //flex-direction: row-reverse;
                     justify-content: flex-end;
                 }
                 &-Discount {
