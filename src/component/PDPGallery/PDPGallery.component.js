@@ -583,11 +583,11 @@ class PDPGallery extends PureComponent {
         title: document.title,
         text: `Hey check this out: ${name}`,
         url: url,
-        files: [
-          new File([blob], gallery_images[0] || fallbackImage, {
-            type: blob.type,
-          }),
-        ],
+        // files: [
+        //   new File([blob], gallery_images[0] || fallbackImage, {
+        //     type: blob.type,
+        //   }),
+        // ],
       };
       if (navigator.share) {
         try {
