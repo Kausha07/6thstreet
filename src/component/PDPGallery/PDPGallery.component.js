@@ -574,14 +574,11 @@ class PDPGallery extends PureComponent {
     const {
       product: { gallery_images, name },
     } = this.props;
-    const url = new URL(window.location.href);
+    const url = new URL(window.location.href).href;
     const navigatorShare = async () => {
-      console.log("Clicked");
-      
-      const blob = await fetch (gallery_images[0],{
-        mode: 'no-cors'
-   });
-      
+      const blob = await fetch(gallery_images[0], {
+        mode: "no-cors",
+      });
       const productData = {
         title: document.title,
         text: `Hey check this out: ${name}`,
@@ -592,25 +589,16 @@ class PDPGallery extends PureComponent {
           }),
         ],
       };
-      console.log("Product DAta",productData )
       if (navigator.share) {
         try {
-          const resp = await navigator.share(productData);
+           await navigator.share(productData);
           alert(resp);
         } catch (err) {
           alert("ERROR: ", err);
+          this.copyToClipboard();
         }
       } else {
         this.copyToClipboard();
-      }
-      if (navigator.canShare) {
-        alert("Can Share");
-      }
-      if (navigator.canShare(productData)) {
-        alert("Can Share productData");
-      }
-      if (!navigator.canShare) {
-        alert("No Share");
       }
     };
     return (
