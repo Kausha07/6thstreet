@@ -565,8 +565,8 @@ class PDPGallery extends PureComponent {
       await navigator.clipboard.writeText(window.location.href);
       showSuccessNotification(__("Link copied to clipboard"));
     } catch (err) {
-      console.error(err);
       showErrorNotification(__("Something went wrong! Please, try again!"));
+      console.error(err);
     }
   };
 
@@ -585,7 +585,7 @@ class PDPGallery extends PureComponent {
         url: url,
         files: [
           new File([blob], "file.jpg", {
-            type: "image/jpg",
+            type: blob.type,
           }),
         ],
       };
