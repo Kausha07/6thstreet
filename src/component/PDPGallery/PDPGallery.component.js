@@ -576,9 +576,10 @@ class PDPGallery extends PureComponent {
     } = this.props;
     const url = new URL(window.location.href).href;
     const navigatorShare = async () => {
-      const blob = await fetch(gallery_images[0], {
+      const response = await fetch(gallery_images[0], {
         mode: "no-cors",
       });
+      const blob = await response.blob();
       const productData = {
         title: document.title,
         text: `Hey check this out: <br/>${name}<br/>`,
