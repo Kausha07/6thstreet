@@ -581,20 +581,20 @@ class PDPGallery extends PureComponent {
       });
       const productData = {
         title: document.title,
-        text: `Hey check this out: ${name}`,
+        text: `Hey check this out: <br/>${name}<br/>`,
         url: url,
-        // files: [
-        //   new File([blob], gallery_images[0] || fallbackImage, {
-        //     type: blob.type,
-        //   }),
-        // ],
+        files: [
+          new File([], gallery_images[0], {
+            type: "image/jpg",
+          }),
+        ],
       };
       if (navigator.share) {
         try {
            await navigator.share(productData);
         } catch (err) {
-          alert("ERROR: ", err);
           this.copyToClipboard();
+          alert("ERROR: ", err);
         }
       } else {
         this.copyToClipboard();
