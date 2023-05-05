@@ -584,7 +584,7 @@ class PDPGallery extends PureComponent {
         text: `Hey check this out: <br/>${name}<br/>`,
         url: url,
         files: [
-          new File([], gallery_images[0], {
+          new File([blob], "file.jpg", {
             type: "image/jpg",
           }),
         ],
