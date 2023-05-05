@@ -594,7 +594,7 @@ class PDPGallery extends PureComponent {
            await navigator.share(productData);
         } catch (err) {
           this.copyToClipboard();
-          alert("ERROR: ", err);
+          alert("ERROR 111: ", err);
         }
       } else {
         this.copyToClipboard();
