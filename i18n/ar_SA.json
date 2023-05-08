@@ -1235,5 +1235,7 @@
     "Ooops... It's gone!": "عذراً... لم يعد متوفراً!",
     "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
     "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة",
-    "Looking for this?": " أتبحث عن هذا؟"
+    "Looking for this?": " أتبحث عن هذا؟",
+    "Coupon applied":"تم تطبيق القسيمة",
+    "Non-discountable item":"منتج غير قابل للخصم"
 }

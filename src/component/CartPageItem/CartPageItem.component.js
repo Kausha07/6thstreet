@@ -673,7 +673,8 @@ export class CartItem extends PureComponent {
   renderProductPrice() {
     const {
       currency_code,
-      item: { row_total, basePrice },
+      item: { row_total, basePrice, discount_amount },
+      totals: { coupon_code },
     } = this.props;
 
     const { isArabic } = this.state;
@@ -688,10 +689,43 @@ export class CartItem extends PureComponent {
       },
     ];
 
+    const finalPrice = row_total
+      ? row_total - discount_amount
+      : basePrice - discount_amount;
+
     return (
-      <div block="CartPageItem" elem="Price" mods={{ isArabic }}>
-        <Price price={price} renderSpecialPrice={false} cart={true} />
-      </div>
+      <>
+        <div
+          block="CartPageItem"
+          elem={`Price ${coupon_code ? "couponPriceActive" : null}`}
+          mods={{ isArabic }}
+        >
+          <Price
+            price={price}
+            renderSpecialPrice={false}
+            cart={true}
+            coupon_code={coupon_code}
+          />
+        </div>
+        {coupon_code ? (
+          discount_amount ? (
+            <div block="discountedCouponAppliedBlock">
+              <span block="couponAppliedFinalPrice">
+                {currency_code} {finalPrice.toFixed(2)}
+              </span>
+              <span block="couponAppliedText">
+                {currency_code} {discount_amount.toFixed(2)} {__("Coupon applied")}
+              </span>
+            </div>
+          ) : (
+            <div block="discountedCouponAppliedBlock">
+              <span block="nonDiscountableItem">
+                {__("Non-discountable item")}
+              </span>
+            </div>
+          )
+        ) : null}
+      </>
     );
   }
 

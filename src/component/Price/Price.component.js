@@ -164,10 +164,6 @@ class Price extends PureComponent {
         <span block="Price" elem="Wrapper">
           {renderSpecialPrice && this.renderSpecialPrice()}
           {isArabic && <>&nbsp;</>}
-          <del block="Price" elem="Del">
-            {this.renderBasePrice()}
-          </del>
-
           {!renderSpecialPrice ? (
             <span block="SearchProduct" elem="PriceWrapper">
               {this.renderDiscountSpecialPrice(true, specialPrice)}
@@ -175,6 +171,9 @@ class Price extends PureComponent {
           ) : (
             this.renderDiscountSpecialPrice(false)
           )}
+          <del block="Price" elem="Del">
+            {this.renderBasePrice()}
+          </del>
         </span>
         {!renderSpecialPrice ? (
           <span block="SearchProduct" elem="PriceWrapper">

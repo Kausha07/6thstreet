@@ -56,6 +56,8 @@ export const mapStateToProps = (state) => ({
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
+  totals: state.CartReducer.cartTotals,
+  couponsItems: state.CartReducer.cartCoupons,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";

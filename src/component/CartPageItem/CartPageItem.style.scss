@@ -228,6 +228,10 @@
     &_isCartPage {
       width: 150px;
     }
+
+    @include mobile {
+      height: 200px;
+    }
   }
 
   &-Price,
@@ -245,21 +249,46 @@
     }
   }
 
-  .discountedCouponAppliedBlock{
+  .discountedCouponAppliedBlock {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 10px 0;
+    border-top: 1px solid rgba(112, 112, 112, 0.1);
+    padding-top: 5px;
 
-    .couponAppliedFinalPrice{
+    .couponAppliedFinalPrice {
       background: #28d9aa;
       color: #ffffff;
       padding: 5px 10px;
       font-weight: 600;
     }
-    .couponAppliedText{
-      font: normal normal normal 13px/14px Avenir Next;
-      text-transform: capitalize;
+    .couponAppliedText {
+      font: normal normal normal 12px/14px Avenir Next;
+      text-transform: none;
+      color: #4A4A4A;
+    }
+    .nonDiscountableItem {
+      background: #F6F6F6;
+      color: #4A4A4A;
+      font-size: 12px;
+      padding: 5px;
+    }
+
+    @include mobile {
+      margin: 5px 0;
+      .couponAppliedFinalPrice{
+        padding: 3px 5px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+      }
+      .couponAppliedText {
+        font-size: 11px;
+        width: 50%;
+      }
     }
   }
 
@@ -291,12 +320,21 @@
         text-decoration: line-through;
         padding-right: 5px;
         font-weight: var(--fw-regular);
+        font-size: 13px;
       }
     }
   }
 
   .Price > span:first-child {
     color: #000000;
+    font-size: 15px;
+  }
+
+  .couponPriceActive span:first-child{
+      color: #B2B2B2;
+      @include mobile {
+        font-size: 13px;
+      }
   }
 
   &-ColSizeQty {
