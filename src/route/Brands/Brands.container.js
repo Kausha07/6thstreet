@@ -1,33 +1,31 @@
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import PropTypes from "prop-types";
-
-import { TYPES_ARRAY } from "./Brands.config";
-import { HistoryType, LocationType } from "Type/Common";
-import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
-
 import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
-import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
-
+import { HistoryType, LocationType } from "Type/Common";
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
+import { getQueryParam, setQueryParams } from "Util/Url";
 import { getCountryFromUrl } from "Util/Url/Url";
-import isMobile from "Util/Mobile";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import { getAllBrands } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
-
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import Brands from "./Brands.component";
+import { TYPES_ARRAY } from "./Brands.config";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
+import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from "Util/Mobile";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = () => ({});
 
@@ -116,6 +114,9 @@ class BrandsContainer extends PureComponent {
     this.setMetaData();
   }
 
+  requestBrandMapping = () => {
+    let brandMapping = this.getBrandMappingData();
+  };
   setLastTapItem = (item) => {
     this.props.setLastTapItemOnHome(item);
   };
@@ -147,6 +148,18 @@ class BrandsContainer extends PureComponent {
     } else {
       this.setState({ brandWidgetData: [] });
     }
+  }
+
+  getBrandMappingData() {
+    const apiUrl = "/cdn/config/brandswithUrl.json";
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        let ret = {};
+        this.setState({
+          brandMapping: data.brands,
+        });
+      });
   }
 
   updateHeaderState() {
@@ -197,49 +210,57 @@ class BrandsContainer extends PureComponent {
   async requestShopbyBrands(gender) {
     try {
       const activeBrandsList = await this.requestBrands(gender);
-        getAllBrands().then((brandResponse)=>{
-          const groupedBrands = groupByName(brandResponse.result) || {};
-          const sortedBrands = Object.entries(groupedBrands).sort(
-            ([letter1], [letter2]) => {
-              if (letter1 === "0-9") {
-                return 1;
-              }
-              if (letter2 === "0-9") {
-                return -1;
-              }
-              if (letter1 !== letter2) {
-                if (letter1 < letter2) {
-                  return -1;
-                }
-                return 1;
-              }
+
+      const brandResponse = await new Algolia({
+        index: "brands_info",
+      }).getShopByBrands({
+        query: "",
+        limit: 800,
+      });
+      let totalBrands = [];
+      brandResponse.map((brand) => {
+        totalBrands = [...totalBrands, ...brand.hits];
+      });
+      const groupedBrands = groupByName(totalBrands) || {};
+      const sortedBrands = Object.entries(groupedBrands).sort(
+        ([letter1], [letter2]) => {
+          if (letter1 === "0-9") {
+            return 1;
+          }
+          if (letter2 === "0-9") {
+            return -1;
+          }
+          if (letter1 !== letter2) {
+            if (letter1 < letter2) {
+              return -1;
             }
-          );
-          const activeBrands = [];
-          sortedBrands.map((data) => {
-            let filteredbrand = [];
-            let combinedArr = [];
-            Object.values(data[1]).filter((brand) => {
-              const { name, name_ar } = brand;
-              if (
-                activeBrandsList.includes(name) ||
-                activeBrandsList.includes(name_ar)
-              ) {
-                filteredbrand.push(brand);
-              }
-            });
-            if (filteredbrand.length > 0) {
-              combinedArr.push(data[0]);
-              combinedArr.push(filteredbrand);
-              activeBrands.push(combinedArr);
-            }
-          });
-          this.setState({
-            brands: activeBrands,
-            isLoading: false,
-          });
-        })
-      
+            return 1;
+          }
+        }
+      );
+      const activeBrands = [];
+      sortedBrands.map((data) => {
+        let filteredbrand = [];
+        let combinedArr = [];
+        Object.values(data[1]).filter((brand) => {
+          const { name, name_ar } = brand;
+          if (
+            activeBrandsList.includes(name) ||
+            activeBrandsList.includes(name_ar)
+          ) {
+            filteredbrand.push(brand);
+          }
+        });
+        if (filteredbrand.length > 0) {
+          combinedArr.push(data[0]);
+          combinedArr.push(filteredbrand);
+          activeBrands.push(combinedArr);
+        }
+      });
+      this.setState({
+        brands: activeBrands,
+        isLoading: false,
+      });
     } catch (e) {
       this.setState({ brands: [] });
       console.error(e);
