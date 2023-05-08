@@ -1171,7 +1171,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer, showErrorNotification } =
       this.props;
     const { shippingAddress } = this.state;
     if (isSignedIn) {

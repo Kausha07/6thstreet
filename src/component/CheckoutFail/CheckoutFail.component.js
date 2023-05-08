@@ -25,6 +25,7 @@ export class CheckoutFail extends CheckoutSuccess {
         id,
       },
       orderID,
+      paymentMethod,
     } = this.props;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
 
@@ -84,6 +85,7 @@ export class CheckoutFail extends CheckoutSuccess {
       size: productSizeValue?.length > 0 ? productSizeValue : "",
       subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
+      payment_method: paymentMethod?.code || "",
     });
   }
 

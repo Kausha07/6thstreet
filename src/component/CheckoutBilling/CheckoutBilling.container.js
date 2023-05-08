@@ -34,7 +34,11 @@ import { isSignedIn } from "Util/Auth";
 import Logger from "Util/Logger";
 import { fetchMutation, fetchQuery } from "Util/Request";
 import * as Sentry from "@sentry/react";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url/Url";
+import { 
+  MOE_trackEvent,
+  EVENT_MOE_PLACE_ORDER_CLICK,
+} from "Util/Event";
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   processingRequest: state.CartReducer.processingRequest,
@@ -372,6 +376,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
+
+    MOE_trackEvent(EVENT_MOE_PLACE_ORDER_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      payment_method : code,
+    });
+
     let finalEdd = null;
     let finalEddString = ""
     let nonCrossBorderItems = items.filter((item) => {
