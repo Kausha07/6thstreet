@@ -255,7 +255,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return data
-      ?.filter(({ key, value }) => key !== "sku" && key !== "alternate_name" && value !== "false")
+    ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
       ?.map((item) =>
         this.renderListItem({
           key: item.key,

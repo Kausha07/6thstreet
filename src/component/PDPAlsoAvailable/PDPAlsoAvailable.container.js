@@ -1,15 +1,9 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { connect } from 'react-redux';
 
 import Algolia from "Util/API/provider/Algolia";
-import PDPAlsoAvailable from "./PDPAlsoAvailable.component";
 
-export const mapStateToProps = (state) => ({
-  isFetchFromAlgolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
-  relatedProducts: state.PDP.product.relatedProducts
-});
+import PDPAlsoAvailable from "./PDPAlsoAvailable.component";
 
 export class PDPAlsoAvailableContainer extends PureComponent {
   static propTypes = {
@@ -20,36 +14,38 @@ export class PDPAlsoAvailableContainer extends PureComponent {
   state = {
     products: [],
     isAlsoAvailable: true,
+    firstLoad: true,
   };
 
   componentDidMount() {
-    const { products = [] } = this.state;
-    const { isFetchFromAlgolia,relatedProducts } = this.props;
-    if (isFetchFromAlgolia && !products.length) {
-      this.getAvailableProducts();
-    }else if(!isFetchFromAlgolia){
-      this.setState({ products: relatedProducts });
-      this.setState({ isAlsoAvailable: relatedProducts?.length === 0 });
-    }
-  }
+    const { firstLoad, products = [] } = this.state;
 
-  async getAvailableProduct(sku) {
-    const product = await new Algolia().getProductBySku({ sku })
-    return product;
+    if (firstLoad && !products.length) {
+      this.getAvailableProducts();
+    }
   }
 
   getAvailableProducts() {
     const { productsAvailable = [] } = this.props;
+
     productsAvailable.map((productID) =>
       this.getAvailableProduct(productID).then((productData) => {
         let { products = [] } = this.state;
+
         if (productData.nbHits === 1) {
           this.setState({ products: [...products, productData.data] });
           products = this.state?.products || [];
         }
+
         this.setState({ isAlsoAvailable: products.length === 0 });
       })
     );
+  }
+
+  async getAvailableProduct(sku) {
+    const product = await new Algolia().getProductBySku({ sku });
+
+    return product;
   }
 
   render() {
@@ -62,4 +58,4 @@ export class PDPAlsoAvailableContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, null)(PDPAlsoAvailableContainer);
+export default PDPAlsoAvailableContainer;

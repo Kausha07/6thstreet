@@ -1,9 +1,14 @@
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-
-import PropTypes from "prop-types";
-
+import { setGender } from "Store/AppState/AppState.action";
+import { updateMeta } from "Store/Meta/Meta.action";
+import { changeNavigationState } from "Store/Navigation/Navigation.action";
+import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
+import { setPLPLoading } from "Store/PLP/PLP.action";
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import {
   Filters,
@@ -16,9 +21,12 @@ import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
+import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
+import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
   EVENT_GTM_IMPRESSIONS_PLP,
   VUE_PAGE_VIEW,
@@ -27,34 +35,23 @@ import Event, {
 } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import isMobile from "Util/Mobile";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { getLocaleFromUrl } from "Util/Url/Url";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import Logger from "Util/Logger";
-import Algolia from "Util/API/provider/Algolia";
-import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
-
-import { setGender } from "Store/AppState/AppState.action";
-import { updateMeta } from "Store/Meta/Meta.action";
-import { changeNavigationState } from "Store/Navigation/Navigation.action";
-import { setPLPLoading, setLastTapItemOnHome } from "Store/PLP/PLP.action";
-import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
-import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
-import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import {
   updatePLPInitialFilters,
+  setPrevProductSku,
   setPrevPath,
   setBrandurl,
 } from "Store/PLP/PLP.action";
-
-import VueIntegrationQueries from "Query/vueIntegration.query";
-
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PLP from "./PLP.component";
-
-
+import isMobile from "Util/Mobile";
+import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Logger from "Util/Logger";
+import { isSignedIn } from "Util/Auth";
 export const BreadcrumbsDispatcher = import(
+  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
@@ -73,8 +70,6 @@ export const mapStateToProps = (state) => ({
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
-  catalogue_from_algolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -129,6 +124,7 @@ export class PLPContainer extends PureComponent {
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
+
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
   static getRequestOptions() {
@@ -225,6 +221,25 @@ export class PLPContainer extends PureComponent {
     let formattedData = data;
     let finalData = [];
     if (category === "categories_without_path") {
+      //   let categoryLevelArray = [
+      //     "categories.level1",
+      //     "categories.level2",
+      //     "categories.level3",
+      //     "categories.level4",
+      //   ];
+      //   let categoryLevel;
+      //   categoryLevelArray.map((entry, index) => {
+      //     if (initialOptions[entry]) {
+      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
+      //     }
+      //   });
+      //   if (categoryLevel) {
+      //     if (data[categoryLevel]) {
+      //       formattedData = data[categoryLevel].subcategories;
+      //     } else {
+      //       formattedData = data[Object.keys(data)[0]].subcategories;
+      //     }
+      //   } else {
       let categoryArray = initialOptions["categories_without_path"]
         ? initialOptions["categories_without_path"].split(",")
         : [];
@@ -239,6 +254,7 @@ export class PLPContainer extends PureComponent {
         });
       });
       formattedData = finalData;
+      //   }
     }
 
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
@@ -259,7 +275,6 @@ export class PLPContainer extends PureComponent {
 
     return mappedData;
   }
-
   constructor(props) {
     super(props);
     let prevLocation;
@@ -284,6 +299,7 @@ export class PLPContainer extends PureComponent {
       }
     });
     if (this.getIsLoading()) {
+      // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
     }
     this.setMetaData();
@@ -361,10 +377,9 @@ export class PLPContainer extends PureComponent {
     });
     this.setState({ categoryloaded: false });
   }
-
   componentDidMount() {
-    const { menuCategories = [], prevPath = null,
-      impressions, catalogue_from_algolia } = this.props;
+    const { menuCategories = [], prevPath = null, impressions } = this.props;
+    const { isArabic, categoryloaded } = this.state;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -388,9 +403,7 @@ export class PLPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
     }
-    catalogue_from_algolia
-      ? this.getBrandDetailsByAloglia()
-      : this.getBrandDetailsByCatalogueApi()
+    this.getBrandDetails();
   }
 
   getCategory() {
@@ -487,7 +500,7 @@ export class PLPContainer extends PureComponent {
     isQuickFilters
   ) {
     const { activeFilters } = this.state;
-    const { filters, updatePLPInitialFilters } = this.props;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
     if (initialFacetKey.includes("size")) {
@@ -690,31 +703,6 @@ export class PLPContainer extends PureComponent {
 
   async getBrandDetails() {
     const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
-    const brandName = location.pathname
-      .split(".html")[0]
-      .substring(1)
-      .split("/")?.[0];
-    if (exceptionalBrand.includes(brandName)) {
-      return null;
-    }
-    try {
-      getBrandInfoByName(brandName).then((resp) => {
-        this.setState({
-          brandDescription: isArabic()
-            ? resp?.result[0]?.description_ar
-            : resp?.result[0]?.description,
-          brandImg: resp?.result[0]?.image,
-          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
-        });
-        this.props.setBrandurl(resp?.result[0]?.url_path);
-      })
-    } catch (err) {
-      console.error("There is an issue while fetching brand information.", err);
-    }
-  }
-
-  async getBrandDetailsByAloglia() {
-    const exceptionalBrand = ['men', 'women', 'kids', 'home']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
