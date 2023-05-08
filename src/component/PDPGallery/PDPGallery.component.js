@@ -579,9 +579,7 @@ class PDPGallery extends PureComponent {
       const response = await fetch(gallery_images[0], {
         mode: "no-cors",
       });
-      console.log("Response", response);
       const blob = await response.blob();
-      console.log("Blob", blob);
       const productData = {
         title: document.title,
         text: `Hey check this out: ${document.title}`,
@@ -592,12 +590,11 @@ class PDPGallery extends PureComponent {
           }),
         ],
       };
-      if (navigator.share) {
+      if (navigator.share && navigator.canShare(productData)) {
         try {
           await navigator.share(productData);
         } catch (err) {
-          this.copyToClipboard();
-          alert("ERROR 111: ", err);
+          console.log("ERROR", err);
         }
       } else {
         this.copyToClipboard();
@@ -628,7 +625,7 @@ class PDPGallery extends PureComponent {
             <div block="OverlayIcons" mods={{ isArabic }}>
               {this.renderCartIcon()}
               {this.renderWishlistIcon()}
-              {this.renderShareButton()}
+              {isMobile.any() && this.renderShareButton()}
             </div>
           </>
         )}
