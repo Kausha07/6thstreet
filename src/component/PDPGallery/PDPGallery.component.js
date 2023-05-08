@@ -579,10 +579,12 @@ class PDPGallery extends PureComponent {
       const response = await fetch(gallery_images[0], {
         mode: "no-cors",
       });
+      console.log("Response", response);
       const blob = await response.blob();
+      console.log("Blob", blob);
       const productData = {
         title: document.title,
-        text: `Hey check this out: <br/>${name}<br/>`,
+        text: `Hey check this out: ${document.title}`,
         url: url,
         files: [
           new File([blob], "file.jpg", {
@@ -592,7 +594,7 @@ class PDPGallery extends PureComponent {
       };
       if (navigator.share) {
         try {
-           await navigator.share(productData);
+          await navigator.share(productData);
         } catch (err) {
           this.copyToClipboard();
           alert("ERROR 111: ", err);
