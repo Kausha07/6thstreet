@@ -29,16 +29,8 @@ import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
-import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
-import { getLocaleFromUrl } from "Util/Url/Url";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
-import { isSignedIn } from "Util/Auth";
-import CatalogueAPI from "Util/API/provider/CatalogueAPI";
-import { getLocaleFromUrl } from "Util/Url/Url";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import Logger from "Util/Logger";
 import Algolia from "Util/API/provider/Algolia";
 import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
 
@@ -721,7 +713,7 @@ export class PLPContainer extends PureComponent {
   }
 
   async getBrandDetailsByAloglia() {
-    const exceptionalBrand = ['men', 'women', 'kids', 'home']
+    const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
