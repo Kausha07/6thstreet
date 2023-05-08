@@ -1,17 +1,18 @@
-import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 
-import { Product } from "Util/API/endpoint/Product/Product.type";
+import PropTypes from "prop-types";
 
-import PDPSummary from "./PDPSummary.component";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import { setBrandInfoData } from "Store/PDP/PDP.action";
-
-import Algolia from "Util/API/provider/Algolia";
-import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+
+import { Product } from "Util/API/endpoint/Product/Product.type";
+import Algolia from "Util/API/provider/Algolia";
+import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
+
+import PDPSummary from "./PDPSummary.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -19,27 +20,28 @@ export const mapStateToProps = (state) => ({
   brand_url: state.PLP.brand_url,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   eddResponse: state.MyAccountReducer.eddResponse,
-  intlEddResponse:state.MyAccountReducer.intlEddResponse,
+  intlEddResponse: state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
   brandButtonClick: state.PDP.brandButtonClick,
+  catalogue_from_algolia:
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
-  setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
+  setEddResponse: (response, request) => _dispatch(setEddResponse(response, request)),
   setBrandInfoData: (data) => _dispatch(setBrandInfoData(data)),
   clickBrandButton: (brandButtonClick) =>
     PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
 });
+
 export class PDPSummaryContainer extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     isLoading: PropTypes.bool.isRequired,
   };
-
-  containerFunctions = {};
 
   containerProps = () => {
     const {
@@ -74,11 +76,14 @@ export class PDPSummaryContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.getBrandDetails = this.getBrandDetails.bind(this);
-    
     this.state = {
-      url_path: ""
+      url_path: "",
+      isFetchFromAlgolia: this.props.catalogue_from_algolia
     }
+    this.getBrandDetails =
+      this.props.catalogue_from_algolia
+        ? this.getBrandDetailsByAlgolia.bind(this)
+        : this.getBrandDetailsCatalogueAPI.bind(this);
   }
 
   componentDidMount() {
@@ -94,25 +99,43 @@ export class PDPSummaryContainer extends PureComponent {
     clickBrandButton(true);
   }
 
-  async getBrandDetails() {
+  async getBrandDetailsCatalogueAPI() {
     const { product: { brand_name }, setBrandInfoData } = this.props;
-    if(brand_name) {
+    if (brand_name) {
       try {
-      const data = await new Algolia({
-        index: "brands_info",
-      })
-        .getBrandsDetails({
-          query: brand_name,
-          limit: 1,
+        getBrandInfoByName(brand_name).then((resp)=>{
+          if(resp?.success && resp?.result != null ) {
+            setBrandInfoData(resp?.result[0].url_path)
+            this.setState({
+              url_path: resp?.result[0].url_path
+            });
+          }
+        })
+      } catch (err) {
+        console.error("There is an issue while fetching brand information.",err);
+      }
+    }
+  }
+
+  async getBrandDetailsByAlgolia() {
+    const { product: { brand_name }, setBrandInfoData } = this.props;
+    if (brand_name) {
+      try {
+        const data = await new Algolia({
+          index: "brands_info",
+        })
+          .getBrandsDetails({
+            query: brand_name,
+            limit: 1,
+          });
+        setBrandInfoData(data?.hits[0]?.url_path)
+        this.setState({
+          url_path: data?.hits[0]?.url_path
         });
-      setBrandInfoData(data?.hits[0]?.url_path)
-      this.setState({
-        url_path: data?.hits[0]?.url_path
-      });
-    }
-    catch (err) {
-      console.error(err);
-    }
+      }
+      catch (err) {
+        console.error("There is an issue while fetching brand information.",err);
+      }
     }
   }
 
@@ -120,7 +143,6 @@ export class PDPSummaryContainer extends PureComponent {
     const { url_path } = this.state;
     return (
       <PDPSummary
-        {...this.containerFunctions}
         {...this.containerProps()}
         url_path={url_path}
         brandNameclick={ this.brandNameclick }
