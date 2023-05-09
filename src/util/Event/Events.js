@@ -289,3 +289,4 @@
  
 // Checkout Errors Tracking Event
 export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
+export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
