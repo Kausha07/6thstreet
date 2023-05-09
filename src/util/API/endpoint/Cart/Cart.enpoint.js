@@ -53,3 +53,8 @@ export const removeCouponCode = ({ cartId, couponCode }) =>
 
 export const removeCart = ({ cartId }) =>
   MobileAPI.delete(`/carts2/${cartId}`) || {};
+
+export const removeBulk = (cartId, items=[]) => 
+  MobileAPI.post(`/carts2/${cartId}/items/remove/bulk`, {
+    items: items
+  }) || {}

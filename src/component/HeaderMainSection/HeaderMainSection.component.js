@@ -715,6 +715,7 @@ class HeaderMainSection extends NavigationAbstract {
                   src={searchIcon}
                   alt="searchIcon"
                   mods={{ isArabic }}
+                  onClick={this.onSubmit}
                 />
               </div>
               <div onClick={this.SearchFieldClick}>
