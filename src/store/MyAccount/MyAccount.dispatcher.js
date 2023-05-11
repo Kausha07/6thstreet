@@ -50,7 +50,12 @@ import {
 } from "Util/Auth";
 import { getStore } from "Store";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
+import Event, {
+  EVENT_GTM_GENERAL_INIT,
+  VUE_PAGE_VIEW,
+  MOE_AddUniqueID,
+  MOE_destroySession,
+} from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
@@ -59,6 +64,7 @@ import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import { isArabic } from "Util/App";
 import { sha256 } from "js-sha256";
 import { getCookie } from "Util/Url/Url";
+import { showNotification } from "Store/Notification/Notification.action";
 export {
   CUSTOMER,
   ONE_MONTH_IN_SECONDS,
@@ -99,7 +105,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     return { finalArea, finalCity };
   };
   setEDDresultData = (response, finalRes, dispatch, login) => {
-    if (Object.values(response.data).length > 0 && finalRes.length > 0) {
+    if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
           return address.default_shipping === true;
@@ -280,6 +286,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     // dispatch(updateGuestUserEmail(""));
     deleteAuthorizationToken();
     deleteMobileAuthorizationToken();
+    dispatch(showNotification("success", __("You have been logged out")));
     dispatch(setCartId(null));
     dispatch(removeCartItems());
     dispatch(setCustomerDefaultShippingAddress(null));
@@ -300,7 +307,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(setClubApparel(getClubApparelInitialState()));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
-    Moengage.destroy_session();
+    MOE_destroySession();
 
     //after logout dispatching custom event
     const loginEvent = new CustomEvent("userLogout");
@@ -419,7 +426,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
     if (user?.email) {
-      Moengage.add_unique_user_id(user?.email);
+      MOE_AddUniqueID(user?.email);
     }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
@@ -460,7 +467,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           }
       );
     if (options?.email){
-       Moengage.add_unique_user_id(options?.email);
+       MOE_AddUniqueID(options?.email);
     }
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",

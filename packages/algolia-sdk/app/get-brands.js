@@ -1,35 +1,29 @@
 import { searchParams } from "./config";
-
 export default function getBrands(gender = "", options = {}) {
-  const { index } = options;
+  const { index, client, env } = options;
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
-    newSearchParams.hitsPerPage = 0;
-    newSearchParams.facets = ["brand_name", "url"];
-    newSearchParams.facetFilters = [[`gender: ${gender}`]];
+    const queries = [];
+    if (gender === "Boy,Girl" || gender === "أولاد,بنات") {
+      newSearchParams.facetFilters = [
+        [`gender: ${gender.split(",")[0]}`],
+        [`gender: ${gender.split(",")[1]}`],
+        [`in_stock:1`]
+      ];
+    } else {
+      newSearchParams.facetFilters = [[`gender: ${gender}`],[`in_stock:1`]];
+    }
 
-    index.search({ query: "", ...newSearchParams }, (err, data = {}) => {
+    queries.push({
+      indexName: index.indexName,
+      params: newSearchParams
+    });
+    client.search(queries, (err, res = {}) => {
+      const brands = res?.results[0]?.facets["brand_name"];
       if (err) {
         return reject(err);
       }
-      const brandNamesObj = data.facets.brand_name;
-      let brands = [];
-
-      if (!brandNamesObj) {
-        return resolve({ data: brands });
-      }
-
-      Object.keys(brandNamesObj).forEach((item) => {
-        brands = [
-          ...brands,
-          {
-            name: item,
-            count: brandNamesObj[item],
-          },
-        ];
-      });
-
-      return resolve({ data: brands });
+      return resolve({ data: brands ? Object.keys(brands) : [] });
     });
   });
 }

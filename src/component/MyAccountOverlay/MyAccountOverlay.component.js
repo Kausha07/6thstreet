@@ -54,6 +54,7 @@ import {
   EVENT_FORGOT_PASSWORD_CLICK,
   EVENT_LOGIN_DETAILS_ENTERED,
   EVENT_REGISTERATION_DETAILS_ENTERED,
+  MOE_trackEvent
 } from "Util/Event";
 import "./MyAccountOverlay.style";
 
@@ -212,7 +213,7 @@ export class MyAccountOverlay extends PureComponent {
     }
   }
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

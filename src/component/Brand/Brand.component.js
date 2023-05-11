@@ -5,7 +5,7 @@ import { Brand as BrandType } from "Util/API/endpoint/Brands/Brands.type";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import "./Brand.style";
-import { EVENT_MOE_GO_TO_BRAND } from "Util/Event";
+import { EVENT_MOE_GO_TO_BRAND, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -33,7 +33,7 @@ class Brand extends PureComponent {
   
   sendMoeEvent(brandName) {
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_GO_TO_BRAND, {
+    MOE_trackEvent(EVENT_MOE_GO_TO_BRAND, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brandName || "",
@@ -56,11 +56,11 @@ class Brand extends PureComponent {
     if (type) {
       if (type === "kids") {
         requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
-      } else if (type === "النساء") {
+      } else if (type === "نساء") {
         requestedGender = "نساء";
-      } else if (type === "الرجال") {
+      } else if (type === "رجال") {
         requestedGender = "رجال";
-      } else if (type === "الأطفال") {
+      } else if (type === "أطفال") {
         requestedGender = "أولاد,بنات";
       } else {
         requestedGender = type;
@@ -68,22 +68,22 @@ class Brand extends PureComponent {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brandName)}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
     }
 
     return (

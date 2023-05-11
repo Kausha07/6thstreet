@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK } from "Util/Event";
+import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -365,7 +365,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     
-    Moengage.track_event(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
@@ -511,7 +511,7 @@ class PLPFilters extends PureComponent {
             if (filter[0] === "sizes") {
               const mappedData = Object.entries(data).reduce((acc, size) => {
                 const { subcategories } = size[1];
-                const mappedSizeData = PLPContainer.mapData(
+                const mappedSizeData = PLPContainer?.mapData(
                   subcategories,
                   filter[0],
                   this.props
@@ -526,7 +526,7 @@ class PLPFilters extends PureComponent {
             } else {
               acc = {
                 ...acc,
-                [filter[0]]: PLPContainer.mapData(data, filter[0], this.props),
+                [filter[0]]: PLPContainer?.mapData(data, filter[0], this.props),
               };
             }
           }
@@ -694,12 +694,23 @@ class PLPFilters extends PureComponent {
     );
   }
 
+  sendMoeEvents = () => {
+
+    MOE_trackEvent(EVENT_PLP_SORT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+
+    Event.dispatch(EVENT_GTM_SORT,EVENT_PLP_SORT);
+  }
+
   renderSortBy = ([key, filter], index) => {
     const { activeFilter, isReset, activeFilters, defaultFilters, isArabic } =
       this.state;
     const { handleCallback, filters } = this.props;
     return (
-      <div block="SortBy" key={index} mods={{ isArabic }}>
+      <div block="SortBy" key={index} mods={{ isArabic }} onClick={this.sendMoeEvents}>
         <PLPFilter
           key={key}
           filter={filter}
@@ -816,10 +827,10 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount, filters } = this.props;
+    const { productsCount, filters, gender } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-    const category_title = this.renderCatPath().split("///").pop();
+    const category_title = gender !== "influencer" && this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
         <div id="productFilterScroll" block="Products" elem={this.state.fixFilter ? "FixScroll" : "Scroll"}>
@@ -856,7 +867,7 @@ class PLPFilters extends PureComponent {
               {this.renderFilters()}
             </form>
           )}
-          {isMobile.any() && (
+          {gender !== "influencer" && isMobile.any() && (
             <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
               <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
                 {this.renderQuickFilters()}

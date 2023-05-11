@@ -61,9 +61,12 @@ import Event, {
   EVENT_OTP_VERIFY_FAILED,
   EVENT_RESET_YOUR_PASSWORD_SUCCESS,
   EVENT_RESET_YOUR_PASSWORD_FAILED,
-  EVENT_FORGOT_PASSWORD_SCREEN_VIEW,
   EVENT_FORGOT_PASSWORD_SUCCESS_SCREEN_VIEW,
   EVENT_ACCOUNT_TAB_ICON,
+  MOE_AddFirstName,
+  MOE_addLastName,
+  MOE_addEmail,
+  MOE_addMobile,
 } from "Util/Event";
 
 export const MyAccountDispatcher = import(
@@ -201,10 +204,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       stateToBeUpdated.state = STATE_LOGGED_IN;
     }
 
-    if (myAccountState === STATE_LOGGED_IN && !isSignedIn) {
-      stateToBeUpdated.state = STATE_SIGN_IN;
-      showNotification("success", __("You are successfully logged out!"));
-    }
 
     if (isPasswordForgotSend !== currentIsPasswordForgotSend) {
       stateToBeUpdated.isLoading = false;
@@ -267,15 +266,21 @@ export class MyAccountOverlayContainer extends PureComponent {
       setHeaderState,
       isPasswordForgotSend,
       showMyAccountMenuPopUp,
+      showRegisterScreen,
     } = props;
 
     const {
       location: { pathname, state: { isForgotPassword } = {} },
     } = history;
 
-    const getDeviceState = showMyAccountMenuPopUp
-      ? STATE_INITIAL_LINKS
-      : STATE_SIGN_IN;
+    let getDeviceState;
+    if (showMyAccountMenuPopUp) {
+      getDeviceState = STATE_INITIAL_LINKS;
+    } else if (showRegisterScreen) {
+      getDeviceState = STATE_CREATE_ACCOUNT;
+    } else {
+      getDeviceState = STATE_SIGN_IN;
+    }
 
     const state = {
       state: getDeviceState,
@@ -288,9 +293,10 @@ export class MyAccountOverlayContainer extends PureComponent {
       OTP: undefined,
       shouldRedirectToMyOrders: false,
       shouldRedirectToMyReturns: false,
+      shouldRedirectToMyWishlist: false,
       otpAttempt: 1,
       prevOverlayState: "",
-      currentOverlayState:"",
+      currentOverlayState: "",
     };
 
     // if customer got here from forgot-password
@@ -351,7 +357,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     return (currentRouteName || "").toLowerCase();
   }
 
-  sendEvents(event, data={}) {
+  sendEvents(event, data = {}) {
     const { prevOverlayState, currentOverlayState, customerRegisterData } =
       this.state;
     const screenName =
@@ -385,7 +391,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     try {
       await signIn(fields);
       onSignIn();
-      const eventAdditionalData ={mode : "Email", isPhone: false}
+      const eventAdditionalData = { mode: "Email", isPhone: false };
       this.sendEvents(EVENT_LOGIN, eventAdditionalData);
       this.checkForOrder();
     } catch (e) {
@@ -398,13 +404,16 @@ export class MyAccountOverlayContainer extends PureComponent {
 
   checkForOrder() {
     const orderId = BrowserDatabase.getItem("ORDER_ID") || null;
-    const { shouldRedirectToMyOrders, shouldRedirectToMyReturns } = this.state;
+    const { shouldRedirectToMyOrders, shouldRedirectToMyReturns, shouldRedirectToMyWishlist } = this.state;
     const { redirectToMyOrdersPage } = this.props;
     if (shouldRedirectToMyOrders || redirectToMyOrdersPage) {
       history.push(`/my-account/my-orders`);
     }
     if (shouldRedirectToMyReturns) {
       history.push(`/my-account/return-item`);
+    }
+    if(shouldRedirectToMyWishlist){
+      history.push(`/my-account/my-wishlist`);
     }
 
     if (orderId) {
@@ -563,25 +572,32 @@ export class MyAccountOverlayContainer extends PureComponent {
                 ? customerRegisterData?.contact_no
                 : "",
             };
-            if(customerRegisterData?.name){
-              const firstName = customerRegisterData.name.indexOf(" ") > 0
-              ? customerRegisterData.name.substr(0, customerRegisterData.name.indexOf(" "))
-              : customerRegisterData.name;
-              const lastName = customerRegisterData?.name.indexOf(" ") > 0
-              ? customerRegisterData?.name.substr(customerRegisterData?.name.indexOf(" ") + 1)
-              : "";
-              if (firstName){
-                Moengage.add_first_name(firstName);
+            if (customerRegisterData?.name) {
+              const firstName =
+                customerRegisterData.name.indexOf(" ") > 0
+                  ? customerRegisterData.name.substr(
+                      0,
+                      customerRegisterData.name.indexOf(" ")
+                    )
+                  : customerRegisterData.name;
+              const lastName =
+                customerRegisterData?.name.indexOf(" ") > 0
+                  ? customerRegisterData?.name.substr(
+                      customerRegisterData?.name.indexOf(" ") + 1
+                    )
+                  : "";
+              if (firstName) {
+                MOE_AddFirstName(firstName);
               }
-              if (lastName){
-                Moengage.add_last_name(lastName);
+              if (lastName) {
+                MOE_addLastName(lastName);
               }
             }
-            if(customerRegisterData?.contact_no){
-              Moengage.add_mobile(customerRegisterData.contact_no);
+            if (customerRegisterData?.contact_no) {
+              MOE_addMobile(customerRegisterData.contact_no);
             }
-            if(customerRegisterData?.email){
-              Moengage.add_email(customerRegisterData.email);
+            if (customerRegisterData?.email) {
+              MOE_addEmail(customerRegisterData.email);
             }
             this.sendEvents(EVENT_REGISTER, eventAdditionalData);
           }
@@ -757,11 +773,11 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onForgotPasswordSuccess(fields) {
-    const { forgotPassword, showNotification,sendEvents } = this.props;
+    const { forgotPassword, showNotification, sendEvents } = this.props;
 
     forgotPassword(fields).then((res) => {
       if (typeof res === "string") {
-        const eventAdditionalData = {failedReason: res};
+        const eventAdditionalData = { failedReason: res };
         showNotification("error", __(res));
         this.stopLoading();
         this.sendEvents(EVENT_RESET_YOUR_PASSWORD_FAILED, eventAdditionalData);
@@ -801,7 +817,6 @@ export class MyAccountOverlayContainer extends PureComponent {
       title: __("Forgot password"),
       onBackClick: () => this.handleSignIn(e),
     });
-    this.sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
   }
 
   handleSignIn(e) {
@@ -854,6 +869,11 @@ export class MyAccountOverlayContainer extends PureComponent {
     if (redirectTo && redirectTo === "RedirectToMyReturns") {
       this.setState({
         shouldRedirectToMyReturns: true,
+      });
+    }
+    if (redirectTo && redirectTo === "RedirectToMyWishlist") {
+      this.setState({
+        shouldRedirectToMyWishlist: true,
       });
     }
   }

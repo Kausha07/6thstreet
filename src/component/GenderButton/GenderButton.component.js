@@ -2,6 +2,7 @@ import Link from "@scandipwa/scandipwa/src/component/Link/Link.component";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { MixType } from "Type/Common";
+
 import "./GenderButton.style";
 
 class GenderButton extends PureComponent {
@@ -14,6 +15,7 @@ class GenderButton extends PureComponent {
     urlKey: PropTypes.string.isRequired,
     isUnsetStyle: PropTypes.bool.isRequired,
     mix: MixType,
+    icon: PropTypes.instanceOf(Element)
   };
 
   static defaultProps = {
@@ -30,12 +32,13 @@ class GenderButton extends PureComponent {
       label,
       urlKey,
       isUnsetStyle,
+      icon
     } = this.props;
 
     if (!urlKey) {
       return null;
     }
-    if(urlKey ==="all"){
+    if (urlKey === "all") {
       return (
         <Link
           block="GenderButton"
@@ -43,6 +46,7 @@ class GenderButton extends PureComponent {
           name={label}
           to={`/`}
         >
+          {icon ? icon : <></>}
           <button
             mix={mix}
             name={label}
@@ -66,6 +70,7 @@ class GenderButton extends PureComponent {
         name={label}
         to={`/${urlKey.toLowerCase()}.html`}
       >
+        {icon ? icon : <></>}
         <button
           mix={mix}
           name={label}

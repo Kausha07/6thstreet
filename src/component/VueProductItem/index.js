@@ -24,6 +24,7 @@ import {
     EVENT_GTM_PRODUCT_CLICK,
     SELECT_ITEM_ALGOLIA,
     EVENT_MOE_PRODUCT_CLICK,
+    MOE_trackEvent
   } from "Util/Event";
   import "./ProductItem.style";
   import { setPrevPath } from "Store/PLP/PLP.action";
@@ -31,7 +32,7 @@ import {
   import { withRouter } from "react-router";
   import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
   import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-  
+  import { isSignedIn } from "Util/Auth";
   //Global Variable for PLP AddToCart
   var urlWithQueryID;
   export const mapStateToProps = (state) => ({
@@ -196,7 +197,7 @@ import {
         });
       }
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
+      MOE_trackEvent(EVENT_MOE_PRODUCT_CLICK, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -212,6 +213,7 @@ import {
         discounted_price: itemPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name,
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       // this.sendBannerClickImpression(product);

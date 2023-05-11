@@ -5,6 +5,7 @@ import Event, {
   EVENT_PHONE,
   EVENT_MAIL,
   EVENT_GTM_CUSTOMER_SUPPORT,
+  MOE_trackEvent
 } from "Util/Event";
 import "./FooterCustomerSupport.style";
 
@@ -40,7 +41,7 @@ class FooterCustomerSupport extends PureComponent {
 
   renderPhone = () => {
     const { isPhoneSupported, phone } = this.props;
-
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
     if (!isPhoneSupported) {
       return null;
     }
@@ -49,7 +50,7 @@ class FooterCustomerSupport extends PureComponent {
       <a
         block="FooterCustomerSupport"
         elem="Phone"
-        href={`tel:${phone}`}
+        href={`tel:${updatedPhoneLink}`}
         onClick={() => {
           this.sendEvents(EVENT_PHONE);
         }}
@@ -74,7 +75,7 @@ class FooterCustomerSupport extends PureComponent {
     );
   }
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

@@ -31,6 +31,9 @@
                     justify-content: center;
                     width: 33.33%;
                     height: auto;
+                    &:last-child {
+                      display: none;
+                    }
 
                     .GenderButton-Button {
                         height: 30px;

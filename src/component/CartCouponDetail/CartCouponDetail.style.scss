@@ -72,6 +72,10 @@
             }
             &_isArabic {
                 float: left;
+                &:before {
+                    top: -10px;
+                    right: -15px;
+                }
             }
         }
         .couponItemName {

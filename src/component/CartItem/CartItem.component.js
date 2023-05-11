@@ -414,7 +414,7 @@ export class CartItem extends PureComponent {
     const {
       eddResponse,
       edd_info,
-      item: { extension_attributes, brand_name = "", sku },
+      item: { extension_attributes, brand_name = "", sku, international_vendor=null },
       intlEddResponse,
     } = this.props;
     const { isArabic } = this.state;
@@ -429,6 +429,7 @@ export class CartItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
+
     let itemEddMessage = extension_attributes && extension_attributes?.click_to_collect_store
         ? DEFAULT_READY_MESSAGE
         : DEFAULT_MESSAGE;
@@ -459,7 +460,7 @@ export class CartItem extends PureComponent {
         edd_info &&
         edd_info.has_cross_border_enabled;
       const intlEddObj = intlEddResponse["cart"]?.find(
-        ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+        ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
       const intlEddMess = intlEddObj
         ? isArabic
@@ -472,6 +473,7 @@ export class CartItem extends PureComponent {
         : "";
 
       if (eddResponse && isObject(eddResponse)) {
+
         if (isIntlBrand) {
           actualEddMess = intlEddMess;
         } else {
@@ -547,6 +549,7 @@ export class CartItem extends PureComponent {
         customizable_options,
         bundle_options,
         full_item_info: { cross_border = 0 },
+        international_vendor = null,
         brand_name = "",
         row_total,
       },
@@ -554,8 +557,7 @@ export class CartItem extends PureComponent {
     } = this.props;
     const { isNotAvailble, isArabic } = this.state;
     const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
-        cross_border === 1) &&
+      (cross_border === 1) &&
       edd_info &&
       edd_info.has_cross_border_enabled;
 

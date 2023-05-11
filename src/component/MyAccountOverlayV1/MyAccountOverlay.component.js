@@ -32,6 +32,7 @@ import {
 } from "Component/Icons";
 import OrdersIcon from "./icons/cat-menu.svg";
 import ReturnIcon from "./icons/return.svg";
+import HeartIcon from "./icons/heart-regular.svg";
 import { ThreeDots, Oval } from "react-loader-spinner";
 import MyAccountAutoDetectOTP from "./MyAccountAutoDetectOTP";
 import { isArabic } from "Util/App";
@@ -60,6 +61,7 @@ import {
   EVENT_RESEND_OTP_CLICK,
   EVENT_OTP_VERIFY_WITH_EMAIL,
   EVENT_OTP_VERIFY_WITH_PHONE,
+  EVENT_FORGOT_PASSWORD_SCREEN_VIEW,
 } from "Util/Event";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
@@ -147,6 +149,10 @@ export class MyAccountOverlay extends PureComponent {
     otpAttempt: 1,
     registerDetailsEntered: false,
     emailFromCheckoutPage: null,
+    phoneInSignin: null,
+    currentPhoneCodeCountry: null,
+    currentScreen: "",
+    prevScreen: "",
   };
 
   componentDidMount() {
@@ -189,8 +195,10 @@ export class MyAccountOverlay extends PureComponent {
       this.OtpTimerFunction();
     }
     setCurrentOverlayState(this.props?.state);
+    this.setState({ currentScreen: this.props?.state });
     if (prevProps.state !== this.props.state) {
       setPrevScreenState(prevProps.state);
+      this.setState({ prevScreen: prevProps.state });
     }
   }
 
@@ -426,8 +434,15 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       sendEvents,
     } = this.props;
-    const { isForgotValidated } = this.state;
+    const { isForgotValidated, currentScreen, prevScreen } = this.state;
     this.setState({ isSignInValidated: false });
+    if (
+      currentScreen == STATE_FORGOT_PASSWORD &&
+      prevScreen !== STATE_FORGOT_PASSWORD
+    ) {
+      sendEvents(EVENT_FORGOT_PASSWORD_SCREEN_VIEW);
+    }
+
     return (
       <Form
         key="forgot-password"
@@ -488,7 +503,7 @@ export class MyAccountOverlay extends PureComponent {
       updateOTP,
       OTP,
       sendOTPOnMailOrPhone,
-      sendEvents
+      sendEvents,
     } = this.props;
     const {
       isArabic,
@@ -513,6 +528,7 @@ export class MyAccountOverlay extends PureComponent {
         emailFromCheckoutPage: null,
       });
     }
+    this.setState({ phoneInSignin: false });
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
         <MyAccountAutoDetectOTP updateOTP={updateOTP} />
@@ -787,11 +803,11 @@ export class MyAccountOverlay extends PureComponent {
                 }
               />
               <Field
-                type="phone"
+                type="text"
                 placeholder={__("PHONE NUMBER*")}
                 id="phone"
                 name="phone"
-                autoComplete="phone"
+                autoComplete="off"
                 maxLength={this.getUserIdentifierCreateMaxLength()}
                 validation={[
                   "notEmpty",
@@ -816,8 +832,12 @@ export class MyAccountOverlay extends PureComponent {
               id="fullname"
               name="fullname"
               autoComplete="fullname"
-              validation={["notEmpty"]}
+              validation={[
+                "notEmpty",
+                "onlyCharacters",
+              ]}
               onFocus={() => sendEvents(EVENT_TYPE_NAME)}
+              maxLength= {50}
             />
           </fieldset>
           <fieldset block="MyAccountOverlayV1" elem="Gender">
@@ -868,12 +888,7 @@ export class MyAccountOverlay extends PureComponent {
               name="password"
               autoComplete="new-password"
               onFocus={() => sendEvents(EVENT_TYPE_PASSWORD)}
-              validation={[
-                "notEmpty",
-                "password",
-                "containNumber",
-                "containCapitalize",
-              ]}
+              validation={["notEmpty", "password"]}
             />
           </fieldset>
           <div
@@ -915,6 +930,10 @@ export class MyAccountOverlay extends PureComponent {
     if (!ENABLE_OTP_LOGIN) {
       return;
     }
+
+    this.setState({
+      phoneInSignin: value,
+    });
 
     const customerCountry = Object.keys(PHONE_CODES).find(
       (key) => PHONE_CODES[key] === countryCode
@@ -989,18 +1008,6 @@ export class MyAccountOverlay extends PureComponent {
     return [];
   }
 
-  getUserIdentifierMaxLength() {
-    const { countryCode, isOTP } = this.state;
-    if (!ENABLE_OTP_LOGIN || !isOTP) {
-      return null;
-    }
-    const customerCountry = Object.keys(PHONE_CODES).find(
-      (key) => PHONE_CODES[key] === countryCode
-    );
-
-    return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
-  }
-
   getUserIdentifierCreateMaxLength() {
     const { countryCode } = this.state;
 
@@ -1073,6 +1080,26 @@ export class MyAccountOverlay extends PureComponent {
                   className="options-icon"
                 />
                 <span className="link-text">{__("Return/Exchange")}</span>
+              </div>
+              <div className="icon-forward">
+                {isArabic ? <ChevronLeft /> : <ChevronRight />}
+              </div>
+            </a>
+          </li>
+          <li
+            className="MyAccountTabListItem hover-list-item"
+            onClick={() => {
+              updateAccountViewState(STATE_SIGN_IN, "RedirectToMyWishlist");
+            }}
+          >
+            <a className="list-item-link">
+              <div className="item-pill">
+                <Image
+                  lazyLoad={true}
+                  src={HeartIcon}
+                  className="options-icon"
+                />
+                <span className="link-text">{__("My Wishlist")}</span>
               </div>
               <div className="icon-forward">
                 {isArabic ? <ChevronLeft /> : <ChevronRight />}
@@ -1202,11 +1229,31 @@ export class MyAccountOverlay extends PureComponent {
             {isOTP && ENABLE_OTP_LOGIN && (
               <PhoneCountryCodeField
                 label={countryLabel}
-                onSelect={(value) =>
+                onSelect={(value) => {
                   this.setState({
                     countryCode: value,
-                  })
-                }
+                  });
+                  const customerCountry = Object.keys(PHONE_CODES).find(
+                    (key) => PHONE_CODES[key] === value
+                  );
+                  const validMobileLength = COUNTRY_CODES_FOR_PHONE_VALIDATION[
+                    customerCountry
+                  ]
+                    ? "9"
+                    : "8";
+                  this.setState({
+                    currentPhoneCodeCountry: customerCountry,
+                  });
+                  validMobileLength == this.state.phoneInSignin?.length
+                    ? this.setState({
+                        isSignInValidated: true,
+                      })
+                    : this.setState({
+                        isSignInValidated: false,
+                      });
+                }}
+                countryCode={countryCode}
+                currentPhoneCodeCountry={this.state.currentPhoneCodeCountry}
               />
             )}
             <Field
@@ -1222,7 +1269,7 @@ export class MyAccountOverlay extends PureComponent {
                   : this.state.emailFromCheckoutPage
               }
               autocomplete={ENABLE_OTP_LOGIN && isOTP ? "off" : "on"}
-              maxLength={this.getUserIdentifierMaxLength()}
+              maxLength={40}
               validation={["notEmpty", this.getValidationForUserIdentifier()]}
               onChange={this.setUserIdentifierType.bind(this)}
               onFocus={() => {
@@ -1291,7 +1338,7 @@ export class MyAccountOverlay extends PureComponent {
               block: "MyAccountOverlayV1",
               elem: isLoading ? "LoadingButton" : "",
             }}
-            onClick={() =>sendEvents(EVENT_SIGN_IN_BUTTON_CLICK)}
+            onClick={() => sendEvents(EVENT_SIGN_IN_BUTTON_CLICK)}
           >
             {!isLoading ? (
               __("Sign In")

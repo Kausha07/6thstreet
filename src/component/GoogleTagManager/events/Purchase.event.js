@@ -3,9 +3,10 @@ import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_PURCHASE_SUCCESS,
   EVENT_MOE_PURCHASE_SUCCESS_PRODUCT,
+  MOE_trackEvent
 } from "Util/Event";
 import { roundPrice } from "Util/Price";
-
+import { isSignedIn } from "Util/Auth";
 import ProductHelper from "../utils";
 import BaseEvent from "./Base.event";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -100,7 +101,7 @@ class PurchaseEvent extends BaseEvent {
         productCategory.push(productKeys?.category);
         productItemPrice.push(productKeys?.itemPrice);
 
-        Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS_PRODUCT, {
+        MOE_trackEvent(EVENT_MOE_PURCHASE_SUCCESS_PRODUCT, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           category: productKeys?.category
@@ -125,7 +126,7 @@ class PurchaseEvent extends BaseEvent {
         });
       });
 
-      Moengage.track_event(EVENT_MOE_PURCHASE_SUCCESS, {
+      MOE_trackEvent(EVENT_MOE_PURCHASE_SUCCESS, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category:
@@ -153,6 +154,7 @@ class PurchaseEvent extends BaseEvent {
         size_id: productSizeOption.length > 0 ? productSizeOption : "",
         size: productSizeValue.length > 0 ? productSizeValue : "",
         subcategory: productSubCategory.length > 0 ? productSubCategory : "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
         //shipping: "",
         //value: "",

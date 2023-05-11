@@ -1,11 +1,12 @@
 require('dotenv-flow').config();
 const express = require('express');
+const compression = require('compression')
 var serveStatic = require('serve-static')
 const serverTimings = require('server-timings');
 const cookieParser = require('cookie-parser');
 const proxy = require('./src/setupProxy');
 const path = require('path');
-
+const redirectPath = require('./redirectPath')
 const PORT = 3000;
 const app = express();
 function setCustomCacheControl(res, path) {
@@ -16,7 +17,7 @@ function setCustomCacheControl(res, path) {
     }
 
     else {
-        res.append('cache-control', 'public, max-age=259200, must-revalidate');
+        res.append('cache-control', 'max-age=31536000, public');
     }
     // Prevent Click-Jacking
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -30,7 +31,8 @@ function setCustomCacheControl(res, path) {
     // To convert http to https 'subDomains' to include subDomains also
     res.setHeader("Strict-Transport-Security", "max-age=15768000; includeSubDomains")
 }
-app.use(cookieParser())
+app.use(compression());
+app.use(cookieParser());
 app.use(serverTimings);
 proxy(app);
 
@@ -45,6 +47,9 @@ app.use(serveStatic(path.join(__dirname, 'build'), {
 app.get('*', (req, res) => {
     const { locale, gender="" } = req.cookies;
     const host =  !locale?"":process.env[`REACT_APP_HOST_${locale.replace("-", "_").toUpperCase()}`];
+    if(redirectPath.hasOwnProperty(req.path)){
+        return res.redirect(301, `${host}${redirectPath[req.path]}`);
+    }
     if(gender && req.path==="/"){
         return res.redirect(302, `${host}/${gender}`);
     }

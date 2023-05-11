@@ -1,0 +1,70 @@
+.subscriptionContainer {
+  margin-right: 80px;
+  width: 100%;
+
+  .subscriptionText {
+    height: 19px;
+    font-size: 14px;
+    font-family: "Avenir Next";
+    letter-spacing: -0.35px;
+    font-weight: 500;
+  }
+
+  .formContainer {
+    display: flex;
+    padding-top: 13px;
+    .emailContainer {
+      display: flex;
+      flex-direction: column;
+      .emailInput {
+        width: 291px;
+        height: 48px;
+        margin-right: 8px;
+        border-radius: 6px;
+        text-transform: none;
+
+        &:focus {
+          border: 1px solid black;
+        }
+      }
+      .arabicStyleInput {
+        margin-right: 0px;
+        margin-left: 8px;
+      }
+      .errorMsg {
+        padding-top: 10px;
+        display: flex;
+        gap: 3px;
+        color: red;
+        font-size: 13px;
+        .infoIcon {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+
+    .submitBtn {
+      background-color: black;
+      color: white;
+      text-transform: uppercase;
+      height: 48px;
+      font-size: 12px;
+      width: 104px;
+      border-radius: 6px;
+      .submit-animation {
+        width: 65px;
+        height: 34px;
+        margin: auto;
+      }
+    }
+    .disabledBtn {
+      background-color: gray;
+    }
+  }
+}
+
+.arabicStyleContainer {
+  margin-right: 0px;
+  margin-left: 80px;
+}

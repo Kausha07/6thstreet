@@ -3,3 +3,95 @@
         padding-right: 1.5rem;
     }
 }
+
+$select-width: 160px !default;
+$select-height: 45px !default;
+$select-option-height: 36px !default;
+$select-arrow-height: 6px !default;
+$select-arrow-width: 6px !default;
+
+:root {
+    --select-option-background: #fff;
+    --select-option-hover-background: #f0f0f0;
+}
+
+.FieldSelect {
+    cursor: pointer;
+
+    &::after {
+        content: '';
+        display: block;
+        width: $select-arrow-width;
+        height: $select-arrow-height;
+        transform: translateY(-2px) rotate(45deg);
+        pointer-events: inherit;
+
+        position: absolute;
+        right: 20px;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+
+        border-style: solid;
+        border-color: #000;
+        border-width: 0 1px 1px 0;
+    }
+
+    &_isExpanded::after {
+        @include desktop {
+            bottom: $select-arrow-height * 3/2;
+            transform: translateY(-2px) rotate(-135deg);
+        }
+    }
+
+    &-Select {
+        width: 100%;
+        min-width: 100%;
+        padding-right: 40px;
+        color: #0a0a0a;
+
+        @include desktop {
+            pointer-events: none;
+        }
+
+
+        &_isExpanded {
+            border-color: var(--input-color);
+        }
+    }
+
+
+
+    &-Options {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        left: 0;
+        z-index: 40;
+        border-width: 0 1px 1px;
+        border-style: solid;
+        border-color: transparent;
+
+        overflow-y: scroll;
+        transition: 200ms max-height;
+        will-change: max-height;
+        max-height: 0;
+        -webkit-overflow-scrolling: touch;
+
+        &_isExpanded {
+            @include desktop {
+                max-height: 200px;
+                border-color: var(--input-border-color);
+            }
+        }
+    }
+
+}
+
+.removeZIndex {
+    z-index: 0 !important;
+}
+
+.selectCityArea {
+    cursor: pointer;
+}

@@ -13,7 +13,9 @@ import Image from "Component/Image";
 import Event, {
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_GO_TO_SEARCH,
+  MOE_trackEvent
 } from "Util/Event";
+import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const URL_REWRITE = "url-rewrite";
@@ -77,10 +79,11 @@ class HeaderSearch extends PureComponent {
 
     if (showSearch && !prevShowSearch) {
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
-      Moengage.track_event(EVENT_GTM_GO_TO_SEARCH, {
+      MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
     }
@@ -154,7 +157,7 @@ class HeaderSearch extends PureComponent {
       sessionStorage.removeItem("Searched_value");
     }
     Event.dispatch(EVENT_GTM_CANCEL_SEARCH, search);
-    Moengage.track_event(EVENT_GTM_CANCEL_SEARCH, {
+    MOE_trackEvent(EVENT_GTM_CANCEL_SEARCH, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: search || "",

@@ -27,6 +27,7 @@ import Event, {
   EVENT_SELECT_SIZE,
   EVENT_GTM_PDP_TRACKING,
   EVENT_SELECT_SIZE_TYPE,
+  MOE_trackEvent
 } from "Util/Event";
 import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -39,6 +40,7 @@ import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import { isObject } from "Util/API/helper/Object";
+import { isSignedIn } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -433,14 +435,14 @@ export class PDPAddToCartContainer extends PureComponent {
 
   onSizeTypeSelect(type) {
     const {
-      product: {sku,name },
+      product: { sku, name },
     } = this.props;
     const eventData = {
       name: EVENT_SELECT_SIZE_TYPE,
       size_type: type.target.value,
       action: EVENT_SELECT_SIZE_TYPE,
       product_name: name, 
-      product_id: sku
+      product_id: sku,
     };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({
@@ -802,7 +804,7 @@ export class PDPAddToCartContainer extends PureComponent {
       ? BrowserDatabase.getItem(CART_ID_CACHE_KEY)
       : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -825,6 +827,7 @@ export class PDPAddToCartContainer extends PureComponent {
       size: optionValue,
       quantity: 1,
       ...(event !== EVENT_SELECT_SIZE && { cart_id: getCartID || "" }),
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }
@@ -872,10 +875,11 @@ export class PDPAddToCartContainer extends PureComponent {
 
   routeChangeToCart() {
     history.push("/cart", { errorState: false });
-    Moengage.track_event(EVENT_MOE_VIEW_BAG, {
+    MOE_trackEvent(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

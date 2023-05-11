@@ -26,6 +26,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_WISHLIST_ICON_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -184,7 +185,7 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   sendMoeEvents(event) {
-    const {newSignUpEnabled} = this.props;
+    const { newSignUpEnabled, isSignedIn } = this.props;
     if (event == EVENT_MOE_WISHLIST_TAB_ICON && newSignUpEnabled){
       const eventData = {
         name: EVENT_WISHLIST_ICON_CLICK,
@@ -192,9 +193,10 @@ class MobileBottomBar extends NavigationAbstract {
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     }else{
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
+        isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
       });
     }

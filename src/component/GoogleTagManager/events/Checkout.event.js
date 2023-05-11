@@ -22,15 +22,15 @@ class CheckoutEvent extends BaseEvent {
    * Bind
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_CHECKOUT, ({ totals, step }) => {
-      this.handle(totals, step);
+    Event.observer(EVENT_GTM_CHECKOUT, ({ totals, step, payment_code }) => {
+      this.handle(totals, step, payment_code);
     });
   }
 
   /**
    * Handle
    */
-  handler(totals, step) {
+  handler(totals, step, payment_code) {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
@@ -48,6 +48,9 @@ class CheckoutEvent extends BaseEvent {
       ...(step == 2 && {
         sha256_email: sha_email,
         sha256_phone_number: sha_phone,
+      }),
+      ...(step == 3 && {
+        payment_type: payment_code ? payment_code : null,
       }),
       ecommerce: {
         currencyCode: this.getCurrencyCode(),

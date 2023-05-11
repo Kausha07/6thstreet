@@ -41,8 +41,9 @@ class PDPDetail extends PureComponent {
   };
 
   getBrandUrl = () => {
-    const { brandName="" } = this.props;
-    const url = brandName
+    const { brandInfoData = '', brand_url = ''  } = this.props;
+    let finalURLKey = brandInfoData ? brandInfoData : brand_url
+    const url = finalURLKey
       .replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
       .replace(/-{2,}/g, "-")
@@ -53,14 +54,14 @@ class PDPDetail extends PureComponent {
   };
 
   renderMoreFromBrand = () => {
-    const { brandName } = this.props;
+    const { brandName, brandNameclick } = this.props;
     const url = this.getBrandUrl();
     const eventData = {
       name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
       action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
     };
     return (
-      <div block="BrandDescription">
+      <div block="BrandDescription" onClick={ brandNameclick }>
         <Link
           block="BrandDescription"
           elem="MoreButton"

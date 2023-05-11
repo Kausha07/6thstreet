@@ -14,6 +14,7 @@ import Event, {
   EVENT_TOP_NAV_KIDS,
   EVENT_TOP_NAV_ALL,
   EVENT_GTM_TOP_NAV_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -39,6 +40,7 @@ export class GenderButtonContainer extends PureComponent {
     gender: PropTypes.shape({
       label: PropTypes.string,
       key: PropTypes.string,
+      icon: PropTypes.instanceOf(Element),
     }).isRequired,
   };
 
@@ -55,13 +57,14 @@ export class GenderButtonContainer extends PureComponent {
 
   containerProps = () => {
     const {
-      gender: { label, key },
+      gender: { label, key, icon },
       isCurrentGender,
       isUnsetStyle,
     } = this.props;
 
     return {
       label,
+      icon,
       urlKey: key,
       isCurrentGender,
       isUnsetStyle,
@@ -81,7 +84,7 @@ export class GenderButtonContainer extends PureComponent {
         ? EVENT_TOP_NAV_HOME
         : "";
     const genderChangeEvent = (event) => {
-      Moengage.track_event(event, {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),

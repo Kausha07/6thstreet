@@ -41,7 +41,7 @@ import isMobile from "Util/Mobile";
 import { appendWithStoreCode } from "Util/Url";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { EVENT_MOE_BEGIN_CHECKOUT } from "Util/Event";
+import { EVENT_MOE_BEGIN_CHECKOUT, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
@@ -98,6 +98,7 @@ export const mapDispatchToProps = (dispatch) => ({
   removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   getTabbyInstallment: (price) =>
     CheckoutDispatcher.getTabbyInstallment(dispatch, price),
+  updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
 });
 
 export class CartPageContainer extends PureComponent {
@@ -367,7 +368,7 @@ export class CartPageContainer extends PureComponent {
       productItemPrice.push(productKeys?.itemPrice);
     });
 
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender

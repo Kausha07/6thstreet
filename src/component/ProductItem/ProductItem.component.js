@@ -9,6 +9,7 @@ import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
+import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
@@ -20,10 +21,12 @@ import { isArabic, getCurrency } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
+import { getQueryParam } from "Util/Url";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -32,12 +35,17 @@ import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
+var influencerPDPURL;
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   requestedOptions: state.PLP.options,
+  selectedGender: state?.InfluencerReducer?.selectedGender,
+  isStorePage: state?.InfluencerReducer?.isStorePage,
+  isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -200,7 +208,7 @@ class ProductItem extends PureComponent {
       });
     }
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_MOE_PRODUCT_CLICK, {
+    MOE_trackEvent(EVENT_MOE_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -216,6 +224,7 @@ class ProductItem extends PureComponent {
       discounted_price: itemPrice || "",
       product_image_url: thumbnail_url || "",
       product_name: name,
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     // this.sendBannerClickImpression(product);
@@ -391,6 +400,7 @@ class ProductItem extends PureComponent {
           pageType={pageType}
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
+          influencerPDPURL={influencerPDPURL}
         />
       </div>
     );
@@ -403,6 +413,9 @@ class ProductItem extends PureComponent {
       qid,
       isVueData,
       prevPath = null,
+      selectedGender,
+      isStorePage,
+      isCollectionPage,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -433,7 +446,11 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID;
+    let parseLink =
+      isVueData && new URL(urlWithQueryID) && new URL(urlWithQueryID).origin
+        ? urlWithQueryID.replace(new URL(urlWithQueryID).origin, "")
+        : urlWithQueryID;
+
     const linkTo = {
       pathname: parseLink,
       state: {
@@ -442,10 +459,34 @@ class ProductItem extends PureComponent {
       },
     };
 
+    let influencerId = "";
+    let collectionId = "";
+    let influencerParseLink = "";
+    if (influencerURL().includes(location.pathname)) {
+      influencerId = getQueryParam("influencerID", location);
+      collectionId = getQueryParam("influencerCollectionID", location);
+      influencerParseLink =
+        parseLink +
+        `${parseLink.includes("?") ? "&" : "?"}` +
+        `influencerID=${influencerId}&influencerCollectionID=${collectionId}` +
+        `&selectedGender=${selectedGender}` +
+        `&isStore=${isStorePage}&isCollection=${isCollectionPage}`;
+      influencerPDPURL = influencerParseLink;
+    }
+
     return (
-      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
+      <Link
+        to={
+          influencerURL().includes(location.pathname)
+            ? influencerPDPURL
+            : isVueData
+            ? parseLink
+            : linkTo
+        }
+        onClick={this.handleClick}
+      >
         {this.renderImage()}
-        {this.renderOutOfStock()}   
+        {this.renderOutOfStock()}
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
@@ -457,7 +498,7 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
     const {
       product: { sku },
-      pageType
+      pageType,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -474,7 +515,10 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
-        {!isMobile.any() && pageType !== "vuePlp" && pageType !== "cart" && this.renderAddToCartOnHover()}
+        {!isMobile.any() &&
+          pageType !== "vuePlp" &&
+          pageType !== "cart" &&
+          this.renderAddToCartOnHover()}
       </li>
     );
   }

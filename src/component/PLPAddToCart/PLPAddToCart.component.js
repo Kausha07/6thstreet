@@ -11,11 +11,13 @@ import { setMinicartOpen } from "Store/Cart/Cart.action";
 import { getUUID } from "Util/Auth";
 import { getStore } from "Store";
 import Image from "Component/Image";
+import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -26,6 +28,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { isObject } from "Util/API/helper/Object";
+import { isSignedIn } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -165,11 +168,16 @@ class PLPAddToCart extends PureComponent {
 
       const filteredProductKeys = Object.keys(simple_products)
         .reduce((acc, key) => {
-          const {
-            size: { eu: productSize },
-          } = simple_products[key];
-          acc.push([size_eu.indexOf(productSize), key]);
-          return acc;
+          const simpleProducts = simple_products[key];
+          if(simpleProducts && simpleProducts.size){
+            const {
+              size: { eu: productSize },
+            } = simple_products[key];
+            acc.push([size_eu.indexOf(productSize), key]);
+            return acc;
+          }else{
+            return null;
+          }
         }, [])
         .sort((a, b) => {
           if (a[0] < b[0]) {
@@ -186,7 +194,7 @@ class PLPAddToCart extends PureComponent {
         }, []);
 
       const filteredProductSizeKeys = Object.keys(
-        product.simple_products[filteredProductKeys[0]].size || {}
+        product.simple_products[filteredProductKeys[0]]?.size || {}
       );
 
       let object = {
@@ -540,7 +548,7 @@ class PLPAddToCart extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -563,6 +571,7 @@ class PLPAddToCart extends PureComponent {
       size: optionValue,
       quantity: 1,
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }
@@ -834,6 +843,7 @@ class PLPAddToCart extends PureComponent {
 
   render() {
     const { sizeObject } = this.state;
+    const { influencerPDPURL } = this.props;
     return (
       <div block="PLPAddToCart">
         <div block="PLPAddToCart" elem="SizeSelector">
@@ -850,7 +860,14 @@ class PLPAddToCart extends PureComponent {
           ) : null}
         </div>
         {this.renderAddToCartButton()}
-        <a href={this.props.url} block="PLPAddToCart-ViewDetails">
+        <a
+          href={
+            influencerURL().includes(location.pathname)
+              ? influencerPDPURL
+              : this.props.url
+          }
+          block="PLPAddToCart-ViewDetails"
+        >
           {__("VIEW DETAILS")}
         </a>
       </div>

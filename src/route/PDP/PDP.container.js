@@ -11,6 +11,9 @@ import { setPDPLoading } from "Store/PDP/PDP.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getInfluencerInfo } from "Util/API/endpoint/Influencer/Influencer.endpoint";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getEnvIDForInfluencer } from "../../util/Common/index";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
@@ -19,19 +22,26 @@ import Event, {
   EVENT_GTM_PRODUCT_DETAIL,
   VUE_PAGE_VIEW,
   EVENT_MOE_PRODUCT_DETAIL,
+  MOE_trackEvent,
 } from "Util/Event";
 import PDP from "./PDP.component";
+import { getQueryParam } from "Util/Url";
 import browserHistory from "Util/History";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import {
-  fetchConsolidatedVueData,
-} from "Util/API/endpoint/Vue/Vue.endpoint";
+import { fetchConsolidatedVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
-import { getUUIDToken } from "Util/Auth";
+import { getUUIDToken, isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
+import {
+  influencerStorePageBreadcrumbsText,
+  influencerCollectionPageBreadcrumbsText,
+  influencerStorePageURL,
+  influencerCollectionPageURL,
+} from "Component/InfluencerCollection/InfluencerCollection.config";
+
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -120,6 +130,7 @@ export class PDPContainer extends PureComponent {
     isPdpWidgetSet: false,
     isArabic: isArabic(),
     eventSent: false,
+    influencerName: "",
   };
 
   constructor(props) {
@@ -131,8 +142,13 @@ export class PDPContainer extends PureComponent {
       requestPdpWidgetData,
       pdpWidgetsData = [],
       location: { pathname = "" },
+      gender,
     } = this.props;
     this.requestProduct();
+    if (gender === "influencer") {
+      this.requestInfluencername();
+    }
+
     if (!pdpWidgetsData || (pdpWidgetsData && pdpWidgetsData.length === 0)) {
       //request pdp widgets data only when not available in redux store.
       requestPdpWidgetData();
@@ -140,7 +156,18 @@ export class PDPContainer extends PureComponent {
     this.setState({ currentLocation: pathname });
   }
 
-  componentDidUpdate(prevProps) {
+  async requestInfluencername() {
+    const locale = getLocaleFromUrl();
+    const envID = getEnvIDForInfluencer();
+    const influencerID = getQueryParam("influencerID", location);
+    const response = await getInfluencerInfo(influencerID, envID, locale).then(
+      (resp) => {
+        this.setState({ influencerName: resp?.influencer_name });
+      }
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     const {
       product: {
         sku,
@@ -156,6 +183,7 @@ export class PDPContainer extends PureComponent {
       product,
       menuCategories = [],
       pdpWidgetsData = [],
+      gender,
     } = this.props;
     const { productSku = "", isPdpWidgetSet = false, eventSent } = this.state;
     if (Object.keys(product).length) {
@@ -167,12 +195,22 @@ export class PDPContainer extends PureComponent {
       }
     }
 
-    if (menuCategories.length !== 0 && sku && productSku !== sku) {
+    if (
+      gender === "influencer"
+        ? sku && productSku !== sku
+        : menuCategories.length !== 0 && sku && productSku !== sku
+    ) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
       this.fetchClickAndCollectStores(brandName, sku);
       this.appendSchemaData();
+    }
+    if (
+      gender === "influencer" &&
+      prevState.influencerName !== this.state.influencerName
+    ) {
+      this.updateBreadcrumbs();
     }
     const getDetails = highlighted_attributes.map((item) => ({
       [item.key]: item.value,
@@ -224,7 +262,7 @@ export class PDPContainer extends PureComponent {
         },
       });
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-      Moengage.track_event(EVENT_MOE_PRODUCT_DETAIL, {
+      MOE_trackEvent(EVENT_MOE_PRODUCT_DETAIL, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         category: currentAppState.gender
@@ -243,6 +281,7 @@ export class PDPContainer extends PureComponent {
         discounted_price: specialPrice || "",
         product_image_url: thumbnail_url || "",
         product_name: name || "",
+        isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
       this.setState({ eventSent: true });
@@ -395,12 +434,12 @@ export class PDPContainer extends PureComponent {
       const userData = BrowserDatabase.getItem("MOE_DATA");
       const customer = BrowserDatabase.getItem("customer");
       const userID = customer && customer.id ? customer.id : null;
-      const madUUid = userData?.USER_DATA?.deviceUuid || getUUIDToken()
+      const madUUid = userData?.USER_DATA?.deviceUuid || getUUIDToken();
       const vuePayload = {
         user_id: userID,
         product_id: sku,
         mad_uuid: madUUid,
-        widget_type:[]
+        widget_type: [],
       };
 
       pdpWidgetsData.forEach((element) => {
@@ -412,16 +451,16 @@ export class PDPContainer extends PureComponent {
         if (type !== "vue_visually_similar_slider") {
           defaultQueryPayload.gender = gender;
         }
-        vuePayload['widget_type'].push({
+        vuePayload["widget_type"].push({
           number_result: 50,
           type,
-          filters: VueQuery.buildFilters({filters: []}, defaultQueryPayload),
+          filters: VueQuery.buildFilters({ filters: [] }, defaultQueryPayload),
         });
       });
-      const vueResp = fetchConsolidatedVueData(vuePayload)
-      vueResp.then((resp)=>{
+      const vueResp = fetchConsolidatedVueData(vuePayload);
+      vueResp.then((resp) => {
         this.setState({ pdpWidgetsAPIData: resp.data });
-      })
+      });
     }
   }
 
@@ -479,19 +518,60 @@ export class PDPContainer extends PureComponent {
       setGender,
       nbHits,
       menuCategories,
+      gender,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, influencerName } = this.state;
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
           Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
-      const categoriesLastLevel = rawCategoriesLastLevel
-        ? rawCategoriesLastLevel.split(" /// ")
-        : [];
+      let isStore = false;
+      let isCollection = false;
+      let categoriesLastLevel;
+      let influencerCategoryArr = [];
+      let influencerID = "";
+      let collectionID = "";
+      let selectedGenderFromURL = "";
 
-      const urlArray =
-        getBreadcrumbsUrl(categoriesLastLevel, menuCategories) || [];
+      if (gender === "influencer") {
+        influencerID = getQueryParam("influencerID", location);
+        collectionID = getQueryParam("influencerCollectionID", location);
+        selectedGenderFromURL = getQueryParam("selectedGender", location);
+        isStore = getQueryParam("isStore", location);
+        isCollection = getQueryParam("isCollection", location);
+
+        if (isStore === "true") {
+          influencerCategoryArr =
+            influencerStorePageBreadcrumbsText(influencerName);
+        } else if (isCollection === "true") {
+          influencerCategoryArr =
+            influencerCollectionPageBreadcrumbsText(influencerName);
+        }
+        categoriesLastLevel = [...influencerCategoryArr];
+      } else {
+        categoriesLastLevel = rawCategoriesLastLevel
+          ? rawCategoriesLastLevel.split(" /// ")
+          : [];
+      }
+
+      let urlArray = [];
+      if (gender === "influencer") {
+        if (isStore === "true") {
+          urlArray = influencerStorePageURL(
+            influencerID,
+            selectedGenderFromURL
+          );
+        } else if (isCollection === "true") {
+          urlArray = influencerCollectionPageURL(
+            influencerID,
+            selectedGenderFromURL,
+            collectionID
+          );
+        }
+      } else {
+        urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories) || [];
+      }
       if (urlArray.length === 0) {
         categoriesLastLevel.map(() => urlArray.push("/"));
       }
@@ -659,7 +739,7 @@ export class PDPContainer extends PureComponent {
         ? product?.price[Object.keys(product?.price)[0]]["6s_special_price"]
         : null;
     localStorage.setItem("PRODUCT_NAME", JSON.stringify(product.name));
-    return(
+    return (
       <PDP
         {...this.containerProps()}
         {...this.props}
@@ -669,7 +749,7 @@ export class PDPContainer extends PureComponent {
           prodPrice: prodPrice,
         }}
       />
-    )
+    );
   }
 }
 

@@ -150,6 +150,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         placeholder: __("City area"),
         ...clearValue,
         onChange: this.copyValue,
+        areaSelected: this.state.area,
+        postCodeValue: this.state.postCodeValue,
+        popupType: "area",
       },
     };
   }
@@ -337,14 +340,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
       },
       firstname: {
         validation: ["notEmpty", "onlyCharacters"],
-        maxLength: 40,
+        maxLength: 25,
         value: firstname,
         placeholder: __("First Name"),
         autocomplete: "on",
       },
       lastname: {
         validation: ["notEmpty", "onlyCharacters"],
-        maxLength: 40,
+        maxLength: 25,
         placeholder: __("Last Name"),
         value: lastname,
       },
@@ -364,6 +367,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         selectOptions: this.getCitiesSelectOptions(),
         type: "select",
         onChange: this.onCityChange,
+        oncityClick: this.onCityChange,
+        citySelected: this.state.city,
+        popupType: "city",
+        autocomplete: "new-password",
       },
       country_id: {
         validation: ["notEmpty"],

@@ -1,0 +1,345 @@
+.Influencer {
+  width: 100%;
+  .LiveShoppingVideoSnapshots {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 175px;
+    @include mobile {
+      margin-top: 40px;
+    }
+    @include tablet {
+      margin-top: 60px;
+    }
+  }
+
+  .InfluencerWrapper {
+    @include desktop {
+      width: 76.389vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @include mobile {
+      padding-bottom: 40px;
+      margin: 0 auto;
+    }
+    @include tablet {
+      padding-top: 0;
+    }
+  }
+
+  .trendingBlock {
+    margin-top: 50px;
+    @include mobile {
+      margin-top: 50px;
+      padding: 0 10px;
+    }
+  }
+
+  .AnimationWrapper {
+    width: 100%;
+    min-height: 300px;
+    background-image: linear-gradient(
+      to right,
+      #e2e2e2 calc(50%),
+      #dcdcdc 50%,
+      #e6e6e6 calc(50%)
+    );
+    background-size: 0;
+    position: relative;
+    overflow: hidden;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc(200% + 200px);
+      bottom: 0;
+      background-image: inherit;
+      animation: move 1s linear infinite;
+    }
+  }
+  .headerMain {
+    position: fixed;
+    width: 100%;
+    z-index: 9;
+    background-color: #ffffff;
+    top: 110px;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    .header {
+      width: 76.389vw;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .trending_following_buttons {
+        display: flex;
+        width: 17%;
+        justify-content: space-between;
+        @include mobile {
+          width: 150px;
+        }
+        @include tablet {
+          width: 180px;
+        }
+        .button_style {
+          padding: 0;
+          height: 30px;
+          width: 85px;
+          font-size: 12px;
+          border: 1px solid #bbbbbb;
+          color: #bbbbbb;
+          border-radius: 15px;
+          text-transform: capitalize;
+          @include mobile {
+            height: 25px;
+            width: 70px;
+            font-size: 10px;
+          }
+        }
+        .active {
+          border: 1px solid black;
+          color: #000000;
+        }
+      }
+    }
+    .influencerSearch {
+      position: relative;
+      .searchIcon {
+        position: absolute;
+        width: 17px;
+        height: 17px;
+        top: 8px;
+        left: 15px;
+        z-index: 1;
+
+        &_isArabic {
+          left: initial;
+          right: 15px;
+        }
+
+        @include mobile {
+          width: 15px;
+          height: 15px;
+          top: 27px;
+          left: 8px;
+        }
+      }
+      .influencerSearchInput {
+        height: 36px;
+        width: 700px;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        text-transform: initial;
+        border: none;
+        outline: none;
+        padding-left: 50px;
+        font-size: 14px;
+        &_isArabic {
+          padding-left: initial;
+          padding-right: 50px;
+        }
+        @include mobile {
+          height: 40px;
+          width: 100%;
+          margin-top: 15px;
+          padding-left: 35px;
+          &_isArabic {
+            margin-left: 2px;
+          }
+          &::placeholder {
+            font-size: 12px;
+          }
+        }
+        @include tablet {
+          height: 40px;
+          width: 100%;
+          margin-top: 15px;
+          padding-left: 35px;
+          &_isArabic {
+            margin-left: 2px;
+          }
+        }
+      }
+    }
+
+    @include mobile {
+      width: 100vw;
+      margin-top: 10px;
+      top: 77px;
+      padding: 20px 10px;
+
+      .header {
+        width: 92vw;
+      }
+    }
+    @include tablet {
+      width: 100vw;
+      top: 94px;
+      .header {
+        width: 92vw;
+      }
+      .influencerSearch {
+        .influencerSearchInput {
+          width: 400px;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .slick-dots {
+    li::before {
+      content: "";
+    }
+  }
+}
+
+.refineButton {
+  border: 1px solid #000000;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-family: inherit;
+  margin-left: 5px;
+  width: 96px;
+  padding-left: 33px;
+  text-transform: capitalize;
+  font-weight: 600;
+  height: 32px;
+  img {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 7px;
+    left: 12px;
+    right: 10px;
+  }
+  @include mobile {
+    height: 25px;
+    width: 80px;
+    padding-left: 24px;
+    font-size: 13px;
+    img {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 2.5px !important;
+      left: 3px !important;
+    }
+  }
+}
+
+.refineImage {
+  &_isArabic {
+    margin-right: -5px !important;
+  }
+}
+
+.refineFilter {
+  position: relative;
+
+  .ul {
+    position: absolute;
+    z-index: 9;
+    margin-top: 10px;
+    max-height: 150px;
+    min-width: 200px;
+    left: 0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+    li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      &::before {
+        display: none;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+      .inputBox {
+        appearance: radio;
+        min-height: 1.5rem;
+        accent-color: auto;
+      }
+
+      &:last-child {
+        div {
+          border-bottom: none;
+          padding-bottom: 0px;
+        }
+      }
+    }
+    @include tablet {
+      min-width: 160px;
+      left: -42px;
+      &_isArabic {
+        left: initial;
+        right: -42px;
+      }
+    }
+  }
+}
+
+.refinePopupInfluencer {
+  left: 0px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  position: fixed;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  .refineOverlayInfluencer {
+    .refineDetailBlockInfluencer {
+      position: fixed;
+      margin: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffff;
+      padding: 42px 20px;
+      border-radius: 30px 30px 0 0;
+      .refineButtonHeading {
+        color: #000000;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      .refineButtonForMobile {
+        .refineItemNameInfluencer {
+          text-align: center;
+          margin-bottom: 0px;
+          &-refineSelected {
+            font-size: 17px;
+            font-weight: 600;
+          }
+        }
+
+        .hr {
+          border-top: 1px solid #efefef;
+          margin-top: 20px;
+          margin-bottom: 20px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        &:last-child .hr {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

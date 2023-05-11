@@ -35,7 +35,8 @@ import Event, {
   EVENT_GTM_EDD_VISIBILITY,
   EVENT_TABBY_LEARN_MORE_CLICK,
   EVENT_GTM_PDP_TRACKING,
-  EVENT_MOE_EDD_VISIBILITY
+  EVENT_MOE_EDD_VISIBILITY,
+  MOE_trackEvent
 } from "Util/Event";
 import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
@@ -333,7 +334,7 @@ class PDPSummary extends PureComponent {
           },
           page: "pdp",
         });
-        Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+        MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           edd_status: edd_info.has_pdp,
@@ -360,7 +361,8 @@ class PDPSummary extends PureComponent {
     }
     if (
       JSON.stringify(prevdefaultShippingAddress) !==
-      JSON.stringify(defaultShippingAddress)
+      JSON.stringify(defaultShippingAddress) &&
+      defaultShippingAddress
     ) {
       const { country_code, area, city } = defaultShippingAddress;
 
@@ -471,7 +473,7 @@ class PDPSummary extends PureComponent {
       },
       page: "pdp",
     });
-    Moengage.track_event(EVENT_MOE_EDD_VISIBILITY, {
+    MOE_trackEvent(EVENT_MOE_EDD_VISIBILITY, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       edd_status: edd_info.has_pdp,
@@ -602,11 +604,12 @@ class PDPSummary extends PureComponent {
     let actualEddMess = "";
     const {
       edd_info,
-      product: { brand_name = "", simple_products = {} },
+      product: { brand_name = "",simple_products = {}, international_vendor=null },
       eddResponse,
       eddResponseForPDP,
       intlEddResponse,
     } = this.props;
+
     const { isArabic } = this.state;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
     if(edd_info?.has_item_level) {
@@ -632,7 +635,7 @@ class PDPSummary extends PureComponent {
         ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
         crossBorder) && edd_info && edd_info.has_cross_border_enabled; // To check whether it is international product or not deciding based on brand_name
       const intlEddObj = intlEddResponse["pdp"]?.find(
-        ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+        ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
       const intlEddMess = intlEddObj
         ? isArabic
@@ -646,6 +649,7 @@ class PDPSummary extends PureComponent {
 
       if (eddResponse && isObject(eddResponse)) {
         if (isIntlBrand) { // For gcc, cross_border=1, but brand not from [trendyol, kotton]
+
           actualEddMess = intlEddMess;
         } else {
           Object.values(eddResponse).filter((entry) => {
@@ -780,7 +784,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { name, brand_name, gallery_images = [] },
     } = this.props;
-    const { url_path } = this.props;
+    const { url_path, brandNameclick } = this.props;
     const { isArabic } = this.state;
     let gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -826,6 +830,7 @@ class PDPSummary extends PureComponent {
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
+                  onClick={ brandNameclick }
                   to={`/${url_path}.html?q=${encodeURIComponent(
                     brand_name
                   )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -837,6 +842,7 @@ class PDPSummary extends PureComponent {
               ) : (
                 <Link
                   className="pdpsummarylinkTagStyle"
+                  onClick={ brandNameclick }
                   to={`/${url_path}.html?q=${encodeURIComponent(
                     brand_name
                   )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -863,6 +869,7 @@ class PDPSummary extends PureComponent {
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
+              onClick={ brandNameclick }
               to={`/${url_path}.html?q=${encodeURIComponent(
                 brand_name
               )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -874,6 +881,7 @@ class PDPSummary extends PureComponent {
           ) : (
             <Link
               className="pdpsummarylinkTagStyle"
+              onClick={ brandNameclick }
               to={`/${url_path}.html?q=${encodeURIComponent(
                 brand_name
               )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
@@ -1108,7 +1116,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku, name, url },
     } = this.props;
-    Moengage.track_event(EVENT_TABBY_LEARN_MORE_CLICK, {
+    MOE_trackEvent(EVENT_TABBY_LEARN_MORE_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       product_name: name ? name : "",
@@ -1143,14 +1151,13 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "" },
+      product: { cross_border = 0, brand_name = "", international_vendor=null },
       edd_info,
       intlEddResponse
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
-      cross_border === 1) && edd_info && edd_info.has_cross_border_enabled;
+      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>

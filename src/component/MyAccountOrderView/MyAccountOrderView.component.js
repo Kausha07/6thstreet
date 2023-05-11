@@ -32,8 +32,9 @@ import {
   CHECKOUT_QPAY,
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
+  KNET_PAY,
 } from "../CheckoutPayments/CheckoutPayments.config";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent } from "Util/Event";
 import Applepay from "./icons/apple.png";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -72,6 +73,7 @@ import {
   EVENT_MOE_RETURN_AN_ITEM_CLICK,
   EVENT_MOE_CANCEL_AN_ITEM_CLICK,
 } from "Util/Event";
+import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -95,6 +97,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAddress = (title, address) => {
     const { getCountryNameById } = this.props;
+    const { isArabic } = this.state;
     const {
       firstname,
       middlename,
@@ -112,7 +115,7 @@ class MyAccountOrderView extends PureComponent {
         <p>{`${firstname} ${middlename || ""} ${lastname}`.trim()}</p>
         <p block="Address" elem="Street">{`${street} ${postcode}`}</p>
         <p>{`${city} - ${getCountryNameById(country_id)}`}</p>
-        <p>{`${telephone}`}</p>
+        <p className={isArabic ? "telephone":""}>{`${telephone}`}</p>
       </div>
     );
   };
@@ -164,7 +167,7 @@ class MyAccountOrderView extends PureComponent {
     );
   }
   sendMoeEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: "OrderDetails",
@@ -855,8 +858,10 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("Store Credit"));
         }
         return;
-      case "checkout_knet":
+      case KNET_PAY:
         return this.renderPaymentTypeText("KNET");
+      case CAREEM_PAY:
+        return this.renderPaymentTypeText("Careem Pay")
       default:
         return null;
     }

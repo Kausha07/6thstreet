@@ -1,6 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { useSelector } from "react-redux";
-import MyAccountOverlayContainerV1 from "../MyAccountOverlayV1/MyAccountOverlay.container";
-import MyAccountOverlayContainerV0 from "./MyAccountOverlay.container";
+const MyAccountOverlayContainerV1 = lazy(() => import(/* webpackChunkName: 'MyAccountOverlayContainerV1' */ "../MyAccountOverlayV1/MyAccountOverlay.container"));
+const MyAccountOverlayContainerV0 = lazy(() => import(/* webpackChunkName: 'MyAccountOverlayContainerV1' */ "./MyAccountOverlay.container"));
+// import MyAccountOverlayContainerV1 from "../MyAccountOverlayV1/MyAccountOverlay.container";
+// import MyAccountOverlayContainerV0 from "./MyAccountOverlay.container";
 
 export default function MyAccountOverlay({
   closePopup,
@@ -11,33 +14,39 @@ export default function MyAccountOverlay({
   registerField,
   showMyAccountMenuPopUp,
   redirectToMyOrdersPage,
+  showRegisterScreen,
 }) {
   const newSigninSignupVersionEnabled = useSelector(
     (state) => state.AppConfig.newSigninSignupVersionEnabled
   );
   if (newSigninSignupVersionEnabled) {
     return (
-      <MyAccountOverlayContainerV1
-        closePopup={closePopup}
-        onSignIn={onSignIn}
-        isPopup={isPopup}
-        email={email}
-        setRegisterFieldFalse={setRegisterFieldFalse}
-        registerField={registerField}
-        showMyAccountMenuPopUp={showMyAccountMenuPopUp}
-        redirectToMyOrdersPage={redirectToMyOrdersPage}
-      />
+      <Suspense fallback={<div></div>}>
+        <MyAccountOverlayContainerV1
+          closePopup={closePopup}
+          onSignIn={onSignIn}
+          isPopup={isPopup}
+          email={email}
+          setRegisterFieldFalse={setRegisterFieldFalse}
+          registerField={registerField}
+          showMyAccountMenuPopUp={showMyAccountMenuPopUp}
+          redirectToMyOrdersPage={redirectToMyOrdersPage}
+          showRegisterScreen={showRegisterScreen}
+        />
+      </Suspense>
     );
   } else {
     return (
-      <MyAccountOverlayContainerV0
-        closePopup={closePopup}
-        onSignIn={onSignIn}
-        isPopup={isPopup}
-        email={email}
-        setRegisterFieldFalse={setRegisterFieldFalse}
-        registerField={registerField}
-      />
+      <Suspense fallback={<div></div>}>
+        <MyAccountOverlayContainerV0
+          closePopup={closePopup}
+          onSignIn={onSignIn}
+          isPopup={isPopup}
+          email={email}
+          setRegisterFieldFalse={setRegisterFieldFalse}
+          registerField={registerField}
+        />
+      </Suspense>
     );
   }
 }

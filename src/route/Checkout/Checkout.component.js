@@ -12,6 +12,7 @@ import ContentWrapper from "Component/ContentWrapper";
 import CreditCardPopup from "Component/CreditCardPopup";
 import HeaderLogo from "Component/HeaderLogo";
 import PropTypes from "prop-types";
+import CareemPay from "../../component/CareemPay/CareemPay";
 import Popup from "SourceComponent/Popup";
 import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.component";
 import { TotalsType } from "Type/MiniCart";
@@ -35,6 +36,7 @@ import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
 import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_CONTINUE_AS_GUEST,
+  MOE_trackEvent
 } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
@@ -51,6 +53,9 @@ export const mapDispatchToProps = (dispatch) => ({
   showError: (message) => dispatch(showNotification("error", message)),
   estimateEddResponse: (code) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, code),
+  createOrder: (code, additional_data, eddItems) =>
+    CheckoutDispatcher.createOrder(dispatch, code, additional_data, eddItems),
+  showErrorNotification: (error) => dispatch(showNotification("error", error)),
 });
 
 export class Checkout extends SourceCheckout {
@@ -87,6 +92,9 @@ export class Checkout extends SourceCheckout {
     isOpen: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     binInfo: {},
+    processingLoader: false,
+    careemPayInfo:{},
+    careemPayStatus: "",
   };
   getArabicCityArea = (city, area) => {
     const { addressCityData } = this.props;
@@ -290,12 +298,37 @@ export class Checkout extends SourceCheckout {
     this.setState({ cashOnDeliveryFee: fee });
   };
 
+  setProcessingLoader=(curretStste)=>{
+    this.setState({ processingLoader: curretStste});    
+  }
+
+  setPaymentinfoCareemPay= (payMethod, billingAddress) => {
+    const { paymentInformation } = this.state;
+    if(billingAddress){
+      const newPaymentInformation = {...paymentInformation, billing_address: billingAddress};
+      this.setState({ paymentInformation: newPaymentInformation });
+    }else {
+      const newPaymentInformation = {...paymentInformation, paymentMethod: {code: payMethod}}
+      this.setState({ paymentInformation: newPaymentInformation });
+    }
+  }
+
+  setCareemPayInfo = (careemPayInfo) => {
+    this.setState({ careemPayInfo: careemPayInfo });
+  }
+
+  setCareemPayStatus = (careemPayStatus) => {
+    this.setState({ careemPayStatus: careemPayStatus });
+  }
+
   renderLoader() {
     const { isLoading, checkoutStep, PaymentRedirect } = this.props;
+    const { processingLoader } = this.state;
 
     if (
       (checkoutStep === BILLING_STEP && isLoading) ||
-      (checkoutStep === SHIPPING_STEP && PaymentRedirect)
+      (checkoutStep === SHIPPING_STEP && PaymentRedirect) ||
+      processingLoader
     ) {
       return (
         <div block="CheckoutSuccess">
@@ -494,7 +527,7 @@ export class Checkout extends SourceCheckout {
       category: "checkout",
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, eventDetails);
-    Moengage.track_event(EVENT_CONTINUE_AS_GUEST, {
+    MOE_trackEvent(EVENT_CONTINUE_AS_GUEST, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -571,6 +604,8 @@ export class Checkout extends SourceCheckout {
     const {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
+      careemPayInfo,
+      careemPayStatus,
     } = this.state;
     this.setState({ isSuccess: true });
 
@@ -612,6 +647,8 @@ export class Checkout extends SourceCheckout {
         order={QPayOrderDetails ? QPayOrderDetails : KNETOrderDetails}
         KnetDetails={KnetDetails}
         KNETOrderDetails={KNETOrderDetails}
+        careemPayInfo={careemPayInfo}
+        careemPayStatus={careemPayStatus}
       />
     );
   }
@@ -630,9 +667,26 @@ export class Checkout extends SourceCheckout {
       isLoading,
       isClickAndCollect,
       handleClickNCollectPayment,
+      createOrder,
+      setDetailsStep,
+      orderID,
+      setIsFailed,
+      resetCart,
+      setShippingAddressCareem,
+      showErrorNotification,
+      checkoutTotals: {
+        total = 0,
+      },
+      config: { countries },
+      config,
     } = this.props;
 
+    const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
     const { continueAsGuest, isArabic } = this.state;
+    const country_code = getCountryFromUrl();
+    const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
+    const lang = isArabic ? "ar" : "en";
+    const isCareemPayEnabled = isCareemPayAvailable[lang];
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
@@ -686,6 +740,25 @@ export class Checkout extends SourceCheckout {
           </div>
           {continueAsGuest ? renderCheckoutShipping : null}
         </div>
+        {/* Currently Careem Pay is only available for EN-AE Desktop site. */}
+        { (isCareemPayEnabled && total != 0 && isCareemPayDisplayToUser) ? (
+            <CareemPay 
+              continueAsGuest={continueAsGuest}
+              isSignedIn={isSignedIn}
+              createOrder={createOrder}
+              setDetailsStep={setDetailsStep}
+              orderID={orderID}
+              setLoading={setLoading}
+              setIsFailed={setIsFailed}
+              resetCart={resetCart}
+              setShippingAddressCareem={setShippingAddressCareem}
+              setProcessingLoader={this.setProcessingLoader}
+              setPaymentinfoCareemPay={this.setPaymentinfoCareemPay}
+              showErrorNotification={showErrorNotification}
+              setCareemPayInfo={this.setCareemPayInfo}
+              setCareemPayStatus={this.setCareemPayStatus}
+            />
+          ) : null}
         {isSignedIn ? renderCheckoutShipping : null}
         {continueAsGuest || isSignedIn
           ? null

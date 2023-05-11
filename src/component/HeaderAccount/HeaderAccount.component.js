@@ -2,6 +2,7 @@
 import ClickOutside from "Component/ClickOutside";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import MyAccountSignedInOverlay from "Component/MyAccountSignedInOverlay";
+import SignInSignupNudge from "../SignInSignupNudge/SignInSignupNudge";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { customerType } from "Type/Account";
@@ -16,6 +17,7 @@ import Event, {
   EVENT_GTM_ACCOUNT_TAB_CLICK,
   EVENT_GTM_AUTHENTICATION,
   EVENT_SIGN_IN_SCREEN_VIEWED,
+  MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -126,11 +128,12 @@ class HeaderAccount extends PureComponent {
   }
 
   sendMoeEvents(event) {
-    const {newSignUpEnabled} = this.props;
-    if (event !== EVENT_ACCOUNT_TAB_ICON && !newSignUpEnabled){
-      Moengage.track_event(event, {
+    const { newSignUpEnabled, isSignedIn } = this.props;
+    if (event !== EVENT_ACCOUNT_TAB_ICON && !newSignUpEnabled) {
+      MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
+        isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
       });
     }
@@ -155,9 +158,14 @@ class HeaderAccount extends PureComponent {
   }
 
   renderAccountButton() {
-    const { isSignedIn, customer, isBottomBar, isFooter, newSignUpEnabled } =
-      this.props;
-
+    const {
+      isSignedIn,
+      customer,
+      isBottomBar,
+      isFooter,
+      newSignUpEnabled,
+      showNudge,
+    } = this.props;
     if (isBottomBar) {
       return;
     }
@@ -217,6 +225,7 @@ class HeaderAccount extends PureComponent {
             <span>{accountButtonText}</span>
           </label>
         </button>
+        {showNudge && <SignInSignupNudge />}
         {this.renderMyAccountPopup()}
       </div>
     );

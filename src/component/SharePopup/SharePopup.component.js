@@ -10,7 +10,8 @@ import Event,{
   EVENT_FB_SHARE,
   EVENT_PINTEREST_SHARE,
   EVENT_MAIL_SHARE,
-  EVENT_GTM_PDP_TRACKING
+  EVENT_GTM_PDP_TRACKING,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { SHARE_POPUP_ID } from "./SharePopup.config";
@@ -108,7 +109,7 @@ class SharePopup extends PureComponent {
         ? EVENT_PINTEREST_SHARE
         : "";
     if (MoeEvent && MoeEvent.length > 0) {
-      Moengage.track_event(MoeEvent, {
+      MOE_trackEvent(MoeEvent, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         product_name: name ? name : "",
@@ -150,36 +151,34 @@ class SharePopup extends PureComponent {
       ));
   };
 
-  componentDidMount() {
-    const { hideShareOverlay } = this.props;
-    document.addEventListener("click", hideShareOverlay, true);
-  }
-
-  componentWillUnmount() {
-    const { hideShareOverlay } = this.props;
-    document.removeEventListener("click", hideShareOverlay, true);
-  }
-
   render() {
-    const { hideShareOverlay, open } = this.props;
+    const { hideShareOverlay, open, openShareOverlay } = this.props;
     return (
-      <Overlay
-        id={SHARE_POPUP_ID}
-        mix={{
-          block: "Overlay",
-          mods: {
-            isArabic: isArabic(),
-          },
-        }}
-        onHide={hideShareOverlay}
-        open={open}
-        isRenderInPortal={false}
-      >
-        <h3>{__("SHARE")}</h3>
-        <div block="Overlay" elem="ButtonsContainer">
-          {this.renderShareButtons()}
+      <>
+      {
+        openShareOverlay && <div className="closeSharePopUp" onClick={() => hideShareOverlay()}>
+          {/* closes share popup */}
         </div>
-      </Overlay>
+      }
+    
+        <Overlay
+          id={SHARE_POPUP_ID}
+          mix={{
+            block: "Overlay",
+            mods: {
+              isArabic: isArabic(),
+            },
+          }}
+          onHide={hideShareOverlay}
+          open={open}
+          isRenderInPortal={false}
+        >
+          <h3>{__("SHARE")}</h3>
+          <div block="Overlay" elem="ButtonsContainer">
+            {this.renderShareButtons()}
+          </div>
+        </Overlay>
+      </>
     );
   }
 }

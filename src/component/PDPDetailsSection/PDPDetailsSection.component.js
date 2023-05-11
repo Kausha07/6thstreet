@@ -1,6 +1,5 @@
 // import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
-import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
 import Link from "Component/Link";
 import PDPDetail from "Component/PDPDetail";
@@ -15,6 +14,7 @@ import Event, {
   EVENT_MORE_FROM_THIS_BRAND_CLICK,
   EVENT_GTM_PDP_TRACKING,
   EVENT_EXPAND_PRODUCT_DETAILS,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -28,7 +28,6 @@ import {
   NO_IN_ARABIC,
 } from "../../util/Common/index";
 
-export const WHATSAPP_LINK = "https://wa.me/9718003852633";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -256,7 +255,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return data
-      ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+      ?.filter(({ key, value }) => key !== "sku" && key !== "alternate_name" && value !== "false")
       ?.map((item) =>
         this.renderListItem({
           key: item.key,
@@ -731,7 +730,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   sendEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
@@ -739,7 +738,10 @@ class PDPDetailsSection extends PureComponent {
   }
   renderContactUs() {
     const { config } = this.props;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    const updatedPhoneLink = toll_free ? toll_free.replaceAll(" ","") : null;
     return (
       <div block="ContactUs">
         <div block="ContactUs" elem="Icons">
@@ -749,7 +751,7 @@ class PDPDetailsSection extends PureComponent {
               elem="Icon"
               onClick={() => this.sendEvents(EVENT_PHONE)}
             >
-              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+              <a href={`tel:${updatedPhoneLink}`} target="_blank" rel="noreferrer">
                 <Phone />
               </a>
             </div>
@@ -763,7 +765,7 @@ class PDPDetailsSection extends PureComponent {
               onClick={() => {
                 this.sendEvents(EVENT_MOE_CHAT);
               }}
-              href={`${WHATSAPP_LINK}`}
+              href={`${whatsappChat}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -780,7 +782,7 @@ class PDPDetailsSection extends PureComponent {
               elem="Icon"
               onClick={() => this.sendEvents(EVENT_MAIL)}
             >
-              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+              <a href={`mailto:${config?.support_email}`} target="_blank" rel="noreferrer">
                 <Email />
               </a>
             </div>
@@ -862,15 +864,17 @@ class PDPDetailsSection extends PureComponent {
       .toLowerCase();
     return `${url}.html`;
   };
+
   renderMoreFromTheBrand = () => {
     const url = this.getBrandUrl();
     // const url = "https://www.google.com";
+    const { brandNameclick } = this.props; 
     const eventData = {
       name: EVENT_MORE_FROM_THIS_BRAND_CLICK,
       action: EVENT_MORE_FROM_THIS_BRAND_CLICK,
     };
     return (
-      <div block="FromBrand">
+      <div block="FromBrand" onClick={ brandNameclick }>
         <Link
           block="FromBrand"
           elem="MoreButton"
@@ -945,6 +949,7 @@ class PDPDetailsSection extends PureComponent {
       config: { countries },
       country,
     } = this.props;
+    const isFreeDelivery = countries[country]?.free_delivery
 
     let free_return_amount = 200;
     if( countries[country] && countries[country].free_return_amount){
@@ -977,8 +982,8 @@ class PDPDetailsSection extends PureComponent {
     return (
       <div>
         <p block="shippingAndFreeReturns" elem="infoShippingFee">
-        {
-            isArabic ? (
+        {   isFreeDelivery ? 
+            (isArabic ? (
               <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
                 {`${txt_common} ${free_return_amount} ${txt_diff[country_name]}`}
               </b>
@@ -986,9 +991,9 @@ class PDPDetailsSection extends PureComponent {
               <b block="shippingAndFreeReturns" elem="infoShippingFeeBold">
                 {`${txt_common} ${txt_diff[country_name]} ${free_return_amount}`}
               </b>
-            )
+            )) : (null)
           }
-          <br />
+          {isFreeDelivery ? <br /> : null}
         </p>
         <div block="FindOutMore" mods={{ isArabic }}>
           <Link block="FindOutMore" elem="MoreButton" to={`/shipping-policy`}>

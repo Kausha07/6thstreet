@@ -26,7 +26,7 @@ import {
 import { TotalsType } from "Type/MiniCart";
 import { isSignedIn } from "Util/Auth";
 import history from "Util/History";
-import { EVENT_MOE_VIEW_BAG, EVENT_MOE_BEGIN_CHECKOUT } from "Util/Event";
+import { EVENT_MOE_VIEW_BAG, EVENT_MOE_BEGIN_CHECKOUT, MOE_trackEvent } from "Util/Event";
 import CartOverlay from "./CartOverlay.component";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -76,12 +76,16 @@ export class CartOverlayContainer extends PureComponent {
     guest_checkout: true,
   };
 
-  state = { isEditing: false };
+  state = { 
+    isEditing: false,
+    isOosOverlayShow: false,
+  };
 
   containerFunctions = {
     changeHeaderState: this.changeHeaderState.bind(this),
     handleCheckoutClick: this.handleCheckoutClick.bind(this),
     handleViewBagClick: this.handleViewBagClick.bind(this),
+    handleOosOverlay: this.handleOosOverlay.bind(this),
   };
 
 
@@ -103,6 +107,10 @@ export class CartOverlayContainer extends PureComponent {
     return (currentRouteName || "").toLowerCase();
   }
 
+  handleOosOverlay(currentState) {
+    this.setState({isOosOverlayShow: currentState})
+  }
+
   handleViewBagClick() {
     const {
       hideActiveOverlay,
@@ -110,10 +118,11 @@ export class CartOverlayContainer extends PureComponent {
       isCheckoutAvailable,
       showNotification,
     } = this.props;
-    Moengage.track_event(EVENT_MOE_VIEW_BAG, {
+    MOE_trackEvent(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: this.getPageType() || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
     hideActiveOverlay();
@@ -169,7 +178,7 @@ export class CartOverlayContainer extends PureComponent {
       productCategory.push(productKeys?.original_price);
       productItemPrice.push(productKeys?.itemPrice);
     });
-    Moengage.track_event(EVENT_MOE_BEGIN_CHECKOUT, {
+    MOE_trackEvent(EVENT_MOE_BEGIN_CHECKOUT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -227,6 +236,7 @@ export class CartOverlayContainer extends PureComponent {
         title: "Sign in",
       });
     } else {
+      this.handleOosOverlay(true);
       showNotification(
         "error",
         __("Some products or selected quantities are no longer available")

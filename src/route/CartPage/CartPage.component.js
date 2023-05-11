@@ -29,12 +29,14 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import { EVENT_MOE_VIEW_CART_ITEMS } from "Util/Event";
+import { EVENT_MOE_VIEW_CART_ITEMS, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
+import CartNudge from "./CartNudges/CartNudge"
+import { RenderEmptyCartPage, RenderEmptyCartPageForMobile } from "./EmptyCart"
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -42,6 +44,7 @@ import { Shipping } from "Component/Icons";
 import ClubApparel from "./icons/club-apparel.png";
 import EmptyCardIcon from "./icons/cart.svg";
 import ProductItem from "Component/ProductItem";
+import RemoveOOS from "Component/RemoveOOS/RemoveOOS";
 
 import "./CartPage.style";
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
@@ -82,6 +85,7 @@ export class CartPage extends PureComponent {
     couponModuleStatus: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     isLoading: false,
+    isOOSProducts: false,
   };
 
   static defaultProps = {
@@ -188,7 +192,7 @@ export class CartPage extends PureComponent {
       productItemPrice.push(productKeys?.itemPrice);
     });
     if (pageLoaded) {
-      Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS, {
+      MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         brand_name: productBrand.length > 0 ? productBrand : "",
@@ -213,6 +217,19 @@ export class CartPage extends PureComponent {
     }
   }
 
+  fitlerItemArr = ( items = [] ) => {
+    let filterArrOne =[];
+    let filterArrTwo = [];
+    items.map((item)=>{
+      if(item?.availableQty === 0 || item?.availableQty < item?.qty){
+        filterArrOne.push(item);
+      }else {
+        filterArrTwo.push(item);
+      }
+    });
+    return [ ...filterArrTwo, ...filterArrOne ];
+  }
+
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -226,9 +243,10 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
+    const cartItems = this.fitlerItemArr(items);
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
-        {items.map((item) => (
+        {cartItems.map((item) => (
           <CartPageItem
             key={item.item_id}
             item={item}
@@ -342,6 +360,23 @@ export class CartPage extends PureComponent {
         console.error(error);
     }
   }
+
+  closeremoveOosOverlay =(currstate)=> {
+    this.setState({isOOSProducts: currstate})
+  }
+
+  renderRemoveOOS() {
+    const { totals, updateTotals } = this.props;
+    const { isArabic } = this.state;
+    return (
+        <RemoveOOS
+          closeremoveOosOverlay={this.closeremoveOosOverlay}
+          totals={totals}
+          isArabic={isArabic}
+        />
+    )
+  }
+  
   renderDiscountCode() {
     const {
       totals: { coupon_code },
@@ -538,6 +573,15 @@ export class CartPage extends PureComponent {
     }
   }
 
+  handleProceedTockButton() {
+    const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+    if(!isCheckoutAvailable){
+      this.setState({ isOOSProducts: true })
+    }
+    
+  }
+
   renderButtons() {
     const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
 
@@ -550,7 +594,7 @@ export class CartPage extends PureComponent {
           elem="CheckoutButton"
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
-          onClick={onCheckoutButtonClick}
+          onClick={(e)=>{onCheckoutButtonClick(e); this.handleProceedTockButton()}}
           id="ProceedToCheckoutButton"
         >
           <span />
@@ -898,53 +942,6 @@ export class CartPage extends PureComponent {
     );
   }
 
-  renderEmptyCartPage() {
-    const { isArabic } = this.state;
-
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon"> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          <Image src={EmptyCardIcon} />
-        </div>
-        <div className="mt-2 EmptyMessage">
-          {__("Your shopping bag is empty.")}
-        </div>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/women.html`}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
-            </span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  renderEmptyCartPageForMobile() {
-    const { isArabic } = this.state;
-
-    return (
-      <div block="CartPage" elem="EmptyCart" mods={{ isArabic }}>
-        {/* <div block="CartPage" elem="EmptyCartIcon" /> */}
-        <div block="CartPage" elem="EmptyCartImg">
-          {/* <image src={EmptyCardIcon}/> */}
-          <Image src={EmptyCardIcon} alt={"cart-icon"} />
-        </div>
-        <p block="CartPage" elem="EmptyCartTextDec">
-          {__("Your shopping bag is empty.")}
-        </p>
-        <div block="ExploreNowBtn">
-          <Link block="ExploreNowBtn" elem="ExploreButton" to={`/`} onClick={()=> window.pageType = TYPE_HOME}>
-            <span block="ExploreNowBtn" elem="ExploreButtonText">
-              {__("Continue Shopping")}
-            </span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   renderDynamicContent() {
     const {
       totals = {},
@@ -954,7 +951,7 @@ export class CartPage extends PureComponent {
       cartWidgetApiData = [],
       youMayAlsoLikeData = [],
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic, isOOSProducts } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     ).data;
@@ -970,17 +967,19 @@ export class CartPage extends PureComponent {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {this.renderMySignInPopup()}
-          {this.renderHeading()}
-          {this.renderEmptyCartPageForMobile()}
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {this.renderHeading()}
+            <RenderEmptyCartPageForMobile />
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -989,19 +988,21 @@ export class CartPage extends PureComponent {
     if (!cart_id) {
       return (
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
-          {/* {this.renderHeading()} */}
-          {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            {/* {this.renderHeading()} */}
+            {this.renderMySignInPopup()}
+            <RenderEmptyCartPage />
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -1016,20 +1017,23 @@ export class CartPage extends PureComponent {
         return (
           <div block="CartPage" elem="Static" mods={{ isArabic }}>
             {this.renderMySignInPopup()}
-            {this.renderHeading()}
-            {this.renderEmptyCartPageForMobile()}
-       
-            <div className="PDPWidgets-cart">
-              {cartWidgetApiData.length !== 0
-                ? this.renderRecentlyViewSlider()
-                : null}
-            </div>
+            <div className="sidePadding">
+              {this.renderHeading()}
+              <RenderEmptyCartPageForMobile />
             
-            <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
-          </div>
+       
+              <div className="PDPWidgets-cart">
+                {cartWidgetApiData.length !== 0
+                  ? this.renderRecentlyViewSlider()
+                  : null}
+              </div>
+            
+              <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+              </div>
+            </div>
           </div>
         );
       }
@@ -1037,17 +1041,19 @@ export class CartPage extends PureComponent {
         <div block="CartPage" elem="Static" mods={{ isArabic }}>
           {/* {this.renderHeading()} */}
           {this.renderMySignInPopup()}
-          {this.renderEmptyCartPage()}
-          <div block="Empty-cart-spacing"></div>
-          <div className="PDPWidgets-cart">
-            {cartWidgetApiData.length !== 0
-              ? this.renderRecentlyViewSlider()
-              : null}
-          </div>
-          <div className="PDPWidgets-cart">
-            {youMayAlsoLikeData.length !== 0
-              ? this.renderYouMayAlsoLikeSlider()
-              : null}
+          <div className="sidePadding">
+            <RenderEmptyCartPage />
+            <div block="Empty-cart-spacing"></div>
+            <div className="PDPWidgets-cart">
+              {cartWidgetApiData.length !== 0
+                ? this.renderRecentlyViewSlider()
+                : null}
+            </div>
+            <div className="PDPWidgets-cart">
+              {youMayAlsoLikeData.length !== 0
+                ? this.renderYouMayAlsoLikeSlider()
+                : null}
+            </div>
           </div>
         </div>
       );
@@ -1095,11 +1101,17 @@ export class CartPage extends PureComponent {
               showOverflow,
             }}
           >
-            {this.renderHeading()}
-            {this.renderCartItems()}
-            {this.renderCrossSellProducts()}
-            {this.renderDiscountCode()}
-            {this.renderPromo()}
+            <div className="sidePadding">
+              {this.renderHeading()}
+            </div>
+            <CartNudge />
+            <div className="sidePadding">
+              {this.renderCartItems()}
+              {this.renderCrossSellProducts()}
+              {this.renderDiscountCode()}
+              {isOOSProducts ? this.renderRemoveOOS() : null}
+              {this.renderPromo()}
+            </div>
           </div>
           <div
             ref={this.dynamicHeight}

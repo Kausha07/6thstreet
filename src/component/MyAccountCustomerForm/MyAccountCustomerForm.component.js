@@ -144,7 +144,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     if (firstname || lastname) {
       return {
         firstName: firstname || "",
-        lastName: lastname || "",
+        lastName: lastname !== "LASTNAME_PLACEHOLDER" ? lastname : "", 
+        //manually handle last name issue hard coded as coming from magento as per backend dev
       };
     }
 
@@ -162,6 +163,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
           id="full-name"
           placeholder={__("fullname")}
           value={`${fullName.firstName} ${fullName.lastName}`}
+          maxLength={50}
         />
       </div>
     );

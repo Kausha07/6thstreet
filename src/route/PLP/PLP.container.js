@@ -1,14 +1,9 @@
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { setGender } from "Store/AppState/AppState.action";
-import { updateMeta } from "Store/Meta/Meta.action";
-import { changeNavigationState } from "Store/Navigation/Navigation.action";
-import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
-import { setPLPLoading } from "Store/PLP/PLP.action";
-import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+
+import PropTypes from "prop-types";
+
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import {
   Filters,
@@ -21,32 +16,44 @@ import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
-import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
   EVENT_GTM_IMPRESSIONS_PLP,
   VUE_PAGE_VIEW,
   EVENT_MOE_VIEW_PLP_ITEMS,
+  MOE_trackEvent
 } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from "Util/Mobile";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import Logger from "Util/Logger";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Algolia from "Util/API/provider/Algolia";
+import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
+
+import { setGender } from "Store/AppState/AppState.action";
+import { updateMeta } from "Store/Meta/Meta.action";
+import { changeNavigationState } from "Store/Navigation/Navigation.action";
+import { setPLPLoading, setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import {
   updatePLPInitialFilters,
-  setPrevProductSku,
   setPrevPath,
   setBrandurl,
 } from "Store/PLP/PLP.action";
-import isMobile from "Util/Mobile";
-import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
-import {  toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+
+import VueIntegrationQueries from "Query/vueIntegration.query";
+
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import PLP from "./PLP.component";
+
+
 export const BreadcrumbsDispatcher = import(
-  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
@@ -64,6 +71,9 @@ export const mapStateToProps = (state) => ({
   plpWidgetData: state.PLP.plpWidgetData,
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
+  influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
+  catalogue_from_algolia:
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -118,7 +128,6 @@ export class PLPContainer extends PureComponent {
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
-
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
   static getRequestOptions() {
@@ -136,8 +145,26 @@ export class PLPContainer extends PureComponent {
   }
 
   static async request(isPage, props) {
-    const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions();
+    const { requestProductList, requestProductListPage, influencerAlgoliaQuery,
+    } = props;
+    let options;
+    if (
+      window.location.pathname === "/influencer.html/Collection" ||
+      window.location.pathname === "/influencer.html/Store"
+    ) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      let params = {
+        q: "",
+      };
+      if (!Object.keys(parsedParams).includes("page")) {
+        params["page"] = "0";
+      }
+      params["categories.level2"] = influencerAlgoliaQuery;
+      const finalParams = { ...parsedParams, ...params };
+      options = finalParams;
+    } else {
+      options = PLPContainer.getRequestOptions();
+    }
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -153,6 +180,7 @@ export class PLPContainer extends PureComponent {
     prevProductSku: "",
     activeFilters: {},
     categoryloaded: false,
+    metaContent: null,
   };
 
   containerFunctions = {
@@ -196,25 +224,6 @@ export class PLPContainer extends PureComponent {
     let formattedData = data;
     let finalData = [];
     if (category === "categories_without_path") {
-      //   let categoryLevelArray = [
-      //     "categories.level1",
-      //     "categories.level2",
-      //     "categories.level3",
-      //     "categories.level4",
-      //   ];
-      //   let categoryLevel;
-      //   categoryLevelArray.map((entry, index) => {
-      //     if (initialOptions[entry]) {
-      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
-      //     }
-      //   });
-      //   if (categoryLevel) {
-      //     if (data[categoryLevel]) {
-      //       formattedData = data[categoryLevel].subcategories;
-      //     } else {
-      //       formattedData = data[Object.keys(data)[0]].subcategories;
-      //     }
-      //   } else {
       let categoryArray = initialOptions["categories_without_path"]
         ? initialOptions["categories_without_path"].split(",")
         : [];
@@ -229,7 +238,6 @@ export class PLPContainer extends PureComponent {
         });
       });
       formattedData = finalData;
-      //   }
     }
 
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
@@ -250,10 +258,12 @@ export class PLPContainer extends PureComponent {
 
     return mappedData;
   }
+
   constructor(props) {
     super(props);
     let prevLocation;
     let finalPrevLocation;
+    this.getStaticMetaContent();
     browserHistory.listen((nextLocation) => {
       let locationArr = ["/men.html", "/women.html", "/kids.html", "/home.html"];
       finalPrevLocation = prevLocation;
@@ -273,11 +283,28 @@ export class PLPContainer extends PureComponent {
       }
     });
     if (this.getIsLoading()) {
-      // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
     }
     this.setMetaData();
   }
+
+  getStaticMetaContent = async () => {
+    const pagePathName = new URL(window.location.href).pathname;
+    if (pagePathName.includes(".html")) {
+      try {
+        const resp = await getStaticFile("plp_meta", {
+          $FILE_NAME: `plp_meta.json`,
+        });
+        if (resp) {
+          this.setState({
+            metaContent: resp?.[0],
+          });
+        }
+      } catch (e) {
+        Logger.log(e);
+      }
+    }
+  };
 
   getInitialOptions = (options) => {
     const optionArr = ["categories.level1", "page", "q", "visibility_catalog"];
@@ -296,14 +323,14 @@ export class PLPContainer extends PureComponent {
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
       : requestedOptions["categories.level3"]
-      ? requestedOptions["categories.level3"]
-      : requestedOptions["categories.level2"]
-      ? requestedOptions["categories.level2"]
-      : requestedOptions["categories.level1"]
-      ? requestedOptions["categories.level1"]
-      : requestedOptions["categories.level0"]
-      ? requestedOptions["categories.level0"]
-      : "";
+        ? requestedOptions["categories.level3"]
+        : requestedOptions["categories.level2"]
+          ? requestedOptions["categories.level2"]
+          : requestedOptions["categories.level1"]
+            ? requestedOptions["categories.level1"]
+            : requestedOptions["categories.level0"]
+              ? requestedOptions["categories.level0"]
+              : "";
     const Categories_level =
       categorylevelPath && categorylevelPath.includes("///")
         ? categorylevelPath.replaceAll(" ", "").split("///")
@@ -313,7 +340,7 @@ export class PLPContainer extends PureComponent {
     let category_2 = checkCategories ? Categories_level.shift() : "";
     let category_3 = checkCategories ? Categories_level.shift() : "";
     let category_4 = checkCategories ? Categories_level.shift() : "";
-    Moengage.track_event(EVENT_MOE_VIEW_PLP_ITEMS, {
+    MOE_trackEvent(EVENT_MOE_VIEW_PLP_ITEMS, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       ...(category_1 && { category_level_1: category_1 }),
@@ -323,19 +350,20 @@ export class PLPContainer extends PureComponent {
       plp_name: category_4
         ? category_4
         : category_3
-        ? category_3
-        : category_2
-        ? category_2
-        : category_1
-        ? category_1
-        : "",
+          ? category_3
+          : category_2
+            ? category_2
+            : category_1
+              ? category_1
+              : "",
       app6thstreet_platform: "Web",
     });
     this.setState({ categoryloaded: false });
   }
+
   componentDidMount() {
-    const { menuCategories = [], prevPath = null, impressions } = this.props;
-    const { isArabic, categoryloaded } = this.state;
+    const { menuCategories = [], prevPath = null,
+      impressions, catalogue_from_algolia } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -359,7 +387,9 @@ export class PLPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
     }
-    this.getBrandDetails();
+    catalogue_from_algolia
+      ? this.getBrandDetailsByAloglia()
+      : this.getBrandDetailsByCatalogueApi()
   }
 
   getCategory() {
@@ -456,7 +486,7 @@ export class PLPContainer extends PureComponent {
     isQuickFilters
   ) {
     const { activeFilters } = this.state;
-    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
+    const { filters, updatePLPInitialFilters } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
     if (initialFacetKey.includes("size")) {
@@ -657,13 +687,38 @@ export class PLPContainer extends PureComponent {
     });
   }
 
-  async getBrandDetails() {
-    const exceptionalBrand = ['men','women','kids','home']
+  async getBrandDetailsByCatalogueApi() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
     const brandName = location.pathname
       .split(".html")[0]
       .substring(1)
       .split("/")?.[0];
-    if(exceptionalBrand.includes(brandName)){
+    if (exceptionalBrand.includes(brandName)) {
+      return null;
+    }
+    try {
+      getBrandInfoByName(brandName).then((resp) => {
+        this.setState({
+          brandDescription: isArabic()
+            ? resp?.result[0]?.description_ar
+            : resp?.result[0]?.description,
+          brandImg: resp?.result[0]?.image,
+          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
+        });
+        this.props.setBrandurl(resp?.result[0]?.url_path);
+      })
+    } catch (err) {
+      console.error("There is an issue while fetching brand information.", err);
+    }
+  }
+
+  async getBrandDetailsByAloglia() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    if (exceptionalBrand.includes(brandName)) {
       return null;
     }
     const data = await new Algolia({
@@ -815,19 +870,21 @@ export class PLPContainer extends PureComponent {
       options: { q: query },
       options,
       menuCategories,
+      gender
     } = this.props;
-    const {isArabic} = this.state
-    if (query) {
+
+    const {isArabic} = this.state;
+    if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-        ? options["categories.level3"]
-        : options["categories.level2"]
-        ? options["categories.level2"]
-        : options["categories.level1"]
-        ? options["categories.level1"]
-        : options["q"];
+          ? options["categories.level3"]
+          : options["categories.level2"]
+            ? options["categories.level2"]
+            : options["categories.level1"]
+              ? options["categories.level1"]
+              : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -865,11 +922,10 @@ export class PLPContainer extends PureComponent {
       requestedOptions: { q } = {},
       gender,
     } = this.props;
-    const { brandDescription, brandName } = this.state;
+    const { brandDescription, brandName, metaContent } = this.state;
     if (!q) {
       return;
     }
-
     const pagePathName = new URL(window.location.href).pathname;
     const checkBrandPage = pagePathName.includes(".html")
       ? pagePathName.split(".html").join("").split("/")
@@ -878,30 +934,51 @@ export class PLPContainer extends PureComponent {
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
-    const breadcrumbs = location.pathname
-      .split(".html")[0]
-      .substring(1)
-      .split("/");
+    const breadcrumbs = location.pathname.split(".html")[0].substring(1).split("/");
     const categoryName = capitalize(breadcrumbs.pop() || "");
-
+    const getCategoryLevel = pagePathName.includes(".html")
+      ? pagePathName.split(".html")[0].substring(1).split("/")
+      : null;
+    const staticMetaData =
+      getCategoryLevel.length == 5 && metaContent
+        ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+        getCategoryLevel[2]
+        ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
+        : getCategoryLevel.length == 4 && metaContent
+          ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+          getCategoryLevel[2]
+          ]?.[getCategoryLevel[3]]
+          : getCategoryLevel.length == 3 && metaContent
+            ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+            ]
+            : getCategoryLevel.length == 2 && metaContent
+              ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
+              : getCategoryLevel.length == 1 && metaContent
+                ? metaContent?.[getCategoryLevel[0]]
+                : null;
     const PLPMetaTitle =
-      brandName && checkBrandPage.length < 3
-        ? __(
+      staticMetaData && staticMetaData?.title
+        ? staticMetaData.title
+        : brandName && checkBrandPage.length < 3
+          ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
             countryName
           )
-        : __("%s | 6thStreet.com %s", categoryName, countryName);
+          : __("%s | 6thStreet.com %s", categoryName, countryName);
 
     const PLPMetaDesc =
-      brandName && checkBrandPage.length < 3
-        ? __(
+      staticMetaData && staticMetaData?.desc
+        ? staticMetaData.desc
+        : brandName && checkBrandPage.length < 3
+          ? __(
             "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             brandName,
             countryName,
             brandName
           )
-        : __(
+          : __(
             "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
             categoryName,
             countryName,
@@ -948,7 +1025,7 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay} =
+    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
     const { brandImg, brandName, brandDescription, activeFilters } = this.state;
     // isDisabled: this._getIsDisabled()
@@ -964,7 +1041,7 @@ export class PLPContainer extends PureComponent {
       pages,
       activeFilters,
       isLoading,
-      showOverlay
+      showOverlay,
     };
   };
 
@@ -974,14 +1051,14 @@ export class PLPContainer extends PureComponent {
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
       : requestedOptions["categories.level3"]
-      ? requestedOptions["categories.level3"]
-      : requestedOptions["categories.level2"]
-      ? requestedOptions["categories.level2"]
-      : requestedOptions["categories.level1"]
-      ? requestedOptions["categories.level1"]
-      : requestedOptions["categories.level0"]
-      ? requestedOptions["categories.level0"]
-      : "";
+        ? requestedOptions["categories.level3"]
+        : requestedOptions["categories.level2"]
+          ? requestedOptions["categories.level2"]
+          : requestedOptions["categories.level1"]
+            ? requestedOptions["categories.level1"]
+            : requestedOptions["categories.level0"]
+              ? requestedOptions["categories.level0"]
+              : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
     if (this.getIsLoading() == false && categoryloaded == true) {

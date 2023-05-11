@@ -10,6 +10,7 @@ import Event, {
   EVENT_GTM_AUTHENTICATION,
   EVENT_WISHLIST_ICON_CLICK,
   EVENT_GTM_NEW_AUTHENTICATION,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -39,9 +40,10 @@ class HeaderWishlist extends PureComponent {
   routeChangeWishlist = () => {
     const { history, isSignedIn, showNotification, newSignUpEnabled } =
       this.props;
-    Moengage.track_event(EVENT_MOE_WISHLIST_TAB_ICON, {
+    MOE_trackEvent(EVENT_MOE_WISHLIST_TAB_ICON, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
+      isLoggedIn: isSignedIn,
       app6thstreet_platform: "Web",
     });
     if (newSignUpEnabled) {

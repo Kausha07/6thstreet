@@ -20,7 +20,7 @@ import { addressType, customerType } from "Type/Account";
 import isMobile from "Util/Mobile";
 import { withRouter } from "react-router";
 import "./MyAccountAddressBook.style";
-import { EVENT_MOE_NEW_ADDRESS_CLICK } from "Util/Event";
+import { EVENT_MOE_NEW_ADDRESS_CLICK, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountAddressBook extends PureComponent {
@@ -56,7 +56,7 @@ export class MyAccountAddressBook extends PureComponent {
 
   openNewForm = () => {
     const { showCreateNewPopup, history } = this.props;
-    Moengage.track_event(EVENT_MOE_NEW_ADDRESS_CLICK, {
+    MOE_trackEvent(EVENT_MOE_NEW_ADDRESS_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       screen_name: "Address Book",
@@ -142,8 +142,11 @@ export class MyAccountAddressBook extends PureComponent {
       ({ default_billing }) => !default_billing
     );
     const sortedAddresses = [...defaultAddress, ...simpleAddresses];
-
-    return sortedAddresses.map(this.renderAddress);
+    const countryCode = getCountryFromUrl().toUpperCase();
+    const localeAddress = sortedAddresses.filter(
+      ({ country_code }) => country_code === countryCode
+    )
+    return localeAddress.map(this.renderAddress);
   }
 
   render() {

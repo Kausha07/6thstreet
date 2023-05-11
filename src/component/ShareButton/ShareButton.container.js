@@ -9,7 +9,7 @@ import {
 } from "Store/Overlay/Overlay.action";
 import ShareButton from "./ShareButton.component";
 import SharePopup from "Component/SharePopup";
-import Event,{ EVENT_SHARE, EVENT_GTM_PDP_TRACKING } from "Util/Event";
+import Event,{ EVENT_SHARE, EVENT_GTM_PDP_TRACKING, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -101,7 +101,7 @@ class ShareButtonContainer extends PureComponent {
           ? product_type_6s
           : "";
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(EVENT_SHARE, {
+    MOE_trackEvent(EVENT_SHARE, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -155,6 +155,7 @@ class ShareButtonContainer extends PureComponent {
             showShareOverlay={this.showShareOverlay}
             hideShareOverlay={this.hideShareOverlay}
             openSharePopup={open}
+            openShareOverlay={openShareOverlay}
             product={product}
             {...rest}
           />

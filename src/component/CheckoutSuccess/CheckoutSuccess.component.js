@@ -14,7 +14,6 @@ import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getDiscountFromTotals, isArabic, getCurrency } from "Util/App";
-import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
 import Call from "./icons/call.svg";
@@ -28,6 +27,7 @@ import Whatsapp from "./icons/whatsapp.svg";
 import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
+import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -42,6 +42,7 @@ import Event, {
   EVENT_RESEND_OTP_CLICK,
   EVENT_OTP_VERIFY_WITH_EMAIL,
   EVENT_OTP_VERIFY_WITH_PHONE,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
@@ -113,6 +114,23 @@ export class CheckoutSuccess extends PureComponent {
     ) {
       clearInterval(this.timerInterval);
     }
+  }
+
+  getCountryConfigs() {
+    const {
+      config: { countries },
+      country,
+    } = this.props;
+
+    const {
+      contact_using: {
+        options: { phone },
+      },
+    } = countries[country];
+
+    return {
+      phone
+    };
   }
 
   OtpTimerFunction() {
@@ -609,10 +627,11 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderTotalsItems() {
-    const { paymentMethod } = this.props;
+    const { paymentMethod, order } = this.props;
+    console.log('prod =>', order, "=>", paymentMethod?.code );
     if (
-      paymentMethod?.code === "checkout_qpay" ||
-      paymentMethod?.code === "tabby_installments"
+      (paymentMethod?.code === "checkout_qpay" ||
+      paymentMethod?.code === "tabby_installments" ) && order
     ) {
       const {
         order: { status, unship = [], base_currency_code: currency },
@@ -634,7 +653,7 @@ export class CheckoutSuccess extends PureComponent {
           </ul>
         </div>
       );
-    } else if (paymentMethod?.code === "checkout_knet") {
+    } else if (paymentMethod?.code === "checkout_knet" && order) {
       const {
         order: { unship = [], base_currency_code: currency },
         incrementID,
@@ -669,7 +688,7 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="TotalItems">
           <div block="TotalItems" elem="OrderId">
-            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          {(incrementID || incrementID != undefined) ? `${__("Order")} #${incrementID} ${__("Details")}` : "Order Details"}
           </div>
           <ul block="TotalItems" elem="Items">
             {items.map((item) => (
@@ -786,12 +805,16 @@ export class CheckoutSuccess extends PureComponent {
 
   renderContact = () => {
     const { isArabic } = this.state;
-
+    const {config} = this.props;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
+    const whatsappChat = `https://wa.me/${validateWhatsapp}`;
+    const { phone } = this.getCountryConfigs();
+    const updatedPhoneLink = phone ? phone.replaceAll(" ","") : null;
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
         <div block="ContactInfo" elem="Links">
           <a
-            href={`tel:${TEL_LINK}`}
+            href={`tel:${updatedPhoneLink}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_PHONE)}
@@ -806,7 +829,7 @@ export class CheckoutSuccess extends PureComponent {
             </div>
           </a>
           <a
-            href={`mailto:${EMAIL_LINK}`}
+            href={`mailto:${config?.support_email}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_MAIL)}
@@ -821,7 +844,7 @@ export class CheckoutSuccess extends PureComponent {
             </div>
           </a>
           <a
-            href={`${WHATSAPP_LINK}`}
+            href={`${whatsappChat}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => this.sendMOEEvents(EVENT_MOE_CHAT)}
@@ -882,6 +905,10 @@ export class CheckoutSuccess extends PureComponent {
         country_id,
       },
     } = this.props;
+
+    if(!firstname || !lastname || !postcode || !country_id || !city) {
+      return null;
+    }
     return (
       <div block="Address">
         <div block="Address" elem="Title">
@@ -1076,6 +1103,7 @@ export class CheckoutSuccess extends PureComponent {
               <p></p>
             </>
           )}
+          {paymentMethod?.code === CAREEM_PAY ? ("Careem Pay") : null}
         </div>
       </>
     );
@@ -1227,7 +1255,7 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   sendMOEEvents(event) {
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",

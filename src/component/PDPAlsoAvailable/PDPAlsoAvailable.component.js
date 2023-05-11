@@ -37,19 +37,21 @@ class PDPAlsoAvailable extends PureComponent {
   }
 
   render() {
-    const { isAlsoAvailable } = this.props;
+    const { isAlsoAvailable, products = [] } = this.props;
     const { isMobile } = this.state;
     return (
       <>
         {isMobile && this.renderSeperator()}
-        <div block="PDPAlsoAvailable" mods={{ isAlsoAvailable }}>
-          <h2 block="PDPAlsoAvailable" elem="Title">
-            {isMobile ? __("Also available in") : __("Also available in:")}
-          </h2>
-          <ul block="PDPAlsoAvailable" elem="List">
-            {this.renderAvailableProducts()}
-          </ul>
-        </div>
+        {products.length > 0 &&
+          <div block="PDPAlsoAvailable" mods={{ isAlsoAvailable }}>
+            <h2 block="PDPAlsoAvailable" elem="Title">
+              {isMobile ? __("Also available in") : __("Also available in:")}
+            </h2>
+            <ul block="PDPAlsoAvailable" elem="List">
+              {this.renderAvailableProducts()}
+            </ul>
+          </div>
+        }
       </>
     );
   }

@@ -1289,7 +1289,10 @@
         border-right: none;
         border-bottom: none;
         border-left: none;
-
+        text-align: left;
+        &_isArabic{
+          text-align: right;
+        }
         .CountryMiniFlag {
           &-Container {
             margin-bottom: -36px;
@@ -1428,7 +1431,10 @@
         border-right: none;
         border-bottom: none;
         border-left: none;
-
+        text-align: left;
+        &_isArabic{
+          text-align: right;
+        }
         .CountryMiniFlag {
           &-Container {
             margin-bottom: -36px;
@@ -1467,7 +1473,7 @@
         border-bottom: none;
         border-left: none;
 
-        &_type_phone {
+        &_type_text {
           height: 40px;
           width: calc(100% - 104px);
 

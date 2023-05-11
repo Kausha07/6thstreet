@@ -4,7 +4,6 @@ import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import EmptySearch from "Component/EmptySearch";
 import isMobile from "Util/Mobile";
 import { PLP } from "Route/PLP/PLP.component";
-import Loader from "Component/Loader";
 import "./SearchPage.style";
 import "../PLP/PLP.style";
 
@@ -81,8 +80,23 @@ class SearchPage extends PLP {
           </main>
         );
       }
-   
-      return  <Loader isLoading={isLoading} />
+
+      return (
+        <div className="SearchPage">
+        <div  className="ContentWrapper">
+          <div class="Card"></div>
+          <div block="Wrapper">
+            <div class="Card"></div>
+            <div class="Card"></div>
+            <div class="Card"></div>
+            <div class="Card"></div>
+            <div class="Card"></div>
+            <div class="Card" ></div>
+          </div>
+        </div>
+        </div>
+      )
+
     // return (
     //   // <main block="SearchPage" >
     //   //   <ContentWrapper label={__("Product List Page")}>

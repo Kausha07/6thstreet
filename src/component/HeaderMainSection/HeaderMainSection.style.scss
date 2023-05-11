@@ -6,10 +6,12 @@ main {
   @include mobile {
     padding-top: var(--main-content-padding);
   }
+
   @include tablet {
     padding-top: var(--main-content-padding);
   }
 }
+
 .HeaderSearchSection {
   .HeaderSearch {
     @include mobile {
@@ -23,6 +25,7 @@ main {
       height: 54px;
       top: 49px;
     }
+
     @include tablet {
       background: $white;
       position: fixed;
@@ -34,70 +37,82 @@ main {
       height: 54px;
       top: 49px;
     }
-    @include after-mobile {
-      // display: none;
-    }
   }
+
   .HeaderSearch {
     @include mobile {
       top: 49px;
     }
+
     @include tablet {
       top: 49px;
     }
   }
 }
+
 .HeaderMainSection {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
+  display: grid;
   justify-content: center;
   align-items: center;
+  grid-template-columns: 200px 1.5fr 1fr 0.5fr;
   height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
-  .leftContainer {
+
+  &_isArabic {
+    right: -18px;
+  }
+
+  .rightContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     flex: 1;
-    order: 2;
+    @include mobile {
+      justify-content: flex-end;
+    }
     @include desktop {
       z-index: 3;
     }
   }
+  .rightIcons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   @include mobile {
+    display: flex;
     &_showPLPSearch {
       &[data-visible="true"] {
         z-index: 9999 !important;
       }
     }
+
     z-index: 9999;
     position: fixed;
     width: 100%;
     background: $white;
     top: 0;
+
     &[data-visible="false"] {
-      // display: none;
-      // width:0;
-      // height:0;
       visibility: hidden;
       top: -50px;
     }
+
     &[data-visible="true"] {
       z-index: 94;
     }
   }
+
   @include tablet {
     z-index: 90;
     position: fixed;
     width: 100%;
     background: $white;
     top: 0;
+
     &[data-visible="false"] {
-      // display: none;
-      // top: -50px;
       visibility: hidden;
       top: -50px;
     }
@@ -106,29 +121,33 @@ main {
   .HeaderGenders {
     display: flex;
     flex: 1;
-    order: 0;
   }
 
   .HeaderLogo {
-    order: 1;
+    &_isArabic {
+      // padding-left: 21px;
+      padding-right: 0px;
+    }
+
     @include mobile {
       position: fixed;
       top: 15px;
       z-index: 1;
     }
+
     @include tablet {
       position: fixed;
       top: 15px;
       width: 90%;
     }
   }
+
+
   .SearchIcon {
-    order: 2;
-    // display: none;
-    // padding-right: 47px;
     img {
       cursor: pointer;
     }
+
     &-Button {
       content: "";
       background: url(./icons/search-black.svg) no-repeat;
@@ -137,11 +156,50 @@ main {
       height: 24px;
       display: inline-block;
       position: relative;
-      // top: -4px;
     }
+
     @include desktop {
-      display: block;
+      display: flex;
+      border: 1px solid #D1D3D4;
+      border-radius: 8px;
+      opacity: 1;
+      width: 250px;
+      height: 40px;
+      margin-right: 10px;
     }
+  }
+
+  #searchIconImage {
+    margin: 8px 12px;
+    opacity: 1;
+  }
+
+  #search-field {
+    width: 178px;
+    height: 30px;
+    border: none;
+    margin-top: 5px !important;
+    margin-left: 0px;
+    overflow-y: scroll;
+    text-transform: initial;
+    padding-left: 0px;
+    letter-spacing: var(--unnamed-character-spacing-0);
+    color: var(--unnamed-color-000000);
+    font: normal normal normal 15px/20px 'Avenir Next';
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+  }
+
+  .clear-button {
+    img {
+      width: 12px !important;
+      height: 12px;
+      margin-top: 15px;
+    }
+
+    opacity: 1;
+    cursor: pointer;
   }
 
   .CategoryTitle {
@@ -171,6 +229,7 @@ main {
         margin-right: 0 !important;
       }
     }
+
     @include tablet {
       font-size: 12px;
       padding-left: 15px;
@@ -191,17 +250,21 @@ main {
         margin-left: unset;
       }
     }
+
     @include after-mobile {
       display: none;
     }
   }
+
   .BackArrow {
     height: 40px;
     width: 40px;
     border-radius: 20px;
+
     @include mobile {
       height: 30px;
     }
+
     position: fixed;
     top: 11px;
     left: 15px;
@@ -234,9 +297,11 @@ main {
       width: 30px;
       height: 30px;
       padding: 0;
+
       p {
         display: none;
       }
+
       &::before {
         content: "";
         position: absolute;
@@ -257,33 +322,16 @@ main {
   }
 
   .HeaderWishlist {
-    order: 3;
     height: 25px;
-    margin-left: 22px;
-    margin-right: 22px;
-  }
-
-  .HeaderAccount {
-    order: 4;
-    margin-left: 22px;
-    margin-right: 22px;
-    &_isArabic {
-      // margin-left: 0;
-    }
   }
 
   .HeaderCart {
-    order: 5;
-    margin-left: 22px;
-    &_isArabic {
-      margin-right: 22px;
-      margin-left: 0;
-    }
 
     @include before-desktop {
       top: 5px;
       width: 45px;
       margin: 0 auto;
+
       @include mobile {
         position: fixed;
         top: 14px;
@@ -305,7 +353,6 @@ main {
           top: 2px;
           right: -2px;
         }
-
         &_isArabic {
           right: unset;
           left: 20px;
@@ -319,6 +366,7 @@ main {
         }
       }
     }
+
     @include tablet {
       position: fixed;
       top: 14px;
@@ -344,11 +392,11 @@ main {
       &_isArabic {
         right: unset;
         left: 20px;
+
         .HeaderCart {
           &-Button {
             right: 5px;
             left: unset;
-            // background-size: 24px;
           }
         }
       }
@@ -365,9 +413,31 @@ main {
           width: 65% !important;
           overflow: scroll;
           z-index: 999;
-          padding-bottom: 13px !important;
         }
       }
+    }
+  }
+  
+  .moveUpGenders {
+    @include mobile {
+      top: 48px;
+      background-color: #ffffff;
+      padding-top: 10px;
+      padding-bottom: 18px;
+    }
+    @include tablet {
+      top: 50px;
+    }
+  }
+  .moveDownGenders {
+    @include mobile {
+      top: 100px;
+      background-color: #ffffff;
+      padding-top: 10px;
+      padding-bottom: 18px;
+    }
+    @include tablet {
+      top: 100px;
     }
   }
   .HeaderGenders {
@@ -380,23 +450,25 @@ main {
         padding-bottom: 18px;
         align-items: center;
         margin-top: 0px;
-        top: 100px;
         position: fixed;
         justify-content: center;
-        padding-left: 17.5%;
-        padding-right: 17.5%;
       }
 
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        width: 33.33%;
+        min-width: 14%;
 
-        .GenderButton-Button {
+        &_isArabic {
+          min-width: 14%;
+        }
+
+    .GenderButton-Button {
           padding: 0 0px;
         }
       }
     }
+
     @include tablet {
       &_isMobile {
         display: flex;
@@ -406,7 +478,6 @@ main {
         padding-bottom: 18px;
         align-items: center;
         margin-top: 0px;
-        top: 100px !important;
         position: fixed;
         justify-content: center;
       }
@@ -414,7 +485,6 @@ main {
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        // width: 33.33%;
 
         .GenderButton-Button {
           padding: 0;
@@ -431,6 +501,7 @@ main {
         display: none;
       }
     }
+
     &_isMobile {
       @include before-desktop {
         display: none;
@@ -439,20 +510,14 @@ main {
   }
 
   @include desktop() {
-    display: flex;
     height: 84px;
     flex-direction: unset;
-    // padding: 0 15px;
     padding: 0;
     width: var(--main-container-width-dsk);
 
     &_isMobile {
       display: block;
     }
-  }
-
-  @include desktop() {
-    display: flex;
   }
 
   .DesktopSearch {
@@ -463,6 +528,7 @@ main {
     height: 40px;
     left: 0;
     z-index: 10;
+
     .HeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
@@ -477,6 +543,7 @@ main {
       justify-content: center;
       align-items: center;
       border: 1px solid #f6f6f6;
+
       &-Clear {
         padding-right: 0px;
         padding-left: 0px;
@@ -488,41 +555,48 @@ main {
         display: flex;
         align-items: center;
       }
+
       .Field {
         input {
           padding-left: 35px !important;
         }
       }
+
       &-Clear {
         display: flex;
       }
+
       &-SubmitBtn {
         left: 0;
         right: 0;
       }
     }
+
     .SearchSuggestion {
       width: 100%;
       left: 0;
       right: 0;
+
       &-Shade {
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.7);
         position: fixed;
         left: 0;
-        content: '.';
+        content: ".";
         color: transparent;
         z-index: -1;
         pointer-events: none;
       }
+
       &-Content {
         margin-left: 0;
         opacity: 1;
         max-height: 400px;
         overflow-y: auto;
         right: 0;
-        & > div {
+
+        &>div {
           max-width: var(--container-max-width);
           width: var(--main-container-width-dsk);
           margin-left: auto;
@@ -535,21 +609,32 @@ main {
 }
 
 .SearchIcon {
-  margin-right: 22px;
   @include mobile {
-    margin-right: 56px;
+    margin-left: 216px;
     top: 4px;
 
     &_isArabic {
-      margin-right: 0;
-      margin-left: 56px !important;
+      margin-left: 0;
+      margin-right: 216px !important;
     }
   }
-  &_isArabic {
-    margin-right: 0;
-    margin-left: 22px;
+
+  #searchIconImage {
+    width: 24px;
+    opacity: 1;
+    margin-left: 12px;
+    margin-right: 10px;
+
+    &_isArabic {
+      margin-left: 0px;
+    }
   }
 }
+
+#overlay-sections {
+  margin-top: 4px;
+}
+
 .HeaderSearchSection {
   @include mobile {
     &_isPDP {
@@ -557,6 +642,7 @@ main {
         display: none;
       }
     }
-    z-index: 93;
+
+    z-index: 95;
   }
 }

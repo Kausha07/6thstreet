@@ -267,7 +267,8 @@ export class SuccessCheckoutItem extends PureComponent {
         customizable_options,
         bundle_options,
         full_item_info: { cross_border = 0 },
-        brand_name = ""
+        brand_name = "",
+        international_vendor=null
       },
       edd_info,
       isFailed,
@@ -275,8 +276,7 @@ export class SuccessCheckoutItem extends PureComponent {
       intlEddResponse
     } = this.props;
     const isIntlBrand =
-    ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
-    cross_border === 1) && edd_info && edd_info.has_cross_border_enabled ;
+    cross_border === 1 && edd_info && edd_info.has_cross_border_enabled ;
 
     return (
       <figcaption
@@ -339,8 +339,8 @@ export class SuccessCheckoutItem extends PureComponent {
         }
       }
     } else {
-      const isIntlBrand = ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) || crossBorder) && edd_info && edd_info.has_cross_border_enabled
-      const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase());
+      const isIntlBrand = crossBorder && edd_info && edd_info.has_cross_border_enabled
+      const intlEddObj = intlEddResponse['thankyou']?.find(({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase());
       const intlEddMess = intlEddObj
         ? isArabic
           ? intlEddObj["edd_message_ar"]
@@ -377,7 +377,7 @@ export class SuccessCheckoutItem extends PureComponent {
   }
 
   renderEdd = (crossBorder) => {
-    const { item: { extension_attributes } } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "", international_vendor }, intlEddResponse } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
     if (!actualEddMess) {
       return null;

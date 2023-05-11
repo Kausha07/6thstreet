@@ -13,6 +13,7 @@ import Event, {
   EVENT_MOE_SET_LANGUAGE,
   EVENT_LANGUAGE_CHANGE,
   EVENT_GTM_TOP_NAV_CLICK,
+  MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
 import Loader from "Component/Loader";
@@ -21,6 +22,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -52,7 +54,7 @@ export class LanguageSwitcherContainer extends PureComponent {
   onLanguageSelect(value) {
     const { language = "", history } = this.props;
     this.setState({ isLoad: true });
-    Moengage.track_event(EVENT_MOE_SET_LANGUAGE, {
+    MOE_trackEvent(EVENT_MOE_SET_LANGUAGE, {
       country: getCountryFromUrl().toUpperCase(),
       language: value.toUpperCase() || "",
       app6thstreet_platform: "Web",
@@ -69,7 +71,20 @@ export class LanguageSwitcherContainer extends PureComponent {
       window.location.href.includes("en-") ||
       window.location.href.includes("ar-")
     ) {
-      if (location.pathname.match(/my-account/)) {
+      if (
+        pageUrl.pathname === "/influencer.html/Collection" ||
+        pageUrl.pathname === "/influencer.html/Store"
+      ) {
+        const pagePath = pageUrl.origin + pageUrl.pathname + pageUrl.search;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else if (location.pathname.match(/my-account/)) {
         this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = location.href
@@ -85,6 +100,19 @@ export class LanguageSwitcherContainer extends PureComponent {
         }, 1000);
       } else if (pageUrl.pathname == "/catalogsearch/result/") {
         const pagePath = pageUrl.origin;
+        this.timer = setTimeout(() => {
+          // Delay is for Moengage call to complete
+          window.location.href = pagePath.replace(
+            language.toLowerCase(),
+            value,
+            pagePath
+          );
+        }, 1000);
+      } else if (
+        window.pageType === "PRODUCT" &&
+        this.props.gender === "influencer"
+      ) {
+        const pagePath = pageUrl.origin + pageUrl.pathname + pageUrl.search;
         this.timer = setTimeout(() => {
           // Delay is for Moengage call to complete
           window.location.href = pagePath.replace(

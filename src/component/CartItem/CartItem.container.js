@@ -33,7 +33,8 @@ import Event, {
   VUE_REMOVE_FROM_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
-  EVENT_MOE_REMOVE_FROM_CART_FAILED
+  EVENT_MOE_REMOVE_FROM_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
@@ -41,6 +42,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
+import { isSignedIn } from "Util/Auth";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -398,7 +400,7 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -423,6 +425,7 @@ export class CartItemContainer extends PureComponent {
       size: size_value || "",
       quantity: qty || "",
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

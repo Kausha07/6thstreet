@@ -7,7 +7,7 @@ import { customerType } from "Type/Account";
 import { formatDate } from "Util/Date";
 
 import "./MyAccountReturnSuccess.style";
-import { EVENT_MOE_BACK_TO_ORDER_DETAILS } from "Util/Event";
+import { EVENT_MOE_BACK_TO_ORDER_DETAILS, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export class MyAccountReturnSuccess extends MyAccountReturnCreate {
@@ -91,7 +91,7 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     const pathLength = pathname.split("/").length;
     const isReturnSuccess = pathname.includes("/my-account/return-item/create/success/") && pathLength > 4;
     const isReturnDetail = pathname.includes("/my-account/return-item/") && pathLength < 5;
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       ...(isReturnSuccess  && {screen_name: "ReturnSuccess"}),

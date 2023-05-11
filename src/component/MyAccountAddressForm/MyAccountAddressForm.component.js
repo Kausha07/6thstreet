@@ -82,6 +82,10 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         };
     }
 
+    onCitySelected = (selectedCity) => {
+        this.setState({ city: selectedCity, isLoading: true })
+    }
+
     getCitiesBasedOnLanguage() {
         const { isArabic, cities = [] } = this.state;
 
@@ -138,7 +142,9 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 selectOptions: this.getRegionsBasedOnLanguage(),
                 onChange: (regionId) => this.setState({ regionId }),
                 value: regionId,
-                placeholder: __('Area')
+                placeholder: __('Area'),
+                postCodeValue: this.state.regionId,
+                popupType: "area",
             }
         };
     }
@@ -230,17 +236,19 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 validation: ['notEmpty'],
                 type: 'hidden',
                 label: __('Delivering to'),
-                value: isShippingAddress ? firstname : customer?.firstname || ''
+                value: isShippingAddress ? firstname : customer?.firstname || '',
+                maxLength: 25
             },
             lastname: {
                 placeholder: __('Last Name'),
                 validation: ['notEmpty'],
                 type: 'hidden',
-                value: isShippingAddress ? lastname : customer?.lastname?.trim() || ''
+                value: isShippingAddress ? lastname : customer?.lastname?.trim() || '',
+                maxLength: 25
             },
             phonecode: {
                 type: 'text',
-                label: <CountryMiniFlag label={ countryId } />,
+                label: <div style={{paddingLeft: "18px"}}> <CountryMiniFlag label={ countryId } /> </div>,
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
                 autocomplete: 'none',
@@ -259,7 +267,11 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 selectOptions: this.getCitiesBasedOnLanguage(),
                 type: 'select',
                 value: isShippingAddress ? shippingCity : city,
-                onChange: (city) => this.setState({ city, isLoading: true })
+                onChange: (city) => this.setState({ city, isLoading: true }),
+                citySelected: this.state.city,
+                popupType: "city",
+                autocomplete: "new-password",
+                onCitySelected: this.onCitySelected,
             },
             ...this.getRegionFields(),
             postcode: {

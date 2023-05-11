@@ -34,6 +34,7 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_REMOVE_FROM_CART,
   EVENT_MOE_REMOVE_FROM_CART_FAILED,
+  MOE_trackEvent
 } from "Util/Event";
 import CartPageItem from "./CartPageItem.component";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -502,7 +503,7 @@ export class CartItemContainer extends PureComponent {
       : "";
 
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-    Moengage.track_event(event, {
+    MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       category: currentAppState.gender
@@ -514,7 +515,7 @@ export class CartItemContainer extends PureComponent {
       full_price: original_price || basePrice || "",
       product_url: url || "",
       currency: getCurrency() || "",
-      gender: currentAppState.gender.toUpperCase() || gender || "",
+      gender: currentAppState?.gender?.toUpperCase() || gender || "",
       product_sku: config_sku || item_id || "",
       discounted_price: itemPrice || price || "",
       product_image_url: thumbnail_url || "",
@@ -523,6 +524,7 @@ export class CartItemContainer extends PureComponent {
       size: size_value || "",
       quantity: qty || "",
       cart_id: getCartID || "",
+      isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
   }

@@ -34,7 +34,7 @@ import { Store } from "../Icons";
 import "./CartPageItem.extended.style";
 import "./CartPageItem.style";
 import Price from "Component/Price";
-import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT } from "Util/Event";
+import { EVENT_MOE_VIEW_CART_ITEMS_PRODUCT,MOE_trackEvent } from "Util/Event";
 import WishlistIcon from "Component/WishlistIcon";
 import trash from "./trash.png";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -244,7 +244,7 @@ export class CartItem extends PureComponent {
 
   onDragStartMouse = (evt) => {
     const el = this.cartItemRef.current;
-    el.classList.add("active");
+    el?.classList?.add("active");
     this.setState({
       dragged: true,
       dragStartX: evt.clientX,
@@ -264,7 +264,7 @@ export class CartItem extends PureComponent {
       dragged: false,
     });
     const el = this.cartItemRef.current;
-    el.classList.remove("active");
+    el?.classList?.remove("active");
   };
   onDragEndTouch = (evt) => {
     const touch = evt.changedTouches[0];
@@ -762,7 +762,7 @@ export class CartItem extends PureComponent {
     const {
       eddResponse,
       edd_info,
-      item: { extension_attributes, brand_name = "", sku },
+      item: { extension_attributes, brand_name = "", sku, international_vendor=null },
       intlEddResponse,
     } = this.props;
     const { isArabic } = this.state;
@@ -775,6 +775,7 @@ export class CartItem extends PureComponent {
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
+
     let itemEddMessage = extension_attributes?.click_to_collect_store
         ? DEFAULT_READY_MESSAGE
         : DEFAULT_MESSAGE;
@@ -803,10 +804,10 @@ export class CartItem extends PureComponent {
       }
     } else {
       const isIntlBrand =
-      (INTL_BRAND.includes(brand_name.toString().toLowerCase()) && crossBorder) ||
+      (edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
       (crossBorder && edd_info && edd_info.has_cross_border_enabled);
       const intlEddObj = intlEddResponse["cart"]?.find(
-        ({ vendor }) => vendor.toLowerCase() === brand_name.toString().toLowerCase()
+        ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
       );
       const intlEddMess = intlEddObj
         ? isArabic
@@ -818,6 +819,7 @@ export class CartItem extends PureComponent {
           : intlEddResponse["cart"][0]["edd_message_en"]
         : "";
       if (eddResponse && isObject(eddResponse)) {
+
         if (isIntlBrand) {
           actualEddMess = intlEddMess;
         } else {
@@ -895,15 +897,14 @@ export class CartItem extends PureComponent {
         customizable_options,
         bundle_options,
         full_item_info: { cross_border = 0 },
+        international_vendor = null,
         brand_name = "",
         row_total
       },
       intlEddResponse
     } = this.props;
     const { isNotAvailble } = this.state;
-    const isIntlBrand =
-      ((INTL_BRAND.includes(brand_name.toString().toLowerCase()) && cross_border === 1) ||
-        cross_border === 1) &&
+    const isIntlBrand = (cross_border === 1) &&
       edd_info &&
       edd_info.has_cross_border_enabled;
 
@@ -952,7 +953,7 @@ export class CartItem extends PureComponent {
         },
       },
     } = this.props;
-    Moengage.track_event(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
+    MOE_trackEvent(EVENT_MOE_VIEW_CART_ITEMS_PRODUCT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       brand_name: brand_name || "",
