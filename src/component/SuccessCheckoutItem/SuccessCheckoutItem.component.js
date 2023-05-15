@@ -308,7 +308,7 @@ export class SuccessCheckoutItem extends PureComponent {
     const { isArabic } = this.state;
     let actualEddMess = "";
     const { item: { sku } } = this.props;
-    const { eddResponse, edd_info, item: { extension_attributes, brand_name = "" }, intlEddResponse } = this.props;
+    const { eddResponse, edd_info, item: { extension_attributes, international_vendor = null}, intlEddResponse } = this.props;
     const defaultDay = extension_attributes?.click_to_collect_store ? edd_info.ctc_message : edd_info.default_message
     const {
       defaultEddDateString,
