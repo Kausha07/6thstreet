@@ -96,12 +96,13 @@ export class MyAccountOrderViewItem extends SourceComponent {
           orderEddDetails &&
           edd_info &&
           edd_info.is_enable) ||
-          (edd_info && edd_info.is_enable)) &&
+          (edd_info && edd_info.is_enable) && edd_info.has_order_detail) &&
           (isIntlBrand || parseInt(cross_border) === 0) &&
           !isFailed &&
           status !== "payment_failed" &&
-          status !== "payment_aborted" &&
-          this.renderEdd(parseInt(cross_border) === 1, orderEddDetails)}
+          status !== "payment_aborted" ?
+          this.renderEdd(parseInt(cross_border) === 1, orderEddDetails) : null
+        }
         {isIntlBrand &&
           edd_info &&
           edd_info.is_enable &&
