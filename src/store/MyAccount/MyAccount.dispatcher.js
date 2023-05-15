@@ -133,7 +133,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           request.intl_vendors=null;
           let items = [];
-          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}));
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null}));
           request.items = items;
         }
         this.estimateDefaultEddResponse(dispatch, request);
@@ -164,7 +164,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
             request.intl_vendors=null;
             let items = [];
-            items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.cross_border ? item?.international_vendor : null}));
+            items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null}));
             request.items = items;
           }
           this.estimateDefaultEddResponse(dispatch, request);
