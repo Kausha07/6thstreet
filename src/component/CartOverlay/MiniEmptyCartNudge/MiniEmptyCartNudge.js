@@ -3,6 +3,8 @@ import { useState } from "react";
 import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import shopbag from "./icons/shopbag.gif";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_LOGIN_CLICK, MOE_trackEvent } from "Util/Event";
 
 import "./MiniEmptyCartNudge.style.scss";
 
@@ -26,7 +28,15 @@ export default function MiniEmptyCartNudge() {
           <div className="content-text">
             <span
               className="btnsSignInRegister"
-              onClick={() => setShowSignInSignUpPopUp(true)}
+              onClick={() => {
+                MOE_trackEvent(EVENT_LOGIN_CLICK, {
+                  country: getCountryFromUrl().toUpperCase(),
+                  language: getLanguageFromUrl().toUpperCase(),
+                  app6thstreet_platform: "Web",
+                  screenName: "cart_nudge",
+                });
+                setShowSignInSignUpPopUp(true);
+              }}
             >
               {__("Login")}{" "}
             </span>
