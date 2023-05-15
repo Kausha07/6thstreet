@@ -114,7 +114,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       const countryCode = getCountryFromUrl();
       if (
         defaultShippingAddress &&
-        Object.values(defaultShippingAddress).length > 0
+        Object.values(defaultShippingAddress).length > 0 && defaultShippingAddress[0]["country_code"] && countryCode == defaultShippingAddress[0]["country_code"]
       ) {
         const { country_code, city, area } = defaultShippingAddress[0];
         const { finalCity, finalArea } = this.getArabicCityArea(
