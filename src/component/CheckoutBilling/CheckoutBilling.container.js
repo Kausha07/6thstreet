@@ -381,7 +381,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
-      payment_method : code,
+      payment_method : code || "",
     });
 
     let finalEdd = null;
