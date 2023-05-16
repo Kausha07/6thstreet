@@ -29,6 +29,19 @@ export class CheckoutFail extends CheckoutSuccess {
     } = this.props;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
 
+    let payment_status = FAILURE;
+    if(paymentMethod?.code === "checkout_qpay" ){
+      const { QPAY_DETAILS = {} } = this.props;
+      if(QPAY_DETAILS && QPAY_DETAILS.statusFromAPI) {
+        payment_status = QPAY_DETAILS.statusFromAPI;
+      }
+    }else if (paymentMethod?.code === "checkout_knet") {
+      const { KnetDetails= {} } = this.props;
+      if(KnetDetails && KnetDetails.statusFromAPI) {
+        payment_status = KnetDetails.statusFromAPI;
+      }
+    }
+
     let productName = [],
       productColor = [],
       productBrand = [],
@@ -86,6 +99,7 @@ export class CheckoutFail extends CheckoutSuccess {
       subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
       payment_method: paymentMethod?.code || "",
+      status: payment_status || ""
     });
   }
 

@@ -400,6 +400,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     Payment_ID: paymentId,
                     knet_payment_id: knet_payment_id,
                     knet_transaction_id: knet_transaction_id,
+                    statusFromAPI: status,
                   },
                 });
               }
@@ -489,6 +490,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     amount: `${currency} ${amount}`,
                     status: FAILED,
                     Payment_ID: paymentId,
+                    statusFromAPI: status,
                   },
                 });
               }
