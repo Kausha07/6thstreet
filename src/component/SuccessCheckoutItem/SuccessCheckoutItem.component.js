@@ -296,7 +296,7 @@ export class SuccessCheckoutItem extends PureComponent {
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_thank_you &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && !isFailed && this.renderIntlTag()}

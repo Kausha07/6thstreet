@@ -97,7 +97,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
           edd_info &&
           edd_info.is_enable) ||
           (edd_info && edd_info.is_enable) && edd_info.has_order_detail) &&
-          (isIntlBrand || parseInt(cross_border) === 0) &&
+          (isIntlBrand || parseInt(cross_border) === 0 || edd_info.has_item_level) &&
           !isFailed &&
           status !== "payment_failed" &&
           status !== "payment_aborted" ?
