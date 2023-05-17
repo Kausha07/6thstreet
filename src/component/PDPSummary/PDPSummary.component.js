@@ -622,13 +622,12 @@ class PDPSummary extends PureComponent {
           }
         })
       } else {
-        const isIntlBrand = crossBorder && edd_info && edd_info.has_cross_border_enabled;
         const { defaultEddMess } = getDefaultEddMessage(
           edd_info.default_message,
           0,
-          crossBorder
+          0
         );
-        actualEddMess = isIntlBrand ? "" : defaultEddMess;
+        actualEddMess = edd_info && edd_info.has_cross_border_enabled ? defaultEddMess : "";
       }
     } else {
       const isIntlBrand =
