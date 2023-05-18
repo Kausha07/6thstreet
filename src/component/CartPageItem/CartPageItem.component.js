@@ -798,9 +798,7 @@ export class CartItem extends PureComponent {
           }
         });
       } else {
-        actualEddMess = isIntlBrand
-          ? ""
-          : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
       }
     } else {
       const isIntlBrand =
