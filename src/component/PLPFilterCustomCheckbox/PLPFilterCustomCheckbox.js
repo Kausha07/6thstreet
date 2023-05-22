@@ -13,12 +13,13 @@ function PLPFilterCustomCheckbox({
   isLeafLevelVisible,
   toggleIsLeafLevelVisible,
   setIsChecked,
+  isSubCatSelected,
 }) {
-  const handleCheckboxClick = (e) => {
+  const handleCheckboxClick = (e, isDropdownable) => {
     if (e) {
       e.stopPropagation();
     }
-    onChange && onChange(!checked);
+    onChange && onChange(isDropdownable);
   };
 
   if (isDropdownable) {
@@ -33,7 +34,7 @@ function PLPFilterCustomCheckbox({
           <div
             className="checkboxText"
             onClick={(e) => {
-              handleCheckboxClick(e);
+              handleCheckboxClick(e, isDropdownable);
             }}
           >
             <div
@@ -42,7 +43,7 @@ function PLPFilterCustomCheckbox({
                 toggleIsLeafLevelVisible(e);
               }}
             >
-              {checked && (
+              {isSubCatSelected && (
                 <span className="checkmarkSelected">
                   <img
                     src={selectRed}
@@ -51,7 +52,7 @@ function PLPFilterCustomCheckbox({
                   />
                 </span>
               )}
-              {!checked && (
+              {!isSubCatSelected && (
                 <span className="checkmarkUnselected">
                   <img
                     src={selectGray}

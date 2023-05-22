@@ -617,7 +617,7 @@ class FieldMultiselect extends PureComponent {
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
 
-    if (searchFacetKey === "categories_without_path" && searchKey != "") {
+    if (searchFacetKey === "categories_without_path" && searchKey != "" && !isMobile.any() ) {
       const isSearch = true;
       return (
         <ul className="multiselectUl">
@@ -626,7 +626,7 @@ class FieldMultiselect extends PureComponent {
         </ul>
       );
     }
-    if (filter.category === "categories_without_path") {
+    if (filter.category === "categories_without_path" && !isMobile.any() ) {
       return (
         <ul className="multiselectUl">
           {this.renderNestedMultiSelect()}
@@ -811,13 +811,22 @@ class FieldMultiselect extends PureComponent {
               entry[1].subcategories[subEntry[0]];
           }
           Object.entries(subEntry[1].sub_subcategories).map(
-            (sub_subcategories) => {
+            (sub_subcategoriesObj) => {
               if (
-                sub_subcategories[0].toLowerCase().includes(value.toLowerCase())
+                sub_subcategoriesObj[0].toLowerCase().includes(value.toLowerCase())
               ) {
                 finalSearchedData[subEntry[0]] =
                   entry[1].subcategories[subEntry[0]];
               }
+              Object.entries(sub_subcategoriesObj[1].sub_subcategories).map(
+                (sub_cat) => {
+                  if (
+                    sub_cat[0].toLowerCase().includes(value.toLowerCase())
+                  ) {
+                    finalSearchedData[subEntry[0]] =
+                      entry[1].subcategories[subEntry[0]];
+                  }                  
+                });
             }
           );
         });

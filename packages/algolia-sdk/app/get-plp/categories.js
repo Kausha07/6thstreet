@@ -57,6 +57,17 @@ const getOptionsMoreFilters = (facets, queryValues) => {
   return option;
 }
 
+const getIsSelected = ( categoryIdsArray, filterObj ) => {
+  if( filterObj && filterObj.category_id ) {
+    if ( categoryIdsArray.includes(filterObj.category_id) ) {
+      return true;
+    }else {
+      return false;
+    }
+  }
+  return false;
+}
+
 const _getCategoryLevel2Data = ({
   facetKey,
   categoriesLevel2,
@@ -64,6 +75,7 @@ const _getCategoryLevel2Data = ({
   categoriesLevel4,
   categoriesWithoutPath,
   query,
+  categoryData,
 }) => {
   let totalSelectedFiltersCount = 0;
 
@@ -87,6 +99,12 @@ const _getCategoryLevel2Data = ({
 
     And merge the two category levels together
   */
+  let regex = new RegExp("\\s///\\s|\\s", "gm");
+  const categoryIds = query?.categoryIds || "";
+  let categoryIdsArray = categoryIds.split(",");
+  if (categoryIdsArray.length) {
+    categoryIdsArray = categoryIdsArray.map(Number);
+  }
   const categoriesMerge = {
     ...categoriesLevel2,
     ...categoriesLevel3,
@@ -112,7 +130,12 @@ const _getCategoryLevel2Data = ({
       if (l2 && categoriesWithoutPath && !categoriesWithoutPath[l2] && __DEV__) {
         console.warn("No categories_without_path for", l2);
       }
+      let categoryKey= key.replace (regex, '_');
       if (l2 && categoriesWithoutPath && categoriesWithoutPath[l2] ) {
+        let category_id = null;
+        if(key && categoryKey && categoryData && categoryData[categoryKey]) {
+          category_id = parseInt(categoryData[categoryKey]);
+        }
         if (!acc[l1]) {
           acc[l1] = {
             label: l1,
@@ -133,6 +156,8 @@ const _getCategoryLevel2Data = ({
           label: l2,
           is_selected: false,
           product_count: categoriesWithoutPath[l2],
+          category_key: categoryKey,
+          category_id,
           sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories},
         };
 
@@ -144,6 +169,8 @@ const _getCategoryLevel2Data = ({
             is_selected: false,
             product_count: categoriesWithoutPath[l3],
             category_level: "L3",
+            category_key: categoryKey,
+            category_id,
             sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories[l3]?.sub_subcategories}
           };
           if(l4 && categoriesWithoutPath && categoriesWithoutPath[l4]) {
@@ -154,6 +181,8 @@ const _getCategoryLevel2Data = ({
                 is_selected: false,
                 product_count: categoriesWithoutPath[l4],
                 category_level: "L4",
+                category_key: categoryKey,
+                category_id,
               } 
           }
         }
@@ -164,7 +193,8 @@ const _getCategoryLevel2Data = ({
             totalSelectedFiltersCount += 1;
           }
           acc[l1].selected_filters_count += 1;
-          acc[l1].subcategories[l2].is_selected = true;
+          const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2]);
+          acc[l1].subcategories[l2].is_selected = isSelected;
         }
         // Mark selected filters, using the query params - for L3 categories
         if(l3 && queryValues[l3]) {
@@ -177,7 +207,8 @@ const _getCategoryLevel2Data = ({
             acc[l1].subcategories[l2] &&
             acc[l1].subcategories[l2].sub_subcategories[l3]
           ) {
-            acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = true;
+            const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3]);
+            acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = isSelected;
           }
         }
         // Mark selected filters, using the query params - for L4 categories
@@ -192,7 +223,8 @@ const _getCategoryLevel2Data = ({
             acc[l1].subcategories[l2].sub_subcategories[l3] &&
             acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4]
           ) {
-            acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4].is_selected = true;
+            const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4]);
+            acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4].is_selected = isSelected;
           }
         }
       }
@@ -259,7 +291,7 @@ const _getCategoryLevel1Data = ({
   return [data, totalSelectedFiltersCount];
 };
 
-const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
+const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData }) => {
   const facetKey = "categories_without_path";
   // let categoriesLevel2Data = query["categories.level2"]
   //   ? {}
@@ -271,6 +303,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
     categoriesLevel4: facets["categories.level4"],
     categoriesWithoutPath: facets.categories_without_path,
     query,
+    categoryData,
   });
   return {
     label: __("Categories"),

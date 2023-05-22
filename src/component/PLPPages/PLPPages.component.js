@@ -19,6 +19,7 @@ import Field from "Component/Field";
 import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
 import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
 import infoBold from "./icons/infoBold.svg";
+import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
 
 
 export const mapStateToProps = (state) => ({
@@ -426,8 +427,18 @@ class PLPPages extends PureComponent {
   OnDeselectFilter = (val, values) => {
     const { facet_key, facet_value } = val;
     const { is_radio } = values;
+    if( facet_key === "categories_without_path" ) {
+      this.onDeselect(val);
+      return;
+    }
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
+
+  onDeselect = (val, values) => {
+    const { onLevelThreeCategoryPress } = this.props;
+    const isDropdownable = checkIsDropdownable(val);
+    onLevelThreeCategoryPress(val, isDropdownable)
+  }
 
   onClickRemoveMoreFilter = (val, value) => {
     const { handleCallback } = this.props;
@@ -459,7 +470,7 @@ class PLPPages extends PureComponent {
                           return (
                             <li key={v4()}>
                               {thisRef.renderButtonView(subVal.label, () =>
-                                thisRef.OnDeselectFilter(subVal, values)
+                                thisRef.onDeselect(subVal, values)
                               )}
                             </li>
                           );
@@ -504,7 +515,7 @@ class PLPPages extends PureComponent {
                                     {thisRef.renderButtonView(
                                       leafValue.label,
                                       () =>
-                                        thisRef.OnDeselectFilter(
+                                        thisRef.onDeselect(
                                           leafValue,
                                           values
                                         )
@@ -635,18 +646,13 @@ class PLPPages extends PureComponent {
     return null;
   }
 
-  renderMoreFiltersNotAvailable() {
+  renderMoreFiltersNotAvailable(isShowMoreFilters) {
     const {
       filters: { categories_without_path = {} },
     } = this.props;
 
     if (
-      categories_without_path &&
-      !categories_without_path.selected_filters_count &&
-      categories_without_path.selected_filters_count === 0 ||
-      categories_without_path &&
-      categories_without_path.selected_filters_count &&
-      categories_without_path.selected_filters_count > 1
+      !isShowMoreFilters
     ) {
       return (
         <>
@@ -681,20 +687,18 @@ class PLPPages extends PureComponent {
     const {
       moreFilters: { option = {} },
       filters: { categories_without_path = {} },
+      newActiveFilters,
     } = this.props;
     const { selectedMoreFilter, noMoreFilters } = this.state;
     const ListOFMoreFilters = Object.keys(option).filter(
       (key) => option[key] !== undefined
     );
+    let isShowMoreFilters = getIsShowMoreFilters(newActiveFilters);
+    
     if (
-      categories_without_path &&
-      !categories_without_path.selected_filters_count &&
-      categories_without_path.selected_filters_count === 0 ||
-      categories_without_path &&
-      categories_without_path.selected_filters_count &&
-      categories_without_path.selected_filters_count > 1
+      !isShowMoreFilters
     ) {
-      return <>{this.renderMoreFiltersNotAvailable()}</>;
+      return <>{this.renderMoreFiltersNotAvailable(isShowMoreFilters)}</>;
     }
     return (
       <>

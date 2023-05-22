@@ -116,7 +116,7 @@ function getMoreFilters (facets, query ) {
   return moreFilters;
 }
 
-function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
+function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -165,6 +165,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
   filtersObject.categories_without_path = makeCategoriesWithoutPathFilter({
     facets,
     query,
+    categoryData,
   });
 
   // Facet filters
@@ -417,7 +418,7 @@ const _formatFacets = ({ facets, queryParams }) => {
   }, {});
 };
 
-function getPLP(URL, options = {}, params = {}) {
+function getPLP(URL, options = {}, params = {}, categoryData={}) {
   const { client, env } = options;
 
   return new Promise((resolve, reject) => {
@@ -564,6 +565,7 @@ function getPLP(URL, options = {}, params = {}) {
         raw_facets: facets,
         query: queryParams,
         additionalFilter: false,
+        categoryData,
       });
       const moreFilters = getMoreFilters(facets, queryParams);
 

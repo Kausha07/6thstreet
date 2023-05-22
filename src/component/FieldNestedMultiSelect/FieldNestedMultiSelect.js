@@ -26,11 +26,11 @@ function FieldNestedMultiSelect({
   };
   const { is_selected } = multiLevelData;
   const is_Arabic = isArabic() ? true : false;
-  const handleToggleIsSelected = (e) => {
+  const handleToggleIsSelected = (e, isDropdown) => {
     const { facet_key, facet_value, is_selected } = multiLevelData;
     e.stopPropagation();
     setIsSelected(!isSelected);
-    onLevelThreeCategoryPress(multiLevelData);
+    onLevelThreeCategoryPress(multiLevelData, isDropdown);
     onBlur();
   };
 
@@ -54,6 +54,11 @@ function FieldNestedMultiSelect({
         if (sub_cat[0].toLowerCase().includes(searchKey.toLowerCase())) {
           sub_subCat.push(sub_cat[1]);
         }
+        Object.entries(sub_cat[1].sub_subcategories).map((subSubCat) => {
+          if( subSubCat[0].toLowerCase().includes(searchKey.toLowerCase())) {
+            sub_subCat.push(sub_cat[1]);
+          }
+        });
       });
     }
     if (sub_subCat.length > 0) {
@@ -68,6 +73,7 @@ function FieldNestedMultiSelect({
               onBlur={onBlur}
               handleTogglebuttonClick={handleTogglebuttonClick}
               onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+              isSearch={isSearch}
             />
           ))}
         </>
@@ -76,6 +82,7 @@ function FieldNestedMultiSelect({
   };
 
   let isDropdown = false;
+  let isSubCatSelected = false;
   if (multiLevelData && multiLevelData?.sub_subcategories) {
     let sub_subCat = [];
     const { sub_subcategories } = multiLevelData;
@@ -84,6 +91,11 @@ function FieldNestedMultiSelect({
     });
     if (sub_subCat.length > 0) {
       isDropdown = true;
+      sub_subCat.map((item)=> {
+        if(item.is_selected) {
+          isSubCatSelected = true;
+        }
+      });
     }
   }
   if (!isDropdown) {
@@ -92,7 +104,7 @@ function FieldNestedMultiSelect({
       <div>
         <div
           onClick={(e) => {
-            handleToggleIsSelected(e);
+            handleToggleIsSelected(e, isDropdown);
           }}
           className="toggleButtonNestedMultiSelect"
           block="toggleButtonNestedMultiSelectBlock"
@@ -142,10 +154,10 @@ function FieldNestedMultiSelect({
       >
         <div
           onClick={(e) => {
-            handleToggleIsSelected(e);
+            handleToggleIsSelected(e, isDropdown);
           }}
         >
-          {is_selected ? (
+          {isSubCatSelected ? (
             <span>
               <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
             </span>

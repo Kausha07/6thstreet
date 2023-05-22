@@ -176,6 +176,7 @@ export class PLPPagesContainer extends PureComponent {
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
     moreFilters: this.props.moreFilters,
+    newActiveFilters: this.props.newActiveFilters,
   });
 
   containerFunctions = () => {
@@ -184,6 +185,7 @@ export class PLPPagesContainer extends PureComponent {
       updateFiltersState,
       setPrevProductSku,
       handleCallback,
+      onLevelThreeCategoryPress,
     } = this.props;
 
     return {
@@ -191,6 +193,7 @@ export class PLPPagesContainer extends PureComponent {
       updateFiltersState,
       setPrevProductSku,
       handleCallback,
+      onLevelThreeCategoryPress,
     };
   };
 

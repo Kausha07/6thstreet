@@ -33,7 +33,14 @@ export class PLPDispatcher {
     if (Object.keys(options).length !== 0) {
       dispatch(setPLPLoading(true));
       try {
-        const response = await new Algolia().getPLP(options);
+        let categoryData = {};
+        const resp = await getStaticFile("category_data", {
+          $FILE_NAME: `en/${"categoryData"}.json`,
+        });
+        if(resp) {
+          categoryData = resp;
+        }
+        const response = await new Algolia().getPLP(options, categoryData);
         localStorage.setItem("queryID", response.queryID);
         dispatch(setProductLoading(false));
 

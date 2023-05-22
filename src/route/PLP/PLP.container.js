@@ -181,6 +181,7 @@ export class PLPContainer extends PureComponent {
     activeFilters: {},
     categoryloaded: false,
     metaContent: null,
+    newActiveFilters: {},
   };
 
   containerFunctions = {
@@ -599,6 +600,120 @@ export class PLPContainer extends PureComponent {
     }
   }
 
+  setNewActiveFilters( multiLevelData, isDropdown ) {
+    const { category_key, facet_key, sub_subcategories, is_selected } = multiLevelData;
+    const { newActiveFilters } = this.state;
+    const filterArray = newActiveFilters[facet_key] || [];
+    const categoryKey = [];
+
+    if(isDropdown) {
+      let isAllSelected = true;
+      let categoryKeyArray = [];
+      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
+        if( !!!sub_cat[1].is_selected ) {
+          isAllSelected= false;
+        }
+        if( sub_cat[1] && sub_cat[1].category_key ) {
+          categoryKeyArray.push(sub_cat[1].category_key);
+        }
+      });
+      if( isAllSelected ) {
+        const newFilterArray = filterArray.filter((filterObj) => {
+          if(  !!!categoryKeyArray.includes(filterObj.category_key) ) {
+            return filterObj
+          } 
+        });
+        this.setState(
+          {
+            newActiveFilters: {
+              ...newActiveFilters,
+              [facet_key]: [...newFilterArray],
+            },
+          },
+          () => this.select()
+        );
+      } else {
+        Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
+          categoryKey.push(sub_cat[1]);
+          if( sub_cat[1].sub_subcategories && Object.keys(sub_cat[1].sub_subcategories)?.length > 0) {
+            Object.entries(sub_cat[1].sub_subcategories).map((sub_subCat) => {
+              categoryKey.push(sub_subCat[1]);
+            });
+          }
+        });
+        this.setState(
+          {
+            newActiveFilters: {
+              ...newActiveFilters,
+              [facet_key]: filterArray
+                ? [ ...filterArray, ...categoryKey ]
+                : [ ...categoryKey ],
+            }
+          },
+          () => this.select()
+        );
+      }
+    } else {
+      if( is_selected ) {
+        const newFilterArray = filterArray.filter((filterObj) => {
+          if( filterObj.category_key != category_key ) {
+            return filterObj
+          } 
+        });
+        this.setState(
+          {
+            newActiveFilters: {
+              ...newActiveFilters,
+              [facet_key]: [...newFilterArray],
+            }
+          },
+          () => this.select()
+        );
+      }else {
+        categoryKey.push(multiLevelData);
+        this.setState(
+          {
+            newActiveFilters: {
+              ...newActiveFilters,
+              [facet_key]: filterArray
+                ? [ ...filterArray, ...categoryKey ]
+                : [ ...categoryKey ],
+            }
+          },
+          () => this.select()
+        );
+      }
+    }
+  }
+
+  getCategoryIds() {
+    const { newActiveFilters } = this.state;
+    const category_ids = [];
+    if(newActiveFilters && newActiveFilters["categories_without_path"]) {
+      const newSelectedFilters = newActiveFilters["categories_without_path"];
+      newSelectedFilters.map((item) => {
+        if(item && item.category_id ) {
+          category_ids.push(item.category_id);
+        }
+      });
+    }
+    return category_ids;
+  }
+
+  getSelectedFiltersFacetValues() {
+    const { newActiveFilters } = this.state;
+    const SelectedFiltersFacetValues = [];
+    if(newActiveFilters && newActiveFilters["categories_without_path"]) {
+      const newSelectedFilters = newActiveFilters["categories_without_path"];
+      newSelectedFilters.map((item) => {
+        if(item && item.facet_value ) {
+          SelectedFiltersFacetValues.push(item.facet_value);
+        }
+      });
+    }
+    return SelectedFiltersFacetValues;
+  }
+
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
@@ -610,45 +725,23 @@ export class PLPContainer extends PureComponent {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          WebUrlParser.setParam(key, activeFilters[key], query);
+          if(key === "categories_without_path") {
+            const categoryIds = this.getCategoryIds();
+            const getSelectedFiltersFacetValues = this.getSelectedFiltersFacetValues();
+            WebUrlParser.setParam(key, getSelectedFiltersFacetValues, categoryIds);
+          }else {
+            WebUrlParser.setParam(key, activeFilters[key], query);
+          }
         }
       }
     });
   };
 
-  onLevelThreeCategoryPress(multiLevelData) {
+  onLevelThreeCategoryPress(multiLevelData, isDropdown) {
     const { filters, updatePLPInitialFilters } = this.props;
     const { activeFilters = {} } = this.state;
-    const {facet_key, facet_value, is_selected} = multiLevelData;
     let newFilterArray = filters;
-    let tempArray = [];
-    if(is_selected) {
-      tempArray  = [...activeFilters["categories_without_path"]];
-      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
-        if(tempArray.includes(sub_cat[0])){
-          const index = tempArray.indexOf(sub_cat[0]);
-          tempArray = tempArray.splice(index, 1);
-        }
-      });
-      Object.entries(newFilterArray).map((filter) => {
-        if (filter[0] === "categories_without_path") {
-            activeFilters[filter[0]] = [...tempArray];
-        }
-      });
-    }else {
-      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
-        tempArray.push(sub_cat[0]);
-      });
-      Object.entries(newFilterArray).map((filter) => {
-        if (filter[0] === "categories_without_path") {
-            activeFilters[filter[0]] = activeFilters[filter[0]] ? [...activeFilters[filter[0]], ...tempArray] : [...tempArray];
-        }
-      });
-    }
-    this.setState({
-      activeFilters,
-    });
-    this.handleCallback(facet_key, facet_value, !is_selected);
+    this.setNewActiveFilters(multiLevelData, isDropdown, activeFilters, newFilterArray);
   }
 
   onUnselectAllPress(category) {
@@ -1086,7 +1179,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1101,6 +1194,7 @@ export class PLPContainer extends PureComponent {
       activeFilters,
       isLoading,
       showOverlay,
+      newActiveFilters,
     };
   };
 
