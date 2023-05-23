@@ -40,24 +40,16 @@ class Price extends PureComponent {
         elem="Discount"
         mods={{ discount: this.haveDiscount() }}
       >
-        {
-          onSale
-            ?
-            <>
-              {currency}
-              <span block="Price-Discount" elem="space"></span>
-              &nbsp;
-              {specialPrice}
-            </>
-            :
-            country && showDiscountPercentage
-              ?
-              <>
-                {`${__("On Sale")} ${this.discountPercentage()} Off`}
-              </>
-              :
-              null
-        }
+        {onSale ? (
+          <>
+            {currency}
+            <span block="Price-Discount" elem="space"></span>
+            &nbsp;
+            {specialPrice}
+          </>
+        ) : country && showDiscountPercentage ? (
+          <>{`${__("On Sale")} ${this.discountPercentage()} Off`}</>
+        ) : null}
       </span>
     );
   }
@@ -164,13 +156,6 @@ class Price extends PureComponent {
         <span block="Price" elem="Wrapper">
           {renderSpecialPrice && this.renderSpecialPrice()}
           {isArabic && <>&nbsp;</>}
-          {!renderSpecialPrice ? (
-            <span block="SearchProduct" elem="PriceWrapper">
-              {this.renderDiscountSpecialPrice(true, specialPrice)}
-            </span>
-          ) : (
-            this.renderDiscountSpecialPrice(false)
-          )}
           <del block="Price" elem="Del">
             {this.renderBasePrice()}
           </del>

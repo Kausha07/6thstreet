@@ -800,7 +800,7 @@
     "Breadcrumbs (current location)...": null,
     "You may earn ": " قد تربح",
     "worth of Club Apparel points for this purchase.": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
-    "Link your Club Apparel account to earn ": " اربط حساب كلوب أباريل الخاص بك لتكسب ",
+    "Link your Club Apparel Account to earn ": " اربط حساب كلوب أباريل الخاص بك لتكسب ",
     "worth of points for this purchase. ": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
     "Link now": "اربط الآن",
     "worth of points for this purchase.": "عملية الشراء هذه تُربحك نقاط كلوب أباريل",
@@ -1235,7 +1235,10 @@
     "Ooops... It's gone!": "عذراً... لم يعد متوفراً!",
     "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
     "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة",
-    "Looking for this?": " أتبحث عن هذا؟",
+    "Looking for this?": "أتبحث عن هذا؟",
     "Coupon applied":"تم تطبيق القسيمة",
-    "Non-discountable item":"منتج غير قابل للخصم"
+    "Non-discountable item":"منتج غير قابل للخصم",
+    "Move to cart": "اضف لسلة التسوق",
+    "SELECT SIZE": "حدد المقاس",
+    "Last %s left":"تبقى %s فقط"
 }

@@ -200,10 +200,11 @@ padding: auto ;
 
             .msitePrice{
                 font-weight: 600;
-                font-size: 16px;
+                font-size: 18px;
             }
             .msiteViewDetail{
                 text-decoration: underline;
+                font-size: 12px;
             }
         }
     }
@@ -933,7 +934,7 @@ padding: auto ;
             }
         }
         .appliedCouponBlock {
-            padding: 10px 10px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
             
@@ -984,6 +985,7 @@ padding: auto ;
                 text-transform: none;
                 cursor: pointer;
                 min-width: 80px;
+                padding-right: 0px;
                 &.remove {
                     border-radius: 8px;
                     color: #28d9aa;

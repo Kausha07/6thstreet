@@ -673,7 +673,7 @@ export class CartItem extends PureComponent {
   renderProductPrice() {
     const {
       currency_code,
-      item: { row_total, basePrice, discount_amount },
+      item: { row_total, basePrice, discount_amount = 0 },
       totals: { coupon_code },
     } = this.props;
 
@@ -697,7 +697,9 @@ export class CartItem extends PureComponent {
       <>
         <div
           block="CartPageItem"
-          elem={`Price ${coupon_code ? "couponPriceActive" : null}`}
+          elem={`Price ${
+            coupon_code && discount_amount ? "couponPriceActive" : null
+          }`}
           mods={{ isArabic }}
         >
           <Price
@@ -714,7 +716,8 @@ export class CartItem extends PureComponent {
                 {currency_code} {finalPrice.toFixed(2)}
               </span>
               <span block="couponAppliedText">
-                {currency_code} {discount_amount.toFixed(2)} {__("Coupon applied")}
+                {currency_code} {discount_amount.toFixed(2)}{" "}
+                {__("Coupon applied")}
               </span>
             </div>
           ) : (

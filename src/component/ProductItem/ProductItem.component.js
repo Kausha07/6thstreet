@@ -26,7 +26,7 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
-  MOE_trackEvent
+  MOE_trackEvent,
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -183,10 +183,9 @@ class ProductItem extends PureComponent {
         return categories.level0[0];
       } else return "";
     };
-    const categoryLevel =
-      checkCategoryLevel().includes("///")
-        ? checkCategoryLevel().split("///").pop()
-        : "";
+    const categoryLevel = checkCategoryLevel().includes("///")
+      ? checkCategoryLevel().split("///").pop()
+      : "";
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
@@ -359,9 +358,16 @@ class ProductItem extends PureComponent {
     const {
       product: { name },
     } = this.props;
+    const { isArabic } = this.state;
 
     return (
-      <p block="ProductItem" elem="Title">
+      <p
+        block="ProductItem"
+        elem="Title"
+        mods={{
+          isArabic,
+        }}
+      >
         {" "}
         {name}{" "}
       </p>
@@ -388,12 +394,8 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const { 
-      product,
-      pageType,
-      removeFromWishlist,
-      wishlist_item_id,
-    } = this.props;
+    const { product, pageType, removeFromWishlist, wishlist_item_id } =
+      this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
       : Object.values(product.price);
@@ -402,7 +404,7 @@ class ProductItem extends PureComponent {
     }
     return (
       <div block="ProductItem" elem="AddToCart">
-        <PLPAddToCart 
+        <PLPAddToCart
           product={this.props.product}
           url={urlWithQueryID}
           pageType={pageType}
@@ -448,7 +450,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = url ? url : link ? link: link; // From api link and url both in different cases.
+      urlWithQueryID = url ? url : link ? link : link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender

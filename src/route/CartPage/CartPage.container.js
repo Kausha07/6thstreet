@@ -273,6 +273,10 @@ export class CartPageContainer extends PureComponent {
   }
 
   getCartLookingForThisVueData() {
+    const {
+      totals: { items },
+      totalsForProduct,
+    } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -285,14 +289,25 @@ export class CartPageContainer extends PureComponent {
     const defaultQueryPayload = {
       userID,
       product_id:
-        `${this.props.totalsForProduct?.[0]?.full_item_info?.config_sku}` ||
-        `${this.props.totals?.items?.[0]?.full_item_info?.config_sku}`,
+        `${totalsForProduct?.[0]?.full_item_info?.config_sku}` ||
+        `${items?.[0]?.full_item_info?.config_sku}`,
     };
     const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
     var promise = Promise.resolve(fetchVueData(payload));
     promise
       .then((resp) => {
-        this.setState({ lookingForThisData: resp.data });
+        const filteredArray = resp?.data?.filter((obj) => {
+          const foundIndex = items?.findIndex((item) => {
+            return (
+              item.product &&
+              item.product.name &&
+              obj.name &&
+              item.product.name === obj.name
+            );
+          });
+          return foundIndex === -1;
+        });
+        this.setState({ lookingForThisData: filteredArray });
       })
       .catch((err) => {
         console.error("uncaught  errr", err);
