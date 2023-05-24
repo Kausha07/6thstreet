@@ -28,7 +28,6 @@ const FACET_FILTERS = [
   "in_stock",
   "age",
   "promotion",
-  // here add discount , array from chat 
 ];
 
 const MORE_FILTERS = [
@@ -48,6 +47,13 @@ const MORE_FILTERS = [
   "trend",
   "padded",
   "wired",
+  "discount",
+  "price.AED.default",
+  "price.SAR.default",
+  "price.KWD.default",
+  "price.OMR.default",
+  "price.BHD.default",
+  "price.QAR.default",
 ]
 
 const config = {

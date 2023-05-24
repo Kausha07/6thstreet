@@ -65,6 +65,14 @@ const getPriceRangeData = ({ currency, lang }) => {
   return priceRangeData;
 };
 
+const getNewPriceRangeData = ({ facets_stats, currency, lang }) => {
+  let newPriceRangeData = {};
+  if(facets_stats && facets_stats[`price.${currency}.default`]){
+    newPriceRangeData = {...facets_stats[`price.${currency}.default`]};
+  }
+  return newPriceRangeData;
+}
+
 const getDiscountData = ({ currency, lang }) => {
   const discountData = {};
   for (let i = 10; i <= 70; i += 10) {
@@ -79,6 +87,14 @@ const getDiscountData = ({ currency, lang }) => {
 
   return discountData;
 };
+
+const getNewDiscountData = ({ facets_stats, currency, lang }) => {
+  let newDiscountData = {};
+  if(facets_stats && facets_stats["discount"]) {
+    newDiscountData = {...facets_stats["discount"]};
+  }
+  return newDiscountData;
+}
 
 const formatFacetData = ({ allFacets, facetKey }) => {
   const data = allFacets[facetKey];
@@ -116,7 +132,7 @@ function getMoreFilters (facets, query ) {
   return moreFilters;
 }
 
-function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData }) {
+function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData, facets_stats }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -224,6 +240,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter, categ
     is_radio: true,
     selected_filters_count: 0,
     data: getPriceRangeData({ currency, lang }),
+    newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
   };
 
   // Discount
@@ -233,6 +250,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter, categ
     is_radio: true,
     selected_filters_count: 0,
     data: getDiscountData({ lang }),
+    newDiscountData: getNewDiscountData({ facets_stats, currency, lang }),
   };
 
   filtersObject["categories.level1"] = makeCategoriesLevel1Filter({
@@ -558,6 +576,12 @@ function getPLP(URL, options = {}, params = {}, categoryData={}) {
           }
         });
       }
+      let facets_stats = {};
+      if( res && res.results[5] && res.results[5].facets_stats ) {
+        facets_stats = res.results[5].facets_stats;
+      } else if ( res && res.results[0] && res.results[0].facets_stats  ) {
+        facets_stats = res.results[0].facets_stats;
+      }
       const facetsFilter = deepCopy(finalFiltersData.facets);
       const { filters, _filtersUnselected } = getFilters({
         locale,
@@ -566,6 +590,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}) {
         query: queryParams,
         additionalFilter: false,
         categoryData,
+        facets_stats,
       });
       const moreFilters = getMoreFilters(facets, queryParams);
 

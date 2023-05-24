@@ -1,0 +1,32 @@
+.trackStyle {
+  background-color: black;
+}
+
+.rc-slider-handle {
+  border: 1px solid black;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+}
+
+.rc-slider-handle:hover {
+  border-color: black;
+}
+
+.renderMinMaxRenger {
+  margin-left: 20px;
+  font-size: 14px;
+
+  &-spanRenderMinMaxRenger {
+    font-weight: bold;
+  }
+}
+
+.rengeSliderWrapper {
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.wrapperSlider {
+  margin: 20px;
+}

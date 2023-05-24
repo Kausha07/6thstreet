@@ -33,6 +33,8 @@ import Event,{
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
+import RangeSlider from "Component/RangeSlider/RangeSlider";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -447,6 +449,58 @@ class FieldMultiselect extends PureComponent {
     });
   };
 
+  renderRangeSliders() {
+    const {
+      filter,
+      parentCallback,
+      filter: {
+        category,
+        newPriceRangeData = {},
+        newDiscountData= {},
+      },
+    } = this.props;
+
+    if( category === "discount" ) {
+      let MIN = newDiscountData.min || 0;
+      let MAX =  newDiscountData.max || 50;
+      const currentMIN = 0;
+      const currentMAX = 50;
+      return (
+        <div>
+          <RangeSlider 
+            filter={filter}
+            parentCallback={parentCallback}
+            minVal={MIN}
+            maxVal={MAX}
+            currentMIN={currentMIN}
+            currentMAX={currentMAX}
+          />
+        </div>
+      );
+    }else {
+      let MIN;
+      let MAX;
+      const currentMIN = 0;
+      const currentMAX = 900;
+      if(newPriceRangeData && newPriceRangeData.min && newPriceRangeData.max ) {
+        MIN = newPriceRangeData.min;
+        MAX = newPriceRangeData.max;
+      }
+      return (
+        <div>
+            <RangeSlider
+              filter={filter}
+              parentCallback={parentCallback}
+              minVal={MIN}
+              maxVal={MAX}
+              currentMIN={currentMIN}
+              currentMAX={currentMAX}
+            />
+        </div>
+      );
+    }
+  }
+
   renderNestedMultiSelect = (isSearch) => {
     const {
       filter: { data = {} },
@@ -616,6 +670,11 @@ class FieldMultiselect extends PureComponent {
     }
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
+
+    const currency = getCountryCurrencyCode();
+    if ( category === `price.${currency}.default` || category === "discount" ) {
+      return this.renderRangeSliders();
+    }
 
     if (searchFacetKey === "categories_without_path" && searchKey != "" && !isMobile.any() ) {
       const isSearch = true;
