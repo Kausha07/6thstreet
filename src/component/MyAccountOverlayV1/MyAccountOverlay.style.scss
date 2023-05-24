@@ -1541,38 +1541,6 @@
       }
     }
 
-    .CountrySwitcher {
-      margin: 0;
-
-      &-CountryBtn {
-        margin: 0;
-        padding: 0;
-
-        &:after,
-        &:before {
-          content: none;
-        }
-      }
-
-      .StoreSwitcherPopup {
-        position: relative !important;
-
-        &-Image {
-          display: none;
-        }
-
-        &-Container {
-          right: 0;
-
-          &_isArabic {
-            @include mobile {
-              right: auto;
-              left: 35px;
-            }
-          }
-        }
-      }
-    }
   }
 
   &-btnOutsidePopUpClose {

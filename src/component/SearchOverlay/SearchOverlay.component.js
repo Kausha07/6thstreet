@@ -50,7 +50,7 @@ export class SearchOverlay extends PureComponent {
     products: Products.isRequired,
     isHidden: PropTypes.bool,
     hideActiveOverlay: PropTypes.func,
-    trendingBrands: PropTypes.array.isRequired,
+    newTrendingBrands: PropTypes.array.isRequired,
     location: LocationType.isRequired,
   };
 
@@ -153,7 +153,7 @@ export class SearchOverlay extends PureComponent {
     genderInURL = this.onGenderSelection(gender);
     catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
       query
-    )}&p=0&dFR[gender][0]=${genderInURL}`;
+    )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`;
     return catalogUrl;
   };
 
@@ -196,7 +196,7 @@ export class SearchOverlay extends PureComponent {
       if (products?.length === 1 && fetchSKU) {
         return (
           <Link
-            to={fetchSKU?.url}
+            to={fetchSKU?.url+'&dFR[in_stock][0]=${1}'}
             onClick={() => suggestionEventDipatch(query)}
             key={i}
           >
@@ -383,7 +383,7 @@ export class SearchOverlay extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&p=0&dFR[gender][0]=${genderInURL}`
+                )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`
           }
           onClick={() => {
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
@@ -430,7 +430,7 @@ export class SearchOverlay extends PureComponent {
   };
 
   renderTrendingBrand = (brand, i) => {
-    const { label = "", image_url, link = "" } = brand;
+    const { ar_label = "", ar_link = "", en_label = "", en_link = "", image_url } = brand;
     const { isArabic } = this.state;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -441,6 +441,8 @@ export class SearchOverlay extends PureComponent {
 
     let genderInURL;
     genderInURL = this.onGenderSelection(gender);
+    const link = isArabic ? ar_link : en_link;
+    const label = isArabic ? ar_label : en_label;
     return (
       <li key={i}>
         <Link
@@ -449,7 +451,7 @@ export class SearchOverlay extends PureComponent {
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   label
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`,
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -463,9 +465,9 @@ export class SearchOverlay extends PureComponent {
   };
 
   renderTrendingBrands() {
-    const { trendingBrands = [] } = this.props;
+    const { newTrendingBrands = [] } = this.props;
     const { isArabic } = this.state;
-    return trendingBrands.length > 0 ? (
+    return newTrendingBrands.length > 0 ? (
       <div block="TrandingBrands" mods={{ isArabic }}>
         <h2>{__("Trending brands")}</h2>
         <ul
@@ -475,7 +477,7 @@ export class SearchOverlay extends PureComponent {
           mods={{ isArabic }}
           ref={this.ref}
         >
-          {trendingBrands?.slice(0, 9)?.map(this.renderTrendingBrand)}
+          {newTrendingBrands?.slice(0, 9)?.map(this.renderTrendingBrand)}
         </ul>
       </div>
     ) : null;
@@ -592,7 +594,7 @@ export class SearchOverlay extends PureComponent {
       }
       if (gender !== "home" && gender !== "all") {
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       } else if (gender === "all") {
@@ -600,12 +602,12 @@ export class SearchOverlay extends PureComponent {
           ? "أولاد,بنات,نساء,رجال"
           : "Men,Women,Kids,Boy,Girl";
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       } else {
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       }

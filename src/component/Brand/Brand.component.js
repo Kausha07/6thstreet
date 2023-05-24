@@ -70,20 +70,20 @@ class Brand extends PureComponent {
             brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
-          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}&dFR[in_stock][0]=${1}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
           )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             brandName
-          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}&dFR[in_stock][0]=${1}`;
     } else {
       finalURL = url
         ? `/${url}.html?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}&dFR[in_stock][0]=${1}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
             brandName
-          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(brandName)}&dFR[in_stock][0]=${1}`;
     }
 
     return (

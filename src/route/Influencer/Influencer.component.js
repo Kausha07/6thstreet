@@ -38,6 +38,7 @@ export const mapStateToProps = (state) => ({
   masterTrendingInfo: state?.InfluencerReducer?.masterTrendingInfo,
   selectedGender: state?.InfluencerReducer?.selectedGender,
   archived: state?.LiveParty?.archived,
+  is_live_party_enabled: state.AppConfig.is_live_party_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -67,6 +68,7 @@ const Influencer = (props) => {
     loadMoreButtonClicked,
     requestLiveShoppingInfo,
     archived,
+    is_live_party_enabled,
   } = props;
   const [showTrending, setShowTrending] = useState(true);
   const [showFollowing, setShowFollowing] = useState(false);
@@ -609,9 +611,9 @@ const Influencer = (props) => {
     let archivedSliced = archived?.slice(0, 8);
     return (
       <div block="LiveShoppingVideoSnapshots">
-        {archived?.length === 0
-          ? renderBannerAnimation()
-          : renderSlider(archivedSliced)}
+        {is_live_party_enabled &&
+          archived?.length > 0 &&
+          renderSlider(archivedSliced)}
       </div>
     );
   };
