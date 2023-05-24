@@ -287,3 +287,6 @@
  export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
    "account_tooltip_close_button_click";
  
+// Checkout Errors Tracking Event
+export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
+export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
