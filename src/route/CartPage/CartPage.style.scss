@@ -311,12 +311,12 @@ padding: auto ;
             margin-top: 20px;
         }
         &Text {
-            font-size: 12px;
+            font-size: 13px;
             display: inline;
             align-items: center;
             flex-wrap: wrap;
             line-height: 20px;
-            letter-spacing: 1px;
+            letter-spacing: 0.6px;
             @include mobile {
                 font-size: 13px;
             }
