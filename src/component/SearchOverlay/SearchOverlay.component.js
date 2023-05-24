@@ -153,7 +153,7 @@ export class SearchOverlay extends PureComponent {
     genderInURL = this.onGenderSelection(gender);
     catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
       query
-    )}&p=0&dFR[gender][0]=${genderInURL}`;
+    )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`;
     return catalogUrl;
   };
 
@@ -196,7 +196,7 @@ export class SearchOverlay extends PureComponent {
       if (products?.length === 1 && fetchSKU) {
         return (
           <Link
-            to={fetchSKU?.url}
+            to={fetchSKU?.url+'&dFR[in_stock][0]=${1}'}
             onClick={() => suggestionEventDipatch(query)}
             key={i}
           >
@@ -383,7 +383,7 @@ export class SearchOverlay extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&p=0&dFR[gender][0]=${genderInURL}`
+                )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`
           }
           onClick={() => {
             Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
@@ -451,7 +451,7 @@ export class SearchOverlay extends PureComponent {
               ? `${link}`
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   label
-                )}&p=0&dFR[gender][0]=${genderInURL}`,
+                )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`,
           }}
           onClick={() => this.handleTrendingBrandsClick(label)}
         >
@@ -594,7 +594,7 @@ export class SearchOverlay extends PureComponent {
       }
       if (gender !== "home" && gender !== "all") {
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       } else if (gender === "all") {
@@ -602,12 +602,12 @@ export class SearchOverlay extends PureComponent {
           ? "أولاد,بنات,نساء,رجال"
           : "Men,Women,Kids,Boy,Girl";
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       } else {
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       }
