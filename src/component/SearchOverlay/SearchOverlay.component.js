@@ -50,7 +50,7 @@ export class SearchOverlay extends PureComponent {
     products: Products.isRequired,
     isHidden: PropTypes.bool,
     hideActiveOverlay: PropTypes.func,
-    trendingBrands: PropTypes.array.isRequired,
+    newTrendingBrands: PropTypes.array.isRequired,
     location: LocationType.isRequired,
   };
 
@@ -430,7 +430,7 @@ export class SearchOverlay extends PureComponent {
   };
 
   renderTrendingBrand = (brand, i) => {
-    const { label = "", image_url, link = "" } = brand;
+    const { ar_label = "", ar_link = "", en_label = "", en_link = "", image_url } = brand;
     const { isArabic } = this.state;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -441,6 +441,8 @@ export class SearchOverlay extends PureComponent {
 
     let genderInURL;
     genderInURL = this.onGenderSelection(gender);
+    const link = isArabic ? ar_link : en_link;
+    const label = isArabic ? ar_label : en_label;
     return (
       <li key={i}>
         <Link
@@ -463,9 +465,9 @@ export class SearchOverlay extends PureComponent {
   };
 
   renderTrendingBrands() {
-    const { trendingBrands = [] } = this.props;
+    const { newTrendingBrands = [] } = this.props;
     const { isArabic } = this.state;
-    return trendingBrands.length > 0 ? (
+    return newTrendingBrands.length > 0 ? (
       <div block="TrandingBrands" mods={{ isArabic }}>
         <h2>{__("Trending brands")}</h2>
         <ul
@@ -475,7 +477,7 @@ export class SearchOverlay extends PureComponent {
           mods={{ isArabic }}
           ref={this.ref}
         >
-          {trendingBrands?.slice(0, 9)?.map(this.renderTrendingBrand)}
+          {newTrendingBrands?.slice(0, 9)?.map(this.renderTrendingBrand)}
         </ul>
       </div>
     ) : null;
