@@ -51,7 +51,13 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PLP from "./PLP.component";
-
+import {
+  getSelectedMoreFiltersFacetValues,
+  getNewMoreActiveFilters,
+  getNewActiveFilters,
+  getCategoryIds,
+  getSelectedFiltersFacetValues,
+} from "Route/PLP/utils/PLP.helper";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -182,6 +188,7 @@ export class PLPContainer extends PureComponent {
     categoryloaded: false,
     metaContent: null,
     newActiveFilters: {},
+    moreActiveFilters: {},
   };
 
   containerFunctions = {
@@ -192,6 +199,7 @@ export class PLPContainer extends PureComponent {
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
+    onMoreFilterClick: this.onMoreFilterClick.bind(this),
   };
 
   resetPLPData() {
@@ -600,122 +608,8 @@ export class PLPContainer extends PureComponent {
     }
   }
 
-  setNewActiveFilters( multiLevelData, isDropdown ) {
-    const { category_key, facet_key, sub_subcategories, is_selected } = multiLevelData;
-    const { newActiveFilters } = this.state;
-    const filterArray = newActiveFilters[facet_key] || [];
-    const categoryKey = [];
-
-    if(isDropdown) {
-      let isAllSelected = true;
-      let categoryKeyArray = [];
-      Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
-        if( !!!sub_cat[1].is_selected ) {
-          isAllSelected= false;
-        }
-        if( sub_cat[1] && sub_cat[1].category_key ) {
-          categoryKeyArray.push(sub_cat[1].category_key);
-        }
-      });
-      if( isAllSelected ) {
-        const newFilterArray = filterArray.filter((filterObj) => {
-          if(  !!!categoryKeyArray.includes(filterObj.category_key) ) {
-            return filterObj
-          } 
-        });
-        this.setState(
-          {
-            newActiveFilters: {
-              ...newActiveFilters,
-              [facet_key]: [...newFilterArray],
-            },
-          },
-          () => this.select()
-        );
-      } else {
-        Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
-          categoryKey.push(sub_cat[1]);
-          if( sub_cat[1].sub_subcategories && Object.keys(sub_cat[1].sub_subcategories)?.length > 0) {
-            Object.entries(sub_cat[1].sub_subcategories).map((sub_subCat) => {
-              categoryKey.push(sub_subCat[1]);
-            });
-          }
-        });
-        this.setState(
-          {
-            newActiveFilters: {
-              ...newActiveFilters,
-              [facet_key]: filterArray
-                ? [ ...filterArray, ...categoryKey ]
-                : [ ...categoryKey ],
-            }
-          },
-          () => this.select()
-        );
-      }
-    } else {
-      if( is_selected ) {
-        const newFilterArray = filterArray.filter((filterObj) => {
-          if( filterObj.category_key != category_key ) {
-            return filterObj
-          } 
-        });
-        this.setState(
-          {
-            newActiveFilters: {
-              ...newActiveFilters,
-              [facet_key]: [...newFilterArray],
-            }
-          },
-          () => this.select()
-        );
-      }else {
-        categoryKey.push(multiLevelData);
-        this.setState(
-          {
-            newActiveFilters: {
-              ...newActiveFilters,
-              [facet_key]: filterArray
-                ? [ ...filterArray, ...categoryKey ]
-                : [ ...categoryKey ],
-            }
-          },
-          () => this.select()
-        );
-      }
-    }
-  }
-
-  getCategoryIds() {
-    const { newActiveFilters } = this.state;
-    const category_ids = [];
-    if(newActiveFilters && newActiveFilters["categories_without_path"]) {
-      const newSelectedFilters = newActiveFilters["categories_without_path"];
-      newSelectedFilters.map((item) => {
-        if(item && item.category_id ) {
-          category_ids.push(item.category_id);
-        }
-      });
-    }
-    return category_ids;
-  }
-
-  getSelectedFiltersFacetValues() {
-    const { newActiveFilters } = this.state;
-    const SelectedFiltersFacetValues = [];
-    if(newActiveFilters && newActiveFilters["categories_without_path"]) {
-      const newSelectedFilters = newActiveFilters["categories_without_path"];
-      newSelectedFilters.map((item) => {
-        if(item && item.facet_value ) {
-          SelectedFiltersFacetValues.push(item.facet_value);
-        }
-      });
-    }
-    return SelectedFiltersFacetValues;
-  }
-
   select = (isQuickFilters) => {
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     const { query } = this.props;
     if (isMobile.any()) {
       window.scrollTo(0, 0);
@@ -726,9 +620,11 @@ export class PLPContainer extends PureComponent {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
           if(key === "categories_without_path") {
-            const categoryIds = this.getCategoryIds();
-            const getSelectedFiltersFacetValues = this.getSelectedFiltersFacetValues();
-            WebUrlParser.setParam(key, getSelectedFiltersFacetValues, categoryIds);
+            WebUrlParser.setParam(
+              key,
+              getSelectedFiltersFacetValues(newActiveFilters),
+              getCategoryIds(newActiveFilters),
+            );
           }else {
             WebUrlParser.setParam(key, activeFilters[key], query);
           }
@@ -737,11 +633,36 @@ export class PLPContainer extends PureComponent {
     });
   };
 
+  selectMoreFilters = () => {
+    const { moreActiveFilters = {}, newActiveFilters = {} } = this.state;
+    const SelectedFiltersFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters);
+    const key = "categories_without_path";
+    WebUrlParser.setParam(
+      key,
+      [...SelectedFiltersFacetValues, ...SelectedMoreFiltersFacetValues],
+      getCategoryIds(newActiveFilters)
+    );
+  }
+
   onLevelThreeCategoryPress(multiLevelData, isDropdown) {
-    const { filters, updatePLPInitialFilters } = this.props;
-    const { activeFilters = {} } = this.state;
-    let newFilterArray = filters;
-    this.setNewActiveFilters(multiLevelData, isDropdown, activeFilters, newFilterArray);
+    const { newActiveFilters = {} } = this.state;
+    this.setState(
+      {
+        newActiveFilters: getNewActiveFilters({ multiLevelData, isDropdown, newActiveFilters }) || {},
+      },
+      () => this.select(),
+    );
+  }
+
+  onMoreFilterClick(option) {
+    const { moreActiveFilters } = this.state;
+    this.setState(
+      {
+        moreActiveFilters: getNewMoreActiveFilters({option, moreActiveFilters}) || {},
+      },
+      () => this.selectMoreFilters()
+    );
   }
 
   onUnselectAllPress(category) {

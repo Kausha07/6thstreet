@@ -3,9 +3,9 @@ import "./PLPOptionsMoreFilter.style";
 import Rectangle from "./icons/Rectangle.svg";
 import SelectedRectangle from "./icons/SelectedRectangle.svg";
 
-function PLPOptionsMoreFilter({ options, handleCallback }) {
-  const handleOptionMoreFilterClick = (facet_key, facet_value, is_selected) => {
-    handleCallback(facet_key, facet_value, !is_selected);
+function PLPOptionsMoreFilter({ options, onMoreFilterClick }) {
+  const handleOptionMoreFilterClick = (option) => {
+    onMoreFilterClick(option);
   };
   const renderCheckbox = (option, index) => {
     const { facet_key, facet_value, is_selected, label } = option;
@@ -25,7 +25,7 @@ function PLPOptionsMoreFilter({ options, handleCallback }) {
                 : "optionsMoreFilterWrapper"
             }
             onClick={() => {
-              handleOptionMoreFilterClick(facet_key, facet_value, is_selected);
+              handleOptionMoreFilterClick(option);
             }}
           >
             <div>

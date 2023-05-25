@@ -186,6 +186,7 @@ export class PLPPagesContainer extends PureComponent {
       setPrevProductSku,
       handleCallback,
       onLevelThreeCategoryPress,
+      onMoreFilterClick,
     } = this.props;
 
     return {
@@ -194,6 +195,7 @@ export class PLPPagesContainer extends PureComponent {
       setPrevProductSku,
       handleCallback,
       onLevelThreeCategoryPress,
+      onMoreFilterClick,
     };
   };
 

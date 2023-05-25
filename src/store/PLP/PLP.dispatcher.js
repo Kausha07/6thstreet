@@ -13,6 +13,7 @@ import Algolia from "Util/API/provider/Algolia";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 export class PLPDispatcher {
   async setInitialPLPFilter(payload, dispatch, state) {
     const { initialOptions = {} } = payload;
@@ -34,8 +35,10 @@ export class PLPDispatcher {
       dispatch(setPLPLoading(true));
       try {
         let categoryData = {};
+        const lang = isArabic() ? "ar" : "en";
         const resp = await getStaticFile("category_data", {
-          $FILE_NAME: `en/${"categoryData"}.json`,
+          $FILE_NAME: `/categoryData.json`,
+          $LANGUAGE: lang,
         });
         if(resp) {
           categoryData = resp;

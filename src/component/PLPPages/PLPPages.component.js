@@ -20,6 +20,7 @@ import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
 import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
 import infoBold from "./icons/infoBold.svg";
 import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
 
 
 export const mapStateToProps = (state) => ({
@@ -441,10 +442,8 @@ class PLPPages extends PureComponent {
   }
 
   onClickRemoveMoreFilter = (val, value) => {
-    const { handleCallback } = this.props;
-    const { facet_key, facet_value } = val;
-    const { is_radio = false } = value;
-    handleCallback(facet_key, facet_value, false, is_radio);
+    const { onMoreFilterClick} = this.props;
+    onMoreFilterClick(val);
   };
 
   renderSelectedFiltersLevelThree() {
@@ -627,6 +626,7 @@ class PLPPages extends PureComponent {
     const {
       moreFilters: { option = {} },
       handleCallback,
+      onMoreFilterClick,
     } = this.props;
     if (
       option &&
@@ -639,6 +639,7 @@ class PLPPages extends PureComponent {
           <PLPOptionsMoreFilter
             options={options}
             handleCallback={handleCallback}
+            onMoreFilterClick={onMoreFilterClick}
           />
         </>
       );
@@ -690,8 +691,9 @@ class PLPPages extends PureComponent {
       newActiveFilters,
     } = this.props;
     const { selectedMoreFilter, noMoreFilters } = this.state;
+    const currency = getCountryCurrencyCode();
     const ListOFMoreFilters = Object.keys(option).filter(
-      (key) => option[key] !== undefined
+      (key) => option[key] !== undefined && key != "discount" && key != `price.${currency}.default`
     );
     let isShowMoreFilters = getIsShowMoreFilters(newActiveFilters);
     
