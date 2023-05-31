@@ -153,10 +153,16 @@ export class Checkout extends SourceCheckout {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           request.intl_vendors=null;
           let items = [];
-          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null}))
+          items_in_cart.map(item => {
+            if(!(item && item.full_item_info && item.full_item_info.cross_border && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1)) {
+              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null})
+            }
+          });
           request.items = items;
+          if(items.length) estimateEddResponse(request, false);
+        } else {
+          estimateEddResponse(request, false);
         }
-        estimateEddResponse(request, false);
       }
     }
   }
