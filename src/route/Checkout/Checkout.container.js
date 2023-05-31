@@ -56,6 +56,7 @@ import Event, {
   MOE_trackEvent,
   MOE_AddUniqueID,
   EVENT_MOE_CREATE_ORDER_API_FAIL,
+  EVENT_MOE_COMPONENT_DID_CATCH,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -526,6 +527,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getQPayData();
     this.getTabbyData();
     getCouponList();
+  }
+
+  componentDidCatch(error, info) {
+
+     MOE_trackEvent(EVENT_MOE_COMPONENT_DID_CATCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      errorDetails : error?.message || "",
+      route: "checkout_page",
+      });
   }
 
   componentDidUpdate(prevProps, prevState) {
