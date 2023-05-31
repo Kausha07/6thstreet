@@ -93,6 +93,7 @@ class Price extends PureComponent {
       country,
       showDiscountPercentage,
       pageType,
+      itemType = "",
     } = this.props;
 
     if (!showDiscountPercentage) {
@@ -114,18 +115,23 @@ class Price extends PureComponent {
         </span>
       );
     } else {
-      if (pageType === "cartSlider") {
+      if (pageType === "cartSlider" || itemType === "Cart") {
         return (
           <span block="discountPercentageText">{`(-${discountPercentage}%)`}</span>
         );
       }
-      return `(-${discountPercentage}%)`;
+      return `-${discountPercentage}%  `;
     }
   }
 
   renderPrice() {
-    const { basePrice, specialPrice, renderSpecialPrice, pageType } =
-      this.props;
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+      pageType,
+      itemType = "",
+    } = this.props;
     const { isArabic } = this.state;
 
     const currency = getCurrency();
@@ -151,6 +157,32 @@ class Price extends PureComponent {
         </span>
       );
     }
+
+    if (itemType === "Cart") {
+      return (
+        <>
+          <span block="Price" elem="Wrapper">
+            {renderSpecialPrice && this.renderSpecialPrice()}
+            {isArabic && <>&nbsp;</>}
+            {!renderSpecialPrice && (
+              <span block="SearchProduct" elem="PriceWrapper">
+                {this.renderDiscountSpecialPrice(true, specialPrice)}
+              </span>
+            )}
+            <del block="Price" elem="Del">
+              {this.renderBasePrice()}
+            </del>
+          </span>
+          {!renderSpecialPrice ? (
+            <span block="SearchProduct" elem="PriceWrapper">
+              {this.discountPercentage(basePrice, specialPrice)}
+            </span>
+          ) : (
+            this.renderDiscountSpecialPrice(false)
+          )}
+        </>
+      );
+    }
     return (
       <>
         <span block="Price" elem="Wrapper">
@@ -163,6 +195,7 @@ class Price extends PureComponent {
         {!renderSpecialPrice ? (
           <span block="SearchProduct" elem="PriceWrapper">
             {this.discountPercentage(basePrice, specialPrice)}
+            {this.renderDiscountSpecialPrice(true, specialPrice)}
           </span>
         ) : (
           this.renderDiscountSpecialPrice(false)

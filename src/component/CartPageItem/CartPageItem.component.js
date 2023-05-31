@@ -707,6 +707,7 @@ export class CartItem extends PureComponent {
             renderSpecialPrice={false}
             cart={true}
             coupon_code={coupon_code}
+            itemType={"Cart"}
           />
         </div>
         {coupon_code ? (
