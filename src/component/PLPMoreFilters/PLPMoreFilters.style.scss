@@ -1,9 +1,7 @@
 .PLPMoreFilters {
-  .Ul {
-    li {
-      min-height: 36px;
-      padding: 8px 0px 8px 8px;
-    }
+  &-Ul {
+    max-width: 80%;
+    align-self: flex-start;
   }
 }
 
@@ -56,6 +54,7 @@
   margin-top: 5px;
   margin-left: 7px;
   margin-right: 8px;
+  opacity: 0.6;
 }
 
 .arrow-top {

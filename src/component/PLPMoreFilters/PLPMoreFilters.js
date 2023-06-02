@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./PLPMoreFilters.style";
+import { isArabic } from "Util/App";
 
 function PLPMoreFilters(props) {
   const [showAll, setShowAll] = useState(false);
-  const [numVisibleItems, setNumVisibleItems] = useState(4);
+  const [numVisibleItems, setNumVisibleItems] = useState(5);
   const listRef = useRef(null);
   const isMoreFilterSelected = false;
   const toggleShowAll = () => {
@@ -21,6 +22,22 @@ function PLPMoreFilters(props) {
     }
   }, [props.ListOFMoreFilters]);
 
+  const getLabel = (item) => {
+    const lang = isArabic() ? "ar" : "en";
+    const { option = {} } = props;
+    if (
+      option &&
+      option[item] &&
+      option[item]?.moreFiltersTraslation &&
+      option[item]?.moreFiltersTraslation?.[lang]
+    ) {
+      let label = option[item]?.moreFiltersTraslation?.[lang];
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+      return label;
+    }
+    return item;
+  };
+
   const renderMoreFilterList = () => {
     const { handleMoreFilterChange, selectedMoreFilter } = props;
     const listItems = props.ListOFMoreFilters.map((item, index) => (
@@ -31,7 +48,7 @@ function PLPMoreFilters(props) {
           }`}
         >
           <label>
-            <h4>{item}</h4>
+            <h4>{getLabel(item)}</h4>
           </label>
           <span
             className={
@@ -55,7 +72,7 @@ function PLPMoreFilters(props) {
           <div>
             <label className="MoreButtonLabel">
               {showAll
-                ? `-${__("Less")}`
+                ? `- ${__("Less")}`
                 : `+${props.ListOFMoreFilters.length - numVisibleItems} ${__(
                     "More"
                   )}`}

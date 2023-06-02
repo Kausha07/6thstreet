@@ -708,6 +708,7 @@ class PLPPages extends PureComponent {
           ListOFMoreFilters={ListOFMoreFilters}
           handleMoreFilterChange={this.handleMoreFilterChange}
           selectedMoreFilter={selectedMoreFilter}
+          option={option}
         />
         {this.optionsOfMoreFilters()}
       </>

@@ -44,14 +44,16 @@ const getOptions = (obj, queryValues) => {
   return {options: outputObj}
 }
 
-const getOptionsMoreFilters = (facets, queryValues) => {
+const getOptionsMoreFilters = (facets, queryValues, moreFiltersData) => {
   const option = {};
+  const moreFiltersTraslation = moreFiltersData?.more_filter_traslation || {};
   MORE_FILTERS.map((item, index) => {
     option[item] = facets[item];
   });
   for (let key in option ) {    
     if(option[key] !== undefined) {
-      option[key] = getOptions(option[key], queryValues)
+      option[key] = getOptions(option[key], queryValues);
+      option[key].moreFiltersTraslation = {...moreFiltersTraslation[key]}
     }
   }
   return option;
@@ -333,11 +335,11 @@ const makeCategoriesLevel1Filter = ({ facets, query }) => {
   };
 };
 
-const makeCategoriesMoreFilter = ({facets, query}) => {
+const makeCategoriesMoreFilter = ({facets, query, moreFiltersData}) => {
   const facetKey = "categories_without_path";
   const queryValues = getQueryValues({ query, path: facetKey });
   const moreFilters = {};
-  moreFilters.option = getOptionsMoreFilters(facets, queryValues);
+  moreFilters.option = getOptionsMoreFilters(facets, queryValues, moreFiltersData);
   moreFilters.moreFilters_selected_filters_count = 0;
   return moreFilters;
 }

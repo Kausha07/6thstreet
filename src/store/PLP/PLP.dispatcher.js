@@ -43,7 +43,14 @@ export class PLPDispatcher {
         if(resp) {
           categoryData = resp;
         }
-        const response = await new Algolia().getPLP(options, categoryData);
+        let moreFiltersData = {};
+        const more_filter = await getStaticFile("more_filter", {
+          $FILE_NAME: `/more_filter.json`,
+        });
+        if(more_filter) {
+          moreFiltersData = more_filter;
+        }
+        const response = await new Algolia().getPLP(options, categoryData, moreFiltersData);
         localStorage.setItem("queryID", response.queryID);
         dispatch(setProductLoading(false));
 

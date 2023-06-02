@@ -35,6 +35,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 import RangeSlider from "Component/RangeSlider/RangeSlider";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
+import { getSelectedCategoryLevelOneFilter } from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -507,15 +508,24 @@ class FieldMultiselect extends PureComponent {
       parentCallback,
       onLevelThreeCategoryPress,
       filter,
+      filters,
     } = this.props;
     let categoryLevelData = [];
     const { searchFacetKey, searchKey, searchList } = this.state;
-
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
+  
     Object.entries(data).map((entry) => {
-      Object.entries(entry[1].subcategories).map((subEntry) => {
-        categoryLevelData.push(subEntry[1]);
-      });
+      if (
+        (selectCategoryLevelOneFilter &&
+          selectCategoryLevelOneFilter === entry[0]) ||
+        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+      ) {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      }
     });
+
     if (isSearch) {
       categoryLevelData = Object.values(searchList);
     }

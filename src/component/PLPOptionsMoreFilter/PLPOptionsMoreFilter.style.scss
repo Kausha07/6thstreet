@@ -1,19 +1,25 @@
 .optionsMoreFilterWrapper {
   display: flex;
-  margin-left: 24px;
   padding-top: 8px;
 }
 
-.firstInRow {
-  margin-left: 0px;
-}
 
 .optionsMoreFilterWrapper label {
   margin-left: 8px;
   min-width: 86px;
   max-width: 86px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .plpMoreFilterOptionsUl {
   margin-bottom: 12px;
+  margin-top: 12px;
+}
+
+.plpMoreFilterOptionsUl{
+  li {
+    flex-basis: 16.666%;
+  }
 }

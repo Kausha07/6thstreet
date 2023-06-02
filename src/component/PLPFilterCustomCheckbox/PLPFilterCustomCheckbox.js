@@ -47,8 +47,8 @@ function PLPFilterCustomCheckbox({
                 <span className="checkmarkSelected">
                   <img
                     src={selectRed}
-                    alt="Call"
-                    id={`call${"gguygytgghjk"}`}
+                    alt="selectRed"
+                    id={`selectRed${label}`}
                   />
                 </span>
               )}
@@ -56,8 +56,8 @@ function PLPFilterCustomCheckbox({
                 <span className="checkmarkUnselected">
                   <img
                     src={selectGray}
-                    alt="Call"
-                    id={`call${"gguygytgghjk"}`}
+                    alt="selectGray"
+                    id={`selectGray${label}`}
                   />
                 </span>
               )}
@@ -65,12 +65,12 @@ function PLPFilterCustomCheckbox({
             {label}
           </div>
           {isDropdownable && (
-            <div className="nestedOptionCount">
+            <div className="nestedOptionCountArr">
               <span className={""}>
                 <img
                   src={DropDownArrow}
-                  alt="Call"
-                  id={`call${"gguygytgghjk"}`}
+                  alt="DropDownArrow"
+                  id={`DropDownArrow${label}`}
                   style={
                     isLeafLevelVisible ? {} : { transform: "rotate(180deg)" }
                   }
@@ -90,12 +90,12 @@ function PLPFilterCustomCheckbox({
           <div className="checkboxDiv">
             {checked && (
               <span className="checkmarkSelected">
-                <img src={selectRed} alt="Call" id={`call${"gguygytgghjk"}`} />
+                <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
               </span>
             )}
             {!checked && (
               <span className="checkmarkUnselected">
-                <img src={selectGray} alt="Call" id={`call${"gguygytgghjk"}`} />
+                <img src={selectGray} alt="selectGray" id={`selectGray${label}`} />
               </span>
             )}
           </div>
@@ -107,7 +107,7 @@ function PLPFilterCustomCheckbox({
           </div>
         )}
         {isDropdownable && (
-          <div className="nestedOptionCount">
+          <div className="nestedOptionCountArr">
             <span className={"arrow arrow-bottom"}></span>
           </div>
         )}
