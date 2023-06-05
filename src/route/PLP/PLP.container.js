@@ -792,7 +792,11 @@ export class PLPContainer extends PureComponent {
     this.setState({ activeFilters });
   }
   handleResetFilter() {
-    this.setState({ activeFilters: {} });
+    this.setState({
+      activeFilters: {},
+      newActiveFilters: {},
+      moreActiveFilters: {},
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const {

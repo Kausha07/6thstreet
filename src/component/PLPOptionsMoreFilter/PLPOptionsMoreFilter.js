@@ -2,6 +2,7 @@ import React from "react";
 import "./PLPOptionsMoreFilter.style";
 import Rectangle from "./icons/Rectangle.svg";
 import SelectedRectangle from "./icons/SelectedRectangle.svg";
+import { isArabic } from "Util/App";
 
 function PLPOptionsMoreFilter({ options, onMoreFilterClick }) {
   const handleOptionMoreFilterClick = (option) => {
@@ -10,18 +11,14 @@ function PLPOptionsMoreFilter({ options, onMoreFilterClick }) {
   const renderCheckbox = (option, index) => {
     const { facet_key, facet_value, is_selected, label } = option;
     const isChecked = is_selected;
-    // below code is for set fist coloumns left margin = 0;
-    let isFirstInRow = false;
-    if (index % 4 === 0) {
-      isFirstInRow = true;
-    }
+
     return (
       <>
         <li>
           <div
             className={
-              isFirstInRow
-                ? "optionsMoreFilterWrapper firstInRow"
+              isArabic()
+                ? "optionsMoreFilterWrapper optionsMoreFilterWrapperAr"
                 : "optionsMoreFilterWrapper"
             }
             onClick={() => {

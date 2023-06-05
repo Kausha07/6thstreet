@@ -29,6 +29,7 @@ import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getNewFilterCount } from "./utils/PLPFilters.helper";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -435,9 +436,8 @@ class PLPFilters extends PureComponent {
 
   renderResetFilterButton() {
     const { isArabic } = this.state;
-
-    const isClear = this.getFilterCount() > 0;
-
+    const { newActiveFilters = {} } = this.props;
+    const isClear = this.getFilterCount() > 0 || getNewFilterCount(newActiveFilters) > 0;
     return isClear || isMobile.any() ? (
       <button
         block="FilterPopup"

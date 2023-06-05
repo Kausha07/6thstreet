@@ -24,7 +24,7 @@ export const getCategoryIds = (newActiveFilters={}) => {
   return category_ids;
 }
 
-export const   getSelectedFiltersFacetValues = ( newActiveFilters = {} ) => {
+export const getSelectedFiltersFacetValues = ( newActiveFilters = {} ) => {
   const SelectedFiltersFacetValues = [];
   if(newActiveFilters && newActiveFilters["categories_without_path"]) {
     const newSelectedFilters = newActiveFilters["categories_without_path"];
