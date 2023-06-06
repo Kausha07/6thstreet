@@ -17,8 +17,7 @@ RUN npm i npm -g; \
     npm install --g lerna; \
     lerna bootstrap; \
     npm rebuild node-sass; \
-    npm run build-ar; \
-    npm run image-opt
+    npm run build-ar
 
 EXPOSE 3000
 CMD ["node", "app.js"]

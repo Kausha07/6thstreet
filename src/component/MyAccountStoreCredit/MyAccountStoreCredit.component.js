@@ -1,4 +1,3 @@
-import dateformat from 'dateformat';
 import React, { PureComponent } from 'react';
 
 import { StoreCreditData } from 'Util/API/endpoint/StoreCredit/StoreCredit.type';

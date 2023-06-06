@@ -194,7 +194,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_CUSTOMER_SUPPORT]: CustomerSupportEvent,
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
     [EVENT_PAGE_LOAD]: PageLoadEvent,
-    [EVENT_GTM_INFLUENCER] : InfluencerEvent,
+    [EVENT_GTM_INFLUENCER]: InfluencerEvent,
   };
 
   /**
@@ -300,10 +300,12 @@ class GoogleTagManager extends PureComponent {
    */
   componentDidMount() {
     this.initialize();
-    MoEngage.init(process.env.REACT_APP_MOE_ID, {
-      debugLogs: process.env.REACT_APP_MOE_LOGS,
-      swPath: process.env.PUBLIC_URL + "/serviceworker.js",
-    });
+    if (!window.__isBOT__) {
+      MoEngage.init(process.env.REACT_APP_MOE_ID, {
+        debugLogs: process.env.REACT_APP_MOE_LOGS,
+        swPath: process.env.PUBLIC_URL + "/serviceworker.js",
+      });
+    }
   }
 
   /**

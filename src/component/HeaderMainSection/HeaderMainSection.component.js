@@ -626,11 +626,8 @@ class HeaderMainSection extends NavigationAbstract {
           state: { prevPath: window.location.href },
         });
       } else if (gender === "all") {
-        const allGender = isArabic()
-          ? "أولاد,بنات,نساء,رجال"
-          : "Men,Women,Kids,Boy,Girl";
         history.push({
-          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[gender][0]=${allGender}&dFR[in_stock][0]=${1}`,
+          pathname: `/catalogsearch/result/?q=${finalSearch}&qid=${queryID}&p=0&dFR[in_stock][0]=${1}`,
           state: { prevPath: window.location.href },
         });
       } else {
