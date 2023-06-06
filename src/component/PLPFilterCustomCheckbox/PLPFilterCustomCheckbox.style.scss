@@ -3,10 +3,15 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  text-align: center;
+  text-align: left;
   line-height: 24px;
   cursor: pointer;
   margin-right: 8px;
+}
+
+.checkboxDivAr {
+  text-align: right;
+  margin-right: 0;
 }
 
 .isCircularborder {
@@ -24,6 +29,14 @@
 
 .checkboxText {
   font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 175px;
+}
+
+.checkboxTextSelected {
+  font-weight: 600;
 }
 
 .SelectAllCheckboxText {
@@ -56,6 +69,11 @@
 
 .nestedOptionCountArr span {
   float: right;
+}
+
+.nestedOptionArrowAr{
+  margin-right: 0;
+  margin-left: 8px;
 }
 
 .checkmarkSelected {

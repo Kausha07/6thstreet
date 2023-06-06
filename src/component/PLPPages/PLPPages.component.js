@@ -666,6 +666,7 @@ class PLPPages extends PureComponent {
                 block="moreFiltersNotAvailable"
                 elem="iconNoMoreFilters"
                 className="imgWrapperSpanMoreFilter"
+                mods={{ isArabic: isArabic() }}
               >
                 <img
                   src={infoBold}
@@ -673,7 +674,11 @@ class PLPPages extends PureComponent {
                   id={`infoBold`}
                 />
               </span>
-              <span block="moreFiltersNotAvailable" elem="detailsNoMoreFilters">
+              <span
+                block="moreFiltersNotAvailable"
+                elem="detailsNoMoreFilters"
+                mods={{ isArabic: isArabic() }}
+              >
                 {__("Select only one category to view more filters")}
               </span>
             </p>

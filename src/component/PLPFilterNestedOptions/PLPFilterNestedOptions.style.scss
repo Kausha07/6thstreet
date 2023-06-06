@@ -23,6 +23,10 @@
     justify-content: space-between;
     width: 100%;
     margin: auto auto auto 30px;
+
+    &_isArabic {
+      margin: auto 25px auto auto;
+    }
   }
 
   &-wrapperIconLabel {
@@ -35,5 +39,19 @@
 
   &-productCount {
     margin-right: 30px;
+
+    &_isArabic {
+      margin-left: 8px;
+      margin-right: 0;
+    }
   }
+}
+
+.labelAr {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
+.isLeafSelected label {
+  font-weight: 500;
 }

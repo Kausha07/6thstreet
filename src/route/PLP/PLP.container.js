@@ -1104,7 +1104,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1120,6 +1120,7 @@ export class PLPContainer extends PureComponent {
       isLoading,
       showOverlay,
       newActiveFilters,
+      moreActiveFilters,
     };
   };
 

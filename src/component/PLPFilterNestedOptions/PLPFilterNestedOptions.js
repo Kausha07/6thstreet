@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PLPFilterCustomCheckbox from "Component/PLPFilterCustomCheckbox/PLPFilterCustomCheckbox";
 import "./PLPFilterNestedOptions.style";
 import selectGray from "Component/FieldNestedMultiSelect/icons/selectGray.svg";
 import selectRed from "Component/FieldNestedMultiSelect/icons/selectRed.svg";
 import { v4 } from "uuid";
+import { isArabic } from "Util/App";
 
 function PLPFilterNestedOptions({
   option,
@@ -12,10 +13,11 @@ function PLPFilterNestedOptions({
   onBlur,
   handleTogglebuttonClick,
   onLevelThreeCategoryPress,
-  isSearch
+  isSearch,
+  searchKey
 }) {
   const [isChecked, setIsChecked] = useState(option?.is_selected || false);
-  const [isLeafLevelVisible, setIsLeafLevelVisible] = useState(isSearch ? true : false);
+  const [isLeafLevelVisible, setIsLeafLevelVisible] = useState(false);
   const leafFilterRef = useRef(null);
   const toggleIsLeafLevelVisible = (e) => {
     setIsLeafLevelVisible(!isLeafLevelVisible);
@@ -23,16 +25,29 @@ function PLPFilterNestedOptions({
   const handleCheckboxClick = (isDropdownable) => {
     const { facet_key, facet_value, is_selected } = option;
     const isDropDown = isDropdownable ? true : false;
-    handleTogglebuttonClick();
     onLevelThreeCategoryPress(option, isDropDown);
-    onBlur();
   };
   const handleLeafLevelClick = (e, leaf ) => {
     onLevelThreeCategoryPress(leaf, false);
-    onBlur();
   };
+
+  useEffect(() => {
+    if (searchKey === "") {
+      setIsLeafLevelVisible(false);
+    } else {
+      setIsLeafLevelVisible(true);
+    }
+  }, [searchKey]);
+
   let isDropdownable = false;
-  let isSubCatSelected = false;
+  let isAllSelected = true;
+  if (option && option?.sub_subcategories) {
+    Object.entries(option.sub_subcategories).map((sub_cat) => {
+      if (!!!sub_cat[1].is_selected) {
+        isAllSelected = false;
+      }
+    });
+  }
   if (option && option?.sub_subcategories) {
     let sub_subCat = [];
     const { sub_subcategories } = option;
@@ -41,11 +56,6 @@ function PLPFilterNestedOptions({
     });
     if (sub_subCat.length > 0) {
       isDropdownable = true;
-      sub_subCat.map((item)=> {
-        if(item.is_selected) {
-          isSubCatSelected = true;
-        }
-      });
     }
   }
 
@@ -68,8 +78,16 @@ function PLPFilterNestedOptions({
           }}
           data-is_selected={is_selected}
         >
-          <div block="wrapperLeafLevel" elem="wrapperDiv">
-            <div block="wrapperLeafLevel" elem="wrapperIconLabel">
+          <div
+            block="wrapperLeafLevel"
+            elem="wrapperDiv"
+            mods={{ isArabic: isArabic() }}
+          >
+            <div
+              block="wrapperLeafLevel"
+              elem="wrapperIconLabel"
+              className={is_selected ? "isLeafSelected" : ""}
+            >
               <div>
                 {is_selected ? (
                   <span>
@@ -89,9 +107,13 @@ function PLPFilterNestedOptions({
                   </span>
                 )}
               </div>
-              <label>{label}</label>
+              <label className={isArabic() ? "labelAr" : ""}>{label}</label>
             </div>
-            <div block="wrapperLeafLevel" elem="productCount">
+            <div
+              block="wrapperLeafLevel"
+              elem="productCount"
+              mods={{ isArabic: isArabic() }}
+            >
               <span>{product_count}</span>
             </div>
           </div>
@@ -117,7 +139,7 @@ function PLPFilterNestedOptions({
         <PLPFilterCustomCheckbox
           label={option?.label}
           checked={isChecked}
-          isSubCatSelected={isSubCatSelected}
+          isSubCatSelected={isAllSelected}
           onChange={handleCheckboxClick}
           parentCallback={parentCallback}
           option={option}
@@ -125,6 +147,7 @@ function PLPFilterNestedOptions({
           isLeafLevelVisible={isLeafLevelVisible}
           toggleIsLeafLevelVisible={toggleIsLeafLevelVisible}
           setIsChecked={setIsChecked}
+          filter={filter}
         />
       </div>
       {isLeafLevelVisible && (

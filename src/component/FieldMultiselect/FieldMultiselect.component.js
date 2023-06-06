@@ -559,14 +559,22 @@ class FieldMultiselect extends PureComponent {
       parentCallback,
       onLevelThreeCategoryPress,
       filter,
+      filters,
     } = this.props;
     let categoryLevelData = [];
     const { searchFacetKey, searchKey, searchList } = this.state;
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
 
     Object.entries(data).map((entry) => {
-      Object.entries(entry[1].subcategories).map((subEntry) => {
-        categoryLevelData.push(subEntry[1]);
-      });
+      if (
+        (selectCategoryLevelOneFilter &&
+          selectCategoryLevelOneFilter === entry[0]) ||
+        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+      ) {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      }
     });
     if (isSearch) {
       categoryLevelData = Object.values(searchList);
@@ -786,7 +794,15 @@ class FieldMultiselect extends PureComponent {
       : "";
     const { currentActiveFilter } = this.props;
     const { isArabic } = this.state;
-    if (isMobile.any() && currentActiveFilter !== category) {
+    const currency = getCountryCurrencyCode();
+
+    if (
+      (isMobile.any() && currentActiveFilter !== category) ||
+      category === "gender" ||
+      category === "discount" ||
+      category === "in_stock" ||
+      category === `price.${currency}.default`
+    ) {
       return null;
     }
     const MoeFilterEvent =
@@ -942,7 +958,7 @@ class FieldMultiselect extends PureComponent {
 
   renderOptionSelected() {
     const {
-      filter: { data, selected_filters_count },
+      filter: { data, selected_filters_count}
     } = this.props;
     const { showMore, showLess } = this.state;
     let selectedItems = true;
@@ -1018,6 +1034,40 @@ class FieldMultiselect extends PureComponent {
         </div>
       );
     }
+  }
+
+  renderFilterCount() {
+    const {
+      filter: {  selected_filters_count, category },
+      newActiveFilters = {},
+    } = this.props;
+
+    if (this.props.isSortBy) {
+      return null;
+    }
+
+    if( category === "categories_without_path" ) {
+      let count = 0;
+      const selectedFilters = newActiveFilters?.[category];
+      if(selectedFilters) {
+        count = selectedFilters.length;
+      }
+      return (
+        <span 
+          className="smallerText"
+        >
+          {count === 0 ? " " : count}
+        </span>
+      );
+    }
+    const count = selected_filters_count || 0;
+    return (
+      <span 
+        className="smallerText"
+      >
+        {count === 0 ? " " : count}
+      </span>
+    );
   }
 
   updateShowMoreState = (state) => {
@@ -1105,12 +1155,12 @@ class FieldMultiselect extends PureComponent {
             }
           >
             {placeholder}
+            {this.renderFilterCount()}
           </button>
         )}
-        {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
-            {Object.keys(conditionalData).length > 10
+            {Object.keys(conditionalData).length > 0
               ? this.renderFilterSearchbox(label, category)
               : null}
             {category === "sizes" && !isMobile.any()

@@ -172,11 +172,20 @@ main {
       width: 16px;
       vertical-align: middle;
     }
+
+    &_isArabic {
+      margin-right: 24px;
+      margin-left: 0px;
+    }
   }
 
   &-detailsNoMoreFilters {
     color: #9B9B9B;
     font-size: 14px;
     margin-left: 10px;
+
+    &_isArabic {
+      margin-right: 10px;
+    }
   }
 }

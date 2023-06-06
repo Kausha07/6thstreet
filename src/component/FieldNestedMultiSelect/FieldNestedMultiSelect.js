@@ -31,7 +31,6 @@ function FieldNestedMultiSelect({
     e.stopPropagation();
     setIsSelected(!isSelected);
     onLevelThreeCategoryPress(multiLevelData, isDropdown);
-    onBlur();
   };
 
   useEffect(() => {
@@ -74,6 +73,7 @@ function FieldNestedMultiSelect({
               handleTogglebuttonClick={handleTogglebuttonClick}
               onLevelThreeCategoryPress={onLevelThreeCategoryPress}
               isSearch={isSearch}
+              searchKey={searchKey}
             />
           ))}
         </>
@@ -81,8 +81,13 @@ function FieldNestedMultiSelect({
     }
   };
 
+  let isAllSelected = true;
+  Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
+    if (!!!sub_cat[1].is_selected) {
+      isAllSelected = false;
+    }
+  });
   let isDropdown = false;
-  let isSubCatSelected = false;
   if (multiLevelData && multiLevelData?.sub_subcategories) {
     let sub_subCat = [];
     const { sub_subcategories } = multiLevelData;
@@ -91,11 +96,6 @@ function FieldNestedMultiSelect({
     });
     if (sub_subCat.length > 0) {
       isDropdown = true;
-      sub_subCat.map((item)=> {
-        if(item.is_selected) {
-          isSubCatSelected = true;
-        }
-      });
     }
   }
   if (!isDropdown) {
@@ -123,7 +123,13 @@ function FieldNestedMultiSelect({
                 />
               </span>
             )}
-            <span className="labelMultiSelect">{label}</span>
+            <span
+              className={`labelMultiSelect ${
+                is_Arabic ? "labelMultiSelectArabic" : ""
+              }`}
+            >
+              {label}
+            </span>
           </div>
           <div className="wrapperCountArrow">
             <div block="toggleButtonNestedMultiSelectBlock" elem="spanwrap">
@@ -157,7 +163,7 @@ function FieldNestedMultiSelect({
             handleToggleIsSelected(e, isDropdown);
           }}
         >
-          {isSubCatSelected ? (
+          {isAllSelected ? (
             <span>
               <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
             </span>

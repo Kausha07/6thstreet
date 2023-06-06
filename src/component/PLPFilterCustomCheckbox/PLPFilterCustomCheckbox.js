@@ -3,6 +3,7 @@ import "./PLPFilterCustomCheckbox.style.scss";
 import selectGray from "./icons/selectGray.svg";
 import selectRed from "Component/FieldNestedMultiSelect/icons/selectRed.svg";
 import DropDownArrow from "./icons/DropDownArrow.svg";
+import { isArabic } from "Util/App";
 
 function PLPFilterCustomCheckbox({
   label,
@@ -32,13 +33,17 @@ function PLPFilterCustomCheckbox({
           }}
         >
           <div
-            className="checkboxText"
+            className={
+              isSubCatSelected
+                ? "checkboxText checkboxTextSelected"
+                : "checkboxText"
+            }
             onClick={(e) => {
               handleCheckboxClick(e, isDropdownable);
             }}
           >
             <div
-              className="checkboxDiv"
+              className={`checkboxDiv ${isArabic() ? "checkboxDivAr" : ""}`}
               onClick={(e) => {
                 toggleIsLeafLevelVisible(e);
               }}
@@ -65,7 +70,11 @@ function PLPFilterCustomCheckbox({
             {label}
           </div>
           {isDropdownable && (
-            <div className="nestedOptionCountArr">
+            <div
+              className={`nestedOptionCountArr ${
+                isArabic() ? "nestedOptionArrowAr" : ""
+              }`}
+            >
               <span className={""}>
                 <img
                   src={DropDownArrow}
@@ -86,8 +95,14 @@ function PLPFilterCustomCheckbox({
     <>
       <div className="optionSeperator"></div>
       <label onClick={handleCheckboxClick}>
-        <div className="checkboxText">
-          <div className="checkboxDiv">
+        <div
+          className={
+            checked ? "checkboxText checkboxTextSelected" : "checkboxText"
+          }
+        >
+          <div 
+              className={`checkboxDiv ${isArabic() ? "checkboxDivAr" : ""}`}
+          >
             {checked && (
               <span className="checkmarkSelected">
                 <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />

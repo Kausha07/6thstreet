@@ -112,6 +112,7 @@ const _getCategoryLevel2Data = ({
     ...categoriesLevel3,
     ...categoriesLevel4,
   };
+  const selectedFiltersArray = []
 
   const queryValues = getQueryValues({ query, path: facetKey });
   let data = Object.entries(categoriesMerge).reduce(
@@ -196,6 +197,9 @@ const _getCategoryLevel2Data = ({
           }
           acc[l1].selected_filters_count += 1;
           const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2]);
+          if(isSelected) {
+            selectedFiltersArray.push(acc[l1].subcategories[l2] );
+          }
           acc[l1].subcategories[l2].is_selected = isSelected;
         }
         // Mark selected filters, using the query params - for L3 categories
@@ -210,6 +214,9 @@ const _getCategoryLevel2Data = ({
             acc[l1].subcategories[l2].sub_subcategories[l3]
           ) {
             const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3]);
+            if(isSelected) {
+              selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3] );
+            }
             acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = isSelected;
           }
         }
@@ -226,6 +233,9 @@ const _getCategoryLevel2Data = ({
             acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4]
           ) {
             const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4]);
+            if(isSelected) {
+              selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4] );
+            }
             acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4].is_selected = isSelected;
           }
         }
@@ -236,13 +246,16 @@ const _getCategoryLevel2Data = ({
     {}
   );
 
+  const newActiveFilters = {
+    [facetKey]: selectedFiltersArray
+  }
   // Sort by product_count in category
   data = sortKeys(data, (obj1, obj2) => {
     const [, a] = obj1;
     const [, b] = obj2;
     return b.product_count - a.product_count;
   });
-  return [data, totalSelectedFiltersCount];
+  return [data, totalSelectedFiltersCount, newActiveFilters];
 };
 
 const _getCategoryLevel1Data = ({
@@ -298,7 +311,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData }) => {
   // let categoriesLevel2Data = query["categories.level2"]
   //   ? {}
   //   : facets["categories.level2"];
-  const [data, totalSelectedFiltersCount] = _getCategoryLevel2Data({
+  const [data, totalSelectedFiltersCount, newActiveFilters] = _getCategoryLevel2Data({
     facetKey,
     categoriesLevel2: facets["categories.level2"],
     categoriesLevel3: facets["categories.level3"],
@@ -314,6 +327,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData }) => {
     is_nested: true,
     selected_filters_count: totalSelectedFiltersCount,
     data,
+    newActiveFilters,
   };
 };
 

@@ -3,6 +3,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./RangeSlider.style";
 import { getCountryCurrencyCode } from "Util/Url/Url";
+import { isArabic } from "Util/App";
 
 const RenderMinMaxRenger = React.memo(({ value1, value2, currency }) => {
   return (
@@ -110,6 +111,36 @@ function RangeSlider({
     optimisedSearchHandler(val);
   };
 
+  if (minVal === maxVal && category === "discount") {
+    return (
+      <>
+        <p>{__("Select Discount Range")}</p>
+        <div block="rengeSliderWrapper">
+          <RenderMinMaxRengerDiscount
+            value1={minVal}
+            value2={maxVal}
+            currency={currency}
+          />
+          <div block="wrapperSlider">
+            <Slider
+              range
+              min={MIN}
+              max={MAX}
+              value={[MIN, MAX]}
+              onChange={onChange}
+              defaultValue={[MIN, MAX]}
+              pushable
+              trackStyle={{ backgroundColor: "black" }}
+              dotStyle={{ border: "solid 2px black" }}
+              activeDotStyle={{ border: "solid 2px black" }}
+              reverse={isArabic()}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       {category === "discount" ? (
@@ -140,11 +171,11 @@ function RangeSlider({
             value={currState}
             onChange={onChange}
             defaultValue={[MIN, MAX]}
-            draggableTrack
             pushable
             trackStyle={{ backgroundColor: "black" }}
             dotStyle={{ border: "solid 2px black" }}
             activeDotStyle={{ border: "solid 2px black" }}
+            reverse={isArabic()}
           />
         </div>
       </div>
