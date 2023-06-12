@@ -646,8 +646,9 @@ export class LiveExperience extends PureComponent {
   }
 
   render() {
+    const { updatedArchived, livepartyId, live, updatedUpcoming } = this.props;
     let archProducts = this.state.archivedItemToShow;
-    let totalProducts = this.props.updatedArchived.length;
+    let totalProducts = updatedArchived.length;
     let progressWidth = (archProducts * 100) / totalProducts;
     const { isArabic } = this.state;
     let disablebtn = false;
@@ -657,7 +658,7 @@ export class LiveExperience extends PureComponent {
 
     return (
       <>
-        {this.props.livepartyId ? (
+        {livepartyId ? (
           <div></div>
         ) : (
           <main block="LiveShopping">
@@ -669,9 +670,11 @@ export class LiveExperience extends PureComponent {
               }}
               label={__("LiveShopping")}
             >
-              <div block="liveEventBanner">{this.renderSpckLiveEvent()}</div>
+              {Object.keys(live)?.length > 0 && (
+                <div block="liveEventBanner">{this.renderSpckLiveEvent()}</div>
+              )}
 
-              {this.props.updatedUpcoming.length > 0 && (
+              {updatedUpcoming?.length > 0 && (
                 <div block="upComing-Grid">
                   <h3 block="sectionTitle" mods={{ isArabic }}>
                     {__("COMING NEXT")}
@@ -681,7 +684,7 @@ export class LiveExperience extends PureComponent {
                 </div>
               )}
 
-              {this.props.updatedArchived.length > 0 && (
+              {updatedArchived?.length > 0 && (
                 <div block="archived-Grid">
                   <div block="Recentlyplayed-heading-layout">
                     <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
@@ -694,7 +697,7 @@ export class LiveExperience extends PureComponent {
                 </div>
               )}
 
-              {this.props.updatedArchived.length > 9 && !isMobile.any() ? (
+              {updatedArchived?.length > 9 && !isMobile.any() ? (
                 <div block="Product-LoadMore">
                   {
                     <>
@@ -734,7 +737,6 @@ export class LiveExperience extends PureComponent {
                 ""
               )}
             </ContentWrapper>
-            <div id="all"></div>
           </main>
         )}
       </>

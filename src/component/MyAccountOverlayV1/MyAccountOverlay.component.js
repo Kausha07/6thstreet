@@ -34,7 +34,6 @@ import OrdersIcon from "./icons/cat-menu.svg";
 import ReturnIcon from "./icons/return.svg";
 import HeartIcon from "./icons/heart-regular.svg";
 import { ThreeDots, Oval } from "react-loader-spinner";
-import MyAccountAutoDetectOTP from "./MyAccountAutoDetectOTP";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Link from "Component/Link";
@@ -500,7 +499,6 @@ export class MyAccountOverlay extends PureComponent {
       isLoading,
       otpError,
       OtpErrorClear,
-      updateOTP,
       OTP,
       sendOTPOnMailOrPhone,
       sendEvents,
@@ -531,7 +529,6 @@ export class MyAccountOverlay extends PureComponent {
     this.setState({ phoneInSignin: false });
     return (
       <div mix={{ block: "VerifyPhone", mods: { isArabic } }}>
-        <MyAccountAutoDetectOTP updateOTP={updateOTP} />
         <div mix={{ block: "VerifyPhone", elem: "TextV1", mods: { isArabic } }}>
           <div block="VerifyPhone-TextV1" elem="TitleV1">
             {__("Enter Verification Code")}

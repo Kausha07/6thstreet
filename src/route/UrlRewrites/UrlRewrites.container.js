@@ -198,7 +198,7 @@ export class UrlRewritesContainer extends PureComponent {
       );
       let UpdatedURL;
       if (urlResolver && urlResolver.data.url) {
-        UpdatedURL = urlResolver.data.url.split("&p=")[0] + '&p=0' + urlResolver.data.url.split("&p=")[1].substring(1)
+        UpdatedURL = urlResolver.data.url.split("&p=")[0] + '&p=0' + urlResolver.data.url.split("&p=")[1].substring(1) + `&dFR[in_stock][0]=1`;
       }
 
       const {

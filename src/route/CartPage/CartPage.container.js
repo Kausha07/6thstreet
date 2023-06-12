@@ -41,7 +41,11 @@ import isMobile from "Util/Mobile";
 import { appendWithStoreCode } from "Util/Url";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { EVENT_MOE_BEGIN_CHECKOUT, MOE_trackEvent } from "Util/Event";
+import {
+  EVENT_MOE_BEGIN_CHECKOUT,
+  MOE_trackEvent,
+  EVENT_MOE_COMPONENT_DID_CATCH,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
@@ -171,6 +175,17 @@ export class CartPageContainer extends PureComponent {
     }
 
     return MyAccountContainer.navigateToSelectedTab(props, state);
+  }
+
+  componentDidCatch(error, info) {
+
+    MOE_trackEvent(EVENT_MOE_COMPONENT_DID_CATCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      errorDetails : error?.message || "",
+      route: "cart_page",
+    });
   }
 
   componentDidMount() {

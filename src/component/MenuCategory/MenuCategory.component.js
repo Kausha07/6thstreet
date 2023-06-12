@@ -112,7 +112,7 @@ class MenuCategory extends PureComponent {
     const link = this.getMenuCategoryLink();
 
     return (
-      <Link to={link} block="MenuCategory" elem="CategoryLink">
+      <Link to={`${link}&dFR[in_stock][0]=${1}`} block="MenuCategory" elem="CategoryLink">
         <div block="MenuCategory" elem="CategoryLink-Label">
           {label}
         </div>

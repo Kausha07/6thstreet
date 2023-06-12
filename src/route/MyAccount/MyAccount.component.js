@@ -9,6 +9,7 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
+import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
   RETURN__EXCHANGE_ITEM_LABEL,
@@ -281,6 +282,7 @@ export class MyAccount extends SourceMyAccount {
       isSignedIn,
       exchangeTabMap,
       is_exchange_enabled = false,
+      customer,
     } = this.props;
     const { pathname = "" } = location;
     let newTabMap = is_exchange_enabled
@@ -320,21 +322,26 @@ export class MyAccount extends SourceMyAccount {
         label={__("My Account page")}
         wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
       >
-        <MyAccountTabList
-          tabMap={newTabMap}
-          activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
-          changeActiveTab={changeActiveTab}
-          onSignOut={this.handleSignOut}
-        />
+        <div block="MyAccount" elem="TabListAndReferral">
+          <MyAccountTabList
+            tabMap={newTabMap}
+            activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
+            changeActiveTab={changeActiveTab}
+            onSignOut={this.handleSignOut}
+          />
+          {customer && (
+            <Referral referralCodeValue={customer.referral_coupon} />
+          )}
+        </div>
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-          name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
-            <h1 block="MyAccount" elem="Heading">
-              {isCancel
-                ? alternateName
-                : alternativePageName || returnTitle || name}
-            </h1>
-          ) : (
+            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+              <h1 block="MyAccount" elem="Heading">
+                {isCancel
+                  ? alternateName
+                  : alternativePageName || returnTitle || name}
+              </h1>
+            ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {isReturnButton
@@ -507,6 +514,9 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
+          {customer && (
+            <Referral referralCodeValue={customer.referral_coupon} />
+          )}
           <div>{isMobile ? this.renderAppColumn() : null}</div>
         </div>
         <div block={hiddenTabContent}>

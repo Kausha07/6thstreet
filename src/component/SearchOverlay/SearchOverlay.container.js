@@ -90,7 +90,7 @@ export class searchOverlayContainer extends PureComponent {
       recentSearches: [],
       typingTimeout: 0,
       isArabic: isArabic(),
-      trendingBrands: [],
+      newTrendingBrands: [],
     };
     this.requestSearchSuggestions(props);
     this.requestRecentSearches();
@@ -99,7 +99,7 @@ export class searchOverlayContainer extends PureComponent {
   componentDidMount() {
     const { gender, algoliaIndex } = this.props;
     sourceIndexName = algoliaIndex?.indexName;
-    this.requestJsonInfo();
+    this.requestTrendingBrandsJsonInfo();
     const { location } = browserHistory;
     const { closeSearch } = this.props;
     browserHistory.push(`${location.pathname}${location.search}`);
@@ -123,32 +123,31 @@ export class searchOverlayContainer extends PureComponent {
     closePopup();
   }
 
-  getTrendingBrands = async (resp) => {
-    const { isArabic } = this.state;
-    if (resp && resp.widgets) {
-      let widgetsData = resp.widgets;
-      let filterString = isArabic ? TRENDING_BRANDS_AR : TRENDING_BRANDS_ENG;
+  getNewTrendingBrands = async (resp) => {
+    if (resp && resp.data) {
+      let TrendingBrandsData = resp.data;
       let trendingBrandsList =
-        widgetsData.find((item) => item?.layout?.title === filterString)
+        TrendingBrandsData.find((item) => item?.key === "trending_brands")
           ?.items || [];
       this.setState({
-        trendingBrands: trendingBrandsList,
+        newTrendingBrands: trendingBrandsList,
       });
     }
   };
 
-  requestJsonInfo = async () => {
+  requestTrendingBrandsJsonInfo = async () => {
     const { gender } = this.props;
     const locale = getLocaleFromUrl();
-    let url = `resources/20191010_staging/${locale}/search/search_${gender}.json`;
+    const [lang, country] = locale.trim().split("-");
+    let url = `resources/20191010_staging/${country}/search/v1/trending_${gender}.json`;
     if (process.env.REACT_APP_FOR_JSON === "production") {
-      url = `resources/20190121/${locale}/search/search_${gender}.json`;
+      url = `resources/20190121/${country}/search/v1/trending_${gender}.json`;
     }
 
     try {
       const resp = await CDN.get(url);
       if (resp) {
-        this.getTrendingBrands(resp);
+        this.getNewTrendingBrands(resp);
       }
     } catch (error) {
       console.error(error);

@@ -1410,11 +1410,13 @@ export class CheckoutSuccess extends PureComponent {
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: dispatchedObj,
+          paymentMethod: paymentMethod?.code || "",
         });
       } else {
         Event.dispatch(EVENT_GTM_PURCHASE, {
           orderID: incrementID,
           totals: initialTotals,
+          paymentMethod: paymentMethod?.code || "",
         });
       }
       this.setState({ eventSent: true });

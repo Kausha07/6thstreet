@@ -286,4 +286,11 @@
  export const EVENT_UNFOLLOW_INFLUENCER_CLICK = "unfollow_influencer_click";
  export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
    "account_tooltip_close_button_click";
+ export const REFERRAL_COPY = "referral_copy";
+ export const REFERRAL_SHARE = "referral_share";
  
+// Checkout Errors Tracking Event
+export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
+export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
+export const EVENT_MOE_COMPONENT_DID_CATCH = "component_did_catch";
+export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong";

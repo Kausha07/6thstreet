@@ -691,6 +691,9 @@ class PDPSummary extends PureComponent {
     }
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
+    const updateNewLink = `/${url_path}.html?q=${encodeURIComponent(
+      brand_name
+    )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brand_name)}`;
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
@@ -700,11 +703,7 @@ class PDPSummary extends PureComponent {
                 <Link
                   className="pdpsummarylinkTagStyle"
                   onClick={ brandNameclick }
-                  to={`/${url_path}.html?q=${encodeURIComponent(
-                    brand_name
-                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
-                    brand_name
-                  )}&dFR[gender][0]=${gender}`}
+                  to={`${updateNewLink}&dFR[gender][0]=${gender}&dFR[in_stock][0]=1`}
                 >
                   {brand_name}
                 </Link>
@@ -712,11 +711,7 @@ class PDPSummary extends PureComponent {
                 <Link
                   className="pdpsummarylinkTagStyle"
                   onClick={ brandNameclick }
-                  to={`/${url_path}.html?q=${encodeURIComponent(
-                    brand_name
-                  )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
-                    brand_name
-                  )}`}
+                  to={`${updateNewLink}&dFR[in_stock][0]=1`}
                 >
                   {brand_name}
                 </Link>
@@ -739,11 +734,7 @@ class PDPSummary extends PureComponent {
             <Link
               className="pdpsummarylinkTagStyle"
               onClick={ brandNameclick }
-              to={`/${url_path}.html?q=${encodeURIComponent(
-                brand_name
-              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
-                brand_name
-              )}&dFR[gender][0]=${gender}`}
+              to={`${updateNewLink}&dFR[gender][0]=${gender}&dFR[in_stock][0]=1`}
             >
               {brand_name}
             </Link>
@@ -751,11 +742,7 @@ class PDPSummary extends PureComponent {
             <Link
               className="pdpsummarylinkTagStyle"
               onClick={ brandNameclick }
-              to={`/${url_path}.html?q=${encodeURIComponent(
-                brand_name
-              )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(
-                brand_name
-              )}`}
+              to={`${updateNewLink}&dFR[in_stock][0]=1`}
             >
               {brand_name}
             </Link>
