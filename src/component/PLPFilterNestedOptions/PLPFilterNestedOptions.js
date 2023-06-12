@@ -1,29 +1,31 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PLPFilterCustomCheckbox from "Component/PLPFilterCustomCheckbox/PLPFilterCustomCheckbox";
 import "./PLPFilterNestedOptions.style";
-import selectGray from "Component/FieldNestedMultiSelect/icons/selectGray.svg";
-import selectRed from "Component/FieldNestedMultiSelect/icons/selectRed.svg";
-import { v4 } from "uuid";
-import { isArabic } from "Util/App";
+import PLPFilterLeaf from "Component/PLPFilterLeaf/PLPFilterLeaf";
 
 function PLPFilterNestedOptions({
   option,
   parentCallback,
   filter,
-  onBlur,
-  handleTogglebuttonClick,
   onLevelThreeCategoryPress,
   isSearch,
-  searchKey
+  searchKey,
+  levelThreeDropdownopen,
+  handleSubcategoryDropdown,
 }) {
   const [isChecked, setIsChecked] = useState(option?.is_selected || false);
   const [isLeafLevelVisible, setIsLeafLevelVisible] = useState(false);
-  const leafFilterRef = useRef(null);
-  const toggleIsLeafLevelVisible = (e) => {
+  const toggleIsLeafLevelVisible = (e, optionClicked) => {
+    const { category_key } = optionClicked;
+    if(levelThreeDropdownopen.includes(category_key)){
+      const newlevelThreeDropdownopen = levelThreeDropdownopen.filter(key => key != category_key)
+      handleSubcategoryDropdown(newlevelThreeDropdownopen);
+    }else {
+      handleSubcategoryDropdown([ ...levelThreeDropdownopen, category_key]);
+    }
     setIsLeafLevelVisible(!isLeafLevelVisible);
   };
   const handleCheckboxClick = (isDropdownable) => {
-    const { facet_key, facet_value, is_selected } = option;
     const isDropDown = isDropdownable ? true : false;
     onLevelThreeCategoryPress(option, isDropDown);
   };
@@ -32,9 +34,9 @@ function PLPFilterNestedOptions({
   };
 
   useEffect(() => {
-    if (searchKey === "") {
+    if (searchKey === "" && isSearch) {
       setIsLeafLevelVisible(false);
-    } else {
+    } else if( isSearch ){
       setIsLeafLevelVisible(true);
     }
   }, [searchKey]);
@@ -63,61 +65,17 @@ function PLPFilterNestedOptions({
     const {
       facet_key = "",
       facet_value = "",
-      is_selected = false,
       label = "",
-      product_count = 0,
     } = leaf;
 
     if (facet_key && facet_value && label) {
       return (
-        <li
-          key={v4()}
-          ref={leafFilterRef}
-          onClick={(e) => {
-            handleLeafLevelClick(e, leaf);
-          }}
-          data-is_selected={is_selected}
-        >
-          <div
-            block="wrapperLeafLevel"
-            elem="wrapperDiv"
-            mods={{ isArabic: isArabic() }}
-          >
-            <div
-              block="wrapperLeafLevel"
-              elem="wrapperIconLabel"
-              className={is_selected ? "isLeafSelected" : ""}
-            >
-              <div>
-                {is_selected ? (
-                  <span>
-                    <img
-                      src={selectRed}
-                      alt="selectRed"
-                      id={`selectRed${label}`}
-                    />
-                  </span>
-                ) : (
-                  <span>
-                    <img
-                      src={selectGray}
-                      alt="selectGray"
-                      id={`selectGray${label}`}
-                    />
-                  </span>
-                )}
-              </div>
-              <label className={isArabic() ? "labelAr" : ""}>{label}</label>
-            </div>
-            <div
-              block="wrapperLeafLevel"
-              elem="productCount"
-              mods={{ isArabic: isArabic() }}
-            >
-              <span>{product_count}</span>
-            </div>
-          </div>
-        </li>
+        <>
+          <PLPFilterLeaf
+            leaf={leaf}
+            handleLeafLevelClick={handleLeafLevelClick}
+          />
+        </>
       );
     }
   };
@@ -150,7 +108,7 @@ function PLPFilterNestedOptions({
           filter={filter}
         />
       </div>
-      {isLeafLevelVisible && (
+      {( levelThreeDropdownopen.includes(option?.category_key) ) && (
         <div block="wrapperLeafLevel">
           <ul>{renderLeafLevel()}</ul>
         </div>

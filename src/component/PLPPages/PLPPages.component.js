@@ -55,7 +55,6 @@ class PLPPages extends PureComponent {
       defaultSizeCode: "size_eu",
       prevProductSku: "",
       loadedLastProduct: false,
-      selectedMoreFilter: "",
       noMoreFilters: true,
     };
   }
@@ -436,9 +435,10 @@ class PLPPages extends PureComponent {
   };
 
   onDeselect = (val, values) => {
-    const { onLevelThreeCategoryPress } = this.props;
+    const { onLevelThreeCategoryPress, onSelectMoreFilterPLP } = this.props;
     const isDropdownable = checkIsDropdownable(val);
-    onLevelThreeCategoryPress(val, isDropdownable)
+    onSelectMoreFilterPLP("");
+    onLevelThreeCategoryPress(val, isDropdownable);
   }
 
   onClickRemoveMoreFilter = (val, value) => {
@@ -618,11 +618,12 @@ class PLPPages extends PureComponent {
   }
 
   handleMoreFilterChange = (selectedMoreFilter) => {
-    this.setState({ selectedMoreFilter: selectedMoreFilter });
+    const { onSelectMoreFilterPLP } = this.props;
+    onSelectMoreFilterPLP(selectedMoreFilter);
   };
 
   optionsOfMoreFilters() {
-    const { selectedMoreFilter } = this.state;
+    const { selectedMoreFilterPLP } = this.props;
     const {
       moreFilters: { option = {} },
       handleCallback,
@@ -630,10 +631,10 @@ class PLPPages extends PureComponent {
     } = this.props;
     if (
       option &&
-      option[selectedMoreFilter] &&
-      option[selectedMoreFilter].options
+      option[selectedMoreFilterPLP] &&
+      option[selectedMoreFilterPLP].options
     ) {
-      const options = option[selectedMoreFilter]?.options;
+      const options = option[selectedMoreFilterPLP]?.options;
       return (
         <>
           <PLPOptionsMoreFilter
@@ -694,8 +695,8 @@ class PLPPages extends PureComponent {
       moreFilters: { option = {} },
       filters: { categories_without_path = {} },
       newActiveFilters,
+      selectedMoreFilterPLP,
     } = this.props;
-    const { selectedMoreFilter, noMoreFilters } = this.state;
     const currency = getCountryCurrencyCode();
     const ListOFMoreFilters = Object.keys(option).filter(
       (key) => option[key] !== undefined && key != "discount" && key != `price.${currency}.default`
@@ -712,7 +713,7 @@ class PLPPages extends PureComponent {
         <PLPMoreFilters
           ListOFMoreFilters={ListOFMoreFilters}
           handleMoreFilterChange={this.handleMoreFilterChange}
-          selectedMoreFilter={selectedMoreFilter}
+          selectedMoreFilter={selectedMoreFilterPLP}
           option={option}
         />
         {this.optionsOfMoreFilters()}

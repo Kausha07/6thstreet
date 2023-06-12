@@ -189,6 +189,7 @@ export class PLPContainer extends PureComponent {
     metaContent: null,
     newActiveFilters: {},
     moreActiveFilters: {},
+    selectedMoreFilterPLP: ""
   };
 
   containerFunctions = {
@@ -200,6 +201,7 @@ export class PLPContainer extends PureComponent {
     compareObjects: this.compareObjects.bind(this),
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
+    onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
   };
 
   resetPLPData() {
@@ -647,6 +649,7 @@ export class PLPContainer extends PureComponent {
 
   onLevelThreeCategoryPress(multiLevelData, isDropdown) {
     const { newActiveFilters = {} } = this.state;
+    this.onSelectMoreFilterPLP("");
     this.setState(
       {
         newActiveFilters: getNewActiveFilters({ multiLevelData, isDropdown, newActiveFilters }) || {},
@@ -663,6 +666,10 @@ export class PLPContainer extends PureComponent {
       },
       () => this.selectMoreFilters()
     );
+  }
+
+  onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {
+    this.setState({ selectedMoreFilterPLP: newSelectedMoreFilterPLP})
   }
 
   onUnselectAllPress(category) {
@@ -1104,7 +1111,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters, selectedMoreFilterPLP } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1121,6 +1128,7 @@ export class PLPContainer extends PureComponent {
       showOverlay,
       newActiveFilters,
       moreActiveFilters,
+      selectedMoreFilterPLP,
     };
   };
 

@@ -178,6 +178,7 @@ export class PLPPagesContainer extends PureComponent {
     renderMySignInPopup: this.props.renderMySignInPopup,
     moreFilters: this.props.moreFilters,
     newActiveFilters: this.props.newActiveFilters,
+    selectedMoreFilterPLP: this.props.selectedMoreFilterPLP,
   });
 
   containerFunctions = () => {
@@ -188,6 +189,7 @@ export class PLPPagesContainer extends PureComponent {
       handleCallback,
       onLevelThreeCategoryPress,
       onMoreFilterClick,
+      onSelectMoreFilterPLP,
     } = this.props;
 
     return {
@@ -197,6 +199,7 @@ export class PLPPagesContainer extends PureComponent {
       handleCallback,
       onLevelThreeCategoryPress,
       onMoreFilterClick,
+      onSelectMoreFilterPLP,
     };
   };
 

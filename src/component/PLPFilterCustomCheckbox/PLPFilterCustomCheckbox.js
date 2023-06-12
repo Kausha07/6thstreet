@@ -29,7 +29,7 @@ function PLPFilterCustomCheckbox({
         <div className="optionSeperator"></div>
         <label
           onClick={(e) => {
-            toggleIsLeafLevelVisible(e);
+            toggleIsLeafLevelVisible(e, option);
           }}
         >
           <div
@@ -45,7 +45,7 @@ function PLPFilterCustomCheckbox({
             <div
               className={`checkboxDiv ${isArabic() ? "checkboxDivAr" : ""}`}
               onClick={(e) => {
-                toggleIsLeafLevelVisible(e);
+                toggleIsLeafLevelVisible(e, option);
               }}
             >
               {isSubCatSelected && (

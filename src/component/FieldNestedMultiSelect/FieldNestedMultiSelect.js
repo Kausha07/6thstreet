@@ -20,6 +20,7 @@ function FieldNestedMultiSelect({
   const [isSelected, setIsSelected] = useState(
     multiLevelData?.is_selected ? true : false
   );
+  const [levelThreeDropdownopen, setLevelThreDropdownopen] = useState([]);
   const handleTogglebuttonClick = (e) => {
     e ? e.stopPropagation() : null;
     setNestedToggleOptionsList(!nestedToggleOptionsList);
@@ -31,6 +32,9 @@ function FieldNestedMultiSelect({
     e.stopPropagation();
     setIsSelected(!isSelected);
     onLevelThreeCategoryPress(multiLevelData, isDropdown);
+  };
+  const handleSubcategoryDropdown = (newOpenDropdown) => {
+    setLevelThreDropdownopen(newOpenDropdown)
   };
 
   useEffect(() => {
@@ -74,6 +78,8 @@ function FieldNestedMultiSelect({
               onLevelThreeCategoryPress={onLevelThreeCategoryPress}
               isSearch={isSearch}
               searchKey={searchKey}
+              levelThreeDropdownopen={levelThreeDropdownopen}
+              handleSubcategoryDropdown={handleSubcategoryDropdown}
             />
           ))}
         </>
