@@ -47,6 +47,7 @@ export class PDPDispatcher {
       highlighted_attributes.push({ key: 'gender', value: productData.gender[0] })
     if (productData?.alternate_name)
       highlighted_attributes.push({ key: 'alternate_name', value: productData.alternate_name })
+    console.log("kiranHighlted",highlighted_attributes,rest);
     return {
       highlighted_attributes,
       ...rest,
@@ -55,24 +56,29 @@ export class PDPDispatcher {
 
   async getProductDetailByIdCatalogue(options, dispatch) {
     const locale = getStore().getState().AppState.locale
-    getProductDetailsById(locale, options.id).then((data) => {
-      const tempResponse = {}
-      tempResponse['data'] = this.formatData(data)
-      if(typeof data === 'object' ){
-        tempResponse['nbHits'] = 1;
-      }else if(typeof data === 'string') {
-        tempResponse['nbHits'] = 0;
-        tempResponse['data'] = {};
-      }
-      dispatch(setPDPData(tempResponse, options));
-      dispatch(setPDPLoading(false));
-      return tempResponse
-    }).catch((error) => {
-      Logger.log(error);
-      // Needed, so PDP container sets "isLoading" to false
-      dispatch(setPDPData({}, {}));
-      dispatch(setPDPLoading(false));
-    })
+    if(locale && options?.id) {
+      getProductDetailsById(locale, options.id).then((data) => {
+        if(data?.brand_name){
+          const tempResponse = {}
+          tempResponse['data'] = this.formatData(data)
+          if(typeof data === 'object' ){
+            tempResponse['nbHits'] = 1;
+          }else if(typeof data === 'string') {
+            tempResponse['nbHits'] = 0;
+            tempResponse['data'] = {};
+          }
+          console.log("kiran7",tempResponse,options);
+          dispatch(setPDPData(tempResponse, options));
+          dispatch(setPDPLoading(false));
+          return tempResponse
+        }
+      }).catch((error) => {
+        Logger.log(error);
+        // Needed, so PDP container sets "isLoading" to false
+        dispatch(setPDPData({}, {}));
+        dispatch(setPDPLoading(false));
+      })
+    }
   }
 
   async getProductDetailByIdAlgolia(options, dispatch) {
@@ -96,6 +102,7 @@ export class PDPDispatcher {
     const isFetchFromAlgolia =
       store.AppConfig.config
         .countries[store.AppState.country]['catalogue_from_algolia']
+    console.log("kiranTempResponseFetch",isFetchFromAlgolia)
     return isFetchFromAlgolia
       ? await this.getProductDetailByIdAlgolia(options, dispatch)
       : await this.getProductDetailByIdCatalogue(options, dispatch)
@@ -126,6 +133,7 @@ export class PDPDispatcher {
       options,
       options: { sku },
     } = payload;
+    console.log("kiran10",payload);
     getProductDetailsBySKU(locale, sku).then((data) => {
       const tempResponse = {}
       tempResponse['data'] = this.formatData(data)

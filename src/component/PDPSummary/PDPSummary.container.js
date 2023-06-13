@@ -83,12 +83,15 @@ export class PDPSummaryContainer extends PureComponent {
     this.getBrandDetails =
       this.props.catalogue_from_algolia
         ? this.getBrandDetailsByAlgolia.bind(this)
-        : this.getBrandDetailsCatalogueAPI.bind(this);
+        : ()=>{};
   }
 
   componentDidMount() {
-    const { brand_url = "" } = this.props;
-    this.getBrandDetails();
+    const { brand_url = "", product: { brand_name = "" }} = this.props;
+    console.log("kiran2",this.props,this.props.catalogue_from_algolia);
+    if(brand_name) {
+      this.getBrandDetails();
+    }
     this.setState({
       url_path: brand_url,
     });
@@ -110,6 +113,7 @@ export class PDPSummaryContainer extends PureComponent {
               url_path: resp?.result[0].url_path
             });
           }
+          console.log("kiran3",resp,brand_name);
         })
       } catch (err) {
         console.error("There is an issue while fetching brand information.",err);

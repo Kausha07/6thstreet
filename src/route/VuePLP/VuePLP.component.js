@@ -497,6 +497,7 @@ const VuePLP = (props) => {
     } else {
       qid = localStorage.getItem("queryID");
     }
+    console.log("kiran6",vueRecommendation);
     return vueRecommendation.map((i, index) =>
       renderProduct(i, index + 1, qid)
     );

@@ -50,6 +50,11 @@ class PDP extends PureComponent {
   componentDidMount() {
     this.renderVueHits();
   }
+
+  componentDidUpdate(prevProps,prevState) {
+    console.log("kiranRemp",prevProps,prevState);
+    Object.keys(prevProps).forEach(key => {})
+  }
   showMyAccountPopup = () => {
     const { showPopup } = this.state;
     this.setState({ showPopup: true });

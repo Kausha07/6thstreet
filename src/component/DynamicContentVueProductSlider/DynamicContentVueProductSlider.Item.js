@@ -53,37 +53,40 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     } = this.props;
     const { category, sku, link, price } = data;
     let destProdID = sku;
+    console.log("kiran1");
     // vue analytics
     try {
-      const locale = VueIntegrationQueries.getLocaleFromUrl();
-      const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
-      const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-
-      VueIntegrationQueries.vueAnalayticsLogger({
-        event_name: VUE_CAROUSEL_CLICK,
-        params: {
-          event: VUE_CAROUSEL_CLICK,
-          pageType: pageType,
-          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-          clicked: Date.now(),
-          uuid: getUUID(),
-          referrer: window.location.href,
-          url: link ? link : null,
-          widgetID: VueIntegrationQueries.getWidgetTypeMapped(
-            widgetID,
-            pageType
-          ),
-          sourceProdID: sourceProdID,
-          sourceCatgID: sourceCatgID,
-          destProdID: destProdID,
-          destCategoryID: category,
-          prodPrice: itemPrice,
-          posofreco: posofreco,
-        },
-      });
-      Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
-      this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
-      setPDPData({}, {});
+      if(data?.brand_name){
+        const locale = VueIntegrationQueries.getLocaleFromUrl();
+        const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+        const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+  
+        VueIntegrationQueries.vueAnalayticsLogger({
+          event_name: VUE_CAROUSEL_CLICK,
+          params: {
+            event: VUE_CAROUSEL_CLICK,
+            pageType: pageType,
+            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+            clicked: Date.now(),
+            uuid: getUUID(),
+            referrer: window.location.href,
+            url: link ? link : null,
+            widgetID: VueIntegrationQueries.getWidgetTypeMapped(
+              widgetID,
+              pageType
+            ),
+            sourceProdID: sourceProdID,
+            sourceCatgID: sourceCatgID,
+            destProdID: destProdID,
+            destCategoryID: category,
+            prodPrice: itemPrice,
+            posofreco: posofreco,
+          },
+        });
+        Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
+        this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
+        setPDPData({}, {});
+      }
     } catch (e) {
       Logger.log(e);
     }
@@ -150,10 +153,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (data?.url) {
       newLink = data.url;
     }
+    console.log("kiran2", this.props,newLink)
     let productTag = this.props.data.product_tag
       ? this.props.data.product_tag
       : "";
-
+    const temp = parseURL(newLink)?.pathname?.split("?_ga")[0] || "/";
+    console.log("kirankumarParseUrl", temp);
     return (
       <div
         block="VueProductSlider"

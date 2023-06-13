@@ -23,6 +23,7 @@ class UrlRewrites extends PureComponent {
   constructor(props) {
     super(props);
     window.history.scrollRestoration = "manual";
+    console.log("test kiran");
   }
 
   static propTypes = {
@@ -105,11 +106,19 @@ class UrlRewrites extends PureComponent {
     }
     const renderFunction = this.typeMap[type] || this.render404;
 
-    return (
-      <div block="UrlRewrites" id="UrlRewrites">
-        {renderFunction()}
-      </div>
-    );
+    if (
+      this.props.brandName != "" &&
+      this.props.brandDescription != "" &&
+      type == TYPE_CATEGORY
+    ) {
+      return null;
+    } else {
+      return (
+        <div block="UrlRewrites" id="UrlRewrites">
+          {renderFunction()}
+        </div>
+      );
+    }
   }
 }
 
