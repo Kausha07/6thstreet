@@ -50,13 +50,13 @@ export function RenderEmptyCartPage() {
                     block="ExploreNowBtn"
                     elem="SignInBtnText"
                     onClick={() => {
+                      setShowSignInPopUp(true);
                       MOE_trackEvent(EVENT_LOGIN_CLICK, {
                         country: getCountryFromUrl().toUpperCase(),
                         language: getLanguageFromUrl().toUpperCase(),
                         app6thstreet_platform: "Web",
                         screenName: "cart_nudge",
                       });
-                      setShowSignInPopUp(true);
                     }}
                   >
                     {__("Sign In")}
@@ -114,13 +114,13 @@ export function RenderEmptyCartPageForMobile() {
                 block="ExploreNowBtn"
                 elem="SignInBtnText"
                 onClick={() => {
-                  MOE_trackEvent(EVENT_LOGIN, {
+                  setShowSignInPopUp(true);
+                  MOE_trackEvent(EVENT_LOGIN_CLICK, {
                     country: getCountryFromUrl().toUpperCase(),
                     language: getLanguageFromUrl().toUpperCase(),
                     app6thstreet_platform: "Web",
                     screenName: "cart_nudge",
                   });
-                  setShowSignInPopUp(true);
                 }}
               >
                 {__("Sign In")}
