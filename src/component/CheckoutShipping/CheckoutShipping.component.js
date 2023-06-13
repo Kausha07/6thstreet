@@ -198,7 +198,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       MOE_trackEvent(EVENT_MOE_GO_TO_PAYMENT, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
-        category: currentAppState.gender
+        category: currentAppState?.gender
           ? currentAppState.gender.toUpperCase()
           : "",
         brand_name: productBrand.length > 0 ? productBrand : "",

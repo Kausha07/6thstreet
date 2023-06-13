@@ -385,7 +385,7 @@ const _formatFacets = ({ facets, queryParams }) => {
     if (isCategoryFacet(facetKey)) {
       acc[facetKey] = filterOutCategoryValues({
         values: { ...facetValue },
-        facetGender: facets.gender,
+        facetGender: facets?.gender,
         queryGender: gender,
         lang,
       });
