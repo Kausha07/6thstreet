@@ -35,7 +35,7 @@
     line-height: 16px;
   }
 
-  .rightBlock{
+  .rightBlock {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -85,7 +85,7 @@
       align-items: center;
       margin-top: 10px;
       flex-wrap: wrap;
-      svg{
+      svg {
         height: 15px;
         width: 15px;
       }
@@ -94,15 +94,13 @@
         top: 0px;
       }
 
-      span:nth-child(2)
-      {
-             margin: 0 5px;
+      span:nth-child(2) {
+        margin: 0 5px;
       }
 
       span:nth-child(3) {
         color: #28d9aa;
         font-size: 12px;
-       
       }
     }
 
@@ -266,18 +264,18 @@
     .couponAppliedText {
       font: normal normal normal 12px/14px Avenir Next;
       text-transform: none;
-      color: #4A4A4A;
+      color: #4a4a4a;
     }
     .nonDiscountableItem {
-      background: #F6F6F6;
-      color: #4A4A4A;
+      background: #f6f6f6;
+      color: #4a4a4a;
       font-size: 12px;
       padding: 5px;
     }
 
     @include mobile {
       margin: 5px 0;
-      .couponAppliedFinalPrice{
+      .couponAppliedFinalPrice {
         padding: 3px 5px;
         font-size: 12px;
         display: flex;
@@ -316,7 +314,7 @@
     }
     span {
       del {
-        color: #B2B2B2;
+        color: #b2b2b2;
         text-decoration: line-through;
         padding-right: 5px;
         font-weight: var(--fw-regular);
@@ -330,11 +328,11 @@
     font-size: 15px;
   }
 
-  .couponPriceActive span:first-child{
-      color: #B2B2B2;
-      @include mobile {
-        font-size: 13px;
-      }
+  .couponPriceActive .Price > span:first-child {
+    color: #b2b2b2;
+    @include mobile {
+      font-size: 13px;
+    }
   }
 
   &-ColSizeQty {

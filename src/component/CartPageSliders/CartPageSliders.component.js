@@ -8,7 +8,6 @@ import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 import ProductItem from "Component/ProductItem";
-import Link from "Component/Link";
 import CartPageSizePopUp from "Component/CartPageSizePopUp/index";
 
 import "./CartPageSliders.style.scss";
@@ -56,8 +55,6 @@ const CartPageSliders = (props) => {
   const [clickedProductInfo, setClickedProductInfo] = useState({});
   const [availableSizeObject, setAvailableSizeObject] = useState([]);
   const [sizeObject, setSizeObject] = useState({});
-  const [isdirectlyAddToCartProduct, setIsdirectlyAddToCartProduct] =
-    useState(false);
   const [insertedProductSizeStatus, setInsertedProductSizeStatus] =
     useState(true);
   const [selectedSizeCode, setSelectedSizeCode] = useState("");
@@ -293,7 +290,7 @@ const CartPageSliders = (props) => {
       closePopUp(false);
       if (sliderType === "wishlist") {
         const wishListItem = sliderProducts
-          .slice(0, 5)
+          .slice(0, 25)
           .find(({ product: { sku } }) => sku === configSKU);
         const { wishlist_item_id } = wishListItem;
         if (wishlist_item_id) {
@@ -345,7 +342,7 @@ const CartPageSliders = (props) => {
                     >
                       {in_stock === 0 || (in_stock === 1 && stock_qty === 0)
                         ? __("Out of stock")
-                        : __("Move to cart")}
+                        : __("Add to bag")}
                     </button>
                   </div>
                 );
@@ -361,9 +358,6 @@ const CartPageSliders = (props) => {
   const closePopUp = (val) => {
     setShowSizePopUp(val);
   };
-  const setdirectlyAddToCartProduct = (val) => {
-    setIsdirectlyAddToCartProduct(val);
-  };
 
   const setShowHideSizePopUp = (val) => {
     setShowSizePopUp(val);
@@ -377,9 +371,7 @@ const CartPageSliders = (props) => {
           sizeObject={sizeObject}
           insertedProductSizeStatus={insertedProductSizeStatus}
           availableSizeObject={availableSizeObject}
-          isdirectlyAddToCartProduct={isdirectlyAddToCartProduct}
           closePopUp={closePopUp}
-          setdirectlyAddToCartProduct={setdirectlyAddToCartProduct}
           sliderType={sliderType}
           addProductsToCartWidget={addProductsToCartWidget}
           selectedItemSizeCode={selectedItemSizeCode}
