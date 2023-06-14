@@ -1306,6 +1306,7 @@ export class CartPage extends PureComponent {
         >
           <Loader isLoading={processingRequest} />
           <div className="sidePadding">{this.renderHeading()}</div>
+          <CartNudge />
           <div block="cartMain">
             <div
               block="CartPage"
@@ -1317,7 +1318,6 @@ export class CartPage extends PureComponent {
                 showOverflow,
               }}
             >
-              <CartNudge />
               <div className="sidePadding">
                 {this.renderCartItems()}
                 {this.renderCrossSellProducts()}
