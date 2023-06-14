@@ -1,21 +1,21 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import Field from 'Component/Field';
-import Loader from 'Component/Loader';
-import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
-import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
-import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
-import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
-import {
-    MyAccountCustomerForm as SourceMyAccountCustomerForm
-} from 'SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component';
-import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
-import { isArabic } from 'Util/App';
-import BrowserDatabase from 'Util/BrowserDatabase';
-import { getCountryFromUrl } from 'Util/Url';
+import Field from "Component/Field";
+import Loader from "Component/Loader";
+import { PHONE_CODES } from "Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config";
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressForm/MyAccountAddressForm.config";
+import MyAccountPasswordForm from "Component/MyAccountPasswordForm";
+import PhoneCountryCodeField from "Component/PhoneCountryCodeField";
+import { MyAccountCustomerForm as SourceMyAccountCustomerForm } from "SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component";
+import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getCountryFromUrl } from "Util/Url";
 import Form from "Component/Form";
 import { createRef } from "react";
+
+import BirthDayInput from "./BirthdayInput/BirthdayInput";
 
 import "./MyAccountCustomerForm.style";
 
@@ -54,6 +54,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             (key) => PHONE_CODES[key] === phone.substr("0", "4")
           )
         : getCountryFromUrl(),
+      isSaveCustomerClicked: false,
     };
   }
 
@@ -66,7 +67,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
       updatedCustomerDetails,
       renderOTPField,
       OTPSentNumber,
-      OTPTimeOutBreak
+      OTPTimeOutBreak,
     } = this.props;
     if (OTPTimeOutBreak && OTPSentNumber == customerUpdatedPhone) {
       renderOTPField(true);
@@ -420,28 +421,23 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
   renderBirthDay() {
     // birthday need to be added to customer data
-    const { isArabic } = this.state;
     const {
-      customer: { dob },
+      customer: { dob }, setDateOfBirth, dateOfBirth
     } = this.props;
-
-    if (!dob) {
-      return null;
-    }
-
-    return (
-      <div block="MyAccountCustomerForm" elem="BirthDay" mods={{ isArabic }}>
-        <Field
-          block="MyAccountCustomerForm"
-          elem="BirthDay"
-          type="date"
-          mods={{ isArabic }}
-          name="dob"
-          id="birth-day"
-          value={dob}
-        />
-      </div>
-    );
+    const { isSaveCustomerClicked } = this.state;
+    return (<>
+          <BirthDayInput 
+            setDateOfBirth={setDateOfBirth}
+            dob={dob}       
+          />
+          {
+            ( dateOfBirth && isSaveCustomerClicked ) && 
+            <div className="birthdaySuccessMsg">
+              {/* This will be uncommented later when gifts and discount on birthday feature is done */}
+              {/* {__("Hooray! We will be sending you a gift on your birthday. Make sure to check your inbox!")} */}
+            </div>
+          }
+          </>)
   }
 
   renderField = (fieldEntry) => {
@@ -488,6 +484,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
           type="submit"
           block="Button"
           mix={{ block: "MyAccount", elem: "Button" }}
+          onClick={()=> this.setState({ isSaveCustomerClicked: true })}
         >
           {__("Save customer")}
         </button>

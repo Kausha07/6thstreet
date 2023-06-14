@@ -1210,6 +1210,7 @@
     "SELECT A CITY": "حدد المدينة",
     "SELECT AN AREA": "حدد المنطقة",
     "Search...": " ابحث...",
+    "Hooray! We will be sending you a gift on your birthday. Make sure to check your inbox!": "مرحى! سنقوم بإرسال هدية لك في يوم عيد ميلادك. تأكد من صندوق الرسائل الواردة!",
     "To know about our new arrivals & exclusive offers,": "للتعرف أكثر على أجدد تشكيلاتنا وعروضنا الحصرية",
     "Welcome to 6thstreet": "مرحباً في 6ستريت",
     "New Customer?": "زبون جديد؟",
@@ -1229,5 +1230,7 @@
     "LATEST STYLING VIDEOS BY INFLUENCERS": "أحدث فيديوهات المؤثرين في تنسيق أزياء",
     "Ooops... It's gone!": "عذراً... لم يعد متوفراً!",
     "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
-    "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة"
+    "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة",
+    "YOUR BIRTHDAY": "تاريخ الولادة",
+    "Birthdate updated successfully": "تم تحديث تاريخ الميلاد بنجاح "
 }

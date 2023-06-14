@@ -28,7 +28,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
   static defaultProps = {
     default_country: JSON.parse(localStorage.getItem("APP_STATE_CACHE_KEY"))
-      .data.country,
+      ?.data?.country,
     onSave: () => {},
   };
 
