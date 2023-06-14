@@ -8,3 +8,10 @@ export const getNewFilterCount = (newActiveFilters) => {
   }
   return 0;
 };
+
+export const getSliderFiltersCount = (sliderFilters) => {
+  if(sliderFilters && Object.entries(sliderFilters).length) {
+    return Object.entries(sliderFilters).length;
+  }
+  return 0;
+}

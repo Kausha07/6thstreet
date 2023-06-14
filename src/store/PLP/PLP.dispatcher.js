@@ -8,6 +8,8 @@ import {
   setPLPWidget,
   setProductLoading,
   updateNewActiveFilters,
+  updateSliderFilters,
+  updateCurrentSliderState,
 } from "Store/PLP/PLP.action";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -55,6 +57,7 @@ export class PLPDispatcher {
         localStorage.setItem("queryID", response.queryID);
         dispatch(setProductLoading(false));
         dispatch(updateNewActiveFilters(response?.filters?.categories_without_path?.newActiveFilters || {}))
+        dispatch(updateSliderFilters(response?.sliderFilters || {}));
         dispatch(setPLPInitialFilters(response.filters, options));
         dispatch(setPLPData(response, options, false));
       } catch (e) {
@@ -72,6 +75,10 @@ export class PLPDispatcher {
 
   updateNewActiveFiltersToStore(updatedNewActiveFilters, dispatch) {
     dispatch(updateNewActiveFilters(updatedNewActiveFilters));
+  }
+
+  updateCurrentSliderStateToStore(updatedCurrentSliderState, dispatch) {
+    dispatch(updateCurrentSliderState(updatedCurrentSliderState))
   }
 
   async requestProductListPage(payload, dispatch) {

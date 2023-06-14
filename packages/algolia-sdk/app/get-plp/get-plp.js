@@ -133,6 +133,38 @@ function getMoreFilters (facets, query, moreFiltersData ) {
   return moreFilters;
 }
 
+function getMinMax(str)  {
+  const numbers = str.split(',')
+    .map((value) => value.replace(/\D/g, ''))
+    .filter((value) => value !== '') // Remove empty strings
+    .map(Number); // Convert the extracted numbers to numeric values
+
+  return numbers;
+}
+
+function getSliderFilters (queryParams, locale) {
+  const [lang, country] = locale.split("-");
+  const currency = getCurrencyCode(country);
+  const sliderFilters = {};
+  if (queryParams && queryParams.discount) {
+    const minMax = getMinMax(queryParams.discount);
+    sliderFilters.discount = {
+      discount: queryParams.discount,
+      min: minMax[0],
+      max: minMax[1]
+    }
+  }
+  if (queryParams && queryParams[`price.${currency}.default`]) {
+    const minMax = getMinMax(queryParams[`price.${currency}.default`]);
+    sliderFilters.price = {
+      price: queryParams[`price.${currency}.default`],
+      min: minMax[0],
+      max: minMax[1]
+    }
+  }
+  return sliderFilters;
+}
+
 function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData, facets_stats, moreFiltersData }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
@@ -595,8 +627,10 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         moreFiltersData,
       });
       const moreFilters = getMoreFilters(facets, queryParams, moreFiltersData);
+      const sliderFilters = getSliderFilters(queryParams, locale);
 
       const output = {
+        sliderFilters,
         moreFilters,
         facets,
         data: hits.map(formatNewInTag),

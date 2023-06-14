@@ -11,6 +11,8 @@ export const SET_PREV_PATH = "SET_PREV_PATH";
 export const UPDATE_PLP_INIT_FILTERS = "UPDATE_PLP_INIT_FILTERS";
 export const SET_BRAND_URL = "SET_BRAND_URL";
 export const UPDATE_NEW_ACTIVE_FILTERS = "UPDATE_NEW_ACTIVE_FILTER";
+export const UPDATE_SLIDER_FILTERS = "UPDATE_SLIDER_FILTERS";
+export const CURRENT_SLIDER_STATE = "CURRENT_SLIDER_STATE";
 export const setPLPWidget = (data) => ({
   type: SET_PLP_WIDGET_DATA,
   plpWidgetData: data,
@@ -84,4 +86,18 @@ export const updateNewActiveFilters = (
 ) => ({
   type: UPDATE_NEW_ACTIVE_FILTERS,
   updatedNewActiveFilters,
+});
+
+export const updateSliderFilters = (
+  updatedSliderFilters,
+) => ({
+  type: UPDATE_SLIDER_FILTERS,
+  updatedSliderFilters,
+});
+
+export const updateCurrentSliderState = (
+  updatedCurrentSliderState,
+) => ( {
+  type: CURRENT_SLIDER_STATE,
+  updatedCurrentSliderState,
 });

@@ -459,13 +459,16 @@ class FieldMultiselect extends PureComponent {
         newPriceRangeData = {},
         newDiscountData= {},
       },
+      currentSliderState,
     } = this.props;
+    const { discoutrange = {}, priceRange = {} } = currentSliderState;
 
     if( category === "discount" ) {
       let MIN = newDiscountData.min || 0;
       let MAX =  newDiscountData.max || 50;
-      const currentMIN = 0;
-      const currentMAX = 50;
+      const currentMIN = discoutrange?.currentMin;
+      const currentMAX = discoutrange?.currentMax;
+      const key = v4();
       return (
         <div>
           <RangeSlider 
@@ -475,14 +478,17 @@ class FieldMultiselect extends PureComponent {
             maxVal={MAX}
             currentMIN={currentMIN}
             currentMAX={currentMAX}
+            key={key}
+            onBlur={this.onBlur}
           />
         </div>
       );
     }else {
       let MIN;
       let MAX;
-      const currentMIN = 0;
-      const currentMAX = 900;
+      const currentMIN = priceRange?.currentMin;
+      const currentMAX = priceRange?.currentMax;
+      const key = v4();
       if(newPriceRangeData && newPriceRangeData.min && newPriceRangeData.max ) {
         MIN = newPriceRangeData.min;
         MAX = newPriceRangeData.max;
@@ -496,6 +502,8 @@ class FieldMultiselect extends PureComponent {
               maxVal={MAX}
               currentMIN={currentMIN}
               currentMAX={currentMAX}
+              key={key}
+              onBlur={this.onBlur}
             />
         </div>
       );

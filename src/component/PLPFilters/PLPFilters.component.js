@@ -29,7 +29,7 @@ import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { getNewFilterCount } from "./utils/PLPFilters.helper";
+import { getNewFilterCount, getSliderFiltersCount } from "./utils/PLPFilters.helper";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -258,6 +258,8 @@ class PLPFilters extends PureComponent {
       onLevelThreeCategoryPress,
       newActiveFilters,
       moreActiveFilters,
+      sliderFilters,
+      currentSliderState,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -294,6 +296,8 @@ class PLPFilters extends PureComponent {
         onLevelThreeCategoryPress={onLevelThreeCategoryPress}
         newActiveFilters={newActiveFilters}
         moreActiveFilters={moreActiveFilters}
+        sliderFilters={sliderFilters}
+        currentSliderState={currentSliderState}
       />
     );
   };
@@ -440,8 +444,10 @@ class PLPFilters extends PureComponent {
 
   renderResetFilterButton() {
     const { isArabic } = this.state;
-    const { newActiveFilters = {} } = this.props;
-    const isClear = this.getFilterCount() > 0 || getNewFilterCount(newActiveFilters) > 0;
+    const { newActiveFilters = {}, sliderFilters = {} } = this.props;
+    const isClear = this.getFilterCount() > 0 ||
+      getNewFilterCount(newActiveFilters) > 0 ||
+      getSliderFiltersCount(sliderFilters) > 0;
     return isClear || isMobile.any() ? (
       <button
         block="FilterPopup"

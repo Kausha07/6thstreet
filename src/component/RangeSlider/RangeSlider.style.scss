@@ -7,9 +7,14 @@
   width: 20px;
   height: 20px;
   margin-top: -8px;
+  opacity: 1;
 }
 
 .rc-slider-handle:hover {
+  border-color: black;
+}
+
+.rc-slider-handle-dragging {
   border-color: black;
 }
 

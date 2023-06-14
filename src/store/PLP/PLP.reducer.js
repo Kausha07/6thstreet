@@ -12,7 +12,9 @@ import {
   SET_LAST_HOME_ITEM,
   SET_PREV_PATH,
   SET_BRAND_URL,
-  UPDATE_NEW_ACTIVE_FILTERS
+  UPDATE_NEW_ACTIVE_FILTERS,
+  UPDATE_SLIDER_FILTERS,
+  CURRENT_SLIDER_STATE,
 } from "./PLP.action";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
@@ -33,6 +35,11 @@ export const getInitialState = () => ({
   prePath: "",
   brand_url:"",
   newActiveFilters: {},
+  sliderFilters: {},
+  currentSliderState: {
+    discoutrange: {currentMin:0, currentMax:0},
+    priceRange: {currentMin:0, currentMax:0}
+  },
 });
 
 export const formatFilters = (filters = {}) =>
@@ -179,6 +186,20 @@ export const PLPReducer = (state = getInitialState(), action) => {
           ...state,
           newActiveFilters: updatedNewActiveFilters
         };
+
+    case UPDATE_SLIDER_FILTERS:
+      const { updatedSliderFilters } = action;
+      return {
+        ...state,
+        sliderFilters: updatedSliderFilters
+      };
+
+    case CURRENT_SLIDER_STATE:
+      const { updatedCurrentSliderState } = action;
+      return {
+        ...state,
+        currentSliderState: updatedCurrentSliderState
+      };
     
     default:
       return state;

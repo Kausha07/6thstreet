@@ -1,11 +1,11 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./RangeSlider.style";
 import { getCountryCurrencyCode } from "Util/Url/Url";
 import { isArabic } from "Util/App";
 
-const RenderMinMaxRenger = React.memo(({ value1, value2, currency }) => {
+const RenderMinMaxRenger = ({ value1, value2, currency }) => {
   return (
     <p block="renderMinMaxRenger">
       {currency}{" "}
@@ -18,25 +18,23 @@ const RenderMinMaxRenger = React.memo(({ value1, value2, currency }) => {
       </span>
     </p>
   );
-});
+};
 
-const RenderMinMaxRengerDiscount = React.memo(
-  ({ value1, value2, currency }) => {
-    return (
-      <p block="renderMinMaxRenger">
-        <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
-          {value1}
-          {"%"}
-        </span>{" "}
-        -{" "}
-        <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
-          {value2}
-          {"%"}
-        </span>
-      </p>
-    );
-  }
-);
+const RenderMinMaxRengerDiscount = ({ value1, value2, currency }) => {
+  return (
+    <p block="renderMinMaxRenger">
+      <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
+        {value1}
+        {"%"}
+      </span>{" "}
+      -{" "}
+      <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
+        {value2}
+        {"%"}
+      </span>
+    </p>
+  );
+};
 
 function RangeSlider({
   filter,
@@ -45,41 +43,18 @@ function RangeSlider({
   maxVal,
   currentMIN,
   currentMAX,
+  onBlur,
 }) {
-  const [currState, setCurrState] = useState([minVal, maxVal]);
-  const [isMinMaxSet, setIsMinMaxSet] = useState(false);
-  const [values, setValues] = useState([currentMIN, currentMAX]);
+  const [currState, setCurrState] = useState();
+  const [showCurrent, setShowCurrent] = useState(false);
   const [currentPointerState, setCurrentPointerState] = useState([
     minVal,
     maxVal,
   ]);
-  const { newPriceRangeData = {}, category, newDiscountData = {} } = filter;
-  let MIN = values[0];
-  let MAX = values[1];
+  const { category } = filter;
+  let MIN = currentMIN;
+  let MAX = currentMAX;
   const currency = getCountryCurrencyCode();
-
-  if (
-    category === "discount" &&
-    newDiscountData &&
-    newDiscountData.min &&
-    newDiscountData.max &&
-    !isMinMaxSet
-  ) {
-    MIN = newDiscountData.min;
-    MAX = newDiscountData.max;
-    setValues([newDiscountData.min, newDiscountData.max]);
-    setIsMinMaxSet(true);
-  } else if (
-    newPriceRangeData &&
-    newPriceRangeData.min &&
-    newPriceRangeData.max &&
-    !isMinMaxSet
-  ) {
-    MIN = newPriceRangeData.min;
-    MAX = newPriceRangeData.max;
-    setValues([newPriceRangeData.min, newPriceRangeData.max]);
-    setIsMinMaxSet(true);
-  }
 
   const debounceFunc = (func, delay) => {
     let timer;
@@ -99,6 +74,8 @@ function RangeSlider({
     const isRadio = true;
     parentCallback(facet_key, facet_value, checked, isRadio);
     setCurrState(val);
+    setShowCurrent(false);
+    onBlur();
   };
 
   const optimisedSearchHandler = useMemo(
@@ -108,38 +85,9 @@ function RangeSlider({
 
   const onChange = (val) => {
     setCurrentPointerState(val);
+    setShowCurrent(true);
     optimisedSearchHandler(val);
   };
-
-  if (minVal === maxVal && category === "discount") {
-    return (
-      <>
-        <p>{__("Select Discount Range")}</p>
-        <div block="rengeSliderWrapper">
-          <RenderMinMaxRengerDiscount
-            value1={minVal}
-            value2={maxVal}
-            currency={currency}
-          />
-          <div block="wrapperSlider">
-            <Slider
-              range
-              min={MIN}
-              max={MAX}
-              value={[MIN, MAX]}
-              onChange={onChange}
-              defaultValue={[MIN, MAX]}
-              pushable
-              trackStyle={{ backgroundColor: "black" }}
-              dotStyle={{ border: "solid 2px black" }}
-              activeDotStyle={{ border: "solid 2px black" }}
-              reverse={isArabic()}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -149,17 +97,31 @@ function RangeSlider({
         <p>{__("Select Price Range")}</p>
       )}
       <div block="rengeSliderWrapper">
-        {category === "discount" && (
+        {category === "discount" && showCurrent && (
           <RenderMinMaxRengerDiscount
             value1={currentPointerState[0] || minVal}
             value2={currentPointerState[1]}
             currency={currency}
           />
         )}
-        {category != "discount" && (
+        {category === "discount" && !!!showCurrent && (
+          <RenderMinMaxRengerDiscount
+            value1={minVal}
+            value2={maxVal}
+            currency={currency}
+          />
+        )}
+        {category != "discount" && showCurrent && (
           <RenderMinMaxRenger
             value1={currentPointerState[0] || minVal}
             value2={currentPointerState[1]}
+            currency={currency}
+          />
+        )}
+        {category != "discount" && !!!showCurrent && (
+          <RenderMinMaxRenger
+            value1={minVal}
+            value2={maxVal}
             currency={currency}
           />
         )}
@@ -170,7 +132,7 @@ function RangeSlider({
             max={MAX}
             value={currState}
             onChange={onChange}
-            defaultValue={[MIN, MAX]}
+            defaultValue={[minVal, maxVal]}
             pushable
             trackStyle={{ backgroundColor: "black" }}
             dotStyle={{ border: "solid 2px black" }}
