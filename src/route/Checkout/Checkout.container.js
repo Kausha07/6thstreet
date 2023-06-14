@@ -54,7 +54,9 @@ import Event, {
   EVENT_MOE_EDD_TRACK_ON_ORDER,
   EVENT_GTM_CHECKOUT_BILLING,
   MOE_trackEvent,
-  MOE_AddUniqueID
+  MOE_AddUniqueID,
+  EVENT_MOE_CREATE_ORDER_API_FAIL,
+  EVENT_MOE_COMPONENT_DID_CATCH,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -402,6 +404,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     Payment_ID: paymentId,
                     knet_payment_id: knet_payment_id,
                     knet_transaction_id: knet_transaction_id,
+                    statusFromAPI: status || "",
                   },
                 });
               }
@@ -491,6 +494,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     amount: `${currency} ${amount}`,
                     status: FAILED,
                     Payment_ID: paymentId,
+                    statusFromAPI: status || "",
                   },
                 });
               }
@@ -526,6 +530,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.getQPayData();
     this.getTabbyData();
     getCouponList();
+  }
+
+  componentDidCatch(error, info) {
+
+     MOE_trackEvent(EVENT_MOE_COMPONENT_DID_CATCH, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      errorDetails : error?.message || "",
+      route: "checkout_page",
+      });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -1216,6 +1231,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
       if (response && typeof response === "string") {
         showErrorNotification(__(response));
+        MOE_trackEvent(EVENT_MOE_CREATE_ORDER_API_FAIL, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          app6thstreet_platform: "Web",
+          response : response || "",
+        });
         this.setState({ isLoading: false });
         if (code === CHECKOUT_APPLE_PAY) {
           return false;
@@ -1233,6 +1254,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.setState({ isLoading: false });
 
       showErrorNotification(__("Something went wrong."));
+      MOE_trackEvent(EVENT_MOE_CREATE_ORDER_API_FAIL, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        response : "Something went wrong",
+      });
       this.resetCart();
       // this._handleError(e);
     }
@@ -1243,7 +1270,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer, showErrorNotification } =
       this.props;
     const { shippingAddress } = this.state;
     if (isSignedIn) {
