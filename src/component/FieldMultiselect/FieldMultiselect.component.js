@@ -32,7 +32,6 @@ import Event,{
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-export const URL_REWRITE = "url-rewrite";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -233,23 +232,9 @@ class FieldMultiselect extends PureComponent {
     );
   };
 
-  getPageType() {
-    const { urlRewrite, currentRouteName } = window;
-    if (currentRouteName === URL_REWRITE) {
-      if (typeof urlRewrite === "undefined") {
-        return "";
-      }
-      if (urlRewrite.notFound) {
-        return "notfound";
-      }
-      return (urlRewrite.type || "").toLowerCase();
-    }
-    return (currentRouteName || "").toLowerCase();
-  }
-
   renderOption = ([key, option = {}]) => {
     const {
-      filter: { is_radio, data, selected_filters_count },
+      filter: { is_radio, data },
       activeFilter,
       isChecked,
       parentCallback,
@@ -259,55 +244,31 @@ class FieldMultiselect extends PureComponent {
       parentActiveFilters,
       currentActiveFilter,
     } = this.props;
-    const { subcategories = {}, facet_key, is_selected, facet_value } = option;
-    const selectAllCheckbox = selected_filters_count === 0 ? true : false;
+
+    const { subcategories = {} } = option;
+
     if (Object.keys(subcategories).length !== 0) {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
     }
-    if (
-      (this.getPageType() === "search" || this.getPageType() === "category") &&
-      !selectAllCheckbox
-    ) {
-      if (facet_key === "brand_name" || facet_key === "gender") {
-        if (is_selected) {
-          return (
-            <PLPFilterOption
-              key={v4()}
-              option={option}
-              isRadio={is_radio}
-              activeFilter={activeFilter}
-              currentActiveFilter={currentActiveFilter}
-              isChecked={isChecked}
-              parentActiveFilters={parentActiveFilters}
-              parentCallback={parentCallback}
-              updateFilters={updateFilters}
-              setDefaultFilters={setDefaultFilters}
-              defaultFilters={defaultFilters}
-              toggleOptionList={this.toggleOptionList}
-            />
-          );
-        }
-      }
-    } else {
-      return (
-        <PLPFilterOption
-          key={v4()}
-          option={option}
-          isRadio={is_radio}
-          activeFilter={activeFilter}
-          currentActiveFilter={currentActiveFilter}
-          isChecked={isChecked}
-          parentActiveFilters={parentActiveFilters}
-          parentCallback={parentCallback}
-          updateFilters={updateFilters}
-          setDefaultFilters={setDefaultFilters}
-          defaultFilters={defaultFilters}
-          toggleOptionList={this.toggleOptionList}
-        />
-      );
-    }
+
+    return (
+      <PLPFilterOption
+        key={v4()}
+        option={option}
+        isRadio={is_radio}
+        activeFilter={activeFilter}
+        currentActiveFilter={currentActiveFilter}
+        isChecked={isChecked}
+        parentActiveFilters={parentActiveFilters}
+        parentCallback={parentCallback}
+        updateFilters={updateFilters}
+        setDefaultFilters={setDefaultFilters}
+        defaultFilters={defaultFilters}
+        toggleOptionList={this.toggleOptionList}
+      />
+    );
   };
 
   handleSizeSelection = (e) => {
@@ -331,10 +292,7 @@ class FieldMultiselect extends PureComponent {
           language: getLanguageFromUrl().toUpperCase(),
           app6thstreet_platform: "Web",
         });
-        const EventData = {
-          name: EVENT_SIZES_SEARCH_FILTER,
-          value: facet_value,
-        };
+        const EventData = { name:EVENT_SIZES_SEARCH_FILTER, value: facet_value};
         Event.dispatch(EVENT_GTM_FILTER, EventData);
       }
     }
@@ -434,7 +392,7 @@ class FieldMultiselect extends PureComponent {
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
       });
-      const EventData = { name: MoeFilterEvent, value: "All" };
+      const EventData = { name:MoeFilterEvent, value: "All"};
       Event.dispatch(EVENT_GTM_FILTER, EventData);
     }
     onUnselectAllPress(category);
@@ -569,6 +527,7 @@ class FieldMultiselect extends PureComponent {
     }
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
+
     return (
       <>
         <ul
@@ -604,13 +563,6 @@ class FieldMultiselect extends PureComponent {
     let product_count = totalCount;
     const { isArabic } = this.state;
     let allColor = initialFacetKey === "colorfamily" ? true : false;
-    if (
-      (initialFacetKey === "brand_name" || initialFacetKey === "gender") &&
-      checked === false
-    ) {
-      return null;
-    }
-
     return (
       <li
         ref={this.allOptionRef}
@@ -639,13 +591,13 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  sendMoeEvents(event, value) {
+  sendMoeEvents (event, value){
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
-    const eventData = { name: event, value: value };
+    const eventData = {name: event, value: value};
     Event.dispatch(EVENT_GTM_FILTER, eventData);
   }
 
@@ -827,7 +779,7 @@ class FieldMultiselect extends PureComponent {
                         <li key={v4()} block="selectedListItem">
                           {label}
                         </li>
-                      </Fragment>
+                        </Fragment>
                     );
                   }
                 });
@@ -844,7 +796,7 @@ class FieldMultiselect extends PureComponent {
                       <li key={v4()} block="selectedListItem">
                         {label}
                       </li>
-                    </Fragment>
+                      </Fragment>
                   );
                 }
               }
