@@ -12,6 +12,7 @@ function PLPFilterNestedOptions({
   searchKey,
   levelThreeDropdownopen,
   handleSubcategoryDropdown,
+  activeFiltersIds,
 }) {
   const [isChecked, setIsChecked] = useState(option?.is_selected || false);
   const [isLeafLevelVisible, setIsLeafLevelVisible] = useState(false);
@@ -43,10 +44,14 @@ function PLPFilterNestedOptions({
 
   let isDropdownable = false;
   let isAllSelected = true;
+  let isSelectedFromSearch = true;
   if (option && option?.sub_subcategories) {
     Object.entries(option.sub_subcategories).map((sub_cat) => {
       if (!!!sub_cat[1].is_selected) {
         isAllSelected = false;
+      }
+      if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
+        isSelectedFromSearch = false;
       }
     });
   }
@@ -74,7 +79,10 @@ function PLPFilterNestedOptions({
           <PLPFilterLeaf
             leaf={leaf}
             handleLeafLevelClick={handleLeafLevelClick}
+            activeFiltersIds={activeFiltersIds}
+            isSearch={isSearch}
           />
+          <div className="leafLevelSeperator" ></div>
         </>
       );
     }
@@ -91,13 +99,23 @@ function PLPFilterNestedOptions({
     }
   };
 
+  let isSearchSelected = false;
+  if(!isDropdownable) {
+    const { category_id } = option;
+    if(isSearch && activeFiltersIds.includes(category_id)){
+      isSearchSelected = true;
+    }
+  }else if (isSearch){
+    isSearchSelected = isSelectedFromSearch;
+  }
+
   return (
     <>
       <div className="checkboxWrapper">
         <PLPFilterCustomCheckbox
           label={option?.label}
-          checked={isChecked}
-          isSubCatSelected={isAllSelected}
+          checked={isChecked || isSearchSelected}
+          isSubCatSelected={isAllSelected || isSearchSelected}
           onChange={handleCheckboxClick}
           parentCallback={parentCallback}
           option={option}
@@ -106,6 +124,7 @@ function PLPFilterNestedOptions({
           toggleIsLeafLevelVisible={toggleIsLeafLevelVisible}
           setIsChecked={setIsChecked}
           filter={filter}
+          activeFiltersIds={activeFiltersIds}
         />
       </div>
       {( levelThreeDropdownopen.includes(option?.category_key) ) && (

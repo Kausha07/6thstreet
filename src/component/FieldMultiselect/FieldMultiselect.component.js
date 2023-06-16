@@ -35,7 +35,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 import RangeSlider from "Component/RangeSlider/RangeSlider";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-import { getSelectedCategoryLevelOneFilter } from "./utils/FieldMultiselect.helper";
+import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds } from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -517,10 +517,12 @@ class FieldMultiselect extends PureComponent {
       onLevelThreeCategoryPress,
       filter,
       filters,
+      newActiveFilters,
     } = this.props;
     let categoryLevelData = [];
     const { searchFacetKey, searchKey, searchList } = this.state;
     const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
   
     Object.entries(data).map((entry) => {
       if (
@@ -553,6 +555,7 @@ class FieldMultiselect extends PureComponent {
                 onLevelThreeCategoryPress={onLevelThreeCategoryPress}
                 filter={filter}
                 onBlur={this.onBlur}
+                activeFiltersIds={activeFiltersIds}
               />
             ) : null
           )}
@@ -568,10 +571,12 @@ class FieldMultiselect extends PureComponent {
       onLevelThreeCategoryPress,
       filter,
       filters,
+      newActiveFilters
     } = this.props;
     let categoryLevelData = [];
     const { searchFacetKey, searchKey, searchList } = this.state;
     const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
 
     Object.entries(data).map((entry) => {
       if (
@@ -603,6 +608,7 @@ class FieldMultiselect extends PureComponent {
                 onLevelThreeCategoryPress={onLevelThreeCategoryPress}
                 filter={filter}
                 onBlur={this.onBlur}
+                activeFiltersIds={activeFiltersIds}
               />
             ) : null
           )}
@@ -1062,7 +1068,7 @@ class FieldMultiselect extends PureComponent {
       }
       return (
         <span 
-          className="smallerText"
+          className={isArabic() ? "smallerTextAr" : "smallerText" }
         >
           {count === 0 ? " " : count}
         </span>
@@ -1071,7 +1077,7 @@ class FieldMultiselect extends PureComponent {
     const count = selected_filters_count || 0;
     return (
       <span 
-        className="smallerText"
+        className={isArabic() ? "smallerTextAr" : "smallerText" }
       >
         {count === 0 ? " " : count}
       </span>
@@ -1121,6 +1127,10 @@ class FieldMultiselect extends PureComponent {
         });
       });
       conditionalData = categoryLevelData;
+    }
+
+    if(category === "discount" && !!!filter?.isDiscount ) {
+      return null;
     }
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const [lang, country] = locale && locale.split("-");

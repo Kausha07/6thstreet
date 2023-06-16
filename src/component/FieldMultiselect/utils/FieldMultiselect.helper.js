@@ -13,3 +13,12 @@ export const getSelectedCategoryLevelOneFilter = (filters = {}) => {
     });
     return selectCategoryLevelOneFilter;
 }
+
+export const getActiveFiltersIds = (newActiveFilters) => {
+    let idsArray = [];
+    const activeCategoryWithoutPath = newActiveFilters?.categories_without_path || [];
+    if(activeCategoryWithoutPath && activeCategoryWithoutPath.length) {
+      activeCategoryWithoutPath.map((item) => {item?.category_id ? idsArray.push(item.category_id) : null })
+    }
+    return idsArray;
+}

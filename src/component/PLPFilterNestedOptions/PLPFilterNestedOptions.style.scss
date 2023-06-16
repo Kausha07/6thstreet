@@ -53,5 +53,11 @@
 }
 
 .isLeafSelected label {
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.leafLevelSeperator {
+  background-color: #efefef;
+  margin: 0 25px 0 25px;
+  height: 1px;
 }

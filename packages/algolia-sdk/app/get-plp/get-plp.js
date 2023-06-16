@@ -96,6 +96,16 @@ const getNewDiscountData = ({ facets_stats, currency, lang }) => {
   return newDiscountData;
 }
 
+const getIsDiscount = ( newfacetStats={} ) => {
+  if(newfacetStats && newfacetStats.discount ) {
+    const { min, max } = newfacetStats.discount;
+    if(min === 0 && max === 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const formatFacetData = ({ allFacets, facetKey }) => {
   const data = allFacets[facetKey];
 
@@ -165,7 +175,7 @@ function getSliderFilters (queryParams, locale) {
   return sliderFilters;
 }
 
-function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData, facets_stats, moreFiltersData }) {
+function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData, facets_stats, moreFiltersData, newfacetStats }) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -284,6 +294,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter, categ
     selected_filters_count: 0,
     data: getDiscountData({ lang }),
     newDiscountData: getNewDiscountData({ facets_stats, currency, lang }),
+    isDiscount: getIsDiscount(newfacetStats),
   };
 
   filtersObject["categories.level1"] = makeCategoriesLevel1Filter({
@@ -610,10 +621,14 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         });
       }
       let facets_stats = {};
+      let newfacetStats = {};
       if( res && res.results[5] && res.results[5].facets_stats ) {
         facets_stats = res.results[5].facets_stats;
       } else if ( res && res.results[0] && res.results[0].facets_stats  ) {
         facets_stats = res.results[0].facets_stats;
+      }
+      if(res && res.results[0] && res.results[0].facets_stats) {
+        newfacetStats = res.results[0].facets_stats;
       }
       const facetsFilter = deepCopy(finalFiltersData.facets);
       const { filters, _filtersUnselected } = getFilters({
@@ -625,6 +640,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         categoryData,
         facets_stats,
         moreFiltersData,
+        newfacetStats,
       });
       const moreFilters = getMoreFilters(facets, queryParams, moreFiltersData);
       const sliderFilters = getSliderFilters(queryParams, locale);

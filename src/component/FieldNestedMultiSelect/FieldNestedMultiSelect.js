@@ -15,6 +15,7 @@ function FieldNestedMultiSelect({
   onLevelThreeCategoryPress,
   filter,
   onBlur,
+  activeFiltersIds,
 }) {
   const [nestedToggleOptionsList, setNestedToggleOptionsList] = useState(false);
   const [isSelected, setIsSelected] = useState(
@@ -80,6 +81,7 @@ function FieldNestedMultiSelect({
               searchKey={searchKey}
               levelThreeDropdownopen={levelThreeDropdownopen}
               handleSubcategoryDropdown={handleSubcategoryDropdown}
+              activeFiltersIds={activeFiltersIds}
             />
           ))}
         </>
@@ -88,9 +90,13 @@ function FieldNestedMultiSelect({
   };
 
   let isAllSelected = true;
+  let isSelectedFromSearch = true;
   Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
     if (!!!sub_cat[1].is_selected) {
       isAllSelected = false;
+    }
+    if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
+      isSelectedFromSearch = false;
     }
   });
   let isDropdown = false;
@@ -105,7 +111,11 @@ function FieldNestedMultiSelect({
     }
   }
   if (!isDropdown) {
-    const { label, product_count, is_selected = false } = multiLevelData;
+    const { label, product_count, is_selected = false, category_id } = multiLevelData;
+    let isSearchSelected = false;
+    if(isSearch && activeFiltersIds.includes(category_id)){
+      isSearchSelected = true;
+    }
     return (
       <div>
         <div
@@ -116,7 +126,7 @@ function FieldNestedMultiSelect({
           block="toggleButtonNestedMultiSelectBlock"
         >
           <div style={{ display: "flex" }}>
-            {is_selected ? (
+            {is_selected || isSearchSelected ? (
               <span>
                 <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
               </span>
@@ -169,7 +179,7 @@ function FieldNestedMultiSelect({
             handleToggleIsSelected(e, isDropdown);
           }}
         >
-          {isAllSelected ? (
+          {isAllSelected || isSelectedFromSearch ? (
             <span>
               <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
             </span>
