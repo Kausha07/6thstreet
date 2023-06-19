@@ -41,6 +41,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getCurrency } from "Util/App";
 
 import { Shipping } from "Component/Icons";
+import isMobile from "Util/Mobile";
 /**
  * Cart and CartOverlay item
  * @class CartItem
@@ -717,8 +718,10 @@ export class CartItem extends PureComponent {
                 {currency_code} {finalPrice.toFixed(2)}
               </span>
               <span block="couponAppliedText">
+                {isMobile.any() && "("}
                 {currency_code} {discount_amount.toFixed(2)}{" "}
                 {__("Coupon applied")}
+                {isMobile.any() && ")"}
               </span>
             </div>
           ) : (

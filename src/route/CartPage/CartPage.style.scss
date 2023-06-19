@@ -164,6 +164,10 @@ padding: auto ;
                 margin-bottom: 135px;
             }
 
+            .msiteRemoveExtraMargin{
+                margin-bottom: 60px;
+            }
+
             .msiteBottomFixed{
                 width: 100%;
                 position: fixed;
@@ -324,6 +328,11 @@ padding: auto ;
         &Link {
             text-decoration: underline;
             font-weight: 600;
+
+            &_isArabic{
+                margin-right: 10px;
+            }
+            
         }
         &Block {
             display: flex;
@@ -626,6 +635,9 @@ padding: auto ;
                 font-weight: var(--fw-regular);
             }
         }
+        &_isArabic {
+            text-align: right;
+          }
     }
     .CartItem {
         @include desktop {
@@ -984,7 +996,6 @@ padding: auto ;
                 height: 34px;
                 text-transform: none;
                 cursor: pointer;
-                min-width: 80px;
                 padding-right: 0px;
                 &.remove {
                     border-radius: 8px;
@@ -995,6 +1006,7 @@ padding: auto ;
                     letter-spacing: 0;
                     line-height: 18px;
                     text-align: center;
+                    padding-left: 0;
                 }
             }
         }

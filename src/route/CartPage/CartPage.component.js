@@ -757,10 +757,21 @@ export class CartPage extends PureComponent {
   }
 
   renderTotals() {
+    const {
+      totals: { extension_attributes },
+    } = this.props;
+
     if (isMobile.any()) {
       return (
         <article block="CartPage" elem="Summary">
-          <div block="msiteScrollableBlock">
+          <div
+            block={
+              extension_attributes &&
+              extension_attributes?.club_apparel_estimated_pointsvalue !== 0
+                ? "msiteScrollableBlock"
+                : "msiteRemoveExtraMargin"
+            }
+          >
             {this.renderYourOffers()}
             {this.renderDiscountCode()}
             {this.renderWishlistSlider()}
@@ -904,6 +915,7 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="ClubApparelLink"
               to="/my-account/club-apparel"
+              mods={{ isArabic }}
             >
               {__("Link now")}
             </Link>
@@ -990,7 +1002,11 @@ export class CartPage extends PureComponent {
     return (
       <div block="CartPage" elem="headingBlock">
         {this.renderBack()}
-        <h1 block="CartPage" elem="Heading">
+        <h1
+          block="CartPage"
+          elem="Heading"
+          mods={{ isArabic: isArabic() && !isMobile.any() }}
+        >
           {isMobile.any() ? __("My SHOPPING BAG ") : __("My Bag ")}
           <span>
             ({totalQuantity}

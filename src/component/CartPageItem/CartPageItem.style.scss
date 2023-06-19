@@ -83,7 +83,7 @@
       line-height: 16px;
       display: flex;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 8px;
       flex-wrap: wrap;
       svg {
         height: 15px;
@@ -92,6 +92,7 @@
 
       @include mobile {
         top: 0px;
+        margin-top: 5px;
       }
 
       span:nth-child(2) {
@@ -245,13 +246,16 @@
       text-underline-position: under;
       cursor: pointer;
     }
+
+    @include mobile {
+      line-height: 20px;
+    }
   }
 
   .discountedCouponAppliedBlock {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0;
     border-top: 1px solid rgba(112, 112, 112, 0.1);
     padding-top: 5px;
 
@@ -274,10 +278,9 @@
     }
 
     @include mobile {
-      margin: 5px 0;
       .couponAppliedFinalPrice {
         padding: 3px 5px;
-        font-size: 12px;
+        font-size: 13px;
         display: flex;
         justify-content: space-between;
         align-items: center;
