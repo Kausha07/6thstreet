@@ -39,6 +39,12 @@ const InfluencerSearch = (props) => {
     useState("");
   const [isMobileOnPageSearchClicked, setIsMobileOnPageSearchClicked] =
     useState(false);
+  let sliderCollectionArr = [];
+  masterTrendingInfo?.superstars?.[selectedGender]?.data.forEach((val) => {
+    if (val.type === "influencer_slider_collection") {
+      sliderCollectionArr = [...sliderCollectionArr, ...val.items];
+    }
+  });
 
   const getInfluencers = () => {
     const locale = getLocaleFromUrl();
@@ -251,20 +257,20 @@ const InfluencerSearch = (props) => {
 
   const renderSearchForMobile = () => {
     const lowerInfluencerSearchText = onPageinfluencerSearchText?.toLowerCase();
-    const sliderContent =
-      masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;
-    const filteredSliderContent = sliderContent?.filter((val) => {
-      if (
-        val?.collection?.title
-          ?.toLowerCase()
-          .includes(lowerInfluencerSearchText) ||
-        val?.influencer?.influencer_name
-          ?.toLowerCase()
-          .includes(lowerInfluencerSearchText)
-      ) {
-        return val;
-      }
-    });
+    const filteredSliderContent = sliderCollectionArr
+      ?.filter((val) => {
+        if (
+          val?.collection?.title
+            ?.toLowerCase()
+            .includes(lowerInfluencerSearchText) ||
+          val?.influencer?.influencer_name
+            ?.toLowerCase()
+            .includes(lowerInfluencerSearchText)
+        ) {
+          return val;
+        }
+      })
+      .slice(0, 5);
     const allInfluencerContent =
       allInfluencersList?.influencers?.superstars?.[selectedGender];
     const filteredAllInfluencerContent = allInfluencerContent?.filter((val) => {
@@ -382,20 +388,20 @@ const InfluencerSearch = (props) => {
 
   const renderSearchForDesktop = () => {
     const lowerInfluencerSearchText = influencerSearchText.toLowerCase();
-    const sliderContent =
-      masterTrendingInfo?.superstars?.[selectedGender]?.data?.[0]?.items;
-    const filteredSliderContent = sliderContent?.filter((val) => {
-      if (
-        val?.collection?.title
-          ?.toLowerCase()
-          .includes(lowerInfluencerSearchText) ||
-        val?.influencer?.influencer_name
-          ?.toLowerCase()
-          .includes(lowerInfluencerSearchText)
-      ) {
-        return val;
-      }
-    });
+    const filteredSliderContent = sliderCollectionArr
+      ?.filter((val) => {
+        if (
+          val?.collection?.title
+            ?.toLowerCase()
+            .includes(lowerInfluencerSearchText) ||
+          val?.influencer?.influencer_name
+            ?.toLowerCase()
+            .includes(lowerInfluencerSearchText)
+        ) {
+          return val;
+        }
+      })
+      .slice(0, 5);
     const allInfluencerContent =
       allInfluencersList?.influencers?.superstars?.[selectedGender];
     const filteredAllInfluencerContent = allInfluencerContent?.filter((val) => {

@@ -626,9 +626,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       firstname: fullname,
       email,
       gender,
+      dob,
       custom_attributes: {
         contact_no: phone,
-        dob,
       },
     };
 

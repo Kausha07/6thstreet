@@ -37,13 +37,13 @@ export default function CartNudge() {
             <span
               className="signin"
               onClick={() => {
+                setShowSignInSignUpPopUp(true);
                 MOE_trackEvent(EVENT_LOGIN_CLICK, {
                   country: getCountryFromUrl().toUpperCase(),
                   language: getLanguageFromUrl().toUpperCase(),
                   app6thstreet_platform: "Web",
                   screenName: "cart_nudge",
                 });
-                setShowSignInSignUpPopUp(true);
               }}
             >
               {__("Sign in")}

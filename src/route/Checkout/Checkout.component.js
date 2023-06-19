@@ -690,7 +690,7 @@ export class Checkout extends SourceCheckout {
     const country_code = getCountryFromUrl();
     const isCareemPayAvailable = countries[country_code]?.is_careempay_enabled;
     const lang = isArabic ? "ar" : "en";
-    const isCareemPayEnabled = isCareemPayAvailable[lang];
+    const isCareemPayEnabled = isCareemPayAvailable ? isCareemPayAvailable[lang] : false;
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
