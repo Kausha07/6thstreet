@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import {
   CATEGORY,
@@ -10,7 +11,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CmsPage from "Route/CmsPage";
 import NoMatch from "Route/NoMatch";
-import PDP from "Route/PDP";
+const PDP = lazy(() => import(/* webpackChunkName: 'PDP' */ "Route/PDP"));
 import PLP from "Route/PLP";
 import {
   TYPE_CATEGORY,
@@ -51,13 +52,15 @@ class UrlRewrites extends PureComponent {
       this.props;
     return (
       <GTMRouteWrapper route={PRODUCT_PAGE}>
-        <PDP
-          id={id}
-          sku={string_sku}
-          brandDescription={brandDescription}
-          brandImg={brandImg}
-          brandName={brandName}
-        />
+        <Suspense fallback={<div></div>}>
+          <PDP
+            id={id}
+            sku={string_sku}
+            brandDescription={brandDescription}
+            brandImg={brandImg}
+            brandName={brandName}
+          />
+        </Suspense>
       </GTMRouteWrapper>
     );
   }
