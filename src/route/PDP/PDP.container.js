@@ -452,7 +452,7 @@ export class PDPContainer extends PureComponent {
           defaultQueryPayload.gender = gender;
         }
         vuePayload["widget_type"].push({
-          number_result: 50,
+          number_result: 10,
           type,
           filters: VueQuery.buildFilters({ filters: [] }, defaultQueryPayload),
         });

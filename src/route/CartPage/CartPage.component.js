@@ -954,7 +954,8 @@ export class CartPage extends PureComponent {
     const { isArabic, isOOSProducts } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
-    )?.data;
+    )?.data || {country: getCountryFromUrl().toUpperCase() };
+
 
 
     // if cart is not created and user goes to cart page in mobile view.
