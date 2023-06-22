@@ -42,7 +42,7 @@ class PDPDetail extends PureComponent {
 
   getBrandUrl = () => {
     const { brandInfoData = '', brand_url = ''  } = this.props;
-    let finalURLKey = brandInfoData ? brandInfoData : brand_url
+    let finalURLKey = brandInfoData ? brandInfoData : brand_url;
     const url = finalURLKey
       .replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
@@ -81,8 +81,9 @@ class PDPDetail extends PureComponent {
 
   renderContent = () => {
     const { isMobile } = this.state;
-    const { brandDescription, brandImg, brandName } = this.props;
-    if (!brandDescription || !brandImg || !brandName) {
+    const { brandDescription, brandImg, brandName, brandInfoData = "", brand_url = "" } =
+      this.props;
+    if (!brandInfoData || !brand_url  || !brandDescription || !brandImg || !brandName) {
       return null;
     }
     return (
