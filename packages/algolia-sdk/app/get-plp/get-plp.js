@@ -501,12 +501,12 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const index = client.initIndex(indexName);
 
     // Build search query
-    const { facetFilters, numericFilters } = getAlgoliaFilters(queryParams);
+    const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams);
     const query = {
       indexName: indexName,
       params: {
         ...defaultSearchParams,
-        facetFilters,
+        facetFilters: newFacetFilters?.length ? [...facetFilters, newFacetFilters ] : facetFilters,
         numericFilters,
         query: q,
         page,
