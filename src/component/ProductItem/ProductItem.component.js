@@ -385,6 +385,9 @@ class ProductItem extends PureComponent {
       pageType,
       removeFromWishlist,
       wishlist_item_id,
+      position,
+      qid,
+      isVueData,
     } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
@@ -401,6 +404,9 @@ class ProductItem extends PureComponent {
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
+          position={position}
+          QueryID={qid}
+          isVueData={isVueData}
         />
       </div>
     );

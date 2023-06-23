@@ -17,7 +17,8 @@ import Event, {
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
-  MOE_trackEvent
+  MOE_trackEvent,
+  SELECT_ITEM_ALGOLIA
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -26,6 +27,8 @@ import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+import Algolia from "Util/API/provider/Algolia";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -589,6 +592,9 @@ class PLPAddToCart extends PureComponent {
       showNotification,
       prevPath = null,
       product,
+      position,
+      QueryID,
+      isVueData
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -667,6 +673,29 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
         },
       });
+
+      var data = localStorage.getItem("customer") ? localStorage.getItem("customer") : null;
+      let userData = data ? JSON.parse(data) : null;
+      let userToken;
+      let queryID;
+      if (!isVueData) {
+        if (!QueryID) {
+          queryID = getStore().getState().SearchSuggestions.queryID;
+        } else {
+          queryID = QueryID;
+        }
+      }
+      if (userData && userData?.data) {
+        userToken = userData.data.id;
+      }
+      if (queryID) {
+        new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+          objectIDs: [product?.objectID],
+          queryID,
+          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          position: [position],
+        });
+      }
 
       //   vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
