@@ -96,10 +96,20 @@ const getNewDiscountData = ({ facets_stats, currency, lang }) => {
   return newDiscountData;
 }
 
+const getIsPriceFilterAvaialbe = ( newfacetStats={}, currency ) => {
+  if(newfacetStats && newfacetStats[`price.${currency}.default`]) {
+    const { min, max } = newfacetStats[`price.${currency}.default`];
+    if(min === max) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const getIsDiscount = ( newfacetStats={} ) => {
   if(newfacetStats && newfacetStats.discount ) {
     const { min, max } = newfacetStats.discount;
-    if(min === 0 && max === 0) {
+    if(min === 0 && max === 0 || min === max) {
       return false;
     }
   }
@@ -284,6 +294,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter, categ
     selected_filters_count: 0,
     data: getPriceRangeData({ currency, lang }),
     newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
+    isPriceFilterAvailable: getIsPriceFilterAvaialbe(newfacetStats, currency),
   };
 
   // Discount

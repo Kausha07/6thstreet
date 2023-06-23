@@ -57,7 +57,10 @@ import {
   getNewActiveFilters,
   getCategoryIds,
   getSelectedFiltersFacetValues,
+  toggleIsSelectedOfSubcategories,
+  getIsDataIsSelected,
 } from "Route/PLP/utils/PLP.helper";
+import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -647,14 +650,36 @@ export class PLPContainer extends PureComponent {
     );
   }
 
-  onLevelThreeCategoryPress(multiLevelData, isDropdown) {
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch) {
     const { newActiveFilters = {} } = this.state;
+    let newMultiLevelData = {...multiLevelData};
+    const { category_id } = multiLevelData;
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+    if(isSearch && activeFiltersIds.includes(category_id)){
+      if(isDropdown) {
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }else {
+        newMultiLevelData.is_selected = true;
+      }
+    } 
+    else if (isSearch) {
+      const isDataIsSelected = getIsDataIsSelected(newMultiLevelData);
+      if(isDropdown && isDataIsSelected){
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }
+    }
+    
     this.onSelectMoreFilterPLP("");
     this.setState(
       {
-        newActiveFilters: getNewActiveFilters({ multiLevelData, isDropdown, newActiveFilters }) || {},
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: newMultiLevelData,
+            isDropdown,
+            newActiveFilters,
+          }) || {},
       },
-      () => this.select(),
+      () => this.select()
     );
   }
 

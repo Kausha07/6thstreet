@@ -1137,6 +1137,9 @@ class FieldMultiselect extends PureComponent {
     const currency = getCurrencyCode(country);
     const priceAttribute = `price.${currency}.default`;
 
+    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable ) {
+      return null;
+    }
     const {
       filters: {
         categories_without_path: {

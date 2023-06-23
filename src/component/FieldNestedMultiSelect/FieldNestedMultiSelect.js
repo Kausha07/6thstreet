@@ -32,7 +32,7 @@ function FieldNestedMultiSelect({
     const { facet_key, facet_value, is_selected } = multiLevelData;
     e.stopPropagation();
     setIsSelected(!isSelected);
-    onLevelThreeCategoryPress(multiLevelData, isDropdown);
+    onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch);
   };
   const handleSubcategoryDropdown = (newOpenDropdown) => {
     setLevelThreDropdownopen(newOpenDropdown)
@@ -93,6 +93,9 @@ function FieldNestedMultiSelect({
   let isSelectedFromSearch = true;
   Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
     if (!!!sub_cat[1].is_selected) {
+      isAllSelected = false;
+    }
+    if(isSearch && !!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
       isAllSelected = false;
     }
     if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){

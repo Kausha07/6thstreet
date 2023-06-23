@@ -10,11 +10,11 @@ const RenderMinMaxRenger = ({ value1, value2, currency }) => {
     <p block="renderMinMaxRenger">
       {currency}{" "}
       <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
-        {value1}
+        {isArabic() ? value2 : value1}
       </span>{" "}
       - {currency}{" "}
       <span block="renderMinMaxRenger" elem="spanRenderMinMaxRenger">
-        {value2}
+        {isArabic() ? value1 : value2}
       </span>
     </p>
   );

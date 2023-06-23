@@ -147,3 +147,24 @@ export const getNewMoreActiveFilters = ({
 
   return newMoreActiveFilters;
 };
+
+export const toggleIsSelectedOfSubcategories = ( multiLevelData = {} ) => {
+  let newMultiLevelData = {...multiLevelData};
+  const {sub_subcategories = {}} = newMultiLevelData;
+  for( let key in sub_subcategories) {
+    const subCategory = sub_subcategories[key];
+    subCategory.is_selected = !subCategory.is_selected;
+  }
+  return newMultiLevelData;
+}
+
+export const getIsDataIsSelected = (multiLevelData = {}) => {
+  const {sub_subcategories = {}} = multiLevelData;
+  for( let key in sub_subcategories) {
+    const subCategory = sub_subcategories[key];
+    if(subCategory.is_selected) {
+      return true;
+    }
+  }
+  return false;
+}

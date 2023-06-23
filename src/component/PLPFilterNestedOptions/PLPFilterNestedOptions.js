@@ -28,10 +28,10 @@ function PLPFilterNestedOptions({
   };
   const handleCheckboxClick = (isDropdownable) => {
     const isDropDown = isDropdownable ? true : false;
-    onLevelThreeCategoryPress(option, isDropDown);
+    onLevelThreeCategoryPress(option, isDropDown, isSearch);
   };
   const handleLeafLevelClick = (e, leaf ) => {
-    onLevelThreeCategoryPress(leaf, false);
+    onLevelThreeCategoryPress(leaf, false, isSearch);
   };
 
   useEffect(() => {
@@ -48,6 +48,9 @@ function PLPFilterNestedOptions({
   if (option && option?.sub_subcategories) {
     Object.entries(option.sub_subcategories).map((sub_cat) => {
       if (!!!sub_cat[1].is_selected) {
+        isAllSelected = false;
+      }
+      if(isSearch && !!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
         isAllSelected = false;
       }
       if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
