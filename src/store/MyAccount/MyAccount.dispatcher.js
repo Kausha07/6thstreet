@@ -136,8 +136,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           let items = [];
           items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
           request.items = items;
+          if(items.length) this.estimateDefaultEddResponse(dispatch, request);
+        } else {
+          this.estimateDefaultEddResponse(dispatch, request);
         }
-        this.estimateDefaultEddResponse(dispatch, request);
         dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
       } else if (sessionStorage.getItem("EddAddressReq")) {
         const response = sessionStorage.getItem("EddAddressRes")
@@ -169,8 +171,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               let items = [];
               items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
               request.items = items;
+              if(items.length) this.estimateDefaultEddResponse(dispatch, request);
+            } else {
+              this.estimateDefaultEddResponse(dispatch, request);
             }
-            this.estimateDefaultEddResponse(dispatch, request);
           }
         } else {
           dispatch(setEddResponse(null, null));
