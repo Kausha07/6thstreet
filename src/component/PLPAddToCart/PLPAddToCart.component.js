@@ -676,7 +676,10 @@ class PLPAddToCart extends PureComponent {
 
       var data = localStorage.getItem("customer") ? localStorage.getItem("customer") : null;
       let userData = data ? JSON.parse(data) : null;
-      let userToken;
+      let userToken =
+        userData && userData?.data?.id
+          ? `user-${userData.data.id}`
+          : getUUIDToken();
       let queryID;
       if (!isVueData) {
         if (!QueryID) {

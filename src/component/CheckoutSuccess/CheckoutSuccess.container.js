@@ -187,8 +187,7 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
-    userToken = userData?.data?.id
+    let userToken = userData?.data?.id
       ? `user-${userData.data.id}`
       : getUUIDToken();
 

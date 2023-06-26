@@ -153,7 +153,10 @@ class ProductItem extends PureComponent {
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
+    let userToken =
+      userData && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
     let queryID;
     resetProduct();
     setPrevPath(window.location.href);
@@ -164,10 +167,6 @@ class ProductItem extends PureComponent {
         queryID = qid;
       }
     }
-    userToken =
-      userData && userData.data.id
-        ? `user-${userData.data.id}`
-        : getUUIDToken();
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
