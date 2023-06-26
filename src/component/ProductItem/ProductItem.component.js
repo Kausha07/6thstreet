@@ -164,9 +164,10 @@ class ProductItem extends PureComponent {
         queryID = qid;
       }
     }
-    if (userData?.data) {
-      userToken = userData.data.id;
-    }
+    userToken =
+      userData && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
     const checkCategoryLevel = () => {
       if (!categories) {
         return "this category";
@@ -199,11 +200,11 @@ class ProductItem extends PureComponent {
       variant: color || "",
       position: product_Position || "",
     });
-    if (queryID) {
+    if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        userToken: userToken,
         position: [position],
       });
     }

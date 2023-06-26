@@ -685,14 +685,21 @@ class PLPAddToCart extends PureComponent {
           queryID = QueryID;
         }
       }
-      if (userData && userData?.data) {
-        userToken = userData.data.id;
-      }
-      if (queryID) {
+      userToken =
+        userData && userData?.data?.id
+          ? `user-${userData.data.id}`
+          : getUUIDToken();
+      if (
+        queryID &&
+        position &&
+        position > 0 &&
+        product?.objectID &&
+        userToken
+      ) {
         new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
           objectIDs: [product?.objectID],
           queryID,
-          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          userToken: userToken,
           position: [position],
         });
       }
