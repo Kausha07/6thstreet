@@ -393,7 +393,7 @@ export class CartPageContainer extends PureComponent {
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       coupon_code_applied: coupon_code || "",

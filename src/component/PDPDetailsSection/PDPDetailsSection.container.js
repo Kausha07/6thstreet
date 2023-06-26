@@ -11,6 +11,8 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   language: state.AppState.language,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
+  brandInfoData : state.PDP.brandInfoData,
+  brand_url: state.PLP.brand_url,
 });
 
 
@@ -37,7 +39,9 @@ export class PDPDetailsSectionContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
-      pdpWidgetsAPIData
+      pdpWidgetsAPIData,
+      brandInfoData,
+      brand_url,
     } = this.props;
     return {
       product,
@@ -51,7 +55,9 @@ export class PDPDetailsSectionContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
-      pdpWidgetsAPIData
+      pdpWidgetsAPIData,
+      brandInfoData,
+      brand_url,
     };
   };
 

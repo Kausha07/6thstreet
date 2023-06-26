@@ -1,3 +1,4 @@
+import ClickOutside from "Component/ClickOutside";
 import { useState, useEffect } from "react";
 import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
@@ -48,40 +49,23 @@ export default function SignInSignupNudge() {
         window.location.pathname == "/men.html" ||
         window.location.pathname == "/kids.html" ||
         window.location.pathname == "/home.html") ? (
-        <div>
-          <div
-            className={
-              isArabicValue
-                ? "nudge-container arabic-alignment"
-                : "nudge-container"
-            }
-          >
-            <div className="nudge-content">
-              <button
-                className="signin"
-                onClick={() => {
-                  setIsNudgeVisible(false);
-                  setShowSignInSignUpPopUp(true);
-                  setIsRegisterScreen(false);
-                  MOE_trackEvent(EVENT_LOGIN_CLICK, {
-                    country: getCountryFromUrl().toUpperCase(),
-                    language: getLanguageFromUrl().toUpperCase(),
-                    app6thstreet_platform: "Web",
-                    screenName: "Home_Account",
-                  });
-                }}
-              >
-                {__("sign in")}
-              </button>
-              <div className="newCostomer">
-                {__("New Customer?")}
-                <span
-                  className="register"
+        <ClickOutside onClick={() => setIsNudgeVisible(false)}>
+          <div>
+            <div
+              className={
+                isArabicValue
+                  ? "nudge-container arabic-alignment"
+                  : "nudge-container"
+              }
+            >
+              <div className="nudge-content">
+                <button
+                  className="signin"
                   onClick={() => {
-                    setIsRegisterScreen(true);
-                    setShowSignInSignUpPopUp(true);
                     setIsNudgeVisible(false);
-                    MOE_trackEvent(EVENT_REGISTER_CLICK, {
+                    setShowSignInSignUpPopUp(true);
+                    setIsRegisterScreen(false);
+                    MOE_trackEvent(EVENT_LOGIN_CLICK, {
                       country: getCountryFromUrl().toUpperCase(),
                       language: getLanguageFromUrl().toUpperCase(),
                       app6thstreet_platform: "Web",
@@ -89,12 +73,31 @@ export default function SignInSignupNudge() {
                     });
                   }}
                 >
-                  {__("Register")}
-                </span>
+                  {__("sign in")}
+                </button>
+                <div className="newCostomer">
+                  {__("New Customer?")}
+                  <span
+                    className="register"
+                    onClick={() => {
+                      setIsRegisterScreen(true);
+                      setShowSignInSignUpPopUp(true);
+                      setIsNudgeVisible(false);
+                      MOE_trackEvent(EVENT_REGISTER_CLICK, {
+                        country: getCountryFromUrl().toUpperCase(),
+                        language: getLanguageFromUrl().toUpperCase(),
+                        app6thstreet_platform: "Web",
+                        screenName: "Home_Account",
+                      });
+                    }}
+                  >
+                    {__("Register")}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </ClickOutside>
       ) : null}
     </>
   );
