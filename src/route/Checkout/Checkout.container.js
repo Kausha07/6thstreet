@@ -948,23 +948,27 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               }
             }
           });
+        } else {
+          const isIntlBrand = cross_border && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          if(isIntlBrand && edd_info.default_message_intl_vendor) {
+            const date_range = edd_info.default_message_intl_vendor.split("-");
+            const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
+            const end_date = date_range && date_range[1] ? date_range[1]: 0;
+            const { defaultEddMess } = getDefaultEddMessage(
+              parseInt(start_date),
+              parseInt(end_date),
+              1
+            );
+            actualEddMess = defaultEddMess;
+            const {
+              defaultEddDateString
+            } = getDefaultEddDate(parseInt(end_date));
+            finalEddForLineItem = defaultEddDateString;
+          } else {
+            finalEddForLineItem = defaultEddDateString;
+          }
         }
-        const isIntlBrand = cross_border && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
-        if(isIntlBrand && edd_info.default_message_intl_vendor) {
-          const date_range = edd_info.default_message_intl_vendor.split("-");
-          const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
-          const end_date = date_range && date_range[1] ? date_range[1]: 0;
-          const { defaultEddMess } = getDefaultEddMessage(
-            parseInt(start_date),
-            parseInt(end_date),
-            1
-          );
-          actualEddMess = defaultEddMess;
-          const {
-            defaultEddDateString
-          } = getDefaultEddDate(parseInt(end_date));
-          finalEddForLineItem = defaultEddDateString;
-        }
+        
         eddItems.push({
           sku: sku,
           edd_date:

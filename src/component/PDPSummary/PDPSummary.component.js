@@ -143,9 +143,7 @@ class PDPSummary extends PureComponent {
           data.intl_vendors=null;
           let items = [];
           items_in_cart.map(item => {
-            if(!(item && item.full_item_info && item.full_item_info.cross_border && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1)) {
-              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null})
-            }
+              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
           })
           data.items = items;
           if(items.length) estimateEddResponse(data, true);
@@ -172,9 +170,7 @@ class PDPSummary extends PureComponent {
       request.intl_vendors=null;
       let items = [];
       items_in_cart.map(item => {
-        if(!(item && item.full_item_info && item.full_item_info.cross_border && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1)) {
-          items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null})
-        }
+        items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
       });
       request.items = items;
       if(items.length) estimateEddResponse(request, type);
@@ -286,7 +282,7 @@ class PDPSummary extends PureComponent {
         };
         request.intl_vendors=null;
         let items = [];
-        Object.keys(simple_products).map(sku => items.push({ sku : sku, intl_vendor: cross_border ? international_vendor : null}))
+        Object.keys(simple_products).map(sku => items.push({ sku : sku, intl_vendor: cross_border && edd_info.international_vendors && international_vendor && edd_info.international_vendors.indexOf(international_vendor)>-1 ? international_vendor : null}))
         request.items = items;
         estimateEddResponseForPDP(request, true);
       }
@@ -455,9 +451,7 @@ class PDPSummary extends PureComponent {
         request.intl_vendors=null;
         let items = [];
         items_in_cart.map(item => {
-          if(!(item && item.full_item_info && item.full_item_info.cross_border && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1)) {
-            items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null})
-          }
+          items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
         });
         request.items = items;
         if(items.length) estimateEddResponse(request, true);
@@ -625,26 +619,26 @@ class PDPSummary extends PureComponent {
     const { isArabic } = this.state;
     let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
     if(edd_info?.has_item_level) {
-      const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
-      if(isIntlBrand && edd_info.default_message_intl_vendor) {
-        const date_range = edd_info.default_message_intl_vendor.split("-");
-        const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
-        const end_date = date_range && date_range[1] ? date_range[1]: 0;
-        const { defaultEddMess } = getDefaultEddMessage(
-          parseInt(start_date),
-          parseInt(end_date),
-          1
-        );
-        actualEddMess = defaultEddMess;
+      if (eddResponseForPDP && isObject(eddResponseForPDP) && eddResponseForPDP["pdp"]) {
+        eddResponseForPDP["pdp"].filter((data) => {
+          if (data.sku == sku  && data.feature_flag_status == 1) {
+            actualEddMess = isArabic
+              ? data.edd_message_ar
+              : data.edd_message_en;
+          }
+        })
       } else {
-        if (eddResponseForPDP && isObject(eddResponseForPDP) && eddResponseForPDP["pdp"]) {
-          eddResponseForPDP["pdp"].filter((data) => {
-            if (data.sku == sku  && data.feature_flag_status == 1) {
-              actualEddMess = isArabic
-                ? data.edd_message_ar
-                : data.edd_message_en;
-            }
-          })
+        const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+        if(isIntlBrand && edd_info.default_message_intl_vendor) {
+          const date_range = edd_info.default_message_intl_vendor.split("-");
+          const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
+          const end_date = date_range && date_range[1] ? date_range[1]: 0;
+          const { defaultEddMess } = getDefaultEddMessage(
+            parseInt(start_date),
+            parseInt(end_date),
+            1
+          );
+          actualEddMess = defaultEddMess;
         } else {
           const { defaultEddMess } = getDefaultEddMessage(
             edd_info.default_message,

@@ -106,6 +106,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   };
   setEDDresultData = (response, finalRes, dispatch, login) => {
     if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
+      const {AppConfig: {edd_info= {}}} = getStore().getState();
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
           return address.default_shipping === true;
@@ -129,11 +130,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           courier: null,
           source: null,
         };
-        if(countryCode == "SA") {
+        if(edd_info.has_item_level) {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           request.intl_vendors=null;
           let items = [];
-          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null}));
+          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
           request.items = items;
         }
         this.estimateDefaultEddResponse(dispatch, request);
@@ -147,27 +148,30 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       } else {
         if (!login) {
           const { country_code, city, area } = response.data[0];
-          const { finalCity, finalArea } = this.getArabicCityArea(
-            city,
-            area,
-            finalRes
-          );
-          let request = {
-            country: country_code,
-            city: isArabic() ? finalCity : city,
-            area: isArabic() ? finalArea : area,
-            courier: null,
-            source: null,
-          };
-          if(countryCode == "SA") {
-            request.country = "SA";
-            let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
-            request.intl_vendors=null;
-            let items = [];
-            items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border ? item?.full_item_info?.international_vendor : null}));
-            request.items = items;
+          const countryCode = getCountryFromUrl();
+          if(countryCode == country_code){
+            const { finalCity, finalArea } = this.getArabicCityArea(
+              city,
+              area,
+              finalRes
+            );
+            let request = {
+              country: country_code,
+              city: isArabic() ? finalCity : city,
+              area: isArabic() ? finalArea : area,
+              courier: null,
+              source: null,
+            };
+            if(edd_info.has_item_level) {
+              request.country = "SA";
+              let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+              request.intl_vendors=null;
+              let items = [];
+              items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
+              request.items = items;
+            }
+            this.estimateDefaultEddResponse(dispatch, request);
           }
-          this.estimateDefaultEddResponse(dispatch, request);
         } else {
           dispatch(setEddResponse(null, null));
           dispatch(setCustomerDefaultShippingAddress(null));

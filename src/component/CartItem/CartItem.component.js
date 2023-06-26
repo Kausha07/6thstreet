@@ -438,32 +438,37 @@ export class CartItem extends PureComponent {
         ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
         : itemEddMessage;
     if(edd_info.has_item_level) {
-      const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
-      if(isIntlBrand && edd_info.default_message_intl_vendor) {
-        const date_range = edd_info.default_message_intl_vendor.split("-");
-        const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
-        const end_date = date_range && date_range[1] ? date_range[1]: 0;
-        const { defaultEddMess } = getDefaultEddMessage(
-          parseInt(start_date),
-          parseInt(end_date),
-          1
-        );
-        actualEddMess = defaultEddMess;
-      } else {
-        if (eddResponse && isObject(eddResponse) && eddResponse["cart"]) {
-          eddResponse["cart"].filter((data) => {
-            if (data.sku == sku && data.feature_flag_status === 1) {
-              if (extension_attributes?.click_to_collect_store) {
-                actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-              } else {
-                actualEddMess = isArabic
-                  ? data.edd_message_ar
-                  : data.edd_message_en;
-              }
+      if (eddResponse && isObject(eddResponse) && eddResponse["cart"]) {
+        eddResponse["cart"].filter((data) => {
+          if (data.sku == sku && data.feature_flag_status === 1) {
+            if (extension_attributes?.click_to_collect_store) {
+              actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+            } else {
+              actualEddMess = isArabic
+                ? data.edd_message_ar
+                : data.edd_message_en;
             }
-          });
+          }
+        });
+      } else {
+        const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+        if(isIntlBrand && edd_info.default_message_intl_vendor) {
+          const date_range = edd_info.default_message_intl_vendor.split("-");
+          const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
+          const end_date = date_range && date_range[1] ? date_range[1]: 0;
+          const { defaultEddMess } = getDefaultEddMessage(
+            parseInt(start_date),
+            parseInt(end_date),
+            1
+          );
+          actualEddMess = defaultEddMess;
         } else {
-          actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          const { defaultEddMess } = getDefaultEddMessage(
+            edd_info.default_message,
+            0,
+            0
+          );
+          actualEddMess = defaultEddMess;
         }
       }
     } else {
