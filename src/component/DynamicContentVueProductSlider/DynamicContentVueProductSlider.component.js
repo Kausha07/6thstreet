@@ -201,6 +201,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     const linkTo = {
       pathname: product?.sku ? defaultPathName.concat(`&product_id=${product.sku}`) : defaultPathName,
       state: {
+        widgetIDOnViewAllBtn:widgetID,
         vueProducts:products,
         product_id:product.sku
       },
