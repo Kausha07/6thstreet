@@ -201,7 +201,9 @@ export class CartPageContainer extends PureComponent {
 
     this.getCartWidgetsVueData();
     this.getCartYoumayAlsoLikeWidgetsVueData();
-    this.getCartLookingForThisVueData();
+    if (isSignedIn() && items?.length !== 0) {
+      this.getCartLookingForThisVueData();
+    }
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -297,7 +299,7 @@ export class CartPageContainer extends PureComponent {
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
-      num_results: 50,
+      num_results: 25,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     const type = "vue_compact_style_it_slider";
@@ -376,9 +378,10 @@ export class CartPageContainer extends PureComponent {
     }
 
     if (
-      this.props.totals?.items?.[0]?.full_item_info?.config_sku !==
-        prevProps?.totals?.items?.[0]?.full_item_info?.config_sku ||
-      this.props.totals !== prevProps?.totals
+      isSignedIn() &&
+      items?.length !== 0 &&
+      totals?.total !== 0 &&
+      totals?.total !== prevtotals?.total
     ) {
       this.getCartLookingForThisVueData();
     }
