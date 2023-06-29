@@ -197,6 +197,15 @@ export class CartPageContainer extends PureComponent {
       location: { state: { errorState: propErrorState } = {} },
     } = this.props;
 
+    if (
+      !isSignedIn() &&
+      Object.keys(this.props.totals)?.length === 0 &&
+      BrowserDatabase.getItem("CART_ID_CACHE_KEY") === null
+    ) {
+      this.getCartWidgetsVueData();
+      this.getCartYoumayAlsoLikeWidgetsVueData();
+    }
+
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
