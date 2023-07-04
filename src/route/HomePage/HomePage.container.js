@@ -22,6 +22,9 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
 import Event, { EVENT_PAGE_LOAD } from "Util/Event";
 import Influencer from "../Influencer/index";
+import { getUUIDToken } from "Util/Auth";
+import VueQuery from "../../query/Vue.query";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
 import {
   deleteAuthorizationToken,
@@ -76,6 +79,8 @@ export class HomePageContainer extends PureComponent {
 
   state = {
     dynamicContent: [],
+    trendingBrands : [],
+    trendingCategories : [],
     isLoading: true,
     defaultGender: "women",
     isMobile: isMobile.any(),
@@ -90,6 +95,7 @@ export class HomePageContainer extends PureComponent {
   componentDidMount() {
     const { prevPath = null, requestCustomerData, logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+    this.getTrendingBrands();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
       params: {
@@ -284,6 +290,48 @@ export class HomePageContainer extends PureComponent {
     });
   }
 
+  getTrendingBrands = () => {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const newPersonalizedWidgetsTypes = ["vue_trending_brands","vue_trending_categories"];
+    newPersonalizedWidgetsTypes.map(async(element)=>{
+      const query = {
+        filters: [],
+        fields : ["title", "image_link", "product_id", "price", "discounted_price", "currency_code", "brand", "ontology", "gender", "custom_label_1", "custom_label_2", "category", "link"],
+        num_results: 10,
+        product_id: "",
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+        widget_type : element
+      };
+  
+      const payload = VueQuery.buildQuery(element, query, {
+        gender,
+        userID
+      });
+      try {
+        await fetchVueData(payload)
+          .then((resp) => {
+            if(element === "vue_trending_brands"){
+              this.setState({
+                trendingBrands: resp?.data?.data[0],
+              });
+            }else {
+              this.setState({
+                trendingCategories: resp?.data?.data[0],
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("vue query catch", err);
+          });
+      } catch (e) {
+        Logger.log(e);
+      }
+    })
+  }
+
   async requestDynamicContent(isUpdate = false) {
     const { gender } = this.props;
     const devicePrefix = this.getDevicePrefix();
@@ -296,6 +344,35 @@ export class HomePageContainer extends PureComponent {
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: `${devicePrefix}${gender}.json`,
         });
+        dynamicContent.push({
+          "type":"vue_brands_for_you",
+          "index":25,
+          "promotion_name":"Vue_brand_for_you_promo",
+          "tag":"Vue_brand_for_you_tag",
+          "header":{
+             "title":"Brand for you Header Title",
+             "subtitle":"Brand for you Subtitle Title",
+             "button_label":"Brand Button Label",
+             "button_link":"/brand"
+          },
+          "query":{
+             "num_results":8
+          },
+          "layout":{
+             "title":"Brand for You Vue"
+          }
+       },{
+        "type":"vue_categories_for_you",
+        "index":26,
+        "promotion_name":"Vue_categories_for_you_promo",
+        "tag":"Vue_categories_for_you_tag",
+        "query":{
+           "num_results":20
+        },
+        "layout":{
+          "title":"Categories for You Vue"
+        }
+     } )
         this.setState({
           dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
           isLoading: false,
@@ -342,6 +419,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
+    const { trendingBrands = [], trendingCategories = [] } = this.state
     if (this.props.gender === "influencer") {
       return <Influencer />;
     }
@@ -351,6 +429,8 @@ export class HomePageContainer extends PureComponent {
         {...this.containerProps()}
         setLastTapItem={this.setLastTapItem}
         HomepageProps={this.props}
+        vue_trending_brands={trendingBrands}
+        vue_trending_categories={trendingCategories}
       />
     );
   }

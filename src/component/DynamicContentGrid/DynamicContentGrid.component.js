@@ -155,6 +155,102 @@ class DynamicContentGrid extends PureComponent {
     );
   };
 
+  renderTrendingItems = (item,i)=>{
+    const {brand,brand_logo,url_path} = item;
+     const { isArabic } = this.state;
+    const { items_per_row, item_height, index } = this.props;
+    let ht = item_height?.toString() + "px";
+    let contentClass = "contentAll";
+    if (item_height >= 500 && items_per_row === 2) {
+      contentClass = `Content_${i}`;
+    }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+    return (
+      <div
+        block="CategoryItem"
+        mods={{ isArabic }}
+        elem="Content"
+        className={contentClass}
+        key={i}
+      >
+        <Link
+          to={formatCDNLink(url_path) || ""}
+          key={i}
+          data-banner-type="grid"
+          data-promotion-name={item?.promotion_name ? item?.promotion_name : ""}
+          data-tag={item?.tag ? item?.tag : ""}
+          onClick={() => {
+            this.onclick(item);
+          }}
+        >
+          <Image
+            lazyLoad={index === 34 ? false : true}
+            src={brand_logo}
+            className="GridImage"
+            alt={item?.promotion_name ? item?.promotion_name : "GridImage"}
+          />
+          {brand && (
+            <div block="Footer">
+              {brand && (
+                <p block="Footer-Title">{brand}</p>
+              )}
+            </div>
+          )}
+        </Link>
+      </div>
+    );
+  }
+
+  renderTrendingCaterogyItems = (item,i)=>{
+    const {english_name,arabic_name,link,image} = item;
+     const { isArabic } = this.state;
+    const { items_per_row, item_height, index } = this.props;
+    let ht = item_height?.toString() + "px";
+    let contentClass = "contentAll";
+    if (item_height >= 500 && items_per_row === 2) {
+      contentClass = `Content_${i}`;
+    }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+    return (
+      <div
+        block="CategoryItem"
+        mods={{ isArabic }}
+        elem="Content"
+        className={contentClass}
+        key={i}
+      >
+        <Link
+          to={formatCDNLink(link) || ""}
+          key={i}
+          data-banner-type="grid"
+          data-promotion-name={item?.promotion_name ? item?.promotion_name : ""}
+          data-tag={item?.tag ? item?.tag : ""}
+          onClick={() => {
+            this.onclick(item);
+          }}
+        >
+          <Image
+            lazyLoad={index === 34 ? false : true}
+            src={image}
+            className="GridImage"
+            alt={item?.promotion_name ? item?.promotion_name : "GridImage"}
+          />
+          {english_name && (
+            <div block="Footer">
+              {english_name && (
+                <p block="Footer-Title">{isArabic ? arabic_name : english_name}</p>
+              )}
+            </div>
+          )}
+        </Link>
+      </div>
+    );
+  }
+
   renderItemMobile = (item, i) => {
     const { link, url,promotion_name, } = item;
     const { index } = this.props;
@@ -197,9 +293,14 @@ class DynamicContentGrid extends PureComponent {
   };
 
   renderItems() {
-    const { items = [] } = this.props;
+    const { items = [],type, trendingBrands = [], trendingCategories = [] } = this.props;
     if (isMobile.any()) {
       return items.map(this.renderItemMobile);
+    }
+    if(type === "vue_brands_for_you"){
+      return trendingBrands?.map(this.renderTrendingItems);
+    }else if (type === "vue_categories_for_you"){
+      return trendingCategories?.map(this.renderTrendingCaterogyItems)
     }
     return items.map(this.renderItem);
   }
