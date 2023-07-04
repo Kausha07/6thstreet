@@ -541,10 +541,16 @@ class PLPPages extends PureComponent {
     const selectedMoreFilters = this.props.moreFilters;
     const { option = {} } = selectedMoreFilters;
     const thisRef = this;
+    const currency = getCountryCurrencyCode();
     if (selectedMoreFilters && option) {
       return (
         <>
-          {Object.values(option).map(function (values, index) {
+          {Object.entries(option).map(function (filter, index) {
+            const key = filter[0]
+            const values = filter[1]
+            if(key === "discount" || key === `price.${currency}.default` ) {
+              return null;
+            }
             if (values) {
               return Object.values(values).map(function (value, index) {
                 if (value) {

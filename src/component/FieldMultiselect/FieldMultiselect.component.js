@@ -690,10 +690,24 @@ class FieldMultiselect extends PureComponent {
 
     let sizeData = data;
     if (this.state.sizeDropDownKey === "" && category === "sizes") {
-      this.setState({
-        sizeDropDownKey: "size_eu",
-        sizeDropDownList: data,
-      });
+      // if there is no size available for EU then we have to set UK and 
+      // if the UK size is also not available then setting it to US
+      if(sizeData && sizeData?.size_eu) {
+        this.setState({
+          sizeDropDownKey: "size_eu",
+          sizeDropDownList: data,
+        });
+      } else if(sizeData && sizeData?.size_uk) {
+        this.setState({
+          sizeDropDownKey: "size_uk",
+          sizeDropDownList: data,
+        });
+      } else {
+        this.setState({
+          sizeDropDownKey: "size_us",
+          sizeDropDownList: data,
+        });
+      }
     }
 
     let searchData = data;
@@ -1054,6 +1068,7 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: {  selected_filters_count, category },
       newActiveFilters = {},
+      newSelectedActiveFilters = {},
     } = this.props;
 
     if (this.props.isSortBy) {
@@ -1062,7 +1077,7 @@ class FieldMultiselect extends PureComponent {
 
     if( category === "categories_without_path" ) {
       let count = 0;
-      const selectedFilters = newActiveFilters?.[category];
+      const selectedFilters = newSelectedActiveFilters?.[category];
       if(selectedFilters) {
         count = selectedFilters.length;
       }

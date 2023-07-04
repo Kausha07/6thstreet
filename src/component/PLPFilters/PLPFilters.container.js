@@ -38,6 +38,7 @@ export const mapStateToProps = (_state) => ({
   productsCount: _state.PLP.meta.hits_count,
   sliderFilters: _state.PLP.sliderFilters,
   currentSliderState: _state.PLP.currentSliderState,
+  newSelectedActiveFilters: _state.PLP.newActiveFilters,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -200,7 +201,10 @@ export class PLPFiltersContainer extends PureComponent {
     resetSortData();
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
-      WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      // we don't want to clear gender and in stock filter when user click on clear all button 
+      if(Object.keys(initialFilters)[i] != "gender" && Object.keys(initialFilters)[i] != "in_stock") {
+        WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      }
     }
 
     const updatedcurrentSliderState = {
@@ -211,7 +215,7 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, currentSliderState = {} } = this.props;
+    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, currentSliderState = {}, newSelectedActiveFilters = {} } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -222,7 +226,8 @@ export class PLPFiltersContainer extends PureComponent {
       query,
       sliderFilters,
       currentSliderState,
-      isPLPSortBy
+      isPLPSortBy,
+      newSelectedActiveFilters
     };
   };
 

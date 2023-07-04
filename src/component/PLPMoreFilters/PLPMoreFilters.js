@@ -70,7 +70,9 @@ function PLPMoreFilters(props) {
       {numVisibleItems < props.ListOFMoreFilters.length && (
         <li onClick={toggleShowAll} className="buttonMoreandLess">
           <div>
-            <label className="MoreButtonLabel">
+            <label className="MoreButtonLabel" 
+              onClick={()=> showAll ? props?.handleMoreFilterChange("") : null}
+            >
               {showAll
                 ? `- ${__("Less")}`
                 : `+${props.ListOFMoreFilters.length - numVisibleItems} ${__(
