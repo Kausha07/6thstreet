@@ -3,6 +3,7 @@ import { sum } from "../utils/num";
 import { sortKeys } from "../utils/obj";
 import { translate } from "../config/translations";
 import { MORE_FILTERS } from "../config"
+import { getFinalProdCountObj } from "../utils/getProdCount";
 
 /*
   Note
@@ -78,8 +79,20 @@ const _getCategoryLevel2Data = ({
   categoriesWithoutPath,
   query,
   categoryData,
+  prodCountFacets,
 }) => {
   let totalSelectedFiltersCount = 0;
+
+let prodCountObj = {};
+Object.entries(prodCountFacets).map((entry, index) => {
+  if (
+    entry[0] === "categories.level2" ||
+    entry[0] === "categories.level3" ||
+    entry[0] === "categories.level4"
+  ) {
+    prodCountObj = { ...prodCountObj, ...entry[1] };
+  }
+});
 
   /*
     Both 'categories.level2' and 'categories.level3' are needed because
@@ -102,6 +115,7 @@ const _getCategoryLevel2Data = ({
     And merge the two category levels together
   */
   let regex = new RegExp("\\s///\\s|\\s", "gm");
+  const finalProdCountObj = getFinalProdCountObj(prodCountObj);
   const categoryIds = query?.categoryIds || "";
   let categoryIdsArray = categoryIds.split(",");
   if (categoryIdsArray.length) {
@@ -158,7 +172,7 @@ const _getCategoryLevel2Data = ({
           facet_key: facetKey,
           label: l2,
           is_selected: false,
-          product_count: categoriesWithoutPath[l2],
+          product_count: finalProdCountObj[categoryKey] || categoriesWithoutPath[l2],
           category_key: categoryKey,
           category_id,
           sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories},
@@ -170,7 +184,7 @@ const _getCategoryLevel2Data = ({
             facet_key: facetKey,
             label: l3,
             is_selected: false,
-            product_count: productCount,
+            product_count: finalProdCountObj[categoryKey] || productCount,
             category_level: "L3",
             category_key: categoryKey,
             category_id,
@@ -182,7 +196,7 @@ const _getCategoryLevel2Data = ({
                 facet_key: facetKey,
                 label: l4,
                 is_selected: false,
-                product_count: productCount,
+                product_count: finalProdCountObj[categoryKey] || productCount,
                 category_level: "L4",
                 category_key: categoryKey,
                 category_id,
@@ -306,7 +320,7 @@ const _getCategoryLevel1Data = ({
   return [data, totalSelectedFiltersCount];
 };
 
-const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData }) => {
+const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData, prodCountFacets }) => {
   const facetKey = "categories_without_path";
   // let categoriesLevel2Data = query["categories.level2"]
   //   ? {}
@@ -319,6 +333,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query, categoryData }) => {
     categoriesWithoutPath: facets.categories_without_path,
     query,
     categoryData,
+    prodCountFacets,
   });
   return {
     label: __("Categories"),

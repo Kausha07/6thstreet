@@ -13,6 +13,7 @@ import {
   deepCopy,
   formatNewInTag,
   getAlgoliaFilters,
+  getAlgoliaFiltersProdCount,
   getCurrencyCode,
   getIndex,
 } from "../utils";
@@ -185,7 +186,18 @@ function getSliderFilters (queryParams, locale) {
   return sliderFilters;
 }
 
-function getFilters({ locale, facets, raw_facets, query, additionalFilter, categoryData, facets_stats, moreFiltersData, newfacetStats }) {
+function getFilters({
+  locale,
+  facets,
+  raw_facets,
+  query,
+  additionalFilter,
+  categoryData,
+  facets_stats,
+  moreFiltersData,
+  newfacetStats,
+  prodCountFacets,
+}) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -235,6 +247,7 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter, categ
     facets,
     query,
     categoryData,
+    prodCountFacets,
   });
 
   // Facet filters
@@ -577,6 +590,23 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
 
     let queries = [];
     queries.push(query);
+
+    // To get the correct count of facets
+    const AlgoliaFiltersProdCount = getAlgoliaFiltersProdCount(queryParams);
+    const queryProdCount = {
+      indexName: indexName,
+      params: {
+        ...defaultSearchParams,
+        facetFilters: AlgoliaFiltersProdCount?.facetFilters,
+        numericFilters,
+        query: q,
+        page,
+        hitsPerPage: limit,
+        clickAnalytics: true,
+      },
+    };
+    queries.push(queryProdCount);
+
     if (selectedFilterArr.length > 0) {
       selectedFilterArr.map((filter) => {
         let finalFacetObj = [];
@@ -641,6 +671,11 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
       if(res && res.results[0] && res.results[0].facets_stats) {
         newfacetStats = res.results[0].facets_stats;
       }
+      // for get the count of the facets
+      let prodCountFacets = {};
+      if(res && res.results[1] && res.results[1] && res.results[1].facets) {
+        prodCountFacets = res.results[1].facets;
+      }
       const facetsFilter = deepCopy(finalFiltersData.facets);
       const { filters, _filtersUnselected } = getFilters({
         locale,
@@ -652,6 +687,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         facets_stats,
         moreFiltersData,
         newfacetStats,
+        prodCountFacets,
       });
       const moreFilters = getMoreFilters(facets, queryParams, moreFiltersData);
       const sliderFilters = getSliderFilters(queryParams, locale);
