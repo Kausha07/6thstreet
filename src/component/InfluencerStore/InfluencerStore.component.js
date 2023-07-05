@@ -81,7 +81,7 @@ const InfluencerStore = (props) => {
 
   useEffect(() => {
     WebUrlParser.setPage("0");
-    document.body.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     getStoreInfo();
     return () => {
       resetPLPData();
@@ -94,6 +94,10 @@ const InfluencerStore = (props) => {
 
   useEffect(() => {
     window.addEventListener("mousedown", closePopupOnOutsideClick);
+    const element = document.querySelector(".storeProducts");
+    if (element) {
+      element.scrollIntoView({ block: "end", behavior: "smooth" });
+    }
     return () => {
       window.removeEventListener("mousedown", closePopupOnOutsideClick);
     };
