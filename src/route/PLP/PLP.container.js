@@ -82,7 +82,8 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
   catalogue_from_algolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
+  newSelectedActiveFilters: state.PLP.newActiveFilters,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -837,6 +838,7 @@ export class PLPContainer extends PureComponent {
       menuCategories = [],
       lastHomeItem,
       pages,
+      newSelectedActiveFilters = {},
     } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
@@ -951,6 +953,7 @@ export class PLPContainer extends PureComponent {
         : [...tempArray];
       this.setState({
         activeFilters: newActiveFilters,
+        newActiveFilters: newSelectedActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
