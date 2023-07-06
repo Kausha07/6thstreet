@@ -47,8 +47,8 @@ class DynamicContent extends PureComponent {
     edge_to_edge_banner: DynamicContentBanner,
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
-    vue_brands_for_you: DynamicContentGrid,
-    vue_categories_for_you: DynamicContentGrid
+    vue_brands_for_you: DynamicContentSliderWithLabel,
+    vue_categories_for_you: DynamicContentSliderWithLabel
   };
   isCheckTwiceBanner = (block) => {
     let isValid = false;
@@ -79,37 +79,47 @@ class DynamicContent extends PureComponent {
       } else {
         Component = this.renderMap["banner"];
       }
-    } else if(type === "vue_brands_for_you") {
-      return (<DynamicContentGrid
-        ref={this.comprefs[i]}
-        {...restProps}
-        trendingBrands = {this.props.trendingBrands}
-        setLastTapItemOnHome={this.props.setLastTapItemOnHome}
-        renderMySignInPopup={this.props.renderMySignInPopup}
-        promotion_name={promotion_name}
-        tag={tag}
-        type={type}
-        widgetID={type}
-        key={i}
-        isHomePage={true}
-        index={i}
-      />)
-    } else if(type === "vue_categories_for_you"){
-      return (<DynamicContentGrid
-      ref={this.comprefs[i]}
-      {...restProps}
-      trendingCategories={this.props.trendingCategories}
-      setLastTapItemOnHome={this.props.setLastTapItemOnHome}
-      renderMySignInPopup={this.props.renderMySignInPopup}
-      promotion_name={promotion_name}
-      tag={tag}
-      type={type}
-      widgetID={type}
-      key={i}
-      isHomePage={true}
-      index={i}
-    />)
-    }else if (vueSliderType.includes(type)) {
+    } else if (type === "vue_brands_for_you") {
+      return (
+        <DynamicContentSliderWithLabel
+          ref={this.comprefs[i]}
+          {...restProps}
+          trendingBrands={this.props.trendingBrands}
+          setLastTapItemOnHome={this.props.setLastTapItemOnHome}
+          renderMySignInPopup={this.props.renderMySignInPopup}
+          promotion_name={promotion_name}
+          tag={tag}
+          type={type}
+          widgetID={type}
+          key={i}
+          isHomePage={true}
+          index={i}
+        />
+      );
+    } else if (type === "vue_categories_for_you") {
+      const {
+        type,
+        promotion_name,
+        tag,
+        layout: { title },
+      } = block;
+      return (
+        <DynamicContentSliderWithLabel
+          ref={this.comprefs[i]}
+          {...restProps}
+          trendingCategories={this.props?.trendingCategories}
+          setLastTapItemOnHome={this.props.setLastTapItemOnHome}
+          renderMySignInPopup={this.props.renderMySignInPopup}
+          promotion_name={promotion_name}
+          tag={tag}
+          type={type}
+          widgetID={type}
+          key={i}
+          isHomePage={true}
+          index={i}
+        />
+      );
+    } else if (vueSliderType.includes(type)) {
       Component = this.renderMap["vue_slider"];
       if (!Component) {
         return null;

@@ -344,35 +344,6 @@ export class HomePageContainer extends PureComponent {
         const dynamicContent = await getStaticFile(HOME_STATIC_FILE_KEY, {
           $FILE_NAME: `${devicePrefix}${gender}.json`,
         });
-        dynamicContent.push({
-          "type":"vue_brands_for_you",
-          "index":25,
-          "promotion_name":"Vue_brand_for_you_promo",
-          "tag":"Vue_brand_for_you_tag",
-          "header":{
-             "title":"Brand for you Header Title",
-             "subtitle":"Brand for you Subtitle Title",
-             "button_label":"Brand Button Label",
-             "button_link":"/brand"
-          },
-          "query":{
-             "num_results":8
-          },
-          "layout":{
-             "title":"Brand for You Vue"
-          }
-       },{
-        "type":"vue_categories_for_you",
-        "index":26,
-        "promotion_name":"Vue_categories_for_you_promo",
-        "tag":"Vue_categories_for_you_tag",
-        "query":{
-           "num_results":20
-        },
-        "layout":{
-          "title":"Categories for You Vue"
-        }
-     } )
         this.setState({
           dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
           isLoading: false,
