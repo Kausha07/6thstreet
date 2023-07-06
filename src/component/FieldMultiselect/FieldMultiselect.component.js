@@ -1202,7 +1202,7 @@ class FieldMultiselect extends PureComponent {
         )}
         {toggleOptionsList && !isMobile.any() && (
           <>
-            {Object.keys(conditionalData).length > 0
+            {Object.keys(conditionalData).length > (category === "sort" ? 10 : 0) 
               ? this.renderFilterSearchbox(label, category)
               : null}
             {category === "sizes" && !isMobile.any()
