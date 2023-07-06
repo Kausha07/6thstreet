@@ -647,7 +647,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 0 && index < Object.values(res.results).length - 1) {
+          if (index > 1 && index < Object.values(res.results).length - 1) {
             Object.entries(result[1].facets).map((entry) => {
               finalFiltersData.facets[[entry[0]]] = entry[1];
             });
