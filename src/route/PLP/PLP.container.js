@@ -338,8 +338,8 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { requestedOptions } = this.props;
-    const { newActiveFilters } = this.state;
-    const isFilters = getIsFilters(newActiveFilters) || false;
+    const { newActiveFilters, activeFilters } = this.state;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]

@@ -57,12 +57,13 @@ function FieldNestedMultiSelect({
       Object.entries(sub_subcategories).map((sub_cat) => {
         if (sub_cat[0].toLowerCase().includes(searchKey.toLowerCase())) {
           sub_subCat.push(sub_cat[1]);
+        } else {
+          Object.entries(sub_cat[1].sub_subcategories).map((subSubCat) => {
+            if( subSubCat[0].toLowerCase().includes(searchKey.toLowerCase())) {
+              sub_subCat.push(sub_cat[1]);
+            }
+          });
         }
-        Object.entries(sub_cat[1].sub_subcategories).map((subSubCat) => {
-          if( subSubCat[0].toLowerCase().includes(searchKey.toLowerCase())) {
-            sub_subCat.push(sub_cat[1]);
-          }
-        });
       });
     }
     if (sub_subCat.length > 0) {

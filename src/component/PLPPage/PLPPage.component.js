@@ -17,8 +17,8 @@ class PLPPage extends PureComponent {
   };
 
   sendProductImpression = (product) => {
-    const { newActiveFilters = {} } = this.props;
-    const isFilters = getIsFilters(newActiveFilters) || false;
+    const { newActiveFilters = {}, activeFilters = {} } = this.props;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
     gtmProdArr.push([product]);
     const product_numbers = isMobile.any() ? 4 : 6;
     const pagePathName = new URL(window.location.href).pathname;
@@ -48,8 +48,8 @@ class PLPPage extends PureComponent {
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup, newActiveFilters = {}  } = this.props;
-    const isFilters = getIsFilters(newActiveFilters) || false;
+    const { renderMySignInPopup, newActiveFilters = {}, activeFilters = {} } = this.props;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
     return (
       <ProductItem
         position={index}

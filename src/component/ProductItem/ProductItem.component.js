@@ -245,6 +245,7 @@ class ProductItem extends PureComponent {
       pageType,
       renderMySignInPopup,
       isFilters,
+      position
     } = this.props;
     return (
       <WishlistIcon
@@ -253,6 +254,7 @@ class ProductItem extends PureComponent {
         data={product}
         pageType={pageType}
         isFilters={isFilters}
+        product_position={position}
       />
     );
   }
@@ -391,7 +393,8 @@ class ProductItem extends PureComponent {
       pageType,
       removeFromWishlist,
       wishlist_item_id,
-      product_Position,
+      position,
+      isFilters,
     } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
@@ -408,7 +411,8 @@ class ProductItem extends PureComponent {
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
-          product_Position={product_Position}
+          product_Position={position}
+          isFilters={isFilters}
         />
       </div>
     );

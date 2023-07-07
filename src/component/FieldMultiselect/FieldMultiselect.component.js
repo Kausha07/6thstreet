@@ -931,33 +931,41 @@ class FieldMultiselect extends PureComponent {
 
   getSearchData = (allData, facet_key, value) => {
     let finalSearchedData = {};
+    const { filters } = this.props;
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
     if (facet_key === "categories_without_path") {
       Object.entries(allData).map((entry) => {
-        Object.entries(entry[1].subcategories).map((subEntry) => {
-          if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
-            finalSearchedData[subEntry[0]] =
-              entry[1].subcategories[subEntry[0]];
-          }
-          Object.entries(subEntry[1].sub_subcategories).map(
-            (sub_subcategoriesObj) => {
-              if (
-                sub_subcategoriesObj[0].toLowerCase().includes(value.toLowerCase())
-              ) {
-                finalSearchedData[subEntry[0]] =
-                  entry[1].subcategories[subEntry[0]];
-              }
-              Object.entries(sub_subcategoriesObj[1].sub_subcategories).map(
-                (sub_cat) => {
-                  if (
-                    sub_cat[0].toLowerCase().includes(value.toLowerCase())
-                  ) {
-                    finalSearchedData[subEntry[0]] =
-                      entry[1].subcategories[subEntry[0]];
-                  }                  
-                });
+        if (
+          (selectCategoryLevelOneFilter &&
+            selectCategoryLevelOneFilter === entry[0]) ||
+          selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+        ) {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
+              finalSearchedData[subEntry[0]] =
+                entry[1].subcategories[subEntry[0]];
             }
-          );
-        });
+            Object.entries(subEntry[1].sub_subcategories).map(
+              (sub_subcategoriesObj) => {
+                if (
+                  sub_subcategoriesObj[0].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  finalSearchedData[subEntry[0]] =
+                    entry[1].subcategories[subEntry[0]];
+                }
+                Object.entries(sub_subcategoriesObj[1].sub_subcategories).map(
+                  (sub_cat) => {
+                    if (
+                      sub_cat[0].toLowerCase().includes(value.toLowerCase())
+                    ) {
+                      finalSearchedData[subEntry[0]] =
+                        entry[1].subcategories[subEntry[0]];
+                    }                  
+                  });
+              }
+            );
+          });
+        }
       });
     } else {
       Object.keys(allData).filter((key) => {

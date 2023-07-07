@@ -64,7 +64,7 @@ class WishlistIcon extends PureComponent {
       swipeWishlist = false,
       newSignUpEnabled,
       isFilters,
-      data: { product_position },
+      product_position,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
