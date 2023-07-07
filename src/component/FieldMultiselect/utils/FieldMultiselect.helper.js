@@ -60,3 +60,25 @@ export const getIsOptionVisible = (option) => {
     }
     return true;
 }
+
+export const getAttributeName = (category, currency) => {
+    switch (category) {
+        case "categories_without_path":
+            return "Categories";
+        
+        case "brand_name":
+            return "Brands";
+
+        case "colorfamily":
+            return "Colours";
+
+        case "in_stock":
+            return "By Stock";
+
+        case `price.${currency}.default`:
+            return "Price Range";
+    
+        default:
+            return category;
+    }
+}

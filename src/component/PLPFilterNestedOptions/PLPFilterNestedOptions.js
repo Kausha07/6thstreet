@@ -28,10 +28,10 @@ function PLPFilterNestedOptions({
   };
   const handleCheckboxClick = (isDropdownable) => {
     const isDropDown = isDropdownable ? true : false;
-    onLevelThreeCategoryPress(option, isDropDown, isSearch);
+    onLevelThreeCategoryPress(option, isDropDown, isSearch, searchKey);
   };
   const handleLeafLevelClick = (e, leaf ) => {
-    onLevelThreeCategoryPress(leaf, false, isSearch);
+    onLevelThreeCategoryPress(leaf, false, isSearch, searchKey);
   };
 
   useEffect(() => {

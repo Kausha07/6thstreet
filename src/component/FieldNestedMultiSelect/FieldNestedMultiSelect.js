@@ -32,7 +32,7 @@ function FieldNestedMultiSelect({
     const { facet_key, facet_value, is_selected } = multiLevelData;
     e.stopPropagation();
     setIsSelected(!isSelected);
-    onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch);
+    onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey);
   };
   const handleSubcategoryDropdown = (newOpenDropdown) => {
     setLevelThreDropdownopen(newOpenDropdown)

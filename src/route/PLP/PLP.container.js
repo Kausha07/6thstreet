@@ -59,9 +59,12 @@ import {
   getSelectedFiltersFacetValues,
   toggleIsSelectedOfSubcategories,
   getIsDataIsSelected,
+  sendEventAttributeSelected,
+  sendEventMoreAttributeSelected,
 } from "Route/PLP/utils/PLP.helper";
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
+import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -335,6 +338,8 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { requestedOptions } = this.props;
+    const { newActiveFilters } = this.state;
+    const isFilters = getIsFilters(newActiveFilters) || false;
 
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
@@ -373,6 +378,7 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No"
     });
     this.setState({ categoryloaded: false });
   }
@@ -651,7 +657,7 @@ export class PLPContainer extends PureComponent {
     );
   }
 
-  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch) {
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
     const { newActiveFilters = {} } = this.state;
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
@@ -682,6 +688,7 @@ export class PLPContainer extends PureComponent {
       },
       () => this.select()
     );
+    sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
   }
 
   onMoreFilterClick(option) {
@@ -692,6 +699,7 @@ export class PLPContainer extends PureComponent {
       },
       () => this.selectMoreFilters()
     );
+    sendEventMoreAttributeSelected(option);
   }
 
   onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {

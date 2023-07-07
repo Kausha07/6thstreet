@@ -36,6 +36,12 @@ import {
   EVENT_GTM_CHECKOUT_BILLING,
   EVENT_PAGE_LOAD,
   EVENT_GTM_INFLUENCER,
+  EVENT_FILTER_CLEAR_ALL,
+  EVENT_FILTER_ATTRIBUTE_SELECTED,
+  EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED,
+  EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED,
+  EVENT_FILTER_SEARCH_CLICK,
+  EVENT_FILTER_SEARCH_VALUE_SELECTED,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -86,6 +92,12 @@ import PageLoadEvent from "./events/PageLoad.event";
 import InfluencerEvent from "./events/Influencer.event";
 import Scripts from "./Scripts";
 import MoEngage from "react-moengage";
+import FilterClearAll from "./events/PLPFiltersEvents/FilterClearAll.event";
+import FilterAttributeSelected from "./events/PLPFiltersEvents/FilterAttributeSelected.event";
+import FilterAttributeValueSelected from "./events/PLPFiltersEvents/FilterAttributeValueSelected.event";
+import FilterAttributeValueDeselected from "./events/PLPFiltersEvents/FilterAttributeValueDeselected.event";
+import FilterSearchClick from "./events/PLPFiltersEvents/FilterSearchClick.event";
+import FilterSearchValueSelected from "./events/PLPFiltersEvents/FilterSearchValueSelected.event";
 
 /**
  * Event list
@@ -195,6 +207,12 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
     [EVENT_PAGE_LOAD]: PageLoadEvent,
     [EVENT_GTM_INFLUENCER] : InfluencerEvent,
+    [EVENT_FILTER_CLEAR_ALL]: FilterClearAll,
+    [EVENT_FILTER_ATTRIBUTE_SELECTED]: FilterAttributeSelected,
+    [EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED]: FilterAttributeValueSelected,
+    [EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED]: FilterAttributeValueDeselected,
+    [EVENT_FILTER_SEARCH_CLICK]: FilterSearchClick,
+    [EVENT_FILTER_SEARCH_VALUE_SELECTED]: FilterSearchValueSelected,
   };
 
   /**

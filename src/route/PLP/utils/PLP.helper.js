@@ -1,3 +1,115 @@
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import Event, {
+  MOE_trackEvent,
+  EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED,
+  EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED,
+  EVENT_FILTER_SEARCH_VALUE_SELECTED
+} from "Util/Event";
+
+export const sendEventAttributeSelected = (multiLevelData, isSearch, searchKey, activeFiltersIds) => {
+
+      const { facet_value, product_count, category_id, category_key } = multiLevelData;
+
+      if( isSearch ) {
+        if(!!!activeFiltersIds.includes(category_id)) {
+
+          Event.dispatch(EVENT_FILTER_SEARCH_VALUE_SELECTED, {
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+            searchTerm: searchKey || "",
+          });
+      
+          MOE_trackEvent(EVENT_FILTER_SEARCH_VALUE_SELECTED, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+            searchTerm: searchKey || "",
+          });
+        }
+      } else {
+
+        if(!!!activeFiltersIds.includes(category_id)) {
+
+          Event.dispatch(EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED, {
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+            productCount: product_count || "",
+          });
+      
+          MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+            productCount: product_count || "",
+          });
+
+        }else if (activeFiltersIds.includes(category_id)) {
+
+          Event.dispatch(EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED, {
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+          });
+      
+          MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            attributeType: "FIXED" ,
+            attributeName: facet_value || "",
+            attributeValue: category_key || "",
+          });
+        }
+
+      }
+}
+
+
+export const sendEventMoreAttributeSelected = (option = {}) => {
+  const { facet_key, facet_value, is_selected, product_count } = option;
+  if(!!!is_selected) {
+    Event.dispatch(EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED, {
+      attributeType: "CUSTOM" ,
+      attributeName: facet_value || "",
+      attributeValue: facet_key || "",
+      productCount: product_count || "",
+    });
+
+    MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      attributeType: "CUSTOM" ,
+      attributeName: facet_value || "",
+      attributeValue: facet_key || "",
+      productCount: product_count || "",
+    });
+    } else {
+    Event.dispatch(EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED, {
+      attributeType: "CUSTOM" ,
+      attributeName: facet_value || "",
+      attributeValue: facet_key || "",
+    });
+
+    MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      attributeType: "CUSTOM" ,
+      attributeName: facet_value || "",
+      attributeValue: facet_key || "",
+    });
+  }
+}
+
 export const getSelectedMoreFiltersFacetValues = (moreActiveFilters = {}) => {
   const SelectedMoerFiltersFacetValues = [];
   if (moreActiveFilters && moreActiveFilters["categories_without_path"]) {

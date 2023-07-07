@@ -359,7 +359,8 @@ class PLPPages extends PureComponent {
     this.setState({
       pageKey: key,
     });
-    const { impressions, query, renderMySignInPopup, filters, productLoading } =
+    const { impressions, query, renderMySignInPopup, filters, productLoading, newActiveFilters
+    } =
       this.props;
     const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
       this.shouldRenderQuickFilter(filters, parseInt(key));
@@ -392,6 +393,7 @@ class PLPPages extends PureComponent {
           impressions={impressions}
           renderMySignInPopup={renderMySignInPopup}
           filters={filters}
+          newActiveFilters={newActiveFilters}
         />
       </Fragment>
     );

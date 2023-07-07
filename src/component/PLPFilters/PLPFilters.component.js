@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
+import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT, EVENT_FILTER_CLEAR_ALL } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { getNewFilterCount, getSliderFiltersCount } from "./utils/PLPFilters.helper";
 
@@ -219,6 +219,7 @@ class PLPFilters extends PureComponent {
   renderFilters() {
     const { filters = {} } = this.props;
     const { isPLPSortBy } = this.props;
+    let count = 0;
     return Object.entries(filters).map((filter, index) => {
 
       if (isPLPSortBy) {
@@ -240,13 +241,16 @@ class PLPFilters extends PureComponent {
 
           return this.renderFilterOption([filter[0], filter[1]]);
         } else {
-          return this.renderFilter([filter[0], filter[1]]);
+          if (Object.keys(filter[1].data).length != 0 && filter[0] != "categories.level1") {
+            count++;
+          }
+          return this.renderFilter([filter[0], filter[1], count]);
         }
       }
     });
   }
 
-  renderFilter = ([key, filter]) => {
+  renderFilter = ([key, filter, filterPosition]) => {
     const { activeFilter, isReset, defaultFilters } = this.state;
     const {
       initialOptions,
@@ -300,6 +304,7 @@ class PLPFilters extends PureComponent {
         sliderFilters={sliderFilters}
         currentSliderState={currentSliderState}
         newSelectedActiveFilters={newSelectedActiveFilters}
+        filterPosition={filterPosition}
       />
     );
   };
@@ -341,6 +346,13 @@ class PLPFilters extends PureComponent {
     this.setState({ isReset: true, defaultFilters: false });
 
     onReset();
+
+    Event.dispatch(EVENT_FILTER_CLEAR_ALL);
+    MOE_trackEvent(EVENT_FILTER_CLEAR_ALL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   };
 
   onClearFilterState = (initialFacetKey) => {

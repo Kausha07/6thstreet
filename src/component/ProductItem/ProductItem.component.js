@@ -149,6 +149,7 @@ class ProductItem extends PureComponent {
         product_Position,
         thumbnail_url,
       },
+      isFilters,
     } = this.props;
 
     var data = localStorage.getItem("customer");
@@ -198,6 +199,7 @@ class ProductItem extends PureComponent {
       category: product_type_6s || categoryLevel,
       variant: color || "",
       position: product_Position || "",
+      isFilters: isFilters ? "Yes" : "No"
     });
     if (queryID) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
@@ -226,6 +228,8 @@ class ProductItem extends PureComponent {
       product_name: name,
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No",
+      position: product_Position || "",
     });
     // this.sendBannerClickImpression(product);
   }
@@ -240,6 +244,7 @@ class ProductItem extends PureComponent {
       product,
       pageType,
       renderMySignInPopup,
+      isFilters,
     } = this.props;
     return (
       <WishlistIcon
@@ -247,6 +252,7 @@ class ProductItem extends PureComponent {
         sku={sku}
         data={product}
         pageType={pageType}
+        isFilters={isFilters}
       />
     );
   }
@@ -385,6 +391,7 @@ class ProductItem extends PureComponent {
       pageType,
       removeFromWishlist,
       wishlist_item_id,
+      product_Position,
     } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
@@ -401,6 +408,7 @@ class ProductItem extends PureComponent {
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
+          product_Position={product_Position}
         />
       </div>
     );

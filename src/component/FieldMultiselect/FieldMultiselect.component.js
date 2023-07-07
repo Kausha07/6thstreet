@@ -28,14 +28,16 @@ import Event,{
   EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
   EVENT_SET_PREFERENCES_GENDER,
   EVENT_GTM_FILTER,
-  MOE_trackEvent
+  MOE_trackEvent,
+  EVENT_FILTER_ATTRIBUTE_SELECTED,
+  EVENT_FILTER_SEARCH_CLICK,
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 import RangeSlider from "Component/RangeSlider/RangeSlider";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds, getIsOptionVisible } from "./utils/FieldMultiselect.helper";
+import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds, getIsOptionVisible, getAttributeName } from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -808,14 +810,31 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  sendMoeEvents (event, value){
-    MOE_trackEvent(event, {
+  sendMoeEvents (value){
+    const {
+      filter: { category },
+    } = this.props;
+
+    const currency = getCountryCurrencyCode();
+    const AttributeName = getAttributeName(category, currency);
+
+    Event.dispatch(EVENT_FILTER_SEARCH_CLICK, {
+      attributeType: "FIXED",
+      attributeName: AttributeName || "",
+    });
+
+    MOE_trackEvent(EVENT_FILTER_SEARCH_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
+      attributeType: "FIXED",
+      attributeName: AttributeName || "",
     });
-    const eventData = {name: event, value: value};
-    Event.dispatch(EVENT_GTM_FILTER, eventData);
+  }
+
+  sendEventSearchItemSelected () {
+    const { searchFacetKey, searchKey } = this.state;
+
   }
 
   renderFilterSearchbox(label, category) {
@@ -839,16 +858,6 @@ class FieldMultiselect extends PureComponent {
     ) {
       return null;
     }
-    const MoeFilterEvent =
-      (currentActiveFilter || category) == "brand_name"
-        ? EVENT_BRAND_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "colorfamily"
-        ? EVENT_COLOR_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "sizes"
-        ? EVENT_SIZES_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "categories_without_path"
-        ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS
-        : "";
 
     return (
       <div block="Search-Container" mods={{ isArabic }}>
@@ -866,7 +875,7 @@ class FieldMultiselect extends PureComponent {
           }
           onChange={(event) => this.handleFilterSearch(event)}
           onFocus={(event) =>
-            this.sendMoeEvents(MoeFilterEvent, event.target.value)
+            this.sendMoeEvents(event.target.value)
           }
         />
         {!isMobile.any() && (
@@ -974,10 +983,34 @@ class FieldMultiselect extends PureComponent {
 
   toggleOptionList() {
     const { toggleOptionsList } = this.state;
+    const {
+      filter: { category },
+      filterPosition,
+    } = this.props;
 
     this.setState({
       toggleOptionsList: !toggleOptionsList,
     });
+    
+    if(!!!toggleOptionsList) {      
+      const currency = getCountryCurrencyCode();
+      const AttributeName = getAttributeName(category, currency);
+
+      Event.dispatch(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        attributeType: "FIXED",
+        AttributeName: AttributeName || "",
+        attributePosition: filterPosition || "",
+      });
+
+      MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        attributeType: "FIXED",
+        AttributeName: AttributeName || "",
+        attributePosition: filterPosition || "",
+      });
+    }
   }
 
   onBlur = () => {

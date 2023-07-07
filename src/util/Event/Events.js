@@ -286,4 +286,14 @@
  export const EVENT_UNFOLLOW_INFLUENCER_CLICK = "unfollow_influencer_click";
  export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
    "account_tooltip_close_button_click";
- 
+// PLP filters event 
+ export const EVENT_FILTER_CLEAR_ALL = "filter_clear_all";
+ export const EVENT_FILTER_ATTRIBUTE_SELECTED = "filter_at t ribute_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED =
+   "filter_attribute_value_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED =
+   "filter_attribute_value_deselected";
+ export const EVENT_FILTER_SEARCH_CLICK = "filter_search_click";
+ export const EVENT_FILTER_SEARCH_VALUE_SELECTED =
+   "filter_search_value_selected";
+ export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";
