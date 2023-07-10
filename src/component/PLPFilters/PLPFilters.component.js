@@ -278,6 +278,10 @@ class PLPFilters extends PureComponent {
         : category === "age"
           ? __("BY AGE")
           : label;
+    let isBrandPLP = false;
+    if(this.props?.brandName && this.props?.brandDescription){
+      isBrandPLP = true;
+    }     
     return (
       <FieldMultiselect
         key={key}
@@ -305,6 +309,7 @@ class PLPFilters extends PureComponent {
         currentSliderState={currentSliderState}
         newSelectedActiveFilters={newSelectedActiveFilters}
         filterPosition={filterPosition}
+        isBrandPLP={isBrandPLP}
       />
     );
   };

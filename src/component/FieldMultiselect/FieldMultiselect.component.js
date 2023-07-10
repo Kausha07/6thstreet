@@ -1170,9 +1170,15 @@ class FieldMultiselect extends PureComponent {
       filter,
       initialOptions,
       currentActiveFilter,
+      isBrandPLP,
     } = this.props;
     let conditionalData = data ? data : subcategories;
     let selectedItems = true;
+
+    // if this is brand PLP then - no need for brand filter
+    if(category === "brand_name" && isBrandPLP) {
+      return null;
+    }
 
     const datakeys = [];
     if (category === "sizes") {
