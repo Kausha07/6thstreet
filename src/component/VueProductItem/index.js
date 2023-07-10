@@ -188,14 +188,6 @@ import {
         variant: color || "",
         position: product_Position || "",
       });
-      // if (queryID) {
-      //   new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-      //     objectIDs: [product.objectID],
-      //     queryID,
-      //     userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-      //     position: [position],
-      //   });
-      // }
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
       MOE_trackEvent(EVENT_MOE_PRODUCT_CLICK, {
         country: getCountryFromUrl().toUpperCase(),

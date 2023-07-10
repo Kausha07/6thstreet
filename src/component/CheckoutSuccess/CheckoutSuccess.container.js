@@ -31,7 +31,7 @@ import Event, {
   EVENT_GTM_NEW_AUTHENTICATION,
 } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
+import { ALGOLIA_PURCHASE_SUCCESS, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
@@ -202,7 +202,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       if (queryID && userToken && productObjectID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
-          ADD_TO_CART_ALGOLIA,
+          ALGOLIA_PURCHASE_SUCCESS,
           [],
           {
             objectIDs: [productObjectID],

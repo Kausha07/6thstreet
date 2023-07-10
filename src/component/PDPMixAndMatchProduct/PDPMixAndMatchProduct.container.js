@@ -7,7 +7,6 @@ import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import Event, {
-  ADD_TO_CART_ALGOLIA,
   EVENT_GTM_PRODUCT_ADD_TO_CART,
 } from "Util/Event";
 import PDPMixAndMatchProduct from "./PDPMixAndMatchProduct.component";
@@ -270,18 +269,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
       if (userData?.data?.id) {
         userToken = userData.data.id;
       }
-      // if (queryID) {
-      //   new Algolia().logAlgoliaAnalytics(
-      //     "conversion",
-      //     ADD_TO_CART_ALGOLIA,
-      //     [],
-      //     {
-      //       objectIDs: [objectID],
-      //       queryID,
-      //       userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-      //     }
-      //   );
-      // }
     }
 
     if (!insertedSizeStatus) {
@@ -332,18 +319,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
       if (userData?.data?.id) {
         userToken = userData.data.id;
       }
-      // if (queryID) {
-      //   new Algolia().logAlgoliaAnalytics(
-      //     "conversion",
-      //     ADD_TO_CART_ALGOLIA,
-      //     [],
-      //     {
-      //       objectIDs: [objectID],
-      //       queryID,
-      //       userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-      //     }
-      //   );
-      // }
     }
   }
 

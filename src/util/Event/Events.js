@@ -39,6 +39,7 @@
  export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";
  export const SELECT_ITEM_ALGOLIA = "select_item_algolia";
  export const ADD_TO_CART_ALGOLIA = "add_to_cart_algolia";
+ export const ALGOLIA_PURCHASE_SUCCESS = "algolia_purchase_success";
  export const VUE_CAROUSEL_SHOW = "carouselShow";
  export const VUE_CAROUSEL_CLICK = "carouselClick";
  export const VUE_CAROUSEL_SWIPE = "carouselSwipe";
