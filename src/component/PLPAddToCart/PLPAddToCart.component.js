@@ -593,7 +593,7 @@ class PLPAddToCart extends PureComponent {
       prevPath = null,
       product,
       position,
-      QueryID,
+      qid,
       isVueData
     } = this.props;
     const {
@@ -611,7 +611,6 @@ class PLPAddToCart extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
     this.setState({ productAdded: true });
-    var qid = new URLSearchParams(window.location.search).get("qid");
     let searchQueryId;
     if (!qid) {
       searchQueryId = getStore().getState().SearchSuggestions.queryID;
@@ -680,20 +679,8 @@ class PLPAddToCart extends PureComponent {
         userData && userData?.data?.id
           ? `user-${userData.data.id}`
           : getUUIDToken();
-      let queryID;
-      if (!isVueData) {
-        if (!QueryID) {
-          queryID = getStore().getState().SearchSuggestions.queryID;
-        } else {
-          queryID = QueryID;
-        }
-      }
-      userToken =
-        userData && userData?.data?.id
-          ? `user-${userData.data.id}`
-          : getUUIDToken();
       if (
-        queryID &&
+        searchQueryId &&
         position &&
         position > 0 &&
         product?.objectID &&
@@ -701,7 +688,7 @@ class PLPAddToCart extends PureComponent {
       ) {
         new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
           objectIDs: [product?.objectID],
-          queryID,
+          queryID: searchQueryId,
           userToken: userToken,
           position: [position],
         });

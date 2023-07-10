@@ -405,7 +405,7 @@ class ProductItem extends PureComponent {
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
           position={position}
-          QueryID={qid}
+          qid={qid}
           isVueData={isVueData}
         />
       </div>
