@@ -17,7 +17,8 @@ import Event, {
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
-  MOE_trackEvent
+  MOE_trackEvent,
+  SELECT_ITEM_ALGOLIA
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -26,6 +27,8 @@ import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+import Algolia from "Util/API/provider/Algolia";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -589,6 +592,9 @@ class PLPAddToCart extends PureComponent {
       showNotification,
       prevPath = null,
       product,
+      position,
+      qid,
+      isVueData
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -605,7 +611,6 @@ class PLPAddToCart extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
     this.setState({ productAdded: true });
-    var qid = new URLSearchParams(window.location.search).get("qid");
     let searchQueryId;
     if (!qid) {
       searchQueryId = getStore().getState().SearchSuggestions.queryID;
@@ -667,6 +672,27 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
         },
       });
+
+      var data = localStorage.getItem("customer") ? localStorage.getItem("customer") : null;
+      let userData = data ? JSON.parse(data) : null;
+      let userToken =
+        userData && userData?.data?.id
+          ? `user-${userData.data.id}`
+          : getUUIDToken();
+      if (
+        searchQueryId &&
+        position &&
+        position > 0 &&
+        product?.objectID &&
+        userToken
+      ) {
+        new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+          objectIDs: [product?.objectID],
+          queryID: searchQueryId,
+          userToken: userToken,
+          position: [position],
+        });
+      }
 
       //   vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();

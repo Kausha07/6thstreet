@@ -270,18 +270,18 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
       if (userData?.data?.id) {
         userToken = userData.data.id;
       }
-      if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
-      }
+      // if (queryID) {
+      //   new Algolia().logAlgoliaAnalytics(
+      //     "conversion",
+      //     ADD_TO_CART_ALGOLIA,
+      //     [],
+      //     {
+      //       objectIDs: [objectID],
+      //       queryID,
+      //       userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+      //     }
+      //   );
+      // }
     }
 
     if (!insertedSizeStatus) {
@@ -332,18 +332,18 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
       if (userData?.data?.id) {
         userToken = userData.data.id;
       }
-      if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
-      }
+      // if (queryID) {
+      //   new Algolia().logAlgoliaAnalytics(
+      //     "conversion",
+      //     ADD_TO_CART_ALGOLIA,
+      //     [],
+      //     {
+      //       objectIDs: [objectID],
+      //       queryID,
+      //       userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+      //     }
+      //   );
+      // }
     }
   }
 

@@ -187,10 +187,10 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
-    if (userData?.data?.id) {
-      userToken = userData.data.id;
-    }
+    let userToken = userData?.data?.id
+      ? `user-${userData.data.id}`
+      : getUUIDToken();
+
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -198,15 +198,16 @@ export class CheckoutSuccessContainer extends PureComponent {
       var queryID = item?.full_item_info?.search_query_id
         ? item?.full_item_info?.search_query_id
         : null;
-      if (queryID) {
+      let productObjectID = item?.full_item_info?.parent_id.toString();
+      if (queryID && userToken && productObjectID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
           ADD_TO_CART_ALGOLIA,
           [],
           {
-            objectIDs: [item?.full_item_info?.parent_id.toString()],
+            objectIDs: [productObjectID],
             queryID: queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+            userToken: userToken,
           }
         );
       }

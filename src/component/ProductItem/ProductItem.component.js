@@ -153,7 +153,10 @@ class ProductItem extends PureComponent {
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
+    let userToken =
+      userData && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
     let queryID;
     resetProduct();
     setPrevPath(window.location.href);
@@ -163,9 +166,6 @@ class ProductItem extends PureComponent {
       } else {
         queryID = qid;
       }
-    }
-    if (userData?.data) {
-      userToken = userData.data.id;
     }
     const checkCategoryLevel = () => {
       if (!categories) {
@@ -199,11 +199,11 @@ class ProductItem extends PureComponent {
       variant: color || "",
       position: product_Position || "",
     });
-    if (queryID) {
+    if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        userToken: userToken,
         position: [position],
       });
     }
@@ -385,6 +385,9 @@ class ProductItem extends PureComponent {
       pageType,
       removeFromWishlist,
       wishlist_item_id,
+      position,
+      qid,
+      isVueData,
     } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
@@ -401,6 +404,9 @@ class ProductItem extends PureComponent {
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
+          position={position}
+          qid={qid}
+          isVueData={isVueData}
         />
       </div>
     );
