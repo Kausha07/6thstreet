@@ -16,6 +16,7 @@ import {
   getAlgoliaFiltersProdCount,
   getCurrencyCode,
   getIndex,
+  getMoreFacetFilters,
 } from "../utils";
 import { intersectArrays } from "../utils/arr";
 import {
@@ -525,12 +526,15 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const index = client.initIndex(indexName);
 
     // Build search query
-    const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams);
+    const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
+    const { moreFacetFilters=[] } = getMoreFacetFilters(queryParams, moreFiltersData);
     const query = {
       indexName: indexName,
       params: {
         ...defaultSearchParams,
-        facetFilters: newFacetFilters?.length ? [...facetFilters, newFacetFilters ] : facetFilters,
+        facetFilters: newFacetFilters?.length
+        ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
+        : [...facetFilters, ...moreFacetFilters],
         numericFilters,
         query: q,
         page,
@@ -689,7 +693,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         newfacetStats,
         prodCountFacets,
       });
-      const moreFilters = getMoreFilters(facets, queryParams, moreFiltersData);
+      const moreFilters = getMoreFilters(finalFiltersData.facets, queryParams, moreFiltersData);
       const sliderFilters = getSliderFilters(queryParams, locale);
 
       const output = {

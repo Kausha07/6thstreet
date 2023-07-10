@@ -39,6 +39,7 @@ export const mapStateToProps = (_state) => ({
   sliderFilters: _state.PLP.sliderFilters,
   currentSliderState: _state.PLP.currentSliderState,
   newSelectedActiveFilters: _state.PLP.newActiveFilters,
+  moreFilters: _state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -196,7 +197,13 @@ export class PLPFiltersContainer extends PureComponent {
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query, handleResetFilter, resetSortData, updateCurrentSliderState } = this.props;
+    const {
+      query,
+      handleResetFilter,
+      resetSortData,
+      updateCurrentSliderState,
+      moreFilters: { moreFiltersArr = [] },
+    } = this.props;
     handleResetFilter()
     resetSortData();
     // eslint-disable-next-line fp/no-let
@@ -206,6 +213,11 @@ export class PLPFiltersContainer extends PureComponent {
         WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
       }
     }
+
+    // reset more filters
+    moreFiltersArr.map((item) => {
+      WebUrlParser.setParam(item, []);
+    });    
 
     const updatedcurrentSliderState = {
       priceRange: {currentMin:0, currentMax:0},

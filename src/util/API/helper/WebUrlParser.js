@@ -170,7 +170,9 @@ const Parser = {
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case
-      url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      if(values.length) {
+        url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      } 
     } else {
       // For non-array cases
       url.searchParams.append(`${prefix}[${key}][0]`, values);

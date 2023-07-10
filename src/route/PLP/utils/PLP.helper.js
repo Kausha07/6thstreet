@@ -110,13 +110,17 @@ export const sendEventMoreAttributeSelected = (option = {}) => {
   }
 }
 
-export const getSelectedMoreFiltersFacetValues = (moreActiveFilters = {}) => {
-  const SelectedMoerFiltersFacetValues = [];
+export const getSelectedMoreFiltersFacetValues = (moreActiveFilters = {}, moreFiltersArr = []) => {
+  const SelectedMoerFiltersFacetValues = {};
+
+  moreFiltersArr.map((item) => {
+    SelectedMoerFiltersFacetValues[item] = [];
+  });
   if (moreActiveFilters && moreActiveFilters["categories_without_path"]) {
     const newSelectedFilters = moreActiveFilters["categories_without_path"];
     newSelectedFilters.map((item) => {
-      if (item && item.facet_value) {
-        SelectedMoerFiltersFacetValues.push(item.facet_value);
+      if (item && item.facet_value && item.new_facet_key ) {
+        SelectedMoerFiltersFacetValues[item.new_facet_key].push(item.facet_value);
       }
     });
   }

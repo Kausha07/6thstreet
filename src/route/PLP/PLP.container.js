@@ -87,6 +87,7 @@ export const mapStateToProps = (state) => ({
   catalogue_from_algolia:
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
+  moreFilters: state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -626,6 +627,7 @@ export class PLPContainer extends PureComponent {
     if (isMobile.any()) {
       window.scrollTo(0, 0);
     }
+    this.selectMoreFilters();
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         if (isQuickFilters) {
@@ -646,19 +648,20 @@ export class PLPContainer extends PureComponent {
   };
 
   selectMoreFilters = () => {
-    const { moreActiveFilters = {}, newActiveFilters = {} } = this.state;
-    const SelectedFiltersFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
-    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters);
-    const key = "categories_without_path";
-    WebUrlParser.setParam(
-      key,
-      [...SelectedFiltersFacetValues, ...SelectedMoreFiltersFacetValues],
-      getCategoryIds(newActiveFilters)
-    );
+    const { moreActiveFilters = {} } = this.state;
+    const { moreFilters: {moreFiltersArr = [] }} = this.props;
+    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters, moreFiltersArr);
+
+    Object.entries(SelectedMoreFiltersFacetValues).map((item) => {
+      WebUrlParser.setParam(
+        item[0],
+        item[1]
+      )
+    });
   }
 
   onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
-    const { newActiveFilters = {} } = this.state;
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
     const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
@@ -675,6 +678,12 @@ export class PLPContainer extends PureComponent {
         newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
       }
     }
+
+    // when user selected any other category fitler reseting the moreFilters.
+    const newMoreActiveFilters = {
+      ...moreActiveFilters,
+      ["categories_without_path"]: [],
+    };
     
     this.onSelectMoreFilterPLP("");
     this.setState(
@@ -685,6 +694,7 @@ export class PLPContainer extends PureComponent {
             isDropdown,
             newActiveFilters,
           }) || {},
+          moreActiveFilters: newMoreActiveFilters,
       },
       () => this.select()
     );

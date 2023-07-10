@@ -137,6 +137,8 @@ const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
     let facetFilters = [];
     const requiredFilerForCategoryCount = [
       "categories.level1",
+      "categories.level2",
+      "categories.level3",
       "gender",
       "in_stock",
       "colorfamily",
@@ -164,6 +166,31 @@ const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
     console.error(err);
   }
 };
+
+const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {} ) => {
+  try {
+    let facetFilters = [];
+    const moreFiltersArr = moreFiltersData?.more_filter || [];
+    Object.keys(paramsObj).forEach((key) => {
+      if (moreFiltersArr.includes(key)) {
+        const valuesArr = paramsObj[key]
+          .split(",")
+          .filter((value) => value !== "undefined" && value !== undefined)
+          .map((value) => {
+            return `${key}:${value}`;
+          });
+        facetFilters = valuesArr.length
+          ? [...facetFilters, valuesArr]
+          : facetFilters;
+      }
+    });
+    return {
+      moreFacetFilters: facetFilters,
+    };
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const getCurrencyCode = (country) => {
   switch (country) {
@@ -221,4 +248,5 @@ export {
   isNewIn,
   formatNewInTag,
   getAlgoliaFiltersProdCount,
+  getMoreFacetFilters,
 };

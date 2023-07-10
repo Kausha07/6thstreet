@@ -1,4 +1,4 @@
-import { getQueryValues } from "../utils/query";
+import { getQueryValues, getQueryValuesMoreFilters } from "../utils/query";
 import { sum } from "../utils/num";
 import { sortKeys } from "../utils/obj";
 import { translate } from "../config/translations";
@@ -31,29 +31,32 @@ const _getLevelsFromCategoryKey = ({ key }) => {
   };
 };
 
-const getOptions = (obj, queryValues) => {
+const getOptions = (obj, newkey, query, arrMoreFilters) => {
+  const formatedQuery = getQueryValuesMoreFilters(query, arrMoreFilters);
   const outputObj = {};
   for (let key in obj) {
     outputObj[key] = {
       facet_key: "categories_without_path",
+      new_facet_key: newkey || "",  // using this key is for params
       facet_value: key,
       label: key,
       product_count: obj[key],
-      is_selected: queryValues[key] ? true : false,
+      is_selected: formatedQuery[key] ? true : false,
     };
   }
   return {options: outputObj}
 }
 
-const getOptionsMoreFilters = (facets, queryValues, moreFiltersData) => {
+const getOptionsMoreFilters = (facets, queryValues, moreFiltersData, query) => {
   const option = {};
+  const arrMoreFilters = moreFiltersData?.more_filter || [];
   const moreFiltersTraslation = moreFiltersData?.more_filter_traslation || {};
   MORE_FILTERS.map((item, index) => {
     option[item] = facets[item];
   });
   for (let key in option ) {    
     if(option[key] !== undefined) {
-      option[key] = getOptions(option[key], queryValues);
+      option[key] = getOptions(option[key], key, query, arrMoreFilters);
       option[key].moreFiltersTraslation = {...moreFiltersTraslation[key]}
     }
   }
@@ -368,7 +371,9 @@ const makeCategoriesMoreFilter = ({facets, query, moreFiltersData}) => {
   const facetKey = "categories_without_path";
   const queryValues = getQueryValues({ query, path: facetKey });
   const moreFilters = {};
-  moreFilters.option = getOptionsMoreFilters(facets, queryValues, moreFiltersData);
+  const moreFiltersArr = moreFiltersData?.more_filter || [];
+  moreFilters.moreFiltersArr = moreFiltersArr;
+  moreFilters.option = getOptionsMoreFilters(facets, queryValues, moreFiltersData, query);
   moreFilters.moreFilters_selected_filters_count = 0;
   return moreFilters;
 }
