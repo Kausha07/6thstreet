@@ -24,6 +24,7 @@
         "node-cache": "^5.1.2",
         "node-fetch": "^2.6.0",
         "normalize-scroll-left": "^0.2.1",
+        "rc-slider": "^10.1.1",
         "react-circular-carousel": "^1.0.4-0",
         "react-collapse": "^5.1.0",
         "react-countdown": "^2.3.2",

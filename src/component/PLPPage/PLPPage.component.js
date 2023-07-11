@@ -7,6 +7,7 @@ import { EVENT_PRODUCT_LIST_IMPRESSION } from "Component/GoogleTagManager/events
 import Event from "Util/Event";
 import "./PLPPage.style";
 import isMobile from "Util/Mobile";
+import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 
 let gtmProdArr = [];
 class PLPPage extends PureComponent {
@@ -16,6 +17,8 @@ class PLPPage extends PureComponent {
   };
 
   sendProductImpression = (product) => {
+    const { newActiveFilters = {}, activeFilters = {} } = this.props;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
     gtmProdArr.push([product]);
     const product_numbers = isMobile.any() ? 4 : 6;
     const pagePathName = new URL(window.location.href).pathname;
@@ -34,6 +37,7 @@ class PLPPage extends PureComponent {
           let clubbedData = {
             ...clubbedProducts[i][j][0],
             ...categorylistName,
+            isFilters: isFilters,
           };
           prodImpression.push(clubbedData);
         }
@@ -44,7 +48,8 @@ class PLPPage extends PureComponent {
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup } = this.props;
+    const { renderMySignInPopup, newActiveFilters = {}, activeFilters = {} } = this.props;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
     return (
       <ProductItem
         position={index}
@@ -56,6 +61,7 @@ class PLPPage extends PureComponent {
         qid={qid}
         lazyLoad={false}
         sendProductImpression={this.sendProductImpression}
+        isFilters={isFilters}
       />
     );
   };
