@@ -1,5 +1,6 @@
 export const URL_REWRITE = "url-rewrite";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { isArabic } from "Util/App";
 
 export const getSelectedCategoryLevelOneFilter = (filters = {}) => {
     let selectCategoryLevelOneFilter = "noMatchForCategoryLevelOne";
@@ -50,6 +51,16 @@ export const getIsOptionVisible = (option) => {
 
         if(currentAppState?.gender !== "home"  ) {
             const urlGender = location?.pathname?.trim()?.split("/")[1];
+            if(isArabic()) {
+                const arabicGenderValues = {
+                    women: "نساء",
+                    men: "رجال",
+                }
+                const ArbicGenderValue = arabicGenderValues[currentAppState?.gender?.toLowerCase()]
+                if(facet_value === ArbicGenderValue) {
+                    return true;
+                }else return false;
+            }
             if(facet_value?.toLowerCase() ===  currentAppState?.gender?.toLowerCase() || 
             facet_value?.toLowerCase() === urlGender?.toLocaleLowerCase()) {
                 return true;
