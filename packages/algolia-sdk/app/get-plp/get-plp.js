@@ -507,6 +507,7 @@ const _formatFacets = ({ facets, queryParams }) => {
 
 function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
   const { client, env } = options;
+  const moreFiltersArr = moreFiltersData?.more_filter || [];
 
   return new Promise((resolve, reject) => {
     const parsedURL = new Url(URL, true);
@@ -622,6 +623,28 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             finalFacetObj.push(facetfilter);
           }
         });
+        // to get correct More filter options we need to pass APPLIED More filters in multi queries also.
+        moreFacetFilters.map((moreFacetfilter) => {          
+          if (
+            selectedFilterArr.includes(moreFacetfilter[0].split(":")[0]) &&
+            moreFacetfilter[0].split(":")[0] !== filter
+          ) {
+            finalFacetObj.push(moreFacetfilter);
+          }
+        });
+        // if user is applying more filters then to get correct result
+        //  we are passing category ids along with it.
+        if(moreFiltersArr.includes(filter)) {
+          newFacetFilters.map((newFacetFilter) => {
+            if (
+              selectedFilterArr.includes(newFacetFilter.split(":")[0]) &&
+              newFacetFilter.split(":")[0] !== filter
+            ) {
+              let idsFilter = [newFacetFilter]
+              finalFacetObj.push(idsFilter);
+            }
+          });
+        }
         let searchParam = JSON.parse(JSON.stringify(defaultSearchParams));
         searchParam["facets"] = [filter];
         queries.push({

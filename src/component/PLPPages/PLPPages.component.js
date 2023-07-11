@@ -628,7 +628,11 @@ class PLPPages extends PureComponent {
   }
 
   handleMoreFilterChange = (selectedMoreFilter) => {
-    const { onSelectMoreFilterPLP } = this.props;
+    const { onSelectMoreFilterPLP, selectedMoreFilterPLP } = this.props;
+    if(selectedMoreFilter === selectedMoreFilterPLP) {
+      onSelectMoreFilterPLP("");
+      return
+    }
     onSelectMoreFilterPLP(selectedMoreFilter);
   };
 
