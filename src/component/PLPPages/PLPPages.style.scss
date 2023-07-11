@@ -69,6 +69,7 @@
       letter-spacing: 0px;
       line-height: 19px;
       margin-right: 10px;
+      margin-top: 2px;
       padding: 10px;
       text-transform: capitalize;
       z-index: 4;
@@ -94,13 +95,13 @@
       // position: absolute;
       // top: -74px;
       z-index: 2;
-      width: 80%;
 
       .ProductSelectedFilters {
         display: flex;
         width: 100%;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
 
         ul {
           height: 100%;
@@ -148,6 +149,44 @@ main {
           padding-top: 6px;
         }
       }
+    }
+  }
+}
+
+.moreFiltersNotAvailable {
+  width: 100%;
+  min-height: 40px;
+
+  p {
+    margin-top: 5px;
+  }
+
+  &-titleNoMoreFilters {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  &-iconNoMoreFilters {
+    margin-left: 24px;
+
+    img {
+      width: 16px;
+      vertical-align: middle;
+    }
+
+    &_isArabic {
+      margin-right: 24px;
+      margin-left: 0px;
+    }
+  }
+
+  &-detailsNoMoreFilters {
+    color: #9B9B9B;
+    font-size: 14px;
+    margin-left: 10px;
+
+    &_isArabic {
+      margin-right: 10px;
     }
   }
 }

@@ -86,6 +86,7 @@ const getAlgoliaFilters = (paramsObj = {}) => {
   try {
     let facetFilters = [];
     let numericFilters = [];
+    let newFacetFilters = [];
 
     Object.keys(paramsObj).forEach((key) => {
       if (FACET_FILTERS.includes(key)) {
@@ -109,16 +110,87 @@ const getAlgoliaFilters = (paramsObj = {}) => {
           ];
         });
       }
+
+      if (key === "categoryIds" ) {
+        const idsArray = paramsObj[key]
+        .split(",")
+        .filter((value) => value !== "undefined" && value !== undefined )
+        .map((value) => {
+          return `${key}:${value}`
+        });
+        newFacetFilters = [ ...newFacetFilters, ...idsArray];
+      }
     });
 
     return {
       facetFilters,
       numericFilters,
+      newFacetFilters,
     };
   } catch (err) {
     console.error(err);
   }
 };
+
+const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
+  try {
+    let facetFilters = [];
+    const requiredFilerForCategoryCount = [
+      "categories.level1",
+      "categories.level2",
+      "categories.level3",
+      "gender",
+      "in_stock",
+      "colorfamily",
+      "brand_name",
+    ];
+
+    Object.keys(paramsObj).forEach((key) => {
+      if (requiredFilerForCategoryCount.includes(key)) {
+        const valuesArr = paramsObj[key]
+          .split(",")
+          .filter((value) => value !== "undefined" && value !== undefined)
+          .map((value) => {
+            return `${key}:${value}`;
+          });
+
+        facetFilters = valuesArr.length
+          ? [...facetFilters, valuesArr]
+          : facetFilters;
+      }
+    });
+    return {
+      facetFilters,
+    };
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {} ) => {
+  try {
+    let facetFilters = [];
+    const moreFiltersArr = moreFiltersData?.more_filter || [];
+    Object.keys(paramsObj).forEach((key) => {
+      if (moreFiltersArr.includes(key)) {
+        const valuesArr = paramsObj[key]
+          .split(",")
+          .filter((value) => value !== "undefined" && value !== undefined)
+          .map((value) => {
+            return `${key}:${value}`;
+          });
+        facetFilters = valuesArr.length
+          ? [...facetFilters, valuesArr]
+          : facetFilters;
+      }
+    });
+    return {
+      moreFacetFilters: facetFilters,
+    };
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const getCurrencyCode = (country) => {
   switch (country) {
@@ -175,4 +247,6 @@ export {
   getCurrencyCode,
   isNewIn,
   formatNewInTag,
+  getAlgoliaFiltersProdCount,
+  getMoreFacetFilters,
 };

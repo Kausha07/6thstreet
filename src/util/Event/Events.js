@@ -295,3 +295,14 @@ export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
 export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
 export const EVENT_MOE_COMPONENT_DID_CATCH = "component_did_catch";
 export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong";
+// PLP filters event 
+ export const EVENT_FILTER_CLEAR_ALL = "filter_clear_all";
+ export const EVENT_FILTER_ATTRIBUTE_SELECTED = "filter_attribute_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED =
+   "filter_attribute_value_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED =
+   "filter_attribute_value_deselected";
+ export const EVENT_FILTER_SEARCH_CLICK = "filter_search_click";
+ export const EVENT_FILTER_SEARCH_VALUE_SELECTED =
+   "filter_search_value_selected";
+ export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";

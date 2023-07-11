@@ -16,6 +16,11 @@ import { isArabic } from "Util/App";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import PLPQuickFilter from "Component/PLPQuickFilter";
 import Field from "Component/Field";
+import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
+import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
+import infoBold from "./icons/infoBold.svg";
+import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
 
 
 export const mapStateToProps = (state) => ({
@@ -50,6 +55,7 @@ class PLPPages extends PureComponent {
       defaultSizeCode: "size_eu",
       prevProductSku: "",
       loadedLastProduct: false,
+      noMoreFilters: true,
     };
   }
 
@@ -353,8 +359,10 @@ class PLPPages extends PureComponent {
     this.setState({
       pageKey: key,
     });
-    const { impressions, query, renderMySignInPopup, filters, productLoading } =
+    const { impressions, query, renderMySignInPopup, filters, productLoading, newActiveFilters
+    } =
       this.props;
+      const { activeFilters } = this.state;
     const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
       this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
@@ -386,6 +394,8 @@ class PLPPages extends PureComponent {
           impressions={impressions}
           renderMySignInPopup={renderMySignInPopup}
           filters={filters}
+          newActiveFilters={newActiveFilters}
+          activeFilters={activeFilters}
         />
       </Fragment>
     );
@@ -421,8 +431,152 @@ class PLPPages extends PureComponent {
   OnDeselectFilter = (val, values) => {
     const { facet_key, facet_value } = val;
     const { is_radio } = values;
+    if( facet_key === "categories_without_path" ) {
+      this.onDeselect(val);
+      return;
+    }
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
+
+  onDeselect = (val, values) => {
+    const { onLevelThreeCategoryPress, onSelectMoreFilterPLP } = this.props;
+    const isDropdownable = checkIsDropdownable(val);
+    onSelectMoreFilterPLP("");
+    onLevelThreeCategoryPress(val, isDropdownable);
+  }
+
+  onClickRemoveMoreFilter = (val, value) => {
+    const { onMoreFilterClick} = this.props;
+    onMoreFilterClick(val);
+  };
+
+  renderSelectedFiltersLevelThree() {
+    const selectedFilters = this.props.filters;
+    const thisRef = this;
+    if (selectedFilters) {
+      return (
+        <>
+          {Object.values(selectedFilters).map(function (values, index) {
+            if (values && values.data) {
+              return Object.values(values.data).map(function (value, index) {
+                if (value.subcategories) {
+                  return Object.values(value.subcategories).map(function (
+                    val,
+                    index
+                  ) {
+                    if (val.sub_subcategories) {
+                      return Object.values(val.sub_subcategories).map(function (
+                        subVal,
+                        index
+                      ) {
+                        if (subVal.is_selected === true) {
+                          return (
+                            <li key={v4()}>
+                              {thisRef.renderButtonView(subVal.label, () =>
+                                thisRef.onDeselect(subVal, values)
+                              )}
+                            </li>
+                          );
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
+
+  renderSelectedFiltersLevelFour() {
+    const selectedFilters = this.props.filters;
+    const thisRef = this;
+    if (selectedFilters) {
+      return (
+        <>
+          {Object.values(selectedFilters).map(function (values, index) {
+            if (values && values.data) {
+              return Object.values(values.data).map(function (value, index) {
+                if (value.subcategories) {
+                  return Object.values(value.subcategories).map(function (
+                    val,
+                    index
+                  ) {
+                    if (val.sub_subcategories) {
+                      return Object.values(val.sub_subcategories).map(function (
+                        subVal,
+                        index
+                      ) {
+                        if (subVal.sub_subcategories) {
+                          return Object.values(subVal.sub_subcategories).map(
+                            function (leafValue, index) {
+                              if (leafValue.is_selected === true) {
+                                return (
+                                  <li key={v4()}>
+                                    {thisRef.renderButtonView(
+                                      leafValue.label,
+                                      () =>
+                                        thisRef.onDeselect(
+                                          leafValue,
+                                          values
+                                        )
+                                    )}
+                                  </li>
+                                );
+                              }
+                            }
+                          );
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
+
+  renderSelectedMoreFilters() {
+    const selectedMoreFilters = this.props.moreFilters;
+    const { option = {} } = selectedMoreFilters;
+    const thisRef = this;
+    const currency = getCountryCurrencyCode();
+    if (selectedMoreFilters && option) {
+      return (
+        <>
+          {Object.entries(option).map(function (filter, index) {
+            const key = filter[0]
+            const values = filter[1]
+            if(key === "discount" || key === `price.${currency}.default` ) {
+              return null;
+            }
+            if (values) {
+              return Object.values(values).map(function (value, index) {
+                if (value) {
+                  return Object.values(value).map(function (val, index) {
+                    if (val && val.is_selected === true) {
+                      return (
+                        <li key={v4()}>
+                          {thisRef.renderButtonView(val.label, () =>
+                            thisRef.onClickRemoveMoreFilter(val, values)
+                          )}
+                        </li>
+                      );
+                    }
+                  });
+                }
+              });
+            }
+          })}
+        </>
+      );
+    }
+  }
 
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
@@ -465,9 +619,120 @@ class PLPPages extends PureComponent {
               });
             }
           })}
+          {this.renderSelectedFiltersLevelThree()}
+          {this.renderSelectedFiltersLevelFour()}
+          {this.renderSelectedMoreFilters()}
         </ul>
       );
     }
+  }
+
+  handleMoreFilterChange = (selectedMoreFilter) => {
+    const { onSelectMoreFilterPLP, selectedMoreFilterPLP } = this.props;
+    if(selectedMoreFilter === selectedMoreFilterPLP) {
+      onSelectMoreFilterPLP("");
+      return
+    }
+    onSelectMoreFilterPLP(selectedMoreFilter);
+  };
+
+  optionsOfMoreFilters() {
+    const { selectedMoreFilterPLP } = this.props;
+    const {
+      moreFilters: { option = {} },
+      handleCallback,
+      onMoreFilterClick,
+    } = this.props;
+    if (
+      option &&
+      option[selectedMoreFilterPLP] &&
+      option[selectedMoreFilterPLP].options
+    ) {
+      const options = option[selectedMoreFilterPLP]?.options;
+      return (
+        <>
+          <PLPOptionsMoreFilter
+            options={options}
+            handleCallback={handleCallback}
+            onMoreFilterClick={onMoreFilterClick}
+          />
+        </>
+      );
+    }
+    return null;
+  }
+
+  renderMoreFiltersNotAvailable(isShowMoreFilters) {
+    const {
+      filters: { categories_without_path = {} },
+    } = this.props;
+
+    if (
+      !isShowMoreFilters
+    ) {
+      return (
+        <>
+          <div block="moreFiltersNotAvailable">
+            <p>
+              <span block="moreFiltersNotAvailable" elem="titleNoMoreFilters">
+                {__("More Filters :")}
+              </span>
+              <span
+                block="moreFiltersNotAvailable"
+                elem="iconNoMoreFilters"
+                className="imgWrapperSpanMoreFilter"
+                mods={{ isArabic: isArabic() }}
+              >
+                <img
+                  src={infoBold}
+                  alt="infoBold"
+                  id={`infoBold`}
+                />
+              </span>
+              <span
+                block="moreFiltersNotAvailable"
+                elem="detailsNoMoreFilters"
+                mods={{ isArabic: isArabic() }}
+              >
+                {__("Select only one category to view more filters")}
+              </span>
+            </p>
+          </div>
+        </>
+      );
+    }
+    return null;
+  }
+
+  renderMoreFilters() {
+    const {
+      moreFilters: { option = {} },
+      filters: { categories_without_path = {} },
+      newActiveFilters,
+      selectedMoreFilterPLP,
+    } = this.props;
+    const currency = getCountryCurrencyCode();
+    const ListOFMoreFilters = Object.keys(option).filter(
+      (key) => option[key] !== undefined && key != "discount" && key != `price.${currency}.default`
+    );
+    let isShowMoreFilters = getIsShowMoreFilters(newActiveFilters);
+    
+    if (
+      !isShowMoreFilters
+    ) {
+      return <>{this.renderMoreFiltersNotAvailable(isShowMoreFilters)}</>;
+    }
+    return (
+      <>
+        <PLPMoreFilters
+          ListOFMoreFilters={ListOFMoreFilters}
+          handleMoreFilterChange={this.handleMoreFilterChange}
+          selectedMoreFilter={selectedMoreFilterPLP}
+          option={option}
+        />
+        {this.optionsOfMoreFilters()}
+      </>
+    );
   }
 
   toggleSortDropdown = () => {
@@ -733,6 +998,7 @@ class PLPPages extends PureComponent {
           {!isMobile.any() && !(pages[0]?.products.length === 0) && (
             <div block="ProductToolBar">
               <div block="ProductSelectedFilters">
+                {this.renderMoreFilters()}
                 {this.renderSelectedFilters()}
               </div>
             </div>

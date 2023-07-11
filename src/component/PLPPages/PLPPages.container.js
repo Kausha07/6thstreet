@@ -17,6 +17,8 @@ export const mapStateToProps = (state) => ({
   prevProductSku: state.PLP.prevProductSku,
   meta: state.PLP.meta,
   prevPath: state.PLP.prevPath,
+  moreFilters: state.PLP.moreFilters,
+  newActiveFilters: state.PLP.newActiveFilters,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   updatePLPInitialFilters: (filters, facet_key, facet_value) =>
@@ -171,16 +173,34 @@ export class PLPPagesContainer extends PureComponent {
     filters: this.props.filters,
     activeFilters: this.state.activeFilters,
     productLoading: this.props.productLoading,
-    prevProductSku:this.props.prevProductSku,
+    prevProductSku: this.props.prevProductSku,
     initialOptions: this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup,
+    moreFilters: this.props.moreFilters,
+    newActiveFilters: this.props.newActiveFilters,
+    selectedMoreFilterPLP: this.props.selectedMoreFilterPLP,
   });
 
   containerFunctions = () => {
-    const { updatePLPInitialFilters, updateFiltersState, setPrevProductSku } =
-      this.props;
+    const {
+      updatePLPInitialFilters,
+      updateFiltersState,
+      setPrevProductSku,
+      handleCallback,
+      onLevelThreeCategoryPress,
+      onMoreFilterClick,
+      onSelectMoreFilterPLP,
+    } = this.props;
 
-    return { updatePLPInitialFilters, updateFiltersState, setPrevProductSku };
+    return {
+      updatePLPInitialFilters,
+      updateFiltersState,
+      setPrevProductSku,
+      handleCallback,
+      onLevelThreeCategoryPress,
+      onMoreFilterClick,
+      onSelectMoreFilterPLP,
+    };
   };
 
   getPages() {
