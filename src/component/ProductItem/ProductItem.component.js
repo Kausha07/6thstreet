@@ -191,16 +191,7 @@ class ProductItem extends PureComponent {
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-      name: name,
-      id: sku,
-      price: itemPrice,
-      brand: brand_name,
-      category: product_type_6s || categoryLevel,
-      variant: color || "",
-      position: product_Position || "",
-      isFilters: isFilters ? "Yes" : "No"
-    });
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, [product]);
     if (queryID) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
