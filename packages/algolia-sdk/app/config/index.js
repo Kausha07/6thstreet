@@ -30,8 +30,34 @@ const FACET_FILTERS = [
   "promotion",
 ];
 
+const MORE_FILTERS = [
+  "fit",
+  "sleeve_length",
+  "sleeve_type",
+  "material",
+  "neck_line",
+  "collar_type",
+  "occasion",
+  "pattern",
+  "dress_length",
+  "skirt_length",
+  "leg_length",
+  "design_details",
+  "denim_wash",
+  "trend",
+  "padded",
+  "wired",
+  "discount",
+  "price.AED.default",
+  "price.SAR.default",
+  "price.KWD.default",
+  "price.OMR.default",
+  "price.BHD.default",
+  "price.QAR.default",
+]
+
 const config = {
-  FACET_FILTERS,
+  FACET_FILTERS: [...FACET_FILTERS, ...MORE_FILTERS],
   NUMERIC_FILTERS: [
     "discount",
     "visibility_catalog",
@@ -262,7 +288,7 @@ const config = {
       "product_tag",
       "material_composition",
     ],
-    facets: FACET_FILTERS,
+    facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],
     numericFilters: [],
     maxValuesPerFacet: 1000,
@@ -312,6 +338,7 @@ export {
   PREPROD_INDICES,
   searchParams,
   VISIBLE_GENDERS,
+  MORE_FILTERS
 };
 
 export default config;

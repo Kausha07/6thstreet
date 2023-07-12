@@ -1,0 +1,41 @@
+.wrapperLeafLevel {
+  li {
+    background-color: #f8fafb;
+    margin-bottom: 0px;
+  }
+
+  &-wrapperDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: auto auto auto 30px;
+
+    &_isArabic {
+      margin: auto 25px auto auto;
+    }
+  }
+
+  &-wrapperIconLabel {
+    display: flex;
+
+    label {
+      margin-left: 10px;
+    }
+  }
+
+  &-productCount {
+    margin-right: 30px;
+
+    &_isArabic {
+      margin-left: 8px;
+      margin-right: 0;
+    }
+  }
+}
+
+.labelLeaflevel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}

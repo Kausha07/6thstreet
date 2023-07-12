@@ -51,6 +51,7 @@ class ProductImpressionEvent extends BaseEvent {
    */
   handler(EVENT_TYPE, impressions = []) {
     const storage = this.getStorage();
+    let isFilters = false;
     const formattedImpressions = impressions.map(
       (
         {
@@ -79,6 +80,12 @@ class ProductImpressionEvent extends BaseEvent {
       })
     );
 
+    impressions.map((item) => {
+      if(item.isFilters){
+        isFilters = true;
+      }
+    });
+
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
@@ -87,6 +94,7 @@ class ProductImpressionEvent extends BaseEvent {
         currencyCode: this.getCurrencyCode(),
         impressions: formattedImpressions,
       },
+      isFilters: isFilters ? "Yes" : "No"
     });
   }
 }

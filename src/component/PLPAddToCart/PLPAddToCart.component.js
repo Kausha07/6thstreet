@@ -29,12 +29,14 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
+import { getIsFilters } from "./utils/PLPAddToCart.helper";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
+  newActiveFilters: state.PLP.newActiveFilters,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -493,8 +495,11 @@ class PLPAddToCart extends PureComponent {
         size_us = [],
       },
       product,
+      newActiveFilters,
+      product_Position,
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
+    const isFilters = getIsFilters(newActiveFilters);
 
     const productStock = simple_products;
 
@@ -568,6 +573,8 @@ class PLPAddToCart extends PureComponent {
       cart_id: getCartID || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No",
+      productPosition: product_Position || "",
     });
   }
 
@@ -594,6 +601,8 @@ class PLPAddToCart extends PureComponent {
       product,
       position,
       qid,
+      newActiveFilters,
+      product_Position,
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -602,6 +611,7 @@ class PLPAddToCart extends PureComponent {
       insertedSizeStatus,
     } = this.state;
     const productStock = simple_products;
+    const isFilters = getIsFilters(newActiveFilters);
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
       return;
@@ -692,6 +702,8 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          isFilters: isFilters ? "Yes" : "No",
+          productPosition: product_Position || "",
         },
       });
 
@@ -749,6 +761,8 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          isFilters: isFilters ? "Yes" : "No",
+          productPosition: product_Position || "",
         },
       });
 

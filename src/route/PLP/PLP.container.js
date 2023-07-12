@@ -51,8 +51,20 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PLP from "./PLP.component";
+import {
+  getSelectedMoreFiltersFacetValues,
+  getNewMoreActiveFilters,
+  getNewActiveFilters,
+  getCategoryIds,
+  getSelectedFiltersFacetValues,
+  toggleIsSelectedOfSubcategories,
+  getIsDataIsSelected,
+  sendEventAttributeSelected,
+  sendEventMoreAttributeSelected,
+} from "Route/PLP/utils/PLP.helper";
+import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
-
+import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -73,7 +85,9 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
   catalogue_from_algolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
+  newSelectedActiveFilters: state.PLP.newActiveFilters,
+  moreFilters: state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -181,6 +195,9 @@ export class PLPContainer extends PureComponent {
     activeFilters: {},
     categoryloaded: false,
     metaContent: null,
+    newActiveFilters: {},
+    moreActiveFilters: {},
+    selectedMoreFilterPLP: ""
   };
 
   containerFunctions = {
@@ -190,6 +207,9 @@ export class PLPContainer extends PureComponent {
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
+    onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
+    onMoreFilterClick: this.onMoreFilterClick.bind(this),
+    onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
   };
 
   resetPLPData() {
@@ -319,6 +339,8 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { requestedOptions } = this.props;
+    const { newActiveFilters, activeFilters } = this.state;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
@@ -357,6 +379,7 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No"
     });
     this.setState({ categoryloaded: false });
   }
@@ -498,6 +521,7 @@ export class PLPContainer extends PureComponent {
         : null;
     if (!isRadio) {
       if (checked) {
+        // for selecting filter
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
           this.updateInitialFilters(
@@ -598,21 +622,99 @@ export class PLPContainer extends PureComponent {
   }
 
   select = (isQuickFilters) => {
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     const { query } = this.props;
     if (isMobile.any()) {
       window.scrollTo(0, 0);
     }
+    this.selectMoreFilters();
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          WebUrlParser.setParam(key, activeFilters[key], query);
+          if(key === "categories_without_path") {
+            WebUrlParser.setParam(
+              key,
+              getSelectedFiltersFacetValues(newActiveFilters),
+              getCategoryIds(newActiveFilters),
+            );
+          }else {
+            WebUrlParser.setParam(key, activeFilters[key], query);
+          }
         }
       }
     });
   };
+
+  selectMoreFilters = () => {
+    const { moreActiveFilters = {} } = this.state;
+    const { moreFilters: {moreFiltersArr = [] }} = this.props;
+    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters, moreFiltersArr);
+
+    Object.entries(SelectedMoreFiltersFacetValues).map((item) => {
+      WebUrlParser.setParam(
+        item[0],
+        item[1]
+      )
+    });
+  }
+
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    let newMultiLevelData = {...multiLevelData};
+    const { category_id } = multiLevelData;
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+    if(isSearch && activeFiltersIds.includes(category_id)){
+      if(isDropdown) {
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }else {
+        newMultiLevelData.is_selected = true;
+      }
+    } 
+    else if (isSearch) {
+      const isDataIsSelected = getIsDataIsSelected(newMultiLevelData);
+      if(isDropdown && isDataIsSelected){
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }
+    }
+
+    // when user selected any other category fitler reseting the moreFilters.
+    const newMoreActiveFilters = {
+      ...moreActiveFilters,
+      ["categories_without_path"]: [],
+    };
+    
+    this.onSelectMoreFilterPLP("");
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: newMultiLevelData,
+            isDropdown,
+            newActiveFilters,
+          }) || {},
+          moreActiveFilters: newMoreActiveFilters,
+      },
+      () => this.select()
+    );
+    sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
+  }
+
+  onMoreFilterClick(option) {
+    const { moreActiveFilters } = this.state;
+    this.setState(
+      {
+        moreActiveFilters: getNewMoreActiveFilters({option, moreActiveFilters}) || {},
+      },
+      () => this.selectMoreFilters()
+    );
+    sendEventMoreAttributeSelected(option);
+  }
+
+  onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {
+    this.setState({ selectedMoreFilterPLP: newSelectedMoreFilterPLP})
+  }
 
   onUnselectAllPress(category) {
     const { filters, updatePLPInitialFilters } = this.props;
@@ -741,7 +843,11 @@ export class PLPContainer extends PureComponent {
     this.setState({ activeFilters });
   }
   handleResetFilter() {
-    this.setState({ activeFilters: {} });
+    this.setState({
+      activeFilters: {},
+      newActiveFilters: {},
+      moreActiveFilters: {},
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const {
@@ -750,6 +856,7 @@ export class PLPContainer extends PureComponent {
       menuCategories = [],
       lastHomeItem,
       pages,
+      newSelectedActiveFilters = {},
     } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
@@ -840,8 +947,31 @@ export class PLPContainer extends PureComponent {
         },
         {}
       );
+      // activeFilters - adding L4 filters into active filters array, when the component get updated
+      const { categories_without_path = {} } = this.props.filters;
+      const { data = {} } = categories_without_path;
+      let tempArray = [];
+      if (data) {
+        Object.entries(data).map((entry) => {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[1] && subEntry[1].sub_subcategories) {
+              Object.entries(subEntry[1].sub_subcategories).map(
+                (sub_subEntry) => {
+                  if (sub_subEntry[1].is_selected === true) {
+                    tempArray.push(sub_subEntry[0]);
+                  }
+                }
+              );
+            }
+          });
+        });
+      }
+      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+        ? [...newActiveFilters["categories_without_path"], ...tempArray]
+        : [...tempArray];
       this.setState({
         activeFilters: newActiveFilters,
+        newActiveFilters: newSelectedActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
@@ -1027,7 +1157,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters, selectedMoreFilterPLP } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1042,6 +1172,9 @@ export class PLPContainer extends PureComponent {
       activeFilters,
       isLoading,
       showOverlay,
+      newActiveFilters,
+      moreActiveFilters,
+      selectedMoreFilterPLP,
     };
   };
 

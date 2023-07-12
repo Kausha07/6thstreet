@@ -1232,5 +1232,11 @@
     "Please remove any unavailable items from the cart.": "يرجى حذف كل المنتجات غير المتوفرة من عربة التسوق",
     "Remove Out Of Stock Items": "إزالة المنتجات غير المتوفرة",
     "YOUR BIRTHDAY": "تاريخ الولادة",
-    "Birthdate updated successfully": "تم تحديث تاريخ الميلاد بنجاح "
+    "Birthdate updated successfully": "تم تحديث تاريخ الميلاد بنجاح ",
+    "More Filters :": "تصنيفات أكثر :",
+    "Select only one category to view more filters": "حدد فئة واحدة فقط لتشاهد تصنيفات أكثر",
+    "More": "أكثر",
+    "Less": "أقل",
+    "Select Price Range": "حدد نطاق السعر",
+    "Select Discount Range": "حدد نطاق الخصم"
 }

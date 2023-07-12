@@ -28,12 +28,18 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 import PLPFilters from "./PLPFilters.component";
 import { SIZES } from "./PLPFilters.config";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 
 export const mapStateToProps = (_state) => ({
   filters: _state.PLP.filters,
   isLoading: _state.PLP.isLoading,
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
+  sliderFilters: _state.PLP.sliderFilters,
+  currentSliderState: _state.PLP.currentSliderState,
+  newSelectedActiveFilters: _state.PLP.newActiveFilters,
+  moreFilters: _state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -47,6 +53,8 @@ export const mapDispatchToProps = (_dispatch) => ({
     _dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
   changeHeaderState: (state) =>
     _dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+  updateCurrentSliderState: (updatedCurrentSliderState) =>
+    PLPDispatcher.updateCurrentSliderStateToStore(updatedCurrentSliderState, _dispatch),
 });
 
 export class PLPFiltersContainer extends PureComponent {
@@ -109,6 +117,44 @@ export class PLPFiltersContainer extends PureComponent {
     return null;
   }
 
+  componentDidUpdate() {
+    const {
+      currentSliderState = {},
+      filters: {
+        discount = {},
+      },
+      filters
+    } = this.props;
+
+    if(currentSliderState && currentSliderState.discoutrange) {
+      const {currentMax = 0, currentMin = 0} = currentSliderState.discoutrange;
+      const min = discount?.newDiscountData?.min || 0;
+      const max = discount?.newDiscountData?.max || 0;
+      const sliderType = "discountRange";
+      if(min === 0 && max ===  0) {
+        return;
+      } else if(currentMax === 0 && currentMin === 0 || currentMin > min || currentMax < max ) {
+        this.updateCurrentSlider(sliderType, {min, max});
+      }
+    }
+
+    const currency = getCountryCurrencyCode();
+    if ( filters && filters[`price.${currency}.default`] ) {
+      const {newPriceRangeData = {} } = filters[`price.${currency}.default`];
+      if(currentSliderState && currentSliderState.priceRange) {
+        const {currentMax = 0, currentMin = 0} = currentSliderState.priceRange;
+        const min = newPriceRangeData?.min || 0;
+        const max = newPriceRangeData?.max || 0;
+        const sliderType = "priceRange";
+        if(min === 0 && max ===  0) {
+          return;
+        } else if(currentMax === 0 && currentMin === 0 || currentMin > min || currentMax < max ) {
+          this.updateCurrentSlider(sliderType, {min, max});
+        }
+      }
+    }
+  }
+
   containerFunctions = () => {
     const {
       showOverlay,
@@ -129,20 +175,59 @@ export class PLPFiltersContainer extends PureComponent {
     };
   };
 
+  updateCurrentSlider(sliderType, data) {
+    const { currentSliderState = {}, updateCurrentSliderState } = this.props;
+    const {min, max} = data
+
+    if(sliderType === "discountRange") {
+      const updatedcurrentSliderState = {
+        ...currentSliderState,
+        discoutrange: {currentMin:min, currentMax:max},
+      }
+      updateCurrentSliderState(updatedcurrentSliderState);
+    }else if (sliderType === "priceRange") {
+      const updatedcurrentSliderState = {
+        ...currentSliderState,
+        priceRange: {currentMin:min, currentMax:max},
+      }
+      updateCurrentSliderState(updatedcurrentSliderState);
+    }
+  }
+
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query, handleResetFilter, resetSortData } = this.props;
+    const {
+      query,
+      handleResetFilter,
+      resetSortData,
+      updateCurrentSliderState,
+      moreFilters: { moreFiltersArr = [] },
+    } = this.props;
     handleResetFilter()
     resetSortData();
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
-      WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      // we don't want to clear gender and in stock filter when user click on clear all button 
+      if(Object.keys(initialFilters)[i] != "gender" && Object.keys(initialFilters)[i] != "in_stock") {
+        WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      }
     }
+
+    // reset more filters
+    moreFiltersArr.map((item) => {
+      WebUrlParser.setParam(item, []);
+    });    
+
+    const updatedcurrentSliderState = {
+      priceRange: {currentMin:0, currentMax:0},
+      discoutrange: {currentMin:0, currentMax:0},
+    }
+    updateCurrentSliderState(updatedcurrentSliderState);
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, isPLPSortBy } = this.props;
+    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, currentSliderState = {}, newSelectedActiveFilters = {} } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -151,7 +236,10 @@ export class PLPFiltersContainer extends PureComponent {
       activeOverlay,
       activeFilters,
       query,
-      isPLPSortBy
+      sliderFilters,
+      currentSliderState,
+      isPLPSortBy,
+      newSelectedActiveFilters
     };
   };
 
