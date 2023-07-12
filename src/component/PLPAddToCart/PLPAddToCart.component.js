@@ -18,7 +18,7 @@ import Event, {
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
   MOE_trackEvent,
-  SELECT_ITEM_ALGOLIA
+  SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -594,7 +594,6 @@ class PLPAddToCart extends PureComponent {
       product,
       position,
       qid,
-      isVueData
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -616,6 +615,29 @@ class PLPAddToCart extends PureComponent {
       searchQueryId = getStore().getState().SearchSuggestions.queryID;
     } else {
       searchQueryId = qid;
+    }
+
+    var data = localStorage.getItem("customer")
+      ? localStorage.getItem("customer")
+      : null;
+    let userData = data ? JSON.parse(data) : null;
+    let userToken =
+      userData && userData?.data?.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
+    if (
+      searchQueryId &&
+      position &&
+      position > 0 &&
+      product?.objectID &&
+      userToken
+    ) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [product?.objectID],
+        queryID: searchQueryId,
+        userToken: userToken,
+        position: [position],
+      });
     }
     if (
       (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
@@ -672,27 +694,6 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
         },
       });
-
-      var data = localStorage.getItem("customer") ? localStorage.getItem("customer") : null;
-      let userData = data ? JSON.parse(data) : null;
-      let userToken =
-        userData && userData?.data?.id
-          ? `user-${userData.data.id}`
-          : getUUIDToken();
-      if (
-        searchQueryId &&
-        position &&
-        position > 0 &&
-        product?.objectID &&
-        userToken
-      ) {
-        new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
-          objectIDs: [product?.objectID],
-          queryID: searchQueryId,
-          userToken: userToken,
-          position: [position],
-        });
-      }
 
       //   vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -772,12 +773,8 @@ class PLPAddToCart extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true") {
-    const { 
-      setMinicartOpen,
-      pageType,
-      removeFromWishlist,
-      wishlist_item_id,
-    } = this.props;
+    const { setMinicartOpen, pageType, removeFromWishlist, wishlist_item_id } =
+      this.props;
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
@@ -791,9 +788,9 @@ class PLPAddToCart extends PureComponent {
 
       /* if user is adding product from wishlist to cart then after adding to cart 
            that product should remove from wishlist   */
-      
-      if(wishlist_item_id) {
-      removeFromWishlist(wishlist_item_id);
+
+      if (wishlist_item_id) {
+        removeFromWishlist(wishlist_item_id);
       }
     }
 
