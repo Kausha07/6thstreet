@@ -8,6 +8,16 @@ class DynamicContentHeader extends PureComponent {
 
     };
 
+    isTrendingWidgetexist = () => {
+        const { type = "" } = this.props;
+        const newTrendingWidget = ["vue_brands_for_you","vue_categories_for_you"];
+        if(type !== "" && !newTrendingWidget.includes(type)) {
+            return true;
+        }else{
+            return false;
+        }
+    }    
+
     render() {
         let titleStyle = ""
         if (this.props?.header?.title_color) {
@@ -19,8 +29,8 @@ class DynamicContentHeader extends PureComponent {
         return (
             <div block="DynamicContentHeader">
                {this.props?.header?.title && <h1 block={ cx('foo', { baz: true }) } style={ this.props?.header?.title_color && titleStyle }>{ this.props?.header?.title }</h1>}
-                { this.props?.header?.subtitle && <p block="">{ this.props?.header?.subtitle }</p>}
-                {this.props?.header?.button_link && <a href={this.props?.header?.button_link} block="">{this.props?.header?.button_label}</a>}
+               {this.isTrendingWidgetexist() ? this.props?.header?.subtitle && <p block="">{ this.props?.header?.subtitle }</p> : ""}
+               {this.isTrendingWidgetexist() ? this.props?.header?.button_link && <a href={this.props?.header?.button_link} block="">{this.props?.header?.button_label}</a> : ""}
 
             </div>
         );

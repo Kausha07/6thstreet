@@ -418,6 +418,17 @@ class DynamicContentSliderWithLabel extends PureComponent {
     );
   }
 
+  getPromotionHeader = () => {
+    const { header, layout } = this.props;
+    if (header && header?.title) {
+      return header;
+    } else if (layout && layout?.title) {
+      return layout;
+    }
+
+    return "";
+  };
+
   render() {
     let setRef = (el) => {
       this.viewElement = el;
@@ -430,14 +441,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
         block="DynamicContentSliderWithLabel"
         id={`DynamicContentSliderWithLabel${index}`}
       >
-        {this.props.type === "vue_categories_for_you" &&
-          this.props?.layout &&
-          this.props?.layout?.title && (
-            <DynamicContentHeader header={this.props?.layout} />
-          )}
-        {this.props?.header && (
-          <DynamicContentHeader header={this.props?.header} />
+        {this.getPromotionHeader() && (
+          <DynamicContentHeader
+            header={this.getPromotionHeader()}
+            type={this.props.type}
+          />
         )}
+        
         {this.props.title && (
           <h1 block="Title" mods={{ isArabic }}>
             {this.props.title}
