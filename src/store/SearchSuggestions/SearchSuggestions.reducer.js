@@ -1,6 +1,7 @@
 import {
   SET_SEARCH_SUGGESTIONS,
   SET_ALGOLIA_INDEX,
+  SET_SEARCH_SUGGESTIONS_PRODUCTS_QUERY_ID,
 } from "./SearchSuggestions.action";
 
 export const getInitialState = () => ({
@@ -11,6 +12,7 @@ export const getInitialState = () => ({
   algoliaIndex: null,
   gender: "",
   country: "",
+  searchSuggestionsProdQID : "",
 });
 
 export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
@@ -34,6 +36,12 @@ export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         algoliaIndex,
+      };
+    case SET_SEARCH_SUGGESTIONS_PRODUCTS_QUERY_ID:
+      const {searchSuggestionsProdQID} = action;
+      return {
+        ...state,
+        searchSuggestionsProdQID,
       };
 
     default:

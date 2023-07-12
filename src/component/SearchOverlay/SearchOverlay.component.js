@@ -25,8 +25,9 @@ import Event, {
   EVENT_GTM_SEARCH,
   EVENT_GTM_VIEW_SEARCH_RESULTS,
   MOE_trackEvent,
+  SELECT_ITEM_ALGOLIA
 } from "Util/Event";
-
+import { getUUIDToken } from "Util/Auth";
 import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
@@ -288,6 +289,21 @@ export class SearchOverlay extends PureComponent {
   };
 
   handleProductClick = (product) => {
+    const { searchSuggestionsProdQID, position, objectID } = product;
+    var data = localStorage.getItem("customer") || null;
+    let userData = data ? JSON.parse(data) : null;
+    let userToken =
+      userData && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
+    if (searchSuggestionsProdQID && position && position > 0 && objectID && userToken) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [objectID],
+        queryID: searchSuggestionsProdQID,
+        userToken: userToken,
+        position: [position],
+      });
+    }
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
@@ -299,10 +315,15 @@ export class SearchOverlay extends PureComponent {
     this.props.closePopup();
   };
 
-  renderProduct = (product) => {
+  renderProduct = (product, index) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
-    const { closePopup } = this.props;
+    const { closePopup, searchSuggestionsProdQID } = this.props;
     const { isArabic } = this.state;
+    let productData = {
+      ...product,
+      ...{ searchSuggestionsProdQID },
+      ...{ position: index + 1 },
+    };
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
@@ -320,7 +341,7 @@ export class SearchOverlay extends PureComponent {
         <div block="productDetailsLayout">
           <Link
             to={parseLink ? parseLink : "#"}
-            onClick={() => this.handleProductClick(product) && closePopup()}
+            onClick={() => this.handleProductClick(productData) && closePopup()}
             block="productsDetailsLink"
             elem="ProductLinks"
           >

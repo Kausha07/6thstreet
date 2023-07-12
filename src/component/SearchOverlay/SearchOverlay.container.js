@@ -31,6 +31,7 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
   suggestionEnabled: state.AppConfig.suggestionEnabled,
+  searchSuggestionsProdQID: state.SearchSuggestions.searchSuggestionsProdQID,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -63,6 +64,7 @@ export class searchOverlayContainer extends PureComponent {
       brands: PropTypes.array,
       products: PropTypes.array,
     }).isRequired,
+    searchSuggestionsProdQID: PropTypes.string,
   };
 
   static getDerivedStateFromProps(props, state) {

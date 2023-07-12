@@ -2,6 +2,7 @@ import { getStore } from "Store";
 import {
   setSearchSuggestions,
   setAlgoliaIndex,
+  setSearchSuggestionsProductQueryID,
 } from "Store/SearchSuggestions/SearchSuggestions.action";
 import {
   getCustomQuerySuggestions,
@@ -24,6 +25,7 @@ export class SearchSuggestionsDispatcher {
       AppState: { gender, country },
     } = getStore().getState();
     let queryID = null;
+    let searchSuggestionProductID = null;
 
     // var searchQuery = search;
     // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
@@ -138,14 +140,19 @@ export class SearchSuggestionsDispatcher {
       } else {
         queryID = productData?.queryID ? productData?.queryID : null;
       }
+      if (productData && productData.queryID) {
+        searchSuggestionProductID = productData.queryID;
+      }
       const results = formatProductSuggestions(productData);
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)
       );
+      dispatch(setSearchSuggestionsProductQueryID(searchSuggestionProductID));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
       dispatch(setSearchSuggestions(search));
+      dispatch(setSearchSuggestionsProductQueryID(null));
     }
   }
 
