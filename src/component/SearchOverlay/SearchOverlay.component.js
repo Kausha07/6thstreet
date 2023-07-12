@@ -293,7 +293,7 @@ export class SearchOverlay extends PureComponent {
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
-      userData && userData.data.id
+      userData && userData.data && userData.data.id
         ? `user-${userData.data.id}`
         : getUUIDToken();
     if (searchSuggestionsProdQID && position && position > 0 && objectID && userToken) {

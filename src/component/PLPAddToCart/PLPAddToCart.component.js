@@ -632,7 +632,7 @@ class PLPAddToCart extends PureComponent {
       : null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
-      userData && userData?.data?.id
+      userData && userData.data && userData.data?.id
         ? `user-${userData.data.id}`
         : getUUIDToken();
     if (

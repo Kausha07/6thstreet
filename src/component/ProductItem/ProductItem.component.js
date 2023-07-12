@@ -152,10 +152,10 @@ class ProductItem extends PureComponent {
       isFilters,
     } = this.props;
 
-    var data = localStorage.getItem("customer");
-    let userData = JSON.parse(data);
+    var data = localStorage.getItem("customer") || null;
+    let userData = data ? JSON.parse(data) : null;
     let userToken =
-      userData && userData.data.id
+      userData && userData.data && userData.data.id
         ? `user-${userData.data.id}`
         : getUUIDToken();
     let queryID;
