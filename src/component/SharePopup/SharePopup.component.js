@@ -113,7 +113,8 @@ class SharePopup extends PureComponent {
       icon: <Pinterest />,
       handleClick: (text, title, url, image) =>
         window.open(
-          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${text}`,
+          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${encodeURIComponent(text)}`,
+          "_blank"
         ),
       render: true,
     },
