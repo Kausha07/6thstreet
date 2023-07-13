@@ -51,7 +51,7 @@ const getOptionsMoreFilters = (facets, queryValues, moreFiltersData, query) => {
   const option = {};
   const arrMoreFilters = moreFiltersData?.more_filter || [];
   const moreFiltersTraslation = moreFiltersData?.more_filter_traslation || {};
-  MORE_FILTERS.map((item, index) => {
+  arrMoreFilters.map((item, index) => {
     option[item] = facets[item];
   });
   for (let key in option ) {    

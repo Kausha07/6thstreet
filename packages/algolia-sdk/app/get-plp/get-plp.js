@@ -536,6 +536,11 @@ const _formatFacets = ({ facets, queryParams }) => {
 function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
   const { client, env } = options;
   const moreFiltersArr = moreFiltersData?.more_filter || [];
+    // data should get update - data is from json file.
+    const newSearchParamsMoreFilters = {
+      ...defaultSearchParams,
+      facets: [...defaultSearchParams.facets, ...moreFiltersArr],
+    };
 
   return new Promise((resolve, reject) => {
     const parsedURL = new Url(URL, true);
@@ -560,7 +565,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const query = {
       indexName: indexName,
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: newFacetFilters?.length
         ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
         : [...facetFilters, ...moreFacetFilters],
@@ -602,7 +607,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     }
     const queryCopy = {
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: [initialFilterArg],
         numericFilters,
         query: q,
@@ -629,7 +634,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const queryProdCount = {
       indexName: indexName,
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: AlgoliaFiltersProdCount?.facetFilters,
         numericFilters,
         query: q,
@@ -644,7 +649,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const querySliderPosition = {
       indexName: indexName,
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: newFacetFilters?.length
         ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
         : [...facetFilters, ...moreFacetFilters],
