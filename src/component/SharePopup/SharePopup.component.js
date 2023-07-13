@@ -56,7 +56,7 @@ class SharePopup extends PureComponent {
       handleClick: (text, title, url, image) =>{
         const { isReferral } = this.props;
         if( isReferral ){
-          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank")
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}%0A%0A${url}`, "_blank"),
         } else{
           window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank")
         }
@@ -101,7 +101,7 @@ class SharePopup extends PureComponent {
       handleClick: (text, title, url, image) =>{
         const { isReferral } = this.props;
         if( isReferral ){
-          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}`)
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}%0A%0A${url}`)
         } else{
           window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`)
         }
@@ -113,7 +113,7 @@ class SharePopup extends PureComponent {
       icon: <Pinterest />,
       handleClick: (text, title, url, image) =>
         window.open(
-          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${text}`,
+          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${encodeURIComponent(text)}`,
           "_blank"
         ),
       render: true,
@@ -161,7 +161,7 @@ class SharePopup extends PureComponent {
       url = window.location.href,
       image = "",
     } = this.props;
-
+    const productTitle = this.props.title || "";
     return this.renderMap
       .filter(({ render }) => render)
       .map(({ title, icon, handleClick }) => (
@@ -169,7 +169,7 @@ class SharePopup extends PureComponent {
           key={title}
           onClick={() => {
             {
-              handleClick(text, title, url, image);
+              handleClick(text, productTitle, url, image);
               this.sendMoeImpressions(title);
             }
           }}
