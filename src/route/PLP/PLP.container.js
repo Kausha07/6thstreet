@@ -633,18 +633,20 @@ export class PLPContainer extends PureComponent {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          if(key === "categories_without_path") {
-            WebUrlParser.setParam(
-              key,
-              getSelectedFiltersFacetValues(newActiveFilters),
-              getCategoryIds(newActiveFilters),
-            );
-          }else {
+          if(key !== "categories_without_path") {
             WebUrlParser.setParam(key, activeFilters[key], query);
           }
         }
       }
     });
+    const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+    const key = "categories_without_path";
+    WebUrlParser.setParam(
+      key,
+      selectedFacetValues,
+      selectedFacetCategoryIds,
+    );
   };
 
   selectMoreFilters = () => {

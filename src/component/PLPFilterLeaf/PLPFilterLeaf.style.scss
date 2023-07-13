@@ -9,7 +9,7 @@
     justify-content: space-between;
     width: 100%;
     margin: auto auto auto 30px;
-
+    cursor: pointer;
     &_isArabic {
       margin: auto 25px auto auto;
     }
@@ -38,4 +38,5 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 150px;
+  cursor: pointer;
 }
