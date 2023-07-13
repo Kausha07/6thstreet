@@ -56,9 +56,9 @@ class SharePopup extends PureComponent {
       handleClick: (text, title, url, image) =>{
         const { isReferral } = this.props;
         if( isReferral ){
-          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}%0A%0A${url}`, "_blank"),
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank")
         } else{
-          window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank")
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}%0A%0A${url}`, "_blank")
         }
       },
       render: true,
@@ -101,9 +101,9 @@ class SharePopup extends PureComponent {
       handleClick: (text, title, url, image) =>{
         const { isReferral } = this.props;
         if( isReferral ){
-          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}%0A%0A${url}`)
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}`)
         } else{
-          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`)
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}%0A%0A${url}`)
         }
       },
       render: true,
@@ -113,8 +113,7 @@ class SharePopup extends PureComponent {
       icon: <Pinterest />,
       handleClick: (text, title, url, image) =>
         window.open(
-          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${encodeURIComponent(text)}`,
-          "_blank"
+          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${text}`,
         ),
       render: true,
     },
@@ -161,7 +160,7 @@ class SharePopup extends PureComponent {
       url = window.location.href,
       image = "",
     } = this.props;
-    const productTitle = this.props.title || "";
+
     return this.renderMap
       .filter(({ render }) => render)
       .map(({ title, icon, handleClick }) => (
@@ -169,7 +168,7 @@ class SharePopup extends PureComponent {
           key={title}
           onClick={() => {
             {
-              handleClick(text, productTitle, url, image);
+              handleClick(text, title, url, image);
               this.sendMoeImpressions(title);
             }
           }}
