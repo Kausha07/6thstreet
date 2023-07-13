@@ -464,52 +464,41 @@ class FieldMultiselect extends PureComponent {
       parentCallback,
       filter: {
         category,
-        newPriceRangeData = {},
-        newDiscountData= {},
       },
-      currentSliderState,
+      sliderFilters = {},
     } = this.props;
-    const { discoutrange = {}, priceRange = {} } = currentSliderState;
 
     if( category === "discount" ) {
-      let MIN = newDiscountData.min || 0;
-      let MAX =  newDiscountData.max || 50;
-      const currentMIN = discoutrange?.currentMin;
-      const currentMAX = discoutrange?.currentMax;
+      const { discount={} } = sliderFilters;
+      const { minValue, maxValue, min, max } = discount;
       const key = v4();
       return (
         <div>
           <RangeSlider 
             filter={filter}
             parentCallback={parentCallback}
-            minVal={MIN}
-            maxVal={MAX}
-            currentMIN={currentMIN}
-            currentMAX={currentMAX}
+            minVal={min || minValue }
+            maxVal={max || maxValue}
+            currentMIN={minValue}
+            currentMAX={maxValue}
             key={key}
             onBlur={this.onBlur}
           />
         </div>
       );
     }else {
-      let MIN;
-      let MAX;
-      const currentMIN = priceRange?.currentMin;
-      const currentMAX = priceRange?.currentMax;
       const key = v4();
-      if(newPriceRangeData && newPriceRangeData.min && newPriceRangeData.max ) {
-        MIN = newPriceRangeData.min;
-        MAX = newPriceRangeData.max;
-      }
+      const { price={} } = sliderFilters;
+      const { minValue, maxValue, min, max } = price;
       return (
         <div>
             <RangeSlider
               filter={filter}
               parentCallback={parentCallback}
-              minVal={MIN}
-              maxVal={MAX}
-              currentMIN={currentMIN}
-              currentMAX={currentMAX}
+              minVal={min || minValue}
+              maxVal={max || maxValue}
+              currentMIN={minValue}
+              currentMAX={maxValue}
               key={key}
               onBlur={this.onBlur}
             />

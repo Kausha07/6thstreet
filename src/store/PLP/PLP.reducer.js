@@ -36,10 +36,6 @@ export const getInitialState = () => ({
   brand_url:"",
   newActiveFilters: {},
   sliderFilters: {},
-  currentSliderState: {
-    discoutrange: {currentMin:0, currentMax:0},
-    priceRange: {currentMin:0, currentMax:0}
-  },
 });
 
 export const formatFilters = (filters = {}) =>
@@ -194,12 +190,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
         sliderFilters: updatedSliderFilters
       };
 
-    case CURRENT_SLIDER_STATE:
-      const { updatedCurrentSliderState } = action;
-      return {
-        ...state,
-        currentSliderState: updatedCurrentSliderState
-      };
     
     default:
       return state;

@@ -263,7 +263,6 @@ class PLPFilters extends PureComponent {
       newActiveFilters,
       moreActiveFilters,
       sliderFilters,
-      currentSliderState,
       newSelectedActiveFilters,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
@@ -306,7 +305,6 @@ class PLPFilters extends PureComponent {
         newActiveFilters={newActiveFilters}
         moreActiveFilters={moreActiveFilters}
         sliderFilters={sliderFilters}
-        currentSliderState={currentSliderState}
         newSelectedActiveFilters={newSelectedActiveFilters}
         filterPosition={filterPosition}
         isBrandPLP={isBrandPLP}

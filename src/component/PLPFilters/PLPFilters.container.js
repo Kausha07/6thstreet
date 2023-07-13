@@ -37,7 +37,6 @@ export const mapStateToProps = (_state) => ({
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
   sliderFilters: _state.PLP.sliderFilters,
-  currentSliderState: _state.PLP.currentSliderState,
   newSelectedActiveFilters: _state.PLP.newActiveFilters,
   moreFilters: _state.PLP.moreFilters,
 });
@@ -53,8 +52,6 @@ export const mapDispatchToProps = (_dispatch) => ({
     _dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
   changeHeaderState: (state) =>
     _dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
-  updateCurrentSliderState: (updatedCurrentSliderState) =>
-    PLPDispatcher.updateCurrentSliderStateToStore(updatedCurrentSliderState, _dispatch),
 });
 
 export class PLPFiltersContainer extends PureComponent {
@@ -117,44 +114,6 @@ export class PLPFiltersContainer extends PureComponent {
     return null;
   }
 
-  componentDidUpdate() {
-    const {
-      currentSliderState = {},
-      filters: {
-        discount = {},
-      },
-      filters
-    } = this.props;
-
-    if(currentSliderState && currentSliderState.discoutrange) {
-      const {currentMax = 0, currentMin = 0} = currentSliderState.discoutrange;
-      const min = discount?.newDiscountData?.min || 0;
-      const max = discount?.newDiscountData?.max || 0;
-      const sliderType = "discountRange";
-      if(min === 0 && max ===  0) {
-        return;
-      } else if(currentMax === 0 && currentMin === 0 || currentMin > min || currentMax < max ) {
-        this.updateCurrentSlider(sliderType, {min, max});
-      }
-    }
-
-    const currency = getCountryCurrencyCode();
-    if ( filters && filters[`price.${currency}.default`] ) {
-      const {newPriceRangeData = {} } = filters[`price.${currency}.default`];
-      if(currentSliderState && currentSliderState.priceRange) {
-        const {currentMax = 0, currentMin = 0} = currentSliderState.priceRange;
-        const min = newPriceRangeData?.min || 0;
-        const max = newPriceRangeData?.max || 0;
-        const sliderType = "priceRange";
-        if(min === 0 && max ===  0) {
-          return;
-        } else if(currentMax === 0 && currentMin === 0 || currentMin > min || currentMax < max ) {
-          this.updateCurrentSlider(sliderType, {min, max});
-        }
-      }
-    }
-  }
-
   containerFunctions = () => {
     const {
       showOverlay,
@@ -175,25 +134,6 @@ export class PLPFiltersContainer extends PureComponent {
     };
   };
 
-  updateCurrentSlider(sliderType, data) {
-    const { currentSliderState = {}, updateCurrentSliderState } = this.props;
-    const {min, max} = data
-
-    if(sliderType === "discountRange") {
-      const updatedcurrentSliderState = {
-        ...currentSliderState,
-        discoutrange: {currentMin:min, currentMax:max},
-      }
-      updateCurrentSliderState(updatedcurrentSliderState);
-    }else if (sliderType === "priceRange") {
-      const updatedcurrentSliderState = {
-        ...currentSliderState,
-        priceRange: {currentMin:min, currentMax:max},
-      }
-      updateCurrentSliderState(updatedcurrentSliderState);
-    }
-  }
-
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
@@ -201,7 +141,6 @@ export class PLPFiltersContainer extends PureComponent {
       query,
       handleResetFilter,
       resetSortData,
-      updateCurrentSliderState,
       moreFilters: { moreFiltersArr = [] },
     } = this.props;
     handleResetFilter()
@@ -219,15 +158,10 @@ export class PLPFiltersContainer extends PureComponent {
       WebUrlParser.setParam(item, []);
     });    
 
-    const updatedcurrentSliderState = {
-      priceRange: {currentMin:0, currentMax:0},
-      discoutrange: {currentMin:0, currentMax:0},
-    }
-    updateCurrentSliderState(updatedcurrentSliderState);
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, currentSliderState = {}, newSelectedActiveFilters = {} } = this.props;
+    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, newSelectedActiveFilters = {} } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -237,7 +171,6 @@ export class PLPFiltersContainer extends PureComponent {
       activeFilters,
       query,
       sliderFilters,
-      currentSliderState,
       isPLPSortBy,
       newSelectedActiveFilters
     };
