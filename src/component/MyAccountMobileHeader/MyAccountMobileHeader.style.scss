@@ -8,6 +8,7 @@
   left: 0;
   width: 100%;
   align-items: center;
+  justify-content: space-between;
 
   @include after-mobile {
     display: none;
@@ -94,6 +95,17 @@
       margin: 15px 10px 15px 0;
       display: flex;
       gap: 6px;
+      .StoreSwitcherPopup{
+        left: -130px;
+
+          &-Container {
+          &_isArabic {
+            @include mobile {
+              left: 120px;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -104,6 +116,7 @@
       .MyAccountOverlay {
         &-StoreSwitcher {
           margin: 15px 0 15px 20px;
+         
         }
       }
     }

@@ -39,7 +39,7 @@ export class Algolia {
     return AlgoliaSDK.index;
   }
 
-  async getPLP(params = {}) {
+  async getPLP(params = {}, categoryData = {}, moreFiltersData = {} ) {
     let influencerCount = 0;
     if(params["pageType"] && params["pageType"] === "InfluencerPage")
     {
@@ -60,7 +60,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`, params);
+    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData );
   }
 
   async getProductForSearchContainer(params = {}, suggestionQuery) {

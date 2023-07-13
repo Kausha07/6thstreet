@@ -181,7 +181,7 @@ export class CartOverlayContainer extends PureComponent {
     MOE_trackEvent(EVENT_MOE_BEGIN_CHECKOUT, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       coupon_code_applied: coupon_code || "",

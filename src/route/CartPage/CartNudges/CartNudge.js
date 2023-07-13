@@ -5,6 +5,8 @@ import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import ShoppingGif from "../icons/shopping-bag.gif";
 import closeIcon from "../icons/close-black.png";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_LOGIN_CLICK, MOE_trackEvent } from "Util/Event";
 
 import "./CartNudge.style.scss";
 
@@ -34,7 +36,15 @@ export default function CartNudge() {
             {__("Login to 6thStreet to synchronize your shopping bag.")}
             <span
               className="signin"
-              onClick={() => setShowSignInSignUpPopUp(true)}
+              onClick={() => {
+                setShowSignInSignUpPopUp(true);
+                MOE_trackEvent(EVENT_LOGIN_CLICK, {
+                  country: getCountryFromUrl().toUpperCase(),
+                  language: getLanguageFromUrl().toUpperCase(),
+                  app6thstreet_platform: "Web",
+                  screenName: "cart_nudge",
+                });
+              }}
             >
               {__("Sign in")}
             </span>

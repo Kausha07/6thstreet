@@ -1,14 +1,9 @@
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
-import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { setGender } from "Store/AppState/AppState.action";
-import { updateMeta } from "Store/Meta/Meta.action";
-import { changeNavigationState } from "Store/Navigation/Navigation.action";
-import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
-import { setPLPLoading } from "Store/PLP/PLP.action";
-import PLPDispatcher from "Store/PLP/PLP.dispatcher";
+
+import PropTypes from "prop-types";
+
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import {
   Filters,
@@ -21,12 +16,9 @@ import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import PLP from "./PLP.component";
 import { isArabic } from "Util/App";
-import Algolia from "Util/API/provider/Algolia";
 import { deepCopy } from "../../../packages/algolia-sdk/app/utils";
 import browserHistory from "Util/History";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import Event, {
   EVENT_GTM_IMPRESSIONS_PLP,
   VUE_PAGE_VIEW,
@@ -35,23 +27,45 @@ import Event, {
 } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from "Util/Mobile";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import Logger from "Util/Logger";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Algolia from "Util/API/provider/Algolia";
+import { getBrandInfoByName } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
+
+import { setGender } from "Store/AppState/AppState.action";
+import { updateMeta } from "Store/Meta/Meta.action";
+import { changeNavigationState } from "Store/Navigation/Navigation.action";
+import { setPLPLoading, setLastTapItemOnHome } from "Store/PLP/PLP.action";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 import {
   updatePLPInitialFilters,
-  setPrevProductSku,
   setPrevPath,
   setBrandurl,
 } from "Store/PLP/PLP.action";
-import isMobile from "Util/Mobile";
-import { setLastTapItemOnHome } from "Store/PLP/PLP.action";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { TYPE_CATEGORY } from "Route/UrlRewrites/UrlRewrites.config";
-import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
-import { getLocaleFromUrl } from "Util/Url/Url";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import Logger from "Util/Logger";
-import { isSignedIn } from "Util/Auth";
+
+import VueIntegrationQueries from "Query/vueIntegration.query";
+
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import PLP from "./PLP.component";
+import {
+  getSelectedMoreFiltersFacetValues,
+  getNewMoreActiveFilters,
+  getNewActiveFilters,
+  getCategoryIds,
+  getSelectedFiltersFacetValues,
+  toggleIsSelectedOfSubcategories,
+  getIsDataIsSelected,
+  sendEventAttributeSelected,
+  sendEventMoreAttributeSelected,
+} from "Route/PLP/utils/PLP.helper";
+import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
+
+import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 export const BreadcrumbsDispatcher = import(
-  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
@@ -70,6 +84,10 @@ export const mapStateToProps = (state) => ({
   lastHomeItem: state.PLP.lastHomeItem,
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
+  catalogue_from_algolia:
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
+  newSelectedActiveFilters: state.PLP.newActiveFilters,
+  moreFilters: state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -124,7 +142,6 @@ export class PLPContainer extends PureComponent {
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
-
   static requestProductListPage = PLPContainer.request.bind({}, true);
 
   static getRequestOptions() {
@@ -178,6 +195,9 @@ export class PLPContainer extends PureComponent {
     activeFilters: {},
     categoryloaded: false,
     metaContent: null,
+    newActiveFilters: {},
+    moreActiveFilters: {},
+    selectedMoreFilterPLP: ""
   };
 
   containerFunctions = {
@@ -187,6 +207,9 @@ export class PLPContainer extends PureComponent {
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
+    onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
+    onMoreFilterClick: this.onMoreFilterClick.bind(this),
+    onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
   };
 
   resetPLPData() {
@@ -221,25 +244,6 @@ export class PLPContainer extends PureComponent {
     let formattedData = data;
     let finalData = [];
     if (category === "categories_without_path") {
-      //   let categoryLevelArray = [
-      //     "categories.level1",
-      //     "categories.level2",
-      //     "categories.level3",
-      //     "categories.level4",
-      //   ];
-      //   let categoryLevel;
-      //   categoryLevelArray.map((entry, index) => {
-      //     if (initialOptions[entry]) {
-      //       categoryLevel = initialOptions[entry].split(" /// ")[index + 1];
-      //     }
-      //   });
-      //   if (categoryLevel) {
-      //     if (data[categoryLevel]) {
-      //       formattedData = data[categoryLevel].subcategories;
-      //     } else {
-      //       formattedData = data[Object.keys(data)[0]].subcategories;
-      //     }
-      //   } else {
       let categoryArray = initialOptions["categories_without_path"]
         ? initialOptions["categories_without_path"].split(",")
         : [];
@@ -254,7 +258,6 @@ export class PLPContainer extends PureComponent {
         });
       });
       formattedData = finalData;
-      //   }
     }
 
     const mappedData = Object.entries(formattedData).reduce((acc, option) => {
@@ -275,6 +278,7 @@ export class PLPContainer extends PureComponent {
 
     return mappedData;
   }
+
   constructor(props) {
     super(props);
     let prevLocation;
@@ -299,7 +303,6 @@ export class PLPContainer extends PureComponent {
       }
     });
     if (this.getIsLoading()) {
-      // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
     }
     this.setMetaData();
@@ -336,6 +339,8 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { requestedOptions } = this.props;
+    const { newActiveFilters, activeFilters } = this.state;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
@@ -374,12 +379,14 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No"
     });
     this.setState({ categoryloaded: false });
   }
+
   componentDidMount() {
-    const { menuCategories = [], prevPath = null, impressions } = this.props;
-    const { isArabic, categoryloaded } = this.state;
+    const { menuCategories = [], prevPath = null,
+      impressions, catalogue_from_algolia } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -403,7 +410,9 @@ export class PLPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
     }
-    this.getBrandDetails();
+    catalogue_from_algolia
+      ? this.getBrandDetailsByAloglia()
+      : this.getBrandDetailsByCatalogueApi()
   }
 
   getCategory() {
@@ -500,7 +509,7 @@ export class PLPContainer extends PureComponent {
     isQuickFilters
   ) {
     const { activeFilters } = this.state;
-    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
+    const { filters, updatePLPInitialFilters } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
     if (initialFacetKey.includes("size")) {
@@ -512,6 +521,7 @@ export class PLPContainer extends PureComponent {
         : null;
     if (!isRadio) {
       if (checked) {
+        // for selecting filter
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
           this.updateInitialFilters(
@@ -612,21 +622,99 @@ export class PLPContainer extends PureComponent {
   }
 
   select = (isQuickFilters) => {
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     const { query } = this.props;
     if (isMobile.any()) {
       window.scrollTo(0, 0);
     }
+    this.selectMoreFilters();
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          WebUrlParser.setParam(key, activeFilters[key], query);
+          if(key === "categories_without_path") {
+            WebUrlParser.setParam(
+              key,
+              getSelectedFiltersFacetValues(newActiveFilters),
+              getCategoryIds(newActiveFilters),
+            );
+          }else {
+            WebUrlParser.setParam(key, activeFilters[key], query);
+          }
         }
       }
     });
   };
+
+  selectMoreFilters = () => {
+    const { moreActiveFilters = {} } = this.state;
+    const { moreFilters: {moreFiltersArr = [] }} = this.props;
+    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters, moreFiltersArr);
+
+    Object.entries(SelectedMoreFiltersFacetValues).map((item) => {
+      WebUrlParser.setParam(
+        item[0],
+        item[1]
+      )
+    });
+  }
+
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    let newMultiLevelData = {...multiLevelData};
+    const { category_id } = multiLevelData;
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+    if(isSearch && activeFiltersIds.includes(category_id)){
+      if(isDropdown) {
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }else {
+        newMultiLevelData.is_selected = true;
+      }
+    } 
+    else if (isSearch) {
+      const isDataIsSelected = getIsDataIsSelected(newMultiLevelData);
+      if(isDropdown && isDataIsSelected){
+        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
+      }
+    }
+
+    // when user selected any other category fitler reseting the moreFilters.
+    const newMoreActiveFilters = {
+      ...moreActiveFilters,
+      ["categories_without_path"]: [],
+    };
+    
+    this.onSelectMoreFilterPLP("");
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: newMultiLevelData,
+            isDropdown,
+            newActiveFilters,
+          }) || {},
+          moreActiveFilters: newMoreActiveFilters,
+      },
+      () => this.select()
+    );
+    sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
+  }
+
+  onMoreFilterClick(option) {
+    const { moreActiveFilters } = this.state;
+    this.setState(
+      {
+        moreActiveFilters: getNewMoreActiveFilters({option, moreActiveFilters}) || {},
+      },
+      () => this.selectMoreFilters()
+    );
+    sendEventMoreAttributeSelected(option);
+  }
+
+  onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {
+    this.setState({ selectedMoreFilterPLP: newSelectedMoreFilterPLP})
+  }
 
   onUnselectAllPress(category) {
     const { filters, updatePLPInitialFilters } = this.props;
@@ -701,7 +789,32 @@ export class PLPContainer extends PureComponent {
     });
   }
 
-  async getBrandDetails() {
+  async getBrandDetailsByCatalogueApi() {
+    const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    if (exceptionalBrand.includes(brandName)) {
+      return null;
+    }
+    try {
+      getBrandInfoByName(brandName).then((resp) => {
+        this.setState({
+          brandDescription: isArabic()
+            ? resp?.result[0]?.description_ar
+            : resp?.result[0]?.description,
+          brandImg: resp?.result[0]?.image,
+          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
+        });
+        this.props.setBrandurl(resp?.result[0]?.url_path);
+      })
+    } catch (err) {
+      console.error("There is an issue while fetching brand information.", err);
+    }
+  }
+
+  async getBrandDetailsByAloglia() {
     const exceptionalBrand = ['men', 'women', 'kids', 'home', 'collection']
     const brandName = location.pathname
       .split(".html")[0]
@@ -730,7 +843,11 @@ export class PLPContainer extends PureComponent {
     this.setState({ activeFilters });
   }
   handleResetFilter() {
-    this.setState({ activeFilters: {} });
+    this.setState({
+      activeFilters: {},
+      newActiveFilters: {},
+      moreActiveFilters: {},
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const {
@@ -739,6 +856,7 @@ export class PLPContainer extends PureComponent {
       menuCategories = [],
       lastHomeItem,
       pages,
+      newSelectedActiveFilters = {},
     } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
@@ -829,8 +947,31 @@ export class PLPContainer extends PureComponent {
         },
         {}
       );
+      // activeFilters - adding L4 filters into active filters array, when the component get updated
+      const { categories_without_path = {} } = this.props.filters;
+      const { data = {} } = categories_without_path;
+      let tempArray = [];
+      if (data) {
+        Object.entries(data).map((entry) => {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[1] && subEntry[1].sub_subcategories) {
+              Object.entries(subEntry[1].sub_subcategories).map(
+                (sub_subEntry) => {
+                  if (sub_subEntry[1].is_selected === true) {
+                    tempArray.push(sub_subEntry[0]);
+                  }
+                }
+              );
+            }
+          });
+        });
+      }
+      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+        ? [...newActiveFilters["categories_without_path"], ...tempArray]
+        : [...tempArray];
       this.setState({
         activeFilters: newActiveFilters,
+        newActiveFilters: newSelectedActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
@@ -1016,7 +1157,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters, selectedMoreFilterPLP } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1031,6 +1172,9 @@ export class PLPContainer extends PureComponent {
       activeFilters,
       isLoading,
       showOverlay,
+      newActiveFilters,
+      moreActiveFilters,
+      selectedMoreFilterPLP,
     };
   };
 

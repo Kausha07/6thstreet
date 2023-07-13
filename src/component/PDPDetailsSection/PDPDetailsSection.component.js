@@ -255,7 +255,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return data
-    ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+      ?.filter(({ key, value }) => key !== "sku" && key !== "alternate_name" && value !== "false")
       ?.map((item) =>
         this.renderListItem({
           key: item.key,
@@ -852,10 +852,9 @@ class PDPDetailsSection extends PureComponent {
     return <div block="AccordionSeperator"></div>;
   }
   getBrandUrl = () => {
-    const {
-      product: { brand_name = "" },
-    } = this.props;
-    const url = brand_name
+    const { brandInfoData = '', brand_url = ''  } = this.props;
+    let finalURLKey = brandInfoData ? brandInfoData : brand_url;
+    const url = finalURLKey
       .replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
       .replace(/-{2,}/g, "-")

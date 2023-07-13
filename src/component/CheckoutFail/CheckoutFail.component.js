@@ -25,8 +25,22 @@ export class CheckoutFail extends CheckoutSuccess {
         id,
       },
       orderID,
+      paymentMethod,
     } = this.props;
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+
+    let payment_status = FAILURE;
+    if(paymentMethod?.code === "checkout_qpay" ){
+      const { QPAY_DETAILS = {} } = this.props;
+      if(QPAY_DETAILS && QPAY_DETAILS.statusFromAPI) {
+        payment_status = QPAY_DETAILS.statusFromAPI;
+      }
+    }else if (paymentMethod?.code === "checkout_knet") {
+      const { KnetDetails= {} } = this.props;
+      if(KnetDetails && KnetDetails.statusFromAPI) {
+        payment_status = KnetDetails.statusFromAPI;
+      }
+    }
 
     let productName = [],
       productColor = [],
@@ -62,7 +76,7 @@ export class CheckoutFail extends CheckoutSuccess {
     MOE_trackEvent(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       coupon_code_applied: coupon_code || "",
@@ -84,6 +98,8 @@ export class CheckoutFail extends CheckoutSuccess {
       size: productSizeValue?.length > 0 ? productSizeValue : "",
       subcategory: productSubCategory?.length > 0 ? productSubCategory : "",
       app6thstreet_platform: "Web",
+      payment_method: paymentMethod?.code || "",
+      status: payment_status || ""
     });
   }
 

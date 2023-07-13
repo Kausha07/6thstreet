@@ -52,10 +52,14 @@ export class FieldSelectContainer extends SourceFieldSelectContainer {
             return;
         }
 
-        const { searchString, valueIndex } = this._getSelectedValueIndex(keyCode);
+        const valueIndexObj = keyCode ? this._getSelectedValueIndex(keyCode) : {};
+        if(!valueIndexObj){
+            return
+        }
+        const { searchString, valueIndex } = valueIndexObj;
 
         // valueIndex can be 0, so !valueIndex === true
-        if (!searchString || valueIndex === null) {
+        if (!searchString || valueIndex === null || valueIndex === undefined) {
             return;
         }
 

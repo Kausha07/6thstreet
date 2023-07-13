@@ -6,6 +6,8 @@ import { isSignedIn } from "Util/Auth";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import EmptyCardIcon from "./icons/cart.svg";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { EVENT_LOGIN_CLICK, MOE_trackEvent } from "Util/Event";
 
 export function RenderEmptyCartPage() {
   const [showSignInPopUp, setShowSignInPopUp] = useState(false);
@@ -49,6 +51,12 @@ export function RenderEmptyCartPage() {
                     elem="SignInBtnText"
                     onClick={() => {
                       setShowSignInPopUp(true);
+                      MOE_trackEvent(EVENT_LOGIN_CLICK, {
+                        country: getCountryFromUrl().toUpperCase(),
+                        language: getLanguageFromUrl().toUpperCase(),
+                        app6thstreet_platform: "Web",
+                        screenName: "cart_nudge",
+                      });
                     }}
                   >
                     {__("Sign In")}
@@ -107,6 +115,12 @@ export function RenderEmptyCartPageForMobile() {
                 elem="SignInBtnText"
                 onClick={() => {
                   setShowSignInPopUp(true);
+                  MOE_trackEvent(EVENT_LOGIN_CLICK, {
+                    country: getCountryFromUrl().toUpperCase(),
+                    language: getLanguageFromUrl().toUpperCase(),
+                    app6thstreet_platform: "Web",
+                    screenName: "cart_nudge",
+                  });
                 }}
               >
                 {__("Sign In")}

@@ -63,6 +63,8 @@ class WishlistIcon extends PureComponent {
       renderMySignInPopup,
       swipeWishlist = false,
       newSignUpEnabled,
+      isFilters,
+      product_position,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -191,6 +193,8 @@ class WishlistIcon extends PureComponent {
           name: data.name,
           price: itemPrice,
           variant: data.color,
+          isFilters: isFilters ? "Yes" : "No",
+          productPosition: product_position || "",
         },
       });
     }
@@ -221,6 +225,8 @@ class WishlistIcon extends PureComponent {
       product_name: data?.name || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No",
+      productPosition: product_position || "",
     });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({

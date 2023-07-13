@@ -470,7 +470,7 @@ export class CartItemContainer extends PureComponent {
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       subcategory: product_type_6s || subcategory || "",

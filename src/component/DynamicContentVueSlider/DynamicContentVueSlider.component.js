@@ -46,7 +46,7 @@ class DynamicContentVueSlider extends PureComponent {
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
-      num_results: 50,
+      num_results: 10,
       mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     let type = this.props.type;

@@ -133,12 +133,13 @@ const Parser = {
   parsePLP(URL = "") {
     URL = URL.replace(/%20&%20/gi, "%20%26%20");
     const { query } = this.parse(URL);
-    const { q, p: page } = query;
+    const { q, p: page, categoryIds="" } = query;
     const queryParams = buildQuery(query);
 
     const params = clean({
       q,
       page,
+      categoryIds,
       ...queryParams,
     });
 
@@ -155,7 +156,7 @@ const Parser = {
     browserHistory.replace(pathname + search);
   },
 
-  setParam(key, values = []) {
+  setParam(key, values = [], categoryIds =[]) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     url.searchParams.set("p", 0);
     // remove all matchign search params
@@ -169,12 +170,26 @@ const Parser = {
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case
-      url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      if(values.length) {
+        url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      } 
     } else {
       // For non-array cases
       url.searchParams.append(`${prefix}[${key}][0]`, values);
     }
 
+    if(key === "categories_without_path") {
+      if (Array.isArray(categoryIds)) {
+        // remove previous appended categoryIds from search params
+        url.searchParams.forEach((_, sKey) => {
+          if(sKey.includes("categoryIds")) {
+            url.searchParams.delete(sKey);
+          }
+        });
+        // appending updated categoryIds to the search params
+        url.searchParams.append(`categoryIds`, categoryIds.join(","));
+      }
+    }
     // update the URL, preserve the state
     const { pathname, search } = url;
     browserHistory.replace(pathname + search);

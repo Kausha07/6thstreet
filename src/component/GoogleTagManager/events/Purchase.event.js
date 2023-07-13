@@ -30,8 +30,8 @@ class PurchaseEvent extends BaseEvent {
    * Bind on product detail
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_PURCHASE, ({ orderID: orderId, totals }) => {
-      this.handle(orderId, totals);
+    Event.observer(EVENT_GTM_PURCHASE, ({ orderID: orderId, totals, paymentMethod }) => {
+      this.handle(orderId, totals, paymentMethod);
     });
   }
 
@@ -42,7 +42,7 @@ class PurchaseEvent extends BaseEvent {
    * @param totals
    * @param cartData
    */
-  handler(orderId, totals) {
+  handler(orderId, totals, paymentMethod) {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
@@ -156,6 +156,7 @@ class PurchaseEvent extends BaseEvent {
         subcategory: productSubCategory.length > 0 ? productSubCategory : "",
         isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
+        paymentMethod: paymentMethod || "",
         //shipping: "",
         //value: "",
       });

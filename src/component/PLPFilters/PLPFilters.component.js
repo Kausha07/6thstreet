@@ -27,8 +27,9 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { getCurrencyCode } from "../../../packages/algolia-sdk/app/utils";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT } from "Util/Event";
+import Event, { EVENT_MOE_PLP_SHOW_FILTER_RESULTS_CLICK, MOE_trackEvent, EVENT_GTM_SORT, EVENT_PLP_SORT, EVENT_FILTER_CLEAR_ALL } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getNewFilterCount, getSliderFiltersCount } from "./utils/PLPFilters.helper";
 
 export const mapStateToProps = (state) => ({
   requestedOptions: state.PLP.options,
@@ -218,6 +219,7 @@ class PLPFilters extends PureComponent {
   renderFilters() {
     const { filters = {} } = this.props;
     const { isPLPSortBy } = this.props;
+    let count = 0;
     return Object.entries(filters).map((filter, index) => {
 
       if (isPLPSortBy) {
@@ -239,13 +241,16 @@ class PLPFilters extends PureComponent {
 
           return this.renderFilterOption([filter[0], filter[1]]);
         } else {
-          return this.renderFilter([filter[0], filter[1]]);
+          if (Object.keys(filter[1].data).length != 0 && filter[0] != "categories.level1") {
+            count++;
+          }
+          return this.renderFilter([filter[0], filter[1], count]);
         }
       }
     });
   }
 
-  renderFilter = ([key, filter]) => {
+  renderFilter = ([key, filter, filterPosition]) => {
     const { activeFilter, isReset, defaultFilters } = this.state;
     const {
       initialOptions,
@@ -254,6 +259,12 @@ class PLPFilters extends PureComponent {
       isChecked,
       activeFilters,
       filters,
+      onLevelThreeCategoryPress,
+      newActiveFilters,
+      moreActiveFilters,
+      sliderFilters,
+      currentSliderState,
+      newSelectedActiveFilters,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -267,6 +278,10 @@ class PLPFilters extends PureComponent {
         : category === "age"
           ? __("BY AGE")
           : label;
+    let isBrandPLP = false;
+    if(this.props?.brandName && this.props?.brandDescription){
+      isBrandPLP = true;
+    }     
     return (
       <FieldMultiselect
         key={key}
@@ -287,6 +302,14 @@ class PLPFilters extends PureComponent {
         setDefaultFilters={this.setDefaultFilters}
         defaultFilters={defaultFilters}
         isSortBy={false}
+        onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+        newActiveFilters={newActiveFilters}
+        moreActiveFilters={moreActiveFilters}
+        sliderFilters={sliderFilters}
+        currentSliderState={currentSliderState}
+        newSelectedActiveFilters={newSelectedActiveFilters}
+        filterPosition={filterPosition}
+        isBrandPLP={isBrandPLP}
       />
     );
   };
@@ -328,6 +351,13 @@ class PLPFilters extends PureComponent {
     this.setState({ isReset: true, defaultFilters: false });
 
     onReset();
+
+    Event.dispatch(EVENT_FILTER_CLEAR_ALL);
+    MOE_trackEvent(EVENT_FILTER_CLEAR_ALL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   };
 
   onClearFilterState = (initialFacetKey) => {
@@ -433,9 +463,10 @@ class PLPFilters extends PureComponent {
 
   renderResetFilterButton() {
     const { isArabic } = this.state;
-
-    const isClear = this.getFilterCount() > 0;
-
+    const { newActiveFilters = {}, sliderFilters = {} } = this.props;
+    const isClear = this.getFilterCount() > 0 ||
+      getNewFilterCount(newActiveFilters) > 0 ||
+      getSliderFiltersCount(sliderFilters) > 0;
     return isClear || isMobile.any() ? (
       <button
         block="FilterPopup"

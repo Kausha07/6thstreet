@@ -95,7 +95,6 @@ class MyAccountMobileHeader extends PureComponent {
                 { isHiddenTabContent
                     ? this.renderTabOptionHeader()
                     : this.renderStoreCredits() }
-                <div block="MyAccountMobileHeader" elem="Actions" />
             </div>
         ) : this.renderCloseButton();
     }

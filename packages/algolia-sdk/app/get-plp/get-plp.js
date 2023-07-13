@@ -6,14 +6,17 @@ import {
   SIZE_FILTERS,
   VISIBLE_FILTERS,
   VISIBLE_GENDERS,
+  MORE_FILTERS,
 } from "../config";
 import { translate } from "../config/translations";
 import {
   deepCopy,
   formatNewInTag,
   getAlgoliaFilters,
+  getAlgoliaFiltersProdCount,
   getCurrencyCode,
   getIndex,
+  getMoreFacetFilters,
 } from "../utils";
 import { intersectArrays } from "../utils/arr";
 import {
@@ -27,6 +30,7 @@ import { getQueryValues } from "../utils/query";
 import {
   makeCategoriesLevel1Filter,
   makeCategoriesWithoutPathFilter,
+  makeCategoriesMoreFilter,
 } from "./categories";
 
 const getPriceRangeData = ({ currency, lang }) => {
@@ -63,6 +67,14 @@ const getPriceRangeData = ({ currency, lang }) => {
   return priceRangeData;
 };
 
+const getNewPriceRangeData = ({ facets_stats, currency, lang }) => {
+  let newPriceRangeData = {};
+  if(facets_stats && facets_stats[`price.${currency}.default`]){
+    newPriceRangeData = {...facets_stats[`price.${currency}.default`]};
+  }
+  return newPriceRangeData;
+}
+
 const getDiscountData = ({ currency, lang }) => {
   const discountData = {};
   for (let i = 10; i <= 70; i += 10) {
@@ -77,6 +89,34 @@ const getDiscountData = ({ currency, lang }) => {
 
   return discountData;
 };
+
+const getNewDiscountData = ({ facets_stats, currency, lang }) => {
+  let newDiscountData = {};
+  if(facets_stats && facets_stats["discount"]) {
+    newDiscountData = {...facets_stats["discount"]};
+  }
+  return newDiscountData;
+}
+
+const getIsPriceFilterAvaialbe = ( newfacetStats={}, currency ) => {
+  if(newfacetStats && newfacetStats[`price.${currency}.default`]) {
+    const { min, max } = newfacetStats[`price.${currency}.default`];
+    if(min === max) {
+      return false;
+    }
+  }
+  return true;
+}
+
+const getIsDiscount = ( newfacetStats={} ) => {
+  if(newfacetStats && newfacetStats.discount ) {
+    const { min, max } = newfacetStats.discount;
+    if(min === 0 && max === 0 || min === max) {
+      return false;
+    }
+  }
+  return true;
+}
 
 const formatFacetData = ({ allFacets, facetKey }) => {
   const data = allFacets[facetKey];
@@ -106,7 +146,59 @@ const filterKeys = ({ allFacets, keys }) => {
   return filteredKeys;
 };
 
-function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
+function getMoreFilters (facets, query, moreFiltersData ) {
+  const moreFilters = makeCategoriesMoreFilter({
+    facets,
+    query,
+    moreFiltersData,
+  })
+  return moreFilters;
+}
+
+function getMinMax(str)  {
+  const numbers = str.split(',')
+    .map((value) => value.replace(/\D/g, ''))
+    .filter((value) => value !== '') // Remove empty strings
+    .map(Number); // Convert the extracted numbers to numeric values
+
+  return numbers;
+}
+
+function getSliderFilters (queryParams, locale) {
+  const [lang, country] = locale.split("-");
+  const currency = getCurrencyCode(country);
+  const sliderFilters = {};
+  if (queryParams && queryParams.discount) {
+    const minMax = getMinMax(queryParams.discount);
+    sliderFilters.discount = {
+      discount: queryParams.discount,
+      min: minMax[0],
+      max: minMax[1]
+    }
+  }
+  if (queryParams && queryParams[`price.${currency}.default`]) {
+    const minMax = getMinMax(queryParams[`price.${currency}.default`]);
+    sliderFilters.price = {
+      price: queryParams[`price.${currency}.default`],
+      min: minMax[0],
+      max: minMax[1]
+    }
+  }
+  return sliderFilters;
+}
+
+function getFilters({
+  locale,
+  facets,
+  raw_facets,
+  query,
+  additionalFilter,
+  categoryData,
+  facets_stats,
+  moreFiltersData,
+  newfacetStats,
+  prodCountFacets,
+}) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
 
@@ -155,6 +247,8 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
   filtersObject.categories_without_path = makeCategoriesWithoutPathFilter({
     facets,
     query,
+    categoryData,
+    prodCountFacets,
   });
 
   // Facet filters
@@ -213,6 +307,8 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
     is_radio: true,
     selected_filters_count: 0,
     data: getPriceRangeData({ currency, lang }),
+    newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
+    isPriceFilterAvailable: getIsPriceFilterAvaialbe(newfacetStats, currency),
   };
 
   // Discount
@@ -222,6 +318,8 @@ function getFilters({ locale, facets, raw_facets, query, additionalFilter }) {
     is_radio: true,
     selected_filters_count: 0,
     data: getDiscountData({ lang }),
+    newDiscountData: getNewDiscountData({ facets_stats, currency, lang }),
+    isDiscount: getIsDiscount(newfacetStats),
   };
 
   filtersObject["categories.level1"] = makeCategoriesLevel1Filter({
@@ -385,7 +483,7 @@ const _formatFacets = ({ facets, queryParams }) => {
     if (isCategoryFacet(facetKey)) {
       acc[facetKey] = filterOutCategoryValues({
         values: { ...facetValue },
-        facetGender: facets.gender,
+        facetGender: facets?.gender,
         queryGender: gender,
         lang,
       });
@@ -407,8 +505,9 @@ const _formatFacets = ({ facets, queryParams }) => {
   }, {});
 };
 
-function getPLP(URL, options = {}, params = {}) {
+function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
   const { client, env } = options;
+  const moreFiltersArr = moreFiltersData?.more_filter || [];
 
   return new Promise((resolve, reject) => {
     const parsedURL = new Url(URL, true);
@@ -428,12 +527,15 @@ function getPLP(URL, options = {}, params = {}) {
     const index = client.initIndex(indexName);
 
     // Build search query
-    const { facetFilters, numericFilters } = getAlgoliaFilters(queryParams);
+    const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
+    const { moreFacetFilters=[] } = getMoreFacetFilters(queryParams, moreFiltersData);
     const query = {
       indexName: indexName,
       params: {
         ...defaultSearchParams,
-        facetFilters,
+        facetFilters: newFacetFilters?.length
+        ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
+        : [...facetFilters, ...moreFacetFilters],
         numericFilters,
         query: q,
         page,
@@ -493,6 +595,23 @@ function getPLP(URL, options = {}, params = {}) {
 
     let queries = [];
     queries.push(query);
+
+    // To get the correct count of facets
+    const AlgoliaFiltersProdCount = getAlgoliaFiltersProdCount(queryParams);
+    const queryProdCount = {
+      indexName: indexName,
+      params: {
+        ...defaultSearchParams,
+        facetFilters: AlgoliaFiltersProdCount?.facetFilters,
+        numericFilters,
+        query: q,
+        page,
+        hitsPerPage: limit,
+        clickAnalytics: true,
+      },
+    };
+    queries.push(queryProdCount);
+
     if (selectedFilterArr.length > 0) {
       selectedFilterArr.map((filter) => {
         let finalFacetObj = [];
@@ -504,6 +623,28 @@ function getPLP(URL, options = {}, params = {}) {
             finalFacetObj.push(facetfilter);
           }
         });
+        // to get correct More filter options we need to pass APPLIED More filters in multi queries also.
+        moreFacetFilters.map((moreFacetfilter) => {          
+          if (
+            selectedFilterArr.includes(moreFacetfilter[0].split(":")[0]) &&
+            moreFacetfilter[0].split(":")[0] !== filter
+          ) {
+            finalFacetObj.push(moreFacetfilter);
+          }
+        });
+        // if user is applying more filters then to get correct result
+        //  we are passing category ids along with it.
+        if(moreFiltersArr.includes(filter)) {
+          newFacetFilters.map((newFacetFilter) => {
+            if (
+              selectedFilterArr.includes(newFacetFilter.split(":")[0]) &&
+              newFacetFilter.split(":")[0] !== filter
+            ) {
+              let idsFilter = [newFacetFilter]
+              finalFacetObj.push(idsFilter);
+            }
+          });
+        }
         let searchParam = JSON.parse(JSON.stringify(defaultSearchParams));
         searchParam["facets"] = [filter];
         queries.push({
@@ -533,7 +674,7 @@ function getPLP(URL, options = {}, params = {}) {
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 0 && index < Object.values(res.results).length - 1) {
+          if (index > 1 && index < Object.values(res.results).length - 1) {
             Object.entries(result[1].facets).map((entry) => {
               finalFiltersData.facets[[entry[0]]] = entry[1];
             });
@@ -547,6 +688,21 @@ function getPLP(URL, options = {}, params = {}) {
           }
         });
       }
+      let facets_stats = {};
+      let newfacetStats = {};
+      if( res && res.results[5] && res.results[5].facets_stats ) {
+        facets_stats = res.results[5].facets_stats;
+      } else if ( res && res.results[0] && res.results[0].facets_stats  ) {
+        facets_stats = res.results[0].facets_stats;
+      }
+      if(res && res.results[0] && res.results[0].facets_stats) {
+        newfacetStats = res.results[0].facets_stats;
+      }
+      // for get the count of the facets
+      let prodCountFacets = {};
+      if(res && res.results[1] && res.results[1] && res.results[1].facets) {
+        prodCountFacets = res.results[1].facets;
+      }
       const facetsFilter = deepCopy(finalFiltersData.facets);
       const { filters, _filtersUnselected } = getFilters({
         locale,
@@ -554,9 +710,18 @@ function getPLP(URL, options = {}, params = {}) {
         raw_facets: facets,
         query: queryParams,
         additionalFilter: false,
+        categoryData,
+        facets_stats,
+        moreFiltersData,
+        newfacetStats,
+        prodCountFacets,
       });
+      const moreFilters = getMoreFilters(finalFiltersData.facets, queryParams, moreFiltersData);
+      const sliderFilters = getSliderFilters(queryParams, locale);
 
       const output = {
+        sliderFilters,
+        moreFilters,
         facets,
         data: hits.map(formatNewInTag),
         filters,

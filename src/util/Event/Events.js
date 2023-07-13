@@ -286,4 +286,23 @@
  export const EVENT_UNFOLLOW_INFLUENCER_CLICK = "unfollow_influencer_click";
  export const EVENT_ACCOUNT_TOOLTIP_CLOSE_BUTTON_CLICK =
    "account_tooltip_close_button_click";
+ export const BIRTHDATE_UPDATE_SUCCESS = "birthdate_update_success";
+ export const REFERRAL_COPY = "referral_copy";
+ export const REFERRAL_SHARE = "referral_share";
  
+// Checkout Errors Tracking Event
+export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
+export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
+export const EVENT_MOE_COMPONENT_DID_CATCH = "component_did_catch";
+export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong";
+// PLP filters event 
+ export const EVENT_FILTER_CLEAR_ALL = "filter_clear_all";
+ export const EVENT_FILTER_ATTRIBUTE_SELECTED = "filter_attribute_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED =
+   "filter_attribute_value_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED =
+   "filter_attribute_value_deselected";
+ export const EVENT_FILTER_SEARCH_CLICK = "filter_search_click";
+ export const EVENT_FILTER_SEARCH_VALUE_SELECTED =
+   "filter_search_value_selected";
+ export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";
