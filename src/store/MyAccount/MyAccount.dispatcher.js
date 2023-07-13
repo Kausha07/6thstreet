@@ -134,7 +134,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           request.intl_vendors=null;
           let items = [];
-          items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
+          items_in_cart.map(item => {
+            if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
+              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+            }
+          });
           request.items = items;
           if(items.length) this.estimateDefaultEddResponse(dispatch, request);
         } else {
@@ -169,7 +173,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
               request.intl_vendors=null;
               let items = [];
-              items_in_cart.map(item => items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}));
+              items_in_cart.map(item => {
+                if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
+                  items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+                }
+              });
               request.items = items;
               if(items.length) this.estimateDefaultEddResponse(dispatch, request);
             } else {

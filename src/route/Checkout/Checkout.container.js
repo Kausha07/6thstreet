@@ -972,12 +972,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         eddItems.push({
           sku: sku,
           edd_date:
-            edd_info && extension_attributes?.click_to_collect_store
+            cross_border && edd_info && !edd_info.has_cross_border_enabled
+              ? null
+              : edd_info && extension_attributes?.click_to_collect_store
               ? defaultEddDateString
               : finalEddForLineItem,
           cross_border: cross_border,
-          edd_message_en: actualEddMess,
-          edd_message_ar: actualEddMess,
+          edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
+          ? null
+          : actualEddMess,
+          edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
+          ? null
+          : actualEddMess,
           intl_vendors: cross_border && international_vendor ? international_vendor : null
         });
       });
