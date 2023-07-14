@@ -336,11 +336,15 @@ export class SearchOverlay extends PureComponent {
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] + `&p=0&dFR[gender][0]=${genderInURL}`
       : url;
+    let refactoredUrl = new URL(parseLink) && new URL(parseLink).pathname
+      ? new URL(parseLink).pathname
+      : parseLink;
+
     return (
-      <li key={v4()} block="productContentLayoutLink"  mods={{ isArabic }} >
+      <li key={v4()} block="productContentLayoutLink" mods={{ isArabic }}>
         <div block="productDetailsLayout">
           <Link
-            to={parseLink ? parseLink : "#"}
+            to={refactoredUrl ? refactoredUrl : "#"}
             onClick={() => this.handleProductClick(productData) && closePopup()}
             block="productsDetailsLink"
             elem="ProductLinks"
