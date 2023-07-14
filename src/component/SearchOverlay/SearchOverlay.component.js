@@ -25,7 +25,7 @@ import Event, {
   EVENT_GTM_SEARCH,
   EVENT_GTM_VIEW_SEARCH_RESULTS,
   MOE_trackEvent,
-  SELECT_ITEM_ALGOLIA
+  SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import { getUUIDToken } from "Util/Auth";
 import { getStore } from "Store";
@@ -281,7 +281,9 @@ export class SearchOverlay extends PureComponent {
         basePrice !== specialPrice;
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
-          <div><Price price={price} renderSpecialPrice={false} /></div>
+          <div>
+            <Price price={price} renderSpecialPrice={false} />
+          </div>
         </div>
       );
     }
@@ -289,17 +291,18 @@ export class SearchOverlay extends PureComponent {
   };
 
   handleProductClick = (product) => {
-    const { searchSuggestionsProdQID, position, objectID } = product;
+    const { position, objectID } = product;
+    const { queryID } = this.props;
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
       userData && userData.data && userData.data.id
         ? `user-${userData.data.id}`
         : getUUIDToken();
-    if (searchSuggestionsProdQID && position && position > 0 && objectID && userToken) {
+    if (queryID && position && position > 0 && objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [objectID],
-        queryID: searchSuggestionsProdQID,
+        queryID: queryID,
         userToken: userToken,
         position: [position],
       });
@@ -317,11 +320,10 @@ export class SearchOverlay extends PureComponent {
 
   renderProduct = (product, index) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
-    const { closePopup, searchSuggestionsProdQID } = this.props;
+    const { closePopup } = this.props;
     const { isArabic } = this.state;
     let productData = {
       ...product,
-      ...{ searchSuggestionsProdQID },
       ...{ position: index + 1 },
     };
     const gender =

@@ -2,7 +2,6 @@ import { getStore } from "Store";
 import {
   setSearchSuggestions,
   setAlgoliaIndex,
-  setSearchSuggestionsProductQueryID,
 } from "Store/SearchSuggestions/SearchSuggestions.action";
 import {
   getCustomQuerySuggestions,
@@ -147,12 +146,10 @@ export class SearchSuggestionsDispatcher {
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)
       );
-      dispatch(setSearchSuggestionsProductQueryID(searchSuggestionProductID));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
       dispatch(setSearchSuggestions(search));
-      dispatch(setSearchSuggestionsProductQueryID(null));
     }
   }
 

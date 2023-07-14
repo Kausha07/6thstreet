@@ -525,6 +525,7 @@ export class PDPAddToCartContainer extends PureComponent {
       const { size } = productStock[selectedSizeCode];
       const optionId = selectedSizeType.toLocaleUpperCase();
       const optionValue = size[selectedSizeType];
+      console.log("searchQueryId",searchQueryId);
       addProductToCart(
         {
           sku: selectedSizeCode,
