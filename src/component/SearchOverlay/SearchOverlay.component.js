@@ -281,9 +281,7 @@ export class SearchOverlay extends PureComponent {
         basePrice !== specialPrice;
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
-          <div>
-            <Price price={price} renderSpecialPrice={false} />
-          </div>
+          <div><Price price={price} renderSpecialPrice={false} /></div>
         </div>
       );
     }
