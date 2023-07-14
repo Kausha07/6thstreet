@@ -57,7 +57,7 @@ export class UrlRewritesContainer extends PureComponent {
     });
   }
   componentDidUpdate(prevProps, prevState) {
-    const { pathname } = location;
+    const { pathname, pathname : urlParam = "" } = location;
     const { locale, hideActiveOverlay,resetPLPPage } = this.props;
     const { locale: prevLocale } = prevProps;
 
@@ -117,16 +117,19 @@ export class UrlRewritesContainer extends PureComponent {
         }
       }
     });
-    if (
-      pathname !== prevPathname ||
-      locale !== prevLocale ||
-      sku !== prevSku
-      // !prevStatePathname
-    ) {
-      hideActiveOverlay();
-      document.body.style.overflow = "visible";
-      // Request URL rewrite if pathname or locale changed
-      this.requestUrlRewrite(true);
+
+    if (prevPathname !== urlParam) {
+      if (
+        pathname !== prevPathname ||
+        locale !== prevLocale ||
+        sku !== prevSku
+        // !prevStatePathname
+      ) {
+        hideActiveOverlay();
+        document.body.style.overflow = "visible";
+        // Request URL rewrite if pathname or locale changed
+        this.requestUrlRewrite(true);
+      }
     }
   }
 

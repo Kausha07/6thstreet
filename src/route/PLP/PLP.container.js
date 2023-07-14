@@ -730,7 +730,6 @@ export class PLPContainer extends PureComponent {
         query: brandName,
         limit: 1,
       });
-      console.log("kiran7",data);
       this.setState({
         brandDescription: isArabic()
           ? data?.hits[0]?.description_ar

@@ -98,7 +98,6 @@ class WishlistSliderItem extends PureComponent {
       data: { thumbnail_url, name, brand_name, price, sku, url = "" },
       data,
     } = this.props;
-    console.log("kiran4",this.props)
     const { isArabic } = this.state;
     return (
       <div

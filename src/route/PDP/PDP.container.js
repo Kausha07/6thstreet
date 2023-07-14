@@ -135,7 +135,6 @@ export class PDPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-    console.log("KiranpdpRendering");
   }
 
   componentDidMount() {
@@ -693,7 +692,6 @@ export class PDPContainer extends PureComponent {
   async requestProduct() {
     const { requestProduct, requestProductBySku, id, setIsLoading, sku } =
       this.props;
-      console.log("kiranTemp",this.props);
     // ignore product request if there is no ID passed
     if (!id) {
       if (sku) {
@@ -701,10 +699,8 @@ export class PDPContainer extends PureComponent {
         setIsLoading(false);
       }
       return;
-    }else{
-      requestProduct({ options: { id } });
-      return;
     }
+    requestProduct({ options: { id } });
   }
 
   containerProps = () => {
