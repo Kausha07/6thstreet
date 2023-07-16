@@ -264,6 +264,7 @@ class PLPFilters extends PureComponent {
       moreActiveFilters,
       sliderFilters,
       newSelectedActiveFilters,
+      compareObjects,
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -308,6 +309,7 @@ class PLPFilters extends PureComponent {
         newSelectedActiveFilters={newSelectedActiveFilters}
         filterPosition={filterPosition}
         isBrandPLP={isBrandPLP}
+        compareObjects={compareObjects}
       />
     );
   };

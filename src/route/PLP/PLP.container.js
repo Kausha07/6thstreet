@@ -667,19 +667,6 @@ export class PLPContainer extends PureComponent {
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
     const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
-    if(isSearch && activeFiltersIds.includes(category_id)){
-      if(isDropdown) {
-        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
-      }else {
-        newMultiLevelData.is_selected = true;
-      }
-    } 
-    else if (isSearch) {
-      const isDataIsSelected = getIsDataIsSelected(newMultiLevelData);
-      if(isDropdown && isDataIsSelected){
-        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
-      }
-    }
 
     // when user selected any other category fitler reseting the moreFilters.
     const newMoreActiveFilters = {

@@ -127,9 +127,11 @@ class FieldMultiselect extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      filter: { selected_filters_count, category },
+      filter: { selected_filters_count, category, data = {} },
       parentActiveFilters,
+      compareObjects,
     } = this.props;
+    const { searchKey } = this.state;
     if (parentActiveFilters) {
       if (
         JSON.stringify(prevProps.parentActiveFilters) !==
@@ -146,6 +148,19 @@ class FieldMultiselect extends PureComponent {
           this.setState({
             showMore: false,
             showLess: false,
+          });
+        }
+      }
+    }
+    
+    // if filters state is updated then update the search list
+    if(compareObjects && category === "categories_without_path" && searchKey !== "" ) {
+      if (!compareObjects(prevProps.filters, this.props.filters)) {
+        let allData = data ? data : null;
+        let finalSearchedData = allData ? this.getSearchData(allData, "categories_without_path", searchKey) : {};
+        if (finalSearchedData) {
+          this.setState({
+            searchList: finalSearchedData,
           });
         }
       }
@@ -889,7 +904,7 @@ class FieldMultiselect extends PureComponent {
     const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
-    let finalSearchedData = this.getSearchData(allData, facet_key, value);
+    let finalSearchedData = allData ? this.getSearchData(allData, facet_key, value) : {};
     if (finalSearchedData) {
       this.setState({
         searchList: finalSearchedData,
