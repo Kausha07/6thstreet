@@ -154,9 +154,9 @@ export class Algolia {
 
   async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
     const {
-      AppState: {AppConfig },
+      AppState: { AppConfig },
     } = getStore().getState();
-    if(AppConfig?.isAlgoliaEventsEnabled){
+    if (AppConfig?.isAlgoliaEventsEnabled) {
       switch (event_type) {
         case "view": {
           switch (name) {
