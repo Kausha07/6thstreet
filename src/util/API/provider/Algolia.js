@@ -153,59 +153,64 @@ export class Algolia {
   }
 
   async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
-    switch (event_type) {
-      case "view": {
-        switch (name) {
-          case VIEW_SEARCH_RESULTS_ALGOLIA: {
-            if (params.items.length > 0) {
-              const { data = [] } =
-                (await AlgoliaSDK.logAlgoliaAnalytics(
-                  event_type,
-                  name,
-                  algoliaParams.objectIDs,
-                  algoliaParams.queryID,
-                  algoliaParams.userToken,
-                  []
-                )) || {};
-              return data;
-            } else {
-              const { data = [] } =
-                (await AlgoliaSDK.logSearchResults(
-                  event_type,
-                  "No_Search_Result",
-                  algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
-                  algoliaParams.queryID,
-                  algoliaParams.userToken,
-                  [`search:${algoliaParams.queryID}`]
-                )) || {};
-              return data;
+    const {
+      AppState: {AppConfig },
+    } = getStore().getState();
+    if(AppConfig?.isAlgoliaEventsEnabled){
+      switch (event_type) {
+        case "view": {
+          switch (name) {
+            case VIEW_SEARCH_RESULTS_ALGOLIA: {
+              if (params.items.length > 0) {
+                const { data = [] } =
+                  (await AlgoliaSDK.logAlgoliaAnalytics(
+                    event_type,
+                    name,
+                    algoliaParams.objectIDs,
+                    algoliaParams.queryID,
+                    algoliaParams.userToken,
+                    []
+                  )) || {};
+                return data;
+              } else {
+                const { data = [] } =
+                  (await AlgoliaSDK.logSearchResults(
+                    event_type,
+                    "No_Search_Result",
+                    algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
+                    algoliaParams.queryID,
+                    algoliaParams.userToken,
+                    [`search:${algoliaParams.queryID}`]
+                  )) || {};
+                return data;
+              }
             }
           }
         }
-      }
-      case "click": {
-        const { data = [] } =
-          (await AlgoliaSDK.logAlgoliaAnalytics(
-            event_type,
-            name,
-            algoliaParams.objectIDs,
-            algoliaParams.queryID,
-            algoliaParams.userToken,
-            algoliaParams.position
-          )) || {};
-        return data;
-      }
-
-      case "conversion": {
-        const { data = [] } =
-          (await AlgoliaSDK.logAlgoliaAnalytics(
-            event_type,
-            name,
-            algoliaParams.objectIDs,
-            algoliaParams.queryID,
-            algoliaParams.userToken
-          )) || {};
-        return data;
+        case "click": {
+          const { data = [] } =
+            (await AlgoliaSDK.logAlgoliaAnalytics(
+              event_type,
+              name,
+              algoliaParams.objectIDs,
+              algoliaParams.queryID,
+              algoliaParams.userToken,
+              algoliaParams.position
+            )) || {};
+          return data;
+        }
+  
+        case "conversion": {
+          const { data = [] } =
+            (await AlgoliaSDK.logAlgoliaAnalytics(
+              event_type,
+              name,
+              algoliaParams.objectIDs,
+              algoliaParams.queryID,
+              algoliaParams.userToken
+            )) || {};
+          return data;
+        }
       }
     }
   }

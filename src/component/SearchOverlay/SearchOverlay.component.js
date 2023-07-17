@@ -290,14 +290,14 @@ export class SearchOverlay extends PureComponent {
 
   handleProductClick = (product) => {
     const { position, objectID } = product;
-    const { queryID, isAlgoliaEventsEnabled } = this.props;
+    const { queryID } = this.props;
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
       userData && userData.data && userData.data.id
         ? `user-${userData.data.id}`
         : getUUIDToken();
-    if (isAlgoliaEventsEnabled && queryID && position && position > 0 && objectID && userToken) {
+    if (queryID && position && position > 0 && objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [objectID],
         queryID: queryID,

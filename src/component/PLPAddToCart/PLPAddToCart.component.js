@@ -37,7 +37,6 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
   newActiveFilters: state.PLP.newActiveFilters,
-  isAlgoliaEventsEnabled: state.AppConfig.isAlgoliaEventsEnabled,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -604,7 +603,6 @@ class PLPAddToCart extends PureComponent {
       qid,
       newActiveFilters,
       product_Position,
-      isAlgoliaEventsEnabled
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -638,7 +636,6 @@ class PLPAddToCart extends PureComponent {
         ? `user-${userData.data.id}`
         : getUUIDToken();
     if (
-      isAlgoliaEventsEnabled &&
       searchQueryId &&
       position &&
       position > 0 &&

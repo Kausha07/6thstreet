@@ -31,7 +31,6 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   algoliaIndex: state.SearchSuggestions.algoliaIndex,
   suggestionEnabled: state.AppConfig.suggestionEnabled,
-  isAlgoliaEventsEnabled: state.AppConfig.isAlgoliaEventsEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,7 +63,6 @@ export class searchOverlayContainer extends PureComponent {
       brands: PropTypes.array,
       products: PropTypes.array,
     }).isRequired,
-    isAlgoliaEventsEnabled: PropTypes.bool,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -180,7 +178,6 @@ export class searchOverlayContainer extends PureComponent {
       queryID,
       suggestionEnabled,
       prevPath,
-      isAlgoliaEventsEnabled
     } = this.props;
     const isEmpty = search === "";
     const inNothingFound = data?.brands?.length + data?.products?.length === 0;
@@ -196,7 +193,6 @@ export class searchOverlayContainer extends PureComponent {
       suggestionEnabled,
       isEmpty,
       inNothingFound,
-      isAlgoliaEventsEnabled
     };
   };
 

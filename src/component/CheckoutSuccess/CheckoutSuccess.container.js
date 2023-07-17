@@ -56,7 +56,6 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
   country: state.AppState.country,
-  isAlgoliaEventsEnabled: state.AppConfig.isAlgoliaEventsEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -111,7 +110,6 @@ export class CheckoutSuccessContainer extends PureComponent {
     newSignUpEnabled: PropTypes.bool,
     config: Config.isRequired,
     country: PropTypes.string.isRequired,
-    isAlgoliaEventsEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -184,7 +182,6 @@ export class CheckoutSuccessContainer extends PureComponent {
       totals,
       setCheckoutDetails,
       orderID,
-      isAlgoliaEventsEnabled
     } = this.props;
     setCheckoutDetails(true);
 
@@ -202,7 +199,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         ? item?.full_item_info?.search_query_id
         : null;
       let productObjectID = item?.full_item_info?.parent_id.toString();
-      if (isAlgoliaEventsEnabled && queryID && userToken && productObjectID) {
+      if (queryID && userToken && productObjectID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
           ALGOLIA_PURCHASE_SUCCESS,
