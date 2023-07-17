@@ -95,9 +95,3 @@ export const updateSliderFilters = (
   updatedSliderFilters,
 });
 
-export const updateCurrentSliderState = (
-  updatedCurrentSliderState,
-) => ( {
-  type: CURRENT_SLIDER_STATE,
-  updatedCurrentSliderState,
-});

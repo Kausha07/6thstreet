@@ -164,7 +164,7 @@ function getMinMax(str)  {
   return numbers;
 }
 
-function getSliderFilters (queryParams, locale) {
+function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
   const [lang, country] = locale.split("-");
   const currency = getCurrencyCode(country);
   const sliderFilters = {};
@@ -175,13 +175,41 @@ function getSliderFilters (queryParams, locale) {
       min: minMax[0],
       max: minMax[1]
     }
+  } else if(facets_stats && facets_stats.discount) {
+    sliderFilters.discount = {
+      min: facets_stats?.discount?.min,
+      max: facets_stats?.discount?.max,
+    }
   }
+
+  // below values are for start and end points of discount slider 
+  if(newfacetStats && newfacetStats.discount) {
+    sliderFilters.discount = {
+      ...sliderFilters.discount,
+      minValue: newfacetStats?.discount?.min,
+      maxValue: newfacetStats?.discount?.max,
+    }    
+  }
+  // below code is for price slider
   if (queryParams && queryParams[`price.${currency}.default`]) {
     const minMax = getMinMax(queryParams[`price.${currency}.default`]);
     sliderFilters.price = {
       price: queryParams[`price.${currency}.default`],
       min: minMax[0],
       max: minMax[1]
+    }
+  } else if (facets_stats && facets_stats[`price.${currency}.default`]) {
+    sliderFilters.price = {
+      min: facets_stats[`price.${currency}.default`]?.min,
+      max: facets_stats[`price.${currency}.default`]?.max,
+    }
+  }
+  // below values are for start and end points of the price slider 
+  if(newfacetStats && newfacetStats[`price.${currency}.default`]) {
+    sliderFilters.price = {
+      ...sliderFilters.price,
+      minValue: newfacetStats[`price.${currency}.default`]?.min,
+      maxValue: newfacetStats[`price.${currency}.default`]?.max,
     }
   }
   return sliderFilters;
@@ -308,7 +336,7 @@ function getFilters({
     selected_filters_count: 0,
     data: getPriceRangeData({ currency, lang }),
     newPriceRangeData: getNewPriceRangeData({ facets_stats, currency, lang }),
-    isPriceFilterAvailable: getIsPriceFilterAvaialbe(newfacetStats, currency),
+    isPriceFilterAvailable: getIsPriceFilterAvaialbe(facets_stats, currency),
   };
 
   // Discount
@@ -319,7 +347,7 @@ function getFilters({
     selected_filters_count: 0,
     data: getDiscountData({ lang }),
     newDiscountData: getNewDiscountData({ facets_stats, currency, lang }),
-    isDiscount: getIsDiscount(newfacetStats),
+    isDiscount: getIsDiscount(facets_stats),
   };
 
   filtersObject["categories.level1"] = makeCategoriesLevel1Filter({
@@ -508,6 +536,11 @@ const _formatFacets = ({ facets, queryParams }) => {
 function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData={} ) {
   const { client, env } = options;
   const moreFiltersArr = moreFiltersData?.more_filter || [];
+    // data should get update - data is from json file.
+    const newSearchParamsMoreFilters = {
+      ...defaultSearchParams,
+      facets: [...defaultSearchParams.facets, ...moreFiltersArr],
+    };
 
   return new Promise((resolve, reject) => {
     const parsedURL = new Url(URL, true);
@@ -532,7 +565,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const query = {
       indexName: indexName,
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: newFacetFilters?.length
         ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
         : [...facetFilters, ...moreFacetFilters],
@@ -574,7 +607,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     }
     const queryCopy = {
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: [initialFilterArg],
         numericFilters,
         query: q,
@@ -601,7 +634,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     const queryProdCount = {
       indexName: indexName,
       params: {
-        ...defaultSearchParams,
+        ...newSearchParamsMoreFilters,
         facetFilters: AlgoliaFiltersProdCount?.facetFilters,
         numericFilters,
         query: q,
@@ -611,6 +644,23 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
       },
     };
     queries.push(queryProdCount);
+
+    // To get correct position of sliders
+    const querySliderPosition = {
+      indexName: indexName,
+      params: {
+        ...newSearchParamsMoreFilters,
+        facetFilters: newFacetFilters?.length
+        ? [...facetFilters, newFacetFilters, ...moreFacetFilters]
+        : [...facetFilters, ...moreFacetFilters],
+        numericFilters: [],  //passing empty for discount/price range
+        query: q,
+        page,
+        hitsPerPage: limit,
+        clickAnalytics: true,
+      },
+    };
+    queries.push(querySliderPosition);
 
     if (selectedFilterArr.length > 0) {
       selectedFilterArr.map((filter) => {
@@ -674,7 +724,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 1 && index < Object.values(res.results).length - 1) {
+          if (index > 2 && index < Object.values(res.results).length - 1) {
             Object.entries(result[1].facets).map((entry) => {
               finalFiltersData.facets[[entry[0]]] = entry[1];
             });
@@ -690,13 +740,13 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
       }
       let facets_stats = {};
       let newfacetStats = {};
-      if( res && res.results[5] && res.results[5].facets_stats ) {
-        facets_stats = res.results[5].facets_stats;
-      } else if ( res && res.results[0] && res.results[0].facets_stats  ) {
+      // below data is for current user selection
+      if ( res && res.results[0] && res.results[0].facets_stats  ) {
         facets_stats = res.results[0].facets_stats;
       }
-      if(res && res.results[0] && res.results[0].facets_stats) {
-        newfacetStats = res.results[0].facets_stats;
+      // below data is for start and end posion of slider 
+      if(res && res.results[2] && res.results[2].facets_stats) {
+        newfacetStats = res.results[2].facets_stats;
       }
       // for get the count of the facets
       let prodCountFacets = {};
@@ -717,7 +767,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         prodCountFacets,
       });
       const moreFilters = getMoreFilters(finalFiltersData.facets, queryParams, moreFiltersData);
-      const sliderFilters = getSliderFilters(queryParams, locale);
+      const sliderFilters = getSliderFilters(queryParams, locale, facets_stats, newfacetStats );
 
       const output = {
         sliderFilters,

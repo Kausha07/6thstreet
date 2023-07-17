@@ -173,6 +173,17 @@ export const getNewActiveFilters = ({
       if (sub_cat[1] && sub_cat[1].category_key) {
         categoryKeyArray.push(sub_cat[1].category_key);
       }
+      // if sub_cat also have subSub categories then we have to add them also
+      if(sub_cat[1] && sub_cat[1].sub_subcategories) {
+        Object.entries(sub_cat[1].sub_subcategories).map((subSubCategory) => {
+          if (!!!subSubCategory[1].is_selected) {
+            isAllSelected = false;
+          }
+          if (subSubCategory[1] && subSubCategory[1].category_key) {
+            categoryKeyArray.push(subSubCategory[1].category_key);
+          }
+        });
+      }
     });
     if (isAllSelected) {
       const newFilterArray = filterArray.filter((filterObj) => {
