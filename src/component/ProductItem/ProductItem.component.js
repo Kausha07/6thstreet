@@ -46,6 +46,7 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
+  isAlgoliaEventsEnabled: state.AppConfig.isAlgoliaEventsEnabled,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -63,6 +64,7 @@ class ProductItem extends PureComponent {
     pageType: PropTypes.string,
     prevPath: PropTypes.string,
     requestedOptions: RequestedOptions.isRequired,
+    isAlgoliaEventsEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -150,6 +152,7 @@ class ProductItem extends PureComponent {
         thumbnail_url,
       },
       isFilters,
+      isAlgoliaEventsEnabled
     } = this.props;
 
     var data = localStorage.getItem("customer") || null;
@@ -192,7 +195,7 @@ class ProductItem extends PureComponent {
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, [product]);
-    if (queryID && position && position > 0 && product.objectID && userToken) {
+    if (isAlgoliaEventsEnabled && queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,

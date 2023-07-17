@@ -37,7 +37,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled,
                 is_exchange_enabled: config.countries[getCountryCode]?.is_exchange_enabled,
                 ctcReturnEnabled: config.countries[getCountryCode]?.is_ctc_return_enabled,
-                is_live_party_enabled: config.countries[getCountryCode]?.is_live_party_enabled
+                is_live_party_enabled: config.countries[getCountryCode]?.is_live_party_enabled,
+                isAlgoliaEventsEnabled: config.countries[getCountryCode]?.isAlgoliaEventsEnabled,
             };
 
             // this will invalidate config after one year
