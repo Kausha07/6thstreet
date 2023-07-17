@@ -46,7 +46,6 @@ export const mapStateToProps = (state) => ({
   selectedGender: state?.InfluencerReducer?.selectedGender,
   isStorePage: state?.InfluencerReducer?.isStorePage,
   isCollectionPage: state?.InfluencerReducer?.isCollectionPage,
-  isAlgoliaEventsEnabled: state.AppConfig.isAlgoliaEventsEnabled,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -64,7 +63,6 @@ class ProductItem extends PureComponent {
     pageType: PropTypes.string,
     prevPath: PropTypes.string,
     requestedOptions: RequestedOptions.isRequired,
-    isAlgoliaEventsEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -152,7 +150,6 @@ class ProductItem extends PureComponent {
         thumbnail_url,
       },
       isFilters,
-      isAlgoliaEventsEnabled
     } = this.props;
 
     var data = localStorage.getItem("customer") || null;
