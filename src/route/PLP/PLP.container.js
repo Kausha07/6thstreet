@@ -633,18 +633,20 @@ export class PLPContainer extends PureComponent {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          if(key === "categories_without_path") {
-            WebUrlParser.setParam(
-              key,
-              getSelectedFiltersFacetValues(newActiveFilters),
-              getCategoryIds(newActiveFilters),
-            );
-          }else {
+          if(key !== "categories_without_path") {
             WebUrlParser.setParam(key, activeFilters[key], query);
           }
         }
       }
     });
+    const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+    const key = "categories_without_path";
+    WebUrlParser.setParam(
+      key,
+      selectedFacetValues,
+      selectedFacetCategoryIds,
+    );
   };
 
   selectMoreFilters = () => {
@@ -665,19 +667,6 @@ export class PLPContainer extends PureComponent {
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
     const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
-    if(isSearch && activeFiltersIds.includes(category_id)){
-      if(isDropdown) {
-        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
-      }else {
-        newMultiLevelData.is_selected = true;
-      }
-    } 
-    else if (isSearch) {
-      const isDataIsSelected = getIsDataIsSelected(newMultiLevelData);
-      if(isDropdown && isDataIsSelected){
-        newMultiLevelData = toggleIsSelectedOfSubcategories(multiLevelData);
-      }
-    }
 
     // when user selected any other category fitler reseting the moreFilters.
     const newMoreActiveFilters = {

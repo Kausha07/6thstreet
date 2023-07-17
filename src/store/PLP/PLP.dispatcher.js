@@ -9,7 +9,6 @@ import {
   setProductLoading,
   updateNewActiveFilters,
   updateSliderFilters,
-  updateCurrentSliderState,
 } from "Store/PLP/PLP.action";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -77,9 +76,6 @@ export class PLPDispatcher {
     dispatch(updateNewActiveFilters(updatedNewActiveFilters));
   }
 
-  updateCurrentSliderStateToStore(updatedCurrentSliderState, dispatch) {
-    dispatch(updateCurrentSliderState(updatedCurrentSliderState))
-  }
 
   async requestProductListPage(payload, dispatch) {
     const {

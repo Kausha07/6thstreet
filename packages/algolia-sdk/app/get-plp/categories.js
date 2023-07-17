@@ -35,29 +35,44 @@ const getOptions = (obj, newkey, query, arrMoreFilters) => {
   const formatedQuery = getQueryValuesMoreFilters(query, arrMoreFilters);
   const outputObj = {};
   for (let key in obj) {
-    outputObj[key] = {
-      facet_key: "categories_without_path",
-      new_facet_key: newkey || "",  // using this key is for params
-      facet_value: key,
-      label: key,
-      product_count: obj[key],
-      is_selected: formatedQuery[key] ? true : false,
-    };
+    if(key !== false && key !== "false") {
+      outputObj[key] = {
+        facet_key: "categories_without_path",
+        new_facet_key: newkey || "",  // using this key is for params
+        facet_value: key,
+        label: key,
+        product_count: obj[key],
+        is_selected: formatedQuery[key] ? true : false,
+      };
+    }
   }
   return {options: outputObj}
+}
+
+const getIsEmptyFilter = (moreFilterObj ={}) => {
+  const { options = {} } = moreFilterObj;
+  if (Object.keys(options).length === 0) {
+    return true
+  }
+  return false;
 }
 
 const getOptionsMoreFilters = (facets, queryValues, moreFiltersData, query) => {
   const option = {};
   const arrMoreFilters = moreFiltersData?.more_filter || [];
   const moreFiltersTraslation = moreFiltersData?.more_filter_traslation || {};
-  MORE_FILTERS.map((item, index) => {
+  arrMoreFilters.map((item, index) => {
     option[item] = facets[item];
   });
   for (let key in option ) {    
     if(option[key] !== undefined) {
       option[key] = getOptions(option[key], key, query, arrMoreFilters);
       option[key].moreFiltersTraslation = {...moreFiltersTraslation[key]}
+    }
+    // if More filter is empty or only contains False value then it should get hide
+    const isEmptyFilter = getIsEmptyFilter(option[key]);
+    if(isEmptyFilter) {
+      option[key] = undefined;
     }
   }
   return option;
