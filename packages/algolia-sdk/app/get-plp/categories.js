@@ -135,7 +135,7 @@ Object.entries(prodCountFacets).map((entry, index) => {
   let regex = new RegExp("\\s///\\s|\\s", "gm");
   const finalProdCountObj = getFinalProdCountObj(prodCountObj);
   const categoryIds = query?.categoryIds || "";
-  let categoryIdsArray = categoryIds.split(",");
+  let categoryIdsArray = categoryIds === "" ? [] : categoryIds.split(",");
   if (categoryIdsArray.length) {
     categoryIdsArray = categoryIdsArray.map(Number);
   }
@@ -260,13 +260,13 @@ Object.entries(prodCountFacets).map((entry, index) => {
             }
           }
           // below condition is for Msite only 
-          if(isCategoryIds) {
+          if(!isCategoryIds) {
             if(!!!avoidDuplicates.includes(category_id) && currentCategoryLevel === "L2"){
               selectedFiltersArray.push(acc[l1].subcategories[l2] );
               avoidDuplicates.push(category_id);
             }
           }
-          acc[l1].subcategories[l2].is_selected = isCategoryIds ? true : isSelected;
+          acc[l1].subcategories[l2].is_selected = isCategoryIds ? isSelected : true;
         }
         // Mark selected filters, using the query params - for L3 categories
         if(l3 && queryValues[l3]) {
@@ -281,7 +281,10 @@ Object.entries(prodCountFacets).map((entry, index) => {
           ) {
             const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3]);
             if(isSelected) {
-              selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3] );
+              if(!!!avoidDuplicates.includes(category_id) && currentCategoryLevel === "L3"){
+                selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3] );
+                avoidDuplicates.push(category_id);
+              }
             }
             acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = isSelected;
           }
