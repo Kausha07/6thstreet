@@ -41,18 +41,15 @@ export class Algolia {
     return AlgoliaSDK.index;
   }
 
-  async getPLP(params = {}, categoryData = {}, moreFiltersData = {}) {
+  async getPLP(params = {}, categoryData = {}, moreFiltersData = {} ) {
     let influencerCount = 0;
-    if (params["pageType"] && params["pageType"] === "InfluencerPage") {
+    if(params["pageType"] && params["pageType"] === "InfluencerPage")
+    {
       influencerCount = params["InfluencerProductCount"];
       delete params["pageType"];
       delete params["InfluencerProductCount"];
     }
-    const productCount = isMobile.any()
-      ? 10
-      : influencerCount !== 0
-      ? influencerCount
-      : 30;
+    const productCount = isMobile.any() ? 10 : influencerCount !== 0 ? influencerCount :30 ;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
     } = getStore().getState();
@@ -65,7 +62,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData);
+    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData );
   }
 
   async getProductForSearchContainer(params = {}, suggestionQuery) {
@@ -80,11 +77,7 @@ export class Algolia {
       locale,
     });
 
-    return AlgoliaSDK.getProductForSearchContainer(
-      `/?${url}`,
-      params,
-      suggestionQuery
-    );
+    return AlgoliaSDK.getProductForSearchContainer(`/?${url}`,params, suggestionQuery);
   }
 
   async getPromotions(params = {}) {
@@ -206,7 +199,7 @@ export class Algolia {
             )) || {};
           return data;
         }
-
+  
         case "conversion": {
           const { data = [] } =
             (await AlgoliaSDK.logAlgoliaAnalytics(
