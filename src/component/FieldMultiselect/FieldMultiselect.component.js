@@ -264,6 +264,7 @@ class FieldMultiselect extends PureComponent {
       defaultFilters,
       parentActiveFilters,
       currentActiveFilter,
+      OnLevelTwoCategoryPressMsite,
     } = this.props;
 
     const { subcategories = {} } = option;
@@ -294,6 +295,7 @@ class FieldMultiselect extends PureComponent {
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
         toggleOptionList={this.toggleOptionList}
+        OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
       />
     );
   };
@@ -1201,7 +1203,7 @@ class FieldMultiselect extends PureComponent {
       conditionalData = categoryLevelData;
     }
 
-    if(category === "discount" && !!!filter?.isDiscount ) {
+    if(category === "discount" && !!!filter?.isDiscount && !isMobile.any()) {
       return null;
     }
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -1209,7 +1211,7 @@ class FieldMultiselect extends PureComponent {
     const currency = getCurrencyCode(country);
     const priceAttribute = `price.${currency}.default`;
 
-    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable ) {
+    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable && !isMobile.any() ) {
       return null;
     }
     const {

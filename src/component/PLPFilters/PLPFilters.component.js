@@ -639,6 +639,7 @@ class PLPFilters extends PureComponent {
           handleCallback,
           activeFilters,
           onUnselectAllPress,
+          OnLevelTwoCategoryPressMsite,
         } = this.props;
         const { label, category, is_radio } = filter[1];
 
@@ -669,6 +670,7 @@ class PLPFilters extends PureComponent {
             setDefaultFilters={this.setDefaultFilters}
             defaultFilters={defaultFilters}
             isSortBy={false}
+            OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
           />
         );
       }
