@@ -730,7 +730,7 @@ class FieldMultiselect extends PureComponent {
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
 
     const currency = getCountryCurrencyCode();
-    if ( category === `price.${currency}.default` || category === "discount" ) {
+    if ( !isMobile.any() && (category === `price.${currency}.default` || category === "discount") ) {
       return this.renderRangeSliders();
     }
 
