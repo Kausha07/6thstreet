@@ -302,7 +302,7 @@ export class PLPContainer extends PureComponent {
         }
       }
     });
-    if (this.getIsLoading()) {
+    if (this.getIsLoading() && window.location.search) {
       PLPContainer.requestProductList(this.props);
     }
     this.setMetaData();
