@@ -860,7 +860,8 @@ class FieldMultiselect extends PureComponent {
       category === "gender" ||
       category === "discount" ||
       category === "in_stock" ||
-      category === `price.${currency}.default`
+      category === `price.${currency}.default` || 
+      category === "sizes"
     ) {
       return null;
     }
