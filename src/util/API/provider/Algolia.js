@@ -3,6 +3,8 @@ import { VIEW_SEARCH_RESULTS_ALGOLIA } from "Util/Event";
 import AlgoliaSDK from "../../../../packages/algolia-sdk";
 import { queryString } from "../helper/Object";
 import isMobile from "Util/Mobile";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_CONFIG_CACHE_KEY } from "Store/AppConfig/AppConfig.reducer";
 
 export const PRODUCT_HIGHLIGHTS = [
   "color",
@@ -39,15 +41,18 @@ export class Algolia {
     return AlgoliaSDK.index;
   }
 
-  async getPLP(params = {}, categoryData = {}, moreFiltersData = {} ) {
+  async getPLP(params = {}, categoryData = {}, moreFiltersData = {}) {
     let influencerCount = 0;
-    if(params["pageType"] && params["pageType"] === "InfluencerPage")
-    {
+    if (params["pageType"] && params["pageType"] === "InfluencerPage") {
       influencerCount = params["InfluencerProductCount"];
       delete params["pageType"];
       delete params["InfluencerProductCount"];
     }
-    const productCount = isMobile.any() ? 10 : influencerCount !== 0 ? influencerCount :30 ;
+    const productCount = isMobile.any()
+      ? 10
+      : influencerCount !== 0
+      ? influencerCount
+      : 30;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
     } = getStore().getState();
@@ -60,7 +65,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData );
+    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData);
   }
 
   async getProductForSearchContainer(params = {}, suggestionQuery) {
@@ -75,7 +80,11 @@ export class Algolia {
       locale,
     });
 
-    return AlgoliaSDK.getProductForSearchContainer(`/?${url}`,params, suggestionQuery);
+    return AlgoliaSDK.getProductForSearchContainer(
+      `/?${url}`,
+      params,
+      suggestionQuery
+    );
   }
 
   async getPromotions(params = {}) {
@@ -90,7 +99,7 @@ export class Algolia {
       locale,
     });
 
-    return AlgoliaSDK.getPromotions(`/?${url}`,params);
+    return AlgoliaSDK.getPromotions(`/?${url}`, params);
   }
 
   async getSearchPLP(params = {}) {
@@ -153,10 +162,8 @@ export class Algolia {
   }
 
   async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
-    const {
-      AppState: { AppConfig },
-    } = getStore().getState();
-    if (AppConfig?.isAlgoliaEventsEnabled) {
+    const appConfig = BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {};
+    if (appConfig?.isAlgoliaEventsEnabled) {
       switch (event_type) {
         case "view": {
           switch (name) {
@@ -199,7 +206,7 @@ export class Algolia {
             )) || {};
           return data;
         }
-  
+
         case "conversion": {
           const { data = [] } =
             (await AlgoliaSDK.logAlgoliaAnalytics(
