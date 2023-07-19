@@ -21,7 +21,7 @@ import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreF
 import infoBold from "./icons/infoBold.svg";
 import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-
+import { getSelectedFiltersFacetValues, getCategoryIds} from "Route/PLP/utils/PLP.helper";
 
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
@@ -963,7 +963,7 @@ class PLPPages extends PureComponent {
 
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
-    const { query, updateFiltersState } = this.props;
+    const { query, updateFiltersState, newActiveFilters={} } = this.props;
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     if (isMobile.any()) {
       window.scrollTo(0, 0);
@@ -971,9 +971,17 @@ class PLPPages extends PureComponent {
     if (!isMobile.any() || isQuickFilters) {
       updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) => {
-        if (key !== "categories.level1")
+        if (key !== "categories.level1" && key !== "categories_without_path")
           WebUrlParser.setParam(key, activeFilters[key], query);
       });
+      const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+      const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+      const key = "categories_without_path";
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
     }
   };
 
