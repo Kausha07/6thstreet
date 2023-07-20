@@ -640,6 +640,9 @@ export class PLPContainer extends PureComponent {
         }
       }
     });
+    if(isQuickFilters) {
+      return;
+    }
     const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
     const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
     const key = "categories_without_path";
