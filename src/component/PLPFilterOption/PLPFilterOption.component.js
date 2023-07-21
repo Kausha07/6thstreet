@@ -67,6 +67,8 @@ class PLPFilterOption extends PureComponent {
       parentCallback,
       toggleOptionList,
       isRadio,
+      option,
+      OnLevelTwoCategoryPressMsite,
     } = this.props;
     const inputRef = this.optionRef.current.children[0].children[0];
     const { checked } = inputRef;
@@ -158,7 +160,11 @@ class PLPFilterOption extends PureComponent {
         }
       }
     }
-    parentCallback(facet_key, facet_value, checked, isRadio);
+    if(isMobile.any() && facet_key === "categories_without_path") {
+      OnLevelTwoCategoryPressMsite(option, checked)
+    }else {
+      parentCallback(facet_key, facet_value, checked, isRadio);
+    }
     toggleOptionList();
   };
 
@@ -223,8 +229,12 @@ class PLPFilterOption extends PureComponent {
 
   renderCount() {
     const {
-      option: { product_count },
+      option: { product_count, facet_key, productCountMsite = 0 },
     } = this.props;
+
+    if (isMobile.any() && facet_key === "categories_without_path") {
+      return <span>{`(${productCountMsite})`}</span>;      
+    }
 
     return <span>{`(${product_count})`}</span>;
   }

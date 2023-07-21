@@ -264,6 +264,7 @@ class FieldMultiselect extends PureComponent {
       defaultFilters,
       parentActiveFilters,
       currentActiveFilter,
+      OnLevelTwoCategoryPressMsite,
     } = this.props;
 
     const { subcategories = {} } = option;
@@ -294,6 +295,7 @@ class FieldMultiselect extends PureComponent {
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
         toggleOptionList={this.toggleOptionList}
+        OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
       />
     );
   };
@@ -730,7 +732,7 @@ class FieldMultiselect extends PureComponent {
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
 
     const currency = getCountryCurrencyCode();
-    if ( category === `price.${currency}.default` || category === "discount" ) {
+    if ( !isMobile.any() && (category === `price.${currency}.default` || category === "discount") ) {
       return this.renderRangeSliders();
     }
 
@@ -858,7 +860,8 @@ class FieldMultiselect extends PureComponent {
       category === "gender" ||
       category === "discount" ||
       category === "in_stock" ||
-      category === `price.${currency}.default`
+      category === `price.${currency}.default` || 
+      category === "sizes"
     ) {
       return null;
     }
@@ -1201,7 +1204,7 @@ class FieldMultiselect extends PureComponent {
       conditionalData = categoryLevelData;
     }
 
-    if(category === "discount" && !!!filter?.isDiscount ) {
+    if(category === "discount" && !!!filter?.isDiscount && !isMobile.any()) {
       return null;
     }
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -1209,7 +1212,7 @@ class FieldMultiselect extends PureComponent {
     const currency = getCurrencyCode(country);
     const priceAttribute = `price.${currency}.default`;
 
-    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable ) {
+    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable && !isMobile.any() ) {
       return null;
     }
     const {

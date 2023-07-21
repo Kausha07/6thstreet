@@ -143,6 +143,9 @@ const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
       "in_stock",
       "colorfamily",
       "brand_name",
+      "size_uk",
+      "size_eu",
+      "size_us",
     ];
 
     Object.keys(paramsObj).forEach((key) => {

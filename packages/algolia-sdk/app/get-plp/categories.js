@@ -135,7 +135,7 @@ Object.entries(prodCountFacets).map((entry, index) => {
   let regex = new RegExp("\\s///\\s|\\s", "gm");
   const finalProdCountObj = getFinalProdCountObj(prodCountObj);
   const categoryIds = query?.categoryIds || "";
-  let categoryIdsArray = categoryIds.split(",");
+  let categoryIdsArray = categoryIds === "" ? [] : categoryIds.split(",");
   if (categoryIdsArray.length) {
     categoryIdsArray = categoryIdsArray.map(Number);
   }
@@ -145,7 +145,8 @@ Object.entries(prodCountFacets).map((entry, index) => {
     ...categoriesLevel4,
   };
   const selectedFiltersArray = []
-
+  const avoidDuplicates = [];
+  const isCategoryIds = categoryIdsArray.length ? true : false;
   const queryValues = getQueryValues({ query, path: facetKey });
   let data = Object.entries(categoriesMerge).reduce(
     (acc, [key, productCount]) => {
@@ -182,6 +183,16 @@ Object.entries(prodCountFacets).map((entry, index) => {
           };
         }
 
+        // is L2, L3 or L4
+        let currentCategoryLevel;
+        if(l4){
+          currentCategoryLevel = "L4";
+        }else if(l3) {
+          currentCategoryLevel = "L3";
+        }else {
+          currentCategoryLevel = "L2"
+        }
+
         // Total product count per category
         acc[l1].product_count = sum(acc[l1].product_count, productCount);
 
@@ -191,8 +202,15 @@ Object.entries(prodCountFacets).map((entry, index) => {
           label: l2,
           is_selected: false,
           product_count: finalProdCountObj[categoryKey] || categoriesWithoutPath[l2],
-          category_key: categoryKey,
-          category_id,
+          category_key:
+            currentCategoryLevel === "L2"
+              ? categoryKey
+              : acc[l1]?.subcategories[l2]?.category_key,
+          category_id:
+            currentCategoryLevel === "L2"
+              ? category_id
+              : acc[l1]?.subcategories[l2]?.category_id,
+          productCountMsite: categoriesWithoutPath[l2],
           sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories},
         };
 
@@ -204,8 +222,14 @@ Object.entries(prodCountFacets).map((entry, index) => {
             is_selected: false,
             product_count: finalProdCountObj[categoryKey] || productCount,
             category_level: "L3",
-            category_key: categoryKey,
-            category_id,
+            category_key:
+              currentCategoryLevel === "L3"
+                ? categoryKey
+                : acc[l1].subcategories[l2]?.sub_subcategories[l3]?.category_key,
+            category_id:
+              currentCategoryLevel === "L3"
+                ? category_id
+                : acc[l1].subcategories[l2]?.sub_subcategories[l3]?.category_id,
             sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories[l3]?.sub_subcategories}
           };
           if(l4 && categoriesWithoutPath && categoriesWithoutPath[l4]) {
@@ -230,9 +254,19 @@ Object.entries(prodCountFacets).map((entry, index) => {
           acc[l1].selected_filters_count += 1;
           const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2]);
           if(isSelected) {
-            selectedFiltersArray.push(acc[l1].subcategories[l2] );
+            if(!!!avoidDuplicates.includes(category_id) && currentCategoryLevel === "L2"){
+              selectedFiltersArray.push(acc[l1].subcategories[l2] );
+              avoidDuplicates.push(category_id);
+            }
           }
-          acc[l1].subcategories[l2].is_selected = isSelected;
+          // below condition is for Msite only 
+          if(!isCategoryIds) {
+            if(!!!avoidDuplicates.includes(category_id) && currentCategoryLevel === "L2"){
+              selectedFiltersArray.push(acc[l1].subcategories[l2] );
+              avoidDuplicates.push(category_id);
+            }
+          }
+          acc[l1].subcategories[l2].is_selected = isCategoryIds ? isSelected : true;
         }
         // Mark selected filters, using the query params - for L3 categories
         if(l3 && queryValues[l3]) {
@@ -247,7 +281,10 @@ Object.entries(prodCountFacets).map((entry, index) => {
           ) {
             const isSelected = getIsSelected(categoryIdsArray, acc[l1].subcategories[l2].sub_subcategories[l3]);
             if(isSelected) {
-              selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3] );
+              if(!!!avoidDuplicates.includes(category_id) && currentCategoryLevel === "L3"){
+                selectedFiltersArray.push(acc[l1].subcategories[l2].sub_subcategories[l3] );
+                avoidDuplicates.push(category_id);
+              }
             }
             acc[l1].subcategories[l2].sub_subcategories[l3].is_selected = isSelected;
           }
