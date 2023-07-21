@@ -210,6 +210,7 @@ export class PLPContainer extends PureComponent {
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
     onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
+    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this)
   };
 
   resetPLPData() {
@@ -639,14 +640,25 @@ export class PLPContainer extends PureComponent {
         }
       }
     });
+    if(isQuickFilters) {
+      return;
+    }
     const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
     const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
     const key = "categories_without_path";
-    WebUrlParser.setParam(
-      key,
-      selectedFacetValues,
-      selectedFacetCategoryIds,
-    );
+      //Below code is for Msite - here I am not sending category Ids to Algolia
+    if(isMobile.any()) {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+      );
+    }else {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
+    }
   };
 
   selectMoreFilters = () => {
@@ -688,6 +700,22 @@ export class PLPContainer extends PureComponent {
       () => this.select()
     );
     sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
+  }
+
+  // for Msite category filter click
+  OnLevelTwoCategoryPressMsite(option, checked) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: option,
+            isDropdown: false,
+            newActiveFilters,
+          }) || {},
+      },
+      () => this.select()
+    );
   }
 
   onMoreFilterClick(option) {

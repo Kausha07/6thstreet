@@ -159,13 +159,22 @@ const Parser = {
   setParam(key, values = [], categoryIds =[]) {
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     url.searchParams.set("p", 0);
+    let isReturn = false;  //checking is key in params or not and is it's current values is empty?
+    let moreFilterKeyCheck = false; //if key is in params then now we need to update.
     // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
         url.searchParams.delete(sKey);
+        moreFilterKeyCheck = true;
         // url.searchParams.split(sKey)[0]
+      }else if(Array.isArray(values) && values.length === 0){
+        isReturn = true;
       }
     });
+    // if Key is not in URL and now also empty then no need to change URL.
+    if(isReturn && !moreFilterKeyCheck) {
+      return;
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
