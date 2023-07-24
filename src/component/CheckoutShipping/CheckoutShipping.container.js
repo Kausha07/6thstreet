@@ -404,10 +404,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const { parameters, message = "" } = response;
     const formattedParams = parameters ? capitalize(parameters[0]) : "Address";
 
-    showNotification(
-      "error",
-      `${formattedParams} ${__("is not valid")}. ${message}`
-    );
+    showNotification("error", `${message}`);
     setLoading(false);
   }
 
