@@ -157,7 +157,7 @@ function getMoreFilters (facets, query, moreFiltersData ) {
 
 function getMinMax(str)  {
   const numbers = str.split(',')
-    .map((value) => value.replace(/\D/g, ''))
+    .map((value) => value.replace(/[^\d.]/g, '')) // Allow decimal point in addition to digits
     .filter((value) => value !== '') // Remove empty strings
     .map(Number); // Convert the extracted numbers to numeric values
 
