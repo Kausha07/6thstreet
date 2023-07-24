@@ -143,13 +143,22 @@ export class CheckoutDispatcher {
 
     dispatch(processingPaymentSelectRequest(true));
 
-    return selectPaymentMethod({
-      cartId,
-      data: {
-        method: code,
-        cart_id: cartId,
-      },
-    });
+    try {
+      const response = await selectPaymentMethod({
+        cartId,
+        data: {
+          method: code,
+          cart_id: cartId,
+        },
+      });
+      if (response?.data) {
+        return response;
+      } else {
+        dispatch(showNotification("error", `${response}`));
+      }
+    } catch (error) {
+      Logger.log(error);
+    }
   }
 
   async getBinPromotion(dispatch, bin) {
