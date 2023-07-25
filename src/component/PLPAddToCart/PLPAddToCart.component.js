@@ -37,7 +37,8 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   edd_info: state.AppConfig.edd_info,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
-  eddResponse: state.MyAccountReducer.eddResponse
+  eddResponse: state.MyAccountReducer.eddResponse,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -593,15 +594,45 @@ class PLPAddToCart extends PureComponent {
     return {city, area, countryCode};
   };
 
+  getIdFromCityArea = (addressCityData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    const { isArabic } = this.state;
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        }
+      }
+    });
+    return { cityEntry, areaEntry };
+  };
+
   callEstimateEddAPI = (sku, international_vendor, cross_border) => {
-    const { estimateEddResponse, edd_info, eddResponse } = this.props;
+    const { estimateEddResponse, edd_info, eddResponse, addressCityData } = this.props;
     const {city, area, countryCode} = this.getSelectedCityAreaCountry();
     let new_item = true;
     if(city && area && countryCode) {
+      const { cityEntry, areaEntry } = this.getIdFromCityArea(
+        addressCityData,
+        city,
+        area
+      );
       let request = {
         country: countryCode,
-        city: city,
-        area: area,
+        city: cityEntry,
+        area: areaEntry,
         courier: null,
         source: null,
       };

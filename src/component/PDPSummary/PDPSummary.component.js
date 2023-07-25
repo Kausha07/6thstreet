@@ -276,11 +276,17 @@ class PDPSummary extends PureComponent {
       let {city, area, countryCode} = this.getSelectedCityAreaCountry();
       area = areaSelected ? areaSelected : area;
       city = this.state.selectedCity ? this.state.selectedCity: city;
+      const { addressCityData } = this.props;
       if(city && area && countryCode) {
+        const { cityEntry, areaEntry } = this.getIdFromCityArea(
+          addressCityData,
+          city,
+          area
+        );
         let request = {
           country: countryCode,
-          city: city,
-          area: area,
+          city: cityEntry,
+          area: areaEntry,
           courier: null,
           source: null,
         };
