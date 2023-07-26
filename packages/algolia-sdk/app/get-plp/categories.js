@@ -201,7 +201,10 @@ Object.entries(prodCountFacets).map((entry, index) => {
           facet_key: facetKey,
           label: l2,
           is_selected: false,
-          product_count: finalProdCountObj[categoryKey] || categoriesWithoutPath[l2],
+          product_count:
+            currentCategoryLevel === "L2"
+              ? finalProdCountObj[categoryKey] || categoriesWithoutPath[l2]
+              : acc[l1]?.subcategories[l2]?.product_count,
           category_key:
             currentCategoryLevel === "L2"
               ? categoryKey
