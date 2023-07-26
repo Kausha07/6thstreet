@@ -816,20 +816,22 @@ export class PLPContainer extends PureComponent {
       return null;
     }
     try {
-      getBrandInfoByName(brandName).then((resp) => {
-        if (resp?.success && resp?.result != null) {
-          this.setState({
-            brandDescription: isArabic()
-              ? resp?.result[0]?.description_ar
-              : resp?.result[0]?.description,
-            brandImg: resp?.result[0]?.image,
-            brandName: isArabic()
-              ? resp?.result[0]?.name_ar
-              : resp?.result[0]?.name,
-          });
-          this.props.setBrandurl(resp?.result[0]?.url_path);
-        }
-      })
+      if(brandName){
+        getBrandInfoByName(brandName).then((resp) => {
+          if (resp?.success && resp?.result != null) {
+            this.setState({
+              brandDescription: isArabic()
+                ? resp?.result[0]?.description_ar
+                : resp?.result[0]?.description,
+              brandImg: resp?.result[0]?.image,
+              brandName: isArabic()
+                ? resp?.result[0]?.name_ar
+                : resp?.result[0]?.name,
+            });
+            this.props.setBrandurl(resp?.result[0]?.url_path);
+          }
+        })
+      }
     } catch (err) {
       console.error("There is an issue while fetching brand information.", err);
     }
@@ -844,20 +846,22 @@ export class PLPContainer extends PureComponent {
     if (exceptionalBrand.includes(brandName)) {
       return null;
     }
-    const data = await new Algolia({
-      index: "brands_info",
-    }).getBrandsDetails({
-      query: brandName,
-      limit: 1,
-    });
-    this.setState({
-      brandDescription: isArabic()
-        ? data?.hits[0]?.description_ar
-        : data?.hits[0]?.description,
-      brandImg: data?.hits[0]?.image,
-      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
-    });
-    this.props.setBrandurl(data?.hits[0]?.url_path);
+    if(brandName){
+      const data = await new Algolia({
+        index: "brands_info",
+      }).getBrandsDetails({
+        query: brandName,
+        limit: 1,
+      });
+      this.setState({
+        brandDescription: isArabic()
+          ? data?.hits[0]?.description_ar
+          : data?.hits[0]?.description,
+        brandImg: data?.hits[0]?.image,
+        brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+      });
+      this.props.setBrandurl(data?.hits[0]?.url_path);
+    }
   }
 
   updateFiltersState(activeFilters) {
