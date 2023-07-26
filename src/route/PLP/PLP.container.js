@@ -817,14 +817,18 @@ export class PLPContainer extends PureComponent {
     }
     try {
       getBrandInfoByName(brandName).then((resp) => {
-        this.setState({
-          brandDescription: isArabic()
-            ? resp?.result[0]?.description_ar
-            : resp?.result[0]?.description,
-          brandImg: resp?.result[0]?.image,
-          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
-        });
-        this.props.setBrandurl(resp?.result[0]?.url_path);
+        if (resp?.success && resp?.result != null) {
+          this.setState({
+            brandDescription: isArabic()
+              ? resp?.result[0]?.description_ar
+              : resp?.result[0]?.description,
+            brandImg: resp?.result[0]?.image,
+            brandName: isArabic()
+              ? resp?.result[0]?.name_ar
+              : resp?.result[0]?.name,
+          });
+          this.props.setBrandurl(resp?.result[0]?.url_path);
+        }
       })
     } catch (err) {
       console.error("There is an issue while fetching brand information.", err);
