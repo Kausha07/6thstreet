@@ -1,9 +1,10 @@
 /* eslint-disable fp/no-let */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import ShareIcon from "../MyAccountReferral/icons/share.png";
 import './ShareButton.style';
 import { Share } from '../Icons';
+import Image from "Component/Image";
 
 class ShareButton extends PureComponent {
     static propTypes = {
@@ -26,7 +27,11 @@ class ShareButton extends PureComponent {
                     openShareOverlay: openShareOverlay
                 }}
             >
-                <Share block="Icon" />
+                {this.props?.isReferral ? (
+                    <Image lazyLoad={true} alt={"Share Icon"} src={ShareIcon} />
+                ) : (
+                    <Share block="Icon" />
+                )} 
                 { children }
             </button>
         );

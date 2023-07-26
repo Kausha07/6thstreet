@@ -12,6 +12,7 @@ import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
 import LogoutIcon from "./icons/logout.png";
 import ReturnIcon from "./icons/return.svg";
+import ReferralIcon from "./icons/referral-icon.png"
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
 import "./MyAccountSignedInOverlay.style";
 import Event, {
@@ -89,6 +90,26 @@ export class MyAccountSignedInOverlay extends PureComponent {
         <AccountIcon />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
           {__("My Profile")}
+        </span>
+      </Link>
+    );
+  }
+
+  renderReferralLink() {
+    return (
+      <Link
+        block="MyAccountSignedInOverlay"
+        elem="LinkAccount"
+        to="/my-account/referral"
+      >
+        <Image
+          lazyLoad={true}
+          src={ReferralIcon}
+          mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+          alt={"cat-menu"}
+        />
+        <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+          {__("Referral")}
         </span>
       </Link>
     );
@@ -257,6 +278,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
         {this.renderClubLink()}
         {this.renderMyAccountLink()}
+        {this.renderReferralLink() }
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}
         {this.renderWishlistLink()}

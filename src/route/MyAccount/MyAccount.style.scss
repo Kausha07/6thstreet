@@ -168,6 +168,11 @@
           background-image: url(./icons/contact-help.png);
         }
       }
+      &_referral{
+        &:before{
+          background-image: url(./icons/referral-icon.png);
+        }
+      }
 
       &_settings {
         &:before {
