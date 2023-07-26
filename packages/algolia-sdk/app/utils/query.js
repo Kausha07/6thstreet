@@ -8,4 +8,17 @@ const getQueryValues = ({ query, path }) => {
   }, {});
 };
 
-export { getQueryValues };
+const getQueryValuesMoreFilters = (query, arrMoreFilters = []) => {
+  let selectedMoreFilterObj = {};
+  arrMoreFilters.map((item) => {
+    if(query[item]){
+      const keyNameArr = query[item].split(',');
+      for(let i=0; i< keyNameArr.length; i++) {
+        selectedMoreFilterObj[keyNameArr[i]] = true;
+      }
+    }
+  });
+  return selectedMoreFilterObj;
+}
+
+export { getQueryValues, getQueryValuesMoreFilters };

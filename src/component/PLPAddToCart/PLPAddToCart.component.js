@@ -17,7 +17,8 @@ import Event, {
   VUE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART,
   EVENT_MOE_ADD_TO_CART_FAILED,
-  MOE_trackEvent
+  MOE_trackEvent,
+  SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -26,12 +27,16 @@ import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+import Algolia from "Util/API/provider/Algolia";
+import { getUUIDToken } from "Util/Auth";
+import { getIsFilters } from "./utils/PLPAddToCart.helper";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   language: state.AppState.language,
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
+  newActiveFilters: state.PLP.newActiveFilters,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
@@ -490,8 +495,11 @@ class PLPAddToCart extends PureComponent {
         size_us = [],
       },
       product,
+      newActiveFilters,
+      product_Position,
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
+    const isFilters = getIsFilters(newActiveFilters);
 
     const productStock = simple_products;
 
@@ -565,6 +573,8 @@ class PLPAddToCart extends PureComponent {
       cart_id: getCartID || "",
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No",
+      productPosition: product_Position || "",
     });
   }
 
@@ -589,6 +599,10 @@ class PLPAddToCart extends PureComponent {
       showNotification,
       prevPath = null,
       product,
+      position,
+      qid,
+      newActiveFilters,
+      product_Position,
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -597,6 +611,7 @@ class PLPAddToCart extends PureComponent {
       insertedSizeStatus,
     } = this.state;
     const productStock = simple_products;
+    const isFilters = getIsFilters(newActiveFilters);
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
       return;
@@ -605,12 +620,34 @@ class PLPAddToCart extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
     this.setState({ productAdded: true });
-    var qid = new URLSearchParams(window.location.search).get("qid");
     let searchQueryId;
     if (!qid) {
       searchQueryId = getStore().getState().SearchSuggestions.queryID;
     } else {
       searchQueryId = qid;
+    }
+
+    var data = localStorage.getItem("customer")
+      ? localStorage.getItem("customer")
+      : null;
+    let userData = data ? JSON.parse(data) : null;
+    let userToken =
+      userData && userData.data && userData.data?.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
+    if (
+      searchQueryId &&
+      position &&
+      position > 0 &&
+      product?.objectID &&
+      userToken
+    ) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [product?.objectID],
+        queryID: searchQueryId,
+        userToken: userToken,
+        position: [position],
+      });
     }
     if (
       (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
@@ -665,6 +702,8 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          isFilters: isFilters ? "Yes" : "No",
+          productPosition: product_Position || "",
         },
       });
 
@@ -722,6 +761,8 @@ class PLPAddToCart extends PureComponent {
           category: product_type_6s,
           variant: color,
           quantity: 1,
+          isFilters: isFilters ? "Yes" : "No",
+          productPosition: product_Position || "",
         },
       });
 
@@ -746,12 +787,8 @@ class PLPAddToCart extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true") {
-    const { 
-      setMinicartOpen,
-      pageType,
-      removeFromWishlist,
-      wishlist_item_id,
-    } = this.props;
+    const { setMinicartOpen, pageType, removeFromWishlist, wishlist_item_id } =
+      this.props;
     // eslint-disable-next-line no-unused-vars
     const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
@@ -765,9 +802,9 @@ class PLPAddToCart extends PureComponent {
 
       /* if user is adding product from wishlist to cart then after adding to cart 
            that product should remove from wishlist   */
-      
-      if(wishlist_item_id) {
-      removeFromWishlist(wishlist_item_id);
+
+      if (wishlist_item_id) {
+        removeFromWishlist(wishlist_item_id);
       }
     }
 

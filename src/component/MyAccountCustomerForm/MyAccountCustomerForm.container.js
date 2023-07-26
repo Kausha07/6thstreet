@@ -6,7 +6,7 @@ import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm
 import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
-import { EVENT_MOE_UPDATE_PROFILE, MOE_trackEvent } from "Util/Event";
+import { EVENT_MOE_UPDATE_PROFILE, BIRTHDATE_UPDATE_SUCCESS, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl,getLanguageFromUrl } from 'Util/Url';
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import isMobile from "Util/Mobile";
@@ -51,12 +51,13 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     sendOTP: this.sendOTP.bind(this),
     updatedCustomerDetails: this.updatedCustomerDetails.bind(this),
     renderOTPField: this.renderOTPField.bind(this),
+    setDateOfBirth: this.setDateOfBirth.bind(this),
   };
 
   constructor(props) {
     super(props);
     const {
-      customer: { gender, phone },
+      customer: { gender, phone, dob },
     } = props;
     this.state = {
       isShowPassword: false,
@@ -70,6 +71,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       OTPSentNumber: "",
       OTPTimeOutBreak: false,
       isMobile: isMobile.any(),
+      dateOfBirth: dob,
+      isDOBChoosen: false,
     };
   }
   timer = null;
@@ -88,6 +91,10 @@ export class MyAccountCustomerFormContainer extends PureComponent {
 
   setGender(gender) {
     this.setState({ gender });
+  }
+
+  setDateOfBirth(dateOfBirthInput){
+    this.setState({dateOfBirth: dateOfBirthInput, isDOBChoosen: true})
   }
 
   updatePhoneNumber(code, phoneNumber) {
@@ -114,6 +121,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       showOTPField,
       OTPSentNumber,
       OTPTimeOutBreak,
+      dateOfBirth,
     } = this.state;
 
     return {
@@ -126,6 +134,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       showOTPField,
       OTPSentNumber,
       OTPTimeOutBreak,
+      dateOfBirth,
     };
   };
 
@@ -208,15 +217,17 @@ export class MyAccountCustomerFormContainer extends PureComponent {
       countryCode,
       gender,
       phoneCountryCode = PHONE_CODES[countryCode],
+      dateOfBirth,
     } = this.state;
-    const { phone } = customer;
+    const { phone, email } = customer;
     const elmnts = document.getElementsByClassName("MyAccount-Heading");
     const GetGender =
       gender == "1" ? "Male" : gender == "2" ? "Female" : "Prefer Not To Say";
     try {
-      updateCustomer({
+      const updatedCustResponse = updateCustomer({
         ...oldCustomerData,
         ...customer,
+        dob: dateOfBirth,
         gender,
         phone: phoneCountryCode + phone,
       });
@@ -232,6 +243,19 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         app6thstreet_platform: "Web",
       });
       this.setState({ showOTPField: false, isLoading: false });
+      if( updatedCustResponse && dateOfBirth ){
+        MOE_trackEvent(BIRTHDATE_UPDATE_SUCCESS, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          email: email || "",
+          birthdate: dateOfBirth || "",
+          app6thstreet_platform: "Web",
+        });
+        this.state.isDOBChoosen && showSuccessNotification(__("Birthdate updated successfully"));
+        this.setState({
+          isDOBChoosen: false,
+        })
+      } 
       showSuccessNotification(__("Your information was successfully updated!"));
     } catch (e) {
       this.setState({ isLoading: false });

@@ -12,7 +12,8 @@ export const getInitialState = () => (
         suggestionEnabled: true,
         is_exchange_enabled:false,
         ctcReturnEnabled:false,
-        is_live_party_enabled:false
+        is_live_party_enabled:false,
+        isAlgoliaEventsEnabled: false,
     }
 );
 
@@ -31,12 +32,14 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ...state,
                 config,
                 newSigninSignupVersionEnabled: config.countries[getCountryCode]?.new_signin_signup_version_enabled,
+                IsReferralEnabled: config.countries[getCountryCode]?.is_referral_enabled,
                 isSignInCartNudgeEnabled: config.countries[getCountryCode]?.is_signin_cart_nudge_enabled,
                 edd_info: config.countries[getCountryCode]?.edd_info,
                 suggestionEnabled: config.countries[getCountryCode]?.query_suggestion_enabled,
                 is_exchange_enabled: config.countries[getCountryCode]?.is_exchange_enabled,
                 ctcReturnEnabled: config.countries[getCountryCode]?.is_ctc_return_enabled,
-                is_live_party_enabled: config.countries[getCountryCode]?.is_live_party_enabled
+                is_live_party_enabled: config.countries[getCountryCode]?.is_live_party_enabled,
+                isAlgoliaEventsEnabled: config.countries[getCountryCode]?.isAlgoliaEventsEnabled,
             };
 
             // this will invalidate config after one year

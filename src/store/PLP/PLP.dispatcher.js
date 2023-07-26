@@ -7,12 +7,15 @@ import {
   setPLPPage,
   setPLPWidget,
   setProductLoading,
+  updateNewActiveFilters,
+  updateSliderFilters,
 } from "Store/PLP/PLP.action";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
+import { isArabic } from "Util/App";
 export class PLPDispatcher {
   async setInitialPLPFilter(payload, dispatch, state) {
     const { initialOptions = {} } = payload;
@@ -33,10 +36,27 @@ export class PLPDispatcher {
     if (Object.keys(options).length !== 0) {
       dispatch(setPLPLoading(true));
       try {
-        const response = await new Algolia().getPLP(options);
+        let categoryData = {};
+        const lang = isArabic() ? "ar" : "en";
+        const resp = await getStaticFile("category_data", {
+          $FILE_NAME: `/categoryData.json`,
+          $LANGUAGE: lang,
+        });
+        if(resp) {
+          categoryData = resp;
+        }
+        let moreFiltersData = {};
+        const more_filter = await getStaticFile("more_filter", {
+          $FILE_NAME: `/more_filter.json`,
+        });
+        if(more_filter) {
+          moreFiltersData = more_filter;
+        }
+        const response = await new Algolia().getPLP(options, categoryData, moreFiltersData);
         localStorage.setItem("queryID", response.queryID);
         dispatch(setProductLoading(false));
-
+        dispatch(updateNewActiveFilters(response?.filters?.categories_without_path?.newActiveFilters || {}))
+        dispatch(updateSliderFilters(response?.sliderFilters || {}));
         dispatch(setPLPInitialFilters(response.filters, options));
         dispatch(setPLPData(response, options, false));
       } catch (e) {
@@ -51,6 +71,11 @@ export class PLPDispatcher {
   resetPLPData(dispatch) {
     dispatch(setPLPData({}));
   }
+
+  updateNewActiveFiltersToStore(updatedNewActiveFilters, dispatch) {
+    dispatch(updateNewActiveFilters(updatedNewActiveFilters));
+  }
+
 
   async requestProductListPage(payload, dispatch) {
     const {

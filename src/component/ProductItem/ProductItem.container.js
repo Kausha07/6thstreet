@@ -43,6 +43,7 @@ export class ProductItemContainer extends PureComponent {
       sendProductImpression,
       removeFromWishlist,
       wishlist_item_id,
+      isFilters,
     } = this.props;
     return {
       product,
@@ -56,6 +57,7 @@ export class ProductItemContainer extends PureComponent {
       sendProductImpression,
       removeFromWishlist,
       wishlist_item_id,
+      isFilters,
     };
   };
 

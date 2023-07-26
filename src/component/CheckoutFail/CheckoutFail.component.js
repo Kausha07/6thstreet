@@ -76,7 +76,7 @@ export class CheckoutFail extends CheckoutSuccess {
     MOE_trackEvent(EVENT_MOE_ECOMMERCE_PURCHASE_FAILED, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       coupon_code_applied: coupon_code || "",

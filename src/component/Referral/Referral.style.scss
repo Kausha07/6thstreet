@@ -1,0 +1,104 @@
+.Referral {
+  width: 300px;
+  height: 229px;
+  padding-top: 39px;
+  @include mobile() {
+    margin: auto;
+  }
+  .referralIcon {
+    width: 39.85px;
+    height: 26.94px;
+    margin: 0px 111px auto 112px;
+  }
+  .Heading {
+    height: 25px;
+    font-family: "Avenir Next";
+    font-size: 18px;
+    margin-left: 10px;
+    text-align: center;
+    margin-right: 10px;
+    color: #000000;
+  }
+  .SubHeading {
+    height: 32px;
+    font-size: 14px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 21px;
+    text-align: center;
+    color: #4a4a4a;
+    .CurrencyAmount {
+      margin: 4px;
+      font-family: "Avenir Next";
+      font-weight: 600;
+    }
+  }
+  .ReferralCore {
+    height: 50px;
+    box-sizing: content-box;
+    border: 1px solid #d1d3d4;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    .ReferralCode {
+      max-width: 133px;
+      font-family: "Avenir Next";
+      font-weight: 500;
+      height: 12px;
+      margin: 20px 20px 18px 12px;
+      padding: auto;
+    }
+    .icons {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px;
+      .CopyShareIcon {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+      .ShareButtonContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button {
+          display: block;
+          width: 16px;
+          svg {
+            height: 16px;
+          }
+        }
+        .Overlay_isVisible {
+          display: flex;
+          flex-direction: column;
+          top: 40px;
+          width: 400px;
+          padding: 12px 21px 33px 21px;
+          border-radius: 12px;
+          box-shadow: 0 0 10px 0 RGB(0 0 0 / 15%);
+
+          .Overlay-ButtonsContainer {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 18px;
+            padding-bottom: 16px;
+          }
+          button {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border-radius: 50%;
+            border: solid transparent;
+            background-color: #f6f6f6;
+            border-width: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.ReferralLoading {
+  height: 229px;
+  padding: 40px;
+}

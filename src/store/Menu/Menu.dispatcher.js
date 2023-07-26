@@ -11,7 +11,7 @@ export class MenuDispatcher {
         const categories = await getStaticFile(
           CATEGORIES_STATIC_FILE_KEY,
           typeof gender === "object"
-            ? { $GENDER: gender.gender }
+            ? { $GENDER: gender?.gender }
             : { $GENDER: gender }
         );
   

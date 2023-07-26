@@ -349,22 +349,6 @@ export class CartItemContainer extends PureComponent {
           variant: color,
         },
       });
-      // if (oldQuantity < quantity) {
-      //   var data = localStorage.getItem("customer");
-      //   let userData = JSON.parse(data);
-      //   let userToken;
-      //   const queryID = getStore().getState().SearchSuggestions.queryID;
-      //   if (userData?.data?.id) {
-      //     userToken = userData.data.id;
-      //   }
-      //   if (queryID) {
-      //     new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
-      //       objectIDs: [item_id.toString()],
-      //       queryID,
-      //       userToken: userToken ? `user-${userToken}`: getUUIDToken(),
-      //     });
-      //   }
-      // }
     });
   }
 
@@ -470,7 +454,7 @@ export class CartItemContainer extends PureComponent {
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
-      category: currentAppState.gender
+      category: currentAppState?.gender
         ? currentAppState.gender.toUpperCase()
         : "",
       subcategory: product_type_6s || subcategory || "",

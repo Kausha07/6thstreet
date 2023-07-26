@@ -53,6 +53,7 @@ const VuePLP = (props) => {
   const [noRecentlyViewed, setNoRecentlyViewed] = useState(false);
   const [requestNumber, setRequestNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [widgetIDFromViewAllBtn, setWidgetIDOnViewAllBtn] = useState(props?.location?.state?.widgetIDOnViewAllBtn || "")
 
   const signedIn = isSignedIn();
   const gender = useSelector((state) => state.AppState.gender);
@@ -238,7 +239,7 @@ const VuePLP = (props) => {
 
   const request = async () => {
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const vueSliderType = payloadQuery ? `vue_${payloadQuery}` : `vue_${q}`;
+    const vueSliderType = widgetIDFromViewAllBtn ? widgetIDFromViewAllBtn : (payloadQuery ? `vue_${payloadQuery}` : `vue_${q}`);
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
@@ -453,6 +454,12 @@ const VuePLP = (props) => {
     }
   }, [recentFirstProduct]);
 
+  useEffect(() => {
+    if(widgetIDFromViewAllBtn ){
+      request();
+    }
+  },[widgetIDFromViewAllBtn]);
+  
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
       case STYLE_IT_SLIDER:

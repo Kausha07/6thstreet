@@ -34,10 +34,15 @@ class SharePopup extends PureComponent {
   };
 
   copyToClipboard = async () => {
-    const { showSuccessNotification, showErrorNotification } = this.props;
+    const { showSuccessNotification, showErrorNotification, isReferral, text } = this.props;
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      showSuccessNotification(__("Link copied to clipboard"));
+      if (isReferral && text){
+        await navigator.clipboard.writeText(text);
+        showSuccessNotification(__("Copied to clipboard"));
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        showSuccessNotification(__("Link copied to clipboard"));
+      }
     } catch (err) {
       console.error(err);
       showErrorNotification(__("Something went wrong! Please, try again!"));
@@ -48,8 +53,14 @@ class SharePopup extends PureComponent {
     {
       title: "WhatsApp",
       icon: <WhatsApp />,
-      handleClick: (text, title, url, image) =>
-        window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank"),
+      handleClick: (text, title, url, image) =>{
+        const { isReferral } = this.props;
+        if( isReferral ){
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank")
+        } else{
+          window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank")
+        }
+      },
       render: true,
     },
     {
@@ -62,10 +73,18 @@ class SharePopup extends PureComponent {
             href: url,
           });
         } else {
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?${url}`,
-            "_blank"
-          );
+          const { isReferral } = this.props;
+          if(isReferral){
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?${encodeURIComponent(text)}`,
+              "_blank"
+            );
+          } else{
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?${url}`,
+              "_blank"
+            );
+          }
         }
       },
       render: true,
@@ -79,8 +98,14 @@ class SharePopup extends PureComponent {
     {
       title: "Mail",
       icon: <Email />,
-      handleClick: (text, title, url, image) =>
-        window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`),
+      handleClick: (text, title, url, image) =>{
+        const { isReferral } = this.props;
+        if( isReferral ){
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}`)
+        } else{
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`)
+        }
+      },
       render: true,
     },
     {
@@ -95,36 +120,39 @@ class SharePopup extends PureComponent {
     },
   ];
   sendMoeImpressions(title) {
-    const {
-      product: { name, sku, url },
-    } = this.props;
-    const MoeEvent =
-      title == "WhatsApp"
-        ? EVENT_WHATSAPP_SHARE
-        : title == "Facebook"
-        ? EVENT_FB_SHARE
-        : title == "Mail"
-        ? EVENT_MAIL_SHARE
-        : title == "Pinterest"
-        ? EVENT_PINTEREST_SHARE
-        : "";
-    if (MoeEvent && MoeEvent.length > 0) {
-      MOE_trackEvent(MoeEvent, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        product_name: name ? name : "",
-        product_sku: sku ? sku : "",
-        product_url : url ? url : "",
-        app6thstreet_platform: "Web",
-      });
+    const { product } = this.props;
+    if(product){
+      const {
+        product: { name, sku, url },
+      } = this.props;
+      const MoeEvent =
+        title == "WhatsApp"
+          ? EVENT_WHATSAPP_SHARE
+          : title == "Facebook"
+          ? EVENT_FB_SHARE
+          : title == "Mail"
+          ? EVENT_MAIL_SHARE
+          : title == "Pinterest"
+          ? EVENT_PINTEREST_SHARE
+          : "";
+      if (MoeEvent && MoeEvent.length > 0) {
+        MOE_trackEvent(MoeEvent, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          product_name: name ? name : "",
+          product_sku: sku ? sku : "",
+          product_url : url ? url : "",
+          app6thstreet_platform: "Web",
+        });
+      }
+      const eventData = {
+        name: MoeEvent,
+        action: MoeEvent + "_click",
+        product_name: name,
+        product_id: sku,
+      };
+      Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     }
-    const eventData = {
-      name: MoeEvent,
-      action: MoeEvent + "_click",
-      product_name: name,
-      product_id: sku,
-    };
-    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
   }
   renderShareButtons = () => {
     const {

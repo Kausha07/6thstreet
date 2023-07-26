@@ -28,12 +28,17 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 import PLPFilters from "./PLPFilters.component";
 import { SIZES } from "./PLPFilters.config";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
+import PLPDispatcher from "Store/PLP/PLP.dispatcher";
 
 export const mapStateToProps = (_state) => ({
   filters: _state.PLP.filters,
   isLoading: _state.PLP.isLoading,
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
+  sliderFilters: _state.PLP.sliderFilters,
+  newSelectedActiveFilters: _state.PLP.newActiveFilters,
+  moreFilters: _state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -132,17 +137,31 @@ export class PLPFiltersContainer extends PureComponent {
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
-    const { query, handleResetFilter, resetSortData } = this.props;
+    const {
+      query,
+      handleResetFilter,
+      resetSortData,
+      moreFilters: { moreFiltersArr = [] },
+    } = this.props;
     handleResetFilter()
     resetSortData();
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
-      WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      // we don't want to clear gender and in stock filter when user click on clear all button 
+      if(Object.keys(initialFilters)[i] != "gender" && Object.keys(initialFilters)[i] != "in_stock") {
+        WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
+      }
     }
+
+    // reset more filters
+    moreFiltersArr.map((item) => {
+      WebUrlParser.setParam(item, []);
+    });    
+
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, isPLPSortBy } = this.props;
+    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, newSelectedActiveFilters = {} } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -151,7 +170,9 @@ export class PLPFiltersContainer extends PureComponent {
       activeOverlay,
       activeFilters,
       query,
-      isPLPSortBy
+      sliderFilters,
+      isPLPSortBy,
+      newSelectedActiveFilters
     };
   };
 

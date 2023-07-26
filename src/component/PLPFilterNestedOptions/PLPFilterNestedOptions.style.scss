@@ -1,0 +1,64 @@
+.Seperator {
+  background-color: #efefef;
+  margin: 10px 0 0 0;
+  height: 1px;
+}
+
+.checkboxWrapper label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.wrapperLeafLevel {
+  li {
+    background-color: #f8fafb;
+    margin-bottom: 0px;
+  }
+
+  &-wrapperDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: auto auto auto 30px;
+
+    &_isArabic {
+      margin: auto 25px auto auto;
+    }
+  }
+
+  &-wrapperIconLabel {
+    display: flex;
+
+    label {
+      margin-left: 10px;
+    }
+  }
+
+  &-productCount {
+    margin-right: 30px;
+
+    &_isArabic {
+      margin-left: 8px;
+      margin-right: 0;
+    }
+  }
+}
+
+.labelAr {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
+.isLeafSelected label {
+  font-weight: 600;
+}
+
+.leafLevelSeperator {
+  background-color: #efefef;
+  margin: 0 25px 0 25px;
+  height: 1px;
+}

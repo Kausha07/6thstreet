@@ -1,0 +1,38 @@
+.BirthdayInput {
+  padding-right: 10px;
+  .react-datepicker-wrapper {
+    .react-datepicker__input-container {
+      @include desktop {
+        input {
+          width: 335px;
+        }
+      }
+    }
+  }
+
+  .react-datepicker {
+    .react-datepicker__triangle {
+      display: none;
+    }
+    .react-datepicker__month-container {
+      .react-datepicker__header,
+      .react-datepicker__header--custom {
+        div {
+          select {
+            height: 100%;
+            margin-top: 6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.BirthdayInputArabic {
+  @include desktop {
+    .react-datepicker {
+      right: -500px;
+      bottom: 10px;
+    }
+  }
+}

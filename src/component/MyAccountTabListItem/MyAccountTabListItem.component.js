@@ -1,16 +1,62 @@
 import { MyAccountTabListItem as SourceMyAccountTabListItem } from "SourceComponent/MyAccountTabListItem/MyAccountTabListItem.component";
 import { isArabic } from "Util/App";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+export const BreadcrumbsDispatcher = import(
+  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+  "Store/Breadcrumbs/Breadcrumbs.dispatcher"
+);
+
+export const mapStateToProps = (state) => ({
+  breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  updateBreadcrumbs: (breadcrumbs) => {
+    BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
+      dispatcher.update(breadcrumbs, dispatch)
+    );
+  },
+});
 
 export class MyAccountTabListItem extends SourceMyAccountTabListItem {
   state = {
     isArabic: isArabic(),
   };
 
+  static propTypes = {
+    updateBreadcrumbs: PropTypes.func.isRequired,
+    breadcrumbs: PropTypes.array.isRequired,
+  };
+
+  updateBreadcrumbs(breadcrumburl, name) {
+    const { updateBreadcrumbs } = this.props;
+
+    const breadcrumbs = [
+      {
+        url: breadcrumburl,
+        name: __(name),
+      },
+      {
+        url: "/my-account",
+        name: __("My Account"),
+      },
+      {
+        url: "/",
+        name: __("Home"),
+      },
+
+    ];
+
+    updateBreadcrumbs(breadcrumbs);
+  }
   render() {
     const {
       tabEntry: [, { name, linkClassName, className }],
       isActive,
       tabEntry,
+      changeActiveTab,
     } = this.props;
     const tabImageId = tabEntry[0];
     const { isArabic } = this.state;
@@ -29,7 +75,8 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
           elem="Button"
           mods={{ tabImageId }}
           onClick={() => {
-            this.changeActiveTab();
+            changeActiveTab(tabEntry[0]);
+            this.updateBreadcrumbs(tabEntry[1]?.url, tabEntry[1]?.name);
           }}
           role="link"
         >
@@ -51,4 +98,6 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
   }
 }
 
-export default MyAccountTabListItem;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(MyAccountTabListItem)
+);

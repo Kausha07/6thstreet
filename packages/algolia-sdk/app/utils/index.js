@@ -86,6 +86,7 @@ const getAlgoliaFilters = (paramsObj = {}) => {
   try {
     let facetFilters = [];
     let numericFilters = [];
+    let newFacetFilters = [];
 
     Object.keys(paramsObj).forEach((key) => {
       if (FACET_FILTERS.includes(key)) {
@@ -109,15 +110,92 @@ const getAlgoliaFilters = (paramsObj = {}) => {
           ];
         });
       }
+
+      if (key === "categoryIds" ) {
+        const idsArray = paramsObj[key]
+        .split(",")
+        .filter((value) => value !== "undefined" && value !== undefined )
+        .map((value) => {
+          return `${key}:${value}`
+        });
+        newFacetFilters = [ ...newFacetFilters, ...idsArray];
+      }
     });
 
     return {
       facetFilters,
       numericFilters,
+      newFacetFilters,
     };
   } catch (err) {
     console.error(err);
   }
+};
+
+const getMasterAlgoliaFilters = (paramsObj = {}) => {
+  try {
+    let facetFilters = [];
+    const requiredFilterForCategoryCount = [
+      "categories.level1",
+      "categories.level2",
+      "categories.level3",
+      "gender",
+      "in_stock",
+      "colorfamily",
+      "brand_name",
+      "size_uk",
+      "size_eu",
+      "size_us",
+      "promotion",
+      "is_new_in",
+    ];
+    requiredFilterForCategoryCount.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
+          .split(",")
+          .map((item) => `${key}:${item.trim()}`);
+        facetFilters.push(subArray);
+      }
+    });
+    return facetFilters;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {}) => {
+  try {
+    let facetFilters = [];
+    const moreFiltersArr = moreFiltersData?.more_filter || [];
+    moreFiltersArr.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
+          .split(",")
+          .map((item) => `${key}:${item.trim()}`);
+        facetFilters.push(subArray);
+      }
+    });
+    return facetFilters;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getAddtionalFacetsFilters = (paramsObj = {}) => {
+  try {
+    let additionalFacets = [];
+    const additionalFilters = ["gender", "in_stock", "is_new_in", "promotion"];
+
+    additionalFilters.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
+          .split(",")
+          .map((item) => `${key}:${item.trim()}`);
+        additionalFacets.push(subArray);
+      }
+    });
+    return additionalFacets;
+  } catch (error) {}
 };
 
 const getCurrencyCode = (country) => {
@@ -175,4 +253,7 @@ export {
   getCurrencyCode,
   isNewIn,
   formatNewInTag,
+  getMasterAlgoliaFilters,
+  getMoreFacetFilters,
+  getAddtionalFacetsFilters,
 };
