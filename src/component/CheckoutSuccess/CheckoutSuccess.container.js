@@ -31,7 +31,7 @@ import Event, {
   EVENT_GTM_NEW_AUTHENTICATION,
 } from "Util/Event";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
+import { ALGOLIA_PURCHASE_SUCCESS, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
@@ -187,10 +187,10 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
-    if (userData?.data?.id) {
-      userToken = userData.data.id;
-    }
+    let userToken = userData?.data?.id
+      ? `user-${userData.data.id}`
+      : getUUIDToken();
+
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -198,15 +198,16 @@ export class CheckoutSuccessContainer extends PureComponent {
       var queryID = item?.full_item_info?.search_query_id
         ? item?.full_item_info?.search_query_id
         : null;
-      if (queryID) {
+      let productObjectID = item?.full_item_info?.parent_id.toString();
+      if (queryID && userToken && productObjectID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
-          ADD_TO_CART_ALGOLIA,
+          ALGOLIA_PURCHASE_SUCCESS,
           [],
           {
-            objectIDs: [item?.full_item_info?.parent_id.toString()],
+            objectIDs: [productObjectID],
             queryID: queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+            userToken: userToken,
           }
         );
       }

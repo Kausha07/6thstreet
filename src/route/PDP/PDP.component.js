@@ -50,6 +50,7 @@ class PDP extends PureComponent {
   componentDidMount() {
     this.renderVueHits();
   }
+
   showMyAccountPopup = () => {
     const { showPopup } = this.state;
     this.setState({ showPopup: true });

@@ -132,10 +132,10 @@ const getAlgoliaFilters = (paramsObj = {}) => {
   }
 };
 
-const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
+const getMasterAlgoliaFilters = (paramsObj = {}) => {
   try {
     let facetFilters = [];
-    const requiredFilerForCategoryCount = [
+    const requiredFilterForCategoryCount = [
       "categories.level1",
       "categories.level2",
       "categories.level3",
@@ -146,54 +146,57 @@ const getAlgoliaFiltersProdCount = (paramsObj = {}) => {
       "size_uk",
       "size_eu",
       "size_us",
+      "promotion",
+      "is_new_in",
     ];
-
-    Object.keys(paramsObj).forEach((key) => {
-      if (requiredFilerForCategoryCount.includes(key)) {
-        const valuesArr = paramsObj[key]
+    requiredFilterForCategoryCount.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
           .split(",")
-          .filter((value) => value !== "undefined" && value !== undefined)
-          .map((value) => {
-            return `${key}:${value}`;
-          });
-
-        facetFilters = valuesArr.length
-          ? [...facetFilters, valuesArr]
-          : facetFilters;
+          .map((item) => `${key}:${item.trim()}`);
+        facetFilters.push(subArray);
       }
     });
-    return {
-      facetFilters,
-    };
-  } catch (err) {
-    console.error(err);
+    return facetFilters;
+  } catch (error) {
+    console.error(error);
   }
 };
 
-const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {} ) => {
+const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {}) => {
   try {
     let facetFilters = [];
     const moreFiltersArr = moreFiltersData?.more_filter || [];
-    Object.keys(paramsObj).forEach((key) => {
-      if (moreFiltersArr.includes(key)) {
-        const valuesArr = paramsObj[key]
+    moreFiltersArr.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
           .split(",")
-          .filter((value) => value !== "undefined" && value !== undefined)
-          .map((value) => {
-            return `${key}:${value}`;
-          });
-        facetFilters = valuesArr.length
-          ? [...facetFilters, valuesArr]
-          : facetFilters;
+          .map((item) => `${key}:${item.trim()}`);
+        facetFilters.push(subArray);
       }
     });
-    return {
-      moreFacetFilters: facetFilters,
-    };
-  } catch (err) {
-    console.error(err);
+    return facetFilters;
+  } catch (error) {
+    console.error(error);
   }
-}
+};
+
+const getAddtionalFacetsFilters = (paramsObj = {}) => {
+  try {
+    let additionalFacets = [];
+    const additionalFilters = ["gender", "in_stock", "is_new_in", "promotion"];
+
+    additionalFilters.map((key) => {
+      if (paramsObj[key] && paramsObj[key] != "") {
+        const subArray = paramsObj[key]
+          .split(",")
+          .map((item) => `${key}:${item.trim()}`);
+        additionalFacets.push(subArray);
+      }
+    });
+    return additionalFacets;
+  } catch (error) {}
+};
 
 const getCurrencyCode = (country) => {
   switch (country) {
@@ -250,6 +253,7 @@ export {
   getCurrencyCode,
   isNewIn,
   formatNewInTag,
-  getAlgoliaFiltersProdCount,
+  getMasterAlgoliaFilters,
   getMoreFacetFilters,
+  getAddtionalFacetsFilters,
 };

@@ -13,7 +13,8 @@ import {
   deepCopy,
   formatNewInTag,
   getAlgoliaFilters,
-  getAlgoliaFiltersProdCount,
+  getMasterAlgoliaFilters,
+  getAddtionalFacetsFilters,
   getCurrencyCode,
   getIndex,
   getMoreFacetFilters,
@@ -157,7 +158,7 @@ function getMoreFilters (facets, query, moreFiltersData ) {
 
 function getMinMax(str)  {
   const numbers = str.split(',')
-    .map((value) => value.replace(/\D/g, ''))
+    .map((value) => value.replace(/[^\d.]/g, '')) // Allow decimal point in addition to digits
     .filter((value) => value !== '') // Remove empty strings
     .map(Number); // Convert the extracted numbers to numeric values
 
@@ -561,7 +562,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
 
     // Build search query
     const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
-    const { moreFacetFilters=[] } = getMoreFacetFilters(queryParams, moreFiltersData);
+    const  moreFacetFilters = getMoreFacetFilters(queryParams, moreFiltersData);
     const query = {
       indexName: indexName,
       params: {
@@ -589,6 +590,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
       }
     });
 
+    let isGender = false;
     if (initialFacetFilter.length === 1) {
       initialFilterArg = initialFacetFilter[0];
     } else if (initialFacetFilter.length > 1) {
@@ -603,12 +605,14 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
           initialFacetFilter[filterOption.indexOf("brand_name")];
       } else if (filterOption.includes("gender")) {
         initialFilterArg = initialFacetFilter[filterOption.indexOf("gender")];
+        isGender = true;
       }
     }
+    const additionalFacets = getAddtionalFacetsFilters(queryParams);
     const queryCopy = {
       params: {
         ...newSearchParamsMoreFilters,
-        facetFilters: [initialFilterArg],
+        facetFilters: isGender ? [...additionalFacets] : [initialFilterArg, ...additionalFacets],
         numericFilters,
         query: q,
         page,
@@ -630,12 +634,11 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     queries.push(query);
 
     // To get the correct count of facets
-    const AlgoliaFiltersProdCount = getAlgoliaFiltersProdCount(queryParams);
     const queryProdCount = {
       indexName: indexName,
       params: {
         ...newSearchParamsMoreFilters,
-        facetFilters: AlgoliaFiltersProdCount?.facetFilters,
+        facetFilters: getMasterAlgoliaFilters(queryParams),
         numericFilters,
         query: q,
         page,
