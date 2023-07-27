@@ -38,7 +38,8 @@ import Event, {
   EVENT_CONTINUE_AS_GUEST,
   MOE_trackEvent
 } from "Util/Event";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import {
   CARD,
   FREE,
@@ -137,8 +138,9 @@ export class Checkout extends SourceCheckout {
       const defaultAddress = addresses.find(
         ({ default_shipping }) => default_shipping === true
       );
-      if (defaultAddress) {
-        const { city, area, country_code } = defaultAddress;
+
+      const { city, area, country_code } = defaultAddress ? defaultAddress : addresses[0];
+      if(country_code == getCountryFromUrl()) {
         const { finalCity, finalArea } = this.getArabicCityArea(city, area);
         let request = {
           country: country_code,
@@ -147,18 +149,20 @@ export class Checkout extends SourceCheckout {
           courier: null,
           source: null,
         };
-        estimateEddResponse(request, false);
-      } else {
-        const { city, area, country_code } = addresses[0];
-        const { finalCity, finalArea } = this.getArabicCityArea(city, area);
-        let request = {
-          country: country_code,
-          city: isArabic() ? finalCity : city,
-          area: isArabic() ? finalArea : area,
-          courier: null,
-          source: null,
-        };
-        estimateEddResponse(request, false);
+        if(edd_info?.has_item_level) {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+          request.intl_vendors=null;
+          let items = [];
+          items_in_cart.map(item => {
+            if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
+              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+            }
+          });
+          request.items = items;
+          if(items.length) estimateEddResponse(request, false);
+        } else {
+          estimateEddResponse(request, false);
+        }
       }
     }
   }

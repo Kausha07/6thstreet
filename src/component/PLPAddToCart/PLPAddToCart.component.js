@@ -26,6 +26,9 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { isObject } from "Util/API/helper/Object";
 import { isSignedIn } from "Util/Auth";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
@@ -37,11 +40,17 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   prevPath: state.PLP.prevPath,
   newActiveFilters: state.PLP.newActiveFilters,
+  edd_info: state.AppConfig.edd_info,
+  defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
+  eddResponse: state.MyAccountReducer.eddResponse,
+  addressCityData: state.MyAccountReducer.addressCityData,
 });
 
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 
 export const mapDispatchToProps = (dispatch) => ({
+  estimateEddResponse: (request, type) =>
+    MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
   showNotification: (type, message) =>
     dispatch(showNotification(type, message)),
   setMinicartOpen: (isMinicartOpen = false) =>
@@ -578,6 +587,87 @@ class PLPAddToCart extends PureComponent {
     });
   }
 
+  getSelectedCityAreaCountry = () => {
+    const countryCode = getCountryFromUrl();
+    const { defaultShippingAddress } = this.props;
+    const sessionData = sessionStorage.getItem("EddAddressReq");
+    let city = "";
+    let area = "";
+    if(sessionData) {
+       let data = JSON.parse(sessionData);
+       city = data.city;
+       area = data.area;
+    } else if(defaultShippingAddress) {
+      city = defaultShippingAddress.city;
+      area = defaultShippingAddress.area;
+    }
+    return {city, area, countryCode};
+  };
+
+  getIdFromCityArea = (addressCityData, city, area) => {
+    let cityEntry;
+    let areaEntry;
+    const { isArabic } = this.state;
+    Object.values(addressCityData).filter((entry) => {
+      if (entry.city === city || entry.city_ar === city) {
+        cityEntry = isArabic ? entry.city_ar : entry.city;
+        if (entry.city === city) {
+          Object.values(entry.areas).filter((cityArea, index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        } else {
+          Object.values(entry.areas_ar).filter((cityArea,index) => {
+            if (cityArea === area) {
+              areaEntry = isArabic ? entry.areas_ar[index] : entry.areas[index];
+            }
+          });
+        }
+      }
+    });
+    return { cityEntry, areaEntry };
+  };
+
+  callEstimateEddAPI = (sku, international_vendor, cross_border) => {
+    const { estimateEddResponse, edd_info, eddResponse, addressCityData } = this.props;
+    const {city, area, countryCode} = this.getSelectedCityAreaCountry();
+    let new_item = true;
+    if(city && area && countryCode) {
+      const { cityEntry, areaEntry } = this.getIdFromCityArea(
+        addressCityData,
+        city,
+        area
+      );
+      let request = {
+        country: countryCode,
+        city: cityEntry,
+        area: areaEntry,
+        courier: null,
+        source: null,
+      };
+      if(eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length && eddResponse["pdp"]) {
+        eddResponse["pdp"].map(eddVal => {
+          if(eddVal.sku == sku) {
+            new_item = false;
+          }
+        })
+      }
+      if(edd_info?.has_item_level && new_item) {
+        let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+        request.intl_vendors=null;
+        let items = [];
+        items_in_cart.map(item => {
+          if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
+            items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+          }
+        });
+        request.items = items;
+        if(items.length) estimateEddResponse(request, true);
+      }
+    }
+  }
+
   addToCart(isClickAndCollect = false) {
     const {
       product: {
@@ -594,6 +684,8 @@ class PLPAddToCart extends PureComponent {
         objectID,
         product_type_6s,
         simple_products,
+        international_vendor=null,
+        cross_border = 0
       },
       addProductToCart,
       showNotification,
@@ -603,6 +695,7 @@ class PLPAddToCart extends PureComponent {
       qid,
       newActiveFilters,
       product_Position,
+      edd_info
     } = this.props;
     const {
       selectedClickAndCollectStore,
@@ -691,6 +784,9 @@ class PLPAddToCart extends PureComponent {
         } else {
           this.afterAddToCart(true, {});
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART);
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.callEstimateEddAPI(selectedSizeCode, international_vendor, cross_border);
+          }
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -750,6 +846,9 @@ class PLPAddToCart extends PureComponent {
           this.afterAddToCart(false);
         } else {
           this.afterAddToCart(true);
+          if(edd_info && edd_info.is_enable && edd_info.has_item_level){
+            this.callEstimateEddAPI(selectedSizeCode, international_vendor, cross_border);
+          }
         }
       });
       Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {

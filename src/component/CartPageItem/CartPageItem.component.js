@@ -757,48 +757,81 @@ export class CartItem extends PureComponent {
       </div>
     );
   }
-  renderEdd = (crossBorder) => {
+
+  formatEddMessage = (crossBorder) => {
     const {
       eddResponse,
       edd_info,
-      item: { extension_attributes, brand_name = "", international_vendor=null },
+      item: { extension_attributes, brand_name = "", sku, full_item_info: {international_vendor=null} },
       intlEddResponse,
     } = this.props;
     const { isArabic } = this.state;
     let actualEddMess = "";
-    let actualEdd = "";
     const defaultDay = extension_attributes?.click_to_collect_store
       ? edd_info.ctc_message
       : edd_info.default_message;
     const {
-      defaultEddDateString,
       defaultEddDay,
       defaultEddMonth,
       defaultEddDat,
     } = getDefaultEddDate(defaultDay);
-    const isIntlBrand =
+
+    let itemEddMessage = extension_attributes?.click_to_collect_store
+        ? DEFAULT_READY_MESSAGE
+        : DEFAULT_MESSAGE;
+      let customDefaultMess = isArabic
+        ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+        : itemEddMessage;
+
+    if(edd_info.has_item_level){
+      if(!(crossBorder && !edd_info.has_cross_border_enabled)) {
+        if (eddResponse && isObject(eddResponse) && eddResponse["cart"]) {
+          eddResponse["cart"].filter((data) => {
+            if (data.sku === sku && data.feature_flag_status === 1) {
+              if (extension_attributes?.click_to_collect_store) {
+                actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+              } else {
+                actualEddMess = isArabic
+                  ? data.edd_message_ar
+                  : data.edd_message_en;
+              }
+            }
+          });
+        } else {
+          const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          if(isIntlBrand && edd_info.default_message_intl_vendor) {
+            const date_range = edd_info.default_message_intl_vendor.split("-");
+            const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
+            const end_date = date_range && date_range[1] ? date_range[1]: 0;
+            const { defaultEddMess } = getDefaultEddMessage(
+              parseInt(start_date),
+              parseInt(end_date),
+              1
+            );
+            actualEddMess = defaultEddMess;
+          } else {
+            actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+          }
+        }
+      }
+    } else {
+      const isIntlBrand =
       (edd_info.international_vendors && edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && crossBorder) ||
       (crossBorder && edd_info && edd_info.has_cross_border_enabled);
-    const intlEddObj = intlEddResponse["cart"]?.find(
-      ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
-    );
-    const intlEddMess = intlEddObj
-      ? isArabic
-        ? intlEddObj["edd_message_ar"]
-        : intlEddObj["edd_message_en"]
-      : isIntlBrand
-      ? isArabic
-        ? intlEddResponse["cart"][0]["edd_message_ar"]
-        : intlEddResponse["cart"][0]["edd_message_en"]
-      : "";
-    let itemEddMessage = extension_attributes?.click_to_collect_store
-      ? DEFAULT_READY_MESSAGE
-      : DEFAULT_MESSAGE;
-    let customDefaultMess = isArabic
-      ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
-      : itemEddMessage;
-    if (eddResponse) {
-      if (isObject(eddResponse)) {
+      const intlEddObj = intlEddResponse["cart"]?.find(
+        ({ vendor }) => vendor.toLowerCase() === international_vendor?.toString().toLowerCase()
+      );
+      const intlEddMess = intlEddObj
+        ? isArabic
+          ? intlEddObj["edd_message_ar"]
+          : intlEddObj["edd_message_en"]
+        : isIntlBrand
+        ? isArabic
+          ? intlEddResponse["cart"][0]["edd_message_ar"]
+          : intlEddResponse["cart"][0]["edd_message_en"]
+        : "";
+      if (eddResponse && isObject(eddResponse)) {
+
         if (isIntlBrand) {
           actualEddMess = intlEddMess;
         } else {
@@ -810,7 +843,6 @@ export class CartItem extends PureComponent {
                 actualEddMess = isArabic
                   ? entry.edd_message_ar
                   : entry.edd_message_en;
-                actualEdd = entry.edd_date;
               }
             }
           });
@@ -819,14 +851,14 @@ export class CartItem extends PureComponent {
         actualEddMess = isIntlBrand
           ? intlEddMess
           : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-        actualEdd = defaultEddDateString;
       }
-    } else {
-      actualEddMess = isIntlBrand
-        ? intlEddMess
-        : `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
-      actualEdd = defaultEddDateString;
     }
+    return actualEddMess;
+  }
+
+  renderEdd = (crossBorder) => {
+    const { item: { extension_attributes } } = this.props;
+    let actualEddMess = this.formatEddMessage(crossBorder);
 
     if (!actualEddMess) {
       return null;
@@ -903,7 +935,7 @@ export class CartItem extends PureComponent {
         {edd_info &&
           edd_info.is_enable &&
           edd_info.has_cart &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0) &&
+          ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
       </figcaption>
