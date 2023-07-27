@@ -78,7 +78,7 @@
             flex-direction: column;
             position: absolute;
             top: 75px;
-            &_isArabic {
+            &_isArabicValue {
               right: -188px;
               text-align: right !important;
             }
@@ -148,7 +148,7 @@
         flex: 0 0 4%;
         align-self: center;
       }
-      &_isArabic {
+      &_isArabicValue {
         .Image {
           img {
             rotate: 180deg;
@@ -248,7 +248,7 @@
       height: 27px;
       right: 27px;
       top: 35px;
-      &_isArabic{
+      &_isArabicValue{
         right:auto;
         left:27px;
       }
@@ -272,7 +272,7 @@
     }
   }
   .TermsPopup {
-    &_isArabic {
+    &_isArabicValue {
       direction: rtl;
       h3{
         text-align: right;

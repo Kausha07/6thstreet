@@ -9,8 +9,8 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
-import MyAccountReferral from "Component/MyAccountReferral";
-import Referral from "./../../component/Referral/Referral";
+import MyAccountReferralTab from "Component/MyAccountReferralTab";
+// import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
   RETURN__EXCHANGE_ITEM_LABEL,
@@ -107,7 +107,7 @@ export class MyAccount extends SourceMyAccount {
     [WALLET_PAYMENTS]: WalletAndPayments,
     [CONTACT_HELP]: ContactHelp,
     [SETTINGS_SCREEN]: SettingsScreen,
-    [REFERRAL_SCREEN]: MyAccountReferral,
+    [REFERRAL_SCREEN]: MyAccountReferralTab,
   };
 
   linksMap = [

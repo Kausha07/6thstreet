@@ -1,93 +1,95 @@
-import { PureComponent } from "react";
-import PropTypes from "prop-types";
-import "./MyAccountReferral.style.scss";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { showNotification } from "Store/Notification/Notification.action";
+import { Oval } from "react-loader-spinner";
+import {
+  fetchAndCreateReferralCode,
+  fetchReferralTexts,
+} from "../../util/API/endpoint/Referral/Referral.endpoint";
+import "./MyAccountReferralTab.style.scss";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { REFERRAL_COPY, REFERRAL_SHARE, MOE_trackEvent } from "Util/Event";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import Invite from "./icons/invite.png";
 import InviteBoth from "./icons/reward-both.png";
 import Arrow from "./icons/arrow.png";
-import { connect } from "react-redux";
 import WhatsappIcon from "./icons/whatsapp.png";
 import Close from "./icons/close.png";
 import CopyIcon from "./icons/copy.png";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import ShareButton from "Component/ShareButton";
 import Popup from "SourceComponent/Popup";
 import {
   hideActiveOverlay,
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
-import ShareButton from "Component/ShareButton";
-import { showNotification } from "Store/Notification/Notification.action";
-import {
-  fetchAndCreateReferralCode,
-  fetchReferralTexts,
-} from "../../util/API/endpoint/Referral/Referral.endpoint";
-import { isArabic } from "Util/App";
-import isMobile from "Util/Mobile";
 
 export const TERMS_OVERLAY = "terms_overlay_tnc";
 
-export const mapStateToProps = (state) => ({
-  customer: state.MyAccountReducer.customer,
-});
+export default function MyAccountReferralTab() {
+  const [referralCode, setReferralCode] = useState("");
+  const [referralHeading, setReferralHeading] = useState("");
+  const [referralText, setReferralText] = useState("");
+  const [socialShareText, setSocialShareText] = useState("");
+  const [isLoading, setIsLoading] = useState();
+  const isArabicValue = isArabic();
+  const isMobileDevice = isMobile.any();
+  const dispatch = useDispatch();
 
-export const mapDispatchToProps = (dispatch) => ({
-  showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-  showNotification: (type, message) =>
-    dispatch(showNotification(type, message)),
-});
-
-export class MyAccountReferral extends PureComponent {
-  static propTypes = {
-    showOverlay: PropTypes.func.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired,
-  };
-
-  state = {
-    isLoading: true,
-    referralHeading: "",
-    referralText: "",
-    socialShareText: "",
-    referralCode: "",
-    isMobile: isMobile.any() || isMobile.tablet(),
-    isArabic: isArabic(),
-  };
-
-  componentDidMount() {
-    this.createReferralCode();
+  function copyReferralCode(code) {
+    navigator.clipboard.writeText(code);
+    dispatch(showNotification("success", __("Link copied to clipboard")));
+    MOE_trackEvent(REFERRAL_COPY, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   }
 
-  createReferralCode = async () => {
-    const { customer } = this.props;
+  function handleWhatsAppClick(text) {
+    window.open(
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
+      "_blank"
+    );
+  }
+
+  const IsReferralEnabled = useSelector(
+    (state) => state.AppConfig.IsReferralEnabled
+  );
+  const customer = useSelector((state) => state.MyAccountReducer.customer);
+
+  async function createReferralCode() {
     if (customer.referral_coupon) {
-      this.setState({ referralCode: customer.referral_coupon });
-      this.setReferralCodeTexts(customer.referral_coupon);
+      console.log("BARATH",customer.referral_coupon )
+      setReferralCode(customer.referral_coupon);
     } else {
-      this.setState({ isLoading: true });
+      setIsLoading(true);
       const response = await fetchAndCreateReferralCode();
       if (response && response.referralCouponCode) {
-        this.setState({ referralCode: response.referralCouponCode });
-        this.setReferralCodeTexts(response.referralCouponCode);
-        this.setState({ isLoading: false });
+        setReferralCode(response.referralCouponCode);
+        setIsLoading(false);
       }
     }
-  };
+  }
 
-  setReferralCodeTexts = async (referral_code) => {
+  async function setReferralCodeTexts() {
+    setIsLoading(true);
     const responseReferralText = await fetchReferralTexts();
     if (responseReferralText && responseReferralText.status) {
       if (responseReferralText.invite_friends) {
-        this.setState({ referralHeading: responseReferralText.invite_friends });
+        setReferralHeading(responseReferralText.invite_friends);
       }
       if (responseReferralText.refer_friend) {
         if (responseReferralText.refer_friend.match(/\\n/)) {
-          const refText = responseReferralText.refer_friend.replace(
+          const reftext = responseReferralText.refer_friend.replace(
             /\\n/g,
             "<br>"
           );
-          this.setState({ referralText: refText });
+          setReferralText(reftext);
         } else {
-          this.setState({ referralText: responseReferralText.refer_friend });
+          setReferralText(responseReferralText.refer_friend);
         }
       }
       if (responseReferralText.social_share_text) {
@@ -99,45 +101,47 @@ export class MyAccountReferral extends PureComponent {
           if (responseReferralText.social_share_text.match(/\{{code}}/)) {
             const refShareTextWithCode = refShareText.replace(
               /\{{code}}/g,
-              `${referral_code}`
+              `${referralCode}`
             );
-            this.setState({ socialShareText: refShareTextWithCode });
+            setSocialShareText(refShareTextWithCode);
           } else {
-            this.setState({
-              socialShareText: responseReferralText.social_share_text,
-            });
+            setSocialShareText(refShareText);
           }
         } else {
-          this.setState({
-            socialShareText: responseReferralText.social_share_text,
-          });
+          setSocialShareText(responseReferralText.social_share_text);
         }
       }
     }
-    this.setState({ isLoading: false });
-  };
-
-  handleWhatsAppClick(text) {
-    window.open(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
-      "_blank"
-    );
+    setIsLoading(false);
   }
 
-  handleCopyCode(referralCode) {
-    const { showNotification } = this.props;
-    navigator.clipboard.writeText(referralCode);
-    showNotification("success", __("Link copied to clipboard"));
-  }
-  showTermsOverlay() {
-    const { showOverlay } = this.props;
-    showOverlay(TERMS_OVERLAY);
-  }
+  useEffect(() => {
+    createReferralCode();
+  }, []);
 
-  renderTermsContent() {
-    const { isArabic, isMobile } = this.state;
+  useEffect(() => {
+    setReferralCodeTexts();
+  }, [referralCode]);
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="ReferralLoading">
+  //       <Oval
+  //         color="#333"
+  //         secondaryColor="#333"
+  //         height={50}
+  //         width={"100%"}
+  //         strokeWidth={3}
+  //         strokeWidthSecondary={3}
+  //       />
+  //     </div>
+  //   );
+  // }
+
+
+  function renderTermsContent() {
     return (
-      <div block="TermsPopup" mods={{ isArabic }}>
+      <div block="TermsPopup" mods={{ isArabicValue }}>
         <h3>Terms & Conditions</h3>
         <div block="Terms" elem="Content">
           <ul>
@@ -180,19 +184,19 @@ export class MyAccountReferral extends PureComponent {
       </div>
     );
   }
-  renderCloseButton() {
-    const { hideActiveOverlay } = this.props;
-    const { isArabic } = this.state;
+
+  function renderCloseButton() {
     return (
       <div
         block="MyAccountReferralOverlay"
         elem="PopupClose"
-        mods={{ isArabic }}
+        mods={{ isArabicValue }}
       >
         <button
           block="MyAccountReferralOverlay"
           elem="Close"
-          onClick={hideActiveOverlay}
+          onClick={() => dispatch(hideActiveOverlay())}
+          
         >
           <img src={Close} alt="Close button" />
         </button>
@@ -200,8 +204,7 @@ export class MyAccountReferral extends PureComponent {
     );
   }
 
-  renderTermsPopup() {
-    const { isMobile, isArabic } = this.state;
+  function renderTermsPopup() {
     return (
       <>
         <Popup
@@ -211,17 +214,16 @@ export class MyAccountReferral extends PureComponent {
           clickOutside={true}
           id={TERMS_OVERLAY}
           title="Terms & Conditions"
-          mods={{ isArabic }}
+          mods={{ isArabicValue }}
         >
-          {isMobile && this.renderCloseButton()}
-          {this.renderTermsContent()}
+          {isMobileDevice && renderCloseButton()}
+          {renderTermsContent()}
         </Popup>
       </>
     );
   }
 
-  renderBannerContent() {
-    const { referralHeading } = this.state;
+  const renderBannerContent = () => {
     return (
       <div block="MyAccountReferral" elem="BannerContent">
         <div
@@ -231,10 +233,8 @@ export class MyAccountReferral extends PureComponent {
         ></div>
       </div>
     );
-  }
-
-  renderCodeContent() {
-    const { referralCode, socialShareText } = this.state;
+  };
+  const renderCodeContent = () => {
     return (
       <div block="MyAccountReferral" elem="CodeWrapper">
         <p block="Referral" elem="Text">
@@ -249,7 +249,7 @@ export class MyAccountReferral extends PureComponent {
             <div
               block="ShareIcon"
               elem="Image"
-              onClick={() => this.handleWhatsAppClick(socialShareText)}
+              onClick={() => handleWhatsAppClick(socialShareText)}
             >
               <Image lazyLoad={true} alt={"Whatsapp"} src={WhatsappIcon} />
             </div>
@@ -259,7 +259,7 @@ export class MyAccountReferral extends PureComponent {
             <div
               block="ShareIcon"
               elem="Image"
-              onClick={() => this.handleCopyCode(referralCode)}
+              onClick={() => copyReferralCode(referralCode)}
             >
               <Image lazyLoad={true} alt={"Copy"} src={CopyIcon} />
             </div>
@@ -273,10 +273,9 @@ export class MyAccountReferral extends PureComponent {
         </div>
       </div>
     );
-  }
+  };
 
-  renderInviteContent() {
-    const { referralText, isArabic } = this.state;
+  const renderInviteContent = () => {
     return (
       <div block="MyAccountReferral" elem="InviteWrapper">
         <div block="MyAccountReferral" elem="InviteContainer">
@@ -284,7 +283,7 @@ export class MyAccountReferral extends PureComponent {
             <Image lazyLoad={true} alt={"Invite"} src={Invite} />
             <p>{__("Invite your friends on 6thStreet to win store credit")}</p>
           </div>
-          <div block="Invite" elem="Container" mods={{ isArabic }}>
+          <div block="Invite" elem="Container" mods={{ isArabicValue }}>
             <Image lazyLoad={true} alt={"Arrow"} src={Arrow} />
           </div>
           <div block="Invite" elem="Container">
@@ -296,34 +295,23 @@ export class MyAccountReferral extends PureComponent {
           <button
             block="Terms"
             elem="Btn"
-            onClick={() => this.showTermsOverlay()}
+            onClick={() => dispatch(toggleOverlayByKey(TERMS_OVERLAY))}
           >
             {__("Terms and Conditions Apply")}
           </button>
         </div>
       </div>
     );
-  }
-
-  render() {
-    const { isLoading, referralCode, isArabic } = this.state;
-    if (isLoading) {
-      return <Loader isLoading={isLoading} />;
-    } else if (referralCode) {
-      return (
-        <>
-          <div block="MyAccountReferral" elem="Container" mods={{ isArabic }}>
-            {this.renderBannerContent()}
-            {this.renderCodeContent()}
-            {this.renderInviteContent()}
-          </div>
-          {this.renderTermsPopup()}
-        </>
-      );
-    } else {
-      return null;
-    }
-  }
+  };
+  return (
+    <>
+      {IsReferralEnabled && referralCode}
+      <div block="MyAccountReferral" elem="Container" mods={{ isArabicValue }}>
+        {renderBannerContent()}
+        {renderCodeContent()}
+        {renderInviteContent()}
+      </div>
+      {renderTermsPopup()}
+    </>
+  );
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountReferral);
