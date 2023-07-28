@@ -1,7 +1,7 @@
 /* eslint-disable fp/no-let */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import ShareIcon from "../MyAccountReferral/icons/share.png";
+import ShareIcon from "../MyAccountReferralTab/icons/share.png";
 import './ShareButton.style';
 import { Share } from '../Icons';
 import Image from "Component/Image";

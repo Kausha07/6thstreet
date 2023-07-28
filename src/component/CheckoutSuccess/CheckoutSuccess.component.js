@@ -47,7 +47,7 @@ import Event, {
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
 import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
-
+import DynamicContentReferralBanner from "../DynamicContentReferralBanner"
 export class CheckoutSuccess extends PureComponent {
   constructor(props) {
     super(props);
@@ -1389,6 +1389,15 @@ export class CheckoutSuccess extends PureComponent {
     );
   }
 
+  renderReferralBanner() {
+    const {isSignedIn} = this.props;
+    if (isSignedIn) {
+      return <DynamicContentReferralBanner />;
+    } else {
+      return null;
+    }
+  }
+
   renderDetails() {
     const {
       customer,
@@ -1431,6 +1440,7 @@ export class CheckoutSuccess extends PureComponent {
           )}
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
+          {this.renderReferralBanner()}
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}

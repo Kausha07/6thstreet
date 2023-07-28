@@ -102,6 +102,11 @@ export const tabMap = {
     name: __("My Profile"),
     className: "",
   },
+  [REFERRAL_SCREEN]: {
+    url: "/referral",
+    name : "Refer and Earn",
+    className: "",
+  },
   [MY_ORDERS]: {
     url: "/my-orders",
     name: __("My Orders"),
@@ -110,11 +115,6 @@ export const tabMap = {
 };
 
 export const tabMap2 = {
-  [REFERRAL_SCREEN]: {
-    url: "/referral",
-    name : "Refer and Earn",
-    className: "",
-  },
   [MY_WISHLIST]: {
     url: "/my-wishlist",
     name: __("My wishlist"),

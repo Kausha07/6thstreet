@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "Store/Notification/Notification.action";
-import { Oval } from "react-loader-spinner";
 import {
   fetchAndCreateReferralCode,
   fetchReferralTexts,
@@ -62,19 +61,20 @@ export default function MyAccountReferralTab() {
 
   async function createReferralCode() {
     if (customer.referral_coupon) {
-      console.log("BARATH",customer.referral_coupon )
       setReferralCode(customer.referral_coupon);
+      setReferralCodeTexts(customer.referral_coupon);
     } else {
       setIsLoading(true);
       const response = await fetchAndCreateReferralCode();
       if (response && response.referralCouponCode) {
         setReferralCode(response.referralCouponCode);
+        setReferralCodeTexts(response.referralCouponCode);
         setIsLoading(false);
       }
     }
   }
 
-  async function setReferralCodeTexts() {
+  async function setReferralCodeTexts(refCode) {
     setIsLoading(true);
     const responseReferralText = await fetchReferralTexts();
     if (responseReferralText && responseReferralText.status) {
@@ -101,7 +101,7 @@ export default function MyAccountReferralTab() {
           if (responseReferralText.social_share_text.match(/\{{code}}/)) {
             const refShareTextWithCode = refShareText.replace(
               /\{{code}}/g,
-              `${referralCode}`
+              `${refCode}`
             );
             setSocialShareText(refShareTextWithCode);
           } else {
@@ -119,27 +119,7 @@ export default function MyAccountReferralTab() {
     createReferralCode();
   }, []);
 
-  useEffect(() => {
-    setReferralCodeTexts();
-  }, [referralCode]);
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="ReferralLoading">
-  //       <Oval
-  //         color="#333"
-  //         secondaryColor="#333"
-  //         height={50}
-  //         width={"100%"}
-  //         strokeWidth={3}
-  //         strokeWidthSecondary={3}
-  //       />
-  //     </div>
-  //   );
-  // }
-
-
-  function renderTermsContent() {
+  const renderTermsContent = () => {
     return (
       <div block="TermsPopup" mods={{ isArabicValue }}>
         <h3>Terms & Conditions</h3>
@@ -185,7 +165,7 @@ export default function MyAccountReferralTab() {
     );
   }
 
-  function renderCloseButton() {
+  const renderCloseButton = () => {
     return (
       <div
         block="MyAccountReferralOverlay"
@@ -196,7 +176,6 @@ export default function MyAccountReferralTab() {
           block="MyAccountReferralOverlay"
           elem="Close"
           onClick={() => dispatch(hideActiveOverlay())}
-          
         >
           <img src={Close} alt="Close button" />
         </button>
@@ -204,7 +183,7 @@ export default function MyAccountReferralTab() {
     );
   }
 
-  function renderTermsPopup() {
+  const renderTermsPopup = () => {
     return (
       <>
         <Popup
@@ -303,15 +282,27 @@ export default function MyAccountReferralTab() {
       </div>
     );
   };
+  if(isLoading){
+    return(
+      <Loader isLoading={isLoading} />
+    )
+  }
   return (
     <>
-      {IsReferralEnabled && referralCode}
-      <div block="MyAccountReferral" elem="Container" mods={{ isArabicValue }}>
-        {renderBannerContent()}
-        {renderCodeContent()}
-        {renderInviteContent()}
-      </div>
-      {renderTermsPopup()}
+      {IsReferralEnabled && referralCode ? (
+        <>
+          <div
+            block="MyAccountReferral"
+            elem="Container"
+            mods={{ isArabicValue }}
+          >
+            {renderBannerContent()}
+            {renderCodeContent()}
+            {renderInviteContent()}
+          </div>
+          {renderTermsPopup()}
+        </>
+      ) : null}
     </>
   );
 }
