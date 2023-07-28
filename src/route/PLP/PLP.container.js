@@ -210,6 +210,7 @@ export class PLPContainer extends PureComponent {
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
     onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
+    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this)
   };
 
   resetPLPData() {
@@ -639,14 +640,25 @@ export class PLPContainer extends PureComponent {
         }
       }
     });
+    if(isQuickFilters) {
+      return;
+    }
     const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
     const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
     const key = "categories_without_path";
-    WebUrlParser.setParam(
-      key,
-      selectedFacetValues,
-      selectedFacetCategoryIds,
-    );
+      //Below code is for Msite - here I am not sending category Ids to Algolia
+    if(isMobile.any()) {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+      );
+    }else {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
+    }
   };
 
   selectMoreFilters = () => {
@@ -688,6 +700,22 @@ export class PLPContainer extends PureComponent {
       () => this.select()
     );
     sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
+  }
+
+  // for Msite category filter click
+  OnLevelTwoCategoryPressMsite(option, checked) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: option,
+            isDropdown: false,
+            newActiveFilters,
+          }) || {},
+      },
+      () => this.select()
+    );
   }
 
   onMoreFilterClick(option) {
@@ -788,16 +816,22 @@ export class PLPContainer extends PureComponent {
       return null;
     }
     try {
-      getBrandInfoByName(brandName).then((resp) => {
-        this.setState({
-          brandDescription: isArabic()
-            ? resp?.result[0]?.description_ar
-            : resp?.result[0]?.description,
-          brandImg: resp?.result[0]?.image,
-          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
-        });
-        this.props.setBrandurl(resp?.result[0]?.url_path);
-      })
+      if(brandName){
+        getBrandInfoByName(brandName).then((resp) => {
+          if (resp?.success && resp?.result != null) {
+            this.setState({
+              brandDescription: isArabic()
+                ? resp?.result[0]?.description_ar
+                : resp?.result[0]?.description,
+              brandImg: resp?.result[0]?.image,
+              brandName: isArabic()
+                ? resp?.result[0]?.name_ar
+                : resp?.result[0]?.name,
+            });
+            this.props.setBrandurl(resp?.result[0]?.url_path);
+          }
+        })
+      }
     } catch (err) {
       console.error("There is an issue while fetching brand information.", err);
     }
@@ -812,20 +846,22 @@ export class PLPContainer extends PureComponent {
     if (exceptionalBrand.includes(brandName)) {
       return null;
     }
-    const data = await new Algolia({
-      index: "brands_info",
-    }).getBrandsDetails({
-      query: brandName,
-      limit: 1,
-    });
-    this.setState({
-      brandDescription: isArabic()
-        ? data?.hits[0]?.description_ar
-        : data?.hits[0]?.description,
-      brandImg: data?.hits[0]?.image,
-      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
-    });
-    this.props.setBrandurl(data?.hits[0]?.url_path);
+    if(brandName){
+      const data = await new Algolia({
+        index: "brands_info",
+      }).getBrandsDetails({
+        query: brandName,
+        limit: 1,
+      });
+      this.setState({
+        brandDescription: isArabic()
+          ? data?.hits[0]?.description_ar
+          : data?.hits[0]?.description,
+        brandImg: data?.hits[0]?.image,
+        brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+      });
+      this.props.setBrandurl(data?.hits[0]?.url_path);
+    }
   }
 
   updateFiltersState(activeFilters) {

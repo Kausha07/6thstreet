@@ -43,8 +43,11 @@ function CareemPay({
 
   async function getCareemPayInvoice(data) {
     try {
-      const res = await careemPayCreateInvoice({data : data});
-      if(res){
+      const res = await careemPayCreateInvoice({ data: data });
+      if (res?.error) {
+        showErrorNotification(`${res?.error}`);
+      }
+      if (res){
         return res;
       }
     } catch (error) {

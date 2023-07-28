@@ -14,7 +14,7 @@ export default async function getTopSearches(options = {}) {
     var formattedEndDate = formatDate("YYYY-MM-DD", endDateObj);
     return new Promise((resolve, reject) => {
       fetch(
-        `https://analytics.algolia.com/2/searches?index=${indexName}&limit=5&tags=PWA_Search&startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+        `https://analytics.algolia.com/2/searches?index=${indexName}&limit=5&tags=Search&startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
         {
           headers: {
             "X-Algolia-API-Key": apiKey,

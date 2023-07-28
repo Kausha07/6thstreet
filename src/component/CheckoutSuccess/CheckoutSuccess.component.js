@@ -628,7 +628,6 @@ export class CheckoutSuccess extends PureComponent {
 
   renderTotalsItems() {
     const { paymentMethod, order } = this.props;
-    console.log('prod =>', order, "=>", paymentMethod?.code );
     if (
       (paymentMethod?.code === "checkout_qpay" ||
       paymentMethod?.code === "tabby_installments" ) && order

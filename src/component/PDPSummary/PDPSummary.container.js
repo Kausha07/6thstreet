@@ -83,12 +83,14 @@ export class PDPSummaryContainer extends PureComponent {
     this.getBrandDetails =
       this.props.catalogue_from_algolia
         ? this.getBrandDetailsByAlgolia.bind(this)
-        : this.getBrandDetailsCatalogueAPI.bind(this);
+        :this.getBrandDetailsCatalogueAPI.bind(this);
   }
 
   componentDidMount() {
-    const { brand_url = "" } = this.props;
-    this.getBrandDetails();
+    const { brand_url = "", product: { brand_name = "" }} = this.props;
+    if(brand_name) {
+      this.getBrandDetails();
+    }
     this.setState({
       url_path: brand_url,
     });

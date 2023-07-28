@@ -58,7 +58,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
       const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-
+  
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_CLICK,
         params: {
