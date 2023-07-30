@@ -8,6 +8,7 @@ import {
   setCustomerAddressData,
   setCustomerDefaultShippingAddress,
   setEddResponse,
+  setEddResponseForPDP,
   setIntlEddResponse,
   setDefaultEddAddress,
   setCitiesData,
@@ -70,6 +71,8 @@ export {
 } from "SourceStore/MyAccount/MyAccount.dispatcher";
 export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
+import { getCountryFromUrl } from "Util/Url";
+import {CART_ITEMS_CACHE_KEY} from "../Cart/Cart.reducer";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
@@ -103,14 +106,16 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   };
   setEDDresultData = (response, finalRes, dispatch, login) => {
     if (response.data && Object.values(response.data).length > 0 && finalRes && finalRes.length > 0) {
+      const {AppConfig: {edd_info= {}}} = getStore().getState();
       const defaultShippingAddress = Object.values(response.data).filter(
         (address) => {
           return address.default_shipping === true;
         }
       );
+      const countryCode = getCountryFromUrl();
       if (
         defaultShippingAddress &&
-        Object.values(defaultShippingAddress).length > 0
+        Object.values(defaultShippingAddress).length > 0 && defaultShippingAddress[0]["country_code"] && countryCode == defaultShippingAddress[0]["country_code"]
       ) {
         const { country_code, city, area } = defaultShippingAddress[0];
         const { finalCity, finalArea } = this.getArabicCityArea(
@@ -125,7 +130,20 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           courier: null,
           source: null,
         };
-        this.estimateDefaultEddResponse(dispatch, request);
+        if(edd_info.has_item_level) {
+          let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+          request.intl_vendors=null;
+          let items = [];
+          items_in_cart.map(item => {
+            if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
+              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+            }
+          });
+          request.items = items;
+          if(items.length) this.estimateDefaultEddResponse(dispatch, request);
+        } else {
+          this.estimateDefaultEddResponse(dispatch, request);
+        }
         dispatch(setCustomerDefaultShippingAddress(defaultShippingAddress[0]));
       } else if (sessionStorage.getItem("EddAddressReq")) {
         const response = sessionStorage.getItem("EddAddressRes")
@@ -136,19 +154,36 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       } else {
         if (!login) {
           const { country_code, city, area } = response.data[0];
-          const { finalCity, finalArea } = this.getArabicCityArea(
-            city,
-            area,
-            finalRes
-          );
-          let request = {
-            country: country_code,
-            city: isArabic() ? finalCity : city,
-            area: isArabic() ? finalArea : area,
-            courier: null,
-            source: null,
-          };
-          this.estimateDefaultEddResponse(dispatch, request);
+          const countryCode = getCountryFromUrl();
+          if(countryCode == country_code){
+            const { finalCity, finalArea } = this.getArabicCityArea(
+              city,
+              area,
+              finalRes
+            );
+            let request = {
+              country: country_code,
+              city: isArabic() ? finalCity : city,
+              area: isArabic() ? finalArea : area,
+              courier: null,
+              source: null,
+            };
+            if(edd_info.has_item_level) {
+              request.country = "SA";
+              let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+              request.intl_vendors=null;
+              let items = [];
+              items_in_cart.map(item => {
+                if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
+                  items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+                }
+              });
+              request.items = items;
+              if(items.length) this.estimateDefaultEddResponse(dispatch, request);
+            } else {
+              this.estimateDefaultEddResponse(dispatch, request);
+            }
+          }
         } else {
           dispatch(setEddResponse(null, null));
           dispatch(setCustomerDefaultShippingAddress(null));
@@ -539,7 +574,27 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   setGuestUserEmail(dispatch, email) {
     dispatch(updateGuestUserEmail(email));
   }
-
+  estimateEddResponseForPDP(dispatch, request){
+    try {
+      MobileAPI.post(`eddservice/estimate`, request).then((response) => {
+        if (response.success) {
+          dispatch(setEddResponseForPDP(response?.result, request));
+          sessionStorage.setItem(
+            "EddAddressResForPDP",
+            JSON.stringify(response?.result),
+          );
+          sessionStorage.setItem("EddAddressReq", JSON.stringify(request));
+        } else {
+          dispatch(setEddResponseForPDP({}, request));
+          sessionStorage.removeItem("EddAddressResForPDP");
+        }
+      });
+    } catch (error) {
+      dispatch(setEddResponseForPDP(null, request));
+      sessionStorage.removeItem("EddAddressResForPDP");
+    }
+  }
+// type --> false for call from checkout because we don't need to save this data for other pages it should be true 
   estimateEddResponse(dispatch, request, type) {
     try {
       MobileAPI.post(`eddservice/estimate`, request).then((response) => {
