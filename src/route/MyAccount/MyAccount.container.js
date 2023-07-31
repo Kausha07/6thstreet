@@ -26,6 +26,7 @@ import {
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
+  REFERRAL_SCREEN
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -99,6 +100,11 @@ export const tabMap = {
   [DASHBOARD]: {
     url: "/dashboard",
     name: __("My Profile"),
+    className: "",
+  },
+  [REFERRAL_SCREEN]: {
+    url: "/referral",
+    name : "Refer and Earn",
     className: "",
   },
   [MY_ORDERS]: {

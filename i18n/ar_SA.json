@@ -1238,5 +1238,17 @@
     "More": "أكثر",
     "Less": "أقل",
     "Select Price Range": "حدد نطاق السعر",
-    "Select Discount Range": "حدد نطاق الخصم"
+    "Select Discount Range": "حدد نطاق الخصم",
+    "Your invite code": "كود التوصية الخاص بك ",
+    "Copy code": "انسخ الكود",
+    "Invite your friends on 6thStreet to win store credit": "قم بدعوة أصدقائك على 6ستريت واربح رصيد متجر",
+    "Terms and Conditions Apply": "تطبق الشروط والأحكام",
+    "Referral code can be shared unlimited number of times": "يمكن مشاركة كود التوصية لعدد غير محدود من المرات",
+    "Referral coupon code can be used only by logged in customers": "لا يستخدم كود التوصية الا المستخدمين الذين سجلوا دخول",
+    "Referral code can be only used on the first order of the account and only once per account": "يستخدم كود التوصية على الطلب الأول في الحساب و فقط مرة واحدة لكل حساب ",
+    "Referral rewards will apply as per active promotion in the country to which the account belongs": "تطبق مكافآت التوصية بحسب توفر العرض في البلد الذي ينتمي له الحساب",
+    "Reward benefits will be awarded in the form of store credit to respective accounts": "سيتم اضافة مكافآت التوصية على شكل رصيد متجر للحسابات",
+    "Referral benefits will be awarded upon completion of first order by the referee using the referrer’s referral coupon code": "سيتم اضافة مكافآت التوصية عند اكمال الطلب الأول للشخص المدعوعند تطبيق كود القسيمة",
+    "Store credit can be used at any time without expiry date": "يمكن استخدام رصيد المتجر في أي وقت بلا تاريخ صلاحية ",
+    "Users cannot use their own referral code to place an order": "لا يمكن للمستخدم تطبيق كود التوصية الخاص به على طلباته"
 }

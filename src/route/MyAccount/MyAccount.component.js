@@ -9,7 +9,8 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
-import Referral from "./../../component/Referral/Referral";
+import MyAccountReferralTab from "Component/MyAccountReferralTab";
+// import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
   RETURN__EXCHANGE_ITEM_LABEL,
@@ -35,6 +36,7 @@ import {
   STORE_CREDIT,
   WALLET_PAYMENTS,
   tabMapType,
+  REFERRAL_SCREEN,
 } from "Type/Account";
 import {
   exchangeReturnState,
@@ -63,7 +65,7 @@ import Event, {
   EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
   EVENT_MOE_RETURN_AN_ITEM_CLICK,
   EVENT_ACCOUNT_PAYMENT_CLICK,
-  MOE_trackEvent
+  MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -105,6 +107,7 @@ export class MyAccount extends SourceMyAccount {
     [WALLET_PAYMENTS]: WalletAndPayments,
     [CONTACT_HELP]: ContactHelp,
     [SETTINGS_SCREEN]: SettingsScreen,
+    [REFERRAL_SCREEN]: MyAccountReferralTab,
   };
 
   linksMap = [
@@ -329,13 +332,13 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={changeActiveTab}
             onSignOut={this.handleSignOut}
           />
-          {customer && (
+          {/* {customer && (
             <Referral referralCodeValue={customer.referral_coupon} />
-          )}
+          )} */}
         </div>
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+            name === ("Club Apparel Loyalty") || (name == "Refer and Earn") ? null : !isReturnButton ? (
               <h1 block="MyAccount" elem="Heading">
                 {isCancel
                   ? alternateName
@@ -376,7 +379,7 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       payload,
       is_exchange_enabled,
-      config
+      config,
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
@@ -514,9 +517,9 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
-          {customer && (
+          {/* {customer && (
             <Referral referralCodeValue={customer.referral_coupon} />
-          )}
+          )} */}
           <div>{isMobile ? this.renderAppColumn() : null}</div>
         </div>
         <div block={hiddenTabContent}>
