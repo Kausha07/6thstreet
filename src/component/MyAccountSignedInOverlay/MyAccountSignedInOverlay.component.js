@@ -109,7 +109,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
           alt={"cat-menu"}
         />
         <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("Referral")}
+          {__("Refer & Earn")}
         </span>
       </Link>
     );
