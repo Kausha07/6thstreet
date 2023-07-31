@@ -42,12 +42,18 @@ import Event, {
   EVENT_RESEND_OTP_CLICK,
   EVENT_OTP_VERIFY_WITH_EMAIL,
   EVENT_OTP_VERIFY_WITH_PHONE,
-  MOE_trackEvent
+  MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
 import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
-import DynamicContentReferralBanner from "../DynamicContentReferralBanner"
+import { lazy, Suspense } from "react";
+
+const DynamicContentReferralBanner = lazy(() =>
+  import(
+    /* webpackChunkName: 'DynamicContentReferralBanner' */ "../DynamicContentReferralBanner"
+  )
+);
 export class CheckoutSuccess extends PureComponent {
   constructor(props) {
     super(props);
@@ -1389,9 +1395,13 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderReferralBanner() {
-    const {isSignedIn} = this.props;
+    const { isSignedIn } = this.props;
     if (isSignedIn) {
-      return <DynamicContentReferralBanner />;
+      return (
+        <Suspense fallback={<div></div>}>
+          <DynamicContentReferralBanner />
+        </Suspense>
+      );
     } else {
       return null;
     }
