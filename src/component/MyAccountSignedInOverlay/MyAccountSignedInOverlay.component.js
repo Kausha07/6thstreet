@@ -23,6 +23,7 @@ import Event, {
   EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_ACCOUNT_PAYMENT_CLICK,
+  EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK,
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -96,23 +97,27 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderReferralLink() {
-    return (
-      <Link
-        block="MyAccountSignedInOverlay"
-        elem="LinkAccount"
-        to="/my-account/referral"
-      >
-        <Image
-          lazyLoad={true}
-          src={ReferralIcon}
-          mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
-          alt={"cat-menu"}
-        />
-        <span block="MyAccountSignedInOverlay" elem="LinkTitle">
-          {__("Refer & Earn")}
-        </span>
-      </Link>
-    );
+    const {IsReferralEnabled} = this.props;
+    if (IsReferralEnabled){
+      return (
+        <Link
+          block="MyAccountSignedInOverlay"
+          elem="LinkAccount"
+          to="/my-account/referral"
+          onClick={() => this.sendEvents(EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK)}
+        >
+          <Image
+            lazyLoad={true}
+            src={ReferralIcon}
+            mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+            alt={"cat-menu"}
+          />
+          <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+            {__("Refer & Earn")}
+          </span>
+        </Link>
+      );
+    }
   }
 
   renderOrderHistoryLink() {

@@ -46,6 +46,7 @@ export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
+  IsReferralEnabled: state.AppConfig.IsReferralEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -104,7 +105,7 @@ export const tabMap = {
   },
   [REFERRAL_SCREEN]: {
     url: "/referral",
-    name : "Refer and Earn",
+    name : __("Refer & Earn"),
     className: "",
   },
   [MY_ORDERS]: {
@@ -157,6 +158,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     language: PropTypes.string.isRequired,
     newSignUpEnabled: PropTypes.bool,
     config: Config.isRequired,
+    IsReferralEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

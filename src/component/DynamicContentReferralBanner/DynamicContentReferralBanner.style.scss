@@ -12,6 +12,14 @@
   .Banner {
     &-Icon {
       margin-right: 30px;
+      &_isArabic{
+        margin-left: 30px;
+        margin-right: 0;
+        @include mobile{
+          margin-right: 0;
+          margin-left: 10px;
+        }
+      }
       @include mobile{
         margin-right: 10px;
       }
@@ -24,6 +32,9 @@
     }
     &-Content {
       text-align: left;
+      &_isArabic{
+        text-align: right;
+      }
       h4,
       p {
         color: #fff;
@@ -50,12 +61,24 @@
       display: block;
       height: 100%;
       left: 0;
+      &_isArabic{
+        left: auto;
+        right: 0;
+      }
     }
     &-close {
       position: absolute;
       right: 7%;
       top: 35%;
       z-index: 5;
+      &_isArabic{
+        right:auto;
+        left:7%;
+        @include mobile {
+          left: 5%;
+          right:auto;
+        }
+      }
       @include mobile {
         top: 30%;
         right: 5%;
@@ -76,6 +99,9 @@
         }
       }
     }
+  }
+  &_isArabic{
+    direction: rtl;
   }
 }
 
@@ -104,6 +130,14 @@
     .Banner {
       &-Icon {
         margin-right: 40px;
+        &_isArabic{
+          margin-right: 0px;
+          margin-left: 40px;
+          @include mobile {
+            margin-right: 0;
+            margin-left: 15px;
+          }
+        }
         @include mobile {
           margin-right: 15px;
         }

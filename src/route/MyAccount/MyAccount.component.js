@@ -65,6 +65,7 @@ import Event, {
   EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
   EVENT_MOE_RETURN_AN_ITEM_CLICK,
   EVENT_ACCOUNT_PAYMENT_CLICK,
+  EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -239,7 +240,9 @@ export class MyAccount extends SourceMyAccount {
         : key == "club-apparel"
         ? EVENT_ACCOUNT_CLUB_APPAREL_CLICK
         : key == "wallet-payments"
-        ? EVENT_ACCOUNT_PAYMENT_CLICK
+        ? EVENT_ACCOUNT_PAYMENT_CLICK 
+        : key == "referral" 
+        ? EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK
         : "";
     if (MoeEvent) {
       this.sendEvents(MoeEvent);
@@ -286,6 +289,7 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       is_exchange_enabled = false,
       customer,
+      IsReferralEnabled
     } = this.props;
     const { pathname = "" } = location;
     let newTabMap = is_exchange_enabled
@@ -296,6 +300,10 @@ export class MyAccount extends SourceMyAccount {
     if (!isSignedIn) {
       const { history } = this.props;
       return history.push("/");
+    }
+
+    if(!IsReferralEnabled){
+      delete tabMap[REFERRAL_SCREEN]
     }
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
@@ -338,7 +346,7 @@ export class MyAccount extends SourceMyAccount {
         </div>
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-            name === ("Club Apparel Loyalty") || (name == "Refer and Earn") ? null : !isReturnButton ? (
+            name === ("Club Apparel Loyalty") || (name == __("Refer & Earn")) ? null : !isReturnButton ? (
               <h1 block="MyAccount" elem="Heading">
                 {isCancel
                   ? alternateName
@@ -380,9 +388,13 @@ export class MyAccount extends SourceMyAccount {
       payload,
       is_exchange_enabled,
       config,
+      IsReferralEnabled
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
+    if(!IsReferralEnabled){
+      delete tabMap[REFERRAL_SCREEN]
+    }
     let newTabMap = is_exchange_enabled
       ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
       : { ...tabMap, ...returnState, ...tabMap2 };
