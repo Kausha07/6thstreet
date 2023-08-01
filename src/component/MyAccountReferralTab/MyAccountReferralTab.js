@@ -7,7 +7,7 @@ import {
 } from "../../util/API/endpoint/Referral/Referral.endpoint";
 import "./MyAccountReferralTab.style.scss";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import Event,{
+import Event, {
   REFERRAL_COPY,
   REFERRAL_SHARE,
   MOE_trackEvent,
@@ -42,6 +42,9 @@ export default function MyAccountReferralTab() {
   const isArabicValue = isArabic();
   const isMobileDevice = isMobile.any();
   const dispatch = useDispatch();
+  const encodedText = socialShareText
+    .replaceAll("<br/>", "\n")
+    .replaceAll("{{code}}", referralCode);
 
   function copyReferralCode(code) {
     navigator.clipboard.writeText(code);
@@ -64,10 +67,7 @@ export default function MyAccountReferralTab() {
       action: EVENT_WHATSAPP_SHARE + "_click",
     };
     Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
-    window.open(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
-      "_blank"
-    );
+    window.open(`https://api.whatsapp.com/send?text=${encodedText}`, "_blank");
   }
 
   const IsReferralEnabled = useSelector(
@@ -272,7 +272,7 @@ export default function MyAccountReferralTab() {
               });
             }}
           >
-            <ShareButton text={socialShareText} isReferral />
+            <ShareButton text={encodedText} isReferral />
             <p>{__("More")}</p>
           </div>
         </div>

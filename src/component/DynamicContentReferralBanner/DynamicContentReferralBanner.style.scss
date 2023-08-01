@@ -76,11 +76,11 @@
         left:7%;
         @include mobile {
           left: 5%;
-          right:auto;
+          right:auto !important;
         }
       }
       @include mobile {
-        top: 30%;
+        top: 24%;
         right: 5%;
       }
       button {

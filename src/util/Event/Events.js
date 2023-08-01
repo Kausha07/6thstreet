@@ -291,6 +291,7 @@
  export const BIRTHDATE_UPDATE_SUCCESS = "birthdate_update_success";
  export const REFERRAL_COPY = "referral_copy";
  export const REFERRAL_SHARE = "referral_share";
+ export const REFERRAL_NUDGE_CLICK = "referral_nudge_click";
  
 // Checkout Errors Tracking Event
 export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";

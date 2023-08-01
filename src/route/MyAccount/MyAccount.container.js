@@ -106,7 +106,7 @@ export const tabMap = {
   [REFERRAL_SCREEN]: {
     url: "/referral",
     name : __("Refer & Earn"),
-    className: "",
+    className: "ReferralTabLink",
   },
   [MY_ORDERS]: {
     url: "/my-orders",

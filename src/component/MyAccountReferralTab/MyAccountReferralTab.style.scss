@@ -78,7 +78,7 @@
             flex-direction: column;
             position: absolute;
             top: 75px;
-            &_isArabicValue {
+            &_isArabicValue, &_isArabic {
               right: -188px;
               text-align: right !important;
             }

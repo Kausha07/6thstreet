@@ -8,6 +8,8 @@ import { isSignedIn } from "Util/Auth";
 import { connect } from "react-redux";
 import bannerGiftImage from "./icons/banner-gift.png";
 import { isArabic } from "Util/App";
+import { MOE_trackEvent, REFERRAL_NUDGE_CLICK } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
@@ -35,6 +37,13 @@ class DynamicContentReferralBanner extends PureComponent {
   hideBanner() {
     setCrossSubdomainCookie("HideReferralBanner", "true", 2);
     this.setState({ disableReferralBanner: true });
+  }
+  sendImpressions(){
+    MOE_trackEvent(REFERRAL_NUDGE_CLICK, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
   }
 
   renderImages() {
@@ -64,7 +73,15 @@ class DynamicContentReferralBanner extends PureComponent {
   }
   renderLink() {
     const { isArabic } = this.state;
-    return <Link block="Banner" elem="Link" mods={{ isArabic }} to="/my-account/referral"></Link>;
+    return (
+      <Link
+        block="Banner"
+        elem="Link"
+        mods={{ isArabic }}
+        onClick={()=> this.sendImpressions()}
+        to="/my-account/referral"
+      ></Link>
+    );
   }
 
   renderText() {
@@ -80,7 +97,7 @@ class DynamicContentReferralBanner extends PureComponent {
   }
 
   render() {
-    const { disableReferralBanner, isSignedIn,isArabic } = this.state;
+    const { disableReferralBanner, isSignedIn, isArabic } = this.state;
     const { IsReferralEnabled } = this.props;
     if (!disableReferralBanner && isSignedIn && IsReferralEnabled) {
       return (

@@ -102,7 +102,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       return (
         <Link
           block="MyAccountSignedInOverlay"
-          elem="LinkAccount"
+          elem="ReferralTabLink"
           to="/my-account/referral"
           onClick={() => this.sendEvents(EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK)}
         >
