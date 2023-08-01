@@ -8,6 +8,11 @@
     justify-content: center;
     display: block;
     text-align: left;
+    margin-top: 5px;
+
+    &-Special_discount {
+      color: #000000;
+    }
   }
   .ProductItem {
     &-ImageBox {
@@ -16,7 +21,6 @@
     }
     .Image {
       // position: unset!important;
-      top: unset!important;
       left: unset!important;
       padding-bottom: unset!important;
     }

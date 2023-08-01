@@ -23,6 +23,7 @@ import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
 import StrikeThrough from "./icons/strike-through.png";
 import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png";
+import Loader from "Component/Loader";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -186,9 +187,15 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
-      this.props;
+    const {
+      selectedSizeCode,
+      onSizeSelect,
+      notifyMeLoading,
+      notifyMeSuccess,
+      popUpType = "",
+    } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
+    const quantity = productStock[code].quantity;
 
     const selectedLabelStyle = {
       fontSize: "14px",
@@ -241,6 +248,11 @@ class PDPAddToCart extends PureComponent {
             />
           )}
         </div>
+        {popUpType === "wishListPopUp" && (
+          <div block="leftQuantity">
+            {quantity < 6 && quantity > 0 && __("Last %s left", quantity)}
+          </div>
+        )}
         <div />
       </div>
     );
@@ -611,6 +623,9 @@ class PDPAddToCart extends PureComponent {
       sizeObject = {},
       processingRequest,
       setStockAvailability,
+      popUpType = "",
+      isSizeLessProduct = false,
+      isLoadingAddToCart = false,
     } = this.props;
 
     if (processingRequest) {
@@ -626,6 +641,10 @@ class PDPAddToCart extends PureComponent {
       setStockAvailability(false);
       return null;
     }
+    
+    if (isMobile.any() && isSizeLessProduct && popUpType === "wishListPopUp") {
+      return <Loader isLoading={isLoadingAddToCart} />;
+    }
 
     return (
       <>
@@ -635,8 +654,10 @@ class PDPAddToCart extends PureComponent {
         {sizeObject.sizeTypes !== undefined &&
         sizeObject.sizeTypes.length !== 0 ? (
           <>
-            <div block="SeperatorAddtoCart" />
-            {this.renderAppParity()}
+            {popUpType !== "wishListPopUp" && (
+              <div block="SeperatorAddtoCart" />
+            )}
+            {popUpType !== "wishListPopUp" && this.renderAppParity()}
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               {in_stock !== 0? <h2 block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}

@@ -1238,5 +1238,8 @@
     "More": "أكثر",
     "Less": "أقل",
     "Select Price Range": "حدد نطاق السعر",
-    "Select Discount Range": "حدد نطاق الخصم"
+    "Select Discount Range": "حدد نطاق الخصم",
+    "Move to Cart": "اضف لسلة التسوق",
+    "Last %s left":"تبقى %s فقط",
+    "Product added to your shopping bag":"تمت اضافة المنتج لحقيبة التسوق الخاصة بك"
 }

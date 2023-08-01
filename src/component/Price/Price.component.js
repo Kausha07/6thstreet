@@ -118,6 +118,31 @@ class Price extends PureComponent {
     }
   }
 
+  renderFinalPriceOnly = () => {
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+    } = this.props;
+    const { isArabic } = this.state;
+
+    if (!parseFloat(basePrice)) {
+      return null;
+    }
+
+    if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
+      return this.renderBasePrice();
+    }
+    return (
+      <>
+        <span block="Price" elem="Wrapper">
+          {renderSpecialPrice && this.renderSpecialPrice()}
+          {isArabic && <>&nbsp;</>}
+        </span>
+      </>
+    );
+  };
+
   renderPrice() {
     const { basePrice, specialPrice, renderSpecialPrice } =
       this.props;
@@ -165,12 +190,15 @@ class Price extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { pageType = "" } = this.props;
     return (
       <div
         block={`Price ${this.haveDiscount() ? "discount" : ""}`}
         mix={{ block: "Price", mods: { isArabic } }}
       >
-        {this.renderPrice()}
+        {pageType === "wishlist"
+          ? this.renderFinalPriceOnly()
+          : this.renderPrice()}
       </div>
     );
   }
