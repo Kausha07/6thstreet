@@ -130,7 +130,7 @@ const MsiteAddToCartPopUp = (props) => {
         >
           {in_stock === 0 || (in_stock === 1 && stock_qty === 0)
             ? __("Out of Stock")
-            : __("Move to Cart")}
+            : __("Add to bag")}
         </button>
         {isAddToCartButtonClicked && renderMsiteAddToCartOverlay()}
       </>
