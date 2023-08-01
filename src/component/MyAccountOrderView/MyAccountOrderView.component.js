@@ -454,7 +454,7 @@ class MyAccountOrderView extends PureComponent {
               </p>
               {index === 2 &&
               edd_info &&
-              edd_info.is_enable &&
+              edd_info.is_enable && finalEdd &&
                 this.renderEdd(finalEdd, colorCode)}
               {/* <p block="MyAccountOrderListItem" elem="StatusTitle">
                 {label === STATUS_DISPATCHED && item?.courier_shipped_date ? formatDate(

@@ -74,8 +74,10 @@ import {
 import { getDefaultEddDate } from "Util/Date/index";
 import { getOrderData } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import Loader from "Component/Loader";
+import { isObject } from "Util/API/helper/Object";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
+import { getDefaultEddMessage } from "Util/Date/index";
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -151,6 +153,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   addressLoader: state.MyAccountReducer.addressLoader,
+  eddResponse: state.MyAccountReducer.eddResponse,
   config: state.AppConfig.config,
 });
 
@@ -814,6 +817,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       cartItems,
       intlEddResponse,
       edd_info,
+      eddResponse,
       totals,
       isSignedIn
     } = this.props;
@@ -831,7 +835,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
       MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
     }
-    if (edd_info?.is_enable && cartItems) {
+    if (edd_info?.is_enable && !edd_info.has_item_level && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {
           cross_border = 0,
@@ -903,6 +907,84 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           intl_vendors: edd_info.international_vendors ? (edd_info.international_vendors.includes(international_vendor?.toString().toLowerCase()) && cross_border === 1
             ? international_vendor : null)
             : null,
+        });
+      });
+    }
+    if (edd_info?.is_enable && edd_info.has_item_level && cartItems) {
+      cartItems.map(({ full_item_info }) => {
+        const {
+          cross_border = 0,
+          sku,
+          extension_attributes,
+          international_vendor = null
+        } = full_item_info;
+        const defaultDay = extension_attributes?.click_to_collect_store
+          ? edd_info.ctc_message
+          : edd_info.default_message;
+        const {
+          defaultEddDateString,
+          defaultEddDay,
+          defaultEddMonth,
+          defaultEddDat,
+        } = getDefaultEddDate(defaultDay);
+        let itemEddMessage = extension_attributes?.click_to_collect_store
+          ? DEFAULT_READY_MESSAGE
+          : DEFAULT_MESSAGE;
+        let customDefaultMess = isArabic()
+          ? EDD_MESSAGE_ARABIC_TRANSLATION[itemEddMessage]
+          : itemEddMessage;
+        let actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+        let finalEddForLineItem = null;
+        if (eddResponse && isObject(eddResponse) && eddResponse["thankyou"]) {
+          eddResponse["thankyou"].filter((data) => {
+            if (data.sku == sku && data.feature_flag_status === 1) {
+              if (extension_attributes?.click_to_collect_store) {
+                actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
+              } else {
+                finalEddForLineItem = data.edd_date;
+                actualEddMess = isArabic()
+                  ? data.edd_message_ar
+                  : data.edd_message_en;
+              }
+            }
+          });
+        } else {
+          const isIntlBrand = cross_border && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
+          if(isIntlBrand && edd_info.default_message_intl_vendor) {
+            const date_range = edd_info.default_message_intl_vendor.split("-");
+            const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
+            const end_date = date_range && date_range[1] ? date_range[1]: 0;
+            const { defaultEddMess } = getDefaultEddMessage(
+              parseInt(start_date),
+              parseInt(end_date),
+              1
+            );
+            actualEddMess = defaultEddMess;
+            const {
+              defaultEddDateString
+            } = getDefaultEddDate(parseInt(end_date));
+            finalEddForLineItem = defaultEddDateString;
+          } else {
+            finalEddForLineItem = defaultEddDateString;
+          }
+        }
+        
+        eddItems.push({
+          sku: sku,
+          edd_date:
+            cross_border && edd_info && !edd_info.has_cross_border_enabled
+              ? null
+              : edd_info && extension_attributes?.click_to_collect_store
+              ? defaultEddDateString
+              : finalEddForLineItem,
+          cross_border: cross_border,
+          edd_message_en: cross_border && edd_info && !edd_info.has_cross_border_enabled
+          ? null
+          : actualEddMess,
+          edd_message_ar: cross_border && edd_info && !edd_info.has_cross_border_enabled
+          ? null
+          : actualEddMess,
+          intl_vendors: cross_border && international_vendor ? international_vendor : null
         });
       });
     }
