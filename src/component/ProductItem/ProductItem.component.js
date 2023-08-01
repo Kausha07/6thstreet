@@ -11,7 +11,7 @@ import WishlistIcon from "Component/WishlistIcon";
 import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
 import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -36,7 +36,11 @@ import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
-import MsiteAddToCartPopUp from "Component/MsiteAddToCartPopUp/index";
+const MsiteAddToCartPopUp = lazy(() =>
+  import(
+    /* webpackChunkName: 'MsiteAddToCartPopUp' */ "Component/MsiteAddToCartPopUp"
+  )
+);
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -513,7 +517,11 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartButton = (productInfo) => {
-    return <MsiteAddToCartPopUp productInfo={productInfo} />;
+    return (
+      <Suspense fallback={<div></div>}>
+        <MsiteAddToCartPopUp productInfo={productInfo} />
+      </Suspense>
+    );
   };
 
   render() {
