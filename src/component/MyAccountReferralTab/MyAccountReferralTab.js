@@ -138,7 +138,7 @@ export default function MyAccountReferralTab() {
   const renderTermsContent = () => {
     return (
       <div block="TermsPopup" mods={{ isArabicValue }}>
-        <h3>Terms & Conditions</h3>
+        <h3>{__("Terms & Conditions")}</h3>
         <div block="Terms" elem="Content">
           <ul>
             <li>
