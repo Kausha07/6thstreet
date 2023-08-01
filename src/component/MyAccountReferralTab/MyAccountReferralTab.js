@@ -7,7 +7,13 @@ import {
 } from "../../util/API/endpoint/Referral/Referral.endpoint";
 import "./MyAccountReferralTab.style.scss";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import { REFERRAL_COPY, REFERRAL_SHARE, MOE_trackEvent } from "Util/Event";
+import Event,{
+  REFERRAL_COPY,
+  REFERRAL_SHARE,
+  MOE_trackEvent,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_WHATSAPP_SHARE,
+} from "Util/Event";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import Invite from "./icons/invite.png";
@@ -48,6 +54,16 @@ export default function MyAccountReferralTab() {
   }
 
   function handleWhatsAppClick(text) {
+    MOE_trackEvent(EVENT_WHATSAPP_SHARE, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: EVENT_WHATSAPP_SHARE,
+      action: EVENT_WHATSAPP_SHARE + "_click",
+    };
+    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     window.open(
       `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
       "_blank"
@@ -163,7 +179,7 @@ export default function MyAccountReferralTab() {
         </div>
       </div>
     );
-  }
+  };
 
   const renderCloseButton = () => {
     return (
@@ -181,7 +197,7 @@ export default function MyAccountReferralTab() {
         </button>
       </div>
     );
-  }
+  };
 
   const renderTermsPopup = () => {
     return (
@@ -200,7 +216,7 @@ export default function MyAccountReferralTab() {
         </Popup>
       </>
     );
-  }
+  };
 
   const renderBannerContent = () => {
     return (
@@ -245,7 +261,17 @@ export default function MyAccountReferralTab() {
 
             <p>{__("Copy code")}</p>
           </div>
-          <div block="ShareIcon" title="Share">
+          <div
+            block="ShareIcon"
+            title="Share"
+            onClick={() => {
+              MOE_trackEvent(REFERRAL_SHARE, {
+                country: getCountryFromUrl().toUpperCase(),
+                language: getLanguageFromUrl().toUpperCase(),
+                app6thstreet_platform: "Web",
+              });
+            }}
+          >
             <ShareButton text={socialShareText} isReferral />
             <p>{__("More")}</p>
           </div>
@@ -282,10 +308,8 @@ export default function MyAccountReferralTab() {
       </div>
     );
   };
-  if(isLoading){
-    return(
-      <Loader isLoading={isLoading} />
-    )
+  if (isLoading) {
+    return <Loader isLoading={isLoading} />;
   }
   return (
     <>
