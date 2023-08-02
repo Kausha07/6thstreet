@@ -9,7 +9,8 @@ import MyAccountDashboard from "Component/MyAccountDashboard";
 import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
-import Referral from "./../../component/Referral/Referral";
+import MyAccountReferralTab from "Component/MyAccountReferralTab";
+// import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
   RETURN__EXCHANGE_ITEM_LABEL,
@@ -35,6 +36,7 @@ import {
   STORE_CREDIT,
   WALLET_PAYMENTS,
   tabMapType,
+  REFERRAL_SCREEN,
 } from "Type/Account";
 import {
   exchangeReturnState,
@@ -63,7 +65,8 @@ import Event, {
   EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK,
   EVENT_MOE_RETURN_AN_ITEM_CLICK,
   EVENT_ACCOUNT_PAYMENT_CLICK,
-  MOE_trackEvent
+  EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK,
+  MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -105,6 +108,7 @@ export class MyAccount extends SourceMyAccount {
     [WALLET_PAYMENTS]: WalletAndPayments,
     [CONTACT_HELP]: ContactHelp,
     [SETTINGS_SCREEN]: SettingsScreen,
+    [REFERRAL_SCREEN]: MyAccountReferralTab,
   };
 
   linksMap = [
@@ -236,7 +240,9 @@ export class MyAccount extends SourceMyAccount {
         : key == "club-apparel"
         ? EVENT_ACCOUNT_CLUB_APPAREL_CLICK
         : key == "wallet-payments"
-        ? EVENT_ACCOUNT_PAYMENT_CLICK
+        ? EVENT_ACCOUNT_PAYMENT_CLICK 
+        : key == "referral" 
+        ? EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK
         : "";
     if (MoeEvent) {
       this.sendEvents(MoeEvent);
@@ -283,6 +289,7 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       is_exchange_enabled = false,
       customer,
+      IsReferralEnabled
     } = this.props;
     const { pathname = "" } = location;
     let newTabMap = is_exchange_enabled
@@ -293,6 +300,10 @@ export class MyAccount extends SourceMyAccount {
     if (!isSignedIn) {
       const { history } = this.props;
       return history.push("/");
+    }
+
+    if(!IsReferralEnabled){
+      delete tabMap[REFERRAL_SCREEN]
     }
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
@@ -329,13 +340,13 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={changeActiveTab}
             onSignOut={this.handleSignOut}
           />
-          {customer && (
+          {/* {customer && (
             <Referral referralCodeValue={customer.referral_coupon} />
-          )}
+          )} */}
         </div>
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-            name === "Club Apparel Loyalty" ? null : !isReturnButton ? (
+            name === ("Club Apparel Loyalty") || (name == __("Refer & Earn")) ? null : !isReturnButton ? (
               <h1 block="MyAccount" elem="Heading">
                 {isCancel
                   ? alternateName
@@ -376,10 +387,14 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       payload,
       is_exchange_enabled,
-      config
+      config,
+      IsReferralEnabled
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
+    if(!IsReferralEnabled){
+      delete tabMap[REFERRAL_SCREEN]
+    }
     let newTabMap = is_exchange_enabled
       ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
       : { ...tabMap, ...returnState, ...tabMap2 };
@@ -514,9 +529,9 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
-          {customer && (
+          {/* {customer && (
             <Referral referralCodeValue={customer.referral_coupon} />
-          )}
+          )} */}
           <div>{isMobile ? this.renderAppColumn() : null}</div>
         </div>
         <div block={hiddenTabContent}>

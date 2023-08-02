@@ -165,7 +165,9 @@ class PLPFilterOption extends PureComponent {
     }else {
       parentCallback(facet_key, facet_value, checked, isRadio);
     }
-    toggleOptionList();
+    if (facet_key === "sort") {
+      toggleOptionList();
+    }
   };
 
   renderField() {

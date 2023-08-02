@@ -12,6 +12,7 @@ import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
 import LogoutIcon from "./icons/logout.png";
 import ReturnIcon from "./icons/return.svg";
+import ReferralIcon from "./icons/referral-icon.png"
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
 import "./MyAccountSignedInOverlay.style";
 import Event, {
@@ -22,6 +23,7 @@ import Event, {
   EVENT_ACCOUNT_CLUB_APPAREL_CLICK,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_ACCOUNT_PAYMENT_CLICK,
+  EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK,
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
@@ -92,6 +94,30 @@ export class MyAccountSignedInOverlay extends PureComponent {
         </span>
       </Link>
     );
+  }
+
+  renderReferralLink() {
+    const {IsReferralEnabled} = this.props;
+    if (IsReferralEnabled){
+      return (
+        <Link
+          block="MyAccountSignedInOverlay"
+          elem="ReferralTabLink"
+          to="/my-account/referral"
+          onClick={() => this.sendEvents(EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK)}
+        >
+          <Image
+            lazyLoad={true}
+            src={ReferralIcon}
+            mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+            alt={"cat-menu"}
+          />
+          <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+            {__("Refer & Earn")}
+          </span>
+        </Link>
+      );
+    }
   }
 
   renderOrderHistoryLink() {
@@ -257,6 +283,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
         {this.renderClubLink()}
         {this.renderMyAccountLink()}
+        {this.renderReferralLink() }
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}
         {this.renderWishlistLink()}
