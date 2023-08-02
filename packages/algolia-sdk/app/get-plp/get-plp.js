@@ -174,12 +174,14 @@ function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
     sliderFilters.discount = {
       discount: queryParams.discount,
       min: minMax[0],
-      max: minMax[1]
+      max: minMax[1],
+      isDiscountFilterApplyed: true,
     }
   } else if(facets_stats && facets_stats.discount) {
     sliderFilters.discount = {
       min: facets_stats?.discount?.min,
       max: facets_stats?.discount?.max,
+      isDiscountFilterApplyed: false,
     }
   }
 
@@ -197,12 +199,14 @@ function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
     sliderFilters.price = {
       price: queryParams[`price.${currency}.default`],
       min: minMax[0],
-      max: minMax[1]
+      max: minMax[1],
+      isPriceFilterApplyed: true,
     }
   } else if (facets_stats && facets_stats[`price.${currency}.default`]) {
     sliderFilters.price = {
       min: facets_stats[`price.${currency}.default`]?.min,
       max: facets_stats[`price.${currency}.default`]?.max,
+      isPriceFilterApplyed: false,
     }
   }
   // below values are for start and end points of the price slider 

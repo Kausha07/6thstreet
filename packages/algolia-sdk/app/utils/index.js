@@ -148,6 +148,7 @@ const getMasterAlgoliaFilters = (paramsObj = {}) => {
       "size_us",
       "promotion",
       "is_new_in",
+      "age",
     ];
     requiredFilterForCategoryCount.map((key) => {
       if (paramsObj[key] && paramsObj[key] != "") {

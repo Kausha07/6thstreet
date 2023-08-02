@@ -1123,6 +1123,7 @@ class FieldMultiselect extends PureComponent {
       filter: {  selected_filters_count, category },
       newActiveFilters = {},
       newSelectedActiveFilters = {},
+      sliderFilters = {},
     } = this.props;
 
     if (this.props.isSortBy) {
@@ -1143,7 +1144,16 @@ class FieldMultiselect extends PureComponent {
         </span>
       );
     }
-    const count = selected_filters_count || 0;
+    let count = selected_filters_count || 0;
+    if ( count === 0 && category === "discount") {
+      const { discount: { isDiscountFilterApplyed = false} } = sliderFilters;
+      isDiscountFilterApplyed ? count = 1 : null;
+    }
+    const currency = getCountryCurrencyCode();
+    if ( count === 0 && category === `price.${currency}.default` ) {
+      const { price: { isPriceFilterApplyed = false} } = sliderFilters;
+      isPriceFilterApplyed ? count = 1 : null;
+    }
     return (
       <span 
         className={isArabic() ? "smallerTextAr" : "smallerText" }
