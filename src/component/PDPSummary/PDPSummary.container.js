@@ -26,7 +26,8 @@ export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
   brandButtonClick: state.PDP.brandButtonClick,
   catalogue_from_algolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
+  international_shipping_fee: state.AppConfig.international_shipping_fee
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -62,7 +63,8 @@ export class PDPSummaryContainer extends PureComponent {
       estimateEddResponseForPDP,
       setEddResponse,
       setEddResponseForPDP,
-      TabbyInstallment
+      TabbyInstallment,
+      international_shipping_fee
     } = this.props;
     return {
       product,
@@ -79,7 +81,8 @@ export class PDPSummaryContainer extends PureComponent {
       estimateEddResponseForPDP,
       setEddResponse,
       setEddResponseForPDP,
-      TabbyInstallment
+      TabbyInstallment,
+      international_shipping_fee
     };
   };
 

@@ -525,7 +525,9 @@ export class CartPage extends PureComponent {
         currency_code = getCurrency(),
         total_segments: totals = [],
         shipping_fee = 0,
+        international_shipping_amount = 0
       },
+      international_shipping_fee
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
@@ -536,6 +538,7 @@ export class CartPage extends PureComponent {
             <div block="CartPage" elem="Subtotals">
               {this.renderPriceLine(subTotal, __("Subtotal"))}
               {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
+              {international_shipping_fee && this.renderPriceLine(international_shipping_amount, __("International Shipping fee"))}
               {this.renderPriceLine(
                 getDiscountFromTotals(totals, "customerbalance"),
                 __("Store Credit")
@@ -563,6 +566,7 @@ export class CartPage extends PureComponent {
                 subtotalOnly: true,
               })}
               {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
+              {international_shipping_fee && this.renderPriceLine(international_shipping_amount, __("International Shipping fee"))}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -648,13 +652,21 @@ export class CartPage extends PureComponent {
   renderPromoContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
-      totals: { currency_code, avail_free_shipping_amount },
+      totals: { currency_code, avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
     const { isArabic } = this.state;
 
     if (cart_cms) {
       return <CmsBlock identifier={cart_cms} />;
     }
+
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
 
     return (
       <figure block="CartPage" elem="PromoBlock">
@@ -663,9 +675,16 @@ export class CartPage extends PureComponent {
           &nbsp;
           {__("Add")}
           &nbsp;
-          <span>{`${currency_code} ${avail_free_shipping_amount.toFixed(
-            3
-          )} `}</span>
+          {
+            international_shipping_fee && inventory_level_cross_border ?
+            <span>{`${currency_code} ${avail_free_intl_shipping_amount.toFixed(
+              3
+            )} `}</span>
+            :
+            <span>{`${currency_code} ${avail_free_shipping_amount.toFixed(
+              3
+            )} `}</span>
+          }
           &nbsp;
           {__("more to your cart for ")}
           &nbsp;
@@ -745,11 +764,19 @@ export class CartPage extends PureComponent {
 
   renderPromo() {
     const {
-      totals: { avail_free_shipping_amount },
+      totals: { avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
 
-    return !avail_free_shipping_amount ||
-      avail_free_shipping_amount === 0 ? null : (
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
+    return ((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && (!avail_free_shipping_amount ||
+      avail_free_shipping_amount === 0)) || (international_shipping_fee && inventory_level_cross_border && (!avail_free_intl_shipping_amount || avail_free_intl_shipping_amount === 0)) ? null : (
       <div block="CartPage" elem="Promo">
         {this.renderPromoContent()}
       </div>

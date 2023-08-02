@@ -16,13 +16,14 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import CartCouponList from "Component/CartCouponList";
 import CartCouponDetail from 'Component/CartCouponDetail';
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
-
+import { connect } from "react-redux";
 import Delivery from "./icons/delivery-truck.png";
 
 import "./CheckoutOrderSummary.extended.style";
 
 export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
+  international_shipping_fee: state.AppConfig.international_shipping_fee
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
@@ -124,9 +125,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   renderPromoContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
-      totals: { currency_code, avail_free_shipping_amount },
+      totals: { currency_code, avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
     const { isArabic } = this.state;
+
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
 
     if (cart_cms) {
       return <CmsBlock identifier={cart_cms} />;
@@ -141,9 +150,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         >
           <Image lazyLoad={true} src={Delivery} alt="Delivery icon" />
           {__("Add ")}
-          <span block="CheckoutOrderSummary" elem="Currency">
-            {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
-          </span>
+          {
+            international_shipping_fee && inventory_level_cross_border ?
+            <span block="CheckoutOrderSummary" elem="Currency">
+              {`${currency_code} ${avail_free_intl_shipping_amount.toFixed(3)} `}
+            </span>
+            :
+            <span block="CheckoutOrderSummary" elem="Currency">
+              {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
+            </span>
+          }
           {__("more to your cart for ")}
           <span block="CheckoutOrderSummary" elem="FreeDelivery">
             {__("Free delivery")}
@@ -314,11 +330,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
   renderPromo() {
     const {
-      totals: { avail_free_shipping_amount },
+      totals: { avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]}, international_shipping_fee
     } = this.props;
 
-    return !avail_free_shipping_amount ||
-      avail_free_shipping_amount === 0 ? null : (
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
+    return ((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && (!avail_free_shipping_amount ||
+      avail_free_shipping_amount === 0)) ||
+      (international_shipping_fee && inventory_level_cross_border && (!avail_free_intl_shipping_amount || avail_free_intl_shipping_amount === 0)) ? null : (
         <div block="CheckoutOrderSummary" elem="Promo">
           {this.renderPromoContent()}
         </div>
@@ -387,6 +411,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         currency_code = getCurrency(),
         total_segments: totals = [],
       },
+      international_shipping_fee,
       checkoutStep,
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
@@ -414,6 +439,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "shipping") || __("FREE"),
               __("Shipping Charges")
+            )}
+            {international_shipping_fee && this.renderPriceLine(
+              getDiscountFromTotals(totals, "international_shipping_amount"),
+              __("International Shipping Charges")
             )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "tax"),
@@ -452,4 +481,4 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 }
 
-export default CheckoutOrderSummary;
+export default connect(mapStateToProps)(CheckoutOrderSummary);

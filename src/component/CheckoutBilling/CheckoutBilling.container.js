@@ -53,6 +53,7 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
+  international_shipping_fee: state.AppConfig.international_shipping_amount
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -900,6 +901,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       totals: {
         discount,
         shipping_fee = 0,
+        international_shipping_amount = 0,
         total_segments: totals = [],
         items = [],
       },
@@ -919,6 +921,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       LineItems.push({
         label: __("Shipping Charges"),
         amount: shipping_fee,
+      });
+    }
+
+    if (international_shipping_amount) {
+      LineItems.push({
+        label: __("International Shipping Charges"),
+        amount: international_shipping_amount,
       });
     }
 
