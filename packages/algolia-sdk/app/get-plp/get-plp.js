@@ -731,7 +731,8 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             Object.entries(result[1].facets).map((entry) => {
               finalFiltersData.facets[[entry[0]]] = entry[1];
             });
-          } else if (index === Object.values(res.results).length - 1) {
+          } else if (index === 1) {
+            // getting category data from result of [1] - passing here all other selected filters except from category filter
             for (let key = 0; key <= 4; key++) {
               if (result[1].facets[`categories.level${key}`]) {
                 finalFiltersData.facets[`categories.level${key}`] =

@@ -136,9 +136,11 @@ const getMasterAlgoliaFilters = (paramsObj = {}) => {
   try {
     let facetFilters = [];
     const requiredFilterForCategoryCount = [
+      "categories.level0",
       "categories.level1",
       "categories.level2",
       "categories.level3",
+      "categories.level4",
       "gender",
       "in_stock",
       "colorfamily",
