@@ -82,7 +82,7 @@ class Brands extends PureComponent {
     const { filteredLetter } = this.state;
     const finalArray = brands.map((brand) => {
       const brandItem = brandMapping.find(
-        (item) => item.en.toUpperCase() === brand.name.toUpperCase()
+        (item) => item?.en?.toUpperCase() === brand?.name?.toUpperCase()
       );
       return Object.assign({}, brandItem, brand);
     });

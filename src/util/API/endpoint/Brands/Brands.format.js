@@ -7,9 +7,9 @@ export const groupByName = (brands = []) => {
         const { name, name_ar } = brand;
         let firstLetter = "";
         if(isArabic()){
-            firstLetter = !Number.isNaN(+name_ar[0]) ? numericGroup : name_ar[0].toUpperCase();
+            firstLetter = !Number.isNaN(+name_ar[0]) ? numericGroup : name_ar[0]?.toUpperCase();
         }else{
-            firstLetter = !Number.isNaN(+name[0]) ? numericGroup : name[0].toUpperCase();
+            firstLetter = !Number.isNaN(+name[0]) ? numericGroup : name[0]?.toUpperCase();
         }
 
         
