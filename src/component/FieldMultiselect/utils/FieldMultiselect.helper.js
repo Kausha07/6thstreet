@@ -46,10 +46,16 @@ export const getIsOptionVisible = (option) => {
     if(facet_key === "gender") {
         // if the gender is kids then other option like boy, girl, and baby will also displayed to the user
         if(currentAppState?.gender === "kids" ) {
+            // in kids Men and Women gender options should NOT be visible.
+            if(isArabic() && (facet_value === "نساء" || facet_value === "رجال" ) ){
+                return false;
+            } else if(facet_value?.toLowerCase() === "men" || facet_value?.toLowerCase() === "women") {
+                return false;
+            }
             return true;
         }
 
-        if(currentAppState?.gender !== "home"  ) {
+        if(currentAppState?.gender !== "home" && currentAppState?.gender !== "all" ) {
             const urlGender = location?.pathname?.trim()?.split("/")[1];
             if(isArabic()) {
                 const arabicGenderValues = {
