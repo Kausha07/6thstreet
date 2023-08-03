@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
+import isMobile from "Util/Mobile";
 
 class Price extends PureComponent {
   static propTypes = {
@@ -196,7 +197,7 @@ class Price extends PureComponent {
         block={`Price ${this.haveDiscount() ? "discount" : ""}`}
         mix={{ block: "Price", mods: { isArabic } }}
       >
-        {pageType === "wishlist"
+        {pageType === "wishlist" && isMobile.any()
           ? this.renderFinalPriceOnly()
           : this.renderPrice()}
       </div>

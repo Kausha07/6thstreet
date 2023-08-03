@@ -651,7 +651,7 @@ class PDPAddToCart extends PureComponent {
 
     return (
       <>
-        {this.renderOutOfStock()}
+        {popUpType !== "wishListPopUp" && this.renderOutOfStock()}
         {this.renderNotifyMeSuccess()}
         {this.renderNotAvailable()}
         {sizeObject.sizeTypes !== undefined &&
@@ -678,7 +678,10 @@ class PDPAddToCart extends PureComponent {
           block="PDPAddToCart"
           elem="Bottom"
           mods={{
-            isOutOfStock: stock_qty === 0 || isOutOfStock || !in_stock,
+            isOutOfStock:
+              popUpType === "wishListPopUp"
+                ? false
+                : stock_qty === 0 || isOutOfStock || !in_stock,
           }}
         >
           {this.renderAddToCartButton()}
