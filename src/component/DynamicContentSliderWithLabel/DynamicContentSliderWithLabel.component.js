@@ -419,8 +419,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   getPromotionHeader = () => {
-    const { header, layout } = this.props;
-    if (header && header?.title) {
+    const { header, layout, trendingBrands=[], trendingCategories=[], type="" } = this.props;
+
+    if (
+      (trendingBrands?.length === 0 && type === "vue_brands_for_you") ||
+      (trendingCategories?.length === 0 && type === "vue_categories_for_you")
+    ) {
+      return null;
+    } else if (header && header?.title) {
       return header;
     } else if (layout && layout?.title) {
       return layout;

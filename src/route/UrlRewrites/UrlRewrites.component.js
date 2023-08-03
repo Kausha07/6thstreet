@@ -19,6 +19,14 @@ import {
   TYPE_PRODUCT,
 } from "./UrlRewrites.config";
 import "./UrlRewrites.style";
+import { connect } from "react-redux";
+
+
+export const mapStateToProps = (state) => ({
+  vueTrendingBrandClick: state.PDP.vueTrendingBrandClick,
+
+});
+
 
 class UrlRewrites extends PureComponent {
   constructor(props) {
@@ -89,6 +97,27 @@ class UrlRewrites extends PureComponent {
     );
   }
 
+  getTrendingBrandsSelection = () => {
+    const {
+      vueTrendingBrandClick = false,
+      brandName = "",
+      brandDescription = "",
+      type
+    } = this.props;
+
+    if (vueTrendingBrandClick) {
+      return true;
+    } else if (
+      brandName != "" &&
+      brandDescription != "" &&
+      type == TYPE_CATEGORY
+    ) {
+      return false;
+    }
+    
+    return true;
+  };
+
   render() {
     const { type, isLoading } = this.props;
 
@@ -108,12 +137,16 @@ class UrlRewrites extends PureComponent {
     }
     const renderFunction = this.typeMap[type] || this.render404;
 
-    return (
-      <div block="UrlRewrites" id="UrlRewrites">
-        {renderFunction()}
-      </div>
-    );
+    if (!this.getTrendingBrandsSelection()) {
+      return null;
+    } else {
+      return (
+        <div block="UrlRewrites" id="UrlRewrites">
+          {renderFunction()}
+        </div>
+      );
+    }
   }
 }
 
-export default UrlRewrites;
+export default connect( mapStateToProps, null) (UrlRewrites);

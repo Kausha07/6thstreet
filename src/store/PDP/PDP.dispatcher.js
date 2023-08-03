@@ -3,7 +3,8 @@ import {
   setPDPClickAndCollect,
   setPDPLoading,
   setPDPShowSearch,
-  setBrandButtonClick
+  setBrandButtonClick,
+  setVueTrendingBrandClick
 } from "Store/PDP/PDP.action";
 import { getStore } from "Store";
 
@@ -215,6 +216,11 @@ export class PDPDispatcher {
   async setBrandButtonClick(payload, dispatch) {
     const { brandButtonClick } = payload;
     dispatch(setBrandButtonClick(brandButtonClick));
+  }
+
+  async setVueTrendingBrandClick(payload, dispatch) {
+    const { vueTrendingBrandClick } = payload;
+    dispatch(setVueTrendingBrandClick(vueTrendingBrandClick));
   }
 }
 

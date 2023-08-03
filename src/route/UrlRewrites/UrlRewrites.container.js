@@ -277,6 +277,7 @@ export class UrlRewritesContainer extends PureComponent {
   containerProps = () => {
     const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
+    const { brandButtonClick } = this.props;
     const string_sku = sku.toString();
     return {
       isLoading,
@@ -286,6 +287,7 @@ export class UrlRewritesContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      brandButtonClick,
     };
   };
 

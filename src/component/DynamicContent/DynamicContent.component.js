@@ -13,8 +13,15 @@ import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
 import { PureComponent } from "react";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { connect } from "react-redux";
 import isMobile from "Util/Mobile";
 import "./DynamicContent.style";
+
+export const mapDispatchToProps = (_dispatch) => ({
+  vueTrendingBrand: (vueTrendingBrandClick) =>
+    PDPDispatcher.setVueTrendingBrandClick({ vueTrendingBrandClick }, _dispatch),
+});
 
 class DynamicContent extends PureComponent {
   static propTypes = {
@@ -80,6 +87,11 @@ class DynamicContent extends PureComponent {
         Component = this.renderMap["banner"];
       }
     } else if (type === "vue_brands_for_you") {
+      if(this.props?.trendingBrands?.length > 0) {
+        this.props.vueTrendingBrand(true);
+      }else {
+        this.props.vueTrendingBrand(false);
+      }
       return (
         <DynamicContentSliderWithLabel
           ref={this.comprefs[i]}
@@ -204,4 +216,4 @@ class DynamicContent extends PureComponent {
   }
 }
 
-export default DynamicContent;
+export default connect(null, mapDispatchToProps) (DynamicContent);
