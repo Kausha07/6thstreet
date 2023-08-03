@@ -3,6 +3,8 @@ import { VIEW_SEARCH_RESULTS_ALGOLIA } from "Util/Event";
 import AlgoliaSDK from "../../../../packages/algolia-sdk";
 import { queryString } from "../helper/Object";
 import isMobile from "Util/Mobile";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_CONFIG_CACHE_KEY } from "Store/AppConfig/AppConfig.reducer";
 
 export const PRODUCT_HIGHLIGHTS = [
   "color",
@@ -39,7 +41,7 @@ export class Algolia {
     return AlgoliaSDK.index;
   }
 
-  async getPLP(params = {}) {
+  async getPLP(params = {}, categoryData = {}, moreFiltersData = {} ) {
     let influencerCount = 0;
     if(params["pageType"] && params["pageType"] === "InfluencerPage")
     {
@@ -60,7 +62,7 @@ export class Algolia {
     });
 
     // TODO: add validation
-    return AlgoliaSDK.getPLP(`/?${url}`, params);
+    return AlgoliaSDK.getPLP(`/?${url}`, params, categoryData, moreFiltersData );
   }
 
   async getProductForSearchContainer(params = {}, suggestionQuery) {
@@ -90,7 +92,7 @@ export class Algolia {
       locale,
     });
 
-    return AlgoliaSDK.getPromotions(`/?${url}`,params);
+    return AlgoliaSDK.getPromotions(`/?${url}`, params);
   }
 
   async getSearchPLP(params = {}) {
@@ -153,59 +155,62 @@ export class Algolia {
   }
 
   async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
-    switch (event_type) {
-      case "view": {
-        switch (name) {
-          case VIEW_SEARCH_RESULTS_ALGOLIA: {
-            if (params.items.length > 0) {
-              const { data = [] } =
-                (await AlgoliaSDK.logAlgoliaAnalytics(
-                  event_type,
-                  name,
-                  algoliaParams.objectIDs,
-                  algoliaParams.queryID,
-                  algoliaParams.userToken,
-                  []
-                )) || {};
-              return data;
-            } else {
-              const { data = [] } =
-                (await AlgoliaSDK.logSearchResults(
-                  event_type,
-                  "No_Search_Result",
-                  algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
-                  algoliaParams.queryID,
-                  algoliaParams.userToken,
-                  [`search:${algoliaParams.queryID}`]
-                )) || {};
-              return data;
+    const appConfig = BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {};
+    if (appConfig?.isAlgoliaEventsEnabled) {
+      switch (event_type) {
+        case "view": {
+          switch (name) {
+            case VIEW_SEARCH_RESULTS_ALGOLIA: {
+              if (params.items.length > 0) {
+                const { data = [] } =
+                  (await AlgoliaSDK.logAlgoliaAnalytics(
+                    event_type,
+                    name,
+                    algoliaParams.objectIDs,
+                    algoliaParams.queryID,
+                    algoliaParams.userToken,
+                    []
+                  )) || {};
+                return data;
+              } else {
+                const { data = [] } =
+                  (await AlgoliaSDK.logSearchResults(
+                    event_type,
+                    "No_Search_Result",
+                    algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
+                    algoliaParams.queryID,
+                    algoliaParams.userToken,
+                    [`search:${algoliaParams.queryID}`]
+                  )) || {};
+                return data;
+              }
             }
           }
         }
-      }
-      case "click": {
-        const { data = [] } =
-          (await AlgoliaSDK.logAlgoliaAnalytics(
-            event_type,
-            name,
-            algoliaParams.objectIDs,
-            algoliaParams.queryID,
-            algoliaParams.userToken,
-            algoliaParams.position
-          )) || {};
-        return data;
-      }
-
-      case "conversion": {
-        const { data = [] } =
-          (await AlgoliaSDK.logAlgoliaAnalytics(
-            event_type,
-            name,
-            algoliaParams.objectIDs,
-            algoliaParams.queryID,
-            algoliaParams.userToken
-          )) || {};
-        return data;
+        case "click": {
+          const { data = [] } =
+            (await AlgoliaSDK.logAlgoliaAnalytics(
+              event_type,
+              name,
+              algoliaParams.objectIDs,
+              algoliaParams.queryID,
+              algoliaParams.userToken,
+              algoliaParams.position
+            )) || {};
+          return data;
+        }
+  
+        case "conversion": {
+          const { data = [] } =
+            (await AlgoliaSDK.logAlgoliaAnalytics(
+              event_type,
+              name,
+              algoliaParams.objectIDs,
+              algoliaParams.queryID,
+              algoliaParams.userToken
+            )) || {};
+          return data;
+        }
       }
     }
   }

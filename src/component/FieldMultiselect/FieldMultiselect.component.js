@@ -28,10 +28,16 @@ import Event,{
   EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS,
   EVENT_SET_PREFERENCES_GENDER,
   EVENT_GTM_FILTER,
-  MOE_trackEvent
+  MOE_trackEvent,
+  EVENT_FILTER_ATTRIBUTE_SELECTED,
+  EVENT_FILTER_SEARCH_CLICK,
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
+import RangeSlider from "Component/RangeSlider/RangeSlider";
+import { getCountryCurrencyCode } from 'Util/Url/Url';
+import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds, getIsOptionVisible, getAttributeName } from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -121,9 +127,11 @@ class FieldMultiselect extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      filter: { selected_filters_count, category },
+      filter: { selected_filters_count, category, data = {} },
       parentActiveFilters,
+      compareObjects,
     } = this.props;
+    const { searchKey } = this.state;
     if (parentActiveFilters) {
       if (
         JSON.stringify(prevProps.parentActiveFilters) !==
@@ -140,6 +148,19 @@ class FieldMultiselect extends PureComponent {
           this.setState({
             showMore: false,
             showLess: false,
+          });
+        }
+      }
+    }
+    
+    // if filters state is updated then update the search list
+    if(compareObjects && category === "categories_without_path" && searchKey !== "" ) {
+      if (!compareObjects(prevProps.filters, this.props.filters)) {
+        let allData = data ? data : null;
+        let finalSearchedData = allData ? this.getSearchData(allData, "categories_without_path", searchKey) : {};
+        if (finalSearchedData) {
+          this.setState({
+            searchList: finalSearchedData,
           });
         }
       }
@@ -243,6 +264,7 @@ class FieldMultiselect extends PureComponent {
       defaultFilters,
       parentActiveFilters,
       currentActiveFilter,
+      OnLevelTwoCategoryPressMsite,
     } = this.props;
 
     const { subcategories = {} } = option;
@@ -251,6 +273,12 @@ class FieldMultiselect extends PureComponent {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
+    }
+
+    const checkIsOptionVisible = getIsOptionVisible(option);
+
+    if(!!!checkIsOptionVisible) {
+      return null;
     }
 
     return (
@@ -267,6 +295,7 @@ class FieldMultiselect extends PureComponent {
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
         toggleOptionList={this.toggleOptionList}
+        OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
       />
     );
   };
@@ -350,6 +379,9 @@ class FieldMultiselect extends PureComponent {
 
   renderUnselectButton(category) {
     let UnSelectAll = true;
+    if (category === "categories_without_path") {
+      return null;
+    }
     return (
       <div
         block="FieldMultiselect"
@@ -443,6 +475,162 @@ class FieldMultiselect extends PureComponent {
     });
   };
 
+  renderRangeSliders() {
+    const {
+      filter,
+      parentCallback,
+      filter: {
+        category,
+      },
+      sliderFilters = {},
+    } = this.props;
+
+    if( category === "discount" ) {
+      const { discount={} } = sliderFilters;
+      const { minValue, maxValue, min, max } = discount;
+      const key = v4();
+      return (
+        <div>
+          <RangeSlider 
+            filter={filter}
+            parentCallback={parentCallback}
+            minVal={min || minValue }
+            maxVal={max || maxValue}
+            currentMIN={minValue}
+            currentMAX={maxValue}
+            key={key}
+            onBlur={this.onBlur}
+          />
+        </div>
+      );
+    }else {
+      const key = v4();
+      const { price={} } = sliderFilters;
+      const { minValue, maxValue, min, max } = price;
+      return (
+        <div>
+            <RangeSlider
+              filter={filter}
+              parentCallback={parentCallback}
+              minVal={min || minValue}
+              maxVal={max || maxValue}
+              currentMIN={minValue}
+              currentMAX={maxValue}
+              key={key}
+              onBlur={this.onBlur}
+            />
+        </div>
+      );
+    }
+  }
+
+  renderNestedMultiSelect = (isSearch) => {
+    const {
+      filter: { data = {} },
+      parentCallback,
+      onLevelThreeCategoryPress,
+      filter,
+      filters,
+      newActiveFilters,
+    } = this.props;
+    let categoryLevelData = [];
+    const { searchFacetKey, searchKey, searchList } = this.state;
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+  
+    Object.entries(data).map((entry) => {
+      if (
+        (selectCategoryLevelOneFilter &&
+          selectCategoryLevelOneFilter === entry[0]) ||
+        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+      ) {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      }
+    });
+
+    if (isSearch) {
+      categoryLevelData = Object.values(searchList);
+    }
+    if (categoryLevelData.length > 0) {
+      return (
+        <>
+          {categoryLevelData?.map((multiLevelData) =>
+            multiLevelData &&
+            multiLevelData?.sub_subcategories &&
+            Object.keys(multiLevelData.sub_subcategories).length != 0 ? (
+              <FieldNestedMultiSelect
+                multiLevelData={multiLevelData}
+                parentCallback={parentCallback}
+                isSearch={isSearch}
+                searchList={searchList}
+                searchKey={searchKey}
+                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+                filter={filter}
+                onBlur={this.onBlur}
+                activeFiltersIds={activeFiltersIds}
+              />
+            ) : null
+          )}
+        </>
+      );
+    }
+  };
+
+  renderNestedOptions = (isSearch) => {
+    const {
+      filter: { data = {} },
+      parentCallback,
+      onLevelThreeCategoryPress,
+      filter,
+      filters,
+      newActiveFilters
+    } = this.props;
+    let categoryLevelData = [];
+    const { searchFacetKey, searchKey, searchList } = this.state;
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+
+    Object.entries(data).map((entry) => {
+      if (
+        (selectCategoryLevelOneFilter &&
+          selectCategoryLevelOneFilter === entry[0]) ||
+        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+      ) {
+        Object.entries(entry[1].subcategories).map((subEntry) => {
+          categoryLevelData.push(subEntry[1]);
+        });
+      }
+    });
+    if (isSearch) {
+      categoryLevelData = Object.values(searchList);
+    }
+    if (categoryLevelData.length > 0) {
+      return (
+        <>
+          {categoryLevelData?.map((multiLevelData) =>
+            multiLevelData &&
+            multiLevelData?.sub_subcategories &&
+            Object.keys(multiLevelData.sub_subcategories).length === 0 ? (
+              <FieldNestedMultiSelect
+                multiLevelData={multiLevelData}
+                parentCallback={parentCallback}
+                isSearch={isSearch}
+                searchList={searchList}
+                searchKey={searchKey}
+                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+                filter={filter}
+                onBlur={this.onBlur}
+                activeFiltersIds={activeFiltersIds}
+              />
+            ) : null
+          )}
+        </>
+      );
+    }
+  };
+
   renderOptions() {
     const {
       filter: {
@@ -453,6 +641,7 @@ class FieldMultiselect extends PureComponent {
         label,
         selected_filters_count,
       },
+      filter,
       initialOptions,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
@@ -515,10 +704,24 @@ class FieldMultiselect extends PureComponent {
 
     let sizeData = data;
     if (this.state.sizeDropDownKey === "" && category === "sizes") {
-      this.setState({
-        sizeDropDownKey: "size_eu",
-        sizeDropDownList: data,
-      });
+      // if there is no size available for EU then we have to set UK and 
+      // if the UK size is also not available then setting it to US
+      if(sizeData && sizeData?.size_eu) {
+        this.setState({
+          sizeDropDownKey: "size_eu",
+          sizeDropDownList: data,
+        });
+      } else if(sizeData && sizeData?.size_uk) {
+        this.setState({
+          sizeDropDownKey: "size_uk",
+          sizeDropDownList: data,
+        });
+      } else {
+        this.setState({
+          sizeDropDownKey: "size_us",
+          sizeDropDownList: data,
+        });
+      }
     }
 
     let searchData = data;
@@ -528,6 +731,28 @@ class FieldMultiselect extends PureComponent {
     const type = is_radio ? "radio" : "checkbox";
     const selectAllCheckbox = selected_filters_count === 0 ? true : false;
 
+    const currency = getCountryCurrencyCode();
+    if ( !isMobile.any() && (category === `price.${currency}.default` || category === "discount") ) {
+      return this.renderRangeSliders();
+    }
+
+    if (searchFacetKey === "categories_without_path" && searchKey != "" && !isMobile.any() ) {
+      const isSearch = true;
+      return (
+        <ul className="multiselectUl">
+          {this.renderNestedMultiSelect(isSearch)}
+          {this.renderNestedOptions(isSearch)}
+        </ul>
+      );
+    }
+    if (filter.category === "categories_without_path" && !isMobile.any() ) {
+      return (
+        <ul className="multiselectUl">
+          {this.renderNestedMultiSelect()}
+          {this.renderNestedOptions()}
+        </ul>
+      );
+    }
     return (
       <>
         <ul
@@ -591,14 +816,31 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  sendMoeEvents (event, value){
-    MOE_trackEvent(event, {
+  sendMoeEvents (value){
+    const {
+      filter: { category },
+    } = this.props;
+
+    const currency = getCountryCurrencyCode();
+    const AttributeName = getAttributeName(category, currency);
+
+    Event.dispatch(EVENT_FILTER_SEARCH_CLICK, {
+      attributeType: "FIXED",
+      attributeName: AttributeName || "",
+    });
+
+    MOE_trackEvent(EVENT_FILTER_SEARCH_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
+      attributeType: "FIXED",
+      attributeName: AttributeName || "",
     });
-    const eventData = {name: event, value: value};
-    Event.dispatch(EVENT_GTM_FILTER, eventData);
+  }
+
+  sendEventSearchItemSelected () {
+    const { searchFacetKey, searchKey } = this.state;
+
   }
 
   renderFilterSearchbox(label, category) {
@@ -611,19 +853,18 @@ class FieldMultiselect extends PureComponent {
       : "";
     const { currentActiveFilter } = this.props;
     const { isArabic } = this.state;
-    if (isMobile.any() && currentActiveFilter !== category) {
+    const currency = getCountryCurrencyCode();
+
+    if (
+      (isMobile.any() && currentActiveFilter !== category) ||
+      category === "gender" ||
+      category === "discount" ||
+      category === "in_stock" ||
+      category === `price.${currency}.default` || 
+      category === "sizes"
+    ) {
       return null;
     }
-    const MoeFilterEvent =
-      (currentActiveFilter || category) == "brand_name"
-        ? EVENT_BRAND_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "colorfamily"
-        ? EVENT_COLOR_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "sizes"
-        ? EVENT_SIZES_SEARCH_FOCUS
-        : (currentActiveFilter || category) == "categories_without_path"
-        ? EVENT_CATEGORIES_WITHOUT_PATH_SEARCH_FOCUS
-        : "";
 
     return (
       <div block="Search-Container" mods={{ isArabic }}>
@@ -641,7 +882,7 @@ class FieldMultiselect extends PureComponent {
           }
           onChange={(event) => this.handleFilterSearch(event)}
           onFocus={(event) =>
-            this.sendMoeEvents(MoeFilterEvent, event.target.value)
+            this.sendMoeEvents(event.target.value)
           }
         />
         {!isMobile.any() && (
@@ -666,7 +907,7 @@ class FieldMultiselect extends PureComponent {
     const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
-    let finalSearchedData = this.getSearchData(allData, facet_key, value);
+    let finalSearchedData = allData ? this.getSearchData(allData, facet_key, value) : {};
     if (finalSearchedData) {
       this.setState({
         searchList: finalSearchedData,
@@ -697,14 +938,41 @@ class FieldMultiselect extends PureComponent {
 
   getSearchData = (allData, facet_key, value) => {
     let finalSearchedData = {};
+    const { filters } = this.props;
+    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
     if (facet_key === "categories_without_path") {
       Object.entries(allData).map((entry) => {
-        Object.entries(entry[1].subcategories).map((subEntry) => {
-          if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
-            finalSearchedData[subEntry[0]] =
-              entry[1].subcategories[subEntry[0]];
-          }
-        });
+        if (
+          (selectCategoryLevelOneFilter &&
+            selectCategoryLevelOneFilter === entry[0]) ||
+          selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+        ) {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[0].toLowerCase().includes(value.toLowerCase())) {
+              finalSearchedData[subEntry[0]] =
+                entry[1].subcategories[subEntry[0]];
+            }
+            Object.entries(subEntry[1].sub_subcategories).map(
+              (sub_subcategoriesObj) => {
+                if (
+                  sub_subcategoriesObj[0].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  finalSearchedData[subEntry[0]] =
+                    entry[1].subcategories[subEntry[0]];
+                }
+                Object.entries(sub_subcategoriesObj[1].sub_subcategories).map(
+                  (sub_cat) => {
+                    if (
+                      sub_cat[0].toLowerCase().includes(value.toLowerCase())
+                    ) {
+                      finalSearchedData[subEntry[0]] =
+                        entry[1].subcategories[subEntry[0]];
+                    }                  
+                  });
+              }
+            );
+          });
+        }
       });
     } else {
       Object.keys(allData).filter((key) => {
@@ -730,20 +998,49 @@ class FieldMultiselect extends PureComponent {
 
   toggleOptionList() {
     const { toggleOptionsList } = this.state;
+    const {
+      filter: { category },
+      filterPosition,
+    } = this.props;
 
     this.setState({
       toggleOptionsList: !toggleOptionsList,
     });
+    
+    if(!!!toggleOptionsList) {      
+      const currency = getCountryCurrencyCode();
+      const AttributeName = getAttributeName(category, currency);
+
+      Event.dispatch(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        attributeType: "FIXED",
+        AttributeName: AttributeName || "",
+        attributePosition: filterPosition || "",
+      });
+
+      MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        attributeType: "FIXED",
+        AttributeName: AttributeName || "",
+        attributePosition: filterPosition || "",
+      });
+    }
   }
 
   onBlur = () => {
     // eslint-disable-next-line no-magic-numbers
+    this.setState({
+      searchKey: "",
+      searchList: {},
+      searchFacetKey: "",
+    })
     this.toggleOptionList();
   };
 
   renderOptionSelected() {
     const {
-      filter: { data, selected_filters_count },
+      filter: { data, selected_filters_count}
     } = this.props;
     const { showMore, showLess } = this.state;
     let selectedItems = true;
@@ -821,6 +1118,51 @@ class FieldMultiselect extends PureComponent {
     }
   }
 
+  renderFilterCount() {
+    const {
+      filter: {  selected_filters_count, category },
+      newActiveFilters = {},
+      newSelectedActiveFilters = {},
+      sliderFilters = {},
+    } = this.props;
+
+    if (this.props.isSortBy) {
+      return null;
+    }
+
+    if( category === "categories_without_path" ) {
+      let count = 0;
+      const selectedFilters = newSelectedActiveFilters?.[category];
+      if(selectedFilters) {
+        count = selectedFilters.length;
+      }
+      return (
+        <span 
+          className={isArabic() ? "smallerTextAr" : "smallerText" }
+        >
+          {count === 0 ? " " : count}
+        </span>
+      );
+    }
+    let count = selected_filters_count || 0;
+    if ( count === 0 && category === "discount") {
+      const { discount: { isDiscountFilterApplyed = false} } = sliderFilters;
+      isDiscountFilterApplyed ? count = 1 : null;
+    }
+    const currency = getCountryCurrencyCode();
+    if ( count === 0 && category === `price.${currency}.default` ) {
+      const { price: { isPriceFilterApplyed = false} } = sliderFilters;
+      isPriceFilterApplyed ? count = 1 : null;
+    }
+    return (
+      <span 
+        className={isArabic() ? "smallerTextAr" : "smallerText" }
+      >
+        {count === 0 ? " " : count}
+      </span>
+    );
+  }
+
   updateShowMoreState = (state) => {
     this.setState({ showMore: state, showLess: !state });
   };
@@ -845,9 +1187,15 @@ class FieldMultiselect extends PureComponent {
       filter,
       initialOptions,
       currentActiveFilter,
+      isBrandPLP,
     } = this.props;
     let conditionalData = data ? data : subcategories;
     let selectedItems = true;
+
+    // if this is brand PLP then - no need for brand filter
+    if(category === "brand_name" && isBrandPLP) {
+      return null;
+    }
 
     const datakeys = [];
     if (category === "sizes") {
@@ -865,11 +1213,18 @@ class FieldMultiselect extends PureComponent {
       });
       conditionalData = categoryLevelData;
     }
+
+    if(category === "discount" && !!!filter?.isDiscount && !isMobile.any()) {
+      return null;
+    }
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const [lang, country] = locale && locale.split("-");
     const currency = getCurrencyCode(country);
     const priceAttribute = `price.${currency}.default`;
 
+    if ( category === `price.${currency}.default` && !!!filter?.isPriceFilterAvailable && !isMobile.any() ) {
+      return null;
+    }
     const {
       filters: {
         categories_without_path: {
@@ -906,12 +1261,12 @@ class FieldMultiselect extends PureComponent {
             }
           >
             {placeholder}
+            {this.renderFilterCount()}
           </button>
         )}
-        {isMobile.any() ? null : this.renderOptionSelected()}
         {toggleOptionsList && !isMobile.any() && (
           <>
-            {Object.keys(conditionalData).length > 10
+            {Object.keys(conditionalData).length > (category === "sort" ? 10 : 0) 
               ? this.renderFilterSearchbox(label, category)
               : null}
             {category === "sizes" && !isMobile.any()

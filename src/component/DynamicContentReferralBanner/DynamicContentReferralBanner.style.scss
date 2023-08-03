@@ -1,0 +1,177 @@
+.DynamicContentReferralBanner {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+  background-color: #5c5c5c;
+  padding: 20px 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  @include mobile{
+    padding:15px;
+  }
+  .Banner {
+    &-Icon {
+      margin-right: 30px;
+      &_isArabic{
+        margin-left: 30px;
+        margin-right: 0;
+        @include mobile{
+          margin-right: 0;
+          margin-left: 10px;
+        }
+      }
+      @include mobile{
+        margin-right: 10px;
+      }
+      img {
+        max-width: 60px;
+        @include mobile {
+          max-width: 50px;
+        }
+      }
+    }
+    &-Content {
+      text-align: left;
+      &_isArabic{
+        text-align: right;
+      }
+      h4,
+      p {
+        color: #fff;
+        font-size: 18px;
+      }
+      h4 {
+        font-weight: 600;
+        line-height: 22px;
+        @include mobile {
+          font-size: 14px;
+        }
+      }
+      p {
+        letter-spacing: 0.8px;
+        @include mobile {
+          font-size: 12px;
+          letter-spacing: 0;
+        }
+      }
+    }
+    &-Link {
+      position: absolute;
+      width: 80%;
+      display: block;
+      height: 100%;
+      left: 0;
+      &_isArabic{
+        left: auto;
+        right: 0;
+      }
+    }
+    &-close {
+      position: absolute;
+      right: 7%;
+      top: 35%;
+      z-index: 5;
+      &_isArabic{
+        right:auto;
+        left:7%;
+        @include mobile {
+          left: 5%;
+          right:auto !important;
+        }
+      }
+      @include mobile {
+        top: 24%;
+        right: 5%;
+      }
+      button {
+        color: #fff;
+        height: auto;
+        width: auto;
+        padding: 0;
+        &::before {
+          content: "\2715";
+          font-size: 22px;
+          font-weight: 600;
+          cursor: pointer;
+          @include mobile{
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+  &_isArabic{
+    direction: rtl;
+  }
+}
+
+.HomePage {
+  .DynamicContent {
+    & > div.DynamicContentReferralBanner {
+      @include mobile {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+  .DynamicContentReferralBanner {
+    padding: 20px 60px;
+    @include mobile {
+      padding: 10px 15px;
+      position: fixed;
+      bottom: 25px;
+      left: 0;
+      max-width: 100%;
+      width: 100%;
+      border-top-right-radius: 15px;
+      border-top-left-radius: 15px;
+      z-index: 1;
+    }
+    .Banner {
+      &-Icon {
+        margin-right: 40px;
+        &_isArabic{
+          margin-right: 0px;
+          margin-left: 40px;
+          @include mobile {
+            margin-right: 0;
+            margin-left: 15px;
+          }
+        }
+        @include mobile {
+          margin-right: 15px;
+        }
+        img {
+          max-width: 70px;
+          @include mobile {
+            max-width: 55px;
+          }
+        }
+      }
+      &-Link {
+        width: 70%;
+        @include mobile {
+          width: 80%;
+        }
+      }
+      &-Content {
+        @include desktop() {
+          h4,
+          p {
+            display: inline-block;
+          }
+          h4:after {
+            content: "-";
+            margin: 0 5px;
+          }
+        }
+      }
+      &-close {
+        top: 40%;
+        @include mobile {
+          top: 30%;
+        }
+      }
+    }
+  }
+}

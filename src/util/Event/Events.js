@@ -39,6 +39,7 @@
  export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";
  export const SELECT_ITEM_ALGOLIA = "select_item_algolia";
  export const ADD_TO_CART_ALGOLIA = "add_to_cart_algolia";
+ export const ALGOLIA_PURCHASE_SUCCESS = "algolia_purchase_success";
  export const VUE_CAROUSEL_SHOW = "carouselShow";
  export const VUE_CAROUSEL_CLICK = "carouselClick";
  export const VUE_CAROUSEL_SWIPE = "carouselSwipe";
@@ -157,6 +158,7 @@
  export const EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK =
    "account_customer_support_click";
  export const EVENT_ACCOUNT_CLUB_APPAREL_CLICK = "account_club_apparel_click";
+ export const EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK = "account_section_referral_tab_click"
  export const EVENT_MOE_ORDER_ITEM_CLICK = "order_item_click";
  export const EVENT_MOE_UPDATE_PROFILE = "update_profile";
  export const EVENT_MOE_RETURN_AN_ITEM_CLICK = "return_an_item_click";
@@ -289,9 +291,21 @@
  export const BIRTHDATE_UPDATE_SUCCESS = "birthdate_update_success";
  export const REFERRAL_COPY = "referral_copy";
  export const REFERRAL_SHARE = "referral_share";
+ export const REFERRAL_NUDGE_CLICK = "referral_nudge_click";
  
 // Checkout Errors Tracking Event
 export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
 export const EVENT_MOE_CREATE_ORDER_API_FAIL = "create_order_api_fail";
 export const EVENT_MOE_COMPONENT_DID_CATCH = "component_did_catch";
 export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong";
+// PLP filters event 
+ export const EVENT_FILTER_CLEAR_ALL = "filter_clear_all";
+ export const EVENT_FILTER_ATTRIBUTE_SELECTED = "filter_attribute_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED =
+   "filter_attribute_value_selected";
+ export const EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED =
+   "filter_attribute_value_deselected";
+ export const EVENT_FILTER_SEARCH_CLICK = "filter_search_click";
+ export const EVENT_FILTER_SEARCH_VALUE_SELECTED =
+   "filter_search_value_selected";
+ export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";

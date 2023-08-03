@@ -33,6 +33,7 @@ export const SETTINGS_SCREEN = "settings";
 export const FAQ = "faq";
 export const RETURN_POLICY = "return-information";
 export const SHIPPING_POLICY = "shipping-policy";
-export const WALLET_PAYMENTS = "wallet-payments"
+export const WALLET_PAYMENTS = "wallet-payments";
+export const REFERRAL_SCREEN = "referral";
 
 export const activeTabType = PropTypes.string;

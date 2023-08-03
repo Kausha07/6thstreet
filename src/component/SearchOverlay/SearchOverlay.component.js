@@ -25,8 +25,9 @@ import Event, {
   EVENT_GTM_SEARCH,
   EVENT_GTM_VIEW_SEARCH_RESULTS,
   MOE_trackEvent,
+  SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
-
+import { getUUIDToken } from "Util/Auth";
 import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
@@ -288,6 +289,22 @@ export class SearchOverlay extends PureComponent {
   };
 
   handleProductClick = (product) => {
+    const { position, objectID } = product;
+    const { queryID } = this.props;
+    var data = localStorage.getItem("customer") || null;
+    let userData = data ? JSON.parse(data) : null;
+    let userToken =
+      userData && userData.data && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
+    if (queryID && position && position > 0 && objectID && userToken) {
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
+        objectIDs: [objectID],
+        queryID: queryID,
+        userToken: userToken,
+        position: [position],
+      });
+    }
     Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
@@ -299,10 +316,14 @@ export class SearchOverlay extends PureComponent {
     this.props.closePopup();
   };
 
-  renderProduct = (product) => {
+  renderProduct = (product, index) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
     const { closePopup } = this.props;
     const { isArabic } = this.state;
+    let productData = {
+      ...product,
+      ...{ position: index + 1 },
+    };
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
         ? "Men,Women,Kids,Boy,Girl"
@@ -315,12 +336,16 @@ export class SearchOverlay extends PureComponent {
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] + `&p=0&dFR[gender][0]=${genderInURL}`
       : url;
+    let refactoredUrl = new URL(parseLink) && new URL(parseLink).pathname
+      ? new URL(parseLink).pathname
+      : parseLink;
+
     return (
-      <li key={v4()} block="productContentLayoutLink"  mods={{ isArabic }} >
+      <li key={v4()} block="productContentLayoutLink" mods={{ isArabic }}>
         <div block="productDetailsLayout">
           <Link
-            to={parseLink ? parseLink : "#"}
-            onClick={() => this.handleProductClick(product) && closePopup()}
+            to={refactoredUrl ? refactoredUrl : "#"}
+            onClick={() => this.handleProductClick(productData) && closePopup()}
             block="productsDetailsLink"
             elem="ProductLinks"
           >

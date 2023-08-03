@@ -26,6 +26,7 @@ import {
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
+  REFERRAL_SCREEN
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -45,6 +46,7 @@ export const mapStateToProps = (state) => ({
   payload: state.PopupReducer.popupPayload,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
+  IsReferralEnabled: state.AppConfig.IsReferralEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -101,6 +103,11 @@ export const tabMap = {
     name: __("My Profile"),
     className: "",
   },
+  [REFERRAL_SCREEN]: {
+    url: "/referral",
+    name : __("Refer & Earn"),
+    className: "ReferralTabLink",
+  },
   [MY_ORDERS]: {
     url: "/my-orders",
     name: __("My Orders"),
@@ -151,6 +158,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     language: PropTypes.string.isRequired,
     newSignUpEnabled: PropTypes.bool,
     config: Config.isRequired,
+    IsReferralEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

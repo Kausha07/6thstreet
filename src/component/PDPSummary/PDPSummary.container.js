@@ -20,7 +20,8 @@ export const mapStateToProps = (state) => ({
   brand_url: state.PLP.brand_url,
   defaultShippingAddress: state.MyAccountReducer.defaultShippingAddress,
   eddResponse: state.MyAccountReducer.eddResponse,
-  intlEddResponse: state.MyAccountReducer.intlEddResponse,
+  eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP,
+  intlEddResponse:state.MyAccountReducer.intlEddResponse,
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
   brandButtonClick: state.PDP.brandButtonClick,
@@ -31,7 +32,9 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(_dispatch, request, type),
-  setEddResponse: (response, request) => _dispatch(setEddResponse(response, request)),
+  estimateEddResponseForPDP: (request) =>
+    MyAccountDispatcher.estimateEddResponseForPDP(_dispatch, request),
+  setEddResponse: (response,request) => _dispatch(setEddResponse(response,request)),
   setBrandInfoData: (data) => _dispatch(setBrandInfoData(data)),
   clickBrandButton: (brandButtonClick) =>
     PDPDispatcher.setBrandButtonClick({ brandButtonClick }, _dispatch),
@@ -51,11 +54,14 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      eddResponseForPDP,
       intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,
+      estimateEddResponseForPDP,
       setEddResponse,
+      setEddResponseForPDP,
       TabbyInstallment
     } = this.props;
     return {
@@ -65,11 +71,14 @@ export class PDPSummaryContainer extends PureComponent {
       getTabbyInstallment,
       defaultShippingAddress,
       eddResponse,
+      eddResponseForPDP,
       intlEddResponse,
       edd_info,
       addressCityData,
       estimateEddResponse,
+      estimateEddResponseForPDP,
       setEddResponse,
+      setEddResponseForPDP,
       TabbyInstallment
     };
   };
@@ -83,12 +92,14 @@ export class PDPSummaryContainer extends PureComponent {
     this.getBrandDetails =
       this.props.catalogue_from_algolia
         ? this.getBrandDetailsByAlgolia.bind(this)
-        : this.getBrandDetailsCatalogueAPI.bind(this);
+        :this.getBrandDetailsCatalogueAPI.bind(this);
   }
 
   componentDidMount() {
-    const { brand_url = "" } = this.props;
-    this.getBrandDetails();
+    const { brand_url = "", product: { brand_name = "" }} = this.props;
+    if(brand_name) {
+      this.getBrandDetails();
+    }
     this.setState({
       url_path: brand_url,
     });

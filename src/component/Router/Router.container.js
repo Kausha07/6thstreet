@@ -173,7 +173,7 @@ export class RouterContainer extends SourceRouterContainer {
     if (addressCityData.length === 0) {
       getCitiesData();
     }
-    if (edd_info && edd_info.is_enable && edd_info.has_cross_border_enabled) {
+    if (edd_info && edd_info.is_enable && edd_info.has_cross_border_enabled && !edd_info.has_item_level) {
       this.getInternationalEdd(countryCode);
     }
 

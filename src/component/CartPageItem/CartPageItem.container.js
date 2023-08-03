@@ -43,6 +43,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { isArabic } from "Util/App";
+import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -185,7 +186,7 @@ export class CartItemContainer extends PureComponent {
   };
 
   getEddResponse = (data, type) => {
-    const { estimateEddResponse } = this.props;
+    const { estimateEddResponse, edd_info } = this.props;
     const { area, city, country } = data;
 
     let request = {
@@ -195,7 +196,20 @@ export class CartItemContainer extends PureComponent {
       courier: null,
       source: null,
     };
-    estimateEddResponse(request, type);
+    if(edd_info?.has_item_level) {
+      let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
+      request.intl_vendors=null;
+      let items = [];
+      items_in_cart.map(item => {
+        if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
+          items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item.full_item_info.international_vendor: null})
+        }
+      });
+      request.items = items;
+      if(items.length) estimateEddResponse(request, type);
+    } else {
+      estimateEddResponse(request, type);
+    }
   };
 
   validateEddStatus = () => {
@@ -351,23 +365,34 @@ export class CartItemContainer extends PureComponent {
           variant: color,
         },
       });
-      // if (oldQuantity < quantity) {
-      //   var data = localStorage.getItem("customer");
-      //   let userData = JSON.parse(data);
-      //   let userToken;
-      //   const queryID = getStore().getState().SearchSuggestions.queryID;
-      //   if (userData?.data?.id) {
-      //     userToken = userData.data.id;
-      //   }
-      //   if (queryID) {
-      //     new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
-      //       objectIDs: [item_id.toString()],
-      //       queryID,
-      //       userToken: userToken ? `user-${userToken}`: getUUIDToken(),
-      //     });
-      //   }
-      // }
     });
+  }
+
+  removeEddData(sku) {
+    const { edd_info, eddResponse } = this.props;
+    let eddRequest = sessionStorage.getItem("EddAddressReq");
+    if(edd_info && edd_info.is_enable && edd_info.has_item_level && eddResponse && isObject(eddResponse) && Object.keys(eddResponse).length) {
+      let obj = {};
+      Object.keys(eddResponse).map(page => {
+        if(eddResponse[page] && eddResponse[page].length) {
+          obj[page] = [];
+          eddResponse[page].map((eddVal, i) => {
+            if(eddVal.sku != sku) {
+              obj[page].push(eddVal);
+            }
+          })
+          if(obj[page].length==0){
+            delete obj[page];
+          }
+        }
+      })
+      if(obj && Object.keys(obj).length==0){
+        this.props.setEddResponse(null, eddRequest);
+      } else {
+        sessionStorage.setItem("EddAddressRes", obj);
+        this.props.setEddResponse(obj, JSON.parse(eddRequest));
+      }
+    }
   }
 
   /**
@@ -400,6 +425,7 @@ export class CartItemContainer extends PureComponent {
         .then((data) => {
           this.setStateNotLoading();
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART);
+          this.removeEddData(sku);
         })
         .catch(() => {
           this.sendMoEImpressions(EVENT_MOE_REMOVE_FROM_CART_FAILED);

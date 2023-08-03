@@ -24,6 +24,7 @@ export class SearchSuggestionsDispatcher {
       AppState: { gender, country },
     } = getStore().getState();
     let queryID = null;
+    let searchSuggestionProductID = null;
 
     // var searchQuery = search;
     // This if condition implements PWA 2423 for Bahrain, Oman & Qatar
@@ -137,6 +138,9 @@ export class SearchSuggestionsDispatcher {
         queryID = suggestionData.queryID;
       } else {
         queryID = productData?.queryID ? productData?.queryID : null;
+      }
+      if (productData && productData.queryID) {
+        searchSuggestionProductID = productData.queryID;
       }
       const results = formatProductSuggestions(productData);
       dispatch(

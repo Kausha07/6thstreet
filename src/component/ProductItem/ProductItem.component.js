@@ -149,11 +149,15 @@ class ProductItem extends PureComponent {
         product_Position,
         thumbnail_url,
       },
+      isFilters,
     } = this.props;
 
-    var data = localStorage.getItem("customer");
-    let userData = JSON.parse(data);
-    let userToken;
+    var data = localStorage.getItem("customer") || null;
+    let userData = data ? JSON.parse(data) : null;
+    let userToken =
+      userData && userData.data && userData.data.id
+        ? `user-${userData.data.id}`
+        : getUUIDToken();
     let queryID;
     resetProduct();
     setPrevPath(window.location.href);
@@ -163,9 +167,6 @@ class ProductItem extends PureComponent {
       } else {
         queryID = qid;
       }
-    }
-    if (userData?.data) {
-      userToken = userData.data.id;
     }
     const checkCategoryLevel = () => {
       if (!categories) {
@@ -189,20 +190,12 @@ class ProductItem extends PureComponent {
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-      name: name,
-      id: sku,
-      price: itemPrice,
-      brand: brand_name,
-      category: product_type_6s || categoryLevel,
-      variant: color || "",
-      position: product_Position || "",
-    });
-    if (queryID) {
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, [product]);
+    if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,
-        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        userToken: userToken,
         position: [position],
       });
     }
@@ -225,6 +218,8 @@ class ProductItem extends PureComponent {
       product_name: name,
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No",
+      position: product_Position || "",
     });
     // this.sendBannerClickImpression(product);
   }
@@ -239,6 +234,8 @@ class ProductItem extends PureComponent {
       product,
       pageType,
       renderMySignInPopup,
+      isFilters,
+      position
     } = this.props;
     return (
       <WishlistIcon
@@ -246,6 +243,8 @@ class ProductItem extends PureComponent {
         sku={sku}
         data={product}
         pageType={pageType}
+        isFilters={isFilters}
+        product_position={position}
       />
     );
   }
@@ -394,8 +393,16 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const { product, pageType, removeFromWishlist, wishlist_item_id } =
-      this.props;
+    const { 
+      product,
+      pageType,
+      removeFromWishlist,
+      wishlist_item_id,
+      position,
+      qid,
+      isVueData,
+      isFilters,
+    } = this.props;
     let price = Array.isArray(product.price)
       ? Object.values(product.price[0])
       : Object.values(product.price);
@@ -411,6 +418,11 @@ class ProductItem extends PureComponent {
           removeFromWishlist={removeFromWishlist}
           wishlist_item_id={wishlist_item_id}
           influencerPDPURL={influencerPDPURL}
+          position={position}
+          qid={qid}
+          isVueData={isVueData}
+          product_Position={position}
+          isFilters={isFilters}
         />
       </div>
     );

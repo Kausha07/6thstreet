@@ -51,8 +51,20 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PLP from "./PLP.component";
+import {
+  getSelectedMoreFiltersFacetValues,
+  getNewMoreActiveFilters,
+  getNewActiveFilters,
+  getCategoryIds,
+  getSelectedFiltersFacetValues,
+  toggleIsSelectedOfSubcategories,
+  getIsDataIsSelected,
+  sendEventAttributeSelected,
+  sendEventMoreAttributeSelected,
+} from "Route/PLP/utils/PLP.helper";
+import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
-
+import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -73,7 +85,9 @@ export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
   influencerAlgoliaQuery: state?.InfluencerReducer?.influencerAlgoliaQuery,
   catalogue_from_algolia:
-    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
+    state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
+  newSelectedActiveFilters: state.PLP.newActiveFilters,
+  moreFilters: state.PLP.moreFilters,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -181,6 +195,9 @@ export class PLPContainer extends PureComponent {
     activeFilters: {},
     categoryloaded: false,
     metaContent: null,
+    newActiveFilters: {},
+    moreActiveFilters: {},
+    selectedMoreFilterPLP: ""
   };
 
   containerFunctions = {
@@ -190,6 +207,10 @@ export class PLPContainer extends PureComponent {
     updateFiltersState: this.updateFiltersState.bind(this),
     resetPLPData: this.resetPLPData.bind(this),
     compareObjects: this.compareObjects.bind(this),
+    onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
+    onMoreFilterClick: this.onMoreFilterClick.bind(this),
+    onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
+    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this)
   };
 
   resetPLPData() {
@@ -319,6 +340,8 @@ export class PLPContainer extends PureComponent {
 
   sendMOEevents() {
     const { requestedOptions } = this.props;
+    const { newActiveFilters, activeFilters } = this.state;
+    const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
     const categorylevelPath = requestedOptions["categories.level4"]
       ? requestedOptions["categories.level4"]
@@ -357,6 +380,7 @@ export class PLPContainer extends PureComponent {
               ? category_1
               : "",
       app6thstreet_platform: "Web",
+      isFilters: isFilters ? "Yes" : "No"
     });
     this.setState({ categoryloaded: false });
   }
@@ -498,6 +522,7 @@ export class PLPContainer extends PureComponent {
         : null;
     if (!isRadio) {
       if (checked) {
+        // for selecting filter
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
           this.updateInitialFilters(
@@ -598,25 +623,119 @@ export class PLPContainer extends PureComponent {
   }
 
   select = (isQuickFilters) => {
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     const { query } = this.props;
     if (isMobile.any()) {
       window.scrollTo(0, 0);
     }
+    this.selectMoreFilters();
     Object.keys(activeFilters).map((key) => {
       if (key !== "categories.level1") {
         if (isQuickFilters) {
           WebUrlParser.setQuickFilterParam(key, activeFilters[key], query);
         } else {
-          WebUrlParser.setParam(key, activeFilters[key], query);
+          if(key !== "categories_without_path") {
+            WebUrlParser.setParam(key, activeFilters[key], query);
+          }
         }
       }
     });
+    if(isQuickFilters) {
+      return;
+    }
+    const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+    const key = "categories_without_path";
+      //Below code is for Msite - here I am not sending category Ids to Algolia
+    if(isMobile.any()) {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+      );
+    }else {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
+    }
   };
+
+  selectMoreFilters = () => {
+    const { moreActiveFilters = {} } = this.state;
+    const { moreFilters: {moreFiltersArr = [] }} = this.props;
+    const SelectedMoreFiltersFacetValues = getSelectedMoreFiltersFacetValues(moreActiveFilters, moreFiltersArr);
+
+    Object.entries(SelectedMoreFiltersFacetValues).map((item) => {
+      WebUrlParser.setParam(
+        item[0],
+        item[1]
+      )
+    });
+  }
+
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    let newMultiLevelData = {...multiLevelData};
+    const { category_id } = multiLevelData;
+    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
+
+    // when user selected any other category fitler reseting the moreFilters.
+    const newMoreActiveFilters = {
+      ...moreActiveFilters,
+      ["categories_without_path"]: [],
+    };
+    
+    this.onSelectMoreFilterPLP("");
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: newMultiLevelData,
+            isDropdown,
+            newActiveFilters,
+          }) || {},
+          moreActiveFilters: newMoreActiveFilters,
+      },
+      () => this.select()
+    );
+    sendEventAttributeSelected(newMultiLevelData, isSearch, searchKey, activeFiltersIds);
+  }
+
+  // for Msite category filter click
+  OnLevelTwoCategoryPressMsite(option, checked) {
+    const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
+    this.setState(
+      {
+        newActiveFilters:
+          getNewActiveFilters({
+            multiLevelData: option,
+            isDropdown: false,
+            newActiveFilters,
+          }) || {},
+      },
+      () => this.select()
+    );
+  }
+
+  onMoreFilterClick(option) {
+    const { moreActiveFilters } = this.state;
+    this.setState(
+      {
+        moreActiveFilters: getNewMoreActiveFilters({option, moreActiveFilters}) || {},
+      },
+      () => this.selectMoreFilters()
+    );
+    sendEventMoreAttributeSelected(option);
+  }
+
+  onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {
+    this.setState({ selectedMoreFilterPLP: newSelectedMoreFilterPLP})
+  }
 
   onUnselectAllPress(category) {
     const { filters, updatePLPInitialFilters } = this.props;
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
@@ -681,10 +800,27 @@ export class PLPContainer extends PureComponent {
     });
 
     Object.keys(activeFilters).map((key) => {
-      if (key !== "categories.level1") {
+      if (key !== "categories.level1" && key !== "categories_without_path") {
         WebUrlParser.setParam(key, activeFilters[key]);
       }
     });
+
+    const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const key = "categories_without_path";
+      //Below code is for Msite - here I am not sending category Ids to Algolia
+    if(isMobile.any()) {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+      );
+    }else {
+      const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
+    }
   }
 
   async getBrandDetailsByCatalogueApi() {
@@ -697,16 +833,22 @@ export class PLPContainer extends PureComponent {
       return null;
     }
     try {
-      getBrandInfoByName(brandName).then((resp) => {
-        this.setState({
-          brandDescription: isArabic()
-            ? resp?.result[0]?.description_ar
-            : resp?.result[0]?.description,
-          brandImg: resp?.result[0]?.image,
-          brandName: isArabic() ? resp?.result[0]?.name_ar : resp?.result[0]?.name,
-        });
-        this.props.setBrandurl(resp?.result[0]?.url_path);
-      })
+      if(brandName){
+        getBrandInfoByName(brandName).then((resp) => {
+          if (resp?.success && resp?.result != null) {
+            this.setState({
+              brandDescription: isArabic()
+                ? resp?.result[0]?.description_ar
+                : resp?.result[0]?.description,
+              brandImg: resp?.result[0]?.image,
+              brandName: isArabic()
+                ? resp?.result[0]?.name_ar
+                : resp?.result[0]?.name,
+            });
+            this.props.setBrandurl(resp?.result[0]?.url_path);
+          }
+        })
+      }
     } catch (err) {
       console.error("There is an issue while fetching brand information.", err);
     }
@@ -721,27 +863,33 @@ export class PLPContainer extends PureComponent {
     if (exceptionalBrand.includes(brandName)) {
       return null;
     }
-    const data = await new Algolia({
-      index: "brands_info",
-    }).getBrandsDetails({
-      query: brandName,
-      limit: 1,
-    });
-    this.setState({
-      brandDescription: isArabic()
-        ? data?.hits[0]?.description_ar
-        : data?.hits[0]?.description,
-      brandImg: data?.hits[0]?.image,
-      brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
-    });
-    this.props.setBrandurl(data?.hits[0]?.url_path);
+    if(brandName){
+      const data = await new Algolia({
+        index: "brands_info",
+      }).getBrandsDetails({
+        query: brandName,
+        limit: 1,
+      });
+      this.setState({
+        brandDescription: isArabic()
+          ? data?.hits[0]?.description_ar
+          : data?.hits[0]?.description,
+        brandImg: data?.hits[0]?.image,
+        brandName: isArabic() ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+      });
+      this.props.setBrandurl(data?.hits[0]?.url_path);
+    }
   }
 
   updateFiltersState(activeFilters) {
     this.setState({ activeFilters });
   }
   handleResetFilter() {
-    this.setState({ activeFilters: {} });
+    this.setState({
+      activeFilters: {},
+      newActiveFilters: {},
+      moreActiveFilters: {},
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const {
@@ -750,6 +898,7 @@ export class PLPContainer extends PureComponent {
       menuCategories = [],
       lastHomeItem,
       pages,
+      newSelectedActiveFilters = {},
     } = this.props;
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
@@ -840,8 +989,31 @@ export class PLPContainer extends PureComponent {
         },
         {}
       );
+      // activeFilters - adding L4 filters into active filters array, when the component get updated
+      const { categories_without_path = {} } = this.props.filters;
+      const { data = {} } = categories_without_path;
+      let tempArray = [];
+      if (data) {
+        Object.entries(data).map((entry) => {
+          Object.entries(entry[1].subcategories).map((subEntry) => {
+            if (subEntry[1] && subEntry[1].sub_subcategories) {
+              Object.entries(subEntry[1].sub_subcategories).map(
+                (sub_subEntry) => {
+                  if (sub_subEntry[1].is_selected === true) {
+                    tempArray.push(sub_subEntry[0]);
+                  }
+                }
+              );
+            }
+          });
+        });
+      }
+      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+        ? [...newActiveFilters["categories_without_path"], ...tempArray]
+        : [...tempArray];
       this.setState({
         activeFilters: newActiveFilters,
+        newActiveFilters: newSelectedActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
@@ -1027,7 +1199,7 @@ export class PLPContainer extends PureComponent {
   containerProps = () => {
     const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
       this.props;
-    const { brandImg, brandName, brandDescription, activeFilters } = this.state;
+    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters, selectedMoreFilterPLP } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1042,6 +1214,9 @@ export class PLPContainer extends PureComponent {
       activeFilters,
       isLoading,
       showOverlay,
+      newActiveFilters,
+      moreActiveFilters,
+      selectedMoreFilterPLP,
     };
   };
 

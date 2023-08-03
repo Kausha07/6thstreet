@@ -10,6 +10,7 @@ import DynamicContentRichContentBanner from "Component/DynamicContentRichContent
 import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
 import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
 import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
+import DynamicContentReferralBanner from "Component/DynamicContentReferralBanner"
 import { PureComponent } from "react";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
@@ -47,6 +48,7 @@ class DynamicContent extends PureComponent {
     edge_to_edge_banner: DynamicContentBanner,
     line_separator: "hr",
     vue_slider: DynamicContentVueSlider,
+    referralBanner: DynamicContentReferralBanner,
   };
   isCheckTwiceBanner = (block) => {
     let isValid = false;

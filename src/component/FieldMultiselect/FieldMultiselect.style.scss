@@ -112,7 +112,7 @@ $select-arrow-width: 6px !default;
     white-space: nowrap;
     overflow: hidden;
     &_selectedItems {
-      padding-bottom: 3px;
+      padding-bottom: 22px;
     }
     @include mobile {
       // border: 1px solid var(--field-multiselect-border);
@@ -128,7 +128,7 @@ $select-arrow-width: 6px !default;
       border: solid var(--black-color);
       border-width: 0 1px 1px 0;
       display: inline-block;
-      padding: 2px 5px 5px 2px;
+      padding: 3px 6px 6px 3px;
       margin: 0 auto;
       transform: rotate(45deg);
       right: 1px;
@@ -468,4 +468,26 @@ $select-arrow-width: 6px !default;
       width: 10%;
     }
   }
+}
+
+.multiselectUl {
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.smallerText {
+  margin-right: 30px;
+  float: right;
+  font-size: 12px;
+  color: #8D8D8D;
+  top: 3px;
+}
+
+.smallerTextAr {
+  float: left;
+  margin-right: 0;
+  margin-left: 40px;
+  font-size: 12px;
+  color: #8D8D8D;
+  top: 3px;
 }

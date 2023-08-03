@@ -28,8 +28,7 @@ export class PDPAlsoAvailableContainer extends PureComponent {
     if (isFetchFromAlgolia && !products.length) {
       this.getAvailableProducts();
     }else if(!isFetchFromAlgolia){
-      this.setState({ products: relatedProducts });
-      this.setState({ isAlsoAvailable: relatedProducts?.length === 0 });
+      this.setState({ products: relatedProducts, isAlsoAvailable: relatedProducts?.length === 0 });
     }
   }
 
