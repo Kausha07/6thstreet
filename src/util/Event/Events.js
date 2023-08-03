@@ -158,6 +158,7 @@
  export const EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK =
    "account_customer_support_click";
  export const EVENT_ACCOUNT_CLUB_APPAREL_CLICK = "account_club_apparel_click";
+ export const EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK = "account_section_referral_tab_click"
  export const EVENT_MOE_ORDER_ITEM_CLICK = "order_item_click";
  export const EVENT_MOE_UPDATE_PROFILE = "update_profile";
  export const EVENT_MOE_RETURN_AN_ITEM_CLICK = "return_an_item_click";
@@ -290,6 +291,7 @@
  export const BIRTHDATE_UPDATE_SUCCESS = "birthdate_update_success";
  export const REFERRAL_COPY = "referral_copy";
  export const REFERRAL_SHARE = "referral_share";
+ export const REFERRAL_NUDGE_CLICK = "referral_nudge_click";
  
 // Checkout Errors Tracking Event
 export const EVENT_MOE_PLACE_ORDER_CLICK = "place_order_click";
