@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./PLPOptionsMoreFilter.style";
 import Rectangle from "./icons/Rectangle.svg";
 import SelectedRectangle from "./icons/SelectedRectangle.svg";
 import { isArabic } from "Util/App";
 
-function PLPOptionsMoreFilter({ options, onMoreFilterClick }) {
+function PLPOptionsMoreFilter({ option, onMoreFilterClick }) {
+  const [isChecked, setIsChecked] = useState(option?.is_selected);
   const handleOptionMoreFilterClick = (option) => {
+    setIsChecked(!isChecked);
     onMoreFilterClick(option);
   };
+  useEffect(() => {
+    setIsChecked(option?.is_selected);
+  }, [option]); 
   const renderCheckbox = (option, index) => {
-    const { facet_key, facet_value, is_selected, label } = option;
-    const isChecked = is_selected;
+    const { label } = option;
 
     return (
       <>
@@ -52,11 +56,9 @@ function PLPOptionsMoreFilter({ options, onMoreFilterClick }) {
   };
 
   return (
-    <ul className="plpMoreFilterOptionsUl">
-      {Object.values(options).map((option, index) =>
-        renderCheckbox(option, index)
-      )}
-    </ul>
+    <>
+      {renderCheckbox(option)}
+    </>
   );
 }
 

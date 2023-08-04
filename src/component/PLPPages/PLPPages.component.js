@@ -640,7 +640,6 @@ class PLPPages extends PureComponent {
     const { selectedMoreFilterPLP } = this.props;
     const {
       moreFilters: { option = {} },
-      handleCallback,
       onMoreFilterClick,
     } = this.props;
     if (
@@ -650,13 +649,15 @@ class PLPPages extends PureComponent {
     ) {
       const options = option[selectedMoreFilterPLP]?.options;
       return (
-        <>
-          <PLPOptionsMoreFilter
-            options={options}
-            handleCallback={handleCallback}
+        <ul className="plpMoreFilterOptionsUl">
+          {Object.values(options).map((option) =>
+            <PLPOptionsMoreFilter
+            option={option}
             onMoreFilterClick={onMoreFilterClick}
-          />
-        </>
+            key={option?.facet_value}
+            />
+          )}
+        </ul>
       );
     }
     return null;
