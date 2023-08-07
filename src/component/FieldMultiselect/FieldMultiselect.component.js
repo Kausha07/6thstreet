@@ -623,6 +623,7 @@ class FieldMultiselect extends PureComponent {
                 filter={filter}
                 onBlur={this.onBlur}
                 activeFiltersIds={activeFiltersIds}
+                key={multiLevelData?.facet_value}
               />
             ) : null
           )}

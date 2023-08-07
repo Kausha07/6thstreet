@@ -26,7 +26,6 @@ function FieldNestedMultiSelect({
     e ? e.stopPropagation() : null;
     setNestedToggleOptionsList(!nestedToggleOptionsList);
   };
-  const { is_selected } = multiLevelData;
   const is_Arabic = isArabic() ? true : false;
   const handleToggleIsSelected = (e, isDropdown) => {
     const { facet_key, facet_value, is_selected } = multiLevelData;
@@ -37,6 +36,9 @@ function FieldNestedMultiSelect({
   const handleSubcategoryDropdown = (newOpenDropdown) => {
     setLevelThreDropdownopen(newOpenDropdown)
   };
+  useEffect(() => {
+    setIsSelected(multiLevelData?.is_selected);
+  }, [multiLevelData]);
 
   useEffect(() => {
     if (searchKey === "") {
@@ -91,16 +93,9 @@ function FieldNestedMultiSelect({
   };
 
   let isAllSelected = true;
-  let isSelectedFromSearch = true;
   Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
     if (!!!sub_cat[1].is_selected) {
       isAllSelected = false;
-    }
-    if(isSearch && !!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
-      isAllSelected = false;
-    }
-    if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
-      isSelectedFromSearch = false;
     }
   });
   let isDropdown = false;
@@ -115,11 +110,7 @@ function FieldNestedMultiSelect({
     }
   }
   if (!isDropdown) {
-    const { label, product_count, is_selected = false, category_id } = multiLevelData;
-    let isSearchSelected = false;
-    if(isSearch && activeFiltersIds.includes(category_id)){
-      isSearchSelected = true;
-    }
+    const { label, product_count } = multiLevelData;
     return (
       <div>
         <div
@@ -130,7 +121,7 @@ function FieldNestedMultiSelect({
           block="toggleButtonNestedMultiSelectBlock"
         >
           <div style={{ display: "flex" }}>
-            {is_selected || isSearchSelected ? (
+            {isSelected ? (
               <span>
                 <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
               </span>
@@ -183,7 +174,7 @@ function FieldNestedMultiSelect({
             handleToggleIsSelected(e, isDropdown);
           }}
         >
-          {isAllSelected || isSelectedFromSearch ? (
+          {isAllSelected || isSelected ? (
             <span>
               <img src={selectRed} alt="selectRed" id={`selectRed${label}`} />
             </span>
