@@ -660,17 +660,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       newAddressSaved,
       customer: { addresses },
       addressIDSelected,
+      isSignedIn
     } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
 
-    const selectedAddress = addressIDSelected
+    const selectedAddress = isSignedIn && addresses 
       ? addressIDSelected
-      : addresses[0]?.id;
-    const getDefaultShippingInfo = addresses.find(
+        ? addressIDSelected
+        : addresses[0]?.id
+      : null;
+    const getDefaultShippingInfo = isSignedIn && selectedAddress && addresses ?  addresses.find(
       (add) => add.id == selectedAddress
-    );
-    const defaultShippingSelected =
+    ) : null;
+    const defaultShippingSelected = isSignedIn && addresses  && 
       typeof getDefaultShippingInfo?.default_shipping !== undefined
         ? getDefaultShippingInfo?.default_shipping
         : null;
@@ -683,8 +686,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         step: this.getCheckoutStepNumber(),
         payment_code: null,
         addressClicked: addNewAddressClicked,
-        newAddressAdded: newAddressSaved,
-        isDefaultAddressAdded: defaultShippingSelected,
+        newAddressAdded: isSignedIn ? newAddressSaved : true,
+        isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
       });
       if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
