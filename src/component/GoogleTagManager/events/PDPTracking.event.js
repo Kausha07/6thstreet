@@ -40,6 +40,7 @@ class PDPTrackingEvent extends BaseEvent {
   handler(data) {
     const eventName = data.name;
     const EventAction = data.action ? data.action : eventName;
+    if(eventName){
     this.pushEventData({
       event: eventName,
       eventCategory: "pdp_tracking",
@@ -49,11 +50,13 @@ class PDPTrackingEvent extends BaseEvent {
       ...(data.stockStatus && { stockStatus: data.stockStatus }),
       ...(data.size_type && { size_type: data.size_type }),
       ...(data.size_value && { size_type: data.size_value }),
+      ...(data.imagesScrolled && { imagesScrolled: data.imagesScrolled }),
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
     });
+    }
   }
 
   getCustomerId() {

@@ -27,6 +27,7 @@ import Event, {
   EVENT_SELECT_SIZE,
   EVENT_GTM_PDP_TRACKING,
   EVENT_SELECT_SIZE_TYPE,
+  EVENT_GTM_COUPON,
   MOE_trackEvent
 } from "Util/Event";
 import history from "Util/History";
@@ -386,11 +387,19 @@ export class PDPAddToCartContainer extends PureComponent {
     const { size } = checkproductSize ? productStock[selectedSizeCode] : "";
     const optionValue = checkproductSize ? size[selectedSizeType] : "";
     if (
-      selectedSizeCode &&
-      prev_selectedSizeCode == selectedSizeCode &&
+      selectedSizeCode && selectedSizeType &&
+      (prev_selectedSizeCode !== selectedSizeCode || 
+      prev_selectedSizeType !== selectedSizeType ) &&
       !isAddToCartClicked
     ) {
-      const eventData = { name: EVENT_SELECT_SIZE, size_value: optionValue, product_name: name, product_id: sku, action:"select_size_no_option" };
+      const eventData = {
+        name: EVENT_SELECT_SIZE,
+        size_type: selectedSizeType,
+        size_value: optionValue,
+        product_name: name,
+        product_id: sku,
+        action: "select_size_no_option",
+      };
       Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
       this.sendMoEImpressions(EVENT_SELECT_SIZE);
     }
@@ -437,14 +446,14 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       product: { sku, name },
     } = this.props;
-    const eventData = {
-      name: EVENT_SELECT_SIZE_TYPE,
-      size_type: type.target.value,
-      action: EVENT_SELECT_SIZE_TYPE,
-      product_name: name, 
-      product_id: sku,
-    };
-    Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    // const eventData = {
+    //   name: EVENT_SELECT_SIZE_TYPE,
+    //   size_type: type.target.value,
+    //   action: EVENT_SELECT_SIZE_TYPE,
+    //   product_name: name, 
+    //   product_id: sku,
+    // };
+    //Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
     this.setState({
       selectedSizeType: type.target.value,
     });
@@ -882,6 +891,17 @@ export class PDPAddToCartContainer extends PureComponent {
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
+    const eventData = {
+      name: EVENT_MOE_VIEW_BAG,
+      coupon: this.props?.totals?.coupon_code || "",
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
   }
 
   showAlertNotification(message) {

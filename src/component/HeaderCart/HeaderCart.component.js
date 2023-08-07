@@ -7,7 +7,7 @@ import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./HeaderCart.style";
-import { EVENT_MOE_GO_TO_BAG, MOE_trackEvent } from "Util/Event";
+import Event, { EVENT_MOE_GO_TO_BAG, MOE_trackEvent,EVENT_GTM_CART } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 
@@ -93,6 +93,7 @@ class HeaderCart extends PureComponent {
       isCheckoutAvailable,
       showNotification,
       totals: { items = [] },
+      totals
     } = this.props;
 
     if (!isCheckoutAvailable && items.length) {
@@ -109,6 +110,7 @@ class HeaderCart extends PureComponent {
         prevPath: window.location.href,
       },
     });
+    Event.dispatch(EVENT_GTM_CART, totals);
   };
 
   getPageType() {

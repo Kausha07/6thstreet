@@ -22,6 +22,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint";
 import { camelCase } from "Util/Common";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
+import { setNewAddressClicked } from "Store/MyAccount/MyAccount.action";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -35,6 +36,7 @@ export const mapDispatchToProps = (dispatch) => ({
   dispatch,
   estimateEddResponse: (request, type) =>
     MyAccountDispatcher.estimateEddResponse(dispatch, request, type),
+  setNewAddressFromClick: (val) => dispatch(setNewAddressClicked(val)),
 });
 
 export const mapStateToProps = (state) => ({
@@ -45,6 +47,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   totals: state.CartReducer.cartTotals,
   addressLoader: state.MyAccountReducer.addressLoader,
+  addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
@@ -56,6 +59,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     shippingAddress: PropTypes.object.isRequired,
     estimateShipping: PropTypes.func.isRequired,
     setLoading: PropTypes.func.isRequired,
+    addNewAddressClicked: PropTypes.bool,
   };
 
   containerFunctions = {
@@ -100,14 +104,14 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   }
 
   showCreateNewPopup() {
-    const { showPopup } = this.props;
-
+    const { showPopup, setNewAddressFromClick } = this.props;
     this.openForm();
     showPopup({
       action: ADD_ADDRESS,
       title: __("Add new address"),
       address: {},
     });
+    setNewAddressFromClick(true);
   }
 
   notSavedAddress() {
