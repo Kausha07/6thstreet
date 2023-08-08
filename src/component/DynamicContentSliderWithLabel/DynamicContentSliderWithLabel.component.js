@@ -261,7 +261,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={brand_logo}
             alt={brand}
             block="Image"
-            style={{ maxWidth: wd, borderRadius: borderRadius }}
+            style={{ borderRadius: borderRadius }}
           />
         </Link>
         {brand ? (
