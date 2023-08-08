@@ -49,7 +49,7 @@ class PDPTrackingEvent extends BaseEvent {
       ...(data.product_name && { productName: data.product_name }),
       ...(data.stockStatus && { stockStatus: data.stockStatus }),
       ...(data.size_type && { size_type: data.size_type }),
-      ...(data.size_value && { size_type: data.size_value }),
+      ...(data.size_value && { size_value: data.size_value }),
       ...(data.imagesScrolled && { imagesScrolled: data.imagesScrolled }),
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
