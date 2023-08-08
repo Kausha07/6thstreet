@@ -54,8 +54,8 @@ export const getIsOptionVisible = (option) => {
             }
             return true;
         }
-
-        if(currentAppState?.gender !== "home" && currentAppState?.gender !== "all" ) {
+        // if pageType is home, all or influencer then show all avaiable gender options
+        if(currentAppState?.gender !== "home" && currentAppState?.gender !== "all" && currentAppState?.gender !== "influencer") {
             const urlGender = location?.pathname?.trim()?.split("/")[1];
             if(isArabic()) {
                 const arabicGenderValues = {
