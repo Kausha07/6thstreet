@@ -1147,13 +1147,13 @@ class FieldMultiselect extends PureComponent {
     }
     let count = selected_filters_count || 0;
     if ( count === 0 && category === "discount") {
-      const { discount: { isDiscountFilterApplyed = false} } = sliderFilters;
-      isDiscountFilterApplyed ? count = 1 : null;
+      const isDiscountFilterApplied = sliderFilters?.discount?.isDiscountFilterApplyed || false;
+      isDiscountFilterApplied ? count = 1 : null;
     }
     const currency = getCountryCurrencyCode();
     if ( count === 0 && category === `price.${currency}.default` ) {
-      const { price: { isPriceFilterApplyed = false} } = sliderFilters;
-      isPriceFilterApplyed ? count = 1 : null;
+      const isPriceFilterApplied = sliderFilters?.price?.isPriceFilterApplyed || false;
+      isPriceFilterApplied ? count = 1 : null;
     }
     return (
       <span 
