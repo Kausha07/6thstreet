@@ -62,7 +62,7 @@ class PurchaseEvent extends BaseEvent {
         };
       }
     );
-    console.log("purchaseImpression", formattedImpressions);
+
     const sha_email =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail

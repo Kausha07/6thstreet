@@ -50,7 +50,7 @@ class CheckoutEvent extends BaseEvent {
         };
       }
     );
-    console.log("formattedImpressions", formattedImpressions);
+
     const sha_email =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
