@@ -48,8 +48,9 @@ class PLPPage extends PureComponent {
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup, newActiveFilters = {}, activeFilters = {} } = this.props;
+    const { renderMySignInPopup, newActiveFilters = {}, activeFilters = {}, products } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
+    const sendImpressionOnBundle = products.length > 5 ? false : true;
     return (
       <ProductItem
         position={index}
@@ -62,6 +63,7 @@ class PLPPage extends PureComponent {
         lazyLoad={false}
         sendProductImpression={this.sendProductImpression}
         isFilters={isFilters}
+        sendImpressionOnBundle={sendImpressionOnBundle}
       />
     );
   };

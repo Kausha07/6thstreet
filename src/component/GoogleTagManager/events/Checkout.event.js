@@ -34,6 +34,23 @@ class CheckoutEvent extends BaseEvent {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
+    const products = this.getProducts(totals);
+    const formattedImpressions = products.map(
+      ({ brand, category, id, name, price, quantity, variant }) => {
+        const productPosition = this.getProductPosition(id) || null;
+        return {
+          brand: brand,
+          category: category,
+          id: id,
+          name: name,
+          price: price,
+          quantity: quantity,
+          variant: variant,
+          ...(productPosition && {position: productPosition}),
+        };
+      }
+    );
+    console.log("formattedImpressions", formattedImpressions);
     const sha_email =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
@@ -61,7 +78,12 @@ class CheckoutEvent extends BaseEvent {
       },
     });
   }
-
+  getProductPosition(id) {
+    const productPositionData =
+      BrowserDatabase.getItem("ProductPositionData") || {};
+    const getProdPosition = productPositionData[id] || null;
+    return getProdPosition;
+  }
   /**
    * Get action field for GTM data
    *

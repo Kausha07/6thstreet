@@ -93,11 +93,20 @@ class ProductItem extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { product = [], sendProductImpression, page } = this.props;
-    if (page == "plp") {
+    const {
+      product = [],
+      sendProductImpression,
+      page,
+      sendProductImpressionOnBundle,
+    } = this.props;
+    if (page == "plp" && !sendProductImpressionOnBundle) {
       sendProductImpression([product]);
     } else {
-      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+      const productData =
+        !product.product_Position && this.props?.position
+          ? { ...product, ...{ position: this.props?.position } }
+          : { ...product };
+      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [productData]);
     }
     this.setState({ impressionSent: true });
   }
@@ -191,7 +200,7 @@ class ProductItem extends PureComponent {
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, [product]);
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],

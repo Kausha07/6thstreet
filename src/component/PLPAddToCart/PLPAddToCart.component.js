@@ -19,6 +19,8 @@ import Event, {
   EVENT_MOE_ADD_TO_CART_FAILED,
   MOE_trackEvent,
   SELECT_ITEM_ALGOLIA,
+  EVENT_GTM_PRODUCT_CLICK,
+  EVENT_GTM_PRODUCT_DETAIL
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -712,6 +714,20 @@ class PLPAddToCart extends PureComponent {
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+      product: {
+        name,
+        id: configSKU,
+        price: itemPrice,
+        brand: brand_name,
+        category: product_type_6s,
+        variant: color,
+        position: product_Position,
+      },
+    });
+
+
     this.setState({ productAdded: true });
     let searchQueryId;
     if (!qid) {
@@ -799,7 +815,7 @@ class PLPAddToCart extends PureComponent {
           variant: color,
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
-          productPosition: product_Position || "",
+          position: product_Position || "",
         },
       });
 
@@ -861,7 +877,7 @@ class PLPAddToCart extends PureComponent {
           variant: color,
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
-          productPosition: product_Position || "",
+          position: product_Position || "",
         },
       });
 
