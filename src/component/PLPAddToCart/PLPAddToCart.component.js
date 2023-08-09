@@ -842,7 +842,9 @@ class PLPAddToCart extends PureComponent {
       ).then((response) => {
         // Response is sent only if error appear
         if (response) {
-          showNotification("error", __(response));
+          if(typeof response == 'string'){
+            showNotification("error", __(response));
+          }
           this.afterAddToCart(false);
         } else {
           this.afterAddToCart(true);
