@@ -102,7 +102,9 @@ class FooterMain extends PureComponent {
         },
         {
           name: __("Order Tracking"),
-          href: process.env.REACT_APP_CLICKPOST_URL
+          href: `${process.env.REACT_APP_BOXATY_URL}?lang=${
+            isArabic() ? "ar" : "en"
+          }`,
         },
         {
           name: __("FAQs"),
