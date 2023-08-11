@@ -410,12 +410,23 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         shipping_amount = 0,
         currency_code = getCurrency(),
         total_segments: totals = [],
+        items = [],
       },
       international_shipping_fee,
       checkoutStep,
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    let inventory_level_cross_border = false;
+    items?.map((item) => {
+      if (
+        item.full_item_info &&
+        item.full_item_info.cross_border &&
+        parseInt(item.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     return (
       <div block="CheckoutOrderSummary" elem="OrderTotals">
         <ul>
@@ -435,15 +446,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             )}
             {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
 
-
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "shipping") || __("FREE"),
-              __("Shipping Charges")
-            )}
-            {international_shipping_fee && this.renderPriceLine(
-              getDiscountFromTotals(totals, "international_shipping_amount"),
-              __("International Shipping Charges")
-            )}
+            {!inventory_level_cross_border &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "shipping") || __("FREE"),
+                __("Shipping Charges")
+              )}
+            {international_shipping_fee &&
+              inventory_level_cross_border &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "intl_shipping"),
+                __("International Shipping Charges")
+              )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "tax"),
               __("Tax")

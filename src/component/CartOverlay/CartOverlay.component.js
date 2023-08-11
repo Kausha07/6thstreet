@@ -187,7 +187,8 @@ export class CartOverlay extends PureComponent {
 
   renderInternationalShipping() {
     const {
-      totals: { items = [], international_shipping_amount = 0, international_shipping_fee }
+      totals: { items = [], international_shipping_amount = 0 },
+      international_shipping_fee,
     } = this.props;
     let inventory_level_cross_border = false;
     items.map(item => {
@@ -195,7 +196,11 @@ export class CartOverlay extends PureComponent {
         inventory_level_cross_border = true;
       }
     });
-    if(inventory_level_cross_border && international_shipping_fee) {
+    if (
+      inventory_level_cross_border &&
+      international_shipping_fee &&
+      international_shipping_amount
+    ) {
       return (
         <dl block="CartOverlay" elem="Discount">
           <dt>{__("International Shipping fee")}</dt>
