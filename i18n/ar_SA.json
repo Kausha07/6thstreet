@@ -1238,5 +1238,8 @@
     "More": "أكثر",
     "Less": "أقل",
     "Select Price Range": "حدد نطاق السعر",
-    "Select Discount Range": "حدد نطاق الخصم"
+    "Select Discount Range": "حدد نطاق الخصم",
+    "International Shipping Fee": "رسوم الشحن الدولي",
+    "International Shipping fee": "سوم الشحن الدولي",
+    "International Shipping Charges": "تكاليف الشحن الجوي"
 }
