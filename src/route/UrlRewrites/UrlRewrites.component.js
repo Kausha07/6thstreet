@@ -110,6 +110,7 @@ class UrlRewrites extends PureComponent {
     } else if (
       brandName != "" &&
       brandDescription != "" &&
+      brandDescription != null &&
       type == TYPE_CATEGORY
     ) {
       return false;
