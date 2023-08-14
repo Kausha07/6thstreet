@@ -73,7 +73,7 @@ class CheckoutEvent extends BaseEvent {
         currencyCode: this.getCurrencyCode(),
         checkout: {
           actionField: this.getActionFields(step),
-          products: this.getProducts(totals),
+          products: formattedImpressions,
         },
       },
     });
