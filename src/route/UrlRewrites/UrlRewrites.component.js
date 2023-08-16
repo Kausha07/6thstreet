@@ -102,7 +102,8 @@ class UrlRewrites extends PureComponent {
       vueTrendingBrandClick = false,
       brandName = "",
       brandDescription = "",
-      type
+      type,
+      brandNameClick
     } = this.props;
 
     if (vueTrendingBrandClick) {
@@ -113,7 +114,11 @@ class UrlRewrites extends PureComponent {
       brandDescription != null &&
       type == TYPE_CATEGORY
     ) {
-      return false;
+      if(!brandNameClick) {
+        return true;
+      }else {
+        return false;
+      }
     }
     
     return true;
