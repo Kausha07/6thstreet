@@ -1087,15 +1087,16 @@ class PDPSummary extends PureComponent {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
-    if (
-      simple_products &&
-      selectedSizeCode &&
-      parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-        parseInt(simple_products[selectedSizeCode]?.quantity) &&
-      parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
-    ) {
-      tags.push(__("International Shipment"));
-    }
+    // Commenting this code, because we are showing this tag other where to with different logic
+    // if (
+    //   simple_products &&
+    //   selectedSizeCode &&
+    //   parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
+    //     parseInt(simple_products[selectedSizeCode]?.quantity) &&
+    //   parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
+    // ) {
+    //   tags.push(__("International Shipment"));
+    // }
     if (discountable?.toLowerCase() === "no") {
       tags.push(__("Non Discountable"));
     }
