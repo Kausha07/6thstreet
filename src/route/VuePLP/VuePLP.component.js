@@ -1,5 +1,8 @@
 /* eslint-disable fp/no-let */
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Helmet } from 'react-helmet';
+
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import "./VuePLP.style";
@@ -11,7 +14,6 @@ import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import { getLastOrder } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import ProductItem from "Component/ProductItem";
-import { useDispatch, useSelector } from "react-redux";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { VUE_PAGE_VIEW } from "Util/Event";
 import { getUUID } from "Util/Auth";
@@ -59,9 +61,7 @@ const VuePLP = (props) => {
   const signedIn = isSignedIn();
   const gender = useSelector((state) => state.AppState.gender);
   const prevPath = useSelector((state) => state.PLP.prevPath);
-  //dispatch
   const dispatch = useDispatch();
-
   const getRequestOptions = () => {
     let params;
     if (location.search && location.search.startsWith("?q")) {
@@ -456,11 +456,11 @@ const VuePLP = (props) => {
   }, [recentFirstProduct]);
 
   useEffect(() => {
-    if(widgetIDFromViewAllBtn ){
+    if (widgetIDFromViewAllBtn) {
       request();
     }
-  },[widgetIDFromViewAllBtn]);
-  
+  }, [widgetIDFromViewAllBtn]);
+
   const fetchBreadCrumbsName = (q) => {
     switch (q) {
       case STYLE_IT_SLIDER:
@@ -522,6 +522,11 @@ const VuePLP = (props) => {
 
   return (
     <>
+      <div>
+        <Helmet>
+          <meta name="robots" content="noindex" />
+        </Helmet>
+      </div>
       <Loader isLoading={isLoading} />
       <div block="UrlRewrites" id="UrlRewrites">
         <main

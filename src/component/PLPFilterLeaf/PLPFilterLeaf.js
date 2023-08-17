@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { isArabic } from "Util/App";
 import selectGray from "Component/FieldNestedMultiSelect/icons/selectGray.svg";
@@ -15,19 +15,20 @@ function PLPFilterLeaf({ leaf, handleLeafLevelClick, activeFiltersIds, isSearch 
     category_id,
   } = leaf;
 
-  let isSearchSelected = false;
-  if(isSearch && activeFiltersIds.includes(category_id)){
-    isSearchSelected = true;
-  }
+  const [isLeafSelected, setIsLeafSelected] = useState(leaf?.is_selected);
+  useEffect(() => {
+    setIsLeafSelected(leaf?.is_selected);
+  }, [leaf]);
 
   if (facet_key && facet_value && label) {
     return (
       <li
         key={v4()}
         onClick={(e) => {
+          setIsLeafSelected(!isLeafSelected);
           handleLeafLevelClick(e, leaf);
         }}
-        data-is_selected={is_selected || isSearchSelected}
+        data-is_selected={isLeafSelected}
       >
         <div
           block="wrapperLeafLevel"
@@ -37,10 +38,10 @@ function PLPFilterLeaf({ leaf, handleLeafLevelClick, activeFiltersIds, isSearch 
           <div
             block="wrapperLeafLevel"
             elem="wrapperIconLabel"
-            className={is_selected || isSearchSelected ? "isLeafSelected" : ""}
+            className={isLeafSelected ? "isLeafSelected" : ""}
           >
             <div>
-              {is_selected || isSearchSelected ? (
+              {isLeafSelected ? (
                 <span>
                   <img
                     src={selectRed}

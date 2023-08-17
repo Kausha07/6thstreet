@@ -44,7 +44,6 @@ function PLPFilterNestedOptions({
 
   let isDropdownable = false;
   let isAllSelected = true;
-  let isSelectedFromSearch = true;
   if (option && option?.sub_subcategories) {
     Object.entries(option.sub_subcategories).map((sub_cat) => {
       if (!!!sub_cat[1].is_selected) {
@@ -52,9 +51,6 @@ function PLPFilterNestedOptions({
       }
       if(isSearch && !!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
         isAllSelected = false;
-      }
-      if(!!!activeFiltersIds.includes(sub_cat[1]?.category_id)){
-        isSelectedFromSearch = false;
       }
     });
   }
@@ -102,23 +98,13 @@ function PLPFilterNestedOptions({
     }
   };
 
-  let isSearchSelected = false;
-  if(!isDropdownable) {
-    const { category_id } = option;
-    if(isSearch && activeFiltersIds.includes(category_id)){
-      isSearchSelected = true;
-    }
-  }else if (isSearch){
-    isSearchSelected = isSelectedFromSearch;
-  }
-
   return (
     <>
       <div className="checkboxWrapper">
         <PLPFilterCustomCheckbox
           label={option?.label}
-          checked={isChecked || isSearchSelected}
-          isSubCatSelected={isAllSelected || isSearchSelected}
+          checked={isChecked}
+          isSubCatSelected={isAllSelected}
           onChange={handleCheckboxClick}
           parentCallback={parentCallback}
           option={option}
