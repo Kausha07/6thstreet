@@ -676,10 +676,13 @@ export class CartPage extends PureComponent {
               {this.renderPriceLine(subTotal, __("Subtotal"), {
                 subtotalOnly: true,
               })}
-              {this.renderPriceLineForShipping(
-                shipping_fee,
-                __("Shipping fee")
-              )}
+              {international_shipping_amount &&
+              international_shipping_amount === 0
+                ? this.renderPriceLineForShipping(
+                    shipping_fee,
+                    __("Shipping fee")
+                  )
+                : null}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
