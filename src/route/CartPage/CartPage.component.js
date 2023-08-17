@@ -622,6 +622,7 @@ export class CartPage extends PureComponent {
         currency_code = getCurrency(),
         total_segments: totals = [],
         shipping_fee = 0,
+        international_shipping_amount = 0,
       },
     } = this.props;
     let appliedCoupon = {};
@@ -652,10 +653,13 @@ export class CartPage extends PureComponent {
               {couponCode || (discount && discount != 0)
                 ? this.renderPriceLine(discount, __("Discount"))
                 : null}
-              {this.renderPriceLineForShipping(
-                shipping_fee,
-                __("Shipping fee")
-              )}
+              {international_shipping_amount &&
+              international_shipping_amount === 0
+                ? this.renderPriceLineForShipping(
+                    shipping_fee,
+                    __("Shipping fee")
+                  )
+                : null}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
