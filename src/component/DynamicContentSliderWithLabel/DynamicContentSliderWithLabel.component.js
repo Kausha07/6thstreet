@@ -229,7 +229,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       url_path = "",
       plp_config,
       height = 500,
-      width = 100,
+      width = 140,
       text_align = "center",
     } = item;
     const { isArabic } = this.state;
@@ -261,7 +261,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={brand_logo}
             alt={brand}
             block="Image"
-            style={{ borderRadius: borderRadius }}
+            style={{ minWidth: wd, maxWidth: wd,borderRadius: borderRadius }}
           />
         </Link>
         {brand ? (
@@ -282,7 +282,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       ontology,
       plp_config,
       height = 500,
-      width = 100,
+      width = 140,
       text_align = "center",
     } = item;
     const { isArabic } = this.state;
@@ -314,7 +314,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={image}
             alt={isArabic ? arabic_name : english_name}
             block="Image"
-            style={{ maxWidth: wd, borderRadius: borderRadius }}
+            style={{ minWidth: wd, maxWidth: wd, borderRadius: borderRadius }}
           />
         </Link>
         {english_name || arabic_name ? (

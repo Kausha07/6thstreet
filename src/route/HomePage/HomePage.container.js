@@ -302,6 +302,7 @@ export class HomePageContainer extends PureComponent {
         fields : ["title", "image_link", "product_id", "price", "discounted_price", "currency_code", "brand", "ontology", "gender", "custom_label_1", "custom_label_2", "category", "link"],
         num_results: 10,
         product_id: "",
+        user_id:userID,
         mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
         widget_type : element
       };
