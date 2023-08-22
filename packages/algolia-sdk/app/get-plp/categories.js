@@ -201,6 +201,7 @@ Object.entries(prodCountFacets).map((entry, index) => {
           facet_key: facetKey,
           label: l2,
           is_selected: false,
+          isDropdown: false,
           product_count:
             currentCategoryLevel === "L2"
               ? finalProdCountObj[categoryKey] || categoriesWithoutPath[l2]
@@ -218,11 +219,13 @@ Object.entries(prodCountFacets).map((entry, index) => {
         };
 
         if(l3 && categoriesWithoutPath && categoriesWithoutPath[l3]) {
+          acc[l1].subcategories[l2].isDropdown = true;
           acc[l1].subcategories[l2].sub_subcategories[l3] = {
             facet_value: l3,
             facet_key: facetKey,
             label: l3,
             is_selected: false,
+            isDropdown: false,
             product_count: finalProdCountObj[categoryKey] || productCount,
             category_level: "L3",
             category_key:
@@ -236,16 +239,18 @@ Object.entries(prodCountFacets).map((entry, index) => {
             sub_subcategories: {...acc[l1].subcategories[l2]?.sub_subcategories[l3]?.sub_subcategories}
           };
           if(l4 && categoriesWithoutPath && categoriesWithoutPath[l4]) {
-                acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4] = {
-                facet_value: l4,
-                facet_key: facetKey,
-                label: l4,
-                is_selected: false,
-                product_count: finalProdCountObj[categoryKey] || productCount,
-                category_level: "L4",
-                category_key: categoryKey,
-                category_id,
-              } 
+            acc[l1].subcategories[l2].sub_subcategories[l3].isDropdown = true;
+            acc[l1].subcategories[l2].sub_subcategories[l3].sub_subcategories[l4] = {
+              facet_value: l4,
+              facet_key: facetKey,
+              label: l4,
+              is_selected: false,
+              isDropdown: false,
+              product_count: finalProdCountObj[categoryKey] || productCount,
+              category_level: "L4",
+              category_key: categoryKey,
+              category_id,
+            }
           }
         }
 
