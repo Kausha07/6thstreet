@@ -653,8 +653,7 @@ export class CartPage extends PureComponent {
               {couponCode || (discount && discount != 0)
                 ? this.renderPriceLine(discount, __("Discount"))
                 : null}
-              {international_shipping_amount &&
-              international_shipping_amount === 0
+              {international_shipping_amount === 0
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
@@ -676,8 +675,7 @@ export class CartPage extends PureComponent {
               {this.renderPriceLine(subTotal, __("Subtotal"), {
                 subtotalOnly: true,
               })}
-              {international_shipping_amount &&
-              international_shipping_amount === 0
+              {international_shipping_amount === 0
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
