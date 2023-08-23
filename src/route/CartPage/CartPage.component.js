@@ -35,8 +35,8 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 
-import CartNudge from "./CartNudges/CartNudge"
-import { RenderEmptyCartPage, RenderEmptyCartPageForMobile } from "./EmptyCart"
+import CartNudge from "./CartNudges/CartNudge";
+import { RenderEmptyCartPage, RenderEmptyCartPageForMobile } from "./EmptyCart";
 import DynamicContentVueProductSliderContainer from "../../component/DynamicContentVueProductSlider";
 import { v4 } from "uuid";
 import { Shipping } from "Component/Icons";
@@ -50,6 +50,9 @@ import "./CartPage.style";
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
+import { Offer, Coupon } from "Component/Icons/index";
+import CartPageSliders from "Component/CartPageSliders/index.js";
+
 export class CartPage extends PureComponent {
   constructor(props) {
     super(props);
@@ -72,7 +75,7 @@ export class CartPage extends PureComponent {
   state = {
     isArabic: isArabic(),
     TermsAndConditions: "",
-    isTermsAndConditionspopupOpen:false,
+    isTermsAndConditionspopupOpen: false,
     isCouponPopupOpen: false,
     couponCode: "",
     couponName: "",
@@ -80,12 +83,13 @@ export class CartPage extends PureComponent {
     isCouponDetialPopupOpen: false,
     couponModuleStatus: false,
     pageLoaded: true,
-    showPopup:false,
+    showPopup: false,
     pdpWidgetsAPIData: [],
     couponModuleStatus: false,
     isMobile: isMobile.any() || isMobile.tablet(),
     isLoading: false,
     isOOSProducts: false,
+    tabbyResp: {},
   };
 
   static defaultProps = {
@@ -104,6 +108,7 @@ export class CartPage extends PureComponent {
     document.body.appendChild(script);
     getTabbyInstallment(total)
       .then((response) => {
+        this.setState({ tabbyResp: response });
         if (response?.value) {
           if (
             document.getElementById("TabbyPromo").classList.contains("d-none")
@@ -128,6 +133,7 @@ export class CartPage extends PureComponent {
     if (prevProps?.totals?.total !== total) {
       getTabbyInstallment(total)
         .then((response) => {
+          this.setState({ tabbyResp: response });
           if (response?.value) {
             if (
               document.getElementById("TabbyPromo").classList.contains("d-none")
@@ -217,18 +223,18 @@ export class CartPage extends PureComponent {
     }
   }
 
-  fitlerItemArr = ( items = [] ) => {
-    let filterArrOne =[];
+  fitlerItemArr = (items = []) => {
+    let filterArrOne = [];
     let filterArrTwo = [];
-    items.map((item)=>{
-      if(item?.availableQty === 0 || item?.availableQty < item?.qty){
+    items.map((item) => {
+      if (item?.availableQty === 0 || item?.availableQty < item?.qty) {
         filterArrOne.push(item);
-      }else {
+      } else {
         filterArrTwo.push(item);
       }
     });
-    return [ ...filterArrTwo, ...filterArrOne ];
-  }
+    return [...filterArrTwo, ...filterArrOne];
+  };
 
   renderCartItems() {
     const {
@@ -306,8 +312,8 @@ export class CartPage extends PureComponent {
     e.stopPropagation();
     this.setState({
       isTermsAndConditionspopupOpen: true,
-    })
-  }
+    });
+  };
 
   hideCouponDetial = (e) => {
     e.stopPropagation();
@@ -324,8 +330,8 @@ export class CartPage extends PureComponent {
     e.stopPropagation();
     this.setState({
       isTermsAndConditionspopupOpen: false,
-    })
-  }
+    });
+  };
 
   handleRemoveCode = (e) => {
     e.stopPropagation();
@@ -344,46 +350,46 @@ export class CartPage extends PureComponent {
   };
   setLoader = (currLoaderState) => {
     this.setState({
-      isLoading: currLoaderState
-    })
-  }
+      isLoading: currLoaderState,
+    });
+  };
   handleApplyCode = async () => {
     const { couponCode } = this.state;
     this.setLoader(true);
-    try{            
-        let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
-        if (typeof apiResponse !== "string") {
-        }
-        this.setLoader(false);
+    try {
+      let apiResponse =
+        (await this.props.applyCouponToCart(couponCode)) || null;
+      if (typeof apiResponse !== "string") {
+      }
+      this.setLoader(false);
+    } catch (error) {
+      console.error(error);
     }
-    catch(error){
-        console.error(error);
-    }
-  }
+  };
 
-  closeremoveOosOverlay =(currstate)=> {
-    this.setState({isOOSProducts: currstate})
-  }
+  closeremoveOosOverlay = (currstate) => {
+    this.setState({ isOOSProducts: currstate });
+  };
 
   renderRemoveOOS() {
     const { totals, updateTotals } = this.props;
     const { isArabic } = this.state;
     return (
-        <RemoveOOS
-          closeremoveOosOverlay={this.closeremoveOosOverlay}
-          totals={totals}
-          isArabic={isArabic}
-        />
-    )
+      <RemoveOOS
+        closeremoveOosOverlay={this.closeremoveOosOverlay}
+        totals={totals}
+        isArabic={isArabic}
+      />
+    );
   }
-  
+
   renderDiscountCode() {
     const {
       totals: { coupon_code },
       couponsItems = [],
     } = this.props;
     const isOpen = false;
-    const { isArabic, isMobile, isLoading }= this.state;
+    const { isArabic, isMobile, isLoading } = this.state;
     const promoCount = Object.keys(couponsItems).length;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -392,15 +398,6 @@ export class CartPage extends PureComponent {
       });
     }
     return (
-    // this.state?.couponModuleStatus ? (
-    //   <ExpandableContent
-    //     isOpen={isOpen}
-    //     heading={__("Have a discount code?")}
-    //     mix={{ block: "CartPage", elem: "Discount" }}
-    //   >
-    //     <CartCoupon couponCode={coupon_code} />
-    //   </ExpandableContent>
-    // ) : (
       <>
         {!this.state?.isCouponPopupOpen ? (
           <>
@@ -408,9 +405,12 @@ export class CartPage extends PureComponent {
               {coupon_code ? (
                 <div block="appliedCouponBlock" onClick={this.openCouponPopup}>
                   <div block="appliedCouponDetail">
-                    <p block="appliedCouponCode">
-                      {appliedCoupon ? appliedCoupon?.code : coupon_code}
-                    </p>
+                    <span block="showCouponBtnLeftBlock">
+                      <img block="couponImage" src={Coupon} alt="couponImage" />
+                      <p block="appliedCouponCode" mods={{ isArabic }}>
+                        {appliedCoupon ? appliedCoupon?.code : coupon_code}
+                      </p>
+                    </span>
                   </div>
                   <button
                     block="appliedCouponBtn remove"
@@ -418,12 +418,19 @@ export class CartPage extends PureComponent {
                       this.handleRemoveCode(e);
                     }}
                   >
-                    {__("Remove")}
+                    {__("Delete")}
                   </button>
                 </div>
               ) : (
                 <button onClick={this.openCouponPopup} block="showCouponBtn">
-                  {__("Enter coupon or promo code")}
+                  <span block="showCouponBtnLeftBlock">
+                    <img block="couponImage" src={Coupon} alt="couponImage" />
+                    <span block="couponText" mods={{ isArabic }}>
+                      {__("Enter coupon or promo code")}
+                    </span>
+                  </span>
+
+                  <span block="couponCodeSelectText">{__("Select")}</span>
                 </button>
               )}
             </div>
@@ -438,8 +445,12 @@ export class CartPage extends PureComponent {
         ) : (
           <>
             <div block="couponPopupBlock">
-              <div block="couponPopupContent" ref={this.cartCouponPopup} mods={{isArabic}}>
-                <div block="couponPopupTop" mods={{isArabic}}>
+              <div
+                block="couponPopupContent"
+                ref={this.cartCouponPopup}
+                mods={{ isArabic }}
+              >
+                <div block="couponPopupTop" mods={{ isArabic }}>
                   {isMobile ? __("Discount code") : __("Promo codes")}
                   <button
                     onClick={this.closeCouponPopup}
@@ -448,13 +459,15 @@ export class CartPage extends PureComponent {
                     <span>Close</span>
                   </button>
                 </div>
-                  {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
-                  <div block="couponInputBox">
-                      <CartCoupon
-                        couponCode={coupon_code}
-                        closePopup={this.closeCouponPopup}
-                      />
-                  </div>
+                {isMobile ? null : (
+                  <p>{__("Select a Promo or type a Coupon code")}</p>
+                )}
+                <div block="couponInputBox">
+                  <CartCoupon
+                    couponCode={coupon_code}
+                    closePopup={this.closeCouponPopup}
+                  />
+                </div>
                 <CartCouponList
                   couponCode={coupon_code}
                   closePopup={this.closeCouponPopup}
@@ -485,6 +498,75 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderPriceLineForCouponSavings(price, name, mods, allowZero = false) {
+    const {
+      totals: { currency_code = getCurrency() },
+    } = this.props;
+    const finalPrice = parseFloat(getFinalPrice(price, currency_code)).toFixed(
+      2
+    );
+
+    return (
+      <li block="CartPage" elem="SummaryItem" mods={mods}>
+        <strong block="CartPage" elem="Text">
+          {name}
+        </strong>
+        <strong block="CartPage" elem="CouponSavingsPrice">
+          {price === 0 ? (
+            <span onClick={this.openCouponPopup} block="applyCouponButton">
+              {__("Apply Coupon")}
+            </span>
+          ) : (
+            currency_code + " -" + finalPrice
+          )}
+        </strong>
+      </li>
+    );
+  }
+
+  renderPriceLineForShipping(price, name, mods, allowZero = false) {
+    const { isArabic } = this.state;
+    const {
+      totals: { currency_code = getCurrency() },
+    } = this.props;
+    const finalPrice = getFinalPrice(price, currency_code);
+    const shippingFee = finalPrice ? finalPrice : 20;
+
+    if (finalPrice === 0) {
+      return (
+        <li block="CartPage" elem="SummaryItem" mods={mods}>
+          <strong block="CartPage" elem="Text">
+            {name}
+          </strong>
+          <span>
+            <strong block="CartPage" elem="Price">
+              <del block="freeShipping" mods={{ isArabic }}>
+                {`${
+                  parseFloat(price) || price === 0 ? currency_code : ""
+                } ${shippingFee}`}
+              </del>
+            </strong>
+
+            {__("FREE")}
+          </span>
+        </li>
+      );
+    }
+
+    return (
+      <li block="CartPage" elem="SummaryItem" mods={mods}>
+        <strong block="CartPage" elem="Text">
+          {name}
+        </strong>
+        <strong block="CartPage" elem="Price">
+          {`${
+            parseFloat(price) || price === 0 ? currency_code : ""
+          } ${shippingFee}`}
+        </strong>
+      </li>
+    );
+  }
+
   renderPriceLine(price, name, mods, allowZero = false) {
     if (!price && !allowZero) {
       return null;
@@ -508,15 +590,30 @@ export class CartPage extends PureComponent {
       </li>
     );
   }
-  renderTabbyPromo() {
-    return (
-      <div block="CartPage" elem="TabbyBlock">
-        <div id="TabbyPromo"></div>
-      </div>
-    );
+  renderYourOffers() {
+    const { isArabic, tabbyResp } = this.state;
+    if (tabbyResp?.value) {
+      return (
+        <div block="CartPage" elem="yourOffersBlock">
+          <div block="CartPage" elem="yourOffersHeading">
+            <img block="OfferIcon" src={Offer} alt="my-Offers" />
+            <h4 block="yourOfferHeading" mods={{ isArabic }}>
+              {__("Your Offers")}
+            </h4>
+          </div>
+          <div block="CartPage" elem="yourOffersItem">
+            {" "}
+            <div block="CartPage" elem="TabbyBlock">
+              <div id="TabbyPromo"></div>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
   renderTotal() {
     const {
+      couponsItems = [],
       totals: {
         coupon_code: couponCode,
         discount,
@@ -525,17 +622,26 @@ export class CartPage extends PureComponent {
         currency_code = getCurrency(),
         total_segments: totals = [],
         shipping_fee = 0,
+        international_shipping_amount = 0,
       },
     } = this.props;
+    let appliedCoupon = {};
+    if (couponsItems) {
+      appliedCoupon = couponsItems.find(function (coupon) {
+        if (coupon.code === couponCode) {
+          return coupon;
+        }
+      });
+    }
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
     if (discount != 0) {
       return (
         <div block="CartPage" elem="OrderTotals">
+          <h3 block="OrderTotalsHeading">{__("ORDER DETAILS")}</h3>
           <ul>
             <div block="CartPage" elem="Subtotals">
               {this.renderPriceLine(subTotal, __("Subtotal"))}
-              {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
               {this.renderPriceLine(
                 getDiscountFromTotals(totals, "customerbalance"),
                 __("Store Credit")
@@ -547,6 +653,12 @@ export class CartPage extends PureComponent {
               {couponCode || (discount && discount != 0)
                 ? this.renderPriceLine(discount, __("Discount"))
                 : null}
+              {international_shipping_amount === 0
+                ? this.renderPriceLineForShipping(
+                    shipping_fee,
+                    __("Shipping fee")
+                  )
+                : null}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -557,12 +669,18 @@ export class CartPage extends PureComponent {
     } else {
       return (
         <div block="CartPage" elem="OrderTotals">
+          <h3 block="OrderTotalsHeading">{__("ORDER DETAILS")}</h3>
           <ul>
             <div block="CartPage" elem="Subtotals">
               {this.renderPriceLine(subTotal, __("Subtotal"), {
                 subtotalOnly: true,
               })}
-              {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
+              {international_shipping_amount === 0
+                ? this.renderPriceLineForShipping(
+                    shipping_fee,
+                    __("Shipping fee")
+                  )
+                : null}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -573,19 +691,55 @@ export class CartPage extends PureComponent {
     }
   }
 
+  scrollToSpecificSection(e) {
+    window.scrollTo(0, 9999);
+  }
+
   handleProceedTockButton() {
     const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
 
-    if(!isCheckoutAvailable){
-      this.setState({ isOOSProducts: true })
+    if (!isCheckoutAvailable) {
+      this.setState({ isOOSProducts: true });
     }
-    
   }
 
   renderButtons() {
     const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
 
     const isDisabled = !isCheckoutAvailable;
+    const {
+      totals: { total = 0, currency_code = getCurrency() },
+    } = this.props;
+    const grandTotal = getFinalPrice(total, currency_code);
+
+    if (isMobile.any()) {
+      return (
+        <div block="CartPage" elem="CheckoutButtons">
+          <div block="msiteTotalPrice">
+            <span block="msitePrice">
+              {currency_code} {grandTotal}
+            </span>
+            <span
+              block="msiteViewDetail"
+              onClick={(e) => this.scrollToSpecificSection(e)}
+            >
+              {__("View details")}
+            </span>
+          </div>
+          <button
+            block="CartPage"
+            elem="CheckoutButton"
+            mods={{ isDisabled }}
+            mix={{ block: "Button" }}
+            onClick={onCheckoutButtonClick}
+            id="ProceedToCheckoutButton"
+          >
+            <span />
+            {__("Proceed to Checkout")}
+          </button>
+        </div>
+      );
+    }
 
     return (
       <div block="CartPage" elem="CheckoutButtons">
@@ -594,7 +748,10 @@ export class CartPage extends PureComponent {
           elem="CheckoutButton"
           mods={{ isDisabled }}
           mix={{ block: "Button" }}
-          onClick={(e)=>{onCheckoutButtonClick(e); this.handleProceedTockButton()}}
+          onClick={(e) => {
+            onCheckoutButtonClick(e);
+            this.handleProceedTockButton();
+          }}
           id="ProceedToCheckoutButton"
         >
           <span />
@@ -605,11 +762,42 @@ export class CartPage extends PureComponent {
   }
 
   renderTotals() {
+    const {
+      totals: { extension_attributes },
+    } = this.props;
+
+    if (isMobile.any()) {
+      return (
+        <article block="CartPage" elem="Summary">
+          <div
+            block={
+              extension_attributes &&
+              extension_attributes?.club_apparel_estimated_pointsvalue !== 0
+                ? "msiteScrollableBlock"
+                : "msiteRemoveExtraMargin"
+            }
+          >
+            {this.renderYourOffers()}
+            {this.renderDiscountCode()}
+            {this.renderWishlistSlider()}
+            {this.renderLookingForThisSlider()}
+            {this.renderTotal()}
+          </div>
+
+          <div block="msiteBottomFixed">
+            {this.renderClubApparel()}
+            {this.renderButtons()}
+          </div>
+        </article>
+      );
+    }
     return (
       <article block="CartPage" elem="Summary">
-        {this.renderTabbyPromo()}
+        {this.renderDiscountCode()}
         {this.renderTotal()}
         {this.renderButtons()}
+        {this.renderYourOffers()}
+        {this.renderClubApparel()}
       </article>
     );
   }
@@ -698,9 +886,14 @@ export class CartPage extends PureComponent {
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+          <Image
+            lazyLoad={true}
+            src={ClubApparel}
+            alt="Club Apparel Logo"
+            mods={{ isArabic }}
+          />
 
-          <div block="CartPage" elem="ClubApparelText">
+          <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
             {__("You may earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
             {__("worth of Club Apparel points for this purchase.")}
@@ -712,16 +905,22 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+          <Image
+            lazyLoad={true}
+            src={ClubApparel}
+            alt="Club Apparel Logo"
+            mods={{ isArabic }}
+          />
 
-          <div block="CartPage" elem="ClubApparelText">
-            {__("Link your Club Apparel account to earn ")}
+          <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
+            {__("Link your Club Apparel Account to earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
             {__("worth of points for this purchase. ")}
             <Link
               block="CartPage"
               elem="ClubApparelLink"
               to="/my-account/club-apparel"
+              mods={{ isArabic }}
             >
               {__("Link now")}
             </Link>
@@ -732,10 +931,15 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-        <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+        <Image
+          lazyLoad={true}
+          src={ClubApparel}
+          alt="Club Apparel Logo"
+          mods={{ isArabic }}
+        />
 
-        <div block="CartPage" elem="ClubApparelText">
-          {__("Link your Club Apparel account to earn ")}
+        <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
+          {__("Link your Club Apparel Account to earn ")}
           <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
           {__("worth of points for this purchase.")}
         </div>
@@ -801,11 +1005,15 @@ export class CartPage extends PureComponent {
     );
 
     return (
-      <div>
+      <div block="CartPage" elem="headingBlock">
         {this.renderBack()}
-        <h1 block="CartPage" elem="Heading">
-        {isMobile.any() ? __("My SHOPPING BAG ") : __("My Bag ")}
-        <span>
+        <h1
+          block="CartPage"
+          elem="Heading"
+          mods={{ isArabic: isArabic() && !isMobile.any() }}
+        >
+          {isMobile.any() ? __("My SHOPPING BAG ") : __("My Bag ")}
+          <span>
             ({totalQuantity}
             {this.renderItemSuffix()})
           </span>
@@ -875,7 +1083,7 @@ export class CartPage extends PureComponent {
         <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
         <DynamicContentVueProductSliderContainer
           widgetID={"vue_recently_viewed_slider"}
-          heading={ __("Recently Viewed")}
+          heading={__("Recently Viewed")}
           isHome={false}
           renderMySignInPopup={this.showPopup}
           pageType={"cart"}
@@ -894,38 +1102,36 @@ export class CartPage extends PureComponent {
     document.body.style.overflowX = "hidden";
     return (
       <>
-      <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
-      <h2 class="cartAlsoLikeHeading">{__("You May Also Like")}</h2>
-      <div block="PLPPage">
-        <ul block="ProductItems">
-          {youMayAlsoLikeData.map((item) => {
-            return (
-              <ProductItem
-                position={1}
-                product={item}
-                renderMySignInPopup={this.showPopup}
-                key={v4()}
-                page="cart"
-                pageType="cart"
-                isVueData={true}
-              />
-            );
-          })}
-        </ul>
-      </div>
+        <div block="Seperator" mods={{ isDesktop: !isMobile.any() }}></div>
+        <h2 class="cartAlsoLikeHeading">{__("You May Also Like")}</h2>
+        <div block="PLPPage">
+          <ul block="ProductItems">
+            {youMayAlsoLikeData.map((item) => {
+              return (
+                <ProductItem
+                  position={1}
+                  product={item}
+                  renderMySignInPopup={this.showPopup}
+                  key={v4()}
+                  page="cart"
+                  pageType="cart"
+                  isVueData={true}
+                />
+              );
+            })}
+          </ul>
+        </div>
       </>
     );
   }
 
-  
   closePopup = () => {
     this.setState({ showPopup: false });
-  }
+  };
 
-  
   showPopup = () => {
-    this.setState({showPopup: true});
-  }
+    this.setState({ showPopup: true });
+  };
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
@@ -942,6 +1148,43 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderWishlistSlider = () => {
+    const { wishListProducts } = this.props;
+
+    return (
+      <CartPageSliders
+        sliderProducts={wishListProducts}
+        heading={__("Your WishList")}
+        linkTo={"/my-account/my-wishlist"}
+        sliderType="wishlist"
+        isVueData={false}
+      />
+    );
+  };
+
+  renderLookingForThisSlider = () => {
+    const { lookingForThisData } = this.props;
+    if (lookingForThisData) {
+      return (
+        <CartPageSliders
+          sliderProducts={lookingForThisData}
+          heading={__("Looking for this?")}
+          linkTo={{
+            pathname: "/viewall/?q=vue_compact_style_it_slider",
+            state: {
+              vueProducts: lookingForThisData,
+              product_id: lookingForThisData.sku,
+            },
+          }}
+          sliderType="LookingForThis"
+          isVueData={true}
+        />
+      );
+    }
+
+    return null;
+  };
+
   renderDynamicContent() {
     const {
       totals = {},
@@ -950,12 +1193,12 @@ export class CartPage extends PureComponent {
       processingRequest,
       cartWidgetApiData = [],
       youMayAlsoLikeData = [],
+      isSignedIn,
     } = this.props;
     const { isArabic, isOOSProducts } = this.state;
     const { country } = JSON.parse(
       localStorage.getItem("APP_STATE_CACHE_KEY")
     )?.data || {country: getCountryFromUrl().toUpperCase() };
-
 
 
     // if cart is not created and user goes to cart page in mobile view.
@@ -1021,18 +1264,17 @@ export class CartPage extends PureComponent {
             <div className="sidePadding">
               {this.renderHeading()}
               <RenderEmptyCartPageForMobile />
-            
-       
+
               <div className="PDPWidgets-cart">
                 {cartWidgetApiData.length !== 0
                   ? this.renderRecentlyViewSlider()
                   : null}
               </div>
-            
+
               <div className="PDPWidgets-cart">
-              {youMayAlsoLikeData.length !== 0
-                ? this.renderYouMayAlsoLikeSlider()
-                : null}
+                {youMayAlsoLikeData.length !== 0
+                  ? this.renderYouMayAlsoLikeSlider()
+                  : null}
               </div>
             </div>
           </div>
@@ -1085,44 +1327,43 @@ export class CartPage extends PureComponent {
           label="Cart page details"
         >
           <Loader isLoading={processingRequest} />
-          <div
-            style={{
-              marginBottom: `${
-                isMobile
-                  ? this.dynamicHeight?.current?.clientHeight + additionalMargin
-                  : 0
-              }px`,
-            }}
-            block="CartPage"
-            elem="Static"
-            mods={{
-              isArabic,
-              showClubOverflowWithDic: finalOverlayCss === 1,
-              showClubOverflow: finalOverlayCss === 2,
-              showOverflow,
-            }}
-          >
-            <div className="sidePadding">
-              {this.renderHeading()}
+          <div className="sidePadding">{this.renderHeading()}</div>
+          <CartNudge />
+          <div block="cartMain">
+            <div
+              block="CartPage"
+              elem="StaticItemBlock"
+              mods={{
+                isArabic,
+                showClubOverflowWithDic: finalOverlayCss === 1,
+                showClubOverflow: finalOverlayCss === 2,
+                showOverflow,
+              }}
+            >
+              <div className="sidePadding">
+                {this.renderCartItems()}
+                {this.renderCrossSellProducts()}
+                {isOOSProducts ? this.renderRemoveOOS() : null}
+                {this.renderPromo()}
+              </div>
             </div>
-            <CartNudge />
-            <div className="sidePadding">
-              {this.renderCartItems()}
-              {this.renderCrossSellProducts()}
-              {this.renderDiscountCode()}
-              {isOOSProducts ? this.renderRemoveOOS() : null}
-              {this.renderPromo()}
+            <div
+              ref={this.dynamicHeight}
+              block="CartPage"
+              elem="Floating"
+              mods={{ isArabic }}
+            >
+              {this.renderTotals()}
             </div>
           </div>
-          <div
-            ref={this.dynamicHeight}
-            block="CartPage"
-            elem="Floating"
-            mods={{ isArabic }}
-          >
-            {this.renderClubApparel()}
-            {this.renderTotals()}
-          </div>
+          {isSignedIn && !isMobiledev && (
+            <div block="cartPageSliders">
+              <div block="WishlistSlider">{this.renderWishlistSlider()}</div>
+              <div block="WishlistSlider">
+                {this.renderLookingForThisSlider()}
+              </div>
+            </div>
+          )}
         </ContentWrapper>
       </>
     );
