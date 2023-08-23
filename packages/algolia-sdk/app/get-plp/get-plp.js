@@ -472,7 +472,7 @@ Kids /// Baby Boy /// Shoes
     }
 
     // Remove "Outlet"
-    if (key.match("Outlet") || key.match("Influencers")) {
+    if (key.match("Outlet") || key.match("Influencers") || key.match("SEO")) {
       keepValue = false;
     }
 
