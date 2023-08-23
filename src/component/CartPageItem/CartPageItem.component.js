@@ -724,13 +724,7 @@ export class CartItem extends PureComponent {
                 {isMobile.any() && ")"}
               </span>
             </div>
-          ) : (
-            <div block="discountedCouponAppliedBlock">
-              <span block="nonDiscountableItem">
-                {__("Non-discountable item")}
-              </span>
-            </div>
-          )
+          ) : null
         ) : null}
       </>
     );
