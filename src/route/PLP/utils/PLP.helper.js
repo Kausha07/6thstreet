@@ -157,6 +157,7 @@ export const getNewActiveFilters = ({
   multiLevelData,
   isDropdown,
   newActiveFilters,
+  isDeselect,
 }) => {
   const { category_key, facet_key, is_selected } = multiLevelData;
   const filterArray = newActiveFilters[facet_key] || [];
@@ -166,6 +167,9 @@ export const getNewActiveFilters = ({
   if (isDropdown) {
     let isAllSelected = true;
     let categoryKeyArray = [];
+    if(category_key){
+      categoryKeyArray.push(category_key);
+    }
     Object.entries(multiLevelData.sub_subcategories).map((sub_cat) => {
       if (!!!sub_cat[1].is_selected) {
         isAllSelected = false;
@@ -185,6 +189,9 @@ export const getNewActiveFilters = ({
         });
       }
     });
+    if(isDeselect){
+      isAllSelected = true;
+    }
     if (isAllSelected) {
       const newFilterArray = filterArray.filter((filterObj) => {
         if (!!!categoryKeyArray.includes(filterObj.category_key)) {

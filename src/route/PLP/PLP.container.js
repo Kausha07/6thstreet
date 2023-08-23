@@ -674,7 +674,7 @@ export class PLPContainer extends PureComponent {
     });
   }
 
-  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey, isDeselect) {
     const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
@@ -694,6 +694,7 @@ export class PLPContainer extends PureComponent {
             multiLevelData: newMultiLevelData,
             isDropdown,
             newActiveFilters,
+            isDeselect,
           }) || {},
           moreActiveFilters: newMoreActiveFilters,
       },
