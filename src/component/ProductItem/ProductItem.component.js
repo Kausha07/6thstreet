@@ -11,7 +11,7 @@ import WishlistIcon from "Component/WishlistIcon";
 import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
 import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -36,6 +36,11 @@ import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+const MsiteAddToCartPopUp = lazy(() =>
+  import(
+    /* webpackChunkName: 'MsiteAddToCartPopUp' */ "Component/MsiteAddToCartPopUp"
+  )
+);
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -371,11 +376,19 @@ class ProductItem extends PureComponent {
     const {
       product: { price },
       page,
+      pageType,
     } = this.props;
     if(!price || (Array.isArray(price) && !price[0])){
       return null;
     }
-    return <Price price={price} page={page} renderSpecialPrice={true} />;
+    return (
+      <Price
+        price={price}
+        page={page}
+        renderSpecialPrice={true}
+        pageType={pageType}
+      />
+    );
   }
 
   renderAddToCartOnHover() {
@@ -424,6 +437,7 @@ class ProductItem extends PureComponent {
       selectedGender,
       isStorePage,
       isCollectionPage,
+      pageType,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -494,13 +508,21 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {pageType !== "wishlist" && this.renderOutOfStock()}
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
       </Link>
     );
   }
+
+  renderAddToCartButton = (productInfo) => {
+    return (
+      <Suspense fallback={<div></div>}>
+        <MsiteAddToCartPopUp productInfo={productInfo} />
+      </Suspense>
+    );
+  };
 
   render() {
     const { isArabic } = this.state;
@@ -527,6 +549,9 @@ class ProductItem extends PureComponent {
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           this.renderAddToCartOnHover()}
+        {isMobile.any() &&
+          pageType === "wishlist" &&
+          this.renderAddToCartButton(this.props.product)}
       </li>
     );
   }
