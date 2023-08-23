@@ -72,6 +72,14 @@
                     color: black;
                 }
             }
+
+            &-Qty {
+                span:nth-child(2) {
+                  border-bottom: 1px solid black;
+                  cursor: pointer;
+                }
+            }
+                
         }
 
         &_isArabic {

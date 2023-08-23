@@ -25,9 +25,6 @@
     flex-wrap: wrap;
     margin-bottom: 8px;
 
-    @include desktop() {
-      height: 187px;
-    }
 
     &-Wrapper {
       display: flex;
@@ -112,15 +109,14 @@
       .swipeableItemContent {
         width: 100%;
         transition: all 800ms;
-        padding-right: 8px;
         .CartPageItem-Wrapper{
           padding-top:0;
           position: relative;
           .SwipeActionBtn{
             background: url(../Icons/Close/icon.svg) no-repeat center;
             background-size: 16px;
-            width: 16px;
-            height: 16px;
+            width: 10px;
+            height: 10px;
             padding: 0px;
             top: 0;
             right: 8px;
@@ -148,7 +144,7 @@
         letter-spacing: 0;
         line-height: 16px;
         text-align: center;
-        max-height: 165px;
+        max-height: 200px;
         background: #28D9AA;
         width: 98px;
         height: 100%;
@@ -171,7 +167,7 @@
         letter-spacing: 0;
         line-height: 16px;
         text-align: center;
-        max-height: 165px;
+        max-height: 200px;
         background: #F01136;
         width: 98px;
         height: 100%;
