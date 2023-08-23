@@ -216,6 +216,10 @@ export class PDPDispatcher {
     const { brandButtonClick } = payload;
     dispatch(setBrandButtonClick(brandButtonClick));
   }
+
+  async setPDPProductDetailsForWishListATC(product, dispatch) {
+    dispatch(setPDPData(product, {}));
+  }
 }
 
 export default new PDPDispatcher();

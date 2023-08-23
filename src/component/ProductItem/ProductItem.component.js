@@ -11,7 +11,7 @@ import WishlistIcon from "Component/WishlistIcon";
 import PLPAddToCart from "Component/PLPAddToCart/PLPAddToCart.component";
 import { influencerURL } from "Component/InfluencerCollection/InfluencerCollection.config";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
+import { PureComponent, lazy, Suspense } from "react";
 import { getStore } from "Store";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
@@ -26,7 +26,7 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
-  MOE_trackEvent
+  MOE_trackEvent,
 } from "Util/Event";
 import "./ProductItem.style";
 import { setPrevPath } from "Store/PLP/PLP.action";
@@ -36,6 +36,11 @@ import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+const MsiteAddToCartPopUp = lazy(() =>
+  import(
+    /* webpackChunkName: 'MsiteAddToCartPopUp' */ "Component/MsiteAddToCartPopUp"
+  )
+);
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -184,10 +189,9 @@ class ProductItem extends PureComponent {
         return categories.level0[0];
       } else return "";
     };
-    const categoryLevel =
-      checkCategoryLevel().includes("///")
-        ? checkCategoryLevel().split("///").pop()
-        : "";
+    const categoryLevel = checkCategoryLevel().includes("///")
+      ? checkCategoryLevel().split("///").pop()
+      : "";
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
@@ -358,9 +362,16 @@ class ProductItem extends PureComponent {
     const {
       product: { name },
     } = this.props;
+    const { isArabic } = this.state;
 
     return (
-      <p block="ProductItem" elem="Title">
+      <p
+        block="ProductItem"
+        elem="Title"
+        mods={{
+          isArabic,
+        }}
+      >
         {" "}
         {name}{" "}
       </p>
@@ -371,11 +382,19 @@ class ProductItem extends PureComponent {
     const {
       product: { price },
       page,
+      pageType,
     } = this.props;
-    if(!price || (Array.isArray(price) && !price[0])){
+    if (!price || (Array.isArray(price) && !price[0])) {
       return null;
     }
-    return <Price price={price} page={page} renderSpecialPrice={true} />;
+    return (
+      <Price
+        price={price}
+        page={page}
+        renderSpecialPrice={true}
+        pageType={pageType}
+      />
+    );
   }
 
   renderAddToCartOnHover() {
@@ -397,7 +416,7 @@ class ProductItem extends PureComponent {
     }
     return (
       <div block="ProductItem" elem="AddToCart">
-        <PLPAddToCart 
+        <PLPAddToCart
           product={this.props.product}
           url={urlWithQueryID}
           pageType={pageType}
@@ -424,6 +443,7 @@ class ProductItem extends PureComponent {
       selectedGender,
       isStorePage,
       isCollectionPage,
+      pageType,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -447,7 +467,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = url ? url : link ? link: link; // From api link and url both in different cases.
+      urlWithQueryID = url ? url : link ? link : link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -494,13 +514,23 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {this.renderOutOfStock()}
+        {pageType !== "cartSlider" && 
+          pageType !== "wishlist" &&  
+          this.renderOutOfStock()}
         {this.renderBrand()}
         {this.renderTitle()}
         {this.renderPrice()}
       </Link>
     );
   }
+
+  renderAddToCartButton = (productInfo) => {
+    return (
+      <Suspense fallback={<div></div>}>
+        <MsiteAddToCartPopUp productInfo={productInfo} />
+      </Suspense>
+    );
+  };
 
   render() {
     const { isArabic } = this.state;
@@ -522,11 +552,16 @@ class ProductItem extends PureComponent {
       >
         {" "}
         {this.renderLabel()}
-        {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {pageType !== "cartSlider" && this.renderWishlistIcon()}
+        {this.renderLink()}{" "}
         {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
+          pageType !== "cartSlider" &&
           this.renderAddToCartOnHover()}
+        {isMobile.any() &&
+          pageType === "wishlist" &&
+          this.renderAddToCartButton(this.props.product)}
       </li>
     );
   }

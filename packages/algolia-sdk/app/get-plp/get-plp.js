@@ -472,7 +472,7 @@ Kids /// Baby Boy /// Shoes
     }
 
     // Remove "Outlet"
-    if (key.match("Outlet") || key.match("Influencers")) {
+    if (key.match("Outlet") || key.match("Influencers") || key.match("SEO")) {
       keepValue = false;
     }
 
@@ -564,6 +564,10 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     }
     const index = client.initIndex(indexName);
 
+    let maxValuesPerFacet = 1000;
+    if (q.trim().split("").includes("+")) {
+      maxValuesPerFacet = 2000;
+    }
     // Build search query
     const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
     const  moreFacetFilters = getMoreFacetFilters(queryParams, moreFiltersData);
@@ -579,6 +583,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     let initialFacetFilter = deepCopy(facetFilters);
@@ -622,6 +627,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
       indexName: indexName,
     };
@@ -648,6 +654,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(queryProdCount);
@@ -665,6 +672,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(querySliderPosition);
@@ -714,6 +722,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             page,
             hitsPerPage: limit,
             clickAnalytics: true,
+            maxValuesPerFacet: maxValuesPerFacet,
           },
         });
       });

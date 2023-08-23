@@ -98,17 +98,7 @@ function FieldNestedMultiSelect({
       isAllSelected = false;
     }
   });
-  let isDropdown = false;
-  if (multiLevelData && multiLevelData?.sub_subcategories) {
-    let sub_subCat = [];
-    const { sub_subcategories } = multiLevelData;
-    Object.entries(sub_subcategories).map((sub_cat) => {
-      sub_subCat.push(sub_cat[1]);
-    });
-    if (sub_subCat.length > 0) {
-      isDropdown = true;
-    }
-  }
+  const { isDropdown } = multiLevelData;
   if (!isDropdown) {
     const { label, product_count } = multiLevelData;
     return (

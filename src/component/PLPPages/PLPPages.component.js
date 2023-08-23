@@ -19,7 +19,7 @@ import Field from "Component/Field";
 import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
 import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
 import infoBold from "./icons/infoBold.svg";
-import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
+import { getIsShowMoreFilters } from "./utils/PLPPages.helper";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
 import { getSelectedFiltersFacetValues, getCategoryIds } from "Route/PLP/utils/PLP.helper";
 import { Helmet } from 'react-helmet';
@@ -439,11 +439,11 @@ class PLPPages extends PureComponent {
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
 
-  onDeselect = (val, values) => {
+  onDeselect = (category) => {
     const { onLevelThreeCategoryPress, onSelectMoreFilterPLP } = this.props;
-    const isDropdownable = checkIsDropdownable(val);
+    const { isDropdown } = category;
     onSelectMoreFilterPLP("");
-    onLevelThreeCategoryPress(val, isDropdownable);
+    onLevelThreeCategoryPress(category, isDropdown, false,  "", true);
   }
 
   onClickRemoveMoreFilter = (val, value) => {
