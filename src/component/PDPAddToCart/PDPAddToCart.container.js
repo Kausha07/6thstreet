@@ -615,13 +615,17 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
-          this.afterAddToCartForWishList(false, configSKU);
+          if (popUpType === "wishListPopUp") {
+            this.afterAddToCartForWishList(false, configSKU);
+          }
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
-          this.afterAddToCartForWishList(true, configSKU);
+          if (popUpType === "wishListPopUp") {
+            this.afterAddToCartForWishList(true, configSKU);
+          }
           if(edd_info && edd_info.is_enable && edd_info.has_item_level){
             this.addOrUpdateEddResponse()
           }
@@ -759,10 +763,12 @@ export class PDPAddToCartContainer extends PureComponent {
         ({ product: { sku } }) => sku === configSKU
       );
 
-      const { wishlist_item_id } = wishListItem;
+      if (wishListItem) {
+        const { wishlist_item_id } = wishListItem;
 
-      if (wishlist_item_id) {
-        removeFromWishlist(wishlist_item_id);
+        if (wishlist_item_id) {
+          removeFromWishlist(wishlist_item_id);
+        }
       }
     }
   };
