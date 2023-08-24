@@ -9,6 +9,7 @@ import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
@@ -63,6 +64,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         },
       },
       impressionSent: false,
+      isMobile: isMobile.any() || isMobile.tablet(),
     };
   }
 
@@ -232,9 +234,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
       width = 140,
       text_align = "center",
     } = item;
-    const { isArabic } = this.state;
+    const { isArabic, isMobile } = this.state;
     let parseLink = url_path;
-    const wd = `${width.toString()}px`;
+    const wd = `${isMobile ? 65 : width.toString()}px`;
     const borderRadius = "50%";
     const ht = `${height.toString()}px`;
     return (
@@ -285,9 +287,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
       width = 140,
       text_align = "center",
     } = item;
-    const { isArabic } = this.state;
+    const { isArabic, isMobile } = this.state;
     let parseLink = link;
-    const wd = `${width.toString()}px`;
+    const wd = `${isMobile ? 65 : width.toString()}px`;
     const borderRadius = "50%";
     const ht = `${height.toString()}px`;
     return (
