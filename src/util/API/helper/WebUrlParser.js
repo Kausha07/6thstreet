@@ -163,7 +163,7 @@ const Parser = {
     let moreFilterKeyCheck = false; //if key is in params then now we need to update.
     // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
-      if (sKey.includes(key)) {
+      if (sKey.includes(key) && (sKey.startsWith("dFR") ? (sKey.startsWith(`dFR[${key}]`)) : true) ) {
         url.searchParams.delete(sKey);
         moreFilterKeyCheck = true;
         // url.searchParams.split(sKey)[0]

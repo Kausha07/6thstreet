@@ -115,6 +115,8 @@ export const CartReducer = (state = getInitialState(), action) => {
             customizable_options: [],
             bundle_options: [],
             item_id: item.item_id,
+            discount_amount: item.discount_amount,
+            discount_percent: item.discount_percent,
             product: {
                 name: item.name,
                 type_id: item.product_type,

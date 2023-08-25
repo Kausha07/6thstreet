@@ -9,7 +9,7 @@ export const getIsShowMoreFilters = (newActiveFilters) => {
       if (
         selectedFilterObj &&
         selectedFilterObj.sub_subcategories &&
-        !!!checkIsDropdownable(selectedFilterObj)
+        !!!selectedFilterObj.isDropdown
       ) {
         return true;
       } else if (
@@ -21,19 +21,4 @@ export const getIsShowMoreFilters = (newActiveFilters) => {
     }
   }
   return false;
-};
-
-export const checkIsDropdownable = (option) => {
-  let isDropdownable = false;
-  if (option && option?.sub_subcategories) {
-    let sub_subCat = [];
-    const { sub_subcategories } = option;
-    Object.entries(sub_subcategories).map((sub_cat) => {
-      sub_subCat.push(sub_cat[1]);
-    });
-    if (sub_subCat.length > 0) {
-      isDropdownable = true;
-    }
-  }
-  return isDropdownable;
 };

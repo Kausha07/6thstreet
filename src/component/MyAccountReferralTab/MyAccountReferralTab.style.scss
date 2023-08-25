@@ -1,0 +1,294 @@
+.MyAccountReferral {
+  &-Container {
+    margin: 0 0 40px;
+    @include mobile {
+      margin: 0 -10px;
+    }
+  }
+  &-BannerContent {
+    padding: 60px 40px 300px;
+    text-align: center;
+    background: linear-gradient(to left, #ff8960, #ff62a5);
+    p {
+      font-size: 26px;
+      color: #fff;
+
+      line-height: 1.2;
+      b {
+        font-weight: 600;
+      }
+    }
+  }
+  &-CodeWrapper {
+    text-align: center;
+    max-width: 440px;
+    margin: -240px auto 0;
+    background: #fff;
+    border: 1px solid #0000001a;
+    box-shadow: 0px 1px 10px #00000014;
+    padding: 30px;
+    border-radius: 20px;
+    z-index: 2;
+    @include mobile {
+      max-width: 90%;
+      margin: -260px auto 0;
+    }
+    .Referral {
+      &-Text {
+        color: #000;
+        font-size: 14px;
+        letter-spacing: 1.3px;
+        line-height: 20px;
+        margin-bottom: 0;
+      }
+      &-Code {
+        letter-spacing: 1.5px;
+        line-height: 30px;
+        font-size: 18px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      &-Share {
+        display: flex;
+        justify-content: center;
+        .ShareIcon {
+          flex: 0 0 20%;
+          margin: 0 10px;
+          align-self: baseline;
+          &-Image{
+            cursor: pointer;
+          }
+          &>p{
+            color: #807E7E;
+            font-size: 12px;
+            line-height: 16px;
+            letter-spacing: 1px;
+          }
+          button {
+            padding: 0;
+            height: 100%;
+            width: 100%;
+          }
+          .Overlay {
+            display: none;
+            &_isVisible {
+              display: flex;
+            }
+            flex-direction: column;
+            position: absolute;
+            top: 75px;
+            &_isArabicValue, &_isArabic {
+              right: -188px;
+              text-align: right !important;
+            }
+            right: -150px;
+            width: 360px;
+            text-align: left !important;
+            padding: 33px 20px 20px !important;
+            border-radius: 12px;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+            z-index: 6 !important;
+
+            h3 {
+              font-size: 18px;
+              font-weight: 500;
+              letter-spacing: 2px;
+              line-height: 18px;
+              margin-top: 0 !important;
+              margin-bottom: 25px !important;
+            }
+
+            &-ButtonsContainer {
+              display: flex;
+              justify-content: space-between;
+              padding-bottom: 16px;
+              button {
+                background-color: #f6f6f6;
+                height: 60px !important;
+                width: 60px !important;
+                border-radius: 100%;
+                &:first-child {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &-InviteWrapper {
+    padding: 130px 20px 0px;
+    z-index: 1;
+    margin: -75px 0 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: #fff;
+    box-shadow: 0px 2px 5px #ddd;
+    @include mobile {
+      box-shadow: none;
+    }
+  }
+  &-InviteContainer {
+    max-width: 480px;
+    @include mobile {
+      max-width: 90%;
+    }
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: space-around;
+    .Invite-Container {
+      flex: 0 0 38%;
+      align-self: baseline;
+      text-align: center;
+      &:nth-child(2) {
+        flex: 0 0 4%;
+        align-self: center;
+      }
+      &_isArabicValue {
+        .Image {
+          img {
+            rotate: 180deg;
+          }
+        }
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.4;
+        color: #000;
+        margin: 10px 0;
+        font-weight: 500;
+        @include mobile {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  &-Terms {
+    text-align: center;
+    margin-top: 80px;
+    .Terms-Btn {
+      font-size: 14px;
+      color: #9b9b9b;
+      text-transform: none;
+      font-weight: 400;
+      height: auto;
+      padding: 0;
+      letter-spacing: 0.4px;
+      margin-bottom: 20px;
+      @include mobile {
+        color: #000;
+        font-size: 12px;
+      }
+    }
+  }
+}
+.MyAccountReferralOverlay {
+  h3 {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 0px;
+    @include mobile {
+      text-align: left;
+      font-size: 18px;
+      padding: 0 1.2rem;
+    }
+  }
+  .Popup-Content {
+    max-width: 700px;
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    .Popup-Header {
+      display: none;
+    }
+    .Popup-CloseBtn {
+      top: 1rem;
+      right: 0.6rem;
+      &::before,
+      &::after {
+        background-color: #000;
+        width: 2px;
+        @include mobile {
+          display: block !important;
+          content: "" !important;
+          position: absolute;
+          width: 2px !important;
+          height: 20px !important;
+          transform-origin: 50% 50%;
+          top: 7px;
+          transform: rotate(-45deg);
+          background-color: var(--header-color);
+        }
+      }
+    }
+  }
+  .Terms-Content {
+    margin-top: 40px;
+    li {
+      font-size: 15px;
+      margin-bottom: 20px;
+      @include mobile {
+        padding-left: 2.3rem;
+      }
+    }
+  }
+  &-PopupClose {
+    position: absolute;
+    z-index: 99;
+    width: 35px;
+    height: 35px;
+    right: 35px;
+    top: 20px;
+    @include mobile {
+      position: absolute;
+      width: 27px;
+      height: 27px;
+      right: 27px;
+      top: 35px;
+      &_isArabicValue{
+        right:auto;
+        left:27px;
+      }
+    }
+    button {
+      padding: 0;
+      height: auto;
+      width: auto;
+    }
+  }
+  &_isVisible {
+    @include mobile {
+      height: auto;
+      top: 60px;
+      padding: 0;
+      .Popup-Content {
+        padding: 1rem;
+        max-width: 100%;
+        border-radius: 0;
+      }
+    }
+  }
+  .TermsPopup {
+    &_isArabicValue {
+      direction: rtl;
+      h3{
+        text-align: right;
+      }
+      ul {
+        li {
+          padding-right: 3.25rem;
+          padding-left: 0;
+          &::before {
+            right: 1rem;
+            left: auto;
+            padding-left: 1.1225em;
+            padding-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

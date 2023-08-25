@@ -174,12 +174,14 @@ function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
     sliderFilters.discount = {
       discount: queryParams.discount,
       min: minMax[0],
-      max: minMax[1]
+      max: minMax[1],
+      isDiscountFilterApplyed: true,
     }
   } else if(facets_stats && facets_stats.discount) {
     sliderFilters.discount = {
       min: facets_stats?.discount?.min,
       max: facets_stats?.discount?.max,
+      isDiscountFilterApplyed: false,
     }
   }
 
@@ -197,12 +199,14 @@ function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
     sliderFilters.price = {
       price: queryParams[`price.${currency}.default`],
       min: minMax[0],
-      max: minMax[1]
+      max: minMax[1],
+      isPriceFilterApplyed: true,
     }
   } else if (facets_stats && facets_stats[`price.${currency}.default`]) {
     sliderFilters.price = {
       min: facets_stats[`price.${currency}.default`]?.min,
       max: facets_stats[`price.${currency}.default`]?.max,
+      isPriceFilterApplyed: false,
     }
   }
   // below values are for start and end points of the price slider 
@@ -468,7 +472,7 @@ Kids /// Baby Boy /// Shoes
     }
 
     // Remove "Outlet"
-    if (key.match("Outlet") || key.match("Influencers")) {
+    if (key.match("Outlet") || key.match("Influencers") || key.match("SEO")) {
       keepValue = false;
     }
 
@@ -560,6 +564,10 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     }
     const index = client.initIndex(indexName);
 
+    let maxValuesPerFacet = 1000;
+    if (q.trim().split("").includes("+")) {
+      maxValuesPerFacet = 2000;
+    }
     // Build search query
     const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
     const  moreFacetFilters = getMoreFacetFilters(queryParams, moreFiltersData);
@@ -575,6 +583,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     let initialFacetFilter = deepCopy(facetFilters);
@@ -618,6 +627,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
       indexName: indexName,
     };
@@ -644,6 +654,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(queryProdCount);
@@ -661,6 +672,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(querySliderPosition);
@@ -710,6 +722,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             page,
             hitsPerPage: limit,
             clickAnalytics: true,
+            maxValuesPerFacet: maxValuesPerFacet,
           },
         });
       });
@@ -724,14 +737,23 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         res.results[0];
 
       let finalFiltersData = deepCopy(res.results[0]);
+      // if page is Influencer page then we should show correct categories from the result[1]
+      let isInfluencer = false;
+      if( params['categories.level2'] ) {
+        const levels = params['categories.level2'].split(" /// ");
+        isInfluencer =  levels[0] === 'Influencers' ? true : false;
+      }
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
           if (index > 2 && index < Object.values(res.results).length - 1) {
             Object.entries(result[1].facets).map((entry) => {
-              finalFiltersData.facets[[entry[0]]] = entry[1];
+              if( !isInfluencer || (entry[0] != "categories.level2" && isInfluencer) ) {
+                finalFiltersData.facets[[entry[0]]] = entry[1];
+              }
             });
-          } else if (index === Object.values(res.results).length - 1) {
+          } else if (index === 1) {
+            // getting category data from result of [1] - passing here all other selected filters except from category filter
             for (let key = 0; key <= 4; key++) {
               if (result[1].facets[`categories.level${key}`]) {
                 finalFiltersData.facets[`categories.level${key}`] =

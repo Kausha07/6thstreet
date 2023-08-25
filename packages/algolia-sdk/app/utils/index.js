@@ -136,9 +136,11 @@ const getMasterAlgoliaFilters = (paramsObj = {}) => {
   try {
     let facetFilters = [];
     const requiredFilterForCategoryCount = [
+      "categories.level0",
       "categories.level1",
       "categories.level2",
       "categories.level3",
+      "categories.level4",
       "gender",
       "in_stock",
       "colorfamily",
@@ -148,6 +150,7 @@ const getMasterAlgoliaFilters = (paramsObj = {}) => {
       "size_us",
       "promotion",
       "is_new_in",
+      "age",
     ];
     requiredFilterForCategoryCount.map((key) => {
       if (paramsObj[key] && paramsObj[key] != "") {

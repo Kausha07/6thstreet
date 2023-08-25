@@ -41,6 +41,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { setEddResponse } from "Store/MyAccount/MyAccount.action";
 import { isObject } from "Util/API/helper/Object";
 import { isSignedIn } from "Util/Auth";
+import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -50,6 +51,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   guestUserEmail: state.MyAccountReducer.guestUserEmail,
   prevPath: state.PLP.prevPath,
+  wishListItems: state.WishlistReducer.items,
   edd_info: state.AppConfig.edd_info,
   eddResponse: state.MyAccountReducer.eddResponse,
   eddResponseForPDP: state.MyAccountReducer.eddResponseForPDP
@@ -91,6 +93,7 @@ export const mapDispatchToProps = (dispatch) => ({
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+  removeFromWishlist: (id) => Wishlist.removeSkuFromWishlist(id, dispatch),
   setEddResponse: (response,request) => dispatch(setEddResponse(response,request)),
 });
 
@@ -158,6 +161,7 @@ export class PDPAddToCartContainer extends PureComponent {
       openClickAndCollectPopup: false,
       selectedClickAndCollectStore: null,
       isAddToCartClicked: false,
+      isLoadingAddToCart: false,
     };
 
     this.fullCheckoutHide = null;
@@ -257,6 +261,9 @@ export class PDPAddToCartContainer extends PureComponent {
       product: { sku, size_eu, size_uk, size_us, in_stock, stock_qty },
       setGuestUserEmail,
       simple_products = [],
+      isSizeLessProduct = false,
+      popUpType = "",
+      isAddToCartButtonClicked = false,
     } = this.props;
     this.updateDefaultSizeType();
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
@@ -305,6 +312,14 @@ export class PDPAddToCartContainer extends PureComponent {
       productStock: simple_products,
       isOutOfStock: outOfStockStatus,
     });
+
+    if (
+      isSizeLessProduct &&
+      popUpType === "wishListPopUp" &&
+      !isAddToCartButtonClicked
+    ) {
+      this.addToCart();
+    }
   }
 
   setGuestUserEmail(email) {
@@ -409,6 +424,9 @@ export class PDPAddToCartContainer extends PureComponent {
       customer,
       guestUserEmail,
       clickAndCollectStores,
+      popUpType,
+      isSizeLessProduct,
+      closeAddToCartPopUp,
     } = this.props;
     const {
       mappedSizeObject,
@@ -430,6 +448,9 @@ export class PDPAddToCartContainer extends PureComponent {
       stores: clickAndCollectStores,
       selectedClickAndCollectStore,
       openClickAndCollectPopup,
+      popUpType,
+      isSizeLessProduct,
+      closeAddToCartPopUp,
     };
   };
 
@@ -529,8 +550,12 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
       prevPath = null,
+      popUpType = "",
+      closeAddToCartPopUp,
       edd_info
     } = this.props;
+
+    const eventPageType = popUpType === "wishListPopUp" ? "wishlist" : "pdp";
     const { productStock, selectedClickAndCollectStore } = this.state;
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
@@ -590,11 +615,17 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          if (popUpType === "wishListPopUp") {
+            this.afterAddToCartForWishList(false, configSKU);
+          }
           this.sendMoEImpressions(EVENT_MOE_ADD_TO_CART_FAILED);
         } else {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          if (popUpType === "wishListPopUp") {
+            this.afterAddToCartForWishList(true, configSKU);
+          }
           if(edd_info && edd_info.is_enable && edd_info.has_item_level){
             this.addOrUpdateEddResponse()
           }
@@ -621,7 +652,7 @@ export class PDPAddToCartContainer extends PureComponent {
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
-          pageType: "pdp",
+          pageType: eventPageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -634,9 +665,13 @@ export class PDPAddToCartContainer extends PureComponent {
       });
     }
 
+    this.setState({ isLoadingAddToCart: true });
     if (!insertedSizeStatus) {
       this.setState({ isLoading: true });
-      const code = Object.keys(productStock);
+      const code =
+        popUpType === "wishListPopUp"
+          ? Object.keys(product?.simple_products)
+          : Object.keys(productStock);
       addProductToCart(
         {
           sku: code[0],
@@ -663,6 +698,10 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(false, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          if (popUpType === "wishListPopUp") {
+            closeAddToCartPopUp();
+            this.afterAddToCartForWishList(false, configSKU);
+          }
         } else {
           if(edd_info && edd_info.is_enable && edd_info.has_item_level){
             this.addOrUpdateEddResponse()
@@ -671,6 +710,14 @@ export class PDPAddToCartContainer extends PureComponent {
           this.afterAddToCart(true, {
             isClickAndCollect: !!isClickAndCollect,
           });
+          if (popUpType === "wishListPopUp") {
+            showNotification(
+              "success",
+              __("Product added to your shopping bag")
+            );
+            closeAddToCartPopUp();
+            this.afterAddToCartForWishList(true, configSKU);
+          }
         }
       });
 
@@ -692,7 +739,7 @@ export class PDPAddToCartContainer extends PureComponent {
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
-          pageType: "pdp",
+          pageType: eventPageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -706,6 +753,26 @@ export class PDPAddToCartContainer extends PureComponent {
     }
   }
 
+  afterAddToCartForWishList = (isAdded = true, configSKU = "") => {
+    const { wishListItems, removeFromWishlist } = this.props;
+
+    this.setState({ isLoadingAddToCart: false });
+
+    if (isAdded) {
+      const wishListItem = wishListItems.find(
+        ({ product: { sku } }) => sku === configSKU
+      );
+
+      if (wishListItem) {
+        const { wishlist_item_id } = wishListItem;
+
+        if (wishlist_item_id) {
+          removeFromWishlist(wishlist_item_id);
+        }
+      }
+    }
+  };
+
   afterAddToCart(isAdded = "true", options) {
     const {
       buttonRefreshTimeout,
@@ -716,7 +783,7 @@ export class PDPAddToCartContainer extends PureComponent {
     if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
     }
-    const { setMinicartOpen } = this.props;
+    const { setMinicartOpen, closeAddToCartPopUp, popUpType } = this.props;
     // eslint-disable-next-line no-unused-vars
     this.setState({ isLoading: false });
     // TODO props for addedToCart
@@ -740,6 +807,12 @@ export class PDPAddToCartContainer extends PureComponent {
       () => this.setState({ productAdded: false, addedToCart: false }),
       timeout
     );
+
+    if (popUpType === "wishListPopUp") {
+      setTimeout(() => {
+        closeAddToCartPopUp();
+      }, 5000);
+    }
   }
   sendMoEImpressions(event) {
     const {

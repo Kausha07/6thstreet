@@ -674,7 +674,7 @@ export class PLPContainer extends PureComponent {
     });
   }
 
-  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey) {
+  onLevelThreeCategoryPress(multiLevelData, isDropdown, isSearch, searchKey, isDeselect) {
     const { newActiveFilters = {}, moreActiveFilters={} } = this.state;
     let newMultiLevelData = {...multiLevelData};
     const { category_id } = multiLevelData;
@@ -694,6 +694,7 @@ export class PLPContainer extends PureComponent {
             multiLevelData: newMultiLevelData,
             isDropdown,
             newActiveFilters,
+            isDeselect,
           }) || {},
           moreActiveFilters: newMoreActiveFilters,
       },
@@ -735,7 +736,7 @@ export class PLPContainer extends PureComponent {
 
   onUnselectAllPress(category) {
     const { filters, updatePLPInitialFilters } = this.props;
-    const { activeFilters = {} } = this.state;
+    const { activeFilters = {}, newActiveFilters = {} } = this.state;
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
@@ -800,10 +801,27 @@ export class PLPContainer extends PureComponent {
     });
 
     Object.keys(activeFilters).map((key) => {
-      if (key !== "categories.level1") {
+      if (key !== "categories.level1" && key !== "categories_without_path") {
         WebUrlParser.setParam(key, activeFilters[key]);
       }
     });
+
+    const selectedFacetValues = getSelectedFiltersFacetValues(newActiveFilters);
+    const key = "categories_without_path";
+      //Below code is for Msite - here I am not sending category Ids to Algolia
+    if(isMobile.any()) {
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+      );
+    }else {
+      const selectedFacetCategoryIds = getCategoryIds(newActiveFilters);
+      WebUrlParser.setParam(
+        key,
+        selectedFacetValues,
+        selectedFacetCategoryIds,
+      );
+    }
   }
 
   async getBrandDetailsByCatalogueApi() {
