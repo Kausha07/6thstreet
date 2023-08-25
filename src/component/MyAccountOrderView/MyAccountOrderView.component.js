@@ -945,12 +945,18 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
-            {this.renderPriceLine(shipping_amount, __("Shipping"), {
-              divider: true,
-            })}
-            {this.renderPriceLine(international_shipping_amount, __("International Shipping Fee"), {
-              divider: true,
-            })}
+            {parseInt(international_shipping_amount) === 0 &&
+              this.renderPriceLine(shipping_amount, __("Shipping"), {
+                divider: true,
+              })}
+            {parseInt(international_shipping_amount) > 0 &&
+              this.renderPriceLine(
+                international_shipping_amount,
+                __("International Shipping Fee"),
+                {
+                  divider: true,
+                }
+              )}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
                   isStoreCredit: true,
