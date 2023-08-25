@@ -901,7 +901,9 @@ class MyAccountOrderView extends PureComponent {
           )}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
-          {currency_code} {finalPrice}
+          {name === "Shipping" && finalPrice === 0
+            ? "FREE"
+            : `${currency_code} ${finalPrice}`}
         </strong>
       </li>
     );
