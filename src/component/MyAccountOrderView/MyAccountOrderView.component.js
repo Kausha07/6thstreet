@@ -888,6 +888,7 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency_code = getCurrency() },
     } = this.props;
     const finalPrice = getFinalPrice(formatPrice, currency_code);
+    const freeTextArray = ["Shipping", "International Shipping Fee"];
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
@@ -901,7 +902,7 @@ class MyAccountOrderView extends PureComponent {
           )}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
-          {name === "Shipping" && finalPrice === 0
+          {freeTextArray.includes(name) && finalPrice === 0
             ? "FREE"
             : `${currency_code} ${finalPrice}`}
         </strong>
@@ -936,7 +937,8 @@ class MyAccountOrderView extends PureComponent {
         store_credit_amount = 0,
         club_apparel_amount = 0,
         currency_code = getCurrency(),
-        international_shipping_amount = 0
+        international_shipping_amount = 0,
+        fulfilled_from = "",
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -947,11 +949,11 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
-            {parseInt(international_shipping_amount) === 0 &&
+            {fulfilled_from === "Local" &&
               this.renderPriceLine(shipping_amount, __("Shipping"), {
                 divider: true,
               })}
-            {parseInt(international_shipping_amount) > 0 &&
+            {fulfilled_from === "International" &&
               this.renderPriceLine(
                 international_shipping_amount,
                 __("International Shipping Fee"),
