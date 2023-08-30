@@ -674,7 +674,12 @@ export class CartItem extends PureComponent {
   renderProductPrice() {
     const {
       currency_code,
-      item: { row_total, basePrice, discount_amount = 0 },
+      item: {
+        row_total,
+        basePrice,
+        discount_amount = 0,
+        full_item_info: { row_total: row_totalforAllQuantities },
+      },
       totals: { coupon_code },
     } = this.props;
 
@@ -691,7 +696,7 @@ export class CartItem extends PureComponent {
     ];
 
     const finalPrice = row_total
-      ? row_total - discount_amount
+      ? row_totalforAllQuantities - discount_amount
       : basePrice - discount_amount;
 
     return (
