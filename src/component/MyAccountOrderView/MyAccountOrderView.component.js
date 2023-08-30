@@ -888,7 +888,7 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency_code = getCurrency() },
     } = this.props;
     const finalPrice = getFinalPrice(formatPrice, currency_code);
-    const freeTextArray = ["Shipping", "International Shipping Fee"];
+    const freeTextArray = [__("Shipping"), __("International Shipping Fee")];
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
