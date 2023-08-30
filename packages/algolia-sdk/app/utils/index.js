@@ -184,23 +184,6 @@ const getMoreFacetFilters = (paramsObj = {}, moreFiltersData = {}) => {
   }
 };
 
-const getAddtionalFacetsFilters = (paramsObj = {}) => {
-  try {
-    let additionalFacets = [];
-    const additionalFilters = ["gender", "in_stock", "is_new_in", "promotion"];
-
-    additionalFilters.map((key) => {
-      if (paramsObj[key] && paramsObj[key] != "") {
-        const subArray = paramsObj[key]
-          .split(",")
-          .map((item) => `${key}:${item.trim()}`);
-        additionalFacets.push(subArray);
-      }
-    });
-    return additionalFacets;
-  } catch (error) {}
-};
-
 const getCurrencyCode = (country) => {
   switch (country) {
     case "ae":
@@ -258,5 +241,4 @@ export {
   formatNewInTag,
   getMasterAlgoliaFilters,
   getMoreFacetFilters,
-  getAddtionalFacetsFilters,
 };
