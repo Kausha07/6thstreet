@@ -903,7 +903,7 @@ class MyAccountOrderView extends PureComponent {
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
           {freeTextArray.includes(name) && finalPrice === 0
-            ? "FREE"
+            ? __("FREE")
             : `${currency_code} ${finalPrice}`}
         </strong>
       </li>
