@@ -861,13 +861,13 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount, filters, gender } = this.props;
+    const { productsCount, filters, gender, isSortBy } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
     const category_title = gender !== "influencer" && this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
-        <div id="productFilterScroll" block="Products" elem={"Scroll"}>
+        <div id="productFilterScroll" block="Products" elem={this.state.fixFilter && !isSortBy  ? "FixScroll" : "Scroll"}>
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>
             {count ? __("Results for ") : null}
