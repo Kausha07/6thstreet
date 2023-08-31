@@ -131,6 +131,7 @@ class PLPFilters extends PureComponent {
 
   scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.setState({ fixFilter: false });
   }
 
   onFixWindow = (e) => {
