@@ -231,16 +231,16 @@ class DynamicContentSliderWithLabel extends PureComponent {
       brand_logo = "",
       url_path = "",
       plp_config,
-      height = 500,
+      height = 140,
       width = 140,
       text_align = "center",
     } = item;
     const { isArabic, isMobile } = this.state;
     let parseLink = url_path;
-    const wd = `${isMobile ? 65 : width.toString()}px`;
+    const wd = `${isMobile ? 65 : width?.toString()}px`;
     const borderRadius = "50%";
-    const ht = `${height.toString()}px`;
-    const brand_name = isArabic ? brand_arabic : brand;
+    const ht = `${isMobile ? 65 : height?.toString()}px`;
+    const brandName = isArabic ? brand_arabic : brand;
     return (
       <div
         block="SliderWithLabel"
@@ -265,12 +265,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={brand_logo}
             alt={brand}
             block="Image"
-            style={{ minWidth: wd, maxWidth: wd,borderRadius: borderRadius }}
+            style={{ width: wd, height: ht, minWidth:wd, maxWidth: wd, borderRadius: borderRadius }}
           />
         </Link>
-        {brand_name ? (
+        {brandName ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {brand_name}
+            {brandName}
           </div>
         ) : null}
       </div>
@@ -285,15 +285,15 @@ class DynamicContentSliderWithLabel extends PureComponent {
       link = "",
       ontology,
       plp_config,
-      height = 500,
+      height = 140,
       width = 140,
       text_align = "center",
     } = item;
     const { isArabic, isMobile } = this.state;
     let parseLink = link;
-    const wd = `${isMobile ? 65 : width.toString()}px`;
+    const wd = `${isMobile ? 65 : width?.toString()}px`;
     const borderRadius = "50%";
-    const ht = `${height.toString()}px`;
+    const ht = `${isMobile ? 65 : height?.toString()}px`;
     return (
       <div
         block="SliderWithLabel"
@@ -318,7 +318,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={image}
             alt={isArabic ? arabic_name : english_name}
             block="Image"
-            style={{ minWidth: wd, maxWidth: wd, borderRadius: borderRadius }}
+            style={{ width: wd, height:ht, minWidth:wd, minHeight: ht, borderRadius: borderRadius }}
           />
         </Link>
         {english_name || arabic_name ? (
