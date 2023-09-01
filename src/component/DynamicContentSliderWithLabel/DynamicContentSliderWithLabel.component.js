@@ -227,6 +227,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabelTrendingBrands = (item, i) => {
     const {
       brand = "",
+      brand_arabic = "",
       brand_logo = "",
       url_path = "",
       plp_config,
@@ -239,6 +240,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const wd = `${isMobile ? 65 : width.toString()}px`;
     const borderRadius = "50%";
     const ht = `${height.toString()}px`;
+    const brand_name = isArabic ? brand_arabic : brand;
     return (
       <div
         block="SliderWithLabel"
@@ -266,9 +268,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
             style={{ minWidth: wd, maxWidth: wd,borderRadius: borderRadius }}
           />
         </Link>
-        {brand ? (
+        {brand_name ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {brand}
+            {brand_name}
           </div>
         ) : null}
       </div>
@@ -300,7 +302,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         key={i * 10}
       >
         <Link
-          to={formatCDNLink(parseLink)}
+          to={`${formatCDNLink(parseLink)}.html`}
           key={i * 10}
           block="SliderWithLabel"
           elem="Link"
