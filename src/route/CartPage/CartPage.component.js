@@ -539,13 +539,15 @@ export class CartPage extends PureComponent {
             {name}
           </strong>
           <span>
-            <strong block="CartPage" elem="Price">
-              <del block="freeShipping" mods={{ isArabic }}>
-                {`${
-                  parseFloat(price) || price === 0 ? currency_code : ""
-                } ${shippingFee}`}
-              </del>
-            </strong>
+            {name !== "International Shipping Fee" && (
+              <strong block="CartPage" elem="Price">
+                <del block="freeShipping" mods={{ isArabic }}>
+                  {`${
+                    parseFloat(price) || price === 0 ? currency_code : ""
+                  } ${shippingFee}`}
+                </del>
+              </strong>
+            )}
 
             {__("FREE")}
           </span>
@@ -622,7 +624,8 @@ export class CartPage extends PureComponent {
         currency_code = getCurrency(),
         total_segments: totals = [],
         shipping_fee = 0,
-        international_shipping_amount = 0
+        international_shipping_amount = 0,
+        items = [],
       },
       international_shipping_fee
     } = this.props;
@@ -636,6 +639,16 @@ export class CartPage extends PureComponent {
     }
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    let inventory_level_cross_border = false;
+    items.map((item) => {
+      if (
+        item.full_item_info &&
+        item.full_item_info.cross_border &&
+        parseInt(item.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     if (discount != 0) {
       return (
         <div block="CartPage" elem="OrderTotals">
@@ -654,13 +667,18 @@ export class CartPage extends PureComponent {
               {couponCode || (discount && discount != 0)
                 ? this.renderPriceLine(discount, __("Discount"))
                 : null}
-              {international_shipping_amount === 0
+              {!inventory_level_cross_border
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
                   )
                 : null}
-              {international_shipping_fee && this.renderPriceLine(international_shipping_amount, __("International Shipping fee"))}
+              {international_shipping_fee &&
+                inventory_level_cross_border &&
+                this.renderPriceLineForShipping(
+                  international_shipping_amount,
+                  __("International Shipping Fee")
+                )}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -677,13 +695,18 @@ export class CartPage extends PureComponent {
               {this.renderPriceLine(subTotal, __("Subtotal"), {
                 subtotalOnly: true,
               })}
-              {international_shipping_amount === 0
+              {!inventory_level_cross_border
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
                   )
                 : null}
-              {international_shipping_fee && this.renderPriceLine(international_shipping_amount, __("International Shipping fee"))}
+              {international_shipping_fee &&
+                inventory_level_cross_border &&
+                this.renderPriceLineForShipping(
+                  international_shipping_amount,
+                  __("International Shipping Fee")
+                )}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}

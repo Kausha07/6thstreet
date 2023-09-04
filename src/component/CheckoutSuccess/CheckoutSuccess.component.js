@@ -754,7 +754,10 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
     const finalPrice = getFinalPrice(price, quote_currency_code);
 
-    const fullPrice = `${quote_currency_code} ${finalPrice}`;
+    const fullPrice =
+      finalPrice === "FREE"
+        ? finalPrice
+        : `${quote_currency_code} ${finalPrice}`;
 
     return (
       <div block="Totals">
@@ -772,8 +775,18 @@ export class CheckoutSuccess extends PureComponent {
     const { isArabic } = this.state;
     const {
       cashOnDeliveryFee,
-      initialTotals: { coupon_code: couponCode, discount, total_segments = [] },
+      initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [] },
     } = this.props;
+    let inventory_level_cross_border = false;
+    items?.map((item) => {
+      if (
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
+        parseInt(item?.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
 
     return (
       <div block="PriceTotals" mods={{ isArabic }}>
@@ -781,14 +794,17 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "subtotal"),
           __("Subtotal")
         )}
-        {this.renderPriceLine(
-          getDiscountFromTotals(total_segments, "shipping"),
-          __("Shipping")
-        )}
-        {this.renderPriceLine(
-          getDiscountFromTotals(total_segments, "intl_shipping"),
-          __("International Shipping Fee")
-        )}
+         {!inventory_level_cross_border &&
+          this.renderPriceLine(
+            getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
+            __("Shipping")
+          )}
+        {inventory_level_cross_border &&
+          this.renderPriceLine(
+            getDiscountFromTotals(total_segments, "intl_shipping") ||
+              __("FREE"),
+            __("International Shipping Fee")
+          )}
         {cashOnDeliveryFee ? this.renderPriceLine(
             getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           getCountryFromUrl() === "QA"

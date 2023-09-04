@@ -420,8 +420,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     let inventory_level_cross_border = false;
     items?.map((item) => {
       if (
-        item.full_item_info &&
-        item.full_item_info.cross_border &&
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
         parseInt(item.full_item_info.cross_border) > 0
       ) {
         inventory_level_cross_border = true;
@@ -454,7 +454,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             {international_shipping_fee &&
               inventory_level_cross_border &&
               this.renderPriceLine(
-                getDiscountFromTotals(totals, "intl_shipping"),
+                getDiscountFromTotals(totals, "intl_shipping")  || __("FREE"),
                 __("International Shipping Charges")
               )}
             {this.renderPriceLine(

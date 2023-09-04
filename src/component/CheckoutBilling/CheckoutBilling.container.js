@@ -906,10 +906,20 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         items = [],
       },
     } = this.props;
-    const LineItems = items.map((item) => ({
-      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: item?.full_item_info?.price * item?.qty,
-    }));
+    let inventory_level_cross_border = false;
+    const LineItems = items.map((item) => {
+      ({
+        label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
+        amount: item?.full_item_info?.price * item?.qty,
+      });
+      if (
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
+        parseInt(item?.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     if (discount) {
       LineItems.push({
         label: __("Discount"),
@@ -917,17 +927,19 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       });
     }
 
-    if (shipping_fee) {
+    if (!inventory_level_cross_border) {
       LineItems.push({
         label: __("Shipping Charges"),
-        amount: shipping_fee,
+        amount: shipping_fee ? shipping_fee : __("FREE"),
       });
     }
 
-    if (international_shipping_amount) {
+    if (inventory_level_cross_border) {
       LineItems.push({
         label: __("International Shipping Charges"),
-        amount: international_shipping_amount,
+        amount: international_shipping_amount
+          ? international_shipping_amount
+          : __("FREE"),
       });
     }
 
