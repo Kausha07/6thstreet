@@ -1133,12 +1133,13 @@ export class PLPContainer extends PureComponent {
   }
 
   renderMetaData() {
-    const { country, config } = this.props;
-    const { brandName, metaContent } = this.state;
+    const { country, config, gender } = this.props;
+    const { brandName, metaContent, isArabic } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
     const checkBrandPage = pagePathName.includes(".html")
       ? pagePathName.split(".html").join("").split("/")
       : "";
+    const genderName = capitalize(gender);
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
@@ -1177,7 +1178,19 @@ export class PLPContainer extends PureComponent {
             brandName,
             countryName
           )
-        : __("%s | 6thStreet.com %s", categoryName, countryName);
+        : isArabic
+        ? __(
+            "Shop %s for %s Online | 6thStreet %s",
+            genderName,
+            categoryName,
+            countryName
+          )
+        : __(
+            "Shop %s for %s Online | 6thStreet %s",
+            categoryName,
+            genderName,
+            countryName
+          );
 
     const PLPMetaDesc =
       staticMetaData && staticMetaData?.desc
@@ -1190,11 +1203,18 @@ export class PLPContainer extends PureComponent {
             brandName
           )
         : __(
-            "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+            "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             categoryName,
+            genderName,
             countryName,
-            countryName
+            categoryName
           );
+    // : __(
+    //     "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+    //     categoryName,
+    //     countryName,
+    //     countryName
+    //   );
     return {
       title: PLPMetaTitle,
       description: PLPMetaDesc,
