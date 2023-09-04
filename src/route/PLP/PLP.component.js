@@ -196,7 +196,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPSortBy() {
-    return <PLPFilters {...this.props} isPLPSortBy={true} isSortBy={ isSortBy }/>;
+    return <PLPFilters {...this.props} isPLPSortBy={true} isSortBy />;
   }
 
   renderPLPPages() {

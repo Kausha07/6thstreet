@@ -131,7 +131,6 @@ class PLPFilters extends PureComponent {
 
   scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.setState({ fixFilter: false });
   }
 
   onFixWindow = (e) => {
@@ -867,7 +866,7 @@ class PLPFilters extends PureComponent {
     const category_title = gender !== "influencer" && this.renderCatPath().split("///").pop();
     return (
       <div block="Products" elem="Filter">
-        <div id="productFilterScroll" block="Products" elem={this.state.fixFilter && !isSortBy  ? "FixScroll" : "Scroll"}>
+        <div id="productFilterScroll" block="Products" elem={this.state.fixFilter && !isSortBy ? "FixScroll" : "Scroll"}>
           <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
             <span>{count}</span>
             {count ? __("Results for ") : null}
