@@ -545,6 +545,7 @@ export class PLP extends PureComponent {
   render() {
     const { isArabic, isSortByOverlayOpen } = this.state;
     const { pages, isLoading, schemaData } = this.props;
+    console.log(":schemaData",schemaData);
     if (
       !isLoading &&
       (!pages["0"] || pages["0"].length === 0 || pages.undefined)
@@ -557,7 +558,7 @@ export class PLP extends PureComponent {
     ) {
       return (
         <main block="PLP" id="plp-main-scroll-id">
-          {schemaData && (
+          {schemaData !== {} && (
             <Helmet>
               <script type="application/ld+json">
                 {JSON.stringify(schemaData)}

@@ -1114,7 +1114,8 @@ export class PLPContainer extends PureComponent {
         },
       })
     );
-    const metaData = this.renderMetaData();
+    console.log(" this.renderMetaData()",  this.renderMetaData())
+    const metaData = this.renderMetaData() || "";
     const pageUrl = new URL(window.location.href);
     const PLPschemaData = {
       "@context": "https://schema.org",
