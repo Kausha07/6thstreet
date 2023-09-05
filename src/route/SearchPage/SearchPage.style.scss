@@ -35,7 +35,7 @@
       }
       .Products {
         &-FixScroll {
-          position: fixed !important; // for resolving 2663.
+          position: static !important; // for resolving 2663.
         }
       }
   }
