@@ -8,7 +8,7 @@ RUN apk add libsass --update-cache; \
 
 COPY . /app
 WORKDIR /app
-RUN npm i npm -g npm@9.8.1; \
+RUN npm i npm -g npm@6.14.8; \
     npm install; \
     sed -i 's/GENERATE_SOURCEMAP: false/GENERATE_SOURCEMAP: true/g' /app/node_modules/@scandipwa/scandipwa-scripts/bin/scandipwa-scripts.js; \
     npm install --g lerna; \

@@ -8,7 +8,7 @@ RUN apk add libsass --update-cache; \
 
 COPY . /app
 WORKDIR /app
-RUN npm i npm -g npm@9.8.1; \
+RUN npm i npm -g npm@6.14.8; \
     npm install; \
     npm install --g lerna; \
     lerna bootstrap; \
