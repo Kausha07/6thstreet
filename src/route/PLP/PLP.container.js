@@ -65,6 +65,7 @@ import {
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -340,21 +341,10 @@ export class PLPContainer extends PureComponent {
   };
 
   sendMOEevents() {
-    const { requestedOptions } = this.props;
     const { newActiveFilters, activeFilters } = this.state;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
-    const categorylevelPath = requestedOptions["categories.level4"]
-      ? requestedOptions["categories.level4"]
-      : requestedOptions["categories.level3"]
-        ? requestedOptions["categories.level3"]
-        : requestedOptions["categories.level2"]
-          ? requestedOptions["categories.level2"]
-          : requestedOptions["categories.level1"]
-            ? requestedOptions["categories.level1"]
-            : requestedOptions["categories.level0"]
-              ? requestedOptions["categories.level0"]
-              : "";
+    const categorylevelPath = this.getCategoryLevel();
     const Categories_level =
       categorylevelPath && categorylevelPath.includes("///")
         ? categorylevelPath.replaceAll(" ", "").split("///")
@@ -1060,16 +1050,7 @@ export class PLPContainer extends PureComponent {
     const {isArabic} = this.state;
     if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level4"]
-        ? options["categories.level4"]
-        : options["categories.level3"]
-          ? options["categories.level3"]
-          : options["categories.level2"]
-            ? options["categories.level2"]
-            : options["categories.level1"]
-              ? options["categories.level1"]
-              : options["q"];
-
+      const breadcrumbLevels = this.getCategoryLevel();
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
         const urlArray = getBreadcrumbsUrl(levelArray, menuCategories) || [];
@@ -1139,15 +1120,18 @@ export class PLPContainer extends PureComponent {
     const checkBrandPage = pagePathName.includes(".html")
       ? pagePathName.split(".html").join("").split("/")
       : "";
-    const genderName = capitalize(gender);
+    const genderName = isArabic
+      ? getGenderInArabic(gender) || ""
+      : capitalize(gender) || "";
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
-    const breadcrumbs = location.pathname
-      .split(".html")[0]
-      .substring(1)
-      .split("/");
-    const categoryName = capitalize(breadcrumbs.pop() || "");
+    const categoryLevel = this.getCategoryLevel() || "";
+    const categoriesList =
+      categoryLevel && categoryLevel.includes("///")
+        ? categoryLevel.replaceAll(" ", "").split("///")
+        : [categoryLevel];
+    const categoryName = capitalize(categoriesList.pop() || "");
     const getCategoryLevel = pagePathName.includes(".html")
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
@@ -1285,7 +1269,7 @@ export class PLPContainer extends PureComponent {
       newActiveFilters,
       moreActiveFilters,
       selectedMoreFilterPLP,
-      schemaData
+      schemaData,
     } = this.state;
     // isDisabled: this._getIsDisabled()
 
@@ -1304,26 +1288,36 @@ export class PLPContainer extends PureComponent {
       newActiveFilters,
       moreActiveFilters,
       selectedMoreFilterPLP,
-      schemaData
+      schemaData,
     };
   };
+
+  getCategoryLevel() {
+    const { options } = this.props;
+    const categorylevelPath = options["categories.level4"]
+      ? options["categories.level4"]
+      : options["categories.level3"]
+      ? options["categories.level3"]
+      : options["categories.level2"]
+      ? options["categories.level2"]
+      : options["categories.level1"]
+      ? options["categories.level1"]
+      : options["categories.level0"]
+      ? options["categories.level0"]
+      : options["q"]
+      ? options["q"]
+      : "";
+    return categorylevelPath;
+  }
 
   render() {
     const { requestedOptions, filters } = this.props;
     const { categoryloaded } = this.state;
-    const categorylevelPath = requestedOptions["categories.level4"]
-      ? requestedOptions["categories.level4"]
-      : requestedOptions["categories.level3"]
-        ? requestedOptions["categories.level3"]
-        : requestedOptions["categories.level2"]
-          ? requestedOptions["categories.level2"]
-          : requestedOptions["categories.level1"]
-            ? requestedOptions["categories.level1"]
-            : requestedOptions["categories.level0"]
-              ? requestedOptions["categories.level0"]
-              : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
-    localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
+    localStorage.setItem(
+      "CATEGORY_CURRENT",
+      JSON.stringify(this.getCategoryLevel())
+    );
     if (this.getIsLoading() == false && categoryloaded == true) {
       this.sendMOEevents();
     }
