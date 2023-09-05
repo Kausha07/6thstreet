@@ -767,7 +767,9 @@ export class PDPAddToCartContainer extends PureComponent {
         const { wishlist_item_id } = wishListItem;
 
         if (wishlist_item_id) {
-          removeFromWishlist(wishlist_item_id);
+          setTimeout(() => {
+            removeFromWishlist(wishlist_item_id);
+          }, 5000);
         }
       }
     }
