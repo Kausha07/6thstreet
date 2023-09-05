@@ -52,6 +52,8 @@ import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { Offer, Coupon } from "Component/Icons/index";
 import CartPageSliders from "Component/CartPageSliders/index.js";
+import { getShippingFees } from "Util/Common/index";
+import { getLocaleFromUrl } from "Util/Url/Url";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -529,10 +531,12 @@ export class CartPage extends PureComponent {
     const {
       totals: { currency_code = getCurrency() },
     } = this.props;
+    const locale = getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
     const finalPrice = getFinalPrice(price, currency_code);
-    const shippingFee = finalPrice ? finalPrice : 20;
+    const shippingFee = parseInt(finalPrice) ? finalPrice : getShippingFees(country);
 
-    if (finalPrice === 0) {
+    if (parseInt(finalPrice) === 0) {
       return (
         <li block="CartPage" elem="SummaryItem" mods={mods}>
           <strong block="CartPage" elem="Text">

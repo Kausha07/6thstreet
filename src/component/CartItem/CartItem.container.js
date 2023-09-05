@@ -98,6 +98,7 @@ export const mapStateToProps = (state) => ({
   intlEddResponse:state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
   defaultEddResponse: state.MyAccountReducer.defaultEddResponse,
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
 });
 
 export class CartItemContainer extends PureComponent {
@@ -178,6 +179,7 @@ export class CartItemContainer extends PureComponent {
     intlEddResponse:this.props.intlEddResponse,
     edd_info:this.props.edd_info,
     defaultEddResponse:this.props.defaultEddResponse,
+    international_shipping_fee: this.props.international_shipping_fee,
   });
 
   /**

@@ -617,3 +617,22 @@ export const getEnvIDForInfluencer = () => {
     return "20191010_staging";
   }
 };
+
+export const getShippingFees = (country) => {
+  switch (country) {
+    case "ae":
+      return 20;
+    case "sa":
+      return 20;
+    case "kw":
+      return 3;
+    case "om":
+      return 3;
+    case "bh":
+      return 3;
+    case "qa":
+      return 20;
+    default:
+      return 20;
+  }
+};

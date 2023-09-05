@@ -130,6 +130,7 @@ class MyAccountOrderView extends PureComponent {
       displayDiscountPercentage,
       eddResponse,
       edd_info,
+      international_shipping_fee,
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -149,6 +150,7 @@ class MyAccountOrderView extends PureComponent {
         edd_info={edd_info}
         currency={currency}
         displayDiscountPercentage={displayDiscountPercentage}
+        international_shipping_fee = {international_shipping_fee}
       />
     );
   };
@@ -902,7 +904,7 @@ class MyAccountOrderView extends PureComponent {
           )}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
-          {freeTextArray.includes(name) && finalPrice === 0
+          {freeTextArray.includes(name) && parseInt(finalPrice) === 0
             ? __("FREE")
             : `${currency_code} ${finalPrice}`}
         </strong>

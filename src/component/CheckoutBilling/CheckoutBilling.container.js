@@ -905,6 +905,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         total_segments: totals = [],
         items = [],
       },
+      international_shipping_fee,
     } = this.props;
     let inventory_level_cross_border = false;
     const LineItems = items.map((item) => {
@@ -934,7 +935,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       });
     }
 
-    if (inventory_level_cross_border) {
+    if (inventory_level_cross_border && international_shipping_fee) {
       LineItems.push({
         label: __("International Shipping Charges"),
         amount: international_shipping_amount

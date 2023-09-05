@@ -571,6 +571,7 @@ export class CheckoutSuccess extends PureComponent {
       isFailed,
       edd_info,
       paymentMethod,
+      international_shipping_fee,
     } = this.props;
 
     return (
@@ -585,6 +586,7 @@ export class CheckoutSuccess extends PureComponent {
         intlEddResponse={intlEddResponse}
         currency={currency}
         displayDiscountPercentage={true}
+        international_shipping_fee={international_shipping_fee}
       />
     );
   };
@@ -776,6 +778,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       cashOnDeliveryFee,
       initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [] },
+      international_shipping_fee,
     } = this.props;
     let inventory_level_cross_border = false;
     items?.map((item) => {
@@ -800,6 +803,7 @@ export class CheckoutSuccess extends PureComponent {
             __("Shipping")
           )}
         {inventory_level_cross_border &&
+          international_shipping_fee &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "intl_shipping") ||
               __("FREE"),
