@@ -19,6 +19,7 @@ import {
   SET_CITIES_DATA,
   SET_ADDRESS_LOADER,
   SET_IS_CURRENT_TAB_ACTIVE,
+  SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE,
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -38,6 +39,7 @@ export const initialState = {
   addressCityData: [],
   addressLoader: true,
   currentTabActive: true,
+  VueTrendingBrandsEnable: false,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -161,6 +163,14 @@ export const MyAccountReducer = (state = initialState, action) => {
       return {
         ...state,
         addressLoader,
+      };
+
+    case SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE:
+      const { isActive : VueTrendingBannerEnabled  } = action;
+
+      return {
+        ...state,
+        VueTrendingBrandsEnable: VueTrendingBannerEnabled,
       };
 
     default:

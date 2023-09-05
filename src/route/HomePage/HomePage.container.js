@@ -43,6 +43,7 @@ export const mapStateToProps = (state) => ({
   lastHomeItem: state.PLP.lastHomeItem,
   config: state.AppConfig.config,
   prevPath: state.PLP.prevPath,
+  VueTrendingBrandsEnable: state.MyAccountReducer.VueTrendingBrandsEnable,
 });
 
 export const MyAccountDispatcher = import(
@@ -174,6 +175,15 @@ export class HomePageContainer extends PureComponent {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
     }
+
+    if (
+      this.props.VueTrendingBrandsEnable !== prevProps.VueTrendingBrandsEnable
+    ) {
+      if (gender !== prevGender || isSignedIn()) {
+        this.getTrendingBrands();
+      }
+    }
+  
     let element = document.getElementById(lastHomeItem);
     if (element) {
       setTimeout(() => {
@@ -403,6 +413,7 @@ export class HomePageContainer extends PureComponent {
         HomepageProps={this.props}
         vue_trending_brands={trendingBrands}
         vue_trending_categories={trendingCategories}
+        getTrendingBrands={this.getTrendingBrands}
       />
     );
   }

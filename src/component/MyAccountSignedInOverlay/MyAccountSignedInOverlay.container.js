@@ -6,6 +6,7 @@ import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.act
 
 import MyAccountSignedInOverlay from './MyAccountSignedInOverlay.component';
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from './MyAccountSignedInOverlay.config';
+import { setVueTrendingBrandsBannerActive } from "Store/MyAccount/MyAccount.action";
 
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -21,7 +22,8 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideOverlay: () => dispatch(hideActiveOverlay()),
-    logout: () => MyAccountDispatcher.then(({ default: dispatcher }) => dispatcher.logout(null, dispatch))
+    logout: () => MyAccountDispatcher.then(({ default: dispatcher }) => dispatcher.logout(null, dispatch)),
+    setVueTrendingBrandsBannerActive: (isActive) =>  dispatch(setVueTrendingBrandsBannerActive(isActive)),
 });
 
 export class MyAccountSignedInOverlayContainer extends PureComponent {
@@ -54,6 +56,7 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
 
         logout();
         onHide();
+        this.props.setVueTrendingBrandsBannerActive(false);
     }
 
     render() {
