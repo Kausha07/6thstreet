@@ -12,7 +12,7 @@ WORKDIR /app
 
 RUN npm install --g lerna
 
-RUN npm i npm -g; \
+RUN npm i npm -g npm@9.8.1; \
     npm install; \
     npm install --g lerna; \
     lerna bootstrap; \
