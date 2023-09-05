@@ -544,7 +544,11 @@ class PLPPages extends PureComponent {
 
   renderSelectedMoreFilters() {
     const selectedMoreFilters = this.props.moreFilters;
-    const { option = {} } = selectedMoreFilters;
+    //const { option = {} } = selectedMoreFilters;
+    const option =
+      selectedMoreFilters && selectedMoreFilters.option
+        ? selectedMoreFilters.option
+        : {};
     const thisRef = this;
     const currency = getCountryCurrencyCode();
     if (selectedMoreFilters && option) {
@@ -708,12 +712,15 @@ class PLPPages extends PureComponent {
 
   renderMoreFilters() {
     const {
-      moreFilters: { option = {} },
+     // moreFilters: { option = {} },
       filters: { categories_without_path = {} },
       newActiveFilters,
       selectedMoreFilterPLP,
     } = this.props;
     const currency = getCountryCurrencyCode();
+    const option = this.props?.moreFilters?.option
+      ? this.props?.moreFilters?.option
+      : {};
     const ListOFMoreFilters = Object.keys(option).filter(
       (key) => option[key] !== undefined && key != "discount" && key != `price.${currency}.default`
     );
