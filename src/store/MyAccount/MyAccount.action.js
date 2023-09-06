@@ -21,6 +21,7 @@ export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS";
 export const SET_CITIES_DATA = "SET_CITIES_DATA";
 export const SET_ADDRESS_LOADER = "SET_ADDRESS_LOADER";
 export const SET_IS_CURRENT_TAB_ACTIVE = "SET_IS_CURRENT_TAB_ACTIVE";
+export const SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE = "SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE"
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -85,4 +86,9 @@ export const setDefaultEddAddress = (defaultEddResponse, PdpEddAddress) => ({
 export const setAddressLoader = (addressLoader) => ({
   type: SET_ADDRESS_LOADER,
   addressLoader,
+});
+
+export const setVueTrendingBrandsBannerActive = (isActive) => ({
+  type: SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE,
+  isActive,
 });

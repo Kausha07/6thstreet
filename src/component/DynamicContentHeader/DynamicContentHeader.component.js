@@ -8,18 +8,29 @@ class DynamicContentHeader extends PureComponent {
 
     };
 
+    isTrendingWidgetexist = () => {
+        const { type = "" } = this.props;
+        const newTrendingWidget = ["vue_brands_for_you","vue_categories_for_you"];
+        if(type !== "" && !newTrendingWidget.includes(type)) {
+            return true;
+        }else{
+            return false;
+        }
+    }    
+
     render() {
-        if (this.props.header.title_color) {
-            const titleStyle = {
+        let titleStyle = ""
+        if (this.props?.header?.title_color) {
+            titleStyle = {
                 color: this.props.header.title_color
             };
         }
 
         return (
             <div block="DynamicContentHeader">
-                {this.props.header.title && <h1 block={ cx('foo', { baz: true }) } style={ this.props.header.title_color && titleStyle }>{ this.props.header.title }</h1>}
-                { this.props.header.subtitle && <p block="">{ this.props.header.subtitle }</p>}
-                {this.props.header.button_link && <a href={this.props.header.button_link} block="">{this.props.header.button_label}</a>}
+               {this.props?.header?.title && <h1 block={ cx('foo', { baz: true }) } style={ this.props?.header?.title_color && titleStyle }>{ this.props?.header?.title }</h1>}
+               {this.isTrendingWidgetexist() ? this.props?.header?.subtitle && <p block="">{ this.props?.header?.subtitle }</p> : ""}
+               {this.isTrendingWidgetexist() ? this.props?.header?.button_link && <a href={this.props?.header?.button_link} block="">{this.props?.header?.button_label}</a> : ""}
 
             </div>
         );

@@ -9,6 +9,7 @@ import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
@@ -63,11 +64,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
         },
       },
       impressionSent: false,
+      isMobile: isMobile.any() || isMobile.tablet(),
     };
   }
 
   componentDidMount() {
-    if (this.props.items.length < 8) {
+    if (this.props?.items?.length < 8) {
       let setting = JSON.parse(JSON.stringify(this.state.settings));
       setting.responsive[1024].items = this.props.items.length;
       this.setState((prevState) => ({
@@ -222,6 +224,112 @@ class DynamicContentSliderWithLabel extends PureComponent {
     );
   };
 
+  renderSliderWithLabelTrendingBrands = (item, i) => {
+    const {
+      brand = "",
+      brand_arabic = "",
+      brand_logo = "",
+      url_path = "",
+      plp_config,
+      height = 140,
+      width = 140,
+      text_align = "center",
+    } = item;
+    const { isArabic, isMobile } = this.state;
+    let parseLink = url_path;
+    const wd = `${isMobile ? 65 : width?.toString()}px`;
+    const borderRadius = "50%";
+    const ht = `${isMobile ? 65 : height?.toString()}px`;
+    const brandName = isArabic ? brand_arabic : brand;
+    return (
+      <div
+        block="SliderWithLabel"
+        mods={{ isArabic }}
+        ref={this.itemRef}
+        key={i * 10}
+      >
+        <Link
+          to={`${formatCDNLink(parseLink)}.html`}
+          key={i * 10}
+          block="SliderWithLabel"
+          elem="Link"
+          data-banner-type="sliderWithLabel"
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-tag={item.tag ? item.tag : ""}
+          onClick={() => {
+            this.onclick(item);
+          }}
+        >
+          <Image
+            lazyLoad={true}
+            src={brand_logo}
+            alt={brand}
+            block="Image"
+            style={{ width: wd, height: ht, minWidth:wd, maxWidth: wd, borderRadius: borderRadius }}
+          />
+        </Link>
+        {brandName ? (
+          <div block="SliderText" style={{ textAlign: text_align }}>
+            {brandName}
+          </div>
+        ) : null}
+      </div>
+    );
+  };
+
+  renderSliderWithLabelTrendingCategories = (item, i) => {
+    const {
+      arabic_name = "",
+      english_name = "",
+      image = "",
+      link = "",
+      ontology,
+      plp_config,
+      height = 140,
+      width = 140,
+      text_align = "center",
+    } = item;
+    const { isArabic, isMobile } = this.state;
+    let parseLink = link;
+    const wd = `${isMobile ? 65 : width?.toString()}px`;
+    const borderRadius = "50%";
+    const ht = `${isMobile ? 65 : height?.toString()}px`;
+    return (
+      <div
+        block="SliderWithLabel"
+        mods={{ isArabic }}
+        ref={this.itemRef}
+        key={i * 10}
+      >
+        <Link
+          to={`${formatCDNLink(parseLink)}.html`}
+          key={i * 10}
+          block="SliderWithLabel"
+          elem="Link"
+          data-banner-type="sliderWithLabel"
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-tag={item.tag ? item.tag : ""}
+          onClick={() => {
+            this.onclick(item);
+          }}
+        >
+          <Image
+            lazyLoad={true}
+            src={image}
+            alt={isArabic ? arabic_name : english_name}
+            block="Image"
+            style={{ width: wd, height:ht, minWidth:wd, minHeight: ht, borderRadius: borderRadius }}
+          />
+        </Link>
+        {english_name || arabic_name ? (
+          <div block="SliderText" style={{ textAlign: text_align }}>
+            {isArabic ? arabic_name : english_name}
+          </div>
+        ) : null}
+      </div>
+    );
+  };
+
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
     if (this.scrollerRef && this.scrollerRef.current) {
@@ -236,24 +344,34 @@ class DynamicContentSliderWithLabel extends PureComponent {
     )[0];
     prentComponent && (prentComponent.scrollLeft = target.scrollLeft);
   };
-  checkWidth(){
+  checkWidth() {
     const { screenWidth, minusWidth } = this.state;
-    if(screenWidth > 1500){
-      this.setState({minusWidth: 590});
-    }else if(screenWidth < 1400){
-      this.setState({minusWidth: 660});
+    if (screenWidth > 1500) {
+      this.setState({ minusWidth: 590 });
+    } else if (screenWidth < 1400) {
+      this.setState({ minusWidth: 660 });
     }
   }
   renderScrollbar = () => {
-    const { items = [] } = this.props;
+    const {
+      items = [],
+      trendingBrands = [],
+      trendingCategories = [],
+    } = this.props;
     this.checkWidth();
     const { minusWidth } = this.state;
-
-    const width = `${(this.itemRef.current && this.itemRef.current.clientWidth) *
-      items.length +
-      items.length * 7 * 2 -
+    const finalItems =
+      this.props.type === "vue_brands_for_you"
+        ? trendingBrands
+        : this.props.type === "vue_categories_for_you"
+        ? trendingCategories
+        : items;
+    const width = `${
+      (this.itemRef.current && this.itemRef.current.clientWidth) *
+        finalItems?.length +
+      finalItems?.length * 7 * 2 -
       minusWidth
-      }px`;
+    }px`;
     return (
       <div
         block="Outer"
@@ -271,8 +389,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   renderSliderWithLabels() {
-    const { items = [], title } = this.props;
-
+    const {
+      items = [],
+      trendingBrands = [],
+      trendingCategories = [],
+      title,
+    } = this.props;
     return (
       <DragScroll
         data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
@@ -284,6 +406,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
           onScroll={this.handleContainerScroll}
         >
           <div className="SliderHelper"></div>
+          {this.props.type === "vue_brands_for_you" &&
+            trendingBrands?.length > 0 &&
+            trendingBrands.map(this.renderSliderWithLabelTrendingBrands)}
+          {this.props.type === "vue_categories_for_you" &&
+            trendingCategories?.length > 0 &&
+            trendingCategories.map(
+              this.renderSliderWithLabelTrendingCategories
+            )}
           {items.map(this.renderSliderWithLabel)}
           <div className="SliderHelper"></div>
         </div>
@@ -291,6 +421,23 @@ class DynamicContentSliderWithLabel extends PureComponent {
       </DragScroll>
     );
   }
+
+  getPromotionHeader = () => {
+    const { header, layout, trendingBrands=[], trendingCategories=[], type="" } = this.props;
+
+    if (
+      (trendingBrands?.length === 0 && type === "vue_brands_for_you") ||
+      (trendingCategories?.length === 0 && type === "vue_categories_for_you")
+    ) {
+      return null;
+    } else if (header && header?.title) {
+      return header;
+    } else if (layout && layout?.title) {
+      return layout;
+    }
+
+    return "";
+  };
 
   render() {
     let setRef = (el) => {
@@ -304,9 +451,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
         block="DynamicContentSliderWithLabel"
         id={`DynamicContentSliderWithLabel${index}`}
       >
-        {this.props.header && (
-          <DynamicContentHeader header={this.props.header} />
+        {this.getPromotionHeader() && (
+          <DynamicContentHeader
+            header={this.getPromotionHeader()}
+            type={this.props.type}
+          />
         )}
+        
         {this.props.title && (
           <h1 block="Title" mods={{ isArabic }}>
             {this.props.title}

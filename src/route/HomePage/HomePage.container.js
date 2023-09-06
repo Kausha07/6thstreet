@@ -22,6 +22,9 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { getCookie } from "Util/Url/Url";
 import Event, { EVENT_PAGE_LOAD } from "Util/Event";
 import Influencer from "../Influencer/index";
+import { getUUIDToken } from "Util/Auth";
+import VueQuery from "../../query/Vue.query";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
 import {
   deleteAuthorizationToken,
@@ -40,6 +43,7 @@ export const mapStateToProps = (state) => ({
   lastHomeItem: state.PLP.lastHomeItem,
   config: state.AppConfig.config,
   prevPath: state.PLP.prevPath,
+  VueTrendingBrandsEnable: state.MyAccountReducer.VueTrendingBrandsEnable,
 });
 
 export const MyAccountDispatcher = import(
@@ -76,6 +80,8 @@ export class HomePageContainer extends PureComponent {
 
   state = {
     dynamicContent: [],
+    trendingBrands : [],
+    trendingCategories : [],
     isLoading: true,
     defaultGender: "women",
     isMobile: isMobile.any(),
@@ -90,6 +96,7 @@ export class HomePageContainer extends PureComponent {
   componentDidMount() {
     const { prevPath = null, requestCustomerData, logout } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+    this.getTrendingBrands();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
       params: {
@@ -168,6 +175,15 @@ export class HomePageContainer extends PureComponent {
       this.setMetaData(gender);
       this.requestDynamicContent(true, gender);
     }
+
+    if (
+      this.props.VueTrendingBrandsEnable !== prevProps.VueTrendingBrandsEnable
+    ) {
+      if (gender !== prevGender || isSignedIn()) {
+        this.getTrendingBrands();
+      }
+    }
+  
     let element = document.getElementById(lastHomeItem);
     if (element) {
       setTimeout(() => {
@@ -284,6 +300,49 @@ export class HomePageContainer extends PureComponent {
     });
   }
 
+  getTrendingBrands = () => {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const newPersonalizedWidgetsTypes = ["vue_trending_brands","vue_trending_categories"];
+    newPersonalizedWidgetsTypes.map(async(element)=>{
+      const query = {
+        filters: [],
+        fields : ["title", "image_link", "product_id", "price", "discounted_price", "currency_code", "brand", "ontology", "gender", "custom_label_1", "custom_label_2", "category", "link"],
+        num_results: 10,
+        product_id: "",
+        user_id:userID,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+        widget_type : element
+      };
+  
+      const payload = VueQuery.buildQuery(element, query, {
+        gender,
+        userID
+      });
+      try {
+        await fetchVueData(payload)
+          .then((resp) => {
+            if(element === "vue_trending_brands"){
+              this.setState({
+                trendingBrands: resp?.data?.data[0],
+              });
+            }else {
+              this.setState({
+                trendingCategories: resp?.data?.data[0],
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("vue query catch", err);
+          });
+      } catch (e) {
+        Logger.log(e);
+      }
+    })
+  }
+
   async requestDynamicContent(isUpdate = false) {
     const { gender } = this.props;
     const devicePrefix = this.getDevicePrefix();
@@ -342,6 +401,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
+    const { trendingBrands = [], trendingCategories = [] } = this.state
     if (this.props.gender === "influencer") {
       return <Influencer />;
     }
@@ -351,6 +411,9 @@ export class HomePageContainer extends PureComponent {
         {...this.containerProps()}
         setLastTapItem={this.setLastTapItem}
         HomepageProps={this.props}
+        vue_trending_brands={trendingBrands}
+        vue_trending_categories={trendingCategories}
+        getTrendingBrands={this.getTrendingBrands}
       />
     );
   }
