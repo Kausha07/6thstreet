@@ -10,9 +10,7 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --g lerna
-
-RUN npm i npm -g; \
+RUN npm i npm -g npm@6.14.8; \
     npm install; \
     npm install --g lerna; \
     lerna bootstrap; \
