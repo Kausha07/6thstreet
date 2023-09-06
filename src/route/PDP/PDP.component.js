@@ -75,14 +75,19 @@ class PDP extends PureComponent {
 
   addTabbyPromo = (total, currency_code) => {
     const { isArabic } = this.state;
-    new window.TabbyPromo({
-      selector: "#TabbyPromo",
-      currency: currency_code?.toString(),
-      price: total,
-      installmentsCount: 4,
-      lang: isArabic ? "ar" : "en",
-      source: "product",
-    });
+    try {
+      new window.TabbyPromo({
+        selector: "#TabbyPromo",
+        currency: currency_code?.toString(),
+        price: total,
+        installmentsCount: 4,
+        lang: isArabic ? "ar" : "en",
+        source: "product",
+      });
+    } catch (error) {
+      // if error - then wait for TabbyPromo object to be load then try again
+      setTimeout(()=>{this.addTabbyPromo(total, currency_code)}, 500); 
+    }
   };
 
   TabbyInstallment = (defPrice, currency) => {
