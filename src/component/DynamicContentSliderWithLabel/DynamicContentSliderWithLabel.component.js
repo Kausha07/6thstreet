@@ -265,12 +265,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={brand_logo}
             alt={brand}
             block="Image"
-            style={{ width: wd, height: ht, minWidth:wd, maxWidth: wd, borderRadius: borderRadius }}
+            style={{ width: wd, height:ht, minWidth:wd, minHeight: ht, borderRadius: borderRadius }}
           />
         </Link>
         {brandName ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {brandName}
+            {brandName?.length > 8 ? `${brandName?.toLowerCase()?.substring(0, 8)}...` : brandName?.toLowerCase()}
           </div>
         ) : null}
       </div>
@@ -289,11 +289,18 @@ class DynamicContentSliderWithLabel extends PureComponent {
       width = 140,
       text_align = "center",
     } = item;
-    const { isArabic, isMobile } = this.state;
+    const { isArabic,isMobile } = this.state;
     let parseLink = link;
     const wd = `${isMobile ? 65 : width?.toString()}px`;
     const borderRadius = "50%";
     const ht = `${isMobile ? 65 : height?.toString()}px`;
+    const categoryName = isArabic
+      ? arabic_name?.length > 8
+        ? `${arabic_name?.substring(0, 8)}...`
+        : arabic_name
+      : arabic_name?.length > 8
+      ? `${english_name?.toLowerCase()?.substring(0, 8)}...`
+      : english_name?.toLowerCase();
     return (
       <div
         block="SliderWithLabel"
@@ -321,9 +328,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
             style={{ width: wd, height:ht, minWidth:wd, minHeight: ht, borderRadius: borderRadius }}
           />
         </Link>
-        {english_name || arabic_name ? (
+        {categoryName ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {isArabic ? arabic_name : english_name}
+            {categoryName}
           </div>
         ) : null}
       </div>
@@ -457,7 +464,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
             type={this.props.type}
           />
         )}
-        
         {this.props.title && (
           <h1 block="Title" mods={{ isArabic }}>
             {this.props.title}

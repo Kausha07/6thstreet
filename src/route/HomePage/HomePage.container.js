@@ -87,6 +87,8 @@ export class HomePageContainer extends PureComponent {
     defaultGender: "women",
     isMobile: isMobile.any(),
     firstLoad: true,
+    vueBrandsNumOfResults: 10,
+    vueCategoriesNumOfResults: 10,
   };
 
   constructor(props) {
@@ -299,6 +301,7 @@ export class HomePageContainer extends PureComponent {
 
   getTrendingBrands = () => {
     const { gender, vueTrendingBrandsUserID } = this.props;
+    const { vueBrandsNumOfResults, vueCategoriesNumOfResults } = this.state;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = vueTrendingBrandsUserID
@@ -311,7 +314,7 @@ export class HomePageContainer extends PureComponent {
       const query = {
         filters: [],
         fields : ["title", "image_link", "product_id", "price", "discounted_price", "currency_code", "brand", "ontology", "gender", "custom_label_1", "custom_label_2", "category", "link"],
-        num_results: 10,
+        num_results: element === "vue_trending_brands" ? vueBrandsNumOfResults : vueCategoriesNumOfResults,
         user_id:userID,
         product_id: "",
         mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
@@ -359,6 +362,15 @@ export class HomePageContainer extends PureComponent {
         this.setState({
           dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
           isLoading: false,
+        });
+
+        dynamicContent?.map((e) => {
+          const { type } = e;
+          if (type === "vue_brands_for_you") {
+            this.setState({ vueBrandsNumOfResults: e?.query?.num_results });
+          } else if (type === "vue_categories_for_you") {
+            this.setState({ vueCategoriesNumOfResults: e?.query?.num_results });
+          }
         });
       } catch (e) {
         Logger.log(e);
