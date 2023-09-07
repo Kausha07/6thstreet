@@ -44,6 +44,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   prevPath: state.PLP.prevPath,
   VueTrendingBrandsEnable: state.MyAccountReducer.VueTrendingBrandsEnable,
+  vueTrendingBrandsUserID: state.MyAccountReducer.vueTrendingBrandsUserID,
 });
 
 export const MyAccountDispatcher = import(
@@ -176,14 +177,10 @@ export class HomePageContainer extends PureComponent {
       this.requestDynamicContent(true, gender);
     }
 
-    if (
-      this.props.VueTrendingBrandsEnable !== prevProps.VueTrendingBrandsEnable
-    ) {
-      if (gender !== prevGender || isSignedIn()) {
-        this.getTrendingBrands();
-      }
+    if (this.props.VueTrendingBrandsEnable !== prevProps.VueTrendingBrandsEnable) {
+      this.getTrendingBrands();
     }
-  
+
     let element = document.getElementById(lastHomeItem);
     if (element) {
       setTimeout(() => {
@@ -301,18 +298,22 @@ export class HomePageContainer extends PureComponent {
   }
 
   getTrendingBrands = () => {
-    const { gender } = this.props;
+    const { gender, vueTrendingBrandsUserID } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
+    const userID = vueTrendingBrandsUserID
+      ? vueTrendingBrandsUserID
+      : customer && customer.id
+      ? customer.id
+      : null;
     const newPersonalizedWidgetsTypes = ["vue_trending_brands","vue_trending_categories"];
     newPersonalizedWidgetsTypes.map(async(element)=>{
       const query = {
         filters: [],
         fields : ["title", "image_link", "product_id", "price", "discounted_price", "currency_code", "brand", "ontology", "gender", "custom_label_1", "custom_label_2", "category", "link"],
         num_results: 10,
-        product_id: "",
         user_id:userID,
+        product_id: "",
         mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
         widget_type : element
       };
@@ -374,9 +375,9 @@ export class HomePageContainer extends PureComponent {
         if (tag) {
           tag.type = "application/ld+json";
           tag.innerHTML = JSON.stringify(response);
-          document
-            .querySelectorAll("script[type='application/ld+json']")
-            .forEach((node) => node.remove());
+          // document
+          //   .querySelectorAll("script[type='application/ld+json']")
+          //   .forEach((node) => node.remove());
           document.head.appendChild(tag);
         }
       }
