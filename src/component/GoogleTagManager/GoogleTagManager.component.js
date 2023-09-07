@@ -42,7 +42,7 @@ import {
   EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED,
   EVENT_FILTER_SEARCH_CLICK,
   EVENT_FILTER_SEARCH_VALUE_SELECTED,
-  EVENT_GTM_CART
+  EVENT_GTM_CART,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -453,7 +453,9 @@ class GoogleTagManager extends PureComponent {
     const isCustomerID = isSignedIn()
       ? this.props?.state?.MyAccountReducer?.customer?.id || null
       : null;
-
+    const uuid = BrowserDatabase.getItem("uuid")
+      ? BrowserDatabase.getItem("uuid")
+      : null;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
@@ -484,6 +486,7 @@ class GoogleTagManager extends PureComponent {
         ...(data?.CustomerID === undefined && {
           CustomerID: isCustomerID,
         }),
+        uuid: uuid,
       };
       this.addDataLayer({ ...data, ...additionalDetails });
 
