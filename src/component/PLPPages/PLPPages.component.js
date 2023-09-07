@@ -19,9 +19,10 @@ import Field from "Component/Field";
 import PLPMoreFilters from "Component/PLPMoreFilters/PLPMoreFilters";
 import PLPOptionsMoreFilter from "Component/PLPOptionsMoreFilter/PLPOptionsMoreFilter";
 import infoBold from "./icons/infoBold.svg";
-import { getIsShowMoreFilters, checkIsDropdownable } from "./utils/PLPPages.helper";
+import { getIsShowMoreFilters } from "./utils/PLPPages.helper";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-import { getSelectedFiltersFacetValues, getCategoryIds} from "Route/PLP/utils/PLP.helper";
+import { getSelectedFiltersFacetValues, getCategoryIds } from "Route/PLP/utils/PLP.helper";
+import { Helmet } from 'react-helmet';
 
 export const mapStateToProps = (state) => ({
   brandButtonClick: state.PDP.brandButtonClick,
@@ -191,31 +192,31 @@ class PLPPages extends PureComponent {
       stockName,
       sortName
     ];
-    const sizeOptions = ['size_eu','size_uk','size_us']
+    const sizeOptions = ['size_eu', 'size_uk', 'size_us']
     const options = this.getRequestOptions()
     let updatedFilter = deepCopy(filters);
     removedFilter.map((key) => {
       delete updatedFilter[key];
     });
-    Object.keys(filters).map((key)=>{
-      if(Object.keys(options).includes(key)){
+    Object.keys(filters).map((key) => {
+      if (Object.keys(options).includes(key)) {
         delete updatedFilter[key];
-      }else{
-        sizeOptions.map((size)=>{
-          if(Object.keys(options).includes(size)){
+      } else {
+        sizeOptions.map((size) => {
+          if (Object.keys(options).includes(size)) {
             delete updatedFilter['sizes']
           }
         })
       }
     })
-    updatedFilter = {stock:"stock",...updatedFilter}
+    updatedFilter = { stock: "stock", ...updatedFilter }
     return updatedFilter;
   };
 
   shouldRenderQuickFilter = (filters, index) => {
     const { pages = {} } = this.props;
     const inlineFilterList = this.getInlineFilterList(filters);
-    
+
     const keyLabel = {
       discount: __("Discount"),
       colorfamily: __("Colours"),
@@ -338,7 +339,7 @@ class PLPPages extends PureComponent {
             <li
               block="ProductItem"
               id={filterIndex}
-              mix={{ block: "ProductItem", elem: "SizeFilterBar",mods:{isArabic:isArabic()} }}
+              mix={{ block: "ProductItem", elem: "SizeFilterBar", mods: { isArabic: isArabic() } }}
             >
               <div
                 block="PLPFilters"
@@ -362,7 +363,7 @@ class PLPPages extends PureComponent {
     const { impressions, query, renderMySignInPopup, filters, productLoading, newActiveFilters
     } =
       this.props;
-      const { activeFilters } = this.state;
+    const { activeFilters } = this.state;
     const { shouldRender, filterIndex, inlineFilterList, finalFilterKey } =
       this.shouldRenderQuickFilter(filters, parseInt(key));
     if (isMobile.any() && isPlaceholder) {
@@ -431,22 +432,22 @@ class PLPPages extends PureComponent {
   OnDeselectFilter = (val, values) => {
     const { facet_key, facet_value } = val;
     const { is_radio } = values;
-    if( facet_key === "categories_without_path" ) {
+    if (facet_key === "categories_without_path") {
       this.onDeselect(val);
       return;
     }
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
 
-  onDeselect = (val, values) => {
+  onDeselect = (category) => {
     const { onLevelThreeCategoryPress, onSelectMoreFilterPLP } = this.props;
-    const isDropdownable = checkIsDropdownable(val);
+    const { isDropdown } = category;
     onSelectMoreFilterPLP("");
-    onLevelThreeCategoryPress(val, isDropdownable);
+    onLevelThreeCategoryPress(category, isDropdown, false,  "", true);
   }
 
   onClickRemoveMoreFilter = (val, value) => {
-    const { onMoreFilterClick} = this.props;
+    const { onMoreFilterClick } = this.props;
     onMoreFilterClick(val);
   };
 
@@ -552,7 +553,7 @@ class PLPPages extends PureComponent {
           {Object.entries(option).map(function (filter, index) {
             const key = filter[0]
             const values = filter[1]
-            if(key === "discount" || key === `price.${currency}.default` ) {
+            if (key === "discount" || key === `price.${currency}.default`) {
               return null;
             }
             if (values) {
@@ -629,7 +630,7 @@ class PLPPages extends PureComponent {
 
   handleMoreFilterChange = (selectedMoreFilter) => {
     const { onSelectMoreFilterPLP, selectedMoreFilterPLP } = this.props;
-    if(selectedMoreFilter === selectedMoreFilterPLP) {
+    if (selectedMoreFilter === selectedMoreFilterPLP) {
       onSelectMoreFilterPLP("");
       return
     }
@@ -640,7 +641,6 @@ class PLPPages extends PureComponent {
     const { selectedMoreFilterPLP } = this.props;
     const {
       moreFilters: { option = {} },
-      handleCallback,
       onMoreFilterClick,
     } = this.props;
     if (
@@ -650,13 +650,15 @@ class PLPPages extends PureComponent {
     ) {
       const options = option[selectedMoreFilterPLP]?.options;
       return (
-        <>
-          <PLPOptionsMoreFilter
-            options={options}
-            handleCallback={handleCallback}
+        <ul className="plpMoreFilterOptionsUl">
+          {Object.values(options).map((option) =>
+            <PLPOptionsMoreFilter
+            option={option}
             onMoreFilterClick={onMoreFilterClick}
-          />
-        </>
+            key={option?.facet_value}
+            />
+          )}
+        </ul>
       );
     }
     return null;
@@ -716,7 +718,7 @@ class PLPPages extends PureComponent {
       (key) => option[key] !== undefined && key != "discount" && key != `price.${currency}.default`
     );
     let isShowMoreFilters = getIsShowMoreFilters(newActiveFilters);
-    
+
     if (
       !isShowMoreFilters
     ) {
@@ -963,7 +965,7 @@ class PLPPages extends PureComponent {
 
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
-    const { query, updateFiltersState, newActiveFilters={} } = this.props;
+    const { query, updateFiltersState, newActiveFilters = {} } = this.props;
     const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     if (isMobile.any()) {
       window.scrollTo(0, 0);
@@ -1015,6 +1017,9 @@ class PLPPages extends PureComponent {
           {this.renderPages()}
           {productLoading && !isMobile.any() && this.renderPlaceHolder()}
         </div>
+        {this.inSearch() && <Helmet>
+          <meta name="robots" content="noindex" />
+        </Helmet>}
         {!isMobile.any() && this.renderLoadMore()}
       </div>
     );

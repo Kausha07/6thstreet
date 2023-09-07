@@ -56,7 +56,6 @@ import CartPage from "./CartPage.component";
 import { getUUIDToken } from "Util/Auth";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
-
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -81,6 +80,8 @@ export const mapStateToProps = (state) => {
     product: state.PDP.product,
     gender: state.AppState.gender,
     options: state.PDP.options,
+    wishListProducts: state.WishlistReducer.items,
+    totalsForProduct: state.CartReducer.cartItems,
   };
 };
 
@@ -135,6 +136,7 @@ export class CartPageContainer extends PureComponent {
     errorState: false,
     cartWidgetApiData: [],
     youMayAlsoLikeData: [],
+    lookingForThisData: [],
   };
 
   containerFunctions = {
@@ -197,6 +199,9 @@ export class CartPageContainer extends PureComponent {
       location: { state: { errorState: propErrorState } = {} },
     } = this.props;
 
+    if (isSignedIn() && items?.length !== 0) {
+      this.getCartLookingForThisVueData();
+    }
     if (
       !isSignedIn() &&
       Object.keys(this.props.totals)?.length === 0 &&
@@ -291,6 +296,48 @@ export class CartPageContainer extends PureComponent {
       });
   }
 
+  getCartLookingForThisVueData() {
+    const {
+      totals: { items },
+      totalsForProduct,
+    } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    const query = {
+      filters: [],
+      num_results: 25,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+    };
+    const type = "vue_compact_style_it_slider";
+    const defaultQueryPayload = {
+      userID,
+      product_id:
+        `${totalsForProduct?.[0]?.full_item_info?.config_sku}` ||
+        `${items?.[0]?.full_item_info?.config_sku}`,
+    };
+    const payload = VueQuery.buildQuery(type, query, defaultQueryPayload);
+    var promise = Promise.resolve(fetchVueData(payload));
+    promise
+      .then((resp) => {
+        const filteredArray = resp?.data?.filter((obj) => {
+          const foundIndex = items?.findIndex((item) => {
+            return (
+              item.product &&
+              item.product.name &&
+              obj.name &&
+              item.product.name === obj.name
+            );
+          });
+          return foundIndex === -1;
+        });
+        this.setState({ lookingForThisData: filteredArray });
+      })
+      .catch((err) => {
+        console.error("uncaught  errr", err);
+      });
+  }
+
   componentDidUpdate(prevProps) {
     const {
       changeHeaderState,
@@ -338,6 +385,15 @@ export class CartPageContainer extends PureComponent {
     }
 
     if (
+      isSignedIn() &&
+      items?.length !== 0 &&
+      totals?.total !== 0 &&
+      totals?.total !== prevtotals?.total
+    ) {
+      this.getCartLookingForThisVueData();
+    }
+
+    if(
       items?.length === 0 &&
       totals?.total !== prevtotals?.total &&
       totals?.total === 0
@@ -427,12 +483,8 @@ export class CartPageContainer extends PureComponent {
   }
 
   onCheckoutButtonClick(e) {
-    const {
-      history,
-      guest_checkout,
-      showOverlay,
-      showNotification,
-    } = this.props;
+    const { history, guest_checkout, showOverlay, showNotification } =
+      this.props;
     const { isCheckoutAvailable } = this.state;
     if (isCheckoutAvailable) {
       // to prevent outside-click handler trigger
@@ -521,10 +573,10 @@ export class CartPageContainer extends PureComponent {
     });
   }
 
-
   render() {
     const cartWidgetApiData = this.state.cartWidgetApiData;
     const youMayAlsoLikeData = this.state.youMayAlsoLikeData;
+    const lookingForThisData = this.state.lookingForThisData;
     return cartWidgetApiData && youMayAlsoLikeData ? (
       <CartPage
         {...this.props}
@@ -532,6 +584,7 @@ export class CartPageContainer extends PureComponent {
         {...this.containerFunctions}
         cartWidgetApiData={cartWidgetApiData}
         youMayAlsoLikeData={youMayAlsoLikeData}
+        lookingForThisData={lookingForThisData}
         tabMap={tabMap}
       />
     ) : (

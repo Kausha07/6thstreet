@@ -1,6 +1,7 @@
 .optionsMoreFilterWrapper {
   display: flex;
   padding-top: 8px;
+  cursor: pointer;
 }
 
 
@@ -11,6 +12,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .optionsMoreFilterWrapperAr label {
