@@ -204,6 +204,8 @@
  export const EVENT_REGISTER_FAILED = "register_failed";
  export const EVENT_SIGN_UP = "sign_up";
  export const EVENT_SIGN_UP_FAIL = "sign_up_fail";
+ export const EVENT_GTM_CART = "cart_event";
+ 
  
  //General Events for MOE and GTM
  export const EVENT_INSTA_FOLLOW = "insta_follow_icon";

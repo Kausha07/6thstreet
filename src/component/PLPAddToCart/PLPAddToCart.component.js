@@ -19,6 +19,8 @@ import Event, {
   EVENT_MOE_ADD_TO_CART_FAILED,
   MOE_trackEvent,
   SELECT_ITEM_ALGOLIA,
+  EVENT_GTM_PDP_TRACKING,
+  EVENT_SELECT_SIZE,
 } from "Util/Event";
 import { v4 } from "uuid";
 import "./PLPAddToCart.style";
@@ -26,7 +28,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getCurrency } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
+import { CART_ITEMS_CACHE_KEY } from "../../store/Cart/Cart.reducer";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { isObject } from "Util/API/helper/Object";
 import { isSignedIn } from "Util/Auth";
@@ -91,6 +93,7 @@ class PLPAddToCart extends PureComponent {
     isLoading: false,
     isOutOfStock: false,
     isArabic: isArabic(),
+    productStock: "",
   };
 
   componentDidMount() {
@@ -106,7 +109,7 @@ class PLPAddToCart extends PureComponent {
         simple_products = [],
       },
     } = this.props;
-
+    this.setState({ productStock: simple_products });
     let outOfStockStatus;
     if (size_us && size_uk && size_eu) {
       outOfStockStatus =
@@ -131,7 +134,46 @@ class PLPAddToCart extends PureComponent {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      product: { name, sku, size_eu, size_uk, size_us, simple_products = [] },
+    } = this.props;
+    const { selectedSizeType, selectedSizeCode } = this.state;
+
+    const productStock = simple_products;
+
+    const checkproductSize =
+      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      selectedSizeCode !== "";
+    const checkproductStock =
+      typeof productStock === "object" && productStock !== null;
+    const { size } =
+      checkproductSize && checkproductStock
+        ? productStock[selectedSizeCode]
+        : "";
+    const optionId = checkproductSize
+      ? selectedSizeType.toLocaleUpperCase()
+      : "";
+    const optionValue = checkproductSize ? size[selectedSizeType] : "";
+
+    if (selectedSizeType && selectedSizeCode) {
+      if (
+        selectedSizeCode !== prevState?.selectedSizeCode ||
+        selectedSizeType !== prevState?.selectedSizeType
+      ) {
+        const eventData = {
+          name: EVENT_SELECT_SIZE,
+          size_type: selectedSizeType,
+          size_value: optionValue,
+          product_name: name,
+          product_id: sku,
+          action: "select_size_no_option",
+        };
+        Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+        this.sendMoEImpressions(EVENT_SELECT_SIZE);
+      }
+    }
+
     const sliders = document.querySelectorAll(
       ".PLPAddToCart-SizeSelector-SizeContainer-AvailableSizes"
     );
@@ -657,16 +699,34 @@ class PLPAddToCart extends PureComponent {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
         let items = [];
-        items_in_cart.map(item => {
-          if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-            items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+        items_in_cart.map((item) => {
+          if (
+            !(
+              item &&
+              item.full_item_info &&
+              item.full_item_info.cross_border &&
+              !edd_info.has_cross_border_enabled
+            )
+          ) {
+            items.push({
+              sku: item.sku,
+              intl_vendor:
+                item?.full_item_info?.cross_border &&
+                item?.full_item_info?.international_vendor &&
+                edd_info.international_vendors &&
+                edd_info.international_vendors.indexOf(
+                  item?.full_item_info?.international_vendor
+                ) > -1
+                  ? item?.full_item_info?.international_vendor
+                  : null,
+            });
           }
         });
         request.items = items;
         if(items.length) estimateEddResponse(request, true);
       }
     }
-  }
+  };
 
   addToCart(isClickAndCollect = false) {
     const {
@@ -684,8 +744,8 @@ class PLPAddToCart extends PureComponent {
         objectID,
         product_type_6s,
         simple_products,
-        international_vendor=null,
-        cross_border = 0
+        international_vendor = null,
+        cross_border = 0,
       },
       addProductToCart,
       showNotification,
@@ -695,7 +755,7 @@ class PLPAddToCart extends PureComponent {
       qid,
       newActiveFilters,
       product_Position,
-      edd_info
+      edd_info,
     } = this.props;
     const {
       selectedClickAndCollectStore,

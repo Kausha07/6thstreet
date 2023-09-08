@@ -21,6 +21,9 @@ export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS";
 export const SET_CITIES_DATA = "SET_CITIES_DATA";
 export const SET_ADDRESS_LOADER = "SET_ADDRESS_LOADER";
 export const SET_IS_CURRENT_TAB_ACTIVE = "SET_IS_CURRENT_TAB_ACTIVE";
+export const SET_NEW_ADDRESS_CLICKED = "SET_NEW_ADDRESS_CLICKED";
+export const SET_NEW_ADDRESS_SAVED ="SET_NEW_ADDRESS_SAVED";
+export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
 
 export const setIsMobileTabActive = (isActive) => ({
   type: SET_IS_MOBILE_TAB_ACTIVE,
@@ -57,7 +60,7 @@ export const setCustomerDefaultShippingAddress = (defaultaddress) => ({
   defaultaddress,
 });
 
-export const setEddResponse = (eddResponse, EddAddress) => {console.log("check setEddResponse", eddResponse);
+export const setEddResponse = (eddResponse, EddAddress) => {
   return ({
   type: SET_EDD_RESPONSE,
   eddResponse,
@@ -85,4 +88,19 @@ export const setDefaultEddAddress = (defaultEddResponse, PdpEddAddress) => ({
 export const setAddressLoader = (addressLoader) => ({
   type: SET_ADDRESS_LOADER,
   addressLoader,
+});
+
+export const setNewAddressClicked = (addNewAddressClicked) => ({
+  type: SET_NEW_ADDRESS_CLICKED,
+  addNewAddressClicked,
+});
+
+export const setNewAddressSaved = (newAddressSaved) => ({
+  type: SET_NEW_ADDRESS_SAVED,
+  newAddressSaved,
+});
+
+export const setSelectedAddressID = (addressIDSelected) => ({
+  type: SET_SELECTED_ADDRESS_ID,
+  addressIDSelected,
 });
