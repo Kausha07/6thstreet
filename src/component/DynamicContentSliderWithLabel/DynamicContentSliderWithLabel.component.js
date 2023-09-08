@@ -241,6 +241,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const borderRadius = "50%";
     const ht = `${isMobile ? 65 : height?.toString()}px`;
     const brandName = isArabic ? brand_arabic : brand;
+    const isDesktop = !isMobile;
+    const updateBrandName = isDesktop
+      ? brandName?.length > 18
+        ? `${brandName?.substring(0, 18)}...`
+        : brandName
+      : brandName?.length > 13
+      ? `${brandName?.substring(0, 13)}...`
+      : brandName;
     return (
       <div
         block="SliderWithLabel"
@@ -270,7 +278,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         </Link>
         {brandName ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {brandName?.length > 8 ? `${brandName?.toLowerCase()?.substring(0, 8)}...` : brandName?.toLowerCase()}
+            { updateBrandName }
           </div>
         ) : null}
       </div>
@@ -294,13 +302,22 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const wd = `${isMobile ? 65 : width?.toString()}px`;
     const borderRadius = "50%";
     const ht = `${isMobile ? 65 : height?.toString()}px`;
-    const categoryName = isArabic
-      ? arabic_name?.length > 8
-        ? `${arabic_name?.substring(0, 8)}...`
+    const isDesktop = !isMobile;
+    const categoryName = isDesktop
+      ? isArabic
+        ? arabic_name?.length > 18
+          ? `${arabic_name?.substring(0, 18)}...`
+          : arabic_name
+        : english_name?.length > 18
+        ? `${english_name?.substring(0, 18)}...`
+        : english_name
+      : isArabic
+      ? arabic_name?.length > 13
+        ? `${arabic_name?.substring(0, 13)}...`
         : arabic_name
-      : arabic_name?.length > 8
-      ? `${english_name?.toLowerCase()?.substring(0, 8)}...`
-      : english_name?.toLowerCase();
+      : english_name?.length > 13
+      ? `${english_name?.substring(0, 13)}...`
+      : english_name;
     return (
       <div
         block="SliderWithLabel"
