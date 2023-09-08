@@ -50,6 +50,7 @@ class CouponEvent extends BaseEvent {
         productID.push(productKeys?.config_sku);
       });
     }
+    if(event.name){
     this.pushEventData({
       event: event.name,
       eventCategory: "checkout_tracking",
@@ -71,7 +72,14 @@ class CouponEvent extends BaseEvent {
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
+      discount: event?.discount,
+      tax: event?.tax,
+      sub_total: event?.sub_total,
+      subtotal_incl_tax: event?.subtotal_incl_tax,
+      shipping: event?.shipping,
+      total: event?.total,
     });
+    }
   }
 
   getCustomerId() {
