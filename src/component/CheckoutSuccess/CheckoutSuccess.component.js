@@ -797,7 +797,7 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "subtotal"),
           __("Subtotal")
         )}
-         {!inventory_level_cross_border &&
+         {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
             __("Shipping")

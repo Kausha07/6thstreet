@@ -928,7 +928,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       });
     }
 
-    if (!inventory_level_cross_border) {
+    if (!inventory_level_cross_border || !international_shipping_fee) {
       LineItems.push({
         label: __("Shipping Charges"),
         amount: shipping_fee ? shipping_fee : __("FREE"),

@@ -446,7 +446,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             )}
             {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
 
-            {!inventory_level_cross_border &&
+            {(!inventory_level_cross_border || !international_shipping_fee) &&
               this.renderPriceLine(
                 getDiscountFromTotals(totals, "shipping") || __("FREE"),
                 __("Shipping Charges")
