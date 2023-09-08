@@ -757,7 +757,7 @@ export class CheckoutSuccess extends PureComponent {
     const finalPrice = getFinalPrice(price, quote_currency_code);
 
     const fullPrice =
-      finalPrice === "FREE"
+      finalPrice === __("FREE")
         ? finalPrice
         : `${quote_currency_code} ${finalPrice}`;
 

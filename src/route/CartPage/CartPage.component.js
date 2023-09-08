@@ -543,7 +543,7 @@ export class CartPage extends PureComponent {
             {name}
           </strong>
           <span>
-            {name !== "International Shipping Fee" && (
+            {name !== __("International Shipping Fee") && (
               <strong block="CartPage" elem="Price">
                 <del block="freeShipping" mods={{ isArabic }}>
                   {`${
