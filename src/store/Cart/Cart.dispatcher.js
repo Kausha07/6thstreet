@@ -24,7 +24,8 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
-
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import { resetCart } from "Store/Cart/Cart.action";
 export class CartDispatcher {
   async setCheckoutStep(dispatch, checkoutDetails = false) {
     dispatch(setCheckoutDetails(checkoutDetails));
@@ -110,7 +111,12 @@ export class CartDispatcher {
   async getCartTotals(dispatch, cartId, isSecondTry = false) {
     try {
       dispatch(processingCartRequest());
-      const { data } = await getCart(cartId);
+      const response = await getCart(cartId);
+      if (response == "Request does not match any route.") {
+        MyAccountDispatcher.logout(null, dispatch);
+        dispatch(resetCart());
+      }
+      const { data } = response;
       const lastCouponCode = localStorage.getItem("lastCouponCode");
       if (
         data.coupon_code === null &&

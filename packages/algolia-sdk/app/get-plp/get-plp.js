@@ -14,7 +14,6 @@ import {
   formatNewInTag,
   getAlgoliaFilters,
   getMasterAlgoliaFilters,
-  getAddtionalFacetsFilters,
   getCurrencyCode,
   getIndex,
   getMoreFacetFilters,
@@ -472,7 +471,7 @@ Kids /// Baby Boy /// Shoes
     }
 
     // Remove "Outlet"
-    if (key.match("Outlet") || key.match("Influencers")) {
+    if (key.match("Outlet") || key.match("Influencers") || key.match("SEO")) {
       keepValue = false;
     }
 
@@ -564,6 +563,10 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
     }
     const index = client.initIndex(indexName);
 
+    let maxValuesPerFacet = 1000;
+    if (q.trim().split("").includes("+")) {
+      maxValuesPerFacet = 2000;
+    }
     // Build search query
     const { facetFilters, numericFilters, newFacetFilters } = getAlgoliaFilters(queryParams, moreFiltersData);
     const  moreFacetFilters = getMoreFacetFilters(queryParams, moreFiltersData);
@@ -579,52 +582,10 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
-    let initialFacetFilter = deepCopy(facetFilters);
-    let initialFilterArg;
-    let filterOption = [];
-    initialFacetFilter.map((entry, index) => {
-      if (
-        entry[0].split(":")[0].includes("categories.level") ||
-        entry[0].split(":")[0].includes("brand_name") ||
-        entry[0].split(":")[0].includes("gender")
-      ) {
-        filterOption[index] = entry[0].split(":")[0];
-      }
-    });
 
-    let isGender = false;
-    if (initialFacetFilter.length === 1) {
-      initialFilterArg = initialFacetFilter[0];
-    } else if (initialFacetFilter.length > 1) {
-      if (
-        filterOption.findIndex(
-          (element) => element && element.includes("categories.level")
-        ) !== -1
-      ) {
-        initialFilterArg = initialFacetFilter[0];
-      } else if (filterOption.includes("brand_name")) {
-        initialFilterArg =
-          initialFacetFilter[filterOption.indexOf("brand_name")];
-      } else if (filterOption.includes("gender")) {
-        initialFilterArg = initialFacetFilter[filterOption.indexOf("gender")];
-        isGender = true;
-      }
-    }
-    const additionalFacets = getAddtionalFacetsFilters(queryParams);
-    const queryCopy = {
-      params: {
-        ...newSearchParamsMoreFilters,
-        facetFilters: isGender ? [...additionalFacets] : [initialFilterArg, ...additionalFacets],
-        numericFilters,
-        query: q,
-        page,
-        hitsPerPage: limit,
-        clickAnalytics: true,
-      },
-      indexName: indexName,
-    };
 
     let selectedFilterArr = [];
     let exceptFilter = ["page", "q", "sort", "discount", "visibility_catalog"];
@@ -648,6 +609,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(queryProdCount);
@@ -665,6 +627,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        maxValuesPerFacet: maxValuesPerFacet,
       },
     };
     queries.push(querySliderPosition);
@@ -714,11 +677,11 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             page,
             hitsPerPage: limit,
             clickAnalytics: true,
+            maxValuesPerFacet: maxValuesPerFacet,
           },
         });
       });
     }
-    queries.push(queryCopy);
     client.search(queries, (err, res = {}) => {
       if (err) {
         return reject(err);
@@ -728,14 +691,23 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         res.results[0];
 
       let finalFiltersData = deepCopy(res.results[0]);
+      // if page is Influencer page then we should show correct categories from the result[1]
+      let isInfluencer = false;
+      if( params['categories.level2'] ) {
+        const levels = params['categories.level2'].split(" /// ");
+        isInfluencer =  levels[0] === 'Influencers' ? true : false;
+      }
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 2 && index < Object.values(res.results).length - 1) {
+          if (index > 2) {
             Object.entries(result[1].facets).map((entry) => {
-              finalFiltersData.facets[[entry[0]]] = entry[1];
+              if( !isInfluencer || (entry[0] != "categories.level2" && isInfluencer) ) {
+                finalFiltersData.facets[[entry[0]]] = entry[1];
+              }
             });
-          } else if (index === Object.values(res.results).length - 1) {
+          } else if (index === 1) {
+            // getting category data from result of [1] - passing here all other selected filters except from category filter
             for (let key = 0; key <= 4; key++) {
               if (result[1].facets[`categories.level${key}`]) {
                 finalFiltersData.facets[`categories.level${key}`] =

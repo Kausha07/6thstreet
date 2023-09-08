@@ -17,13 +17,20 @@ import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressFo
 import { addressType } from "Type/Account";
 import { countriesType } from "Type/Config";
 import { isArabic } from "Util/App";
+import { connect } from "react-redux";
+import { setNewAddressSaved } from "Store/MyAccount/MyAccount.action";
 
+export const mapDispatchToProps = (dispatch) => ({
+  setNewAddressSaved: (val) => dispatch(setNewAddressSaved(val)),
+});
 export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   static propTypes = {
     address: addressType.isRequired,
     countries: countriesType.isRequired,
     default_country: PropTypes.string,
     onSave: PropTypes.func,
+    addNewAddressClicked: PropTypes.bool,
+    setNewAddressSaved: PropTypes.func,
   };
 
   static defaultProps = {
@@ -99,16 +106,16 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 
   onFormSuccess = (fields) => {
-    const { onSave } = this.props;
+    const { onSave,setNewAddressSaved } = this.props;
     const {
       region_id,
       region_string: region,
       telephone,
       ...newAddress
     } = fields;
-
     newAddress.region = { region_id, region };
     newAddress.telephone = this.addPhoneCode() + telephone;
+    setNewAddressSaved(true);
     onSave(newAddress);
   };
 
@@ -435,4 +442,4 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
   }
 }
 
-export default MyAccountDeliveryAddressForm;
+export default connect(null, mapDispatchToProps)(MyAccountDeliveryAddressForm);

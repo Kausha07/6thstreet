@@ -553,79 +553,25 @@ class FieldMultiselect extends PureComponent {
     if (isSearch) {
       categoryLevelData = Object.values(searchList);
     }
+    categoryLevelData.sort((a, b) =>
+      a.isDropdown === b.isDropdown ? 0 : a.isDropdown ? -1 : 1
+    );
     if (categoryLevelData.length > 0) {
       return (
         <>
-          {categoryLevelData?.map((multiLevelData) =>
-            multiLevelData &&
-            multiLevelData?.sub_subcategories &&
-            Object.keys(multiLevelData.sub_subcategories).length != 0 ? (
-              <FieldNestedMultiSelect
-                multiLevelData={multiLevelData}
-                parentCallback={parentCallback}
-                isSearch={isSearch}
-                searchList={searchList}
-                searchKey={searchKey}
-                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
-                filter={filter}
-                onBlur={this.onBlur}
-                activeFiltersIds={activeFiltersIds}
-              />
-            ) : null
-          )}
-        </>
-      );
-    }
-  };
-
-  renderNestedOptions = (isSearch) => {
-    const {
-      filter: { data = {} },
-      parentCallback,
-      onLevelThreeCategoryPress,
-      filter,
-      filters,
-      newActiveFilters
-    } = this.props;
-    let categoryLevelData = [];
-    const { searchFacetKey, searchKey, searchList } = this.state;
-    const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
-    const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
-
-    Object.entries(data).map((entry) => {
-      if (
-        (selectCategoryLevelOneFilter &&
-          selectCategoryLevelOneFilter === entry[0]) ||
-        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
-      ) {
-        Object.entries(entry[1].subcategories).map((subEntry) => {
-          categoryLevelData.push(subEntry[1]);
-        });
-      }
-    });
-    if (isSearch) {
-      categoryLevelData = Object.values(searchList);
-    }
-    if (categoryLevelData.length > 0) {
-      return (
-        <>
-          {categoryLevelData?.map((multiLevelData) =>
-            multiLevelData &&
-            multiLevelData?.sub_subcategories &&
-            Object.keys(multiLevelData.sub_subcategories).length === 0 ? (
-              <FieldNestedMultiSelect
-                multiLevelData={multiLevelData}
-                parentCallback={parentCallback}
-                isSearch={isSearch}
-                searchList={searchList}
-                searchKey={searchKey}
-                onLevelThreeCategoryPress={onLevelThreeCategoryPress}
-                filter={filter}
-                onBlur={this.onBlur}
-                activeFiltersIds={activeFiltersIds}
-              />
-            ) : null
-          )}
+          {categoryLevelData?.map((multiLevelData) => (
+            <FieldNestedMultiSelect
+              multiLevelData={multiLevelData}
+              parentCallback={parentCallback}
+              isSearch={isSearch}
+              searchList={searchList}
+              searchKey={searchKey}
+              onLevelThreeCategoryPress={onLevelThreeCategoryPress}
+              filter={filter}
+              onBlur={this.onBlur}
+              activeFiltersIds={activeFiltersIds}
+            />
+          ))}
         </>
       );
     }
@@ -741,7 +687,6 @@ class FieldMultiselect extends PureComponent {
       return (
         <ul className="multiselectUl">
           {this.renderNestedMultiSelect(isSearch)}
-          {this.renderNestedOptions(isSearch)}
         </ul>
       );
     }
@@ -749,7 +694,6 @@ class FieldMultiselect extends PureComponent {
       return (
         <ul className="multiselectUl">
           {this.renderNestedMultiSelect()}
-          {this.renderNestedOptions()}
         </ul>
       );
     }
@@ -1146,13 +1090,13 @@ class FieldMultiselect extends PureComponent {
     }
     let count = selected_filters_count || 0;
     if ( count === 0 && category === "discount") {
-      const { discount: { isDiscountFilterApplyed = false} } = sliderFilters;
-      isDiscountFilterApplyed ? count = 1 : null;
+      const isDiscountFilterApplied = sliderFilters?.discount?.isDiscountFilterApplyed || false;
+      isDiscountFilterApplied ? count = 1 : null;
     }
     const currency = getCountryCurrencyCode();
     if ( count === 0 && category === `price.${currency}.default` ) {
-      const { price: { isPriceFilterApplyed = false} } = sliderFilters;
-      isPriceFilterApplyed ? count = 1 : null;
+      const isPriceFilterApplied = sliderFilters?.price?.isPriceFilterApplyed || false;
+      isPriceFilterApplied ? count = 1 : null;
     }
     return (
       <span 

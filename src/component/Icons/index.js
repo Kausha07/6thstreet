@@ -28,6 +28,8 @@ import Phone from "./Phone";
 import Chat from "./Chat";
 import Email from "./Email";
 import FlashAnimation from "./Flash";
+import Offer from "./Offer";
+import Coupon from "./Coupon";
 import PlayButton from "./PlayButton";
 
 
@@ -62,5 +64,7 @@ export {
   Chat,
   Email,
   FlashAnimation,
+  Offer,
+  Coupon,
   PlayButton,
 };

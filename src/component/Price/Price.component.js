@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
+import isMobile from "Util/Mobile";
 
 class Price extends PureComponent {
   static propTypes = {
@@ -40,24 +41,16 @@ class Price extends PureComponent {
         elem="Discount"
         mods={{ discount: this.haveDiscount() }}
       >
-        {
-          onSale
-            ?
-            <>
-              {currency}
-              <span block="Price-Discount" elem="space"></span>
-              &nbsp;
-              {specialPrice}
-            </>
-            :
-            country && showDiscountPercentage
-              ?
-              <>
-                {`${__("On Sale")} ${this.discountPercentage()} Off`}
-              </>
-              :
-              null
-        }
+        {onSale ? (
+          <>
+            {currency}
+            <span block="Price-Discount" elem="space"></span>
+            &nbsp;
+            {specialPrice}
+          </>
+        ) : country && showDiscountPercentage ? (
+          <>{`${__("On Sale")} ${this.discountPercentage()} Off`}</>
+        ) : null}
       </span>
     );
   }
@@ -93,10 +86,19 @@ class Price extends PureComponent {
   }
 
   discountPercentage() {
-    const { basePrice, specialPrice, renderSpecialPrice, cart, country, showDiscountPercentage } = this.props;
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+      cart,
+      country,
+      showDiscountPercentage,
+      pageType,
+      itemType = "",
+    } = this.props;
 
-    if (!showDiscountPercentage ) {
-      return null
+    if (!showDiscountPercentage) {
+      return null;
     }
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
@@ -114,16 +116,22 @@ class Price extends PureComponent {
         </span>
       );
     } else {
-      return `-${discountPercentage}%`;
+      if (pageType === "cartSlider" || itemType === "Cart") {
+        return (
+          <span block="discountPercentageText">{`(-${discountPercentage}%)`}</span>
+        );
+      }
+      return `-${discountPercentage}%  `;
     }
   }
 
-  renderPrice() {
-    const { basePrice, specialPrice, renderSpecialPrice } =
-      this.props;
+  renderFinalPriceOnly = () => {
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+    } = this.props;
     const { isArabic } = this.state;
-
-    const currency = getCurrency();
 
     if (!parseFloat(basePrice)) {
       return null;
@@ -137,7 +145,75 @@ class Price extends PureComponent {
         <span block="Price" elem="Wrapper">
           {renderSpecialPrice && this.renderSpecialPrice()}
           {isArabic && <>&nbsp;</>}
+        </span>
+      </>
+    );
+  };
 
+  renderPrice() {
+    const {
+      basePrice,
+      specialPrice,
+      renderSpecialPrice,
+      pageType,
+      itemType = "",
+    } = this.props;
+    const { isArabic } = this.state;
+
+    const currency = getCurrency();
+
+    if (!parseFloat(basePrice)) {
+      return null;
+    }
+
+    if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
+      return this.renderBasePrice();
+    }
+
+    if (pageType === "cartSlider") {
+      return (
+        <span block="Price" elem="Wrapper">
+          {renderSpecialPrice && this.renderSpecialPrice()}
+          {isArabic && <>&nbsp;</>}
+          <del block="Price" elem="Del">
+            {this.renderBasePrice()}
+          </del>
+
+          {this.discountPercentage()}
+        </span>
+      );
+    }
+
+    if (itemType === "Cart") {
+      return (
+        <>
+          <span block="Price" elem="Wrapper">
+            {renderSpecialPrice && this.renderSpecialPrice()}
+            {isArabic && <>&nbsp;</>}
+            {!renderSpecialPrice && (
+              <span block="SearchProduct" elem="PriceWrapper">
+                {this.renderDiscountSpecialPrice(true, specialPrice)}
+              </span>
+            )}
+            <del block="Price" elem="Del">
+              {this.renderBasePrice()}
+            </del>
+          </span>
+          {!renderSpecialPrice ? (
+            <span block="SearchProduct" elem="PriceWrapper">
+              {this.discountPercentage(basePrice, specialPrice)}
+            </span>
+          ) : (
+            this.renderDiscountSpecialPrice(false)
+          )}
+        </>
+      );
+    }
+    return (
+      <>
+        <span block="Price" elem="Wrapper">
+          {renderSpecialPrice && this.renderSpecialPrice()}
+          {isArabic && <>&nbsp;</>}
           <del block="Price" elem="Del">
             {this.renderBasePrice()}
           </del>
@@ -165,12 +241,15 @@ class Price extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { pageType = "" } = this.props;
     return (
       <div
         block={`Price ${this.haveDiscount() ? "discount" : ""}`}
         mix={{ block: "Price", mods: { isArabic } }}
       >
-        {this.renderPrice()}
+        {pageType === "wishlist" && isMobile.any()
+          ? this.renderFinalPriceOnly()
+          : this.renderPrice()}
       </div>
     );
   }
