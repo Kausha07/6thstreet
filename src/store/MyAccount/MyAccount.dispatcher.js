@@ -13,6 +13,8 @@ import {
   setDefaultEddAddress,
   setCitiesData,
   setAddressLoader,
+  setVueTrendingBrandsBannerActive,
+  setUserIdForVueTrendingBrands,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -321,6 +323,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
+    dispatch(setUserIdForVueTrendingBrands(null));
+    dispatch(setVueTrendingBrandsBannerActive(false));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
     MOE_destroySession();
@@ -493,6 +497,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       : false;
 
     dispatch(setCartId(null));
+    dispatch(setUserIdForVueTrendingBrands(id));
     setMobileAuthorizationToken(token);
     options.hasOwnProperty("type") ? setAuthorizationToken(t) : null;
     if (isPhone) {

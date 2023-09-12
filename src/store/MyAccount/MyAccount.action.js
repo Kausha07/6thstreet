@@ -21,6 +21,8 @@ export const SET_PDP_EDD_ADDRESS = "SET_PDP_EDD_ADDRESS";
 export const SET_CITIES_DATA = "SET_CITIES_DATA";
 export const SET_ADDRESS_LOADER = "SET_ADDRESS_LOADER";
 export const SET_IS_CURRENT_TAB_ACTIVE = "SET_IS_CURRENT_TAB_ACTIVE";
+export const SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE = "SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE";
+export const SET_USER_ID_FOR_VUE_TRENDING_BRANDS = "SET_USER_ID_FOR_VUE_TRENDING_BRANDS";
 export const SET_NEW_ADDRESS_CLICKED = "SET_NEW_ADDRESS_CLICKED";
 export const SET_NEW_ADDRESS_SAVED ="SET_NEW_ADDRESS_SAVED";
 export const SET_SELECTED_ADDRESS_ID = "SET_SELECTED_ADDRESS_ID";
@@ -90,6 +92,15 @@ export const setAddressLoader = (addressLoader) => ({
   addressLoader,
 });
 
+export const setVueTrendingBrandsBannerActive = (isActive) => ({
+  type: SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE,
+  isActive,
+});
+
+export const setUserIdForVueTrendingBrands = (userID) => ({
+  type: SET_USER_ID_FOR_VUE_TRENDING_BRANDS,
+  userID,
+});
 export const setNewAddressClicked = (addNewAddressClicked) => ({
   type: SET_NEW_ADDRESS_CLICKED,
   addNewAddressClicked,

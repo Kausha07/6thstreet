@@ -22,7 +22,7 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideOverlay: () => dispatch(hideActiveOverlay()),
-    logout: () => MyAccountDispatcher.then(({ default: dispatcher }) => dispatcher.logout(null, dispatch))
+    logout: () => MyAccountDispatcher.then(({ default: dispatcher }) => dispatcher.logout(null, dispatch)),
 });
 
 export class MyAccountSignedInOverlayContainer extends PureComponent {
