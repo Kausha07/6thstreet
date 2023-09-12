@@ -22,6 +22,9 @@ import {
   SET_IS_CURRENT_TAB_ACTIVE,
   SET_VUE_TRENDING_BRANDS_BANNER_ACTIVE,
   SET_USER_ID_FOR_VUE_TRENDING_BRANDS,
+  SET_NEW_ADDRESS_CLICKED,
+  SET_NEW_ADDRESS_SAVED,
+  SET_SELECTED_ADDRESS_ID
 } from "./MyAccount.action";
 
 export const initialState = {
@@ -44,6 +47,9 @@ export const initialState = {
   currentTabActive: true,
   VueTrendingBrandsEnable: false,
   vueTrendingBrandsUserID : null,
+  addNewAddressClicked: false,
+  newAddressSaved: false,
+  addressIDSelected: null,
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -191,6 +197,26 @@ export const MyAccountReducer = (state = initialState, action) => {
         ...state,
         vueTrendingBrandsUserID: userID,
       };
+    case SET_NEW_ADDRESS_CLICKED:
+    const { addNewAddressClicked } = action;
+    return {
+      ...state,
+      addNewAddressClicked,
+    };
+
+    case SET_NEW_ADDRESS_SAVED:
+      const { newAddressSaved } = action;
+    return {
+      ...state,
+      newAddressSaved,
+    };
+    
+    case SET_SELECTED_ADDRESS_ID:
+      const { addressIDSelected } = action;
+    return {
+      ...state,
+      addressIDSelected,
+    };
 
     default:
       return state;

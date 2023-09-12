@@ -15,7 +15,7 @@ import CheckoutAddressBook from "./CheckoutAddressBook.component";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
-
+import { setSelectedAddressID } from "Store/MyAccount/MyAccount.action";
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
@@ -31,6 +31,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.estimateEddResponse(dispatch, request, type)
     ),
+    setSelectedAddressID: (val) => dispatch(setSelectedAddressID(val)),
 });
 
 export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookContainer {
@@ -75,9 +76,10 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
   }
 
   componentDidMount() {
-    const { onAddressSelect } = this.props;
+    const { onAddressSelect, setSelectedAddressID } = this.props;
     const { selectedAddressId } = this.state;
     onAddressSelect(selectedAddressId);
+    setSelectedAddressID(selectedAddressId);
   }
   componentDidUpdate(prevProps, prevState) {
     const {
@@ -86,6 +88,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       isSignedIn,
       customer,
       addresses,
+      setSelectedAddressID
     } = this.props;
     const { selectedAddressId: prevSelectedAddressId } = prevState;
     const { selectedAddressId } = this.state;
@@ -93,6 +96,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
       requestCustomerData();
     }
     if (selectedAddressId !== prevSelectedAddressId) {
+      setSelectedAddressID(selectedAddressId);
       onAddressSelect(selectedAddressId);
       this.estimateShipping(selectedAddressId);
     }

@@ -17,7 +17,11 @@ import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { connect } from "react-redux";
 import HomeIcon from "Component/Icons/Home/home.png";
 import { setPDPGaleryImage } from "Store/PDP/PDP.action";
-import { EVENT_MOE_PDP_IMAGE_SCROLL, MOE_trackEvent } from "Util/Event";
+import Event, {
+  EVENT_MOE_PDP_IMAGE_SCROLL,
+  MOE_trackEvent,
+  EVENT_GTM_PDP_TRACKING,
+} from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -55,11 +59,28 @@ class PDPGallery extends PureComponent {
       isArabic: isArabic(),
       listener: "",
       isFirstTimeZoomedIn: true,
+      scrolledSlide: 0,
     };
     this.videoRef = {
       prod_style_video: React.createRef(),
       prod_360_video: React.createRef(),
     };
+  }
+
+  componentWillUnmount() {
+    const { scrolledSlide } = this.state;
+    const {
+      product: { sku, name },
+    } = this.props;
+    if (scrolledSlide > 0) {
+      const eventData = {
+        name: EVENT_MOE_PDP_IMAGE_SCROLL,
+        product_id: sku,
+        product_name: name,
+        imagesScrolled: scrolledSlide,
+      };
+      Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
+    }
   }
 
   onBackButtonClick = () => {
@@ -382,7 +403,11 @@ class PDPGallery extends PureComponent {
         brand_name,
       },
     } = this.props;
-    const { isVideoPlaying, listener } = this.state;
+    const { isVideoPlaying, listener, scrolledSlide } = this.state;
+
+    if (activeSlide > scrolledSlide) {
+      this.setState({ scrolledSlide: activeSlide });
+    }
 
     if (activeSlide <= gallery.length - 1) {
       // stop the video

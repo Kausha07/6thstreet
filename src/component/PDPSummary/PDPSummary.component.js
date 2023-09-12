@@ -219,7 +219,7 @@ class PDPSummary extends PureComponent {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
       const { default: defPrice } = priceData;
-      TabbyInstallment(defPrice,currency);
+      script.onload = TabbyInstallment(defPrice, currency);
     }
   }
 
