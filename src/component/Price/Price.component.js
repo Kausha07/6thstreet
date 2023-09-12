@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
+import { getCountryFromUrl } from "Util/Url";
 import isMobile from "Util/Mobile";
 
 class Price extends PureComponent {
@@ -160,13 +161,25 @@ class Price extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
 
-    const currency = getCurrency();
+    const country = getCountryFromUrl();
 
     if (!parseFloat(basePrice)) {
       return null;
     }
 
     if (basePrice === specialPrice || (!specialPrice && !specialPrice === 0)) {
+      if (pageType === "cartSlider" && country === "KW" ) {
+        return (
+          <span block="Price" elem="Wrapper">
+            {isArabic && <>&nbsp;</>}
+            {this.renderBasePrice()}
+            <span
+              block="discountPercentageText"
+              className="noDiscountEmptySpace"
+            >{` `}</span>
+          </span>
+        );
+      }
       return this.renderBasePrice();
     }
 
