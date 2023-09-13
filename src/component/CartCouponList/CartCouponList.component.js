@@ -4,6 +4,13 @@ import "./CartCouponList.style";
 import { isArabic } from 'Util/App';
 import CartCouponDetail from 'Component/CartCouponDetail'
 import Loader from "Component/Loader";
+import Event, {
+    EVENT_APPLY_COUPON_FAILED,
+    EVENT_APPLY_COUPON,
+    EVENT_GTM_COUPON,
+    MOE_trackEvent
+  } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 export class CartCouponList extends PureComponent {
     constructor(props) {
         super(props);
@@ -23,6 +30,9 @@ export class CartCouponList extends PureComponent {
             let apiResponse = await (this.props.applyCouponToCart(couponCode)) || null;
             if (typeof apiResponse !== "string") {
                 this.props.closePopup();
+                this.sendEvents(EVENT_APPLY_COUPON, couponCode);        
+            }else{
+                this.sendEvents(EVENT_APPLY_COUPON_FAILED, couponCode);
             }
             if(setLoader) {
                 setLoader(false)
@@ -32,12 +42,33 @@ export class CartCouponList extends PureComponent {
         }
         catch(error){
             console.error(error);
+            this.sendEvents(EVENT_APPLY_COUPON_FAILED, couponCode);
         }
         
     }
     handleRemoveCode = (couponCode) => {
         this.props.removeCouponFromCart()
     }
+
+    sendEvents(event, coupon) {
+        MOE_trackEvent(event, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          coupon_code: coupon || "",
+          app6thstreet_platform: "Web",
+        });
+        const eventData = {
+            name: event,
+            coupon: coupon,
+            discount: this.props?.totals?.discount || "",
+            shipping: this.props?.totals?.shipping_fee || "",
+            tax: this.props?.totals?.tax_amount || "",
+            sub_total : this.props?.totals?.subtotal || "",
+            subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+            total: this.props?.totals?.total || "",
+          };
+        Event.dispatch(EVENT_GTM_COUPON, eventData);
+      }
     
     
     renderCouponItems() {

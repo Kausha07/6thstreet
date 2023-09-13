@@ -60,6 +60,7 @@ export class NoMatch extends PureComponent {
     this.updateHeaderState();
     this.cleanUpTransition();
     window.pageType = TYPE_NOTFOUND;
+    sessionStorage.setItem("currentScreen",TYPE_NOTFOUND );
     this.requestNoMatchWidgetData();
   }
   componentDidUpdate() {

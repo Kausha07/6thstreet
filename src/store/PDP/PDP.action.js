@@ -5,6 +5,7 @@ export const SET_PDP_GALLERY_IMAGE_INDEX = 'SET_PDP_GALLERY_IMAGE_INDEX';
 export const SET_PDP_CLICK_AND_COLLECT = 'SET_PDP_CLICK_AND_COLLECT';
 export const SET_BRAND_INFO_DATA = 'SET_BRAND_INFO_DATA';
 export const SET_BRAND_BUTTON_CLICK = 'SET_BRAND_BUTTON_CLICK';
+export const SET_VUE_TRENDING_BRAND_CLICK = 'SET_VUE_TRENDING_BRAND_CLICK'
 
 export const setPDPGaleryImage = (imageIndex) => ({
     type: SET_PDP_GALLERY_IMAGE_INDEX,
@@ -43,4 +44,9 @@ export const setPDPClickAndCollect = ( storesList ) => ({
 export const setBrandButtonClick = (brandButtonClick) => ({
     type: SET_BRAND_BUTTON_CLICK,
     brandButtonClick
+});
+
+export const setVueTrendingBrandClick = (vueTrendingBrandClick) => ({
+    type: SET_VUE_TRENDING_BRAND_CLICK,
+    vueTrendingBrandClick
 });

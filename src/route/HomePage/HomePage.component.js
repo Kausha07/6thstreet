@@ -85,7 +85,7 @@ class HomePage extends PureComponent {
   }
 
   renderDynamicContent() {
-    const { dynamicContent, gender, setLastTapItem } = this.props;
+    const { dynamicContent, vue_trending_brands = [],vue_trending_categories = [],gender, setLastTapItem } = this.props;
 
     return (
       <DynamicContent
@@ -93,6 +93,8 @@ class HomePage extends PureComponent {
         setLastTapItemOnHome={setLastTapItem}
         content={dynamicContent}
         renderMySignInPopup={this.showMyAccountPopup}
+        trendingBrands={vue_trending_brands}
+        trendingCategories={vue_trending_categories}
       />
     );
   }

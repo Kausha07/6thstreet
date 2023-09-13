@@ -68,6 +68,7 @@ import Event, {
   MOE_addEmail,
   MOE_addMobile,
 } from "Util/Event";
+import { setVueTrendingBrandsBannerActive } from "Store/MyAccount/MyAccount.action";
 
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -112,6 +113,7 @@ export const mapDispatchToProps = (dispatch) => ({
   goToPreviousHeaderState: () =>
     dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
   showError: (message) => dispatch(showNotification("error", message)),
+  setVueTrendingBrandsBannerActive: (isActive) =>  dispatch(setVueTrendingBrandsBannerActive(isActive)),
 });
 
 export class MyAccountOverlayContainer extends PureComponent {
@@ -254,6 +256,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
 
     if (isSignedIn !== prevIsSignedIn) {
+      this.props.setVueTrendingBrandsBannerActive(true);
       hideActiveOverlay();
       if (isCheckout) {
         goToPreviousHeaderState();

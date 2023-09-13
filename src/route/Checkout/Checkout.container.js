@@ -155,6 +155,9 @@ export const mapStateToProps = (state) => ({
   addressLoader: state.MyAccountReducer.addressLoader,
   eddResponse: state.MyAccountReducer.eddResponse,
   config: state.AppConfig.config,
+  addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
+  newAddressSaved: state.MyAccountReducer.newAddressSaved,
+  addressIDSelected: state.MyAccountReducer.addressIDSelected,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -651,9 +654,29 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   handleCheckoutGTM(isInitial = false) {
-    const { totals } = this.props;
+    const {
+      totals,
+      addNewAddressClicked,
+      newAddressSaved,
+      customer: { addresses },
+      addressIDSelected,
+      isSignedIn
+    } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
     const tempObj = JSON.stringify(initialTotals);
+
+    const selectedAddress = isSignedIn && addresses 
+      ? addressIDSelected
+        ? addressIDSelected
+        : addresses[0]?.id
+      : null;
+    const getDefaultShippingInfo = isSignedIn && selectedAddress && addresses ?  addresses.find(
+      (add) => add.id == selectedAddress
+    ) : null;
+    const defaultShippingSelected = isSignedIn && addresses  && 
+      typeof getDefaultShippingInfo?.default_shipping !== undefined
+        ? getDefaultShippingInfo?.default_shipping
+        : null;
     if (checkoutStep == BILLING_STEP) {
       localStorage.setItem("cartProducts", tempObj);
     }
@@ -662,6 +685,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         totals,
         step: this.getCheckoutStepNumber(),
         payment_code: null,
+        addressClicked: addNewAddressClicked,
+        newAddressAdded: isSignedIn ? newAddressSaved : true,
+        isDefaultAddressAdded: isSignedIn ? defaultShippingSelected : false,
       });
       if (this.getCheckoutStepNumber() == "2") {
         Event.dispatch(EVENT_GTM_CHECKOUT_BILLING);
