@@ -81,7 +81,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           posofreco: posofreco,
         },
       });
-      const productData = {...data, position:index};
+      const productData = {...data, position: posofreco + 1};
       Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, productData);
       this.props.setLastTapItemOnHome(`VeuSliderWrapper${index}`);
       setPDPData({}, {});

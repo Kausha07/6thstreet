@@ -52,6 +52,7 @@ class ProductImpressionEvent extends BaseEvent {
   handler(EVENT_TYPE, impressions = []) {
     const storage = this.getStorage();
     let isFilters = false;
+    console.log("impressions", impressions);
     const formattedImpressions = impressions.map(
       (
         {
@@ -67,6 +68,7 @@ class ProductImpressionEvent extends BaseEvent {
           list,
           product_Position,
           position,
+          productQueryID,
         },
         index
       ) => ({
@@ -79,13 +81,13 @@ class ProductImpressionEvent extends BaseEvent {
         brand: brand_name ? brand_name : "",
         category: product_type_6s || category || "",
         variant: color || "",
-        //list: list || "Recommendations",
-        list: "Category page",
+        list: list || "Others",
         position: product_Position
           ? product_Position
           : position
           ? position
           : index + 1 || "",
+        queryId: productQueryID ? productQueryID : null,
       })
     );
 

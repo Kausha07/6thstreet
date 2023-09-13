@@ -16,27 +16,46 @@ class PLPPage extends PureComponent {
     impressions: Products.isRequired,
   };
 
+  getPLPListName() {
+    const pageUrl = new URL(window.location.href);
+    if (pageUrl.pathname == "/catalogsearch/result/") {
+      const getSearchQuery = pageUrl.search.includes("&")
+        ? pageUrl.search.split("&")
+        : pageUrl.search;
+      const searchParameter = getSearchQuery[0]
+        ? getSearchQuery[0].replace("?q=", "")
+        : getSearchQuery.includes("?q=")
+        ? getSearchQuery.replace("?q=", "")
+        : getSearchQuery;
+      const formatSearchParam =
+        searchParameter && searchParameter.includes("+")
+          ? searchParameter.replaceAll("+", " ")
+          : searchParameter;
+      return `Search PLP - ${formatSearchParam}`;
+    } else if (pageUrl.pathname.includes(".html")) {
+      const pagePath = pageUrl.pathname.split(".html");
+      const pageName = pagePath[0] ? pagePath[0].replaceAll("/", " ") : "";
+      return `PLP -${pageName}`;
+    } else {
+      return null;
+    }
+  }
+
   sendProductImpression = (product) => {
     const { newActiveFilters = {}, activeFilters = {} } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
     gtmProdArr.push([product]);
     const product_numbers = isMobile.any() ? 4 : 6;
-    const pagePathName = new URL(window.location.href).pathname;
-    const getPageName =
-      pagePathName == "/catalogsearch/result/"
-        ? "Search Results"
-        : "Category Results";
-
     if (gtmProdArr.length > product_numbers - 1) {
       let clubbedProducts = gtmProdArr.slice(0, product_numbers);
       gtmProdArr.splice(0, product_numbers);
       let prodImpression = [];
       for (var i = 0; i < clubbedProducts.length; i++) {
         for (var j = 0; j < clubbedProducts[i].length; j++) {
-          let categorylistName = { list: getPageName };
+          let categoryListName = { list: this.getPLPListName() };
           let clubbedData = {
             ...clubbedProducts[i][j][0],
-            ...categorylistName,
+            ...categoryListName,
             isFilters: isFilters,
           };
           prodImpression.push(clubbedData);
@@ -48,9 +67,14 @@ class PLPPage extends PureComponent {
 
   renderProduct = (product, index, qid) => {
     const { sku } = product;
-    const { renderMySignInPopup, newActiveFilters = {}, activeFilters = {}, products } = this.props;
+    const {
+      renderMySignInPopup,
+      newActiveFilters = {},
+      activeFilters = {},
+      products,
+    } = this.props;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
-    const sendImpressionOnBundle = products.length > 5 ? false : true;
+    const sendImpressionOnBundle = products.length > 5 ? true : false;
     return (
       <ProductItem
         position={index}

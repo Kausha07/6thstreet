@@ -104,13 +104,20 @@ class ProductItem extends PureComponent {
       page,
       sendProductImpressionOnBundle,
     } = this.props;
-    if (page == "plp" && !sendProductImpressionOnBundle) {
-      sendProductImpression([product]);
+    const queryID = localStorage.getItem("queryID")
+      ? localStorage.getItem("queryID")
+      : null;
+    const productDataWithQueryID =
+      page == "plp" && queryID
+        ? { ...product, ...{ productQueryID: queryID } }
+        : product;
+    if (page == "plp" && sendProductImpressionOnBundle) {
+      sendProductImpression([productDataWithQueryID]);
     } else {
       const productData =
-        !product.product_Position && this.props?.position
-          ? { ...product, ...{ position: this.props?.position } }
-          : { ...product };
+        !productDataWithQueryID.product_Position && this.props?.position
+          ? { ...productDataWithQueryID, ...{ position: this.props?.position } }
+          : { ...productDataWithQueryID };
       Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [productData]);
     }
     this.setState({ impressionSent: true });
@@ -249,7 +256,7 @@ class ProductItem extends PureComponent {
       pageType,
       renderMySignInPopup,
       isFilters,
-      position
+      position,
     } = this.props;
     return (
       <WishlistIcon
@@ -407,7 +414,7 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const { 
+    const {
       product,
       pageType,
       removeFromWishlist,
