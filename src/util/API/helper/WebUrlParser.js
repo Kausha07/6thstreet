@@ -196,7 +196,7 @@ const Parser = {
           }
         });
         // appending updated categoryIds to the search params
-        url.searchParams.append(`categoryIds`, categoryIds.join(","));
+        url.searchParams.append(`dFR[categoryIds][0]`, categoryIds.join(","));
       }
     }
     // update the URL, preserve the state
