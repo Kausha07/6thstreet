@@ -26,7 +26,12 @@ import {
 import { TotalsType } from "Type/MiniCart";
 import { isSignedIn } from "Util/Auth";
 import history from "Util/History";
-import { EVENT_MOE_VIEW_BAG, EVENT_MOE_BEGIN_CHECKOUT, MOE_trackEvent } from "Util/Event";
+import Event, {
+  EVENT_MOE_VIEW_BAG,
+  EVENT_MOE_BEGIN_CHECKOUT,
+  MOE_trackEvent,
+  EVENT_GTM_CART,
+} from "Util/Event";
 import CartOverlay from "./CartOverlay.component";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
@@ -109,7 +114,7 @@ export class CartOverlayContainer extends PureComponent {
   }
 
   handleOosOverlay(currentState) {
-    this.setState({isOosOverlayShow: currentState})
+    this.setState({ isOosOverlayShow: currentState });
   }
 
   handleViewBagClick() {
@@ -118,6 +123,7 @@ export class CartOverlayContainer extends PureComponent {
       closePopup,
       isCheckoutAvailable,
       showNotification,
+      totals,
     } = this.props;
     MOE_trackEvent(EVENT_MOE_VIEW_BAG, {
       country: getCountryFromUrl().toUpperCase(),
@@ -126,6 +132,7 @@ export class CartOverlayContainer extends PureComponent {
       isLoggedIn: isSignedIn(),
       app6thstreet_platform: "Web",
     });
+    Event.dispatch(EVENT_GTM_CART, totals);
     hideActiveOverlay();
     closePopup();
     if (!isCheckoutAvailable) {

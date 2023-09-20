@@ -15,6 +15,13 @@ class GoogleTagManagerRouteWrapper extends PureComponent {
         const { route } = this.props;
 
         window.currentRouteName = route;
+        let prevScreen = "";
+        const currentScreen = sessionStorage.getItem("currentScreen") || null;
+        if (window.currentRouteName !== "url_rewrites") {
+            prevScreen = currentScreen;
+            sessionStorage.setItem("currentScreen", window.currentRouteName);
+            sessionStorage.setItem("prevScreen", prevScreen);
+        }
     }
 
     render() {

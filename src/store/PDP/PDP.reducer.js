@@ -6,7 +6,8 @@ import {
     SET_PDP_CLICK_AND_COLLECT,
     SET_DISPLAY_SEARCH,
     SET_BRAND_INFO_DATA,
-    SET_BRAND_BUTTON_CLICK
+    SET_BRAND_BUTTON_CLICK,
+    SET_VUE_TRENDING_BRAND_CLICK
 } from './PDP.action';
 
 export const getInitialState = () => ({
@@ -18,6 +19,7 @@ export const getInitialState = () => ({
     displaySearch: false,
     brandInfoData: '',
     brandButtonClick : false,
+    vueTrendingBrandClick: false
 });
 
 export const PDPReducer = (state = getInitialState(), action) => {
@@ -87,7 +89,15 @@ export const PDPReducer = (state = getInitialState(), action) => {
                 ...state,
                 brandButtonClick
             };
+
+        case SET_VUE_TRENDING_BRAND_CLICK:
+            const { vueTrendingBrandClick } = action;
     
+            return {
+                ...state,
+                vueTrendingBrandClick
+            };
+
         default:
             return state;
     }

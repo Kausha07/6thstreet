@@ -29,7 +29,7 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import { EVENT_MOE_VIEW_CART_ITEMS, MOE_trackEvent } from "Util/Event";
+import Event, { EVENT_MOE_VIEW_CART_ITEMS, MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MyAccountOverlay from "Component/MyAccountOverlay";
@@ -337,6 +337,23 @@ export class CartPage extends PureComponent {
 
   handleRemoveCode = (e) => {
     e.stopPropagation();
+    MOE_trackEvent(EVENT_REMOVE_COUPON, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      coupon_code: this.props?.totals?.coupon_code || "",
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: EVENT_REMOVE_COUPON,
+      coupon: this.props?.totals?.coupon_code || "",
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
     this.props.removeCouponFromCart();
   };
   getCouponModuleStatus = async () => {
@@ -389,6 +406,7 @@ export class CartPage extends PureComponent {
     const {
       totals: { coupon_code },
       couponsItems = [],
+      totals
     } = this.props;
     const isOpen = false;
     const { isArabic, isMobile, isLoading } = this.state;
@@ -461,15 +479,14 @@ export class CartPage extends PureComponent {
                     <span>Close</span>
                   </button>
                 </div>
-                {isMobile ? null : (
-                  <p>{__("Select a Promo or type a Coupon code")}</p>
-                )}
-                <div block="couponInputBox">
-                  <CartCoupon
-                    couponCode={coupon_code}
-                    closePopup={this.closeCouponPopup}
-                  />
-                </div>
+                  {isMobile ? (null) : (<p>{__("Select a Promo or type a Coupon code")}</p>)}
+                  <div block="couponInputBox">
+                      <CartCoupon
+                        couponCode={coupon_code}
+                        closePopup={this.closeCouponPopup}
+                        totals={totals}
+                      />
+                  </div>
                 <CartCouponList
                   couponCode={coupon_code}
                   closePopup={this.closeCouponPopup}

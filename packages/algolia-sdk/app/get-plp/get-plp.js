@@ -14,7 +14,6 @@ import {
   formatNewInTag,
   getAlgoliaFilters,
   getMasterAlgoliaFilters,
-  getAddtionalFacetsFilters,
   getCurrencyCode,
   getIndex,
   getMoreFacetFilters,
@@ -586,51 +585,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         maxValuesPerFacet: maxValuesPerFacet,
       },
     };
-    let initialFacetFilter = deepCopy(facetFilters);
-    let initialFilterArg;
-    let filterOption = [];
-    initialFacetFilter.map((entry, index) => {
-      if (
-        entry[0].split(":")[0].includes("categories.level") ||
-        entry[0].split(":")[0].includes("brand_name") ||
-        entry[0].split(":")[0].includes("gender")
-      ) {
-        filterOption[index] = entry[0].split(":")[0];
-      }
-    });
 
-    let isGender = false;
-    if (initialFacetFilter.length === 1) {
-      initialFilterArg = initialFacetFilter[0];
-    } else if (initialFacetFilter.length > 1) {
-      if (
-        filterOption.findIndex(
-          (element) => element && element.includes("categories.level")
-        ) !== -1
-      ) {
-        initialFilterArg = initialFacetFilter[0];
-      } else if (filterOption.includes("brand_name")) {
-        initialFilterArg =
-          initialFacetFilter[filterOption.indexOf("brand_name")];
-      } else if (filterOption.includes("gender")) {
-        initialFilterArg = initialFacetFilter[filterOption.indexOf("gender")];
-        isGender = true;
-      }
-    }
-    const additionalFacets = getAddtionalFacetsFilters(queryParams);
-    const queryCopy = {
-      params: {
-        ...newSearchParamsMoreFilters,
-        facetFilters: isGender ? [...additionalFacets] : [initialFilterArg, ...additionalFacets],
-        numericFilters,
-        query: q,
-        page,
-        hitsPerPage: limit,
-        clickAnalytics: true,
-        maxValuesPerFacet: maxValuesPerFacet,
-      },
-      indexName: indexName,
-    };
 
     let selectedFilterArr = [];
     let exceptFilter = ["page", "q", "sort", "discount", "visibility_catalog"];
@@ -727,7 +682,6 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         });
       });
     }
-    queries.push(queryCopy);
     client.search(queries, (err, res = {}) => {
       if (err) {
         return reject(err);
@@ -746,7 +700,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
 
       if (Object.values(res.results).length > 1) {
         Object.entries(res.results).map((result, index) => {
-          if (index > 2 && index < Object.values(res.results).length - 1) {
+          if (index > 2) {
             Object.entries(result[1].facets).map((entry) => {
               if( !isInfluencer || (entry[0] != "categories.level2" && isInfluencer) ) {
                 finalFiltersData.facets[[entry[0]]] = entry[1];

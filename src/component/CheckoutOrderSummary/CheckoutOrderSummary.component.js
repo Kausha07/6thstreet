@@ -12,11 +12,12 @@ import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import Image from "Component/Image";
-import { getCountryFromUrl } from "Util/Url/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import CartCouponList from "Component/CartCouponList";
 import CartCouponDetail from 'Component/CartCouponDetail';
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
 import { connect } from "react-redux";
+import Event, { MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
 import Delivery from "./icons/delivery-truck.png";
 
 import "./CheckoutOrderSummary.extended.style";
@@ -226,7 +227,24 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 
   handleRemoveCode = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
+    MOE_trackEvent(EVENT_REMOVE_COUPON, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      coupon_code: this.props?.totals?.coupon_code || "",
+      app6thstreet_platform: "Web",
+    });
+    const eventData = {
+      name: EVENT_REMOVE_COUPON,
+      coupon: this.props?.totals?.coupon_code || "",
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
     this.props.removeCouponFromCart()
   }
 
@@ -319,13 +337,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   renderCartCoupon() {
     const {
       totals: { coupon_code },
+      totals
     } = this.props;
 
     if (isMobile.any()) {
       return null;
     }
 
-    return <CartCoupon couponCode={coupon_code} />;
+    return <CartCoupon couponCode={coupon_code} totals={totals} />;
   }
 
   renderPromo() {

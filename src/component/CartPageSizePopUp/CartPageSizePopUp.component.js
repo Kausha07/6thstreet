@@ -141,7 +141,7 @@ const CartPageSizePopUp = (props) => {
         block="CartPage-SizeSelector"
         elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
         onClick={() => {
-          onSizeSelect({ target: { value: code }, label });
+          !isNotAvailable && onSizeSelect({ target: { value: code }, label });
         }}
       >
         <input
