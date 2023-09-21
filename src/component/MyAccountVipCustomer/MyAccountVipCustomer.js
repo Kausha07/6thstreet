@@ -86,7 +86,7 @@ export default function MyAccountVipCustomer() {
             block="MyAccountVIP"
             elem="Wrapper"
             mods={{ isArabic: isArabicState }}
-            dangerouslySetInnerHTML={{ __html: vipData || null }}
+            dangerouslySetInnerHTML={{ __html: vipData }}
           ></div>
         ) : null}
       </>

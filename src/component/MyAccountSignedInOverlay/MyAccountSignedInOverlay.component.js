@@ -304,11 +304,11 @@ export class MyAccountSignedInOverlay extends PureComponent {
   renderWrapper() {
     const { customer, IsVipCustomerEnabled } = this.props;
     const isVipCustomer =
-      customer && customer?.vipCustomer && IsVipCustomerEnabled ? true : false;
+      customer && customer?.vipCustomer && IsVipCustomerEnabled;
     return (
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
-        {this.renderClubLink()}
         {isVipCustomer && this.renderVipLink()}
+        {this.renderClubLink()}
         {this.renderMyAccountLink()}
         {this.renderReferralLink()}
         {this.renderOrderHistoryLink()}

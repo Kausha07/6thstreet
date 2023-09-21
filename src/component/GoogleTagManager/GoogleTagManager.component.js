@@ -456,6 +456,9 @@ class GoogleTagManager extends PureComponent {
     const uuid = BrowserDatabase.getItem("uuid")
       ? BrowserDatabase.getItem("uuid")
       : null;
+    const isVipCustomer =
+      isSignedIn() &&
+      this.props?.state?.MyAccountReducer?.customer?.vipCustomer ? true : false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
@@ -486,6 +489,7 @@ class GoogleTagManager extends PureComponent {
         ...(data?.CustomerID === undefined && {
           CustomerID: isCustomerID,
         }),
+        vip_customer: isVipCustomer || false,
         uuid: uuid,
       };
       this.addDataLayer({ ...data, ...additionalDetails });
