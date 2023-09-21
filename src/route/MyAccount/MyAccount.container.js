@@ -26,7 +26,7 @@ import {
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
-  REFERRAL_SCREEN
+  REFERRAL_SCREEN,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -47,6 +47,7 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -86,18 +87,25 @@ export const exchangeReturnState = {
     className: "",
   },
 };
-export const tabMap = {
+
+export const storeCreditState = {
   [STORE_CREDIT]: {
     url: "/storecredit/info",
     name: <StoreCredit />,
     alternativePageName: __("Balance"),
     linkClassName: "StoreCreditLink",
   },
+};
+
+export const clubApparelState = {
   [CLUB_APPAREL]: {
     url: "/club-apparel",
     name: __("Club Apparel Loyalty"),
     className: "MobileHide",
   },
+};
+
+export const tabMap = {
   [DASHBOARD]: {
     url: "/dashboard",
     name: __("My Profile"),
@@ -105,7 +113,7 @@ export const tabMap = {
   },
   [REFERRAL_SCREEN]: {
     url: "/referral",
-    name : __("Refer & Earn"),
+    name: __("Refer & Earn"),
     className: "ReferralTabLink",
   },
   [MY_ORDERS]: {
@@ -159,6 +167,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     newSignUpEnabled: PropTypes.bool,
     config: Config.isRequired,
     IsReferralEnabled: PropTypes.bool,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -185,10 +194,22 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   changeActiveTab(activeTab) {
-    const { history, is_exchange_enabled } = this.props;
+    const { history, is_exchange_enabled, isClubApparelEnabled } = this.props;
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     const {
       [activeTab]: { url },
     } = newTabMap;
@@ -196,20 +217,22 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { clubApparel } = props;
-    const { clubApparel: currentClubApparel } = state;
-    const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(
-      props,
-      state
-    );
-    if (clubApparel !== currentClubApparel) {
-      if (isNavigateToSelectedTab) {
-        return {
-          clubApparel,
-          ...MyAccountContainer.navigateToSelectedTab(props, state),
-        };
+    if (props?.isClubApparelEnabled) {
+      const { clubApparel } = props;
+      const { clubApparel: currentClubApparel } = state;
+      const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(
+        props,
+        state
+      );
+      if (clubApparel !== currentClubApparel) {
+        if (isNavigateToSelectedTab) {
+          return {
+            clubApparel,
+            ...MyAccountContainer.navigateToSelectedTab(props, state),
+          };
+        }
+        return { clubApparel };
       }
-      return { clubApparel };
     }
     return { ...MyAccountContainer.navigateToSelectedTab(props, state) };
   }
@@ -253,12 +276,25 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs, is_exchange_enabled } = this.props;
+    const { updateBreadcrumbs, is_exchange_enabled, isClubApparelEnabled } =
+      this.props;
     const { activeTab } = this.state;
     let finalTabMap;
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     if (activeTab === EXCHANGE_ITEM) {
       finalTabMap = exchangeTabMap[activeTab];
     } else {

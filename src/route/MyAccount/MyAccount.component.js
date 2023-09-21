@@ -43,6 +43,8 @@ import {
   returnState,
   tabMap,
   tabMap2,
+  storeCreditState,
+  clubApparelState,
 } from "./MyAccount.container";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
@@ -240,8 +242,8 @@ export class MyAccount extends SourceMyAccount {
         : key == "club-apparel"
         ? EVENT_ACCOUNT_CLUB_APPAREL_CLICK
         : key == "wallet-payments"
-        ? EVENT_ACCOUNT_PAYMENT_CLICK 
-        : key == "referral" 
+        ? EVENT_ACCOUNT_PAYMENT_CLICK
+        : key == "referral"
         ? EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK
         : "";
     if (MoeEvent) {
@@ -289,12 +291,25 @@ export class MyAccount extends SourceMyAccount {
       exchangeTabMap,
       is_exchange_enabled = false,
       customer,
-      IsReferralEnabled
+      IsReferralEnabled,
+      isClubApparelEnabled,
     } = this.props;
     const { pathname = "" } = location;
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     const { isArabic } = this.state;
 
     if (!isSignedIn) {
@@ -302,8 +317,8 @@ export class MyAccount extends SourceMyAccount {
       return history.push("/");
     }
 
-    if(!IsReferralEnabled){
-      delete tabMap[REFERRAL_SCREEN]
+    if (!IsReferralEnabled) {
+      delete tabMap[REFERRAL_SCREEN];
     }
     const TabContent = this.renderMap[activeTab];
     // eslint-disable-next-line no-unused-vars
@@ -346,13 +361,14 @@ export class MyAccount extends SourceMyAccount {
         </div>
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
-            name === ("Club Apparel Loyalty") || (name == __("Refer & Earn")) ? null : !isReturnButton ? (
-              <h1 block="MyAccount" elem="Heading">
-                {isCancel
-                  ? alternateName
-                  : alternativePageName || returnTitle || name}
-              </h1>
-            ) : (
+          name === "Club Apparel Loyalty" ||
+          name == __("Refer & Earn") ? null : !isReturnButton ? (
+            <h1 block="MyAccount" elem="Heading">
+              {isCancel
+                ? alternateName
+                : alternativePageName || returnTitle || name}
+            </h1>
+          ) : (
             <div block="MyAccount" elem="HeadingBlock">
               <h1 block="MyAccount" elem="Heading">
                 {isReturnButton
@@ -388,16 +404,29 @@ export class MyAccount extends SourceMyAccount {
       payload,
       is_exchange_enabled,
       config,
-      IsReferralEnabled
+      IsReferralEnabled,
+      isClubApparelEnabled,
     } = this.props;
 
     const { isArabic, isMobile } = this.state;
-    if(!IsReferralEnabled){
-      delete tabMap[REFERRAL_SCREEN]
+    if (!IsReferralEnabled) {
+      delete tabMap[REFERRAL_SCREEN];
     }
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isClubApparelEnabled && clubApparelState),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     const showProfileMenu =
       location.pathname.match("\\/my-account").input === "/my-account";
     let hiddenTabContent, hiddenTabList;
@@ -429,7 +458,9 @@ export class MyAccount extends SourceMyAccount {
     const firstname =
       customer && customer.firstname ? customer.firstname : null;
     const payloadKey = Object.keys(payload)[0];
-    const validateWhatsapp = config?.whatsapp_chatbot_phone ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/ig, "") : null;
+    const validateWhatsapp = config?.whatsapp_chatbot_phone
+      ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/gi, "")
+      : null;
     const whatsappChat = `https://wa.me/${validateWhatsapp}`;
     return (
       <ContentWrapper

@@ -17,6 +17,7 @@ export const mapStateToProps = (_state) => ({
     is_exchange_enabled: _state.AppConfig.is_exchange_enabled,
     newSignUpEnabled: _state.AppConfig.newSigninSignupVersionEnabled,
     IsReferralEnabled: _state.AppConfig.IsReferralEnabled,
+    isClubApparelEnabled: _state.AppConfig.isClubApparelEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -33,6 +34,7 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
         onHide: PropTypes.func.isRequired,
         newSignUpEnabled:PropTypes.bool,
         IsReferralEnabled:PropTypes.bool,
+        isClubApparelEnabled:PropTypes.bool
     };
 
     containerFunctions = {

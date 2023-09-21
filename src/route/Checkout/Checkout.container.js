@@ -158,6 +158,7 @@ export const mapStateToProps = (state) => ({
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
   newAddressSaved: state.MyAccountReducer.newAddressSaved,
   addressIDSelected: state.MyAccountReducer.addressIDSelected,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -170,6 +171,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     cartId: PropTypes.number.isRequired,
     updateTotals: PropTypes.func.isRequired,
     binModal: PropTypes.func.isRequired,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   containerFunctions = {

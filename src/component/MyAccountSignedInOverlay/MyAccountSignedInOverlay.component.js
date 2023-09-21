@@ -279,9 +279,10 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderWrapper() {
+    const {isClubApparelEnabled} = this.props;
     return (
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
-        {this.renderClubLink()}
+        {isClubApparelEnabled && this.renderClubLink()}
         {this.renderMyAccountLink()}
         {this.renderReferralLink() }
         {this.renderOrderHistoryLink()}

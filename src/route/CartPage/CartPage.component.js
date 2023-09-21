@@ -781,8 +781,8 @@ export class CartPage extends PureComponent {
   renderTotals() {
     const {
       totals: { extension_attributes },
+      isClubApparelEnabled
     } = this.props;
-
     if (isMobile.any()) {
       return (
         <article block="CartPage" elem="Summary">
@@ -802,7 +802,7 @@ export class CartPage extends PureComponent {
           </div>
 
           <div block="msiteBottomFixed">
-            {this.renderClubApparel()}
+            {isClubApparelEnabled && this.renderClubApparel()}
             {this.renderButtons()}
           </div>
         </article>
@@ -814,7 +814,7 @@ export class CartPage extends PureComponent {
         {this.renderTotal()}
         {this.renderButtons()}
         {this.renderYourOffers()}
-        {this.renderClubApparel()}
+        {isClubApparelEnabled &&this.renderClubApparel()}
       </article>
     );
   }
@@ -885,7 +885,7 @@ export class CartPage extends PureComponent {
     const {
       totals: {
         currency_code,
-        extension_attributes: { club_apparel_estimated_pointsvalue },
+        extension_attributes
       },
       clubApparel: { accountLinked },
       isSignedIn,
@@ -896,7 +896,7 @@ export class CartPage extends PureComponent {
       return <CmsBlock identifier={cart_cms} />;
     }
 
-    if (!club_apparel_estimated_pointsvalue) {
+    if (!extension_attributes?.club_apparel_estimated_pointsvalue) {
       return null;
     }
 
@@ -912,7 +912,7 @@ export class CartPage extends PureComponent {
 
           <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
             {__("You may earn ")}
-            <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
+            <span>{`${currency_code} ${extension_attributes?.club_apparel_estimated_pointsvalue} `}</span>
             {__("worth of Club Apparel points for this purchase.")}
           </div>
         </div>
@@ -931,7 +931,7 @@ export class CartPage extends PureComponent {
 
           <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
             {__("Link your Club Apparel Account to earn ")}
-            <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
+            <span>{`${currency_code} ${extension_attributes?.club_apparel_estimated_pointsvalue} `}</span>
             {__("worth of points for this purchase. ")}
             <Link
               block="CartPage"
@@ -957,7 +957,7 @@ export class CartPage extends PureComponent {
 
         <div block="CartPage" elem="ClubApparelText" mods={{ isArabic }}>
           {__("Link your Club Apparel Account to earn ")}
-          <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
+          <span>{`${currency_code} ${extension_attributes?.club_apparel_estimated_pointsvalue} `}</span>
           {__("worth of points for this purchase.")}
         </div>
       </div>
@@ -983,9 +983,7 @@ export class CartPage extends PureComponent {
     } = this.props;
 
     if (extension_attributes) {
-      const { club_apparel_estimated_pointsvalue } = extension_attributes;
-
-      return club_apparel_estimated_pointsvalue !== 0 ? (
+      return extension_attributes?.club_apparel_estimated_pointsvalue !== 0 ? (
         <div block="CartPage" elem="ClubApparel">
           {this.renderClubApparelContent()}
         </div>

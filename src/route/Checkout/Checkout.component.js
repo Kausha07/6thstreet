@@ -74,6 +74,7 @@ export class Checkout extends SourceCheckout {
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
     isClickAndCollect: PropTypes.string.isRequired,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   state = {
@@ -360,6 +361,7 @@ export class Checkout extends SourceCheckout {
       removeCouponFromCart,
       couponLists,
       applyCouponToCart,
+      isClubApparelEnabled
     } = this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
     if (!areTotalsVisible) {
@@ -377,6 +379,7 @@ export class Checkout extends SourceCheckout {
         removeCouponFromCart={removeCouponFromCart}
         couponLists={couponLists}
         applyCouponToCart={applyCouponToCart}
+        isClubApparelEnabled={isClubApparelEnabled}
       />
     );
   }
@@ -454,6 +457,7 @@ export class Checkout extends SourceCheckout {
       setBillingStep,
       isClickAndCollect,
       addresses,
+      isClubApparelEnabled
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
@@ -502,6 +506,7 @@ export class Checkout extends SourceCheckout {
           removeCouponFromCart={removeCouponFromCart}
           couponLists={couponLists}
           applyCouponToCart={applyCouponToCart}
+          isClubApparelEnabled={isClubApparelEnabled}
         />
       </>
     );
