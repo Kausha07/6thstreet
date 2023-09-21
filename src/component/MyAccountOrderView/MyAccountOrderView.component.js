@@ -951,7 +951,7 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
-            {fulfilled_from === "Local" &&
+            {(fulfilled_from === "Local" || fulfilled_from === null) &&
               this.renderPriceLine(shipping_amount, __("Shipping"), {
                 divider: true,
               })}
