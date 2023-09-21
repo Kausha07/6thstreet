@@ -165,6 +165,7 @@ class HeaderAccount extends PureComponent {
       isFooter,
       newSignUpEnabled,
       showNudge,
+      IsVipCustomerEnabled,
     } = this.props;
     if (isBottomBar) {
       return;
@@ -174,6 +175,10 @@ class HeaderAccount extends PureComponent {
       isSignedIn && customer && customer.firstname && customer.lastname
         ? `${customer.firstname} ${customer.lastname}`
         : __("Login/Register");
+    const isVip =
+      isSignedIn && customer && customer?.vipCustomer && IsVipCustomerEnabled
+        ? true
+        : false;
     const sendGTMEvent = () => {
       if (newSignUpEnabled) {
         const eventData = {
@@ -212,7 +217,7 @@ class HeaderAccount extends PureComponent {
         <button
           block="HeaderAccount"
           elem="Button"
-          mods={{ isArabic: this._isArabic, isFooter }}
+          mods={{ isArabic: this._isArabic, isFooter, isVip }}
           onClick={() => {
             isFooter && isSignedIn
               ? this.redirectToAccount()

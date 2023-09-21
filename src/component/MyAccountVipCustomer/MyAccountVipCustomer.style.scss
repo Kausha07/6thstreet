@@ -1,0 +1,264 @@
+.MyAccountVIPScreen {
+  margin-bottom: 70px;
+  overflow: hidden;
+  @include mobile {
+    background: linear-gradient(180deg, #41019b 0%, #2a0167 100%);
+    margin: 0 -10px;
+    padding-bottom: 60px;
+  }
+  .MyAccountVIP-Wrapper {
+    .Image {
+      background: transparent;
+    }
+
+    .MyAccountVIPContainer {
+      background: linear-gradient(180deg, #41019b 0%, #2a0167 100%);
+      padding: 60px 100px;
+      overflow: hidden;
+      @include mobile {
+        background: transparent;
+        padding: 40px 20px 25px;
+      }
+      .Logo {
+        &-Wrapper {
+          text-align: center;
+        }
+        &-prefix {
+          max-width: 60px;
+          margin: auto;
+        }
+        &-Images {
+          display: inline-block;
+          position: relative;
+          padding: 0 40px;
+        }
+        &-Container {
+          padding: 10px 0 10px;
+          p {
+            color: #fff;
+            margin-top: 5px;
+            line-height: 36px;
+            font-weight: 400;
+            font-size: 18px;
+          }
+          .Image {
+            &.Logo {
+              margin-right: auto;
+              margin-left: auto;
+              padding: 10px 0 0;
+              img {
+                max-width: 165px;
+                position: relative;
+              }
+            }
+            &.vip {
+              position: absolute;
+              top: 0;
+              right: 0;
+              width: auto;
+              max-width: 40px;
+            }
+          }
+        }
+      }
+      .Content-Wrapper {
+        display: flex;
+        width: 100%;
+        margin: auto;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        @include mobile {
+          padding: 25px 20px;
+          background: #2d0c60;
+          border: 1px solid #3a1177;
+          margin-top: 20px;
+        }
+        & > h4 {
+          display: none;
+          width: 100%;
+          background: linear-gradient(180deg, #fce392 0%, #cba245 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-size: 18px;
+          letter-spacing: 1.3px;
+          @include mobile {
+            display: block;
+            margin-bottom: 10px;
+          }
+        }
+        .Highlight-Block {
+          flex: 0 0 48%;
+          text-align: center;
+          color: #fff;
+          background-color: #2d0c60;
+          border: 1px solid #3a1177;
+          margin: 25px 0 0;
+          padding: 25px;
+          @include mobile {
+            border: 1px solid transparent;
+            background: transparent;
+            flex: 0 0 100%;
+            text-align: left;
+            display: flex;
+            padding: 0;
+            margin: 15px 0;
+            align-items: center;
+          }
+          h4 {
+            font-size: 16px;
+            line-height: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            @include mobile {
+              margin: 5px 0 8px;
+              font-size: 15px;
+            }
+          }
+          p {
+            font-size: 14px;
+            line-height: 17px;
+            margin-bottom: 10px;
+          }
+          .Image {
+            @include mobile {
+              flex: 0 0 17%;
+            }
+            img {
+              width: auto !important;
+              max-width: 100%;
+              @include mobile {
+                height: auto !important;
+              }
+            }
+          }
+          .content {
+            @include mobile {
+              flex: 0 0 80%;
+              margin-left: 12px;
+            }
+          }
+        }
+      }
+    }
+    &_isArabic{
+      .MyAccountVIPContainer{
+        .Content-Wrapper {
+          .Highlight-Block{
+            text-align: right;
+            .content{
+              @include mobile{
+                margin-right: 12px;
+                margin-left: auto;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .faq-Container {
+    margin: 20px 0;
+    overflow: hidden;
+    @include mobile {
+      margin: 0 10px;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      line-height: 16px;
+      @include mobile {
+        color: #fff;
+      }
+    }
+    .Accordion {
+      padding: 15px 0;
+      border-bottom: 1px solid #eaeaea;
+      font-size: 13px;
+      line-height: 17px;
+      @include mobile {
+        border-bottom: 1px solid #4d4d4d;
+      }
+      p {
+        font-size: 13px;
+        line-height: 18px;
+        margin-top: 5px;
+      }
+      a {
+        color: #000;
+        text-decoration: underline;
+        @include mobile {
+          color: #fff;
+        }
+      }
+      .Accordion-Heading {
+        h2 {
+          &.vipHeading {
+            color: #000;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 19px;
+            margin: 0;
+            letter-spacing: 0;
+            cursor: pointer;
+
+            text-transform: none;
+
+            @include mobile {
+              color: #fff;
+            }
+          }
+        }
+        .Accordion-Expand {
+          transform: rotate(90deg);
+          width: 45px;
+          @include mobile {
+            width: 50px;
+            svg {
+              path {
+                fill: #fff;
+              }
+            }
+          }
+          height: auto;
+          &_isExpanded {
+            transform: rotate(0deg);
+          }
+        }
+      }
+      &_isExpanded {
+        @include mobile {
+          color: #fff;
+        }
+        .Accordion-Heading {
+          padding-bottom: 5px;
+        }
+      }
+    }
+    &_isArabic {
+      .customerSupport {
+        .vip_customerCare {
+          li {
+            padding-left: 0;
+            padding-right: 3.25rem;
+            &:before {
+              left: auto;
+              right: 1em;
+              padding-left: 1.1225em;
+              padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  .customerSupport {
+    margin: 5px 0 0;
+    .vip_customerCare {
+      overflow: hidden;
+      li {
+        margin: 15px 0;
+      }
+    }
+  }
+}

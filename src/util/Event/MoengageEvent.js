@@ -40,3 +40,9 @@ export const MOE_destroySession = () => {
     Moengage.destroy_session();
   }
 };
+
+export const MOE_vipCustomer = (value) => {
+  if (MoEngage.moe && window.Moengage) {
+    Moengage.add_user_attribute("vip_customer", value);
+  }
+};

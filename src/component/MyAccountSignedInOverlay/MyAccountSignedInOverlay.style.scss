@@ -56,7 +56,14 @@
       border-radius: 2px;
     }
   }
-
+  &-vipLink{
+    .MyAccountSignedInOverlay{
+      &-Image{
+        width: 25px;
+        margin-right: 5px;
+      }
+    }
+  }
   &-Image {
     height: 0;
     display: inline-block;

@@ -218,6 +218,14 @@
           background-image: url(./icons/settings.png);
         }
       }
+      &_vip{
+        &:before {
+          background-image: url(./icons/vip.png);
+          max-width: 23px;
+          background-size: contain;
+          margin-top: 7px;
+        }
+      }
     }
   }
 
@@ -292,7 +300,12 @@
             left: 0;
           }
         }
-
+        &-Button_tabImageId_vip{
+          &:before{
+            margin-top: 5px;
+            right: 13px !important;
+          }
+        }
         &:first-child {
           button {
             padding: 10px;
