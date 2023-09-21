@@ -88,17 +88,8 @@
           &.HeaderAccount-Button_isArabic{
             label{
               &:after{
-                right: 7px;
-                left: auto;
+                right: -25px;
               }
-            }
-          }
-        }
-        &_isFooter {
-          label {
-            &:after {
-              left: 15px;
-              right: auto;
             }
           }
         }

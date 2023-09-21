@@ -58,7 +58,7 @@ export class Accordion extends PureComponent {
           block="Accordion"
           elem="Expand"
           mods={{ isExpanded, isArabic: isArabic(), isVipAccordion }}
-          onClick={!isVipAccordion ? this.toggleAccordion : null}
+          onClick={this.toggleAccordion}
         >
           {isExpanded ? MyAccountSection ? (
             <Minus alt={`Expand ${title}`} />) : (<ChevronUp alt={`Expand ${title}`} />

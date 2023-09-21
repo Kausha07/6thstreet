@@ -140,13 +140,13 @@
         }
       }
     }
-    &_isArabic{
-      .MyAccountVIPContainer{
+    &_isArabic {
+      .MyAccountVIPContainer {
         .Content-Wrapper {
-          .Highlight-Block{
+          .Highlight-Block {
             text-align: right;
-            .content{
-              @include mobile{
+            .content {
+              @include mobile {
                 margin-right: 12px;
                 margin-left: auto;
               }
@@ -257,7 +257,8 @@
     .vip_customerCare {
       overflow: hidden;
       li {
-        margin: 15px 0;
+        margin: 10px 0;
+        font-size: 13px;
       }
     }
   }

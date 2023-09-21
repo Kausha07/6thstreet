@@ -224,6 +224,9 @@
           max-width: 23px;
           background-size: contain;
           margin-top: 7px;
+          @include mobile{
+            max-width: 25px;
+          }
         }
       }
     }
