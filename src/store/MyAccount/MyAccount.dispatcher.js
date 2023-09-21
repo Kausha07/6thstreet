@@ -57,7 +57,8 @@ import Event, {
   VUE_PAGE_VIEW,
   MOE_AddUniqueID,
   MOE_destroySession,
-  MOE_vipCustomer,
+  MOE_addUserAttribute,
+  VIP_CUSTOMER,
 } from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
@@ -456,9 +457,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       MOE_AddUniqueID(user?.email);
     }
     if (vipCustomer) {
-      MOE_vipCustomer(true);
+      MOE_addUserAttribute(VIP_CUSTOMER, true);
     } else {
-      MOE_vipCustomer(false);
+      MOE_addUserAttribute(VIP_CUSTOMER, false);
     }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
@@ -514,9 +515,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
     if (vipCustomer) {
-      MOE_vipCustomer(true);
+      MOE_addUserAttribute(VIP_CUSTOMER, true);
     } else {
-      MOE_vipCustomer(false);
+      MOE_addUserAttribute(VIP_CUSTOMER, false);
     }
     dispatch(setCartId(null));
     dispatch(setUserIdForVueTrendingBrands(id));
