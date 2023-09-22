@@ -457,9 +457,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const topTierAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "top_tier_customer"
     );
-    const vipCustomer = topTierAttribute[0]?.value
-      ? topTierAttribute[0]?.value
-      : false;
+    const vipCustomer =
+      topTierAttribute[0] && topTierAttribute[0]?.value == 1
+        ? topTierAttribute[0]?.value
+        : "";
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
@@ -515,9 +516,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const topTierAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "top_tier_customer"
     );
-    const vipCustomer = topTierAttribute[0]?.value
-      ? topTierAttribute[0]?.value
-      : false;
+    const vipCustomer =
+      topTierAttribute[0] && topTierAttribute[0]?.value == 1
+        ? topTierAttribute[0]?.value
+        : "";
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
@@ -601,7 +603,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       ({ attribute_code }) => attribute_code === "top_tier_customer"
     );
     const { value: vipCustomer } =
-      topTierAttribute && topTierAttribute[0]
+      topTierAttribute && topTierAttribute[0]?.value == 1
         ? topTierAttribute[0]
         : { value: "" };
     setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
