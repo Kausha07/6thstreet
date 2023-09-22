@@ -246,6 +246,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const getPhoneNumberFromCookie = getCookie("customerPrimaryPhone")
           ? getCookie("customerPrimaryPhone")
           : null;
+        const isVipCustomer = getCookie("isTopTierCustomer")
+          ? getCookie("isTopTierCustomer")
+          : null;
         dispatch(
           updateCustomerDetails({
             ...stateCustomer,
@@ -253,6 +256,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
+            ...(isVipCustomer && {
+              vipCustomer: isVipCustomer,
+            })
           }),
         );
         BrowserDatabase.setItem(
@@ -262,6 +268,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
+            ...(isVipCustomer && {
+              vipCustomer: isVipCustomer,
+            })
           },
           CUSTOMER,
           ONE_MONTH_IN_SECONDS,
@@ -322,6 +331,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     localStorage.removeItem("RmaId");
     BrowserDatabase.deleteItem("TT_Data");
     setCrossSubdomainCookie("customerPrimaryPhone", "", 1, true);
+    setCrossSubdomainCookie("isTopTierCustomer", "", 1, true);
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
@@ -593,8 +603,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     const { value: vipCustomer } =
       topTierAttribute && topTierAttribute[0]
         ? topTierAttribute[0]
-        : { value: false };
+        : { value: "" };
     setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
+    setCrossSubdomainCookie("isTopTierCustomer", vipCustomer, "30");
     dispatch(
       updateCustomerDetails({
         ...customer,
