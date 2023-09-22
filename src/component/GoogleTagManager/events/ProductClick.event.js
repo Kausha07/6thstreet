@@ -58,7 +58,7 @@ class ProductClickEvent extends BaseEvent {
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
         click: {
-          actionField: { list: "Category page" },
+          actionField: { list: product.listName ? product.listName : "Others" },
           products: [
             {
               name: product.name ? product.name : "",
