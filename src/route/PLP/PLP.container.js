@@ -1081,7 +1081,12 @@ export class PLPContainer extends PureComponent {
 
   appendSchemaData() {
     const { pages } = this.props;
-    const productsList = pages[0];
+    let productsList = [];
+    for (const key in pages) {
+      if (pages.hasOwnProperty(key)) {
+        productsList = [...productsList, ...pages[key]];
+      }
+    }
     const formattedImpressions = productsList.map(
       ({ url, name, thumbnail_url, price, brand_name }) => ({
         "@type": "Product",
