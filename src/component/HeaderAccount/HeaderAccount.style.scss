@@ -93,6 +93,14 @@
             }
           }
         }
+        &_isFooter {
+          label {
+            &:after {
+              left: 15px;
+              right: auto;
+            }
+          }
+        }
       }
       
       
