@@ -600,7 +600,7 @@ class PDPAddToCart extends PureComponent {
   }
   renderAppParity() {
     const {
-      product: { brand_name = "" },
+      product: { brand_name = "", international_vendor = "" },
     } = this.props;
 
     if (
@@ -611,6 +611,20 @@ class PDPAddToCart extends PureComponent {
         <div block="AppParity">
           <p block="AppParity" elem="Text">
             {__("Select a size up for the right fit")}
+          </p>
+        </div>
+      );
+    }
+
+    if (
+      brand_name.toString().toLowerCase() === "boohoo" ||
+      brand_name.toString().toLowerCase() === "بوهو" ||
+      international_vendor === "boohoo_uk"
+    ) {
+      return (
+        <div block="AppParity">
+          <p block="AppParity" elem="Text">
+            {__("This brand follows UK sizing standards")}
           </p>
         </div>
       );
