@@ -62,7 +62,6 @@ class HomePage extends PureComponent {
   }
   componentDidUpdate() {
     const DynamicContent = document.getElementsByClassName("DynamicContent")[0];
-    this.renderMetaData();
     if (DynamicContent) {
       const { children = [] } = DynamicContent;
       const { href } = location;
