@@ -38,6 +38,8 @@ import refine from "./icons/refine.svg";
 import Line from "./icons/Line.svg";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
@@ -406,6 +408,44 @@ export class PLP extends PureComponent {
     return newActiveFilters;
   };
 
+  renderMetaContent() {
+    const { pages, brandName, brandImg, gender } = this.props;
+    const getCategory = BrowserDatabase.getItem("CATEGORY_CURRENT")
+      ? BrowserDatabase.getItem("CATEGORY_CURRENT")
+      : null;
+    const handleCategory =
+      getCategory && getCategory.includes("///")
+        ? getCategory.split("///").pop()
+        : getCategory;
+    const category = handleCategory ? handleCategory.trim() : null;
+    const imageUrl = () => {
+      if (brandImg) {
+        return brandImg;
+      } else if (
+        pages &&
+        pages[0] &&
+        pages[0].length > 0 &&
+        pages[0][0]?.thumbnail_url
+      ) {
+        return pages[0][0]?.thumbnail_url;
+      } else {
+        return null;
+      }
+    };
+    const image = this.state.bannerData?.image_url
+      ? this.state.bannerData.image_url
+      : imageUrl();
+    const altText = brandName
+      ? brandName
+      : category
+      ? category
+      : `${gender} products`;
+
+    if (image) {
+      return renderDynamicMetaTags(image, altText);
+    }
+  }
+
   getFilterCount() {
     // const { activeFilters = {} } = this.props;
     let activeFilters = this.getActiveFilter();
@@ -556,6 +596,7 @@ export class PLP extends PureComponent {
     ) {
       return (
         <main block="PLP" id="plp-main-scroll-id">
+          {this.renderMetaContent()}
           <ContentWrapper label={__("Product List Page")}>
             {this.renderMySignInPopup()}
             {this.renderPLPDetails()}

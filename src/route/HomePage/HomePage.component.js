@@ -11,7 +11,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import "./HomePage.style";
-
+import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 class HomePage extends PureComponent {
   constructor(props) {
     super(props);
@@ -59,7 +59,7 @@ class HomePage extends PureComponent {
   }
   componentDidUpdate() {
     const DynamicContent = document.getElementsByClassName("DynamicContent")[0];
-
+    this.renderMetaData();
     if (DynamicContent) {
       const { children = [] } = DynamicContent;
       const { href } = location;
@@ -127,6 +127,12 @@ class HomePage extends PureComponent {
     );
   }
 
+  renderMetaData() {
+    const { imageUrl } = this.props;
+    const altText = "6thStreet Banner";
+    return renderDynamicMetaTags(imageUrl, altText);
+  }
+
   renderContent() {
     const { isLoading } = this.props;
 
@@ -139,11 +145,14 @@ class HomePage extends PureComponent {
 
   render() {
     return (
-      <main block="HomePage">
-        {this.renderMySignInPopup()}
-        <SignInSignUpMobileNudge />
-        {this.renderContent()}
-      </main>
+      <>
+        {this.renderMetaData()}
+        <main block="HomePage">
+          {this.renderMySignInPopup()}
+          <SignInSignUpMobileNudge />
+          {this.renderContent()}
+        </main>
+      </>
     );
   }
 }

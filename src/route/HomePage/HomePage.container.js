@@ -89,6 +89,7 @@ export class HomePageContainer extends PureComponent {
     firstLoad: true,
     vueBrandsNumOfResults: 10,
     vueCategoriesNumOfResults: 10,
+    imageUrl: "",
   };
 
   constructor(props) {
@@ -191,6 +192,22 @@ export class HomePageContainer extends PureComponent {
         element.scrollIntoView({ behavior: "smooth" });
       }, 10);
     }
+  }
+
+  getMainBannerForMeta() {
+    const { dynamicContent } = this.state;
+
+    for (const banners of dynamicContent) {
+      if (
+        banners.type === "fullWidthBannerSlider" &&
+        banners.items?.[0] &&
+        banners.items?.[0]?.url
+      ) {
+        this.setState({imageUrl: banners.items?.[0]?.url})
+        return;
+      }
+    }
+    return;
   }
 
   setDefaultGender() {
@@ -363,7 +380,7 @@ export class HomePageContainer extends PureComponent {
           dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
           isLoading: false,
         });
-
+        this.getMainBannerForMeta();
         dynamicContent?.map((e) => {
           const { type } = e;
           if (type === "vue_brands_for_you") {
@@ -400,12 +417,13 @@ export class HomePageContainer extends PureComponent {
 
   containerProps = () => {
     const { gender } = this.props;
-    const { dynamicContent, isLoading } = this.state;
+    const { dynamicContent, isLoading,imageUrl } = this.state;
 
     return {
       dynamicContent,
       isLoading,
       gender,
+      imageUrl
     };
   };
 
@@ -414,7 +432,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
-    const { trendingBrands = [], trendingCategories = [] } = this.state
+    const { trendingBrands = [], trendingCategories = [] } = this.state;
     if (this.props.gender === "influencer") {
       return <Influencer />;
     }
