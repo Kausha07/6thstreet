@@ -37,7 +37,13 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 import RangeSlider from "Component/RangeSlider/RangeSlider";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds, getIsOptionVisible, getAttributeName } from "./utils/FieldMultiselect.helper";
+import {
+  getSelectedCategoryLevelOneFilter,
+  getActiveFiltersIds,
+  getIsOptionVisible,
+  getAttributeName,
+  getLevelsFromCategoryKey,
+} from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -90,6 +96,7 @@ class FieldMultiselect extends PureComponent {
       sizeDropDownKey: "",
       showMore: false,
       showLess: false,
+      isVisible: true,
     };
     this.toggleOptionList = this.toggleOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
@@ -532,23 +539,91 @@ class FieldMultiselect extends PureComponent {
       filter,
       filters,
       newActiveFilters,
+      isBrandPLP,
+      queryParams,
     } = this.props;
     let categoryLevelData = [];
     const { searchFacetKey, searchKey, searchList } = this.state;
     const selectCategoryLevelOneFilter = getSelectedCategoryLevelOneFilter(filters);
     const activeFiltersIds = getActiveFiltersIds(newActiveFilters);
   
-    Object.entries(data).map((entry) => {
-      if (
-        (selectCategoryLevelOneFilter &&
-          selectCategoryLevelOneFilter === entry[0]) ||
-        selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
-      ) {
-        Object.entries(entry[1].subcategories).map((subEntry) => {
-          categoryLevelData.push(subEntry[1]);
-        });
-      }
-    });
+    if (isBrandPLP) {
+      Object.entries(data).map((entry) => {
+        const newEntry = {
+          ...entry[1],
+          sub_subcategories: entry[1]?.subcategories,
+        };
+        categoryLevelData.push(newEntry);
+      });
+    } else {
+        if (
+          selectCategoryLevelOneFilter != "noMatchForCategoryLevelOne"
+        ) {
+            if (data[selectCategoryLevelOneFilter]) {
+              Object.entries(data[selectCategoryLevelOneFilter].subcategories).map((subEntry) => {
+                categoryLevelData.push(subEntry[1]);
+              });
+            }
+        } else if (
+          selectCategoryLevelOneFilter === "noMatchForCategoryLevelOne"
+        ) {
+          const isLevelTwo =
+            queryParams && queryParams[`categories.level2`] ? true : false;
+          const isLevelThree =
+            queryParams && queryParams[`categories.level3`] ? true : false;
+
+          if (isLevelTwo) {
+            const { l1, l2 } = getLevelsFromCategoryKey(
+              queryParams[`categories.level2`]
+            );
+
+            if (
+              data &&
+              data[l1] &&
+              data[l1].subcategories &&
+              data[l1].subcategories[l2]
+            ) {
+              Object.entries(data[l1].subcategories[l2].sub_subcategories).map(
+                (subSubEntry) => {
+                  categoryLevelData.push(subSubEntry[1]);
+                }
+              );
+            }
+          } else if (isLevelThree) {
+            const { l1, l2, l3 } = getLevelsFromCategoryKey(
+              queryParams[`categories.level3`]
+            );
+
+            if (
+              data &&
+              data[l1] &&
+              data[l1].subcategories &&
+              data[l1].subcategories[l2] &&
+              data[l1].subcategories[l2].sub_subcategories &&
+              data[l1].subcategories[l2].sub_subcategories[l3]
+            ) {
+              Object.entries(
+                data[l1].subcategories[l2].sub_subcategories[l3]
+                  .sub_subcategories
+              ).map((subSubEntry) => {
+                const newEntry = {
+                  ...subSubEntry[1],
+                  sub_subcategories: {},
+                };
+                categoryLevelData.push(newEntry);
+              });
+            }
+          } else {
+            Object.entries(data).map((entry) => {
+              const newEntry = {
+                ...entry[1],
+                sub_subcategories: entry[1]?.subcategories,
+              };
+              categoryLevelData.push(newEntry);
+            });
+          }
+        }
+    }
 
     if (isSearch) {
       categoryLevelData = Object.values(searchList);
@@ -556,6 +631,9 @@ class FieldMultiselect extends PureComponent {
     categoryLevelData.sort((a, b) =>
       a.isDropdown === b.isDropdown ? 0 : a.isDropdown ? -1 : 1
     );
+    if(categoryLevelData.length === 0){
+      this.setState({ isVisible: false})
+    }
     if (categoryLevelData.length > 0) {
       return (
         <>
@@ -1116,7 +1194,7 @@ class FieldMultiselect extends PureComponent {
   };
 
   renderMultiselectContainer() {
-    const { toggleOptionsList, isArabic } = this.state;
+    const { toggleOptionsList, isArabic, isVisible } = this.state;
     const {
       placeholder,
       isHidden,
@@ -1186,7 +1264,7 @@ class FieldMultiselect extends PureComponent {
       <div
         ref={this.filterDropdownRef}
         block="FieldMultiselect"
-        mods={{ isHidden }}
+        mods={{ isHidden: isVisible ? isHidden : true }}
       >
         {!isMobile.any() && (
           <button
