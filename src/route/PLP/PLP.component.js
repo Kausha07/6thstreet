@@ -40,6 +40,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { renderDynamicMetaTags } from "Util/Meta/metaTags";
+import { Helmet } from "react-helmet";
 export const mapStateToProps = (state) => ({
   prevPath: state.PLP.prevPath,
 });
@@ -583,7 +584,8 @@ export class PLP extends PureComponent {
 
   render() {
     const { isArabic, isSortByOverlayOpen } = this.state;
-    const { pages, isLoading } = this.props;
+    const { pages, isLoading, schemaData } = this.props;
+
     if (
       !isLoading &&
       (!pages["0"] || pages["0"].length === 0 || pages.undefined)
@@ -597,6 +599,13 @@ export class PLP extends PureComponent {
       return (
         <main block="PLP" id="plp-main-scroll-id">
           {this.renderMetaContent()}
+          {schemaData !== {} && (
+            <Helmet>
+              <script type="application/ld+json">
+                {JSON.stringify(schemaData)}
+              </script>
+            </Helmet>
+          )}
           <ContentWrapper label={__("Product List Page")}>
             {this.renderMySignInPopup()}
             {this.renderPLPDetails()}
