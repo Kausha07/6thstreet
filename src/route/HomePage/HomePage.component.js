@@ -11,6 +11,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import "./HomePage.style";
+import { Helmet } from "react-helmet";
 
 class HomePage extends PureComponent {
   constructor(props) {
@@ -84,6 +85,21 @@ class HomePage extends PureComponent {
     }
   }
 
+  appendSchemaData() {
+    const pageUrl = new URL(window.location.href);
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      url: `${pageUrl.origin}/`,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${pageUrl.origin}/catalogsearch/result/?q={search_term_string}&utm_source=google_search_action&utm_medium=organic`,
+        "query-input": "required name=search_term_string",
+      },
+    };
+    return JSON.stringify(schemaData);
+  }
+
   renderDynamicContent() {
     const { dynamicContent, vue_trending_brands = [],vue_trending_categories = [],gender, setLastTapItem } = this.props;
 
@@ -139,11 +155,16 @@ class HomePage extends PureComponent {
 
   render() {
     return (
-      <main block="HomePage">
-        {this.renderMySignInPopup()}
-        <SignInSignUpMobileNudge />
-        {this.renderContent()}
-      </main>
+      <>
+        <Helmet>
+          <script type="application/ld+json">{this.appendSchemaData()}</script>
+        </Helmet>
+        <main block="HomePage">
+          {this.renderMySignInPopup()}
+          <SignInSignUpMobileNudge />
+          {this.renderContent()}
+        </main>
+      </>
     );
   }
 }
