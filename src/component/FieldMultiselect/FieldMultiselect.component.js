@@ -296,6 +296,8 @@ class FieldMultiselect extends PureComponent {
         defaultFilters={defaultFilters}
         toggleOptionList={this.toggleOptionList}
         OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
+        isLoadingFilter={this.props.isLoadingFilter}
+        setLoadingMobileFilter={this.props.setLoadingMobileFilter}
       />
     );
   };
