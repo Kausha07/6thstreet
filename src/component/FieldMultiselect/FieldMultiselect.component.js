@@ -37,7 +37,11 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import FieldNestedMultiSelect from "Component/FieldNestedMultiSelect/FieldNestedMultiSelect";
 import RangeSlider from "Component/RangeSlider/RangeSlider";
 import { getCountryCurrencyCode } from 'Util/Url/Url';
-import { getSelectedCategoryLevelOneFilter, getActiveFiltersIds, getIsOptionVisible, getAttributeName } from "./utils/FieldMultiselect.helper";
+import {
+  getSelectedCategoryLevelOneFilter,
+  getActiveFiltersIds,
+  getAttributeName,
+} from "./utils/FieldMultiselect.helper";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -273,12 +277,6 @@ class FieldMultiselect extends PureComponent {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
-    }
-
-    const checkIsOptionVisible = getIsOptionVisible(option);
-
-    if(!!!checkIsOptionVisible) {
-      return null;
     }
 
     return (
