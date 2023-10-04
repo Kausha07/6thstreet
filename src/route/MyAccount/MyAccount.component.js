@@ -186,6 +186,23 @@ export class MyAccount extends SourceMyAccount {
     ));
   }
 
+  componentDidMount() {
+    const { isMobile } = this.state;
+    if (isMobile) {
+      document.body.style.position = "static";
+    }
+  }
+
+  componentWillUnmount() {
+    const { isMobile } = this.state;
+    if (isMobile) {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "";
+      document.body.style.position = "";
+    }
+  }
+
   sendEvents(event) {
     const { newSignUpEnabled } = this.props;
     if (newSignUpEnabled) {
