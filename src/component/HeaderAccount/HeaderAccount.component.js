@@ -176,9 +176,7 @@ class HeaderAccount extends PureComponent {
         ? `${customer.firstname} ${customer.lastname}`
         : __("Login/Register");
     const isVip =
-      isSignedIn && customer && customer?.vipCustomer && IsVipCustomerEnabled
-        ? true
-        : false;
+      isSignedIn && customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
     const sendGTMEvent = () => {
       if (newSignUpEnabled) {
         const eventData = {

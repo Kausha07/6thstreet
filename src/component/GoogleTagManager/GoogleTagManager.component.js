@@ -458,7 +458,7 @@ class GoogleTagManager extends PureComponent {
       : null;
     const isVipCustomer =
       isSignedIn() &&
-      this.props?.state?.MyAccountReducer?.customer?.vipCustomer ? true : false;
+      this.props?.state?.MyAccountReducer?.customer?.vipCustomer || false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,

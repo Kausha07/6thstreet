@@ -201,7 +201,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
 
   changeActiveTab(activeTab) {
     const { history, is_exchange_enabled, IsVipCustomerEnabled, customer } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
@@ -282,7 +282,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
 
   updateBreadcrumbs() {
     const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     const { activeTab } = this.state;
     let finalTabMap;
     let newTabMap = is_exchange_enabled

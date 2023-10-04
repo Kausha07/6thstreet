@@ -321,6 +321,13 @@
         }
       }
     }
+    &_isVip {
+      #MyAccountMobileHeader {
+        @include mobile{
+          background: #e7d8fc;
+        }
+      }
+    }
   }
 }
 
@@ -448,7 +455,7 @@
       border: 1px solid #000000;
       border-radius: 8px;
       background-color: #ffffff;
-      padding: 14px;
+      padding: 14px 7px;
       width: 33.33%;
       display: flex;
       flex-direction: column;
@@ -459,7 +466,7 @@
       letter-spacing: 0;
       line-height: 22px;
       text-align: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
 
       img {
@@ -470,15 +477,28 @@
       .CardTitle {
         color: #000000;
         font-family: "Avenir Next";
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         letter-spacing: 0;
-        line-height: 22px;
+        line-height: 19px;
         text-align: center;
+        margin-top: 6px;
+      }
+      span {
+        font-size: 13px;
+        color: #ff6180;
+        font-weight: 500;
+        margin-top: 5px;
+        line-height: 1.3;
+        &.timing {
+          margin-top: 0;
+          font-size: 12px;
+          text-transform: uppercase;
+        }
       }
 
       button,
-      .chat-button {
+      a {
         border-radius: 8px;
         background-color: #000000;
         width: 100%;
@@ -494,13 +514,18 @@
         line-height: 18px;
         justify-content: center;
         align-items: center;
-
+        max-width: calc(100% - 20px);
+        position: absolute;
+        bottom: 14px;
+        left: 10px;
         &:hover,
         &:focus &:active {
           text-decoration: none;
           color: white;
         }
-
+        &.chat-button {
+          background-color: #28d9aa;
+        }
         &.AccountLinked {
           border-radius: 6px;
           line-height: 12px;
@@ -547,6 +572,42 @@
             flex-direction: column;
             align-items: center;
           }
+        }
+      }
+      &.isVIP {
+        border: 1px solid #400399;
+        button,
+        a {
+          background-color: #400399;
+        }
+        &.helpContainer {
+          span {
+            margin-top: 5px;
+            line-height: 1.3;
+            color: #400399;
+            &.timing {
+              margin-top: 0;
+              font-size: 12px;
+            }
+          }
+          img {
+            width: 33px !important;
+            height: 30px !important;
+          }
+        }
+      }
+      &.referralContainer {
+        button {
+          background-color: #ff6180;
+        }
+      }
+      &.helpContainer {
+        img {
+          width: auto !important;
+          height: auto !important;
+        }
+        span {
+          color: #28d9aa;
         }
       }
     }
@@ -697,8 +758,26 @@
       }
     }
   }
-  .ExpandableContent.MyAccountTabList {
-    border-bottom: none;
+  .MyAccountMobile-Menu {
+    .ExpandableContent {
+      &.MyAccountTabList {
+        border-bottom: none;
+      }
+      .MyAccountTabListItem {
+        &.ReferralTabLink {
+          display: none;
+        }
+      }
+    }
+    &_isClubApparelEnabled {
+      .ExpandableContent {
+        .MyAccountTabListItem {
+          &.ReferralTabLink {
+            display: block;
+          }
+        }
+      }
+    }
   }
 }
 

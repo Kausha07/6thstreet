@@ -360,7 +360,7 @@ class MobileBottomBar extends NavigationAbstract {
 
     this.setState({ isAccount: location.pathname === "/my-account" });
 
-    const isVip = isSignedIn && customer && customer.vipCustomer && IsVipCustomerEnabled;
+    const isVip = isSignedIn && customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
     const onClickHandle = !isSignedIn
       ? this.renderAccountMenuPopUp
       : this.routeChangeAccount;

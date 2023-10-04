@@ -73,6 +73,9 @@ import Event, {
   MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import supportIcon from "./icons/support.png";
+import OrdersIcon from "./icons/box-vip.png";
+import help from "./icons/help.png";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -297,7 +300,8 @@ export class MyAccount extends SourceMyAccount {
       IsReferralEnabled,
       IsVipCustomerEnabled,
     } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     const { pathname = "" } = location;
 
     let newTabMap = is_exchange_enabled
@@ -413,9 +417,27 @@ export class MyAccount extends SourceMyAccount {
       config,
       IsReferralEnabled,
       IsVipCustomerEnabled,
+      history: { location },
     } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer;
     const { isArabic, isMobile } = this.state;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
+    const isVip = isVipCustomer ? true : false;
+    if (
+      isVipCustomer &&
+      activeTab == "dashboard" &&
+      isMobile &&
+      location.pathname === "/my-account"
+    ) {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "linear-gradient(180deg, #e7d8fc 0%, #fff 100%)";
+    } else {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "none";
+    }
+
     if (!IsReferralEnabled) {
       delete tabMap[REFERRAL_SCREEN];
     }
@@ -472,7 +494,11 @@ export class MyAccount extends SourceMyAccount {
     return (
       <ContentWrapper
         label={__("My Account page")}
-        wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
+        wrapperMix={{
+          block: "MyAccount",
+          elem: "Wrapper",
+          mods: { isArabic, isVip },
+        }}
       >
         {!(isPickUpAddress && payloadKey && payload[payloadKey].title) && (
           <MyAccountMobileHeader
@@ -538,28 +564,60 @@ export class MyAccount extends SourceMyAccount {
                 </button>
               )}
             </div>
-            <div block="CardsContainer">
-              <Image block="CardsIcon" src={box} alt={"box"} />
-              <div block="CardTitle"> {__("My Orders")} </div>
-              <button onClick={() => this.handleTabChange("my-orders")}>
-                {__("View")}
-              </button>
-            </div>
-            <div block="CardsContainer">
-              <Image block="CardsIcon" src={contactHelp} alt={"box"} />
-              <div block="CardTitle"> {__("Customer Support")} </div>
-              <a
-                onClick={() => {
-                  this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
-                }}
-                className="chat-button"
-                href={`${whatsappChat}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {__("Live Chat")}
-              </a>
-            </div>
+            {isVipCustomer ? (
+              <>
+                <div block="CardsContainer isVIP">
+                  <Image block="CardsIcon" src={OrdersIcon} alt={"Orders"} />
+                  <div block="CardTitle"> {__("My Orders")} </div>
+                  <button onClick={() => this.handleTabChange("my-orders")}>
+                    {__("Track")}
+                  </button>
+                </div>
+                <div block="CardsContainer helpContainer isVIP">
+                  <Image block="CardsIcon" src={supportIcon} alt={"Support"} />
+                  <div block="CardTitle"> {__("My Agent")} </div>
+                  <span>{__("Mon - Fri")}</span>
+                  <span block="timing">({__("9am - 9pm")})</span>
+                  <a
+                    onClick={() => {
+                      this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                    }}
+                    className="chat-button"
+                    href={`${whatsappChat}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {__("Call")}
+                  </a>
+                </div>
+              </>
+            ) : (
+              <>
+                <div block="CardsContainer">
+                  <Image block="CardsIcon" src={box} alt={"box"} />
+                  <div block="CardTitle"> {__("My Orders")} </div>
+                  <button onClick={() => this.handleTabChange("my-orders")}>
+                    {__("View")}
+                  </button>
+                </div>
+                <div block="CardsContainer helpContainer">
+                  <Image block="CardsIcon" src={help} alt={"help"} />
+                  <div block="CardTitle">{__("Help Center 24/7")}</div>
+                  <span>{__("Online")}</span>
+                  <a
+                    onClick={() => {
+                      this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                    }}
+                    className="chat-button"
+                    href={`${whatsappChat}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {__("Live Chat")}
+                  </a>
+                </div>
+              </>
+            )}
           </div>
           <MyAccountTabList
             tabMap={newTabMap}
