@@ -1251,7 +1251,6 @@
     "Select Price Range": "حدد نطاق السعر",
     "Select Discount Range": "حدد نطاق الخصم",
     "Move to Cart": "اضف لسلة التسوق",
-    "Last %s left":"تبقى %s فقط",
     "Product added to your shopping bag":"تمت اضافة المنتج لحقيبة التسوق الخاصة بك",
     "Refer and Earn Credit": "قم بدعوة أصدقائك واحصل على رصيد",
     "Refer 6thStreet and get store credit today!": "قم بتوصية 6ستريت واحصر على رصيد متجر اليوم! ",
@@ -1268,6 +1267,12 @@
     "Referral benefits will be awarded upon completion of first order by the referee using the referrer’s referral coupon code": "سيتم اضافة مكافآت التوصية عند اكمال الطلب الأول للشخص المدعوعند تطبيق كود القسيمة",
     "Store credit can be used at any time without expiry date": "يمكن استخدام رصيد المتجر في أي وقت بلا تاريخ صلاحية ",
     "Users cannot use their own referral code to place an order": "لا يمكن للمستخدم تطبيق كود التوصية الخاص به على طلباته",
-    "Shop %s for %s Online | 6thStreet %s": "التسوق أونلاين %s %s على 6ستريت %s ",
-    "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.": "اشترِ %s %s مع أفضل العروض  في %s على6ستريت.  أفضل العلامات التجارية %s مع✅ توصيل مجاني عند الحد الأدنى للطلب ✅ 100 يوم إرجاع مجاني"
+      "Shop %s for %s Online | 6thStreet %s": "التسوق أونلاين %s %s على 6ستريت %s ",
+    "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.": "اشترِ %s %s مع أفضل العروض  في %s على6ستريت.  أفضل العلامات التجارية %s مع✅ توصيل مجاني عند الحد الأدنى للطلب ✅ 100 يوم إرجاع مجاني",
+    "Your VIP Perks": "مميزاتك كعميل VIP",
+    "My Agent": "مندوبي",
+    "Call": "اتصل",
+    "Mon-Sat": "الإثنين- السبت",
+    "Help Center 24/7": "مركز المساعدة 24/7",
+    "Online": "متصل"
 }

@@ -40,3 +40,9 @@ export const MOE_destroySession = () => {
     Moengage.destroy_session();
   }
 };
+
+export const MOE_addUserAttribute = (key, value) => {
+  if (MoEngage.moe && window.Moengage) {
+    Moengage.add_user_attribute(key, value);
+  }
+};
