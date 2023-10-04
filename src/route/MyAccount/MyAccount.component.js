@@ -576,14 +576,14 @@ export class MyAccount extends SourceMyAccount {
                 <div block="CardsContainer helpContainer isVIP">
                   <Image block="CardsIcon" src={supportIcon} alt={"Support"} />
                   <div block="CardTitle"> {__("My Agent")} </div>
-                  <span>{__("Mon - Fri")}</span>
+                  <span>{__("Mon - Sat")}</span>
                   <span block="timing">({__("9am - 9pm")})</span>
                   <a
                     onClick={() => {
                       this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
                     }}
                     className="chat-button"
-                    href={`${whatsappChat}`}
+                    href="tel:048142666"
                     target="_blank"
                     rel="noreferrer"
                   >
