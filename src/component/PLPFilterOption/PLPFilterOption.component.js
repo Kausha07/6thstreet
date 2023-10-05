@@ -75,6 +75,8 @@ class PLPFilterOption extends PureComponent {
     this.setState({ isLoading: true });
     const inputRef = this.optionRef.current.children[0].children[0];
     const { checked } = inputRef;
+    const mobileFacetKeys = ["brand_name", "colorfamily", "gender", "in_stock", "size_uk", "size_us", "size_eu", "discount"];
+    const isValidFacetKey = facet_key => mobileFacetKeys.includes(facet_key) || facet_key.includes("price");
     const MoeFilterEvent =
       facet_key == "brand_name"
         ? EVENT_BRAND_SEARCH_FILTER
@@ -164,7 +166,7 @@ class PLPFilterOption extends PureComponent {
       }
     }
 
-    if(isMobile.any() && (facet_key === "brand_name" || facet_key === "colorfamily")) {
+    if (isMobile.any() && isValidFacetKey(facet_key)) {
       this.props.setLoadingMobileFilter(true);
     }
 
