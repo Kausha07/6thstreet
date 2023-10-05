@@ -186,9 +186,9 @@ export class MyAccount extends SourceMyAccount {
     ));
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     const { isMobile } = this.state;
-    if (isMobile) {
+    if (isMobile && document?.body?.style?.position == "fixed") {
       document.body.style.position = "static";
     }
   }
