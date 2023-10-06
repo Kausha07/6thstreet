@@ -30,6 +30,7 @@ const pattern = /bot/i;
 window.__DEV__ = process.env.NODE_ENV === "development";
 window.__useragent__ = navigator.userAgent;
 window.__isBOT__ = pattern.test(navigator.userAgent);
+window.__PREPROD__ = process.env.NODE_ENV === "preprod";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_ENDPOINT,

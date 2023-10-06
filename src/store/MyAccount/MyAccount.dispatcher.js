@@ -305,7 +305,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         });
       },
       () => {
-        window.location.reload();
+        if(!window.__PREPROD__){
+          window.location.reload();
+        }
       },
     );
   }
