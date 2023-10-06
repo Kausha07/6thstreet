@@ -305,9 +305,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         });
       },
       () => {
-        if(process.env.REACT_APP_ENV_NAME !== "uat"){
-          window.location.reload();
-        }
+        window.location.reload();
       },
     );
   }
