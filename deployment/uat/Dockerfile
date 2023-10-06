@@ -1,6 +1,6 @@
 FROM node:lts-alpine as build
 
-ENV NODE_ENV=production \
+ENV NODE_ENV=preprod \
     SERVER_PORT=3000
 
 RUN apk add libsass --update-cache; \
