@@ -305,7 +305,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         });
       },
       () => {
-        window.location.reload();
+        console.log("PREPROD TEST", process.env.REACT_ENV_NAME)
+        if(process.env.REACT_ENV_NAME !== "uat"){
+          window.location.reload();
+        }
       },
     );
   }
