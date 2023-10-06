@@ -305,8 +305,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         });
       },
       () => {
-        console.log("PREPROD TEST", process.env.REACT_ENV_NAME)
-        if(process.env.REACT_ENV_NAME !== "uat"){
+        if(process.env.REACT_APP_ENV_NAME !== "uat"){
           window.location.reload();
         }
       },
