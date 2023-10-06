@@ -30,8 +30,7 @@
           height: 24px;
           display: flex;
           font-size: 0;
-          margin-right: 6px
-
+          margin-right: 6px;
 
           //   margin-top: -8px;
         }
@@ -53,16 +52,58 @@
     }
 
     &_isArabic {
-
       &:not(&_isBottomBar) {
         label {
-
           &::before {
             margin-right: 0px;
             margin-left: 6px;
-          }}
+          }
+        }
         // margin-left: 90px;
       }
+    }
+    &_isVip {
+      label {
+        &:after {
+          content: "";
+          background: url(./icons/vip.png) no-repeat;
+          background-size: 26px;
+          width: 27px;
+          height: 12px;
+          display: flex;
+          font-size: 0;
+          margin-right: 6px;
+          position: absolute;
+          top: -7px;
+          right: -19px;
+        }
+      }
+      &.HeaderAccount-Button{
+        &_isArabic{
+          label{
+            &:after{
+              right: 8px;
+            }
+          }
+          &.HeaderAccount-Button_isArabic{
+            label{
+              &:after{
+                right: -25px;
+              }
+            }
+          }
+        }
+        &_isFooter {
+          label {
+            &:after {
+              left: 15px;
+              right: auto;
+            }
+          }
+        }
+      }
+      
+      
     }
   }
 

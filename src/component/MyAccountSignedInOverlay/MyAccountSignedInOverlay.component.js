@@ -12,7 +12,8 @@ import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
 import LogoutIcon from "./icons/logout.png";
 import ReturnIcon from "./icons/return.svg";
-import ReferralIcon from "./icons/referral-icon.png"
+import ReferralIcon from "./icons/referral-icon.png";
+import vipIcon from "./icons/vip.png";
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from "./MyAccountSignedInOverlay.config";
 import "./MyAccountSignedInOverlay.style";
 import Event, {
@@ -24,7 +25,7 @@ import Event, {
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_ACCOUNT_PAYMENT_CLICK,
   EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK,
-  MOE_trackEvent
+  MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 
@@ -97,14 +98,16 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderReferralLink() {
-    const {IsReferralEnabled} = this.props;
-    if (IsReferralEnabled){
+    const { IsReferralEnabled } = this.props;
+    if (IsReferralEnabled) {
       return (
         <Link
           block="MyAccountSignedInOverlay"
           elem="ReferralTabLink"
           to="/my-account/referral"
-          onClick={() => this.sendEvents(EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK)}
+          onClick={() =>
+            this.sendEvents(EVENT_ACCOUNT_SECTION_REFERRAL_TAB_CLICK)
+          }
         >
           <Image
             lazyLoad={true}
@@ -256,6 +259,26 @@ export class MyAccountSignedInOverlay extends PureComponent {
     );
   }
 
+  renderVipLink() {
+    return (
+      <Link
+        block="MyAccountSignedInOverlay"
+        elem="vipLink"
+        to="/my-account/vip"
+      >
+        <Image
+          lazyLoad={true}
+          src={vipIcon}
+          mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+          alt={"vipIcon"}
+        />
+        <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+          {__("Your VIP Perks")}
+        </span>
+      </Link>
+    );
+  }
+
   renderLogoutButton() {
     const { signOut } = this.props;
 
@@ -279,11 +302,15 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderWrapper() {
+    const { customer, IsVipCustomerEnabled } = this.props;
+    const isVipCustomer =
+      customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
     return (
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
+        {isVipCustomer && this.renderVipLink()}
         {this.renderClubLink()}
         {this.renderMyAccountLink()}
-        {this.renderReferralLink() }
+        {this.renderReferralLink()}
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}
         {this.renderWishlistLink()}
