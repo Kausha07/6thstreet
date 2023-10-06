@@ -155,9 +155,10 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
-    if (isMobile.any()) {
-      document.body.style.position = "fixed";
-    }
+    // commented because causing CSS issue after logged in, Logout button is not visible
+    // if (isMobile.any()) {
+    //   document.body.style.position = "fixed";
+    // }
     const { email, setCurrentOverlayState } = this.props;
     setCurrentOverlayState(this.props?.state);
     if (email) {
