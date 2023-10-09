@@ -13,6 +13,8 @@ import {
   setDefaultEddAddress,
   setCitiesData,
   setAddressLoader,
+  setVueTrendingBrandsBannerActive,
+  setUserIdForVueTrendingBrands,
 } from "Store/MyAccount/MyAccount.action";
 import {
   CUSTOMER,
@@ -55,6 +57,8 @@ import Event, {
   VUE_PAGE_VIEW,
   MOE_AddUniqueID,
   MOE_destroySession,
+  MOE_addUserAttribute,
+  VIP_CUSTOMER,
 } from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
@@ -242,6 +246,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const getPhoneNumberFromCookie = getCookie("customerPrimaryPhone")
           ? getCookie("customerPrimaryPhone")
           : null;
+        const isVipCustomer = getCookie("isTopTierCustomer")
+          ? getCookie("isTopTierCustomer")
+          : null;
         dispatch(
           updateCustomerDetails({
             ...stateCustomer,
@@ -249,6 +256,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
+            ...(isVipCustomer && {
+              vipCustomer: isVipCustomer,
+            })
           }),
         );
         BrowserDatabase.setItem(
@@ -258,6 +268,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             ...(getPhoneNumberFromCookie && {
               phone: getPhoneNumberFromCookie,
             }),
+            ...(isVipCustomer && {
+              vipCustomer: isVipCustomer,
+            })
           },
           CUSTOMER,
           ONE_MONTH_IN_SECONDS,
@@ -318,9 +331,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     localStorage.removeItem("RmaId");
     BrowserDatabase.deleteItem("TT_Data");
     setCrossSubdomainCookie("customerPrimaryPhone", "", 1, true);
+    setCrossSubdomainCookie("isTopTierCustomer", "", 1, true);
     dispatch(updateCustomerDetails({}));
     dispatch(setStoreCredit(getStoreCreditInitialState()));
     dispatch(setClubApparel(getClubApparelInitialState()));
+    dispatch(setUserIdForVueTrendingBrands(null));
+    dispatch(setVueTrendingBrandsBannerActive(false));
     setCrossSubdomainCookie("authData", "", 1, true);
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
     MOE_destroySession();
@@ -436,18 +452,30 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       data: { token, t, user, user: { custom_attributes, gender, id } } = {},
     } = options;
     const phoneAttribute = custom_attributes?.filter(
-      ({ attribute_code }) => attribute_code === "contact_no",
+      ({ attribute_code }) => attribute_code === "contact_no"
     );
+    const topTierAttribute = custom_attributes?.filter(
+      ({ attribute_code }) => attribute_code === "top_tier_customer"
+    );
+    const vipCustomer =
+      topTierAttribute[0] && topTierAttribute[0]?.value == 1
+        ? topTierAttribute[0]?.value
+        : "";
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
     if (user?.email) {
       MOE_AddUniqueID(user?.email);
     }
+    if (vipCustomer) {
+      MOE_addUserAttribute(VIP_CUSTOMER, true);
+    } else {
+      MOE_addUserAttribute(VIP_CUSTOMER, false);
+    }
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
     setAuthorizationToken(t);
-    if (isPhone) {
+    if (isPhone || vipCustomer) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }
 
@@ -485,17 +513,29 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     if (options?.email){
        MOE_AddUniqueID(options?.email);
     }
+    const topTierAttribute = custom_attributes?.filter(
+      ({ attribute_code }) => attribute_code === "top_tier_customer"
+    );
+    const vipCustomer =
+      topTierAttribute[0] && topTierAttribute[0]?.value == 1
+        ? topTierAttribute[0]?.value
+        : "";
     const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no",
     );
     const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
-
+    if (vipCustomer) {
+      MOE_addUserAttribute(VIP_CUSTOMER, true);
+    } else {
+      MOE_addUserAttribute(VIP_CUSTOMER, false);
+    }
     dispatch(setCartId(null));
+    dispatch(setUserIdForVueTrendingBrands(id));
     setMobileAuthorizationToken(token);
     options.hasOwnProperty("type") ? setAuthorizationToken(t) : null;
-    if (isPhone) {
+    if (isPhone || vipCustomer) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }
 
@@ -559,9 +599,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       isVerifiedAttribute && isVerifiedAttribute[0]
         ? isVerifiedAttribute[0]
         : { value: false };
+    const topTierAttribute = custom_attributes?.filter(
+      ({ attribute_code }) => attribute_code === "top_tier_customer"
+    );
+    const { value: vipCustomer } =
+      topTierAttribute && topTierAttribute[0]?.value == 1
+        ? topTierAttribute[0]
+        : { value: "" };
     setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
+    setCrossSubdomainCookie("isTopTierCustomer", vipCustomer, "30");
     dispatch(
-      updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }),
+      updateCustomerDetails({
+        ...customer,
+        phone: phoneNumber,
+        vipCustomer,
+        isVerified,
+      })
     );
   }
 

@@ -26,7 +26,8 @@ import {
   SETTINGS_SCREEN,
   STORE_CREDIT,
   WALLET_PAYMENTS,
-  REFERRAL_SCREEN
+  REFERRAL_SCREEN,
+  VIP_CUSTOMER,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -47,6 +48,7 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
+  IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -86,13 +88,26 @@ export const exchangeReturnState = {
     className: "",
   },
 };
-export const tabMap = {
+
+export const vipCustomerState = {
+  [VIP_CUSTOMER]: {
+    url: "/vip",
+    name: __("Your VIP Perks"),
+    alternativePageName: "vip",
+    className: "",
+  },
+};
+
+export const storeCreditState = {
   [STORE_CREDIT]: {
     url: "/storecredit/info",
     name: <StoreCredit />,
     alternativePageName: __("Balance"),
     linkClassName: "StoreCreditLink",
   },
+};
+
+export const tabMap = {
   [CLUB_APPAREL]: {
     url: "/club-apparel",
     name: __("Club Apparel Loyalty"),
@@ -105,7 +120,7 @@ export const tabMap = {
   },
   [REFERRAL_SCREEN]: {
     url: "/referral",
-    name : __("Refer & Earn"),
+    name: __("Refer & Earn"),
     className: "ReferralTabLink",
   },
   [MY_ORDERS]: {
@@ -185,10 +200,23 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   changeActiveTab(activeTab) {
-    const { history, is_exchange_enabled } = this.props;
+    const { history, is_exchange_enabled, IsVipCustomerEnabled, customer } = this.props;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     const {
       [activeTab]: { url },
     } = newTabMap;
@@ -253,12 +281,25 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs, is_exchange_enabled } = this.props;
+    const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer } = this.props;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     const { activeTab } = this.state;
     let finalTabMap;
     let newTabMap = is_exchange_enabled
-      ? { ...tabMap, ...exchangeReturnState, ...tabMap2 }
-      : { ...tabMap, ...returnState, ...tabMap2 };
+      ? {
+          ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
+          ...tabMap,
+          ...exchangeReturnState,
+          ...tabMap2,
+        }
+      : {
+          ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
+          ...tabMap,
+          ...returnState,
+          ...tabMap2,
+        };
     if (activeTab === EXCHANGE_ITEM) {
       finalTabMap = exchangeTabMap[activeTab];
     } else {

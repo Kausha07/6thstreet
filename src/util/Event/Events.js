@@ -204,6 +204,8 @@
  export const EVENT_REGISTER_FAILED = "register_failed";
  export const EVENT_SIGN_UP = "sign_up";
  export const EVENT_SIGN_UP_FAIL = "sign_up_fail";
+ export const EVENT_GTM_CART = "cart_event";
+ 
  
  //General Events for MOE and GTM
  export const EVENT_INSTA_FOLLOW = "insta_follow_icon";
@@ -309,3 +311,4 @@ export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong"
  export const EVENT_FILTER_SEARCH_VALUE_SELECTED =
    "filter_search_value_selected";
  export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";
+export const VIP_CUSTOMER = "vip_customer";

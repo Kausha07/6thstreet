@@ -41,10 +41,17 @@ export class MyAccountAddressPopup extends PureComponent {
     };
 
     state = {
-        defaultChecked: false,
+        defaultChecked: null,
         mobileDeleteNotice: false,
         isArabic: isArabic()
     };
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.defaultChecked === null || prevState.defaultChecked === undefined) {
+          return { defaultChecked: nextProps.payload?.address?.default_shipping };
+        }
+    
+        return null;
+    }
 
     componentDidUpdate(prevProps, _) {
         const { payload = {} } = this.props;

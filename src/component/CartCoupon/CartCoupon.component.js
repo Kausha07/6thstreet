@@ -30,13 +30,24 @@ export class CartCoupon extends SourceCartCoupon {
     handleApplyCouponToCart(formattedCouponValue);
   };
 
-  sendMOEEvents(event, coupon) {
+  sendEvents(event, coupon) {
     MOE_trackEvent(event, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       coupon_code: coupon || "",
       app6thstreet_platform: "Web",
     });
+    const eventData = {
+      name: event,
+      coupon: coupon,
+      discount: this.props?.totals?.discount || "",
+      shipping: this.props?.totals?.shipping_fee || "",
+      tax: this.props?.totals?.tax_amount || "",
+      sub_total : this.props?.totals?.subtotal || "",
+      subtotal_incl_tax : this.props?.totals?.subtotal_incl_tax || "",
+      total: this.props?.totals?.total || "",
+    };
+    Event.dispatch(EVENT_GTM_COUPON, eventData);
   }
 
   handleApplyCode = async (e, couponCode) => {
@@ -45,24 +56,13 @@ export class CartCoupon extends SourceCartCoupon {
     this.setState({
       enteredCouponCode: "",
     });
-
     try {
       let apiResponse =
         (await this.props.applyCouponToCart(couponCode)) || null;
       if (apiResponse) {
-        this.sendMOEEvents(EVENT_APPLY_COUPON_FAILED, couponCode);
-        const eventData = {
-          name: EVENT_APPLY_COUPON_FAILED,
-          coupon: couponCode,
-        };
-        Event.dispatch(EVENT_GTM_COUPON, eventData);
+        this.sendEvents(EVENT_APPLY_COUPON_FAILED, couponCode);
       } else {
-        this.sendMOEEvents(EVENT_APPLY_COUPON, couponCode);
-        const eventData = {
-          name: EVENT_APPLY_COUPON,
-          coupon: couponCode,
-        };
-        Event.dispatch(EVENT_GTM_COUPON, eventData);
+        this.sendEvents(EVENT_APPLY_COUPON, couponCode);
       }
       if (typeof apiResponse !== "string") {
         this.props.closePopup();
@@ -77,9 +77,6 @@ export class CartCoupon extends SourceCartCoupon {
     const { couponCode } = this.props;
     localStorage.removeItem("lastCouponCode");
     handleRemoveCouponFromCart();
-    this.sendMOEEvents(EVENT_REMOVE_COUPON, couponCode);
-    const eventData = { name: EVENT_REMOVE_COUPON, coupon: couponCode };
-    Event.dispatch(EVENT_GTM_COUPON, eventData);
 
     // We need to reset input field. If we do it in applyCouponCode,
     // then it will disappear if code is incorrect. We want to avoid it
@@ -146,7 +143,10 @@ export class CartCoupon extends SourceCartCoupon {
           elem="Button"
           type="button"
           mix={{ block: "Button" }}
-          onClick={this.handleRemoveCoupon}
+          onClick={() => {
+            this.sendEvents(EVENT_REMOVE_COUPON, couponCode);
+            this.handleRemoveCoupon();
+          }}
         >
           {__("Remove")}
         </button>

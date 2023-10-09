@@ -42,6 +42,7 @@ import {
   EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED,
   EVENT_FILTER_SEARCH_CLICK,
   EVENT_FILTER_SEARCH_VALUE_SELECTED,
+  EVENT_GTM_CART,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -98,6 +99,9 @@ import FilterAttributeValueSelected from "./events/PLPFiltersEvents/FilterAttrib
 import FilterAttributeValueDeselected from "./events/PLPFiltersEvents/FilterAttributeValueDeselected.event";
 import FilterSearchClick from "./events/PLPFiltersEvents/FilterSearchClick.event";
 import FilterSearchValueSelected from "./events/PLPFiltersEvents/FilterSearchValueSelected.event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { isSignedIn } from "Util/Auth";
+import CartEvent from "./events/Cart.event";
 
 /**
  * Event list
@@ -207,13 +211,14 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_CHECKOUT_BILLING]: CheckoutBillingEvent,
     [EVENT_PAGE_LOAD]: PageLoadEvent,
     [EVENT_GTM_INFLUENCER]: InfluencerEvent,
-    [EVENT_GTM_INFLUENCER] : InfluencerEvent,
+    [EVENT_GTM_INFLUENCER]: InfluencerEvent,
     [EVENT_FILTER_CLEAR_ALL]: FilterClearAll,
     [EVENT_FILTER_ATTRIBUTE_SELECTED]: FilterAttributeSelected,
     [EVENT_FILTER_ATTRIBUTE_VALUE_SELECTED]: FilterAttributeValueSelected,
     [EVENT_FILTER_ATTRIBUTE_VALUE_DESELECTED]: FilterAttributeValueDeselected,
     [EVENT_FILTER_SEARCH_CLICK]: FilterSearchClick,
     [EVENT_FILTER_SEARCH_VALUE_SELECTED]: FilterSearchValueSelected,
+    [EVENT_GTM_CART]: CartEvent,
   };
 
   /**
@@ -445,20 +450,49 @@ class GoogleTagManager extends PureComponent {
    */
 
   processDataPush(event, data) {
-    const isCustomerStatus =
-      this.props.state.MyAccountReducer.isSignedIn || false;
+    const isCustomerID = isSignedIn()
+      ? this.props?.state?.MyAccountReducer?.customer?.id || null
+      : null;
+    const uuid = BrowserDatabase.getItem("uuid")
+      ? BrowserDatabase.getItem("uuid")
+      : null;
+    const isVipCustomer =
+      isSignedIn() &&
+      this.props?.state?.MyAccountReducer?.customer?.vipCustomer || false;
     if (this.enabled) {
       dataLayer.push({
         ecommerce: null,
         eventCategory: null,
         eventAction: null,
-        UserType: isCustomerStatus ? "Logged In" : "Logged Out",
+        UserType: isSignedIn() ? "Logged In" : "Logged Out",
         CustomerID: null,
         PageType: null,
         SearchTerm: null,
         BannerName: null,
       });
-      this.addDataLayer(data);
+      const additionalDetails = {
+        ...(!data?.screen_name && {
+          screen_name: sessionStorage.getItem("currentScreen") || null,
+        }),
+        ...(!data?.prev_screen_name && {
+          prev_screen_name: sessionStorage.getItem("prevScreen") || null,
+        }),
+        ...(!data?.country && {
+          country: getCountryFromUrl().toUpperCase() || null,
+        }),
+        ...(!data?.language && {
+          language: getLanguageFromUrl().toUpperCase(),
+        }),
+        ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
+          isLoggedIn: isSignedIn(),
+        }),
+        ...(data?.CustomerID === undefined && {
+          CustomerID: isCustomerID,
+        }),
+        vip_customer: isVipCustomer || false,
+        uuid: uuid,
+      };
+      this.addDataLayer({ ...data, ...additionalDetails });
 
       if (this.debug) {
         // eslint-disable-next-line no-console

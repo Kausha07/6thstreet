@@ -20,6 +20,7 @@ export const mapStateToProps = (state) => ({
   default_country: state.ConfigReducer.default_country,
   isLoading: state.MyAccountReducer.isAddressLoading,
   addressCityData: state.MyAccountReducer.addressCityData,
+  addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
 });
 
 export default connect(
