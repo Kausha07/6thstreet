@@ -11,7 +11,7 @@ import ShareButton from "Component/ShareButton";
 import WishlistIcon from "Component/WishlistIcon";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor, qtyAttributeForCountry } from "Util/Common";
 import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
@@ -138,13 +138,18 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        let payload = {};
         if(edd_info?.has_item_level) {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           data.intl_vendors=null;
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              }
+              items.push(payload);
             }
           })
           data.items = items;
@@ -167,13 +172,18 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
+    let payload = {};
     if(edd_info?.has_item_level) {
       let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
       request.intl_vendors=null;
       let items = [];
       items_in_cart.map(item => {
         if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-          items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+          payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+          if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country)) {
+            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+          }
+          items.push(payload);
         }
       });
       request.items = items;
@@ -291,9 +301,28 @@ class PDPSummary extends PureComponent {
           source: null,
         };
         request.intl_vendors=null;
+        let payload = {};
         if(!(cross_border && !edd_info?.has_cross_border_enabled)) {
           let items = [];
-          Object.keys(simple_products).map(sku => items.push({ sku : sku, intl_vendor: cross_border && edd_info.international_vendors && international_vendor && edd_info.international_vendors.indexOf(international_vendor)>-1 ? international_vendor : null}))
+          Object.keys(simple_products).map((sku) => {
+            payload = {
+              sku: sku,
+              intl_vendor:
+              parseInt(simple_products[sku]?.cross_border_qty) > 0 &&
+                edd_info.international_vendors &&
+                international_vendor &&
+                edd_info.international_vendors.indexOf(international_vendor) >
+                  -1
+                  ? international_vendor
+                  : null,
+            };
+
+            if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+              payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
+            }
+
+            items.push(payload);
+          });
           request.items = items;
           estimateEddResponseForPDP(request, true);
         }
@@ -458,13 +487,18 @@ class PDPSummary extends PureComponent {
         courier: null,
         source: null,
       };
+      let payload = {};
       if(edd_info?.has_item_level) {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
         let items = [];
         items_in_cart.map(item => {
           if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-            items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+            payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+            if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            }
+            items.push(payload);
           }
         });
         request.items = items;

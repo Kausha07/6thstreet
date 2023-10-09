@@ -636,3 +636,7 @@ export const getShippingFees = (country) => {
       return 20;
   }
 };
+
+export const qtyAttributeForCountry = () =>{
+  return ["AE"];
+}
