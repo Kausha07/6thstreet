@@ -26,7 +26,17 @@ import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png"
 import Loader from "Component/Loader";
 
 import { connect } from "react-redux";
+import PDPTags from "Component/PDPTags";
+import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
+import { getCountryFromUrl } from "Util/Url";
+
 class PDPAddToCart extends PureComponent {
+
+  constructor(props) {
+    super(props);
+    this.getRecommendedSize = this.getRecommendedSize.bind(this);
+  }
+
   static propTypes = {
     product: Product.isRequired,
     onSizeTypeSelect: PropTypes.func.isRequired,
@@ -56,6 +66,8 @@ class PDPAddToCart extends PureComponent {
     customer: null,
     OOSrendered: false,
     OOS_mailSent: false,
+    sizePredictorMessage:'',
+    recommendedSizeSku:''
   };
 
   componentDidMount() {
@@ -68,6 +80,47 @@ class PDPAddToCart extends PureComponent {
     const { customer } = this.props;
     if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    const { selectedSizeCode } = this.props;
+    if(prevProps.selectedSizeCode !== selectedSizeCode) {
+      this.getRecommendedSize();
+    }
+  }
+
+  async getRecommendedSize(){
+    const { customer, selectedSizeCode, product: {sku, simple_products}} = this.props;
+    if(customer && customer.email) {
+      const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
+      const header = {
+        sku: sku,
+        size: optionValue,
+        userEmail: customer.email
+      };
+      const response = await fetchPredictedSize(header);
+      if(response.status) {
+        const country = getCountryFromUrl().toLowerCase();
+        let message = response.message;
+        let recSku = response.size;
+        if(country == 'uk') {
+          message = response.uk_message;
+          size = response.uk_size;
+        } else if(country = 'us') {
+          message = response.us_message;
+          size = response.us_size;
+        }
+        simple_products.filter((values,sku)=>{
+          if(values['size']['eu'] == response.size) {
+            recSku = sku;
+          }
+        })
+        this.setState({
+          sizePredictorMessage: message,
+          recommendedSizeSku: recSku
+        });
+      }
     }
   }
 
@@ -211,6 +264,10 @@ class PDPAddToCart extends PureComponent {
       filter: "none",
     };
 
+    const recommendedLabelStyle = {
+      borderColor: "#4ef057",
+    };
+
     const isCurrentSizeSelected = selectedSizeCode === code;
     const { edd_info } = this.props;
 
@@ -237,7 +294,7 @@ class PDPAddToCart extends PureComponent {
         <div>
           <label
             for={code}
-            style={isCurrentSizeSelected ? selectedLabelStyle : {}}
+            style={isCurrentSizeSelected ? selectedLabelStyle : this.state.recommendedSizeSku==code ? recommendedLabelStyle : {}}
           >
             {label}
           </label>
@@ -312,7 +369,7 @@ class PDPAddToCart extends PureComponent {
     ) {
       return (
         <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
-          <PDPSizeGuide product={product} />
+          <PDPSizeGuide product={product} getRecommendedSize={this.getRecommendedSize} />
         </div>
       );
     }
@@ -674,6 +731,7 @@ class PDPAddToCart extends PureComponent {
             {/* {isMobile.any() && <div block="Seperator" />} */}
           </>
         ) : null}
+        {this.state.sizePredictorMessage && <PDPTags tags={[this.state.sizePredictorMessage]} /> }
         <div
           block="PDPAddToCart"
           elem="Bottom"
