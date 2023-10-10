@@ -80,6 +80,7 @@ class ProductItem extends PureComponent {
     stockAvailibility: true,
     selectedSizeType: "eu",
     selectedSizeCode: "",
+    hover: false
   };
   componentDidMount() {
     this.registerViewPortEvent();
@@ -578,6 +579,18 @@ class ProductItem extends PureComponent {
     );
   };
 
+  handleMouseEnter = () => {
+    if(!this.state.hover) {
+      this.setState({hover: true});
+    } 
+  };
+
+  handleMouseLeave = () => {
+    if(this.state.hover) {
+      this.setState({hover: false});
+    }
+  };
+
   render() {
     const { isArabic } = this.state;
     const {
@@ -592,6 +605,8 @@ class ProductItem extends PureComponent {
         id={sku}
         ref={setRef}
         block="ProductItem"
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
         mods={{
           isArabic,
         }}
@@ -604,6 +619,7 @@ class ProductItem extends PureComponent {
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           pageType !== "cartSlider" &&
+          this.state.hover &&
           this.renderAddToCartOnHover()}
         {isMobile.any() &&
           pageType === "wishlist" &&
