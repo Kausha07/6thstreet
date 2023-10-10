@@ -90,6 +90,8 @@ export class HomePageContainer extends PureComponent {
     vueBrandsNumOfResults: 10,
     vueCategoriesNumOfResults: 10,
     imageUrl: "",
+    metaTitle: "",
+    metaDesc: "",
   };
 
   constructor(props) {
@@ -283,6 +285,7 @@ export class HomePageContainer extends PureComponent {
             genderName,
             countryName
           );
+    this.setState({ metaTitle: homePageMetaTitle, metaDesc: homepageMetaDesc });
     setMeta({
       title: homePageMetaTitle,
       keywords: __(
@@ -291,10 +294,6 @@ export class HomePageContainer extends PureComponent {
         countryName
       ),
       description: homepageMetaDesc,
-      twitter_title: homePageMetaTitle,
-      twitter_desc: homepageMetaDesc,
-      og_title: homePageMetaTitle,
-      og_desc: homepageMetaDesc,
     });
   }
 
@@ -417,13 +416,16 @@ export class HomePageContainer extends PureComponent {
 
   containerProps = () => {
     const { gender } = this.props;
-    const { dynamicContent, isLoading,imageUrl } = this.state;
+    const { dynamicContent, isLoading, imageUrl, metaTitle, metaDesc } =
+      this.state;
 
     return {
       dynamicContent,
       isLoading,
       gender,
-      imageUrl
+      imageUrl,
+      metaTitle,
+      metaDesc,
     };
   };
 

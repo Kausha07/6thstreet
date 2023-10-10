@@ -145,9 +145,9 @@ class HomePage extends PureComponent {
   }
 
   renderMetaData() {
-    const { imageUrl } = this.props;
+    const { metaTitle, metaDesc, imageUrl } = this.props;
     const altText = "6thStreet Banner";
-    return renderDynamicMetaTags(imageUrl, altText);
+    return renderDynamicMetaTags(metaTitle, metaDesc, imageUrl, altText);
   }
 
   renderContent() {

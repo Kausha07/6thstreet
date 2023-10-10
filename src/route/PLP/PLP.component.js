@@ -410,7 +410,7 @@ export class PLP extends PureComponent {
   };
 
   renderMetaContent() {
-    const { pages, brandName, brandImg, gender } = this.props;
+    const { pages, brandName, brandImg, gender, metaTitle, metaDesc } = this.props;
     const getCategory = BrowserDatabase.getItem("CATEGORY_CURRENT")
       ? BrowserDatabase.getItem("CATEGORY_CURRENT")
       : null;
@@ -442,9 +442,7 @@ export class PLP extends PureComponent {
       ? category
       : `${gender} products`;
 
-    if (image) {
-      return renderDynamicMetaTags(image, altText);
-    }
+    return renderDynamicMetaTags(metaTitle, metaDesc, image, altText);
   }
 
   getFilterCount() {

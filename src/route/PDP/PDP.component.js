@@ -179,7 +179,7 @@ class PDP extends PureComponent {
     return <div block="Seperator" mods={{ isMobile: !!isMobile }} />;
   }
   renderMetaData() {
-    const { product } = this.props;
+    const { product, metaTitle, metaDesc } = this.props;
     const imageURL = product?.thumbnail_url
       ? product.thumbnail_url
       : product?.gallery_images && product?.gallery_images[0]
@@ -190,7 +190,7 @@ class PDP extends PureComponent {
         ? `${product?.brand_name} ${product?.name}`
         : product?.name;
     if (imageURL) {
-      return renderDynamicMetaTags(imageURL, altText);
+      return renderDynamicMetaTags(metaTitle, metaDesc, imageURL, altText);
     }
   }
 
