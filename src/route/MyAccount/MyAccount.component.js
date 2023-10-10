@@ -77,7 +77,7 @@ import Event, {
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import supportIcon from "./icons/support.png";
 import OrdersIcon from "./icons/box-vip.png";
-import help from "./icons/help.png";
+
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
