@@ -97,12 +97,57 @@ class ProductItem extends PureComponent {
     observer = new IntersectionObserver(this.handleIntersect, options);
     observer.observe(this.viewElement);
   }
-  sendImpressions() {
-    const { product = [], sendProductImpression, page } = this.props;
-    if (page == "plp") {
-      sendProductImpression([product]);
+  getPLPListName() {
+    const { page } = this.props;
+    const pageUrl = new URL(window.location.href);
+    if (pageUrl.pathname == "/catalogsearch/result/" && (page == "plp")) {
+      const getSearchQuery = pageUrl.search.includes("&")
+        ? pageUrl.search.split("&")
+        : pageUrl.search;
+      const searchParameter = getSearchQuery[0]
+        ? getSearchQuery[0].replace("?q=", "")
+        : getSearchQuery.includes("?q=")
+        ? getSearchQuery.replace("?q=", "")
+        : getSearchQuery;
+      const formatSearchParam =
+        searchParameter && searchParameter.includes("+")
+          ? searchParameter.replaceAll("+", " ")
+          : searchParameter;
+      return `Search PLP - ${formatSearchParam}`;
+    } else if ((page == "plp" && pageUrl.pathname.includes(".html"))) {
+      const pagePath = pageUrl.pathname.split(".html");
+      const pageName = pagePath[0] ? pagePath[0].replaceAll("/", " ") : "";
+      return `PLP -${pageName}`;
     } else {
-      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [product]);
+      return null;
+    }
+  }
+  sendImpressions() {
+    const {
+      product = [],
+      sendProductImpression,
+      page,
+      sendProductImpressionOnBundle,
+    } = this.props;
+    const queryID = localStorage.getItem("queryID")
+      ? localStorage.getItem("queryID")
+      : null;
+    const productDataWithQueryID =
+      page == "plp" && queryID
+        ? { ...product, ...{ productQueryID: queryID } }
+        : product;
+    if (page == "plp" && sendProductImpressionOnBundle) {
+      sendProductImpression([productDataWithQueryID]);
+    } else {
+      const productData =
+        !productDataWithQueryID.product_Position && this.props?.position
+          ? { ...productDataWithQueryID, ...{ position: this.props?.position } }
+          : { ...productDataWithQueryID };
+      const productMappedData = {
+        ...productData,
+        ...{ list: this.getPLPListName() },
+      };
+      Event.dispatch(EVENT_PRODUCT_LIST_IMPRESSION, [productMappedData]);
     }
     this.setState({ impressionSent: true });
   }
@@ -195,7 +240,8 @@ class ProductItem extends PureComponent {
 
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, [product]);
+    const productData = { ...product, ...{ listName: this.getPLPListName() } };
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, productData);
     if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
@@ -240,7 +286,7 @@ class ProductItem extends PureComponent {
       pageType,
       renderMySignInPopup,
       isFilters,
-      position
+      position,
     } = this.props;
     return (
       <WishlistIcon
@@ -398,7 +444,7 @@ class ProductItem extends PureComponent {
   }
 
   renderAddToCartOnHover() {
-    const { 
+    const {
       product,
       pageType,
       removeFromWishlist,

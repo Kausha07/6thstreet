@@ -65,23 +65,33 @@ class ProductImpressionEvent extends BaseEvent {
           category,
           price,
           list,
-          product_Position
+          product_Position,
+          position,
+          productQueryID,
         },
         index
       ) => ({
         name: name || label || "",
         id: sku || id || "",
-        price: price && price.length > 0 ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : "",
+        price:
+          price && price.length > 0
+            ? price[0][Object.keys(price[0])[0]]["6s_special_price"]
+            : "",
         brand: brand_name ? brand_name : "",
         category: product_type_6s || category || "",
         variant: color || "",
-        list: list || "Recommendations",
-        position: product_Position ? product_Position : (index + 1) || "",
+        list: list || "Others",
+        position: product_Position
+          ? product_Position
+          : position
+          ? position
+          : index + 1 || "",
+        queryId: productQueryID ? productQueryID : null,
       })
     );
 
     impressions.map((item) => {
-      if(item.isFilters){
+      if (item.isFilters) {
         isFilters = true;
       }
     });
@@ -94,7 +104,7 @@ class ProductImpressionEvent extends BaseEvent {
         currencyCode: this.getCurrencyCode(),
         impressions: formattedImpressions,
       },
-      isFilters: isFilters ? "Yes" : "No"
+      isFilters: isFilters ? "Yes" : "No",
     });
   }
 }
