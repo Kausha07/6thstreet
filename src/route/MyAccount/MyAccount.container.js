@@ -27,6 +27,7 @@ import {
   STORE_CREDIT,
   WALLET_PAYMENTS,
   REFERRAL_SCREEN,
+  VIP_CUSTOMER,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -48,6 +49,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+  IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -84,6 +86,15 @@ export const exchangeReturnState = {
     name: __("My Return/Exchange"),
     alternateName: __("Cancel an item"),
     alternateSecondName: __("Exchange an item"),
+    className: "",
+  },
+};
+
+export const vipCustomerState = {
+  [VIP_CUSTOMER]: {
+    url: "/vip",
+    name: __("Your VIP Perks"),
+    alternativePageName: "vip",
     className: "",
   },
 };
@@ -194,10 +205,12 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   changeActiveTab(activeTab) {
-    const { history, is_exchange_enabled, isClubApparelEnabled } = this.props;
+    const { history, is_exchange_enabled, IsVipCustomerEnabled, customer,isClubApparelEnabled } = this.props;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
@@ -205,6 +218,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
         }
       : {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
@@ -276,13 +290,14 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs, is_exchange_enabled, isClubApparelEnabled } =
-      this.props;
+    const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer, isClubApparelEnabled } = this.props;
+    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     const { activeTab } = this.state;
     let finalTabMap;
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
@@ -290,6 +305,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
         }
       : {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,

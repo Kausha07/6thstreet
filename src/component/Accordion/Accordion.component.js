@@ -34,21 +34,30 @@ export class Accordion extends PureComponent {
     }
   }
 
-  toggleAccordion = () =>
+  toggleAccordion = (e) => {
     this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
+    e.stopPropagation();
+  };
 
   renderHeading() {
     const { title, MyAccountSection } = this.props;
     const { isExpanded } = this.state;
-
+    const isVipAccordion = this.props?.isVipAccordion ? true : false;
     return (
-      <div block="Accordion" elem="Heading">
-        {typeof title === "string" && <h2 className="prodDetailTitle">{title}</h2>}
+      <div block="Accordion" elem="Heading" mods={{ isVipAccordion }}>
+        {typeof title === "string" && (
+          <h2
+            className={isVipAccordion ? "vipHeading" : "prodDetailTitle"}
+            onClick={isVipAccordion ? this.toggleAccordion : null}
+          >
+            {title}
+          </h2>
+        )}
         {typeof title !== "string" && title}
         <button
           block="Accordion"
           elem="Expand"
-          mods={{ isExpanded, isArabic: isArabic() }}
+          mods={{ isExpanded, isArabic: isArabic(), isVipAccordion }}
           onClick={this.toggleAccordion}
         >
           {isExpanded ? MyAccountSection ? (

@@ -10,6 +10,7 @@ import MyAccountMobileHeader from "Component/MyAccountMobileHeader";
 import MyAccountMyOrders from "Component/MyAccountMyOrders";
 import MyAccountMyWishlist from "Component/MyAccountMyWishlist";
 import MyAccountReferralTab from "Component/MyAccountReferralTab";
+import MyAccountVipCustomer from "Component/MyAccountVipCustomer";
 // import Referral from "./../../component/Referral/Referral";
 import {
   RETURN_ITEM_LABEL,
@@ -37,6 +38,7 @@ import {
   WALLET_PAYMENTS,
   tabMapType,
   REFERRAL_SCREEN,
+  VIP_CUSTOMER,
 } from "Type/Account";
 import {
   exchangeReturnState,
@@ -45,6 +47,7 @@ import {
   tabMap2,
   storeCreditState,
   clubApparelState,
+  vipCustomerState,
 } from "./MyAccount.container";
 import { isArabic } from "Util/App";
 import { deleteAuthorizationToken } from "Util/Auth";
@@ -72,6 +75,9 @@ import Event, {
   MOE_trackEvent,
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import supportIcon from "./icons/support.png";
+import OrdersIcon from "./icons/box-vip.png";
+import help from "./icons/help.png";
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -112,6 +118,7 @@ export class MyAccount extends SourceMyAccount {
     [CONTACT_HELP]: ContactHelp,
     [SETTINGS_SCREEN]: SettingsScreen,
     [REFERRAL_SCREEN]: MyAccountReferralTab,
+    [VIP_CUSTOMER]: MyAccountVipCustomer,
   };
 
   linksMap = [
@@ -179,6 +186,23 @@ export class MyAccount extends SourceMyAccount {
         </div>
       </div>
     ));
+  }
+
+  componentDidUpdate() {
+    const { isMobile } = this.state;
+    if (isMobile && document?.body?.style?.position == "fixed") {
+      document.body.style.position = "static";
+    }
+  }
+
+  componentWillUnmount() {
+    const { isMobile } = this.state;
+    if (isMobile) {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "";
+      document.body.style.position = "";
+    }
   }
 
   sendEvents(event) {
@@ -294,11 +318,16 @@ export class MyAccount extends SourceMyAccount {
       customer,
       IsReferralEnabled,
       isClubApparelEnabled,
+      IsVipCustomerEnabled,
     } = this.props;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     const { pathname = "" } = location;
+
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
@@ -306,6 +335,7 @@ export class MyAccount extends SourceMyAccount {
         }
       : {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
@@ -363,7 +393,8 @@ export class MyAccount extends SourceMyAccount {
         <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
           {alternativePageName === "Club Apparel Loyalty" ||
           name === "Club Apparel Loyalty" ||
-          name == __("Refer & Earn") ? null : !isReturnButton ? (
+          name == __("Refer & Earn") ||
+          name == __("Your VIP Perks") ? null : !isReturnButton ? (
             <h1 block="MyAccount" elem="Heading">
               {isCancel
                 ? alternateName
@@ -397,6 +428,7 @@ export class MyAccount extends SourceMyAccount {
 
   renderMobile() {
     const {
+      customer,
       activeTab,
       isSignedIn,
       mobileTabActive,
@@ -407,15 +439,35 @@ export class MyAccount extends SourceMyAccount {
       config,
       IsReferralEnabled,
       isClubApparelEnabled,
+      IsVipCustomerEnabled,
+      history: { location },
     } = this.props;
-
     const { isArabic, isMobile } = this.state;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
+    const isVip = isVipCustomer ? true : false;
+    if (
+      isVipCustomer &&
+      activeTab == "dashboard" &&
+      isMobile &&
+      location.pathname === "/my-account"
+    ) {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "linear-gradient(180deg, #e7d8fc 0%, #fff 100%)";
+    } else {
+      document.getElementsByClassName(
+        "PageWrapper-Content"
+      )[0].style.background = "none";
+    }
+
     if (!IsReferralEnabled) {
       delete tabMap[REFERRAL_SCREEN];
     }
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
@@ -423,6 +475,7 @@ export class MyAccount extends SourceMyAccount {
         }
       : {
           ...storeCreditState,
+          ...(isVipCustomer && { ...vipCustomerState }),
           ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
@@ -455,9 +508,9 @@ export class MyAccount extends SourceMyAccount {
     const isCancel = pathname.includes("/return-item/cancel");
     const isPickUpAddress =
       pathname === "/my-account/return-item/pick-up-address";
-    const customer = BrowserDatabase.getItem("customer");
+    const customerData = BrowserDatabase.getItem("customer");
     const firstname =
-      customer && customer.firstname ? customer.firstname : null;
+      customer && customerData.firstname ? customerData.firstname : null;
     const payloadKey = Object.keys(payload)[0];
     const validateWhatsapp = config?.whatsapp_chatbot_phone
       ? config.whatsapp_chatbot_phone.replaceAll(/[^A-Z0-9]/gi, "")
@@ -466,7 +519,11 @@ export class MyAccount extends SourceMyAccount {
     return (
       <ContentWrapper
         label={__("My Account page")}
-        wrapperMix={{ block: "MyAccount", elem: "Wrapper", mods: { isArabic } }}
+        wrapperMix={{
+          block: "MyAccount",
+          elem: "Wrapper",
+          mods: { isArabic, isVip },
+        }}
       >
         {!(isPickUpAddress && payloadKey && payload[payloadKey].title) && (
           <MyAccountMobileHeader
@@ -489,7 +546,7 @@ export class MyAccount extends SourceMyAccount {
             <span block="UserName">{firstname}</span>
           </div>
           <div block="MobileCards" mods={{ isClubApparelEnabled }}>
-            {isClubApparelEnabled ? (
+          {isClubApparelEnabled ? (
               <div block="CaCardsContainer">
                 <div block="InfoIconBlock">
                   <Image block="InfoIcon" src={infoIcon} alt={"Club Apparel"} />
@@ -543,42 +600,67 @@ export class MyAccount extends SourceMyAccount {
                 </button>
               </div>
             )}
-            <div block="CardsContainer">
-              <Image block="CardsIcon" src={box} alt={"My Orders"} />
-              <div block="CardTitle"> {__("My Orders")} </div>
-              <button onClick={() => this.handleTabChange("my-orders")}>
-                {__("Track")}
-              </button>
-            </div>
-            <div block="CardsContainer helpContainer">
-              <Image block="CardsIcon" src={help} alt={"help"} />
-              <div block="CardTitle">Help Center 24/7</div>
-              <span>{__("Online")}</span>
-              <a
-                onClick={() => {
-                  this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
-                }}
-                className="chat-button"
-                href={`${whatsappChat}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {__("Live Chat")}
-              </a>
-            </div>
+            {isVipCustomer ? (
+              <>
+                <div block="CardsContainer isVIP">
+                  <Image block="CardsIcon" src={OrdersIcon} alt={"Orders"} />
+                  <div block="CardTitle"> {__("My Orders")} </div>
+                  <button onClick={() => this.handleTabChange("my-orders")}>
+                    {__("Track")}
+                  </button>
+                </div>
+                <div block="CardsContainer helpContainer isVIP">
+                  <Image block="CardsIcon" src={supportIcon} alt={"Support"} />
+                  <div block="CardTitle"> {__("My Agent")} </div>
+                  <span>{__("Mon - Sat")}</span>
+                  <span block="timing">({__("9am - 9pm")})</span>
+                  <a
+                    onClick={() => {
+                      this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                    }}
+                    className="chat-button"
+                    href="tel:048142666"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {__("Call")}
+                  </a>
+                </div>
+              </>
+            ) : (
+              <>
+                <div block="CardsContainer">
+                  <Image block="CardsIcon" src={box} alt={"box"} />
+                  <div block="CardTitle"> {__("My Orders")} </div>
+                  <button onClick={() => this.handleTabChange("my-orders")}>
+                    {__("View")}
+                  </button>
+                </div>
+                <div block="CardsContainer helpContainer">
+                  <Image block="CardsIcon" src={help} alt={"help"} />
+                  <div block="CardTitle">{__("Help Center 24/7")}</div>
+                  <span>{__("Online")}</span>
+                  <a
+                    onClick={() => {
+                      this.sendEvents(EVENT_ACCOUNT_CUSTOMER_SUPPORT_CLICK);
+                    }}
+                    className="chat-button"
+                    href={`${whatsappChat}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {__("Live Chat")}
+                  </a>
+                </div>
+              </>
+            )}
           </div>
-          <div
-            block="MyAccountMobile"
-            elem="Menu"
-            mods={{ isClubApparelEnabled }}
-          >
-            <MyAccountTabList
-              tabMap={newTabMap}
-              activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
-              changeActiveTab={this.handleTabChange}
-              onSignOut={this.handleSignOut}
-            />
-          </div>
+          <MyAccountTabList
+            tabMap={newTabMap}
+            activeTab={activeTab === EXCHANGE_ITEM ? RETURN_ITEM : activeTab}
+            changeActiveTab={this.handleTabChange}
+            onSignOut={this.handleSignOut}
+          />
           {/* {customer && (
             <Referral referralCodeValue={customer.referral_coupon} />
           )} */}
