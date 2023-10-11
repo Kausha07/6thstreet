@@ -107,12 +107,12 @@ class PDPAddToCart extends PureComponent {
         if(country == 'uk') {
           message = response.uk_message;
           size = response.uk_size;
-        } else if(country = 'us') {
+        } else if(country == 'us') {
           message = response.us_message;
           size = response.us_size;
         }
-        simple_products.filter((values,sku)=>{
-          if(values['size']['eu'] == response.size) {
+        Object.keys(simple_products).map((sku)=>{
+          if(simple_products[sku]['size']['eu'] == response.size) {
             recSku = sku;
           }
         })
