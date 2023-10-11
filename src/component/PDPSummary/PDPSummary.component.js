@@ -287,6 +287,14 @@ class PDPSummary extends PureComponent {
       area = areaSelected ? areaSelected : area;
       city = this.state.selectedCity ? this.state.selectedCity: city;
       const { addressCityData } = this.props;
+      let cross_border_qty = 0;
+      if (typeof simple_products === "object" && simple_products !== null) {
+        Object.values(simple_products).forEach((obj) => {
+          if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
+            cross_border_qty = 1;
+          }
+        });
+      }
       if(city && area && countryCode) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
           addressCityData,
@@ -302,13 +310,13 @@ class PDPSummary extends PureComponent {
         };
         request.intl_vendors=null;
         let payload = {};
-        if(!(cross_border && !edd_info?.has_cross_border_enabled)) {
+        if (!(cross_border_qty && !edd_info?.has_cross_border_enabled)) {
           let items = [];
           Object.keys(simple_products).map((sku) => {
             payload = {
               sku: sku,
               intl_vendor:
-              parseInt(simple_products[sku]?.cross_border_qty) > 0 &&
+                parseInt(simple_products[sku]?.cross_border_qty) > 0 &&
                 edd_info.international_vendors &&
                 international_vendor &&
                 edd_info.international_vendors.indexOf(international_vendor) >
@@ -317,7 +325,10 @@ class PDPSummary extends PureComponent {
                   : null,
             };
 
-            if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+            if (
+              payload?.intl_vendor !== null &&
+              qtyAttributeForCountry().includes(countryCode)
+            ) {
               payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
             }
 
@@ -349,7 +360,7 @@ class PDPSummary extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      product: { cross_border = 0, price },
+      product: { cross_border = 0, price, simple_products = {} },
       edd_info,
       defaultShippingAddress,
       addressCityData,
@@ -357,6 +368,14 @@ class PDPSummary extends PureComponent {
     const countryCode = getCountryFromUrl();
 
     const { eddEventSent } = this.state;
+    let cross_border_qty = 0;
+    if (typeof simple_products === "object" && simple_products !== null) {
+      Object.values(simple_products).forEach((obj) => {
+        if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
+          cross_border_qty = 1;
+        }
+      });
+    }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
@@ -366,7 +385,8 @@ class PDPSummary extends PureComponent {
       edd_info.is_enable &&
       edd_info.has_pdp &&
       !eddEventSent &&
-      cross_border === 0 && !edd_info.has_item_level
+      cross_border_qty === 0 &&
+      !edd_info.has_item_level
     ) {
       if (addressCityData?.length > 0) {
         this.validateEddStatus(countryCode);
@@ -1213,16 +1233,19 @@ class PDPSummary extends PureComponent {
       international_shipping_fee
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
-    const isIntlBrand =
-      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
     let inventory_level_cross_border = false;
-    if(typeof simple_products === 'object' && simple_products !== null) {
-      Object.values(simple_products).forEach(obj => {
-        if(obj.cross_border_qty && parseInt(obj.cross_border_qty) > 1) {
+    let cross_border_qty = 0;
+    if (typeof simple_products === "object" && simple_products !== null) {
+      Object.values(simple_products).forEach((obj) => {
+        if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
           inventory_level_cross_border = true;
+          cross_border_qty = 1;
         }
       });
     }
+    const isIntlBrand =
+      cross_border_qty === 1 && edd_info && edd_info.has_cross_border_enabled;
+
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
@@ -1237,9 +1260,15 @@ class PDPSummary extends PureComponent {
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0 && !edd_info.has_item_level)  || cross_border === 0 || (edd_info.has_item_level && isIntlBrand)) &&
-          this.renderSelectCity(cross_border === 1)}
-        {inventory_level_cross_border && international_shipping_fee &&  this.renderIntlTag()}
+          ((isIntlBrand &&
+            Object.keys(intlEddResponse).length > 0 &&
+            !edd_info.has_item_level) ||
+            cross_border_qty === 0 ||
+            (edd_info.has_item_level && isIntlBrand)) &&
+          this.renderSelectCity(cross_border_qty === 1)}
+        {inventory_level_cross_border &&
+          international_shipping_fee &&
+          this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
