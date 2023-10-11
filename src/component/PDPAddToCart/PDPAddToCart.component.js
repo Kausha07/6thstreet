@@ -91,35 +91,47 @@ class PDPAddToCart extends PureComponent {
   }
 
   async getRecommendedSize(){
-    const { customer, selectedSizeCode, product: {sku, simple_products}} = this.props;
-    if(customer && customer.email) {
+    const { customer, selectedSizeCode, product: {sku, simple_products, categories_without_path=[], gender}} = this.props;
+    const isRequiredCategory = categories_without_path.some(item => item.toLowerCase() === "shoes");
+    let checkRequiredGender = false;
+    if(typeof gender == 'string' && gender.toLowerCase() == "men"){
+      checkRequiredGender = true;
+    } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men")) {
+      checkRequiredGender = true;
+    }
+
+    if(customer && customer.email && isRequiredCategory && checkRequiredGender) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
       const header = {
         sku: sku,
         size: optionValue,
         userEmail: customer.email
       };
-      const response = await fetchPredictedSize(header);
-      if(response.status) {
-        const country = getCountryFromUrl().toLowerCase();
-        let message = response.message;
-        let recSku = response.size;
-        if(country == 'uk') {
-          message = response.uk_message;
-          size = response.uk_size;
-        } else if(country == 'us') {
-          message = response.us_message;
-          size = response.us_size;
-        }
-        Object.keys(simple_products).map((sku)=>{
-          if(simple_products[sku]['size']['eu'] == response.size) {
-            recSku = sku;
+      try{
+        const response = await fetchPredictedSize(header);
+        if(response.status) {
+          const country = getCountryFromUrl().toLowerCase();
+          let message = response.message;
+          let recSku = response.size;
+          if(country == 'uk') {
+            message = response.uk_message;
+            size = response.uk_size;
+          } else if(country == 'us') {
+            message = response.us_message;
+            size = response.us_size;
           }
-        })
-        this.setState({
-          sizePredictorMessage: message,
-          recommendedSizeSku: recSku
-        });
+          Object.keys(simple_products).map((sku)=>{
+            if(simple_products[sku]['size']['eu'] == response.size) {
+              recSku = sku;
+            }
+          })
+          this.setState({
+            sizePredictorMessage: message,
+            recommendedSizeSku: recSku
+          });
+        }
+      } catch (e) {
+        console.log("error", e);
       }
     }
   }
