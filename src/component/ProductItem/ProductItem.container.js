@@ -45,6 +45,9 @@ export class ProductItemContainer extends PureComponent {
       wishlist_item_id,
       isFilters,
     } = this.props;
+    const sendProductImpressionOnBundle = this.props?.sendImpressionOnBundle
+      ? true
+      : false;
     return {
       product,
       page,
@@ -58,6 +61,7 @@ export class ProductItemContainer extends PureComponent {
       removeFromWishlist,
       wishlist_item_id,
       isFilters,
+      sendProductImpressionOnBundle,
     };
   };
 

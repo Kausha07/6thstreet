@@ -650,7 +650,11 @@ export class CartPage extends PureComponent {
         }
       });
     }
-    const grandTotal = getFinalPrice(total, currency_code);
+    const cashOnDeliveryFee = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
+    const grandTotal =
+      total > cashOnDeliveryFee
+        ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDeliveryFee, currency_code)
+        : getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
     if (discount != 0) {
       return (

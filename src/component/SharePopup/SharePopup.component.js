@@ -58,7 +58,7 @@ class SharePopup extends PureComponent {
         if( isReferral ){
           window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank")
         } else{
-          window.open(`https://api.whatsapp.com/send?text=${url}`, "_blank")
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}%0A%0A${url}`, "_blank")
         }
       },
       render: true,
@@ -103,7 +103,7 @@ class SharePopup extends PureComponent {
         if( isReferral ){
           window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}`)
         } else{
-          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${text} ${url}`)
+          window.open(`mailto:?&&subject=${title}&cc=&bcc=&body=${encodeURIComponent(text)}%0A%0A${url}`)
         }
       },
       render: true,
@@ -113,7 +113,7 @@ class SharePopup extends PureComponent {
       icon: <Pinterest />,
       handleClick: (text, title, url, image) =>
         window.open(
-          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${text}`,
+          `https://pinterest.com/pin/create/button?url=${url}&media=${image}&description=${encodeURIComponent(text)}`,
           "_blank"
         ),
       render: true,
