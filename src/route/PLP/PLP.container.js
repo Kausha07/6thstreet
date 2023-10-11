@@ -200,6 +200,8 @@ export class PLPContainer extends PureComponent {
     moreActiveFilters: {},
     selectedMoreFilterPLP: "",
     schemaData: {},
+    metaTitle: "",
+    metaDesc: "",
   };
 
   containerFunctions = {
@@ -1204,6 +1206,7 @@ export class PLPContainer extends PureComponent {
     //     countryName,
     //     countryName
     //   );
+    this.setState({ metaTitle: PLPMetaTitle, metaDesc: PLPMetaDesc });
     return {
       title: PLPMetaTitle,
       description: PLPMetaDesc,
@@ -1225,10 +1228,6 @@ export class PLPContainer extends PureComponent {
       title: metaData.title ? metaData.title : "",
       keywords: metaData.keywords ? metaData.keywords : "",
       description: metaData.description ? metaData.description : "",
-      twitter_title: metaData.title ? metaData.title : "",
-      twitter_desc: metaData.description ? metaData.description : "",
-      og_title: metaData.title ? metaData.title : "",
-      og_desc: metaData.description ? metaData.description : "",
     });
   }
 
@@ -1275,6 +1274,8 @@ export class PLPContainer extends PureComponent {
       moreActiveFilters,
       selectedMoreFilterPLP,
       schemaData,
+      metaTitle,
+      metaDesc
     } = this.state;
     // isDisabled: this._getIsDisabled()
 
@@ -1294,6 +1295,8 @@ export class PLPContainer extends PureComponent {
       moreActiveFilters,
       selectedMoreFilterPLP,
       schemaData,
+      metaTitle,
+      metaDesc
     };
   };
 
