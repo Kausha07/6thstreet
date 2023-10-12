@@ -92,15 +92,14 @@ class PDPAddToCart extends PureComponent {
 
   async getRecommendedSize(){
     const { customer, selectedSizeCode, product: {sku, simple_products, categories_without_path=[], gender}} = this.props;
-    const isRequiredCategory = categories_without_path.some(item => item.toLowerCase() === "shoes");
+    const isRequiredCategory = categories_without_path.some(item => (item.toLowerCase() === "shoes" || item.toLowerCase() === "أحذية"));
     let checkRequiredGender = false;
-    if(typeof gender == 'string' && gender.toLowerCase() == "men"){
+    if(typeof gender == 'string' && (gender.toLowerCase() == "men" || gender.toLowerCase() == "رجال")){
       checkRequiredGender = true;
-    } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men")) {
+    } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men" || item.toLowerCase() === "رجال")) {
       checkRequiredGender = true;
     }
-
-    if(customer && customer.email && isRequiredCategory && checkRequiredGender) {
+    if(customer && customer.email && isRequiredCategory && checkRequiredGender && this.props.hasSizePredictor) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
       const header = {
         sku: sku,
@@ -769,6 +768,7 @@ class PDPAddToCart extends PureComponent {
 
 export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
+  hasSizePredictor: state.AppConfig.hasSizePredictor
 });
 
 export default connect(mapStateToProps)(PDPAddToCart);
