@@ -474,7 +474,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               inventory_level_cross_border &&
               this.renderPriceLine(
                 getDiscountFromTotals(totals, "intl_shipping")  || __("FREE"),
-                __("International Shipping Charges")
+                __("International Shipping Fee")
               )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "tax"),

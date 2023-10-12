@@ -937,7 +937,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     if (inventory_level_cross_border && international_shipping_fee) {
       LineItems.push({
-        label: __("International Shipping Charges"),
+        label: __("International Shipping Fee"),
         amount: international_shipping_amount
           ? international_shipping_amount
           : __("FREE"),
