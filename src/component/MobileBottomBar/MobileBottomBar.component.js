@@ -29,13 +29,15 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-
+import { customerType } from "Type/Account";
 import "./MobileBottomBar.style.scss";
 
 
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
+  customer: state.MyAccountReducer.customer,
+  IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -52,6 +54,8 @@ class MobileBottomBar extends NavigationAbstract {
     newMenuGender: PropTypes.string,
     setIsCurrentTabActive: PropTypes.func,
     newSignUpEnabled: PropTypes.bool,
+    customer: customerType.isRequired,
+    IsVipCustomerEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -351,11 +355,12 @@ class MobileBottomBar extends NavigationAbstract {
 
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
-    const { location, isSignedIn, newSignUpEnabled } = this.props;
+    const { location, isSignedIn, newSignUpEnabled,customer, IsVipCustomerEnabled } = this.props;
     const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });
 
+    const isVip = isSignedIn && customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
     const onClickHandle = !isSignedIn
       ? this.renderAccountMenuPopUp
       : this.routeChangeAccount;
@@ -390,6 +395,7 @@ class MobileBottomBar extends NavigationAbstract {
           key="accountButton"
           block="MobileBottomBar"
           elem="WishListAndAccount"
+          mods={{isVip}}
         >
           <HeaderAccount
             isAccount={isAccount}

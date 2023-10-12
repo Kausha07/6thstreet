@@ -156,7 +156,13 @@ export class MyAccountOverlay extends PureComponent {
 
   componentDidMount() {
     if (isMobile.any()) {
-      document.body.style.position = "fixed";
+      if (!this.props?.isSignedIn) {
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+        return;
+      } else {
+        document.body.style.position = "";
+      }
     }
     const { email, setCurrentOverlayState } = this.props;
     setCurrentOverlayState(this.props?.state);

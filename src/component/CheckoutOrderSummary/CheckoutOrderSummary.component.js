@@ -434,7 +434,11 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       international_shipping_fee,
       checkoutStep,
     } = this.props;
-    const grandTotal = getFinalPrice(total, currency_code);
+    const cashOnDelivery = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
+    const grandTotal =
+      checkoutStep === SHIPPING_STEP && total > cashOnDelivery
+        ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDelivery, currency_code)
+        : getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
     let inventory_level_cross_border = false;
     items?.map((item) => {

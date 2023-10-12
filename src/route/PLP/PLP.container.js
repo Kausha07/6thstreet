@@ -65,6 +65,7 @@ import {
 import { getActiveFiltersIds } from "Component/FieldMultiselect/utils/FieldMultiselect.helper";
 
 import { getIsFilters } from "Component/PLPAddToCart/utils/PLPAddToCart.helper";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -197,7 +198,10 @@ export class PLPContainer extends PureComponent {
     metaContent: null,
     newActiveFilters: {},
     moreActiveFilters: {},
-    selectedMoreFilterPLP: ""
+    selectedMoreFilterPLP: "",
+    schemaData: {},
+    metaTitle: "",
+    metaDesc: "",
   };
 
   containerFunctions = {
@@ -303,7 +307,7 @@ export class PLPContainer extends PureComponent {
         }
       }
     });
-    if (this.getIsLoading()) {
+    if (this.getIsLoading() && window.location.search) {
       PLPContainer.requestProductList(this.props);
     }
     this.setMetaData();
@@ -339,21 +343,10 @@ export class PLPContainer extends PureComponent {
   };
 
   sendMOEevents() {
-    const { requestedOptions } = this.props;
     const { newActiveFilters, activeFilters } = this.state;
     const isFilters = getIsFilters(newActiveFilters, activeFilters) || false;
 
-    const categorylevelPath = requestedOptions["categories.level4"]
-      ? requestedOptions["categories.level4"]
-      : requestedOptions["categories.level3"]
-        ? requestedOptions["categories.level3"]
-        : requestedOptions["categories.level2"]
-          ? requestedOptions["categories.level2"]
-          : requestedOptions["categories.level1"]
-            ? requestedOptions["categories.level1"]
-            : requestedOptions["categories.level0"]
-              ? requestedOptions["categories.level0"]
-              : "";
+    const categorylevelPath = this.getCategoryLevel();
     const Categories_level =
       categorylevelPath && categorylevelPath.includes("///")
         ? categorylevelPath.replaceAll(" ", "").split("///")
@@ -1023,6 +1016,16 @@ export class PLPContainer extends PureComponent {
       element.style.scrollMarginTop = "180px";
       element.scrollIntoView({ behavior: "smooth" });
     }
+    const pagePathName = new URL(window.location.href).pathname;
+    const isCollectionPage = pagePathName.includes(".html") || false;
+    if (
+      pages[0] &&
+      pages[0].length &&
+      prevProps.pages !== pages &&
+      isCollectionPage
+    ) {
+      this.appendSchemaData();
+    }
   }
 
   capitalizeFirstLetter(string = "") {
@@ -1049,16 +1052,7 @@ export class PLPContainer extends PureComponent {
     const {isArabic} = this.state;
     if (query && gender !== "influencer") {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level4"]
-        ? options["categories.level4"]
-        : options["categories.level3"]
-          ? options["categories.level3"]
-          : options["categories.level2"]
-            ? options["categories.level2"]
-            : options["categories.level1"]
-              ? options["categories.level1"]
-              : options["q"];
-
+      const breadcrumbLevels = this.getCategoryLevel();
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
         const urlArray = getBreadcrumbsUrl(levelArray, menuCategories) || [];
@@ -1087,89 +1081,153 @@ export class PLPContainer extends PureComponent {
     }
   }
 
-  setMetaData() {
-    const {
-      setMeta,
-      country,
-      config,
-      requestedOptions: { q } = {},
-      gender,
-    } = this.props;
-    const { brandDescription, brandName, metaContent } = this.state;
-    if (!q) {
-      return;
+  appendSchemaData() {
+    const { pages } = this.props;
+    let productsList = [];
+    for (const key in pages) {
+      if (pages.hasOwnProperty(key)) {
+        productsList = [...productsList, ...pages[key]];
+      }
     }
+    const formattedImpressions = productsList.map(
+      ({ url, name, thumbnail_url, price, brand_name }) => ({
+        "@type": "Product",
+        url: url,
+        name: `${brand_name} ${name}`,
+        image: thumbnail_url,
+        offers: {
+          "@type": "Offer",
+          price: price[0][Object.keys(price[0])[0]]["6s_special_price"],
+          priceCurrency: [Object.keys(price[0])[0]][0],
+        },
+      })
+    );
+    const metaData = this.renderMetaData() || "";
+    const pageUrl = new URL(window.location.href);
+    const PLPschemaData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "@id": `${pageUrl.origin}${pageUrl.pathname}#CollectionPage`,
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: [...formattedImpressions],
+      },
+      description: metaData.description ? metaData.description : "",
+      name: metaData.title ? metaData.title : "",
+      url: `${pageUrl.origin}${pageUrl.pathname}`,
+      isPartOf: `${pageUrl.hostname}`,
+    };
+    this.setState({ schemaData: PLPschemaData });
+  }
+
+  renderMetaData() {
+    const { country, config, gender } = this.props;
+    const { brandName, metaContent, isArabic } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
     const checkBrandPage = pagePathName.includes(".html")
       ? pagePathName.split(".html").join("").split("/")
       : "";
-    const genderName = capitalize(gender);
+    const genderName = isArabic
+      ? getGenderInArabic(gender) || ""
+      : capitalize(gender) || "";
     const countryList = getCountriesForSelect(config);
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
-    const breadcrumbs = location.pathname.split(".html")[0].substring(1).split("/");
-    const categoryName = capitalize(breadcrumbs.pop() || "");
+    const categoryLevel = this.getCategoryLevel() || "";
+    const categoriesList =
+      categoryLevel && categoryLevel.includes("///")
+        ? categoryLevel.replaceAll(" ", "").split("///")
+        : [categoryLevel];
+    const categoryName = capitalize(categoriesList.pop() || "");
     const getCategoryLevel = pagePathName.includes(".html")
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
     const staticMetaData =
       getCategoryLevel.length == 5 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
-        getCategoryLevel[2]
-        ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
-        : getCategoryLevel.length == 4 && metaContent
-          ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
-          getCategoryLevel[2]
-          ]?.[getCategoryLevel[3]]
-          : getCategoryLevel.length == 3 && metaContent
-            ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
-            ]
-            : getCategoryLevel.length == 2 && metaContent
-              ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
-              : getCategoryLevel.length == 1 && metaContent
-                ? metaContent?.[getCategoryLevel[0]]
-                : null;
+          ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
+        : getCategoryLevel.length == 4 && metaContent
+        ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+          ]?.[getCategoryLevel[3]]
+        : getCategoryLevel.length == 3 && metaContent
+        ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
+            getCategoryLevel[2]
+          ]
+        : getCategoryLevel.length == 2 && metaContent
+        ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
+        : getCategoryLevel.length == 1 && metaContent
+        ? metaContent?.[getCategoryLevel[0]]
+        : null;
     const PLPMetaTitle =
       staticMetaData && staticMetaData?.title
         ? staticMetaData.title
         : brandName && checkBrandPage.length < 3
-          ? __(
+        ? __(
             "Shop %s Online | Buy Latest Collections on 6thStreet %s",
             brandName,
             countryName
           )
-          : __("%s | 6thStreet.com %s", categoryName, countryName);
+        : isArabic
+        ? __(
+            "Shop %s for %s Online | 6thStreet %s",
+            genderName,
+            categoryName,
+            countryName
+          )
+        : __(
+            "Shop %s for %s Online | 6thStreet %s",
+            categoryName,
+            genderName,
+            countryName
+          );
 
     const PLPMetaDesc =
       staticMetaData && staticMetaData?.desc
         ? staticMetaData.desc
         : brandName && checkBrandPage.length < 3
-          ? __(
+        ? __(
             "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             brandName,
             countryName,
             brandName
           )
-          : __(
-            "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        : __(
+            "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
             categoryName,
+            genderName,
             countryName,
-            countryName
+            categoryName
           );
-
-    setMeta({
+    // : __(
+    //     "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+    //     categoryName,
+    //     countryName,
+    //     countryName
+    //   );
+    this.setState({ metaTitle: PLPMetaTitle, metaDesc: PLPMetaDesc });
+    return {
       title: PLPMetaTitle,
+      description: PLPMetaDesc,
       keywords: __(
         "%s, online shopping, %s, free shipping, returns",
         categoryName,
         countryName
       ),
-      description: PLPMetaDesc,
-      twitter_title: PLPMetaTitle,
-      twitter_desc: PLPMetaDesc,
-      og_title: PLPMetaTitle,
-      og_desc: PLPMetaDesc,
+    };
+  }
+
+  setMetaData() {
+    const { setMeta, requestedOptions: { q } = {} } = this.props;
+    if (!q) {
+      return;
+    }
+    const metaData = this.renderMetaData() || null;
+    setMeta({
+      title: metaData.title ? metaData.title : "",
+      keywords: metaData.keywords ? metaData.keywords : "",
+      description: metaData.description ? metaData.description : "",
     });
   }
 
@@ -1198,9 +1256,27 @@ export class PLPContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { query, plpWidgetData, gender, filters, pages, isLoading, showOverlay } =
-      this.props;
-    const { brandImg, brandName, brandDescription, activeFilters, newActiveFilters, moreActiveFilters, selectedMoreFilterPLP } = this.state;
+    const {
+      query,
+      plpWidgetData,
+      gender,
+      filters,
+      pages,
+      isLoading,
+      showOverlay,
+    } = this.props;
+    const {
+      brandImg,
+      brandName,
+      brandDescription,
+      activeFilters,
+      newActiveFilters,
+      moreActiveFilters,
+      selectedMoreFilterPLP,
+      schemaData,
+      metaTitle,
+      metaDesc
+    } = this.state;
     // isDisabled: this._getIsDisabled()
 
     return {
@@ -1218,25 +1294,38 @@ export class PLPContainer extends PureComponent {
       newActiveFilters,
       moreActiveFilters,
       selectedMoreFilterPLP,
+      schemaData,
+      metaTitle,
+      metaDesc
     };
   };
+
+  getCategoryLevel() {
+    const { options } = this.props;
+    const categorylevelPath = options["categories.level4"]
+      ? options["categories.level4"]
+      : options["categories.level3"]
+      ? options["categories.level3"]
+      : options["categories.level2"]
+      ? options["categories.level2"]
+      : options["categories.level1"]
+      ? options["categories.level1"]
+      : options["categories.level0"]
+      ? options["categories.level0"]
+      : options["q"]
+      ? options["q"]
+      : "";
+    return categorylevelPath;
+  }
 
   render() {
     const { requestedOptions, filters } = this.props;
     const { categoryloaded } = this.state;
-    const categorylevelPath = requestedOptions["categories.level4"]
-      ? requestedOptions["categories.level4"]
-      : requestedOptions["categories.level3"]
-        ? requestedOptions["categories.level3"]
-        : requestedOptions["categories.level2"]
-          ? requestedOptions["categories.level2"]
-          : requestedOptions["categories.level1"]
-            ? requestedOptions["categories.level1"]
-            : requestedOptions["categories.level0"]
-              ? requestedOptions["categories.level0"]
-              : "";
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
-    localStorage.setItem("CATEGORY_CURRENT", JSON.stringify(categorylevelPath));
+    localStorage.setItem(
+      "CATEGORY_CURRENT",
+      JSON.stringify(this.getCategoryLevel())
+    );
     if (this.getIsLoading() == false && categoryloaded == true) {
       this.sendMOEevents();
     }

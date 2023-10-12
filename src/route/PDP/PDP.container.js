@@ -131,6 +131,8 @@ export class PDPContainer extends PureComponent {
     isArabic: isArabic(),
     eventSent: false,
     influencerName: "",
+    metaTitle: "",
+    metaDesc: "",
   };
 
   constructor(props) {
@@ -664,6 +666,7 @@ export class PDPContainer extends PureComponent {
       countryName,
       categoryLevel
     );
+    this.setState({ metaTitle: pdpMetaTitle, metaDesc: pdpMetaDescription });
     setMeta({
       title: pdpMetaTitle,
       keywords: __(
@@ -674,10 +677,6 @@ export class PDPContainer extends PureComponent {
         countryName
       ),
       description: pdpMetaDescription,
-      twitter_title: pdpMetaTitle,
-      twitter_desc: pdpMetaDescription,
-      og_title: pdpMetaTitle,
-      og_desc: pdpMetaDescription,
     });
   }
 
@@ -712,7 +711,7 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
     } = this.props;
-    const { pdpWidgetsAPIData = [] } = this.state;
+    const { pdpWidgetsAPIData = [], metaTitle, metaDesc } = this.state;
 
     // const { isLoading: isCategoryLoading } = this.state;
 
@@ -725,6 +724,8 @@ export class PDPContainer extends PureComponent {
       brandName,
       clickAndCollectStores,
       pdpWidgetsAPIData,
+      metaTitle,
+      metaDesc
     };
   };
 

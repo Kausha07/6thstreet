@@ -89,6 +89,9 @@ export class HomePageContainer extends PureComponent {
     firstLoad: true,
     vueBrandsNumOfResults: 10,
     vueCategoriesNumOfResults: 10,
+    imageUrl: "",
+    metaTitle: "",
+    metaDesc: "",
   };
 
   constructor(props) {
@@ -193,6 +196,22 @@ export class HomePageContainer extends PureComponent {
     }
   }
 
+  getMainBannerForMeta() {
+    const { dynamicContent } = this.state;
+
+    for (const banners of dynamicContent) {
+      if (
+        banners.type === "fullWidthBannerSlider" &&
+        banners.items?.[0] &&
+        banners.items?.[0]?.url
+      ) {
+        this.setState({imageUrl: banners.items?.[0]?.url})
+        return;
+      }
+    }
+    return;
+  }
+
   setDefaultGender() {
     const { setGender } = this.props;
     const { defaultGender } = this.state;
@@ -266,6 +285,7 @@ export class HomePageContainer extends PureComponent {
             genderName,
             countryName
           );
+    this.setState({ metaTitle: homePageMetaTitle, metaDesc: homepageMetaDesc });
     setMeta({
       title: homePageMetaTitle,
       keywords: __(
@@ -274,10 +294,6 @@ export class HomePageContainer extends PureComponent {
         countryName
       ),
       description: homepageMetaDesc,
-      twitter_title: homePageMetaTitle,
-      twitter_desc: homepageMetaDesc,
-      og_title: homePageMetaTitle,
-      og_desc: homepageMetaDesc,
     });
   }
 
@@ -363,7 +379,7 @@ export class HomePageContainer extends PureComponent {
           dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
           isLoading: false,
         });
-
+        this.getMainBannerForMeta();
         dynamicContent?.map((e) => {
           const { type } = e;
           if (type === "vue_brands_for_you") {
@@ -387,9 +403,9 @@ export class HomePageContainer extends PureComponent {
         if (tag) {
           tag.type = "application/ld+json";
           tag.innerHTML = JSON.stringify(response);
-          document
-            .querySelectorAll("script[type='application/ld+json']")
-            .forEach((node) => node.remove());
+          // document
+          //   .querySelectorAll("script[type='application/ld+json']")
+          //   .forEach((node) => node.remove());
           document.head.appendChild(tag);
         }
       }
@@ -400,12 +416,16 @@ export class HomePageContainer extends PureComponent {
 
   containerProps = () => {
     const { gender } = this.props;
-    const { dynamicContent, isLoading } = this.state;
+    const { dynamicContent, isLoading, imageUrl, metaTitle, metaDesc } =
+      this.state;
 
     return {
       dynamicContent,
       isLoading,
       gender,
+      imageUrl,
+      metaTitle,
+      metaDesc,
     };
   };
 
@@ -414,7 +434,7 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
-    const { trendingBrands = [], trendingCategories = [] } = this.state
+    const { trendingBrands = [], trendingCategories = [] } = this.state;
     if (this.props.gender === "influencer") {
       return <Influencer />;
     }

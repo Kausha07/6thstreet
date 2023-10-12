@@ -524,10 +524,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
     const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
-    if (!QPAY_CHECK && !TABBY_CHECK && !KNET_CHECK) {
-      this.refreshCart();
-    } else {
-      await updateTotals(cartId);
+    if(!TABBY_CHECK) {
+      if (!QPAY_CHECK && !KNET_CHECK) {
+        this.refreshCart();
+      } else {
+        await updateTotals(cartId);
+      }
     }
     setMeta({ title: __("Checkout") });
     this.getKNETData();

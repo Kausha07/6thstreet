@@ -60,7 +60,11 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
               {firstname} {lastname}
             </div>
             <div block="MyAccountAddressCard" elem="Street">
-              {street}
+              {isMobile.any() ? (
+                <div className="street-text">{street}</div>
+              ) : (
+                street
+              )}
             </div>
             <div block="MyAccountAddressCard" elem="City">
               {area}

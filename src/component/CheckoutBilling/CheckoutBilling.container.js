@@ -171,11 +171,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress,
       setTabbyWebUrl,
       getTabbyInstallment,
-      totals: { total },
+      totals: { total, cod_fee = 0 },
+      cashOnDeliveryFee = 0,
     } = this.props;
     // const countryCode = ['AE', 'SA', 'KW'].includes(getCountryFromUrl());
     const getCountryCode = getCountryFromUrl();
-    getTabbyInstallment(total)
+    getTabbyInstallment(total - cashOnDeliveryFee)
       .then((response) => {
         if (response?.value) {
           createTabbySession(shippingAddress)
@@ -210,10 +211,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress,
       setTabbyWebUrl,
       getTabbyInstallment,
-      totals: { total },
+      totals: { total, cod_fee = 0 },
+      cashOnDeliveryFee = 0,
     } = this.props;
     if (prevProps?.totals?.total !== total) {
-      getTabbyInstallment(total)
+      getTabbyInstallment(total - cashOnDeliveryFee)
         .then((response) => {
           if (response?.value) {
             createTabbySession(shippingAddress)
