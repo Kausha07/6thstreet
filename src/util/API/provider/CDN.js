@@ -9,7 +9,8 @@ class CDN {
         const options = {
             headers: {
                 Accept: 'application/json',
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
             }
         };
 

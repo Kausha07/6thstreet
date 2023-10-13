@@ -28,7 +28,8 @@ import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import PDPTags from "Component/PDPTags";
 import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import CDN from "Util/API/provider/CDN";
 
 class PDPAddToCart extends PureComponent {
 
@@ -77,11 +78,48 @@ class PDPAddToCart extends PureComponent {
 
     window.addEventListener("userLogout", () => this.updateStateNotifyEmail());
 
-    const { customer } = this.props;
+    const { customer, product: {brand_name} } = this.props;
     if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
     }
+    this.getBrandSizeSuggestion(brand_name);
   }
+
+  filtersuggestion(data, brand, country) {
+    let filterData = data.filter(
+      (item) => {
+        if(item.brand.toLowerCase() == brand.toLowerCase() && item.country.toLowerCase() == country.toLowerCase()){
+          return true;
+        }
+      }
+    );
+    if (filterData.length > 0) {
+      return { message: filterData[0].message, ar_message: filterData[0].ar_message };
+    }
+    return {};
+  }
+
+  async getBrandSizeSuggestion (brand) {
+
+    const country = getCountryFromUrl();
+    let json_url = '';
+    if (process.env.REACT_APP_FOR_JSON === "production") {
+      json_url = `size_production/runsSmallOrBigger.json`;
+    } else {
+      json_url = `size/runsSmallOrBigger.json`;
+    }
+    try{
+      const res = await CDN.get(json_url);
+      if(res && res.result) {
+        const suggestion = this.filtersuggestion(res.result, brand, country);
+        if(suggestion && suggestion.message){
+          this.props.addTag([suggestion.message]);
+        }
+      }
+    } catch(e){
+      console.log("error for reading brand json suggestion", e);
+    }
+  };
 
   componentDidUpdate(prevProps){
     const { selectedSizeCode } = this.props;

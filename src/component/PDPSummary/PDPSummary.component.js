@@ -67,6 +67,7 @@ class PDPSummary extends PureComponent {
     eddEventSent: false,
     intlEddResponseState:{},
     isMobile: isMobile.any() || isMobile.tablet(),
+    tagsFromAddToCart: []
   };
 
   getIdFromCityArea = (addressCityData, city, area) => {
@@ -1063,9 +1064,16 @@ class PDPSummary extends PureComponent {
           simple_products={simple_products}
           setStockAvailability={this.setStockAvailability}
           setSize={this.setSize}
+          addTag={this.addTag}
         />
       </>
     );
+  }
+
+  addTag = (tags) => {
+    this.setState({
+      tagsFromAddToCart:[...tags]
+    });
   }
 
   renderPDPTags() {
@@ -1086,7 +1094,11 @@ class PDPSummary extends PureComponent {
     if (simple_products && Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
-
+    if(this.state.tagsFromAddToCart.length){
+      this.state.tagsFromAddToCart.map((tag)=>{
+        tags.push(__(tag));
+      })
+    }
     if (
       simple_products &&
       selectedSizeCode &&
