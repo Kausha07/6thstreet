@@ -74,17 +74,9 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       },
     });
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"] || "";
+    
     Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK, name);
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-      name: name || "",
-      id: sku || "",
-      price: itemPrice || "",
-      brand: brand_name || "",
-      category: product_type_6s || category,
-      variant: color || "",
-      position: product_Position || "",
-    });
-    //this.sendBannerClickImpression(item);
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, data);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);

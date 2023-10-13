@@ -14,6 +14,7 @@ export const getInitialState = () => (
         ctcReturnEnabled:false,
         is_live_party_enabled:false,
         isAlgoliaEventsEnabled: false,
+        isVIPEnabled: false,
     }
 );
 
@@ -40,7 +41,8 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 ctcReturnEnabled: config.countries[getCountryCode]?.is_ctc_return_enabled,
                 is_live_party_enabled: config.countries[getCountryCode]?.is_live_party_enabled,
                 isAlgoliaEventsEnabled: config.countries[getCountryCode]?.isAlgoliaEventsEnabled,
-                hasSizePredictor: config.countries[getCountryCode]?.hasSizePredictor
+                hasSizePredictor: config.countries[getCountryCode]?.hasSizePredictor,
+                isVIPEnabled: config.countries[getCountryCode]?.isVipEnabled
             };
 
             // this will invalidate config after one year

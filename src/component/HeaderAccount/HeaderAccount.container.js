@@ -15,7 +15,8 @@ export const MyAccountDispatcher = import(
 export const mapStateToProps = (state) => ({
   language: state.AppState.language,
   customer: state.MyAccountReducer.customer,
-  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled
+  newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
+  IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
 });
 
 export class HeaderAccountContainer extends PureComponent {
@@ -28,6 +29,7 @@ export class HeaderAccountContainer extends PureComponent {
     requestCustomerData: PropTypes.func,
     handleFooterIsAccountOpen: PropTypes.func,
     isFooter: PropTypes.bool,
+    IsVipCustomerEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

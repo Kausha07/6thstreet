@@ -6,7 +6,7 @@ import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.act
 
 import MyAccountSignedInOverlay from './MyAccountSignedInOverlay.component';
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from './MyAccountSignedInOverlay.config';
-
+import { customerType } from "Type/Account";
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
     'Store/MyAccount/MyAccount.dispatcher'
@@ -17,6 +17,8 @@ export const mapStateToProps = (_state) => ({
     is_exchange_enabled: _state.AppConfig.is_exchange_enabled,
     newSignUpEnabled: _state.AppConfig.newSigninSignupVersionEnabled,
     IsReferralEnabled: _state.AppConfig.IsReferralEnabled,
+    customer: _state.MyAccountReducer.customer,
+    IsVipCustomerEnabled: _state.AppConfig.isVIPEnabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -33,6 +35,8 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
         onHide: PropTypes.func.isRequired,
         newSignUpEnabled:PropTypes.bool,
         IsReferralEnabled:PropTypes.bool,
+        customer: customerType.isRequired,
+        IsVipCustomerEnabled: PropTypes.bool,
     };
 
     containerFunctions = {

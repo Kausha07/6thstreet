@@ -73,9 +73,9 @@ class ProductDetailEvent extends BaseEvent {
       sha256_phone_number: sha_phone,
       ecommerce: {
         detail: {
-          actionField: {
-            list: "Category page",
-          },
+          // actionField: {
+          //   list: "Category page",
+          // },
           products: [product],
         },
       },
