@@ -275,6 +275,7 @@
 
   &-Description {
     // text-align: justify;
+    text-wrap: pretty;
     @include mobile {
       font-size: 14px;
       letter-spacing: 0;

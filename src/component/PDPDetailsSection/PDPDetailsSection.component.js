@@ -204,9 +204,9 @@ class PDPDetailsSection extends PureComponent {
             >
               {__("PRODUCT DETAILS:")}
             </h3>
-            <p block="PDPDetailsSection" elem="Description">
-              {description}
-            </p>
+            <pre block="PDPDetailsSection" elem="Description">
+              {description?.replaceAll(/\â€¢/g, "\u2022")}
+            </pre>
           </div>
           {this.renderHighlights()}
         </div>
