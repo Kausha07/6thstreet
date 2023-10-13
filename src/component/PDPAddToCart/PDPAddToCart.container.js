@@ -436,6 +436,7 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
+      addTag=()=>null
     } = this.props;
     const {
       mappedSizeObject,
@@ -460,6 +461,7 @@ export class PDPAddToCartContainer extends PureComponent {
       popUpType,
       isSizeLessProduct,
       closeAddToCartPopUp,
+      addTag
     };
   };
 

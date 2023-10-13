@@ -6,7 +6,7 @@ import { getQueryParam } from "Util/Url";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 
 class MobileAPI {
-    async _fetch(method, relativeURL, body = {}) {
+    async _fetch(method, relativeURL, body = {}, header={}) {
         // TODO: get proper locale
         const token = getMobileAuthorizationToken();
         const { AppState: { locale } } = getStore().getState();
@@ -23,7 +23,8 @@ class MobileAPI {
                 'Content-Type': 'application/json',
                 'X-App-Version': '2.23.0',
                 'Request-Source': 'PWA',
-                ...tokenHeader
+                ...tokenHeader,
+                ...header
             },
             ...payload({ body: JSON.stringify(body) })
         };
@@ -41,8 +42,8 @@ class MobileAPI {
         return this._fetch('post', url, data);
     }
 
-    get(url) {
-        return this._fetch('get', url);
+    get(url, header={}) {
+        return this._fetch('get', url, {}, header);
     }
 
     delete(url) {

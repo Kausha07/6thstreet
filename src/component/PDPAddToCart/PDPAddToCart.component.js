@@ -26,7 +26,18 @@ import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png"
 import Loader from "Component/Loader";
 
 import { connect } from "react-redux";
+import PDPTags from "Component/PDPTags";
+import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import CDN from "Util/API/provider/CDN";
+
 class PDPAddToCart extends PureComponent {
+
+  constructor(props) {
+    super(props);
+    this.getRecommendedSize = this.getRecommendedSize.bind(this);
+  }
+
   static propTypes = {
     product: Product.isRequired,
     onSizeTypeSelect: PropTypes.func.isRequired,
@@ -56,6 +67,8 @@ class PDPAddToCart extends PureComponent {
     customer: null,
     OOSrendered: false,
     OOS_mailSent: false,
+    sizePredictorMessage:'',
+    recommendedSizeSku:''
   };
 
   componentDidMount() {
@@ -65,9 +78,98 @@ class PDPAddToCart extends PureComponent {
 
     window.addEventListener("userLogout", () => this.updateStateNotifyEmail());
 
-    const { customer } = this.props;
+    const { customer, product: {brand_name} } = this.props;
     if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
+    }
+    this.getBrandSizeSuggestion(brand_name);
+  }
+
+  filtersuggestion(data, brand, country) {
+    let filterData = data.filter(
+      (item) => {
+        if(item.brand.toLowerCase() == brand.toLowerCase() && item.country.toLowerCase() == country.toLowerCase()){
+          return true;
+        }
+      }
+    );
+    if (filterData.length > 0) {
+      return { message: filterData[0].message, ar_message: filterData[0].ar_message };
+    }
+    return {};
+  }
+
+  async getBrandSizeSuggestion (brand) {
+
+    const country = getCountryFromUrl();
+    let json_url = '';
+    if (process.env.REACT_APP_FOR_JSON === "production") {
+      json_url = `size_production/runsSmallOrBigger.json`;
+    } else {
+      json_url = `size/runsSmallOrBigger.json`;
+    }
+    try{
+      const res = await CDN.get(json_url);
+      if(res && res.result) {
+        const suggestion = this.filtersuggestion(res.result, brand, country);
+        if(suggestion && suggestion.message){
+          this.props.addTag([suggestion.message]);
+        }
+      }
+    } catch(e){
+      console.log("error for reading brand json suggestion", e);
+    }
+  };
+
+  componentDidUpdate(prevProps){
+    const { selectedSizeCode } = this.props;
+    if(prevProps.selectedSizeCode !== selectedSizeCode) {
+      this.getRecommendedSize();
+    }
+  }
+
+  async getRecommendedSize(){
+    const { customer, selectedSizeCode, product: {sku, simple_products, categories_without_path=[], gender}} = this.props;
+    const isRequiredCategory = categories_without_path.some(item => (item.toLowerCase() === "shoes" || item.toLowerCase() === "أحذية"));
+    let checkRequiredGender = false;
+    if(typeof gender == 'string' && (gender.toLowerCase() == "men" || gender.toLowerCase() == "رجال")){
+      checkRequiredGender = true;
+    } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men" || item.toLowerCase() === "رجال")) {
+      checkRequiredGender = true;
+    }
+    if(customer && customer.email && isRequiredCategory && checkRequiredGender && this.props.hasSizePredictor) {
+      const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
+      const header = {
+        sku: sku,
+        size: optionValue,
+        userEmail: customer.email
+      };
+      try{
+        const response = await fetchPredictedSize(header);
+        if(response.status) {
+          const country = getCountryFromUrl().toLowerCase();
+          let message = response.message;
+          let recSku = response.size;
+          if(country == 'uk') {
+            message = response.uk_message;
+            size = response.uk_size;
+          } else if(country == 'us') {
+            message = response.us_message;
+            size = response.us_size;
+          }
+          Object.keys(simple_products).map((sku)=>{
+            if(simple_products[sku]['size']['eu'] == response.size) {
+              recSku = sku;
+            }
+          })
+          this.setState({
+            sizePredictorMessage: message,
+            recommendedSizeSku: recSku
+          });
+        }
+      } catch (e) {
+        console.log("error", e);
+      }
     }
   }
 
@@ -211,6 +313,10 @@ class PDPAddToCart extends PureComponent {
       filter: "none",
     };
 
+    const recommendedLabelStyle = {
+      borderColor: "#4ef057",
+    };
+
     const isCurrentSizeSelected = selectedSizeCode === code;
     const { edd_info } = this.props;
 
@@ -237,7 +343,7 @@ class PDPAddToCart extends PureComponent {
         <div>
           <label
             for={code}
-            style={isCurrentSizeSelected ? selectedLabelStyle : {}}
+            style={isCurrentSizeSelected ? selectedLabelStyle : this.state.recommendedSizeSku==code ? recommendedLabelStyle : {}}
           >
             {label}
           </label>
@@ -312,7 +418,7 @@ class PDPAddToCart extends PureComponent {
     ) {
       return (
         <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
-          <PDPSizeGuide product={product} />
+          <PDPSizeGuide product={product} getRecommendedSize={this.getRecommendedSize} />
         </div>
       );
     }
@@ -674,6 +780,7 @@ class PDPAddToCart extends PureComponent {
             {/* {isMobile.any() && <div block="Seperator" />} */}
           </>
         ) : null}
+        {this.state.sizePredictorMessage && <PDPTags tags={[this.state.sizePredictorMessage]} /> }
         <div
           block="PDPAddToCart"
           elem="Bottom"
@@ -699,6 +806,7 @@ class PDPAddToCart extends PureComponent {
 
 export const mapStateToProps = (state) => ({
   edd_info: state.AppConfig.edd_info,
+  hasSizePredictor: state.AppConfig.hasSizePredictor
 });
 
 export default connect(mapStateToProps)(PDPAddToCart);
