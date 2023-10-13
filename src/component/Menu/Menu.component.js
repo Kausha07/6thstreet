@@ -50,6 +50,7 @@ class Menu extends PureComponent {
 
   renderCategory = (category) => {
     const { activeCategory, isDefaultCategoryOpen } = this.state;
+    const { gender = "women" } = this.props;
 
     const { data, label, design, key, link } = category;
 
@@ -57,6 +58,7 @@ class Menu extends PureComponent {
       <MenuCategory
         key={key}
         categoryKey={key}
+        gender={gender}
         data={data}
         label={label}
         link={link}
