@@ -82,7 +82,9 @@ class PDPAddToCart extends PureComponent {
     if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
     }
-    this.getBrandSizeSuggestion(brand_name);
+    if(this.checkForCategoryAndGender()) {
+      this.getBrandSizeSuggestion(brand_name);
+    }
   }
 
   filtersuggestion(data, brand, country) {
@@ -128,8 +130,8 @@ class PDPAddToCart extends PureComponent {
     }
   }
 
-  async getRecommendedSize(){
-    const { customer, selectedSizeCode, product: {sku, simple_products, categories_without_path=[], gender}} = this.props;
+  checkForCategoryAndGender(){
+    const { product: { categories_without_path=[], gender}} = this.props;
     const isRequiredCategory = categories_without_path.some(item => (item.toLowerCase() === "shoes" || item.toLowerCase() === "أحذية"));
     let checkRequiredGender = false;
     if(typeof gender == 'string' && (gender.toLowerCase() == "men" || gender.toLowerCase() == "رجال")){
@@ -137,7 +139,11 @@ class PDPAddToCart extends PureComponent {
     } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men" || item.toLowerCase() === "رجال")) {
       checkRequiredGender = true;
     }
-    if(customer && customer.email && isRequiredCategory && checkRequiredGender && this.props.hasSizePredictor) {
+    return isRequiredCategory && checkRequiredGender;
+  }
+  async getRecommendedSize(){
+    const { customer, selectedSizeCode, product: {sku, simple_products}} = this.props;
+    if(customer && customer.email && this.checkForCategoryAndGender() && this.props.hasSizePredictor) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
       const header = {
         sku: sku,
