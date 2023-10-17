@@ -7,6 +7,25 @@
   &_isArabic {
     text-align: right;
   }
+
+  .HeaderWithTimer{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    .DynamicContentHeader{
+      h1{
+        margin-top: 0;
+      }
+    }
+    .DynamicContentCountDownTimer{
+      margin-top: 10px;
+      margin-bottom: 20px;
+      text-align: right;
+      .TimerTitle{
+        margin: 0;
+      }
+    }
+  }
   .SliderWithLabelWrapper.active {
     cursor: grabbing;
     cursor: -webkit-grabbing;

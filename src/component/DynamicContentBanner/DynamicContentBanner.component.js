@@ -12,6 +12,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -149,6 +150,7 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
+        {this.props.start_time && this.props.end_time && this.renderTimer()}
         <Image
           lazyLoad={index === 21 || index === 35 ? false : true}
           src={url || image_url}
@@ -184,6 +186,19 @@ class DynamicContentBanner extends PureComponent {
   renderImages() {
     const { items = [] } = this.props;
     return items.map(this.renderImage);
+  }
+
+  renderTimer = ()=>{
+    const  {start_time = "", end_time ="", text_alignment = "", title ="", alignment=""} = this.props; 
+    const now = new Date();
+    const utcString = now.toUTCString();   
+    if(this.props.start_time && this.props.end_time && Date.parse(this.props.end_time) >= Date.parse(utcString)){
+      return (
+        <>
+          <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+        </>
+      )
+    }    
   }
 
   render() {

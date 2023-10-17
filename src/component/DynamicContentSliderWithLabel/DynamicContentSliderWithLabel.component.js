@@ -16,6 +16,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -256,6 +257,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ref={this.itemRef}
         key={i * 10}
       >
+        {this.props.start_time && this.props.end_time && this.renderTimer()}
         <Link
           to={`${formatCDNLink(parseLink)}.html`}
           key={i * 10}
@@ -463,6 +465,19 @@ class DynamicContentSliderWithLabel extends PureComponent {
     return "";
   };
 
+  renderTimer = ()=>{
+    const  {start_time = "", end_time ="", text_alignment = "", title ="", alignment=""} = this.props; 
+    const now = new Date();
+    const utcString = now.toUTCString();   
+    if(this.props.start_time && this.props.end_time && Date.parse(this.props.end_time) >= Date.parse(utcString)){
+      return (
+        <>
+          <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+        </>
+      )
+    }    
+  }
+
   render() {
     let setRef = (el) => {
       this.viewElement = el;
@@ -475,17 +490,39 @@ class DynamicContentSliderWithLabel extends PureComponent {
         block="DynamicContentSliderWithLabel"
         id={`DynamicContentSliderWithLabel${index}`}
       >
-        {this.getPromotionHeader() && (
+        {this.getPromotionHeader() && !this.props.start_time && !this.props.end_time && (
           <DynamicContentHeader
             header={this.getPromotionHeader()}
             type={this.props.type}
           />
         )}
-        {this.props.title && (
+
+        {this.getPromotionHeader() && this.props.start_time && this.props.end_time && (
+          <div block="HeaderWithTimer">          
+            <DynamicContentHeader
+              header={this.getPromotionHeader()}
+              type={this.props.type}
+            />
+            {this.renderTimer()}
+          </div>
+        )}
+        {this.props.title && !this.props.start_time && !this.props.end_time && (
           <h1 block="Title" mods={{ isArabic }}>
             {this.props.title}
           </h1>
         )}
+
+        {this.props.title && this.props.start_time && this.props.end_time && (
+          <div block="HeaderWithTimer"> 
+            <h1 block="Title" mods={{ isArabic }}>
+              {this.props.title}
+            </h1>
+            {this.renderTimer()}
+          </div> 
+        )}
+
+        {/* {this.props.start_time && this.props.end_time && this.renderTimer()} */}
+        
         {this.renderSliderWithLabels()}
         {this.props.footer && (
           <DynamicContentFooter footer={this.props.footer} />

@@ -15,6 +15,7 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 const settings = {
   lazyload: true,
@@ -160,6 +161,18 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
       setPreload && setPreload(true);
     }
   }
+  renderTimer = ()=>{
+    const  {start_time = "", end_time ="", text_alignment = "", title ="", alignment=""} = this.props; 
+    const now = new Date();
+    const utcString = now.toUTCString();   
+    if(this.props.start_time && this.props.end_time && Date.parse(this.props.end_time) >= Date.parse(utcString)){
+      return (
+        <>
+          <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+        </>
+      )
+    }    
+  }
 
   render() {
     let setRef = (el) => {
@@ -175,6 +188,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
+        {this.props.start_time && this.props.end_time && this.renderTimer()}
         {this.renderSlider()}
       </div>
     );

@@ -1,0 +1,63 @@
+.DynamicContentTimer {
+  margin-right: 30px;
+  margin-left: 30px;
+  max-width: var(--container-max-width);
+
+  &.AlignRight{
+    text-align: right;
+  }
+  &.AlignLeft{
+    text-align: left;
+  }
+  &.AlignCenter{
+    text-align: center;
+  }
+
+
+  .Title {
+    font-size: 18px;
+    line-height: 25px;
+    letter-spacing: 2px;
+    margin-bottom: 34px;
+    font-weight: 500;
+
+    &_isArabic {
+      text-align: right;
+    }
+    @include mobile {
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 40px;
+      // text-align: left;
+      margin: 9px 10px;
+
+    }
+    @include tablet {
+      margin-bottom: 20px;
+      margin-left: 30px;
+      &_isArabic {
+        margin-left: 0px;
+        margin-right: 30px;
+      }
+    }
+  }
+  @include mobile {
+    max-height: 700px;
+    overflow: none;
+    margin-left: 0;
+    margin-right: 0;
+
+
+  }
+
+
+
+  @include tablet {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: 40px !important;
+  }
+}
