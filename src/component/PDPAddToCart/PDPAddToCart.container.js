@@ -96,6 +96,7 @@ export const mapDispatchToProps = (dispatch) => ({
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
   removeFromWishlist: (id) => Wishlist.removeSkuFromWishlist(id, dispatch),
   setEddResponse: (response,request) => dispatch(setEddResponse(response,request)),
+  setIsAnimate: (options) => Wishlist.setIsAnimate(options, dispatch),
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -720,10 +721,6 @@ export class PDPAddToCartContainer extends PureComponent {
             isClickAndCollect: !!isClickAndCollect,
           });
           if (popUpType === "wishListPopUp") {
-            showNotification(
-              "success",
-              __("Product added to your shopping bag")
-            );
             closeAddToCartPopUp();
             this.afterAddToCartForWishList(true, configSKU);
           }
@@ -763,7 +760,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   afterAddToCartForWishList = (isAdded = true, configSKU = "") => {
-    const { wishListItems, removeFromWishlist } = this.props;
+    const { wishListItems, removeFromWishlist, setIsAnimate } = this.props;
 
     this.setState({ isLoadingAddToCart: false });
 
@@ -776,9 +773,13 @@ export class PDPAddToCartContainer extends PureComponent {
         const { wishlist_item_id } = wishListItem;
 
         if (wishlist_item_id) {
+          removeFromWishlist(wishlist_item_id);
+
+          setIsAnimate({ currentState: true });
+
           setTimeout(() => {
-            removeFromWishlist(wishlist_item_id);
-          }, 5000);
+            setIsAnimate({ currentState: false });
+          }, 2000);
         }
       }
     }
@@ -820,9 +821,7 @@ export class PDPAddToCartContainer extends PureComponent {
     );
 
     if (popUpType === "wishListPopUp") {
-      setTimeout(() => {
-        closeAddToCartPopUp();
-      }, 5000);
+      closeAddToCartPopUp();
     }
   }
   sendMoEImpressions(event) {

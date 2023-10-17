@@ -108,8 +108,71 @@
       }
     }
   }
+.HeaderCart {
+  z-index: 96;
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  background: #fff;
+  height: 30px;
+  width: 30px;
+  border-radius: 20px;
+
+  .HeaderCart-Button {
+    .HeaderCart-Count {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+    }
+
+    .amimateEle {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      animation: moveElement 1s ease-in-out forwards;
+    }
+  }
+
+  &_isArabic {
+    right: unset;
+    left: 20px;
+  }
+}
 }
 
+@keyframes moveElement {
+  0% {
+    top: 10px;
+  }
+
+  20% {
+    top: -5px;
+  }
+
+  30% {
+    top: 5px;
+  }
+
+  40% {
+    top: -3px;
+  }
+
+  50% {
+    top: -2px;
+  }
+
+  60% {
+    top: 3px;
+  }
+
+  70% {
+    top: -2px;
+  }
+
+  100% {
+    top: -2px;
+  }
+}
 .PageWrapper {
   &_isArabic {
     .MyAccountMobileHeader {

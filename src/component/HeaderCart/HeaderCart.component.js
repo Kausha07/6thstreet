@@ -134,13 +134,20 @@ class HeaderCart extends PureComponent {
   renderItemCount() {
     const {
       totals: { items = [] },
+      location: { pathname = "" },
+      isAnimate,
     } = this.props;
 
+    const isWishlistPageCartIcon = pathname === "/my-account/my-wishlist" ? true : false
     const totalQuantity = items.length;
 
     if (totalQuantity && totalQuantity !== 0) {
       return (
-        <div block="HeaderCart" elem="Count">
+        <div
+          block="HeaderCart"
+          elem="Count"
+          className={isWishlistPageCartIcon && isAnimate ? "amimateEle" : ""}
+        >
           {totalQuantity}
         </div>
       );
