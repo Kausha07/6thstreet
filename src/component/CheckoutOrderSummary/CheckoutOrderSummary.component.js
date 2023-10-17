@@ -459,16 +459,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               this.renderPriceLine(shipping_amount, __("Shipping"), {
                 divider: true,
               })}
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "customerbalance"),
-              __("Store Credit")
-            )}
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "clubapparel"),
-              __("Club Apparel Redemption")
-            )}
-            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
-
             {(!inventory_level_cross_border || !international_shipping_fee) &&
               this.renderPriceLine(
                 getDiscountFromTotals(totals, "shipping") || __("FREE"),
@@ -480,6 +470,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 getDiscountFromTotals(totals, "intl_shipping")  || __("FREE"),
                 __("International Shipping Fee")
               )}
+            {this.renderPriceLine(
+              getDiscountFromTotals(totals, "customerbalance"),
+              __("Store Credit")
+            )}
+            {this.renderPriceLine(
+              getDiscountFromTotals(totals, "clubapparel"),
+              __("Club Apparel Redemption")
+            )}
+            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
+
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "tax"),
               __("Tax")
