@@ -310,6 +310,8 @@ class PLPFilters extends PureComponent {
         filterPosition={filterPosition}
         isBrandPLP={isBrandPLP}
         compareObjects={compareObjects}
+        isLoadingFilter={this.props.isLoadingFilter}
+        setLoadingMobileFilter={this.props.setLoadingMobileFilter}
       />
     );
   };
@@ -671,6 +673,8 @@ class PLPFilters extends PureComponent {
             defaultFilters={defaultFilters}
             isSortBy={false}
             OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
+            isLoadingFilter={this.props.isLoadingFilter}
+            setLoadingMobileFilter={this.props.setLoadingMobileFilter}
           />
         );
       }
