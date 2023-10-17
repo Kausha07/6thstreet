@@ -15,6 +15,7 @@ import LiveParty from "Store/LiveParty/LiveParty.reducer";
 import InfluencerReducer from "Store/Influencer/Influencer.reducer";
 import SearchSuggestions from "Store/SearchSuggestions/SearchSuggestions.reducer";
 import BrandCms from "Store/BrandCms/BrandCms.reducer";
+import Checkout from "Store/Checkout/Checkout.reducer";
 import * as Sentry from "@sentry/react";
 
 class App extends SourceApp {
@@ -32,6 +33,7 @@ class App extends SourceApp {
     store.injectReducer("LiveParty", LiveParty);
     store.injectReducer("InfluencerReducer", InfluencerReducer);
     store.injectReducer("BrandCms", BrandCms);
+    store.injectReducer("CheckoutReducer", Checkout);
 
     return store;
   }

@@ -24,6 +24,7 @@ import {
 
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
+  cartTotal: state.CheckoutReducer.cartTotal,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -136,7 +137,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
   }
 
   selectPaymentMethod(item) {
-    const { m_code: code } = item;
+    let { m_code: code } = item;
     const {
       Cart: { cartId },
     } = getStore().getState();
@@ -149,7 +150,19 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       updateTotals,
       removeBinPromotion,
       resetBinApply,
+      cartTotal,
     } = this.props;
+
+    const { selectedPaymentCode } = this.state;
+    // if total is 0 and selected payment method is Free
+    if(code === "checkoutcom_card_payment" && cartTotal === 0  && selectedPaymentCode === FREE) {
+      return;
+    }
+
+    // if total is 0, then the Card payment is not allow
+    if(code === "checkoutcom_card_payment" && cartTotal === 0 ){
+      code = FREE;
+    }
 
     this.setState({
       selectedPaymentCode: code,
