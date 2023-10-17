@@ -290,7 +290,10 @@ class PDPSummary extends PureComponent {
       let cross_border_qty = 0;
       if (typeof simple_products === "object" && simple_products !== null) {
         Object.values(simple_products).forEach((obj) => {
-          if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
+          if (
+            parseInt(obj.cross_border_qty) &&
+            parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+          ) {
             cross_border_qty = 1;
           }
         });
@@ -316,7 +319,9 @@ class PDPSummary extends PureComponent {
             payload = {
               sku: sku,
               intl_vendor:
-                parseInt(simple_products[sku]?.cross_border_qty) > 0 &&
+                parseInt(simple_products[sku]?.cross_border_qty) &&
+                parseInt(simple_products[sku]?.quantity) <=
+                  parseInt(simple_products[sku]?.cross_border_qty) &&
                 edd_info.international_vendors &&
                 international_vendor &&
                 edd_info.international_vendors.indexOf(international_vendor) >
@@ -371,7 +376,10 @@ class PDPSummary extends PureComponent {
     let cross_border_qty = 0;
     if (typeof simple_products === "object" && simple_products !== null) {
       Object.values(simple_products).forEach((obj) => {
-        if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
+        if (
+          parseInt(obj.cross_border_qty) &&
+          parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+        ) {
           cross_border_qty = 1;
         }
       });
@@ -1237,7 +1245,10 @@ class PDPSummary extends PureComponent {
     let cross_border_qty = 0;
     if (typeof simple_products === "object" && simple_products !== null) {
       Object.values(simple_products).forEach((obj) => {
-        if (obj.cross_border_qty && parseInt(obj.cross_border_qty) > 0) {
+        if (
+          parseInt(obj.cross_border_qty) &&
+          parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+        ) {
           inventory_level_cross_border = true;
           cross_border_qty = 1;
         }
