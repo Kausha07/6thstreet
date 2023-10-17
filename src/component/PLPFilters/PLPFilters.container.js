@@ -183,6 +183,8 @@ export class PLPFiltersContainer extends PureComponent {
         {...this.containerFunctions()}
         {...this.containerFunction}
         {...this.containerProps()}
+        isLoadingFilter={this.props.isLoadingFilter}
+        setLoadingMobileFilter={this.props.setLoadingMobileFilter}
       />
     );
   }

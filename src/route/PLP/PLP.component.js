@@ -195,7 +195,7 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} isPLPSortBy={false} resetSortData={this.resetSortData} />;
+    return <PLPFilters {...this.props} isPLPSortBy={false} resetSortData={this.resetSortData}  isLoadingFilter={this.props.isLoadingFilter} setLoadingMobileFilter={this.props.setLoadingMobileFilter} />;
   }
 
   renderPLPSortBy() {

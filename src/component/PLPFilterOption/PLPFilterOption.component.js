@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
 
+import Loader from "Component/Loader";
 import Field from "Component/Field";
 import { FilterOption } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
@@ -59,6 +60,7 @@ class PLPFilterOption extends PureComponent {
     onSelectChecked: false,
     initialFacetKey: "",
     filterSelected: false,
+    isLoading:false,
   };
 
   handleClick = () => {
@@ -70,8 +72,11 @@ class PLPFilterOption extends PureComponent {
       option,
       OnLevelTwoCategoryPressMsite,
     } = this.props;
+    this.setState({ isLoading: true });
     const inputRef = this.optionRef.current.children[0].children[0];
     const { checked } = inputRef;
+    const mobileFacetKeys = ["brand_name", "colorfamily", "gender", "in_stock", "size_uk", "size_us", "size_eu", "discount"];
+    const isValidFacetKey = facet_key => mobileFacetKeys.includes(facet_key) || facet_key.includes("price");
     const MoeFilterEvent =
       facet_key == "brand_name"
         ? EVENT_BRAND_SEARCH_FILTER
@@ -160,7 +165,13 @@ class PLPFilterOption extends PureComponent {
         }
       }
     }
+
+    if (isMobile.any() && isValidFacetKey(facet_key)) {
+      this.props.setLoadingMobileFilter(true);
+    }
+
     if(isMobile.any() && facet_key === "categories_without_path") {
+      this.props.setLoadingMobileFilter(true);
       OnLevelTwoCategoryPressMsite(option, checked)
     }else {
       parentCallback(facet_key, facet_value, checked, isRadio);
@@ -210,7 +221,10 @@ class PLPFilterOption extends PureComponent {
       updateFilters();
       setDefaultFilters();
     }
-    return (
+    this.props.setLoadingMobileFilter(false);
+    return (<>
+    
+      <Loader isLoading={this.props.isLoading} />
       <Field
         formRef={this.fieldRef}
         onClick={this.handleClick}
@@ -226,6 +240,7 @@ class PLPFilterOption extends PureComponent {
         defaultCheck={defaultCheck || checked}
         checked={defaultCheck || checked}
       />
+    </>
     );
   }
 
@@ -336,18 +351,21 @@ class PLPFilterOption extends PureComponent {
       return null;
     }
     return (
-      <li
-        key={v4()}
-        ref={this.optionRef}
-        block="PLPFilterOption"
-        elem="List"
-        mods={{ isArabic }}
-      >
-        {isMobile.any() &&
-          this.renderMobileField(facet_value, facet_key, checked)}
-        {!isMobile.any() && this.renderField()}
-        {this.renderLabel()}
-      </li>
+      <>
+        <Loader isLoading={this.props.isLoadingFilter} />
+        <li
+          key={v4()}
+          ref={this.optionRef}
+          block="PLPFilterOption"
+          elem="List"
+          mods={{ isArabic }}
+        >
+          {isMobile.any() &&
+            this.renderMobileField(facet_value, facet_key, checked)}
+          {!isMobile.any() && this.renderField()}
+          {this.renderLabel()}
+        </li>
+      </>
     );
   }
 }
