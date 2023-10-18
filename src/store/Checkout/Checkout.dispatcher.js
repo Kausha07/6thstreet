@@ -1,6 +1,6 @@
 import { getStore } from "Store";
 import { processingPaymentSelectRequest } from "Store/Cart/Cart.action";
-import { setShipping } from "Store/Checkout/Checkout.action";
+import { setShipping, setCartTotal } from "Store/Checkout/Checkout.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
   createOrder,
@@ -103,10 +103,12 @@ export class CheckoutDispatcher {
 
     dispatch(setShipping({}));
 
-    return saveShippingInformation({
+    const resp = await saveShippingInformation({
       cartId,
       data: address,
     });
+    dispatch(setCartTotal(resp?.data?.totals?.total || 0 ));
+    return resp;
   }
 
   async getPaymentMethods() {

@@ -28,7 +28,7 @@ import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import PDPTags from "Component/PDPTags";
 import {fetchPredictedSize} from "../../util/API/endpoint/SizePredict/SizePredict.endpoint";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getCountryFromUrl } from "Util/Url";
 import CDN from "Util/API/provider/CDN";
 
 class PDPAddToCart extends PureComponent {
@@ -82,7 +82,9 @@ class PDPAddToCart extends PureComponent {
     if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
     }
-    this.getBrandSizeSuggestion(brand_name);
+    if(this.checkForCategoryAndGender()) {
+      this.getBrandSizeSuggestion(brand_name);
+    }
   }
 
   filtersuggestion(data, brand, country) {
@@ -128,8 +130,8 @@ class PDPAddToCart extends PureComponent {
     }
   }
 
-  async getRecommendedSize(){
-    const { customer, selectedSizeCode, product: {sku, simple_products, categories_without_path=[], gender}} = this.props;
+  checkForCategoryAndGender(){
+    const { product: { categories_without_path=[], gender}} = this.props;
     const isRequiredCategory = categories_without_path.some(item => (item.toLowerCase() === "shoes" || item.toLowerCase() === "أحذية"));
     let checkRequiredGender = false;
     if(typeof gender == 'string' && (gender.toLowerCase() == "men" || gender.toLowerCase() == "رجال")){
@@ -137,7 +139,11 @@ class PDPAddToCart extends PureComponent {
     } else if (typeof gender == 'object' && Array.isArray(gender) && gender.some(item => item.toLowerCase() === "men" || item.toLowerCase() === "رجال")) {
       checkRequiredGender = true;
     }
-    if(customer && customer.email && isRequiredCategory && checkRequiredGender && this.props.hasSizePredictor) {
+    return isRequiredCategory && checkRequiredGender;
+  }
+  async getRecommendedSize(){
+    const { customer, selectedSizeCode, selectedSizeType, product: {sku, simple_products}} = this.props;
+    if(customer && customer.email && this.checkForCategoryAndGender() && this.props.hasSizePredictor) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
       const header = {
         sku: sku,
@@ -147,15 +153,12 @@ class PDPAddToCart extends PureComponent {
       try{
         const response = await fetchPredictedSize(header);
         if(response.status) {
-          const country = getCountryFromUrl().toLowerCase();
           let message = response.message;
           let recSku = response.size;
-          if(country == 'uk') {
+          if(selectedSizeType == 'uk') {
             message = response.uk_message;
-            size = response.uk_size;
-          } else if(country == 'us') {
+          } else if(selectedSizeType == 'us') {
             message = response.us_message;
-            size = response.us_size;
           }
           Object.keys(simple_products).map((sku)=>{
             if(simple_products[sku]['size']['eu'] == response.size) {

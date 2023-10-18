@@ -25,6 +25,7 @@ export const mapStateToProps = (state) => ({
   addressCityData: state.MyAccountReducer.addressCityData,
   edd_info: state.AppConfig.edd_info,
   brandButtonClick: state.PDP.brandButtonClick,
+  brandInfoData : state.PDP.brandInfoData,
   catalogue_from_algolia:
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia']
 });
@@ -62,7 +63,8 @@ export class PDPSummaryContainer extends PureComponent {
       estimateEddResponseForPDP,
       setEddResponse,
       setEddResponseForPDP,
-      TabbyInstallment
+      TabbyInstallment,
+      brandInfoData,
     } = this.props;
     return {
       product,
@@ -79,7 +81,8 @@ export class PDPSummaryContainer extends PureComponent {
       estimateEddResponseForPDP,
       setEddResponse,
       setEddResponseForPDP,
-      TabbyInstallment
+      TabbyInstallment,
+      brandInfoData
     };
   };
 

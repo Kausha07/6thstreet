@@ -202,6 +202,7 @@ export class PLPContainer extends PureComponent {
     schemaData: {},
     metaTitle: "",
     metaDesc: "",
+    isLoadingFilter: false,
   };
 
   containerFunctions = {
@@ -214,13 +215,17 @@ export class PLPContainer extends PureComponent {
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
     onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
-    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this)
+    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this),
   };
 
   resetPLPData() {
     const { resetPLPData } = this.props;
     resetPLPData();
   }
+
+  setLoadingMobileFilter = (value) => {
+    this.setState({ isLoadingFilter: value });
+  };
 
   compareObjects(object1 = {}, object2 = {}) {
     if (Object.keys(object1).length === Object.keys(object2).length) {
@@ -641,6 +646,7 @@ export class PLPContainer extends PureComponent {
     const key = "categories_without_path";
       //Below code is for Msite - here I am not sending category Ids to Algolia
     if(isMobile.any()) {
+      this.setLoadingMobileFilter(true);
       WebUrlParser.setParam(
         key,
         selectedFacetValues,
@@ -1320,7 +1326,7 @@ export class PLPContainer extends PureComponent {
 
   render() {
     const { requestedOptions, filters } = this.props;
-    const { categoryloaded } = this.state;
+    const { categoryloaded, isLoadingFilter } = this.state;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     localStorage.setItem(
       "CATEGORY_CURRENT",
@@ -1335,6 +1341,8 @@ export class PLPContainer extends PureComponent {
         {...this.containerFunctions}
         {...this.containerProps()}
         setLastTapItem={this.setLastTapItem}
+        isLoadingFilter={isLoadingFilter}
+        setLoadingMobileFilter={this.setLoadingMobileFilter}
       />
     );
   }
