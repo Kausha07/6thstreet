@@ -3,6 +3,43 @@
   a + a {
     margin-left: 0px;
   }
+
+  .DynamicContentCountDownTimer {
+    .TimerTitle {
+      &.AlignCenter {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+      }
+  
+      &.AlignLeft {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+      }
+  
+      &.AlignRight {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+      }
+      // .InfoText{
+      //   display: inline-block;
+      // }
+      @include mobile {
+        display: inline-block;
+        text-align: center;
+        margin-top: 4px;
+      }
+    }
+    @include mobile {
+      text-align: right;
+    }
+  }
+
   @include mobile {
     a {
       margin-left: -30px;

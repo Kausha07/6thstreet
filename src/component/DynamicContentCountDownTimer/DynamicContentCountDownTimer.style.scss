@@ -29,7 +29,7 @@
     }
 
     .InfoText {
-      margin: 0 2px;
+      margin: 0 4px;
       font-size: 13px;
       font-weight: 500;
       line-height: 20px;
@@ -65,10 +65,10 @@
     .Box {
       background-color: #000000;
       color: #ffffff;
-      padding: 5px 4px 1px;
+      padding: 3px 4px 2px;
       display: inline-block;
       border-radius: 4px;
-      margin: 0 4px;
+      margin: 0 2px 0 0;
       font-size: 13px;
       font-weight: 500;
       line-height: 20px;
@@ -79,6 +79,25 @@
         line-height: 20px;
         letter-spacing: 0px;        
       }
+    }
+    @include mobile {
+      margin-top: 12px;
+      .timer{
+        min-width: 99px;
+        .Box {        
+          padding: 0 3px;
+          margin: 0 3px 0 1px;
+          font-size: 0;
+          font-weight: 500;
+          line-height: 1;
+          letter-spacing: 0px;
+          b {
+            font-size: 14px;
+            line-height: 20px;      
+          }
+        }
+      }
+      
     }
   }
 }

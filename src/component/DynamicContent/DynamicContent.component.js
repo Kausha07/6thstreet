@@ -33,6 +33,166 @@ class DynamicContent extends PureComponent {
   constructor(props) {
     super(props);
     const { content = [] } = this.props;
+    content.push(
+      {
+        "type": "timer",
+        "index": 14,
+        "promotion_name": "Stage Timer - Promo",
+        "tag": "Stage Timer - Tag",
+        "start_time": "Wed, 18 Oct 2023 06:39:00 GMT",
+        "end_time": "Fri, 20 Oct 2023 06:39:00 GMT",
+        "text_alignment": "right_to_the_timer",
+        "title": "Offer End In",
+        "header": {
+            "title": "Header Title"
+        }
+    },
+    {
+        "type": "timer_banner_slider_with_label",
+        "index": 18,
+        "promotion_name": "Stage Timer Label Slider - Promo",
+        "tag": "Stage Timer Label Slider - Tag",
+        "start_time": "Wed, 18 Oct 2023 07:11:00 GMT",
+        "end_time": "Sat, 21 Oct 2023 07:11:00 GMT",
+        "header": {
+            "title": "New In"
+        },
+        "items": [
+            {
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "width": 360,
+                "height": 200
+            },
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag",
+                "width": 360,
+                "height": 200
+            },
+            {
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "width": 360,
+                "height": 200
+            },
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "width": 360,
+                "height": 200,
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag"
+            },
+            {
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "width": 360,
+                "height": 200
+            },
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/09-10-2023-women/womens+New+in+OCT/womens+New+in+OCT/LC+Waikiki.jpg",
+                "promotion_name": "Stage Timer Label Slider - Item Promo",
+                "tag": "Stage Timer Label Slider - Item Tag",
+                "link": "/women?idx=enterprise_magento_english_products",
+                "width": 360,
+                "height": 200
+            }
+        ]
+    },
+    {
+        "type": "timer_banner",
+        "index": 15,
+        "promotion_name": "Stage Timer Banner - Promo",
+        "tag": "Stage Timer Banner - Tag",
+        "start_time": "Wed, 18 Oct 2023 06:41:00 GMT",
+        "end_time": "Sat, 21 Oct 2023 06:41:00 GMT",
+        "alignment": "center",
+        "text_alignment": "left_to_the_timer",
+        "title": "Offer End In",
+        "items": [
+            {
+                "promotion_name": "Stage Timer Banner - Item Promo",
+                "tag": "Stage Timer Banner - Item Tag",
+                "width": 1080,
+                "height": 720,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+                "link": "/women?idx=enterprise_magento_english_products"
+            }
+        ]
+    },
+    {
+        "type": "timer_edge_to_edge_banner",
+        "index": 16,
+        "promotion_name": "Stage Timer Edge to Edge Banner - Promo",
+        "tag": "Stage Timer Edge to Edge Banner - Tag",
+        "start_time": "Wed, 18 Oct 2023 06:46:00 GMT",
+        "end_time": "Sat, 21 Oct 2023 06:49:00 GMT",
+        "alignment": "right",
+        "text_alignment": "right_to_the_timer",
+        "title": "Offer End In",
+        "items": [
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+                "promotion_name": "Stage Timer Edge to Edge Banner - Item Promo",
+                "tag": "Stage Timer Edge to Edge Banner - Item Tag",
+                "width": 1080,
+                "height": 720,
+                "link": "/women?idx=enterprise_magento_english_products"
+            }
+        ]
+    },
+    {
+        "type": "timer_full_width_banner_slider",
+        "index": 17,
+        "promotion_name": "Stage Timer Full with Banner - Promo",
+        "tag": "Stage Timer Full with Banner - Tag",
+        "start_time": "Wed, 18 Oct 2023 06:52:00 GMT",
+        "end_time": "Sat, 21 Oct 2023 06:52:00 GMT",
+        "title": "Offer End In",
+        "items": [
+            {
+                "promotion_name": "Stage Timer Full with Banner - Item Promo",
+                "tag": "Stage Timer Full with Banner - Item Tag",
+                "width": 1080,
+                "height": 720,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+                "link": "/women?idx=enterprise_magento_english_products"
+            },
+            {
+                "promotion_name": "sadfasd",
+                "height": 720,
+                "width": 1080,
+                "tag": "fsdf",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+                "link": "/women?idx=enterprise_magento_english_products"
+            },
+            {
+              "promotion_name": "sadfasd",
+              "height": 720,
+              "width": 1080,
+              "tag": "fsdf",
+              "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+              "link": "/women?idx=enterprise_magento_english_products"
+          },{
+            "promotion_name": "sadfasd",
+            "height": 720,
+            "width": 1080,
+            "tag": "fsdf",
+            "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/06-09-2023/AW23-SBC-Style+edit/Stock+clearance/UAE/70+off/Stock+app+EN.jpg",
+            "link": "/women?idx=enterprise_magento_english_products"
+        }
+        ]
+    }
+    )
     this.comprefs = content.map((i) => {
       return React.createRef();
     });

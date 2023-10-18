@@ -24,6 +24,7 @@ const settings = {
   // controlsText: ["&#x27E8", "&#x27E9"],
   nav: true,
   loop: true,
+  rewind: true,
   navPosition: "bottom",
   autoplay: true,
   responsive: {
@@ -34,7 +35,7 @@ const settings = {
       items: 1,
     },
     300: {
-      items: 1.2,
+      items: 1.1,
     },
   },
 };
@@ -134,6 +135,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
           this.onclick(item);
         }}
       >
+        {this.renderTimer()}
         <img src={image_url} alt={label ? label : "full-width-banner-image" } />
       </Link>
     );
@@ -188,7 +190,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
-        {this.props.start_time && this.props.end_time && this.renderTimer()}
+        {/* {this.props.start_time && this.props.end_time && this.renderTimer()} */}
         {this.renderSlider()}
       </div>
     );

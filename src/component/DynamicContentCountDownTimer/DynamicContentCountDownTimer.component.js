@@ -35,7 +35,7 @@ function DynamicContentCountDownTimer(props) {
     const { infoText = "", alignment="", textAlignment="" } = props;
     const isArabicStore = isArabic();
     return (
-      <h3 block={alignment === "left" ? "TimerTitle AlignLeft" : alignment === "center" ? "TimerTitle AlignCenter" : "TimerTitle AlignRight"} mods={{isArabicStore}} >
+      <h3 block={alignment === "left" ? "TimerTitle AlignLeft" : alignment === "right" ? "TimerTitle  AlignRight" : "TimerTitle AlignCenter"} mods={{isArabicStore}} >
         {
           infoText && 
           <span block={textAlignment === "right_to_the_timer" ? "InfoText AlignTextRight" : textAlignment === "left_to_the_timer" ? "InfoText AlignTextLeft" : "InfoText AlignTextCenter"} mods={{isArabicStore}}>{infoText}</span>

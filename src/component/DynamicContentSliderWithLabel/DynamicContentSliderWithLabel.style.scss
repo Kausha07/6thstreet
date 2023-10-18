@@ -21,6 +21,9 @@
       margin-top: 10px;
       margin-bottom: 20px;
       text-align: right;
+      @include mobile{
+        margin-top: 20px;
+      }
       .TimerTitle{
         margin: 0;
       }
