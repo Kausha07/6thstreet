@@ -24,6 +24,26 @@ const settings = {
   // controlsText: ["&#x27E8", "&#x27E9"],
   nav: true,
   loop: true,
+  navPosition: "bottom",
+  autoplay: true,
+  responsive: {
+    1024: {
+      items: 1,
+    },
+    420: {
+      items: 1,
+    },
+    300: {
+      items: 1.2,
+    },
+  },
+};
+const settingsTimer = {
+  lazyload: true,
+  mouseDrag: true,
+  touch: true,
+  nav: true,
+  loop: true,
   rewind: true,
   navPosition: "bottom",
   autoplay: true,
@@ -142,14 +162,14 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   };
 
   renderSlider() {
-    const { items = [] } = this.props;
+    const { items = [], type="" } = this.props;
     const { activeSlide } = this.state;
     // const items = [];
 
     return (
       <>
         {items && items.length === 0 ? this.renderBannerAnimation() : null}
-        <TinySlider settings={settings} block="">
+        <TinySlider settings={type === "timer_full_width_banner_slider" ? settingsTimer : settings } block="">
           {items.map(this.renderSlide)}
         </TinySlider>
       </>
