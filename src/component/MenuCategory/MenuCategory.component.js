@@ -140,7 +140,7 @@ class MenuCategory extends PureComponent {
 
   render() {
     const { isVisible, isArabic } = this.state;
-    const { isDefaultCategoryOpen, categoryKey } = this.props;
+    const { isDefaultCategoryOpen, categoryKey, gender } = this.props;
 
     if (!isMobile.any() && categoryKey === "stories") {
       return null;
@@ -163,6 +163,9 @@ class MenuCategory extends PureComponent {
         );
       }
 
+      if (gender === "home" && categoryKey === "utilities") {
+        this.setState({ isVisible: true });
+      }
       return (
         <div
           mix={{ block: "MenuCategory", mods: { isArabic, isVisible } }}

@@ -33,8 +33,8 @@ export class PDPSizeGuideContainer extends PureComponent {
     };
 
     containerFunctons = () => {
-        const { showOverlay, hideActiveOverlay } = this.props;
-        return { showOverlay, hideActiveOverlay };
+        const { showOverlay, hideActiveOverlay, getRecommendedSize } = this.props;
+        return { showOverlay, hideActiveOverlay, getRecommendedSize };
     };
 
     render() {

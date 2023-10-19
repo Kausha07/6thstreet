@@ -67,6 +67,7 @@ class PDPSummary extends PureComponent {
     eddEventSent: false,
     intlEddResponseState:{},
     isMobile: isMobile.any() || isMobile.tablet(),
+    tagsFromAddToCart: []
   };
 
   getIdFromCityArea = (addressCityData, city, area) => {
@@ -814,11 +815,24 @@ class PDPSummary extends PureComponent {
     this.setState({ stockAvailibility: !!price && status });
   };
 
+  getBrandUrl = () => {
+    const { brandInfoData = '', url_path = ''  } = this.props;
+    let finalURLKey = brandInfoData ? brandInfoData : url_path;
+    const url = finalURLKey
+      .replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
+    return `${url}.html`;
+  };
+
   renderBrand() {
     const {
-      product: { name, brand_name, gallery_images = [] },
+      product: { name, brand_name, gallery_images = [], brandNameclick  },
     } = this.props;
-    const { url_path, brandNameclick } = this.props;
+
     const { isArabic } = this.state;
     let gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -856,19 +870,18 @@ class PDPSummary extends PureComponent {
     }
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
-    const updateNewLink = `/${url_path}.html?q=${encodeURIComponent(
-      brand_name
-    )}&p=0&dFR[categories.level0][0]=${encodeURIComponent(brand_name)}`;
+    const brandUrlPath = this.props.brandInfoData ? this.props.brandInfoData : this.props.url_path
+    const updateNewLink = this.getBrandUrl();
     if (isMobile.any()) {
       return (
         <div block="PDPSummary" elem="Heading">
           <h1>
-            {url_path ? (
+            {brandUrlPath ? (
               gender !== "home" ? (
                 <Link
                   className="pdpsummarylinkTagStyle"
                   onClick={ brandNameclick }
-                  to={`${updateNewLink}&dFR[gender][0]=${gender}&dFR[in_stock][0]=1`}
+                  to={ updateNewLink }
                 >
                   {brand_name}
                 </Link>
@@ -876,7 +889,7 @@ class PDPSummary extends PureComponent {
                 <Link
                   className="pdpsummarylinkTagStyle"
                   onClick={ brandNameclick }
-                  to={`${updateNewLink}&dFR[in_stock][0]=1`}
+                  to={ updateNewLink }
                 >
                   {brand_name}
                 </Link>
@@ -894,12 +907,12 @@ class PDPSummary extends PureComponent {
 
     return (
       <h1>
-        {url_path ? (
+        {brandUrlPath ? (
           gender !== "home" ? (
             <Link
               className="pdpsummarylinkTagStyle"
               onClick={ brandNameclick }
-              to={`${updateNewLink}&dFR[gender][0]=${gender}&dFR[in_stock][0]=1`}
+              to={ updateNewLink }
             >
               {brand_name}
             </Link>
@@ -907,7 +920,7 @@ class PDPSummary extends PureComponent {
             <Link
               className="pdpsummarylinkTagStyle"
               onClick={ brandNameclick }
-              to={`${updateNewLink}&dFR[in_stock][0]=1`}
+              to={ updateNewLink }
             >
               {brand_name}
             </Link>
@@ -1063,9 +1076,16 @@ class PDPSummary extends PureComponent {
           simple_products={simple_products}
           setStockAvailability={this.setStockAvailability}
           setSize={this.setSize}
+          addTag={this.addTag}
         />
       </>
     );
+  }
+
+  addTag = (tags) => {
+    this.setState({
+      tagsFromAddToCart:[...tags]
+    });
   }
 
   renderPDPTags() {
@@ -1086,7 +1106,11 @@ class PDPSummary extends PureComponent {
     if (simple_products && Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
-
+    if(this.state.tagsFromAddToCart.length){
+      this.state.tagsFromAddToCart.map((tag)=>{
+        tags.push(__(tag));
+      })
+    }
     if (
       simple_products &&
       selectedSizeCode &&

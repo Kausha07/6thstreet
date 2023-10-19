@@ -21,6 +21,7 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 
 export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
@@ -177,17 +178,35 @@ class PDP extends PureComponent {
     const { isMobile } = this.state;
     return <div block="Seperator" mods={{ isMobile: !!isMobile }} />;
   }
+  renderMetaData() {
+    const { product, metaTitle, metaDesc } = this.props;
+    const imageURL = product?.thumbnail_url
+      ? product.thumbnail_url
+      : product?.gallery_images && product?.gallery_images[0]
+      ? product.gallery_images[0]
+      : null;
+    const altText =
+      product?.name && product?.brand_name
+        ? `${product?.brand_name} ${product?.name}`
+        : product?.name;
+    if (imageURL) {
+      return renderDynamicMetaTags(metaTitle, metaDesc, imageURL, altText);
+    }
+  }
 
   renderPDP() {
     return (
-      <div block="PDP" onClick={this.onPDPPageClicked}>
-        {this.renderMySignInPopup()}
-        {this.renderMainSection()}
-        {this.renderSeperator()}
-        {this.renderMixAndMatchSection()}
-        {this.renderDetailsSection()}
-        {this.renderDetail()}
-      </div>
+      <>
+        {this.renderMetaData()}
+        <div block="PDP" onClick={this.onPDPPageClicked}>
+          {this.renderMySignInPopup()}
+          {this.renderMainSection()}
+          {this.renderSeperator()}
+          {this.renderMixAndMatchSection()}
+          {this.renderDetailsSection()}
+          {this.renderDetail()}
+        </div>
+      </>
     );
   }
 

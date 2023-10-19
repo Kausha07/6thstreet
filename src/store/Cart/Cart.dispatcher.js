@@ -26,6 +26,7 @@ import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { resetCart } from "Store/Cart/Cart.action";
+import { setCartTotal } from "Store/Checkout/Checkout.action";
 export class CartDispatcher {
   async setCheckoutStep(dispatch, checkoutDetails = false) {
     dispatch(setCheckoutDetails(checkoutDetails));
@@ -161,6 +162,7 @@ export class CartDispatcher {
           Logger.log(e);
         }
       } else {
+        dispatch(setCartTotal(data?.total || 0))
         await this.setCartItems(dispatch, data);
         dispatch(setCartTotals(data));
       }

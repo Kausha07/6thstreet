@@ -19,6 +19,8 @@ import Event, {
   EVENT_MOE_ADD_TO_CART_FAILED,
   MOE_trackEvent,
   SELECT_ITEM_ALGOLIA,
+  EVENT_GTM_PRODUCT_CLICK,
+  EVENT_GTM_PRODUCT_DETAIL,
   EVENT_GTM_PDP_TRACKING,
   EVENT_SELECT_SIZE,
 } from "Util/Event";
@@ -728,6 +730,31 @@ class PLPAddToCart extends PureComponent {
     }
   };
 
+  getPLPListName() {
+    const pageUrl = new URL(window.location.href);
+    if (pageUrl.pathname == "/catalogsearch/result/") {
+      const getSearchQuery = pageUrl.search.includes("&")
+        ? pageUrl.search.split("&")
+        : pageUrl.search;
+      const searchParameter = getSearchQuery[0]
+        ? getSearchQuery[0].replace("?q=", "")
+        : getSearchQuery.includes("?q=")
+        ? getSearchQuery.replace("?q=", "")
+        : getSearchQuery;
+      const formatSearchParam =
+        searchParameter && searchParameter.includes("+")
+          ? searchParameter.replaceAll("+", " ")
+          : searchParameter;
+      return `Search PLP - ${formatSearchParam}`;
+    } else if (pageUrl.pathname.includes(".html")) {
+      const pagePath = pageUrl.pathname.split(".html");
+      const pageName = pagePath[0] ? pagePath[0].replaceAll("/", " ") : "";
+      return `PLP -${pageName}`;
+    } else {
+      return null;
+    }
+  }
+
   addToCart(isClickAndCollect = false) {
     const {
       product: {
@@ -771,6 +798,20 @@ class PLPAddToCart extends PureComponent {
     }
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+    const productData = {...product, listName: this.getPLPListName()}
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, productData);
+    Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+      product: {
+        name,
+        id: configSKU,
+        price: itemPrice,
+        brand: brand_name,
+        category: product_type_6s,
+        variant: color,
+        position: product_Position,
+      },
+    });
+
 
     this.setState({ productAdded: true });
     let searchQueryId;
@@ -859,7 +900,7 @@ class PLPAddToCart extends PureComponent {
           variant: color,
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
-          productPosition: product_Position || "",
+          position: product_Position || "",
         },
       });
 
@@ -923,7 +964,7 @@ class PLPAddToCart extends PureComponent {
           variant: color,
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
-          productPosition: product_Position || "",
+          position: product_Position || "",
         },
       });
 

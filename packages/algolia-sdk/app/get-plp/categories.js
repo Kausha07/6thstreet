@@ -21,6 +21,7 @@ const _getLevelsFromCategoryKey = ({ key }) => {
   const l2 = levels[offset + 2];
   const l3 = levels[offset + 3];
   const l4 = levels[offset + 4];
+  const categoryKeyString = `${l0} ${kidsTransaltions.includes(l0) ? levels[1] + " " + levels[2] : l1 }`;
 
   return {
     l0,
@@ -28,6 +29,7 @@ const _getLevelsFromCategoryKey = ({ key }) => {
     l2,
     l3,
     l4,
+    categoryKeyString,
   };
 };
 
@@ -158,6 +160,7 @@ Object.entries(prodCountFacets).map((entry, index) => {
         l2,
         l3,
         l4,
+        categoryKeyString,
       } = _getLevelsFromCategoryKey({ key });
       // let l2 = query["categories.level2"] ? l3Key : l2Key; code for l2 and l3 logic
       // let l1 = query["categories.level2"] ? l2Key : l1Key;
@@ -173,6 +176,8 @@ Object.entries(prodCountFacets).map((entry, index) => {
           category_id = parseInt(categoryData[categoryKey]);
         }
         if (!acc[l1]) {
+          const categoryKeyL1 = categoryKeyString.replace (regex, '_') || "";
+          const categoryIdL1 = parseInt(categoryData[categoryKeyL1]);
           acc[l1] = {
             label: l1,
             facet_key: facetKey,
@@ -180,6 +185,9 @@ Object.entries(prodCountFacets).map((entry, index) => {
             selected_filters_count: 0,
             product_count: 0,
             subcategories: {},
+            isDropdown: true,
+            category_key: categoryKeyL1,
+            category_id: categoryIdL1,
           };
         }
 
