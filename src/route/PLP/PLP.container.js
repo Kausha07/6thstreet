@@ -216,6 +216,7 @@ export class PLPContainer extends PureComponent {
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
     onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
     OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this),
+    setLoadingMobileFilter:this.setLoadingMobileFilter.bind(this)
   };
 
   resetPLPData() {
@@ -223,7 +224,7 @@ export class PLPContainer extends PureComponent {
     resetPLPData();
   }
 
-  setLoadingMobileFilter = (value) => {
+  setLoadingMobileFilter (value = false) {
     this.setState({ isLoadingFilter: value });
   };
 
@@ -1281,7 +1282,8 @@ export class PLPContainer extends PureComponent {
       selectedMoreFilterPLP,
       schemaData,
       metaTitle,
-      metaDesc
+      metaDesc,
+      isLoadingFilter
     } = this.state;
     // isDisabled: this._getIsDisabled()
 
@@ -1302,7 +1304,8 @@ export class PLPContainer extends PureComponent {
       selectedMoreFilterPLP,
       schemaData,
       metaTitle,
-      metaDesc
+      metaDesc,
+      isLoadingFilter
     };
   };
 
@@ -1341,8 +1344,6 @@ export class PLPContainer extends PureComponent {
         {...this.containerFunctions}
         {...this.containerProps()}
         setLastTapItem={this.setLastTapItem}
-        isLoadingFilter={isLoadingFilter}
-        setLoadingMobileFilter={this.setLoadingMobileFilter}
       />
     );
   }

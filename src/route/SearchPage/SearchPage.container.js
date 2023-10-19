@@ -59,8 +59,8 @@ export class SearchPageContainer extends PLPContainer {
 
   containerProps = () => {
     const { options, pages, isLoading, filters,showOverlay } = this.props;
-    const { activeFilters, selectedMoreFilterPLP } = this.state;
-    return { options, pages, isLoading, filters, activeFilters,showOverlay, selectedMoreFilterPLP };
+    const { activeFilters, selectedMoreFilterPLP, isLoadingFilter } = this.state;
+    return { options, pages, isLoading, filters, activeFilters,showOverlay, selectedMoreFilterPLP, isLoadingFilter };
   };
 
   setMetaData() {

@@ -63,6 +63,12 @@ class PLPFilterOption extends PureComponent {
     isLoading:false,
   };
 
+  componentDidMount(){
+    if(isMobile?.any()) {
+      this.props?.setLoadingMobileFilter(false);
+    }
+  }
+
   handleClick = () => {
     const {
       option: { facet_value, facet_key },
@@ -167,11 +173,11 @@ class PLPFilterOption extends PureComponent {
     }
 
     if (isMobile.any() && isValidFacetKey(facet_key)) {
-      this.props.setLoadingMobileFilter(true);
+      this.props.setLoadingMobileFilter ? this.props.setLoadingMobileFilter(true) : null;
     }
 
     if(isMobile.any() && facet_key === "categories_without_path") {
-      this.props.setLoadingMobileFilter(true);
+      this.props.setLoadingMobileFilter ? this.props.setLoadingMobileFilter(true) : null;
       OnLevelTwoCategoryPressMsite(option, checked)
     }else {
       parentCallback(facet_key, facet_value, checked, isRadio);
@@ -221,10 +227,10 @@ class PLPFilterOption extends PureComponent {
       updateFilters();
       setDefaultFilters();
     }
-    this.props.setLoadingMobileFilter(false);
+
     return (<>
     
-      <Loader isLoading={this.props.isLoading} />
+      <Loader isLoading={this.props.isLoadingFilter} />
       <Field
         formRef={this.fieldRef}
         onClick={this.handleClick}
