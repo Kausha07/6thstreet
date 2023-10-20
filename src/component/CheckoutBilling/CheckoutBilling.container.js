@@ -406,7 +406,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     ) {
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+          if (entry.source === "thankyou" && entry.feature_flag_status === 1) {
             finalEdd = entry.edd_date;
             finalEddString = isArabic() ? entry['edd_message_ar'] : entry['edd_message_en']
           }
@@ -563,7 +563,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       );
       if (isObject(eddResponse)) {
         Object.values(eddResponse).filter((entry) => {
-          if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+          if (entry.source === "thankyou" && entry.feature_flag_status === 1) {
             finalEdd = entry.edd_date;
             finalEddString = isArabic() ? entry['edd_message_ar'] : entry['edd_message_en']
           }
