@@ -265,6 +265,7 @@ class PLPFilters extends PureComponent {
       sliderFilters,
       newSelectedActiveFilters,
       compareObjects,
+      meta: { query = {}},
     } = this.props;
     if (Object.keys(filter.data).length === 0 || key === "categories.level1") {
       return null;
@@ -310,6 +311,9 @@ class PLPFilters extends PureComponent {
         filterPosition={filterPosition}
         isBrandPLP={isBrandPLP}
         compareObjects={compareObjects}
+        isLoadingFilter={this.props.isLoadingFilter}
+        setLoadingMobileFilter={this.props.setLoadingMobileFilter}
+        queryParams={query}
       />
     );
   };
@@ -671,6 +675,8 @@ class PLPFilters extends PureComponent {
             defaultFilters={defaultFilters}
             isSortBy={false}
             OnLevelTwoCategoryPressMsite={OnLevelTwoCategoryPressMsite}
+            isLoadingFilter={this.props.isLoadingFilter}
+            setLoadingMobileFilter={this.props.setLoadingMobileFilter}
           />
         );
       }

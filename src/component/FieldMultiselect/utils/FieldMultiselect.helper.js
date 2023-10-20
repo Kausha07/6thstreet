@@ -1,6 +1,4 @@
 export const URL_REWRITE = "url-rewrite";
-import BrowserDatabase from "Util/BrowserDatabase";
-import { isArabic } from "Util/App";
 
 export const getSelectedCategoryLevelOneFilter = (filters = {}) => {
     let selectCategoryLevelOneFilter = "noMatchForCategoryLevelOne";
@@ -18,6 +16,25 @@ export const getSelectedCategoryLevelOneFilter = (filters = {}) => {
     return selectCategoryLevelOneFilter;
 }
 
+export const getLevelsFromCategoryKey = (key) => {
+  const levels = key.split(" /// ");
+  const kidsTransaltions = ["Kids", "أطفال"];
+  const l0 = levels[0];
+  const offset = !kidsTransaltions.includes(l0) ? 0 : 1;
+  const l1 = levels[offset + 1];
+  const l2 = levels[offset + 2];
+  const l3 = levels[offset + 3];
+  const l4 = levels[offset + 4];
+
+  return {
+    l0,
+    l1,
+    l2,
+    l3,
+    l4,
+  };
+};
+
 export const getActiveFiltersIds = (newActiveFilters) => {
     let idsArray = [];
     const activeCategoryWithoutPath = newActiveFilters?.categories_without_path || [];
@@ -25,57 +42,6 @@ export const getActiveFiltersIds = (newActiveFilters) => {
       activeCategoryWithoutPath.map((item) => {item?.category_id ? idsArray.push(item.category_id) : null })
     }
     return idsArray;
-}
-
-export const getIsOptionVisible = (option) => {
-    const { facet_key, facet_value } = option;
-    const currentAppState = BrowserDatabase?.getItem("APP_STATE_CACHE_KEY");
-
-    // for colour, in_stock and sort filter should work as it is.
-    if(facet_key === "colorfamily" || facet_key === "sort" || facet_key === "in_stock") {
-        return true;
-    }
-
-    // if PLP is BRAND PLP then no other brand options should be visible in brand filter
-    if(facet_key === "brand_name") {
-        return true;
-    }
-
-    // If user access PLP with gender selected then no other gender option should be 
-    // visible to the user
-    if(facet_key === "gender") {
-        // if the gender is kids then other option like boy, girl, and baby will also displayed to the user
-        if(currentAppState?.gender === "kids" ) {
-            // in kids Men and Women gender options should NOT be visible.
-            if(isArabic() && (facet_value === "نساء" || facet_value === "رجال" ) ){
-                return false;
-            } else if(facet_value?.toLowerCase() === "men" || facet_value?.toLowerCase() === "women") {
-                return false;
-            }
-            return true;
-        }
-        // if pageType is home, all or influencer then show all avaiable gender options
-        if(currentAppState?.gender !== "home" && currentAppState?.gender !== "all" && currentAppState?.gender !== "influencer") {
-            const urlGender = location?.pathname?.trim()?.split("/")[1];
-            if(isArabic()) {
-                const arabicGenderValues = {
-                    women: "نساء",
-                    men: "رجال",
-                }
-                const ArbicGenderValue = arabicGenderValues[currentAppState?.gender?.toLowerCase()]
-                if(facet_value === ArbicGenderValue) {
-                    return true;
-                }else return false;
-            }
-            if(facet_value?.toLowerCase() ===  currentAppState?.gender?.toLowerCase() || 
-            facet_value?.toLowerCase() === urlGender?.toLocaleLowerCase()) {
-                return true;
-            }else return false;
-        }
-
-        return true;
-    }
-    return true;
 }
 
 export const getAttributeName = (category, currency) => {

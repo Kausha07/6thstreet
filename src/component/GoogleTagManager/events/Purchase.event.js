@@ -46,6 +46,23 @@ class PurchaseEvent extends BaseEvent {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
+    const productsData = this.getProducts(totals);
+    const formattedImpressions = productsData.map(
+      ({ brand, category, id, name, price, quantity, variant }) => {
+        const productPosition = this.getProductPosition(id) || null;
+        return {
+          brand: brand,
+          category: category,
+          id: id,
+          name: name,
+          price: price,
+          quantity: quantity,
+          variant: variant,
+          ...(productPosition && {position: productPosition}),
+        };
+      }
+    );
+
     const sha_email =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
@@ -63,7 +80,7 @@ class PurchaseEvent extends BaseEvent {
         currencyCode: this.getCurrencyCode(),
         purchase: {
           actionField: this.getActionFields(orderId, totals),
-          products: this.getProducts(totals),
+          products: formattedImpressions,
         },
       },
     });
@@ -162,6 +179,14 @@ class PurchaseEvent extends BaseEvent {
       });
     }
   }
+
+  getProductPosition(id) {
+    const productPositionData =
+      BrowserDatabase.getItem("ProductPositionData") || {};
+    const getProdPosition = productPositionData[id] || null;
+    return getProdPosition;
+  }
+  
   /**
    * Get order information
    *

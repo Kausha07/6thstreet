@@ -4,7 +4,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import BaseEvent from "./Base.event";
 
 export const SPAM_PROTECTION_DELAY = 200;
-
+export const EVENT_EXECUTION_DELAY = 400;
 /**
  * Product add to cart event
  */
@@ -14,7 +14,9 @@ class AddToCartEvent extends BaseEvent {
    */
   bindEvent() {
     Event.observer(EVENT_GTM_PRODUCT_ADD_TO_CART, ({ product }) => {
-      this.handle(product);
+      setTimeout(() => {
+        this.handle(product);
+      }, EVENT_EXECUTION_DELAY);
     });
   }
 
@@ -25,6 +27,17 @@ class AddToCartEvent extends BaseEvent {
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }
+    const productPositionData =
+      BrowserDatabase.getItem("ProductPositionData") || {};
+    const sku = product.id;
+    const getProdPosition = productPositionData[sku] || null;
+
+    const formattedData = product.position
+      ? product
+      : {
+          ...product,
+          ...(getProdPosition && { position: getProdPosition }),
+        };
     const sha_email =
       BrowserDatabase.getItem("TT_Data") &&
       BrowserDatabase.getItem("TT_Data")?.mail
@@ -41,7 +54,7 @@ class AddToCartEvent extends BaseEvent {
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
         add: {
-          products: [product],
+          products: [formattedData],
         },
       },
     });

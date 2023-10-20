@@ -219,6 +219,17 @@ function getSliderFilters (queryParams, locale, facets_stats, newfacetStats) {
   return sliderFilters;
 }
 
+const getIsSelected = (categoryIdsArray, filterObj) => {
+  if (filterObj && filterObj.category_id) {
+    if (categoryIdsArray.includes(filterObj.category_id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
+};
+
 function getFilters({
   locale,
   facets,
@@ -360,6 +371,11 @@ function getFilters({
   });
 
   const _filtersUnselected = deepCopy(filtersObject);
+  const categoryIds = query?.categoryIds || "";
+  let categoryIdsArray = categoryIds === "" ? [] : categoryIds.split(",");
+  if (categoryIdsArray.length) {
+    categoryIdsArray = categoryIdsArray.map(Number);
+  }
 
   // Update filtersObject based on query
   // Marking the selected filters
@@ -376,7 +392,17 @@ function getFilters({
 
     if (category != null) {
       facetValues.forEach((facetValue) => {
-        if (category.data[facetValue]) {
+        if (
+          category.data[facetValue] &&
+          facetKey === "categories_without_path"
+        ) {
+          const isSelected = getIsSelected(
+            categoryIdsArray,
+            category.data[facetValue]
+          );
+          category.data[facetValue].is_selected = isSelected;
+          category.selected_filters_count += 1;
+        } else if (category.data[facetValue]) {
           category.data[facetValue].is_selected = true;
           category.selected_filters_count += 1;
         }

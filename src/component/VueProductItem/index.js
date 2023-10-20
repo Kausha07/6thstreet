@@ -179,15 +179,7 @@ import {
   
       const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
       const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
-      Event.dispatch(EVENT_GTM_PRODUCT_CLICK, {
-        name: name,
-        id: sku,
-        price: itemPrice,
-        brand: brand_name,
-        category: product_type_6s || categoryLevel,
-        variant: color || "",
-        position: product_Position || "",
-      });
+      Event.dispatch(EVENT_GTM_PRODUCT_CLICK,product);
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
       MOE_trackEvent(EVENT_MOE_PRODUCT_CLICK, {
         country: getCountryFromUrl().toUpperCase(),

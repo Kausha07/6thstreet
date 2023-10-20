@@ -39,6 +39,7 @@ export const mapStateToProps = (_state) => ({
   sliderFilters: _state.PLP.sliderFilters,
   newSelectedActiveFilters: _state.PLP.newActiveFilters,
   moreFilters: _state.PLP.moreFilters,
+  meta: _state.PLP.meta,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -161,7 +162,16 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query, isPLPSortBy, sliderFilters, newSelectedActiveFilters = {} } = this.props;
+    const {
+      filters,
+      isLoading,
+      activeOverlay,
+      query,
+      isPLPSortBy,
+      sliderFilters,
+      newSelectedActiveFilters = {},
+      meta = {},
+    } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -172,7 +182,8 @@ export class PLPFiltersContainer extends PureComponent {
       query,
       sliderFilters,
       isPLPSortBy,
-      newSelectedActiveFilters
+      newSelectedActiveFilters,
+      meta,
     };
   };
 
@@ -183,6 +194,8 @@ export class PLPFiltersContainer extends PureComponent {
         {...this.containerFunctions()}
         {...this.containerFunction}
         {...this.containerProps()}
+        isLoadingFilter={this.props.isLoadingFilter}
+        setLoadingMobileFilter={this.props.setLoadingMobileFilter}
       />
     );
   }

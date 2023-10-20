@@ -11,7 +11,9 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
 } from "Util/Event";
 import "./HomePage.style";
+import { renderDynamicMetaTags } from "Util/Meta/metaTags";
 import { Helmet } from "react-helmet";
+
 
 class HomePage extends PureComponent {
   constructor(props) {
@@ -60,7 +62,6 @@ class HomePage extends PureComponent {
   }
   componentDidUpdate() {
     const DynamicContent = document.getElementsByClassName("DynamicContent")[0];
-
     if (DynamicContent) {
       const { children = [] } = DynamicContent;
       const { href } = location;
@@ -143,6 +144,12 @@ class HomePage extends PureComponent {
     );
   }
 
+  renderMetaData() {
+    const { metaTitle, metaDesc, imageUrl } = this.props;
+    const altText = "6thStreet Banner";
+    return renderDynamicMetaTags(metaTitle, metaDesc, imageUrl, altText);
+  }
+
   renderContent() {
     const { isLoading } = this.props;
 
@@ -156,6 +163,7 @@ class HomePage extends PureComponent {
   render() {
     return (
       <>
+        {this.renderMetaData()}
         <Helmet>
           <script type="application/ld+json">{this.appendSchemaData()}</script>
         </Helmet>

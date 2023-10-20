@@ -61,7 +61,8 @@ class PDPSizeGuide extends PureComponent {
       },
     } = this.props;
     const { isOpen } = this.state;
-    const { showOverlay } = this.props;
+    const { showOverlay, getRecommendedSize=()=>null } = this.props;
+    getRecommendedSize();
     showOverlay("PDPSizeGuide");
     const checkCategoryLevel = () => {
       if (!categories) {

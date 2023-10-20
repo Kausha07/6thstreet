@@ -200,6 +200,9 @@ export class PLPContainer extends PureComponent {
     moreActiveFilters: {},
     selectedMoreFilterPLP: "",
     schemaData: {},
+    metaTitle: "",
+    metaDesc: "",
+    isLoadingFilter: false,
   };
 
   containerFunctions = {
@@ -212,13 +215,18 @@ export class PLPContainer extends PureComponent {
     onLevelThreeCategoryPress: this.onLevelThreeCategoryPress.bind(this),
     onMoreFilterClick: this.onMoreFilterClick.bind(this),
     onSelectMoreFilterPLP: this.onSelectMoreFilterPLP.bind(this),
-    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this)
+    OnLevelTwoCategoryPressMsite: this.OnLevelTwoCategoryPressMsite.bind(this),
+    setLoadingMobileFilter:this.setLoadingMobileFilter.bind(this)
   };
 
   resetPLPData() {
     const { resetPLPData } = this.props;
     resetPLPData();
   }
+
+  setLoadingMobileFilter (value = false) {
+    this.setState({ isLoadingFilter: value });
+  };
 
   compareObjects(object1 = {}, object2 = {}) {
     if (Object.keys(object1).length === Object.keys(object2).length) {
@@ -639,6 +647,7 @@ export class PLPContainer extends PureComponent {
     const key = "categories_without_path";
       //Below code is for Msite - here I am not sending category Ids to Algolia
     if(isMobile.any()) {
+      this.setLoadingMobileFilter(true);
       WebUrlParser.setParam(
         key,
         selectedFacetValues,
@@ -1204,6 +1213,7 @@ export class PLPContainer extends PureComponent {
     //     countryName,
     //     countryName
     //   );
+    this.setState({ metaTitle: PLPMetaTitle, metaDesc: PLPMetaDesc });
     return {
       title: PLPMetaTitle,
       description: PLPMetaDesc,
@@ -1225,10 +1235,6 @@ export class PLPContainer extends PureComponent {
       title: metaData.title ? metaData.title : "",
       keywords: metaData.keywords ? metaData.keywords : "",
       description: metaData.description ? metaData.description : "",
-      twitter_title: metaData.title ? metaData.title : "",
-      twitter_desc: metaData.description ? metaData.description : "",
-      og_title: metaData.title ? metaData.title : "",
-      og_desc: metaData.description ? metaData.description : "",
     });
   }
 
@@ -1275,6 +1281,9 @@ export class PLPContainer extends PureComponent {
       moreActiveFilters,
       selectedMoreFilterPLP,
       schemaData,
+      metaTitle,
+      metaDesc,
+      isLoadingFilter
     } = this.state;
     // isDisabled: this._getIsDisabled()
 
@@ -1294,6 +1303,9 @@ export class PLPContainer extends PureComponent {
       moreActiveFilters,
       selectedMoreFilterPLP,
       schemaData,
+      metaTitle,
+      metaDesc,
+      isLoadingFilter
     };
   };
 
@@ -1317,7 +1329,7 @@ export class PLPContainer extends PureComponent {
 
   render() {
     const { requestedOptions, filters } = this.props;
-    const { categoryloaded } = this.state;
+    const { categoryloaded, isLoadingFilter } = this.state;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     localStorage.setItem(
       "CATEGORY_CURRENT",
