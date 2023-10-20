@@ -37,6 +37,7 @@ import { isSignedIn } from "Util/Auth";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
 import { getIsFilters } from "./utils/PLPAddToCart.helper";
+import { qtyAttributeForCountry } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -697,6 +698,7 @@ class PLPAddToCart extends PureComponent {
           }
         })
       }
+      let payload = {};
       if(edd_info?.has_item_level && new_item) {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
@@ -710,7 +712,7 @@ class PLPAddToCart extends PureComponent {
               !edd_info.has_cross_border_enabled
             )
           ) {
-            items.push({
+            payload = {
               sku: item.sku,
               intl_vendor:
                 item?.full_item_info?.cross_border &&
@@ -721,7 +723,14 @@ class PLPAddToCart extends PureComponent {
                 ) > -1
                   ? item?.full_item_info?.international_vendor
                   : null,
-            });
+            };
+            if (
+              payload?.intl_vendor !== null &&
+              qtyAttributeForCountry().includes(countryCode)
+            ) {
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            }
+            items.push(payload);
           }
         });
         request.items = items;

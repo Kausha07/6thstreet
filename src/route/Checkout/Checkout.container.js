@@ -158,6 +158,7 @@ export const mapStateToProps = (state) => ({
   addNewAddressClicked: state.MyAccountReducer.addNewAddressClicked,
   newAddressSaved: state.MyAccountReducer.newAddressSaved,
   addressIDSelected: state.MyAccountReducer.addressIDSelected,
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -847,7 +848,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       edd_info,
       eddResponse,
       totals,
-      isSignedIn
+      isSignedIn,
+      international_shipping_fee,
     } = this.props;
     const {
       shippingAddress: { email },
@@ -863,6 +865,26 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if(!isSignedIn && paymentInformation?.billing_address?.guest_email){
       MOE_AddUniqueID(paymentInformation.billing_address.guest_email);
     }
+
+    if (
+      international_shipping_fee &&
+      cartItems &&
+      cartItems?.length > 0 &&
+      !edd_info
+    ) {
+      cartItems.map(({ full_item_info }) => {
+        const { cross_border = 0, sku } = full_item_info;
+        eddItems.push({
+          sku: sku,
+          cross_border: cross_border,
+          edd_date: null,
+          edd_message_en: null,
+          edd_message_ar: null,
+          intl_vendors: null,
+        });
+      });
+    }
+
     if (edd_info?.is_enable && !edd_info.has_item_level && cartItems) {
       cartItems.map(({ full_item_info }) => {
         const {

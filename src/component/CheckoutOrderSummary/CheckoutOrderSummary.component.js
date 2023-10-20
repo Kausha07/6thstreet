@@ -16,6 +16,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import CartCouponList from "Component/CartCouponList";
 import CartCouponDetail from 'Component/CartCouponDetail';
 import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions/CartCouponTermsAndConditions.component";
+import { connect } from "react-redux";
 import Event, { MOE_trackEvent, EVENT_GTM_COUPON, EVENT_REMOVE_COUPON } from "Util/Event";
 import Delivery from "./icons/delivery-truck.png";
 
@@ -23,6 +24,7 @@ import "./CheckoutOrderSummary.extended.style";
 
 export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
+  international_shipping_fee: state.AppConfig.international_shipping_fee
 });
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
@@ -124,9 +126,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   renderPromoContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
-      totals: { currency_code, avail_free_shipping_amount },
+      totals: { currency_code, avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
     const { isArabic } = this.state;
+
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
 
     if (cart_cms) {
       return <CmsBlock identifier={cart_cms} />;
@@ -141,9 +151,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         >
           <Image lazyLoad={true} src={Delivery} alt="Delivery icon" />
           {__("Add ")}
-          <span block="CheckoutOrderSummary" elem="Currency">
-            {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
-          </span>
+          {
+            international_shipping_fee && inventory_level_cross_border ?
+            <span block="CheckoutOrderSummary" elem="Currency">
+              {`${currency_code} ${avail_free_intl_shipping_amount.toFixed(3)} `}
+            </span>
+            :
+            <span block="CheckoutOrderSummary" elem="Currency">
+              {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
+            </span>
+          }
           {__("more to your cart for ")}
           <span block="CheckoutOrderSummary" elem="FreeDelivery">
             {__("Free delivery")}
@@ -332,11 +349,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
   renderPromo() {
     const {
-      totals: { avail_free_shipping_amount },
+      totals: { avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]}, international_shipping_fee
     } = this.props;
 
-    return !avail_free_shipping_amount ||
-      avail_free_shipping_amount === 0 ? null : (
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
+    return ((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && (!avail_free_shipping_amount ||
+      avail_free_shipping_amount === 0)) ||
+      (international_shipping_fee && inventory_level_cross_border && (!avail_free_intl_shipping_amount || avail_free_intl_shipping_amount === 0)) ? null : (
         <div block="CheckoutOrderSummary" elem="Promo">
           {this.renderPromoContent()}
         </div>
@@ -404,7 +429,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         shipping_amount = 0,
         currency_code = getCurrency(),
         total_segments: totals = [],
+        items = [],
       },
+      international_shipping_fee,
       checkoutStep,
     } = this.props;
     const cashOnDelivery = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
@@ -413,6 +440,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDelivery, currency_code)
         : getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    let inventory_level_cross_border = false;
+    items?.map((item) => {
+      if (
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
+        parseInt(item.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     return (
       <div block="CheckoutOrderSummary" elem="OrderTotals">
         <ul>
@@ -422,6 +459,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               this.renderPriceLine(shipping_amount, __("Shipping"), {
                 divider: true,
               })}
+            {(!inventory_level_cross_border || !international_shipping_fee) &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "shipping") || __("FREE"),
+                __("Shipping Charges")
+              )}
+            {international_shipping_fee &&
+              inventory_level_cross_border &&
+              this.renderPriceLine(
+                getDiscountFromTotals(totals, "intl_shipping")  || __("FREE"),
+                __("International Shipping Fee")
+              )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "customerbalance"),
               __("Store Credit")
@@ -432,11 +480,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             )}
             {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
 
-
-            {this.renderPriceLine(
-              getDiscountFromTotals(totals, "shipping") || __("FREE"),
-              __("Shipping Charges")
-            )}
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "tax"),
               __("Tax")
@@ -474,4 +517,4 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
   }
 }
 
-export default CheckoutOrderSummary;
+export default connect(mapStateToProps)(CheckoutOrderSummary);

@@ -11,7 +11,7 @@ import ShareButton from "Component/ShareButton";
 import WishlistIcon from "Component/WishlistIcon";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor, qtyAttributeForCountry } from "Util/Common";
 import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
@@ -139,13 +139,18 @@ class PDPSummary extends PureComponent {
       },
       () => {
         let data = { area: areaEntry, city: cityEntry, country: countryCode };
+        let payload = {};
         if(edd_info?.has_item_level) {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           data.intl_vendors=null;
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              }
+              items.push(payload);
             }
           })
           data.items = items;
@@ -168,13 +173,18 @@ class PDPSummary extends PureComponent {
       courier: null,
       source: null,
     };
+    let payload = {};
     if(edd_info?.has_item_level) {
       let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
       request.intl_vendors=null;
       let items = [];
       items_in_cart.map(item => {
         if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-          items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+          payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+          if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country)) {
+            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+          }
+          items.push(payload);
         }
       });
       request.items = items;
@@ -278,6 +288,17 @@ class PDPSummary extends PureComponent {
       area = areaSelected ? areaSelected : area;
       city = this.state.selectedCity ? this.state.selectedCity: city;
       const { addressCityData } = this.props;
+      let cross_border_qty = 0;
+      if (typeof simple_products === "object" && simple_products !== null) {
+        Object.values(simple_products).forEach((obj) => {
+          if (
+            parseInt(obj.cross_border_qty) &&
+            parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+          ) {
+            cross_border_qty = 1;
+          }
+        });
+      }
       if(city && area && countryCode) {
         const { cityEntry, areaEntry } = this.getIdFromCityArea(
           addressCityData,
@@ -292,9 +313,33 @@ class PDPSummary extends PureComponent {
           source: null,
         };
         request.intl_vendors=null;
-        if(!(cross_border && !edd_info?.has_cross_border_enabled)) {
+        let payload = {};
+        if (!(cross_border_qty && !edd_info?.has_cross_border_enabled)) {
           let items = [];
-          Object.keys(simple_products).map(sku => items.push({ sku : sku, intl_vendor: cross_border && edd_info.international_vendors && international_vendor && edd_info.international_vendors.indexOf(international_vendor)>-1 ? international_vendor : null}))
+          Object.keys(simple_products).map((sku) => {
+            payload = {
+              sku: sku,
+              intl_vendor:
+                parseInt(simple_products[sku]?.cross_border_qty) &&
+                parseInt(simple_products[sku]?.quantity) <=
+                  parseInt(simple_products[sku]?.cross_border_qty) &&
+                edd_info.international_vendors &&
+                international_vendor &&
+                edd_info.international_vendors.indexOf(international_vendor) >
+                  -1
+                  ? international_vendor
+                  : null,
+            };
+
+            if (
+              payload?.intl_vendor !== null &&
+              qtyAttributeForCountry().includes(countryCode)
+            ) {
+              payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
+            }
+
+            items.push(payload);
+          });
           request.items = items;
           estimateEddResponseForPDP(request, true);
         }
@@ -321,7 +366,7 @@ class PDPSummary extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const {
-      product: { cross_border = 0, price },
+      product: { cross_border = 0, price, simple_products = {} },
       edd_info,
       defaultShippingAddress,
       addressCityData,
@@ -329,6 +374,17 @@ class PDPSummary extends PureComponent {
     const countryCode = getCountryFromUrl();
 
     const { eddEventSent } = this.state;
+    let cross_border_qty = 0;
+    if (typeof simple_products === "object" && simple_products !== null) {
+      Object.values(simple_products).forEach((obj) => {
+        if (
+          parseInt(obj.cross_border_qty) &&
+          parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+        ) {
+          cross_border_qty = 1;
+        }
+      });
+    }
     const {
       defaultShippingAddress: prevdefaultShippingAddress,
       addressCityData: prevAddressCitiesData,
@@ -338,7 +394,8 @@ class PDPSummary extends PureComponent {
       edd_info.is_enable &&
       edd_info.has_pdp &&
       !eddEventSent &&
-      cross_border === 0 && !edd_info.has_item_level
+      cross_border_qty === 0 &&
+      !edd_info.has_item_level
     ) {
       if (addressCityData?.length > 0) {
         this.validateEddStatus(countryCode);
@@ -459,13 +516,18 @@ class PDPSummary extends PureComponent {
         courier: null,
         source: null,
       };
+      let payload = {};
       if(edd_info?.has_item_level) {
         let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
         request.intl_vendors=null;
         let items = [];
         items_in_cart.map(item => {
           if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
-            items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+            payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+            if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            }
+            items.push(payload);
           }
         });
         request.items = items;
@@ -1106,20 +1168,17 @@ class PDPSummary extends PureComponent {
     if (simple_products && Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
-    if(this.state.tagsFromAddToCart.length){
-      this.state.tagsFromAddToCart.map((tag)=>{
-        tags.push(__(tag));
-      })
-    }
-    if (
-      simple_products &&
-      selectedSizeCode &&
-      parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
-        parseInt(simple_products[selectedSizeCode]?.quantity) &&
-      parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
-    ) {
-      tags.push(__("International Shipment"));
-    }
+
+    // Commenting this code, because we are showing this tag other where to with different logic
+    // if (
+    //   simple_products &&
+    //   selectedSizeCode &&
+    //   parseInt(simple_products[selectedSizeCode]?.cross_border_qty) ===
+    //     parseInt(simple_products[selectedSizeCode]?.quantity) &&
+    //   parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0
+    // ) {
+    //   tags.push(__("International Shipment"));
+    // }
     if (discountable?.toLowerCase() === "no") {
       tags.push(__("Non Discountable"));
     }
@@ -1196,13 +1255,27 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "", international_vendor=null },
+      product: { cross_border = 0, brand_name = "", international_vendor=null, simple_products = {} },
       edd_info,
-      intlEddResponse
+      intlEddResponse,
+      international_shipping_fee
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
+    let inventory_level_cross_border = false;
+    let cross_border_qty = 0;
+    if (typeof simple_products === "object" && simple_products !== null) {
+      Object.values(simple_products).forEach((obj) => {
+        if (
+          parseInt(obj.cross_border_qty) &&
+          parseInt(obj.quantity) <= parseInt(obj.cross_border_qty)
+        ) {
+          inventory_level_cross_border = true;
+          cross_border_qty = 1;
+        }
+      });
+    }
     const isIntlBrand =
-      cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+      cross_border_qty === 1 && edd_info && edd_info.has_cross_border_enabled;
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
@@ -1218,9 +1291,15 @@ class PDPSummary extends PureComponent {
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0 && !edd_info.has_item_level)  || cross_border === 0 || (edd_info.has_item_level && isIntlBrand)) &&
-          this.renderSelectCity(cross_border === 1)}
-        {isIntlBrand && this.renderIntlTag()}
+          ((isIntlBrand &&
+            Object.keys(intlEddResponse).length > 0 &&
+            !edd_info.has_item_level) ||
+            cross_border_qty === 0 ||
+            (edd_info.has_item_level && isIntlBrand)) &&
+          this.renderSelectCity(cross_border_qty === 1)}
+        {inventory_level_cross_border &&
+          international_shipping_fee &&
+          this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}

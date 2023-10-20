@@ -52,6 +52,8 @@ import CartCouponTermsAndConditions from "Component/CartCouponTermsAndConditions
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { Offer, Coupon } from "Component/Icons/index";
 import CartPageSliders from "Component/CartPageSliders/index.js";
+import { getShippingFees } from "Util/Common/index";
+import { getLocaleFromUrl } from "Util/Url/Url";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -546,23 +548,27 @@ export class CartPage extends PureComponent {
     const {
       totals: { currency_code = getCurrency() },
     } = this.props;
+    const locale = getLocaleFromUrl();
+    const [lang, country] = locale && locale.split("-");
     const finalPrice = getFinalPrice(price, currency_code);
-    const shippingFee = finalPrice ? finalPrice : 20;
+    const shippingFee = parseInt(finalPrice) ? finalPrice : getShippingFees(country);
 
-    if (finalPrice === 0) {
+    if (parseInt(finalPrice) === 0) {
       return (
         <li block="CartPage" elem="SummaryItem" mods={mods}>
           <strong block="CartPage" elem="Text">
             {name}
           </strong>
           <span>
-            <strong block="CartPage" elem="Price">
-              <del block="freeShipping" mods={{ isArabic }}>
-                {`${
-                  parseFloat(price) || price === 0 ? currency_code : ""
-                } ${shippingFee}`}
-              </del>
-            </strong>
+            {name !== __("International Shipping Fee") && (
+              <strong block="CartPage" elem="Price">
+                <del block="freeShipping" mods={{ isArabic }}>
+                  {`${
+                    parseFloat(price) || price === 0 ? currency_code : ""
+                  } ${shippingFee}`}
+                </del>
+              </strong>
+            )}
 
             {__("FREE")}
           </span>
@@ -640,7 +646,9 @@ export class CartPage extends PureComponent {
         total_segments: totals = [],
         shipping_fee = 0,
         international_shipping_amount = 0,
+        items = [],
       },
+      international_shipping_fee
     } = this.props;
     let appliedCoupon = {};
     if (couponsItems) {
@@ -656,6 +664,16 @@ export class CartPage extends PureComponent {
         ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDeliveryFee, currency_code)
         : getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
+    let inventory_level_cross_border = false;
+    items.map((item) => {
+      if (
+        item.full_item_info &&
+        item.full_item_info.cross_border &&
+        parseInt(item.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     if (discount != 0) {
       return (
         <div block="CartPage" elem="OrderTotals">
@@ -674,12 +692,18 @@ export class CartPage extends PureComponent {
               {couponCode || (discount && discount != 0)
                 ? this.renderPriceLine(discount, __("Discount"))
                 : null}
-              {international_shipping_amount === 0
+              {(!inventory_level_cross_border || !international_shipping_fee)
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
                   )
                 : null}
+              {international_shipping_fee &&
+                inventory_level_cross_border &&
+                this.renderPriceLineForShipping(
+                  international_shipping_amount,
+                  __("International Shipping Fee")
+                )}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -696,12 +720,18 @@ export class CartPage extends PureComponent {
               {this.renderPriceLine(subTotal, __("Subtotal"), {
                 subtotalOnly: true,
               })}
-              {international_shipping_amount === 0
+              {(!inventory_level_cross_border || !international_shipping_fee)
                 ? this.renderPriceLineForShipping(
                     shipping_fee,
                     __("Shipping fee")
                   )
                 : null}
+              {international_shipping_fee &&
+                inventory_level_cross_border &&
+                this.renderPriceLineForShipping(
+                  international_shipping_amount,
+                  __("International Shipping Fee")
+                )}
               {this.renderPriceLine(grandTotal, __("Total Amount"), {
                 divider: true,
               })}
@@ -857,13 +887,21 @@ export class CartPage extends PureComponent {
   renderPromoContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
-      totals: { currency_code, avail_free_shipping_amount },
+      totals: { currency_code, avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
     const { isArabic } = this.state;
 
     if (cart_cms) {
       return <CmsBlock identifier={cart_cms} />;
     }
+
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
 
     return (
       <figure block="CartPage" elem="PromoBlock">
@@ -872,9 +910,16 @@ export class CartPage extends PureComponent {
           &nbsp;
           {__("Add")}
           &nbsp;
-          <span>{`${currency_code} ${avail_free_shipping_amount.toFixed(
-            3
-          )} `}</span>
+          {
+            international_shipping_fee && inventory_level_cross_border ?
+            <span>{`${currency_code} ${avail_free_intl_shipping_amount.toFixed(
+              3
+            )} `}</span>
+            :
+            <span>{`${currency_code} ${avail_free_shipping_amount.toFixed(
+              3
+            )} `}</span>
+          }
           &nbsp;
           {__("more to your cart for ")}
           &nbsp;
@@ -970,11 +1015,19 @@ export class CartPage extends PureComponent {
 
   renderPromo() {
     const {
-      totals: { avail_free_shipping_amount },
+      totals: { avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
 
-    return !avail_free_shipping_amount ||
-      avail_free_shipping_amount === 0 ? null : (
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
+    return ((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && (!avail_free_shipping_amount ||
+      avail_free_shipping_amount === 0)) || (international_shipping_fee && inventory_level_cross_border && (!avail_free_intl_shipping_amount || avail_free_intl_shipping_amount === 0)) ? null : (
       <div block="CartPage" elem="Promo">
         {this.renderPromoContent()}
       </div>
