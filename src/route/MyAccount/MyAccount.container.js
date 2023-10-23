@@ -48,6 +48,7 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
   IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
 });
 
@@ -107,12 +108,15 @@ export const storeCreditState = {
   },
 };
 
-export const tabMap = {
+export const clubApparelState = {
   [CLUB_APPAREL]: {
     url: "/club-apparel",
     name: __("Club Apparel Loyalty"),
     className: "MobileHide",
   },
+};
+
+export const tabMap = {
   [DASHBOARD]: {
     url: "/dashboard",
     name: __("My Profile"),
@@ -174,6 +178,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     newSignUpEnabled: PropTypes.bool,
     config: Config.isRequired,
     IsReferralEnabled: PropTypes.bool,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -200,12 +205,13 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   changeActiveTab(activeTab) {
-    const { history, is_exchange_enabled, IsVipCustomerEnabled, customer } = this.props;
+    const { history, is_exchange_enabled, IsVipCustomerEnabled, customer,isClubApparelEnabled } = this.props;
     const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
           ...tabMap2,
@@ -213,6 +219,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
       : {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
           ...tabMap2,
@@ -224,20 +231,22 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { clubApparel } = props;
-    const { clubApparel: currentClubApparel } = state;
-    const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(
-      props,
-      state
-    );
-    if (clubApparel !== currentClubApparel) {
-      if (isNavigateToSelectedTab) {
-        return {
-          clubApparel,
-          ...MyAccountContainer.navigateToSelectedTab(props, state),
-        };
+    if (props?.isClubApparelEnabled) {
+      const { clubApparel } = props;
+      const { clubApparel: currentClubApparel } = state;
+      const isNavigateToSelectedTab = MyAccountContainer.navigateToSelectedTab(
+        props,
+        state
+      );
+      if (clubApparel !== currentClubApparel) {
+        if (isNavigateToSelectedTab) {
+          return {
+            clubApparel,
+            ...MyAccountContainer.navigateToSelectedTab(props, state),
+          };
+        }
+        return { clubApparel };
       }
-      return { clubApparel };
     }
     return { ...MyAccountContainer.navigateToSelectedTab(props, state) };
   }
@@ -281,7 +290,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer } = this.props;
+    const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer, isClubApparelEnabled } = this.props;
     const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
     const { activeTab } = this.state;
     let finalTabMap;
@@ -289,6 +298,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
       ? {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
           ...tabMap2,
@@ -296,6 +306,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
       : {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
           ...tabMap2,
