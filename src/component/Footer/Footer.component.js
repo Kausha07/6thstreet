@@ -12,12 +12,16 @@ import isMobile from 'Util/Mobile';
 import './Footer.style';
 
 export const mapStateToProps = (state) => {
-   return  {checkoutDetails: state.CartReducer.checkoutDetails}
+    return {
+      checkoutDetails: state.CartReducer.checkoutDetails,
+      isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+    };
   };
 
 export class Footer extends PureComponent {
     static propTypes = {
-        isVisibleOnMobile: PropTypes.bool
+        isVisibleOnMobile: PropTypes.bool,
+        isClubApparelEnabled: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -62,7 +66,7 @@ export class Footer extends PureComponent {
 
         const { isCheckout , isMobile, hidefooter} = this.state;
 
-        const {checkoutDetails}= this.props
+        const {checkoutDetails,isClubApparelEnabled}= this.props
         if (footer_cms) {
             return <CmsBlock identifier={ footer_cms } />;
         }
@@ -83,8 +87,8 @@ export class Footer extends PureComponent {
                 <FooterMiddle
                   handleFooterIsAccountOpen={ this.handleFooterIsAccountOpen }
                 />
-                <FooterBottom />
-                <FooterMobile />
+                <FooterBottom isClubApparelEnabled={isClubApparelEnabled} />
+                <FooterMobile isClubApparelEnabled={isClubApparelEnabled}/>
             </>
         );
     }

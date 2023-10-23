@@ -82,6 +82,7 @@ export const mapStateToProps = (state) => {
     options: state.PDP.options,
     wishListProducts: state.WishlistReducer.items,
     totalsForProduct: state.CartReducer.cartItems,
+    isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
   };
 };
 
@@ -121,6 +122,7 @@ export class CartPageContainer extends PureComponent {
     isSignedIn: PropTypes.bool.isRequired,
     processingRequest: PropTypes.bool,
     clubApparel: ClubApparelMember,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
