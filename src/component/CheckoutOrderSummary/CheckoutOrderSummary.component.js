@@ -351,7 +351,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
         <StoreCredit canApply hideIfZero />
-        <ClubApparel hideIfZero />
+        {this.props?.isClubApparelEnabled ? <ClubApparel hideIfZero /> : null}
       </div>
     );
   }
@@ -426,10 +426,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "customerbalance"),
               __("Store Credit")
             )}
-            {this.renderPriceLine(
+            {this.props?.isClubApparelEnabled ? this.renderPriceLine(
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
-            )}
+            ) : null}
             {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Coupon Code")) : null}
 
 

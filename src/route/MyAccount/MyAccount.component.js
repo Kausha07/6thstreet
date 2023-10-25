@@ -46,6 +46,7 @@ import {
   tabMap,
   tabMap2,
   storeCreditState,
+  clubApparelState,
   vipCustomerState,
 } from "./MyAccount.container";
 import { isArabic } from "Util/App";
@@ -54,8 +55,9 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import { TIER_DATA } from "./../../component/MyAccountClubApparel/MyAccountClubApparel.config";
 import box from "./icons/box.png";
+import referIcon from "./icons/refer.png";
+import help from "./icons/help.png";
 import calogo from "./icons/calogo.png";
-import contactHelp from "./icons/contact-help.png";
 import infoIcon from "./icons/infobold.png";
 import { ADD_ADDRESS } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
 import Event, {
@@ -75,7 +77,7 @@ import Event, {
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import supportIcon from "./icons/support.png";
 import OrdersIcon from "./icons/box-vip.png";
-import help from "./icons/help.png";
+
 
 export class MyAccount extends SourceMyAccount {
   constructor(props) {
@@ -315,6 +317,7 @@ export class MyAccount extends SourceMyAccount {
       is_exchange_enabled = false,
       customer,
       IsReferralEnabled,
+      isClubApparelEnabled,
       IsVipCustomerEnabled,
     } = this.props;
     const isVipCustomer =
@@ -325,6 +328,7 @@ export class MyAccount extends SourceMyAccount {
       ? {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
           ...tabMap2,
@@ -332,6 +336,7 @@ export class MyAccount extends SourceMyAccount {
       : {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
           ...tabMap2,
@@ -433,6 +438,7 @@ export class MyAccount extends SourceMyAccount {
       is_exchange_enabled,
       config,
       IsReferralEnabled,
+      isClubApparelEnabled,
       IsVipCustomerEnabled,
       history: { location },
     } = this.props;
@@ -462,6 +468,7 @@ export class MyAccount extends SourceMyAccount {
       ? {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...exchangeReturnState,
           ...tabMap2,
@@ -469,6 +476,7 @@ export class MyAccount extends SourceMyAccount {
       : {
           ...storeCreditState,
           ...(isVipCustomer && { ...vipCustomerState }),
+          ...(isClubApparelEnabled && clubApparelState),
           ...tabMap,
           ...returnState,
           ...tabMap2,
@@ -537,50 +545,61 @@ export class MyAccount extends SourceMyAccount {
             <span>{__("Hello, ")}</span>
             <span block="UserName">{firstname}</span>
           </div>
-          <div block="MobileCards">
-            <div block="CaCardsContainer">
-              <div block="InfoIconBlock">
-                <Image block="InfoIcon" src={infoIcon} alt={"Club Apparel"} />
+          <div block="MobileCards" mods={{ isClubApparelEnabled }}>
+          {isClubApparelEnabled ? (
+              <div block="CaCardsContainer">
+                <div block="InfoIconBlock">
+                  <Image block="InfoIcon" src={infoIcon} alt={"Club Apparel"} />
+                </div>
+                <div block="CardsIconBlock">
+                  <Image block="CardsIcon" src={calogo} alt={"apparel"} />
+                </div>
+                {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
+                {this.props.clubApparel?.accountLinked ? (
+                  <button
+                    onClick={() => this.handleTabChange("club-apparel")}
+                    block="AccountLinked"
+                  >
+                    <div block="AccountLinkedTextBlock">
+                      <span block="ClubApparelImgBlock">
+                        <Image
+                          block="ClubApparelImg"
+                          src={
+                            TIER_DATA[
+                              this.props.clubApparel?.memberDetails?.memberTier
+                            ]?.img
+                          }
+                          alt={"apparel"}
+                        />
+                      </span>
+                      <span block="TierName">
+                        {" "}
+                        {this.props.clubApparel?.memberDetails?.memberTier} TIER
+                      </span>
+                      <span block="pointDetails">
+                        <span block="pointsValue">
+                          {this.props.clubApparel?.caPointsValue}
+                        </span>{" "}
+                        {this.props.clubApparel?.currency}
+                      </span>
+                    </div>
+                  </button>
+                ) : (
+                  <button onClick={() => this.handleTabChange("club-apparel")}>
+                    {__("Link Now")}
+                  </button>
+                )}
               </div>
-              <div block="CardsIconBlock">
-                <Image block="CardsIcon" src={calogo} alt={"apparel"} />
+            ) : (
+              <div block="CardsContainer referralContainer">
+                <Image block="CardsIcon" src={referIcon} alt={"box"} />
+                <div block="CardTitle"> {__("Refer & Earn")} </div>
+                <span>{__("Invite a friend")}</span>
+                <button onClick={() => this.handleTabChange("referral")}>
+                  {__("View")}
+                </button>
               </div>
-              {/* tier image to be added once we got the background image REF: https://projects.invisionapp.com/d/main?origin=v7#/console/17341759/362923026/preview?scrollOffset=23294#project_console */}
-              {this.props.clubApparel?.accountLinked ? (
-                <button
-                  onClick={() => this.handleTabChange("club-apparel")}
-                  block="AccountLinked"
-                >
-                  <div block="AccountLinkedTextBlock">
-                    <span block="ClubApparelImgBlock">
-                      <Image
-                        block="ClubApparelImg"
-                        src={
-                          TIER_DATA[
-                            this.props.clubApparel?.memberDetails?.memberTier
-                          ]?.img
-                        }
-                        alt={"apparel"}
-                      />
-                    </span>
-                    <span block="TierName">
-                      {" "}
-                      {this.props.clubApparel?.memberDetails?.memberTier} TIER
-                    </span>
-                    <span block="pointDetails">
-                      <span block="pointsValue">
-                        {this.props.clubApparel?.caPointsValue}
-                      </span>{" "}
-                      {this.props.clubApparel?.currency}
-                    </span>
-                  </div>
-                </button>
-              ) : (
-                <button onClick={() => this.handleTabChange("club-apparel")}>
-                  {__("Link Now")}
-                </button>
-              )}
-            </div>
+            )}
             {isVipCustomer ? (
               <>
                 <div block="CardsContainer isVIP">

@@ -27,12 +27,14 @@ const settings = {
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
 })
 class HeaderTopBar extends NavigationAbstract {
   static propTypes = {
     location: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     country: PropTypes.string.isRequired,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   stateMap = {
@@ -146,9 +148,11 @@ class HeaderTopBar extends NavigationAbstract {
           <div block="HeaderTopBar" elem="CmsBlock">
             {__("100-DAY FREE RETURNS")}
           </div>
-          <div block="HeaderTopBar" elem="CmsBlock">
-            {__("CLUB APPAREL REWARDS")}
-          </div>
+          {this.props?.isClubApparelEnabled && (
+            <div block="HeaderTopBar" elem="CmsBlock">
+              {__("CLUB APPAREL REWARDS")}
+            </div>
+          )}
           {isFreeDelivery ? (country ? (
             <div block="HeaderTopBar" elem="CmsBlock">
               {this.renderShippingInfo()}

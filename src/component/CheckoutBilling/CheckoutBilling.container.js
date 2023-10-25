@@ -926,7 +926,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     const storeCredit = getDiscountFromTotals(totals, "customerbalance");
 
-    const clubApparel = getDiscountFromTotals(totals, "clubapparel");
+    const clubApparel = this.props?.isClubApparelEnabled ? getDiscountFromTotals(totals, "clubapparel") : null;
 
     if (storeCredit) {
       LineItems.push({
