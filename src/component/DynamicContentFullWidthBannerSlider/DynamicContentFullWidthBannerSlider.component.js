@@ -187,7 +187,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
           this.onclick(item);
         }}
       >
-        {/* {this.renderTimer()} */}
+        {this.renderTimer()}
         <img src={image_url} alt={label ? label : "full-width-banner-image" } />
       </Link>
     );
@@ -229,17 +229,22 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     if (start_time && end_time) {
       if (!this.state.isHideWidget) {
         return (
-          <div
-            ref={setRef}
+          <div 
+            ref={setRef} 
             block="DynamicContentFullWidthBannerSlider"
             id={`DynamicContentFullWidthBannerSlider${index}`}
           >
-            {/* {this.renderTimer()} */}
-            {this.props.header && (
-              <DynamicContentHeader header={this.props.header} />
-            )}
-            
-            {this.renderSlider()}
+            <div
+              id={`DynamicContentFullWidthBannerSlider${index}Timer`}
+            >              
+              {this.props.header && (
+                <DynamicContentHeader header={this.props.header} />
+              )}
+              {/* <div
+              id={`DynamicContentFullWidthBannerSlider${index}TimerWidget`}
+            >{this.renderTimer()}</div>             */}
+              {this.renderSlider()}
+            </div>
           </div>
         );
       }else{
