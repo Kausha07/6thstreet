@@ -8,14 +8,12 @@ function DynamicContentCountDownTimer(props) {
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
-  const deadline = props.end;  
-
+  const deadline = props.end; 
   const getTime = () => {    
     const now = new Date();
     const utcString = now.toUTCString();
     const finalendDate = deadline.toLocaleString();
     const time = Date.parse(finalendDate) - Date.parse(utcString);
-
     const Days = Math.floor(time / (1000 * 60 * 60 * 24)) > 9 ? Math.floor(time / (1000 * 60 * 60 * 24)) : "0" + Math.floor(time / (1000 * 60 * 60 * 24))
     const Hours = Math.floor(((time / (1000 * 60 * 60)) % 24) + (Days * 24)) > 9 ? Math.floor(((time / (1000 * 60 * 60)) % 24) + (Days * 24)) : ("0" + Math.floor((time / (1000 * 60 * 60)) % 24))
     const Minutes = Math.floor((time / 1000 / 60) % 60) > 9 ? Math.floor((time / 1000 / 60) % 60) : "0" + Math.floor((time / 1000 / 60) % 60)
@@ -57,14 +55,12 @@ function DynamicContentCountDownTimer(props) {
   }
 
   const { start, end } = props;
-
   const now = Date.parse(new Date().toUTCString());
   const startDay = Date.parse(start);
   const endDay = Date.parse(end);
-  if (startDay > endDay || now > endDay) {
+  if (!(endDay >= startDay) || !(now <= endDay) ||  startDay >= now) {
     return null;
   }
-
 
   return (
     <div
