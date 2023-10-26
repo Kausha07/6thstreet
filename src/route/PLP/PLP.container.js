@@ -1143,9 +1143,9 @@ export class PLPContainer extends PureComponent {
     const categoryLevel = this.getCategoryLevel() || "";
     const categoriesList =
       categoryLevel && categoryLevel.includes("///")
-        ? categoryLevel.replaceAll(" ", "").split("///")
+        ? categoryLevel.split("///")
         : [categoryLevel];
-    const categoryName = capitalize(categoriesList.pop() || "");
+    const categoryName = capitalize(categoriesList.pop().trim() || "");
     const getCategoryLevel = pagePathName.includes(".html")
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
