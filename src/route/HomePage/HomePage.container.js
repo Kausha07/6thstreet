@@ -431,9 +431,9 @@ export class HomePageContainer extends PureComponent {
   };
 
   render() {
-    const { trendingBrands = [], trendingCategories = [] } = this.state;
+    const { trendingBrands = [], trendingCategories = [], metaTitle } = this.state;
     if (this.props.gender === "influencer") {
-      return <Influencer />;
+      return <Influencer metaTitle={metaTitle}  />;
     }
     return (
       <HomePage
