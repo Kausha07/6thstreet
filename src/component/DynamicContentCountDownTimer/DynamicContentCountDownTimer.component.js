@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
+import clockIcon from "./assets/clockIcon.svg";
 import "./DynamicContentCountDownTimer.style";
 
 function DynamicContentCountDownTimer(props) {
@@ -32,20 +33,23 @@ function DynamicContentCountDownTimer(props) {
   }, []);
 
   const renderCountDown = () => {
-    const { infoText = "", alignment="", textAlignment="" } = props;
+    const { infoText = "", alignment="", textAlignment="", isPLPOrPDP } = props;
     const isArabicStore = isArabic();
     return (
-      <h3 block={alignment === "left" ? "TimerTitle AlignLeft" : alignment === "right" ? "TimerTitle  AlignRight" : "TimerTitle AlignCenter"} mods={{isArabicStore}} >
+      <h3 block={alignment === "left" ? "TimerTitle AlignLeft" : alignment === "right" ? "TimerTitle  AlignRight" : isPLPOrPDP? "TimerTitle AlignCenter PDPPLPMarginZero": "TimerTitle AlignCenter"} mods={{isArabicStore}} >
         {
           infoText && 
           <span block={textAlignment === "right_to_the_timer" ? "InfoText AlignTextRight" : textAlignment === "left_to_the_timer" ? "InfoText AlignTextLeft" : "InfoText AlignTextCenter"} mods={{isArabicStore}}>{infoText}</span>
         }
         
-        <span block="timer">
+        <span block= {isPLPOrPDP ?"timer PLPOrPDPTimer" : "timer"}>
           {/*
             <span block="Box"><b>{days}</b>d</span> 
             <span block="separator">:</span>
           */}
+          {
+            isPLPOrPDP && <span block="clock"> <img src={clockIcon} alt="countDown"/></span>
+          }
           <span block="Box"><b>{hours}</b>h</span> 
           <span block="separator">:</span>
           <span block="Box"><b>{minutes}</b>m</span>

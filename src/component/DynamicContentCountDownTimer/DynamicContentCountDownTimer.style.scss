@@ -61,6 +61,18 @@
         line-height: 10px;
       }
     }
+
+    .PLPOrPDPTimer{
+      background-color: #000000;
+      border-radius: 6px;
+       .separator{
+        color: white;
+      }
+    }
+    .clock{
+      padding:  2px 4px;
+      width: 24px;
+    }
     
     .Box {
       background-color: #000000;
@@ -99,5 +111,8 @@
       }
       
     }
+  }
+  .PDPPLPMarginZero{
+    margin: 0px;
   }
 }

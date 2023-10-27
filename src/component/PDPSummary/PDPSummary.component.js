@@ -40,6 +40,7 @@ import Event, {
 } from "Util/Event";
 import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 class PDPSummary extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -1184,7 +1185,7 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "", international_vendor=null },
+      product: { cross_border = 0, brand_name = "", international_vendor=null, timer_start_time, timer_end_time},
       edd_info,
       intlEddResponse
     } = this.props;
@@ -1199,8 +1200,11 @@ class PDPSummary extends PureComponent {
         </div>
         {this.renderBrand()}
         {/* {this.renderName()} */}
-        <div block="PriceAndPDPSummaryHeader">
-          {this.renderPriceAndPDPSummaryHeader()}
+        <div block="PriceAndPDPSummaryHeaderAndTimer">
+          <div block="PriceAndPDPSummaryHeader">
+            {this.renderPriceAndPDPSummaryHeader()}
+          </div>
+          <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
         </div>
         {cityResponse &&
           edd_info &&
