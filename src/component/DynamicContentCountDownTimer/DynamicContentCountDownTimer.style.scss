@@ -11,6 +11,7 @@
       justify-content: center;
       &_isArabicStore {
         justify-content: center;
+        direction: rtl;
       }
     }
 
@@ -18,6 +19,7 @@
       justify-content: left;
       &_isArabicStore {
         justify-content: right;
+        direction: rtl;
       }
     }
 
@@ -25,6 +27,7 @@
       justify-content: right;
       &_isArabicStore {
         justify-content: left;
+        direction: rtl;
       }
     }
 

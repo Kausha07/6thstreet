@@ -56,7 +56,7 @@ const settingsTimer = {
       items: 1,
     },
     300: {
-      items: 1,
+      items: 1.1,
     },
   },
 };
