@@ -31,6 +31,7 @@ import "./Influencer.style.scss";
 import cartIcon from "./icons/cart-icon.png";
 import Refine from "../../component/Icons/Refine/icon.png";
 import Search from "../../component/Icons/Search/icon.svg";
+import { Helmet } from "react-helmet";
 
 export const mapStateToProps = (state) => ({
   isSignedIn: state.MyAccountReducer.isSignedIn,
@@ -617,9 +618,13 @@ const Influencer = (props) => {
       </div>
     );
   };
-
   return (
     <main block="Influencer">
+      {props?.metaTitle && (
+        <Helmet>
+          <title>{props.metaTitle}</title>
+        </Helmet>
+      )}
       {renderHeader()}
       {showTrending && renderLiveShoppingVideoSnapshots()}
       <div block="InfluencerWrapper">
