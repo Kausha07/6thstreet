@@ -41,6 +41,7 @@ const MsiteAddToCartPopUp = lazy(() =>
     /* webpackChunkName: 'MsiteAddToCartPopUp' */ "Component/MsiteAddToCartPopUp"
   )
 );
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -596,6 +597,8 @@ class ProductItem extends PureComponent {
     const {
       product: { sku },
       pageType,
+      timer_start_time,
+      timer_end_time,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -615,6 +618,11 @@ class ProductItem extends PureComponent {
         {this.renderLabel()}
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
         {this.renderLink()}{" "}
+        <DynamicContentCountDownTimer 
+          start={timer_start_time}
+          end={timer_end_time}
+          isPLPOrPDP
+        />
         {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
