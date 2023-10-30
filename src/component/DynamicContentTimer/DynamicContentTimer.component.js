@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
   HOME_PAGE_BANNER_IMPRESSIONS,
@@ -39,14 +40,45 @@ class DynamicContentTimer extends PureComponent {
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
     impressionSent: false,
+    isHideWidget: true,
   };
+
+  timerStartRef = createRef();
+  timerEndRef = createRef();
 
   componentDidMount() {
     const { doNotTrackImpression } = this.props;
     if (!doNotTrackImpression) {
       this.registerViewPortEvent();
     }
+    this.showWidgetPostRender()
   }
+  componentWillUnmount() {
+    clearTimeout(this.timerStartRef.current);
+    clearTimeout(this.timerEndRef.current);
+  }
+
+  showWidgetPostRender = () => {
+    const now = new Date();
+    const utcString = now.toUTCString();
+    const { end_time, start_time } = this.props;
+    const finalendDate = end_time;
+    const time = Date.parse(finalendDate) - Date.parse(utcString);
+    const timeToStart = Date.parse(start_time) - Date.parse(utcString);
+    if (timeToStart > 0) {
+      this.timerStartRef.current = setTimeout(() => {
+        this.setState({ isHideWidget: false })
+      }, timeToStart)
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
+    if (time <= 0) {
+      this.setState({ isHideWidget: true });
+    } else if (Date.parse(start_time) < Date.parse(utcString) && Date.parse(utcString) < Date.parse(finalendDate)) {
+      this.setState({ isHideWidget: false });
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
+  }
+
 
   registerViewPortEvent() {
     let observer;
@@ -106,39 +138,37 @@ class DynamicContentTimer extends PureComponent {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
-  renderTimer = ()=>{
-    const  {start_time = "", end_time ="", text_alignment = "", title ="", alignment=""} = this.props; 
-    const now = new Date();
-    const utcString = now.toUTCString();   
-    if(this.props.start_time && this.props.end_time && Date.parse(this.props.end_time) >= Date.parse(utcString)){
-      return (
-        <>
-          <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
-        </>
-      )
-    }    
-  } 
+  renderTimer = () => {
+    const { start_time = "", end_time = "", text_alignment = "", title = "", alignment = "" } = this.props;
+    return <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+  }
 
   render() {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const { index} = this.props;    
-    return (
-      <div
-        ref={setRef}
-        block={"DynamicContentTimer"}
-        id={`DynamicContentTimer${index}`}
-      >
-        {this.props.header && (
-          <DynamicContentHeader header={this.props.header} />
-        )}
-        {this.renderTimer()}
-        {this.props.footer && (
-          <DynamicContentFooter footer={this.props.footer} />
-        )}
-      </div>
-    );
+    const { index, start_time, end_time } = this.props;
+
+    if (start_time && end_time) {
+      if (!this.state.isHideWidget) {
+        return (
+          <div
+            ref={setRef}
+            block={"DynamicContentTimer"}
+            id={`DynamicContentTimer${index}`}
+          >
+            {this.props.header && (
+              <DynamicContentHeader header={this.props.header} />
+            )}
+            {this.renderTimer()}
+            {this.props.footer && (
+              <DynamicContentFooter footer={this.props.footer} />
+            )}
+          </div>
+        )
+      }
+    }
+    return <div ref={setRef}></div>
   }
 }
 

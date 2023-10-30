@@ -8,31 +8,40 @@
     .TimerTitle {
       &.AlignCenter {
         justify-content: right;
-        &_isArabicStore {
-          justify-content: left;
+        flex-direction: column;
+        flex-direction: row;
+        align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
         }
       }
   
       &.AlignLeft {
         justify-content: right;
-        &_isArabicStore {
-          justify-content: left;
+        flex-direction: row;      
+        align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
         }
       }
   
       &.AlignRight {
         justify-content: right;
-        &_isArabicStore {
-          justify-content: left;
+        flex-direction: row;        
+        align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
+        }
+
+      }
+      .InfoText{
+        @include mobile {
+          min-width: 92px;
         }
       }
-      // .InfoText{
-      //   display: inline-block;
-      // }
       @include mobile {
-        display: inline-block;
         text-align: center;
-        margin-top: 4px;
+        margin-top: 10px;
       }
     }
     @include mobile {
