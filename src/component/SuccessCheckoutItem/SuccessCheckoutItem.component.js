@@ -338,8 +338,8 @@ export class SuccessCheckoutItem extends PureComponent {
           });
         } else {
           const isIntlBrand = crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
-          if(isIntlBrand && edd_info.default_message_intl_vendor) {
-            const date_range = edd_info.default_message_intl_vendor.split("-");
+          if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
+            const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
             const end_date = date_range && date_range[1] ? date_range[1]: 0;
             const { defaultEddMess } = getDefaultEddMessage(
@@ -372,7 +372,7 @@ export class SuccessCheckoutItem extends PureComponent {
             actualEddMess = intlEddMess
           } else {
             Object.values(eddResponse).filter((entry) => {
-              if (entry.source === "thankyou" && entry.featute_flag_status === 1) {
+              if (entry.source === "thankyou" && entry.feature_flag_status === 1) {
                 if (extension_attributes?.click_to_collect_store) {
                   actualEddMess = `${customDefaultMess} ${defaultEddDat} ${defaultEddMonth}, ${defaultEddDay}`;
                 } else {

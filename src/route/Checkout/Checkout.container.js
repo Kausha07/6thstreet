@@ -159,6 +159,7 @@ export const mapStateToProps = (state) => ({
   newAddressSaved: state.MyAccountReducer.newAddressSaved,
   addressIDSelected: state.MyAccountReducer.addressIDSelected,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -171,6 +172,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     cartId: PropTypes.number.isRequired,
     updateTotals: PropTypes.func.isRequired,
     binModal: PropTypes.func.isRequired,
+    isClubApparelEnabled: PropTypes.bool,
   };
 
   containerFunctions = {
@@ -1000,8 +1002,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           });
         } else {
           const isIntlBrand = cross_border && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)!==-1
-          if(isIntlBrand && edd_info.default_message_intl_vendor) {
-            const date_range = edd_info.default_message_intl_vendor.split("-");
+          if(isIntlBrand && edd_info?.intl_vendor_edd_range) {
+            const date_range = edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()]?.split("-");
             const start_date = date_range && date_range[0] ? date_range[0] : edd_info.default_message ;
             const end_date = date_range && date_range[1] ? date_range[1]: 0;
             const { defaultEddMess } = getDefaultEddMessage(

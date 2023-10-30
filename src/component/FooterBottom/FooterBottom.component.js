@@ -97,14 +97,18 @@ class FooterBottom extends PureComponent {
   renderPaymentIcons() {
     return (
       <div block="FooterBottom" elem="PaymentIcons">
-        <Image lazyLoad={true}
-          mix={{
-            block: "FooterBottom",
-            elem: "PaymentIcons-ClubApparel",
-          }}
-          src={CA}
-          alt="ca"
-        />
+        {this.props?.isClubApparelEnabled && (
+          <Image
+            lazyLoad={true}
+            mix={{
+              block: "FooterBottom",
+              elem: "PaymentIcons-ClubApparel",
+            }}
+            src={CA}
+            alt="ca"
+          />
+        )}
+        
         <Image lazyLoad={true}
           mix={{
             block: "FooterBottom",
