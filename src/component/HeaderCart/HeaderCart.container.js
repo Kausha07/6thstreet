@@ -14,6 +14,7 @@ import HeaderCart from "./HeaderCart.component";
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
   isMinicartOpen: state.CartReducer.isMinicartOpen,
+  isAnimate: state.WishlistReducer.isAnimate,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({

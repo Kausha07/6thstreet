@@ -1,10 +1,11 @@
 import { formatItems } from 'Util/API/endpoint/Wishlist/Wishlist.format';
 
-import { SET_WISHLIST_ITEMS } from './Wishlist.action';
+import { SET_WISHLIST_ITEMS, SET_IS_ANIMATE } from './Wishlist.action';
 
 export const getInitialState = () => ({
     isLoading: true,
-    items: []
+    items: [],
+    isAnimate: false,
 });
 
 export const WishlistReducer = (state = getInitialState(), action) => {
@@ -16,6 +17,13 @@ export const WishlistReducer = (state = getInitialState(), action) => {
             ...state,
             isLoading: false,
             items: items.filter(({ product }) => !!product)
+        };
+
+    case SET_IS_ANIMATE:
+        const { currentState } = action;
+        return {
+            ...state,
+            isAnimate: currentState
         };
 
     default:
