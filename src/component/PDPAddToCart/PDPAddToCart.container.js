@@ -94,7 +94,7 @@ export const mapDispatchToProps = (dispatch) => ({
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-  removeFromWishlist: (id) => Wishlist.removeSkuFromWishlist(id, dispatch),
+  removeFromWishlist: (id, isAddedToCart) => Wishlist.removeSkuFromWishlist(id, dispatch, isAddedToCart),
   setEddResponse: (response,request) => dispatch(setEddResponse(response,request)),
   setIsAnimate: (options) => Wishlist.setIsAnimate(options, dispatch),
 });
@@ -773,7 +773,8 @@ export class PDPAddToCartContainer extends PureComponent {
         const { wishlist_item_id } = wishListItem;
 
         if (wishlist_item_id) {
-          removeFromWishlist(wishlist_item_id);
+          const isAddedToCart = true
+          removeFromWishlist(wishlist_item_id, isAddedToCart);
 
           setIsAnimate({ currentState: true });
 

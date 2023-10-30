@@ -56,7 +56,7 @@ class MyAccountMobileHeader extends PureComponent {
     renderCartIcon() {
         const { isArabic } = this.state;
         const { name = "" } = this.props
-        if(name === "My wishlist") {            
+        if(name === "My wishlist" || name === "قائمة أمنياتي") {            
             return <HeaderCart showCartPopUp={false} mods={{ isArabic }} />;
         }
         return null;

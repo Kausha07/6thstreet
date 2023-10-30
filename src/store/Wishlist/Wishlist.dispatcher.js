@@ -52,7 +52,7 @@ export class WishlistDispatcher {
     }
   }
 
-  async removeSkuFromWishlist(id, dispatch) {
+  async removeSkuFromWishlist(id, dispatch, isAddedToCart=false) {
     if (!isSignedIn()) {
       // skip non-authorized users
       dispatch(
@@ -70,12 +70,21 @@ export class WishlistDispatcher {
 
       this.updateInitialWishlistData(dispatch);
 
-      dispatch(
-        showNotification(
-          "success",
-          __("Added to your shopping bag")
-        )
-      );
+      if(isAddedToCart) {
+        dispatch(
+          showNotification(
+            "success",
+            __("Product added to your shopping bag")
+          )
+        );
+      }else {
+        dispatch(
+          showNotification(
+            "success",
+            __("Product has been removed from your Wish List!")
+          )
+        );
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
