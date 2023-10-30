@@ -26,8 +26,16 @@
       }
       .TimerTitle{
         margin: 0;
+        @include mobile {
+          .timer{
+            .Box {          
+              font-size: 13px;            
+            }
+          }        
+        }
       }
     }
+
   }
   .SliderWithLabelWrapper.active {
     cursor: grabbing;

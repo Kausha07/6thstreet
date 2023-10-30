@@ -60,4 +60,15 @@
     margin-left: 0px;
     margin-bottom: 40px !important;
   }
+  .DynamicContentCountDownTimer {
+    .TimerTitle {
+      @include mobile {
+        .timer{
+          .Box {          
+            font-size: 13px;            
+          }
+        }        
+      }
+    }
+  }
 }

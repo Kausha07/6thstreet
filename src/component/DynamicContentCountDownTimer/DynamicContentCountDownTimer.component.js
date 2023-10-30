@@ -44,11 +44,11 @@ function DynamicContentCountDownTimer(props) {
             <span block="Box"><b>{days}</b>d</span> 
             <span block="separator">:</span>
           */}
-          <span block="Box"><b>{hours}</b>h</span> 
+          <span block="Box"><b>{hours}</b>{__("h")}</span> 
           <span block="separator">:</span>
-          <span block="Box"><b>{minutes}</b>m</span>
+          <span block="Box"><b>{minutes}</b>{__("m")}</span>
           <span block="separator">:</span>
-          <span block="Box"><b>{seconds}</b>s</span>
+          <span block="Box"><b>{seconds}</b>{__("s")}</span>
         </span>
       </h3>
     )

@@ -9,19 +9,29 @@
       &.AlignCenter {
         justify-content: right;
         flex-direction: column;
+        flex-direction: row;
         align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
+        }
       }
   
       &.AlignLeft {
         justify-content: right;
-        flex-direction: column;
+        flex-direction: row;      
         align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
+        }
       }
   
       &.AlignRight {
         justify-content: right;
-        flex-direction: column;
+        flex-direction: row;        
         align-items: flex-end;
+        @include mobile {
+          flex-direction: column;
+        }
 
       }
       .InfoText{
