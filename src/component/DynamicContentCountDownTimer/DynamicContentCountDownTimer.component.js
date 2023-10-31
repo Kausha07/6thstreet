@@ -48,11 +48,11 @@ function DynamicContentCountDownTimer(props) {
           {
             isPLPOrPDP && <span block="clock"> <img src={clockIcon} alt="countDown"/></span>
           }
-          <span block="Box"><b>{hours}</b>{__("h")}</span> 
+          <span block={ isPLPOrPDP ? "Box isPLPorPDPBox" : "Box"}><b>{hours}</b>{__("h")}</span> 
           <span block="separator">:</span>
-          <span block="Box"><b>{minutes}</b>{__("m")}</span>
+          <span block={ isPLPOrPDP ?"Box isPLPorPDPBox" : "Box"}><b>{minutes}</b>{__("m")}</span>
           <span block="separator">:</span>
-          <span block="Box"><b>{seconds}</b>{__("s")}</span>
+          <span block={ isPLPOrPDP ? "Box isPLPorPDPBox" : "Box"}><b>{seconds}</b>{__("s")}</span>
         </span>
       </h3>
     )
