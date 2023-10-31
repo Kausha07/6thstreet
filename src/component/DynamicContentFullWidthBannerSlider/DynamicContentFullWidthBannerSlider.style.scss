@@ -3,6 +3,57 @@
   a + a {
     margin-left: 0px;
   }
+
+  .DynamicContentCountDownTimer {
+    .TimerTitle {
+      &.AlignCenter {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+        @include mobile {
+          flex-direction: column;
+          align-items: flex-end;
+        }
+      }
+  
+      &.AlignLeft {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+        @include mobile {
+          flex-direction: column;
+          align-items: flex-end;
+        }
+      }
+  
+      &.AlignRight {
+        justify-content: right;
+        &_isArabicStore {
+          justify-content: left;
+        }
+        @include mobile {
+          flex-direction: column;
+          align-items: flex-end;
+        }
+
+      }
+      .InfoText{
+        @include mobile {
+          min-width: 92px;
+        }
+      }
+      @include mobile {
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+    @include mobile {
+      text-align: right;
+    }
+  }
+
   @include mobile {
     a {
       margin-left: -30px;
@@ -119,6 +170,19 @@
   }
   .tns-nav {
     // display: none;
+  }
+  .DynamicContentCountDownTimer {
+      position: absolute;
+      width: calc(100% - 64px);
+      top: 0;
+      left: 32px;
+      right: 32px;
+      z-index: 9;
+      @include mobile {
+        width: calc(100% - 40px);
+        left: 24px;
+        right: 16px;
+      }
   }
 }
 

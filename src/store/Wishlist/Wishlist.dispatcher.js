@@ -1,5 +1,5 @@
 import { showNotification } from "Store/Notification/Notification.action";
-import { setWishlistItems } from "Store/Wishlist/Wishlist.action";
+import { setWishlistItems, setIsAnimate } from "Store/Wishlist/Wishlist.action";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 import MobileAPI from "Util/API/provider/MobileAPI";
 import { isSignedIn } from "Util/Auth";
@@ -9,6 +9,11 @@ export class WishlistDispatcher {
   updateInitialWishlistData(dispatch) {
     // backwards compatibility
     this.syncWishlist(dispatch);
+  }
+
+  setIsAnimate( options, dispatch) {
+    const { currentState } = options
+    dispatch(setIsAnimate(currentState))
   }
 
   async syncWishlist(dispatch) {
@@ -47,7 +52,7 @@ export class WishlistDispatcher {
     }
   }
 
-  async removeSkuFromWishlist(id, dispatch) {
+  async removeSkuFromWishlist(id, dispatch, isAddedToCart=false) {
     if (!isSignedIn()) {
       // skip non-authorized users
       dispatch(
@@ -65,12 +70,21 @@ export class WishlistDispatcher {
 
       this.updateInitialWishlistData(dispatch);
 
-      dispatch(
-        showNotification(
-          "success",
-          __("Product has been removed from your Wish List!")
-        )
-      );
+      if(isAddedToCart) {
+        dispatch(
+          showNotification(
+            "success",
+            __("Product added to your shopping bag")
+          )
+        );
+      }else {
+        dispatch(
+          showNotification(
+            "success",
+            __("Product has been removed from your Wish List!")
+          )
+        );
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

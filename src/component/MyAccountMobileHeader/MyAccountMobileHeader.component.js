@@ -6,6 +6,7 @@ import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
 import Link from 'Component/Link';
 import StoreCredit from 'Component/StoreCredit';
+import HeaderCart from "Component/HeaderCart";
 import { isArabic } from 'Util/App';
 
 import './MyAccountMobileHeader.style.scss';
@@ -52,6 +53,15 @@ class MyAccountMobileHeader extends PureComponent {
         );
     }
 
+    renderCartIcon() {
+        const { isArabic } = this.state;
+        const { name = "" } = this.props
+        if(name === "My wishlist" || name === "قائمة أمنياتي") {            
+            return <HeaderCart showCartPopUp={false} mods={{ isArabic }} />;
+        }
+        return null;
+    }
+
     renderTabOptionHeader() {
         const { alternativePageName, name } = this.props;
 
@@ -59,6 +69,7 @@ class MyAccountMobileHeader extends PureComponent {
             <div block="MyAccountMobileHeader" elem="TabOptionHeader">
                 { this.renderCloseButton() }
                 <h1 block="MyAccountMobileHeader" elem="Heading">{ alternativePageName || name }</h1>
+                {this.renderCartIcon() }
             </div>
         );
     }

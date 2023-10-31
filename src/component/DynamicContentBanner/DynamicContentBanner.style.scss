@@ -52,6 +52,15 @@
         height: auto;
         font-size: 14px;
     }
+
+    .DynamicContentCountDownTimer {
+        position: absolute;
+        width: calc(100% - 32px);
+        top: 0;
+        left: 16px;
+        right: 16px;
+        z-index: 9;
+    }
 }
 
 @media (max-width: 860px) {

@@ -263,6 +263,8 @@ const config = {
     attributesToRetrieve: [
       "name",
       "sku",
+      "timer_start_time",
+      "timer_end_time",
       "price",
       "colorfamily",
       "thumbnail_url",

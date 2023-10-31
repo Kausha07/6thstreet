@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
@@ -16,6 +17,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -65,8 +67,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
       },
       impressionSent: false,
       isMobile: isMobile.any() || isMobile.tablet(),
+      isHideWidget: true,
     };
   }
+
+  timerStartRef = createRef();
+  timerEndRef = createRef();
 
   componentDidMount() {
     if (this.props?.items?.length < 8) {
@@ -87,6 +93,32 @@ class DynamicContentSliderWithLabel extends PureComponent {
       }));
     }
     this.registerViewPortEvent();
+    this.showWidgetPostRender()
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timerStartRef.current);
+    clearTimeout(this.timerEndRef.current);
+  }
+
+  showWidgetPostRender = () => {
+    const now = new Date();
+    const utcString = now.toUTCString();
+    const { end_time, start_time } = this.props;
+    const finalendDate = end_time;
+    const time = Date.parse(finalendDate) - Date.parse(utcString);
+    const timeToStart = Date.parse(start_time) - Date.parse(utcString);
+    if (timeToStart > 0) {
+      this.timerStartRef.current = setTimeout(() => {
+        this.setState({ isHideWidget: false })
+      }, timeToStart)
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
+    if (time <= 0) {
+      this.setState({ isHideWidget: true });
+    } else if (Date.parse(start_time) < Date.parse(utcString) && Date.parse(utcString) < Date.parse(finalendDate)) {
+      this.setState({ isHideWidget: false });
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
   }
   registerViewPortEvent() {
     let observer;
@@ -256,6 +288,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ref={this.itemRef}
         key={i * 10}
       >
+        {this.props.start_time && this.props.end_time && this.renderTimer()}
         <Link
           to={`${formatCDNLink(parseLink)}.html`}
           key={i * 10}
@@ -463,12 +496,54 @@ class DynamicContentSliderWithLabel extends PureComponent {
     return "";
   };
 
+  renderTimer = () => {
+    const { start_time = "", end_time = "", text_alignment = "", title = "", alignment = "" } = this.props;
+    return <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+  }
+
   render() {
     let setRef = (el) => {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
-    const { index } = this.props;
+    const { index, start_time, end_time } = this.props;
+
+    if (start_time && end_time) {
+      if (!this.state.isHideWidget) {
+        return (
+          <div
+            ref={setRef}
+            block="DynamicContentSliderWithLabel"
+            id={`DynamicContentSliderWithLabel${index}`}
+          >
+            {this.getPromotionHeader() && (
+              <div block="HeaderWithTimer">
+                <DynamicContentHeader
+                  header={this.getPromotionHeader()}
+                  type={this.props.type}
+                />
+                {this.renderTimer()}
+              </div>
+            )}
+            {this.props.title && (
+              <div block="HeaderWithTimer">
+                <h1 block="Title" mods={{ isArabic }}>
+                  {this.props.title}
+                </h1>
+                {this.renderTimer()}
+              </div>
+            )}
+            {this.renderSliderWithLabels()}
+            {this.props.footer && (
+              <DynamicContentFooter footer={this.props.footer} />
+            )}
+          </div>
+        );
+      } else {
+        return <div ref={setRef}></div>
+      }
+    }
+
     return (
       <div
         ref={setRef}
@@ -485,8 +560,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           <h1 block="Title" mods={{ isArabic }}>
             {this.props.title}
           </h1>
-        )}
-        {this.renderSliderWithLabels()}
+        )}       {this.renderSliderWithLabels()}
         {this.props.footer && (
           <DynamicContentFooter footer={this.props.footer} />
         )}
