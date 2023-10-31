@@ -1,0 +1,124 @@
+.DynamicContentCountDownTimer {
+  .TimerTitle {
+    font-size: 18px;
+    line-height: 25px;
+    letter-spacing: 2px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+
+    &.AlignCenter {
+      justify-content: center;
+      &_isArabicStore {
+        justify-content: center;
+        direction: rtl;
+      }
+    }
+
+    &.AlignLeft {
+      justify-content: left;
+      &_isArabicStore {
+        justify-content: right;
+        direction: rtl;
+      }
+    }
+
+    &.AlignRight {
+      justify-content: right;
+      &_isArabicStore {
+        justify-content: left;
+        direction: rtl;
+      }
+    }
+
+    .InfoText {
+      margin: 0 4px;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: 1px;
+
+
+      &.AlignTextRight {
+        order: 1;
+      }
+
+      &.AlignTextLeft {
+        order: 0;
+
+      }
+
+      &.AlignTextCenter {
+        order: 0;
+
+      }
+    }
+    .timer{
+      min-width: 130px;
+      display: flex;
+      align-items: center;
+      .separator{
+        color:#939393;
+        font-weight:500;
+        font-size:14px;
+        line-height: 10px;
+      }
+    }
+
+    .PLPOrPDPTimer{
+      background-color: #6A6A6A;
+      border-radius: 6px;
+       .separator{
+        color: white;
+      }
+    }
+    .clock{
+      padding:  2px 4px;
+      width: 24px;
+    }
+    
+    .Box {
+      background-color: #000000;
+      color: #ffffff;
+      padding: 3px 4px 2px;
+      display: inline-block;
+      border-radius: 4px;
+      margin: 0 2px 0 0;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: 0px;
+      b {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 20px;
+        letter-spacing: 0px;        
+      }
+    }
+    .isPLPorPDPBox{
+      background-color: #6A6A6A;
+    }
+    @include mobile {
+      margin-top: 12px;
+      .timer{
+        min-width: 99px;
+        .Box {        
+          padding: 0 3px;
+          margin: 0 3px 0 1px;
+          font-size: 0;
+          font-weight: 500;
+          line-height: 1;
+          letter-spacing: 0px;
+          b {
+            font-size: 14px;
+            line-height: 20px;      
+          }
+        }
+      }
+      
+    }
+  }
+  .PDPPLPMarginZero{
+    margin: 0px;
+  }
+}

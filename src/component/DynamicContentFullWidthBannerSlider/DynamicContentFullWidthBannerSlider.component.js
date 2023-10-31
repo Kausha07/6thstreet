@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
@@ -15,6 +16,7 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 const settings = {
   lazyload: true,
@@ -37,6 +39,27 @@ const settings = {
     },
   },
 };
+const settingsTimer = {
+  lazyload: true,
+  mouseDrag: true,
+  touch: true,
+  nav: true,
+  loop: true,
+  rewind: true,
+  navPosition: "bottom",
+  autoplay: true,
+  responsive: {
+    1024: {
+      items: 1,
+    },
+    420: {
+      items: 1,
+    },
+    300: {
+      items: 1.1,
+    },
+  },
+};
 class DynamicContentFullWidthBannerSlider extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -52,11 +75,42 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   state = {
     activeSlide: 0,
     impressionSent: false,
+    isHideWidget: true,
   };
+
+  timerStartRef = createRef();
+  timerEndRef = createRef();
 
   componentDidMount() {
     this.registerViewPortEvent();
     this.preloadImage();
+    this.showWidgetPostRender()
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timerStartRef.current);
+    clearTimeout(this.timerEndRef.current);
+  }
+
+  showWidgetPostRender = () => {
+    const now = new Date();
+    const utcString = now.toUTCString();
+    const { end_time, start_time } = this.props;
+    const finalendDate = end_time;
+    const time = Date.parse(finalendDate) - Date.parse(utcString);
+    const timeToStart = Date.parse(start_time) - Date.parse(utcString);
+    if (timeToStart > 0) {
+      this.timerStartRef.current = setTimeout(() => {
+        this.setState({ isHideWidget: false })
+      }, timeToStart)
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
+    if (time <= 0) {
+      this.setState({ isHideWidget: true });
+    } else if (Date.parse(start_time) < Date.parse(utcString) && Date.parse(utcString) < Date.parse(finalendDate)) {
+      this.setState({ isHideWidget: false });
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
   }
 
   registerViewPortEvent() {
@@ -133,20 +187,21 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
           this.onclick(item);
         }}
       >
+        {this.renderTimer()}
         <img src={image_url} alt={label ? label : "full-width-banner-image" } />
       </Link>
     );
   };
 
   renderSlider() {
-    const { items = [] } = this.props;
+    const { items = [], type="" } = this.props;
     const { activeSlide } = this.state;
     // const items = [];
 
     return (
       <>
         {items && items.length === 0 ? this.renderBannerAnimation() : null}
-        <TinySlider settings={settings} block="">
+        <TinySlider settings={type === "timer_full_width_banner_slider" ? settingsTimer : settings } block="">
           {items.map(this.renderSlide)}
         </TinySlider>
       </>
@@ -160,12 +215,43 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
       setPreload && setPreload(true);
     }
   }
+  renderTimer = () => {
+    const { start_time = "", end_time = "", text_alignment = "", title = "", alignment = "" } = this.props;
+    return <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+  }
 
   render() {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const { index } = this.props;
+    const  {index, start_time = "", end_time =""} = this.props; 
+
+    if (start_time && end_time) {
+      if (!this.state.isHideWidget) {
+        return (
+          <div 
+            ref={setRef} 
+            block="DynamicContentFullWidthBannerSlider"
+            id={`DynamicContentFullWidthBannerSlider${index}`}
+          >
+            <div
+              id={`DynamicContentFullWidthBannerSlider${index}Timer`}
+            >              
+              {this.props.header && (
+                <DynamicContentHeader header={this.props.header} />
+              )}
+              {/* <div
+              id={`DynamicContentFullWidthBannerSlider${index}TimerWidget`}
+            >{this.renderTimer()}</div>             */}
+              {this.renderSlider()}
+            </div>
+          </div>
+        );
+      }else{
+        return <div ref={setRef}></div>
+      }
+    }
+
     return (
       <div
         ref={setRef}
