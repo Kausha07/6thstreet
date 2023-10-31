@@ -8,29 +8,34 @@
     .TimerTitle {
       &.AlignCenter {
         justify-content: right;
-        flex-direction: column;
-        flex-direction: row;
-        align-items: flex-end;
+        &_isArabicStore {
+          justify-content: left;
+        }
         @include mobile {
           flex-direction: column;
+          align-items: flex-end;
         }
       }
   
       &.AlignLeft {
         justify-content: right;
-        flex-direction: row;      
-        align-items: flex-end;
+        &_isArabicStore {
+          justify-content: left;
+        }
         @include mobile {
           flex-direction: column;
+          align-items: flex-end;
         }
       }
   
       &.AlignRight {
         justify-content: right;
-        flex-direction: row;        
-        align-items: flex-end;
+        &_isArabicStore {
+          justify-content: left;
+        }
         @include mobile {
           flex-direction: column;
+          align-items: flex-end;
         }
 
       }
@@ -168,11 +173,16 @@
   }
   .DynamicContentCountDownTimer {
       position: absolute;
-      width: calc(100% - 32px);
+      width: calc(100% - 64px);
       top: 0;
-      left: 16px;
-      right: 16px;
+      left: 32px;
+      right: 32px;
       z-index: 9;
+      @include mobile {
+        width: calc(100% - 40px);
+        left: 24px;
+        right: 16px;
+      }
   }
 }
 
