@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
   HOME_PAGE_BANNER_IMPRESSIONS,
@@ -12,6 +13,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
+import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -38,12 +40,43 @@ class DynamicContentBanner extends PureComponent {
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
     impressionSent: false,
+    isHideWidget: true,
   };
+
+  timerStartRef = createRef();
+  timerEndRef = createRef();
 
   componentDidMount() {
     const { doNotTrackImpression } = this.props;
     if (!doNotTrackImpression) {
       this.registerViewPortEvent();
+    }
+    this.showWidgetPostRender()
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timerStartRef.current);
+    clearTimeout(this.timerEndRef.current);
+  }
+
+  showWidgetPostRender = () => {
+    const now = new Date();
+    const utcString = now.toUTCString();
+    const { end_time, start_time } = this.props;
+    const finalendDate = end_time;
+    const time = Date.parse(finalendDate) - Date.parse(utcString);
+    const timeToStart = Date.parse(start_time) - Date.parse(utcString);
+    if (timeToStart > 0) {
+      this.timerStartRef.current = setTimeout(() => {
+        this.setState({ isHideWidget: false })
+      }, timeToStart)
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
+    }
+    if (time <= 0) {
+      this.setState({ isHideWidget: true });
+    } else if (Date.parse(start_time) < Date.parse(utcString) && Date.parse(utcString) < Date.parse(finalendDate)) {
+      this.setState({ isHideWidget: false });
+      this.timerEndRef.current = setTimeout(() => { this.setState({ isHideWidget: true }); }, time)
     }
   }
 
@@ -149,6 +182,7 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
+        {this.props.start_time && this.props.end_time && this.renderTimer()}
         <Image
           lazyLoad={index === 21 || index === 35 ? false : true}
           src={url || image_url}
@@ -186,11 +220,39 @@ class DynamicContentBanner extends PureComponent {
     return items.map(this.renderImage);
   }
 
+  renderTimer = () => {
+    const { start_time = "", end_time = "", text_alignment = "", title = "", alignment = "" } = this.props;
+    return <DynamicContentCountDownTimer start={start_time} end={end_time} alignment={alignment} textAlignment={text_alignment} infoText={title} />
+  }
+
   render() {
     let setRef = (el) => {
       this.viewElement = el;
     };
-    const { index } = this.props;
+    const { index, start_time, end_time } = this.props;
+
+    if (start_time && end_time) {
+      if (!this.state.isHideWidget) {
+        return (
+          <div
+            ref={setRef}
+            block="DynamicContentBanner"
+            id={`DynamicContentBanner${index}`}
+          >
+            {this.props.header && (
+              <DynamicContentHeader header={this.props.header} />
+            )}
+            {this.renderImages()}
+            {this.props.footer && (
+              <DynamicContentFooter footer={this.props.footer} />
+            )}
+          </div>
+        );
+      } else {
+        return <div ref={setRef}></div>
+      }
+    }
+
     return (
       <div
         ref={setRef}
