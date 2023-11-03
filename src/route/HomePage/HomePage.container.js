@@ -225,53 +225,76 @@ export class HomePageContainer extends PureComponent {
     const { label: countryName = "" } =
       countryList.find((obj) => obj.id === country) || {};
     const genderName = capitalize(gender);
+    const pagePathName = new URL(window.location.href).pathname;
     const countryNameConfig =
       countryName == "Saudi Arabia" ? "KSA" : countryName;
 
-      const homePageMetaTitle =
-      gender == "men"
+    const homePageMetaTitle =
+      pagePathName == "/"
+        ? __(
+            "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
+            countryNameConfig
+          )
+        : pagePathName == "/women.html"
+        ? __(
+            "6thStreet Online Shopping for Women - Get Fashionable from Biggest Brands in %s",
+            countryNameConfig
+          )
+        : pagePathName == "/men.html"
         ? __(
             "6thStreet Online Shopping for Men - Get Fashionable from Biggest Brands in %s",
             countryNameConfig
           )
-        : gender == "kids"
+        : pagePathName == "/kids.html"
         ? __(
             "6thStreet Online Shopping for Kids - Get Fashionable from Biggest Brands in %s",
             countryNameConfig
           )
-        : gender == "home"
+        : pagePathName == "/home.html"
         ? __(
             "6thStreet Online Shopping for Your Home - Get Fancy from Biggest Brands in %s",
             countryNameConfig
           )
-        : gender == "influencer"
+        : pagePathName == "/influencer.html"
         ? __(
             "6thStreet Online Shopping With Influencer - Get Styling Tips from Biggest Influencers in %s",
             countryNameConfig
           )
         : __(
-            "6thStreet Online Shopping for Women - Get Fashionable from Biggest Brands in %s",
+            "Online Shopping @ 6thStreet %s | Fashion & Lifestyle Brands for Women, Men & Kids",
             countryNameConfig
           );
     const homepageMetaDesc =
-      gender == "men"
+      pagePathName == "/"
+        ? __(
+            // eslint-disable-next-line max-len
+            "6thStreet.com, an online shopping site for fashion & lifestyle brands in the %s. Find top brands offering footwear, clothing, accessories & lifestyle products for women, men & kids.",
+            countryName
+          )
+        : pagePathName == "/women.html"
+        ? __(
+            // eslint-disable-next-line max-len
+            "Shop for Women from top brands in %s such as Aldo, Ardene, Charles and Keith, BHPC and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals. ✅ Free Delivery on minimum order",
+            countryName
+          )
+        : pagePathName == "/men.html"
         ? __(
             // eslint-disable-next-line max-len
             "Shop for Men from top brands in %s such as BHPC, Levis, Skechers, Tommy and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals. ✅ Free Delivery on minimum order",
             countryName
           )
-        : gender == "kids"
+        : pagePathName == "/kids.html"
         ? __(
             // eslint-disable-next-line max-len
             "Shop for Kids from top brands in %s such as R&B kids, Levis, LC Waikiki and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals . ✅ Free Delivery on minimum order",
             countryName
           )
-        : gender == "home"
+        : pagePathName == "/home.html"
         ? __(
             "Shop for Your Home from top brands in %s such as Lakeland, Fissman, Marks and Spencers, Hema and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals . ✅ Free Delivery on minimum order",
             countryName
           )
-        : gender == "influencer"
+        : pagePathName == "/influencer.html"
         ? __(
             // eslint-disable-next-line max-len
             "Shop with Influencers from top brands in %s such as Trendyol, BHPC, LC Waikiki, Aldo and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals . ✅ Free Delivery on minimum order",
@@ -279,7 +302,8 @@ export class HomePageContainer extends PureComponent {
           )
         : __(
             // eslint-disable-next-line max-len
-            "Shop for Women from top brands in %s such as Aldo, Ardene, Charles and Keith, BHPC and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals. ✅ Free Delivery on minimum order",
+            "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet",
+            genderName,
             countryName
           );
     this.setState({ metaTitle: homePageMetaTitle, metaDesc: homepageMetaDesc });
