@@ -1216,7 +1216,9 @@ class PDPSummary extends PureComponent {
           <div block="PriceAndPDPSummaryHeader">
             {this.renderPriceAndPDPSummaryHeader()}
           </div>
-          <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+            {
+              timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+            }
         </div>
         {cityResponse &&
           edd_info &&
