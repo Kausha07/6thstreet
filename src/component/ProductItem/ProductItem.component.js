@@ -617,7 +617,7 @@ class ProductItem extends PureComponent {
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
         {this.renderLink()}{" "}
         <div className= {isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
-          <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />
+         {timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />}
         </div> 
         {!isMobile.any() &&
           pageType !== "vuePlp" &&
