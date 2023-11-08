@@ -57,7 +57,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         </strong>
         {price !== undefined ? (
           <strong block="CheckoutOrderSummary" elem="Price">
-            {`${currency_code} ${price}`}
+            {`${price === __("FREE") ? "" : currency_code} ${price}`}
           </strong>
         ) : null}
       </li>
@@ -86,6 +86,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             <ul>
               <div block="Checkout" elem="Subtotals">
                 {this.renderPriceLine(subTotal, __("Subtotal"))}
+                {this.renderPriceLine(shipping_fee || __("FREE"), __("Shipping fee"))}
                 {couponCode || (discount && discount != 0)
                   ? this.renderPriceLine(discount, __("Discount"))
                   : null}
@@ -101,6 +102,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           <div block="Checkout" elem="OrderTotals">
             {this.renderPriceLine(subTotal, __("Subtotal"), {
               subtotalOnly: true,
+            })}
+            {this.renderPriceLine(shipping_fee || __("FREE"), __("Shipping fee"))}
+            {this.renderPriceLine(grandTotal, __("Total Amount"), {
+              divider: true,
             })}
           </div>
         );
