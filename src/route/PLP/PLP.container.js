@@ -89,7 +89,6 @@ export const mapStateToProps = (state) => ({
     state.AppConfig.config.countries[state.AppState.country]['catalogue_from_algolia'],
   newSelectedActiveFilters: state.PLP.newActiveFilters,
   moreFilters: state.PLP.moreFilters,
-  return_duration: state.AppConfig.return_duration,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -1129,7 +1128,7 @@ export class PLPContainer extends PureComponent {
   }
 
   renderMetaData() {
-    const { country, config, gender, return_duration } = this.props;
+    const { country, config, gender } = this.props;
     const { brandName, metaContent, isArabic } = this.state;
     const pagePathName = new URL(window.location.href).pathname;
     const checkBrandPage = pagePathName.includes(".html")
@@ -1200,7 +1199,7 @@ export class PLPContainer extends PureComponent {
             brandName,
             countryName,
             brandName,
-            return_duration,
+            config?.countries[country]?.return_duratio,
           )
         : __(
             "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ %s days Free Return.",
@@ -1208,7 +1207,7 @@ export class PLPContainer extends PureComponent {
             genderName,
             countryName,
             categoryName,
-            return_duration,
+            config?.countries[country]?.return_duration 
           );
     // : __(
     //     "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",

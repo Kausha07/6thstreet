@@ -900,7 +900,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderReturnInfo() {
     const { isArabic } = this.state;
-    const { return_duration } = this.props;
+    const { config, country } = this.props;
 
     if (
       this.props.product.returnable === YES ||
@@ -910,7 +910,7 @@ class PDPDetailsSection extends PureComponent {
         <div>
           <p block="shippingAndFreeReturns" elem="infoShippingFee">
             {__(
-              "Return any unsatisfactory items within %s days from receiving your order.", return_duration
+              "Return any unsatisfactory items within %s days from receiving your order.", config?.countries[country]?.return_duration 
             )}
           </p>
         </div>
