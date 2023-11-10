@@ -24,6 +24,7 @@ export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
   language: state.AppState.language,
+  return_duration: state.AppConfig.return_duration,
 });
 class InlineCustomerSupport extends PureComponent {
   static propTypes = {
@@ -181,6 +182,7 @@ class InlineCustomerSupport extends PureComponent {
 
   renderDropdown() {
     const { isExpanded, isArabic } = this.state;
+    const { return_duration } = this.props;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
     const countryCode = getCountryFromUrl();
@@ -307,7 +309,7 @@ class InlineCustomerSupport extends PureComponent {
                 }}
                 //to={`${rootURL}/return-information`}
               >
-                {__("100 Days Free Return")}
+                {__("%s Days Free Return", return_duration)}
               </button>
             </div>
 

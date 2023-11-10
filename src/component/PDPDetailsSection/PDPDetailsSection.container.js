@@ -13,6 +13,7 @@ export const mapStateToProps = (state) => ({
   pdpWidgetsData: state.AppState.pdpWidgetsData,
   brandInfoData : state.PDP.brandInfoData,
   brand_url: state.PLP.brand_url,
+  return_duration: state.AppConfig.return_duration,
 });
 
 
@@ -42,6 +43,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
       pdpWidgetsAPIData,
       brandInfoData,
       brand_url,
+      return_duration,
     } = this.props;
     return {
       product,
@@ -58,6 +60,7 @@ export class PDPDetailsSectionContainer extends PureComponent {
       pdpWidgetsAPIData,
       brandInfoData,
       brand_url,
+      return_duration,
     };
   };
 

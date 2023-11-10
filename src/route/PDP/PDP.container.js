@@ -59,6 +59,7 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
+  return_duration: state.AppConfig.return_duration,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -604,6 +605,7 @@ export class PDPContainer extends PureComponent {
       setMeta,
       country,
       config,
+      return_duration,
       product: {
         brand_name: brandName,
         name,
@@ -660,11 +662,12 @@ export class PDPContainer extends PureComponent {
 
     const pdpMetaTitle = getTitle();
     const pdpMetaDescription = __(
-      "Shop %s %s at best prices & deals on 6thStreet.com %s. Get top collection in %s with free delivery on minimum order & 100 days free return.",
+      "Shop %s %s at best prices & deals on 6thStreet.com %s. Get top collection in %s with free delivery on minimum order & %s days free return.",
       brandName,
       name,
       countryName,
-      categoryLevel
+      categoryLevel,
+      return_duration,
     );
     this.setState({ metaTitle: pdpMetaTitle, metaDesc: pdpMetaDescription });
     setMeta({

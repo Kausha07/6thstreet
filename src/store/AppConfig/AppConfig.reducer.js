@@ -44,6 +44,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 hasSizePredictor: config.countries[getCountryCode]?.hasSizePredictor,
                 isVIPEnabled: config.countries[getCountryCode]?.isVipEnabled || false,
                 isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false,
+                return_duration: 14,
             };
 
             // this will invalidate config after one year
