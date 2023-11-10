@@ -43,7 +43,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 isAlgoliaEventsEnabled: config.countries[getCountryCode]?.isAlgoliaEventsEnabled,
                 hasSizePredictor: config.countries[getCountryCode]?.hasSizePredictor,
                 isVIPEnabled: config.countries[getCountryCode]?.isVipEnabled || false,
-                isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false
+                isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false,
             };
 
             // this will invalidate config after one year
