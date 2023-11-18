@@ -181,6 +181,7 @@ class InlineCustomerSupport extends PureComponent {
 
   renderDropdown() {
     const { isExpanded, isArabic } = this.state;
+    const { config, country } = this.props;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
     const countryCode = getCountryFromUrl();
@@ -307,7 +308,7 @@ class InlineCustomerSupport extends PureComponent {
                 }}
                 //to={`${rootURL}/return-information`}
               >
-                {__("100 Days Free Return")}
+                {__("%s Days Free Return", config?.countries[country]?.return_duration  )}
               </button>
             </div>
 

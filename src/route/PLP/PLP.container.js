@@ -1195,17 +1195,19 @@ export class PLPContainer extends PureComponent {
         ? staticMetaData.desc
         : brandName && checkBrandPage.length < 3
         ? __(
-            "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
+            "Buy %s products with best deals on 6thStreet %s. Find latest %s collections and trending products with ✅ Free Delivery on minimum order & ✅ %s days Free Return.",
             brandName,
             countryName,
-            brandName
+            brandName,
+            config?.countries[country]?.return_duratio,
           )
         : __(
-            "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ 100 days Free Return.",
+            "Buy %s for %s with best deals on 6thStreet in %s. Find trending %s brands with ✅ Free Delivery on minimum order & ✅ %s days Free Return.",
             categoryName,
             genderName,
             countryName,
-            categoryName
+            categoryName,
+            config?.countries[country]?.return_duration 
           );
     // : __(
     //     "Shop %s Online in %s | Free shipping and returns | 6thStreet.com %s",
