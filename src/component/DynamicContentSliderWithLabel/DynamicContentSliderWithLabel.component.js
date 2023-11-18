@@ -96,8 +96,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
     this.showWidgetPostRender()
   }
   componentWillUnmount() {
-    clearTimeout(this.timerStartRef.current);
-    clearTimeout(this.timerEndRef.current);
+    this.timerStartRef.current && clearTimeout(this.timerStartRef.current);
+    this.timerEndRef.current && clearTimeout(this.timerEndRef.current);
   }
 
   showWidgetPostRender = () => {

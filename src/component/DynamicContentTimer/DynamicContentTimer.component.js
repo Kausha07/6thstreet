@@ -54,8 +54,8 @@ class DynamicContentTimer extends PureComponent {
     this.showWidgetPostRender()
   }
   componentWillUnmount() {
-    clearTimeout(this.timerStartRef.current);
-    clearTimeout(this.timerEndRef.current);
+    this.timerStartRef.current && clearTimeout(this.timerStartRef.current);
+    this.timerEndRef.current && clearTimeout(this.timerEndRef.current);
   }
 
   showWidgetPostRender = () => {
@@ -166,6 +166,8 @@ class DynamicContentTimer extends PureComponent {
             )}
           </div>
         )
+      }else {
+        return <div ref={setRef}></div>
       }
     }
     return <div ref={setRef}></div>
