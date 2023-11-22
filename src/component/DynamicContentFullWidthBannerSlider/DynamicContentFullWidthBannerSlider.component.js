@@ -88,8 +88,8 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timerStartRef.current);
-    clearTimeout(this.timerEndRef.current);
+    this.timerStartRef.current && clearTimeout(this.timerStartRef.current);
+    this.timerEndRef.current && clearTimeout(this.timerEndRef.current);
   }
 
   showWidgetPostRender = () => {

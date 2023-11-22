@@ -146,7 +146,7 @@ class HeaderTopBar extends NavigationAbstract {
             {__("1200+ GLOBAL BRANDS")}
           </div>
           <div block="HeaderTopBar" elem="CmsBlock">
-            {__("100-DAY FREE RETURNS")}
+           {__("%s DAY FREE RETURNS", countries[country]?.return_duration )}
           </div>
           {this.props?.isClubApparelEnabled && (
             <div block="HeaderTopBar" elem="CmsBlock">
