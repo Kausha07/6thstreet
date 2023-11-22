@@ -852,7 +852,10 @@ class MyAccountOrderView extends PureComponent {
       case EXCHANGE_STORE_CREDIT:
         return this.renderPaymentTypeText(__("Exchange Store Credit"));
       case "free":
-        if (parseFloat(this.props?.club_apparel_amount) !== 0 ) {
+        if (
+          this.props?.order?.club_apparel_amount &&
+          parseFloat(this.props?.order?.club_apparel_amount) !== 0
+        ) {
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
           return this.renderPaymentTypeText(__("Store Credit"));
@@ -952,9 +955,10 @@ class MyAccountOrderView extends PureComponent {
                   isStoreCredit: true,
                 })
               : null}
-            {parseFloat(this.props?.club_apparel_amount) !== 0
+            {this.props?.order?.club_apparel_amount &&
+            parseFloat(this.props?.order?.club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                this.props?.club_apparel_amount,
+                  this.props?.order?.club_apparel_amount,
                   __("Club Apparel Redemption"),
                   { isClubApparel: true }
                 )

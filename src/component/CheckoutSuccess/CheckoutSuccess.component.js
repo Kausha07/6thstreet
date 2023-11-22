@@ -1339,7 +1339,7 @@ export class CheckoutSuccess extends PureComponent {
         msp_cod_amount = 0,
         tax_amount = 0,
         customer_balance_amount = 0,
-        club_apparel_amount = 0,
+        //club_apparel_amount = 0,
         currency_code = getCurrency(),
       },
     } = this.props;
@@ -1361,9 +1361,10 @@ export class CheckoutSuccess extends PureComponent {
                   { isStoreCredit: true }
                 )
               : null}
-            {parseFloat(club_apparel_amount) !== 0
+            {this.props?.order?.club_apparel_amount &&
+            parseFloat(this.props?.order?.club_apparel_amount) !== 0
               ? this.renderPriceLineQPAY(
-                  club_apparel_amount,
+                  this.props.order.club_apparel_amount,
                   __("Club Apparel Redemption"),
                   { isClubApparel: true }
                 )
