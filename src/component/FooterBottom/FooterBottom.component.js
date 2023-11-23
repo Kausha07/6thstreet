@@ -13,6 +13,7 @@ import COD from "./icons/COD.svg";
 import mastercard from "./icons/mastercard.svg";
 import visa from "./icons/visa.svg";
 import Image from "Component/Image";
+import mada from "./icons/mada.svg";
 
 import "./FooterBottom.style";
 
@@ -132,6 +133,14 @@ class FooterBottom extends PureComponent {
           }}
           src={visa}
           alt="ca"
+        />
+        <Image lazyLoad={true}
+          mix={{
+            block: "FooterBottom",
+            elem: "PaymentIcons-mada",
+          }}
+          src={mada}
+          alt="mada"
         />
       </div>
     );
