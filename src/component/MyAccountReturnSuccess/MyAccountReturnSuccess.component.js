@@ -143,7 +143,6 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
       <div block="MyAccountReturnSuccess">
         {this.renderLoader()}
         {this.renderContent()}
-        {this.renderBackButton()}
       </div>
     );
   }

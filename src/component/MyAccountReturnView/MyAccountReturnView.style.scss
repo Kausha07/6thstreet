@@ -1,52 +1,67 @@
 .MyAccountReturnView {
-    &-Details {
-        &Date {
-            font-size: 15px;
-            font-weight: var(--fe-medium);
+  &-Details {
+    &Date {
+      font-weight: var(--fe-medium);
+      color: var(--color-gray);
+      margin-bottom: 0;
 
-            @include desktop {
-                font-size: 16px;
-            }
+      span {
+        font-weight: var(--fw-demi);
+        color: #000000;
+      }
+    }
+  }
 
-            span {
-                color: var(--color-gray);
-                font-weight: var(--fw-regular);
-            }
-        }
+  &-Status {
+    text-transform: capitalize;
+    margin-bottom: 0;
+    color: var(--color-gray);
+    padding: 0;
+
+    span {
+      font-weight: var(--fw-demi);
+      color: #000000;
     }
 
-    &-Status,
-    &-Order {
-        margin-bottom: 0;
+    &_isDenied {
+      span {
+        color: var(--error-color);
+      }
+    }
+  }
+  &-Order {
+    margin-bottom: 0;
+    color: var(--color-gray);
 
-        span {
-            font-weight: var(--fw-demi);
-        }
-
-        &_isDenied {
-            span {
-                color: var(--error-color);
-            }
-        }
+    span {
+      font-weight: var(--fw-demi);
+      color: #000000;
     }
 
-    &-SubDetails {
-        align-items: center;
-        border-top: 2px solid var(--color-gainsboro);
-        display: flex;
-        justify-content: space-between;
-        margin: 20px 0;
-        padding: 20px 0;
-
-        @include desktop {
-            align-items: unset;
-            border-bottom: 2px solid var(--color-gainsboro);
-            flex-direction: column;
-            justify-content: flex-start;
-            margin: 20px 0 35px;
-            padding: 10px 0;
-        }
+    &_isDenied {
+      span {
+        color: var(--error-color);
+      }
     }
+  }
+
+  &-SubDetails {
+    margin: 20px 0;
+    padding: 20px 0;
+
+    @include desktop {
+      align-items: unset;
+      border-bottom: 1px solid var(--color-gainsboro);
+      flex-direction: column;
+      justify-content: flex-start;
+      margin: 10px 0 30px;
+      padding: 10px 0;
+    }
+
+    @include mobile {
+      margin: 0;
+    }
+  }
 
     &-Items {
         margin-bottom: 40px;
@@ -73,4 +88,125 @@
             }
         }
     }
+
+    &-AccordionStatus {
+      padding: 0;
+    }
+  
+  &-Header {
+    display: flex;
+    align-items: center;
+    align-items: center;
+  }
+  &-Heading {
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &-BackButton {
+    margin-right: 10px;
+    &::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border: solid #000000;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 2px 7px 7px 2px;
+      margin: 0 auto;
+      left: 10px;
+      transform: rotate(135deg);
+      background: transparent;
+    }
+
+    &_isArabic {
+      left: unset;
+      right: -5px;
+
+      &::before {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+
+  &-BackToOrderPageButtonDiv {
+    margin-top: 25px;
+  }
+
+  &-BackToOrderPageButton {
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-weight: var(--fw-regular);
+    font-size: 14px;
+    padding: 10px 15px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+  }
+
+  &-StatusBar {
+    margin: 10px 0 20px 0;
+  }
+
+  &-exchangeTypeHeading {
+    color: var(--color-gray);
+
+    span {
+      margin: 0 5px;
+    }
+  }
+
+  &-deliveryMessage {
+    background-color: #f0f0f0;
+    color: #000000;
+    width: 75%;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: 500;
+    margin: 5px 0 25px 0;
+
+    img {
+      height: 20px !important;
+    }
+
+    @include mobile {
+      width: 100%;
+      p {
+        font-size: 13px;
+      }
+
+      img {
+        height: 30px !important;
+      }
+    }
+  }
+
+  &-Accordion {
+    border-bottom: 1px solid var(--color-light-grey);
+  }
+
+  &-AccordionTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+      @include mobile {
+        font-size: 14px;
+      }
+    }
+  }
+
+  &-AccordionTitleImage {
+    margin-right: 10px;
+
+    &_isArabic {
+      margin-right: initial;
+      margin-left: 10px;
+    }
+  }
 }

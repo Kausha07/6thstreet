@@ -10,6 +10,7 @@ import MobileAPI from "Util/API/provider/MobileAPI";
 
 export const mapStateToProps = (_state) => ({
   customer: _state.MyAccountReducer.customer,
+  edd_info: _state.AppConfig.edd_info,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -38,6 +39,9 @@ export class MyAccountExchangeViewContainer extends PureComponent {
   constructor(props) {
     super(props);
 
+  }
+
+  componentDidMount(){
     this.getReturn();
   }
 
@@ -52,7 +56,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       isLoading,
       status,
     } = this.state;
-    const { customer, exchangeSuccess } = this.props;
+    const { customer, exchangeSuccess, edd_info, } = this.props;
     return {
       orderId: order_id,
       orderNumber: order_increment_id,
@@ -65,6 +69,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       status,
       customer,
       exchangeSuccess,
+      edd_info,
     };
   };
 
@@ -80,7 +85,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       const exchangeId = this.getExchangeId();
       let resData = {};
       if (!exchangeSuccess) {
-        const { data } = await MagentoAPI.get(`returns/${exchangeId}`);
+        const { data } = await MobileAPI.get(`returns/${exchangeId}`);
         resData = data;
       }
       const {
