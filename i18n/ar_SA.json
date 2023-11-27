@@ -1279,5 +1279,17 @@
     "Shop for Women from top brands in %s such as Aldo, Ardene, Charles and Keith, BHPC and more. Get biggest collection of Shoes, Clothing, Bags & more with best deals. ✅ Free Delivery on minimum order": "تسوقي للنساء من أفضل الماركات في دولة %s مثل ألدو، أردين، بيفرلي هيلز بولو كلوب، تشارلز آند كيث وغيرها. تعرفي على أكبر تشكيلة من الأحذية، الملابس، الحقائب وغيرها بعروض خيالية. ✅ شحن مجاني على الطلبات بقيمة محددة.",
     "h": " س",
     "m": " د",
-    "s": " ث"
+    "s": " ث",
+    "days":"يوم",
+    "Refund Initiated": "بدأت عملية الإسترداد النقدي",
+    "Refund Successful": "تم الإسترداد النقدي بنجاح ", 
+    "Package": "الطرد", 
+    "Doorstep Exchange": "استبدال على عتبة الباب", 
+    "Normal Exchange": "استبدال عادي", 
+    "Our courier partner executive will pickup the item": "سيقوم مندوب التوصيل لدنيا بإستلام المنتج المرتجع", 
+    "We have picked up the item and your refund will be processed in 5 to 7 business days": "لقد تسلمنا المنتج المرتجع و ستتم عملية الإسترداد النقدي خلال 5 إلى 7 أيام عمل", 
+    "Our courier partner executive will first pickup the item and then the exchange item will be delivered in ": "سيقوم مندوب التوصيل الخاص بنا باستلام المنتج أولاً ثم سيتم تسليم المنتج المستبدل خلال ", 
+    "Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep ": "أبقِ المنتجات المرتجعة جاهزة، وسيحضر مندوب التوصيل لدينا ويستلم المنتج ثم يقوم بتسليم المنتج المستبدل على باب منزلك ", 
+    "We picked up the item, the exchange item will be delivered in ": "لقد استلمنا المنتج. المنتج المستبدل سيصل خلال ", 
+    "We picked up the item, the exchange item is an international shipment, hence will be delivered in ": "لقد استلمنا المنتج، والمنتج المستبدل عبارة عن شحنة دولية، وبالتالي سيتم تسليمه خلال "
 }

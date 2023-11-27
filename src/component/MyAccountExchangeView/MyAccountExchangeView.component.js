@@ -27,6 +27,7 @@ import {
   DOORSTEP_EX_DELIVERY_MESSAGE,
   NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+  NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
 } from "./MyAccountExchangeView.config";
 
 export class MyAccountExchangeView extends SourceComponent {
@@ -140,8 +141,15 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   }
 
-  renderItem = (item, eddItem, index) => {
+  renderItem = (item, isItemUnderProcessing = false, index) => {
     const { exchangeSuccess } = this.props;
+    const exchangeMessage =
+      item?.exchange_type?.toLowerCase() === "normal"
+        ? __("Normal Exchange")
+        : item?.exchange_type?.toLowerCase() === "hih"
+        ? __("Doorstep Exchange")
+        : null;
+
     return (
       <div
         block="MyAccountExchangeView"
@@ -149,11 +157,18 @@ export class MyAccountExchangeView extends SourceComponent {
         mix={{ block: "MyAccountReturnSuccess", elem: "Items" }}
       >
         <div key={index}>
+          {isItemUnderProcessing && exchangeMessage && (
+            <p block="MyAccountExchangeView" elem="exchangeMessage">
+              {exchangeMessage}
+            </p>
+          )}
           <MyAccountReturnSuccessItem item={item} key={index} />
           {!exchangeSuccess && (
             <div block="MyAccountExchangeView" elem="Reason">
               <h3>{__("Reason")}</h3>
-              {!!(item.reason || []).length && <p>{item.reason[0].value}</p>}
+              {!!(item?.reason || []).length && (
+                <p>{item?.reason?.[0]?.value}</p>
+              )}
             </div>
           )}
         </div>
@@ -276,29 +291,41 @@ export class MyAccountExchangeView extends SourceComponent {
     let deliveryMessageAndIcon =
       (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
         STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
-      exchangeType === "Normal"
+      exchangeType === "Normal" &&
+      isInternational
+        ? {
+            message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
+            daysToShow: true,
+          }
+        : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
+            STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
+          exchangeType === "Normal"
         ? {
             message: NORMAL_EX_DELIVERY_MESSAGE,
+            daysToShow: true,
           }
         : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
             STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
           exchangeType === "HIH"
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
+            daysToShow: false,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
           exchangeType === "Normal" &&
           !isInternational
         ? {
             message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+            daysToShow: true,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
           exchangeType === "Normal" &&
           isInternational
         ? {
             message: INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+            daysToShow: true,
           }
-        : { message: "" };
+        : { message: "", daysToShow: false };
 
     return deliveryMessageAndIcon;
   };
@@ -312,6 +339,7 @@ export class MyAccountExchangeView extends SourceComponent {
       international_vendor,
       label,
     } = item;
+
     const isInternational = parseInt(cross_border) === 1;
     const getIcon =
       package_status === "Cancelled" || package_status === "cancelled"
@@ -320,7 +348,7 @@ export class MyAccountExchangeView extends SourceComponent {
           label?.toLowerCase()?.includes("processing")
         ? TimerImage
         : PackageImage;
-    const { message } = this.getDeliveryMessage(
+    const { message, daysToShow } = this.getDeliveryMessage(
       exchange_type,
       package_status,
       isInternational
@@ -334,6 +362,8 @@ export class MyAccountExchangeView extends SourceComponent {
         ? date_range
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
+    const isItemUnderProcessing =
+      label?.toLowerCase() === "items under processing";
 
     return (
       <div
@@ -345,10 +375,6 @@ export class MyAccountExchangeView extends SourceComponent {
         <Accordion
           mix={{ block: "MyAccountExchangeView", elem: "Accordion" }}
           is_expanded={index === 0}
-          shortDescription={this.renderAccordionProgress(
-            item?.package_status,
-            item
-          )}
           title={this.renderAccordionTitle(
             label,
             getIcon,
@@ -377,13 +403,16 @@ export class MyAccountExchangeView extends SourceComponent {
                 <p>
                   {__(message)}
                   {__(deliveryDays)}
-                  {__(" days.")}
+                  {daysToShow && __(" days.")}
                 </p>
               </div>
             )
           ) : null}
+          {this.renderAccordionProgress(item?.package_status, item)}
           <div></div>
-          {item?.items?.map((data) => this.renderItem(data, item))}
+          {item?.items?.map((data) =>
+            this.renderItem(data, isItemUnderProcessing)
+          )}
         </Accordion>
       </div>
     );
@@ -457,6 +486,7 @@ export class MyAccountExchangeView extends SourceComponent {
         block="MyAccountExchangeView"
         elem="BackButton"
         to={`/my-account/return-item`}
+        mods={{ isArabic: isArabic() }}
       ></Link>
     );
   }

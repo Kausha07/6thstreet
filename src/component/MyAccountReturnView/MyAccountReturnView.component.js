@@ -92,6 +92,7 @@ export class MyAccountReturnView extends SourceComponent {
         block="MyAccountReturnView"
         elem="BackButton"
         to={`/my-account/return-item`}
+        mods={{ isArabic: isArabic() }}
       ></Link>
     );
   }
@@ -171,7 +172,6 @@ export class MyAccountReturnView extends SourceComponent {
         <Accordion
           mix={{ block: "MyAccountReturnView", elem: "Accordion" }}
           is_expanded={index === 0}
-          shortDescription={this.renderAccordionProgress(package_status, item)}
           title={this.renderAccordionTitle(
             label,
             getIcon,
@@ -196,6 +196,7 @@ export class MyAccountReturnView extends SourceComponent {
                 <p>{message}</p>
               </div>
             )}
+          {this.renderAccordionProgress(package_status, item)}
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
       </div>
@@ -228,7 +229,7 @@ export class MyAccountReturnView extends SourceComponent {
             : title}
         </h3>
 
-        {DELIVERY_SUCCESSFUL.includes(package_status.toLowerCase()) && (
+        {exchangeTypeText !== "" && (
           <h3 block="MyAccountReturnView" elem="exchangeTypeHeading">
             <span>-</span>
             {exchangeTypeText}

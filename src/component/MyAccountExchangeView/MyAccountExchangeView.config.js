@@ -35,7 +35,8 @@ export const DELIVERY_SUCCESSFUL = ["exchanged", "delivered", "pickedup"];
   };
 
   export const NORMAL_EX_DELIVERY_MESSAGE = __("Our courier partner executive will first pickup the item and then the exchange item will be delivered in ");
-  export const DOORSTEP_EX_DELIVERY_MESSAGE = __("Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep ");
+  export const DOORSTEP_EX_DELIVERY_MESSAGE = __("Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep");
 
   export const NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE = __("We picked up the item, the exchange item will be delivered in ");
   export const INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE = __("We picked up the item, the exchange item is an international shipment, hence will be delivered in ");
+  export const NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE = __("Our courier partner executive will first pickup the item and then the exchange item is an international shipment, hence will be delivered in");

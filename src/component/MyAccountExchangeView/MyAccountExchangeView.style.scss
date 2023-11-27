@@ -97,6 +97,11 @@
     display: flex;
     align-items: center;
     align-items: center;
+
+    @include mobile{
+    display: none;
+    }
+
   }
   &-Heading {
     h3 {
@@ -214,5 +219,10 @@
   &-exchangeTypeStatus{
     margin-left: 5px;
     color: var(--color-gray);
+  }
+
+  &-exchangeMessage{
+    color: var(--color-gray);
+    font-weight: 600;
   }
 }
