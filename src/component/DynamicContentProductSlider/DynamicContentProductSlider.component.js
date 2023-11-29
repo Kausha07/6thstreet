@@ -140,6 +140,7 @@ class DynamicContentProductSlider extends PureComponent {
       renderMySignInPopup,
       setLastTapItemOnHome,
       index = 0,
+      data_url,
     } = this.props;
     if (products.length === 0) {
       return null;
@@ -170,6 +171,7 @@ class DynamicContentProductSlider extends PureComponent {
           pageType={"home"}
           widgetID={"vue_top_picks_slider"}
           index={index}
+          data_url={data_url}
         />
       </React.Fragment>
     );
