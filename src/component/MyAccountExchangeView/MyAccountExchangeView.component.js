@@ -336,7 +336,7 @@ export class MyAccountExchangeView extends SourceComponent {
       cross_border = "0",
       exchange_type,
       package_status,
-      international_vendor,
+      international_vendor = "",
       label,
     } = item;
 

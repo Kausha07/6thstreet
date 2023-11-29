@@ -518,7 +518,7 @@ class MyAccountOrderView extends PureComponent {
       item.cross_border && item.cross_border === 1 ? true : false;
     const STATUS_LABELS =
       exchangeCount === 1
-        ? exchange_type?.toUpperCase() === "HIH"
+        ? item?.exchange_type?.toUpperCase() === "HIH"
           ? Object.assign({}, STATUS_LABEL_MAP_DOORSTEP_EXCHANGE)
           : Object.assign({}, NEW_EXCHANGE_STATUS_LABEL_MAP)
         : Object.assign({}, NEW_STATUS_LABEL_MAP);
@@ -716,7 +716,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [] },
+      order: { groups: shipped = [], international_vendor = "" },
       edd_info,
     } = this.props;
     const { isArabic } = this.state;
@@ -739,9 +739,9 @@ class MyAccountOrderView extends PureComponent {
     const date_range =
       edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
     const deliveryDays =
-      exchange_type === "Normal" && !isInternational
+      item?.exchange_type?.toLowerCase() === "normal" && !isInternational
         ? "3-4"
-        : exchange_type === "Normal" && isInternational
+        : item?.exchange_type?.toLowerCase() === "normal" && isInternational
         ? date_range
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(item?.status);
