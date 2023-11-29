@@ -291,7 +291,7 @@ export class MyAccountExchangeView extends SourceComponent {
     let deliveryMessageAndIcon =
       (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
         STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
-      exchangeType === "Normal" &&
+      exchangeType?.toLowerCase() === "normal" &&
       isInternational
         ? {
             message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
@@ -299,27 +299,27 @@ export class MyAccountExchangeView extends SourceComponent {
           }
         : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
             STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
-          exchangeType === "Normal"
+          exchangeType?.toLowerCase() === "normal"
         ? {
             message: NORMAL_EX_DELIVERY_MESSAGE,
             daysToShow: true,
           }
         : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
             STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
-          exchangeType === "HIH"
+          exchangeType?.toLowerCase() === "hih"
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
             daysToShow: false,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
-          exchangeType === "Normal" &&
+          exchangeType?.toLowerCase() === "normal" &&
           !isInternational
         ? {
             message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
             daysToShow: true,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
-          exchangeType === "Normal" &&
+          exchangeType?.toLowerCase() === "normal" &&
           isInternational
         ? {
             message: INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
@@ -387,7 +387,6 @@ export class MyAccountExchangeView extends SourceComponent {
           exchange_type !== null &&
           package_status !== "" &&
           package_status !== null &&
-          deliveryDays !== undefined &&
           isDisplayBarVisible ? (
             exchange_type === "HIH" && package_status === "exchanged" ? null : (
               <div block="MyAccountExchangeView" elem="deliveryMessage">
@@ -402,7 +401,7 @@ export class MyAccountExchangeView extends SourceComponent {
                 />
                 <p>
                   {__(message)}
-                  {__(deliveryDays)}
+                  {deliveryDays && __(deliveryDays)}
                   {daysToShow && __(" days.")}
                 </p>
               </div>

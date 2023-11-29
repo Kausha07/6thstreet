@@ -1289,7 +1289,8 @@
     "Our courier partner executive will pickup the item": "سيقوم مندوب التوصيل لدنيا بإستلام المنتج المرتجع", 
     "We have picked up the item and your refund will be processed in 5 to 7 business days": "لقد تسلمنا المنتج المرتجع و ستتم عملية الإسترداد النقدي خلال 5 إلى 7 أيام عمل", 
     "Our courier partner executive will first pickup the item and then the exchange item will be delivered in ": "سيقوم مندوب التوصيل الخاص بنا باستلام المنتج أولاً ثم سيتم تسليم المنتج المستبدل خلال ", 
-    "Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep ": "أبقِ المنتجات المرتجعة جاهزة، وسيحضر مندوب التوصيل لدينا ويستلم المنتج ثم يقوم بتسليم المنتج المستبدل على باب منزلك ", 
+    "Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep": "أبقِ المنتجات المرتجعة جاهزة، وسيحضر مندوب التوصيل لدينا ويستلم المنتج ثم يقوم بتسليم المنتج المستبدل على باب منزلك",
     "We picked up the item, the exchange item will be delivered in ": "لقد استلمنا المنتج. المنتج المستبدل سيصل خلال ", 
-    "We picked up the item, the exchange item is an international shipment, hence will be delivered in ": "لقد استلمنا المنتج، والمنتج المستبدل عبارة عن شحنة دولية، وبالتالي سيتم تسليمه خلال "
+    "We picked up the item, the exchange item is an international shipment, hence will be delivered in ": "لقد استلمنا المنتج، والمنتج المستبدل عبارة عن شحنة دولية، وبالتالي سيتم تسليمه خلال ",
+    "Our courier partner executive will first pickup the item and then the exchange item is an international shipment, hence will be delivered in ": "سيقوم مندوب التوصيل لدينا بإستلام المنتج أولاً. وبما أن المنتج المرتجع شحنة دولية, سيتم توصيلها خلال "
 }

@@ -56,7 +56,7 @@
     button {
       margin: 0 5px;
       border: 1px solid var(--black);
-      border-radius: 5px;
+      border-radius: 10px;
       font-family: var(--avenir-regular-font);
       font-size: 14px;
       font-weight: 600;
@@ -486,7 +486,19 @@
   }
   &-AccordionTitle {
     margin-left: 8px;
+
+    h3{
+      @include mobile{
+        font-size: 14px;
+      }
+    }
   }
+
+  &-exchangeMessage{
+    color: var(--color-gray);
+    font-weight: 600;
+  }
+  
   &-ClickAndCollect {
     display: flex;
     align-items: center;

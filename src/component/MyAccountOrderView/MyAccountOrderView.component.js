@@ -74,6 +74,18 @@ import {
   EVENT_MOE_CANCEL_AN_ITEM_CLICK,
 } from "Util/Event";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
+import {
+  DELIVERY_SUCCESSFUL as HIH_DELIVERY_SUCCESSFUL,
+  STATUS_IN_TRANSIT as HIH_STATUS_IN_TRANSIT,
+  STATUS_DISPATCHED as HIH_STATUS_DISPATCHED,
+  STATUS_LABEL_MAP_DOORSTEP_EXCHANGE,
+  NORMAL_EX_DELIVERY_MESSAGE,
+  DOORSTEP_EX_DELIVERY_MESSAGE,
+  NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+  INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+  NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
+} from "Component/MyAccountExchangeView/MyAccountExchangeView.config";
+import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -124,7 +136,7 @@ class MyAccountOrderView extends PureComponent {
     this.setState({ eddEventSent: true });
   };
 
-  renderItem = (item, eddItem) => {
+  renderItem = (item, eddItem, isItemUnderProcessing = false) => {
     const {
       order: { order_currency_code: currency, status },
       displayDiscountPercentage,
@@ -136,20 +148,34 @@ class MyAccountOrderView extends PureComponent {
       item.status === "Processing" || item.status === "processing"
         ? eddItem?.edd
         : item?.edd;
+
+    const exchangeMessage =
+      item?.exchange_type?.toLowerCase() === "normal"
+        ? __("Normal Exchange")
+        : item?.exchange_type?.toLowerCase() === "hih"
+        ? __("Doorstep Exchange")
+        : null;
     return (
-      <MyAccountOrderViewItem
-        key={item.item_id}
-        item={item}
-        setEddEventSent={this.setEddEventSent}
-        eddEventSent={eddEventSent}
-        status={status}
-        myOrderEdd={finalEdd}
-        compRef={"myOrder"}
-        eddResponse={eddResponse}
-        edd_info={edd_info}
-        currency={currency}
-        displayDiscountPercentage={displayDiscountPercentage}
-      />
+      <>
+        {isItemUnderProcessing && exchangeMessage && (
+          <p block="MyAccountOrderView" elem="exchangeMessage">
+            {exchangeMessage}
+          </p>
+        )}
+        <MyAccountOrderViewItem
+          key={item.item_id}
+          item={item}
+          setEddEventSent={this.setEddEventSent}
+          eddEventSent={eddEventSent}
+          status={status}
+          myOrderEdd={finalEdd}
+          compRef={"myOrder"}
+          eddResponse={eddResponse}
+          edd_info={edd_info}
+          currency={currency}
+          displayDiscountPercentage={displayDiscountPercentage}
+        />
+      </>
     );
   };
 
@@ -355,10 +381,22 @@ class MyAccountOrderView extends PureComponent {
     }
   };
 
-  renderAccordionTitle(title, image, status = null, deliveryDate = null) {
+  renderAccordionTitle(
+    title,
+    image,
+    status = null,
+    deliveryDate = null,
+    exchangeType = ""
+  ) {
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
+    const exchangeTypeText =
+      exchangeType?.toUpperCase() === "HIH"
+        ? __("Doorstep Exchange")
+        : exchangeType?.toUpperCase() === "NORMAL"
+        ? __("Normal Exchange")
+        : null;
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -372,7 +410,14 @@ class MyAccountOrderView extends PureComponent {
         />
         <h3>
           {title}
-          {!!packageStatus && <span>{` - ${packageStatus}`}</span>}
+          {exchangeTypeText ? (
+            <>
+              <span>{` - ${exchangeTypeText}`}</span>
+              {!!packageStatus && <span>{` ${packageStatus}`}</span>}
+            </>
+          ) : (
+            !!packageStatus && <span>{` - ${packageStatus}`}</span>
+          )}
           {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ?
           <span>: &nbsp;{formatDate(
             "DD MMMM YYYY",
@@ -384,6 +429,14 @@ class MyAccountOrderView extends PureComponent {
   }
 
   shouldDisplayBar = (status) => {
+    if (
+      HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()) ||
+      HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()) ||
+      HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase())
+    ) {
+      return true;
+    }
+
     switch (status) {
       case STATUS_DISPATCHED:
       case STATUS_IN_TRANSIT:
@@ -395,6 +448,53 @@ class MyAccountOrderView extends PureComponent {
         return false;
       }
     }
+  };
+
+  getDeliveryMessage = (exchangeType, exchangeItemStatus, isInternational) => {
+    let deliveryMessageAndIcon =
+      (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
+        HIH_STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
+      exchangeType?.toLowerCase() === "normal" &&
+      isInternational
+        ? {
+            message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
+            daysToShow: true,
+          }
+        : (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
+            HIH_STATUS_IN_TRANSIT.includes(
+              exchangeItemStatus?.toLowerCase()
+            )) &&
+          exchangeType?.toLowerCase() === "normal"
+        ? {
+            message: NORMAL_EX_DELIVERY_MESSAGE,
+            daysToShow: true,
+          }
+        : (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
+            HIH_STATUS_IN_TRANSIT.includes(
+              exchangeItemStatus?.toLowerCase()
+            )) &&
+          exchangeType?.toLowerCase() === "hih"
+        ? {
+            message: DOORSTEP_EX_DELIVERY_MESSAGE,
+            daysToShow: false,
+          }
+        : HIH_DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
+          exchangeType?.toLowerCase() === "normal" &&
+          !isInternational
+        ? {
+            message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+            daysToShow: true,
+          }
+        : HIH_DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
+          exchangeType?.toLowerCase() === "normal" &&
+          isInternational
+        ? {
+            message: INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
+            daysToShow: true,
+          }
+        : { message: "", daysToShow: false };
+
+    return deliveryMessageAndIcon;
   };
 
   renderAccordionProgress(status, item) {
@@ -418,7 +518,9 @@ class MyAccountOrderView extends PureComponent {
       item.cross_border && item.cross_border === 1 ? true : false;
     const STATUS_LABELS =
       exchangeCount === 1
-        ? Object.assign({}, NEW_EXCHANGE_STATUS_LABEL_MAP)
+        ? exchange_type?.toUpperCase() === "HIH"
+          ? Object.assign({}, STATUS_LABEL_MAP_DOORSTEP_EXCHANGE)
+          : Object.assign({}, NEW_EXCHANGE_STATUS_LABEL_MAP)
         : Object.assign({}, NEW_STATUS_LABEL_MAP);
     return (
       <div
@@ -431,18 +533,30 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isShipped: status === STATUS_DISPATCHED,
-              inTransit: status === STATUS_IN_TRANSIT,
-              isDelivered: status === DELIVERY_SUCCESSFUL,
+              isShipped:
+                status === STATUS_DISPATCHED ||
+                HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()),
+              inTransit:
+                status === STATUS_IN_TRANSIT ||
+                HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
+              isDelivered:
+                status === DELIVERY_SUCCESSFUL ||
+                HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
             }}
           />
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isShipped: status === STATUS_DISPATCHED,
-              inTransit: status === STATUS_IN_TRANSIT,
-              isDelivered: status === DELIVERY_SUCCESSFUL,
+              isShipped:
+                status === STATUS_DISPATCHED ||
+                HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()),
+              inTransit:
+                status === STATUS_IN_TRANSIT ||
+                HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
+              isDelivered:
+                status === DELIVERY_SUCCESSFUL ||
+                HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
             }}
           />
         </div>
@@ -603,6 +717,7 @@ class MyAccountOrderView extends PureComponent {
   renderAccordion(item, index) {
     const {
       order: { groups: shipped = [] },
+      edd_info,
     } = this.props;
     const { isArabic } = this.state;
     const itemNumber = shipped.length;
@@ -613,6 +728,23 @@ class MyAccountOrderView extends PureComponent {
         : item.status === "Processing" || item.status === "processing"
         ? TimerImage
         : PackageImage;
+    const isItemUnderProcessing =
+      item?.label?.toLowerCase() === "items under processing";
+    const isInternational = parseInt(item?.cross_border) === 1;
+    const { message, daysToShow } = this.getDeliveryMessage(
+      item?.exchange_type,
+      item?.status,
+      isInternational
+    );
+    const date_range =
+      edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
+    const deliveryDays =
+      exchange_type === "Normal" && !isInternational
+        ? "3-4"
+        : exchange_type === "Normal" && isInternational
+        ? date_range
+        : "";
+    const isDisplayBarVisible = this.shouldDisplayBar(item?.status);
     return (
       <div
         key={item.shipment_number}
@@ -628,10 +760,36 @@ class MyAccountOrderView extends PureComponent {
             item.label,
             getIcon,
             item.status,
-            item.courier_deliver_date
+            item.courier_deliver_date,
+            item?.exchange_type
           )}
           MyAccountSection={true}
         >
+          {item?.exchange_type !== "" &&
+          item?.exchange_type !== null &&
+          item?.status !== "" &&
+          item?.status !== null &&
+          isDisplayBarVisible ? (
+            item?.exchange_type?.toUpperCase() === "HIH" &&
+            item?.status === "exchanged" ? null : (
+              <div block="MyAccountExchangeView" elem="deliveryMessage">
+                <Image
+                  src={ExchangeIcon}
+                  mix={{
+                    block: "MyAccountExchangeView",
+                    elem: "AccordionTitleImage",
+                    mods: { isArabic: isArabic() },
+                  }}
+                  alt={"AccordionTitleImage"}
+                />
+                <p>
+                  {__(message)}
+                  {deliveryDays && __(deliveryDays)}
+                  {daysToShow && __(" days.")}
+                </p>
+              </div>
+            )
+          ) : null}
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED &&
             item.status !== PICKUP_FAILED &&
@@ -650,15 +808,19 @@ class MyAccountOrderView extends PureComponent {
               </div>
             </div>
           )}
-          <p>
-            {__(
-              "Package contains %s %s",
-              item.items.length,
-              item.items.length === 1 ? __("item") : __("items")
-            )}
-          </p>
+          {isItemUnderProcessing && (
+            <p>
+              {__(
+                "Package contains %s %s",
+                item.items.length,
+                item.items.length === 1 ? __("item") : __("items")
+              )}
+            </p>
+          )}
           <div></div>
-          {item.items.map((data) => this.renderItem(data, item))}
+          {item.items.map((data) =>
+            this.renderItem(data, item, isItemUnderProcessing)
+          )}
         </Accordion>
       </div>
     );
@@ -695,13 +857,8 @@ class MyAccountOrderView extends PureComponent {
     }
 
     return (
-      <div
-        block="MyAccountOrderView"
-        elem="OrderDetails"
-        mods={{ failed: true }}
-      >
-        <h3>{__("Order detail")}</h3>
-        {itemsArray.map((item) => this.renderItem(item, ""))}
+      <div block="MyAccountOrderView" elem="Accordions">
+        {unship.map((item, index) => this.renderAccordion(item, index))}
       </div>
     );
   }
