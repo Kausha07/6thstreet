@@ -50,7 +50,7 @@ export class SearchPageContainer extends PLPContainer {
       options: { q } = {},
     } = this.props;
     const link = `${pathname}${search}`;
-    let breadCrumbName = q?.trim() ? q?.trim() : "Available products";
+    let breadCrumbName = q?.trim() ? q?.trim() : __("Available products");
     updateBreadcrumbs([
       { name: breadCrumbName, url: link },
       { name: __("Home"), url: "/" },
