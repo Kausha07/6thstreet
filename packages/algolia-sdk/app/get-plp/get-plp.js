@@ -32,6 +32,7 @@ import {
   makeCategoriesWithoutPathFilter,
   makeCategoriesMoreFilter,
 } from "./categories";
+import { userToken } from "Util/User/userToken";
 
 const getPriceRangeData = ({ currency, lang }) => {
   const priceRangeData = {};
@@ -609,6 +610,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
+        userToken: userToken()
       },
     };
 
@@ -636,6 +638,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
+        userToken: userToken()
       },
     };
     queries.push(queryProdCount);
@@ -654,6 +657,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
+        userToken: userToken()
       },
     };
     queries.push(querySliderPosition);
@@ -704,6 +708,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             hitsPerPage: limit,
             clickAnalytics: true,
             maxValuesPerFacet: maxValuesPerFacet,
+            userToken: userToken()
           },
         });
       });

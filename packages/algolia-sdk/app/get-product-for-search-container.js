@@ -2,6 +2,7 @@ import Url from "url-parse";
 import { searchParams as defaultSearchParams } from "./config";
 import { formatNewInTag, getAlgoliaFilters, getIndex } from "./utils";
 import { getIndexBySort } from "./utils/filters";
+import { userToken } from "Util/User/userToken";
 
 function getProductForSearchContainer(
   URL,
@@ -39,6 +40,7 @@ function getProductForSearchContainer(
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        userToken: userToken()
       },
     };
 
