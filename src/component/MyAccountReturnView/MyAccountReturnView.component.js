@@ -130,6 +130,7 @@ export class MyAccountReturnView extends SourceComponent {
               isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
               inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
               isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isArabic: isArabic(),
             }}
           />
           <div
@@ -139,6 +140,7 @@ export class MyAccountReturnView extends SourceComponent {
               isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
               inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
               isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isArabic: isArabic(),
             }}
           />
         </div>
@@ -156,9 +158,9 @@ export class MyAccountReturnView extends SourceComponent {
   };
 
   renderAccordion = (item, index) => {
-    const { exchange_type, package_status, label } = item;
+    const { exchange_type = null, package_status = null, label } = item;
     const getIcon = PackageImage;
-    const message = DELIVERY_SUCCESSFUL.includes(package_status.toLowerCase())
+    const message = DELIVERY_SUCCESSFUL.includes(package_status?.toLowerCase())
       ? RETURN_PICKED_UP
       : RETURN_PENDING_MESSAGE;
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
@@ -180,8 +182,8 @@ export class MyAccountReturnView extends SourceComponent {
           )}
           MyAccountSection={true}
         >
-          {(!package_status.toLowerCase().includes("refunded") ||
-            !package_status.toLowerCase().includes("refund")) &&
+          {(!package_status?.toLowerCase().includes("refunded") ||
+            !package_status?.toLowerCase().includes("refund")) &&
             isDisplayBarVisible && (
               <div block="MyAccountReturnView" elem="deliveryMessage">
                 <Image
@@ -206,10 +208,10 @@ export class MyAccountReturnView extends SourceComponent {
   renderAccordionTitle(title, image, package_status = "", exchangeType = "") {
     const { groups } = this.props;
     const exchangeTypeText =
-      package_status.toLowerCase() === "pickedup"
+      package_status?.toLowerCase() === "pickedup"
         ? __("Refund Initiated")
-        : package_status.toLowerCase().includes("refunded") ||
-          package_status.toLowerCase().includes("refund")
+        : package_status?.toLowerCase().includes("refunded") ||
+          package_status?.toLowerCase().includes("refund")
         ? __("Refund Successful")
         : "";
     return (
@@ -224,7 +226,8 @@ export class MyAccountReturnView extends SourceComponent {
           alt={title ? title : "AccordionTitleImage"}
         />
         <h3>
-          {groups?.length === 1 && title?.toLowerCase()?.includes("package")
+          {groups?.length === 1 &&
+          (title?.toLowerCase()?.includes("package") || title?.includes("شحنة"))
             ? __("Package")
             : title}
         </h3>

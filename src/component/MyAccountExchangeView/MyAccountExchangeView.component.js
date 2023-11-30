@@ -238,7 +238,7 @@ export class MyAccountExchangeView extends SourceComponent {
 
   renderAccordionProgress = (status, item) => {
     const displayStatusBar = this.shouldDisplayBar(status);
-    const { exchange_type } = item;
+    const { exchange_type = null } = item;
     const STATUS_LABELS =
       exchange_type?.toUpperCase() === "HIH"
         ? Object.assign({}, STATUS_LABEL_MAP_DOORSTEP_EXCHANGE)
@@ -262,6 +262,7 @@ export class MyAccountExchangeView extends SourceComponent {
               isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
               inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
               isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isArabic: isArabic(),
             }}
           />
           <div
@@ -271,6 +272,7 @@ export class MyAccountExchangeView extends SourceComponent {
               isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
               inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
               isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isArabic: isArabic(),
             }}
           />
         </div>
@@ -334,8 +336,8 @@ export class MyAccountExchangeView extends SourceComponent {
     const { orderItemGroups: shipped = [], edd_info } = this.props;
     const {
       cross_border = "0",
-      exchange_type,
-      package_status,
+      exchange_type = null,
+      package_status = null,
       international_vendor = "",
       label,
     } = item;
@@ -363,8 +365,8 @@ export class MyAccountExchangeView extends SourceComponent {
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
     const isItemUnderProcessing =
-      label?.toLowerCase() === "items under processing";
-
+      label?.toLowerCase() === "items under processing" ||
+      label === "المنتجات قيد التجهيز";
     return (
       <div
         key={item.track_number}
@@ -437,9 +439,10 @@ export class MyAccountExchangeView extends SourceComponent {
           alt={title ? title : "AccordionTitleImage"}
         />
         <h3>
-          {groups?.length === 1 && title?.toLowerCase()?.includes("package")
+          {groups?.length === 1 &&
+          (title?.toLowerCase()?.includes("package") || title?.includes("شحنة"))
             ? __("Package")
-            : title}
+            : __(`${title}`)}
         </h3>
         {exchangeType !== null && exchangeType !== "" && (
           <>

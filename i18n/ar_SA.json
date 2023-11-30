@@ -1292,5 +1292,6 @@
     "Keep your return items ready, our courier partner executive will come and pickup the item and then deliver the exchange item at your doorstep": "أبقِ المنتجات المرتجعة جاهزة، وسيحضر مندوب التوصيل لدينا ويستلم المنتج ثم يقوم بتسليم المنتج المستبدل على باب منزلك",
     "We picked up the item, the exchange item will be delivered in ": "لقد استلمنا المنتج. المنتج المستبدل سيصل خلال ", 
     "We picked up the item, the exchange item is an international shipment, hence will be delivered in ": "لقد استلمنا المنتج، والمنتج المستبدل عبارة عن شحنة دولية، وبالتالي سيتم تسليمه خلال ",
-    "Our courier partner executive will first pickup the item and then the exchange item is an international shipment, hence will be delivered in ": "سيقوم مندوب التوصيل لدينا بإستلام المنتج أولاً. وبما أن المنتج المرتجع شحنة دولية, سيتم توصيلها خلال "
+    "Our courier partner executive will first pick up the item. Since the exchange item is an international shipment, it will be delivered in ": "سيقوم مندوب التوصيل لدينا بإستلام المنتج أولاً. وبما أن المنتج المرتجع شحنة دولية, سيتم توصيلها خلال ",
+    "Items under processing": "المنتجات قيد التجهيز"
 }

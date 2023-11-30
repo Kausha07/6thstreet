@@ -729,7 +729,9 @@ class MyAccountOrderView extends PureComponent {
         ? TimerImage
         : PackageImage;
     const isItemUnderProcessing =
-      item?.label?.toLowerCase() === "items under processing";
+      item?.label?.toLowerCase() === "items under processing" ||
+      item?.label === "المنتجات قيد التجهيز";
+
     const isInternational = parseInt(item?.cross_border) === 1;
     const { message, daysToShow } = this.getDeliveryMessage(
       item?.exchange_type,
