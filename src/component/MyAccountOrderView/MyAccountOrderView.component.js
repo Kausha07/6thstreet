@@ -86,6 +86,7 @@ import {
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
 } from "Component/MyAccountExchangeView/MyAccountExchangeView.config";
 import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
+import { exchangeFormatGroupStatus } from "Util/Common";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -187,7 +188,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">
-          {__("Order #%s", increment_id)}
+          {increment_id}
         </h3>
       </div>
     );
@@ -209,7 +210,8 @@ class MyAccountOrderView extends PureComponent {
         is_returnable,
         is_cancelable,
         is_exchangeable,
-        is_exchange_order = 0
+        is_exchange_order = 0,
+        order_id,
       },
       is_exchange_enabled = false
     } = this.props;
@@ -249,7 +251,7 @@ class MyAccountOrderView extends PureComponent {
             mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
           >
             {__("Status: ")}
-            <span>{`- ${finalStatus}`}</span>
+            <span>{` ${finalStatus}`}</span>
           </p>
           <p block="MyAccountOrderView" elem="StatusDate">
             {__("Order placed: ")}
@@ -259,6 +261,14 @@ class MyAccountOrderView extends PureComponent {
                 new Date(created_at.replace(/-/g, "/"))
               )}
             </span>
+          </p>
+          <p
+            block="MyAccountOrderView"
+            elem="StatusTitle"
+            mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
+          >
+            {__("Order ID: ")}
+            <span>{` ${order_id}`}</span>
           </p>
         </div>
         {
@@ -388,9 +398,14 @@ class MyAccountOrderView extends PureComponent {
     deliveryDate = null,
     exchangeType = ""
   ) {
+    const {
+      order: { is_exchange_order: exchangeCount },
+    } = this.props;
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
+
+    const exchangePackageStatus = exchangeFormatGroupStatus(status);
     const exchangeTypeText =
       exchangeType?.toUpperCase() === "HIH"
         ? __("Doorstep Exchange")
@@ -413,10 +428,13 @@ class MyAccountOrderView extends PureComponent {
           {exchangeTypeText ? (
             <>
               <span>{` - ${exchangeTypeText}`}</span>
-              {!!packageStatus && <span>{` ${packageStatus}`}</span>}
+              {exchangePackageStatus && (
+                <span>{` ${exchangePackageStatus}`}</span>
+              )}
             </>
           ) : (
-            !!packageStatus && <span>{` - ${packageStatus}`}</span>
+            !!packageStatus &&
+            exchangeCount === 0 && <span>{` - ${packageStatus}`}</span>
           )}
           {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ?
           <span>: &nbsp;{formatDate(

@@ -96,6 +96,7 @@
 
     h3 {
       margin: 7px 0 0;
+      margin: 0;
     }
     @include before-desktop {
       flex-direction: column;

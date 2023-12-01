@@ -96,7 +96,7 @@
   &-Header {
     display: flex;
     align-items: center;
-    align-items: center;
+    height: 50px;
 
     @include mobile{
     display: none;

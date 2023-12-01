@@ -30,6 +30,8 @@ import {
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
 } from "./MyAccountExchangeView.config";
 
+import { exchangeFormatGroupStatus } from "Util/Common";
+
 export class MyAccountExchangeView extends SourceComponent {
   getItemsFromGroup = () => {
     const { orderItemGroups } = this.props;
@@ -48,11 +50,7 @@ export class MyAccountExchangeView extends SourceComponent {
 
     return (
       <div block="MyAccountExchangeView" elem="Heading">
-        <h3>
-          {exchangeSuccess
-            ? __("Order #%s", orderIncrementId)
-            : __("Order #%s", orderNumber)}
-        </h3>
+        <h3>{__("EXCHANGE #%s", orderIncrementId)}</h3>
         {exchangeSuccess && this.renderRequestSuccessContent()}
       </div>
     );
@@ -124,18 +122,10 @@ export class MyAccountExchangeView extends SourceComponent {
             {__("Date Requested: ")}
             <span>{dateString.split("at").join(__("at"))}</span>
           </p>
-          {exchangeSuccess && (
-            <p block="MyAccountExchangeView" elem="Order">
-              {__("ID: ")}
-              <span>{returnNumber}</span>
-            </p>
-          )}
-          {!exchangeSuccess && (
-            <p block="MyAccountExchangeView" elem="Order">
-              {__("Order ID: ")}
-              <span>{orderNumber}</span>
-            </p>
-          )}
+          <p block="MyAccountExchangeView" elem="Order">
+            {__("Order ID: ")}
+            <span>{orderNumber}</span>
+          </p>
         </div>
       </div>
     );
@@ -185,54 +175,6 @@ export class MyAccountExchangeView extends SourceComponent {
       return true;
     } else {
       return false;
-    }
-  };
-
-  formatGroupStatus = (status) => {
-    // use toLowerCase because sometimes the response from backend is not consistent
-    switch (status?.toLowerCase()) {
-      case "shipped": {
-        return __("Shipped");
-      }
-      case "out_for_pickup": {
-        return __("Out for Pickup");
-      }
-      case "delivery_successful": {
-        return __("Delivered");
-      }
-      case "delivery_failed": {
-        return __("Failed");
-      }
-      case "cancelled": {
-        return __("Cancelled");
-      }
-      case "created": {
-        return __("Created");
-      }
-      case "pickup_pending": {
-        return __("Created");
-      }
-      case "pickupfailed": {
-        return __("Pick up Failed");
-      }
-      case "pickedup": {
-        return __("Picked up");
-      }
-      case "pending": {
-        return __("Shipped");
-      }
-      case "out_for_exchange": {
-        return __("Out for exchange");
-      }
-      case "exchanged": {
-        return __("Delivered");
-      }
-      case "closed": {
-        return __("Cancelled");
-      }
-      default: {
-        return null;
-      }
     }
   };
 
@@ -420,13 +362,13 @@ export class MyAccountExchangeView extends SourceComponent {
   };
 
   renderAccordionTitle(title, image, package_status = null, exchangeType = "") {
-    const { groups } = this.props;
+    const { orderItemGroups = [] } = this.props;
     const exchangeTypeText =
       exchangeType?.toUpperCase() === "HIH"
         ? __("Doorstep Exchange")
         : __("Normal Exchange");
 
-    const statusToShow = this.formatGroupStatus(package_status);
+    const statusToShow = exchangeFormatGroupStatus(package_status);
     return (
       <div block="MyAccountExchangeView" elem="AccordionTitle">
         <Image
@@ -439,7 +381,7 @@ export class MyAccountExchangeView extends SourceComponent {
           alt={title ? title : "AccordionTitleImage"}
         />
         <h3>
-          {groups?.length === 1 &&
+          {orderItemGroups?.length === 1 &&
           (title?.toLowerCase()?.includes("package") || title?.includes("شحنة"))
             ? __("Package")
             : __(`${title}`)}

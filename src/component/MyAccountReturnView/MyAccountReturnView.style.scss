@@ -48,6 +48,7 @@
   &-SubDetails {
     margin: 20px 0;
     padding: 20px 0;
+    margin-top: 0;
 
     @include desktop {
       align-items: unset;
@@ -56,6 +57,7 @@
       justify-content: flex-start;
       margin: 10px 0 30px;
       padding: 10px 0;
+      margin-top: 0;
     }
 
     @include mobile {
@@ -96,7 +98,7 @@
   &-Header {
     display: flex;
     align-items: center;
-    align-items: center;
+    height: 50px;
   }
   &-Heading {
     h3 {

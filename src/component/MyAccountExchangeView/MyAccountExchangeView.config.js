@@ -16,9 +16,9 @@ export const STATUS_HIH_SHIPPED = "shipped";
 export const STATUS_OUT_FOR_EXCHANGE = "out_for_exchange";
 export const STATUS_EXCHANGED = "exchanged";
 
-export const STATUS_DISPATCHED = ["created", "shipped", "pickup_pending", "pending"]; 
+export const STATUS_DISPATCHED = ["created", "shipped"]; 
 export const STATUS_IN_TRANSIT = ["in_transit", "out_for_exchange", "out_for_pickup"];
-export const DELIVERY_SUCCESSFUL = ["exchanged", "delivered", "pickedup"];
+export const DELIVERY_SUCCESSFUL = ["exchanged", "pickedup"];
 
   
   export const STATUS_LABEL_MAP_NORMAL_EXCHANGE = {

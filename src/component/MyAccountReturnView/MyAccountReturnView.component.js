@@ -10,6 +10,9 @@ import {
   RETURN_PENDING_MESSAGE,
   RETURN_PICKED_UP,
   STATUS_LABEL_MAP_NORMAL_RETURN,
+  STATUS_CREATED,
+  STATUS_TRANSIT,
+  STATUS_REFUND_INITIATED,
 } from "./MyAccountReturnView.config";
 
 import {
@@ -24,16 +27,17 @@ import PackageImage from "Component/MyAccountOrderView/icons/package.png";
 import Accordion from "Component/Accordion";
 import Link from "Component/Link";
 import RefundIcon from "Component/Icons/Refund/icon.svg";
+import { exchangeFormatGroupStatus } from "Util/Common";
 
 import "./MyAccountReturnView.style";
 
 export class MyAccountReturnView extends SourceComponent {
     renderHeading() {
-        const { orderNumber } = this.props;
+        const { returnNumber } = this.props;
 
         return (
             <div block="MyAccountReturnView" elem="Heading">
-                <h3>{ __('Order #%s', orderNumber) }</h3>
+                <h3>{ __('RETURN #%s', returnNumber) }</h3>
             </div>
         );
     }
@@ -99,9 +103,9 @@ export class MyAccountReturnView extends SourceComponent {
 
   shouldDisplayBar = (status) => {
     if (
-      STATUS_DISPATCHED.includes(status?.toLowerCase()) ||
-      STATUS_IN_TRANSIT.includes(status?.toLowerCase()) ||
-      DELIVERY_SUCCESSFUL.includes(status?.toLowerCase())
+      status?.toLowerCase() === STATUS_CREATED ||
+      status?.toLowerCase() === STATUS_TRANSIT ||
+      status?.toLowerCase() === STATUS_REFUND_INITIATED
     ) {
       return true;
     } else {
@@ -127,9 +131,9 @@ export class MyAccountReturnView extends SourceComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
-              inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
-              isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isShipped: !status?.toLowerCase() === STATUS_CREATED,
+              inTransit: status?.toLowerCase() === STATUS_TRANSIT,
+              isDelivered: status?.toLowerCase() === STATUS_REFUND_INITIATED,
               isArabic: isArabic(),
             }}
           />
@@ -137,9 +141,9 @@ export class MyAccountReturnView extends SourceComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isShipped: !STATUS_DISPATCHED.includes(status?.toLowerCase()),
-              inTransit: STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
-              isDelivered: DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isShipped: !status?.toLowerCase() === STATUS_CREATED,
+              inTransit: status?.toLowerCase() === STATUS_TRANSIT,
+              isDelivered: status?.toLowerCase() === STATUS_REFUND_INITIATED,
               isArabic: isArabic(),
             }}
           />
@@ -208,12 +212,15 @@ export class MyAccountReturnView extends SourceComponent {
   renderAccordionTitle(title, image, package_status = "", exchangeType = "") {
     const { groups } = this.props;
     const exchangeTypeText =
-      package_status?.toLowerCase() === "pickedup"
+      package_status?.toLowerCase() === STATUS_TRANSIT
+        ? __("Items Picked up")
+        : package_status?.toLowerCase() === STATUS_REFUND_INITIATED
         ? __("Refund Initiated")
         : package_status?.toLowerCase().includes("refunded") ||
           package_status?.toLowerCase().includes("refund")
         ? __("Refund Successful")
         : "";
+    const statusToShow = exchangeFormatGroupStatus(package_status);
     return (
       <div block="MyAccountReturnView" elem="AccordionTitle">
         <Image
@@ -236,6 +243,11 @@ export class MyAccountReturnView extends SourceComponent {
           <h3 block="MyAccountReturnView" elem="exchangeTypeHeading">
             <span>-</span>
             {exchangeTypeText}
+          </h3>
+        )}
+        {statusToShow != null && (
+          <h3 block="MyAccountReturnView" elem="exchangeTypeHeading">
+            {statusToShow}
           </h3>
         )}
       </div>
@@ -288,7 +300,7 @@ export class MyAccountReturnView extends SourceComponent {
 
     return (
       <>
-        <div block="MyAccountExchangeView" elem="Header">
+        <div block="MyAccountReturnView" elem="Header">
           {this.renderBackButton()} {this.renderHeading()}
         </div>
         {this.renderDetails()}
