@@ -50,8 +50,12 @@ export class MyAccountExchangeView extends SourceComponent {
 
     return (
       <div block="MyAccountExchangeView" elem="Heading">
-        <h3>{__("EXCHANGE #%s", orderIncrementId)}</h3>
-        {exchangeSuccess && this.renderRequestSuccessContent()}
+        <h3>{__("EXCHANGE")}</h3>
+        <h3
+          block="MyAccountExchangeView"
+          elem="HeadingText"
+          mods={{ isArabic: isArabic() }}
+        >{` #${orderIncrementId}`}</h3>
       </div>
     );
   }
@@ -477,7 +481,7 @@ export class MyAccountExchangeView extends SourceComponent {
           {this.renderBackButton()} {this.renderHeading()}
         </div>
         {exchangeSuccess && this.renderItems()}
-        {exchangeSuccess ? this.renderSuccessDetails() : this.renderDetails()}
+        {this.renderDetails()}
         {!exchangeSuccess && this.renderItems()}
       </>
     );

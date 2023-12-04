@@ -1299,6 +1299,6 @@
     "Picked up": "تم الاستلام",
     "Exchanged": "تم الاستبدال",
     "Pickup Initiated": "بدأت عملية استلام المنتجات",
-    "EXCHANGE #%s": "إستبدال #%s",
-    "RETURN #%s": "إرجاع #%s"
+    "EXCHANGE": "إستبدال",
+    "RETURN": "إرجاع"
 }

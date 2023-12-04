@@ -32,20 +32,25 @@ import { exchangeFormatGroupStatus } from "Util/Common";
 import "./MyAccountReturnView.style";
 
 export class MyAccountReturnView extends SourceComponent {
-    renderHeading() {
-        const { returnNumber } = this.props;
+  renderHeading() {
+    const { returnNumber } = this.props;
 
-        return (
-            <div block="MyAccountReturnView" elem="Heading">
-                <h3>{ __('RETURN #%s', returnNumber) }</h3>
-            </div>
-        );
-    }
+    return (
+      <div block="MyAccountReturnView" elem="Heading">
+        <h3>{__("RETURN")}</h3>
+        <h3
+          block="MyAccountReturnView"
+          elem="HeadingText"
+          mods={{ isArabic: isArabic() }}
+        >{` #${returnNumber}`}</h3>
+      </div>
+    );
+  }
 
     renderDetails() {
         const { date, status, orderNumber } = this.props;
         const dateObject = new Date(date.replace(/-/g, "/"));
-        const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
+        const dateString = formatDate('DD MMM YYYY at hh:mm', dateObject);
         const { [status]: title } = STATUS_TITLE_MAP;
 
         return (
