@@ -18,4 +18,4 @@ export const STATUS_LABEL_MAP_NORMAL_RETURN = {
   };
 
 export const RETURN_PENDING_MESSAGE = __("Our courier partner executive will pickup the item");
-export const RETURN_PICKED_UP = __("We have picked up the item and your refund will be processed in  5 to 7  business days");
+export const RETURN_PICKED_UP = __("We have picked up the item and your refund will be processed in 5 to 7 business days");
