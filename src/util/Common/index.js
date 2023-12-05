@@ -621,20 +621,17 @@ export const getEnvIDForInfluencer = () => {
 export const exchangeFormatGroupStatus = (status) => {
   // use toLowerCase because sometimes the response from backend is not consistent
   switch (status?.toLowerCase()) {
-    case "delivery_failed": {
+    case "pickup_failed": {
       return __("Failed");
     }
     case "cancelled": {
       return __("Cancelled");
     }
-    case "pickupfailed": {
-      return __("Pick up Failed");
-    }
-    case "closed": {
+    case "autocancel": {
       return __("Cancelled");
     }
-    case "failed": {
-      return __("Failed");
+    case "canceled": {
+      return __("Cancelled");
     }
     default: {
       return null;

@@ -798,7 +798,7 @@ class MyAccountOrderView extends PureComponent {
                   mix={{
                     block: "MyAccountExchangeView",
                     elem: "AccordionTitleImage",
-                    mods: { isArabic: isArabic() },
+                    mods: { isArabic },
                   }}
                   alt={"AccordionTitleImage"}
                 />

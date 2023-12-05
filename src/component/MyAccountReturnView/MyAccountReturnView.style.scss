@@ -99,9 +99,22 @@
     display: flex;
     align-items: center;
     height: 50px;
+
+    @include mobile{
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 100;
+      background: #ffffff;
+      width: 100%;
+    }
+    
   }
   &-Heading {
     display: flex;
+    align-items: center;
     h3 {
       margin-top: 0;
       margin-bottom: 0;
@@ -120,6 +133,7 @@
 
   &-BackButton {
     margin-right: 10px;
+    
     &::before {
       content: "";
       width: 0;
@@ -134,9 +148,14 @@
       background: transparent;
     }
 
+    @include mobile{
+      position: absolute;
+      left: 10px;
+    }
+
     &_isArabic {
-      left: unset;
-      right: -5px;
+      left: initial;
+      right: 0;
 
       &::before {
         transform: rotate(-45deg);
@@ -185,7 +204,7 @@
     margin: 5px 0 25px 0;
 
     img {
-      height: 20px !important;
+      height: 50px !important;
     }
 
     @include mobile {
@@ -195,7 +214,7 @@
       }
 
       img {
-        height: 30px !important;
+        height: 40px !important;
       }
     }
   }

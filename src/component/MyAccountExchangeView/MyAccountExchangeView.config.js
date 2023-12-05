@@ -7,8 +7,8 @@ export const STATUS_TITLE_MAP = {
     [STATUS_DENIED]: __('Denied')
 };
 
-export const STATUS_CREATED = "created";
-export const STATUS_TRANSIT = "out_for_ickup";
+export const STATUS_CREATED = "pickup_pending";
+export const STATUS_TRANSIT = "out_for_pickup";
 export const STATUS_DELIVERED = "pickedup";
 
 
@@ -16,7 +16,7 @@ export const STATUS_HIH_SHIPPED = "shipped";
 export const STATUS_OUT_FOR_EXCHANGE = "out_for_exchange";
 export const STATUS_EXCHANGED = "exchanged";
 
-export const STATUS_DISPATCHED = ["created", "shipped"]; 
+export const STATUS_DISPATCHED = ["created", "shipped", "pickup_pending"]; 
 export const STATUS_IN_TRANSIT = ["in_transit", "out_for_exchange", "out_for_pickup"];
 export const DELIVERY_SUCCESSFUL = ["exchanged", "pickedup"];
 

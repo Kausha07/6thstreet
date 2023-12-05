@@ -100,7 +100,6 @@
     }
     @include before-desktop {
       flex-direction: column;
-      align-items: flex-start;
       margin-top: 15px;
       &Buttons,
       &Button {
@@ -435,7 +434,7 @@
 
     &_isArabic {
       left: unset;
-      right: -5px;
+      right: 0px;
 
       &::before {
         transform: rotate(-45deg);
@@ -445,7 +444,18 @@
 
   &-Header {
     display: flex;
-    align-items: center;
+    height: 50px;
+    justify-content: center;
+
+    @include mobile{
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 100;
+      background: #ffffff;
+      width: 100%;
+    }
   }
 
   &-CardPaymentType {
