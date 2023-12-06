@@ -304,9 +304,9 @@ export class MyAccountExchangeView extends SourceComponent {
     const date_range =
       edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
     const deliveryDays =
-      exchange_type === "Normal" && !isInternational
+      exchange_type?.toLowerCase() === "normal" && !isInternational
         ? "3-4"
-        : exchange_type === "Normal" && isInternational
+        : exchange_type?.toLowerCase() === "normal" && isInternational
         ? date_range
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
@@ -481,7 +481,7 @@ export class MyAccountExchangeView extends SourceComponent {
           {this.renderBackButton()} {this.renderHeading()}
         </div>
         {exchangeSuccess && this.renderItems()}
-        {this.renderDetails()}
+        {exchangeSuccess ? this.renderSuccessDetails() : this.renderDetails()}
         {!exchangeSuccess && this.renderItems()}
       </>
     );
