@@ -40,7 +40,7 @@ function getProductForSearchContainer(
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
-        userToken: userToken()
+        userToken: userToken(),
       },
     };
 

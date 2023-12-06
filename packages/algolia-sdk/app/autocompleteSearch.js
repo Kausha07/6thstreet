@@ -8,7 +8,7 @@ export default async function autocompleteSearch(params, options) {
         hitsPerPage: params.limit,
         clickAnalytics: true,
         ...queryOptions,
-        userToken : userToken()
+        userToken: userToken(),
       },
       (err, data = {}) => {
         if (err) {

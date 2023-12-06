@@ -610,7 +610,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
-        userToken: userToken()
+        userToken: userToken(),
       },
     };
 
@@ -638,7 +638,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
-        userToken: userToken()
+        userToken: userToken(),
       },
     };
     queries.push(queryProdCount);
@@ -657,7 +657,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         hitsPerPage: limit,
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
-        userToken: userToken()
+        userToken: userToken(),
       },
     };
     queries.push(querySliderPosition);
@@ -708,7 +708,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             hitsPerPage: limit,
             clickAnalytics: true,
             maxValuesPerFacet: maxValuesPerFacet,
-            userToken: userToken()
+            userToken: userToken(),
           },
         });
       });

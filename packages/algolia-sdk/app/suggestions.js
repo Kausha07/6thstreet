@@ -8,7 +8,7 @@ export default async function getSuggestions(
     const res = await index.search(query, {
       hitsPerPage: limit,
       clickAnalytics: true,
-      userToken: userToken()
+      userToken: userToken(),
     });
     return res;
   } catch (e) {
