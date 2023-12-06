@@ -1,5 +1,6 @@
 import { searchParams } from "./config";
 import { formatNewInTag, formatResult } from "./utils";
+import { userToken } from "Util/User/userToken";
 
 export default function searchBy(
   { query = "", gender = "", limit = 4, addAnalytics = false },
@@ -21,6 +22,7 @@ export default function searchBy(
         ...newSearchParams,
         clickAnalytics: true,
         analyticsTags: tags,
+        userToken: userToken(),
       },
       (err, data = {}) => {
         if (err) {
