@@ -1,3 +1,4 @@
+import { userToken } from "Util/User/userToken";
 export default async function autocompleteSearch(params, options) {
   return new Promise((resolve, reject) => {
     const { index, ...queryOptions } = options;
@@ -7,6 +8,7 @@ export default async function autocompleteSearch(params, options) {
         hitsPerPage: params.limit,
         clickAnalytics: true,
         ...queryOptions,
+        userToken: userToken(),
       },
       (err, data = {}) => {
         if (err) {
