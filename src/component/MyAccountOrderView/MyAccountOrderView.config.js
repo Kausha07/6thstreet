@@ -42,7 +42,7 @@ export const NEW_STATUS_LABEL_MAP = {
 };
 
 export const NEW_EXCHANGE_STATUS_LABEL_MAP = {
-  [STATUS_DISPATCHED]: __("Exchange Shipped"),
-  [STATUS_IN_TRANSIT]: __("Exchange In Transit"),
-  [DELIVERY_SUCCESSFUL]: __("Exchange Delivered"),
+  [STATUS_DISPATCHED]: __("Created"),
+  [STATUS_IN_TRANSIT]: __("In Transit"),
+  [DELIVERY_SUCCESSFUL]: __("Delivered"),
 };

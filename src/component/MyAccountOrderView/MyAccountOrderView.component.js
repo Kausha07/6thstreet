@@ -75,9 +75,6 @@ import {
 } from "Util/Event";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
 import {
-  DELIVERY_SUCCESSFUL as HIH_DELIVERY_SUCCESSFUL,
-  STATUS_IN_TRANSIT as HIH_STATUS_IN_TRANSIT,
-  STATUS_DISPATCHED as HIH_STATUS_DISPATCHED,
   STATUS_LABEL_MAP_DOORSTEP_EXCHANGE,
   NORMAL_EX_DELIVERY_MESSAGE,
   DOORSTEP_EX_DELIVERY_MESSAGE,
@@ -447,14 +444,6 @@ class MyAccountOrderView extends PureComponent {
   }
 
   shouldDisplayBar = (status) => {
-    if (
-      HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()) ||
-      HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()) ||
-      HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase())
-    ) {
-      return true;
-    }
-
     switch (status) {
       case STATUS_DISPATCHED:
       case STATUS_IN_TRANSIT:
@@ -470,40 +459,36 @@ class MyAccountOrderView extends PureComponent {
 
   getDeliveryMessage = (exchangeType, exchangeItemStatus, isInternational) => {
     let deliveryMessageAndIcon =
-      (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
-        HIH_STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
+      (exchangeItemStatus === STATUS_DISPATCHED ||
+        exchangeItemStatus === STATUS_IN_TRANSIT) &&
       exchangeType?.toLowerCase() === "normal" &&
       isInternational
         ? {
             message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
             daysToShow: true,
           }
-        : (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
-            HIH_STATUS_IN_TRANSIT.includes(
-              exchangeItemStatus?.toLowerCase()
-            )) &&
+        : (exchangeItemStatus === STATUS_DISPATCHED ||
+            exchangeItemStatus === STATUS_IN_TRANSIT) &&
           exchangeType?.toLowerCase() === "normal"
         ? {
             message: NORMAL_EX_DELIVERY_MESSAGE,
             daysToShow: true,
           }
-        : (HIH_STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
-            HIH_STATUS_IN_TRANSIT.includes(
-              exchangeItemStatus?.toLowerCase()
-            )) &&
+        : (exchangeItemStatus === STATUS_DISPATCHED ||
+            exchangeItemStatus === STATUS_IN_TRANSIT) &&
           exchangeType?.toLowerCase() === "hih"
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
             daysToShow: false,
           }
-        : HIH_DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
+        : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
           exchangeType?.toLowerCase() === "normal" &&
           !isInternational
         ? {
             message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
             daysToShow: true,
           }
-        : HIH_DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
+        : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
           exchangeType?.toLowerCase() === "normal" &&
           isInternational
         ? {
@@ -551,30 +536,18 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isShipped:
-                status === STATUS_DISPATCHED ||
-                HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()),
-              inTransit:
-                status === STATUS_IN_TRANSIT ||
-                HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
-              isDelivered:
-                status === DELIVERY_SUCCESSFUL ||
-                HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isShipped: status === STATUS_DISPATCHED,
+              inTransit: status === STATUS_IN_TRANSIT,
+              isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
           />
           <div
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isShipped:
-                status === STATUS_DISPATCHED ||
-                HIH_STATUS_DISPATCHED.includes(status?.toLowerCase()),
-              inTransit:
-                status === STATUS_IN_TRANSIT ||
-                HIH_STATUS_IN_TRANSIT.includes(status?.toLowerCase()),
-              isDelivered:
-                status === DELIVERY_SUCCESSFUL ||
-                HIH_DELIVERY_SUCCESSFUL.includes(status?.toLowerCase()),
+              isShipped: status === STATUS_DISPATCHED,
+              inTransit: status === STATUS_IN_TRANSIT,
+              isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
           />
         </div>
@@ -791,7 +764,7 @@ class MyAccountOrderView extends PureComponent {
           item?.status !== null &&
           isDisplayBarVisible ? (
             item?.exchange_type?.toUpperCase() === "HIH" &&
-            item?.status === "exchanged" ? null : (
+            item?.status === DELIVERY_SUCCESSFUL ? null : (
               <div block="MyAccountExchangeView" elem="deliveryMessage">
                 <Image
                   src={ExchangeIcon}
@@ -1223,7 +1196,7 @@ class MyAccountOrderView extends PureComponent {
           {this.renderTitle()}
         </div>
         {this.renderStatus()}
-        {this.renderPackagesMessage()}
+        {/* {this.renderPackagesMessage()} */}
         {this.renderAccordions()}
         {this.renderFailedOrderDetails()}
         {this.renderSummary()}
