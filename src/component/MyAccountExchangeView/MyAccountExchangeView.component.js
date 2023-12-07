@@ -399,6 +399,7 @@ export class MyAccountExchangeView extends SourceComponent {
 
             {statusToShow != null && (
               <h3 block="MyAccountExchangeView" elem="exchangeTypeStatus">
+               {exchangeTypeText === "" && <span>-</span>}
                 {statusToShow}
               </h3>
             )}

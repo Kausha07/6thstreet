@@ -9,6 +9,7 @@ import {
   STATUS_TITLE_MAP,
   RETURN_PENDING_MESSAGE,
   RETURN_PICKED_UP,
+  RETURN_REFUND_INITIATED,
   STATUS_LABEL_MAP_NORMAL_RETURN,
   STATUS_CREATED,
   STATUS_TRANSIT,
@@ -108,7 +109,7 @@ export class MyAccountReturnView extends SourceComponent {
 
   shouldDisplayBar = (status) => {
     if (
-      status?.toLowerCase() === STATUS_CREATED ||
+      STATUS_CREATED?.includes(status?.toLowerCase()) ||
       status?.toLowerCase() === STATUS_TRANSIT ||
       status?.toLowerCase() === STATUS_REFUND_INITIATED
     ) {
@@ -136,7 +137,7 @@ export class MyAccountReturnView extends SourceComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isShipped: !status?.toLowerCase() === STATUS_CREATED,
+              isShipped: !STATUS_CREATED?.includes(status?.toLowerCase()),
               inTransit: status?.toLowerCase() === STATUS_TRANSIT,
               isDelivered: status?.toLowerCase() === STATUS_REFUND_INITIATED,
               isArabic: isArabic(),
@@ -146,7 +147,7 @@ export class MyAccountReturnView extends SourceComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isShipped: !status?.toLowerCase() === STATUS_CREATED,
+              isShipped: !STATUS_CREATED?.includes(status?.toLowerCase()),
               inTransit: status?.toLowerCase() === STATUS_TRANSIT,
               isDelivered: status?.toLowerCase() === STATUS_REFUND_INITIATED,
               isArabic: isArabic(),
@@ -169,9 +170,13 @@ export class MyAccountReturnView extends SourceComponent {
   renderAccordion = (item, index) => {
     const { exchange_type = null, package_status = null, label } = item;
     const getIcon = PackageImage;
-    const message = DELIVERY_SUCCESSFUL.includes(package_status?.toLowerCase())
+    const message = STATUS_CREATED?.includes(package_status?.toLowerCase())
+      ? RETURN_PENDING_MESSAGE
+      : package_status?.toLowerCase() === STATUS_TRANSIT
       ? RETURN_PICKED_UP
-      : RETURN_PENDING_MESSAGE;
+      : package_status?.toLowerCase() === STATUS_REFUND_INITIATED
+      ? RETURN_REFUND_INITIATED
+      : "";
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
     return (
       <div
@@ -191,22 +196,20 @@ export class MyAccountReturnView extends SourceComponent {
           )}
           MyAccountSection={true}
         >
-          {(!package_status?.toLowerCase().includes("refunded") ||
-            !package_status?.toLowerCase().includes("refund")) &&
-            isDisplayBarVisible && (
-              <div block="MyAccountReturnView" elem="deliveryMessage">
-                <Image
-                  src={RefundIcon}
-                  mix={{
-                    block: "MyAccountReturnView",
-                    elem: "AccordionTitleImage",
-                    mods: { isArabic: isArabic() },
-                  }}
-                  alt={"AccordionTitleImage"}
-                />
-                <p>{message}</p>
-              </div>
-            )}
+          {isDisplayBarVisible && (
+            <div block="MyAccountReturnView" elem="deliveryMessage">
+              <Image
+                src={RefundIcon}
+                mix={{
+                  block: "MyAccountReturnView",
+                  elem: "AccordionTitleImage",
+                  mods: { isArabic: isArabic() },
+                }}
+                alt={"AccordionTitleImage"}
+              />
+              <p>{message}</p>
+            </div>
+          )}
           {this.renderAccordionProgress(package_status, item)}
           {item.items.map((data) => this.renderItem(data, item))}
         </Accordion>
@@ -216,15 +219,15 @@ export class MyAccountReturnView extends SourceComponent {
 
   renderAccordionTitle(title, image, package_status = "", exchangeType = "") {
     const { groups } = this.props;
-    const exchangeTypeText =
-      package_status?.toLowerCase() === STATUS_TRANSIT
-        ? __("Items Picked up")
-        : package_status?.toLowerCase() === STATUS_REFUND_INITIATED
-        ? __("Refund Initiated")
-        : package_status?.toLowerCase().includes("refunded") ||
-          package_status?.toLowerCase().includes("refund")
-        ? __("Refund Successful")
-        : "";
+    const exchangeTypeText = STATUS_CREATED?.includes(
+      package_status?.toLowerCase()
+    )
+      ? __("Pickup Initiated")
+      : package_status?.toLowerCase() === STATUS_TRANSIT
+      ? __("Items Picked up")
+      : package_status?.toLowerCase() === STATUS_REFUND_INITIATED
+      ? __("Refund Initiated")
+      : "";
     const statusToShow = exchangeFormatGroupStatus(package_status);
     return (
       <div block="MyAccountReturnView" elem="AccordionTitle">
@@ -252,6 +255,7 @@ export class MyAccountReturnView extends SourceComponent {
         )}
         {statusToShow != null && (
           <h3 block="MyAccountReturnView" elem="exchangeTypeHeading">
+            {exchangeTypeText === "" && <span>-</span>}
             {statusToShow}
           </h3>
         )}
