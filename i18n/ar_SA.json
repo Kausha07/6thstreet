@@ -483,7 +483,6 @@
     "accepted cards:": "البطاقات التي يتم قبولها",
     "100% secured payments": "دفع آمن 100%",
     "Shipped": "تم الشحن",
-    "Out for Delivery": "خارج للتسليم",
     "Delivered": "تم التوصيل",
     "Area": "المنطقة",
     "Type your address here": "اكتب عنوانك",
@@ -1302,5 +1301,6 @@
     "EXCHANGE": "إستبدال",
     "RETURN": "إرجاع",
     "Items Picked up": "تم استلام المنتجات",
-    "We have picked up the item and your refund has been initiated": "لقد قمنا بإستلام المنتج وتم إسترجاع المبلغ المستحق"
+    "We have picked up the item and your refund has been initiated": "لقد قمنا بإستلام المنتج وتم إسترجاع المبلغ المستحق",
+    "Out for Delivery": "خارج للتوصيل"
 }

@@ -538,7 +538,7 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCurrent"
             mods={{
-              isShipped: status === STATUS_DISPATCHED,
+              isShipped: status !== STATUS_DISPATCHED,
               inTransit: status === STATUS_IN_TRANSIT,
               isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
@@ -547,7 +547,7 @@ class MyAccountOrderView extends PureComponent {
             block="MyAccountOrderListItem"
             elem="ProgressCheckbox"
             mods={{
-              isShipped: status === STATUS_DISPATCHED,
+              isShipped: status !== STATUS_DISPATCHED,
               inTransit: status === STATUS_IN_TRANSIT,
               isDelivered: status === DELIVERY_SUCCESSFUL,
             }}
