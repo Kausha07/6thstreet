@@ -1301,5 +1301,6 @@
     "Pickup Initiated": "بدأت عملية استلام المنتجات",
     "EXCHANGE": "إستبدال",
     "RETURN": "إرجاع",
-    "Items Picked up": "تم استلام المنتجات"
+    "Items Picked up": "تم استلام المنتجات",
+    "We have picked up the item and your refund has been initiated": "لقد قمنا بإستلام المنتج وتم إسترجاع المبلغ المستحق"
 }
