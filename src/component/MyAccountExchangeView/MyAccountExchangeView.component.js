@@ -79,7 +79,7 @@ export class MyAccountExchangeView extends SourceComponent {
   renderSuccessDetails() {
     const { returnNumber, orderIncrementId, date } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
-    const dateString = formatDate('DD/MM/YY at hh:mm', dateObject);
+    const dateString = formatDate('DD/MM/YY', dateObject);
 
     return (
         <div block="MyAccountReturnSuccess" elem="Details">
@@ -94,7 +94,7 @@ export class MyAccountExchangeView extends SourceComponent {
             </p>
             <p>
                 { __('Date requested ') }
-                <span>{dateString.split('at').join(__('at'))}</span>
+                <span>{dateString}</span>
             </p>
         </div>
     );
@@ -108,7 +108,7 @@ export class MyAccountExchangeView extends SourceComponent {
       returnNumber,
     } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
-    const dateString = formatDate("DD MMM YYYY at hh:mm", dateObject);
+    const dateString = formatDate("DD MMM YYYY", dateObject);
     const { [status]: title } = STATUS_TITLE_MAP;
 
     return (
@@ -124,7 +124,7 @@ export class MyAccountExchangeView extends SourceComponent {
           </p>
           <p block="MyAccountExchangeView" elem="DetailsDate">
             {__("Date Requested: ")}
-            <span>{dateString.split("at").join(__("at"))}</span>
+            <span>{dateString}</span>
           </p>
           <p block="MyAccountExchangeView" elem="Order">
             {__("Order ID: ")}

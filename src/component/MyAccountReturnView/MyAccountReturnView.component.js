@@ -50,7 +50,7 @@ export class MyAccountReturnView extends SourceComponent {
     renderDetails() {
         const { date, status, orderNumber } = this.props;
         const dateObject = new Date(date.replace(/-/g, "/"));
-        const dateString = formatDate('DD MMM YYYY at hh:mm', dateObject);
+        const dateString = formatDate('DD MMM YYYY', dateObject);
         const { [status]: title } = STATUS_TITLE_MAP;
 
         return (
@@ -62,7 +62,7 @@ export class MyAccountReturnView extends SourceComponent {
                     </p>
                     <p block="MyAccountReturnView" elem="DetailsDate">
                     { __('Date Requested: ') }
-                    <span>{dateString.split('at').join(__('at'))}</span>
+                    <span>{dateString}</span>
                     </p>
                     <p block="MyAccountReturnView" elem="Order">
                         { __('Order ID: ') }

@@ -396,12 +396,11 @@ class MyAccountOrderView extends PureComponent {
     exchangeType = ""
   ) {
     const {
-      order: { is_exchange_order: exchangeCount },
+      order: { is_exchange_order: exchangeCount, groups },
     } = this.props;
     const packageStatus = /\d/.test(title)
       ? this.formatGroupStatus(status)
       : null;
-
     const exchangePackageStatus = exchangeFormatGroupStatus(status);
     const exchangeTypeText =
       exchangeType?.toUpperCase() === "HIH"
@@ -421,7 +420,10 @@ class MyAccountOrderView extends PureComponent {
           alt={title ? title : "AccordionTitleImage"}
         />
         <h3>
-          {title}
+          {groups?.length === 1 &&
+          (title?.toLowerCase()?.includes("package") || title?.includes("شحنة"))
+            ? __("Package")
+            : title}
           {exchangeTypeText ? (
             <>
               <span>{` - ${exchangeTypeText}`}</span>
