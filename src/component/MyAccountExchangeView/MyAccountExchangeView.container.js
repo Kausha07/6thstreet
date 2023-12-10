@@ -33,6 +33,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
     date: null,
     items: [],
     orderIncrementId: null,
+    parentOrderIncrementId: null,
     orderItemGroups: [],
   };
 
@@ -50,6 +51,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       order_id,
       order_increment_id,
       orderIncrementId,
+      parentOrderIncrementId,
       orderItemGroups,
       date,
       items,
@@ -62,6 +64,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       orderNumber: order_increment_id,
       returnNumber: localStorage.getItem('RmaId'),
       orderIncrementId,
+      parentOrderIncrementId,
       orderItemGroups,
       items,
       date,
@@ -102,6 +105,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
       }
       const {
         increment_id: orderIncrementId,
+        parent_increment_id: parentOrderIncrementId,
         groups: orderItemGroups,
         order_id: ordersId,
         created_at: orderDate,
@@ -111,6 +115,7 @@ export class MyAccountExchangeViewContainer extends PureComponent {
         order_id: order_id || ordersId,
         order_increment_id,
         orderIncrementId,
+        parentOrderIncrementId,
         orderItemGroups,
         date: date || orderDate,
         items,
