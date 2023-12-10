@@ -209,6 +209,7 @@ class MyAccountOrderView extends PureComponent {
         is_exchangeable,
         is_exchange_order = 0,
         order_id,
+        parent_increment_id = "",
       },
       is_exchange_enabled = false
     } = this.props;
@@ -259,14 +260,16 @@ class MyAccountOrderView extends PureComponent {
               )}
             </span>
           </p>
-          <p
-            block="MyAccountOrderView"
-            elem="StatusTitle"
-            mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
-          >
-            {__("Order ID: ")}
-            <span>{` ${order_id}`}</span>
-          </p>
+          {parent_increment_id && (
+            <p
+              block="MyAccountOrderView"
+              elem="StatusTitle"
+              mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
+            >
+              {__("Order ID: ")}
+              <span>{` ${parent_increment_id}`}</span>
+            </p>
+          )}
         </div>
         {
           <div block="MyAccountOrderView" elem="HeadingButtons">

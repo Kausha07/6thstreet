@@ -77,7 +77,7 @@ export class MyAccountExchangeView extends SourceComponent {
   }
 
   renderSuccessDetails() {
-    const { returnNumber, parentOrderIncrementId, date } = this.props;
+    const { returnNumber, parentOrderIncrementId = "", date } = this.props;
     const dateObject = new Date(date.replace(/-/g, "/"));
     const dateString = formatDate('DD/MM/YY', dateObject);
 
@@ -88,11 +88,12 @@ export class MyAccountExchangeView extends SourceComponent {
                 { __('ID: ') }
                 <span>{ returnNumber }</span>
             </p>
-            <p>
-                { __('Order ID: ') }
-                <span>{ parentOrderIncrementId ? parentOrderIncrementId : ""}</span>
-            </p>
-            <p>
+            {parentOrderIncrementId && (
+              <p>
+                {__("Order ID: ")}
+                <span>{parentOrderIncrementId}</span>
+              </p>
+            )}            <p>
                 { __('Date requested ') }
                 <span>{dateString}</span>
             </p>

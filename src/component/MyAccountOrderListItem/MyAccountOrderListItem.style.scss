@@ -220,6 +220,7 @@
       }
       .PageWrapper_isArabic & {
         left: unset;
+        right: 10%;
         transform: translate(50%, -50%);
       }
       &::after {
