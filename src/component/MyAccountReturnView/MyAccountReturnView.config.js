@@ -13,7 +13,7 @@ export const STATUS_REFUND_INITIATED = "refunded";
 
 export const STATUS_LABEL_MAP_NORMAL_RETURN = {
     [STATUS_CREATED_]: __("Pickup Initiated"),
-    [STATUS_TRANSIT]: __("Items Picked Up"),
+    [STATUS_TRANSIT]: __("Items Picked up"),
     [STATUS_REFUND_INITIATED]: __("Refund Initiated"),
   };
 

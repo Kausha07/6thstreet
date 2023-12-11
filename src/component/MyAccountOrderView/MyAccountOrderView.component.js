@@ -753,7 +753,6 @@ class MyAccountOrderView extends PureComponent {
         <Accordion
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
-          shortDescription={this.renderAccordionProgress(item.status, item)}
           title={this.renderAccordionTitle(
             item.label,
             getIcon,
@@ -788,6 +787,7 @@ class MyAccountOrderView extends PureComponent {
               </div>
             )
           ) : null}
+          {this.renderAccordionProgress(item?.status, item)}
           {item.status !== DELIVERY_SUCCESSFUL &&
             item.status !== DELIVERY_FAILED &&
             item.status !== PICKUP_FAILED &&
