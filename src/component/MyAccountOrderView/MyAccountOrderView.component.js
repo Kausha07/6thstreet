@@ -81,6 +81,8 @@ import {
   NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
+  DAYS_TEXT,
+  SHORTLY_TEXT, 
 } from "Component/MyAccountExchangeView/MyAccountExchangeView.config";
 import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
 import { exchangeFormatGroupStatus } from "Util/Common";
@@ -743,6 +745,7 @@ class MyAccountOrderView extends PureComponent {
         ? date_range
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(item?.status);
+    const isEDDEnabled = edd_info ? true : false;
     return (
       <div
         key={item.shipment_number}
@@ -781,8 +784,14 @@ class MyAccountOrderView extends PureComponent {
                 />
                 <p>
                   {__(message)}
-                  {deliveryDays && __(deliveryDays)}
-                  {daysToShow && __(" days.")}
+                  {isEDDEnabled ? (
+                    <>
+                      {deliveryDays && __(deliveryDays)}
+                      {daysToShow && DAYS_TEXT}
+                    </>
+                  ) : (
+                    SHORTLY_TEXT
+                  )}
                 </p>
               </div>
             )

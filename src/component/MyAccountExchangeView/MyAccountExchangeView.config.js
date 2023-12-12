@@ -40,4 +40,7 @@ export const DELIVERY_SUCCESSFUL = ["exchanged", "pickedup"];
   export const NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE = __("We picked up the item, the exchange item will be delivered in ");
   export const INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE = __("We picked up the item. Since the exchange item is an international shipment, it will be delivered in ");
   export const NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE = __("Our courier partner executive will first pick up the item. Since the exchange item is an international shipment, it will be delivered in ");
+  export const DAYS_TEXT = __(" days.");
+  export const SHORTLY_TEXT =__(" shortly.");
+  
   

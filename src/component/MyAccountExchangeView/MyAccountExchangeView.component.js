@@ -28,6 +28,8 @@ import {
   NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
+  DAYS_TEXT,
+  SHORTLY_TEXT, 
 } from "./MyAccountExchangeView.config";
 
 import { exchangeFormatGroupStatus } from "Util/Common";
@@ -310,6 +312,7 @@ export class MyAccountExchangeView extends SourceComponent {
         : exchange_type?.toLowerCase() === "normal" && isInternational
         ? date_range
         : "";
+    const isEDDEnabled = edd_info ? true : false;
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
     const isItemUnderProcessing =
       label?.toLowerCase() === "items under processing" ||
@@ -350,8 +353,14 @@ export class MyAccountExchangeView extends SourceComponent {
                 />
                 <p>
                   {__(message)}
-                  {deliveryDays && __(deliveryDays)}
-                  {daysToShow && __(" days.")}
+                  {isEDDEnabled ? (
+                    <>
+                      {deliveryDays && __(deliveryDays)}
+                      {daysToShow && DAYS_TEXT}
+                    </>
+                  ) : (
+                    SHORTLY_TEXT
+                  )}
                 </p>
               </div>
             )
