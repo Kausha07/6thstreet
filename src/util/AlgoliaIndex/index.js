@@ -1,4 +1,8 @@
-export const indexCode = {
+import { getAlgoliaIndexForQuerySuggestion } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { isArabic } from "Util/App";
+import { getLocaleFromUrl } from "Util/Url/Url";
+
+const indexCodeList = {
   production: {
     enterprise_magento_english_products: "ae-en-c",
     enterprise_magento_arabic_products: "ae-ar-c",
@@ -78,3 +82,12 @@ export const indexCode = {
     preprod_magento_ar_qa_products_ABtest: "qa-ar-t",
   },
 };
+
+const countryCodeFromUrl = getLocaleFromUrl();
+const lang = isArabic() ? "arabic" : "english";
+const algoliaQueryIndex = getAlgoliaIndexForQuerySuggestion(
+  countryCodeFromUrl,
+  lang
+);
+export const indexCode =
+  indexCodeList[process.env.REACT_APP_ALGOLIA_ENV][algoliaQueryIndex] || null;

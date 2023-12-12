@@ -3,10 +3,7 @@ import Event, {
 } from "Util/Event";
 
 import BaseEvent from "../Base.event";
-import { getLocaleFromUrl } from "Util/Url/Url";
-import { getAlgoliaIndexForQuerySuggestion } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { indexCode } from "Util/AlgoliaIndex";
-import { isArabic } from "Util/App";
 
 /**
  * Constants
@@ -40,14 +37,6 @@ class SearchSuggesionClickEvent extends BaseEvent {
   }
 
   handler(EVENT_TYPE, search) {
-    const countryCodeFromUrl = getLocaleFromUrl();
-    const lang = isArabic() ? "arabic" : "english";
-    const algoliaQueryIndex = getAlgoliaIndexForQuerySuggestion(
-      countryCodeFromUrl,
-      lang
-    );
-    const index_code =
-      indexCode[process.env.REACT_APP_ALGOLIA_ENV][algoliaQueryIndex] || null;
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
@@ -57,7 +46,7 @@ class SearchSuggesionClickEvent extends BaseEvent {
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: search || "",
-      index_code: index_code,
+      index_code: indexCode,
     });
   }
   getCustomerId() {
