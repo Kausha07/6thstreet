@@ -3,9 +3,7 @@ import Event, {
 } from "Util/Event";
 
 import BaseEvent from "../Base.event";
-import { getAlgoliaIndexForQuerySuggestion } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { indexCode } from "Util/AlgoliaIndex";
-import { isArabic } from "Util/App";
 
 /**
  * Constants
