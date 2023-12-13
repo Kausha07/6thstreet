@@ -1,7 +1,7 @@
 import Event, { EVENT_GTM_SEARCH } from "Util/Event";
 
 import BaseEvent from "../Base.event";
-
+import { indexCode } from "Util/AlgoliaIndex";
 /**
  * Constants
  *
@@ -43,6 +43,7 @@ class SearchResultEvent extends BaseEvent {
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: search,
+      index_code: indexCode,
     });
   }
   getCustomerId() {
