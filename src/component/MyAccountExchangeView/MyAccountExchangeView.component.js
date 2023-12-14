@@ -28,8 +28,10 @@ import {
   NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
-  DAYS_TEXT,
-  SHORTLY_TEXT, 
+  NORMAL_EX_DELIVERY_MESSAGE_EDD_DISABLED,
+  NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
+  INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
+  NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE_EDD_DISABLED,
 } from "./MyAccountExchangeView.config";
 
 import { exchangeFormatGroupStatus } from "Util/Common";
@@ -238,45 +240,53 @@ export class MyAccountExchangeView extends SourceComponent {
     );
   };
 
-  getDeliveryMessage = (exchangeType, exchangeItemStatus, isInternational) => {
+  getDeliveryMessage = (
+    exchangeType,
+    exchangeItemStatus,
+    isInternational,
+    isEDDEnabled
+  ) => {
     let deliveryMessageAndIcon =
       (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
         STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
       exchangeType?.toLowerCase() === "normal" &&
       isInternational
         ? {
-            message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE
+              : NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
             STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
           exchangeType?.toLowerCase() === "normal"
         ? {
-            message: NORMAL_EX_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EX_DELIVERY_MESSAGE
+              : NORMAL_EX_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : (STATUS_DISPATCHED.includes(exchangeItemStatus?.toLowerCase()) ||
             STATUS_IN_TRANSIT.includes(exchangeItemStatus?.toLowerCase())) &&
           exchangeType?.toLowerCase() === "hih"
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
-            daysToShow: false,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
           exchangeType?.toLowerCase() === "normal" &&
           !isInternational
         ? {
-            message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
+              : NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : DELIVERY_SUCCESSFUL.includes(exchangeItemStatus?.toLowerCase()) &&
           exchangeType?.toLowerCase() === "normal" &&
           isInternational
         ? {
-            message: INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
+              : INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
-        : { message: "", daysToShow: false };
+        : { message: "" };
 
     return deliveryMessageAndIcon;
   };
@@ -291,7 +301,9 @@ export class MyAccountExchangeView extends SourceComponent {
       label,
     } = item;
 
-    const isInternational = parseInt(cross_border) === 1;
+    const isInternational =
+    parseInt(item?.cross_border) === 1 &&
+    edd_info?.international_vendors?.indexOf(international_vendor) > -1;
     const getIcon =
       package_status === "Cancelled" || package_status === "cancelled"
         ? CancelledImage
@@ -299,10 +311,12 @@ export class MyAccountExchangeView extends SourceComponent {
           label?.toLowerCase()?.includes("processing")
         ? TimerImage
         : PackageImage;
-    const { message, daysToShow } = this.getDeliveryMessage(
+    const isEDDEnabled = edd_info ? true : false;
+    const { message } = this.getDeliveryMessage(
       exchange_type,
       package_status,
-      isInternational
+      isInternational,
+      isEDDEnabled
     );
     const date_range =
       edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
@@ -312,7 +326,6 @@ export class MyAccountExchangeView extends SourceComponent {
         : exchange_type?.toLowerCase() === "normal" && isInternational
         ? date_range
         : "";
-    const isEDDEnabled = edd_info ? true : false;
     const isDisplayBarVisible = this.shouldDisplayBar(package_status);
     const isItemUnderProcessing =
       label?.toLowerCase() === "items under processing" ||
@@ -352,15 +365,9 @@ export class MyAccountExchangeView extends SourceComponent {
                   alt={"AccordionTitleImage"}
                 />
                 <p>
-                  {__(message)}
-                  {isEDDEnabled ? (
-                    <>
-                      {deliveryDays && __(deliveryDays)}
-                      {daysToShow && DAYS_TEXT}
-                    </>
-                  ) : (
-                    SHORTLY_TEXT
-                  )}
+                  {message?.includes(undefined)
+                    ? message.replace(undefined, deliveryDays)
+                    : message}
                 </p>
               </div>
             )
@@ -409,7 +416,7 @@ export class MyAccountExchangeView extends SourceComponent {
 
             {statusToShow != null && (
               <h3 block="MyAccountExchangeView" elem="exchangeTypeStatus">
-               {exchangeTypeText === "" && <span>-</span>}
+                {exchangeTypeText === "" && <span>-</span>}
                 {statusToShow}
               </h3>
             )}

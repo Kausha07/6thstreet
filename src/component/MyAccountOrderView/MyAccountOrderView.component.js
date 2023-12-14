@@ -81,8 +81,10 @@ import {
   NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
   NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
-  DAYS_TEXT,
-  SHORTLY_TEXT, 
+  NORMAL_EX_DELIVERY_MESSAGE_EDD_DISABLED,
+  NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
+  INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
+  NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE_EDD_DISABLED,
 } from "Component/MyAccountExchangeView/MyAccountExchangeView.config";
 import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
 import { exchangeFormatGroupStatus } from "Util/Common";
@@ -464,45 +466,53 @@ class MyAccountOrderView extends PureComponent {
     }
   };
 
-  getDeliveryMessage = (exchangeType, exchangeItemStatus, isInternational) => {
+  getDeliveryMessage = (
+    exchangeType,
+    exchangeItemStatus,
+    isInternational,
+    isEDDEnabled
+  ) => {
     let deliveryMessageAndIcon =
       (exchangeItemStatus === STATUS_DISPATCHED ||
         exchangeItemStatus === STATUS_IN_TRANSIT) &&
       exchangeType?.toLowerCase() === "normal" &&
       isInternational
         ? {
-            message: NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE
+              : NORMAL_EXCHANGE_INTERNATIONAL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : (exchangeItemStatus === STATUS_DISPATCHED ||
             exchangeItemStatus === STATUS_IN_TRANSIT) &&
           exchangeType?.toLowerCase() === "normal"
         ? {
-            message: NORMAL_EX_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EX_DELIVERY_MESSAGE
+              : NORMAL_EX_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : (exchangeItemStatus === STATUS_DISPATCHED ||
             exchangeItemStatus === STATUS_IN_TRANSIT) &&
           exchangeType?.toLowerCase() === "hih"
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
-            daysToShow: false,
           }
         : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
           exchangeType?.toLowerCase() === "normal" &&
           !isInternational
         ? {
-            message: NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
+              : NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
         : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
           exchangeType?.toLowerCase() === "normal" &&
           isInternational
         ? {
-            message: INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE,
-            daysToShow: true,
+            message: isEDDEnabled
+              ? INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
+              : INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
           }
-        : { message: "", daysToShow: false };
+        : { message: "" };
 
     return deliveryMessageAndIcon;
   };
@@ -511,7 +521,7 @@ class MyAccountOrderView extends PureComponent {
     const displayStatusBar = this.shouldDisplayBar(status);
     const {
       order: { is_exchange_order: exchangeCount },
-      edd_info
+      edd_info,
     } = this.props;
     if (!displayStatusBar) {
       return null;
@@ -730,11 +740,15 @@ class MyAccountOrderView extends PureComponent {
       item?.label?.toLowerCase() === "items under processing" ||
       item?.label === "المنتجات قيد التجهيز";
 
-    const isInternational = parseInt(item?.cross_border) === 1;
-    const { message, daysToShow } = this.getDeliveryMessage(
+    const isInternational =
+    parseInt(item?.cross_border) === 1 &&
+    edd_info?.international_vendors?.indexOf(international_vendor) > -1;
+    const isEDDEnabled = edd_info ? true : false;
+    const { message } = this.getDeliveryMessage(
       item?.exchange_type,
       item?.status,
-      isInternational
+      isInternational,
+      isEDDEnabled
     );
     const date_range =
       edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
@@ -745,7 +759,6 @@ class MyAccountOrderView extends PureComponent {
         ? date_range
         : "";
     const isDisplayBarVisible = this.shouldDisplayBar(item?.status);
-    const isEDDEnabled = edd_info ? true : false;
     return (
       <div
         key={item.shipment_number}
@@ -783,15 +796,9 @@ class MyAccountOrderView extends PureComponent {
                   alt={"AccordionTitleImage"}
                 />
                 <p>
-                  {__(message)}
-                  {isEDDEnabled ? (
-                    <>
-                      {deliveryDays && __(deliveryDays)}
-                      {daysToShow && DAYS_TEXT}
-                    </>
-                  ) : (
-                    SHORTLY_TEXT
-                  )}
+                  {message?.includes(undefined)
+                    ? message.replace(undefined, deliveryDays)
+                    : message}
                 </p>
               </div>
             )
