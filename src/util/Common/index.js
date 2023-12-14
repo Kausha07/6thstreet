@@ -633,6 +633,12 @@ export const exchangeFormatGroupStatus = (status) => {
     case "canceled": {
       return __("Cancelled");
     }
+    case "delivery_failed": {
+      return __("Failed");
+    }
+    case "pickupfailed": {
+      return __("Failed");
+    }
     default: {
       return null;
     }
