@@ -405,9 +405,7 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { is_exchange_order: exchangeCount, groups },
     } = this.props;
-    const packageStatus = /\d/.test(title)
-      ? this.formatGroupStatus(status)
-      : null;
+    const packageStatus = this.formatGroupStatus(status);
     const exchangePackageStatus = exchangeFormatGroupStatus(status);
     const exchangeTypeText =
       exchangeType?.toUpperCase() === "HIH"
