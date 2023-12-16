@@ -299,11 +299,12 @@ export class MyAccountExchangeView extends SourceComponent {
       package_status = null,
       international_vendor = "",
       label,
+      exchange_item_status = null,
     } = item;
 
     const isInternational =
-    parseInt(item?.cross_border) === 1 &&
-    edd_info?.international_vendors?.indexOf(international_vendor) > -1;
+      parseInt(item?.cross_border) === 1 &&
+      edd_info?.international_vendors?.indexOf(international_vendor) > -1;
     const getIcon =
       package_status === "Cancelled" || package_status === "cancelled"
         ? CancelledImage
@@ -353,7 +354,8 @@ export class MyAccountExchangeView extends SourceComponent {
           package_status !== "" &&
           package_status !== null &&
           isDisplayBarVisible ? (
-            exchange_type === "HIH" && package_status === "exchanged" ? null : (
+            (exchange_type === "HIH" && package_status === "exchanged") ||
+            exchange_item_status === "delivered" ? null : (
               <div block="MyAccountExchangeView" elem="deliveryMessage">
                 <Image
                   src={ExchangeIcon}
