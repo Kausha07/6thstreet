@@ -520,6 +520,29 @@
     color: var(--cart-item-heading-color);
     font-weight: 500;
   }
+
+  &-deliveryMessage {
+    background-color: #f0f0f0;
+    color: #000000;
+    width: 75%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: 500;
+    margin: 5px 0 25px 0;
+
+    @include mobile {
+      width: 100%;
+      p {
+        font-size: 13px;
+      }
+
+      img {
+        height: 20px !important;
+      }
+    }
+  }
 }
 h2.prodDetailTitle {
   margin: 7px 0px 0px;

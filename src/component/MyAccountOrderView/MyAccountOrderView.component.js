@@ -494,22 +494,6 @@ class MyAccountOrderView extends PureComponent {
         ? {
             message: DOORSTEP_EX_DELIVERY_MESSAGE,
           }
-        : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
-          exchangeType?.toLowerCase() === "normal" &&
-          !isInternational
-        ? {
-            message: isEDDEnabled
-              ? NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
-              : NORMAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
-          }
-        : exchangeItemStatus === DELIVERY_SUCCESSFUL &&
-          exchangeType?.toLowerCase() === "normal" &&
-          isInternational
-        ? {
-            message: isEDDEnabled
-              ? INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE
-              : INTERNATIONAL_EX_SUCCESSFUL_DELIVERY_MESSAGE_EDD_DISABLED,
-          }
         : { message: "" };
 
     return deliveryMessageAndIcon;
@@ -781,9 +765,8 @@ class MyAccountOrderView extends PureComponent {
           item?.status !== "" &&
           item?.status !== null &&
           isDisplayBarVisible ? (
-            item?.exchange_type?.toUpperCase() === "HIH" &&
             item?.status === DELIVERY_SUCCESSFUL ? null : (
-              <div block="MyAccountExchangeView" elem="deliveryMessage">
+              <div block="MyAccountOrderView" elem="deliveryMessage">
                 <Image
                   src={ExchangeIcon}
                   mix={{

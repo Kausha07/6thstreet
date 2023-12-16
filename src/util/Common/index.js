@@ -639,6 +639,9 @@ export const exchangeFormatGroupStatus = (status) => {
     case "pickupfailed": {
       return __("Failed");
     }
+    case "exchange_failed": {
+      return __("Failed");
+    }
     default: {
       return null;
     }
