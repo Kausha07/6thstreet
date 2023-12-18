@@ -8,6 +8,7 @@
   &-Expand {
     display: flex;
     justify-content: center;
+    align-items: center;
     @include desktop {
       transform: translateY(6px);
     }

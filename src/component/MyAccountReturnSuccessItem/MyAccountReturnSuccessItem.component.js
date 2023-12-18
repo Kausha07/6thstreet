@@ -81,7 +81,6 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
     render() {
         return (
             <div block="MyAccountReturnSuccessItem">
-                <p>{ __('Item details') }</p>
                 <div block="MyAccountReturnSuccessItem" elem="Content">
                     { this.renderImage() }
                     { this.renderDetails() }

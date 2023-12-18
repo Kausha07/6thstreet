@@ -617,3 +617,33 @@ export const getEnvIDForInfluencer = () => {
     return "20191010_staging";
   }
 };
+
+export const exchangeFormatGroupStatus = (status) => {
+  // use toLowerCase because sometimes the response from backend is not consistent
+  switch (status?.toLowerCase()) {
+    case "pickup_failed": {
+      return __("Failed");
+    }
+    case "cancelled": {
+      return __("Cancelled");
+    }
+    case "autocancel": {
+      return __("Cancelled");
+    }
+    case "canceled": {
+      return __("Cancelled");
+    }
+    case "delivery_failed": {
+      return __("Failed");
+    }
+    case "pickupfailed": {
+      return __("Failed");
+    }
+    case "exchange_failed": {
+      return __("Failed");
+    }
+    default: {
+      return null;
+    }
+  }
+};

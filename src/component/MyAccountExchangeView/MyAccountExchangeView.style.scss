@@ -1,16 +1,13 @@
 .MyAccountExchangeView {
   &-Details {
     &Date {
-      font-size: 15px;
       font-weight: var(--fe-medium);
-
-      @include desktop {
-        font-size: 16px;
-      }
+      color: var(--color-gray);
+      margin-bottom: 0;
 
       span {
-        color: var(--color-gray);
-        font-weight: var(--fw-regular);
+        font-weight: var(--fw-demi);
+        color: #000000;
       }
     }
   }
@@ -18,9 +15,12 @@
   &-Status {
     text-transform: capitalize;
     margin-bottom: 0;
+    color: var(--color-gray);
+    padding: 0;
 
     span {
       font-weight: var(--fw-demi);
+      color: #000000;
     }
 
     &_isDenied {
@@ -31,9 +31,11 @@
   }
   &-Order {
     margin-bottom: 0;
+    color: var(--color-gray);
 
     span {
       font-weight: var(--fw-demi);
+      color: #000000;
     }
 
     &_isDenied {
@@ -44,20 +46,20 @@
   }
 
   &-SubDetails {
-    align-items: center;
-    border-top: 2px solid var(--color-gainsboro);
-    display: flex;
-    justify-content: space-between;
     margin: 20px 0;
     padding: 20px 0;
 
     @include desktop {
       align-items: unset;
-      border-bottom: 2px solid var(--color-gainsboro);
+      border-bottom: 1px solid var(--color-gainsboro);
       flex-direction: column;
       justify-content: flex-start;
-      margin: 20px 0 35px;
+      margin: 10px 0 30px;
       padding: 10px 0;
+    }
+
+    @include mobile{
+      margin: 0;
     }
   }
 
@@ -85,5 +87,166 @@
         font-size: 14px;
       }
     }
+  }
+
+  &-AccordionStatus {
+    padding: 0;
+  }
+
+  &-Header {
+    display: flex;
+    align-items: center;
+    height: 50px;
+
+    @include mobile{
+    justify-content: center;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 100;
+      background: #ffffff;
+      width: 100%;
+    }
+  }
+  &-Heading {
+    display: flex;
+    align-items: center;
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &-HeadingText{
+    margin-left: 5px;
+
+    &_isArabic{
+      direction: ltr;
+      margin-left: initial;
+      margin-right: 5px;
+    }
+  }
+
+  &-BackButton {
+    margin-right: 10px;
+    &::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border: solid #000000;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 2px 7px 7px 2px;
+      margin: 0 auto;
+      left: 10px;
+      transform: rotate(135deg);
+      background: transparent;
+    }
+
+    @include mobile{
+      position: absolute;
+      left: 10px;
+    }
+
+    &_isArabic {
+      left: initial;
+      right: 0;
+
+      &::before {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+
+  &-BackToOrderPageButtonDiv {
+    margin-top: 25px;
+  }
+
+  &-BackToOrderPageButton {
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-weight: var(--fw-regular);
+    font-size: 14px;
+    padding: 10px 15px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+  }
+  
+  &-StatusBar {
+    margin: 10px 0 20px 0;
+  }
+
+  &-exchangeTypeHeading {
+    color: var(--color-gray);
+
+    span {
+      margin: 0 5px;
+    }
+  }
+
+  &-deliveryMessage {
+    background-color: #f0f0f0;
+    color: #000000;
+    width: 75%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: 500;
+    margin: 5px 0 25px 0;
+
+    img {
+      height: 18px !important;
+    }
+
+    @include mobile {
+      width: 100%;
+      p {
+        font-size: 13px;
+      }
+
+      img {
+        height: 30px !important;
+      }
+    }
+  }
+
+  &-Accordion {
+    border-bottom: 1px solid var(--color-light-grey);
+  }
+
+  &-AccordionTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+      @include mobile {
+        font-size: 14px;
+      }
+    }
+  }
+
+  &-AccordionTitleImage {
+    margin-right: 10px;
+
+    &_isArabic {
+      margin-right: initial;
+      margin-left: 10px;
+    }
+  }
+  
+  &-exchangeTypeStatus{
+    margin-left: 5px;
+    color: var(--color-gray);
+  }
+
+  &-exchangeMessage{
+    color: var(--color-gray);
+    font-weight: 600;
   }
 }

@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { MatchType } from 'Type/Common';
-import MagentoAPI from 'Util/API/provider/MagentoAPI';
+import MobileAPI from "Util/API/provider/MobileAPI";
 
 import MyAccountReturnView from './MyAccountReturnView.component';
 
@@ -30,12 +30,14 @@ export class MyAccountReturnViewContainer extends PureComponent {
         order_increment_id: null,
         increment_id: null,
         date: null,
-        items: []
+        groups: []
     };
 
     constructor(props) {
         super(props);
+    }
 
+    componentDidMount(){
         this.getReturn();
     }
 
@@ -45,7 +47,7 @@ export class MyAccountReturnViewContainer extends PureComponent {
             order_increment_id,
             increment_id,
             date,
-            items,
+            groups,
             isLoading,
             status
         } = this.state;
@@ -55,7 +57,7 @@ export class MyAccountReturnViewContainer extends PureComponent {
             orderNumber: order_increment_id,
             returnNumber: increment_id,
             date,
-            items,
+            groups,
             isLoading,
             status
         };
@@ -82,17 +84,17 @@ export class MyAccountReturnViewContainer extends PureComponent {
                     order_increment_id,
                     increment_id,
                     date,
-                    items,
+                    groups,
                     status
                 }
-            } = await MagentoAPI.get(`returns/${ returnId }`);
+            } = await MobileAPI.get(`returns/${ returnId }`);
 
             this.setState({
                 order_id,
                 order_increment_id,
                 increment_id,
                 date,
-                items,
+                groups,
                 isLoading: false,
                 status
             });

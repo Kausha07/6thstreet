@@ -170,6 +170,9 @@
       top: 50%;
       transform: translateY(-50%);
       width: 10%;
+      .PageWrapper_isArabic &_isDelivered {
+        width: 100% !important;
+      }
 
       .PageWrapper_isArabic & {
         left: unset;
@@ -210,13 +213,14 @@
           right: 50% !important;
       }
       .PageWrapper_isArabic &_inTransit {
-        right: 50% !important;
+        right: 52% !important;
       }
       .PageWrapper_isArabic &_isDelivered {
         right: 100% !important;
       }
       .PageWrapper_isArabic & {
         left: unset;
+        right: 10%;
         transform: translate(50%, -50%);
       }
       &::after {
