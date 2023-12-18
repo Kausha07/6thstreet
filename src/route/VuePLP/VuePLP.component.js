@@ -477,7 +477,7 @@ const VuePLP = (props) => {
   };
 
   const updateBreadcrumbs = () => {
-    let breadCrumbName = q ? fetchBreadCrumbsName(q) : "Available products";
+    let breadCrumbName = q ? fetchBreadCrumbsName(q) : __("Available products");
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update([{ name: breadCrumbName }], dispatch)
     );

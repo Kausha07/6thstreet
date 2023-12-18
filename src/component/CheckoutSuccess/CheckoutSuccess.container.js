@@ -335,7 +335,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       const mobile = phone.slice(countryCodeLastChar);
       const { otp } = fields;
       if (isSignedIn) {
-        verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
+        verifyUserPhone({ mobile: phone, country_code: countryCode, otp }).then(
           (response) => {
             if (response.success) {
               this.setState({ isPhoneVerified: true });

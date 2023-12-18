@@ -1,15 +1,8 @@
 import Url from "url-parse";
-import {
-  searchParams as defaultSearchParams,
-} from "./config";
-import {
-  formatNewInTag,
-  getAlgoliaFilters,
-  getIndex,
-} from "./utils";
-import {
-  getIndexBySort,
-} from "./utils/filters";
+import { searchParams as defaultSearchParams } from "./config";
+import { formatNewInTag, getAlgoliaFilters, getIndex } from "./utils";
+import { getIndexBySort } from "./utils/filters";
+import { userToken } from "Util/User/userToken";
 
 function getPromotions(URL, options = {}, params = {}) {
   const { client, env } = options;
@@ -42,6 +35,7 @@ function getPromotions(URL, options = {}, params = {}) {
         page,
         hitsPerPage: limit,
         clickAnalytics: true,
+        userToken: userToken(),
       },
     };
 

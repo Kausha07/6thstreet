@@ -1319,7 +1319,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const code = phone.slice(1, 4);
         const mobile = phone.slice(4);
 
-        sendVerificationCode({ mobile, code }).then((response) => {
+        sendVerificationCode({ mobile: phone, countryCode: code }).then((response) => {
           if (response.success) {
             this.setState({ isVerificationCodeSent: response.success });
           } else {

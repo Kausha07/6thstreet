@@ -28,6 +28,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     products: PropTypes.array.isRequired,
     widgetID: PropTypes.string.isRequired,
     pageType: PropTypes.string.isRequired,
+    data_url: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -196,9 +197,9 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   viewAllBtn() {
-    const { withViewAll= true, widgetID ="", products=[],product={} } = this.props;
+    const { withViewAll= true, widgetID ="", products=[],product={}, data_url } = this.props;
     let defaultPathName = `/viewall/?q=${widgetID?.replace('vue_','')}`;
-    const linkTo = {
+    const linkTo = data_url ? data_url : {
       pathname: product?.sku ? defaultPathName.concat(`&product_id=${product.sku}`) : defaultPathName,
       state: {
         widgetIDOnViewAllBtn:widgetID,

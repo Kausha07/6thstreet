@@ -3,6 +3,7 @@ import Event, {
 } from "Util/Event";
 
 import BaseEvent from "../Base.event";
+import { indexCode } from "Util/AlgoliaIndex";
 
 /**
  * Constants
@@ -44,6 +45,7 @@ class SearchSuggestionProductClickEvent extends BaseEvent {
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: product || "",
+      index_code: indexCode,
     });
   }
   getCustomerId() {
