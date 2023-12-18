@@ -706,7 +706,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [], international_vendor = "" },
+      order: { groups: shipped = [] },
       edd_info,
     } = this.props;
     const { isArabic } = this.state;
@@ -724,7 +724,7 @@ class MyAccountOrderView extends PureComponent {
 
     const isInternational =
     parseInt(item?.cross_border) === 1 &&
-    edd_info?.international_vendors?.indexOf(international_vendor) > -1;
+    edd_info?.international_vendors?.indexOf(item?.international_vendor) > -1;
     const isEDDEnabled = edd_info ? true : false;
     const { message } = this.getDeliveryMessage(
       item?.exchange_type,
@@ -733,7 +733,7 @@ class MyAccountOrderView extends PureComponent {
       isEDDEnabled
     );
     const date_range =
-      edd_info?.intl_vendor_edd_range?.[international_vendor?.toLowerCase()];
+      edd_info?.intl_vendor_edd_range?.[item?.international_vendor?.toLowerCase()];
     const deliveryDays =
       item?.exchange_type?.toLowerCase() === "normal" && !isInternational
         ? "3-4"
