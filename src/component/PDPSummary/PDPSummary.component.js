@@ -1197,13 +1197,43 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "", international_vendor=null, timer_start_time, timer_end_time},
+      product: {
+        cross_border = 0,
+        brand_name = "",
+        international_vendor = null,
+        timer_start_time,
+        timer_end_time,
+        size_us = [],
+        size_uk = [],
+        size_eu = [],
+        in_stock,
+        stock_qty,
+      },
       edd_info,
       intlEddResponse
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     const isIntlBrand =
       cross_border === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let outOfStockStatus = false;
+    if (size_us && size_uk && size_eu) {
+      outOfStockStatus =
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    } else {
+      outOfStockStatus =
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    }
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
@@ -1224,7 +1254,12 @@ class PDPSummary extends PureComponent {
           edd_info &&
           edd_info.is_enable &&
           edd_info.has_pdp &&
-          ((isIntlBrand && Object.keys(intlEddResponse).length>0 && !edd_info.has_item_level)  || cross_border === 0 || (edd_info.has_item_level && isIntlBrand)) &&
+          ((isIntlBrand &&
+            Object.keys(intlEddResponse).length > 0 &&
+            !edd_info.has_item_level) ||
+            cross_border === 0 ||
+            (edd_info.has_item_level && isIntlBrand)) &&
+          !outOfStockStatus &&
           this.renderSelectCity(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
