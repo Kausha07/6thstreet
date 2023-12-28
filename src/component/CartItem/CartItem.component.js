@@ -599,6 +599,7 @@ export class CartItem extends PureComponent {
           edd_info.is_enable &&
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
+          !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {row_total === 0 ? null : this.renderActions()}
