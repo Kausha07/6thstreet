@@ -18,6 +18,7 @@ import Event, {
   EVENT_OUT_OF_STOCK,
   EVENT_OUT_OF_STOCK_MAIL_SENT,
   EVENT_GTM_PDP_TRACKING,
+  EVENT_SIZE_PREDICTION_CLICK,
 } from "Util/Event";
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
@@ -61,6 +62,7 @@ class PDPAddToCart extends PureComponent {
   state = {
     notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
     isIPhoneNavigationHidden: false,
+    isGTMEventCalled: false,
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
     isArabic: isArabic(),
@@ -148,12 +150,25 @@ class PDPAddToCart extends PureComponent {
       const header = {
         sku: sku,
         size: optionValue,
-        userEmail: customer.email
+        // userEmail: '00_crosse_pacts@icloud.com',
+        userEmail: customer.email,
       };
       try{
         const response = await fetchPredictedSize(header);
+
         if(response.status) {
           let message = response.message;
+          if(!!!this.state.isGTMEventCalled){
+            const eventData = {
+              ...response, 
+              event_name : EVENT_SIZE_PREDICTION_CLICK,
+              trigger_source: 'size_bar',
+            }
+            Event.dispatch(EVENT_SIZE_PREDICTION_CLICK, eventData);
+            this.setState({
+              isGTMEventCalled: true,
+            })
+          }
           let recSku = response.size;
           if(selectedSizeType == 'uk') {
             message = response.uk_message;
