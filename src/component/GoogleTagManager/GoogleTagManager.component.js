@@ -491,6 +491,8 @@ class GoogleTagManager extends PureComponent {
         }),
         vip_customer: isVipCustomer || false,
         uuid: uuid,
+        device_id: uuid,
+        user_id: isCustomerID,
       };
       this.addDataLayer({ ...data, ...additionalDetails });
 
