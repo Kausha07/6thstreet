@@ -56,13 +56,16 @@ class HeaderMenu extends PureComponent {
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
-    browserHistory.push(
-      `/${
-        gender === "home_beauty_women" || gender === "influencer"
-          ? "women"
-          : gender
-      }.html`
-    );
+
+    if (gender !== "all") {
+      browserHistory.push(
+        `/${
+          gender === "home_beauty_women" || gender === "influencer"
+            ? "women"
+            : gender
+        }.html`
+      );
+    }
   };
 
   renderMenu() {
