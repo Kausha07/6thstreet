@@ -122,7 +122,7 @@ class GeneralEvent extends BaseEvent {
      * @return {string}
      */
     getLanguage() {
-        return isArabic() ? 'ar_SA' : 'en_US';
+        return isArabic() ? 'ar' : 'en';
     }
 
     /**

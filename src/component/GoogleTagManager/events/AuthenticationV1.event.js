@@ -41,7 +41,7 @@ class AuthenticationV1Event extends BaseEvent {
     this.pushEventData({
       event: data?.name,
       country: getCountryFromUrl().toUpperCase(),
-      language: getLanguageFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toLowerCase(), 
       isLoggedIn:
         data.name == "login"
           ? true

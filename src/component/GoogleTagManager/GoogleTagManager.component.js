@@ -481,7 +481,7 @@ class GoogleTagManager extends PureComponent {
           country: getCountryFromUrl().toUpperCase() || null,
         }),
         ...(!data?.language && {
-          language: getLanguageFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toLowerCase(), 
         }),
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
