@@ -477,10 +477,10 @@ class GoogleTagManager extends PureComponent {
         ...(!data?.prev_screen_name && {
           prev_screen_name: sessionStorage.getItem("prevScreen") || null,
         }),
-        ...(!data?.country && {
-          country: getCountryFromUrl().toUpperCase() || null,
+        ...({
+          country: getCountryFromUrl().toUpperCase(),
         }),
-        ...(!data?.language && {
+        ...({
           language: getLanguageFromUrl().toLowerCase(), 
         }),
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
