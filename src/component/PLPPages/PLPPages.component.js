@@ -632,13 +632,13 @@ class PLPPages extends PureComponent {
     }
   }
 
-  handleMoreFilterChange = (selectedMoreFilter) => {
+  handleMoreFilterChange = (selectedMoreFilter,filterPosition) => {
     const { onSelectMoreFilterPLP, selectedMoreFilterPLP } = this.props;
     if (selectedMoreFilter === selectedMoreFilterPLP) {
       onSelectMoreFilterPLP("");
       return
     }
-    onSelectMoreFilterPLP(selectedMoreFilter);
+    onSelectMoreFilterPLP(selectedMoreFilter,filterPosition);
   };
 
   optionsOfMoreFilters() {
