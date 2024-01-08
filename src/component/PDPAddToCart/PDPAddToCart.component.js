@@ -128,7 +128,7 @@ class PDPAddToCart extends PureComponent {
   componentDidUpdate(prevProps){
     const { selectedSizeCode } = this.props;
     if(prevProps.selectedSizeCode !== selectedSizeCode) {
-      this.getRecommendedSize();
+      this.getRecommendedSize("size_bar");
     }
   }
 
@@ -143,7 +143,7 @@ class PDPAddToCart extends PureComponent {
     }
     return isRequiredCategory && checkRequiredGender;
   }
-  async getRecommendedSize(){
+  async getRecommendedSize(SizeBar){
     const { customer, selectedSizeCode, selectedSizeType, product: {sku, simple_products}} = this.props;
     if(customer && customer.email && this.checkForCategoryAndGender() && this.props.hasSizePredictor) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
@@ -162,7 +162,7 @@ class PDPAddToCart extends PureComponent {
             const eventData = {
               ...response, 
               event_name : EVENT_SIZE_PREDICTION_CLICK,
-              trigger_source: 'size_bar',
+              trigger_source: SizeBar? SizeBar: "size_help",
             }
             Event.dispatch(EVENT_SIZE_PREDICTION_CLICK, eventData);
             this.setState({
