@@ -647,3 +647,26 @@ export const exchangeFormatGroupStatus = (status) => {
     }
   }
 };
+
+export const getShippingFees = (country) => {
+  switch (country) {
+    case "ae":
+      return 20;
+    case "sa":
+      return 20;
+    case "kw":
+      return 3;
+    case "om":
+      return 3;
+    case "bh":
+      return 3;
+    case "qa":
+      return 20;
+    default:
+      return 20;
+  }
+};
+
+export const qtyAttributeForCountry = () =>{
+  return ["AE"];
+}
