@@ -480,11 +480,11 @@ class GoogleTagManager extends PureComponent {
         ...(!data?.prev_screen_name && {
           prev_screen_name: sessionStorage.getItem("prevScreen") || null,
         }),
-        ...(!data?.country && {
-          country: getCountryFromUrl().toUpperCase() || null,
+        ...({
+          country: getCountryFromUrl().toUpperCase(),
         }),
-        ...(!data?.language && {
-          language: getLanguageFromUrl().toUpperCase(),
+        ...({
+          language: getLanguageFromUrl().toLowerCase(), 
         }),
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
@@ -494,6 +494,8 @@ class GoogleTagManager extends PureComponent {
         }),
         vip_customer: isVipCustomer || false,
         uuid: uuid,
+        device_id: uuid,
+        user_id: isCustomerID,
       };
       this.addDataLayer({ ...data, ...additionalDetails });
 
