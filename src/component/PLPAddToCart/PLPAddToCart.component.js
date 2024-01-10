@@ -85,18 +85,22 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 class PLPAddToCart extends PureComponent {
-  state = {
-    insertedSizeStatus: null,
-    sizeObject: {},
-    selectedSizeCode: "",
-    selectedSizeType: "eu",
-    selectedClickAndCollectStore: null,
-    addedToCart: false,
-    isLoading: false,
-    isOutOfStock: false,
-    isArabic: isArabic(),
-    productStock: "",
-  };
+  constructor(props) {
+    super(props);
+    this.scrollRef = React.createRef(null);
+    this.state = {
+      insertedSizeStatus: null,
+      sizeObject: {},
+      selectedSizeCode: "",
+      selectedSizeType: "eu",
+      selectedClickAndCollectStore: null,
+      addedToCart: false,
+      isLoading: false,
+      isOutOfStock: false,
+      isArabic: isArabic(),
+      productStock: "",
+    };
+  }
 
   componentDidMount() {
     this.setSizeData();
@@ -388,6 +392,7 @@ class PLPAddToCart extends PureComponent {
           block="PLPAddToCart-SizeSelector-SizeContainer"
           elem="AvailableSizes"
           mods={{ isArabic }}
+          ref={this.scrollRef}
         >
           {sizeObject.sizeCodes.reduce((acc, code) => {
             const label = productStock[code].size[selectedSizeType];
@@ -1016,6 +1021,26 @@ class PLPAddToCart extends PureComponent {
     );
   }
 
+  handleScroll = (scrollOffset) => {
+    const adjustedOffset = this.state.isArabic ? -scrollOffset : scrollOffset;
+    this.scrollRef.current.scrollLeft += adjustedOffset;
+  }
+
+  handleMoreSizeOption = () => {
+    let productStock = this.props.product.simple_products;
+    let selectedSizeType = this.state.selectedSizeType;
+    let sizeObject = this.state.sizeObject;
+    let product = this.props.product;
+    if (
+      sizeObject?.sizeCodes !== undefined &&
+      Object.keys(productStock || []).length !== 0 &&
+      product[`size_${selectedSizeType}`].length !== 0 && sizeObject?.sizeCodes?.length > 4
+    ) { 
+      return true;
+    }
+    return false
+  }
+
   render() {
     const { sizeObject } = this.state;
     const { influencerPDPURL } = this.props;
@@ -1028,23 +1053,15 @@ class PLPAddToCart extends PureComponent {
               <div block="PLPAddToCart-SizeSelector" elem="SizeTypeContainer">
                 {this.getSizeTypeSelect()}
               </div>
-              <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
-                {this.getSizeSelect()}
-              </div>
+                <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
+                  {(this.handleMoreSizeOption())?<div block="left-arrow-btn" onClick={()=>this.handleScroll(-30)}>{"<"}</div>: null}
+                    {this.getSizeSelect()}
+                  {(this.handleMoreSizeOption())?<div block="right-arrow-btn" onClick={()=>this.handleScroll(30)}>{">"}</div> : null}
+                </div>
             </>
           ) : null}
         </div>
         {this.renderAddToCartButton()}
-        <a
-          href={
-            influencerURL().includes(location.pathname)
-              ? influencerPDPURL
-              : this.props.url
-          }
-          block="PLPAddToCart-ViewDetails"
-        >
-          {__("VIEW DETAILS")}
-        </a>
       </div>
     );
   }

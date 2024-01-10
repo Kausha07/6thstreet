@@ -57,6 +57,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch, state) => ({
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
+  requestProductBySku: (options) =>
+    PDPDispatcher.requestProductBySku(options, dispatch),
 });
 
 class ProductItem extends PureComponent {
@@ -76,13 +78,24 @@ class ProductItem extends PureComponent {
     impressionSent: false,
   };
 
-  state = {
-    isArabic: isArabic(),
-    stockAvailibility: true,
-    selectedSizeType: "eu",
-    selectedSizeCode: "",
-    hover: false
-  };
+  constructor(props) {
+    super(props);
+    this.scrollRef = React.createRef(null);
+    this.state = {
+      isArabic: isArabic(),
+      stockAvailibility: true,
+      selectedSizeType: "eu",
+      selectedSizeCode: "",
+      hover: false,
+      currentImage: "",
+      currentIndex: 0,
+      colorVarientsClick: false,
+      theme: { dark: false, light: false },
+      isdark: true,
+      colorVarientButtonClick : false,
+      colorVarientProductData : {},
+    };
+  }
   componentDidMount() {
     this.registerViewPortEvent();
   }
@@ -102,7 +115,7 @@ class ProductItem extends PureComponent {
   getPLPListName() {
     const { page } = this.props;
     const pageUrl = new URL(window.location.href);
-    if (pageUrl.pathname == "/catalogsearch/result/" && (page == "plp")) {
+    if (pageUrl.pathname == "/catalogsearch/result/" && page == "plp") {
       const getSearchQuery = pageUrl.search.includes("&")
         ? pageUrl.search.split("&")
         : pageUrl.search;
@@ -116,7 +129,7 @@ class ProductItem extends PureComponent {
           ? searchParameter.replaceAll("+", " ")
           : searchParameter;
       return `Search PLP - ${formatSearchParam}`;
-    } else if ((page == "plp" && pageUrl.pathname.includes(".html"))) {
+    } else if (page == "plp" && pageUrl.pathname.includes(".html")) {
       const pagePath = pageUrl.pathname.split(".html");
       const pageName = pagePath[0] ? pagePath[0].replaceAll("/", " ") : "";
       return `PLP -${pageName}`;
@@ -359,6 +372,49 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderColorVariantsMobile = () => {
+    const { product } = this.props;
+    const { isdark, isArabic } = this.state;
+    const productAlsoAvailableColors = product["6s_also_available_color"]
+      ? Object.keys(product["6s_also_available_color"])
+      : [];
+  
+    const generateInputField = (index) => {
+      const colorKey = productAlsoAvailableColors[index];
+      const background = product["6s_also_available_color"][colorKey] || "";
+  
+      return (
+        <input
+          block="radio-input"
+          type="radio"
+          name={isdark ? "dark" : "light"}
+          id={isdark ? "dark" : "light"}
+          value={"Dark"}
+          onChange={this.onChangeTheme}
+          checked={isdark ? isdark : true}
+          style={{ background }}
+        />
+      );
+    };
+  
+    return productAlsoAvailableColors.length > 0 ? (
+      <div block="PLPMobileColorVarients" mods={{ isArabic }}>
+        {productAlsoAvailableColors.length === 1 ? (
+          <div block="radio-label">{generateInputField(0)}</div>
+        ) : (
+          <div block="radio-label multi-color">
+            {generateInputField(0)}
+            {generateInputField(productAlsoAvailableColors.length - 1)}
+          </div>
+        )}
+        <span block="colorVarientCounts" mods={{ isArabic }}>
+          {productAlsoAvailableColors.length}{" "}
+        </span>
+      </div>
+    ) : null;
+  };
+  
+
   renderImage() {
     const {
       product: { thumbnail_url, brand_name, product_type_6s, color },
@@ -387,13 +443,91 @@ class ProductItem extends PureComponent {
       brand_name + " " + categoryTitle + " - " + color + " " + product_type_6s;
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} alt={altText} />
+        <Image
+          lazyLoad={lazyLoad}
+          src={
+            this.state.colorVarientButtonClick
+              ? this.state.currentImage
+              : thumbnail_url
+          }
+          alt={altText}
+        />
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()}
-        {this.renderColors()}
       </div>
     );
   }
+
+  colorVarientsButtonClick = (productImage) => {
+    this.setState({ currentImage: productImage });
+  };
+
+  async requestAvailableColorProduct(sku) {
+    const { requestProductBySku } = this.props;
+    if (sku) {
+      const response = await requestProductBySku({ options: { sku } });
+      return  response;
+    }
+    return;
+  }
+
+  getProductDetailsBySkuAlgolia = async(sku) => {
+    const { colorVarientButtonClick } = this.state;
+    try {
+      if(sku){
+        const response = await new Algolia().getProductBySku({ sku });
+        const {data: {image_url=""}} = response;
+        this.setState({colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: !colorVarientButtonClick});
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  onChangeTheme = () => {
+    const { isdark } = this.state;
+    this.setState({ isDark: !isdark });
+  };
+
+  handleScroll = (scrollOffset) => {
+    const adjustedOffset = this.state.isArabic ? -scrollOffset : scrollOffset;
+    this.scrollRef.current.scrollLeft += adjustedOffset;
+  }
+
+  renderColorVariants = () => {
+    const { product } = this.props;
+    const { isdark, isArabic } = this.state;
+    const productAlsoAvailableColors = product["6s_also_available_color"]
+      ? Object.keys(product["6s_also_available_color"])
+      : [];
+
+    return (
+      <div block="colorVariantContainer">
+        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? "<" : ""}</button>
+        <div block="colorVariantSlider" ref={this.scrollRef}>
+          {productAlsoAvailableColors?.map(
+            (sku) => (
+                <div key={sku} block="radio-label" onClick={() => this.getProductDetailsBySkuAlgolia(sku)}>
+                  <input
+                    block="radio-input"
+                    type="radio"
+                    name={isdark ? "dark" : "light"}
+                    id={isdark ? "dark" : "light"}
+                    value={"Dark"}
+                    onChange={this.onChangeTheme}
+                    checked={isdark ? isdark : true}
+                    style={{
+                      background: product["6s_also_available_color"][sku] || "",
+                    }}
+                  />
+                </div>
+              )
+          )}
+        </div>
+        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? ">" : ""}</button>
+      </div>
+    );
+  };
 
   renderBrand() {
     const {
@@ -562,12 +696,6 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {pageType !== "cartSlider" && 
-          pageType !== "wishlist" &&  
-          this.renderOutOfStock()}
-        {this.renderBrand()}
-        {this.renderTitle()}
-        {this.renderPrice()}
       </Link>
     );
   }
@@ -581,22 +709,26 @@ class ProductItem extends PureComponent {
   };
 
   handleMouseEnter = () => {
-    if(!this.state.hover) {
-      this.setState({hover: true});
-    } 
+    if (!this.state.hover) {
+      this.setState({ hover: true });
+    }
   };
 
   handleMouseLeave = () => {
-    if(this.state.hover) {
-      this.setState({hover: false});
+    if (this.state.hover) {
+      this.setState({ hover: false });
     }
   };
+
+  handleMouseEnterLeaveColorVarients = () => {
+    this.setState({ hover: false });
+  }
 
   render() {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
-      pageType,    
+      pageType,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -606,8 +738,6 @@ class ProductItem extends PureComponent {
         id={sku}
         ref={setRef}
         block="ProductItem"
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
         mods={{
           isArabic,
         }}
@@ -616,15 +746,33 @@ class ProductItem extends PureComponent {
         {this.renderLabel()}
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
         {this.renderLink()}{" "}
-        <div className= {isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
-         {timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />}
-        </div> 
-        {!isMobile.any() &&
+        {!isMobile.any() ? this.renderColorVariants() : this.renderColorVariantsMobile()}
+        {pageType !== "cartSlider" &&
+          pageType !== "wishlist" &&
+          this.renderOutOfStock()}
+        <div
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+          >
+          {this.renderBrand()}
+          {this.renderTitle()}
+          {this.renderPrice()}
+          {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           pageType !== "cartSlider" &&
           this.state.hover &&
           this.renderAddToCartOnHover()}
+        </div>
+        <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
+          {timer_start_time && timer_end_time && (
+            <DynamicContentCountDownTimer
+              start={timer_start_time}
+              end={timer_end_time}
+              isPLPOrPDP
+            />
+          )}
+        </div>
         {isMobile.any() &&
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}
