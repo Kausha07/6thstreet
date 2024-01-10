@@ -18,6 +18,7 @@ import Event, {
   EVENT_OUT_OF_STOCK,
   EVENT_OUT_OF_STOCK_MAIL_SENT,
   EVENT_GTM_PDP_TRACKING,
+  EVENT_SIZE_PREDICTION_CLICK,
 } from "Util/Event";
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
@@ -61,6 +62,7 @@ class PDPAddToCart extends PureComponent {
   state = {
     notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
     isIPhoneNavigationHidden: false,
+    isGTMEventCalled: false,
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
     isArabic: isArabic(),
@@ -126,7 +128,7 @@ class PDPAddToCart extends PureComponent {
   componentDidUpdate(prevProps){
     const { selectedSizeCode } = this.props;
     if(prevProps.selectedSizeCode !== selectedSizeCode) {
-      this.getRecommendedSize();
+      this.getRecommendedSize("size_bar");
     }
   }
 
@@ -141,19 +143,32 @@ class PDPAddToCart extends PureComponent {
     }
     return isRequiredCategory && checkRequiredGender;
   }
-  async getRecommendedSize(){
+  async getRecommendedSize(SizeBar){
     const { customer, selectedSizeCode, selectedSizeType, product: {sku, simple_products}} = this.props;
     if(customer && customer.email && this.checkForCategoryAndGender() && this.props.hasSizePredictor) {
       const optionValue = selectedSizeCode && simple_products[selectedSizeCode] && simple_products[selectedSizeCode]['size'] && simple_products[selectedSizeCode]['size']['eu'] ? simple_products[selectedSizeCode]['size']['eu']: '';
       const header = {
         sku: sku,
         size: optionValue,
-        userEmail: customer.email
+        // userEmail: '00_crosse_pacts@icloud.com',
+        userEmail: customer.email,
       };
       try{
         const response = await fetchPredictedSize(header);
+
         if(response.status) {
           let message = response.message;
+          if(!!!this.state.isGTMEventCalled){
+            const eventData = {
+              ...response, 
+              event_name : EVENT_SIZE_PREDICTION_CLICK,
+              trigger_source: SizeBar? SizeBar: "size_help",
+            }
+            Event.dispatch(EVENT_SIZE_PREDICTION_CLICK, eventData);
+            this.setState({
+              isGTMEventCalled: true,
+            })
+          }
           let recSku = response.size;
           if(selectedSizeType == 'uk') {
             message = response.uk_message;
