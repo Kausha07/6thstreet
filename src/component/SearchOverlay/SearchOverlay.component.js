@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
+import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import history from "Util/History";
@@ -39,6 +39,13 @@ import { SEARCH_OVERLAY } from "Component/Header/Header.config";
 import "./SearchOverlay.style";
 
 import { LocationType } from "Type/Common";
+
+export const mapStateToProps = (state) => ({
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+});
+export const mapDispatchToProps = (_dispatch) => ({
+
+});
 
 export class SearchOverlay extends PureComponent {
   static propTypes = {
@@ -551,7 +558,7 @@ export class SearchOverlay extends PureComponent {
   };
 
   SeeAllButtonClick = async () => {
-    const { search, closePopup } = this.props;
+    const { search, closePopup, indexCodeRedux } = this.props;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
       ? encodeURIComponent(search)
@@ -585,7 +592,8 @@ export class SearchOverlay extends PureComponent {
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearches(search);
-        Event.dispatch(EVENT_GTM_SEARCH, search);
+        const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_SEARCH, eventData);
         MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -707,4 +715,6 @@ export class SearchOverlay extends PureComponent {
   }
 }
 
-export default SearchOverlay;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SearchOverlay)
+);

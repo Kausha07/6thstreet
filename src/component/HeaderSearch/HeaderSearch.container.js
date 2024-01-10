@@ -16,8 +16,9 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-export const mapStateToProps = (_state) => ({
+export const mapStateToProps = (state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
 });
 export const mapDispatchToProps = (_dispatch) => ({
   // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
@@ -65,7 +66,7 @@ export class HeaderSearchContainer extends PureComponent {
   };
 
   async onSearchSubmit() {
-    const { history } = this.props;
+    const { history, indexCodeRedux } = this.props;
     const { search } = this.state;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
@@ -100,7 +101,8 @@ export class HeaderSearchContainer extends PureComponent {
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
-        Event.dispatch(EVENT_GTM_SEARCH, search);
+        const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_SEARCH, eventData);
         MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),

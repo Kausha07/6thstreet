@@ -28,12 +28,12 @@ class SearchResultEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_GTM_SEARCH, (search) => {
-      this.handle(EVENT_GTM_SEARCH, search);
+    Event.observer(EVENT_GTM_SEARCH, (data) => {
+      this.handle(EVENT_GTM_SEARCH, data);
     });
   }
 
-  handler(EVENT_TYPE, search) {
+  handler(EVENT_TYPE, data) {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search_enter",
@@ -42,8 +42,8 @@ class SearchResultEvent extends BaseEvent {
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: search,
-      index_code: indexCode,
+      SearchTerm: data.search,
+      index_code: data.indexCodeRedux,
     });
   }
   getCustomerId() {
