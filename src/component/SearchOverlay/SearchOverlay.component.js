@@ -410,6 +410,8 @@ export class SearchOverlay extends PureComponent {
 
     let genderInURL;
     genderInURL = this.onGenderSelection(gender);
+    const { indexCodeRedux } = this.props;
+    const eventData = { search: name, indexCodeRedux: indexCodeRedux };
     return (
       <li key={i}>
         <Link
@@ -421,7 +423,7 @@ export class SearchOverlay extends PureComponent {
                 )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`
           }
           onClick={() => {
-            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
+            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, eventData);
             MOE_trackEvent(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
