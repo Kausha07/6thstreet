@@ -43,6 +43,7 @@ import {
   EVENT_FILTER_SEARCH_CLICK,
   EVENT_FILTER_SEARCH_VALUE_SELECTED,
   EVENT_GTM_CART,
+  EVENT_SIZE_PREDICTION_CLICK,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -102,6 +103,7 @@ import FilterSearchValueSelected from "./events/PLPFiltersEvents/FilterSearchVal
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
+import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
 
 /**
  * Event list
@@ -219,6 +221,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_FILTER_SEARCH_CLICK]: FilterSearchClick,
     [EVENT_FILTER_SEARCH_VALUE_SELECTED]: FilterSearchValueSelected,
     [EVENT_GTM_CART]: CartEvent,
+    [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
   };
 
   /**
@@ -477,11 +480,11 @@ class GoogleTagManager extends PureComponent {
         ...(!data?.prev_screen_name && {
           prev_screen_name: sessionStorage.getItem("prevScreen") || null,
         }),
-        ...(!data?.country && {
-          country: getCountryFromUrl().toUpperCase() || null,
+        ...({
+          country: getCountryFromUrl().toUpperCase(),
         }),
-        ...(!data?.language && {
-          language: getLanguageFromUrl().toUpperCase(),
+        ...({
+          language: getLanguageFromUrl().toLowerCase(), 
         }),
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
@@ -491,6 +494,8 @@ class GoogleTagManager extends PureComponent {
         }),
         vip_customer: isVipCustomer || false,
         uuid: uuid,
+        device_id: uuid,
+        user_id: isCustomerID,
       };
       this.addDataLayer({ ...data, ...additionalDetails });
 
