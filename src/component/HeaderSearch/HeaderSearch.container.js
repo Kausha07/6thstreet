@@ -60,7 +60,9 @@ export class HeaderSearchContainer extends PureComponent {
       return data[0];
     }
     if (data.length === 0) {
-      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+      const { indexCodeRedux } = this.props;
+      const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
     }
     return null;
   };

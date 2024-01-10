@@ -44,8 +44,8 @@ class NoResultSearchScreenEvent extends BaseEvent {
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: data || "",
-      index_code: indexCode,
+      SearchTerm: data.search || "",
+      index_code: data.indexCodeRedux,
     });
   }
   getCustomerId() {

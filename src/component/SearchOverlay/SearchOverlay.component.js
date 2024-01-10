@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import history from "Util/History";
@@ -182,7 +183,9 @@ export class SearchOverlay extends PureComponent {
 
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
+        const { indexCodeRedux } = this.props;
+        const eventData = { search: query, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
         MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -552,7 +555,9 @@ export class SearchOverlay extends PureComponent {
       return data[0];
     }
     if (data.length === 0) {
-      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+      const { indexCodeRedux } = this.props;
+      const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
     }
     return null;
   };

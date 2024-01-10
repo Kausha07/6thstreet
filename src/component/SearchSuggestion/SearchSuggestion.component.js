@@ -5,6 +5,7 @@ import Price from "Component/Price";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import DragScroll from "Component/DragScroll/DragScroll.component";
@@ -41,6 +42,13 @@ import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 
 var ESCAPE_KEY = 27;
+
+export const mapStateToProps = (state) => ({
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+});
+export const mapDispatchToProps = (_dispatch) => ({
+
+});
 
 class SearchSuggestion extends PureComponent {
   static propTypes = {
@@ -374,7 +382,9 @@ class SearchSuggestion extends PureComponent {
 
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
+        const { indexCodeRedux } = this.props;
+        const eventData = { search: query, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
         MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -1080,4 +1090,6 @@ class SearchSuggestion extends PureComponent {
   }
 }
 
-export default withRouter(SearchSuggestion);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SearchSuggestion)
+);
