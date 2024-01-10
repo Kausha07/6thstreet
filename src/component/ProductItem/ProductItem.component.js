@@ -389,9 +389,8 @@ class ProductItem extends PureComponent {
           type="radio"
           name={isdark ? "dark" : "light"}
           id={isdark ? "dark" : "light"}
-          value={"Dark"}
+          value={isdark ? "dark" : "light" }
           onChange={this.onChangeTheme}
-          checked={isdark ? isdark : true}
           style={{ background }}
         />
       );
@@ -472,12 +471,11 @@ class ProductItem extends PureComponent {
   }
 
   getProductDetailsBySkuAlgolia = async(sku) => {
-    const { colorVarientButtonClick } = this.state;
     try {
       if(sku){
         const response = await new Algolia().getProductBySku({ sku });
         const {data: {image_url=""}} = response;
-        this.setState({colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: !colorVarientButtonClick});
+        this.setState({colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true});
       }
     } catch (e) {
       console.error(e);
@@ -503,7 +501,7 @@ class ProductItem extends PureComponent {
 
     return (
       <div block="colorVariantContainer">
-        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? "<" : ""}</button>
+        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow"></span>  : null}</button>
         <div block="colorVariantSlider" ref={this.scrollRef}>
           {productAlsoAvailableColors?.map(
             (sku) => (
@@ -513,9 +511,8 @@ class ProductItem extends PureComponent {
                     type="radio"
                     name={isdark ? "dark" : "light"}
                     id={isdark ? "dark" : "light"}
-                    value={"Dark"}
+                    value={isdark ? "dark" : "light"}
                     onChange={this.onChangeTheme}
-                    checked={isdark ? isdark : true}
                     style={{
                       background: product["6s_also_available_color"][sku] || "",
                     }}
@@ -524,7 +521,7 @@ class ProductItem extends PureComponent {
               )
           )}
         </div>
-        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? ">" : ""}</button>
+        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? <span block="right-arrow"></span> : null}</button>
       </div>
     );
   };

@@ -8,6 +8,7 @@
  .ProductItem {
     font-weight: var(--fw-regular);
     // margin: 20px 5px;
+    width: 245px;
     min-width: 0;
     padding-left: 0;
     position: relative;
@@ -182,6 +183,27 @@
       display : flex;
       flex-direction: row;
       align-items: center;
+      margin: 14px 0px;
+
+     .left-arrow {
+      content: "";
+      display: block;
+      width: 12px;
+      height: 12px;
+      transform: rotate(135deg);
+      border: solid #000000;
+      border-width: 0 1px 1px 0;
+      }
+      .right-arrow {
+        content: "";
+        display: block;
+        width: 12px;
+        height: 12px;
+        transform: rotate(-45deg);
+        border: solid #000000;
+        border-width: 0 1px 1px 0;
+        right: 6px;
+      }
     }
   
     .colorVariantContainer button {
@@ -189,7 +211,9 @@
       align-items: center;
       height: 0px;
       padding: 0px;
-      opacity: 0.3;
+      font-size: 20px;
+      font-weight: 400;
+      opacity: 0.2;
     }
 
     .colorVariantSlider {
@@ -387,47 +411,24 @@
       display: flex;
     }
     .radio-input {
-      margin: 0px 8px;
+      margin: 8px 8px;
       width: 15px;
       height: 15px;
-      min-height: 15px;
-      min-width: 15px;
+      min-height: 13px;
+      min-width: 12px;
       padding: 0px;
-      border-radius:50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0px 0px 0px 1px #D3D3D3;
+      border-radius: 50%;
     }
     
     .radio-input:checked {
-      border: 2px solid #4a4a4a;
+      box-shadow: 0px 0px 0px 1px #000000;
+      background-color: #000000;
     }
     
     .radio-input:checked :after {
       opacity: 1;
-    }
-    
-    .custom-radio {
-      left: -8px;
-      top: 6px;
-      cursor: pointer;
-      width: 17px;
-      height: 17px;
-      border: 2px solid #9a9a9a;
-      border-radius: 50%;
-      display: inline-block;
-      position: relative;
-    }
-    
-    /* for inner filled circle */
-    .custom-radio::after {
-      content: "";
-      width: 12px;
-      height: 12px;
-      position: absolute;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.2s;
     }
     
   }

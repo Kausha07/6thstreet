@@ -183,16 +183,29 @@ $select-arrow-width: 6px !default;
       // width: calc(100% - 150px);
     }
     .left-arrow-btn {
+      content: "";
       cursor: pointer;
-      margin : 0px 7px;
-      font-size: 17px;
+      display: block;
+      width: 10px;
+      height: 10px;
+      transform: rotate(135deg);
+      border: solid #000000;
+      border-width: 0 1px 1px 0;
+      top: 7px;
+      left: 6px;
       opacity: 0.3;
     }
-
     .right-arrow-btn {
+      content: "";
       cursor: pointer;
-      margin : 0px 7px;
-      font-size: 17px;
+      display: block;
+      width: 10px;
+      height: 10px;
+      transform: rotate(-45deg);
+      border: solid #000000;
+      border-width: 0 1px 1px 0;
+      top: 7px;
+      right: 6px;
       opacity: 0.3;
     }
 
@@ -218,15 +231,16 @@ $select-arrow-width: 6px !default;
     }
     &-SizeContainer {
       white-space: nowrap;
-      width: 70%;
+      width: 75%;
       display: flex;
+      justify-content: space-between;
       &-AvailableSizes {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
-        width: 70%;
+        width: 75%;
         overflow: scroll;
-        margin-bottom: 22px;
+        margin-bottom: 16px;
         -webkit-overflow-scrolling: touch;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         &::-webkit-scrollbar {
@@ -348,7 +362,7 @@ $select-arrow-width: 6px !default;
     border-radius: 4px;
     padding: 2px;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 16px;
     padding-right: 12px;
   }
   &-SizeTypeSelect {
