@@ -1042,7 +1042,7 @@ class PLPAddToCart extends PureComponent {
   }
 
   render() {
-    const { sizeObject } = this.state;
+    const { sizeObject, isArabic } = this.state;
     const { influencerPDPURL } = this.props;
     return (
       <div block="PLPAddToCart">
@@ -1054,9 +1054,9 @@ class PLPAddToCart extends PureComponent {
                 {this.getSizeTypeSelect()}
               </div>
                 <div block="PLPAddToCart-SizeSelector" elem="SizeContainer">
-                  {(this.handleMoreSizeOption())?<div block="left-arrow-btn" onClick={()=>this.handleScroll(-30)}></div>: null}
+                  {(this.handleMoreSizeOption())?<div block="left-arrow-btn" mods={{ isArabic }} onClick={()=>this.handleScroll(-30)}></div>: null}
                     {this.getSizeSelect()}
-                  {(this.handleMoreSizeOption())?<div block="right-arrow-btn" onClick={()=>this.handleScroll(30)}></div> : null}
+                  {(this.handleMoreSizeOption())?<div block="right-arrow-btn" mods={{ isArabic }} onClick={()=>this.handleScroll(30)}></div> : null}
                 </div>
             </>
           ) : null}

@@ -94,6 +94,7 @@ class ProductItem extends PureComponent {
       isdark: true,
       colorVarientButtonClick : false,
       colorVarientProductData : {},
+      selectedOption: null,
     };
   }
   componentDidMount() {
@@ -482,9 +483,9 @@ class ProductItem extends PureComponent {
     }
   }
 
-  onChangeTheme = () => {
+  onChangeTheme = (sku) => {
     const { isdark } = this.state;
-    this.setState({ isDark: !isdark });
+    this.setState({ isDark: !isdark, selectedOption: sku });
   };
 
   handleScroll = (scrollOffset) => {
@@ -494,34 +495,36 @@ class ProductItem extends PureComponent {
 
   renderColorVariants = () => {
     const { product } = this.props;
-    const { isdark, isArabic } = this.state;
+    const { isdark, isArabic, selectedOption } = this.state;
     const productAlsoAvailableColors = product["6s_also_available_color"]
       ? Object.keys(product["6s_also_available_color"])
       : [];
 
     return (
       <div block="colorVariantContainer">
-        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow"></span>  : null}</button>
+        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow" mods={{ isArabic }}></span>  : null}</button>
         <div block="colorVariantSlider" ref={this.scrollRef}>
           {productAlsoAvailableColors?.map(
-            (sku) => (
-                <div key={sku} block="radio-label" onClick={() => this.getProductDetailsBySkuAlgolia(sku)}>
+            (sku, index) => (
+                <div key={index} block="radio-label" onClick={() => this.getProductDetailsBySkuAlgolia(sku)}>
                   <input
                     block="radio-input"
                     type="radio"
                     name={isdark ? "dark" : "light"}
                     id={isdark ? "dark" : "light"}
-                    value={isdark ? "dark" : "light"}
-                    onChange={this.onChangeTheme}
+                    value={sku}
+                    checked={selectedOption === sku}
+                    onChange={()=>this.onChangeTheme(sku)}
                     style={{
                       background: product["6s_also_available_color"][sku] || "",
+                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku]}` : '0px 0px 0px 0.5px #D1D3D4'
                     }}
                   />
                 </div>
               )
           )}
         </div>
-        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? <span block="right-arrow"></span> : null}</button>
+        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? <span block="right-arrow" mods={{ isArabic }}></span> : null}</button>
       </div>
     );
   };
@@ -693,6 +696,7 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
+        {isMobile.any() ? this.renderColorVariantsMobile() : null}
       </Link>
     );
   }
@@ -743,7 +747,7 @@ class ProductItem extends PureComponent {
         {this.renderLabel()}
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
         {this.renderLink()}{" "}
-        {!isMobile.any() ? this.renderColorVariants() : this.renderColorVariantsMobile()}
+        {!isMobile.any() ? this.renderColorVariants() : null}
         {pageType !== "cartSlider" &&
           pageType !== "wishlist" &&
           this.renderOutOfStock()}
