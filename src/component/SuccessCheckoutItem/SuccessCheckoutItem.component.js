@@ -301,7 +301,7 @@ export class SuccessCheckoutItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
-        {((isIntlBrand && !isFailed) || (international_shipping_fee && cross_border)) ? this.renderIntlTag() : null}
+        {((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
       </figcaption>
     );
   }

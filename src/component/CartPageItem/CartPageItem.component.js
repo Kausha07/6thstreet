@@ -980,7 +980,7 @@ export class CartItem extends PureComponent {
           edd_info.has_cart &&
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           this.renderEdd(cross_border === 1)}
-        {(isIntlBrand || (international_shipping_fee && cross_border)) ?  this.renderIntlTag() : null}
+        {(isIntlBrand || (international_shipping_fee && +cross_border)) ?  this.renderIntlTag() : null}
       </figcaption>
     );
   }

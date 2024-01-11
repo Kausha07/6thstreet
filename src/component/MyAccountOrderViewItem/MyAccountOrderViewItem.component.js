@@ -110,7 +110,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
           !isFailed &&
           status !== "payment_failed" &&
           status !== "payment_aborted") ||
-        (international_shipping_fee && cross_border) ||
+        (international_shipping_fee && +cross_border) ||
         int_shipment === "1"
           ? this.renderIntlTag()
           : null}
