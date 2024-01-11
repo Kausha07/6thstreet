@@ -41,7 +41,7 @@ function PLPMoreFilters(props) {
   const renderMoreFilterList = () => {
     const { handleMoreFilterChange, selectedMoreFilter } = props;
     const listItems = props.ListOFMoreFilters.map((item, index) => (
-      <li key={index} onClick={() => handleMoreFilterChange(item)}>
+      <li key={index} onClick={() => handleMoreFilterChange(item,index+1)}>
         <div
           className={`moreFilters ${
             item === selectedMoreFilter ? "isSelected" : ""
