@@ -21,9 +21,11 @@ import {
   TABBY_ISTALLMENTS,
   TABBY_PAYMENT_CODES,
   KNET_PAY,
+  TAMARA,
 } from "./CheckoutPayments.config";
 import "./CheckoutPayments.extended.style";
 import Applepay from "./icons/apple-pay@3x.png";
+import TamaraCard from "Component/TamaraCard/TamaraCard";
 
 export class CheckoutPayments extends SourceCheckoutPayments {
   static propTypes = {
@@ -50,6 +52,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     [FREE]: this.renderFree.bind(this),
     [CHECKOUT_QPAY]: this.renderQPay.bind(this),
     [KNET_PAY]: this.renderKnetPay.bind(this),
+    [TAMARA]: this.renderTamara.bind(this),
   };
 
   state = {
@@ -217,6 +220,32 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         <p block="CheckoutPayments" elem="MethodDiscription">
           {method_description}
         </p>
+      </div>
+    );
+  }
+
+  renderTamara() {
+    const {
+      options: { method_description, method_title },
+    } = this.getSelectedMethodData();
+    const { totals: { total, currency_code } } = this.props;
+    const { isArabic, isMobile } = this.state;
+    const countryCode = getCountryFromUrl();
+
+    return (
+      <div block="CheckoutPayments" elem="SelectedInfo">
+        <h2 block="CheckoutPayments" elem="MethodTitle">
+          {method_title}
+        </h2>
+        <div>
+          <TamaraCard 
+            isMobile={isMobile}
+            isArabic={isArabic}
+            currency={currency_code}
+            productPrice={total}
+            countryCode={countryCode}
+          />
+        </div>
       </div>
     );
   }

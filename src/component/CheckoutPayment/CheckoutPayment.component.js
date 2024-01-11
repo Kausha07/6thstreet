@@ -5,6 +5,7 @@ import {
   CHECKOUT_APPLE_PAY,
   HIDDEN_PAYMENTS,
   TABBY_PAYMENT_CODES,
+  TAMARA,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { paymentMethodType } from "Type/Checkout";
 import { isArabic } from "Util/App";
@@ -13,6 +14,7 @@ import Image from "Component/Image";
 import {EVENT_MOE_ADD_PAYMENT_INFO, MOE_trackEvent} from "Util/Event"
 import { PAYMENTS_DATA } from "./CheckoutPayment.config";
 import tabbyAr from "./icons/tabby-logo-black-ar@2x.png";
+import TamaraLogo from "./icons/Tamara.svg";
 
 import "./CheckoutPayment.style";
 
@@ -108,6 +110,14 @@ export class CheckoutPayment extends PureComponent {
       return (
         <div block="CheckoutPayment" elem="Method">
           <p>KNET</p>
+        </div>
+      );
+    }
+
+    if (m_code === TAMARA) {
+      return (
+        <div block="CheckoutPayment" elem="Method">
+          <img src={TamaraLogo} alt="tamara-logo" />
         </div>
       );
     }

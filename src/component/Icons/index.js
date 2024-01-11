@@ -31,6 +31,7 @@ import FlashAnimation from "./Flash";
 import Offer from "./Offer";
 import Coupon from "./Coupon";
 import PlayButton from "./PlayButton";
+import { tamaraLogo } from "./Tamara";
 
 
 export {
@@ -67,4 +68,5 @@ export {
   Offer,
   Coupon,
   PlayButton,
+  tamaraLogo
 };

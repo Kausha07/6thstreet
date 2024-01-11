@@ -4,6 +4,7 @@ import {
   CHECKOUT_QPAY,
   TABBY_ISTALLMENTS,
   KNET_PAY,
+  TAMARA,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
@@ -23,6 +24,7 @@ import {
   STATUS_PENDING,
   SUCCESS,
   FAILED,
+  APPROVED,
 } from "Route/Checkout/Checkout.config";
 import {
   BILLING_STEP,
@@ -130,6 +132,12 @@ export const mapDispatchToProps = (dispatch) => ({
   removeCouponFromCart: () => CartDispatcher.removeCouponCode(dispatch),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
+  createTamaraSession: () =>
+    CheckoutDispatcher.createTamaraSession(dispatch),
+  verifyTamaraPayment: (paymentID) =>
+    CheckoutDispatcher.verifyTamaraPayment(dispatch, paymentID),
+  updateTamaraPayment: (paymentID, orderId) =>
+    CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId),
 });
 export const mapStateToProps = (state) => ({
   couponsItems: state.CartReducer.cartCoupons,
@@ -255,6 +263,63 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { updateTotals, cartId, removeBinPromotion } = this.props;
     await removeBinPromotion();
     await updateTotals(cartId);
+  };
+
+  getTamaraData = async () => {
+    const {
+      showErrorNotification,
+      cancelOrder,
+      verifyTamaraPayment,
+      updateTamaraPayment,
+    } = this.props;
+    try {
+      const TAMARA_CHECK = JSON.parse(localStorage.getItem("TAMARA_ORDER_DETAILS"));
+      const now = new Date();
+      if (TAMARA_CHECK && now.getTime() < TAMARA_CHECK?.expiry) {
+        const { order_id, increment_id } = TAMARA_CHECK;
+        this.setState({ PaymentRedirect: true, isLoading: false });
+        const ShippingAddress = JSON.parse(
+          localStorage.getItem("Shipping_Address")
+        );
+        this.setState({ shippingAddress: ShippingAddress });
+
+        let paymentStatus = "";
+        let tamaraOrderId = "";
+        if (new URLSearchParams(window.location.search).get("paymentStatus")) {
+          paymentStatus = new URLSearchParams(window.location.search).get("paymentStatus");
+        } 
+        if (new URLSearchParams(window.location.search).get("orderId")) {
+          tamaraOrderId = new URLSearchParams(window.location.search).get("orderId");
+        } 
+
+        const resp = await verifyTamaraPayment(tamaraOrderId);
+        const responseData = await getOrderData(order_id);
+        const order = responseData?.data;
+        this.setState({ KNETOrderDetails: order });
+
+        if (paymentStatus === APPROVED ) {
+          BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+          this.setDetailsStep(order_id, increment_id);
+          this.setState({ isLoading: false });
+          this.resetCart();
+          // below call is only to update payment state to magento
+          const updatePaymentResp = await updateTamaraPayment(tamaraOrderId, order_id)
+        } else {
+          cancelOrder(order_id, PAYMENT_FAILED);
+          this.setState({ isFailed: true });
+          this.setDetailsStep(order_id, increment_id);
+          this.resetCart();
+        }
+        localStorage.removeItem("TAMARA_ORDER_DETAILS");
+        return;
+      } else if (now.getTime() >= TAMARA_CHECK?.expiry) {
+        localStorage.removeItem("TAMARA_ORDER_DETAILS");
+      }
+    } catch (error) {
+      localStorage.removeItem("TAMARA_ORDER_DETAILS");
+      this.setState({ PaymentRedirect: false });
+      console.error("error while auth in Tamara case", error);
+    }
   };
 
   getTabbyData = async () => {
@@ -525,14 +590,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     const TABBY_CHECK = JSON.parse(localStorage.getItem("TABBY_ORDER_DETAILS"));
     const KNET_CHECK = JSON.parse(localStorage.getItem("KNET_ORDER_DETAILS"));
+    const TAMARA_CHECK = JSON.parse(localStorage.getItem("TAMARA_ORDER_DETAILS"));
     if(!TABBY_CHECK) {
-      if (!QPAY_CHECK && !KNET_CHECK) {
+      if (!QPAY_CHECK && !KNET_CHECK && !TAMARA_CHECK) {
         this.refreshCart();
       } else {
         await updateTotals(cartId);
       }
     }
     setMeta({ title: __("Checkout") });
+    if(TAMARA_CHECK) {
+      this.getTamaraData();
+    }
     this.getKNETData();
     this.getQPayData();
     this.getTabbyData();
@@ -1062,7 +1131,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } else if (
       code === TABBY_ISTALLMENTS ||
       code === CHECKOUT_QPAY ||
-      code === KNET_PAY
+      code === KNET_PAY ||
+      code === TAMARA
     ) {
       this.placeOrder(code, data, paymentInformation, finalEdd, eddItems);
     } else {
@@ -1223,6 +1293,33 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 JSON.stringify(shippingAddress)
               );
               window.open(`${href}`, "_self");
+            } else if (code === TAMARA) {
+              const { shippingAddress } = this.state;
+              this.setState({
+                order_id,
+                increment_id,
+                id,
+              });
+              const now = new Date();
+              const obj = {
+                order_id,
+                id,
+                increment_id,
+                // keep details in localstorage for 10 mins only
+                expiry: now.getTime() + 600000,
+              };
+              localStorage.setItem("ORDER_EDD_ITEMS", JSON.stringify(eddItems));
+              localStorage.setItem("TAMARA_ORDER_DETAILS", JSON.stringify(obj));
+              localStorage.setItem(
+                "PAYMENT_INFO",
+                JSON.stringify(paymentInformation)
+              );
+              localStorage.setItem(
+                "Shipping_Address",
+                JSON.stringify(shippingAddress)
+              );
+              this.setState({ isLoading: true });
+              this.placeTamaraOrder(code);
             } else {
               if (code === CARD) {
                 const { saveCreditCard, newCardVisible } = this.props;
@@ -1427,6 +1524,22 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
       }
     });
+  }
+
+  async placeTamaraOrder (code) {
+    const { createOrder, showErrorNotification, createTamaraSession } = this.props;
+    const tamaraSessionResponse = await createTamaraSession(code);
+
+    if( tamaraSessionResponse && tamaraSessionResponse.tamara_url ) {
+      const tamara_url = tamaraSessionResponse.tamara_url
+      window.open(`${tamara_url}`, "_self");
+    } else if(tamaraSessionResponse === "Internal Server Error" || !tamaraSessionResponse) {
+      showErrorNotification(tamaraSessionResponse)
+      history.push({
+        pathname: "/cart",
+      });
+      return;
+    }
   }
 
   processThreeDSWithTimeout(counter) {

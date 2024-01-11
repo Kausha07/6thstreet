@@ -28,6 +28,9 @@ import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
+import {
+  TAMARA,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -1109,6 +1112,7 @@ export class CheckoutSuccess extends PureComponent {
             </>
           )}
           {paymentMethod?.code === CAREEM_PAY ? ("Careem Pay") : null}
+          {paymentMethod?.code === TAMARA ? ("Tamara") : null}
         </div>
       </>
     );

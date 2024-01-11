@@ -32,6 +32,12 @@ import {
 } from "Util/API/endpoint/Tabby/Tabby.enpoint";
 import { capitalize } from "Util/App";
 import Logger from "Util/Logger";
+import {
+  getInstallmentForTamara,
+  createSessionTamara,
+  verifyTamaraPayment,
+  updateTamaraPayment
+} from "Util/API/endpoint/Tamara/Tamara.endpoint";
 
 export class CheckoutDispatcher {
   async validateAddress(dispatch, address) {
@@ -113,6 +119,28 @@ export class CheckoutDispatcher {
 
   async getPaymentMethods() {
     return getPaymentMethods();
+  }
+
+  async getTamaraInstallment(dispatch, price) {
+    return getInstallmentForTamara(price);
+  }
+
+  async createTamaraSession(dispatch, billingData = {}) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();    
+
+    return createSessionTamara({
+      cart_id: cartId.toString(),
+    });
+  }
+
+  async verifyTamaraPayment (dispatch, paymentID) {
+    return verifyTamaraPayment(paymentID);
+  }
+
+  async updateTamaraPayment (dispatch, paymentID, orderId) {
+    return updateTamaraPayment(paymentID, orderId)
   }
 
   async getTabbyInstallment(dispatch, price) {

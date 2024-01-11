@@ -65,6 +65,7 @@ export class PDPSummaryContainer extends PureComponent {
       setEddResponseForPDP,
       TabbyInstallment,
       brandInfoData,
+      config = {},
     } = this.props;
     return {
       product,
@@ -82,7 +83,8 @@ export class PDPSummaryContainer extends PureComponent {
       setEddResponse,
       setEddResponseForPDP,
       TabbyInstallment,
-      brandInfoData
+      brandInfoData,
+      config,
     };
   };
 

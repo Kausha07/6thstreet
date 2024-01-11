@@ -17,6 +17,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import TamaraWidget from "Component/TamaraWidget/TamaraWidget";
 import {
   DEFAULT_MESSAGE,
   EDD_MESSAGE_ARABIC_TRANSLATION,
@@ -1186,6 +1187,37 @@ class PDPSummary extends PureComponent {
     );
   }
 
+  renderTammaraWidget() {
+    const {
+      product: { price },
+      config: { countries = {} }
+    } = this.props;
+    const { isArabic, isMobile } = this.state;
+    const countryCode = getCountryFromUrl();
+    const isTamaraEnable = countries[countryCode]?.isTamaraEnable || false;
+    
+    if (price && isTamaraEnable) {
+      let productPrice = 0;
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { default: defPrice } = priceData;
+      productPrice = defPrice;
+
+      return (
+        <div id="TammaraPromo" > 
+          <TamaraWidget 
+            isArabic={isArabic}
+            countryCode={countryCode}
+            productPrice={productPrice}
+            isMobile={isMobile}
+            currency={currency}
+            pageType="pdpPage"
+          />
+        </div>
+      );
+    }
+  }
+
   renderIntlTag() {
     return (
       <span block="AdditionShippingInformation">
@@ -1228,6 +1260,7 @@ class PDPSummary extends PureComponent {
           this.renderSelectCity(cross_border === 1)}
         {isIntlBrand && this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
+        {this.renderTammaraWidget()}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
         {this.renderAddToCartSection()}
