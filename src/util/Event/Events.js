@@ -312,4 +312,3 @@ export const EVENT_MOE_OOOPS_SOMETHING_WENT_WRONG = "ooops_something_went_wrong"
    "filter_search_value_selected";
  export const EVENT_GTM_VIEW_PLP_ITEMS = "view_plp_items";
 export const VIP_CUSTOMER = "vip_customer";
-export const EVENT_SIZE_PREDICTION_CLICK = "size_prediction_click";
