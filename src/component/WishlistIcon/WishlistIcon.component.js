@@ -2,6 +2,7 @@
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -25,6 +26,13 @@ import { isSignedIn } from "Util/Auth";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
+export const mapStateToProps = (state) => ({
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+});
+
+export const mapDispatchToProps = (_dispatch) => ({
+});
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -65,6 +73,7 @@ class WishlistIcon extends PureComponent {
       newSignUpEnabled,
       isFilters,
       product_position,
+      indexCodeRedux,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -174,7 +183,8 @@ class WishlistIcon extends PureComponent {
       ? priceObject[Object.keys(priceObject)[0]]["6s_base_price"]
       : "";
     if (pageType == "search") {
-      Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, data?.name);
+      const eventData = { search: data?.name, indexCodeRedux: indexCodeRedux };
+      Event.dispatch(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, eventData);
       MOE_trackEvent(EVENT_CLICK_SEARCH_WISH_LIST_CLICK, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
@@ -300,4 +310,4 @@ class WishlistIcon extends PureComponent {
   }
 }
 
-export default WishlistIcon;
+export default connect(mapStateToProps, mapDispatchToProps)(WishlistIcon);
