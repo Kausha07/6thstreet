@@ -298,7 +298,7 @@ export class SearchOverlay extends PureComponent {
 
   handleProductClick = (product) => {
     const { position, objectID } = product;
-    const { queryID } = this.props;
+    const { queryID, indexCodeRedux } = this.props;
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
@@ -313,7 +313,8 @@ export class SearchOverlay extends PureComponent {
         position: [position],
       });
     }
-    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
+    const eventData = { search: product?.name, indexCodeRedux: indexCodeRedux };
+    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, eventData);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),

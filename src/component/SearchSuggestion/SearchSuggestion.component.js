@@ -274,7 +274,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleProductClick = (product) => {
-    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
+    const { indexCodeRedux } = this.props;
+    const eventData = { search: product?.name, indexCodeRedux: indexCodeRedux };
+    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, eventData);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
