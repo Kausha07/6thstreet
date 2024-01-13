@@ -366,7 +366,7 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderQuerySuggestion = (querySuggestions, i) => {
-    const { query, label } = querySuggestions;
+    const { query, label, indexCodeRedux } = querySuggestions;
     const { searchString, products = [] } = this.props;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -380,10 +380,10 @@ class SearchSuggestion extends PureComponent {
         item?.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
 
+    const eventData = { search: query, indexCodeRedux: indexCodeRedux };
+    
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        const { indexCodeRedux } = this.props;
-        const eventData = { search: query, indexCodeRedux: indexCodeRedux };
         Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
         MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
@@ -392,7 +392,7 @@ class SearchSuggestion extends PureComponent {
           app6thstreet_platform: "Web",
         });
       } else {
-        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
+        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, eventData);
         MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
