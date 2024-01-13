@@ -18,6 +18,7 @@ import { Price as PriceType } from "Util/API/endpoint/Product/Product.type";
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
 });
 
 class RecommendedForYouVueSliderItem extends PureComponent {
@@ -52,6 +53,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       sourceCatgID,
       posofreco,
       data,
+      indexCodeRedux,
     } = this.props;
     let destProdID = sku;
     // vue analytics
@@ -74,8 +76,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       },
     });
     const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"] || "";
-    
-    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK, name);
+    const eventData = { search: name, indexCodeRedux: indexCodeRedux };
+    Event.dispatch(EVENT_CLICK_RECOMMENDATION_CLICK, eventData);
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, data);
   };
   sendBannerClickImpression(item) {

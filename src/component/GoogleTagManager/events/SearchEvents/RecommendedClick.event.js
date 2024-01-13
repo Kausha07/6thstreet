@@ -3,7 +3,7 @@ import Event, {
 } from "Util/Event";
 
 import BaseEvent from "../Base.event";
-import { indexCode } from "Util/AlgoliaIndex";
+import { getAlgoliaIndexCode } from "Util/AlgoliaIndex";
 
 /**
  * Constants
@@ -31,12 +31,12 @@ class RecommendedClickEvent extends BaseEvent {
    * Bind PWA event handling
    */
   bindEvent() {
-    Event.observer(EVENT_CLICK_RECOMMENDATION_CLICK, (name) => {
-      this.handle(EVENT_CLICK_RECOMMENDATION_CLICK, name);
+    Event.observer(EVENT_CLICK_RECOMMENDATION_CLICK, (data) => {
+      this.handle(EVENT_CLICK_RECOMMENDATION_CLICK, data);
     });
   }
 
-  handler(EVENT_TYPE, name) {
+  handler(EVENT_TYPE, data) {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
@@ -44,8 +44,8 @@ class RecommendedClickEvent extends BaseEvent {
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: name || "",
-      index_code: indexCode,
+      SearchTerm: data.search || "",
+      index_code: getAlgoliaIndexCode(data.indexCodeRedux),
     });
   }
   getCustomerId() {
