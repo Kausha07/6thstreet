@@ -44,8 +44,8 @@ class SearchSuggestionProductClickEvent extends BaseEvent {
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: product.search || "",
-      index_code: getAlgoliaIndexCode(data.indexCodeRedux),
+      SearchTerm: product?.search || "",
+      index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });
   }
   getCustomerId() {
