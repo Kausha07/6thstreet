@@ -5,6 +5,7 @@ import Price from "Component/Price";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import DragScroll from "Component/DragScroll/DragScroll.component";
@@ -41,6 +42,13 @@ import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 
 var ESCAPE_KEY = 27;
+
+export const mapStateToProps = (state) => ({
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+});
+export const mapDispatchToProps = (_dispatch) => ({
+
+});
 
 class SearchSuggestion extends PureComponent {
   static propTypes = {
@@ -266,7 +274,9 @@ class SearchSuggestion extends PureComponent {
   };
 
   handleProductClick = (product) => {
-    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
+    const { indexCodeRedux } = this.props;
+    const eventData = { search: product?.name, indexCodeRedux: indexCodeRedux };
+    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, eventData);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -358,7 +368,7 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderQuerySuggestion = (querySuggestions, i) => {
-    const { query, label } = querySuggestions;
+    const { query, label, indexCodeRedux } = querySuggestions;
     const { searchString, products = [] } = this.props;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -372,9 +382,11 @@ class SearchSuggestion extends PureComponent {
         item?.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
 
+    const eventData = { search: query, indexCodeRedux: indexCodeRedux };
+    
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
+        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
         MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -382,7 +394,7 @@ class SearchSuggestion extends PureComponent {
           app6thstreet_platform: "Web",
         });
       } else {
-        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
+        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, eventData);
         MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -926,6 +938,8 @@ class SearchSuggestion extends PureComponent {
         }
       }
     }
+    const { indexCodeRedux } = this.props;
+    const eventData = { search: name, indexCodeRedux: indexCodeRedux };
     return (
       <li key={i}>
         <Link
@@ -937,7 +951,7 @@ class SearchSuggestion extends PureComponent {
                 )}&p=0&dFR[gender][0]=${genderInURL}`
           }
           onClick={() => {
-            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
+            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, eventData);
             MOE_trackEvent(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
@@ -1080,4 +1094,6 @@ class SearchSuggestion extends PureComponent {
   }
 }
 
-export default withRouter(SearchSuggestion);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SearchSuggestion)
+);

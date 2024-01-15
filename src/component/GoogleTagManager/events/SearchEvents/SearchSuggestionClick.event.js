@@ -3,7 +3,7 @@ import Event, {
 } from "Util/Event";
 
 import BaseEvent from "../Base.event";
-import { indexCode } from "Util/AlgoliaIndex";
+import { getAlgoliaIndexCode } from "Util/AlgoliaIndex";
 
 /**
  * Constants
@@ -36,7 +36,7 @@ class SearchSuggesionClickEvent extends BaseEvent {
     });
   }
 
-  handler(EVENT_TYPE, search) {
+  handler(EVENT_TYPE, data) {
     this.pushEventData({
       event: EVENT_TYPE,
       eventCategory: "search",
@@ -45,8 +45,8 @@ class SearchSuggesionClickEvent extends BaseEvent {
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
       CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
-      SearchTerm: search || "",
-      index_code: indexCode,
+      SearchTerm: data?.search || "",
+      index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });
   }
   getCustomerId() {
