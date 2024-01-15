@@ -185,6 +185,31 @@ export class CartOverlay extends PureComponent {
     );
   }
 
+  renderInternationalShipping() {
+    const {
+      totals: { items = [], international_shipping_amount = 0 },
+      international_shipping_fee,
+    } = this.props;
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+    if (
+      inventory_level_cross_border &&
+      international_shipping_fee &&
+      international_shipping_amount
+    ) {
+      return (
+        <dl block="CartOverlay" elem="Discount">
+          <dt>{__("International Shipping fee")}</dt>
+          <dd>{this.renderPriceLine(international_shipping_amount)}</dd>
+        </dl>
+      );
+    }
+  }
+
   renderActions() {
     const {
       totals: { items = [] },
@@ -229,7 +254,8 @@ export class CartOverlay extends PureComponent {
   renderPromoContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
-      totals: { currency_code, avail_free_shipping_amount },
+      totals: { currency_code, avail_free_shipping_amount, avail_free_intl_shipping_amount, items=[]},
+      international_shipping_fee
     } = this.props;
     const { isArabic } = this.state;
 
@@ -237,14 +263,28 @@ export class CartOverlay extends PureComponent {
       return <CmsBlock identifier={cart_cms} />;
     }
 
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
     return (
       <div block="CartOverlay" elem="PromoBlock">
         <figcaption block="CartOverlay" elem="PromoText" mods={{ isArabic }}>
           <Image lazyLoad={true} src={Delivery} alt="Delivery icon" />
           {__("Add ")}
-          <span block="CartOverlay" elem="Currency">
-            {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
-          </span>
+          {
+            international_shipping_fee && inventory_level_cross_border ?
+            <span block="CartOverlay" elem="Currency">
+              {`${currency_code} ${avail_free_intl_shipping_amount.toFixed(3)} `}
+            </span>
+            :
+            <span block="CartOverlay" elem="Currency">
+              {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
+            </span>
+          }
           {__("more to your cart for ")}
           <span block="CartOverlay" elem="FreeDelivery">
             {__("Free delivery")}
@@ -265,15 +305,23 @@ export class CartOverlay extends PureComponent {
 
   renderPromo() {
     const {
-      totals: { avail_free_shipping_amount },
+      totals: { avail_free_shipping_amount, avail_free_intl_shipping_amount, items = []},
+      international_shipping_fee,
     } = this.props;
 
-    if (!avail_free_shipping_amount && avail_free_shipping_amount !== 0) {
+    let inventory_level_cross_border = false;
+    items.map(item => {
+      if(item.full_item_info && item.full_item_info.cross_border && parseInt(item.full_item_info.cross_border) > 0) {
+        inventory_level_cross_border = true;
+      }
+    });
+
+    if (((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && (!avail_free_shipping_amount && avail_free_shipping_amount !== 0)) || (international_shipping_fee && inventory_level_cross_border && !avail_free_intl_shipping_amount && avail_free_intl_shipping_amount !== 0)) {
       return null;
     }
     return (
       <div block="CartOverlay" elem="Promo">
-        {avail_free_shipping_amount === 0
+        {((!international_shipping_fee || (international_shipping_fee && !inventory_level_cross_border)) && avail_free_shipping_amount === 0) || (international_shipping_fee && inventory_level_cross_border && avail_free_intl_shipping_amount === 0)
           ? this.renderFreeShippingContent()
           : this.renderPromoContent()}
       </div>
@@ -381,6 +429,7 @@ export class CartOverlay extends PureComponent {
           {this.renderCartItems()}
           {this.renderTotals()}
           {this.renderShipping()}
+          {this.renderInternationalShipping()}
           {this.renderDiscount()}
           {this.renderActions()}
           {this.renderPromo()}

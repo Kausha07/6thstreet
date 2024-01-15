@@ -91,3 +91,7 @@ const algoliaQueryIndex = getAlgoliaIndexForQuerySuggestion(
 );
 export const indexCode =
   indexCodeList[process.env.REACT_APP_ALGOLIA_ENV][algoliaQueryIndex] || null;
+
+export const getAlgoliaIndexCode = (algoliaQueryIndex) => {
+  return indexCodeList[process.env.REACT_APP_ALGOLIA_ENV][algoliaQueryIndex] || null;
+};

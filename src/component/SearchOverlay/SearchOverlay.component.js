@@ -1,7 +1,8 @@
 import { v4 } from "uuid";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
+import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import history from "Util/History";
@@ -39,6 +40,13 @@ import { SEARCH_OVERLAY } from "Component/Header/Header.config";
 import "./SearchOverlay.style";
 
 import { LocationType } from "Type/Common";
+
+export const mapStateToProps = (state) => ({
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+});
+export const mapDispatchToProps = (_dispatch) => ({
+
+});
 
 export class SearchOverlay extends PureComponent {
   static propTypes = {
@@ -159,7 +167,7 @@ export class SearchOverlay extends PureComponent {
   };
 
   renderQuerySuggestion = (querySuggestions, i) => {
-    const { query, label, count } = querySuggestions;
+    const { query, label, count, indexCodeRedux } = querySuggestions;
     const { searchString, products = [] } = this.props;
     const gender =
       BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender === "all"
@@ -172,10 +180,10 @@ export class SearchOverlay extends PureComponent {
         item?.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
         item?.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
-
+    const eventData = { search: query, indexCodeRedux: indexCodeRedux };
     const suggestionEventDipatch = (query) => {
       if (query == searchString) {
-        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, query);
+        Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
         MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -183,7 +191,7 @@ export class SearchOverlay extends PureComponent {
           app6thstreet_platform: "Web",
         });
       } else {
-        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, query);
+        Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, eventData);
         MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -290,7 +298,7 @@ export class SearchOverlay extends PureComponent {
 
   handleProductClick = (product) => {
     const { position, objectID } = product;
-    const { queryID } = this.props;
+    const { queryID, indexCodeRedux } = this.props;
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
@@ -305,7 +313,8 @@ export class SearchOverlay extends PureComponent {
         position: [position],
       });
     }
-    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, product?.name);
+    const eventData = { search: product?.name, indexCodeRedux: indexCodeRedux };
+    Event.dispatch(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, eventData);
     MOE_trackEvent(EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK, {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
@@ -400,6 +409,8 @@ export class SearchOverlay extends PureComponent {
 
     let genderInURL;
     genderInURL = this.onGenderSelection(gender);
+    const { indexCodeRedux } = this.props;
+    const eventData = { search: name, indexCodeRedux: indexCodeRedux };
     return (
       <li key={i}>
         <Link
@@ -411,7 +422,7 @@ export class SearchOverlay extends PureComponent {
                 )}&p=0&dFR[gender][0]=${genderInURL}&dFR[in_stock][0]=${1}`
           }
           onClick={() => {
-            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, name);
+            Event.dispatch(EVENT_CLICK_RECENT_SEARCHES_CLICK, eventData);
             MOE_trackEvent(EVENT_CLICK_RECENT_SEARCHES_CLICK, {
               country: getCountryFromUrl().toUpperCase(),
               language: getLanguageFromUrl().toUpperCase(),
@@ -545,13 +556,15 @@ export class SearchOverlay extends PureComponent {
       return data[0];
     }
     if (data.length === 0) {
-      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+      const { indexCodeRedux } = this.props;
+      const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
     }
     return null;
   };
 
   SeeAllButtonClick = async () => {
-    const { search, closePopup } = this.props;
+    const { search, closePopup, indexCodeRedux } = this.props;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
       ? encodeURIComponent(search)
@@ -585,7 +598,8 @@ export class SearchOverlay extends PureComponent {
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearches(search);
-        Event.dispatch(EVENT_GTM_SEARCH, search);
+        const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_SEARCH, eventData);
         MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
@@ -707,4 +721,6 @@ export class SearchOverlay extends PureComponent {
   }
 }
 
-export default SearchOverlay;
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SearchOverlay)
+);

@@ -54,6 +54,7 @@ export const mapStateToProps = (state) => ({
   chosenGender: state.AppState.gender,
   displaySearch: state.PDP.displaySearch,
   gender: state.AppState.gender,
+  indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -520,7 +521,9 @@ class HeaderMainSection extends NavigationAbstract {
       return data[0];
     }
     if (data.length === 0) {
-      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, search);
+      const { indexCodeRedux } = this.props;
+      const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+      Event.dispatch(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, eventData);
     }
     return null;
   };
@@ -553,7 +556,7 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   onSearchSubmit = async () => {
-    const { history } = this.props;
+    const { history, indexCodeRedux } = this.props;
     const { search, isArabic } = this.state;
     var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
     let finalSearch = search.match(invalid)
@@ -588,7 +591,8 @@ class HeaderMainSection extends NavigationAbstract {
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
-        Event.dispatch(EVENT_GTM_SEARCH, search);
+        const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+        Event.dispatch(EVENT_GTM_SEARCH, eventData);
         MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),

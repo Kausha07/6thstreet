@@ -56,6 +56,7 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   config: state.AppConfig.config,
   country: state.AppState.country,
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

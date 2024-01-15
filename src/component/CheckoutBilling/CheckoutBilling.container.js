@@ -53,6 +53,7 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   addressCityData: state.MyAccountReducer.addressCityData,
+  international_shipping_fee: state.AppConfig.international_shipping_amount
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -902,14 +903,26 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       totals: {
         discount,
         shipping_fee = 0,
+        international_shipping_amount = 0,
         total_segments: totals = [],
         items = [],
       },
+      international_shipping_fee,
     } = this.props;
-    const LineItems = items.map((item) => ({
-      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: item?.full_item_info?.price * item?.qty,
-    }));
+    let inventory_level_cross_border = false;
+    const LineItems = items.map((item) => {
+      ({
+        label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
+        amount: item?.full_item_info?.price * item?.qty,
+      });
+      if (
+        item?.full_item_info &&
+        item?.full_item_info?.cross_border &&
+        parseInt(item?.full_item_info.cross_border) > 0
+      ) {
+        inventory_level_cross_border = true;
+      }
+    });
     if (discount) {
       LineItems.push({
         label: __("Discount"),
@@ -917,10 +930,19 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       });
     }
 
-    if (shipping_fee) {
+    if (!inventory_level_cross_border || !international_shipping_fee) {
       LineItems.push({
         label: __("Shipping Charges"),
-        amount: shipping_fee,
+        amount: shipping_fee ? shipping_fee : __("FREE"),
+      });
+    }
+
+    if (inventory_level_cross_border && international_shipping_fee) {
+      LineItems.push({
+        label: __("International Shipping Fee"),
+        amount: international_shipping_amount
+          ? international_shipping_amount
+          : __("FREE"),
       });
     }
 
