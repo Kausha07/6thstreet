@@ -39,6 +39,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       } = {},
       status,
       paymentMethod,
+      international_shipping_fee,
     } = this.props;
     const isIntlBrand =
       ( parseInt(cross_border) === 1 &&
@@ -103,13 +104,16 @@ export class MyAccountOrderViewItem extends SourceComponent {
           status !== "payment_aborted" ?
           this.renderEdd(parseInt(cross_border) === 1, orderEddDetails) : null
         }
-        {isIntlBrand &&
+        {(isIntlBrand &&
           edd_info &&
           edd_info.is_enable &&
           !isFailed &&
           status !== "payment_failed" &&
-          status !== "payment_aborted" &&
-          this.renderIntlTag()}
+          status !== "payment_aborted") ||
+        (international_shipping_fee && +cross_border) ||
+        int_shipment === "1"
+          ? this.renderIntlTag()
+          : null}
       </div>
     );
   }

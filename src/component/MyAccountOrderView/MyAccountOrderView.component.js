@@ -144,6 +144,7 @@ class MyAccountOrderView extends PureComponent {
       displayDiscountPercentage,
       eddResponse,
       edd_info,
+      international_shipping_fee,
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -176,6 +177,7 @@ class MyAccountOrderView extends PureComponent {
           edd_info={edd_info}
           currency={currency}
           displayDiscountPercentage={displayDiscountPercentage}
+          international_shipping_fee = {international_shipping_fee}
         />
       </>
     );
@@ -1043,6 +1045,7 @@ class MyAccountOrderView extends PureComponent {
       order: { order_currency_code: currency_code = getCurrency() },
     } = this.props;
     const finalPrice = getFinalPrice(formatPrice, currency_code);
+    const freeTextArray = [__("Shipping"), __("International Shipping Fee")];
 
     return (
       <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
@@ -1056,7 +1059,9 @@ class MyAccountOrderView extends PureComponent {
           )}
         </strong>
         <strong block="MyAccountOrderView" elem="Price">
-          {currency_code} {finalPrice}
+          {freeTextArray.includes(name) && parseInt(finalPrice) === 0
+            ? __("FREE")
+            : `${currency_code} ${finalPrice}`}
         </strong>
       </li>
     );
@@ -1089,6 +1094,8 @@ class MyAccountOrderView extends PureComponent {
         store_credit_amount = 0,
        // club_apparel_amount = 0,
         currency_code = getCurrency(),
+        international_shipping_amount = 0,
+        fulfilled_from = "",
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1099,9 +1106,18 @@ class MyAccountOrderView extends PureComponent {
         <ul>
           <div block="MyAccountOrderView" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
-            {this.renderPriceLine(shipping_amount, __("Shipping"), {
-              divider: true,
-            })}
+            {(fulfilled_from === "Local" || fulfilled_from === null) &&
+              this.renderPriceLine(shipping_amount, __("Shipping"), {
+                divider: true,
+              })}
+            {fulfilled_from === "International" &&
+              this.renderPriceLine(
+                international_shipping_amount,
+                __("International Shipping Fee"),
+                {
+                  divider: true,
+                }
+              )}
             {store_credit_amount !== 0
               ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
                   isStoreCredit: true,
