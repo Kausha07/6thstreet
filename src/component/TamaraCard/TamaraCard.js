@@ -33,7 +33,7 @@ function TamaraCard(props) {
           <img src={tamaraIcon} />
         </div>
         <div block="tamara-header-wrapper-tamara-line" mods={{ isArabic }}>
-          Split In 4, Interest-free
+          {__("Split In 4, Interest-free")}
         </div>
       </div>
     );
@@ -52,7 +52,7 @@ function TamaraCard(props) {
   };
 
   const renderCircleBlock = (circle) => {
-    const { text, svg } = circle;
+    const { text, svg, textAr } = circle;
     return (
       <div
         block="roundWrapper"
@@ -67,17 +67,17 @@ function TamaraCard(props) {
         <div className="text-circle-bold">
           {currencyCode} {installmentAmount}
         </div>
-        {renderCircleText(text)}
+        {isArabic ? renderCircleText(textAr) : renderCircleText(text)}
       </div>
     );
   };
 
   const renderFourCircles = () => {
     const FourCirclesData = [
-      { text: "Today", svg: Round1 },
-      { text: "In 1 month", svg: Round2 },
-      { text: "In 2 month", svg: Round3 },
-      { text: "In 3 month", svg: Round4 },
+      { text: "Today", textAr: "اليوم", svg: Round1 },
+      { text: "In 1 month", textAr: "خلال 1 شهر", svg: Round2 },
+      { text: "In 2 month", textAr: "خلال 2 شهر", svg: Round3 },
+      { text: "In 3 month", textAr: "خلال 3 شهر", svg: Round4 },
     ];
     return (
       <div block="circleWrapper">{FourCirclesData.map(renderCircleBlock)}</div>

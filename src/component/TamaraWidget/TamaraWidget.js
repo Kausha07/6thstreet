@@ -28,7 +28,7 @@ function TamaraWidget(props) {
       <>
         <span>&nbsp;</span>
         <a className="tamara-summary-widget-inline-text-underline">
-          Learn more
+          {__("Learn more")}
         </a>
       </>
     );
@@ -44,6 +44,10 @@ function TamaraWidget(props) {
   };
 
   const addTamaraScripts = () => {
+    const checkSript = document.getElementById("TamaraScript");
+    if (checkSript) {
+      return;
+    }
     const script = document.createElement("script");
     script.src = process.env.REACT_APP_TAMARA_WIDGET_URL;
     script.defer = true;
@@ -100,6 +104,7 @@ function TamaraWidget(props) {
   }, []);
 
   useEffect(() => {
+    setInstallmentAmount(0);
     getTamaraInstallments();
   }, [productPrice]);
 
@@ -111,15 +116,18 @@ function TamaraWidget(props) {
     <div
       className="tamara-widget-example"
     >
-      <tamara-widget type="tamara-summary" amount="350" inline-type="0">
+      <tamara-widget type="tamara-summary" 
+        amount={productPrice}
+        inline-type="0"
+      >
         <div className="my-custome-class-tamara">
           <div className="tamara-summary-widget-content">
             <span className="tamara-widget__number-of-installments-node">
-              Pay a minimum of
+              {__("Pay a minimum of")}
             </span>
             {renderInstallmentsAmount()}
             <span className="tamara-widget__number-of-installments-node">
-              now, and the rest over time - no hidden fees, no interest.
+              {__("now, and the rest over time - no hidden fees, no interest.")}
             </span>
             {renderLearnMore()}
           </div>
