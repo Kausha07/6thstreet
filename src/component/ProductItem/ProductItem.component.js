@@ -494,12 +494,12 @@ class ProductItem extends PureComponent {
   }
 
   renderColorVariants = () => {
-    const { product } = this.props;
+    const { product, product: { sku, color } } = this.props;
     const { isdark, isArabic, selectedOption } = this.state;
-    const productAlsoAvailableColors = product["6s_also_available_color"]
-      ? Object.keys(product["6s_also_available_color"])
+    const productAlsoAvailableColors = (Array.isArray(product["6s_also_available_color"]) ? product["6s_also_available_color"]?.length > 0 : product["6s_also_available_color"])
+      ? [sku, ...Object.keys(product["6s_also_available_color"])]
       : [];
-
+    const colorValue = color ? color.toLowerCase() : "";
     return (
       <div block="colorVariantContainer">
         <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow" mods={{ isArabic }}></span>  : null}</button>
@@ -516,8 +516,8 @@ class ProductItem extends PureComponent {
                     checked={selectedOption === sku}
                     onChange={()=>this.onChangeTheme(sku)}
                     style={{
-                      background: product["6s_also_available_color"][sku] || "",
-                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku]}` : '0px 0px 0px 0.5px #D1D3D4'
+                      background: product["6s_also_available_color"][sku] || colorValue,
+                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku] || colorValue }` : '0px 0px 0px 0.5px #D1D3D4'
                     }}
                   />
                 </div>
