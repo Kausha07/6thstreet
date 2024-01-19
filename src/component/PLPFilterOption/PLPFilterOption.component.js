@@ -264,8 +264,9 @@ class PLPFilterOption extends PureComponent {
 
   renderLabel() {
     const {
-      option: { label = "", facet_value, facet_key, product_count },
+      option: { label = "", facet_value, facet_key, product_count, productCountMsite },
     } = this.props;
+    const finalProductCount = product_count ? product_count : productCountMsite;
 
     if (!label) {
       return null;
@@ -343,7 +344,7 @@ class PLPFilterOption extends PureComponent {
     return (
       <label block="PLPFilterOption" htmlFor={facet_value}>
         {label}
-        {product_count && this.renderCount()}
+        {finalProductCount && this.renderCount()}
       </label>
     );
   }

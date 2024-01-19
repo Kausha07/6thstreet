@@ -23,7 +23,8 @@ import Event, {
   EVENT_GTM_IMPRESSIONS_PLP,
   VUE_PAGE_VIEW,
   EVENT_MOE_VIEW_PLP_ITEMS,
-  MOE_trackEvent
+  MOE_trackEvent,
+  EVENT_FILTER_ATTRIBUTE_SELECTED,
 } from "Util/Event";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -730,7 +731,24 @@ export class PLPContainer extends PureComponent {
     sendEventMoreAttributeSelected(option);
   }
 
-  onSelectMoreFilterPLP(newSelectedMoreFilterPLP) {
+  onSelectMoreFilterPLP(newSelectedMoreFilterPLP,filterPosition) {
+    if (newSelectedMoreFilterPLP) {
+      Event.dispatch(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        app6thstreet_platform: "Web",
+        attributeType: "CUSTOM",
+        AttributeName: newSelectedMoreFilterPLP || "",
+        attributePosition: filterPosition || "",
+      });
+
+      MOE_trackEvent(EVENT_FILTER_ATTRIBUTE_SELECTED, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        attributeType: "CUSTOM",
+        AttributeName: newSelectedMoreFilterPLP || "",
+        attributePosition: filterPosition || "",
+      });
+    }
     this.setState({ selectedMoreFilterPLP: newSelectedMoreFilterPLP})
   }
 

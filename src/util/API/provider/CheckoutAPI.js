@@ -22,7 +22,7 @@ class CheckoutAPI {
 
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const tokenHeader = this.token ? { 'X-API-Token': this.token } : {};
-        const checkoutApiDiffCountries = ['OM', 'BH'];
+        const checkoutApiDiffCountries = ['QA', "KW"];
 
         const options = {
             method,
@@ -36,7 +36,7 @@ class CheckoutAPI {
         };
 
         options.headers.Authorization = checkoutApiDiffCountries.includes(country)
-            ? process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY_OM_BH
+            ? process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY_QA
             : process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY_BASE;
 
         return doFetch(url, options);

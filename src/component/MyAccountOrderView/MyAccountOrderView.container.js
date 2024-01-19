@@ -31,7 +31,8 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   edd_info: state.AppConfig.edd_info,
   is_exchange_enabled: state.AppConfig.is_exchange_enabled,
-  ctcReturnEnabled:state.AppConfig.ctcReturnEnabled
+  ctcReturnEnabled:state.AppConfig.ctcReturnEnabled,
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -66,7 +67,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   containerProps = () => {
     const { isLoading, order } = this.state;
-    const { history, country, eddResponse, edd_info,is_exchange_enabled } = this.props;
+    const { history, country, eddResponse, edd_info,is_exchange_enabled, international_shipping_fee } = this.props;
 
     return {
       isLoading,
@@ -74,7 +75,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
       history,
       eddResponse,
       edd_info,
-      is_exchange_enabled
+      is_exchange_enabled,
+      international_shipping_fee,
     };
   };
 

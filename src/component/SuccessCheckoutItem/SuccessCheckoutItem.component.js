@@ -29,6 +29,7 @@ export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
   intlEddResponse: state.MyAccountReducer.intlEddResponse,
   edd_info: state.AppConfig.edd_info,
+  international_shipping_fee: state.AppConfig.international_shipping_fee,
 });
 
 export class SuccessCheckoutItem extends PureComponent {
@@ -273,7 +274,8 @@ export class SuccessCheckoutItem extends PureComponent {
       edd_info,
       isFailed,
       eddResponse,
-      intlEddResponse
+      intlEddResponse,
+      international_shipping_fee,
     } = this.props;
     const isIntlBrand =
     cross_border === 1 && edd_info && edd_info.has_cross_border_enabled ;
@@ -299,7 +301,7 @@ export class SuccessCheckoutItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info.has_item_level) &&
           !isFailed &&
           this.renderEdd(cross_border === 1)}
-        {isIntlBrand && !isFailed && this.renderIntlTag()}
+        {((isIntlBrand && !isFailed) || (international_shipping_fee && +cross_border)) ? this.renderIntlTag() : null}
       </figcaption>
     );
   }

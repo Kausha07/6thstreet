@@ -163,7 +163,7 @@ class MenuCategory extends PureComponent {
         );
       }
 
-      if (gender === "home" && categoryKey === "utilities") {
+      if (gender === "home" && (categoryKey === "utilities" || categoryKey === "shoes")) {
         this.setState({ isVisible: true });
       }
       return (

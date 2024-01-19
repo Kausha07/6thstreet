@@ -16,6 +16,8 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import { setSelectedAddressID } from "Store/MyAccount/MyAccount.action";
+import { qtyAttributeForCountry } from "Util/Common/index";
+
 export const MyAccountDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/MyAccount/MyAccount.dispatcher"
@@ -167,13 +169,18 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
           courier: null,
           source: null,
         };
+        let payload = {};
         if(edd_info?.has_item_level) {
           let items_in_cart = BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [];
           request.intl_vendors=null;
           let items = [];
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
-              items.push({ sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null})
+              payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
+              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country_code)) {
+                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              }
+              items.push(payload);
             }
           })
           request.items = items;

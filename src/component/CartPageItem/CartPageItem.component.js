@@ -955,7 +955,8 @@ export class CartItem extends PureComponent {
         brand_name = "",
         row_total
       },
-      intlEddResponse
+      intlEddResponse,
+      international_shipping_fee,
     } = this.props;
     const { isNotAvailble } = this.state;
     const isIntlBrand = (cross_border === 1) &&
@@ -980,7 +981,7 @@ export class CartItem extends PureComponent {
           ((isIntlBrand && Object.keys(intlEddResponse).length>0) || cross_border === 0 || edd_info?.has_item_level) &&
           !isNotAvailble &&
           this.renderEdd(cross_border === 1)}
-        {isIntlBrand && this.renderIntlTag()}
+        {(isIntlBrand || (international_shipping_fee && +cross_border)) ?  this.renderIntlTag() : null}
       </figcaption>
     );
   }

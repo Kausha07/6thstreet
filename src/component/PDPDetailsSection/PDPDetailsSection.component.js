@@ -546,6 +546,14 @@ class PDPDetailsSection extends PureComponent {
       material_composition
     );
 
+    if (Array.isArray(product?.gender) && product?.gender?.length > 1) {
+      const productGender = product?.gender?.join(",");
+      const getHighlightGender = highlights?.find((e) => e?.key === "gender");
+      if (getHighlightGender && productGender) {
+        getHighlightGender.value = productGender;
+      }
+    }
+
     return (
       <div
         block="PDPDetailsSection"
