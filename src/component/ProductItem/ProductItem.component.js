@@ -475,8 +475,15 @@ class ProductItem extends PureComponent {
     try {
       if(sku){
         const response = await new Algolia().getProductBySku({ sku });
-        const {data: {image_url=""}} = response;
-        this.setState({colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true});
+        const {
+          data: { image_url = "", sku: productSku },
+        } = response;
+        const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png"
+        if(sku === productSku) {
+          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true});
+        }else {
+          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true})
+        }
       }
     } catch (e) {
       console.error(e);
