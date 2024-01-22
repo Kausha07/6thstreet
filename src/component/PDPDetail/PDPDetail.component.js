@@ -83,9 +83,11 @@ class PDPDetail extends PureComponent {
     const { isMobile } = this.state;
     const { brandDescription, brandImg, brandName, brandInfoData = "", brand_url = "" } =
       this.props;
-    if ( !brand_url || !brandDescription || !brandImg || !brandName) {
+
+    if (!brandDescription && !brandImg && !brandName) {
       return null;
     }
+  
     return (
       <>
         <div block="PDPDetail" elem="BrandImage">
