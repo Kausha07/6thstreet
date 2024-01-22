@@ -150,7 +150,6 @@ class PDPAddToCart extends PureComponent {
       const header = {
         sku: sku,
         size: optionValue,
-        // userEmail: '00_crosse_pacts@icloud.com',
         userEmail: customer.email,
       };
       try{
