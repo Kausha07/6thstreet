@@ -591,7 +591,7 @@ class HeaderMainSection extends NavigationAbstract {
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
         this.logRecentSearch(search);
-        const eventData = { search: search, indexCodeRedux: indexCodeRedux };
+        const eventData = { search: search, indexCodeRedux: productData?.indexUsed };
         Event.dispatch(EVENT_GTM_SEARCH, eventData);
         MOE_trackEvent(EVENT_GTM_VIEW_SEARCH_RESULTS, {
           country: getCountryFromUrl().toUpperCase(),

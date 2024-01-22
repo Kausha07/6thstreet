@@ -5,6 +5,7 @@ export default async function getBrandsDetails(params, options) {
       {
         query: params.query,
         hitsPerPage: params.limit,
+        getRankingInfo: true,
         ...queryOptions,
       },
       (err, data = {}) => {

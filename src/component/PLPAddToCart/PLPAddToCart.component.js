@@ -850,6 +850,7 @@ class PLPAddToCart extends PureComponent {
         queryID: searchQueryId,
         userToken: userToken,
         position: [position],
+        getRankingInfo: true,
       });
     }
     if (

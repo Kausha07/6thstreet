@@ -611,6 +611,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
         userToken: userToken(),
+        getRankingInfo: true,
       },
     };
 
@@ -639,6 +640,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
         userToken: userToken(),
+        getRankingInfo: true,
       },
     };
     queries.push(queryProdCount);
@@ -658,6 +660,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
         clickAnalytics: true,
         maxValuesPerFacet: maxValuesPerFacet,
         userToken: userToken(),
+        getRankingInfo: true,
       },
     };
     queries.push(querySliderPosition);
@@ -709,6 +712,7 @@ function getPLP(URL, options = {}, params = {}, categoryData={}, moreFiltersData
             clickAnalytics: true,
             maxValuesPerFacet: maxValuesPerFacet,
             userToken: userToken(),
+            getRankingInfo: true,
           },
         });
       });

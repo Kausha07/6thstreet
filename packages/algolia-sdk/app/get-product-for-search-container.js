@@ -41,6 +41,7 @@ function getProductForSearchContainer(
         hitsPerPage: limit,
         clickAnalytics: true,
         userToken: userToken(),
+        getRankingInfo: true,
       },
     };
 
