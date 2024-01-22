@@ -208,6 +208,7 @@ export class CheckoutSuccessContainer extends PureComponent {
             objectIDs: [productObjectID],
             queryID: queryID,
             userToken: userToken,
+            getRankingInfo: true,
           }
         );
       }

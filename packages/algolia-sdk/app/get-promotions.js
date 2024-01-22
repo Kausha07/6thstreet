@@ -36,6 +36,7 @@ function getPromotions(URL, options = {}, params = {}) {
         hitsPerPage: limit,
         clickAnalytics: true,
         userToken: userToken(),
+        getRankingInfo: true,
       },
     };
 

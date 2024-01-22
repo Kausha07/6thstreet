@@ -27,6 +27,7 @@ function getSearchPLP(URL, options = {}, params = {}) {
           query: param,
           page: 0,
           hitsPerPage: 2,
+          getRankingInfo: true,
         },
         indexName: indexName,
       };
