@@ -295,7 +295,7 @@ class MyAccountOrderView extends PureComponent {
                 {EXCHANGE_ITEM_LABEL}
               </button>
             }
-            {status === STATUS_EXCHANGE_PENDING && is_cancelable ? (
+            {is_cancelable && +is_exchange_order === 1 ? (
               <div block="MyAccountOrderView" elem="HeadingButton">
                 <button
                   onClick={() => openOrderCancelation(CANCEL_ORDER_LABEL)}
@@ -303,7 +303,7 @@ class MyAccountOrderView extends PureComponent {
                   {CANCEL_ORDER_LABEL}
                 </button>
               </div>
-            ) : is_cancelable ? (
+            ) : is_cancelable && +is_exchange_order === 0 ? (
               <button
                 onClick={() => {
                   openOrderCancelation(CANCEL_ITEM_LABEL);

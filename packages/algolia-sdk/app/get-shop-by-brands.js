@@ -15,6 +15,7 @@ export default async function getShopByBrands(params, options) {
         query: params.query,
         facetFilters: genderForQuery,
         page: 1,
+        getRankingInfo: true,
         hitsPerPage: params.limit        
       },      
       indexName: options.index.indexName
@@ -26,6 +27,7 @@ export default async function getShopByBrands(params, options) {
         query: params.query,
         facetFilters: genderForQuery,
         page: 0,
+        getRankingInfo: true,
         hitsPerPage: params.limit
       },      
       indexName: options.index.indexName

@@ -9,6 +9,7 @@ function getProduct(id, highlights, options) {
       {
         filters: `objectID:${id}`,
         // clickAnalytics: true,
+        getRankingInfo: true,
       },
       (error, data) => {
         if (error) {
