@@ -684,6 +684,23 @@ class PDPSummary extends PureComponent {
     );
   }
 
+  getInStockSKU = (simple_products) => {
+    let arr = [];
+
+    if (Object.values(simple_products)?.[0]?.quantity > 0) {
+      arr.push(Object.keys(simple_products)?.[0]);
+    } else {
+      arr = Object.keys(simple_products).filter(
+        (sku) => simple_products?.[sku]?.quantity > 0
+      );
+    }
+    if (arr?.length > 0) {
+      return arr?.[0];
+    }
+
+    return null;
+  };
+
   formatEddMessage(crossBorder){
     let actualEddMess = "";
     const {
@@ -695,7 +712,14 @@ class PDPSummary extends PureComponent {
     } = this.props;
 
     const { isArabic } = this.state;
-    let sku = this.state.selectedSizeCode ? this.state.selectedSizeCode : Object.keys(simple_products)[0];
+    let sku = this.state.selectedSizeCode
+      ? this.state.selectedSizeCode
+      : this.getInStockSKU(simple_products);
+
+    if (sku === null) {
+      return null;
+    }
+
     if(edd_info?.has_item_level) {
       if(!(crossBorder && !edd_info.has_cross_border_enabled)) {
         if (eddResponseForPDP && isObject(eddResponseForPDP) && eddResponseForPDP["pdp"]) {
@@ -779,9 +803,16 @@ class PDPSummary extends PureComponent {
       selectedArea,
       isMobile,
       isArabic,
+      selectedSizeCode,
     } = this.state;
-    const { edd_info, product: {international_vendor = null} } = this.props;
+    const {
+      edd_info,
+      product: { international_vendor = null, simple_products = {}, },
+    } = this.props;
     let actualEddMess = this.formatEddMessage(crossBorder);
+    if (actualEddMess === null) {
+      return null;
+    }
     const isArea = !(
       selectedCityArea && Object.values(selectedCityArea).length > 0
     );
@@ -790,11 +821,16 @@ class PDPSummary extends PureComponent {
       return this.renderMobileSelectCity();
     }
     let splitKey = DEFAULT_SPLIT_KEY;
-    let EddMessMargin = selectedAreaId ? true : false;
+    let EddMessMargin =
+    selectedAreaId &&
+    edd_info.international_vendors.indexOf(international_vendor) === -1
+      ? true
+      : false;
     return (
       <div block="EddParentWrapper" >
         <div block="EddWrapper">
-          {actualEddMess && (
+          {actualEddMess &&
+              simple_products?.[selectedSizeCode]?.quantity !== 0 && (
             <div
               mix={{
                 block: "EddWrapper",
@@ -860,6 +896,9 @@ class PDPSummary extends PureComponent {
             )}
           </div>
         </div>
+        {actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
+          simple_products?.[selectedSizeCode]?.quantity !== 0 &&
+          this.renderIntlTag()}
       </div>
     );
   }
@@ -1247,9 +1286,9 @@ class PDPSummary extends PureComponent {
 
   renderIntlTag() {
     return (
-      <span block="AdditionShippingInformation">
+      <div block="AdditionShippingInformationInternationalTag">
         {__("International Shipment")}
-      </span>
+      </div>
     );
   }
 
@@ -1303,9 +1342,6 @@ class PDPSummary extends PureComponent {
             cross_border_qty === 0 ||
             (edd_info.has_item_level && isIntlBrand)) &&
           this.renderSelectCity(cross_border_qty === 1)}
-        {inventory_level_cross_border &&
-          international_shipping_fee &&
-          this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
