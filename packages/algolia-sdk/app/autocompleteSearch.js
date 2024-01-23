@@ -9,6 +9,7 @@ export default async function autocompleteSearch(params, options) {
         clickAnalytics: true,
         ...queryOptions,
         userToken: userToken(),
+        getRankingInfo: true,
       },
       (err, data = {}) => {
         if (err) {

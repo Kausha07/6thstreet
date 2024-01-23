@@ -250,6 +250,7 @@ class ProductItem extends PureComponent {
         queryID,
         userToken: userToken,
         position: [position],
+        getRankingInfo: true,
       });
     }
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);

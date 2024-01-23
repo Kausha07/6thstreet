@@ -1295,7 +1295,19 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic, cityResponse, showCityDropdown, isMobile } = this.state;
     const {
-      product: { cross_border = 0, brand_name = "", international_vendor=null, timer_start_time, timer_end_time, simple_products = {} },
+      product: {
+        cross_border = 0,
+        brand_name = "",
+        international_vendor = null,
+        timer_start_time,
+        timer_end_time,
+        simple_products = {},
+        size_us = [],
+        size_uk = [],
+        size_eu = [],
+        in_stock,
+        stock_qty,
+      },
       edd_info,
       intlEddResponse,
       international_shipping_fee
@@ -1315,7 +1327,26 @@ class PDPSummary extends PureComponent {
       });
     }
     const isIntlBrand =
-      cross_border_qty === 1 && edd_info && edd_info.has_cross_border_enabled;
+    cross_border_qty === 1 && edd_info && edd_info.has_cross_border_enabled;
+    let outOfStockStatus = false;
+    if (size_us && size_uk && size_eu) {
+      outOfStockStatus =
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    } else {
+      outOfStockStatus =
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    }
 
     return (
       <div block="PDPSummary" mods={{ isArabic, AreaOverlay }}>
@@ -1341,6 +1372,7 @@ class PDPSummary extends PureComponent {
             !edd_info.has_item_level) ||
             cross_border_qty === 0 ||
             (edd_info.has_item_level && isIntlBrand)) &&
+            !outOfStockStatus &&
           this.renderSelectCity(cross_border_qty === 1)}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}

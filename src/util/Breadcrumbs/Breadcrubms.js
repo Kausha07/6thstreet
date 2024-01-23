@@ -15,7 +15,7 @@ export const getBreadcrumbs = (data = [], onClick, urlArray,isArabic) => data.re
 
 // eslint-disable-next-line max-len
 export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories = []) => menuCategories.reduce((acc, category) => {
-    if (category.label === categoriesLastLevel[1]) {
+    if (category?.label?.toLowerCase() === categoriesLastLevel[1]?.toLowerCase()) {
         const currentCategory = category.data[category.data.length - 1] || {};
         acc.push('/', currentCategory?.button?.link);
 

@@ -9,6 +9,7 @@ export default async function getSuggestions(
       hitsPerPage: limit,
       clickAnalytics: true,
       userToken: userToken(),
+      getRankingInfo: true,
     });
     return res;
   } catch (e) {

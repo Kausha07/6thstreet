@@ -23,6 +23,7 @@ export default function searchBy(
         clickAnalytics: true,
         analyticsTags: tags,
         userToken: userToken(),
+        getRankingInfo: true,
       },
       (err, data = {}) => {
         if (err) {
