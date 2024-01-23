@@ -826,81 +826,85 @@ class PDPSummary extends PureComponent {
     edd_info.international_vendors.indexOf(international_vendor) === -1
       ? true
       : false;
-    return (
-      <div block="EddParentWrapper" >
-        <div block="EddWrapper">
-          {actualEddMess &&
-              simple_products?.[selectedSizeCode]?.quantity !== 0 && (
-            <div
-              mix={{
-                block: "EddWrapper",
-                elem: `AreaText`,
-                mods: { isArabic },
-              }}
-              block={
-                EddMessMargin
-                  ? `EddMessMargin ${isArabic ? "isArabic" : ""}`
-                  : ""
-              }
-            >
-              <span>
-                {actualEddMess.split(splitKey)[0]}
-                {splitKey}
-              </span>
-              <span>{actualEddMess.split(splitKey)[1]}</span>
-            </div>
-          )}
-          {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && !crossBorder) || (edd_info.has_item_level && crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
-            <>
-              {selectedAreaId ? (
+      if (+simple_products?.[selectedSizeCode]?.quantity !== 0) {
+        return (
+          <div block="EddParentWrapper" >
+            <div block="EddWrapper">
+              {actualEddMess && (
                 <div
-                  block={`EddWrapper SelectedAreaWrapper`}
-                  mods={{ isArabic }}
-                  onClick={() => this.handleAreaDropDownClick()}
+                  mix={{
+                    block: "EddWrapper",
+                    elem: `AreaText`,
+                    mods: { isArabic },
+                  }}
+                  block={
+                    EddMessMargin
+                      ? `EddMessMargin ${isArabic ? "isArabic" : ""}`
+                      : ""
+                  }
                 >
-                  <Image lazyLoad={false} src={addressBlack} alt="" />
-                  <div block={`SelectAreaText `}>{selectedArea}</div>
-                </div>
-              ) : (
-                <div
-                  block="EddWrapper"
-                  elem="AreaButton"
-                  mods={{ isArabic }}
-                  onClick={() => this.handleAreaDropDownClick()}
-                >
-                  <Image lazyLoad={false} src={address} alt="" />
-                  <div block="SelectAreaText">
-                    {isArabic ? "حدد المنطقة" : "Select Area"}
-                  </div>
+                  <span>
+                    {actualEddMess.split(splitKey)[0]}
+                    {splitKey}
+                  </span>
+                  <span>{actualEddMess.split(splitKey)[1]}</span>
                 </div>
               )}
-            </>
-          )}
-          <div block="DropDownWrapper">
-            {showCityDropdown && !isMobile && (
-              <div mix={{ block: "EddWrapper", elem: "CountryDrop" }}>
-                {this.renderSelectCityItem()}
+              {((!crossBorder && !edd_info.has_item_level) || (edd_info.has_item_level && !crossBorder) || (edd_info.has_item_level && crossBorder && edd_info.international_vendors && edd_info.international_vendors.indexOf(international_vendor)===-1)) && (
+                <>
+                  {selectedAreaId ? (
+                    <div
+                      block={`EddWrapper SelectedAreaWrapper`}
+                      mods={{ isArabic }}
+                      onClick={() => this.handleAreaDropDownClick()}
+                    >
+                      <Image lazyLoad={false} src={addressBlack} alt="" />
+                      <div block={`SelectAreaText `}>{selectedArea}</div>
+                    </div>
+                  ) : (
+                    <div
+                      block="EddWrapper"
+                      elem="AreaButton"
+                      mods={{ isArabic }}
+                      onClick={() => this.handleAreaDropDownClick()}
+                    >
+                      <Image lazyLoad={false} src={address} alt="" />
+                      <div block="SelectAreaText">
+                        {isArabic ? "حدد المنطقة" : "Select Area"}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+              <div block="DropDownWrapper">
+                {showCityDropdown && !isMobile && (
+                  <div mix={{ block: "EddWrapper", elem: "CountryDrop" }}>
+                    {this.renderSelectCityItem()}
+                  </div>
+                )}
+                {showCityDropdown && showAreaDropDown && !isMobile && (
+                  <div
+                    block="AreaDropdown"
+                    mix={{
+                      block: "EddWrapper",
+                      elem: "CountryDrop",
+                      mods: { isArea, isArabic },
+                    }}
+                  >
+                    {this.renderSelectAreaItem()}
+                  </div>
+                )}
               </div>
-            )}
-            {showCityDropdown && showAreaDropDown && !isMobile && (
-              <div
-                block="AreaDropdown"
-                mix={{
-                  block: "EddWrapper",
-                  elem: "CountryDrop",
-                  mods: { isArea, isArabic },
-                }}
-              >
-                {this.renderSelectAreaItem()}
-              </div>
-            )}
+            </div>
+            {actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
+              simple_products?.[selectedSizeCode]?.quantity !== 0 &&
+              this.renderIntlTag()}
           </div>
-        </div>
-        {actualEddMess?.split(splitKey)?.[1]?.includes("-") &&
-          simple_products?.[selectedSizeCode]?.quantity !== 0 &&
-          this.renderIntlTag()}
-      </div>
-    );
+        );
+      }
+  
+      return null;
+
   }
 
   setSize = (sizeType, sizeCode) => {
