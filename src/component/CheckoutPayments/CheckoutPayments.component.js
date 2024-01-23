@@ -235,7 +235,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     return (
       <div block="CheckoutPayments" elem="SelectedInfo">
         <h2 block="CheckoutPayments" elem="MethodTitle">
-          {method_title}
+          {method_title ? method_title : __("Tamara")}
         </h2>
         <div>
           <TamaraCard 

@@ -1204,7 +1204,7 @@ class PDPSummary extends PureComponent {
       productPrice = defPrice;
 
       return (
-        <div id="TammaraPromo" > 
+        <div id="TamaraPromo"> 
           <TamaraWidget 
             isArabic={isArabic}
             countryCode={countryCode}

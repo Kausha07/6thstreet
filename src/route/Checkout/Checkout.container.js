@@ -286,30 +286,37 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         let paymentStatus = "";
         let tamaraOrderId = "";
         if (new URLSearchParams(window.location.search).get("paymentStatus")) {
-          paymentStatus = new URLSearchParams(window.location.search).get("paymentStatus");
-        } 
+          paymentStatus = new URLSearchParams(window.location.search).get(
+            "paymentStatus"
+          );
+        }
         if (new URLSearchParams(window.location.search).get("orderId")) {
-          tamaraOrderId = new URLSearchParams(window.location.search).get("orderId");
-        } 
+          tamaraOrderId = new URLSearchParams(window.location.search).get(
+            "orderId"
+          );
+        }
 
         const resp = await verifyTamaraPayment(tamaraOrderId);
         const responseData = await getOrderData(order_id);
         const order = responseData?.data;
         this.setState({ KNETOrderDetails: order });
 
-        if (paymentStatus === APPROVED ) {
+        if (paymentStatus === APPROVED) {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
           this.setDetailsStep(order_id, increment_id);
           this.setState({ isLoading: false });
           this.resetCart();
-          // below call is only to update payment state to magento
-          const updatePaymentResp = await updateTamaraPayment(tamaraOrderId, order_id)
         } else {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isFailed: true });
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
         }
+        // below call is only to update payment state to magento
+        const updatePaymentResp = await updateTamaraPayment(
+          tamaraOrderId,
+          order_id
+        );
         localStorage.removeItem("TAMARA_ORDER_DETAILS");
         return;
       } else if (now.getTime() >= TAMARA_CHECK?.expiry) {

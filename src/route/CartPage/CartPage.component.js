@@ -633,15 +633,20 @@ export class CartPage extends PureComponent {
               {__("Your Offers")}
             </h4>
           </div>
-          <div id="TammaraPromo" > 
-            <TamaraWidget 
-              isArabic={isArabic}
-              countryCode={countryCode}
-              productPrice={grandTotal}
-              isMobile={isMobile}
-              pageType="cartPage"
-            />
-          </div><br />
+          {isTamaraEnable ? (
+            <>
+              <div id="TamaraPromo">
+                <TamaraWidget
+                  isArabic={isArabic}
+                  countryCode={countryCode}
+                  productPrice={grandTotal}
+                  isMobile={isMobile}
+                  pageType="cartPage"
+                />
+              </div>
+              <br />
+            </>
+          ) : null}
           <div block="CartPage" elem="yourOffersItem">
             {" "}
             <div block="CartPage" elem="TabbyBlock">

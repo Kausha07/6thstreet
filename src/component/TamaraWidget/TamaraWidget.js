@@ -95,6 +95,15 @@ function TamaraWidget(props) {
               line-height: 18px;
               margin-right: 12px;
             }
+            .tamara-summary-widget-content-ar {
+              color: #0A0A0A;
+              font-family: "Avenir Next";
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 18px;
+              margin-left: 12px;
+            }
             .tamara-icon-tamara-widget {
               max-width: 55px;
             }`,
@@ -113,15 +122,20 @@ function TamaraWidget(props) {
   }
 
   return (
-    <div
-      className="tamara-widget-example"
-    >
-      <tamara-widget type="tamara-summary" 
+    <div className="tamara-widget-example">
+      <tamara-widget
+        type="tamara-summary"
         amount={productPrice}
         inline-type="0"
       >
         <div className="my-custome-class-tamara">
-          <div className="tamara-summary-widget-content">
+          <div
+            className={
+              isArabic
+                ? "tamara-summary-widget-content-ar"
+                : "tamara-summary-widget-content"
+            }
+          >
             <span className="tamara-widget__number-of-installments-node">
               {__("Pay a minimum of")}
             </span>
