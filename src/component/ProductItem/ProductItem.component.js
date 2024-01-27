@@ -388,27 +388,27 @@ class ProductItem extends PureComponent {
         <input
           block="radio-input"
           type="radio"
-          name={isdark ? "dark" : "light"}
-          id={isdark ? "dark" : "light"}
-          value={isdark ? "dark" : "light" }
+          name={colorKey}
+          id={colorKey}
+          value={colorKey }
           onChange={this.onChangeTheme}
-          style={{ background }}
+          style={{ background, boxShadow:'0px 0px 0px 0.5px #D1D3D4' }}
         />
       );
     };
   
-    return productAlsoAvailableColors.length > 0 ? (
+    return productAlsoAvailableColors?.length > 0 ? (
       <div block="PLPMobileColorVarients" mods={{ isArabic }}>
-        {productAlsoAvailableColors.length === 1 ? (
+        {productAlsoAvailableColors?.length === 1 ? (
           <div block="radio-label">{generateInputField(0)}</div>
         ) : (
           <div block="radio-label multi-color">
             {generateInputField(0)}
-            {generateInputField(productAlsoAvailableColors.length - 1)}
+            {generateInputField(productAlsoAvailableColors?.length - 1)}
           </div>
         )}
         <span block="colorVarientCounts" mods={{ isArabic }}>
-          {productAlsoAvailableColors.length}{" "}
+          {product["6s_also_available_count"]}{" "}
         </span>
       </div>
     ) : null;
@@ -453,6 +453,7 @@ class ProductItem extends PureComponent {
           alt={altText}
         />
         {/* {this.renderOutOfStock()} */}
+        {isMobile.any() ? this.renderColorVariantsMobile() : null}
         {this.renderExclusive()}
       </div>
     );
@@ -518,7 +519,7 @@ class ProductItem extends PureComponent {
                     block="radio-input"
                     type="radio"
                     name={isdark ? "dark" : "light"}
-                    id={isdark ? "dark" : "light"}
+                    id={sku}
                     value={sku}
                     checked={selectedOption === sku}
                     onChange={()=>this.onChangeTheme(sku)}
@@ -703,7 +704,6 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {isMobile.any() ? this.renderColorVariantsMobile() : null}
       </Link>
     );
   }
