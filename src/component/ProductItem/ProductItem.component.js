@@ -382,9 +382,9 @@ class ProductItem extends PureComponent {
   
     const generateInputField = (index) => {
       const colorKey = productAlsoAvailableColors[index];
-      const background = product["6s_also_available_color"][colorKey] || "";
+      const background = product["6s_also_available_color"][colorKey]?.color || "";
   
-      return (
+      return product["6s_also_available_color"][colorKey]?.stock !== '0' && (
         <input
           block="radio-input"
           type="radio"
@@ -513,7 +513,7 @@ class ProductItem extends PureComponent {
         <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow" mods={{ isArabic }}></span>  : null}</button>
         <div block="colorVariantSlider" ref={this.scrollRef}>
           {productAlsoAvailableColors?.map(
-            (sku, index) => (
+            (sku, index) =>  product["6s_also_available_color"][sku]?.stock !== '0' &&  (
                 <div key={index} block="radio-label" onClick={() => this.getProductDetailsBySkuAlgolia(sku)}>
                   <input
                     block="radio-input"
@@ -524,8 +524,8 @@ class ProductItem extends PureComponent {
                     checked={selectedOption === sku}
                     onChange={()=>this.onChangeTheme(sku)}
                     style={{
-                      background: product["6s_also_available_color"][sku] || colorValue,
-                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku] || colorValue }` : '0px 0px 0px 0.5px #D1D3D4'
+                      background: product["6s_also_available_color"][sku]?.color || colorValue,
+                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku]?.color || colorValue }` : '0px 0px 0px 0.5px #D1D3D4'
                     }}
                   />
                 </div>
