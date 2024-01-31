@@ -1138,13 +1138,38 @@ export class CheckoutSuccess extends PureComponent {
     );
   };
 
+  // to check for the Mada card
+  getIsMadaCard(numbers) {
+    const { config } = this.props;
+    const madaBinTable = config?.bin_table?.mada || {};
+    const digitCountOfNumber = numbers.toString().length;
+
+    for (const key in madaBinTable) {
+        const values = madaBinTable[key];
+        const number = numbers.slice(0, parseInt(key));
+    
+        if (
+          digitCountOfNumber >= parseInt(key) &&
+          values.includes(parseInt(number))
+        ) {
+          return true;
+        }
+    }
+    return false;
+  }
+
   renderCardLogo() {
     const {
       creditCardData: { number = "" },
     } = this.props;
-    const { visa, mastercard, amex } = MINI_CARDS;
+    const { visa, mastercard, amex, mada } = MINI_CARDS;
     const first = parseInt(number.charAt(0));
     const second = parseInt(number.charAt(1));
+    const isMadaCard = this.getIsMadaCard(number);
+
+    if (isMadaCard) {
+      return <img src={mada} alt="card icon" />;
+    }
 
     if (first === 4) {
       return <img src={visa} alt="card icon" />;
