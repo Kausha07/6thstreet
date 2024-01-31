@@ -95,6 +95,9 @@ class ProductItem extends PureComponent {
       colorVarientButtonClick : false,
       colorVarientProductData : {},
       selectedOption: null,
+      colorVarientBrandName : "",
+      colorVarientName : "",
+      colorVarientPrice : []
     };
   }
   componentDidMount() {
@@ -477,13 +480,13 @@ class ProductItem extends PureComponent {
       if(sku){
         const response = await new Algolia().getProductBySku({ sku });
         const {
-          data: { image_url = "", sku: productSku },
+          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
         } = response;
         const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png"
         if(sku === productSku) {
-          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true});
+          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
         }else {
-          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true})
+          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [] });
         }
       }
     } catch (e) {
@@ -541,10 +544,12 @@ class ProductItem extends PureComponent {
     const {
       product: { brand_name },
     } = this.props;
+    const { colorVarientBrandName } = this.state;
+    const modifiedBrandName = ( colorVarientBrandName !== "" ) ? colorVarientBrandName : brand_name;
     return (
       <h2 block="ProductItem" elem="Brand">
         {" "}
-        {brand_name}{" "}
+        {modifiedBrandName}{" "}
       </h2>
     );
   }
@@ -552,8 +557,8 @@ class ProductItem extends PureComponent {
     const {
       product: { name },
     } = this.props;
-    const { isArabic } = this.state;
-
+    const { isArabic, colorVarientName } = this.state;
+    const modifiedName = ( colorVarientName !== '' ) ? colorVarientName : name ; 
     return (
       <p
         block="ProductItem"
@@ -563,7 +568,7 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {name}{" "}
+        {modifiedName}{" "}
       </p>
     );
   }
@@ -574,12 +579,14 @@ class ProductItem extends PureComponent {
       page,
       pageType,
     } = this.props;
-    if (!price || (Array.isArray(price) && !price[0])) {
+    const { colorVarientPrice  } = this.state;
+    const modifiedPrice = (colorVarientPrice?.length !== 0 ) ? colorVarientPrice : price ; 
+    if (!modifiedPrice || (Array.isArray(modifiedPrice) && !modifiedPrice[0])) {
       return null;
     }
     return (
       <Price
-        price={price}
+        price={modifiedPrice}
         page={page}
         renderSpecialPrice={true}
         pageType={pageType}
@@ -598,16 +605,18 @@ class ProductItem extends PureComponent {
       isVueData,
       isFilters,
     } = this.props;
-    let price = Array.isArray(product.price)
-      ? Object.values(product.price[0])
-      : Object.values(product.price);
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const modifiedProductData = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data : product; 
+    let price = Array.isArray(modifiedProductData?.price)
+      ? Object.values(modifiedProductData?.price[0])
+      : Object.values(modifiedProductData?.price);
     if (price[0].default === 0) {
       return null;
     }
     return (
       <div block="ProductItem" elem="AddToCart">
         <PLPAddToCart
-          product={this.props.product}
+          product={modifiedProductData}
           url={urlWithQueryID}
           pageType={pageType}
           removeFromWishlist={removeFromWishlist}
@@ -616,7 +625,6 @@ class ProductItem extends PureComponent {
           position={position}
           qid={qid}
           isVueData={isVueData}
-          product_Position={position}
           isFilters={isFilters}
         />
       </div>
@@ -635,6 +643,10 @@ class ProductItem extends PureComponent {
       isCollectionPage,
       pageType,
     } = this.props;
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const modifiedUrl = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.url : url; 
+    const modifiedLink = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.link : link;
+
     let queryID;
     if (!isVueData) {
       if (!qid) {
@@ -645,9 +657,9 @@ class ProductItem extends PureComponent {
     }
 
     let pathname = "/";
-    if (!isVueData && url) {
+    if (!isVueData && modifiedUrl) {
       try {
-        pathname = new URL(url)?.pathname;
+        pathname = new URL(modifiedUrl)?.pathname;
       } catch (err) {
         console.error(err);
       }
@@ -657,7 +669,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = url ? url : link ? link : link; // From api link and url both in different cases.
+      urlWithQueryID = modifiedUrl ? modifiedUrl : modifiedLink ? modifiedLink : link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
