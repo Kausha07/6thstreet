@@ -114,7 +114,7 @@ export class CartDispatcher {
       dispatch(processingCartRequest());
       const response = await getCart(cartId);
       if (response == "Request does not match any route.") {
-        MyAccountDispatcher.logout(null, dispatch);
+        // MyAccountDispatcher.logout(null, dispatch);
         dispatch(resetCart());
       }
       const { data } = response;

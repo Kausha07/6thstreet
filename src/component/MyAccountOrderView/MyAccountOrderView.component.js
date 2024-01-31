@@ -919,7 +919,7 @@ class MyAccountOrderView extends PureComponent {
           method,
           // cc_last_4,
           additional_information: {
-            source: { last4, scheme },
+            source: { last4, scheme, scheme_local },
           },
         },
       },
@@ -935,7 +935,7 @@ class MyAccountOrderView extends PureComponent {
           ) : method === CHECKOUT_QPAY ? (
             <img src={QPAY} alt="Apple pay" />
           ) : (
-            this.renderMiniCard(scheme?.toLowerCase())
+            this.renderMiniCard(scheme_local === "mada" ? scheme_local?.toLowerCase() : scheme?.toLowerCase())
           )}
         </div>
         <div block="MyAccountOrderView" elem="Number">
