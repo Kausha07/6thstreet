@@ -583,6 +583,14 @@ class FieldMultiselect extends PureComponent {
                   categoryLevelData.push(subSubEntry[1]);
                 }
               );
+            } else {
+              Object.entries(data).map((entry) => {
+                const newEntry = {
+                  ...entry[1],
+                  sub_subcategories: entry[1]?.subcategories,
+                };
+                categoryLevelData.push(newEntry);
+              });
             }
           } else if (isLevelThree) {
             const { l1, l2, l3 } = getLevelsFromCategoryKey(
