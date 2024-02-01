@@ -400,7 +400,7 @@ class ProductItem extends PureComponent {
       );
     };
   
-    return productAlsoAvailableColors?.length > 0 ? (
+    return (this.getInstockColorVarientsCount() > 0 && productAlsoAvailableColors?.length > 0 )? (
       <div block="PLPMobileColorVarients" mods={{ isArabic }}>
         {productAlsoAvailableColors?.length === 1 ? (
           <div block="radio-label">{generateInputField(0)}</div>
@@ -411,7 +411,7 @@ class ProductItem extends PureComponent {
           </div>
         )}
         <span block="colorVarientCounts" mods={{ isArabic }}>
-          {product["6s_also_available_count"]}{" "}
+          {this.getInstockColorVarientsCount()}{" "}
         </span>
       </div>
     ) : null;
@@ -504,6 +504,22 @@ class ProductItem extends PureComponent {
     this.scrollRef.current.scrollLeft += adjustedOffset;
   }
 
+  getInstockColorVarientsCount = () => {
+    const { product } = this.props
+    const { colorVarientProductData } = this.state
+    let stockCount = 0;
+    const updatedProductData = Object.keys(colorVarientProductData).length !== 0 ? colorVarientProductData?.data : product;
+    if(updatedProductData?.["6s_also_available_count"] > 0) {
+      stockCount = Object.values(updatedProductData?.["6s_also_available_color"]).reduce((count, item) => {
+        if (item.stock === "1") {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+    return stockCount;
+  }
+
   renderColorVariants = () => {
     const { product, product: { sku, color } } = this.props;
     const { isdark, isArabic, selectedOption } = this.state;
@@ -511,7 +527,7 @@ class ProductItem extends PureComponent {
       ? [sku, ...Object.keys(product["6s_also_available_color"])]
       : [];
     const colorValue = color ? color.toLowerCase() : "";
-    return (
+    return this.getInstockColorVarientsCount() > 0 && (
       <div block="colorVariantContainer">
         <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow" mods={{ isArabic }}></span>  : null}</button>
         <div block="colorVariantSlider" ref={this.scrollRef}>
