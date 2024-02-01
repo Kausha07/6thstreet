@@ -509,8 +509,16 @@ class ProductItem extends PureComponent {
     const { colorVarientProductData } = this.state
     let stockCount = 0;
     const updatedProductData = Object.keys(colorVarientProductData).length !== 0 ? colorVarientProductData?.data : product;
-    if(updatedProductData?.["6s_also_available_count"] > 0) {
-      stockCount = Object.values(updatedProductData?.["6s_also_available_color"]).reduce((count, item) => {
+    if (
+      updatedProductData &&
+      Object.keys(updatedProductData).length > 0 &&
+      updatedProductData?.["6s_also_available"]?.length > 0 &&
+      updatedProductData?.["6s_also_available_color"] &&
+      Object.keys(updatedProductData?.["6s_also_available_color"])?.length > 0
+    ) {
+      stockCount = Object?.values(
+        updatedProductData?.["6s_also_available_color"]
+      )?.reduce((count, item) => {
         if (item.stock === "1") {
           return count + 1;
         }
