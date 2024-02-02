@@ -84,7 +84,7 @@ class PDPDetail extends PureComponent {
     const { brandDescription, brandImg, brandName, brandInfoData = "", brand_url = "" } =
       this.props;
 
-    if (!brandDescription && !brandImg && !brandName) {
+    if (!brandDescription || !brandImg || !brandName) {
       return null;
     }
   
