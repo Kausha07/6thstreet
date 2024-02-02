@@ -118,7 +118,13 @@ export class CheckoutDispatcher {
   }
 
   async getPaymentMethods() {
-    return getPaymentMethods();
+    const {
+      Cart: { cartId },
+    } = getStore().getState();  
+
+    return getPaymentMethods({
+      cart_id: cartId.toString(),
+    });
   }
 
   async getTamaraInstallment(dispatch, price) {
