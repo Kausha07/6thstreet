@@ -89,6 +89,8 @@ import {
 import ExchangeIcon from "Component/Icons/Exchange/icon.svg";
 import { exchangeFormatGroupStatus } from "Util/Common";
 
+import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
     order: ExtendedOrderType,
@@ -101,6 +103,7 @@ class MyAccountOrderView extends PureComponent {
 
   static defaultProps = {
     order: null,
+    productsRating:{},
     displayDiscountPercentage: true,
   };
 
@@ -138,13 +141,15 @@ class MyAccountOrderView extends PureComponent {
     this.setState({ eddEventSent: true });
   };
 
-  renderItem = (item, eddItem, isItemUnderProcessing = false) => {
+  renderItem = (item, eddItem, isItemUnderProcessing = false, order_id="", itemStatus) => {
     const {
       order: { order_currency_code: currency, status },
       displayDiscountPercentage,
       eddResponse,
       edd_info,
       international_shipping_fee,
+      productsRating,
+      updateRating
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -178,6 +183,10 @@ class MyAccountOrderView extends PureComponent {
           currency={currency}
           displayDiscountPercentage={displayDiscountPercentage}
           international_shipping_fee = {international_shipping_fee}
+          orderId= {order_id}
+          productsRating = {productsRating}
+          itemStatus = {itemStatus}
+          updateRating = {updateRating}
         />
       </>
     );
@@ -455,9 +464,11 @@ class MyAccountOrderView extends PureComponent {
   shouldDisplayBar = (status) => {
     switch (status) {
       case STATUS_DISPATCHED:
-      case STATUS_IN_TRANSIT:
+      case STATUS_IN_TRANSIT: {
+        return true
+      }
       case DELIVERY_SUCCESSFUL: {
-        return true;
+        return false;
       }
 
       default: {
@@ -708,7 +719,8 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [] },
+      order: { groups: shipped = [], order_id
+      },
       edd_info,
     } = this.props;
     const { isArabic } = this.state;
@@ -816,7 +828,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           <div></div>
           {item.items.map((data) =>
-            this.renderItem(data, item, isItemUnderProcessing)
+            this.renderItem(data, item, isItemUnderProcessing, order_id, item.status)
           )}
         </Accordion>
       </div>

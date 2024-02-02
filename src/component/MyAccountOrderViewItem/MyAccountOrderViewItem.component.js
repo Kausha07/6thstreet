@@ -14,10 +14,39 @@ import {
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent, EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR } from "Util/Event";
 import { Store } from "../Icons";
+import Image from "Component/Image";
+import Tick from "./icons/tick.png";
+import HollowStar from "./icons/hollow-star.png";
+import RatingStar from "./icons/rating_star.png";
+
+import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
+
 
 export class MyAccountOrderViewItem extends SourceComponent {
+
+  state = {
+    starRating: 0,
+    starHover: 0,
+    isRatingSubmited: false
+  };
+
+  componentDidMount() {
+    const {
+      item: {
+        sku
+      } = {},
+      productsRating,
+    } = this.props;
+
+    if (productsRating[sku]) {
+      this.setState({ starRating: productsRating[sku] })
+    }
+  }
+  
   renderDetails() {
     let {
       currency,
@@ -230,7 +259,163 @@ export class MyAccountOrderViewItem extends SourceComponent {
       </div>
     );
   };
+
+  renderProductRating() {
+    const {
+      item: {
+        sku
+      } = {},
+      productsRating,
+    } = this.props;
+
+    // if (productsRating[sku]) {
+    //   this.setState({ starRating: productsRating[sku] })
+    // }
+    return (
+      <div className="productRatingSection">
+        <h3 className="title">{__("Rate the quality of the product")}</h3>
+        <div className="ratingBox">
+          {this.renderStarRating()}
+          <div className="ratingActions">
+            {this.state.isRatingSubmited &&
+              <div className="ratingSubmitIcon"><Image
+                lazyLoad={false}
+                src={Tick}
+                className="lineImg"
+                alt="Tick"
+              /></div>
+            }
+            {(this.state.starRating > 0 && productsRating[sku]) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+  renderStarRating() {
+
+    return (
+      <div className="ratingStars">
+        {[...Array(5)].map((star, index) => {
+          index += 1;
+          return (
+            <button
+              className="starIcons"
+              type="button"
+              key={`starIcon_${index}`}
+              onClick={() => this.handleStarClick(index)}
+              onMouseEnter={() => this.handleStarHoverEnter(index)}
+              onMouseLeave={() => this.handleStarHoverLeave()}
+            >
+              <Image
+                lazyLoad={false}
+                src={index <= (this.state.starRating || this.state.starHover) ? RatingStar : HollowStar}
+                className="starIcon"
+                alt="star"
+              />
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+  handleStarHoverLeave() {
+    const {
+      item: {
+        sku
+      } = {},
+      productsRating,
+    } = this.props;
+
+    if (!productsRating && !productsRating[sku]) {
+      // this.setState({ starRating: productsRating[sku] })
+      this.setState({ starHover: 0 })
+    } else {
+      // this.setState({ starHover: 0 })
+      this.setState({ starRating: productsRating[sku] })
+    }
+  }
+  async handleStarHoverEnter(value) {
+    console.log("status enter", value, this.state.starRating, this.state.starHover)
+
+    this.setState({ starRating: value })
+  }
+  async handleStarClick(value) {
+
+    const {
+      item: {
+        item_id,
+        sku
+      } = {},
+      orderId,
+      productsRating,
+      updateRating
+    } = this.props;
+
+
+    // this.setState({ starRating: value })
+
+    if (productsRating[sku] !== value) {
+      await updateStarRating({
+        "item_id": +item_id,
+        "order_id": +orderId,
+        "rating": value
+      }).then(() => {
+        this.setState({ isRatingSubmited: true });
+        setTimeout(() => {
+          this.setState({ isRatingSubmited: false });
+        }, 2000);
+        updateRating(sku, value)
+
+        Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
+          sku: sku || "",
+          rating: value || "",
+        });
+
+        MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          app6thstreet_platform: "Web",
+          sku: sku || "",
+          rating: value || "",
+        });
+      })
+
+    }
+
+
+
+  }
+
+
+  async handleDeleteStarRating(value) {
+    const {
+      item: {
+        item_id,
+        sku
+      } = {},
+      orderId,
+      productsRating,
+      updateRating
+    } = this.props;
+    await deleteStarRating(value, {}).then(()=>{
+      Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
+        sku: sku || "",
+        rating: value || "",
+      });
+
+      MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        sku: sku || "",
+        rating: value || "",
+      });
+    })
+  }
+
   render() {
+    const { item, itemStatus } = this.props;
     return (
       <div
         block="MyAccountOrderViewItem"
@@ -240,6 +425,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
           {this.renderImage()}
           {this.renderDetails()}
         </div>
+        {itemStatus && itemStatus === "delivery_successful" && this.renderProductRating()}
+
       </div>
     );
   }

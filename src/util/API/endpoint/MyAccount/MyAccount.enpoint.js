@@ -47,3 +47,17 @@ export const getOrders = (limit, offset = 0) => MobileAPI.get(
 ) || {};
 
 export const subscribeToNewsletter = (email) => MobileAPI.post('/newsletter/subscribe', email);
+
+export const getStarRating = (data) => MobileAPI.post(
+    '/product-rating',
+    data
+) || {};
+
+export const updateStarRating = (data) => MobileAPI.post(
+    '/product-rating/save',
+    data
+) || {};
+export const deleteStarRating = (starRatingId, data) => MobileAPI.delete(
+    `/product-rating/${starRatingId}`,
+    data
+) || {};

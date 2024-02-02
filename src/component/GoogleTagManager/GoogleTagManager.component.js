@@ -44,6 +44,9 @@ import {
   EVENT_FILTER_SEARCH_VALUE_SELECTED,
   EVENT_GTM_CART,
   EVENT_SIZE_PREDICTION_CLICK,
+  EVENT_PRODUCT_RATING_CLICK,
+  EVENT_PRODUCT_RATING_CLEAR,
+  EVENT_PRODUCT_RATING_HOVER,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -104,6 +107,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
 import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
+import ProductRating from "./events/ProductRating.event";
 
 /**
  * Event list
@@ -222,6 +226,10 @@ class GoogleTagManager extends PureComponent {
     [EVENT_FILTER_SEARCH_VALUE_SELECTED]: FilterSearchValueSelected,
     [EVENT_GTM_CART]: CartEvent,
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
+    [EVENT_PRODUCT_RATING_CLICK] :ProductRating,
+    [EVENT_PRODUCT_RATING_CLEAR] :ProductRating,
+    [EVENT_PRODUCT_RATING_HOVER] :ProductRating,
+
   };
 
   /**

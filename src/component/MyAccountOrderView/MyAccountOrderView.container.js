@@ -24,7 +24,7 @@ import {
 import { showPopup } from "Store/Popup/Popup.action";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 import { showNotification } from "Store/Notification/Notification.action";
-
+import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
@@ -51,23 +51,24 @@ export class MyAccountOrderViewContainer extends PureComponent {
   containerFunctions = {
     getCountryNameById: this.getCountryNameById.bind(this),
     openOrderCancelation: this.openOrderCancelation.bind(this),
+    updateRating: this.updateRating.bind(this),
   };
 
   state = {
     isLoading: true,
     order: null,
     entity_id: null,
+    productsRating: {}
   };
 
   constructor(props) {
     super(props);
-
     this.getOrder();
   }
 
   containerProps = () => {
-    const { isLoading, order } = this.state;
-    const { history, country, eddResponse, edd_info,is_exchange_enabled, international_shipping_fee } = this.props;
+    const { isLoading, order, productsRating } = this.state;
+    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee } = this.props;
 
     return {
       isLoading,
@@ -77,9 +78,15 @@ export class MyAccountOrderViewContainer extends PureComponent {
       edd_info,
       is_exchange_enabled,
       international_shipping_fee,
+      productsRating,
     };
   };
 
+  updateRating(sku, rating){
+    let ratings = {...this.state.productsRating};
+    ratings[sku] = rating;    
+    this.setState({productsRating : ratings})
+  }
   getCountryNameById(countryId) {
     const { config } = this.props;
     const countries = getCountriesForSelect(config);
@@ -164,7 +171,16 @@ export class MyAccountOrderViewContainer extends PureComponent {
     try {
       const orderId = this.getOrderId();
       const { data: order } = await MobileAPI.get(`orders/${orderId}`);
-      this.setState({ order, isLoading: false, entity_id: orderId });
+      const itemsGroups = (order.groups.filter(group => group.status === "delivery_successful")).map(group => group.items);
+      // const productSkuIds = itemsGroups[0].map(item => item.sku)
+      let productSkuIds = [];
+      itemsGroups.map(items => {
+        items.map(item => {
+          productSkuIds.push(item.sku);
+        })
+      })
+      const Ratings = await getStarRating({ "product_sku_ids": productSkuIds });
+      this.setState({ order, isLoading: false, entity_id: orderId, productsRating: Ratings });
     } catch (e) {
       this.setState({ isLoading: false });
     }
