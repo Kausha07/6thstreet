@@ -519,7 +519,7 @@ class ProductItem extends PureComponent {
       stockCount = Object?.values(
         updatedProductData?.["6s_also_available_color"]
       )?.reduce((count, item) => {
-        if (item.stock === "1") {
+        if (item?.stock === "1") {
           return count + 1;
         }
         return count;
@@ -535,31 +535,56 @@ class ProductItem extends PureComponent {
       ? [sku, ...Object.keys(product["6s_also_available_color"])]
       : [];
     const colorValue = color ? color.toLowerCase() : "";
-    return this.getInstockColorVarientsCount() > 0 && (
+    return (
       <div block="colorVariantContainer">
-        <button onClick={()=>this.handleScroll(-30)} >{productAlsoAvailableColors?.length > 7 ? <span block="left-arrow" mods={{ isArabic }}></span>  : null}</button>
-        <div block="colorVariantSlider" ref={this.scrollRef}>
-          {productAlsoAvailableColors?.map(
-            (sku, index) =>  product["6s_also_available_color"][sku]?.stock !== '0' &&  (
-                <div key={index} block="radio-label" onClick={() => this.getProductDetailsBySkuAlgolia(sku)}>
-                  <input
-                    block="radio-input"
-                    type="radio"
-                    name={isdark ? "dark" : "light"}
-                    id={sku}
-                    value={sku}
-                    checked={selectedOption === sku}
-                    onChange={()=>this.onChangeTheme(sku)}
-                    style={{
-                      background: product["6s_also_available_color"][sku]?.color || colorValue,
-                      boxShadow: selectedOption === sku ? `0px 0px 0px 0.5px ${product["6s_also_available_color"][sku]?.color || colorValue }` : '0px 0px 0px 0.5px #D1D3D4'
-                    }}
-                  />
-                </div>
-              )
-          )}
-        </div>
-        <button onClick={()=>this.handleScroll(30)}>{productAlsoAvailableColors.length > 7 ? <span block="right-arrow" mods={{ isArabic }}></span> : null}</button>
+        {this.getInstockColorVarientsCount() > 0 ? (
+          <>
+            <button onClick={() => this.handleScroll(-30)}>
+              {productAlsoAvailableColors?.length > 7 ? (
+                <span block="left-arrow" mods={{ isArabic }}></span>
+              ) : null}
+            </button>
+            <div block="colorVariantSlider" ref={this.scrollRef}>
+              {productAlsoAvailableColors?.map(
+                (sku, index) =>
+                  product["6s_also_available_color"][sku]?.stock !== "0" && (
+                    <div
+                      key={index}
+                      block="radio-label"
+                      onClick={() => this.getProductDetailsBySkuAlgolia(sku)}
+                    >
+                      <input
+                        block="radio-input"
+                        type="radio"
+                        name={isdark ? "dark" : "light"}
+                        id={sku}
+                        value={sku}
+                        checked={selectedOption === sku}
+                        onChange={() => this.onChangeTheme(sku)}
+                        style={{
+                          background:
+                            product["6s_also_available_color"][sku]?.color ||
+                            colorValue,
+                          boxShadow:
+                            selectedOption === sku
+                              ? `0px 0px 0px 0.5px ${
+                                  product["6s_also_available_color"][sku]
+                                    ?.color || colorValue
+                                }`
+                              : "0px 0px 0px 0.5px #D1D3D4",
+                        }}
+                      />
+                    </div>
+                  )
+              )}
+            </div>
+            <button onClick={() => this.handleScroll(30)}>
+              {productAlsoAvailableColors.length > 7 ? (
+                <span block="right-arrow" mods={{ isArabic }}></span>
+              ) : null}
+            </button>
+          </>
+        ) : null}
       </div>
     );
   };
