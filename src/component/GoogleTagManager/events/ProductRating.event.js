@@ -6,13 +6,13 @@ class ProductRating extends BaseEvent {
 
     bindEvent() {
         Event.observer(EVENT_PRODUCT_RATING_CLICK, ({ sku, rating}) => {
-          this.handle({ sku, rating});
+          this.handle(EVENT_PRODUCT_RATING_CLICK,{ sku, rating});
         });
         Event.observer(EVENT_PRODUCT_RATING_CLEAR, ({ sku, rating}) => {
-          this.handle({ sku, rating});
+          this.handle(EVENT_PRODUCT_RATING_CLEAR, { sku, rating});
         });
         Event.observer(EVENT_PRODUCT_RATING_HOVER, ({ sku, rating}) => {
-          this.handle({ sku, rating});
+          this.handle(EVENT_PRODUCT_RATING_HOVER, { sku, rating});
         });
     }
 

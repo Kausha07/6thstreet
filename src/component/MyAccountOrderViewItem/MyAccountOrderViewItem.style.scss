@@ -45,6 +45,10 @@
 
   .productRatingSection {
     padding-bottom: 10px;
+    width: 50%;
+    @include mobile {
+      width: 100%;
+    }
     .title {
       font-family: "Avenir Next";
       font-weight: 500;

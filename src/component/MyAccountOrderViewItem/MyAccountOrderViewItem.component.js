@@ -23,30 +23,42 @@ import RatingStar from "./icons/rating_star.png";
 
 import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { ThreeDots } from "react-loader-spinner";
 
 
 
 export class MyAccountOrderViewItem extends SourceComponent {
 
   state = {
-    starRating: 0,
+    // starRating: 0,
     starHover: 0,
-    isRatingSubmited: false
+    isRatingSubmited: false,
+    isRatingProccessing: false
   };
 
-  componentDidMount() {
-    const {
-      item: {
-        sku
-      } = {},
-      productsRating,
-    } = this.props;
+  // componentDidMount() {
+  //   // const {
+  //   //   item: {
+  //   //     sku
+  //   //   } = {},
+  //   //   productsRating,
+  //   // } = this.props;
 
-    if (productsRating[sku]) {
-      this.setState({ starRating: productsRating[sku] })
-    }
-  }
-  
+  //   // if (productsRating[sku]) {
+  //   //   this.setState({ starRating: productsRating[sku] })
+  //   // }
+  // }
+  // componentDidUpdate(prevProps, prevState) {
+  //   const {
+  //     item: {
+  //       sku
+  //     } = {},
+  //   } = this.props;
+  //   if (prevProps.productsRating[sku]) {
+  //     this.setState({ starRating: prevProps.productsRating[sku] })
+  //   }
+  // }
+
   renderDetails() {
     let {
       currency,
@@ -71,7 +83,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       international_shipping_fee,
     } = this.props;
     const isIntlBrand =
-      ( parseInt(cross_border) === 1 &&
+      (parseInt(cross_border) === 1 &&
         edd_info &&
         edd_info.has_cross_border_enabled) ||
       int_shipment === "1";
@@ -268,24 +280,24 @@ export class MyAccountOrderViewItem extends SourceComponent {
       productsRating,
     } = this.props;
 
-    // if (productsRating[sku]) {
-    //   this.setState({ starRating: productsRating[sku] })
-    // }
     return (
       <div className="productRatingSection">
         <h3 className="title">{__("Rate the quality of the product")}</h3>
         <div className="ratingBox">
           {this.renderStarRating()}
           <div className="ratingActions">
+          {this.state.isRatingProccessing && <ThreeDots color="black" height={6} width={"100%"} />}
             {this.state.isRatingSubmited &&
-              <div className="ratingSubmitIcon"><Image
+              <div className="ratingSubmitIcon">
+                <Image
                 lazyLoad={false}
                 src={Tick}
                 className="lineImg"
                 alt="Tick"
-              /></div>
+                />
+              </div>
             }
-            {(this.state.starRating > 0 && productsRating[sku]) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
+            {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing  && !this.state.isRatingSubmited) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
           </div>
         </div>
 
@@ -293,7 +305,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
     );
   }
   renderStarRating() {
-
+    const {
+      item: {
+        item_id,
+        sku
+      } = {},
+      orderId,
+      productsRating,
+      updateRating
+    } = this.props;
     return (
       <div className="ratingStars">
         {[...Array(5)].map((star, index) => {
@@ -309,7 +329,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
             >
               <Image
                 lazyLoad={false}
-                src={index <= (this.state.starRating || this.state.starHover) ? RatingStar : HollowStar}
+                src={index <= (this.state.starHover || productsRating[sku]) ? RatingStar : HollowStar}
                 className="starIcon"
                 alt="star"
               />
@@ -320,28 +340,12 @@ export class MyAccountOrderViewItem extends SourceComponent {
     )
   }
   handleStarHoverLeave() {
-    const {
-      item: {
-        sku
-      } = {},
-      productsRating,
-    } = this.props;
-
-    if (!productsRating && !productsRating[sku]) {
-      // this.setState({ starRating: productsRating[sku] })
-      this.setState({ starHover: 0 })
-    } else {
-      // this.setState({ starHover: 0 })
-      this.setState({ starRating: productsRating[sku] })
-    }
+    this.setState({ starHover: 0 })
   }
   async handleStarHoverEnter(value) {
-    console.log("status enter", value, this.state.starRating, this.state.starHover)
-
-    this.setState({ starRating: value })
+    this.setState({ starHover: value })
   }
   async handleStarClick(value) {
-
     const {
       item: {
         item_id,
@@ -352,15 +356,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
       updateRating
     } = this.props;
 
-
-    // this.setState({ starRating: value })
-
     if (productsRating[sku] !== value) {
+      this.setState({ isRatingProccessing: true });
       await updateStarRating({
-        "item_id": +item_id,
+        "simple_sku": sku,
         "order_id": +orderId,
         "rating": value
       }).then(() => {
+        this.setState({ isRatingProccessing: false });
         this.setState({ isRatingSubmited: true });
         setTimeout(() => {
           this.setState({ isRatingSubmited: false });
@@ -388,7 +391,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
 
-  async handleDeleteStarRating(value) {
+  async handleDeleteStarRating(productSku) {
     const {
       item: {
         item_id,
@@ -398,19 +401,28 @@ export class MyAccountOrderViewItem extends SourceComponent {
       productsRating,
       updateRating
     } = this.props;
-    await deleteStarRating(value, {}).then(()=>{
+
+    this.setState({ isRatingProccessing: true });
+    await deleteStarRating(productSku, {
+      "order_id": +orderId,
+    }).then(() => {
+      this.setState({ isRatingProccessing: false });
       Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
         sku: sku || "",
-        rating: value || "",
+        rating: productsRating[sku] || "",
       });
-
       MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         app6thstreet_platform: "Web",
         sku: sku || "",
-        rating: value || "",
+        rating: productsRating[sku] || "",
       });
+      this.setState({ isRatingSubmited: true });
+      setTimeout(() => {
+        this.setState({ isRatingSubmited: false });
+      }, 2000);
+      updateRating(sku, 0);
     })
   }
 

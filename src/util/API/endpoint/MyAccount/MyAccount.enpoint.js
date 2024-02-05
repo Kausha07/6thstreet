@@ -58,6 +58,6 @@ export const updateStarRating = (data) => MobileAPI.post(
     data
 ) || {};
 export const deleteStarRating = (starRatingId, data) => MobileAPI.delete(
-    `/product-rating/${starRatingId}`,
+    `/product-rating/${starRatingId}/?order_id=${data.order_id}`,
     data
 ) || {};

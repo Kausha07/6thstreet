@@ -174,13 +174,18 @@ export class MyAccountOrderViewContainer extends PureComponent {
       const itemsGroups = (order.groups.filter(group => group.status === "delivery_successful")).map(group => group.items);
       // const productSkuIds = itemsGroups[0].map(item => item.sku)
       let productSkuIds = [];
+      let productRatingsResp = {};
       itemsGroups.map(items => {
         items.map(item => {
           productSkuIds.push(item.sku);
         })
       })
-      const Ratings = await getStarRating({ "product_sku_ids": productSkuIds });
-      this.setState({ order, isLoading: false, entity_id: orderId, productsRating: Ratings });
+      await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
+        if(resp.status !== 404){
+          productRatingsResp = resp;
+        }
+      })
+      this.setState({ order, isLoading: false, entity_id: orderId, productsRating: productRatingsResp });
     } catch (e) {
       this.setState({ isLoading: false });
     }
