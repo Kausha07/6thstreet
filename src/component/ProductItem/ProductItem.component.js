@@ -26,10 +26,11 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
+  EVENT_COLOUR_VARIENT_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
 import "./ProductItem.style";
-import { setPrevPath } from "Store/PLP/PLP.action";
+import { setPrevPath, setColourVarientsButtonClick } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
@@ -59,6 +60,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
+    setColourVarientsButtonClick: (colourVarientsButtonClick) => dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 class ProductItem extends PureComponent {
@@ -315,6 +317,7 @@ class ProductItem extends PureComponent {
         pageType={pageType}
         isFilters={isFilters}
         product_position={position}
+        colorVarientButtonClick={this.state?.colorVarientButtonClick}
       />
     );
   }
@@ -484,11 +487,39 @@ class ProductItem extends PureComponent {
         } = response;
         const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png"
         if(sku === productSku) {
+          this.props.setColourVarientsButtonClick(true);
           this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
         }else {
           this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [] });
         }
       }
+
+      const {
+        colorVarientProductData: {
+          data,
+          data: { objectID, name: ProductName, color },
+        },
+      } = this.state;
+
+      // MoEnange Tracking Event for Color Varient Button click
+      MOE_trackEvent(EVENT_COLOUR_VARIENT_CLICK, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        product_id: objectID || "",
+        product_name: ProductName || "",
+        number_of_colours_available: data?.["6s_also_available_count"] || 0,
+        colour_name : color || "",
+      });
+
+      // GTM Tracking Event for Color Varient Button Click
+      Event.dispatch(EVENT_COLOUR_VARIENT_CLICK, {
+        product_id: objectID || "",
+        product_name: ProductName || "",
+        number_of_colours_available: data?.["6s_also_available_count"] || 0,
+        colour_name: color || "",
+      });
+
     } catch (e) {
       console.error(e);
     }
@@ -675,6 +706,7 @@ class ProductItem extends PureComponent {
           qid={qid}
           isVueData={isVueData}
           isFilters={isFilters}
+          colorVarientButtonClick={colorVarientButtonClick}
         />
       </div>
     );

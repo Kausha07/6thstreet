@@ -633,6 +633,7 @@ class PLPAddToCart extends PureComponent {
       app6thstreet_platform: "Web",
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_Position || "",
+      colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
     });
   }
 
@@ -906,6 +907,7 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
+          colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
         },
       });
 
@@ -970,6 +972,7 @@ class PLPAddToCart extends PureComponent {
           quantity: 1,
           isFilters: isFilters ? "Yes" : "No",
           position: product_Position || "",
+          colour_variant_click : this.props.colorVarientButtonClick ? "Yes" : "No",
         },
       });
 
