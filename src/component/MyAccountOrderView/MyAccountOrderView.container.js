@@ -181,9 +181,9 @@ export class MyAccountOrderViewContainer extends PureComponent {
         })
       })
       await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
-        if(resp.status !== 404){
-          productRatingsResp = resp;
-        }
+          if(!resp.status){
+            productRatingsResp = resp;
+          }
       })
       this.setState({ order, isLoading: false, entity_id: orderId, productsRating: productRatingsResp });
     } catch (e) {

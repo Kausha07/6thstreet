@@ -333,6 +333,21 @@
           margin-left: 15px;
           margin-right: 0;
         }
+
+        .productRatingSection{
+          .ratingBox{
+            .ratingStars {
+              .starIcons {            
+                margin: 0 0 0 8px;
+                .Image {              
+                  margin-left:0;
+                  margin-right:0;
+                }
+              }
+            }
+          }
+        }
+        
       }
     }
     .Accordion-Heading {
