@@ -640,7 +640,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     const { checkoutStep, initialGTMSent, PaymentRedirect } = this.state;
     const { checkoutStep: prevCheckoutStep } = prevState;
-    const { total: { items: prevItems } = {} } = prevProps;
+    const { total: { items: prevItems } = {}, totals: prevtotals } = prevProps;
+    if (checkoutStep === BILLING_STEP && totals?.total !== prevtotals?.total) {
+      this.getPaymentMethods();
+    }
     if (PaymentRedirect) {
       if (checkoutStep !== prevCheckoutStep) {
         updateStoreCredit();
