@@ -30,34 +30,11 @@ import { ThreeDots } from "react-loader-spinner";
 export class MyAccountOrderViewItem extends SourceComponent {
 
   state = {
-    // starRating: 0,
     starHover: 0,
     isRatingSubmited: false,
     isRatingProccessing: false
   };
 
-  // componentDidMount() {
-  //   // const {
-  //   //   item: {
-  //   //     sku
-  //   //   } = {},
-  //   //   productsRating,
-  //   // } = this.props;
-
-  //   // if (productsRating[sku]) {
-  //   //   this.setState({ starRating: productsRating[sku] })
-  //   // }
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   const {
-  //     item: {
-  //       sku
-  //     } = {},
-  //   } = this.props;
-  //   if (prevProps.productsRating[sku]) {
-  //     this.setState({ starRating: prevProps.productsRating[sku] })
-  //   }
-  // }
 
   renderDetails() {
     let {
@@ -286,18 +263,18 @@ export class MyAccountOrderViewItem extends SourceComponent {
         <div className="ratingBox">
           {this.renderStarRating()}
           <div className="ratingActions">
-          {this.state.isRatingProccessing && <ThreeDots color="black" height={6} width={"100%"} />}
-            {this.state.isRatingSubmited &&
-              <div className="ratingSubmitIcon">
-                <Image
-                lazyLoad={false}
-                src={Tick}
-                className="lineImg"
-                alt="Tick"
-                />
-              </div>
-            }
-            {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing  && !this.state.isRatingSubmited) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
+            {(this.state.isRatingProccessing && !this.state.isRatingSubmited) && <ThreeDots color="black" height={6} width={"100%"} />}
+              {(this.state.isRatingSubmited && !this.state.isRatingProccessing) &&
+                <div className="ratingSubmitIcon">
+                  <Image
+                    lazyLoad={false}
+                    src={Tick}
+                    className="lineImg"
+                    alt="Tick"
+                  />
+                </div>
+              }
+              {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
           </div>
         </div>
 
@@ -342,7 +319,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
   handleStarHoverLeave() {
     this.setState({ starHover: 0 })
   }
-  async handleStarHoverEnter(value) {
+  handleStarHoverEnter(value) {
     this.setState({ starHover: value })
   }
   async handleStarClick(value) {
@@ -356,7 +333,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       updateRating
     } = this.props;
 
-    if (productsRating[sku] !== value) {
+    if (productsRating[sku] !== value && !this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
       await updateStarRating({
         "simple_sku": sku,
@@ -385,9 +362,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
       })
 
     }
-
-
-
   }
 
 
@@ -401,29 +375,30 @@ export class MyAccountOrderViewItem extends SourceComponent {
       productsRating,
       updateRating
     } = this.props;
-
-    this.setState({ isRatingProccessing: true });
-    await deleteStarRating(productSku, {
-      "order_id": +orderId,
-    }).then(() => {
-      this.setState({ isRatingProccessing: false });
-      Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
-        sku: sku || "",
-        rating: productsRating[sku] || "",
-      });
-      MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
-        country: getCountryFromUrl().toUpperCase(),
-        language: getLanguageFromUrl().toUpperCase(),
-        app6thstreet_platform: "Web",
-        sku: sku || "",
-        rating: productsRating[sku] || "",
-      });
-      this.setState({ isRatingSubmited: true });
-      setTimeout(() => {
-        this.setState({ isRatingSubmited: false });
-      }, 2000);
-      updateRating(sku, 0);
-    })
+    if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
+      this.setState({ isRatingProccessing: true });
+      await deleteStarRating(productSku, {
+        "order_id": +orderId,
+      }).then(() => {
+        this.setState({ isRatingProccessing: false });
+        Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
+          sku: sku || "",
+          rating: productsRating[sku] || "",
+        });
+        MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          app6thstreet_platform: "Web",
+          sku: sku || "",
+          rating: productsRating[sku] || "",
+        });
+        this.setState({ isRatingSubmited: true });
+        setTimeout(() => {
+          this.setState({ isRatingSubmited: false });
+        }, 2000);
+        updateRating(sku, 0);
+      })
+    }
   }
 
   render() {
