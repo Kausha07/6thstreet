@@ -26,10 +26,11 @@ import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
+  EVENT_COLOUR_VARIENT_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
 import "./ProductItem.style";
-import { setPrevPath } from "Store/PLP/PLP.action";
+import { setPrevPath, setColourVarientsButtonClick } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { RequestedOptions } from "Util/API/endpoint/Product/Product.type";
@@ -57,6 +58,9 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch, state) => ({
   setPrevPath: (prevPath) => dispatch(setPrevPath(prevPath)),
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
+  requestProductBySku: (options) =>
+    PDPDispatcher.requestProductBySku(options, dispatch),
+    setColourVarientsButtonClick: (colourVarientsButtonClick) => dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 class ProductItem extends PureComponent {
@@ -76,13 +80,28 @@ class ProductItem extends PureComponent {
     impressionSent: false,
   };
 
-  state = {
-    isArabic: isArabic(),
-    stockAvailibility: true,
-    selectedSizeType: "eu",
-    selectedSizeCode: "",
-    hover: false
-  };
+  constructor(props) {
+    super(props);
+    this.scrollRef = React.createRef(null);
+    this.state = {
+      isArabic: isArabic(),
+      stockAvailibility: true,
+      selectedSizeType: "eu",
+      selectedSizeCode: "",
+      hover: false,
+      currentImage: "",
+      currentIndex: 0,
+      colorVarientsClick: false,
+      theme: { dark: false, light: false },
+      isdark: true,
+      colorVarientButtonClick : false,
+      colorVarientProductData : {},
+      selectedOption: null,
+      colorVarientBrandName : "",
+      colorVarientName : "",
+      colorVarientPrice : []
+    };
+  }
   componentDidMount() {
     this.registerViewPortEvent();
   }
@@ -102,7 +121,7 @@ class ProductItem extends PureComponent {
   getPLPListName() {
     const { page } = this.props;
     const pageUrl = new URL(window.location.href);
-    if (pageUrl.pathname == "/catalogsearch/result/" && (page == "plp")) {
+    if (pageUrl.pathname == "/catalogsearch/result/" && page == "plp") {
       const getSearchQuery = pageUrl.search.includes("&")
         ? pageUrl.search.split("&")
         : pageUrl.search;
@@ -116,7 +135,7 @@ class ProductItem extends PureComponent {
           ? searchParameter.replaceAll("+", " ")
           : searchParameter;
       return `Search PLP - ${formatSearchParam}`;
-    } else if ((page == "plp" && pageUrl.pathname.includes(".html"))) {
+    } else if (page == "plp" && pageUrl.pathname.includes(".html")) {
       const pagePath = pageUrl.pathname.split(".html");
       const pageName = pagePath[0] ? pagePath[0].replaceAll("/", " ") : "";
       return `PLP -${pageName}`;
@@ -299,6 +318,7 @@ class ProductItem extends PureComponent {
         pageType={pageType}
         isFilters={isFilters}
         product_position={position}
+        colorVarientButtonClick={this.state?.colorVarientButtonClick}
       />
     );
   }
@@ -360,6 +380,48 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderColorVariantsMobile = () => {
+    const { product } = this.props;
+    const { isdark, isArabic } = this.state;
+    const productAlsoAvailableColors = product["6s_also_available_color"]
+      ? Object.keys(product["6s_also_available_color"])
+      : [];
+  
+    const generateInputField = (index) => {
+      const colorKey = productAlsoAvailableColors[index];
+      const background = product["6s_also_available_color"][colorKey]?.color || "";
+  
+      return product["6s_also_available_color"][colorKey]?.stock !== '0' && (
+        <input
+          block="radio-input"
+          type="radio"
+          name={colorKey}
+          id={colorKey}
+          value={colorKey }
+          onChange={this.onChangeTheme}
+          style={{ background, boxShadow:'0px 0px 0px 0.5px #D1D3D4' }}
+        />
+      );
+    };
+  
+    return (this.getInstockColorVarientsCount() > 0 && productAlsoAvailableColors?.length > 0 )? (
+      <div block="PLPMobileColorVarients" mods={{ isArabic }}>
+        {productAlsoAvailableColors?.length === 1 ? (
+          <div block="radio-label">{generateInputField(0)}</div>
+        ) : (
+          <div block="radio-label multi-color">
+            {generateInputField(0)}
+            {generateInputField(productAlsoAvailableColors?.length - 1)}
+          </div>
+        )}
+        <span block="colorVarientCounts" mods={{ isArabic }}>
+          {this.getInstockColorVarientsCount()}{" "}
+        </span>
+      </div>
+    ) : null;
+  };
+  
+
   renderImage() {
     const {
       product: { thumbnail_url, brand_name, product_type_6s, color },
@@ -388,22 +450,187 @@ class ProductItem extends PureComponent {
       brand_name + " " + categoryTitle + " - " + color + " " + product_type_6s;
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} alt={altText} />
+        <Image
+          lazyLoad={lazyLoad}
+          src={
+            this.state.colorVarientButtonClick
+              ? this.state.currentImage
+              : thumbnail_url
+          }
+          alt={altText}
+        />
         {/* {this.renderOutOfStock()} */}
+        {isMobile.any() ? this.renderColorVariantsMobile() : null}
         {this.renderExclusive()}
-        {this.renderColors()}
       </div>
     );
   }
+
+  colorVarientsButtonClick = (productImage) => {
+    this.setState({ currentImage: productImage });
+  };
+
+  async requestAvailableColorProduct(sku) {
+    const { requestProductBySku } = this.props;
+    if (sku) {
+      const response = await requestProductBySku({ options: { sku } });
+      return  response;
+    }
+    return;
+  }
+
+  getProductDetailsBySkuAlgolia = async(sku) => {
+    try {
+      if(sku){
+        const response = await new Algolia().getProductBySku({ sku });
+        const {
+          data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
+        } = response;
+        const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png"
+        if(sku === productSku) {
+          this.props.setColourVarientsButtonClick(true);
+          this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
+        }else {
+          this.setState({ colorVarientProductData : "", currentImage : defaultImage, colorVarientButtonClick: true, colorVarientBrandName : "", colorVarientName : "", colorVarientPrice : [] });
+        }
+      }
+
+      const {
+        colorVarientProductData: {
+          data,
+          data: { objectID, name: ProductName, color },
+        },
+      } = this.state;
+
+      // MoEngage Tracking Event for Color Varient Button click
+      MOE_trackEvent(EVENT_COLOUR_VARIENT_CLICK, {
+        country: getCountryFromUrl().toUpperCase(),
+        language: getLanguageFromUrl().toUpperCase(),
+        app6thstreet_platform: "Web",
+        product_id: objectID || "",
+        product_name: ProductName || "",
+        number_of_colours_available: data?.["6s_also_available_count"] || 0,
+        colour_name : color || "",
+      });
+
+      // GTM Tracking Event for Color Varient Button Click
+      Event.dispatch(EVENT_COLOUR_VARIENT_CLICK, {
+        product_id: objectID || "",
+        product_name: ProductName || "",
+        number_of_colours_available: data?.["6s_also_available_count"] || 0,
+        colour_name: color || "",
+      });
+
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  onChangeTheme = (sku) => {
+    const { isdark } = this.state;
+    this.setState({ isDark: !isdark, selectedOption: sku });
+  };
+
+  handleScroll = (scrollOffset) => {
+    const adjustedOffset = this.state.isArabic ? -scrollOffset : scrollOffset;
+    this.scrollRef.current.scrollLeft += adjustedOffset;
+  }
+
+  getInstockColorVarientsCount = () => {
+    const { product } = this.props
+    const { colorVarientProductData } = this.state
+    let stockCount = 0;
+    const updatedProductData = Object.keys(colorVarientProductData).length !== 0 ? colorVarientProductData?.data : product;
+    if (
+      updatedProductData &&
+      Object.keys(updatedProductData).length > 0 &&
+      updatedProductData?.["6s_also_available"]?.length > 0 &&
+      updatedProductData?.["6s_also_available_color"] &&
+      Object.keys(updatedProductData?.["6s_also_available_color"])?.length > 0
+    ) {
+      stockCount = Object?.values(
+        updatedProductData?.["6s_also_available_color"]
+      )?.reduce((count, item) => {
+        if (item?.stock === "1") {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+    return stockCount;
+  }
+
+  renderColorVariants = () => {
+    const { product, product: { sku, color } } = this.props;
+    const { isdark, isArabic, selectedOption } = this.state;
+    const productAlsoAvailableColors = (Array.isArray(product["6s_also_available_color"]) ? product["6s_also_available_color"]?.length > 0 : product["6s_also_available_color"])
+      ? [sku, ...Object.keys(product["6s_also_available_color"])]
+      : [];
+    const colorValue = color ? color.toLowerCase() : "";
+    return (
+      <div block="colorVariantContainer">
+        {this.getInstockColorVarientsCount() > 0 ? (
+          <>
+            <button onClick={() => this.handleScroll(-30)}>
+              {productAlsoAvailableColors?.length > 7 ? (
+                <span block="left-arrow" mods={{ isArabic }}></span>
+              ) : null}
+            </button>
+            <div block="colorVariantSlider" ref={this.scrollRef}>
+              {productAlsoAvailableColors?.map(
+                (sku, index) =>
+                  product["6s_also_available_color"][sku]?.stock !== "0" && (
+                    <div
+                      key={index}
+                      block="radio-label"
+                      onClick={() => this.getProductDetailsBySkuAlgolia(sku)}
+                    >
+                      <input
+                        block="radio-input"
+                        type="radio"
+                        name={isdark ? "dark" : "light"}
+                        id={sku}
+                        value={sku}
+                        checked={selectedOption === sku}
+                        onChange={() => this.onChangeTheme(sku)}
+                        style={{
+                          background:
+                            product["6s_also_available_color"][sku]?.color ||
+                            colorValue,
+                          boxShadow:
+                            selectedOption === sku
+                              ? `0px 0px 0px 0.5px ${
+                                  product["6s_also_available_color"][sku]
+                                    ?.color || colorValue
+                                }`
+                              : "0px 0px 0px 0.5px #D1D3D4",
+                        }}
+                      />
+                    </div>
+                  )
+              )}
+            </div>
+            <button onClick={() => this.handleScroll(30)}>
+              {productAlsoAvailableColors.length > 7 ? (
+                <span block="right-arrow" mods={{ isArabic }}></span>
+              ) : null}
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
+  };
 
   renderBrand() {
     const {
       product: { brand_name },
     } = this.props;
+    const { colorVarientBrandName } = this.state;
+    const modifiedBrandName = ( colorVarientBrandName !== "" ) ? colorVarientBrandName : brand_name;
     return (
       <h2 block="ProductItem" elem="Brand">
         {" "}
-        {brand_name}{" "}
+        {modifiedBrandName}{" "}
       </h2>
     );
   }
@@ -411,8 +638,8 @@ class ProductItem extends PureComponent {
     const {
       product: { name },
     } = this.props;
-    const { isArabic } = this.state;
-
+    const { isArabic, colorVarientName } = this.state;
+    const modifiedName = ( colorVarientName !== '' ) ? colorVarientName : name ; 
     return (
       <p
         block="ProductItem"
@@ -422,7 +649,7 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {name}{" "}
+        {modifiedName}{" "}
       </p>
     );
   }
@@ -433,12 +660,14 @@ class ProductItem extends PureComponent {
       page,
       pageType,
     } = this.props;
-    if (!price || (Array.isArray(price) && !price[0])) {
+    const { colorVarientPrice  } = this.state;
+    const modifiedPrice = (colorVarientPrice?.length !== 0 ) ? colorVarientPrice : price ; 
+    if (!modifiedPrice || (Array.isArray(modifiedPrice) && !modifiedPrice[0])) {
       return null;
     }
     return (
       <Price
-        price={price}
+        price={modifiedPrice}
         page={page}
         renderSpecialPrice={true}
         pageType={pageType}
@@ -457,16 +686,18 @@ class ProductItem extends PureComponent {
       isVueData,
       isFilters,
     } = this.props;
-    let price = Array.isArray(product.price)
-      ? Object.values(product.price[0])
-      : Object.values(product.price);
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const modifiedProductData = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data : product; 
+    let price = Array.isArray(modifiedProductData?.price)
+      ? Object.values(modifiedProductData?.price[0])
+      : Object.values(modifiedProductData?.price);
     if (price[0].default === 0) {
       return null;
     }
     return (
       <div block="ProductItem" elem="AddToCart">
         <PLPAddToCart
-          product={this.props.product}
+          product={modifiedProductData}
           url={urlWithQueryID}
           pageType={pageType}
           removeFromWishlist={removeFromWishlist}
@@ -475,8 +706,8 @@ class ProductItem extends PureComponent {
           position={position}
           qid={qid}
           isVueData={isVueData}
-          product_Position={position}
           isFilters={isFilters}
+          colorVarientButtonClick={colorVarientButtonClick}
         />
       </div>
     );
@@ -494,6 +725,10 @@ class ProductItem extends PureComponent {
       isCollectionPage,
       pageType,
     } = this.props;
+    const { colorVarientProductData = {}, colorVarientProductData : { data = "" }, colorVarientButtonClick  } = this.state;
+    const modifiedUrl = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.url : url; 
+    const modifiedLink = (colorVarientButtonClick && Object.keys(colorVarientProductData)?.length !== 0 ) ? data?.link : link;
+
     let queryID;
     if (!isVueData) {
       if (!qid) {
@@ -504,9 +739,9 @@ class ProductItem extends PureComponent {
     }
 
     let pathname = "/";
-    if (!isVueData && url) {
+    if (!isVueData && modifiedUrl) {
       try {
-        pathname = new URL(url)?.pathname;
+        pathname = new URL(modifiedUrl)?.pathname;
       } catch (err) {
         console.error(err);
       }
@@ -516,7 +751,7 @@ class ProductItem extends PureComponent {
         urlWithQueryID = pathname;
       }
     } else {
-      urlWithQueryID = url ? url : link ? link : link; // From api link and url both in different cases.
+      urlWithQueryID = modifiedUrl ? modifiedUrl : modifiedLink ? modifiedLink : link; // From api link and url both in different cases.
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -563,12 +798,6 @@ class ProductItem extends PureComponent {
         onClick={this.handleClick}
       >
         {this.renderImage()}
-        {pageType !== "cartSlider" && 
-          pageType !== "wishlist" &&  
-          this.renderOutOfStock()}
-        {this.renderBrand()}
-        {this.renderTitle()}
-        {this.renderPrice()}
       </Link>
     );
   }
@@ -582,22 +811,26 @@ class ProductItem extends PureComponent {
   };
 
   handleMouseEnter = () => {
-    if(!this.state.hover) {
-      this.setState({hover: true});
-    } 
+    if (!this.state.hover) {
+      this.setState({ hover: true });
+    }
   };
 
   handleMouseLeave = () => {
-    if(this.state.hover) {
-      this.setState({hover: false});
+    if (this.state.hover) {
+      this.setState({ hover: false });
     }
   };
+
+  handleMouseEnterLeaveColorVarients = () => {
+    this.setState({ hover: false });
+  }
 
   render() {
     const { isArabic } = this.state;
     const {
       product: { sku, timer_start_time, timer_end_time, },
-      pageType,    
+      pageType,
     } = this.props;
     let setRef = (el) => {
       this.viewElement = el;
@@ -607,8 +840,6 @@ class ProductItem extends PureComponent {
         id={sku}
         ref={setRef}
         block="ProductItem"
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
         mods={{
           isArabic,
         }}
@@ -617,15 +848,33 @@ class ProductItem extends PureComponent {
         {this.renderLabel()}
         {pageType !== "cartSlider" && this.renderWishlistIcon()}
         {this.renderLink()}{" "}
-        <div className= {isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
-         {timer_start_time && timer_end_time && <DynamicContentCountDownTimer start={timer_start_time} end={timer_end_time} isPLPOrPDP />}
-        </div> 
-        {!isMobile.any() &&
+        {pageType !== "cartSlider" &&
+          pageType !== "wishlist" &&
+          this.renderOutOfStock()}
+        {!isMobile.any() ? this.renderColorVariants() : null}
+        <div
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+          >
+          {this.renderBrand()}
+          {this.renderTitle()}
+          {this.renderPrice()}
+          {!isMobile.any() &&
           pageType !== "vuePlp" &&
           pageType !== "cart" &&
           pageType !== "cartSlider" &&
           this.state.hover &&
           this.renderAddToCartOnHover()}
+        </div>
+        <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
+          {timer_start_time && timer_end_time && (
+            <DynamicContentCountDownTimer
+              start={timer_start_time}
+              end={timer_end_time}
+              isPLPOrPDP
+            />
+          )}
+        </div>
         {isMobile.any() &&
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}

@@ -59,6 +59,7 @@ export const mapStateToProps = (state) => ({
   breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
   menuCategories: state.MenuReducer.categories,
   pdpWidgetsData: state.AppState.pdpWidgetsData,
+  colourVarientsButtonClick : state.PLP.colourVarientsButtonClick
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -261,6 +262,7 @@ export class PDPContainer extends PureComponent {
           brand: productKeys?.brand_name,
           category: categoryLevel || "",
           variant: productKeys?.color || "",
+          colour_variant_available : this.props?.colourVarientsButtonClick ? "Yes" : "No"
         },
       });
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
@@ -285,6 +287,7 @@ export class PDPContainer extends PureComponent {
         product_name: name || "",
         isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
+        colour_variant_available : this.props?.colourVarientsButtonClick ? "Yes" : "No"
       });
       this.setState({ eventSent: true });
     }

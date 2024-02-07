@@ -49,6 +49,7 @@
       }
     }
     @include desktop {
+      width: 242px;
       min-height: 368px;
     }
   
@@ -80,12 +81,13 @@
     &::before {
       display: none;
     }
-  
+
     &-ImageBox {
       padding-top: 100%;
       background: #ffffff;
       position: relative;
       display: flex;
+      flex-direction: column;
       justify-content: center;
     }
   
@@ -178,6 +180,97 @@
       font-weight: var(--fw-medium);
     }
   
+    .colorVariantContainer {
+      display : flex;
+      flex-direction: row;
+      align-items: center;
+      width: 242px;
+      height: 31px;
+
+     .left-arrow {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 10px;
+      transform: rotate(135deg);
+      border: solid #000000;
+      border-width: 0 1px 1px 0;
+      &_isArabic {
+        transform:rotate(-45deg);
+      }
+      }
+      .right-arrow {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        transform: rotate(-45deg);
+        border: solid #000000;
+        border-width: 0 1px 1px 0;
+        &_isArabic {
+          transform: rotate(135deg);
+        }
+      }
+    }
+  
+    .colorVariantContainer button {
+      display: flex;
+      align-items: center;
+      height: 0px;
+      padding: 0px;
+      font-size: 20px;
+      font-weight: 400;
+      opacity: 0.2;
+    }
+
+    .colorVariantSlider {
+      display: flex;
+      overflow-x: scroll;
+    }
+
+    .colorVariantSlider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .PLPMobileColorVarients {
+      background-color: #ffffff;
+      opacity: 1;
+      bottom: 10px;
+      left: calc(100% - 8px);
+      transform: translateX(-100%);
+      border-radius: 12px;
+      padding: 7px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      @include mobile {
+        font-size: 12px;
+        width: 50px;
+        bottom: 43px;
+        &_isArabic {
+          left: calc(44px - 100%);
+          transform: translateX(10px);
+        }
+      }
+
+      .radio-input {
+        margin : 0px;
+      }
+      .multi-color {
+        .radio-input {
+          margin : 0px -3px;
+        }
+      }
+      .colorVarientCounts {
+        margin-left : 9px;
+        font-weight: bold;
+        &_isArabic {
+          margin-left : 0px;
+          margin-right: 6px;
+        }
+      }
+    }
     .ProductTag {
       width: 90px;
       height: 20px;
@@ -309,9 +402,8 @@
       position: absolute;
       bottom: 0%;
       width: 100%;
-      border-radius: 30px 30px 0 0;
       background-color: #ffffff;
-      min-height: 150px;
+      min-height: 123px;
       display: none;
     }
   
@@ -328,4 +420,24 @@
       padding-top: 6px;
       float: right;
     }
+
+    .radio-label {
+      display: flex;
+    }
+    .radio-input {
+      cursor: pointer;
+      margin: 8px 8px;
+      width: 15px;
+      height: 15px;
+      min-height: 13px;
+      min-width: 12px;
+      padding: 0px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+    }
+    
+    .radio-input:checked :after {
+      opacity: 1;
+    }
+    
   }

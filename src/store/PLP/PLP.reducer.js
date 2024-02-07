@@ -15,6 +15,7 @@ import {
   UPDATE_NEW_ACTIVE_FILTERS,
   UPDATE_SLIDER_FILTERS,
   CURRENT_SLIDER_STATE,
+  COLOUR_VARIENTS_BUTTON_CLICK,
 } from "./PLP.action";
 export const getInitialState = () => ({
   // loading state (controlled by PLP container)
@@ -36,6 +37,7 @@ export const getInitialState = () => ({
   brand_url:"",
   newActiveFilters: {},
   sliderFilters: {},
+  colourVarientsButtonClick: false,
 });
 
 export const formatFilters = (filters = {}) =>
@@ -79,6 +81,13 @@ export const PLPReducer = (state = getInitialState(), action) => {
         ...state,
         prevProductSku: sku,
       };
+    
+    case COLOUR_VARIENTS_BUTTON_CLICK:
+      const { colourVarientsButtonClick } = action;
+      return {
+        ...state,
+        colourVarientsButtonClick
+      }
 
     case SET_LAST_HOME_ITEM:
       const { item } = action;
