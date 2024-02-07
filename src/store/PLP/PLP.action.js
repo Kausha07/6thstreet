@@ -13,6 +13,8 @@ export const SET_BRAND_URL = "SET_BRAND_URL";
 export const UPDATE_NEW_ACTIVE_FILTERS = "UPDATE_NEW_ACTIVE_FILTER";
 export const UPDATE_SLIDER_FILTERS = "UPDATE_SLIDER_FILTERS";
 export const CURRENT_SLIDER_STATE = "CURRENT_SLIDER_STATE";
+export const COLOUR_VARIENTS_BUTTON_CLICK = "COLOUR_VARIENTS_BUTTON_CLICK";
+
 export const setPLPWidget = (data) => ({
   type: SET_PLP_WIDGET_DATA,
   plpWidgetData: data,
@@ -27,6 +29,11 @@ export const setPrevProductSku = (sku) => ({
   type: SET_PREV_PRODUCT_SKU,
   sku,
 });
+
+export const setColourVarientsButtonClick = (colourVarientsButtonClick) => ({
+  type: COLOUR_VARIENTS_BUTTON_CLICK,
+  colourVarientsButtonClick
+})
 
 export const setLastTapItemOnHome = (item) => ({
   type: SET_LAST_HOME_ITEM,

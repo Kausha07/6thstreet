@@ -150,7 +150,6 @@ class PDPAddToCart extends PureComponent {
       const header = {
         sku: sku,
         size: optionValue,
-        // userEmail: '00_crosse_pacts@icloud.com',
         userEmail: customer.email,
       };
       try{
@@ -161,6 +160,7 @@ class PDPAddToCart extends PureComponent {
           if(!!!this.state.isGTMEventCalled){
             const eventData = {
               ...response, 
+              sp_size_list: JSON.stringify(response?.sp_size_list),
               event_name : EVENT_SIZE_PREDICTION_CLICK,
               trigger_source: SizeBar? SizeBar: "size_help",
             }
