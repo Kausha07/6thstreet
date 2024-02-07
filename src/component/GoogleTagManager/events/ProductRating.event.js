@@ -1,4 +1,4 @@
-import Event, { EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR, EVENT_PRODUCT_RATING_HOVER  } from "Util/Event";
+import Event, { EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR, EVENT_PRODUCT_RATING_VALUE  } from "Util/Event";
 import BaseEvent from "./Base.event"
 export const SPAM_PROTECTION_DELAY = 200;
 
@@ -11,8 +11,8 @@ class ProductRating extends BaseEvent {
         Event.observer(EVENT_PRODUCT_RATING_CLEAR, ({ sku, rating}) => {
           this.handle(EVENT_PRODUCT_RATING_CLEAR, { sku, rating});
         });
-        Event.observer(EVENT_PRODUCT_RATING_HOVER, ({ sku, rating}) => {
-          this.handle(EVENT_PRODUCT_RATING_HOVER, { sku, rating});
+        Event.observer(EVENT_PRODUCT_RATING_VALUE, ({ sku, rating}) => {
+          this.handle(EVENT_PRODUCT_RATING_VALUE, { sku, rating});
         });
     }
 

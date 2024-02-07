@@ -46,7 +46,11 @@ import {
   EVENT_SIZE_PREDICTION_CLICK,
   EVENT_PRODUCT_RATING_CLICK,
   EVENT_PRODUCT_RATING_CLEAR,
-  EVENT_PRODUCT_RATING_HOVER,
+  EVENT_PRODUCT_RATING_VALUE,
+  EVENT_MYORDERPAGE_VISIT,
+  EVENT_ORDERDETAILPAGE_VISIT,
+  EVENT_ORDERDETAILPAGE_CHANNEL,
+
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -108,6 +112,7 @@ import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
 import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
 import ProductRating from "./events/ProductRating.event";
+import MyOrder from "./events/MyOrder.event";
 
 /**
  * Event list
@@ -228,7 +233,10 @@ class GoogleTagManager extends PureComponent {
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
     [EVENT_PRODUCT_RATING_CLICK] :ProductRating,
     [EVENT_PRODUCT_RATING_CLEAR] :ProductRating,
-    [EVENT_PRODUCT_RATING_HOVER] :ProductRating,
+    [EVENT_PRODUCT_RATING_VALUE] :ProductRating,
+    [EVENT_MYORDERPAGE_VISIT] :MyOrder,
+    [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
+    [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrder,
 
   };
 

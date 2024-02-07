@@ -141,7 +141,7 @@ class MyAccountOrderView extends PureComponent {
     this.setState({ eddEventSent: true });
   };
 
-  renderItem = (item, eddItem, isItemUnderProcessing = false, order_id="", itemStatus) => {
+  renderItem = (item, eddItem, isItemUnderProcessing = false, increment_id="", itemStatus) => {
     const {
       order: { order_currency_code: currency, status },
       displayDiscountPercentage,
@@ -149,7 +149,8 @@ class MyAccountOrderView extends PureComponent {
       edd_info,
       international_shipping_fee,
       productsRating,
-      updateRating
+      updateRating,
+      isProductRatingEnabled
     } = this.props;
     const { eddEventSent } = this.state;
     let finalEdd =
@@ -183,10 +184,11 @@ class MyAccountOrderView extends PureComponent {
           currency={currency}
           displayDiscountPercentage={displayDiscountPercentage}
           international_shipping_fee = {international_shipping_fee}
-          orderId= {order_id}
+          incrementId= {increment_id}
           productsRating = {productsRating}
           itemStatus = {itemStatus}
           updateRating = {updateRating}
+          isProductRatingEnabled = {isProductRatingEnabled}
         />
       </>
     );
@@ -468,7 +470,7 @@ class MyAccountOrderView extends PureComponent {
         return true
       }
       case DELIVERY_SUCCESSFUL: {
-        return false;
+        return this.props.isProductRatingEnabled ? false : true;
       }
 
       default: {
@@ -719,7 +721,7 @@ class MyAccountOrderView extends PureComponent {
 
   renderAccordion(item, index) {
     const {
-      order: { groups: shipped = [], order_id
+      order: { groups: shipped = [], increment_id
       },
       edd_info,
     } = this.props;
@@ -828,7 +830,7 @@ class MyAccountOrderView extends PureComponent {
           )}
           <div></div>
           {item.items.map((data) =>
-            this.renderItem(data, item, isItemUnderProcessing, order_id, item.status)
+            this.renderItem(data, item, isItemUnderProcessing, increment_id, item.status)
           )}
         </Accordion>
       </div>

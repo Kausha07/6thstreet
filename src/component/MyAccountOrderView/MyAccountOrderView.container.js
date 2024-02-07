@@ -25,6 +25,9 @@ import { showPopup } from "Store/Popup/Popup.action";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 import { showNotification } from "Store/Notification/Notification.action";
 import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import Event, { MOE_trackEvent, EVENT_ORDERDETAILPAGE_VISIT, EVENT_ORDERDETAILPAGE_CHANNEL } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
@@ -33,6 +36,7 @@ export const mapStateToProps = (state) => ({
   is_exchange_enabled: state.AppConfig.is_exchange_enabled,
   ctcReturnEnabled:state.AppConfig.ctcReturnEnabled,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  isProductRatingEnabled: state.AppConfig.isProductRatingEnabled
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -66,9 +70,25 @@ export class MyAccountOrderViewContainer extends PureComponent {
     this.getOrder();
   }
 
+  componentDidMount() {
+    Event.dispatch(EVENT_ORDERDETAILPAGE_VISIT, {
+      page: "Order Detail Page",
+      channel: "",
+    });
+
+    MOE_trackEvent(EVENT_ORDERDETAILPAGE_VISIT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      page: "Order Detail Page",
+      channel: "",
+    });
+
+  }
+
   containerProps = () => {
     const { isLoading, order, productsRating } = this.state;
-    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee } = this.props;
+    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee , isProductRatingEnabled} = this.props;
 
     return {
       isLoading,
@@ -79,6 +99,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       is_exchange_enabled,
       international_shipping_fee,
       productsRating,
+      isProductRatingEnabled,
     };
   };
 
@@ -175,16 +196,19 @@ export class MyAccountOrderViewContainer extends PureComponent {
       // const productSkuIds = itemsGroups[0].map(item => item.sku)
       let productSkuIds = [];
       let productRatingsResp = {};
-      itemsGroups.map(items => {
-        items.map(item => {
-          productSkuIds.push(item.sku);
+      if(this.props.isProductRatingEnabled){
+        itemsGroups.map(items => {
+          items.map(item => {
+            productSkuIds.push(item.sku);
+          })
         })
-      })
-      await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
-          if(!resp.status){
-            productRatingsResp = resp;
-          }
-      })
+        await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
+            if(!resp.status){
+              productRatingsResp = resp;
+            }
+        })
+      }
+      
       this.setState({ order, isLoading: false, entity_id: orderId, productsRating: productRatingsResp });
     } catch (e) {
       this.setState({ isLoading: false });

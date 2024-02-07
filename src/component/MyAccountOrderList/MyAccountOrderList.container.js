@@ -8,6 +8,9 @@ import { showNotification } from "Store/Notification/Notification.action";
 
 import MyAccountOrderList from "./MyAccountOrderList.component";
 
+import Event, { MOE_trackEvent, EVENT_MYORDERPAGE_VISIT } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+
 export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
 });
@@ -36,7 +39,19 @@ export class MyAccountOrderListContainer extends SourceComponent {
 
     this.getOrderList(limit);
 
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);    
+    Event.dispatch(EVENT_MYORDERPAGE_VISIT, {
+      page: "My Order List Page",
+      channel: "",
+    });
+
+    MOE_trackEvent(EVENT_MYORDERPAGE_VISIT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      page: "My Order List Page",
+      channel: "",
+    });
   }
 
   handleScroll = () => {

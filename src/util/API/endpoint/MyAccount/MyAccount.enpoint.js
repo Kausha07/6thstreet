@@ -57,7 +57,6 @@ export const updateStarRating = (data) => MobileAPI.post(
     '/product-rating/save',
     data
 ) || {};
-export const deleteStarRating = (starRatingId, data) => MobileAPI.deleteWithBody(
-    `/product-rating/${starRatingId}`,
-    data
+export const deleteStarRating = (simpleSKU, configSKU, incrementId) => MobileAPI.delete(
+    `/product-rating/${simpleSKU}?order_id=${incrementId}&config_sku=${configSKU}`
 ) || {};

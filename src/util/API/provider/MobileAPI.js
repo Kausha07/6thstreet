@@ -49,10 +49,6 @@ class MobileAPI {
     delete(url) {
         return this._fetch('delete', url);
     }
-    
-    deleteWithBody(url, data={}) {
-        return this._fetch('delete', url, data);
-    }
 
     put(url, data) {
         return this._fetch('put', url, data);

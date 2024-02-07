@@ -252,7 +252,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
   renderProductRating() {
     const {
       item: {
-        sku
+        sku,
+        config_sku,
       } = {},
       productsRating,
     } = this.props;
@@ -274,7 +275,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                   />
                 </div>
               }
-              {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku)}>{__("Clear")}</button>}
+              {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku, config_sku)}>{__("Clear")}</button>}
           </div>
         </div>
 
@@ -284,12 +285,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
   renderStarRating() {
     const {
       item: {
-        item_id,
-        sku
+        sku,
+        config_sku,
       } = {},
-      orderId,
       productsRating,
-      updateRating
     } = this.props;
     return (
       <div className="ratingStars">
@@ -325,10 +324,10 @@ export class MyAccountOrderViewItem extends SourceComponent {
   async handleStarClick(value) {
     const {
       item: {
-        item_id,
-        sku
+        sku,
+        config_sku,
       } = {},
-      orderId,
+      incrementId,
       productsRating,
       updateRating
     } = this.props;
@@ -337,7 +336,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
       this.setState({ isRatingProccessing: true });
       await updateStarRating({
         "simple_sku": sku,
-        "order_id": +orderId,
+        "config_sku": config_sku,
+        "order_id": +incrementId,
         "rating": value
       }).then(() => {
         this.setState({ isRatingProccessing: false });
@@ -365,21 +365,19 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
 
-  async handleDeleteStarRating(productSku) {
+  async handleDeleteStarRating(productSimpleSku, productConfigSku) {
     const {
       item: {
-        item_id,
-        sku
+        sku,
+        config_sku,
       } = {},
-      orderId,
+      incrementId,
       productsRating,
       updateRating
     } = this.props;
     if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
-      await deleteStarRating(productSku, {
-        "order_id": +orderId,
-      }).then(() => {
+      await deleteStarRating(productSimpleSku,productConfigSku, +incrementId).then(() => {        
         this.setState({ isRatingProccessing: false });
         Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
           sku: sku || "",
@@ -402,7 +400,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
   }
 
   render() {
-    const { item, itemStatus } = this.props;
+    const { item, itemStatus, isProductRatingEnabled } = this.props;
     return (
       <div
         block="MyAccountOrderViewItem"
@@ -412,7 +410,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
           {this.renderImage()}
           {this.renderDetails()}
         </div>
-        {itemStatus && itemStatus === "delivery_successful" && this.renderProductRating()}
+        {itemStatus && itemStatus === "delivery_successful" && isProductRatingEnabled && this.renderProductRating()}
 
       </div>
     );
