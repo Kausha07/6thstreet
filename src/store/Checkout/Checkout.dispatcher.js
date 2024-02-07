@@ -145,8 +145,8 @@ export class CheckoutDispatcher {
     return verifyTamaraPayment(paymentID);
   }
 
-  async updateTamaraPayment (dispatch, paymentID, orderId) {
-    return updateTamaraPayment(paymentID, orderId)
+  async updateTamaraPayment (dispatch, paymentID, orderId, paymentStatus) {
+    return updateTamaraPayment(paymentID, orderId, paymentStatus)
   }
 
   async getTabbyInstallment(dispatch, price) {

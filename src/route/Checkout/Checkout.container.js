@@ -136,8 +136,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.createTamaraSession(dispatch),
   verifyTamaraPayment: (paymentID) =>
     CheckoutDispatcher.verifyTamaraPayment(dispatch, paymentID),
-  updateTamaraPayment: (paymentID, orderId) =>
-    CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId),
+  updateTamaraPayment: (paymentID, orderId, paymentStatus) =>
+    CheckoutDispatcher.updateTamaraPayment(dispatch, paymentID, orderId, paymentStatus),
 });
 export const mapStateToProps = (state) => ({
   couponsItems: state.CartReducer.cartCoupons,
@@ -315,7 +315,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         // below call is only to update payment state to magento
         const updatePaymentResp = await updateTamaraPayment(
           tamaraOrderId,
-          order_id
+          order_id,
+          paymentStatus,
         );
         localStorage.removeItem("TAMARA_ORDER_DETAILS");
         return;

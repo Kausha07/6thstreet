@@ -13,9 +13,10 @@ export const verifyTamaraPayment = (paymentID) => MobileAPI.get(
     `/tamara/payments/${paymentID}`
 ) || {};
 
-export const updateTamaraPayment = ( paymentID, order_id ) => MobileAPI.put(
+export const updateTamaraPayment = ( paymentID, order_id, paymentStatus ) => MobileAPI.put(
     `/tamara/payments/${paymentID}`,
     {
-        order_id: order_id
+        order_id: order_id,
+        payment_status: paymentStatus,
     }
 ) || {};
