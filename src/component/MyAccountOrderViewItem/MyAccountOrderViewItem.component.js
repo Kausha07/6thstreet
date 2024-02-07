@@ -321,6 +321,15 @@ export class MyAccountOrderViewItem extends SourceComponent {
   handleStarHoverEnter(value) {
     this.setState({ starHover: value })
   }
+
+  extractIfHasEXPrefix(inputString) {
+    if (inputString.startsWith("EX-") || inputString.startsWith("RAE")) {
+      return inputString.substring(3);
+    } else {
+      return inputString;
+    }
+  }
+
   async handleStarClick(value) {
     const {
       item: {
@@ -337,7 +346,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       await updateStarRating({
         "simple_sku": sku,
         "config_sku": config_sku,
-        "order_id": +incrementId,
+        "order_id": +this.extractIfHasEXPrefix(incrementId),
         "rating": value
       }).then(() => {
         this.setState({ isRatingProccessing: false });
@@ -377,7 +386,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
     } = this.props;
     if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
-      await deleteStarRating(productSimpleSku,productConfigSku, +incrementId).then(() => {        
+      const incmntId = this.extractIfHasEXPrefix(incrementId)
+      await deleteStarRating(productSimpleSku,productConfigSku, +incmntId).then(() => {        
         this.setState({ isRatingProccessing: false });
         Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
           sku: sku || "",
