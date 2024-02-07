@@ -37,7 +37,6 @@ import { isSignedIn } from "Util/Auth";
 import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
 import { getIsFilters } from "./utils/PLPAddToCart.helper";
-import { qtyAttributeForCountry } from "Util/Common/index";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -724,12 +723,8 @@ class PLPAddToCart extends PureComponent {
                   ? item?.full_item_info?.international_vendor
                   : null,
             };
-            if (
-              payload?.intl_vendor !== null &&
-              qtyAttributeForCountry().includes(countryCode)
-            ) {
-              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-            }
+            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
             items.push(payload);
           }
         });

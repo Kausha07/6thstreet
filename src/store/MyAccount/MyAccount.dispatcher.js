@@ -77,7 +77,6 @@ export const RESET_EMAIL = "RESET_EMAIL";
 export const CART_ID_CACHE_KEY = "CART_ID_CACHE_KEY";
 import { getCountryFromUrl } from "Util/Url";
 import {CART_ITEMS_CACHE_KEY} from "../Cart/Cart.reducer";
-import { qtyAttributeForCountry } from "Util/Common/index";
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   getArabicCityArea = (city, area, addressCityData) => {
     let finalArea = area;
@@ -143,9 +142,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country_code)) {
-                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-              }
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
               items.push(payload);
             }
           });
@@ -187,9 +185,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
               items_in_cart.map(item => {
                 if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
                   payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-                  if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country_code)) {
-                    payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-                  }
+                  payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+                  payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
                   items.push(payload);
                 }
               });
