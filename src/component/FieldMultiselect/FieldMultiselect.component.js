@@ -634,9 +634,7 @@ class FieldMultiselect extends PureComponent {
     categoryLevelData.sort((a, b) =>
       a.isDropdown === b.isDropdown ? 0 : a.isDropdown ? -1 : 1
     );
-    if(categoryLevelData.length === 0){
-      this.setState({ isVisible: false})
-    }
+
     if (categoryLevelData.length > 0) {
       return (
         <>
