@@ -50,7 +50,6 @@ function TamaraWidget(props) {
     }
     const script = document.createElement("script");
     script.src = process.env.REACT_APP_TAMARA_WIDGET_URL;
-    script.defer = true;
     script.id = "TamaraScript";
     document.body.appendChild(script);
   };
