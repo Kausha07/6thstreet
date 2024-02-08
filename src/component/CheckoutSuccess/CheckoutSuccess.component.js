@@ -1345,6 +1345,7 @@ export class CheckoutSuccess extends PureComponent {
         customer_balance_amount = 0,
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
+        international_shipping_charges= 0,
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1358,6 +1359,10 @@ export class CheckoutSuccess extends PureComponent {
             {this.renderPriceLineQPAY(shipping_amount, __("Shipping"), {
               divider: true,
             })}
+            {this.renderPriceLineQPAY(
+              international_shipping_charges,
+              __("International Shipping fee")
+            )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
@@ -1460,7 +1465,8 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
-          paymentMethod?.code === "checkout_knet"
+          paymentMethod?.code === "checkout_knet" ||
+          paymentMethod?.code === TAMARA
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}
