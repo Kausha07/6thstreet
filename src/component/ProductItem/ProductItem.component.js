@@ -29,6 +29,7 @@ import Event, {
   EVENT_COLOUR_VARIENT_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
+import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import "./ProductItem.style";
 import { setPrevPath, setColourVarientsButtonClick } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
@@ -559,6 +560,15 @@ class ProductItem extends PureComponent {
     }
     return stockCount;
   }
+  
+  getArabicToEnglishColorTranslation = (color) => {
+    const engColor = isArabic ? translateArabicColor(color) : color;
+    const fixedColor = engColor?.toLowerCase()?.replace(/ /g, "_");
+    const prodColor = SPECIAL_COLORS[fixedColor]
+      ? SPECIAL_COLORS[fixedColor]
+      : fixedColor;
+    return prodColor;
+  }
 
   renderColorVariants = () => {
     const { product = {}, product: { sku = "", color = "" } } = this.props;
@@ -569,9 +579,9 @@ class ProductItem extends PureComponent {
     
     let colorValue = "";
     if(!Array.isArray(color) && color) {
-      colorValue = color?.toLowerCase();
+      colorValue = this.getArabicToEnglishColorTranslation(color);
     }else if(Array.isArray(color) && color?.length > 0) {
-      colorValue = color[0]?.toLowerCase();
+      colorValue = this.getArabicToEnglishColorTranslation(color[0]);
     }else {
       colorValue = "";
     }
