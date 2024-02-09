@@ -348,41 +348,46 @@ export class MyAccountOrderViewItem extends SourceComponent {
         "config_sku": config_sku,
         "order_id": +this.extractIfHasEXPrefix(incrementId),
         "rating": value
-      }).then(() => {
-        this.setState({ isRatingProccessing: false });
-        this.setState({ isRatingSubmited: true });
-        setTimeout(() => {
-          this.setState({ isRatingSubmited: false });
-        }, 2000);
+      }).then((resp) => {
+        if(resp.success){
+          this.setState({ isRatingProccessing: false });
+          this.setState({ isRatingSubmited: true });
+          setTimeout(() => {
+            this.setState({ isRatingSubmited: false });
+          }, 2000);
 
-        if(!productsRating[sku]){
-          Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
-            sku: sku || "",
-            rating: value || "",
-          });
-  
-          MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
-            country: getCountryFromUrl().toUpperCase(),
-            language: getLanguageFromUrl().toUpperCase(),
-            app6thstreet_platform: "Web",
-            sku: sku || "",
-            rating: value || "",
-          });
+          if(!productsRating[sku]){
+            Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
+              sku: sku || "",
+              rating: value || "",
+            });
+    
+            MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              app6thstreet_platform: "Web",
+              sku: sku || "",
+              rating: value || "",
+            });
+          }else{
+            Event.dispatch(EVENT_PRODUCT_RATING_VALUE, {
+              sku: sku || "",
+              rating: value || "",
+            });
+    
+            MOE_trackEvent(EVENT_PRODUCT_RATING_VALUE, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              app6thstreet_platform: "Web",
+              sku: sku || "",
+              rating: value || "",
+            });
+          }
+          updateRating(sku, value)        
         }else{
-          Event.dispatch(EVENT_PRODUCT_RATING_VALUE, {
-            sku: sku || "",
-            rating: value || "",
-          });
-  
-          MOE_trackEvent(EVENT_PRODUCT_RATING_VALUE, {
-            country: getCountryFromUrl().toUpperCase(),
-            language: getLanguageFromUrl().toUpperCase(),
-            app6thstreet_platform: "Web",
-            sku: sku || "",
-            rating: value || "",
-          });
+          this.setState({ isRatingProccessing: false });
+          this.setState({ isRatingSubmited: false });
         }
-        updateRating(sku, value)        
       })
 
     }
@@ -402,20 +407,25 @@ export class MyAccountOrderViewItem extends SourceComponent {
     if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
       const incmntId = this.extractIfHasEXPrefix(incrementId)
-      await deleteStarRating(productSimpleSku,productConfigSku, +incmntId).then(() => {        
-        this.setState({ isRatingProccessing: false });
-        Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
-          sku: sku || "",
-          rating: productsRating[sku] || "",
-        });
-        MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
-          country: getCountryFromUrl().toUpperCase(),
-          language: getLanguageFromUrl().toUpperCase(),
-          app6thstreet_platform: "Web",
-          sku: sku || "",
-          rating: productsRating[sku] || "",
-        });
-        updateRating(sku, 0);
+      await deleteStarRating(productSimpleSku,productConfigSku, +incmntId).then((resp) => {
+        if(resp.success){
+          this.setState({ isRatingProccessing: false });
+          Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
+            sku: sku || "",
+            rating: productsRating[sku] || "",
+          });
+          MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            sku: sku || "",
+            rating: productsRating[sku] || "",
+          });
+          updateRating(sku, 0);
+        }else{
+          this.setState({ isRatingProccessing: false });
+        }       
+        
       })
     }
   }
