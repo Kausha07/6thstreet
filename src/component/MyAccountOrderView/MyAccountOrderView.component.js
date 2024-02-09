@@ -417,6 +417,7 @@ class MyAccountOrderView extends PureComponent {
   ) {
     const {
       order: { is_exchange_order: exchangeCount, groups },
+      isProductRatingEnabled
     } = this.props;
     const packageStatus = this.formatGroupStatus(status);
     const exchangePackageStatus = exchangeFormatGroupStatus(status);
@@ -459,6 +460,12 @@ class MyAccountOrderView extends PureComponent {
             new Date(deliveryDate.replace(/-/g, "/"))
           )}</span>: null } */}
         </h3>
+        {(status === DELIVERY_SUCCESSFUL && deliveryDate && isProductRatingEnabled) ?
+        <div className="subTitle">{__("Delivered")}: &nbsp;{formatDate(
+            "DD MMMM YYYY",
+            new Date(deliveryDate.replace(/-/g, "/"))
+          )}</div>: null
+        }
       </div>
     );
   }

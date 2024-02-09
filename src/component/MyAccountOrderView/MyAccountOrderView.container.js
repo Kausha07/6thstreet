@@ -72,7 +72,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   componentDidMount() {
     Event.dispatch(EVENT_ORDERDETAILPAGE_VISIT, {
-      page: "Order Detail Page",
+      page: "OrderDetails",
       channel: "",
     });
 
@@ -80,7 +80,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
-      page: "Order Detail Page",
+      page: "OrderDetails",
       channel: "",
     });
 

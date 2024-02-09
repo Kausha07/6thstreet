@@ -14,7 +14,7 @@ import {
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
-import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent, EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent, EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR, EVENT_PRODUCT_RATING_VALUE } from "Util/Event";
 import { Store } from "../Icons";
 import Image from "Component/Image";
 import Tick from "./icons/tick.png";
@@ -354,20 +354,35 @@ export class MyAccountOrderViewItem extends SourceComponent {
         setTimeout(() => {
           this.setState({ isRatingSubmited: false });
         }, 2000);
-        updateRating(sku, value)
 
-        Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
-          sku: sku || "",
-          rating: value || "",
-        });
-
-        MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
-          country: getCountryFromUrl().toUpperCase(),
-          language: getLanguageFromUrl().toUpperCase(),
-          app6thstreet_platform: "Web",
-          sku: sku || "",
-          rating: value || "",
-        });
+        if(!productsRating[sku]){
+          Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
+            sku: sku || "",
+            rating: value || "",
+          });
+  
+          MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            sku: sku || "",
+            rating: value || "",
+          });
+        }else{
+          Event.dispatch(EVENT_PRODUCT_RATING_VALUE, {
+            sku: sku || "",
+            rating: value || "",
+          });
+  
+          MOE_trackEvent(EVENT_PRODUCT_RATING_VALUE, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+            sku: sku || "",
+            rating: value || "",
+          });
+        }
+        updateRating(sku, value)        
       })
 
     }
@@ -400,10 +415,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
           sku: sku || "",
           rating: productsRating[sku] || "",
         });
-        this.setState({ isRatingSubmited: true });
-        setTimeout(() => {
-          this.setState({ isRatingSubmited: false });
-        }, 2000);
         updateRating(sku, 0);
       })
     }

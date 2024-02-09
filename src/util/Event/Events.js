@@ -315,9 +315,9 @@ export const VIP_CUSTOMER = "vip_customer";
 export const EVENT_SIZE_PREDICTION_CLICK = "size_prediction_click";
 
 // Product Rating
-export const EVENT_PRODUCT_RATING_CLICK = "RatingSubmission";
-export const EVENT_PRODUCT_RATING_CLEAR = "RatingSubmission_Clear";
-export const EVENT_PRODUCT_RATING_VALUE = "RatingSubmission_Value";
-export const EVENT_MYORDERPAGE_VISIT = "MyOrderPage_Visit";
-export const EVENT_ORDERDETAILPAGE_VISIT = "OrderDetailPage_Visit";
-export const EVENT_ORDERDETAILPAGE_CHANNEL = "OrderDetailPage_Channel";
+export const EVENT_PRODUCT_RATING_CLICK = "add_user_rating";
+export const EVENT_PRODUCT_RATING_CLEAR = "delete_user_rating";
+export const EVENT_PRODUCT_RATING_VALUE = "edit_user_rating";
+export const EVENT_MYORDERPAGE_VISIT = "my_orders_screen_view";
+export const EVENT_ORDERDETAILPAGE_VISIT = "order_details_screen_view";
+export const EVENT_ORDERDETAILPAGE_CHANNEL = "order_details_screen_Channel";

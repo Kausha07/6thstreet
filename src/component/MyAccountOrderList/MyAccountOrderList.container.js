@@ -41,7 +41,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
 
     window.addEventListener("scroll", this.handleScroll);    
     Event.dispatch(EVENT_MYORDERPAGE_VISIT, {
-      page: "My Order List Page",
+      page: "Orders",
       channel: "",
     });
 
@@ -49,7 +49,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
-      page: "My Order List Page",
+      page: "Orders",
       channel: "",
     });
   }

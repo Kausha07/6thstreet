@@ -24,12 +24,8 @@ class MyOrder extends BaseEvent {
         }    
         this.pushEventData({
           event: EVENT_TYPE,
-          ecommerce: {
-            page: {
-              type: page,
-              channel: channel
-            },
-          },
+          screen_name: page,
+          channel: channel,
         });
     }
 }
