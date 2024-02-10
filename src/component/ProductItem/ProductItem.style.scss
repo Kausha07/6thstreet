@@ -235,7 +235,7 @@
     .PLPMobileColorVarients {
       background-color: #ffffff;
       opacity: 1;
-      bottom: 10px;
+      bottom: 10%;
       left: calc(100% - 8px);
       transform: translateX(-100%);
       border-radius: 12px;
@@ -247,10 +247,9 @@
       @include mobile {
         font-size: 12px;
         width: 50px;
-        bottom: 43px;
+        z-index: 1;
         &_isArabic {
-          left: calc(44px - 100%);
-          transform: translateX(10px);
+          transform: translateX(18px);
         }
       }
 
@@ -313,6 +312,7 @@
     .WishlistIcon {
       width: 28px;
       height: 28px;
+      z-index: 2;
   
       &-Icon {
         width: 20px;
@@ -440,4 +440,9 @@
       opacity: 1;
     }
     
+    .swiperWrapper {
+      @include desktop {
+        min-height: 274px;
+      }
+    }
   }
