@@ -392,7 +392,7 @@ class ProductItem extends PureComponent {
       const colorKey = productAlsoAvailableColors[index];
       const background = product?.["6s_also_available_color"]?.[colorKey]?.color || "";
   
-      return product?.["6s_also_available_color"]?.[colorKey]?.stock !== '0' && (
+      return (
         <input
           block="radio-input"
           type="radio"
@@ -467,18 +467,6 @@ class ProductItem extends PureComponent {
     );
   }
 
-  colorVarientsButtonClick = (productImage) => {
-    this.setState({ currentImage: productImage });
-  };
-
-  async requestAvailableColorProduct(sku) {
-    const { requestProductBySku } = this.props;
-    if (sku) {
-      const response = await requestProductBySku({ options: { sku } });
-      return  response;
-    }
-    return;
-  }
 
   getProductDetailsBySkuAlgolia = async(sku) => {
     try {
