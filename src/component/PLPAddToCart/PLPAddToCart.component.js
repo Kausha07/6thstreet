@@ -150,7 +150,7 @@ class PLPAddToCart extends PureComponent {
     const productStock = simple_products;
 
     const checkproductSize =
-      (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
+      (size_uk?.length !== 0 || size_eu?.length !== 0 || size_us?.length !== 0) &&
       selectedSizeCode !== "";
     const checkproductStock =
       typeof productStock === "object" && productStock !== null;
@@ -1035,19 +1035,19 @@ class PLPAddToCart extends PureComponent {
   }
 
   handleScroll = (scrollOffset) => {
-    const adjustedOffset = this.state.isArabic ? -scrollOffset : scrollOffset;
+    const adjustedOffset = this.state?.isArabic ? -scrollOffset : scrollOffset;
     this.scrollRef.current.scrollLeft += adjustedOffset;
   }
 
   handleMoreSizeOption = () => {
-    let productStock = this.props.product.simple_products;
-    let selectedSizeType = this.state.selectedSizeType;
-    let sizeObject = this.state.sizeObject;
-    let product = this.props.product;
+    let productStock = this.props?.product?.simple_products;
+    let selectedSizeType = this.state?.selectedSizeType;
+    let sizeObject = this.state?.sizeObject;
+    let product = this.props?.product;
     if (
       sizeObject?.sizeCodes !== undefined &&
-      Object.keys(productStock || []).length !== 0 &&
-      product[`size_${selectedSizeType}`].length !== 0 && sizeObject?.sizeCodes?.length > 4
+      Object.keys(productStock || [])?.length !== 0 &&
+      product[`size_${selectedSizeType}`]?.length !== 0 && sizeObject?.sizeCodes?.length > 4
     ) { 
       return true;
     }
