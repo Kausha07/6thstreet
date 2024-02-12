@@ -33,7 +33,7 @@ function TamaraCard(props) {
           <img src={tamaraIcon} />
         </div>
         <div block="tamara-header-wrapper-tamara-line" mods={{ isArabic }}>
-          {__("Split In 4, Interest-free")}
+          {__("Split in 4 payments - No late fees.")}
         </div>
       </div>
     );
