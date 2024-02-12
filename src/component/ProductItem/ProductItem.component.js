@@ -29,6 +29,7 @@ import Event, {
   EVENT_COLOUR_VARIENT_CLICK,
   MOE_trackEvent,
 } from "Util/Event";
+import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import "./ProductItem.style";
 import { setPrevPath, setColourVarientsButtonClick } from "Store/PLP/PLP.action";
 import { connect } from "react-redux";
@@ -381,17 +382,17 @@ class ProductItem extends PureComponent {
   }
 
   renderColorVariantsMobile = () => {
-    const { product } = this.props;
+    const { product = {} } = this.props;
     const { isdark, isArabic } = this.state;
-    const productAlsoAvailableColors = product["6s_also_available_color"]
-      ? Object.keys(product["6s_also_available_color"])
+    const productAlsoAvailableColors = product?.["6s_also_available_color"]
+      ? Object.keys(product?.["6s_also_available_color"])
       : [];
   
     const generateInputField = (index) => {
       const colorKey = productAlsoAvailableColors[index];
-      const background = product["6s_also_available_color"][colorKey]?.color || "";
+      const background = product?.["6s_also_available_color"]?.[colorKey]?.color || "";
   
-      return product["6s_also_available_color"][colorKey]?.stock !== '0' && (
+      return (
         <input
           block="radio-input"
           type="radio"
@@ -453,8 +454,8 @@ class ProductItem extends PureComponent {
         <Image
           lazyLoad={lazyLoad}
           src={
-            this.state.colorVarientButtonClick
-              ? this.state.currentImage
+            this.state?.colorVarientButtonClick
+              ? this.state?.currentImage
               : thumbnail_url
           }
           alt={altText}
@@ -466,23 +467,11 @@ class ProductItem extends PureComponent {
     );
   }
 
-  colorVarientsButtonClick = (productImage) => {
-    this.setState({ currentImage: productImage });
-  };
-
-  async requestAvailableColorProduct(sku) {
-    const { requestProductBySku } = this.props;
-    if (sku) {
-      const response = await requestProductBySku({ options: { sku } });
-      return  response;
-    }
-    return;
-  }
 
   getProductDetailsBySkuAlgolia = async(sku) => {
     try {
       if(sku){
-        const response = await new Algolia().getProductBySku({ sku });
+        const response = await new Algolia()?.getProductBySku({ sku });
         const {
           data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
         } = response;
@@ -537,13 +526,13 @@ class ProductItem extends PureComponent {
   }
 
   getInstockColorVarientsCount = () => {
-    const { product } = this.props
-    const { colorVarientProductData } = this.state
+    const { product = {} } = this.props
+    const { colorVarientProductData = {} } = this.state
     let stockCount = 0;
-    const updatedProductData = Object.keys(colorVarientProductData).length !== 0 ? colorVarientProductData?.data : product;
+    const updatedProductData = Object.keys(colorVarientProductData)?.length !== 0 ? colorVarientProductData?.data : product;
     if (
       updatedProductData &&
-      Object.keys(updatedProductData).length > 0 &&
+      Object.keys(updatedProductData)?.length > 0 &&
       updatedProductData?.["6s_also_available"]?.length > 0 &&
       updatedProductData?.["6s_also_available_color"] &&
       Object.keys(updatedProductData?.["6s_also_available_color"])?.length > 0
@@ -559,27 +548,45 @@ class ProductItem extends PureComponent {
     }
     return stockCount;
   }
+  
+  getArabicToEnglishColorTranslation = (color) => {
+    const engColor = isArabic ? translateArabicColor(color) : color;
+    const fixedColor = engColor?.toLowerCase()?.replace(/ /g, "_");
+    const prodColor = SPECIAL_COLORS[fixedColor]
+      ? SPECIAL_COLORS[fixedColor]
+      : fixedColor;
+    return prodColor;
+  }
 
   renderColorVariants = () => {
-    const { product, product: { sku, color } } = this.props;
-    const { isdark, isArabic, selectedOption } = this.state;
-    const productAlsoAvailableColors = (Array.isArray(product["6s_also_available_color"]) ? product["6s_also_available_color"]?.length > 0 : product["6s_also_available_color"])
-      ? [sku, ...Object.keys(product["6s_also_available_color"])]
+    const { product = {}, product: { sku = "", color = "" } } = this.props;
+    const { isdark = "", isArabic, selectedOption } = this.state;
+    const productAlsoAvailableColors = ((product && Object.keys(product)?.length > 0 && Array.isArray(product?.["6s_also_available_color"])) ? product?.["6s_also_available_color"]?.length > 0 : product?.["6s_also_available_color"])
+      ? [sku, ...Object.keys(product?.["6s_also_available_color"])]
       : [];
-    const colorValue = color ? color.toLowerCase() : "";
+    
+    let colorValue = "";
+    if(!Array.isArray(color) && color) {
+      colorValue = this.getArabicToEnglishColorTranslation(color);
+    }else if(Array.isArray(color) && color?.length > 0) {
+      colorValue = this.getArabicToEnglishColorTranslation(color[0]);
+    }else {
+      colorValue = "";
+    }
+
     return (
       <div block="colorVariantContainer">
         {this.getInstockColorVarientsCount() > 0 ? (
           <>
             <button onClick={() => this.handleScroll(-30)}>
-              {productAlsoAvailableColors?.length > 7 ? (
+              {(productAlsoAvailableColors?.length > 7 && this.getInstockColorVarientsCount() > 7 )? (
                 <span block="left-arrow" mods={{ isArabic }}></span>
               ) : null}
             </button>
             <div block="colorVariantSlider" ref={this.scrollRef}>
               {productAlsoAvailableColors?.map(
                 (sku, index) =>
-                  product["6s_also_available_color"][sku]?.stock !== "0" && (
+                  product?.["6s_also_available_color"]?.[sku]?.stock !== "0" && (
                     <div
                       key={index}
                       block="radio-label"
@@ -595,12 +602,12 @@ class ProductItem extends PureComponent {
                         onChange={() => this.onChangeTheme(sku)}
                         style={{
                           background:
-                            product["6s_also_available_color"][sku]?.color ||
+                            product?.["6s_also_available_color"]?.[sku]?.color ||
                             colorValue,
                           boxShadow:
                             selectedOption === sku
                               ? `0px 0px 0px 0.5px ${
-                                  product["6s_also_available_color"][sku]
+                                  product?.["6s_also_available_color"]?.[sku]
                                     ?.color || colorValue
                                 }`
                               : "0px 0px 0px 0.5px #D1D3D4",
@@ -611,7 +618,7 @@ class ProductItem extends PureComponent {
               )}
             </div>
             <button onClick={() => this.handleScroll(30)}>
-              {productAlsoAvailableColors.length > 7 ? (
+              {(productAlsoAvailableColors?.length > 7 && this.getInstockColorVarientsCount() > 7)? (
                 <span block="right-arrow" mods={{ isArabic }}></span>
               ) : null}
             </button>
