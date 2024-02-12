@@ -248,6 +248,7 @@
         position: absolute;
         font-size: 12px;
         width: 50px;
+        z-index: 1;
         &_isArabic {
           transform: translateX(18px);
         }
@@ -312,6 +313,7 @@
     .WishlistIcon {
       width: 28px;
       height: 28px;
+      z-index: 2;
   
       &-Icon {
         width: 20px;
@@ -439,4 +441,9 @@
       opacity: 1;
     }
     
+    .swiperWrapper {
+      @include desktop {
+        min-height: 274px;
+      }
+    }
   }
