@@ -55,7 +55,7 @@ class SwiperSliderProduct extends PureComponent {
           autoplay={{ enabled: false, delay: 800 }}
           pagination={{ clickable: true }}
           modules={[Autoplay, Pagination, Navigation]}
-          // reverseDirection={true}
+          reverseDirection={true}
           allowTouchMove={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
         >

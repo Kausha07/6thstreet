@@ -27,6 +27,7 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
   EVENT_COLOUR_VARIENT_CLICK,
+  EVENT_FLIP_IMAGE_SCROLL,
   MOE_trackEvent,
 } from "Util/Event";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
@@ -228,7 +229,6 @@ class ProductItem extends PureComponent {
       },
       isFilters,
     } = this.props;
-
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
@@ -269,6 +269,13 @@ class ProductItem extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     const productData = { ...product, ...{ listName: this.getPLPListName() } };
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, productData);
+
+    Event.dispatch(EVENT_FLIP_IMAGE_SCROLL, {
+      product_id: product?.objectID || "",
+      product_name: name || "",
+      image_number: this.swiperRef?.current?.activeIndex || 0,
+    });
+
     if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
@@ -300,6 +307,16 @@ class ProductItem extends PureComponent {
       isFilters: isFilters ? "Yes" : "No",
       position: product_Position || "",
     });
+
+    MOE_trackEvent(EVENT_FLIP_IMAGE_SCROLL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      product_id: product?.objectID || "",
+      product_name: name || "",
+      image_number: this.swiperRef?.current?.activeIndex || 0,
+    });
+
     // this.sendBannerClickImpression(product);
   }
 

@@ -45,6 +45,7 @@ import {
   EVENT_GTM_CART,
   EVENT_SIZE_PREDICTION_CLICK,
   EVENT_COLOUR_VARIENT_CLICK,
+  EVENT_FLIP_IMAGE_SCROLL,
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
@@ -106,6 +107,7 @@ import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
 import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
 import ColorVarientEvent from "./events/PLPFiltersEvents/ColorEvent.event";
+import FlipImageScrollEvent from "./events/PLPFiltersEvents/FlipImageScrollEvent.event";
 
 /**
  * Event list
@@ -225,6 +227,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_CART]: CartEvent,
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
     [EVENT_COLOUR_VARIENT_CLICK]: ColorVarientEvent,
+    [EVENT_FLIP_IMAGE_SCROLL]: FlipImageScrollEvent,
   };
 
   /**
