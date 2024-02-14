@@ -112,7 +112,9 @@ import { isSignedIn } from "Util/Auth";
 import CartEvent from "./events/Cart.event";
 import SizeSelectionOrSizeHelpClicked from "./events/SizePredictorClick.event";
 import ProductRating from "./events/ProductRating.event";
+import ProductRatingClear from "./events/ProductRatingClear.event";
 import MyOrder from "./events/MyOrder.event";
+import MyOrderChannel from "./events/MyOrderChannel.event";
 
 /**
  * Event list
@@ -232,11 +234,11 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_CART]: CartEvent,
     [EVENT_SIZE_PREDICTION_CLICK]: SizeSelectionOrSizeHelpClicked,
     [EVENT_PRODUCT_RATING_CLICK] :ProductRating,
-    [EVENT_PRODUCT_RATING_CLEAR] :ProductRating,
+    [EVENT_PRODUCT_RATING_CLEAR] :ProductRatingClear,
     [EVENT_PRODUCT_RATING_VALUE] :ProductRating,
     [EVENT_MYORDERPAGE_VISIT] :MyOrder,
     [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
-    [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrder,
+    [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
 
   };
 

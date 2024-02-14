@@ -341,7 +341,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       updateRating
     } = this.props;
 
-    if (productsRating[sku] !== value && !this.state.isRatingProccessing && !this.state.isRatingSubmited) {
+    if (sku &&  config_sku && productsRating[sku] !== value && !this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
       await updateStarRating({
         "simple_sku": sku,
@@ -407,19 +407,14 @@ export class MyAccountOrderViewItem extends SourceComponent {
     if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
       this.setState({ isRatingProccessing: true });
       const incmntId = this.extractIfHasEXPrefix(incrementId)
-      await deleteStarRating(productSimpleSku,productConfigSku, +incmntId).then((resp) => {
+      await deleteStarRating(productSimpleSku,encodeURIComponent(productConfigSku), +incmntId).then((resp) => {
         if(resp.success){
           this.setState({ isRatingProccessing: false });
-          Event.dispatch(EVENT_PRODUCT_RATING_CLEAR, {
-            sku: sku || "",
-            rating: productsRating[sku] || "",
-          });
+          Event.dispatch(EVENT_PRODUCT_RATING_CLEAR);
           MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
             country: getCountryFromUrl().toUpperCase(),
             language: getLanguageFromUrl().toUpperCase(),
             app6thstreet_platform: "Web",
-            sku: sku || "",
-            rating: productsRating[sku] || "",
           });
           updateRating(sku, 0);
         }else{

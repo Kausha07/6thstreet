@@ -42,7 +42,6 @@ export class MyAccountOrderListContainer extends SourceComponent {
     window.addEventListener("scroll", this.handleScroll);    
     Event.dispatch(EVENT_MYORDERPAGE_VISIT, {
       page: "Orders",
-      channel: "",
     });
 
     MOE_trackEvent(EVENT_MYORDERPAGE_VISIT, {
@@ -50,7 +49,6 @@ export class MyAccountOrderListContainer extends SourceComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
       page: "Orders",
-      channel: "",
     });
   }
 

@@ -26,7 +26,7 @@ import MagentoAPI from "Util/API/provider/MagentoAPI";
 import { showNotification } from "Store/Notification/Notification.action";
 import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import Event, { MOE_trackEvent, EVENT_ORDERDETAILPAGE_VISIT, EVENT_ORDERDETAILPAGE_CHANNEL } from "Util/Event";
-import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl, getQueryParam } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -71,9 +71,11 @@ export class MyAccountOrderViewContainer extends PureComponent {
   }
 
   componentDidMount() {
+
+    const channel = getQueryParam("utm_source", location) || "Organic";
+
     Event.dispatch(EVENT_ORDERDETAILPAGE_VISIT, {
       page: "OrderDetails",
-      channel: "",
     });
 
     MOE_trackEvent(EVENT_ORDERDETAILPAGE_VISIT, {
@@ -81,7 +83,19 @@ export class MyAccountOrderViewContainer extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
       page: "OrderDetails",
-      channel: "",
+    });
+    
+    Event.dispatch(EVENT_ORDERDETAILPAGE_CHANNEL, {
+      page: "OrderDetails",
+      channel: channel,
+    });
+
+    MOE_trackEvent(EVENT_ORDERDETAILPAGE_CHANNEL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      page: "OrderDetails",
+      channel: channel,
     });
 
   }
@@ -193,20 +207,24 @@ export class MyAccountOrderViewContainer extends PureComponent {
       const orderId = this.getOrderId();
       const { data: order } = await MobileAPI.get(`orders/${orderId}`);
       const itemsGroups = (order.groups.filter(group => group.status === "delivery_successful")).map(group => group.items);
-      // const productSkuIds = itemsGroups[0].map(item => item.sku)
-      let productSkuIds = [];
+
+      
       let productRatingsResp = {};
       if(this.props.isProductRatingEnabled){
+        let productSkuIds = [];
         itemsGroups.map(items => {
           items.map(item => {
             productSkuIds.push(item.sku);
           })
         })
-        await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
+        if(productSkuIds.length > 0){
+          await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
             if(!resp.status){
               productRatingsResp = resp;
             }
-        })
+          })
+        }
+        
       }
       
       this.setState({ order, isLoading: false, entity_id: orderId, productsRating: productRatingsResp });
