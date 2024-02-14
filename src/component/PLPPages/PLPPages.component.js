@@ -57,6 +57,8 @@ class PLPPages extends PureComponent {
       prevProductSku: "",
       loadedLastProduct: false,
       noMoreFilters: true,
+      showAll: false,
+      numVisibleItems: 13,
     };
   }
 
@@ -429,204 +431,172 @@ class PLPPages extends PureComponent {
     return Object.entries(pages).map(this.renderPage);
   }
 
-  OnDeselectFilter = (val, values) => {
-    const { facet_key, facet_value } = val;
-    const { is_radio } = values;
+  // OnDeselectFilter method is invoked on deselecting fixed filters
+  OnDeselectFilter = (values) => {
+    const { facet_key, facet_value, is_radio } = values;
     if (facet_key === "categories_without_path") {
-      this.onDeselect(val);
+      this.onDeselect(values);
       return;
     }
     this.handleCallback(facet_key, facet_value, false, is_radio, false);
   };
 
+  // onDeselect method is invoked on deselecting L3 and L4 categoryies;
   onDeselect = (category) => {
     const { onLevelThreeCategoryPress, onSelectMoreFilterPLP } = this.props;
     const { isDropdown } = category;
     onSelectMoreFilterPLP("");
-    onLevelThreeCategoryPress(category, isDropdown, false,  "", true);
-  }
+    onLevelThreeCategoryPress(category, isDropdown, false, "", true);
+  };
 
-  onClickRemoveMoreFilter = (val, value) => {
+  //onClickRemoveMoreFilter method is invoked on deselecting custom more active filters
+  onClickRemoveMoreFilter = (val) => {
     const { onMoreFilterClick } = this.props;
     onMoreFilterClick(val);
   };
 
-  renderSelectedFiltersLevelThree() {
-    const selectedFilters = this.props.filters;
-    const thisRef = this;
-    if (selectedFilters) {
-      return (
-        <>
-          {Object.values(selectedFilters).map(function (values, index) {
-            if (values && values.data) {
-              return Object.values(values.data).map(function (value, index) {
-                if (value.subcategories) {
-                  return Object.values(value.subcategories).map(function (
-                    val,
-                    index
-                  ) {
-                    if (val.sub_subcategories) {
-                      return Object.values(val.sub_subcategories).map(function (
-                        subVal,
-                        index
-                      ) {
-                        if (subVal.is_selected === true) {
-                          return (
-                            <li key={v4()}>
-                              {thisRef.renderButtonView(subVal.label, () =>
-                                thisRef.onDeselect(subVal, values)
-                              )}
-                            </li>
-                          );
-                        }
-                      });
-                    }
-                  });
-                }
-              });
-            }
-          })}
-        </>
-      );
-    }
-  }
+  toggleShowAll = () => {
+    const { showAll } = this.state;
+    this.setState({ showAll: !showAll });
+  };
 
-  renderSelectedFiltersLevelFour() {
+  getDefaultSelectedFilter = () => {
     const selectedFilters = this.props.filters;
-    const thisRef = this;
-    if (selectedFilters) {
-      return (
-        <>
-          {Object.values(selectedFilters).map(function (values, index) {
-            if (values && values.data) {
-              return Object.values(values.data).map(function (value, index) {
-                if (value.subcategories) {
-                  return Object.values(value.subcategories).map(function (
-                    val,
-                    index
-                  ) {
-                    if (val.sub_subcategories) {
-                      return Object.values(val.sub_subcategories).map(function (
-                        subVal,
-                        index
-                      ) {
-                        if (subVal.sub_subcategories) {
-                          return Object.values(subVal.sub_subcategories).map(
-                            function (leafValue, index) {
-                              if (leafValue.is_selected === true) {
-                                return (
-                                  <li key={v4()}>
-                                    {thisRef.renderButtonView(
-                                      leafValue.label,
-                                      () =>
-                                        thisRef.onDeselect(
-                                          leafValue,
-                                          values
-                                        )
-                                    )}
-                                  </li>
-                                );
-                              }
-                            }
-                          );
-                        }
-                      });
-                    }
-                  });
-                }
-              });
+    let fixedFiltersData = [];
+    Object.values(selectedFilters).map(function (values, index) {
+      if (values && values.data && values.category !== "categories_without_path") {
+        return Object.values(values.data).map(function (value, index) {
+          if (value.subcategories) {
+            return Object.values(value.subcategories).map(function (
+              val,
+              index
+            ) {
+              if (val.is_selected === true) {
+                const { is_radio } = values;
+                let newobje = { ...val, is_radio };
+                fixedFiltersData.push(newobje);
+              }
+            });
+          } else if (values) {
+            if (
+              value.is_selected === true &&
+              value.facet_key !== "categories.level1"
+            ) {
+              const { is_radio } = values;
+              let newobje = { ...value, is_radio };
+              fixedFiltersData.push(newobje);
             }
-          })}
-        </>
-      );
-    }
-  }
+          }
+        });
+      }
+    });
+    return fixedFiltersData;
+  };
 
-  renderSelectedMoreFilters() {
-    const selectedMoreFilters = this.props.moreFilters;
-    //const { option = {} } = selectedMoreFilters;
-    const option =
-      selectedMoreFilters && selectedMoreFilters.option
-        ? selectedMoreFilters.option
-        : {};
-    const thisRef = this;
-    const currency = getCountryCurrencyCode();
-    if (selectedMoreFilters && option) {
-      return (
-        <>
-          {Object.entries(option).map(function (filter, index) {
-            const key = filter[0]
-            const values = filter[1]
-            if (key === "discount" || key === `price.${currency}.default`) {
-              return null;
+  getCustomizedFilters = () => {
+    const {
+      newActiveFilters: { categories_without_path = [] },
+      moreActiveFilters,
+    } = this.props;
+    let requiredCustomFilterResult = [];
+    let fixedFilterResult = this.getDefaultSelectedFilter();
+    let moreActiveFiltersData = moreActiveFilters?.categories_without_path || [];
+    const option = this.props?.moreFilters?.option
+    ? this.props?.moreFilters?.option
+    : {};
+
+    // collect more filter data on searching product from the search catalogue
+    if(moreActiveFiltersData && moreActiveFiltersData?.length === 0 && option && Object.keys(option)?.length > 0) {
+      let moreFilterCustomSelected = [];
+      Object.values(option)?.map((value) => {
+        if(value && value?.options) {
+          Object.values(value?.options)?.map((item) => {
+            if(item?.is_selected === true) {
+              const newItem = {...item, type: "MoreFilter"};
+              moreFilterCustomSelected.push(newItem);
             }
-            if (values) {
-              return Object.values(values).map(function (value, index) {
-                if (value) {
-                  return Object.values(value).map(function (val, index) {
-                    if (val && val.is_selected === true) {
-                      return (
-                        <li key={v4()}>
-                          {thisRef.renderButtonView(val.label, () =>
-                            thisRef.onClickRemoveMoreFilter(val, values)
-                          )}
-                        </li>
-                      );
-                    }
-                  });
-                }
-              });
-            }
-          })}
-        </>
-      );
+          })
+        }
+      });
+      moreActiveFiltersData = [...moreFilterCustomSelected, moreActiveFiltersData];
     }
-  }
+
+    requiredCustomFilterResult = [
+      ...fixedFilterResult,
+      ...categories_without_path,
+      moreActiveFiltersData,
+    ];
+    let flatedRequiredArray = requiredCustomFilterResult?.flat() || [];
+    return flatedRequiredArray;
+  };
 
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
-    const thisRef = this;
+    const { numVisibleItems = 0, showAll = false } = this.state;
+    //Getting all L3 and L4 and MoreActiveFilters and fixed filter in one array;
+    const getAllFiltersData = this.getCustomizedFilters();
+    const customSelectedFilter = showAll
+      ? getAllFiltersData
+      : getAllFiltersData?.slice(0, numVisibleItems);
     if (selectedFilters) {
       return (
         <ul>
-          {Object.values(selectedFilters).map(function (values, index) {
-            if (values && values.data) {
-              return Object.values(values.data).map(function (value, index) {
-                if (value.subcategories) {
-                  return Object.values(value.subcategories).map(function (
-                    val,
-                    index
-                  ) {
-                    if (val.is_selected === true) {
-                      return (
-                        <li key={v4()}>
-                          {thisRef.renderButtonView(val.label, () =>
-                            thisRef.OnDeselectFilter(val, values)
-                          )}
-                        </li>
-                      );
-                    }
-                  });
-                } else if (values) {
-                  if (
-                    value.is_selected === true &&
-                    value.facet_key !== "categories.level1"
-                  ) {
-                    return (
-                      <li key={v4()}>
-                        {thisRef.renderButtonView(value.label, () =>
-                          thisRef.OnDeselectFilter(value, values)
-                        )}
-                      </li>
-                    );
-                  }
-                }
-              });
-            }
-          })}
-          {this.renderSelectedFiltersLevelThree()}
-          {this.renderSelectedFiltersLevelFour()}
-          {this.renderSelectedMoreFilters()}
+          <li key={v4()}>
+            {customSelectedFilter?.map((values) => {
+              if (values?.type && values?.type === "MoreFilter") {
+                const thisRef = this;
+                const {
+                  facet_key = "",
+                  new_facet_key = "",
+                  facet_value = "",
+                  label = "",
+                  product_count = 0,
+                  is_selected = false,
+                } = values;
+                const modifedValue = {
+                  facet_key,
+                  new_facet_key,
+                  facet_value,
+                  label,
+                  product_count,
+                  is_selected,
+                };
+                return values?.label && (
+                  <li key={v4()}>
+                    {thisRef.renderButtonView(label, () =>
+                      thisRef.onClickRemoveMoreFilter(modifedValue)
+                    )}
+                  </li>
+                );
+              } else if (
+                values?.category_level === "L3" ||
+                values?.category_level === "L4"
+              ) {
+                const thisRef = this;
+                return values?.label && thisRef.renderButtonView(values?.label, () =>
+                  thisRef.onDeselect(values)
+                );
+              } else {
+                const thisRef = this;
+                return values?.label && thisRef.renderButtonView(values?.label, () =>
+                  thisRef.OnDeselectFilter(values)
+                );
+              }
+            })}
+            {numVisibleItems < getAllFiltersData?.length && (
+              <li onClick={this.toggleShowAll} className="buttonMoreandLess">
+                <div>
+                  <label className="MoreButtonLabel">
+                    {showAll
+                      ? `- ${__("Less")}`
+                      : `+${getAllFiltersData?.length - numVisibleItems} ${__(
+                          "More"
+                        )}`}
+                  </label>
+                </div>
+              </li>
+            )}
+          </li>
         </ul>
       );
     }
@@ -1024,9 +994,11 @@ class PLPPages extends PureComponent {
           {this.renderPages()}
           {productLoading && !isMobile.any() && this.renderPlaceHolder()}
         </div>
-        {this.inSearch() && <Helmet>
-          <meta name="robots" content="noindex" />
-        </Helmet>}
+        {this.inSearch() && (
+          <Helmet>
+            <meta name="robots" content="noindex" />
+          </Helmet>
+        )}
         {!isMobile.any() && this.renderLoadMore()}
       </div>
     );
