@@ -291,7 +291,8 @@ const config = {
       "material_composition",
       "6s_also_available",
       "6s_also_available_color",
-      "6s_also_available_count"
+      "6s_also_available_count",
+      "gallery_image_urls",
     ],
     facets: [...FACET_FILTERS, ...MORE_FILTERS],
     facetFilters: [],

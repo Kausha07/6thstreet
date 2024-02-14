@@ -27,6 +27,7 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
   EVENT_MOE_PRODUCT_CLICK,
   EVENT_COLOUR_VARIENT_CLICK,
+  EVENT_FLIP_IMAGE_SCROLL,
   MOE_trackEvent,
 } from "Util/Event";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
@@ -44,6 +45,7 @@ const MsiteAddToCartPopUp = lazy(() =>
   )
 );
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
+import SwiperSliderProduct from "../SwiperSliderProduct/SwiperSliderProduct.component"
 
 //Global Variable for PLP AddToCart
 var urlWithQueryID;
@@ -84,6 +86,7 @@ class ProductItem extends PureComponent {
   constructor(props) {
     super(props);
     this.scrollRef = React.createRef(null);
+    this.swiperRef = React.createRef(null);
     this.state = {
       isArabic: isArabic(),
       stockAvailibility: true,
@@ -100,7 +103,10 @@ class ProductItem extends PureComponent {
       selectedOption: null,
       colorVarientBrandName : "",
       colorVarientName : "",
-      colorVarientPrice : []
+      colorVarientPrice : [],
+      autoplay: false,
+      imageScroller: false,
+      showImageScroller: false,
     };
   }
   componentDidMount() {
@@ -223,7 +229,6 @@ class ProductItem extends PureComponent {
       },
       isFilters,
     } = this.props;
-
     var data = localStorage.getItem("customer") || null;
     let userData = data ? JSON.parse(data) : null;
     let userToken =
@@ -264,6 +269,13 @@ class ProductItem extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
     const productData = { ...product, ...{ listName: this.getPLPListName() } };
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, productData);
+
+    Event.dispatch(EVENT_FLIP_IMAGE_SCROLL, {
+      product_id: product?.objectID || "",
+      product_name: name || "",
+      image_number: this.swiperRef?.current?.activeIndex || 0,
+    });
+
     if (queryID && position && position > 0 && product.objectID && userToken) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
@@ -295,6 +307,16 @@ class ProductItem extends PureComponent {
       isFilters: isFilters ? "Yes" : "No",
       position: product_Position || "",
     });
+
+    MOE_trackEvent(EVENT_FLIP_IMAGE_SCROLL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      product_id: product?.objectID || "",
+      product_name: name || "",
+      image_number: this.swiperRef?.current?.activeIndex || 0,
+    });
+
     // this.sendBannerClickImpression(product);
   }
 
@@ -348,14 +370,23 @@ class ProductItem extends PureComponent {
     return null;
   }
 
-  renderExclusive() {
+  // gallery_image_urls_flag : true when crowsel is visible
+  renderExclusive(gallery_image_urls_flag) {
     const {
       product: { promotion },
     } = this.props;
 
+    let TagStyle = {};
+    if(gallery_image_urls_flag && !isMobile.any()) {
+      TagStyle = { 
+        bottom: "0px",
+        zIndex : 1 
+      }
+    }
+
     if (promotion !== undefined) {
       return promotion !== null ? (
-        <div block="PLPSummary" elem="Exclusive">
+        <div block="PLPSummary" elem="Exclusive" style={TagStyle}>
           {" "}
           {promotion}{" "}
         </div>
@@ -400,7 +431,7 @@ class ProductItem extends PureComponent {
           id={colorKey}
           value={colorKey }
           onChange={this.onChangeTheme}
-          style={{ background, boxShadow:'0px 0px 0px 0.5px #D1D3D4' }}
+          style={{ background, boxShadow : '0px 0px 0px 0.5px #D1D3D4' }}
         />
       );
     };
@@ -422,14 +453,48 @@ class ProductItem extends PureComponent {
     ) : null;
   };
   
+  handleImageScrollerMouseEnter = (requireGalleryImageUrl) => {
+    if(!isMobile.any() && requireGalleryImageUrl?.length > 0) {
+      this.setState({ imageScroller : true },() => {
+          setTimeout(() => {
+            this.setState({showImageScroller: true});
+            if (this.swiperRef.current && this.swiperRef.current.autoplay) {
+              this.swiperRef.current.autoplay.start();
+            }
+          }, 200);
+         
+      });
+    }
+  }
 
+  handleImageScrollerMouseLeave = (requireGalleryImageUrl) => {
+    if(!isMobile.any() && requireGalleryImageUrl?.length > 0) {
+      this.setState({ imageScroller : false },() => {
+       
+        setTimeout(() => {
+          this.setState({showImageScroller: false});
+          if (this.swiperRef.current && this.swiperRef.current.autoplay) {
+            this.swiperRef.current.autoplay.stop();
+          }
+        }, 200);
+        
+      });
+    }
+   
+  }
   renderImage() {
     const {
-      product: { thumbnail_url, brand_name, product_type_6s, color },
+      product: { thumbnail_url, brand_name, product_type_6s, color, gallery_image_urls = [], sku },
       lazyLoad = true,
       requestedOptions,
     } = this.props;
-
+    const { isArabic, colorVarientButtonClick, currentImage, colorVarientProductData } = this.state;
+    const updateProductGalleryImageData =
+      (colorVarientButtonClick &&
+      colorVarientProductData &&
+      Object.keys(colorVarientProductData)?.length !== 0)
+        ? colorVarientProductData?.data?.gallery_image_urls
+        : gallery_image_urls;
     const checkCatgeroyPath = () => {
       if (requestedOptions.hasOwnProperty("categories.level4") == 1) {
         return requestedOptions["categories.level4"];
@@ -449,20 +514,43 @@ class ProductItem extends PureComponent {
 
     const altText =
       brand_name + " " + categoryTitle + " - " + color + " " + product_type_6s;
+
+    const requireGalleryImageUrl =
+    updateProductGalleryImageData?.length > 4
+        ? updateProductGalleryImageData?.slice(0, 4)
+        : updateProductGalleryImageData;
     return (
-      <div block="ProductItem" elem="ImageBox">
-        <Image
-          lazyLoad={lazyLoad}
-          src={
-            this.state?.colorVarientButtonClick
-              ? this.state?.currentImage
-              : thumbnail_url
-          }
-          alt={altText}
-        />
+      <div block="ProductItem" elem="ImageBox" onMouseEnter={() =>this.handleImageScrollerMouseEnter(requireGalleryImageUrl)} onMouseLeave={() =>this.handleImageScrollerMouseLeave(requireGalleryImageUrl)}>
+        {(isMobile.any() && requireGalleryImageUrl?.length > 0) || ((requireGalleryImageUrl?.length > 0 && this.state.imageScroller) || this.state.showImageScroller ) ? (
+          <div className="swiperWrapper" style={{display: (this.state.showImageScroller || isMobile.any())? "block" : "none"}}>
+          <SwiperSliderProduct
+            gallery_image_urls={requireGalleryImageUrl}
+            isArabic={isArabic}
+            sku={sku}
+            altText={altText}
+            lazyLoad={lazyLoad}
+            colorVarientButtonClick={colorVarientButtonClick}
+            currentImage={currentImage}
+            swiperRef={this.swiperRef}
+            imageScroller={this.state.imageScroller}
+            thumbnail_url={thumbnail_url}
+          />
+          {this.renderExclusive(true)}
+        </div>
+        ) :null}
+        {(!isMobile.any() || (isMobile.any() && requireGalleryImageUrl.length === 0)) && <div style={{display: this.state.showImageScroller ? "none" : "block"}}>
+          <Image
+            src={
+              this.state.colorVarientButtonClick
+                ? this.state.currentImage
+                : thumbnail_url
+            }
+            alt={altText}
+          />
+          {this.renderExclusive(false)}
+        </div>}
         {/* {this.renderOutOfStock()} */}
         {isMobile.any() ? this.renderColorVariantsMobile() : null}
-        {this.renderExclusive()}
       </div>
     );
   }
@@ -475,7 +563,7 @@ class ProductItem extends PureComponent {
         const {
           data: { image_url = "", sku: productSku, brand_name = "", name = "", price = []},
         } = response;
-        const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png"
+        const defaultImage = "https://d3aud5mq3f80jd.cloudfront.net/static/media/fallback.bf804003.png";
         if(sku === productSku) {
           this.props.setColourVarientsButtonClick(true);
           this.setState({ colorVarientProductData : response, currentImage : image_url, colorVarientButtonClick: true, colorVarientBrandName : brand_name, colorVarientName : name, colorVarientPrice : price});
@@ -819,19 +907,16 @@ class ProductItem extends PureComponent {
 
   handleMouseEnter = () => {
     if (!this.state.hover) {
-      this.setState({ hover: true });
+      this.setState({ hover: true, imageScroller : false });
     }
   };
 
   handleMouseLeave = () => {
     if (this.state.hover) {
-      this.setState({ hover: false });
+      this.setState({ hover: false, imageScroller : false });
     }
   };
 
-  handleMouseEnterLeaveColorVarients = () => {
-    this.setState({ hover: false });
-  }
 
   render() {
     const { isArabic } = this.state;
@@ -860,6 +945,7 @@ class ProductItem extends PureComponent {
           this.renderOutOfStock()}
         {!isMobile.any() ? this.renderColorVariants() : null}
         <div
+          block="product-description-block"
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}
           >
