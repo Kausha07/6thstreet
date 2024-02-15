@@ -388,7 +388,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
     await WishlistDispatcher.updateInitialWishlistData(dispatch);
     await StoreCreditDispatcher.getStoreCredit(dispatch);
-    setCrossSubdomainCookie("authData", this.getCustomerData(), "90");
+    setCrossSubdomainCookie("authData", this.getCustomerData(), "365");
     this.requestCustomerData(dispatch, true);
 
     Event.dispatch(EVENT_GTM_GENERAL_INIT);
@@ -614,8 +614,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       topTierAttribute && topTierAttribute[0]?.value == 1
         ? topTierAttribute[0]
         : { value: "" };
-    setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "30");
-    setCrossSubdomainCookie("isTopTierCustomer", vipCustomer, "30");
+    setCrossSubdomainCookie("customerPrimaryPhone", phoneNumber, "365");
+    setCrossSubdomainCookie("isTopTierCustomer", vipCustomer, "365");
     dispatch(
       updateCustomerDetails({
         ...customer,
