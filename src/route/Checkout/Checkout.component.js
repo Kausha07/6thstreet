@@ -45,7 +45,6 @@ import {
   FREE,
   CHECKOUT_APPLE_PAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
-import { qtyAttributeForCountry } from "Util/Common/index";
 export const mapDispatchToProps = (dispatch) => ({
   selectPaymentMethod: (code) =>
     CheckoutDispatcher.selectPaymentMethod(dispatch, code),
@@ -159,9 +158,8 @@ export class Checkout extends SourceCheckout {
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country_code)) {
-                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-              }
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
               items.push(payload);
             }
           });

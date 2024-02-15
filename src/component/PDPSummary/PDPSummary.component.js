@@ -11,7 +11,7 @@ import ShareButton from "Component/ShareButton";
 import WishlistIcon from "Component/WishlistIcon";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import { SPECIAL_COLORS, translateArabicColor, qtyAttributeForCountry } from "Util/Common";
+import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import fallbackImage from "../../style/icons/fallback.png";
@@ -148,9 +148,8 @@ class PDPSummary extends PureComponent {
           items_in_cart.map(item => {
             if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info.has_cross_border_enabled)) {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-              if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
-                payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-              }
+              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+              payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
               items.push(payload);
             }
           })
@@ -182,9 +181,8 @@ class PDPSummary extends PureComponent {
       items_in_cart.map(item => {
         if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
           payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-          if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(country)) {
-            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-          }
+          payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+          payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
           items.push(payload);
         }
       });
@@ -332,12 +330,8 @@ class PDPSummary extends PureComponent {
                   : null,
             };
 
-            if (
-              payload?.intl_vendor !== null &&
-              qtyAttributeForCountry().includes(countryCode)
-            ) {
-              payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
-            }
+            payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
+            payload["cross_border_qty"] = parseInt(simple_products?.[sku]?.cross_border_qty) ? parseInt(simple_products?.[sku]?.cross_border_qty): "";
 
             items.push(payload);
           });
@@ -525,9 +519,8 @@ class PDPSummary extends PureComponent {
         items_in_cart.map(item => {
           if(!(item && item.full_item_info && item.full_item_info.cross_border && !edd_info?.has_cross_border_enabled)) {
             payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
-            if (payload?.intl_vendor !== null && qtyAttributeForCountry().includes(countryCode)) {
-              payload["qty"] = parseInt(item?.full_item_info?.available_qty);
-            }
+            payload["qty"] = parseInt(item?.full_item_info?.available_qty);
+            payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
             items.push(payload);
           }
         });
