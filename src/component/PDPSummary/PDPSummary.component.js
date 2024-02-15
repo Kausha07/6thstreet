@@ -1263,8 +1263,7 @@ class PDPSummary extends PureComponent {
         stock_qty,
       },
       edd_info,
-      intlEddResponse,
-      international_shipping_fee
+      intlEddResponse
     } = this.props;
     const AreaOverlay = isMobile && showCityDropdown ? true : false;
     let inventory_level_cross_border = false;
@@ -1329,7 +1328,6 @@ class PDPSummary extends PureComponent {
             !outOfStockStatus &&
           this.renderSelectCity(cross_border_qty === 1)}
         {inventory_level_cross_border &&
-          international_shipping_fee &&
           this.renderIntlTag()}
         {/* <div block="Seperator" /> */}
         {this.renderTabby()}
