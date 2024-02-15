@@ -262,7 +262,7 @@ export class PDPContainer extends PureComponent {
           brand: productKeys?.brand_name,
           category: categoryLevel || "",
           variant: productKeys?.color || "",
-          colour_variant_available : this.props?.colourVarientsButtonClick ? "Yes" : "No"
+          colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No"
         },
       });
       const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
@@ -287,7 +287,7 @@ export class PDPContainer extends PureComponent {
         product_name: name || "",
         isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
-        colour_variant_available : this.props?.colourVarientsButtonClick ? "Yes" : "No"
+        colour_variant_available : this.props?.product?.["6s_also_available_count"] > 0 ? "Yes" : "No"
       });
       this.setState({ eventSent: true });
     }

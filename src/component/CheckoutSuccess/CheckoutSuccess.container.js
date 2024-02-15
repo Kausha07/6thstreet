@@ -152,7 +152,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       isEditing: false,
       clubApparelMember: null,
       phone: null,
-      isPhoneVerified: false,
+      isPhoneVerified: BrowserDatabase.getItem("customer")?.isVerified  === "1" ? true :  false,
       isChangePhonePopupOpen: false,
       isMobileVerification: false,
       ...MyAccountContainer.navigateToSelectedTab(this.props),

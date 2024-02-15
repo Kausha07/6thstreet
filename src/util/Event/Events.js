@@ -316,3 +316,6 @@ export const EVENT_SIZE_PREDICTION_CLICK = "size_prediction_click";
 
 // Colour Varients Tracking Events
 export const EVENT_COLOUR_VARIENT_CLICK = "colour_variant_click";
+
+// Flip Image Tracking Events
+export const EVENT_FLIP_IMAGE_SCROLL = "product_image_scroll";

@@ -205,7 +205,7 @@ class WishlistIcon extends PureComponent {
           variant: data.color,
           isFilters: isFilters ? "Yes" : "No",
           productPosition: product_position || "",
-          colour_variant_available : this.props.colorVarientButtonClick ? "Yes" : "No",
+          colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
         },
       });
     }
@@ -238,7 +238,7 @@ class WishlistIcon extends PureComponent {
       app6thstreet_platform: "Web",
       isFilters: isFilters ? "Yes" : "No",
       productPosition: product_position || "",
-      colour_variant_available : this.props.colorVarientButtonClick ? "Yes" : "No",
+      colour_variant_available : (this.props?.data?.["6s_also_available_count"] > 0) ? "Yes" : "No",
     });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
