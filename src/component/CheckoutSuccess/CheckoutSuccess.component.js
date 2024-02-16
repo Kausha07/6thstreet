@@ -28,6 +28,9 @@ import { Oval } from "react-loader-spinner";
 import Image from "Component/Image";
 import { TYPE_HOME } from "Route/UrlRewrites/UrlRewrites.config";
 import { CAREEM_PAY } from "Component/CareemPay/CareemPay.config";
+import {
+  TAMARA,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 import Event, {
   EVENT_GTM_PURCHASE,
   EVENT_MOE_CONTINUE_SHOPPING,
@@ -1133,6 +1136,7 @@ export class CheckoutSuccess extends PureComponent {
             </>
           )}
           {paymentMethod?.code === CAREEM_PAY ? ("Careem Pay") : null}
+          {paymentMethod?.code === TAMARA ? ("Tamara") : null}
         </div>
       </>
     );
@@ -1390,6 +1394,7 @@ export class CheckoutSuccess extends PureComponent {
         customer_balance_amount = 0,
         //club_apparel_amount = 0,
         currency_code = getCurrency(),
+        international_shipping_charges= 0,
       },
     } = this.props;
     const grandTotal = getFinalPrice(grand_total, currency_code);
@@ -1403,6 +1408,10 @@ export class CheckoutSuccess extends PureComponent {
             {this.renderPriceLineQPAY(shipping_amount, __("Shipping"), {
               divider: true,
             })}
+            {this.renderPriceLineQPAY(
+              international_shipping_charges,
+              __("International Shipping fee")
+            )}
             {customer_balance_amount !== 0
               ? this.renderPriceLineQPAY(
                   customer_balance_amount,
@@ -1505,7 +1514,8 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
-          paymentMethod?.code === "checkout_knet"
+          paymentMethod?.code === "checkout_knet" ||
+          paymentMethod?.code === TAMARA
             ? this.renderPaymentSummary()
             : this.renderTotals()}
           {this.renderContact()}

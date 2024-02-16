@@ -19,7 +19,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import { TotalsType } from "Type/MiniCart";
 
 import {
-  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES, KNET_PAY, CHECKOUT_QPAY
+  CARD, FREE, CHECKOUT_APPLE_PAY, TABBY_PAYMENT_CODES, KNET_PAY, CHECKOUT_QPAY, TAMARA,
 } from "./CheckoutPayments.config";
 
 export const mapStateToProps = (state) => ({
@@ -130,7 +130,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     }
     if (prevProps?.totals?.total !== total || prevProps?.isTabbyInstallmentAvailable !== isTabbyInstallmentAvailable) {
       this.setState({ isTabbyInstallmentAvailable: isTabbyInstallmentAvailable });
-      if (TABBY_PAYMENT_CODES.includes(selectedPaymentCode) && total < 150) {
+      if ((TABBY_PAYMENT_CODES.includes(selectedPaymentCode) && total < 150) || 
+        selectedPaymentCode === TAMARA
+      ) {
         this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
       }
     }

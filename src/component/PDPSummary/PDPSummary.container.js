@@ -66,7 +66,8 @@ export class PDPSummaryContainer extends PureComponent {
       setEddResponseForPDP,
       TabbyInstallment,
       brandInfoData,
-      international_shipping_fee
+      international_shipping_fee,
+      config = {},
     } = this.props;
     return {
       product,
@@ -85,7 +86,8 @@ export class PDPSummaryContainer extends PureComponent {
       setEddResponseForPDP,
       TabbyInstallment,
       brandInfoData,
-      international_shipping_fee
+      international_shipping_fee,
+      config,
     };
   };
 

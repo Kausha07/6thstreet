@@ -40,7 +40,7 @@ export const createOrder = ({ data }) =>
 export const cancelOrder = ({ data }) =>
   MobileAPI.post("/cancel-order", data) || {};
 
-export const getPaymentMethods = () => MobileAPI.get("/payment-methods") || {};
+export const getPaymentMethods = ({ cart_id }) => MobileAPI.get(`/payment-methods/${cart_id}`) || {};
 
 export const getLastOrder = () => MobileAPI.get("/order/last") || {};
 

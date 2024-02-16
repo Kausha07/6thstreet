@@ -1,0 +1,134 @@
+.tamara-card-container {
+    max-width: 500px;
+    border-radius: 4px;
+    border: 1px solid #D6D6D6;
+    background: #FFF;
+    width: 381px;
+    height: 171px;
+}
+
+.tamaraCardContainer {
+    width: 381px;
+    height: 171px;
+    min-width: 300px;
+    max-width: 400px;
+    border-radius: 4px;
+    border: 1px solid #D6D6D6;
+    background: #FFF;
+
+    @include mobile {
+        &_isMobile {
+            width: 100%;
+        }
+    }
+}
+
+.tamara-header-wrapper {
+    display: flex;
+    margin-top: 14px;
+    margin-left: 18px;
+    margin-right: 18px;
+    margin-bottom: 14px;
+}
+
+.tamara-header-wrapper-tamara-icon img {
+    border-radius: 5px;
+}
+
+.tamara-header-wrapper-tamara-line {
+    color: #000;
+    font-family: Avenir Next;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    margin-left: 12px;
+    margin-top: 5px;
+
+    &_isArabic {
+        margin-left: unset;
+        margin-right: 12px;
+    }
+}
+
+.round-wrapper {
+    flex: 1;
+    max-width: 100px;
+}
+
+.text-circle {
+    font-size: 11px;
+    line-height: 11px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.text-circle-bold {
+    color: #000;
+    font-family: Avenir Next;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: center;
+}
+
+.circle-wrapper {
+    display: flex;
+    margin: auto;
+}
+
+.round-wrapper {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.round {
+    max-width: 44px;
+    margin: auto;
+}
+
+.circleWrapper {
+    display: flex;
+    margin: auto;
+    margin-top: 25px;
+}
+
+.roundWrapper {
+    flex: 1;
+    max-width: 100px;
+    position: relative;
+    margin-bottom: 5px;
+
+    &-round-warp-horizontal-line {
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 61px;
+            left: 78%;
+            width: 44%;
+            height: 1px;
+            background-color: #818181;
+        }
+    }
+
+    &-round-warp-horizontal-line:last-child::after {
+        display: none;
+    }
+
+    &-round-warp-horizontal-line-isArabic {
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 61px;
+            right: 78%;
+            width: 44%;
+            height: 1px;
+            background-color: #818181;
+        }
+    }
+
+    &-round-warp-horizontal-line-isArabic:last-child::after {
+        display: none;
+    }
+}

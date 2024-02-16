@@ -33,6 +33,7 @@ import {
   CHECK_MONEY,
   TABBY_ISTALLMENTS,
   KNET_PAY,
+  TAMARA,
 } from "../CheckoutPayments/CheckoutPayments.config";
 import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent } from "Util/Event";
 import Applepay from "./icons/apple.png";
@@ -1018,7 +1019,9 @@ class MyAccountOrderView extends PureComponent {
       case KNET_PAY:
         return this.renderPaymentTypeText("KNET");
       case CAREEM_PAY:
-        return this.renderPaymentTypeText("Careem Pay")
+        return this.renderPaymentTypeText("Careem Pay");
+      case TAMARA:
+        return this.renderPaymentTypeText("Tamara");
       default:
         return null;
     }
