@@ -63,11 +63,13 @@
       justify-content: space-between;
 
       .ratingStars {
+        display: flex;
         .starIcons {
           width: 25px;
           height: 24px;
           padding: 0;
           margin: 0 8px 0 0;
+          display: inline-block;
         }
       }
 
