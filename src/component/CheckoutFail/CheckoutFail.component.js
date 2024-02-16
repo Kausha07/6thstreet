@@ -7,6 +7,9 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
 import "./CheckoutFail.style";
 import { SUCCESS, FAILURE } from "Component/CareemPay/CareemPay.config";
+import {
+  TAMARA,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 
 export class CheckoutFail extends CheckoutSuccess {
   componentWillUnmount() {
@@ -162,7 +165,8 @@ export class CheckoutFail extends CheckoutSuccess {
           {this.renderPaymentType()}
           {paymentMethod?.code === "checkout_qpay" ||
           paymentMethod?.code === "tabby_installments" ||
-          paymentMethod?.code === "checkout_knet"
+          paymentMethod?.code === "checkout_knet" ||
+          paymentMethod?.code === TAMARA
             ? this.renderPaymentSummary()
             : this.renderTotals()}
         </div>

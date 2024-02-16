@@ -54,6 +54,7 @@ import { Offer, Coupon } from "Component/Icons/index";
 import CartPageSliders from "Component/CartPageSliders/index.js";
 import { getShippingFees } from "Util/Common/index";
 import { getLocaleFromUrl } from "Util/Url/Url";
+import TamaraWidget from "Component/TamaraWidget/TamaraWidget";
 
 export class CartPage extends PureComponent {
   constructor(props) {
@@ -614,8 +615,22 @@ export class CartPage extends PureComponent {
     );
   }
   renderYourOffers() {
-    const { isArabic, tabbyResp } = this.state;
-    if (tabbyResp?.value) {
+    const { isArabic, tabbyResp, isMobile } = this.state;
+    const {
+      totals: { currency_code, total,
+        total_segments: totals = [],
+      },
+      config: { countries = {} }
+    } = this.props;
+    const countryCode = getCountryFromUrl();
+    const cashOnDeliveryFee = getDiscountFromTotals(totals, "msp_cashondelivery") || 0;
+    const isTamaraEnable = countries[countryCode]?.isTamaraEnable;
+    const grandTotal =
+      total > cashOnDeliveryFee
+        ? getFinalPrice(total, currency_code) - getFinalPrice(cashOnDeliveryFee, currency_code)
+        : getFinalPrice(total, currency_code);
+
+    if (tabbyResp?.value || isTamaraEnable ) { 
       return (
         <div block="CartPage" elem="yourOffersBlock">
           <div block="CartPage" elem="yourOffersHeading">
@@ -624,6 +639,20 @@ export class CartPage extends PureComponent {
               {__("Your Offers")}
             </h4>
           </div>
+          {isTamaraEnable ? (
+            <>
+              <div id="TamaraPromo">
+                <TamaraWidget
+                  isArabic={isArabic}
+                  countryCode={countryCode}
+                  productPrice={grandTotal}
+                  isMobile={isMobile}
+                  pageType="cartPage"
+                />
+              </div>
+              <br />
+            </>
+          ) : null}
           <div block="CartPage" elem="yourOffersItem">
             {" "}
             <div block="CartPage" elem="TabbyBlock">
