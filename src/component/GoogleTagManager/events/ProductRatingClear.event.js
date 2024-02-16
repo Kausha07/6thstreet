@@ -5,7 +5,7 @@ export const SPAM_PROTECTION_DELAY = 200;
 class ProductRatingClear extends BaseEvent {
 
     bindEvent() {
-        Event.observer(EVENT_PRODUCT_RATING_CLEAR => {
+        Event.observer(EVENT_PRODUCT_RATING_CLEAR,() => {
           this.handle(EVENT_PRODUCT_RATING_CLEAR);
         });
     }

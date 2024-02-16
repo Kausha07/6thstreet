@@ -91,6 +91,8 @@ import { exchangeFormatGroupStatus } from "Util/Common";
 
 import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 
+import {  ARABIC_MONTHS } from "../MyAccountOrderListItem/MyAccountOrderListItem.config";
+
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
     order: ExtendedOrderType,
@@ -231,6 +233,11 @@ class MyAccountOrderView extends PureComponent {
       is_exchange_enabled = false
     } = this.props;
 
+    const date = new Date(created_at?.replace(/-/g, "/"));
+    const arabicDate = `${date.getDate()} ${
+      ARABIC_MONTHS[date.getMonth()]
+    } ${date.getFullYear()}`;
+
     const modifiedStatus =  is_exchange_order=== 1 && status === 'complete' ? 'exchange_complete':status
     const finalStatus = isArabic()
       ? translateArabicStatus(modifiedStatus)
@@ -269,12 +276,15 @@ class MyAccountOrderView extends PureComponent {
             <span>{` ${finalStatus}`}</span>
           </p>
           <p block="MyAccountOrderView" elem="StatusDate">
-            {__("Order placed: ")}
+            {__("Order placed")}: &nbsp;
             <span>
-              {formatDate(
-                "DD MMM YYYY",
-                new Date(created_at.replace(/-/g, "/"))
-              )}
+              {isArabic()
+                  ? arabicDate
+                  : formatDate(
+                    "DD MMM YYYY",
+                    new Date(created_at.replace(/-/g, "/"))
+                  )
+              }
             </span>
           </p>
           {parent_increment_id && (
@@ -427,6 +437,13 @@ class MyAccountOrderView extends PureComponent {
         : exchangeType?.toUpperCase() === "NORMAL"
         ? __("Normal Exchange")
         : null;
+
+
+    const date = new Date(deliveryDate?.replace(/-/g, "/"));
+    const arabicDate = `${date.getDate()} ${
+      ARABIC_MONTHS[date.getMonth()]
+    } ${date.getFullYear()}`;
+   
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
@@ -454,17 +471,17 @@ class MyAccountOrderView extends PureComponent {
             !!packageStatus &&
             exchangeCount === 0 && <span>{` - ${packageStatus}`}</span>
           )}
-          {/* {status === DELIVERY_SUCCESSFUL && deliveryDate ?
-          <span>: &nbsp;{formatDate(
-            "DD MMMM YYYY",
-            new Date(deliveryDate.replace(/-/g, "/"))
-          )}</span>: null } */}
+
         </h3>
         {(status === DELIVERY_SUCCESSFUL && deliveryDate && isProductRatingEnabled) ?
-        <div className="subTitle">{__("Delivered")}: &nbsp;{formatDate(
-            "DD MMMM YYYY",
-            new Date(deliveryDate.replace(/-/g, "/"))
-          )}</div>: null
+        <div className="subTitle">{__("Delivered")}: &nbsp;
+          {isArabic()
+                ? arabicDate
+                : formatDate(
+                  "DD MMMM YYYY",
+                  new Date(deliveryDate.replace(/-/g, "/"))
+                )
+          }</div>: null
         }
       </div>
     );
