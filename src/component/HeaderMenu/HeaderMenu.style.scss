@@ -1,6 +1,7 @@
 .HeaderMenu {
     line-height: 40px;
     color: #ffffff;
+    text-align: center;
 
     @include before-desktop {
         overflow-x: hidden;
@@ -21,28 +22,45 @@
         padding: 0;
         margin: 10px auto 0 auto;
 
-        &::before{
-            content: '';
-            right: 0;
-            background: url(./icons/categories-gray@2x.png) no-repeat;
-            background-size: 27px;
-            width: 27px;
-            height: 29px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-        }
-
         &_isExpanded {
             color: var(--active-button-header-color);
 
-            &::before{
+            &::before {
                 filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
             }
+        }
+
+        .nav-bar-item-icon {
+            margin-top: 16px;
+        }
+
+        .nav-bar-item-label {
+            margin-top: 2px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: none;
+
+            &.selected {
+                color: var(--active-button-header-color);
+            }
+        }
+
+        img {
+            width: auto;
         }
     }
 
     @include desktop {
         width: auto;
+    }
+
+    .nav-bar-item-button {
+        margin: 0px 10px;
+        border-top: 3px solid white;
+
+        &.selected {
+            border-top: 3px solid var(--active-button-header-color);
+        }
     }
 }
