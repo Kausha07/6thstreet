@@ -14,7 +14,7 @@ import mastercard from "./icons/mastercard.svg";
 import visa from "./icons/visa.svg";
 import Image from "Component/Image";
 import mada from "./icons/mada.svg";
-
+import { tamaraLogo } from "Component/Icons";
 import "./FooterBottom.style";
 
 class FooterBottom extends PureComponent {
@@ -141,6 +141,15 @@ class FooterBottom extends PureComponent {
           }}
           src={mada}
           alt="mada"
+        />
+        <Image
+          lazyLoad={true}
+          mix={{
+            block: "FooterBottom",
+            elem: "PaymentIcons-tamara",
+          }}
+          src={tamaraLogo}
+          alt="tamaraLogo"
         />
       </div>
     );
