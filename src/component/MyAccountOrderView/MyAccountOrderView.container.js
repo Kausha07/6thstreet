@@ -24,6 +24,9 @@ import {
 import { showPopup } from "Store/Popup/Popup.action";
 import MagentoAPI from "Util/API/provider/MagentoAPI";
 import { showNotification } from "Store/Notification/Notification.action";
+import { getStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import Event, { MOE_trackEvent, EVENT_ORDERDETAILPAGE_VISIT, EVENT_ORDERDETAILPAGE_CHANNEL } from "Util/Event";
+import { getCountryFromUrl, getLanguageFromUrl, getQueryParam } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
@@ -33,6 +36,7 @@ export const mapStateToProps = (state) => ({
   is_exchange_enabled: state.AppConfig.is_exchange_enabled,
   ctcReturnEnabled:state.AppConfig.ctcReturnEnabled,
   international_shipping_fee: state.AppConfig.international_shipping_fee,
+  isProductRatingEnabled: state.AppConfig.isProductRatingEnabled
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -51,23 +55,54 @@ export class MyAccountOrderViewContainer extends PureComponent {
   containerFunctions = {
     getCountryNameById: this.getCountryNameById.bind(this),
     openOrderCancelation: this.openOrderCancelation.bind(this),
+    updateRating: this.updateRating.bind(this),
   };
 
   state = {
     isLoading: true,
     order: null,
     entity_id: null,
+    productsRating: {}
   };
 
   constructor(props) {
     super(props);
-
     this.getOrder();
   }
 
+  componentDidMount() {
+
+    const channel = getQueryParam("utm_source", location) || "Organic";
+
+    Event.dispatch(EVENT_ORDERDETAILPAGE_VISIT, {
+      page: "OrderDetails",
+    });
+
+    MOE_trackEvent(EVENT_ORDERDETAILPAGE_VISIT, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      page: "OrderDetails",
+    });
+    
+    Event.dispatch(EVENT_ORDERDETAILPAGE_CHANNEL, {
+      page: "OrderDetails",
+      channel: channel,
+    });
+
+    MOE_trackEvent(EVENT_ORDERDETAILPAGE_CHANNEL, {
+      country: getCountryFromUrl().toUpperCase(),
+      language: getLanguageFromUrl().toUpperCase(),
+      app6thstreet_platform: "Web",
+      page: "OrderDetails",
+      channel: channel,
+    });
+
+  }
+
   containerProps = () => {
-    const { isLoading, order } = this.state;
-    const { history, country, eddResponse, edd_info,is_exchange_enabled, international_shipping_fee } = this.props;
+    const { isLoading, order, productsRating } = this.state;
+    const { history, country, eddResponse, edd_info, is_exchange_enabled, international_shipping_fee , isProductRatingEnabled} = this.props;
 
     return {
       isLoading,
@@ -77,9 +112,16 @@ export class MyAccountOrderViewContainer extends PureComponent {
       edd_info,
       is_exchange_enabled,
       international_shipping_fee,
+      productsRating,
+      isProductRatingEnabled,
     };
   };
 
+  updateRating(sku, rating){
+    let ratings = {...this.state.productsRating};
+    ratings[sku] = rating;    
+    this.setState({productsRating : ratings})
+  }
   getCountryNameById(countryId) {
     const { config } = this.props;
     const countries = getCountriesForSelect(config);
@@ -164,7 +206,28 @@ export class MyAccountOrderViewContainer extends PureComponent {
     try {
       const orderId = this.getOrderId();
       const { data: order } = await MobileAPI.get(`orders/${orderId}`);
-      this.setState({ order, isLoading: false, entity_id: orderId });
+      const itemsGroups = (order.groups.filter(group => group.status === "delivery_successful")).map(group => group.items);
+
+      
+      let productRatingsResp = {};
+      if(this.props.isProductRatingEnabled){
+        let productSkuIds = [];
+        itemsGroups.map(items => {
+          items.map(item => {
+            productSkuIds.push(item.sku);
+          })
+        })
+        if(productSkuIds.length > 0){
+          await getStarRating({ "product_sku_ids": productSkuIds }).then((resp)=>{
+            if(!resp.status){
+              productRatingsResp = resp;
+            }
+          })
+        }
+        
+      }
+      
+      this.setState({ order, isLoading: false, entity_id: orderId, productsRating: productRatingsResp });
     } catch (e) {
       this.setState({ isLoading: false });
     }
