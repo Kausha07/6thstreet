@@ -319,3 +319,10 @@ export const EVENT_COLOUR_VARIENT_CLICK = "colour_variant_click";
 
 // Flip Image Tracking Events
 export const EVENT_FLIP_IMAGE_SCROLL = "product_image_scroll";
+// Product Rating
+export const EVENT_PRODUCT_RATING_CLICK = "add_user_rating";
+export const EVENT_PRODUCT_RATING_CLEAR = "delete_user_rating";
+export const EVENT_PRODUCT_RATING_VALUE = "edit_user_rating";
+export const EVENT_MYORDERPAGE_VISIT = "my_orders_screen_view";
+export const EVENT_ORDERDETAILPAGE_VISIT = "order_details_screen_view";
+export const EVENT_ORDERDETAILPAGE_CHANNEL = "order_details_screen_Channel";
