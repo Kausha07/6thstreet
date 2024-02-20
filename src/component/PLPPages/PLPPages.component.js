@@ -518,14 +518,22 @@ class PLPPages extends PureComponent {
           })
         }
       });
-      moreActiveFiltersData = [...moreFilterCustomSelected, moreActiveFiltersData];
+      if(moreFilterCustomSelected && moreFilterCustomSelected?.length > 0) {
+        moreActiveFiltersData = [...moreFilterCustomSelected, moreActiveFiltersData];
+      }
     }
 
     requiredCustomFilterResult = [
       ...fixedFilterResult,
-      ...categories_without_path,
-      moreActiveFiltersData,
+      ...categories_without_path
     ];
+
+    if(moreActiveFiltersData && moreActiveFiltersData?.length > 0) {
+      requiredCustomFilterResult = [
+        ...requiredCustomFilterResult,
+        moreActiveFiltersData,
+      ];
+    }
     let flatedRequiredArray = requiredCustomFilterResult?.flat() || [];
     return flatedRequiredArray;
   };
