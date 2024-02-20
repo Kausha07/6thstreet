@@ -315,6 +315,12 @@
           color: var(--color-gray);
         }
       }
+      .subTitle{
+        padding-left:35px;
+        font-size: 12px;
+        line-height: 17px;
+        font-weight:400;
+      }
     }
 
     .MyAccountOrderViewItem {
@@ -333,6 +339,21 @@
           margin-left: 15px;
           margin-right: 0;
         }
+
+        .productRatingSection{
+          .ratingBox{
+            .ratingStars {
+              .starIcons {            
+                margin: 0 0 0 8px;
+                .Image {              
+                  margin-left:0;
+                  margin-right:0;
+                }
+              }
+            }
+          }
+        }
+        
       }
     }
     .Accordion-Heading {
@@ -554,4 +575,9 @@ h2.prodDetailTitle {
   font-weight: 600;
   font-size: 17px;
   text-transform: none;
+}
+
+.MyAccountOrderView-AccordionWrapper_isArabic .subTitle{
+  padding-left: 0;
+  padding-right: 35px;
 }

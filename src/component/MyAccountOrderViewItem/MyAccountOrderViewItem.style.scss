@@ -42,4 +42,60 @@
     color: var(--cart-item-heading-color);
     font-weight: var(--fw-medium);
   }
+
+  .productRatingSection {
+    padding-bottom: 10px;
+    width: 50%;
+    @include mobile {
+      width: 100%;
+    }
+    .title {
+      font-family: "Avenir Next";
+      font-weight: 500;
+      font-size: 13px;
+      color: #9B9B9B;
+      line-height: 30px;
+    }
+
+    .ratingBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .ratingStars {
+        display: flex;
+        .starIcons {
+          width: 25px;
+          height: 24px;
+          padding: 0;
+          margin: 0 8px 0 0;
+          display: inline-block;
+        }
+      }
+
+      .ratingActions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .ratingSubmitIcon {
+          border-right: 1px solid #EAEAEA;
+          padding-right: 10px;
+          line-height: 1;
+        }
+
+        .submitRating {
+          font-family: "Avenir Next";
+          font-weight: 400;
+          font-size: 14px;
+          color: #1493D0;
+          line-height: 15px;
+          text-transform: none;
+          height: auto;
+          padding-left:10px;
+          padding-right:10px;
+        }
+      }
+    }
+  }
 }
