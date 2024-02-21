@@ -247,8 +247,8 @@
       @include mobile {
         position: absolute;
         font-size: 12px;
-        width: 50px;
         z-index: 1;
+        padding: 3px 6px;
         &_isArabic {
           transform: translateX(18px);
         }
@@ -263,7 +263,7 @@
         }
       }
       .colorVarientCounts {
-        margin-left : 9px;
+        margin-left : 5px;
         font-weight: bold;
         &_isArabic {
           margin-left : 0px;
@@ -435,6 +435,14 @@
       padding: 0px;
       border: 2px solid #ffffff;
       border-radius: 50%;
+
+      @include mobile {
+        border: none;
+        width: 13px;
+        height: 13px;
+        min-height: 13px;
+        min-width: 13px;
+      }
     }
     
     .radio-input:checked :after {

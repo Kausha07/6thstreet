@@ -43,6 +43,11 @@ import { TabbyPromoURL } from "./config";
 import {CART_ITEMS_CACHE_KEY} from "../../store/Cart/Cart.reducer";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer/DynamicContentCountDownTimer.component.js"
 class PDPSummary extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.alsoAvailableRef = React.createRef();
+  }
+
   static propTypes = {
     product: Product.isRequired,
     isLoading: PropTypes.bool.isRequired,
@@ -459,6 +464,12 @@ class PDPSummary extends PureComponent {
             this.getEddResponse(data, false);
           }
         );
+      }
+    }
+
+    if (this.props.colourVarientsButtonClick) {
+      if (this.alsoAvailableRef.current) {
+        this.alsoAvailableRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }
   }
@@ -1200,11 +1211,13 @@ class PDPSummary extends PureComponent {
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
-          <PDPAlsoAvailable
-            productsAvailable={alsoAvailable}
-            renderMySignInPopup={renderMySignInPopup}
-            productSku={sku}
-          />
+          <div ref={this.alsoAvailableRef}>
+            <PDPAlsoAvailable
+              productsAvailable={alsoAvailable}
+              renderMySignInPopup={renderMySignInPopup}
+              productSku={sku}
+            />
+          </div>
         );
       }
     }
