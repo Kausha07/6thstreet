@@ -257,7 +257,7 @@ class MobileBottomBar extends NavigationAbstract {
           }}
           key="homeButton"
           elem="HomeAndBrand"
-          className={`nav-bar-item-button  ${isHome ? 'selected' : ''}`}>
+          className={`nav-bar-item-button ${isHome ? 'selected' : ''}`}>
           <img className="nav-bar-item-icon"
             src={isHome
               ? homeActiveSVG
@@ -372,7 +372,7 @@ class MobileBottomBar extends NavigationAbstract {
       : this.routeChangeWishlist;
 
     return (
-      <div key="wishlist" className={`nav-bar-item ${isWishlist ? 'selected' : ''} `}>
+      <div key="wishlist" className="nav-bar-item">
         <button
           onClick={() => {
             onClickHandle();
@@ -383,8 +383,7 @@ class MobileBottomBar extends NavigationAbstract {
           }}
           key="wishlistButton"
           elem="WishListAndAccount"
-          className="nav-bar-item-button"
-        >
+          className={`nav-bar-item-button  ${isWishlist ? 'selected' : ''}`}>
           <img className="nav-bar-item-icon"
             src={isWishlist
               ? wishlistActiveSVG
@@ -453,7 +452,7 @@ class MobileBottomBar extends NavigationAbstract {
     };
 
     return (
-      <div key="account" className={`nav-bar-item ${isVip ? 'selected' : ''} `}>
+      <div key="account" className={`nav-bar-item`}>
         <button
           onClick={() => {
             onClickHandle();
@@ -463,13 +462,13 @@ class MobileBottomBar extends NavigationAbstract {
           key="accountButton"
           elem="WishListAndAccount"
           mods={{ isVip }}
-          className="nav-bar-item-button">
+          className={`nav-bar-item-button ${isAccount ? 'selected' : ''}`}>
           <img className="nav-bar-item-icon"
-            src={isVip
+            src={isAccount
               ? accountActiveSVG
               : accountSVG}
             alt="Wishlist" width={24} height={24} />
-          <div className={`nav-bar-item-label ${isVip ? 'selected' : ''}`}>
+          <div className={`nav-bar-item-label ${isAccount ? 'selected' : ''}`}>
             {__('Account')}</div>
           <HeaderAccount
             isAccount={isAccount}
