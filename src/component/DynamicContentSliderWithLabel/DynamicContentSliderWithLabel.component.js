@@ -450,6 +450,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
       items = [],
       trendingBrands = [],
       trendingCategories = [],
+      megeMenuHorizontalSliderData = [],
+      megamenuType = false,
       title,
     } = this.props;
     return (
@@ -471,6 +473,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
             trendingCategories.map(
               this.renderSliderWithLabelTrendingCategories
             )}
+          {megamenuType
+            ? megeMenuHorizontalSliderData?.map(this.renderSliderWithLabel)
+            : null
+          }
           {items.map(this.renderSliderWithLabel)}
           <div className="SliderHelper"></div>
         </div>

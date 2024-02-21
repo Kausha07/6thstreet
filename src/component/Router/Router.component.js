@@ -39,6 +39,7 @@ const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "R
 const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Route/UrlRewrites"));
 const VuePLP = lazy(() => import(/* webpackChunkName: 'VuePLP' */ "Route/VuePLP/VuePLP.component"));
 const LiveExperience = lazy(() => import(/* webpackChunkName: 'LiveExperience' */ "Route/LiveExperience"));
+const MobileMegaMenu = lazy(() => import(/* webpackChunkName: 'MobileMegaMenu' */ "Route/MobileMegaMenu/MobileMegaMenu.component"));
 const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
 const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
 const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
@@ -327,6 +328,19 @@ export class Router extends SourceRouter {
           render={(props) => (
             <GTMRouteWrapper route={LIVE_PARTY}>
               {this.props.is_live_party_enabled ? <LiveExperience {...props} /> : <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("megamenu")}
+          render={(props) => (
+            <GTMRouteWrapper route={"megamenu"}>
+              <MobileMegaMenu {...props} />
             </GTMRouteWrapper>
           )}
         />
