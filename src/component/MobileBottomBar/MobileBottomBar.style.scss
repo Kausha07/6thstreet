@@ -75,10 +75,10 @@
   .nav-bar-item {
     text-align: center;
 
-
     .nav-bar-item-button {
       border-top: 3px solid white;
       padding: 0;
+      width: 80%;
 
       &.selected {
         border-top: 3px solid var(--active-button-header-color);
@@ -92,7 +92,7 @@
     .nav-bar-item-label {
       margin-top: 2px;
       margin-bottom: 14px;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 500;
       text-transform: none;
 
