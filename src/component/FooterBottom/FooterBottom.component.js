@@ -142,15 +142,17 @@ class FooterBottom extends PureComponent {
           src={mada}
           alt="mada"
         />
-        <Image
-          lazyLoad={true}
-          mix={{
-            block: "FooterBottom",
-            elem: "PaymentIcons-tamara",
-          }}
-          src={tamaraLogo}
-          alt="tamaraLogo"
-        />
+        {this.props?.isTamaraEnable && (
+          <Image
+            lazyLoad={true}
+            mix={{
+              block: "FooterBottom",
+              elem: "PaymentIcons-tamara",
+            }}
+            src={tamaraLogo}
+            alt="tamaraLogo"
+          />
+        )}
       </div>
     );
   }
