@@ -467,12 +467,19 @@ class PDPSummary extends PureComponent {
       }
     }
 
-    if (this.props.colourVarientsButtonClick) {
-      if (this.alsoAvailableRef.current) {
-        this.alsoAvailableRef.current.scrollIntoView({ behavior: "smooth" });
-      }
+    if (this.props?.colourVarientsButtonClick) {
+      setTimeout(() => {
+        this.scrollToRef();
+      }, 2000);
     }
   }
+
+  scrollToRef = () => {
+    if (this?.alsoAvailableRef?.current) {
+      this?.alsoAvailableRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
   static getDerivedStateFromProps(props, state) {
     const { product,intlEddResponse } = props;
 

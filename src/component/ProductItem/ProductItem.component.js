@@ -437,12 +437,31 @@ class ProductItem extends PureComponent {
   }
 
   generateInputField = (val, index) => {
-    const { product = {} } = this.props;
-    const productAlsoAvailableColors = product?.["6s_also_available_color"]
-      ? Object.keys(product?.["6s_also_available_color"])
+    const {
+      product = {},
+      product: { sku = "", color = "" },
+    } = this.props;
+    const productAlsoAvailableColors = (
+      product &&
+      Object.keys(product)?.length > 0 &&
+      Array.isArray(product?.["6s_also_available_color"])
+        ? product?.["6s_also_available_color"]?.length > 0
+        : product?.["6s_also_available_color"]
+    )
+      ? [sku, ...Object.keys(product?.["6s_also_available_color"])]
       : [];
+
+    let colorValue = "";
+    if (!Array.isArray(color) && color) {
+      colorValue = this.getArabicToEnglishColorTranslation(color);
+    } else if (Array.isArray(color) && color?.length > 0) {
+      colorValue = this.getArabicToEnglishColorTranslation(color[0]);
+    } else {
+      colorValue = "";
+    }
     const colorKey = productAlsoAvailableColors?.[index];
-    const background = product?.["6s_also_available_color"]?.[colorKey]?.color || "";
+    const background =
+      product?.["6s_also_available_color"]?.[colorKey]?.color || colorValue;
     const colorArray = ["#ffffff"];
     const isBorderColor = colorArray?.includes(background?.toLowerCase());
     const zIndex = index === 0 ? 1 : -index;
@@ -464,26 +483,31 @@ class ProductItem extends PureComponent {
   };
 
   renderColorVariantsMobile = () => {
-    const { product = {} } = this.props;
+    const {
+      product = {},
+      product: { sku = "" },
+    } = this.props;
     const { isdark, isArabic } = this.state;
     const productAlsoAvailableColors = product?.["6s_also_available_color"]
-      ? Object.keys(product?.["6s_also_available_color"]).slice(0, 3)
+      ? Object.keys(product?.["6s_also_available_color"])
       : [];
 
+    const allAvailableColors = [sku, ...productAlsoAvailableColors].slice(0, 3);
+
     return this.getInstockColorVarientsCount() > 0 &&
-      productAlsoAvailableColors?.length > 0 ? (
+      allAvailableColors?.length > 0 ? (
       <div
         block="PLPMobileColorVarients"
         mods={{ isArabic }}
         onClick={() => this.props.setColourVarientsButtonClick(true)}
       >
-        {productAlsoAvailableColors?.length === 1 ? (
+        {allAvailableColors?.length === 1 ? (
           <div block="radio-label">
             {this.generateInputField(productAlsoAvailableColors?.[0], 0)}
           </div>
         ) : (
           <div block="radio-label multi-color">
-            {productAlsoAvailableColors?.map(this.generateInputField)}
+            {allAvailableColors?.map(this.generateInputField)}
           </div>
         )}
         {this.getInstockColorVarientsCount() > 3 && (
