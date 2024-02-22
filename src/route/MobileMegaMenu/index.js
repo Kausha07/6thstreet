@@ -1,1 +1,1 @@
-export { default } from "./MobileMegaMenu.component.js"
+export { default } from "./MobileMegaMenu.component.js";

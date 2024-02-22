@@ -1,1 +1,1 @@
-export { default } from "./MegaMenuHorizontalSlider.component.js"
+export { default } from "./MegaMenuHorizontalSlider.component.js";
