@@ -18,6 +18,7 @@ import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.compon
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Loader from "Component/Loader";
 import {
   AUTHORIZED_STATUS,
   BILLING_STEP,
@@ -697,6 +698,13 @@ export class Checkout extends SourceCheckout {
       config: { countries },
       config,
     } = this.props;
+
+    let platform = "";
+    platform = new URLSearchParams(window.location.search).get("platform");
+
+    if (platform === "app") {
+      return <Loader isLoading={true} />;
+    }
 
     const isCareemPayDisplayToUser = isSignedIn ? (config?.is_carrempay_enable_loggedinuser) : true;    
     const { continueAsGuest, isArabic } = this.state;
