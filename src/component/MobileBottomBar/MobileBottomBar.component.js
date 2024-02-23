@@ -48,6 +48,7 @@ export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
   IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
   bottomNavConfig: state.AppConfig.config.bottomNavigationConfig,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -208,7 +209,7 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   sendMoeEvents(event) {
-    const { newSignUpEnabled, isSignedIn } = this.props;
+    const { newSignUpEnabled, isSignedIn, bottomNavConfig, gender } = this.props;
     if (event == EVENT_MOE_WISHLIST_TAB_ICON && newSignUpEnabled) {
       const eventData = {
         name: EVENT_WISHLIST_ICON_CLICK,
@@ -216,11 +217,16 @@ class MobileBottomBar extends NavigationAbstract {
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     } else {
+      const countryFromURL = getCountryFromUrl().toLowerCase();
+      const labelURL = getLanguageFromUrl().toUpperCase() === "EN" ? bottomNavConfig[countryFromURL].alternateLink_en : bottomNavConfig[countryFromURL].alternateLink_ar; 
       MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
+        label_name: bottomNavConfig[countryFromURL].label_en,
+        label_URL: labelURL,
+        gender: gender,
       });
     }
   }
@@ -328,7 +334,7 @@ class MobileBottomBar extends NavigationAbstract {
               this.routeChangeCustomOption();
               this.sendMoeEvents(EVENT_MOE_CUSTOM_TAB_ICON);
             }}
-            key="customButton"
+            key="customButton"//here
             elem="HomeAndBrand"
             className={`nav-bar-item-button ${isCustomOption ? 'selected' : ''}`}>
             <img className="nav-bar-item-icon"
