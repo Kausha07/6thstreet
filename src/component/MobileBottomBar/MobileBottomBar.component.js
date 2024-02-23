@@ -334,7 +334,7 @@ class MobileBottomBar extends NavigationAbstract {
               this.routeChangeCustomOption();
               this.sendMoeEvents(EVENT_MOE_CUSTOM_TAB_ICON);
             }}
-            key="customButton"//here
+            key="customButton"
             elem="HomeAndBrand"
             className={`nav-bar-item-button ${isCustomOption ? 'selected' : ''}`}>
             <img className="nav-bar-item-icon"
