@@ -75,6 +75,8 @@ export class Footer extends PureComponent {
         } = this.props;
         const countryCode = getCountryFromUrl();
         const isTamaraEnable = countries[countryCode]?.isTamaraEnable || false;
+        const tabbyRange = countries[countryCode]?.tabby_range || {};
+        const isTabbyEnable = tabbyRange.min || tabbyRange.max ? true : false;
 
         if (footer_cms) {
             return <CmsBlock identifier={ footer_cms } />;
@@ -99,6 +101,7 @@ export class Footer extends PureComponent {
                 <FooterBottom 
                     isClubApparelEnabled={isClubApparelEnabled} 
                     isTamaraEnable={isTamaraEnable}
+                    isTabbyEnable={isTabbyEnable}
                 />
                 <FooterMobile isClubApparelEnabled={isClubApparelEnabled}/>
             </>
