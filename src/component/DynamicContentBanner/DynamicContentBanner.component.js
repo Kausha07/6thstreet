@@ -127,6 +127,7 @@ class DynamicContentBanner extends PureComponent {
     }
     setTimeout(() => { });
     let banner = {
+      banner_type: item?.has_video ? "video" : "image",
       link: item.link,
       promotion_name: item.promotion_name,
     };
@@ -141,7 +142,7 @@ class DynamicContentBanner extends PureComponent {
   renderImage = (item, i) => {
     const { index, type } = this.props;
     // const { height, width } = items[0];
-    const { url, image_url, link, height = "", width = "",promotion_name, description, button_label } = item;
+    const { url, image_url, link, height = "", width = "",promotion_name, description, button_label, has_video = false, video_url = ""} = item;
     let ht, wd;
     // if (screen.width < 900) {
     //   wd = (screen.width - 20).toString() + "px";
@@ -153,18 +154,36 @@ class DynamicContentBanner extends PureComponent {
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     const aspectRatio = width/height || 1;
+    let videoBannerStyle = (isMobile.any()) ?  {
+      width: "100%",
+      padding:"0 10px",
+      objectFit: "cover"
+    }: { width:"100%", height: "auto", objectFit: "cover" };
     if (!link) {
       return (
         <>
-          <Image
-            lazyLoad={index === 21 || index === 35 ? false : true}
-            key={i}
-            src={url || image_url}
-            ratio="custom"
-            height={ht}
-            width={wd}
-            alt={ promotion_name ? promotion_name : "DynamicContentBannerImage"}
-          />
+          {(has_video && video_url) ? (
+            <video
+              src={video_url}
+              style={videoBannerStyle}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <Image
+              lazyLoad={index === 21 || index === 35 ? false : true}
+              key={i}
+              src={url || image_url}
+              ratio="custom"
+              height={ht}
+              width={wd}
+              alt={
+                promotion_name ? promotion_name : "DynamicContentBannerImage"
+              }
+            />
+          )}
           {this.renderButton()}
           {this.renderDescription(description, button_label)}
         </>
@@ -183,15 +202,35 @@ class DynamicContentBanner extends PureComponent {
         }}
       >
         {this.props.start_time && this.props.end_time && this.renderTimer()}
-        <Image
-          lazyLoad={index === 21 || index === 35 ? false : true}
-          src={url || image_url}
-          block="Image"
-          style= {isMobile.any() && width && height ? 
-            { width: `${window.innerWidth - 20}px`, height:`${(window.innerWidth - 40)/aspectRatio}px`}: 
-            { maxWidth: wd, height: ht, objectFit: "unset" }}
-          alt={item.promotion_name ? item.promotion_name : "DynamicContentBannerImage"}
-        />
+        {(has_video && video_url)? (
+          <video
+            src={video_url}
+            style={videoBannerStyle}
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ) : (
+          <Image
+            lazyLoad={index === 21 || index === 35 ? false : true}
+            src={url || image_url}
+            block="Image"
+            style={
+              isMobile.any() && width && height
+                ? {
+                    width: `${window.innerWidth - 20}px`,
+                    height: `${(window.innerWidth - 40) / aspectRatio}px`,
+                  }
+                : { maxWidth: wd, height: ht, objectFit: "unset" }
+            }
+            alt={
+              item.promotion_name
+                ? item.promotion_name
+                : "DynamicContentBannerImage"
+            }
+          />
+        )}
 
         {this.renderButton()}
         {this.renderDescription(description, button_label)}
