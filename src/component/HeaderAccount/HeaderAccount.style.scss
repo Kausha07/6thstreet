@@ -2,14 +2,11 @@
   width: auto;
 
   &-Button {
-    // height: 30px;
-    // left: -30px;
     padding: 0;
     z-index: 3;
     height: auto;
 
     &:not(&_isBottomBar) {
-      // margin-left: 60px;
 
       label {
         text-transform: none;
@@ -20,9 +17,6 @@
         font-weight: var(--fw-demi);
 
         &::before {
-          // position: absolute;
-          // left: -30px;
-          // top: -6px;
           content: "";
           background: url(./icons/account.svg) no-repeat;
           background-size: 24px;
@@ -31,8 +25,6 @@
           display: flex;
           font-size: 0;
           margin-right: 6px;
-
-          //   margin-top: -8px;
         }
 
         span {
@@ -59,9 +51,9 @@
             margin-left: 6px;
           }
         }
-        // margin-left: 90px;
       }
     }
+
     &_isVip {
       label {
         &:after {
@@ -78,21 +70,24 @@
           right: -19px;
         }
       }
-      &.HeaderAccount-Button{
-        &_isArabic{
-          label{
-            &:after{
+
+      &.HeaderAccount-Button {
+        &_isArabic {
+          label {
+            &:after {
               right: 8px;
             }
           }
-          &.HeaderAccount-Button_isArabic{
-            label{
-              &:after{
+
+          &.HeaderAccount-Button_isArabic {
+            label {
+              &:after {
                 right: -25px;
               }
             }
           }
         }
+
         &_isFooter {
           label {
             &:after {
@@ -102,8 +97,6 @@
           }
         }
       }
-      
-      
     }
   }
 
@@ -121,19 +114,6 @@
     padding: 0;
     text-align: center;
 
-    &::before {
-      content: "";
-      right: 0;
-      background: url(./icons/account.svg) no-repeat center center;
-      background-size: 29px;
-      width: 27px;
-      height: 29px;
-      display: inline-block;
-      font-size: 0;
-      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
-        brightness(90%) contrast(80%);
-    }
-
     @include desktop {
       display: none;
     }
@@ -143,8 +123,7 @@
     color: var(--active-button-header-color);
 
     &::before {
-      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
-        brightness(107%) contrast(95%);
+      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
     }
   }
 
