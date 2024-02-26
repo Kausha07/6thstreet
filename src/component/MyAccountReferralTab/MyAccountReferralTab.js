@@ -170,7 +170,7 @@ export default function MyAccountReferralTab() {
               )}
             </li>
             <li>
-              {__("Store credit can be used at any time without expiry date")}
+              {__("Store credit is valid for one year")}
             </li>
             <li>
               {__("Users cannot use their own referral code to place an order")}
