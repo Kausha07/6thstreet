@@ -12,7 +12,7 @@ export const getConfig = () => {
 export const getSchema = (locale) => {
     const configFile = 'schema.json';
     const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
-    if(!!!locale){
+    if (!!!locale) {
         return CDN.get(`${directory}/seo/${configFile}`);
     }
     return CDN.get(`${directory}/seo/${locale}/${configFile}`);
@@ -21,3 +21,9 @@ export const getSchema = (locale) => {
 export const getCities = () => MobileAPI.get(
     '/cities',
 ) || {};
+
+export const getBottomNavigationConfig = () => {
+    const configFile = 'bottom_tab.json';
+    const directory = process.env.REACT_APP_BOTTOM_NAVIGATION_CONFIG_DIR;
+    return indexConfig(CDN.get(`${directory}/${configFile}`));
+}

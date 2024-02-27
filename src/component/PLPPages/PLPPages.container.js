@@ -179,6 +179,8 @@ export class PLPPagesContainer extends PureComponent {
     moreFilters: this.props.moreFilters,
     newActiveFilters: this.props.newActiveFilters,
     selectedMoreFilterPLP: this.props.selectedMoreFilterPLP,
+    customisedActiveFilter: this.props.customisedActiveFilter,
+    moreActiveFilters: this.props.moreActiveFilters,
   });
 
   containerFunctions = () => {

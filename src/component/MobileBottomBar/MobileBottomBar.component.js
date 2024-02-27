@@ -26,10 +26,19 @@ import Event, {
   EVENT_SIGN_IN_SCREEN_VIEWED,
   EVENT_GTM_NEW_AUTHENTICATION,
   EVENT_WISHLIST_ICON_CLICK,
+  EVENT_MOE_CUSTOM_TAB_ICON,
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { customerType } from "Type/Account";
+import homeSVG from "./icons/home.svg";
+import homeActiveSVG from "./icons/home-active.svg";
+import brandSVG from "./icons/brand.svg";
+import brandActiveSVG from "./icons/brand-active.svg";
+import wishlistSVG from "./icons/favorites.svg";
+import wishlistActiveSVG from "./icons/favorites-active.svg";
+import accountSVG from "./icons/account.svg";
+import accountActiveSVG from "./icons/account-active.svg";
 import "./MobileBottomBar.style.scss";
 
 
@@ -38,6 +47,8 @@ export const mapStateToProps = (state) => ({
   newSignUpEnabled: state.AppConfig.newSigninSignupVersionEnabled,
   customer: state.MyAccountReducer.customer,
   IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
+  bottomNavConfig: state.AppConfig.config.bottomNavigationConfig,
+  gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -59,8 +70,8 @@ class MobileBottomBar extends NavigationAbstract {
   };
 
   static defaultProps = {
-    setIsMobileTabActive: () => {},
-    setIsCurrentTabActive: () => {},
+    setIsMobileTabActive: () => { },
+    setIsCurrentTabActive: () => { },
     newMenuGender: "women",
   };
 
@@ -68,7 +79,9 @@ class MobileBottomBar extends NavigationAbstract {
     isHome: false,
     redirectHome: false,
     redirectBrand: false,
+    redirectCenterOption: false,
     isBrand: false,
+    isCustomOption: false,
     isBottomBar: true,
     isWishlist: false,
     isAccount: false,
@@ -82,7 +95,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderMap = {
     home: this.renderHome.bind(this),
     menu: this.renderMenu.bind(this),
-    brand: this.renderBrand.bind(this),
+    centerOption: this.renderCenterOption.bind(this),
     wishlist: this.renderWishlist.bind(this),
     account: this.renderAccount.bind(this),
   };
@@ -138,6 +151,13 @@ class MobileBottomBar extends NavigationAbstract {
     });
   };
 
+  routeChangeCustomOption = () => {
+    this.setState({
+      redirectCenterOption: true,
+      isCategoryMenu: false,
+    });
+  };
+
   renderAccountMenuPopUp = () => {
     const { isPopup } = this.state;
     const popUpElement = (
@@ -189,22 +209,28 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   sendMoeEvents(event) {
-    const { newSignUpEnabled, isSignedIn } = this.props;
-    if (event == EVENT_MOE_WISHLIST_TAB_ICON && newSignUpEnabled){
+    const { newSignUpEnabled, isSignedIn, bottomNavConfig, gender } = this.props;
+    if (event == EVENT_MOE_WISHLIST_TAB_ICON && newSignUpEnabled) {
       const eventData = {
         name: EVENT_WISHLIST_ICON_CLICK,
         screen: this.getPageType() || "",
       };
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
-    }else{
+    } else {
+      const countryFromURL = getCountryFromUrl().toLowerCase();
+      const labelURL = getLanguageFromUrl().toUpperCase() === "EN" ? bottomNavConfig[countryFromURL].alternateLink_en : bottomNavConfig[countryFromURL].alternateLink_ar; 
       MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
+        label_name: bottomNavConfig[countryFromURL].label_en,
+        label_URL: labelURL,
+        gender: gender,
       });
     }
   }
+
   sendPopupEvent(source) {
     const popupEventData = {
       name: EVENT_SIGN_IN_SCREEN_VIEWED,
@@ -214,6 +240,7 @@ class MobileBottomBar extends NavigationAbstract {
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
   }
+
   renderHome() {
     const { history } = this.props;
     const { isHome, redirectHome, isCategoryMenu } = this.state;
@@ -228,59 +255,99 @@ class MobileBottomBar extends NavigationAbstract {
     });
 
     return (
-      <button
-        onClick={() => {
-          this.routeChangeHome();
-          this.sendMoeEvents(EVENT_MOE_HOME_TAB_ICON);
-        }}
-        key="homeButton"
-        block="MobileBottomBar"
-        elem="HomeAndBrand"
-        mods={{ isHomeButton: true }}
-        mix={{
-          block: "MobileBottomBar",
-          elem: "HomeAndBrand",
-          mods: { isActive: isHome },
-        }}
-      >
-        {/* <label htmlFor="Home">{__("Home")}</label> */}
-      </button>
+      <div className={`nav-bar-item`} >
+        <button
+          onClick={() => {
+            this.routeChangeHome();
+            this.sendMoeEvents(EVENT_MOE_HOME_TAB_ICON);
+          }}
+          key="homeButton"
+          elem="HomeAndBrand"
+          className={`nav-bar-item-button ${isHome ? 'selected' : ''}`}>
+          <img className="nav-bar-item-icon"
+            src={isHome
+              ? homeActiveSVG
+              : homeSVG}
+            alt="Home" width={24} height={24} />
+          <div className={`nav-bar-item-label ${isHome ? 'selected' : ''}`}>
+            {__('Home')}</div>
+        </button>
+      </div>
     );
   }
 
-  renderBrand() {
-    const { history } = this.props;
-    const { isBrand, redirectBrand, isCategoryMenu } = this.state;
-
-    if (redirectBrand) {
-      this.setState({ redirectBrand: false });
-      return history.push("/shop-by-brands");
+  renderCenterOption() {
+    const { history, bottomNavConfig } = this.props;
+    const { isBrand,
+      redirectBrand,
+      isCategoryMenu,
+      redirectCenterOption,
+      isCustomOption } = this.state;
+    const language = getLanguageFromUrl();
+    const country = getCountryFromUrl().toLowerCase();
+    if (bottomNavConfig[country]?.redirect_brand) {
+      if (redirectBrand) {
+        this.setState({ redirectBrand: false });
+        return history.push("/shop-by-brands");
+      }
+      this.setState({
+        isBrand:
+          window.location.pathname === "/shop-by-brands" && !isCategoryMenu,
+      });
+      return (
+        <div className="nav-bar-item" >
+          <button
+            onClick={() => {
+              this.routeChangeBrand();
+              this.sendMoeEvents(EVENT_MOE_BRANDS_TAB_ICON);
+            }}
+            key="brandButton"
+            elem="HomeAndBrand"
+            className={`nav-bar-item-button ${isBrand ? 'selected' : ''}`}>
+            <img className="nav-bar-item-icon"
+              src={isBrand
+                ? brandActiveSVG
+                : brandSVG}
+              alt="Brands" width={24} height={24} />
+            <div className={`nav-bar-item-label ${isBrand ? 'selected' : ''}`}>
+              {__('Brands')}</div>
+          </button>
+        </div>
+      );
+    } else {
+      if (redirectCenterOption) {
+        this.setState({ redirectCenterOption: false });
+        return history.push(language == 'en'
+          ? `/store/${bottomNavConfig?.[country]?.alternateLink_en}`
+          : `/store/${bottomNavConfig?.[country]?.alternateLink_ar}`);
+      }
+      this.setState({
+        isCustomOption:
+          window.location.pathname === (language == 'en'
+            ? `/store/${bottomNavConfig?.[country]?.alternateLink_en}`
+            : `/store/${bottomNavConfig?.[country]?.alternateLink_ar}`) && !isCategoryMenu,
+      });
+      return (
+        <div className="nav-bar-item" >
+          <button
+            onClick={() => {
+              this.routeChangeCustomOption();
+              this.sendMoeEvents(EVENT_MOE_CUSTOM_TAB_ICON);
+            }}
+            key="customButton"
+            elem="HomeAndBrand"
+            className={`nav-bar-item-button ${isCustomOption ? 'selected' : ''}`}>
+            <img className="nav-bar-item-icon"
+              src={isCustomOption
+                ? bottomNavConfig[country].selectedIcon
+                : bottomNavConfig[country].icon}
+              alt={bottomNavConfig[country].label} width={24} height={24} />
+            <div className={`nav-bar-item-label ${isCustomOption ? 'selected' : ''}`}>
+              {language == 'en' ? bottomNavConfig[country].label_en : bottomNavConfig[country].label_ar}</div>
+          </button>
+        </div>
+      );
     }
-
-    this.setState({
-      isBrand:
-        window.location.pathname === "/shop-by-brands" && !isCategoryMenu,
-    });
-
-    return (
-      <button
-        onClick={() => {
-          this.routeChangeBrand();
-          this.sendMoeEvents(EVENT_MOE_BRANDS_TAB_ICON);
-        }}
-        key="brandButton"
-        block="MobileBottomBar"
-        elem="HomeAndBrand"
-        mods={{ isBrandButton: true }}
-        mix={{
-          block: "MobileBottomBar",
-          elem: "HomeAndBrand",
-          mods: { isActive: isBrand },
-        }}
-      >
-        {/* <label htmlFor="Home">{__("Brands")}</label> */}
-      </button>
-    );
   }
 
   renderMenu() {
@@ -311,8 +378,8 @@ class MobileBottomBar extends NavigationAbstract {
       : this.routeChangeWishlist;
 
     return (
-      <div key="wishlist">
-        <div
+      <div key="wishlist" className="nav-bar-item">
+        <button
           onClick={() => {
             onClickHandle();
             this.sendMoeEvents(EVENT_MOE_WISHLIST_TAB_ICON);
@@ -321,16 +388,21 @@ class MobileBottomBar extends NavigationAbstract {
             }
           }}
           key="wishlistButton"
-          block="MobileBottomBar"
           elem="WishListAndAccount"
-          mods={{ isActive: isWishlist }}
-        >
+          className={`nav-bar-item-button  ${isWishlist ? 'selected' : ''}`}>
+          <img className="nav-bar-item-icon"
+            src={isWishlist
+              ? wishlistActiveSVG
+              : wishlistSVG}
+            alt="Wishlist" width={24} height={24} />
+          <div className={`nav-bar-item-label ${isWishlist ? 'selected' : ''}`}>
+            {__('WishList')}</div>
           <HeaderWishlist
             isWishlist={isWishlist}
             isBottomBar={isBottomBar}
             key="wishlist"
           />
-        </div>
+        </button>
       </div>
     );
   }
@@ -355,7 +427,7 @@ class MobileBottomBar extends NavigationAbstract {
 
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
-    const { location, isSignedIn, newSignUpEnabled,customer, IsVipCustomerEnabled } = this.props;
+    const { location, isSignedIn, newSignUpEnabled, customer, IsVipCustomerEnabled } = this.props;
     const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });
@@ -384,8 +456,9 @@ class MobileBottomBar extends NavigationAbstract {
         }
       }
     };
+
     return (
-      <div key="account">
+      <div key="account" className={`nav-bar-item`}>
         <button
           onClick={() => {
             onClickHandle();
@@ -393,10 +466,16 @@ class MobileBottomBar extends NavigationAbstract {
             sendGTMEvent();
           }}
           key="accountButton"
-          block="MobileBottomBar"
           elem="WishListAndAccount"
-          mods={{isVip}}
-        >
+          mods={{ isVip }}
+          className={`nav-bar-item-button ${isAccount ? 'selected' : ''}`}>
+          <img className="nav-bar-item-icon"
+            src={isAccount
+              ? accountActiveSVG
+              : accountSVG}
+            alt="Wishlist" width={24} height={24} />
+          <div className={`nav-bar-item-label ${isAccount ? 'selected' : ''}`}>
+            {__('Account')}</div>
           <HeaderAccount
             isAccount={isAccount}
             isBottomBar={isBottomBar}
@@ -410,12 +489,6 @@ class MobileBottomBar extends NavigationAbstract {
 
   render() {
     const { isIPhoneNavigationHidden } = this.state;
-
-    // Commenting it for not hiding bottom bar after coming from pdp(PWA-907)
-
-    // if(this.isPDP()){
-    //     return null;
-    // }
 
     if (!isMobile.any()) {
       return null;
