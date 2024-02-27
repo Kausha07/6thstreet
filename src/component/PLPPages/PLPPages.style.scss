@@ -59,16 +59,16 @@
 
     .PLPPageFilter {
       align-items: center;
-      border: 1px solid #d6d6d6;
+      background-color:#F5F5F5;
       border-radius: 6px;
       display: flex;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: var(--fw-light);
-      height: 34px;
+      height: 25px;
       justify-content: space-between;
       letter-spacing: 0px;
-      line-height: 19px;
-      margin-right: 10px;
+      line-height: 12px;
+      margin-right: 8px;
       margin-top: 2px;
       padding: 10px;
       text-transform: capitalize;
@@ -120,17 +120,28 @@
             vertical-align: baseline;
             margin: 0 !important;
             padding: 0 !important;
+            flex-wrap: wrap;
             &::before {
               content: none;
             }
           }
           button {
             svg {
-              height: 15px;
-              width: 15px;
+              height: 10px;
+              width: 10px;
               margin-left: 6px;
             }
           }
+        }
+
+        .MoreButtonLabel {
+          font-family : "Avenir Next";
+          min-height: 25px;
+          padding: 5px 8px 5px 8px;
+          font-weight: 400;
+          font-size: 12px;
+          color: #0B92D3;
+        
         }
       }
     }
