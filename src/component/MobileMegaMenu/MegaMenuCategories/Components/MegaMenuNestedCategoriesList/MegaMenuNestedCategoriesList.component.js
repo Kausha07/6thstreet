@@ -9,6 +9,7 @@ const MegaMenuNestedCategoriesList = ({ nestedCategoiresList = [] }) => {
       image = "",
       promotion_name = "",
     } = item;
+
     return (
       <li>
         <Link
@@ -34,9 +35,12 @@ const MegaMenuNestedCategoriesList = ({ nestedCategoiresList = [] }) => {
       </li>
     );
   };
+
   return (
     <div block="nested-categories-list-container">{
-        nestedCategoiresList?.map((item)=>renderCategoriesList(item))
+        nestedCategoiresList?.map((item)=>{
+          return renderCategoriesList(item)
+        })
     }</div>
   );
 };

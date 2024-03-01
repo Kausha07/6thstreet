@@ -12,7 +12,7 @@ const MegaMenuHorizontalSlider = () => {
       {
         promotion_name: "Home-FreshStyle-Tommy Hilfiger",
         tag: "Tommy Hilfiger",
-        url: "https://s3-alpha-sig.figma.com/img/fc69/8bb0/8c7de4da8201006bf30dec89f4b05180?Expires=1709510400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=fAex0P1uO1OqRZ3Cwbt-jiPSyTcE3nCfwUwC6eDSPlsrRyg5Z8cC~KRN37KeuIw8yYBLJG7K6TKqEvw2WxbplGVhPwxsYlJGHz1dj0RjSU~jrK8DfdsdtEE6vbKmYGaxLW64-dDlQCTRQja4ntgmBWVCIUwvSDjjbYqvfSYtIFJBoRASCn6~6ehvskcBUSI7k~t~pSAn0IGk8WSZBRFHzmM6Ay6SZa9z-Wx17~wbzN-EdRbnCoQVX0vhc~OVBOEU7DEeYoVLkx29Nc6MPyUbbwe6njXJDYrWJ8UqSmRafuYzBLCK2BhCQ1byiDVjkgUNhkHdUYGPo1hs-UTwwBc0LA__",
+        url: "https://s3-alpha-sig.figma.com/img/7d99/4921/9b1efb21533d747a94f359a6f6439b5c?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X2ZKFGj45JiZ0sV2V0TYW6oQZnxZHBoCql35SntKbol8BOdWSNOONLNZAoxraadmR6U3FsmGUfW2VMVeOYrAHiwnjS~rI2fiLf3jTVSWsOCP~iwYy7qEABrPz4mHherczDsYMMOJji9YFYgeXuDc5M7AWCZcmCkCwgNtFoE6sh-zPLuoCagionm-hDgioGhAODiVz8LUbPs56I5jLlpFgc7ijTRoQTVHi51baEEF8PF2l7OKSc0eg9E0~svXYRpTlqqba3oRRgLncjH7lWf~oNaUas0thiYbn8nGAwwTF1fmun7oEJZYm4kcBGxJSGvhmlcgq5WHCIX4PVEoDB8mYA__",
         link: "/catalogsearch/result/?q=Tommy+Hilfiger&qid=41b8cae6659d1a65d9fb276a9abf11bc&p=0&dFR%5Bbrand_name%5D%5B0%5D=Tommy+Hilfiger%2CTommy+Jeans&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
         text: "Brands",
         width: 280,

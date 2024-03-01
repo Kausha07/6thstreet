@@ -17,6 +17,7 @@ class HeaderMenu extends PureComponent {
     gender: PropTypes.string.isRequired,
     activeOverlay: PropTypes.string.isRequired,
     setGender: PropTypes.func.isRequired,
+    is_msite_megamenu_enabled:PropTypes.boolean,
   };
 
   state = {
@@ -42,7 +43,7 @@ class HeaderMenu extends PureComponent {
   }
 
   onCategoriesClick = () => {
-    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome } =
+    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled } =
       this.props;
 
     if (gender === "home_beauty_women" || gender === "influencer") {
@@ -58,13 +59,19 @@ class HeaderMenu extends PureComponent {
     setLastTapItemOnHome("");
 
     if (gender !== "all") {
-      browserHistory.push(
-        `/${
-          gender === "home_beauty_women" || gender === "influencer"
-            ? "women"
-            : gender
-        }.html`
-      );
+      if(is_msite_megamenu_enabled) {
+        browserHistory.push(
+          `/${"megamenu"}`
+        );
+      }else {
+        browserHistory.push(
+          `/${
+            gender === "home_beauty_women" || gender === "influencer"
+              ? "women"
+              : gender
+          }.html`
+        );
+      }
     }
   };
 

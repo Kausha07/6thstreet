@@ -1,9 +1,7 @@
 .MegaMenuBannerImage {
-    margin-top:150px;
     .Image {
         &-Image {
             @include mobile {
-                padding: 0 10px;
                 height: 157px !important;
                 object-fit: cover;
                 max-width: 100%;

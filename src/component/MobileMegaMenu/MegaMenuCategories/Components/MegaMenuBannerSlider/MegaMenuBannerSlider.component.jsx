@@ -8,7 +8,7 @@ import "./MegaMenuBannerSlider.style.scss";
 const MegamenuBannerSlider = (props) => {
   const Banneritems = {
     "type": "banner",
-    "image_url": "https://s3-alpha-sig.figma.com/img/6fbc/9851/667540c2aa8e81b6b816b96bf5f61a29?Expires=1709510400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=gkPCvKQZk3PoWp7MKCIL7WZPBuahdltKdTiA98FvxYhg3rwNLO4Lg1cR~0X9UNp48qUJswLiDPjoWzh-A37Cl7sLT-T8ZtxYE~35Ppxg6gPV5kM0fb1U3RAQ1SUBLd7ihCkqGlw4C9wOctBl7A0Q0iuBjFm7NHciRDbzM2RZNY6NgOKjCUAdVuSDy48jr~eYy9ePKxuAs7Q8Z9cuhICvm6-HSXgMz1ub8b2C~mK9Dd3Afrk-KMkUNUR335MUQ6Q~PUnxMTF1lpmiTeUFx9xmY-uFzxJiS5qi1Avtg4ny-51jXiM1MzcjQonxj~cIibe1jtN8PcrVKlKyWVa1L-qh2A__",
+    "image_url": "https://s3-alpha-sig.figma.com/img/6fbc/9851/667540c2aa8e81b6b816b96bf5f61a29?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=cJE5q15joj~dnhgVfTAi5xngCLDzW~RWKgDXR6f~cvkJFb29sVa46uaH6uGNGW40zS7rKEBKbqGy9Xa2x5ICM7qQQD7Y4LrrWf5viYDUpOn9lfU-hE5mbsQMQjGvKoXTcZmdEIz9wW8P9F6QnA~GgXqAhML0u4zBde~vOQ~N7gnQYz1FWZWTJQZCCbGZHBGS7BQL3FpEDZFSahHQag6EAAoZskIV79UhWPNV4qnDJcZYq9FSjOFGS3QcSKVIBf~FPMGpudebKBX1ojt3kvJL8ZRCEVWz3hS3yLvsfdy9ejz0FdvFLfD3CVyEE66QjZDrAGfbKsH7cioJlomKqEjzfg__",
     "description": "love is in the air",
     "link": "https://en-ae-stage.6tst.com/catalogsearch/result/?q=adidias&qid=cbb3a8e0303527db32a69041672d7778&p=0&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1",
     "button_label": "Shop The Valentine’s Edit >"

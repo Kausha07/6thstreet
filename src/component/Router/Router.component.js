@@ -340,7 +340,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("megamenu")}
           render={(props) => (
             <GTMRouteWrapper route={"megamenu"}>
-              <MobileMegaMenu {...props} />
+              {this.props?.is_msite_megamenu_enabled ? <MobileMegaMenu {...props} /> : <NoMatch />}
             </GTMRouteWrapper>
           )}
         />

@@ -3,7 +3,22 @@ import Image from "Component/Image";
 import "./MegaMenuCategoriesAccordian.style.scss";
 import MegaMenuNestedCategoriesList from "../MegaMenuNestedCategoriesList/MegaMenuNestedCategoriesList.component";
 import { useState } from "react";
-const MegaMenuCategoriesAccordion = () => {
+import { connect, useDispatch } from "react-redux";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import { getQueryParam } from "Util/Url";
+import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
+
+export const mapStateToProps = (state) => ({
+  gender: state.AppState.gender,
+  locale: state.AppState.locale,
+  categories: state?.CategoriesListReducer?.categories
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  requestMegaMenuCategoriesList: (gender,locale) => CategoriesListDispatcher.requestMegaMenuCategoriesList(gender, locale, dispatch)
+});
+
+const MegaMenuCategoriesAccordion = (props) => {
   const [showList, setShowList] = useState(false);
   const [clickedIndex, setClickedIndex] = useState(null);
   const ScrollerRef = useRef(null);
@@ -270,6 +285,11 @@ const MegaMenuCategoriesAccordion = () => {
     },
     
   ];
+  const {requestMegaMenuCategoriesList, gender, data = [] } = props;
+  useState(()=>{
+    const locale = getLocaleFromUrl();
+    requestMegaMenuCategoriesList(gender,locale);
+  },[])
 
   const renderImage = (image_url = "", description = "") => {
     return (
@@ -316,7 +336,7 @@ const MegaMenuCategoriesAccordion = () => {
         </div>
         {isClicked ? (
           <div block="megamenu-nested-categories-list-container">
-            {<MegaMenuNestedCategoriesList nestedCategoiresList={item?.item} ScrollerRef={ScrollerRef} />}
+            {item?.item?.map((category)=><MegaMenuNestedCategoriesList nestedCategoiresList={category} ScrollerRef={ScrollerRef} />)}
           </div>
         ) : null}
       </ul>
@@ -324,11 +344,11 @@ const MegaMenuCategoriesAccordion = () => {
   };
   return (
     <div block="megamenu-categories-accordian-container">
-      {MegamenuCategoriesData?.map((item, index) =>
+      {props?.categories?.data?.map((item, index) =>
         renderMegaMenuCategoriesLists(item, index)
       )}
     </div>
   );
 };
 
-export default MegaMenuCategoriesAccordion;
+export default connect(mapStateToProps, mapDispatchToProps)(MegaMenuCategoriesAccordion);
