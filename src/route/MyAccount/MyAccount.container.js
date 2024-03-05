@@ -28,6 +28,7 @@ import {
   WALLET_PAYMENTS,
   REFERRAL_SCREEN,
   VIP_CUSTOMER,
+  MY_WALLET,
 } from "Type/Account";
 import { MY_ACCOUNT_URL } from "./MyAccount.config";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
@@ -122,6 +123,11 @@ export const tabMap = {
     name: __("My Profile"),
     className: "",
   },
+  [MY_WALLET]: {
+    url: "/my-wallet",
+    name: __("My wallet"),
+    className: "WalletTabLink",
+  },
   [REFERRAL_SCREEN]: {
     url: "/referral",
     name: __("Refer & Earn"),
@@ -205,8 +211,15 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   changeActiveTab(activeTab) {
-    const { history, is_exchange_enabled, IsVipCustomerEnabled, customer,isClubApparelEnabled } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
+    const {
+      history,
+      is_exchange_enabled,
+      IsVipCustomerEnabled,
+      customer,
+      isClubApparelEnabled,
+    } = this.props;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     let newTabMap = is_exchange_enabled
       ? {
           ...storeCreditState,
@@ -290,8 +303,15 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   }
 
   updateBreadcrumbs() {
-    const { updateBreadcrumbs, is_exchange_enabled,IsVipCustomerEnabled, customer, isClubApparelEnabled } = this.props;
-    const isVipCustomer = IsVipCustomerEnabled && customer && customer?.vipCustomer || false;
+    const {
+      updateBreadcrumbs,
+      is_exchange_enabled,
+      IsVipCustomerEnabled,
+      customer,
+      isClubApparelEnabled,
+    } = this.props;
+    const isVipCustomer =
+      (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     const { activeTab } = this.state;
     let finalTabMap;
     let newTabMap = is_exchange_enabled

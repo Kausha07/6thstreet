@@ -97,6 +97,29 @@ export class MyAccountSignedInOverlay extends PureComponent {
     );
   }
 
+  renderMyWalletLink() {
+    return (
+      <div>
+        <Link
+          block="MyAccountSignedInOverlay"
+          // elem="LinkAccount"
+          to="/my-account/my-wallet"
+          // onClick={() => this.sendEvents(EVENT_ACCOUNT_PROFILE_CLICK)}
+        >
+          <Image
+            lazyLoad={true}
+            src={WalletIcon}
+            mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
+            alt={"cat-menu"}
+          />
+          <span block="MyAccountSignedInOverlay" elem="LinkTitle">
+            {__("My Wallet")}
+          </span>
+        </Link>
+      </div>
+    );
+  }
+
   renderReferralLink() {
     const { IsReferralEnabled } = this.props;
     if (IsReferralEnabled) {
@@ -304,12 +327,13 @@ export class MyAccountSignedInOverlay extends PureComponent {
   renderWrapper() {
     const { customer, IsVipCustomerEnabled, isClubApparelEnabled } = this.props;
     const isVipCustomer =
-      customer && customer?.vipCustomer && IsVipCustomerEnabled || false;
+      (customer && customer?.vipCustomer && IsVipCustomerEnabled) || false;
     return (
       <div block="MyAccountSignedInOverlay" elem="Wrapper">
         {isVipCustomer && this.renderVipLink()}
         {isClubApparelEnabled && this.renderClubLink()}
         {this.renderMyAccountLink()}
+        {this.renderMyWalletLink()}
         {this.renderReferralLink()}
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}
