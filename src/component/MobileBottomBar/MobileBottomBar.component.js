@@ -215,7 +215,7 @@ class MobileBottomBar extends NavigationAbstract {
     Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
   }
   renderHome() {
-    const { history } = this.props;
+    const { history, setMobileMegaMenuPageOpenFlag } = this.props;
     const { isHome, redirectHome, isCategoryMenu } = this.state;
 
     if (redirectHome) {
@@ -230,6 +230,7 @@ class MobileBottomBar extends NavigationAbstract {
     return (
       <button
         onClick={() => {
+          setMobileMegaMenuPageOpenFlag("");
           this.routeChangeHome();
           this.sendMoeEvents(EVENT_MOE_HOME_TAB_ICON);
         }}
@@ -284,13 +285,15 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   renderMenu() {
-    const { newMenuGender } = this.props;
+    const { newMenuGender, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
 
     return (
       <HeaderMenu
         key="menu"
         newMenuGender={newMenuGender}
         isMobileBottomBar={true}
+        setMobileMegaMenuPageOpenFlag={setMobileMegaMenuPageOpenFlag}
+        mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}
       />
     );
   }
@@ -355,7 +358,7 @@ class MobileBottomBar extends NavigationAbstract {
 
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
-    const { location, isSignedIn, newSignUpEnabled,customer, IsVipCustomerEnabled } = this.props;
+    const { location, isSignedIn, newSignUpEnabled,customer, IsVipCustomerEnabled, setMobileMegaMenuPageOpenFlag } = this.props;
     const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });

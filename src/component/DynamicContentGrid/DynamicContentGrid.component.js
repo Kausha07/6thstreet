@@ -24,7 +24,7 @@ class DynamicContentGrid extends PureComponent {
         url: PropTypes.string,
         title: PropTypes.string,
       })
-    ).isRequired,
+    ),
     header: PropTypes.shape({
       title: PropTypes.string,
     }),
@@ -157,7 +157,7 @@ class DynamicContentGrid extends PureComponent {
 
   renderItemMobile = (item, i) => {
     const { link = "", url = "",promotion_name = "", image_url = "",label = ""} = item;
-    const { index } = this.props;
+    const { index, isMsiteMegaMenu } = this.props;
     let ht = this.props.item_height?.toString() + "px";
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -165,6 +165,7 @@ class DynamicContentGrid extends PureComponent {
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const promotionName = label ? label : promotion_name;
     const imageUrl = image_url ? image_url : url;
+    const imageStyle = isMsiteMegaMenu ? { maxWidth: "193px", maxHeight: "83px", borderRadius: "10px"} : {};
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
@@ -177,7 +178,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={index === 34 ? false : true} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
+          <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
 
           {item.footer && (
             <div block="Footer">

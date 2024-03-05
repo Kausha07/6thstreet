@@ -1,0 +1,85 @@
+.brand-selection-directory-main-container {
+    font-family: "Aviner Next";
+    padding-left: 10px;
+    .Brands {
+        &-Heading {
+            font-family: 'Avenir Next';
+            font-size: 18px;
+            font-weight: 600;
+            color: #606060;
+        }
+    }
+    .brands-list-alphabetically-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .Brands {
+                display: flex;
+                flex-direction: column;
+                padding-top: 60px;
+                position: sticky;
+                position: -webkit-sticky;
+                top: 153px;
+                height: 80vh;
+                overflow: scroll;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                &-isVisible {
+                    position: fixed;
+                }
+                &-FixScroll{
+                    position: sticky;
+                    position: -webkit-sticky;
+                    width: 261px;
+                    top: 153px;
+                    height: 80vh;
+                    overflow: scroll;
+                    -webkit-overflow-scrolling: touch;
+                    -ms-overflow-style: -ms-autohiding-scrollbar;
+                    &::-webkit-scrollbar {
+                      display: none;
+                    }
+                }
+            &-LetterButton {
+                height: 15px;
+                font-size:12px;
+                font-weight: 500;
+                padding: 0px 0px;
+                font-family: 'Avenir Next';
+                color: #000000;
+                line-height: 11px;
+                opacity: 0.8;
+            }
+        }
+
+        .Brand {
+            h3 {
+                font-family: 'Avenir Next';
+                font-size: 26px;
+                font-weight: 400;
+                opacity: 0.8;
+            }
+
+            .BrandLink {
+                font-weight: 400;
+                font-size:15px;
+                padding: 10px 0px;
+                font-family: 'Avenir Next';
+                margin-left: 0px;
+            }
+
+            .horizatal-line {
+                width: 90vw;
+                height: 1px;
+                background-color: darkgray;
+            }
+        }
+    }
+    .BrandLink {
+        display: flex;
+        flex-direction: column;
+    }
+}

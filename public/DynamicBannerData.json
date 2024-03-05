@@ -1,0 +1,131 @@
+{
+  "data": [
+    {
+      "key": "menu",
+      "label": "Menu",
+      "link": "/?idx=enterprise_magento_en_bh_products",
+      "design": {
+        "background_color": "",
+        "text_color": ""
+      },
+      "data": [
+        {
+          "type": "banner",
+          "image_url": "https://s3-alpha-sig.figma.com/img/6fbc/9851/667540c2aa8e81b6b816b96bf5f61a29?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=cJE5q15joj~dnhgVfTAi5xngCLDzW~RWKgDXR6f~cvkJFb29sVa46uaH6uGNGW40zS7rKEBKbqGy9Xa2x5ICM7qQQD7Y4LrrWf5viYDUpOn9lfU-hE5mbsQMQjGvKoXTcZmdEIz9wW8P9F6QnA~GgXqAhML0u4zBde~vOQ~N7gnQYz1FWZWTJQZCCbGZHBGS7BQL3FpEDZFSahHQag6EAAoZskIV79UhWPNV4qnDJcZYq9FSjOFGS3QcSKVIBf~FPMGpudebKBX1ojt3kvJL8ZRCEVWz3hS3yLvsfdy9ejz0FdvFLfD3CVyEE66QjZDrAGfbKsH7cioJlomKqEjzfg__",
+          "description": "love is in the air",
+          "link": "https://en-ae-stage.6tst.com/catalogsearch/result/?q=adidias&qid=cbb3a8e0303527db32a69041672d7778&p=0&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1",
+          "button_label": "Shop The Valentine’s Edit >"
+        },
+        {
+          "type": "grid",
+          "title": "Shop Now",
+          "items": [
+            {
+              "image_url": "https://s3-alpha-sig.figma.com/img/7d99/4921/9b1efb21533d747a94f359a6f6439b5c?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=X2ZKFGj45JiZ0sV2V0TYW6oQZnxZHBoCql35SntKbol8BOdWSNOONLNZAoxraadmR6U3FsmGUfW2VMVeOYrAHiwnjS~rI2fiLf3jTVSWsOCP~iwYy7qEABrPz4mHherczDsYMMOJji9YFYgeXuDc5M7AWCZcmCkCwgNtFoE6sh-zPLuoCagionm-hDgioGhAODiVz8LUbPs56I5jLlpFgc7ijTRoQTVHi51baEEF8PF2l7OKSc0eg9E0~svXYRpTlqqba3oRRgLncjH7lWf~oNaUas0thiYbn8nGAwwTF1fmun7oEJZYm4kcBGxJSGvhmlcgq5WHCIX4PVEoDB8mYA__",
+              "label": "Brands",
+              "link": "//catalogsearch/result/?q=Tommy+Hilfiger&qid=41b8cae6659d1a65d9fb276a9abf11bc&p=0&dFR%5Bbrand_name%5D%5B0%5D=Tommy+Hilfiger%2CTommy+Jeans&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
+              "itemName": "Brands"
+            },
+            {
+              "image_url": "https://via.placeholder.com/111x136",
+              "label": "New In",
+              "link": "/catalogsearch/result/?q=Aldo&qid=1c24752e5fed8b2747e9c735aaca1e56&p=0&dFR%5Bbrand_name%5D%5B0%5D=Aldo%2CAldo+Accessories&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
+              "itemName": "New In"
+            },
+            {
+                "image_url": "https://via.placeholder.com/111x136",
+                "label": "outlet",
+                "link": "/catalogsearch/result/?q=Aldo&qid=1c24752e5fed8b2747e9c735aaca1e56&p=0&dFR%5Bbrand_name%5D%5B0%5D=Aldo%2CAldo+Accessories&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
+                "itemName": "outlet"
+              },
+              {
+                "image_url": "https://via.placeholder.com/111x136",
+                "label": "New In",
+                "link": "/catalogsearch/result/?q=Aldo&qid=1c24752e5fed8b2747e9c735aaca1e56&p=0&dFR%5Bbrand_name%5D%5B0%5D=Aldo%2CAldo+Accessories&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
+                "itemName": "New In"
+              },
+              {
+                "image_url": "https://via.placeholder.com/111x136",
+                "label": "outlet",
+                "link": "/catalogsearch/result/?q=Aldo&qid=1c24752e5fed8b2747e9c735aaca1e56&p=0&dFR%5Bbrand_name%5D%5B0%5D=Aldo%2CAldo+Accessories&dFR%5Bgender%5D%5B0%5D=Men&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bsort%5D%5B0%5D=latest&idx=enterprise_magento_english_products",
+                "itemName": "outlet"
+              }
+          ],
+          "button": {
+            "link": "/?idx=enterprise_magento_en_bh_products",
+            "plp_title": "Shop Now"
+          }
+        }
+      ]
+    },
+    {
+      "key": "brand",
+      "label": "Brand",
+      "link": "/?idx=enterprise_magento_en_bh_products",
+      "design": {
+        "background_color": "",
+        "text_color": ""
+      },
+      "data": [
+        {
+          "type": "grid",
+          "title": "Grid ",
+          "items": [
+            {
+              "itemName": "Home-SBC-Payday-Sandals",
+              "link": "/women/shoes/sandals.html?q=Women+Shoes+Sandals&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Sandals&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Block+Heels%2CHeels%2CKitten+Heels%2CMules%2CPlatforms%2CPumps%2CStilettos&dFR%5BcategoryIds%5D%5B0%5D=15794%2C6448%2C15524%2C15774%2C19145%2C19144%2C19146&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Sandals"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Dresses",
+              "link": "/women/clothing/dresses.html?q=Women+Clothing+Dresses&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Clothing+%2F%2F%2F+Dresses&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bprice.AED.default%5D%5B0%5D=gte23%2Clte299&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Dresses"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Abayas",
+              "link": "/women/clothing/arabic-clothing.html?q=Women+Clothing+Arabic+Clothing&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Clothing+%2F%2F%2F+Arabic+Clothing&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Abayas"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Bags",
+              "link": "/women/bags.html?q=Women+Bags&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Bags&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Belt+Bags%2CClutches%2CCross+Body+Bags%2CHandheld+Bags%2CHobo+Bags%2CMini+Bags%2CSatchel+Bags%2CShoulder+Bags%2CTote+Bags&dFR%5BcategoryIds%5D%5B0%5D=10705%2C16032%2C10700%2C16410%2C10701%2C10704%2C10699%2C10697%2C10698&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Bags"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Shoes",
+              "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Loafers+%26+Mocassins%2CAnkle+Boots%2CCalf+Boots%2CChelsea+Boots%2CKnee+High+Boots%2CRain+Boots%2CLace-up%2CSlip-ons%2CLace-up+shoes%2CMary+Janes%2COxfords%2CMules%2CHiking+Shoes%2CTrail+Shoes%2CWalking+Shoes%2CRunning+Shoes%2CTraining+Shoes%2CBlock+Heels%2CFlat+Sandals%2CGladiators%2CHeels%2CKitten+Heels%2CMules%2CPlatforms%2CPumps%2CStilettos%2CWedge+Sandals%2CBallerinas%2CEspadrilles%2CLace+Up%2CLoafers+%26+Moccasins%2CPeeptoe%2CPumps%2CHigh+Top%2CLow+Top%2CMid+Top%2CBasketball%2CFootball+Shoes%2CRunning+Shoes%2CTennis+Shoes%2CTraining+Shoes%2CWalking+Shoes%2CBallerinas&dFR%5BcategoryIds%5D%5B0%5D=20%2C15789%2C15790%2C15792%2C15791%2C19147%2C16491%2C15526%2C19162%2C19161%2C19164%2C3670%2C10310%2C10311%2C10313%2C10304%2C10305%2C15794%2C15793%2C19143%2C6448%2C15524%2C15774%2C19145%2C19144%2C19146%2C6447%2C15786%2C15788%2C16338%2C6446%2C15787%2C15892%2C10301%2C10297%2C10299%2C10308%2C10307%2C19152%2C10309%2C19153%2C19151&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Shoes"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Clothing",
+              "link": "/women/clothing.html?q=Women+Clothing&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Clothing&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bin_stock%5D%5B0%5D=1&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Clothing"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Sports Shoes",
+              "link": "/women/shoes/sports-shoes.html?q=Women+Shoes+Sports+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Sports+Shoes&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bin_stock%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Sports Shoes"
+            },
+            {
+              "itemName": "Home-SBC-Payday-Deals",
+              "link": "/store/campaign?idx=enterprise_magento_english_products",
+              "image_url": "https://placehold.co/193x83",
+              "label": "Deals"
+            }
+          ],
+          "button": {
+            "link": "/?idx=enterprise_magento_en_bh_products",
+            "plp_title": "Grid"
+          }
+        }
+      ]
+    }
+  ]
+}

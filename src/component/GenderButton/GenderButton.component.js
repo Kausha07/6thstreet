@@ -2,6 +2,7 @@ import Link from "@scandipwa/scandipwa/src/component/Link/Link.component";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { MixType } from "Type/Common";
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 import "./GenderButton.style";
 
@@ -62,7 +63,23 @@ class GenderButton extends PureComponent {
         </Link>
       );
     }
-
+   if(isMsiteMegaMenuRoute()) {
+      return <>
+         {icon ? icon : <></>}
+          <button
+          mix={mix}
+          name={label}
+          block="GenderButton"
+          elem="Button"
+          mods={{ isCurrentGender, isUnsetStyle }}
+          onClick={onGenderClick}
+          onMouseEnter={onGenderEnter}
+          onMouseLeave={onGenderLeave}
+        >
+          {label}
+        </button>
+      </>
+   }
     return (
       <Link
         block="GenderButton"
