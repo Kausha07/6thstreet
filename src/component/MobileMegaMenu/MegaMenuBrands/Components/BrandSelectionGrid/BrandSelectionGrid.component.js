@@ -1,29 +1,22 @@
-import { useState, useEffect } from "react";
 import DynamicContentGrid from "Component/DynamicContentGrid";
 import "./BrandSelectionGrid.style.scss";
-const BrandSelectionGrid = () => {
-  const [brandsGridData, setBrandGridData] = useState([]);
-
-  useEffect(() => {
-    getBrandsSelectionGridData();
-  },[])
-  const getBrandsSelectionGridData = async() => {
-    const respone = await fetch("http://localhost:3001/brands");
-    const data = await respone.json();
-    const finalBrandsdata = data?.data[1]?.data || [];
-    setBrandGridData(finalBrandsdata);
-  }
+const BrandSelectionGrid = (props) => {
+  const refinedBrandSelectionGridData =
+    props?.BrandSelectionGridData?.[0] || {};
 
   return (
     <div block="brand-selection-grid-container">
-      <DynamicContentGrid
-        brandGridItem = {brandsGridData[0]?.items}
-        items_per_row={2}
-        type={brandsGridData?.type}
-        isHomePage={true}
-        widgetID={brandsGridData?.type}
-        isMsiteMegaMenu={true}
-      />
+      {refinedBrandSelectionGridData &&
+      Object.keys(refinedBrandSelectionGridData)?.length > 0 ? (
+        <DynamicContentGrid
+          brandGridItem={refinedBrandSelectionGridData?.items}
+          items_per_row={2}
+          type={refinedBrandSelectionGridData?.type}
+          isHomePage={true}
+          widgetID={refinedBrandSelectionGridData?.type}
+          isMsiteMegaMenu={true}
+        />
+      ) : null}
     </div>
   );
 };

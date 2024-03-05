@@ -1,14 +1,15 @@
 import Image from "Component/Image";
 import Link from "Component/Link";
+import Loader from "Component/Loader";
+import { isArabic } from "Util/App";
 import "./MegaMenuNestedCategoriesList.style.scss";
-const MegaMenuNestedCategoriesList = ({ nestedCategoiresList = [] }) => {
-  const renderCategoriesList = (item = [],index) => {
-    const {
-      label = "",
-      link = "",
-      image = "",
-      promotion_name = "",
-    } = item;
+const MegaMenuNestedCategoriesList = ({
+  isLoading,
+  nestedCategoiresList = [],
+}) => {
+  const renderCategoriesList = (item = {}, index) => {
+    const { label = "", link = "", image = "", promotion_name = "" } = item;
+    const isArabicValue = isArabic();
 
     return (
       <li>
@@ -29,7 +30,9 @@ const MegaMenuNestedCategoriesList = ({ nestedCategoiresList = [] }) => {
                   : "megamenu-nested-categoires-list"
               }
             />
-            <div block="categoryLabel">{label}</div>
+            <div block="categoryLabel" mods={{ isArabicValue }}>
+              {label}
+            </div>
           </div>
         </Link>
       </li>
@@ -37,11 +40,12 @@ const MegaMenuNestedCategoriesList = ({ nestedCategoiresList = [] }) => {
   };
 
   return (
-    <div block="nested-categories-list-container">{
-        nestedCategoiresList?.map((item)=>{
-          return renderCategoriesList(item)
-        })
-    }</div>
+    <div block="nested-categories-list-container">
+      <Loader isLoading={isLoading} />
+      {nestedCategoiresList && Object.keys(nestedCategoiresList)?.length > 0
+        ? renderCategoriesList(nestedCategoiresList)
+        : null}
+    </div>
   );
 };
 

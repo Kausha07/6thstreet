@@ -179,10 +179,25 @@ class HeaderSearch extends PureComponent {
     }
   };
 
+  getPlaceholderText = () => {
+    const {mobileMegaMenuPageOpenFlag = ""} = this.props;
+    if(isMobile.any() || isMobile.tablet()) {
+      if(window.location.pathname !== "/" && mobileMegaMenuPageOpenFlag && mobileMegaMenuPageOpenFlag === "megamenu") {
+        return "Search for Categories";
+      } else if(window.location.pathname !== "/" && mobileMegaMenuPageOpenFlag && mobileMegaMenuPageOpenFlag === "menu-brands") {
+        return "Search for Brands";
+      } else {
+        return "What are you looking for?";
+      } 
+    } else {
+      return "Search for items, brands, inspiration and styles";
+    }
+  }
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP, mobileMegaMenuPageOpenFlag = "" } =
       this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
+    const  modifiedPlaceholderText = this.getPlaceholderText(); 
     return (
       <>
         <Form
@@ -199,11 +214,7 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={
-              isMobile.any() || isMobile.tablet()
-                ? __("What are you looking for?")
-                : __("Search for items, brands, inspiration and styles")
-            }
+            placeholder={__(modifiedPlaceholderText)}
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}

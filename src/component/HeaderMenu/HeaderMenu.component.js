@@ -17,7 +17,7 @@ class HeaderMenu extends PureComponent {
     gender: PropTypes.string.isRequired,
     activeOverlay: PropTypes.string.isRequired,
     setGender: PropTypes.func.isRequired,
-    is_msite_megamenu_enabled:PropTypes.boolean,
+    is_msite_megamenu_enabled:PropTypes.bool,
   };
 
   state = {
@@ -43,7 +43,7 @@ class HeaderMenu extends PureComponent {
   }
 
   onCategoriesClick = () => {
-    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled } =
+    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled, setMobileMegaMenuPageOpenFlag } =
       this.props;
 
     if (gender === "home_beauty_women" || gender === "influencer") {
@@ -58,27 +58,29 @@ class HeaderMenu extends PureComponent {
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
 
-    if (gender !== "all") {
-      if(is_msite_megamenu_enabled) {
-        browserHistory.push(
-          `/${"megamenu"}`
-        );
+    if(is_msite_megamenu_enabled) {
+      if(window.location?.pathname?.includes("brands-menu")) {
+        setMobileMegaMenuPageOpenFlag("menu-brands");
       }else {
-        browserHistory.push(
-          `/${
+        setMobileMegaMenuPageOpenFlag("megamenu");
+      }
+    }
+
+    if (gender !== "all") {
+      browserHistory.push(
+        `/${
             gender === "home_beauty_women" || gender === "influencer"
               ? "women"
               : gender
-          }.html`
+        }.html`
         );
-      }
     }
   };
 
   renderMenu() {
-    const { newMenuGender } = this.props;
+    const { newMenuGender, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
 
-    return <Menu newMenuGender={newMenuGender} />;
+    return <Menu newMenuGender={newMenuGender} setMobileMegaMenuPageOpenFlag={setMobileMegaMenuPageOpenFlag} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>;
   }
 
   renderCategoriesButton() {
@@ -101,6 +103,7 @@ class HeaderMenu extends PureComponent {
   }
 
   render() {
+    console.log("test kiran headerMenu", this.props);
     return (
       <div block="HeaderMenu">
         {this.renderCategoriesButton()}

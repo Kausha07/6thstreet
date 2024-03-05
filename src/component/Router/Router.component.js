@@ -40,6 +40,7 @@ const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Rou
 const VuePLP = lazy(() => import(/* webpackChunkName: 'VuePLP' */ "Route/VuePLP/VuePLP.component"));
 const LiveExperience = lazy(() => import(/* webpackChunkName: 'LiveExperience' */ "Route/LiveExperience"));
 const MobileMegaMenu = lazy(() => import(/* webpackChunkName: 'MobileMegaMenu' */ "Route/MobileMegaMenu/MobileMegaMenu.component"));
+const MegaMenuBrands = lazy(() => import(/* webpackChunkName: 'MegaMenuBrands'*/ "Route/MegaMenuBrands/MegaMenuBrands.component"))
 const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
 const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
 const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
@@ -346,6 +347,19 @@ export class Router extends SourceRouter {
         />
       ),
       position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("/:gender?/brands-menu")}
+          render={(props) => (
+            <GTMRouteWrapper route={BRANDS}>
+              {this.props?.is_msite_megamenu_enabled ? <MegaMenuBrands {...props} />: <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 90,
     },
     {
       component: (

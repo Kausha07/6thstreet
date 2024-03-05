@@ -791,13 +791,14 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderSearch = () => {
-    const { displaySearch } = this.props;
+    const { displaySearch,mobileMegaMenuPageOpenFlag } = this.props;
     const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     let isPDP = this.isPDP();
+    console.log("test kiran this.props", this.props,mobileMegaMenuPageOpenFlag)
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
-        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible, isPDP }}>
+        <div block={`${mobileMegaMenuPageOpenFlag ? "HeaderSearchMegaMenuSection" : "HeaderSearchSection"}`} mods={{ isPDPSearchVisible, isPDP }}>
           <HeaderSearch
             key="search"
             isPLP={this.isPLP() && showPLPSearch}
@@ -806,6 +807,7 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
+            mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}
           />
         </div>
       );

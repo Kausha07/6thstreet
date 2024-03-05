@@ -18,6 +18,7 @@ import {
   TYPE_NOTFOUND,
 } from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
 import isMobile from "Util/Mobile";
 import "./Header.style";
 
@@ -27,12 +28,15 @@ export const mapStateToProps = (state) => {
     gender: state.AppState.gender,
     isLive: state.LiveParty.isLive,
     is_live_party_enabled: state.AppConfig.is_live_party_enabled,
+    mobileMegaMenuPageOpenFlag: state.CategoriesListReducer.mobileMegaMenuPageOpenFlag,
   };
 };
 export const mapDispatchToProps = (dispatch) => ({
   resetProduct: () => PDPDispatcher.resetProduct({}, dispatch),
   showPDPSearch: (displaySearch) =>
     PDPDispatcher.setPDPShowSearch({ displaySearch }, dispatch),
+  setMobileMegaMenuPageOpenFlag: (mobileMegaMenuPageOpenFlag) => dispatch(setMobileMegaMenuPageOpenFlag(mobileMegaMenuPageOpenFlag))
+  
 });
 export class Header extends PureComponent {
   static propTypes = {
@@ -196,6 +200,9 @@ export class Header extends PureComponent {
         changeMenuGender={this.changeMenuGender}
         newMenuGender={newMenuGender}
         pathname={pathname}
+        mobileMegaMenuPageOpenFlag={this.props?.mobileMegaMenuPageOpenFlag}
+        setMobileMegaMenuPageOpenFlag={this.props?.setMobileMegaMenuPageOpenFlag}
+        
       />
     );
   };

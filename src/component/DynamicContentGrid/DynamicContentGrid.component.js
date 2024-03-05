@@ -24,7 +24,7 @@ class DynamicContentGrid extends PureComponent {
         url: PropTypes.string,
         title: PropTypes.string,
       })
-    ).isRequired,
+    ),
     header: PropTypes.shape({
       title: PropTypes.string,
     }),

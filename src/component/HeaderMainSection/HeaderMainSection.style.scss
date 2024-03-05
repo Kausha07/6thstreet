@@ -50,6 +50,42 @@ main {
   }
 }
 
+.HeaderSearchMegaMenuSection {
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: top;
+      padding-top: 5px;
+      height: 54px;
+      top: 49px;
+    }
+
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      padding-top: 5px;
+      justify-content: center;
+      align-items: top;
+      height: 54px;
+      top: 49px;
+    }
+    .Form {
+      border-radius: 10px;
+      width: 300px;
+      background-color: var(--gray);
+      height: 39px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
 .HeaderMainSection {
   display: grid;
   justify-content: center;

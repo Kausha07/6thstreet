@@ -6,7 +6,9 @@ import { PureComponent } from "react";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Categories } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
+import MobileMegaMenu from "../../route/MobileMegaMenu";
 import "./Menu.style";
 
 class Menu extends PureComponent {
@@ -23,6 +25,7 @@ class Menu extends PureComponent {
   static propTypes = {
     categories: Categories.isRequired,
     gender: PropTypes.string.isRequired,
+    is_msite_megamenu_enabled: PropTypes.bool,
   };
 
   componentDidMount() {
@@ -70,9 +73,19 @@ class Menu extends PureComponent {
     );
   };
 
+  renderMobileMegaMenu = () => {
+    if(this.props?.setMobileMegaMenuPageOpenFlag && this.props?.mobileMegaMenuPageOpenFlag === "") {
+      this.props?.setMobileMegaMenuPageOpenFlag("megamenu")
+    }
+    return (
+      <div block="header-mobile-megamenu">
+        <MobileMegaMenu key="megamenu" />
+      </div>
+    );
+  };
+
   renderCategories() {
     const { categories = [] } = this.props;
-
     if (!Array.isArray(categories)) {
       return null;
     }
@@ -82,6 +95,7 @@ class Menu extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    const { mobileMegaMenuPageOpenFlag = "" } = this.props;
 
     return (
       <div block="Menu" elem="Container">
@@ -93,7 +107,7 @@ class Menu extends PureComponent {
               mods: { isArabic },
             }}
           >
-            <HeaderGenders isMenu={true} />
+            <HeaderGenders isMenu={true} isMobileMegaMenu={this.props?.is_msite_megamenu_enabled && isMobile.any() ? true : false} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>
           </div>
         </div>
         <div
@@ -102,7 +116,7 @@ class Menu extends PureComponent {
             mods: { isArabic },
           }}
         >
-          {this.renderCategories()}
+          {this.props?.is_msite_megamenu_enabled && isMobile.any() ? this.renderMobileMegaMenu() : this.renderCategories() }
         </div>
       </div>
     );
