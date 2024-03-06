@@ -1143,7 +1143,7 @@ export class MyAccountOverlay extends PureComponent {
               <div className="options-icon">
                 <Shipping width={25} />
               </div>
-              <span className="link-text">{__("Free delivery")}</span>
+              <span className="link-text">{__("Shipping Policy")}</span>
             </div>
             <div className="icon-forward">
               {isArabic ? <ChevronLeft /> : <ChevronRight />}
