@@ -215,7 +215,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         return {
             country_id: {
                 type: 'select',
-                label: <CountryMiniFlag label={ countryId } />,
+                label: <div style={{paddingLeft: "9px"}}> <CountryMiniFlag label={ countryId } /> </div>,
                 validation: ['notEmpty'],
                 value: countryId,
                 autocomplete: 'none',
