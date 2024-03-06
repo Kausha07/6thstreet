@@ -8,6 +8,7 @@ import FooterMain from 'Component/FooterMain';
 import FooterMiddle from 'Component/FooterMiddle';
 import FooterMobile from 'Component/FooterMobile';
 import isMobile from 'Util/Mobile';
+import { getCountryFromUrl } from "Util/Url";
 
 import './Footer.style';
 
@@ -15,6 +16,7 @@ export const mapStateToProps = (state) => {
     return {
       checkoutDetails: state.CartReducer.checkoutDetails,
       isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+      config: state.AppConfig.config,
     };
   };
 
@@ -66,7 +68,16 @@ export class Footer extends PureComponent {
 
         const { isCheckout , isMobile, hidefooter} = this.state;
 
-        const {checkoutDetails,isClubApparelEnabled}= this.props
+        const {
+          checkoutDetails,
+          isClubApparelEnabled,
+          config: { countries = {} },
+        } = this.props;
+        const countryCode = getCountryFromUrl();
+        const isTamaraEnable = countries[countryCode]?.isTamaraEnable || false;
+        const tabbyRange = countries[countryCode]?.tabby_range || {};
+        const isTabbyEnable = tabbyRange.min || tabbyRange.max ? true : false;
+
         if (footer_cms) {
             return <CmsBlock identifier={ footer_cms } />;
         }
@@ -87,7 +98,11 @@ export class Footer extends PureComponent {
                 <FooterMiddle
                   handleFooterIsAccountOpen={ this.handleFooterIsAccountOpen }
                 />
-                <FooterBottom isClubApparelEnabled={isClubApparelEnabled} />
+                <FooterBottom 
+                    isClubApparelEnabled={isClubApparelEnabled} 
+                    isTamaraEnable={isTamaraEnable}
+                    isTabbyEnable={isTabbyEnable}
+                />
                 <FooterMobile isClubApparelEnabled={isClubApparelEnabled}/>
             </>
         );

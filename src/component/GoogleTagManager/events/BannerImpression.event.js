@@ -81,6 +81,7 @@ class BannerImpressionEvent extends BaseEvent {
     );
 
     let promoName = [], promoID = [], promoIndex = [];
+    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
 
     formattedImpressions.forEach((item) => {
       promoName.push(item?.name);
@@ -97,6 +98,8 @@ class BannerImpressionEvent extends BaseEvent {
           promotions: formattedImpressions,
         },
       },
+      gender: currentAppState?.gender?.toLowerCase(),
+      banner_type: impressions[0]?.has_video ? "video" : "image"
     });
     const MoeEventType =
       EVENT_TYPE == "promotionImpression"
@@ -104,7 +107,6 @@ class BannerImpressionEvent extends BaseEvent {
         : EVENT_TYPE == "promotionClick"
           ? EVENT_MOE_PROMOTION_CLICK
           : null;
-    const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
     const currentPageType = this.getPageType() || "";
 
     if (document.readyState == ("complete" || "interactive")) {
@@ -119,6 +121,8 @@ class BannerImpressionEvent extends BaseEvent {
           : "",
         screen_name: currentPageType,
         app6thstreet_platform: "Web",
+        gender: currentAppState?.gender?.toLowerCase(),
+        banner_type: impressions[0]?.has_video ? "video" : "image"
       });
     }
   }

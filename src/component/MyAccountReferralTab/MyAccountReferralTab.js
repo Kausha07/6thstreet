@@ -170,7 +170,9 @@ export default function MyAccountReferralTab() {
               )}
             </li>
             <li>
-              {__("Earned store credit will remain valid for one year from the date of issuance")}
+              {__(
+                "Earned store credit will remain valid for one year from the date of issuance"
+              )}
             </li>
             <li>
               {__("Users cannot use their own referral code to place an order")}

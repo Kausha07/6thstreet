@@ -6,6 +6,8 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Menu from "Component/Menu";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import browserHistory from "Util/History";
+import categorySVG from "Component/MobileBottomBar/icons/categories.svg";
+import categoryActiveSVG from "Component/MobileBottomBar/icons/categories-active.svg";
 
 import "./HeaderMenu.style";
 
@@ -59,10 +61,9 @@ class HeaderMenu extends PureComponent {
 
     if (gender !== "all") {
       browserHistory.push(
-        `/${
-          gender === "home_beauty_women" || gender === "influencer"
-            ? "women"
-            : gender
+        `/${gender === "home_beauty_women" || gender === "influencer"
+          ? "women"
+          : gender
         }.html`
       );
     }
@@ -86,6 +87,15 @@ class HeaderMenu extends PureComponent {
         }}
         onClick={this.onCategoriesClick}
       >
+        <div className={`nav-bar-item-button ${expanded ? 'selected' : ''} `}>
+          <img className="nav-bar-item-icon"
+            src={expanded
+              ? categoryActiveSVG
+              : categorySVG}
+            alt="Wishlist" width={24} height={24} />
+          <div className={`nav-bar-item-label ${expanded ? 'selected' : ''}`}>
+            {__("Categories")}</div>
+        </div>
         {!this.props.isMobileBottomBar && (
           <label htmlFor="Categories">{__("Categories")}</label>
         )}

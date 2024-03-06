@@ -14,7 +14,8 @@ import mastercard from "./icons/mastercard.svg";
 import visa from "./icons/visa.svg";
 import Image from "Component/Image";
 import mada from "./icons/mada.svg";
-
+import { tamaraLogo } from "Component/Icons";
+import tabbyLogo from "Component/CheckoutPayment/icons/tabby_preferred.png"
 import "./FooterBottom.style";
 
 class FooterBottom extends PureComponent {
@@ -142,6 +143,28 @@ class FooterBottom extends PureComponent {
           src={mada}
           alt="mada"
         />
+        {this.props?.isTamaraEnable && (
+          <Image
+            lazyLoad={true}
+            mix={{
+              block: "FooterBottom",
+              elem: "PaymentIcons-tamara",
+            }}
+            src={tamaraLogo}
+            alt="tamaraLogo"
+          />
+        )}
+        {this.props?.isTabbyEnable && (
+          <Image
+            lazyLoad={true}
+            mix={{
+              block: "FooterBottom",
+              elem: "PaymentIcons-tabby",
+            }}
+            src={tabbyLogo}
+            alt="tabbyLogo"
+          />
+        )}
       </div>
     );
   }
