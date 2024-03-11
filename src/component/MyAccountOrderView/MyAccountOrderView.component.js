@@ -1043,7 +1043,7 @@ class MyAccountOrderView extends PureComponent {
         }
         return this.renderCardPaymentType();
       case EXCHANGE_STORE_CREDIT:
-        return this.renderPaymentTypeText(__("Exchange Store Credit"));
+        return this.renderPaymentTypeText(__("Exchange My Cash"));
       case "free":
         if (
           this.props?.order?.club_apparel_amount &&
@@ -1051,7 +1051,7 @@ class MyAccountOrderView extends PureComponent {
         ) {
           return this.renderPaymentTypeText(__("Club Apparel"));
         } else if (store_credit_amount !== 0) {
-          return this.renderPaymentTypeText(__("Store Credit"));
+          return this.renderPaymentTypeText(__("My Cash"));
         }
         return;
       case KNET_PAY:
@@ -1160,7 +1160,7 @@ class MyAccountOrderView extends PureComponent {
                 }
               )}
             {store_credit_amount !== 0
-              ? this.renderPriceLine(store_credit_amount, __("Store Credit"), {
+              ? this.renderPriceLine(store_credit_amount, __("My Cash"), {
                   isStoreCredit: true,
                 })
               : null}
