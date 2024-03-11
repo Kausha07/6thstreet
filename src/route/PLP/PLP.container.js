@@ -46,6 +46,7 @@ import {
   updatePLPInitialFilters,
   setPrevPath,
   setBrandurl,
+  setColourVarientsButtonClick,
 } from "Store/PLP/PLP.action";
 
 import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -116,6 +117,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
   setLastTapItemOnHome: (item) => dispatch(setLastTapItemOnHome(item)),
   setBrandurl: (brand_url) => dispatch(setBrandurl(brand_url)),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+  setColourVarientsButtonClick: (colourVarientsButtonClick) =>
+    dispatch(setColourVarientsButtonClick(colourVarientsButtonClick)),
 });
 
 export class PLPContainer extends PureComponent {
@@ -387,7 +390,7 @@ export class PLPContainer extends PureComponent {
 
   componentDidMount() {
     const { menuCategories = [], prevPath = null,
-      impressions, catalogue_from_algolia } = this.props;
+      impressions, catalogue_from_algolia, setColourVarientsButtonClick, } = this.props;
     this.setState({ categoryloaded: true });
     this.props.setPrevPath(prevPath);
     const category = this.getCategory();
@@ -414,6 +417,8 @@ export class PLPContainer extends PureComponent {
     catalogue_from_algolia
       ? this.getBrandDetailsByAloglia()
       : this.getBrandDetailsByCatalogueApi()
+    
+    setColourVarientsButtonClick(false);
   }
 
   getCategory() {

@@ -383,7 +383,7 @@ class ProductItem extends PureComponent {
       };
     }
 
-    if (promotion !== undefined) {
+    if (promotion !== undefined && promotion !== "") {
       return promotion !== null ? (
         <span block="PLPSummary" elem="ExclusiveMobile" style={TagStyle}>
           {" "}
