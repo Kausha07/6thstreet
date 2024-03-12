@@ -128,7 +128,9 @@ export function ExpiringSoon() {
     <>
       <div className="ExpiringSoonContainer">
         <div className="ExpiringSoon">
-          <div>{/* <img src={InfoIcon} /> */}</div>
+          <div className="InfoIcon">
+            <img src={InfoIcon} />
+          </div>
           <div className="ExpiringText">
             My Cash Balance of AED 30 expires in
             <span className="Days">2 Days </span>
@@ -166,7 +168,7 @@ export function CollapsableComponent() {
       <div className="CollapsableComponent">
         <div className="Heading">
           <div>What is Wallet?</div>
-          <button onClick={() => setIsExpanded(true)}>
+          <button onClick={() => setIsExpanded(!isExpanded)}>
             <img src={GoDownArrow} />
           </button>
         </div>

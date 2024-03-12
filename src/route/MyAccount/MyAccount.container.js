@@ -125,7 +125,7 @@ export const tabMap = {
   },
   [MY_WALLET]: {
     url: "/my-wallet",
-    name: __("My wallet"),
+    name: __("My Wallet"),
     className: "WalletTabLink",
   },
   [REFERRAL_SCREEN]: {

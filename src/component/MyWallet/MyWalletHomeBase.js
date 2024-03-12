@@ -18,11 +18,15 @@ export default function MyWalletHomeBase() {
   const [currentScreen, setCurrentScreen] = useState("home");
   return (
     <>
-      <CollapsableComponent />
-      <EarnedCashReward />
       <div>
         {currentScreen === "home" && (
-          <MyWalletHome setCurrentScreen={setCurrentScreen} />
+          <>
+            <MyWalletHome setCurrentScreen={setCurrentScreen} />
+            <CollapsableComponent />
+            <CollapsableComponent />
+            <CollapsableComponent />
+            <EarnedCashReward />
+          </>
         )}
       </div>
       <div>

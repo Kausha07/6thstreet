@@ -5,6 +5,7 @@ import CashRefundIcon from "./../IconsAndImages/CashRefundIcon.svg";
 import WalletIcon from "./../IconsAndImages/WalletIcon.svg";
 import test4 from "./../IconsAndImages/test4.svg";
 import GoRightIcon from "./../IconsAndImages/GoRightIcon.svg";
+import WalletMainIcon from "./../IconsAndImages/WalletMainIcon.svg";
 import isMobile from "Util/Mobile";
 
 import "./MyWalletHome.style.scss";
@@ -14,7 +15,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
 
   return (
     <div className="">
-      <h2 className="TopHeading"> {__("My Wallet")}</h2>
+      {/* <h2 className="TopHeading"> {__("My Wallet")}</h2> */}
       <div
         className={
           isMobileValue
@@ -23,9 +24,13 @@ export default function MyWalletHome({ setCurrentScreen }) {
         }
       >
         <div className="WalletMainTop">
+          <div className="SlantBackground"></div>
           <div className="TotalBalance">
             <div className="Heading">{__("Total Available Balance")}</div>
-            <div className="Amount">{__("AED 100")}</div>
+            <div className="Amount">{__("AED 60")}</div>
+          </div>
+          <div className="WalletIcon">
+            <img src={WalletMainIcon} />
           </div>
         </div>
         <div className="WalletMainTwo">
