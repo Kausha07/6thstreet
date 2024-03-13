@@ -17,11 +17,15 @@ import isMobile from "Util/Mobile";
 import "./MyWalletHome.style.scss";
 
 export default function MyWalletHome({ setCurrentScreen }) {
+  const ACTION_TYPE_ORDER = "1";
+  const ACTION_TYPE_RETURN = "2";
+  const ACTION_TYPE_REWARD = "3";
   const isMobileValue = isMobile.any() || isMobile.tablet();
   const [isLoading, setIsLoading] = useState(false);
   const [promotionalBalance, setPromotionalBalance] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [transactionBalance, setTransactionBalance] = useState(null);
+  const [allTransactionHistory, setAllTransactionHistory] = useState(null);
 
   const fetchWalletBalance = async () => {
     try {
@@ -38,13 +42,30 @@ export default function MyWalletHome({ setCurrentScreen }) {
     }
   };
 
+  const fetchTransactionHistory = async () => {
+    try {
+      setIsLoading(true);
+      //type can be eaither all/transactional/promotional
+      const type = "all";
+      const page = 1;
+      const limit = 3;
+      const responseHistory = await getTransactionHistory(type, page, limit);
+      if (responseHistory && responseHistory.success) {
+        setAllTransactionHistory(responseHistory?.data);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchWalletBalance();
   }, []);
 
-  // useEffect(() => {
-  //   getTransactionHistory();
-  // }, []);
+  useEffect(() => {
+    fetchTransactionHistory();
+  }, []);
 
   // useEffect(() => {
   //   getRewardsDetails();
@@ -134,72 +155,88 @@ export default function MyWalletHome({ setCurrentScreen }) {
               {__("View all")}
             </button>
           </div>
-          <div className="transactionPill">
-            <div className="date">24 Jan 2024</div>
-            <div className="WalletLink">
-              <div className="LinkImgText">
-                <div className="Icon">
-                  <img src={OrderBagIcon} />
-                </div>
-                <div>
-                  <div className="LinkHeading">Order placed</div>
-                  <div className="LinkSubHeading">Order#502814663</div>
-                  <div className="LinkDetails">
-                    My Cash: -AED70, My Rewards:-AED30
-                  </div>
-                </div>
-              </div>
-              <div className="AmountExchange Deducted">-AED 100</div>
-            </div>
-          </div>
-          <hr className="HoriRow" />
-          <div className="transactionPill">
-            <div className="date">24 Jan 2024</div>
-            <div className="WalletLink">
-              <div className="LinkImgText">
-                <div className="Icon">
-                  <img src={CashRefundIcon} />
-                </div>
-                <div>
-                  <div className="LinkHeading">Refund</div>
-                  <div className="LinkSubHeading">Expires: 25 JAN 2025</div>
-                </div>
-              </div>
-              <div className="AmountExchange Added">+AED 100</div>
-            </div>
-          </div>
-          <hr className="HoriRow" />
-          <div className="transactionPill">
-            <div className="date">24 Jan 2024</div>
-            <div className="WalletLink">
-              <div className="LinkImgText">
-                <div className="Icon">
-                  <img src={CashRefundIcon} />
-                </div>
-                <div>
-                  <div className="LinkHeading">Refund</div>
-                  <div className="LinkSubHeading">Expires: 1 JAN 2025</div>
-                </div>
-              </div>
-              <div className="AmountExchange Added">+AED 100</div>
-            </div>
-          </div>
-          {/* <div className="transactionPill">
-            <div className="date">24 Jan 2024</div>
-            <div className="WalletLink">
-              <div className="LinkImgText">
-                <div>
-                  <img src={CashRefundIcon} />
-                </div>
-                <div>
-                  <div>Order placed</div>
-                  <div>Order#502814663</div>
-                  <div>Earned from return/cancel order</div>
-                </div>
-              </div>
-              <div className="AmountExchange Deducted">-AED 100</div>
-            </div>
-          </div> */}
+
+          {allTransactionHistory?.history.map((transaction) => {
+            return (
+              <>
+                {transaction.action == ACTION_TYPE_ORDER && (
+                  <>
+                    <div className="transactionPill">
+                      <div className="date">{transaction.created_at}</div>
+                      <div className="WalletLink">
+                        <div className="LinkImgText">
+                          <div className="Icon">
+                            <img src={OrderBagIcon} />
+                          </div>
+                          <div>
+                            <div className="LinkHeading">Order placed</div>
+                            <div className="LinkSubHeading">
+                              Order#{transaction.order_id}
+                            </div>
+                            {/* <div className="LinkDetails">
+                              My Cash: -AED70, My Rewards:-AED30
+                            </div> */}
+                          </div>
+                        </div>
+                        <div className="AmountExchange Deducted">
+                          {transaction.balance}
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="HoriRow" />
+                  </>
+                )}
+                {transaction.action == ACTION_TYPE_RETURN && (
+                  <>
+                    <div className="transactionPill">
+                      <div className="date">{transaction.created_at}</div>
+                      <div className="WalletLink">
+                        <div className="LinkImgText">
+                          <div className="Icon">
+                            <img src={CashRefundIcon} />
+                          </div>
+                          <div>
+                            <div className="LinkHeading">Refund</div>
+                            {/* <div className="LinkSubHeading">
+                              Expires: {transaction.expires_at}
+                            </div> */}
+                          </div>
+                        </div>
+                        <div className="AmountExchange Added">
+                          {transaction.balance}
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="HoriRow" />
+                  </>
+                )}
+                {transaction.action == ACTION_TYPE_REWARD && (
+                  <>
+                    <div className="transactionPill">
+                      <div className="date">{transaction.created_at}</div>
+                      <div className="WalletLink">
+                        <div className="LinkImgText">
+                          <div className="Icon">
+                            <img src={CashRefundIcon} />
+                          </div>
+                          <div>
+                            <div className="LinkHeading">Reward</div>
+                            <div className="LinkSubHeading">
+                              Expires: {transaction.expires_at}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="AmountExchange Added">
+                          {transaction.balance}
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="HoriRow" />
+                  </>
+                )}
+              </>
+            );
+          })}
         </div>
       </div>
       <div>
