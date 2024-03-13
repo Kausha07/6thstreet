@@ -1,3 +1,9 @@
+import { useState, useEffect } from "react";
+import {
+  getWalletBalance,
+  getTransactionHistory,
+  getRewardsDetails,
+} from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
 import referralIcon from "./../IconsAndImages/referralIcon.svg";
 import MyRewardsIcon from "./../IconsAndImages/MyRewardsIcon.svg";
 import OrderBagIcon from "./../IconsAndImages/OrderBagIcon.svg";
@@ -12,10 +18,40 @@ import "./MyWalletHome.style.scss";
 
 export default function MyWalletHome({ setCurrentScreen }) {
   const isMobileValue = isMobile.any() || isMobile.tablet();
+  const [isLoading, setIsLoading] = useState(false);
+  const [promotionalBalance, setPromotionalBalance] = useState(null);
+  const [totalBalance, setTotalBalance] = useState(null);
+  const [transactionBalance, setTransactionBalance] = useState(null);
+
+  const fetchWalletBalance = async () => {
+    try {
+      setIsLoading(true);
+      const responseBalance = await getWalletBalance();
+      if (responseBalance && responseBalance.success) {
+        setPromotionalBalance(responseBalance?.data?.promotional_balance);
+        setTotalBalance(responseBalance?.data?.total_balance);
+        setTransactionBalance(responseBalance?.data?.transaction_balance);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletBalance();
+  }, []);
+
+  // useEffect(() => {
+  //   getTransactionHistory();
+  // }, []);
+
+  // useEffect(() => {
+  //   getRewardsDetails();
+  // }, []);
 
   return (
     <div className="">
-      {/* <h2 className="TopHeading"> {__("My Wallet")}</h2> */}
       <div
         className={
           isMobileValue
@@ -27,7 +63,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
           <div className="SlantBackground"></div>
           <div className="TotalBalance">
             <div className="Heading">{__("Total Available Balance")}</div>
-            <div className="Amount">{__("AED 60")}</div>
+            <div className="Amount">{totalBalance}</div>
           </div>
           <div className="WalletIcon">
             <img src={WalletMainIcon} />
@@ -50,7 +86,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
               className="GoTo"
               onClick={() => setCurrentScreen("my-cash")}
             >
-              <div className="Amount">AED 30</div>
+              <div className="Amount">{promotionalBalance}</div>
               <div className="RightIcon">
                 <img src={GoRightIcon} />
               </div>
@@ -72,7 +108,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
               className="GoTo"
               onClick={() => setCurrentScreen("rewards")}
             >
-              <div className="Amount">AED 30</div>
+              <div className="Amount">{transactionBalance}</div>
               <div className="RightIcon">
                 <img src={GoRightIcon} />
               </div>
