@@ -16,6 +16,9 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { isMsiteMegaMenuBrandsRoute } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 export const mapStateToProps = (state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
@@ -67,6 +70,36 @@ export class HeaderSearchContainer extends PureComponent {
     return null;
   };
 
+  brandRecentSearch = (brandSearchQuery) => {
+  const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
+
+    if (brandSearchQuery.trim()) {
+      let recentSearches =
+      JSON.parse(localStorage.getItem("brandRecentSearches"))?.[gender] || [];
+
+      let tempRecentSearches = [];
+      if (recentSearches) {
+        tempRecentSearches = [...recentSearches.reverse()];
+      }
+      tempRecentSearches = tempRecentSearches.filter(
+        (item) =>
+          item.name.toUpperCase().trim() !== brandSearchQuery.toUpperCase().trim()
+      );
+      if (tempRecentSearches.length > 4) {
+        tempRecentSearches.shift();
+        tempRecentSearches.push({
+          name: brandSearchQuery,
+        });
+      } else {
+        tempRecentSearches.push({ name: brandSearchQuery });
+      }
+      localStorage.setItem(
+        "brandRecentSearches",
+        JSON.stringify({[gender]:tempRecentSearches.reverse()})
+      );
+    }
+  }
+
   async onSearchSubmit() {
     const { history, indexCodeRedux } = this.props;
     const { search } = this.state;
@@ -102,6 +135,10 @@ export class HeaderSearchContainer extends PureComponent {
             }
       );
       if (productData?.nbHits !== 0 && productData?.data.length > 0) {
+        const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+        if(isBrandsMenu){
+          this.brandRecentSearch(search);
+        }
         this.logRecentSearch(search);
         const eventData = { search: search, indexCodeRedux: indexCodeRedux };
         Event.dispatch(EVENT_GTM_SEARCH, eventData);

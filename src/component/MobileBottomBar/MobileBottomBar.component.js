@@ -250,7 +250,7 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   renderBrand() {
-    const { history } = this.props;
+    const { history, setMobileMegaMenuPageOpenFlag } = this.props;
     const { isBrand, redirectBrand, isCategoryMenu } = this.state;
 
     if (redirectBrand) {
@@ -266,6 +266,7 @@ class MobileBottomBar extends NavigationAbstract {
     return (
       <button
         onClick={() => {
+          setMobileMegaMenuPageOpenFlag("");
           this.routeChangeBrand();
           this.sendMoeEvents(EVENT_MOE_BRANDS_TAB_ICON);
         }}
@@ -301,7 +302,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderWishlist() {
     const { isBottomBar, isWishlist, isCategoryMenu } = this.state;
 
-    const { isSignedIn } = this.props;
+    const { isSignedIn, setMobileMegaMenuPageOpenFlag } = this.props;
 
     const popup_source = "Wishlist";
     this.setState({
@@ -318,6 +319,7 @@ class MobileBottomBar extends NavigationAbstract {
         <div
           onClick={() => {
             onClickHandle();
+            setMobileMegaMenuPageOpenFlag("");
             this.sendMoeEvents(EVENT_MOE_WISHLIST_TAB_ICON);
             {
               !isSignedIn ? this.sendPopupEvent(popup_source) : null;
@@ -391,6 +393,7 @@ class MobileBottomBar extends NavigationAbstract {
       <div key="account">
         <button
           onClick={() => {
+            setMobileMegaMenuPageOpenFlag("");
             onClickHandle();
             this.sendMoeEvents(EVENT_ACCOUNT_TAB_ICON);
             sendGTMEvent();
