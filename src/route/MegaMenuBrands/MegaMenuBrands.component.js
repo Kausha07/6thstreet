@@ -18,7 +18,7 @@ const MegaMenuBrands = (props) => {
   const BrandSelectionGridData = props?.megaMenuBannerAndDynamicSliderData?.[1]?.data || [];
   console.log('test megamenuBrands', BrandSelectionGridData, gender);
   return (
-    <div block="megamenu-brands-main-container">
+    <div block="megamenu-brands-main-container" id="megamenu-brands-main-container-id">
       <BrandSelectionGrid BrandSelectionGridData={BrandSelectionGridData}/>
       <BrandSelectionDirectoryList gender={props?.gender}/>
     </div>

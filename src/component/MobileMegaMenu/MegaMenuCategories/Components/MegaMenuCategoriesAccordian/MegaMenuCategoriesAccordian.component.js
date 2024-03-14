@@ -31,8 +31,9 @@ const MegaMenuCategoriesAccordion = (props) => {
   const [clickedIndex, setClickedIndex] = useState(null);
   const [isScrolledToTop, setIsScrolledToTop] = useState(false);
   const [previousScrollPosition, setPreviousScrollPosition] = useState(0);
+  const [clickedRefValue, setClickedRefValue] = useState(null);
   const isArabicValue = isArabic();
-  const ScrollerRef = useRef(null);
+  let ScrollerRef = useRef(null);
   const { requestMegaMenuCategoriesList, gender, data = [] } = props;
   useEffect(() => {
     const locale = getLocaleFromUrl();
@@ -55,17 +56,10 @@ const MegaMenuCategoriesAccordion = (props) => {
     );
   };
 
-  const handleScroll = () => {
-    setPreviousScrollPosition(ScrollerRef.current?.scrollTop);
-  };
-
-  const handleNestedCategoriesShowList = (index) => {
+  const handleNestedCategoriesShowList = (index, divRef) => {
     setClickedIndex((prevIndex) => (prevIndex === index ? null : index));
-    if (ScrollerRef && ScrollerRef.current) {
-      var headerOffset = 200;
-      const currentScroll = window.scrollY || window.pageYOffset;
-      const bannerTop = ScrollerRef?.current?.getBoundingClientRect()?.top + currentScroll - headerOffset;
-      window.scrollTo({     top: bannerTop,     behavior: 'smooth'  });
+    if (divRef) {
+      window.scrollTo(0,divRef?.offsetTop);
     }
   };
   const renderMegaMenuCategoriesLists = (item, index) => {
@@ -81,11 +75,10 @@ const MegaMenuCategoriesAccordion = (props) => {
     return (
       <ul
         block="megamenucategoryList-container"
-        key={index}
-        ref={ScrollerRef} 
-        onScroll={handleScroll}
+        key={index+1}
+        ref={ScrollerRef.current[index+1]}
       >
-        <div block="megaMenuCategoryList" id="" onClick={() => handleNestedCategoriesShowList(index)}>
+        <div block="megaMenuCategoryList" id="" onClick={() => handleNestedCategoriesShowList(index, ScrollerRef.current[index+1])}>
           <div block="megaMenuContentBlock" mods={{isArabicValue}}>
             <div block="megeMenuCategoriesHeader" mods={{isArabicValue}}>
               <h3>{truncate(label,17)}</h3>

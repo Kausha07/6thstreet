@@ -14,6 +14,7 @@ import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper"
 import "./DynamicContentGrid.style";
 
 class DynamicContentGrid extends PureComponent {
@@ -91,7 +92,9 @@ class DynamicContentGrid extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setLastTapItemOnHome(`DynamicContentGrid${index}`);
+    if(!isMsiteMegaMenuBrandsRoute()) {
+      this.props?.setLastTapItemOnHome(`DynamicContentGrid${index}`) ;
+    }
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);

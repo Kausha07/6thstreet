@@ -12,12 +12,9 @@ const BrandSelectionDirectoryList = (props) => {
   const [fixWindow, setFixWindow] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("mousewheel", handleScroll);
-  },[])
-
-  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('mousewheel', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     }
   },[])
  
@@ -72,9 +69,10 @@ const BrandSelectionDirectoryList = (props) => {
   }
 
   const handleScroll = (e) => {
-    let k = document.getElementById("brand-selection-directory-main-container-id")
+    let k = document.getElementById("megamenu-brands-main-container-id");
+    let gridKvalue = document.getElementById("brand-selection-grid-container-id");
     if (k) {
-      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) < window.pageYOffset) {
+      if ((k.offsetHeight - (document.body.offsetHeight - gridKvalue?.offsetHeight) + 50) < window.pageYOffset) {
         if (!fixWindow) {
           setFixWindow(true);
           onFixWindowMethod(e)
@@ -82,7 +80,7 @@ const BrandSelectionDirectoryList = (props) => {
 
 
       }
-      if ((k.offsetHeight - (document.body.offsetHeight - 155) + 50) > window.pageYOffset) {
+      if ((k.offsetHeight - (document.body.offsetHeight - gridKvalue?.offsetHeight) + 50) > window.pageYOffset) {
         if (fixWindow) {
           setFixWindow(false);
           onNotFixWindow(e)
@@ -90,15 +88,10 @@ const BrandSelectionDirectoryList = (props) => {
 
       }
 
-      if (window.pageYOffset > 95) {
-        if (!fixFilter) {
+      if (window.pageYOffset > gridKvalue?.offsetHeight) {
           setFixFilter(true);
-        }
-      }
-      else {
-        if (fixFilter) {
-          setFixFilter(false);
-        }
+      }else {
+        setFixFilter(false);
       }
     }
   }
@@ -139,14 +132,15 @@ const BrandSelectionDirectoryList = (props) => {
   }
   const onBrandLetterClick = (key) => {
     if (alphabetRefs?.current?.[key]) {
-      alphabetRefs?.current?.[key].scrollIntoView({ top:"100px", behavior: "smooth"});
+      window.scrollTo(0, alphabetRefs?.current?.[key].offsetTop);
+      handleScroll();
     }
   };
   const renderLetterSelector = () => {
     const { brands = [] } = props;
  
     return (
-      <div block="Brands" elem={fixFilter ? "FixScroll" : "Scroll"} id="brands-letter-filter-scroll">
+      <div block="Brands" elem={fixFilter ? "FixScroll" : "Scroll"} mods={{isArabicValue}} id="brands-letter-filter-scroll">
         {brands.map(([key]) => (
           <button
             key={key}
