@@ -5,7 +5,7 @@ const BrandSelectionGrid = (props) => {
     props?.BrandSelectionGridData?.[0] || {};
 
   return (
-    <div block="brand-selection-grid-container">
+    <div block="brand-selection-grid-container" id="brand-selection-grid-container-id">
       {refinedBrandSelectionGridData &&
       Object.keys(refinedBrandSelectionGridData)?.length > 0 ? (
         <DynamicContentGrid

@@ -39,8 +39,6 @@ const renderImage = (item) => {
             ratio="custom"
             alt={description ? description : ""}
           />
-          {renderButton()}
-          {renderDescription(description, button_label)}
         </>
       );
     }
@@ -64,8 +62,6 @@ const renderImage = (item) => {
           }
         />
 
-        {renderButton()}
-        {renderDescription(description, button_label)}
       </Link>
     );
   };
