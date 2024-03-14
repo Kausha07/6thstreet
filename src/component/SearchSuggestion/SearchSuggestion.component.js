@@ -12,8 +12,7 @@ import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   getGenderInArabic,
   getHighlightedText,
-  getBrandSuggetions,
-} from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 // import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
@@ -43,7 +42,7 @@ import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
 import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
-import { isMsiteMegaMenuBrandsRoute } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 
 var ESCAPE_KEY = 27;
 
