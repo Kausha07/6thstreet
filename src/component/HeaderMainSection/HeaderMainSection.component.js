@@ -798,7 +798,7 @@ class HeaderMainSection extends NavigationAbstract {
     console.log("test kiran this.props", this.props,mobileMegaMenuPageOpenFlag)
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
-        <div block={`${mobileMegaMenuPageOpenFlag ? "HeaderSearchMegaMenuSection" : "HeaderSearchSection"}`} mods={{ isPDPSearchVisible, isPDP }}>
+        <div block="HeaderSearchSection" mods={{ isPDPSearchVisible, isPDP }}>
           <HeaderSearch
             key="search"
             isPLP={this.isPLP() && showPLPSearch}

@@ -12,7 +12,8 @@ import DragScroll from "Component/DragScroll/DragScroll.component";
 import {
   getGenderInArabic,
   getHighlightedText,
-} from "Util/API/endpoint/Suggestions/Suggestions.create";
+  getBrandSuggetions,
+} from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 // import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
@@ -40,6 +41,9 @@ import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
+import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuBrandsRoute } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 
 var ESCAPE_KEY = 27;
 
@@ -241,6 +245,37 @@ class SearchSuggestion extends PureComponent {
     this.props.closeSearch();
   };
 
+  brandRecentSearch = (brandSearchQuery) => {
+    const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
+
+    if (brandSearchQuery.trim()) {
+        let recentSearches =
+        JSON.parse(localStorage.getItem("brandRecentSearches"))?.[gender] || [];
+
+      let tempRecentSearches = [];
+      if (recentSearches) {
+        tempRecentSearches = [...recentSearches.reverse()];
+      }
+      tempRecentSearches = tempRecentSearches.filter(
+        (item) =>
+          item.name.toUpperCase().trim() !== brandSearchQuery.toUpperCase().trim()
+      );
+      if (tempRecentSearches.length > 4) {
+        tempRecentSearches.shift();
+        tempRecentSearches.push({
+          name: brandSearchQuery,
+        });
+      } else {
+        tempRecentSearches.push({ name: brandSearchQuery });
+      }
+      localStorage.setItem(
+        "brandRecentSearches",
+        JSON.stringify({[gender]:tempRecentSearches.reverse()})
+
+      );
+    }
+  }
+
   logRecentSearches = (search) => {
     let recentSearches =
       JSON.parse(localStorage.getItem("recentSearches")) || [];
@@ -268,6 +303,11 @@ class SearchSuggestion extends PureComponent {
   // common function for top search, recent search, query suggestion search.
   onSearchQueryClick = (search) => {
     const { closeSearch, setPrevPath } = this.props;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+
+    if(isBrandsMenu){
+      this.brandRecentSearch(search);
+    }
     this.logRecentSearches(search);
     setPrevPath(window.location.href);
     closeSearch();
@@ -367,6 +407,34 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderMobileQuerySuggestion = (querySuggestion) => {
+    const { name = "", name_ar= "", objectID= "", url_path= "" } = querySuggestion;
+    const { searchString= "" } = this.props;
+    const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
+
+    return (
+      <li>
+        <Link
+          to={{
+            pathname: `/${url_path}.html?q=${encodeURIComponent(
+              name
+            )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+              name
+            )}&dFR[gender][0]=${capitalizeFirstLetter(
+              requestedGender(gender)
+            )}&dFR[in_stock][0]=${1}`
+          }}
+          key={i}
+          onClick={() => this.onSearchQueryClick(name, gender, url_path)}
+        >
+          <div className="suggestion-details-box">
+            {getHighlightedText(name, searchString)}
+          </div>
+        </Link>
+      </li>
+    );
+  }
+
   renderQuerySuggestion = (querySuggestions, i) => {
     const { query, label, indexCodeRedux } = querySuggestions;
     const { searchString, products = [] } = this.props;
@@ -436,8 +504,31 @@ class SearchSuggestion extends PureComponent {
     return <li>{suggestionContent()}</li>;
   };
 
-  renderQuerySuggestions() {
-    const { querySuggestions = [] } = this.props;
+  renderQuerySuggestions(isMegaMenu = false) {
+    const { 
+      querySuggestions = [],
+      isMsiteMegamenuEnabled,
+      megaMenuBrands = {},
+      searchString= "",
+     } = this.props;
+    const typeSuggetions = getBrandSuggetions(megaMenuBrands, searchString )
+
+    if(isMegaMenu) {
+      return (
+        <div block="SearchSuggestion" elem="Item"
+          className={
+            isMsiteMegamenuEnabled && isMegaMenu ? "newSearchSuggestionMsite" : ""
+          }
+        >
+          {typeSuggetions?.length > 0 ? (
+            <ul>
+              {typeSuggetions?.slice(0, 5).map(this.renderMobileQuerySuggestion)}
+            </ul>
+          ) : null}
+        </div>
+      );
+    }
+
     return (
       <div block="SearchSuggestion" elem="Item">
         {querySuggestions?.length > 0 ? (
@@ -574,8 +665,20 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderSuggestions() {
-    const { products = [],querySuggestions, suggestionEnabled = false } = this.props;
+    const {
+      products = [],
+      querySuggestions,
+      suggestionEnabled = false,
+    } = this.props;
     let isRecommended = products.length === 0 && querySuggestions.length === 1;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+
+    if (isMobile && isBrandsMenu) {
+      return (
+        <>{suggestionEnabled ? this.renderQuerySuggestions(true) : null}</>
+      );
+    }
+
     return (
       <>
         {suggestionEnabled ? this.renderQuerySuggestions(): null}
@@ -989,6 +1092,28 @@ class SearchSuggestion extends PureComponent {
   };
 
   renderEmptySearch() {
+    const { isArabic, isMobile } = this.state;
+    const {
+      recentSearches = [],
+      trendingBrands = [],
+      recentSearchesBrands = [],
+      isMsiteMegamenuEnabled,
+    } = this.props;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+
+    if (isBrandsMenu && isMobile && isMsiteMegamenuEnabled) {
+      return (
+        <>
+          <MobileRecentSearches
+            isArabic={isArabic}
+            recentSearches={recentSearches}
+            trendingBrands={trendingBrands}
+            recentSearchesBrands={recentSearchesBrands}
+          />
+        </>
+      );
+    }
+
     return (
       <>
         {this.renderRecentSearches()}

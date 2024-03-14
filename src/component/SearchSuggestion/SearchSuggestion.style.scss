@@ -47,6 +47,7 @@
     scrollbar-width: none;
     @include mobile {
       top: 103px;
+      // top: 143px;
     }
     @include before-desktop {
       height: 100%;
@@ -686,4 +687,12 @@
 
 .text-capitalize {
   text-transform: capitalize;
+}
+
+.newSearchSuggestionMsite {
+  @include mobile {
+    ul li {
+      font-size: 15px !important;
+    }
+  }
 }
