@@ -51,6 +51,7 @@ export const mapStateToProps = (state) => ({
   IsReferralEnabled: state.AppConfig.IsReferralEnabled,
   isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
   IsVipCustomerEnabled: state.AppConfig.isVIPEnabled,
+  isWalletEnabled: state.AppConfig.isWalletV1Enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -185,6 +186,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     config: Config.isRequired,
     IsReferralEnabled: PropTypes.bool,
     isClubApparelEnabled: PropTypes.bool,
+    isWalletEnabled: PropTypes.bool,
   };
 
   static defaultProps = {

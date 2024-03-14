@@ -321,10 +321,15 @@ export class MyAccount extends SourceMyAccount {
       IsReferralEnabled,
       isClubApparelEnabled,
       IsVipCustomerEnabled,
+      isWalletEnabled,
     } = this.props;
     const isVipCustomer =
       (IsVipCustomerEnabled && customer && customer?.vipCustomer) || false;
     const { pathname = "" } = location;
+
+    if (!isWalletEnabled) {
+      delete tabMap[MY_WALLET];
+    }
 
     let newTabMap = is_exchange_enabled
       ? {
@@ -443,6 +448,7 @@ export class MyAccount extends SourceMyAccount {
       isClubApparelEnabled,
       IsVipCustomerEnabled,
       history: { location },
+      isWalletEnabled,
     } = this.props;
     const { isArabic, isMobile } = this.state;
     const isVipCustomer =
@@ -463,6 +469,9 @@ export class MyAccount extends SourceMyAccount {
       )[0].style.background = "none";
     }
 
+    if (!isWalletEnabled) {
+      delete tabMap[MY_WALLET];
+    }
     if (!IsReferralEnabled) {
       delete tabMap[REFERRAL_SCREEN];
     }

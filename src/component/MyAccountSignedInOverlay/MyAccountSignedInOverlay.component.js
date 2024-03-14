@@ -7,6 +7,7 @@ import { ReactComponent as AccountIcon } from "Style/account.svg";
 import { isArabic } from "Util/App";
 import AddressIcon from "./icons/address.svg";
 import WalletIcon from "../../style/icons/payment.png";
+import WalletV1Icon from "../../route/MyAccount/icons/walletIcon.svg";
 import OrdersIcon from "./icons/cat-menu.svg";
 import ClubIcon from "./icons/club-apparel.png";
 import HeartIcon from "./icons/heart-regular.svg";
@@ -102,13 +103,13 @@ export class MyAccountSignedInOverlay extends PureComponent {
       <div>
         <Link
           block="MyAccountSignedInOverlay"
-          // elem="LinkAccount"
+          elem="LinkAccount"
           to="/my-account/my-wallet"
           // onClick={() => this.sendEvents(EVENT_ACCOUNT_PROFILE_CLICK)}
         >
           <Image
             lazyLoad={true}
-            src={WalletIcon}
+            src={WalletV1Icon}
             mix={{ block: "MyAccountSignedInOverlay", elem: "Image" }}
             alt={"cat-menu"}
           />
@@ -325,7 +326,12 @@ export class MyAccountSignedInOverlay extends PureComponent {
   }
 
   renderWrapper() {
-    const { customer, IsVipCustomerEnabled, isClubApparelEnabled } = this.props;
+    const {
+      customer,
+      IsVipCustomerEnabled,
+      isClubApparelEnabled,
+      isWalletEnabled,
+    } = this.props;
     const isVipCustomer =
       (customer && customer?.vipCustomer && IsVipCustomerEnabled) || false;
     return (
@@ -333,7 +339,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         {isVipCustomer && this.renderVipLink()}
         {isClubApparelEnabled && this.renderClubLink()}
         {this.renderMyAccountLink()}
-        {this.renderMyWalletLink()}
+        {isWalletEnabled && this.renderMyWalletLink()}
         {this.renderReferralLink()}
         {this.renderOrderHistoryLink()}
         {this.renderReturnAnItemLink()}
