@@ -5,7 +5,7 @@ export const getInitialState = () => ({
     categories: [],
     megaMenuBannerAndDynamicSliderData: [],
     mobileMegaMenuPageOpenFlag: "",
-    megaMenuBrands: [],
+    megaMenuBrands: {},
 });
 
 const CategoriesListReducer = (state = getInitialState(), action) => {
