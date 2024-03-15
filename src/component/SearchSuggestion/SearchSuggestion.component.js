@@ -42,7 +42,7 @@ import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
 import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
-import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions, saveBrandRecentSearch } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 
 var ESCAPE_KEY = 27;
 
@@ -244,38 +244,6 @@ class SearchSuggestion extends PureComponent {
     this.props.closeSearch();
   };
 
-  brandRecentSearch = (brandSearchQuery) => {
-    const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
-
-    if (brandSearchQuery.trim()) {
-        let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
-        let recentSearches =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
-
-      let tempRecentSearches = [];
-      if (recentSearches) {
-        tempRecentSearches = [...recentSearches.reverse()];
-      }
-      tempRecentSearches = tempRecentSearches.filter(
-        (item) =>
-          item.name.toUpperCase().trim() !== brandSearchQuery.toUpperCase().trim()
-      );
-      if (tempRecentSearches.length > 4) {
-        tempRecentSearches.shift();
-        tempRecentSearches.push({
-          name: brandSearchQuery,
-        });
-      } else {
-        tempRecentSearches.push({ name: brandSearchQuery });
-      }
-      let tempObj = {...recentSearchesObj};
-      tempObj[gender] = tempRecentSearches.reverse();
-      localStorage.setItem(
-        "brandRecentSearches",
-        JSON.stringify(tempObj)
-      );
-    }
-  }
-
   logRecentSearches = (search) => {
     let recentSearches =
       JSON.parse(localStorage.getItem("recentSearches")) || [];
@@ -306,7 +274,7 @@ class SearchSuggestion extends PureComponent {
     const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
 
     if(isBrandsMenu){
-      this.brandRecentSearch(search);
+      saveBrandRecentSearch(search);
     }
     this.logRecentSearches(search);
     setPrevPath(window.location.href);

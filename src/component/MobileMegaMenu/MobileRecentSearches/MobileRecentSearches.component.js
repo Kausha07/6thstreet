@@ -8,6 +8,7 @@ import { getCountryFromUrl } from "Util/Url";
 import {
   capitalizeFirstLetter,
   requestedGender,
+  saveBrandRecentSearch,
 } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 
 function MobileRecentSearches({ isArabic, recentSearches = [] }) {
@@ -38,40 +39,8 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
     }
   }
 
-  const brandRecentSearch = (brandSearchQuery) => {
-    if (brandSearchQuery.trim()) {
-      let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
-      let recentSearches =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
-      let tempRecentSearches = [];
-      if (recentSearches) {
-        tempRecentSearches = [...recentSearches.reverse()];
-      }
-      tempRecentSearches = tempRecentSearches.filter(
-        (item) =>
-          item.name.toUpperCase().trim() !==
-          brandSearchQuery.toUpperCase().trim()
-      );
-      if (tempRecentSearches.length > 4) {
-        tempRecentSearches.shift();
-        tempRecentSearches.push({
-          name: brandSearchQuery,
-        });
-      } else {
-        tempRecentSearches.push({ name: brandSearchQuery });
-      }
-      let tempObj = {...recentSearchesObj};
-      tempObj[gender] = tempRecentSearches.reverse();
-      localStorage.setItem(
-        "brandRecentSearches",
-        JSON.stringify(tempObj)
-      );
-    }
-  };
-
   const onSearchQueryClick = (search) => {
-    brandRecentSearch(search);
-    // setPrevPath(window.location.href);
-    // closeSearch();
+    saveBrandRecentSearch(search);
   };
 
   const renderNewRecentSearch = ({ name, link }, i) => {
