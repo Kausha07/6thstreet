@@ -58,10 +58,14 @@ const MegaMenuCategoriesAccordion = (props) => {
 
   const handleNestedCategoriesShowList = (index) => {
     setClickedIndex((prevIndex) => (prevIndex === index ? null : index));
-    if (ScrollerRef && ScrollerRef.current) {
-      if (ScrollerRef?.current?.[index]) {
-        window.scrollTo(0, ScrollerRef?.current?.[index]?.offsetTop);
-      }
+    if (ScrollerRef && ScrollerRef.current && ScrollerRef.current[index]) {
+      setTimeout(() => {
+        const element = ScrollerRef.current[index];
+        const elementRect = element.getBoundingClientRect();
+        const elementTop = elementRect.top + window.scrollY;
+        const scrollToOffset = elementTop - 100; 
+        window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
+      }, 1);
     }
   };
   const renderMegaMenuCategoriesLists = (item, index) => {
