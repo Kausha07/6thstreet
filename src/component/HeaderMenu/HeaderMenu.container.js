@@ -11,6 +11,7 @@ import HeaderMenu from "./HeaderMenu.component";
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   gender: state.AppState.gender,
+  is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -24,11 +25,13 @@ export class HeaderMenuContainer extends PureComponent {
     activeOverlay: PropTypes.string.isRequired,
     newMenuGender: PropTypes.string.isRequired,
     gender: PropTypes.string.isRequired,
+    is_msite_megamenu_enabled: PropTypes.bool,
+    setMobileMegaMenuPageOpenFlag: PropTypes.func,
   };
 
   containerProps = () => {
-    const { activeOverlay, newMenuGender, gender } = this.props;
-    return { activeOverlay, newMenuGender, gender };
+    const { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled = false,setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
+    return { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag};
   };
 
   render() {

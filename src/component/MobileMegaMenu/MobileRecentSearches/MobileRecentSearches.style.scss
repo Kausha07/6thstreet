@@ -1,0 +1,60 @@
+.SearchSuggestionNew {
+
+    .TrandingTagNew {
+        font-family: "Avenir Next";
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 51px;
+        letter-spacing: 0px;
+        text-align: center;
+
+        ul {
+            display: flex;
+        }
+
+        li {
+            margin-top: 0;
+            margin-right: 5px;
+
+            @include mobile {
+                margin-right: 5px;
+            }
+
+        }
+
+        h2 {
+            line-height: 40px;
+        }
+
+    }
+
+}
+
+
+.NewSearchSuggetions {
+    font-family: "Avenir Next";
+    font-size: 15px;
+    font-weight: 400;
+    padding: 10px 0px;
+    letter-spacing: 0px;
+}
+
+.NewRecentSearches {
+    padding: 0 20px;
+
+    h3 {
+        font-family: "Avenir Next";
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 55px;
+        letter-spacing: 0px;
+        margin-top: 0;
+        margin-bottom: 0;
+        color: #606060;
+        text-transform: uppercase;
+    }
+
+    ul li {
+        margin-top: 0px;
+    }
+}

@@ -14,6 +14,7 @@ import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper"
 import "./DynamicContentGrid.style";
 
 class DynamicContentGrid extends PureComponent {
@@ -24,7 +25,7 @@ class DynamicContentGrid extends PureComponent {
         url: PropTypes.string,
         title: PropTypes.string,
       })
-    ).isRequired,
+    ),
     header: PropTypes.shape({
       title: PropTypes.string,
     }),
@@ -91,7 +92,9 @@ class DynamicContentGrid extends PureComponent {
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setLastTapItemOnHome(`DynamicContentGrid${index}`);
+    if(!isMsiteMegaMenuBrandsRoute()) {
+      this.props?.setLastTapItemOnHome(`DynamicContentGrid${index}`) ;
+    }
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -156,27 +159,29 @@ class DynamicContentGrid extends PureComponent {
   };
 
   renderItemMobile = (item, i) => {
-    const { link, url,promotion_name, } = item;
-    const { index } = this.props;
-    let ht = this.props.item_height.toString() + "px";
+    const { link = "", url = "",promotion_name = "", image_url = "",label = ""} = item;
+    const { index, isMsiteMegaMenu } = this.props;
+    let ht = this.props.item_height?.toString() + "px";
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-
+    const promotionName = label ? label : promotion_name;
+    const imageUrl = image_url ? image_url : url;
+    const imageStyle = isMsiteMegaMenu ? { maxWidth: "193px", maxHeight: "83px", borderRadius: "10px"} : {};
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={promotionName ? promotionName : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={index === 34 ? false : true} src={url} alt={promotion_name ? promotion_name : "categoryItemsImage"}/>
+          <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
 
           {item.footer && (
             <div block="Footer">
@@ -193,13 +198,17 @@ class DynamicContentGrid extends PureComponent {
           )}
         </Link>
       </div>
-    );
-  };
+    );  };
+
 
   renderItems() {
-    const { items = [] } = this.props;
+    const { items = [], isMsiteMegaMenu = false, brandGridItem = [] } = this.props;
     if (isMobile.any()) {
-      return items.map(this.renderItemMobile);
+      if(isMsiteMegaMenu && brandGridItem && brandGridItem?.length > 0) {
+        return brandGridItem?.map(this.renderItemMobile)
+      }else {
+        return items.map(this.renderItemMobile);
+      }
     }
     return items.map(this.renderItem);
   }

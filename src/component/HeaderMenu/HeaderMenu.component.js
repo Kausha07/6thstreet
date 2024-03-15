@@ -8,6 +8,7 @@ import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSi
 import browserHistory from "Util/History";
 import categorySVG from "Component/MobileBottomBar/icons/categories.svg";
 import categoryActiveSVG from "Component/MobileBottomBar/icons/categories-active.svg";
+import isMobile from "Util/Mobile";
 
 import "./HeaderMenu.style";
 
@@ -19,6 +20,7 @@ class HeaderMenu extends PureComponent {
     gender: PropTypes.string.isRequired,
     activeOverlay: PropTypes.string.isRequired,
     setGender: PropTypes.func.isRequired,
+    is_msite_megamenu_enabled:PropTypes.bool,
   };
 
   state = {
@@ -44,7 +46,7 @@ class HeaderMenu extends PureComponent {
   }
 
   onCategoriesClick = () => {
-    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome } =
+    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled, setMobileMegaMenuPageOpenFlag } =
       this.props;
 
     if (gender === "home_beauty_women" || gender === "influencer") {
@@ -59,20 +61,26 @@ class HeaderMenu extends PureComponent {
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
 
-    if (gender !== "all") {
-      browserHistory.push(
-        `/${gender === "home_beauty_women" || gender === "influencer"
-          ? "women"
-          : gender
-        }.html`
-      );
+    if(is_msite_megamenu_enabled && isMobile.any()) {
+      browserHistory.push("/megamenu");
+      setMobileMegaMenuPageOpenFlag("megamenu");
+    }else {
+      if (gender !== "all") {
+        browserHistory.push(
+          `/${
+              gender === "home_beauty_women" || gender === "influencer"
+                ? "women"
+                : gender
+          }.html`
+          );
+      }
+    };
     }
-  };
 
   renderMenu() {
-    const { newMenuGender } = this.props;
+    const { newMenuGender, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
 
-    return <Menu newMenuGender={newMenuGender} />;
+    return <Menu newMenuGender={newMenuGender} setMobileMegaMenuPageOpenFlag={setMobileMegaMenuPageOpenFlag} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>;
   }
 
   renderCategoriesButton() {
@@ -104,6 +112,7 @@ class HeaderMenu extends PureComponent {
   }
 
   render() {
+    console.log("test kiran headerMenu", this.props);
     return (
       <div block="HeaderMenu">
         {this.renderCategoriesButton()}

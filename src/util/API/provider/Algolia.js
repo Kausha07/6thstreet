@@ -130,9 +130,9 @@ export class Algolia {
     return AlgoliaSDK.searchBy(params);
   }
 
-  async getBrands(gender) {
+  async getBrands(gender, megamenuBrands = false) {
     // TODO: validate data, possible cache
-    const { data = [] } = (await AlgoliaSDK.getBrands(gender)) || {};
+    const { data = [] } = (await AlgoliaSDK.getBrands(gender, megamenuBrands)) || {};
     return data;
   }
 

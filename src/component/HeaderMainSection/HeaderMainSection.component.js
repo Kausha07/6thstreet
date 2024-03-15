@@ -48,6 +48,7 @@ import {
 import Clear from "./icons/close-black.png";
 import searchIcon from "./icons/search-black.svg";
 import { HistoryType } from "Type/Common";
+import { isMsiteMegaMenuRoute, isMsiteMegaMenuCategoriesRoute, isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
@@ -351,6 +352,9 @@ class HeaderMainSection extends NavigationAbstract {
   renderLogo() {
     const { isArabic, showPLPSearch } = this.state;
     const { changeMenuGender } = this.props;
+    if (isMsiteMegaMenuRoute() && isMobile.any()) {
+      return null;
+    }
     if (isMobile.any()) {
       if (showPLPSearch) {
         this.setMainContentPadding("150px");
@@ -406,13 +410,17 @@ class HeaderMainSection extends NavigationAbstract {
       "/influencer.html/Collection",
       "/influencer.html/Store",
     ];
-    if (this.isPDP() && isMobile.any()) {
+    if (
+      (this.isPDP() ||
+      isMsiteMegaMenuCategoriesRoute()) &&
+      isMobile.any()
+    ) {
       return null;
     }
     return this.isPLP() ||
       this.isPDP() ||
       showPLPSearch ||
-      pathNamesIncludesArrow.includes(location.pathname) ? (
+      pathNamesIncludesArrow.includes(location.pathname) || isMsiteMegaMenuBrandsRoute() ? (
       <div block="BackArrow" mods={{ isArabic }} key="back">
         <button block="BackArrow-Button" onClick={history.goBack}>
           <p>{__("Back")}</p>
@@ -784,6 +792,7 @@ class HeaderMainSection extends NavigationAbstract {
           hideSearchBar={this.hideSearchBar}
           renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
+          mobileMegaMenuPageOpenFlag={this.props?.mobileMegaMenuPageOpenFlag}
           key="searchDesktop"
         />
       </div>
@@ -791,10 +800,11 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderSearch = () => {
-    const { displaySearch } = this.props;
+    const { displaySearch,mobileMegaMenuPageOpenFlag } = this.props;
     const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     let isPDP = this.isPDP();
+    const showMegaMenuHeaderSearchStyle = isMsiteMegaMenuRoute();
     if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() && !showPLPSearch ? null : (
         <div block="HeaderSearchSection" mods={{ isPDPSearchVisible, isPDP }}>
@@ -806,6 +816,8 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
+            mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}
+            showMegaMenuHeaderSearchStyle={showMegaMenuHeaderSearchStyle}
           />
         </div>
       );
