@@ -33,6 +33,7 @@ import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
+import isMobile from "Util/Mobile";
 
 const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
 const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
@@ -341,7 +342,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("megamenu")}
           render={(props) => (
             <GTMRouteWrapper route={"megamenu"}>
-              {this.props?.is_msite_megamenu_enabled ? <MobileMegaMenu {...props} /> : <NoMatch />}
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MobileMegaMenu {...props} /> : <NoMatch />}
             </GTMRouteWrapper>
           )}
         />
@@ -354,7 +355,7 @@ export class Router extends SourceRouter {
           path={withStoreRegex("brands-menu")}
           render={(props) => (
             <GTMRouteWrapper route={BRANDS}>
-              {this.props?.is_msite_megamenu_enabled ? <MegaMenuBrands {...props} />: <NoMatch />}
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MegaMenuBrands {...props} />: <NoMatch />}
             </GTMRouteWrapper>
           )}
         />

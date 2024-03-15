@@ -285,7 +285,7 @@ class MobileBottomBar extends NavigationAbstract {
       isCustomOption } = this.state;
     const language = getLanguageFromUrl();
     const country = getCountryFromUrl().toLowerCase();
-    if (bottomNavConfig[country]?.redirect_brand) {
+    if (bottomNavConfig?.[country]?.redirect_brand) {
       if (redirectBrand) {
         this.setState({ redirectBrand: false });
         return history.push("/shop-by-brands");
