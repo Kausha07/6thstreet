@@ -248,8 +248,8 @@ class SearchSuggestion extends PureComponent {
     const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
 
     if (brandSearchQuery.trim()) {
-        let recentSearches =
-        JSON.parse(localStorage.getItem("brandRecentSearches"))?.[gender] || [];
+        let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
+        let recentSearches =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
 
       let tempRecentSearches = [];
       if (recentSearches) {
@@ -267,10 +267,11 @@ class SearchSuggestion extends PureComponent {
       } else {
         tempRecentSearches.push({ name: brandSearchQuery });
       }
+      let tempObj = {...recentSearchesObj};
+      tempObj[gender] = tempRecentSearches.reverse();
       localStorage.setItem(
         "brandRecentSearches",
-        JSON.stringify({[gender]:tempRecentSearches.reverse()})
-
+        JSON.stringify(tempObj)
       );
     }
   }
