@@ -242,7 +242,7 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   renderHome() {
-    const { history } = this.props;
+    const { history, setMobileMegaMenuPageOpenFlag } = this.props;
     const { isHome, redirectHome, isCategoryMenu } = this.state;
 
     if (redirectHome) {
@@ -343,7 +343,7 @@ class MobileBottomBar extends NavigationAbstract {
                 : bottomNavConfig[country].icon}
               alt={bottomNavConfig[country].label} width={24} height={24} />
             <div className={`nav-bar-item-label ${isCustomOption ? 'selected' : ''}`}>
-              {language == 'en' ? bottomNavConfig[country].label_en : bottomNavConfig[country].label_ar}</div>
+              {language == 'en' ? bottomNavConfig[country]?.label_en : bottomNavConfig[country]?.label_ar}</div>
           </button>
         </div>
       );
@@ -351,13 +351,15 @@ class MobileBottomBar extends NavigationAbstract {
   }
 
   renderMenu() {
-    const { newMenuGender } = this.props;
+    const { newMenuGender, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
 
     return (
       <HeaderMenu
         key="menu"
         newMenuGender={newMenuGender}
         isMobileBottomBar={true}
+        setMobileMegaMenuPageOpenFlag={setMobileMegaMenuPageOpenFlag}
+        mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}
       />
     );
   }
@@ -365,7 +367,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderWishlist() {
     const { isBottomBar, isWishlist, isCategoryMenu } = this.state;
 
-    const { isSignedIn } = this.props;
+    const { isSignedIn, setMobileMegaMenuPageOpenFlag } = this.props;
 
     const popup_source = "Wishlist";
     this.setState({
@@ -382,6 +384,7 @@ class MobileBottomBar extends NavigationAbstract {
         <button
           onClick={() => {
             onClickHandle();
+            setMobileMegaMenuPageOpenFlag("");
             this.sendMoeEvents(EVENT_MOE_WISHLIST_TAB_ICON);
             {
               !isSignedIn ? this.sendPopupEvent(popup_source) : null;
@@ -427,7 +430,7 @@ class MobileBottomBar extends NavigationAbstract {
 
   renderAccount() {
     const { isBottomBar, isAccount, accountPopUp } = this.state;
-    const { location, isSignedIn, newSignUpEnabled, customer, IsVipCustomerEnabled } = this.props;
+    const { location, isSignedIn, newSignUpEnabled,customer, IsVipCustomerEnabled, setMobileMegaMenuPageOpenFlag } = this.props;
     const popup_source = "Account Icon";
 
     this.setState({ isAccount: location.pathname === "/my-account" });
@@ -461,6 +464,7 @@ class MobileBottomBar extends NavigationAbstract {
       <div key="account" className={`nav-bar-item`}>
         <button
           onClick={() => {
+            setMobileMegaMenuPageOpenFlag("");
             onClickHandle();
             this.sendMoeEvents(EVENT_ACCOUNT_TAB_ICON);
             sendGTMEvent();

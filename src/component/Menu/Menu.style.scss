@@ -31,9 +31,6 @@
                     justify-content: center;
                     width: 33.33%;
                     height: auto;
-                    &:last-child {
-                      display: none;
-                    }
 
                     .GenderButton-Button {
                         height: 30px;
@@ -41,6 +38,10 @@
                         padding: 0 4px;
                     }
                 }
+            }
+
+            .mobileMegaMenuHeaderGender {
+                top: 50px
             }
         }
 

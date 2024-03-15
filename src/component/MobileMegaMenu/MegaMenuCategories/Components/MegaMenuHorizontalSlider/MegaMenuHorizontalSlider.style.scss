@@ -1,0 +1,29 @@
+.megemenu-horizantal-slider-container {
+    margin-top: 10px;
+    .DynamicContentSliderWithLabel {
+        margin-bottom: 0px !important;
+        .SliderHelper {
+            min-width: 0px;
+        }
+    }
+    .DynamicContentSliderWithLabel img {
+        min-width: 26vw;
+        min-height: 107px;
+        border-radius: 6px;
+    }
+
+    .SliderText {
+        font-family: 'Avenir Next';
+        text-align: center;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.74px;
+        bottom: 20px;
+        position: absolute;
+        text-transform: uppercase;
+        line-height: 13px;
+        left: 10%;
+        right: 10%;
+    }
+}

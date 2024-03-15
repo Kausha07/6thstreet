@@ -17,6 +17,7 @@ import Event, {
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import {isMsiteMegaMenuRoute, isMsiteMegaMenuCategoriesRoute, isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
@@ -179,10 +180,25 @@ class HeaderSearch extends PureComponent {
     }
   };
 
+  getPlaceholderText = () => {
+    const {mobileMegaMenuPageOpenFlag = ""} = this.props;
+    if(isMobile.any() || isMobile.tablet()) {
+      if(isMsiteMegaMenuCategoriesRoute()) {
+        return "Search for Categories";
+      } else if(isMsiteMegaMenuBrandsRoute()) {
+        return "Search for Brands";
+      } else {
+        return "What are you looking for?";
+      } 
+    } else {
+      return "Search for items, brands, inspiration and styles";
+    }
+  }
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP, mobileMegaMenuPageOpenFlag = "" } =
       this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
+    const  modifiedPlaceholderText = this.getPlaceholderText(); 
     return (
       <>
         <Form
@@ -199,11 +215,7 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={
-              isMobile.any() || isMobile.tablet()
-                ? __("What are you looking for?")
-                : __("Search for items, brands, inspiration and styles")
-            }
+            placeholder={__(modifiedPlaceholderText)}
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}
@@ -239,7 +251,7 @@ class HeaderSearch extends PureComponent {
             />
           </button>
         </Form>
-        {showSearch ? (
+        {showSearch && !isMsiteMegaMenuRoute() ? (
           <div
             block="SearchSuggestion"
             elem="CloseContainer"
@@ -295,7 +307,14 @@ class HeaderSearch extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { isPDP, isPDPSearchVisible, isPLP } = this.props;
+    const { isPDP, isPDPSearchVisible, isPLP, showMegaMenuHeaderSearchStyle = false } = this.props;
+    const mobileMegaMenuStyle = showMegaMenuHeaderSearchStyle
+      ? {
+          top: "5px",
+          width: "300px",
+          left: "10%",
+        }
+      : {};
 
     return (
       <>
@@ -305,7 +324,7 @@ class HeaderSearch extends PureComponent {
             isPDP ? null : this.closeSearch();
           }}
         >
-          <div block="HeaderSearch" mods={{ isArabic, isPLP }}>
+          <div block="HeaderSearch" mods={{ isArabic, isPLP}} style={mobileMegaMenuStyle}>
             {this.renderField()}
           </div>
         </ClickOutside>

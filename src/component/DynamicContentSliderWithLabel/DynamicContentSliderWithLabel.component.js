@@ -28,7 +28,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         link: PropTypes.string,
         plp_config: PropTypes.shape({}), // TODO: describe
       })
-    ).isRequired,
+    ),
   };
 
   constructor(props) {
@@ -201,25 +201,27 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
-    const { index } = this.props;
+    const { index, megamenuType = false } = this.props;
     let banner = {
-      link: item.link,
-      promotion_name: item.promotion_name,
+      link: item?.link,
+      promotion_name: item?.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    this.props.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
+    (!megamenuType) && this.props?.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderSliderWithLabel = (item, i) => {
-    const { link, text, url, plp_config, height, width, text_align } = item;
+    const { link = "", text, url, plp_config, height, width, text_align, image_url = "",label ="" } = item;
+    const { megamenuType = false, gender = "women" } = this.props;
     const { isArabic } = this.state;
-    let parseLink = link;
-    const wd = `${width.toString()}px`;
-    const ht = `${height.toString()}px`;
+    let parseLink = megamenuType && (label === "Brands" || label === "Slider 1") ? `/brands-menu` : formatCDNLink(link);
+    const wd = `${width?.toString()}px`;
+    const ht = `${height?.toString()}px`;
+    const modifiedText = text ? text : megamenuType && label ? label : null;
     return (
       <div
         block="SliderWithLabel"
@@ -227,8 +229,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ref={this.itemRef}
         key={i * 10}
       >
-        <Link
-          to={formatCDNLink(parseLink)}
+        <a
+          href={parseLink}
           key={i * 10}
           block="SliderWithLabel"
           elem="Link"
@@ -241,15 +243,15 @@ class DynamicContentSliderWithLabel extends PureComponent {
         >
           <Image
             lazyLoad={true}
-            src={url}
+            src={megamenuType ? image_url : url}
             alt={text}
             block="Image"
             style={{ maxWidth: wd }}
           />
-        </Link>
-        {text ? (
+        </a>
+        {modifiedText ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
-            {text}
+            {modifiedText}
           </div>
         ) : null}
       </div>
@@ -450,6 +452,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
       items = [],
       trendingBrands = [],
       trendingCategories = [],
+      megeMenuHorizontalSliderData = [],
+      megamenuType = false,
       title,
     } = this.props;
     return (
@@ -471,6 +475,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
             trendingCategories.map(
               this.renderSliderWithLabelTrendingCategories
             )}
+          {megamenuType
+            ? megeMenuHorizontalSliderData?.map(this.renderSliderWithLabel)
+            : null
+          }
           {items.map(this.renderSliderWithLabel)}
           <div className="SliderHelper"></div>
         </div>
