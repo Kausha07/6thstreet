@@ -33,7 +33,7 @@ const MegaMenuCategoriesAccordion = (props) => {
   const [previousScrollPosition, setPreviousScrollPosition] = useState(0);
   const [clickedRefValue, setClickedRefValue] = useState(null);
   const isArabicValue = isArabic();
-  let ScrollerRef = useRef(null);
+  const ScrollerRef = useRef({});
   const { requestMegaMenuCategoriesList, gender, data = [] } = props;
   useEffect(() => {
     const locale = getLocaleFromUrl();
@@ -56,10 +56,12 @@ const MegaMenuCategoriesAccordion = (props) => {
     );
   };
 
-  const handleNestedCategoriesShowList = (index, divRef) => {
+  const handleNestedCategoriesShowList = (index) => {
     setClickedIndex((prevIndex) => (prevIndex === index ? null : index));
-    if (divRef) {
-      window.scrollTo(0,divRef?.offsetTop);
+    if (ScrollerRef && ScrollerRef.current) {
+      if (ScrollerRef?.current?.[index]) {
+        ScrollerRef?.current?.[index]?.scrollIntoView({ top: 130, behavior: "smooth"});
+      }
     }
   };
   const renderMegaMenuCategoriesLists = (item, index) => {
@@ -73,12 +75,14 @@ const MegaMenuCategoriesAccordion = (props) => {
     } = item;
     const isClicked = clickedIndex === index;
     return (
-      <ul
-        block="megamenucategoryList-container"
-        key={index+1}
-        ref={ScrollerRef.current[index+1]}
+      <div
+        block={`megamenucategoryList-container menu-${index}`}
+        key={`menu-${index}`}
+        ref={(ref) => (ScrollerRef.current[index] = ref)}
+        onClick={() => handleNestedCategoriesShowList(index)}
+        id={`menu-${index}`}
       >
-        <div block="megaMenuCategoryList" id="" onClick={() => handleNestedCategoriesShowList(index, ScrollerRef.current[index+1])}>
+        <div block="megaMenuCategoryList" id={index} >
           <div block="megaMenuContentBlock" mods={{isArabicValue}}>
             <div block="megeMenuCategoriesHeader" mods={{isArabicValue}}>
               <h3>{truncate(label,17)}</h3>
@@ -90,16 +94,17 @@ const MegaMenuCategoriesAccordion = (props) => {
         </div>
         {isClicked ? (
           <div block="megamenu-nested-categories-list-container">
-            {item?.item?.map((category) => (
+            {item?.item?.map((category, index) => (
               <MegaMenuNestedCategoriesList
                 nestedCategoiresList={category}
                 isLoading={props.isLoading}
                 ScrollerRef={ScrollerRef}
+                key={`listMenu-${index}`}
               />
             ))}
           </div>
         ) : null}
-      </ul>
+      </div>
     );
   };
   const nestedCatoriesList = props?.categories?.data || [];
