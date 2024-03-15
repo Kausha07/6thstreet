@@ -10,7 +10,7 @@ export class CategoriesListDispatcher {
     if(gender !== "influencer" || gender !== "home"){
       try {
         const categories = await MobileAPI.get(`/megamenu/${gender}?locale=${locale}&device=app&category_level=3`);
-        console.log("test kiran", gender)
+
         dispatch(setMegaMenuCategoriesList(categories));
       } catch (e) {
         // TODO: handle error
