@@ -242,7 +242,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
           }}
         >
           <Image
-            lazyLoad={true}
             src={megamenuType ? image_url : url}
             alt={text}
             block="Image"

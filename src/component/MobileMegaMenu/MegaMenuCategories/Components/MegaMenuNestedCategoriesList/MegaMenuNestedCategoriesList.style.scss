@@ -8,6 +8,15 @@
         height: 50px;
         padding: 0px 25px;
 
+        .Image {
+            .LazyLoad-wrapper {
+                .Image-Image {
+                    width: 40px !important;
+                    height: 100%;
+                }
+            }
+        }
+
         .categriesImage {
             width:33.33px;
             height: 26px;

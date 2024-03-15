@@ -48,7 +48,6 @@ const MegaMenuCategoriesAccordion = (props) => {
   const renderImage = (image_url = "", description = "") => {
     return (
       <Image
-        lazyLoad={true}
         src={image_url}
         block="MegamenImage"
         alt={description ? description : ""}
