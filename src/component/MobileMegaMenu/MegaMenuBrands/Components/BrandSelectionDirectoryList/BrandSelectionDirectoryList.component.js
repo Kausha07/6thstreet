@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import Loader from "Component/Loader";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
-import HeaderGenders from "Component/HeaderGenders";
 import "./BrandSelectionDirectoryList.style.scss";
 const BrandSelectionDirectoryList = (props) => {
   const [alphabet, setAlphabet] = useState("");
@@ -157,7 +156,6 @@ const BrandSelectionDirectoryList = (props) => {
  
   return (
     <div block="brand-selection-directory-main-container" id="brand-selection-directory-main-container-id">
-      <HeaderGenders isMenu={true} />
       <Loader isLoading={props?.isLoading} />
       <h2 block="Brands" elem="Heading">
         {__("A-Z Brands")}

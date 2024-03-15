@@ -21,7 +21,6 @@ const MegaMenuNestedCategoriesList = ({
         >
           <div block="nested-categories-list">
             <Image
-              lazyLoad={true}
               src={image}
               block="categriesImage"
               alt={

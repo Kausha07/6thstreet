@@ -2,8 +2,6 @@
     .Image {
         &-Image {
             @include mobile {
-                height: 157px !important;
-                object-fit: cover;
                 max-width: 100%;
             }
         }

@@ -23,7 +23,7 @@ export const mapDispatchToProps = (dispatch) => ({
 const BrandSelectionDirectoryListContainer = (props) => {
   const [brands, setBrands] = useState([]);
   const [brandMapping, setBrandMapping] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, setIsLoading } = props;
   const isArabicValue = isArabic();
   const gender = props?.gender;
 

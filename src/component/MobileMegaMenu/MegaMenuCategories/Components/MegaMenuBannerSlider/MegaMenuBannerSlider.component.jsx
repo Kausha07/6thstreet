@@ -50,13 +50,8 @@ const renderImage = (item) => {
         data-promotion-name={item.description ? item.description : ""}
       >
         <Image
-          lazyLoad={true}
           src={image_url}
           block="Image"
-          style={{
-            width: `${window.innerWidth}px`,
-            height: `${window.innerWidth / 2}px`,
-          }}
           alt={
             item.description ? item.description : "DynamicContentBannerImage"
           }
