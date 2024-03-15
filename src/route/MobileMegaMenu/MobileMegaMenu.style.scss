@@ -1,4 +1,66 @@
 .mobile-megamenu-main-container {
-    overflow-y: scroll;
-    padding : 120px 10px 106px 10px;
+  overflow-y: scroll;
+  padding: 120px 10px 80px 10px;
+}
+
+.AnimationWrapper {
+  width: 401px;
+  min-height: 157px;
+  background-image: linear-gradient(to right,
+      #e2e2e2 calc(50%),
+      #dcdcdc 50%,
+      #e6e6e6 calc(50%));
+  background-size: 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(200% + 200px);
+    bottom: 0;
+    background-image: inherit;
+    animation: move 1s linear infinite;
+  }
+}
+
+.Wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin: 20px 0px;
+
+  &-Card {
+    min-width: 111px;
+    height: 136px;
+    margin-right: 7px;
+    border-radius: 10px;
+    background-image: var(--placeholder-image);
+    background-size: var(--placeholder-size);
+    animation: var(--placeholder-animation);
+  }
+}
+
+.CategoiresAccordianWrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0px;
+
+  @include tablet {
+    min-width: 21.224vw;
+  }
+
+  @include mobile {
+    min-width: 41vw;
+  }
+
+  &-CategoiresAccordianCard {
+    width: 392px;
+    height: 110px;
+    margin: 5px 0px;
+    background-image: var(--placeholder-image);
+    background-size: var(--placeholder-size);
+    animation: var(--placeholder-animation);
+  }
 }
