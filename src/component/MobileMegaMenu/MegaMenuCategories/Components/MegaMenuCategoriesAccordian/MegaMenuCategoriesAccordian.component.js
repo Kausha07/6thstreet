@@ -60,7 +60,7 @@ const MegaMenuCategoriesAccordion = (props) => {
     setClickedIndex((prevIndex) => (prevIndex === index ? null : index));
     if (ScrollerRef && ScrollerRef.current) {
       if (ScrollerRef?.current?.[index]) {
-        ScrollerRef?.current?.[index]?.scrollIntoView({ top: 130, behavior: "smooth"});
+        window.scrollTo(0, ScrollerRef?.current?.[index]?.offsetTop);
       }
     }
   };
