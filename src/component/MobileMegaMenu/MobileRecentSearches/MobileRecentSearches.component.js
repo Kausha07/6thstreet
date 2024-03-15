@@ -13,8 +13,8 @@ import {
 function MobileRecentSearches({ isArabic, recentSearches = [] }) {
   const [trendingBrands, setTrendingBrands] = useState([]);
   const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
-  const recentSearchesBrands =
-    JSON.parse(localStorage.getItem("brandRecentSearches"))?.[gender] || [];
+  let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
+  let recentSearchesBrands =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
   const countryCode = getCountryFromUrl();
 
   async function getTrendingBrands() {
@@ -40,8 +40,8 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
 
   const brandRecentSearch = (brandSearchQuery) => {
     if (brandSearchQuery.trim()) {
-      let recentSearches =
-        JSON.parse(localStorage.getItem("brandRecentSearches"))?.[gender] || [];
+      let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
+      let recentSearches =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
       let tempRecentSearches = [];
       if (recentSearches) {
         tempRecentSearches = [...recentSearches.reverse()];
@@ -59,9 +59,11 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
       } else {
         tempRecentSearches.push({ name: brandSearchQuery });
       }
+      let tempObj = {...recentSearchesObj};
+      tempObj[gender] = tempRecentSearches.reverse();
       localStorage.setItem(
         "brandRecentSearches",
-        JSON.stringify({ [gender]: tempRecentSearches.reverse() })
+        JSON.stringify(tempObj)
       );
     }
   };
