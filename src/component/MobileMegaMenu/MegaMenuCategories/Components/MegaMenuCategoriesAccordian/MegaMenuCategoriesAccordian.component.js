@@ -10,20 +10,26 @@ import { getQueryParam } from "Util/Url";
 import { isArabic,truncate } from "Util/App";
 import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
 
+let globalGenderAccordian = "";
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   categories: state?.CategoriesListReducer?.categories,
   isLoading: state?.CategoriesListReducer?.isLoading,
+  isCategoryLoading: state?.CategoriesListReducer?.isCategoryLoading,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  setLoaderforCategory: () => {
+    CategoriesListDispatcher.setLoaderforCategory(dispatch);
+  },
   requestMegaMenuCategoriesList: (gender, locale) =>
     CategoriesListDispatcher.requestMegaMenuCategoriesList(
       gender,
       locale,
       dispatch
     ),
+    
 });
 
 const MegaMenuCategoriesAccordion = (props) => {
@@ -34,15 +40,15 @@ const MegaMenuCategoriesAccordion = (props) => {
   const [clickedRefValue, setClickedRefValue] = useState(null);
   const isArabicValue = isArabic();
   const ScrollerRef = useRef({});
-  const { requestMegaMenuCategoriesList, gender, data = [] } = props;
-  useEffect(() => {
-    const locale = getLocaleFromUrl();
-    requestMegaMenuCategoriesList(gender, locale);
-  }, []);
+  const { requestMegaMenuCategoriesList, setLoaderforCategory,  gender, data = [] } = props;
 
   useEffect(() => {
     const locale = getLocaleFromUrl();
-    requestMegaMenuCategoriesList(gender, locale);
+    if(globalGenderAccordian !==gender) {
+      globalGenderAccordian = gender;
+      setLoaderforCategory();
+      requestMegaMenuCategoriesList(gender, locale);
+    }
   }, [gender]);
 
   const renderImage = (image_url = "", description = "") => {
@@ -100,7 +106,7 @@ const MegaMenuCategoriesAccordion = (props) => {
             {item?.item?.map((category, index) => (
               <MegaMenuNestedCategoriesList
                 nestedCategoiresList={category}
-                isLoading={props.isLoading}
+                isLoading={props.isCategoryLoading}
                 ScrollerRef={ScrollerRef}
                 key={`listMenu-${index}`}
               />
@@ -113,12 +119,30 @@ const MegaMenuCategoriesAccordion = (props) => {
   const nestedCatoriesList = props?.categories?.data || [];
   return (
     <div block="megamenu-categories-accordian-container">
-      <Loader isLoading={props.isLoading} />
-      {nestedCatoriesList?.length > 0
+      {/* <Loader isLoading={props.isCategoryLoading} /> */}
+      {props.isCategoryLoading ? <div block="CategoiresAccordianWrapper">
+        <div
+          block="CategoiresAccordianWrapper"
+          elem="CategoiresAccordianCard"
+        ></div>
+        <div
+          block="CategoiresAccordianWrapper"
+          elem="CategoiresAccordianCard"
+        ></div>
+        <div
+          block="CategoiresAccordianWrapper"
+          elem="CategoiresAccordianCard"
+        ></div>
+        <div
+          block="CategoiresAccordianWrapper"
+          elem="CategoiresAccordianCard"
+        ></div>
+      </div> : nestedCatoriesList?.length > 0
         ? nestedCatoriesList.map((item, index) =>
             renderMegaMenuCategoriesLists(item, index)
           )
         : null}
+      
     </div>
   );
 };

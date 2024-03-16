@@ -2,7 +2,7 @@ import { CATEGORIES_MEGA_MENU_STATIC_FILE_KEY } from "Component/MobileMegaMenu/M
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Logger from "Util/Logger";
 
-import { setMegaMenuCategoriesList, setMegaMenuBannerAndDynmaicSliderData } from "./CategoriesList.action";
+import { setMegaMenuCategoriesList, setMegaMenuBannerAndDynmaicSliderData, setLoadingFlagTrue  } from "./CategoriesList.action";
 import MobileAPI from "Util/API/provider/MobileAPI";
 
 export class CategoriesListDispatcher {
@@ -10,7 +10,6 @@ export class CategoriesListDispatcher {
     if(gender !== "influencer" || gender !== "home"){
       try {
         const categories = await MobileAPI.get(`/megamenu/${gender}?locale=${locale}&device=app&category_level=3`);
-
         dispatch(setMegaMenuCategoriesList(categories));
       } catch (e) {
         // TODO: handle error
@@ -32,6 +31,10 @@ export class CategoriesListDispatcher {
     } catch (e) {
       Logger.log(e);
     }
+  }
+
+  setLoaderforCategory(dispatch) {
+    dispatch(setLoadingFlagTrue())
   }
 }
 
