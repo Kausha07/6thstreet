@@ -3,6 +3,7 @@ import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
 import { setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import {renderBannerAnimationShimper, renderMegaMenuAnimationShimer} from "../../component/MobileMegaMenu/Utils/MegaMenuShimers.helper"
 import MegaMenuBannerSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuBannerSlider/MegaMenuBannerSlider.component";
 import MegaMenuHorizontalSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuHorizontalSlider/MegaMenuHorizontalSlider.component";
 import MegaMenuCategoriesAccordian from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuCategoriesAccordian/MegaMenuCategoriesAccordian.component";
@@ -43,50 +44,12 @@ const MobileMegaMenu = (props) => {
     props.megaMenuBannerAndDynamicSliderData?.[0]?.data?.[0] || {};
   const HorizantalSliderInformation =
     props.megaMenuBannerAndDynamicSliderData?.[0]?.data?.[1] || [];
-  const renderBannerAnimationShimper = () => {
-    return <div block="AnimationWrapper"></div>;
-  };
-
-  const renderHorizantalSliderAnimationShimer = () => {
-    return (
-      <div block="Wrapper">
-        <div block="Wrapper" elem="Card"></div>
-        <div block="Wrapper" elem="Card"></div>
-        <div block="Wrapper" elem="Card"></div>
-        <div block="Wrapper" elem="Card"></div>
-      </div>
-    );
-  };
-
-  const renderMegaMenuCategoriesAccordianAnimationShimer = () => {
-    return (
-      <div block="CategoiresAccordianWrapper">
-        <div
-          block="CategoiresAccordianWrapper"
-          elem="CategoiresAccordianCard"
-        ></div>
-        <div
-          block="CategoiresAccordianWrapper"
-          elem="CategoiresAccordianCard"
-        ></div>
-        <div
-          block="CategoiresAccordianWrapper"
-          elem="CategoiresAccordianCard"
-        ></div>
-        <div
-          block="CategoiresAccordianWrapper"
-          elem="CategoiresAccordianCard"
-        ></div>
-      </div>
-    );
-  };
-
   const renderLoaders = () => {
     return (
       <>
         {renderBannerAnimationShimper()}
-        {renderHorizantalSliderAnimationShimer()}
-        {renderMegaMenuCategoriesAccordianAnimationShimer()}
+        {renderMegaMenuAnimationShimer("Wrapper","Card",4)}
+        {renderMegaMenuAnimationShimer("CategoiresAccordianWrapper","CategoiresAccordianCard",4)}
       </>
     );
   };
