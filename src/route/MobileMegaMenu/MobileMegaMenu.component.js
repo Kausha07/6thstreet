@@ -7,7 +7,7 @@ import MegaMenuBannerSlider from "../../component/MobileMegaMenu/MegaMenuCategor
 import MegaMenuHorizontalSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuHorizontalSlider/MegaMenuHorizontalSlider.component";
 import MegaMenuCategoriesAccordian from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuCategoriesAccordian/MegaMenuCategoriesAccordian.component";
 import "./MobileMegaMenu.style.scss";
-
+let globalGender = "";
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
@@ -30,12 +30,13 @@ export const mapDispatchToProps = (dispatch) => ({
 const MobileMegaMenu = (props) => {
   const [dynamicContent, setDynamicContent] = useState([]);
   const { requestMegaMenuBannerAndDynamicSliderData, gender } = props;
-  useEffect(() => {
-    requestMegaMenuBannerAndDynamicSliderData(gender);
-  }, []);
+
 
   useEffect(() => {
-    requestMegaMenuBannerAndDynamicSliderData(gender);
+    if(globalGender !== gender) {
+     globalGender = gender;
+      requestMegaMenuBannerAndDynamicSliderData(gender);
+    }
   }, [gender]);
 
   const BannerInformation =
