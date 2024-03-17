@@ -311,8 +311,10 @@ class HeaderSearch extends PureComponent {
     const mobileMegaMenuStyle = showMegaMenuHeaderSearchStyle
       ? {
           top: "5px",
-          width: "300px",
-          left: "10%",
+          width: "75%",
+          left: isArabic ? "15%": "8%",
+          height: "39px",
+          padding: "5px 0px 0px 0px"
         }
       : {};
 

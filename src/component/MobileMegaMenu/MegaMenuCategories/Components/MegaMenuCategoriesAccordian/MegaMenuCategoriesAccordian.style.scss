@@ -14,7 +14,7 @@
         .Image {
             .LazyLoad-wrapper {
                 .Image-Image {
-                    width: 120px !important;
+                    max-width: 120px;
                     height: 100%;
                 }
             }
@@ -42,7 +42,6 @@
                     font-size: 18px;
                     letter-spacing: 0.7px;
                     text-transform: uppercase;
-                    line-height: 15px;
                     color:#000000;
                 }
 
@@ -63,7 +62,7 @@
                         padding: 3px 6px 6px 3px;
                         margin: 0 auto;
                         transform: rotate(45deg);
-                        top: 22px;
+                        top: 18px;
                         left: 36px;
                         opacity: 0.3;
                     }
