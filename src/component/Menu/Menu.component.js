@@ -43,8 +43,7 @@ class Menu extends PureComponent {
   setNewGender = (newGender) => {
     const { currentGender } = this.state;
     if (currentGender !== newGender && newGender !== "") {
-      this.setState({ currentGender: newGender });
-      this.setState({ isDefaultCategoryOpen: true });
+      this.setState({ currentGender: newGender, isDefaultCategoryOpen: true  });
     }
   };
 

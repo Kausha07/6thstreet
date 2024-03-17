@@ -63,7 +63,7 @@ const MegaMenuCategoriesAccordion = (props) => {
         const element = ScrollerRef.current[index];
         const elementRect = element.getBoundingClientRect();
         const elementTop = elementRect.top + window.scrollY;
-        const scrollToOffset = elementTop - 100; 
+        const scrollToOffset = elementTop - 90; 
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);
     }
@@ -89,7 +89,7 @@ const MegaMenuCategoriesAccordion = (props) => {
         <div block="megaMenuCategoryList" id={index} >
           <div block="megaMenuContentBlock" mods={{isArabicValue}}>
             <div block="megeMenuCategoriesHeader" mods={{isArabicValue}}>
-              <h3>{truncate(label,17)}</h3>
+              <h3 block="categoriesL2names">{truncate(label,17)}</h3>
               <span block={`accordian${isClicked ? " active" : ""}`}></span>
             </div>
             <div block="megaMenuCategoriesDescription">{truncate(desc,28)}</div>
