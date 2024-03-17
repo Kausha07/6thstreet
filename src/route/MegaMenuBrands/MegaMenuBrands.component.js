@@ -9,14 +9,14 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   isLoading: state?.CategoriesListReducer?.isLoading,
-  megaMenuBannerAndDynamicSliderData:
-    state?.CategoriesListReducer?.megaMenuBannerAndDynamicSliderData,
+  megamenuDynmaicBannerSliderData: state?.CategoriesListReducer?.megamenuDynmaicBannerSliderData
 });
 
 const MegaMenuBrands = (props) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { gender, megamenuDynmaicBannerSliderData } = props;
   const BrandSelectionGridData =
-    props?.megaMenuBannerAndDynamicSliderData?.[1]?.data || [];
+    megamenuDynmaicBannerSliderData?.[gender]?.[1]?.data || [];
   return (
     <div
       block="megamenu-brands-main-container"

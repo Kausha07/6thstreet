@@ -13,10 +13,9 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   isLoading: state?.CategoriesListReducer?.isLoading,
-  megaMenuBannerAndDynamicSliderData:
-    state?.CategoriesListReducer?.megaMenuBannerAndDynamicSliderData,
   mobileMegaMenuPageOpenFlag:
     state.CategoriesListReducer.mobileMegaMenuPageOpenFlag,
+  megamenuDynmaicBannerSliderData: state?.CategoriesListReducer?.megamenuDynmaicBannerSliderData
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -29,21 +28,20 @@ export const mapDispatchToProps = (dispatch) => ({
     setMobileMegaMenuPageOpenFlag(mobileMegaMenuPageOpenFlag),
 });
 const MobileMegaMenu = (props) => {
-  const [dynamicContent, setDynamicContent] = useState([]);
-  const { requestMegaMenuBannerAndDynamicSliderData, gender } = props;
+  const { requestMegaMenuBannerAndDynamicSliderData, gender, megamenuDynmaicBannerSliderData } = props;
 
 
   useEffect(() => {
-    if(globalGender !== gender) {
+    if(globalGender !== gender && megamenuDynmaicBannerSliderData?.[gender]?.length === 0) {
      globalGender = gender;
       requestMegaMenuBannerAndDynamicSliderData(gender);
     }
   }, [gender]);
 
   const BannerInformation =
-    props.megaMenuBannerAndDynamicSliderData?.[0]?.data?.[0] || {};
+    megamenuDynmaicBannerSliderData?.[gender]?.[0]?.data?.[0] || {};
   const HorizantalSliderInformation =
-    props.megaMenuBannerAndDynamicSliderData?.[0]?.data?.[1] || [];
+    megamenuDynmaicBannerSliderData?.[gender]?.[0]?.data?.[1] || [];
   const renderLoaders = () => {
     return (
       <>
@@ -70,7 +68,7 @@ const MobileMegaMenu = (props) => {
       </>
     );
   };
-  console.log("test kiran loader", props.isLoading);
+
   return (
     <div block="mobile-megamenu-main-container">
       {props?.isLoading ? renderLoaders() : renderMegaMenuContent()}

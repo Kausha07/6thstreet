@@ -1,43 +1,37 @@
-import { SET_MEGAMENU_CATEGORIES_LIST,SET_MEGAMENU_BANNER_AND_DYNAMIC_SLIDER_DATA, SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG, SET_MEGAMENU_BRANDS_DATA, SET_MOBILE_MEGAMENU_CATEGORY_LOADER } from './CategoriesList.action';
+import { SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG, SET_MEGAMENU_BRANDS_DATA, SET_MOBILE_MEGAMENU_CATEGORY_LOADER, SET_MEGAMENU_CATEGORIES_DATA, SET_MEGAMENU_DYNAMIC_BANNER_SLIDER_DATA } from './CategoriesList.action';
 
 export const getInitialState = () => ({
     isLoading: true,
     isCategoryLoading: true,
     isBrandListLoading:true,
     isJSONLoading: true,
-    categories: [],
-    megaMenuBannerAndDynamicSliderData: [],
+    megaMenuCategoriesData: {
+        women: [],
+        men: [],
+        kids: [],
+    },
+    megamenuDynmaicBannerSliderData:  {
+        women: [],
+        men: [],
+        kids: [],
+    },
     mobileMegaMenuPageOpenFlag: "",
     megaMenuBrands: {},
 });
 
 const CategoriesListReducer = (state = getInitialState(), action) => {
-    const { type, categories, megaMenuBannerAndDynamicSliderData, mobileMegaMenuPageOpenFlag, megaMenuBrands } = action;
+    const { type, mobileMegaMenuPageOpenFlag, megaMenuBrands } = action;
 
     switch (type) {
-    case SET_MEGAMENU_CATEGORIES_LIST:
-        return {
-            ...state,
-            isLoading: false,
-            isCategoryLoading: false,
-            categories
-        };
-    case SET_MEGAMENU_BANNER_AND_DYNAMIC_SLIDER_DATA:
-
-        return {
-            ...state,
-            isLoading: false,
-            isJSONLoading: false,
-            megaMenuBannerAndDynamicSliderData,
-        }
-    case SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG:
+    case SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG: {
 
         return {
             ...state,
             isLoading: false,
             mobileMegaMenuPageOpenFlag
         }
-    case SET_MEGAMENU_BRANDS_DATA:
+    }
+    case SET_MEGAMENU_BRANDS_DATA:{
 
         return {
             ...state,
@@ -46,7 +40,8 @@ const CategoriesListReducer = (state = getInitialState(), action) => {
             megaMenuBrands
 
         }
-    case SET_MOBILE_MEGAMENU_CATEGORY_LOADER: 
+    }
+    case SET_MOBILE_MEGAMENU_CATEGORY_LOADER: {
         
         return {
             ...state,
@@ -56,6 +51,34 @@ const CategoriesListReducer = (state = getInitialState(), action) => {
             isJSONLoading: true,
             isLoading: true
         }
+    }
+    case SET_MEGAMENU_CATEGORIES_DATA: {
+        const { gender, data } = action.payload;
+
+        return {
+            ...state,
+            isLoading: false,
+            isCategoryLoading: false,
+            megaMenuCategoriesData: {
+              ...state.megaMenuCategoriesData,
+              [gender]: data,
+            },
+        };
+    }
+    case SET_MEGAMENU_DYNAMIC_BANNER_SLIDER_DATA: {
+        const { gender, data } = action.payload;
+
+        return {
+            ...state,
+            isLoading: false,
+            isJSONLoading: false,
+            megamenuDynmaicBannerSliderData: {
+                ...state.megamenuDynmaicBannerSliderData,
+                [gender]: data,
+            },
+        };
+    }
+
     default:
         return state;
     }
