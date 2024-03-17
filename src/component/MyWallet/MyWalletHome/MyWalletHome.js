@@ -4,6 +4,12 @@ import {
   getTransactionHistory,
   getRewardsDetails,
 } from "../../../util/API/endpoint/Wallet/Wallet.endpoint.js";
+import {
+  ACTION_TYPE_ORDER,
+  ACTION_TYPE_RETURN,
+  ACTION_TYPE_REWARD,
+  ALL_HISTORY_TYPE,
+} from "./../MyWalletConfig/MyWalletConfig.js";
 import referralIcon from "./../IconsAndImages/referralIcon.svg";
 import MyRewardsIcon from "./../IconsAndImages/MyRewardsIcon.svg";
 import OrderBagIcon from "./../IconsAndImages/OrderBagIcon.svg";
@@ -17,9 +23,6 @@ import isMobile from "Util/Mobile";
 import "./MyWalletHome.style.scss";
 
 export default function MyWalletHome({ setCurrentScreen }) {
-  const ACTION_TYPE_ORDER = "1";
-  const ACTION_TYPE_RETURN = "2";
-  const ACTION_TYPE_REWARD = "3";
   const isMobileValue = isMobile.any() || isMobile.tablet();
   const [isLoading, setIsLoading] = useState(false);
   const [promotionalBalance, setPromotionalBalance] = useState(null);
@@ -46,7 +49,7 @@ export default function MyWalletHome({ setCurrentScreen }) {
     try {
       setIsLoading(true);
       //type can be eaither all/transactional/promotional
-      const type = "all";
+      const type = ALL_HISTORY_TYPE;
       const page = 1;
       const limit = 3;
       const responseHistory = await getTransactionHistory(type, page, limit);

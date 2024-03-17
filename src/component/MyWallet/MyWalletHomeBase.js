@@ -8,7 +8,6 @@ import RewardsTransactions from "./RewardsTransactions/RewardsTransactions";
 import AllTransactions from "./AllTransactions/AllTransactions";
 import {
   TransactionHeading,
-  ExpiringSoon,
   EarnedCashReward,
   CollapsableComponent,
 } from "./HelperComponents/HelperComponents";
@@ -62,7 +61,6 @@ export default function MyWalletHomeBase() {
                   setCurrentScreen={setCurrentScreen}
                   currentScreen={currentScreen}
                 />
-                <ExpiringSoon />
                 <RewardsTransactions setCurrentScreen={setCurrentScreen} />
               </>
             )}

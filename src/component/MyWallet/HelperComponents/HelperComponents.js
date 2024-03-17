@@ -8,11 +8,11 @@ import { useState } from "react";
 
 import "./HelperComponents.style.scss";
 
-export function Cashback() {
+export function Cashback({ transaction }) {
   return (
     <>
       <div className="transactionPill">
-        <div className="date">24 Jan 2024</div>
+        <div className="date">{transaction?.created_at}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -20,22 +20,30 @@ export function Cashback() {
             </div>
             <div>
               <div className="LinkHeading">Cashback</div>
-              <div className="LinkSubHeading">Order#502814663</div>
-              <div className="LinkDetails">Expires: 25 JAN 2025</div>
+              {transaction?.order_id && (
+                <div className="LinkSubHeading">
+                  Order#{transaction?.order_id}
+                </div>
+              )}
+
+              <div className="LinkDetails">
+                Expires: {transaction?.expires_at}
+              </div>
             </div>
           </div>
-          <div className="AmountExchange Added">+AED 100</div>
+          <div className="AmountExchange Added">{transaction?.balance}</div>
         </div>
       </div>
     </>
   );
 }
 
-export function Refund() {
+export function Refund({ transaction }) {
+  console.log("test transaction", transaction);
   return (
     <>
       <div className="transactionPill">
-        <div className="date">24 Jan 2024</div>
+        <div className="date">{transaction?.created_at}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -43,21 +51,26 @@ export function Refund() {
             </div>
             <div>
               <div className="LinkHeading">Refund</div>
-              <div className="LinkDetails">Expires: 25 JAN 2025</div>
+              {transaction.expires_at && (
+                <div className="LinkDetails">
+                  Expires: {transaction.expires_at}
+                </div>
+              )}
             </div>
           </div>
-          <div className="AmountExchange Added">+AED 100</div>
+          <div className="AmountExchange Added">{transaction.balance}</div>
         </div>
       </div>
     </>
   );
 }
 
-export function OrderPlaced() {
+export function OrderPlaced({ transaction }) {
+  console.log("test transaction", transaction);
   return (
     <>
       <div className="transactionPill">
-        <div className="date">24 Jan 2024</div>
+        <div className="date">{transaction.created_at}</div>
         <div className="WalletLink">
           <div className="LinkImgText">
             <div className="Icon">
@@ -71,7 +84,7 @@ export function OrderPlaced() {
               </div> */}
             </div>
           </div>
-          <div className="AmountExchange Deducted">-AED 100</div>
+          <div className="AmountExchange Deducted">{transaction.balance}</div>
         </div>
       </div>
     </>
@@ -123,7 +136,7 @@ export function TransactionHeading({ setCurrentScreen, currentScreen }) {
   );
 }
 
-export function ExpiringSoon() {
+export function ExpiringSoon({ expiry, balance }) {
   return (
     <>
       <div className="ExpiringSoonContainer">
@@ -132,8 +145,8 @@ export function ExpiringSoon() {
             <img src={InfoIcon} />
           </div>
           <div className="ExpiringText">
-            My Cash Balance of AED 30 expires in
-            <span className="Days">2 Days </span>
+            My Cash Balance of {balance} expires in
+            <span className="Days">{expiry} Days</span>
           </div>
         </div>
       </div>
