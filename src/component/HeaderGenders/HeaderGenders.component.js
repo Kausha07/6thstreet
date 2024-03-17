@@ -193,8 +193,12 @@ class HeaderGenders extends PureComponent {
         const { isMobile, isMobileMegaMenu } = this.props;
         const megaMenuBrandsStyle = isMsiteMegaMenuRoute() ? {
           width: "100%",
-          justifyContent: "space-around",
-          top: "47px",
+          justifyContent: "space-evenly",
+          top: "30px",
+          height: "auto",
+          borderBottom: "0.6px solid #d3d3d3",
+          paddingBottom: "0px",
+          paddingTop: "40px"
         } : {};
         return (
             <div
