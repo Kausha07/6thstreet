@@ -1167,13 +1167,14 @@ class SearchSuggestion extends PureComponent {
   render() {
     const { isPDPSearchVisible, suggestionEnabled } = this.props;
     const { isArabic } = this.state;
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
     // const { isPDPSearchVisible } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div
           block="SearchSuggestion"
           elem="Content"
-          mods={{ isPDPSearchVisible }}
+          mods={{ isPDPSearchVisible, isBrandsMenu }}
         >
           {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}

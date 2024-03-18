@@ -130,6 +130,10 @@ class HeaderSearch extends PureComponent {
       },
     } = this.searchRef;
 
+    if(isMsiteMegaMenuBrandsRoute()){
+      return;
+    }
+
     const searchInput = children[0].children[0];
     const submitBtn = children[1];
     submitBtn.blur();
