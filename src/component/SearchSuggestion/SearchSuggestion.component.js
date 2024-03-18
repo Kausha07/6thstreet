@@ -43,6 +43,7 @@ import "./SearchSuggestion.style";
 import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
 import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
 import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions, saveBrandRecentSearch } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 var ESCAPE_KEY = 27;
 
@@ -384,7 +385,7 @@ class SearchSuggestion extends PureComponent {
       <li>
         <Link
           to={{
-            pathname: `/${url_path}.html?q=${encodeURIComponent(
+            pathname: `${window?.location?.host}/${url_path}.html?q=${encodeURIComponent(
               name
             )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
               name
@@ -482,6 +483,17 @@ class SearchSuggestion extends PureComponent {
     const typeSuggetions = getBrandSuggetions(megaMenuBrands, searchString )
 
     if(isMegaMenu) {
+      if (!typeSuggetions?.length) {
+        return (
+          <div
+            block="SearchSuggestion"
+            elem="Item"
+            className="NoBrandSearchSuggestions"
+          >
+            <p>{__("oops! We couldn't find the brand you are looking for")}</p>
+          </div>
+        );
+      }
       return (
         <div block="SearchSuggestion" elem="Item"
           className={
@@ -1167,7 +1179,7 @@ class SearchSuggestion extends PureComponent {
   render() {
     const { isPDPSearchVisible, suggestionEnabled } = this.props;
     const { isArabic } = this.state;
-    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+    const isBrandsMenu = isMsiteMegaMenuRoute() ;
     // const { isPDPSearchVisible } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
