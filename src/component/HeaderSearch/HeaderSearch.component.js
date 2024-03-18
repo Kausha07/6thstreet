@@ -318,7 +318,6 @@ class HeaderSearch extends PureComponent {
           width: "75%",
           left: isArabic ? "15%": "8%",
           height: "39px",
-          padding: "5px 0px 0px 8px"
         }
       : {};
 

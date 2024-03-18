@@ -17,7 +17,9 @@
             #brands-letter-filter-scroll {
                 display: flex;
                 flex-direction: column;
-                width: 20px;
+                width: 30px;
+                background: #ffffff;
+
             }
     
             .Brands {
@@ -76,9 +78,11 @@
             }
 
             .horizatal-line {
-                width: 90vw;
-                height: 1px;
-                background-color: darkgray;
+                width: 100vw;
+                height: 0.5px;
+                background-color: #a9a9a9;
+                opacity: 0.5;
+                margin-left: -20px;
             }
         }
     }
