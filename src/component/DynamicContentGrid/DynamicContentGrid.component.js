@@ -205,7 +205,8 @@ class DynamicContentGrid extends PureComponent {
     const { items = [], isMsiteMegaMenu = false, brandGridItem = [] } = this.props;
     if (isMobile.any()) {
       if(isMsiteMegaMenu && brandGridItem && brandGridItem?.length > 0) {
-        return brandGridItem?.map(this.renderItemMobile)
+        const refinedGridItem = brandGridItem?.length > 8 ? brandGridItem?.slice(0, 8): brandGridItem;
+        return refinedGridItem?.map(this.renderItemMobile)
       }else {
         return items.map(this.renderItemMobile);
       }

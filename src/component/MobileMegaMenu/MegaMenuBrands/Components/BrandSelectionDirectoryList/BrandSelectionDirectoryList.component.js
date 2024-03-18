@@ -124,7 +124,7 @@ const BrandSelectionDirectoryList = (props) => {
               {isArabicValue ? individualBrand?.name_ar : individualBrand?.name}
             </Link>
           ))}
-          <div block="horizatal-line"></div>
+          <div block="horizatal-line" mods={{isArabicValue}}></div>
         </div>
       );
     });
