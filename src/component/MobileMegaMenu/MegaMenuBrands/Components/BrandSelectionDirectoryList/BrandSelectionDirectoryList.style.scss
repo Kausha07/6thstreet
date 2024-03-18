@@ -1,6 +1,5 @@
 .brand-selection-directory-main-container {
     font-family: "Aviner Next";
-    padding-left: 10px;
     .Brands {
         &-Heading {
             font-family: 'Avenir Next';
@@ -71,7 +70,7 @@
 
             .BrandLink {
                 font-weight: 400;
-                font-size:12px;
+                font-size:15px;
                 padding: 10px 0px;
                 font-family: 'Avenir Next';
                 margin-left: 0px;
@@ -83,6 +82,10 @@
                 background-color: #a9a9a9;
                 opacity: 0.5;
                 margin-left: -20px;
+                &_isArabicValue {
+                    margin-left:0px;
+                    margin-right: -20px;
+                }
             }
         }
     }

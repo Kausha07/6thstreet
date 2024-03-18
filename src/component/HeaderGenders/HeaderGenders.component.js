@@ -198,7 +198,7 @@ class HeaderGenders extends PureComponent {
           height: "auto",
           borderBottom: "0.6px solid #d3d3d3",
           paddingBottom: "0px",
-          paddingTop: "40px"
+          paddingTop: "20px"
         } : {};
         return (
             <div

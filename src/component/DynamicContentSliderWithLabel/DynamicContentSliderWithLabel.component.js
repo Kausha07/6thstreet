@@ -249,7 +249,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           />
         </a>
         {modifiedText ? (
-          <div block="SliderText" style={{ textAlign: text_align }}>
+          <div block={`SliderText${megamenuType ? " megaMenuSliderText": ""}`} style={{ textAlign: text_align }}>
             {modifiedText}
           </div>
         ) : null}
