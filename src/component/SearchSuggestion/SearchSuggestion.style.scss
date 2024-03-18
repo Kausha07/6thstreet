@@ -70,7 +70,7 @@
     }
     &_isBrandsMenu {
       @include mobile {
-        top: 70px;
+        top: 50px;
         max-height: fit-content;
       }
     }
@@ -700,5 +700,11 @@
     ul li {
       font-size: 15px !important;
     }
+  }
+}
+
+.NoBrandSearchSuggestions {
+  p {
+    font-size: 16px;
   }
 }
