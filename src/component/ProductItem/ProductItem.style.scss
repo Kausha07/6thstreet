@@ -250,7 +250,9 @@
         z-index: 1;
         padding: 3px 6px;
         &_isArabic {
-          transform: translateX(18px);
+          left: 8px;
+          transform: translateX(0);
+          direction: ltr;
         }
       }
 
