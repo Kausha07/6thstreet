@@ -385,7 +385,7 @@ class ProductItem extends PureComponent {
 
     if (promotion !== undefined && promotion !== "") {
       return promotion !== null ? (
-        <span block="PLPSummary" elem="ExclusiveMobile" style={TagStyle}>
+        <span block="ExclusiveMobile" style={TagStyle}>
           {" "}
           {promotion}{" "}
         </span>
@@ -399,6 +399,10 @@ class ProductItem extends PureComponent {
     const {
       product: { promotion },
     } = this.props;
+
+    if(isMobile.any()){
+      return null;
+    }
 
     let TagStyle = {};
     if(gallery_image_urls_flag && !isMobile.any()) {
@@ -439,7 +443,7 @@ class ProductItem extends PureComponent {
   generateInputField = (val, index) => {
     const {
       product = {},
-      product: { sku = "", color = "" },
+      product: { sku = "", color = "", color_hex = "", },
     } = this.props;
     const productAlsoAvailableColors = (
       product &&
@@ -451,18 +455,18 @@ class ProductItem extends PureComponent {
       ? [sku, ...Object.keys(product?.["6s_also_available_color"])]
       : [];
 
-    let colorValue = "";
-    if (!Array.isArray(color) && color) {
-      colorValue = this.getArabicToEnglishColorTranslation(color);
-    } else if (Array.isArray(color) && color?.length > 0) {
-      colorValue = this.getArabicToEnglishColorTranslation(color[0]);
-    } else {
-      colorValue = "";
-    }
     const colorKey = productAlsoAvailableColors?.[index];
     const background =
-      product?.["6s_also_available_color"]?.[colorKey]?.color || colorValue;
-    const colorArray = ["#ffffff"];
+      product?.["6s_also_available_color"]?.[colorKey]?.color || color_hex;
+    const colorArray = [
+      "#ffffff",
+      "#FFFFFF",
+      "#F7E7CE",
+      "#fbfdea",
+      "#e1e1de",
+      "#efe6c6",
+      "#e3dac9",
+    ];
     const isBorderColor = colorArray?.includes(background?.toLowerCase());
     const zIndex = index === 0 ? 1 : -index;
     return (
@@ -1025,9 +1029,6 @@ class ProductItem extends PureComponent {
           this.state.hover &&
           this.renderAddToCartOnHover()}
         </div>
-        {isMobile.any() && (
-          <div className="tags">{this.renderExclusiveMobile(true)}</div>
-        )}
         <div className={isArabic ? "CountdownTimerArabic" : "CountdownTimer"}>
           {timer_start_time && timer_end_time && (
             <DynamicContentCountDownTimer
@@ -1040,6 +1041,12 @@ class ProductItem extends PureComponent {
         {isMobile.any() &&
           pageType === "wishlist" &&
           this.renderAddToCartButton(this.props.product)}
+        
+        {isMobile.any() &&  pageType !== "cartSlider" &&(
+          <div className="tagsForMsiteProduct">
+            {this.renderExclusiveMobile(true)}
+          </div>
+        )}
       </li>
     );
   }

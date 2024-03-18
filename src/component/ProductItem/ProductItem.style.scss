@@ -357,7 +357,7 @@
     }
   
     .Price {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       letter-spacing: -0.5px;
       text-align: start;
@@ -452,6 +452,22 @@
     .swiperWrapper {
       @include desktop {
         min-height: 274px;
+      }
+    }
+  }
+
+  .tagsForMsiteProduct {
+    @include mobile {
+      display: flex;
+      .ExclusiveMobile {
+        background: #e9e9e9;
+        border-radius: 12px;
+        color: #000000;
+        padding: 5px 10px;
+        font-weight: 500;
+        margin: 5px 5px 0 0;
+        font-size: 11px;
+        z-index: 1;
       }
     }
   }
