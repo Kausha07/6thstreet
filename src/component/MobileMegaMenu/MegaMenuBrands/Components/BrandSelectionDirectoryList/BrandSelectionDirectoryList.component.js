@@ -131,7 +131,13 @@ const BrandSelectionDirectoryList = (props) => {
   }
   const onBrandLetterClick = (key) => {
     if (alphabetRefs?.current?.[key]) {
-      window.scrollTo(0, alphabetRefs?.current?.[key].offsetTop);
+      setTimeout(() => {
+        const element =  alphabetRefs?.current?.[key];
+        const elementRect = element.getBoundingClientRect();
+        const elementTop = elementRect.top + window.scrollY;
+        const scrollToOffset = elementTop - 90; 
+        window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
+      }, 1);
       handleScroll();
     }
   };
