@@ -68,6 +68,12 @@
         min-height: calc(100vh - 80px);
       }
     }
+    &_isBrandsMenu {
+      @include mobile {
+        top: 70px;
+        max-height: fit-content;
+      }
+    }
   }
 
   @include desktop() {
