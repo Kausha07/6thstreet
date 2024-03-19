@@ -190,20 +190,11 @@ class HeaderGenders extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
-        const { isMobile, isMobileMegaMenu } = this.props;
-        const megaMenuBrandsStyle = isMsiteMegaMenuRoute() ? {
-          width: "100%",
-          justifyContent: "space-evenly",
-          top: "30px",
-          height: "auto",
-          borderBottom: "0.6px solid #d3d3d3",
-          paddingBottom: "0px",
-          paddingTop: "20px"
-        } : {};
+        const { isMobile } = this.props;
+        const isMegaMenuValue = isMsiteMegaMenuRoute();
         return (
             <div
-                mix={{ block: `${this.props.currContentGender === "influencer" ? "moveUpGenders" : "moveDownGenders"} HeaderGenders ${(isMobileMegaMenu) ? "mobileMegaMenuHeaderGender" : ""}`, mods: { isArabic, isMobile } }}
-                style={megaMenuBrandsStyle}
+                mix={{ block: `${this.props.currContentGender === "influencer" ? "moveUpGenders" : "moveDownGenders"} HeaderGenders ${(isMegaMenuValue) ? "mobileMegaMenuHeaderGender" : ""}`, mods: { isArabic, isMobile } }}
             >
                 {this.renderGenders()}
             </div>
