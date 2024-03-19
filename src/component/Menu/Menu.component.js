@@ -96,7 +96,7 @@ class Menu extends PureComponent {
     const mobileMegaMenuStyle = isMsiteMegaMenuCategoriesRoute()? { marginTop : "0px"}  : {};
     return (
       <div block="Menu" elem="Container">
-        <div block="Menu" elem="Header-Mobile">
+       {!isMsiteMegaMenuCategoriesRoute() && <div block="Menu" elem="Header-Mobile">
           <div
             mix={{
               block: "Menu",
@@ -106,7 +106,7 @@ class Menu extends PureComponent {
           >
             <HeaderGenders isMenu={true} isMobileMegaMenu={this.props?.is_msite_megamenu_enabled && isMobile.any() ? true : false} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>
           </div>
-        </div>
+        </div>}
         <div
           mix={{
             block: `Menu ${this.props.gender}-menu`,

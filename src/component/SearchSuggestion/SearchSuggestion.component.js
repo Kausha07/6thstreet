@@ -490,7 +490,7 @@ class SearchSuggestion extends PureComponent {
             elem="Item"
             className="NoBrandSearchSuggestions"
           >
-            <p>{__("oops! We couldn't find the brand you are looking for")}</p>
+            <p>{__("Oops! We couldn't find the brand you are looking for")}</p>
           </div>
         );
       }
