@@ -99,20 +99,21 @@ const BrandSelectionDirectoryListContainer = (props) => {
         const groupedBrands = groupByName(brandResponse.result) || {};
         const sortedBrands = Object.entries(groupedBrands)?.sort(
           ([letter1], [letter2]) => {
-            if (letter1 === "0-9") {
-              return 1;
-            }
-            if (letter2 === "0-9") {
-              return -1;
-            }
             if (letter1 !== letter2) {
               if (letter1 < letter2) {
                 return -1;
               }
               return 1;
             }
+            if (letter1 === "0-9") {
+              return 1;
+            }
+            if (letter2 === "0-9") {
+              return -1;
+            }
           }
         );
+
         const activeBrands = [];
         let newActiveBrands = {};
         sortedBrands?.map((data) => {

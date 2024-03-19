@@ -9,6 +9,7 @@ import browserHistory from "Util/History";
 import categorySVG from "Component/MobileBottomBar/icons/categories.svg";
 import categoryActiveSVG from "Component/MobileBottomBar/icons/categories-active.svg";
 import isMobile from "Util/Mobile";
+import { isMsiteMegaMenuCategoriesRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 import "./HeaderMenu.style";
 
@@ -40,7 +41,7 @@ class HeaderMenu extends PureComponent {
 
     return {
       expanded:
-        pathname.includes(`/${gender}.html`) &&
+        pathname.includes(`/${gender}.html`) || isMsiteMegaMenuCategoriesRoute() &&
         activeOverlay === MOBILE_MENU_SIDEBAR_ID,
     };
   }
