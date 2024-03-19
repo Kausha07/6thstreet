@@ -331,7 +331,7 @@ class HeaderMainSection extends NavigationAbstract {
       "/influencer.html/Collection",
       "/influencer.html/Store",
     ];
-    if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
+    if (isMobile.any() && (activeOverlay === MOBILE_MENU_SIDEBAR_ID && !isMsiteMegaMenuCategoriesRoute())) {
       return null;
     }
     return (this.isPLP() ||

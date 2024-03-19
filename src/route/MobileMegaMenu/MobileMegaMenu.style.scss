@@ -5,7 +5,7 @@
 }
 
 .AnimationWrapper {
-  width: 401px;
+  max-width: 401px;
   min-height: 157px;
   background-image: linear-gradient(to right,
       #e2e2e2 calc(50%),
@@ -31,6 +31,7 @@
   display: flex;
   justify-content: flex-start;
   margin: 20px 0px;
+  overflow: hidden;
 
   &-Card {
     min-width: 111px;
@@ -47,7 +48,7 @@
   display: flex;
   flex-direction: column;
   margin: 20px 0px;
-
+  overflow: hidden;
   @include tablet {
     min-width: 21.224vw;
   }

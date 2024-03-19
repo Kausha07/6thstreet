@@ -385,7 +385,7 @@ class SearchSuggestion extends PureComponent {
       <li>
         <Link
           to={{
-            pathname: `${window?.location?.host}/${url_path}.html?q=${encodeURIComponent(
+            pathname: `/${url_path}.html?q=${encodeURIComponent(
               name
             )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
               name
@@ -490,7 +490,7 @@ class SearchSuggestion extends PureComponent {
             elem="Item"
             className="NoBrandSearchSuggestions"
           >
-            <p>{__("oops! We couldn't find the brand you are looking for")}</p>
+            <p>{__("Oops! We couldn't find the brand you are looking for")}</p>
           </div>
         );
       }
