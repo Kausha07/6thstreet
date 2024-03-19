@@ -188,14 +188,14 @@ class HeaderSearch extends PureComponent {
     const {mobileMegaMenuPageOpenFlag = ""} = this.props;
     if(isMobile.any() || isMobile.tablet()) {
       if(isMsiteMegaMenuCategoriesRoute()) {
-        return "Search for Categories";
+        return __("Search for Categories");
       } else if(isMsiteMegaMenuBrandsRoute()) {
-        return "Search for Brands";
+        return __("Search for Brands");
       } else {
-        return "What are you looking for?";
+        return __("What are you looking for?");
       } 
     } else {
-      return "Search for items, brands, inspiration and styles";
+      return __("Search for items, brands, inspiration and styles");
     }
   }
   renderField() {
@@ -219,7 +219,7 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={__(modifiedPlaceholderText)}
+            placeholder={modifiedPlaceholderText}
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}

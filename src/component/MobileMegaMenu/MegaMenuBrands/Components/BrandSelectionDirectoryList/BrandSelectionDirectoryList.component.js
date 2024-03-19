@@ -117,7 +117,7 @@ const BrandSelectionDirectoryList = (props) => {
                 individualBrand?.name
               )}&dFR[gender][0]=${capitalizeFirstLetter(
                 requestedGender(gender)
-              )}&dFR[in_stock][0]=${1}`}
+              )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`}
               block="BrandLink"
               key={index}
             >
