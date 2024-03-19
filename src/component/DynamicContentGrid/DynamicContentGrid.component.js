@@ -14,7 +14,8 @@ import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper"
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import { clickBrandBannerEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import "./DynamicContentGrid.style";
 
 class DynamicContentGrid extends PureComponent {
@@ -84,7 +85,7 @@ class DynamicContentGrid extends PureComponent {
       }
     });
   };
-  onclick = (item) => {
+  onclick = (item, i) => {
     const { index } = this.props;
     let banner = {
       link: item.link,
@@ -179,6 +180,11 @@ class DynamicContentGrid extends PureComponent {
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
+            clickBrandBannerEvent({
+              gender : gender,
+              banner_position: i+1,
+              banner_label:promotionName,
+            })
           }}
         >
           <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>

@@ -3,6 +3,7 @@ import Loader from "Component/Loader";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import "./BrandSelectionDirectoryList.style.scss";
+import { brandAlphabetClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 const BrandSelectionDirectoryList = (props) => {
   const [alphabet, setAlphabet] = useState("");
   const isArabicValue = isArabic();
@@ -134,6 +135,10 @@ const BrandSelectionDirectoryList = (props) => {
       window.scrollTo(0, alphabetRefs?.current?.[key].offsetTop);
       handleScroll();
     }
+    brandAlphabetClickEvent({
+      gender: props?.gender || "",
+      alphabet_click: key
+    })
   };
   const renderLetterSelector = () => {
     const { brands = [] } = props;

@@ -18,6 +18,7 @@ import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.c
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
+import { megaMenuCarousalEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -201,13 +202,21 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
-    const { index, megamenuType = false } = this.props;
+    const { index, megamenuType = false, gender = "women", label = "" } = this.props;
     let banner = {
       link: item?.link,
       promotion_name: item?.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
+    if(megamenuType) {
+      megaMenuCarousalEvent({
+        gender: gender,
+        prev_screen_name: sessionStorage.getItem("prevScreen"),
+        banner_label: label,
+        banner_position: index+1,
+      });
+    }
     (!megamenuType) && this.props?.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
   };
   sendBannerClickImpression(item) {

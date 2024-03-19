@@ -58,6 +58,7 @@ const MobileMegaMenu = (props) => {
         <MegaMenuBannerSlider
           BannerInformation={BannerInformation}
           isLoading={props?.isLoading}
+          gender={props?.gender}
         />
         <MegaMenuHorizontalSlider
           HorizantalSliderInformation={HorizantalSliderInformation}

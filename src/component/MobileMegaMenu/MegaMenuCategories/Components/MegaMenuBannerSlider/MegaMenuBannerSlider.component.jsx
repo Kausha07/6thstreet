@@ -5,8 +5,10 @@ import Image from "Component/Image";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import "./MegaMenuBannerSlider.style.scss";
+import { topBannerClickTrackingEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 const MegamenuBannerSlider = (props) => {
+  const { gender="women" } = props
   const renderDescription = (description, button_label) => {
     return (
       <>
@@ -48,6 +50,13 @@ const renderImage = (item) => {
         to={formatCDNLink(item?.link)}
         data-banner-type={type || "banner"}
         data-promotion-name={item.description ? item.description : ""}
+        onClick = {()=>{
+          topBannerClickTrackingEvent({
+            gender: gender,
+            prev_screen_name: sessionStorage.getItem("prevScreen"),
+            banner_label: description,
+          })
+        }}
       >
         <Image
           src={image_url}

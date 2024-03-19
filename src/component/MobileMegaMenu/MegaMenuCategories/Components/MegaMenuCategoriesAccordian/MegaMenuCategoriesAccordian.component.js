@@ -7,7 +7,8 @@ import { connect } from "react-redux";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import { isArabic,truncate } from "Util/App";
 import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
-import { renderMegaMenuAnimationShimer } from "Component/MobileMegaMenu/Utils/MegaMenuShimers.helper"
+import { renderMegaMenuAnimationShimer } from "Component/MobileMegaMenu/Utils/MegaMenuShimers.helper";
+import { categoryExpandEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 let globalGenderAccordian = "";
 export const mapStateToProps = (state) => ({
@@ -56,7 +57,8 @@ const MegaMenuCategoriesAccordion = (props) => {
     );
   };
 
-  const handleNestedCategoriesShowList = (index) => {
+  const handleNestedCategoriesShowList = (index,item) => {
+    const { label = "" } = item;
     setClickedIndex((prevIndex) => (prevIndex === index ? null : index));
     if (ScrollerRef && ScrollerRef.current && ScrollerRef.current[index]) {
       setTimeout(() => {
@@ -67,6 +69,11 @@ const MegaMenuCategoriesAccordion = (props) => {
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);
     }
+    categoryExpandEvent({
+      gender: gender,
+      banner_position: index+1,
+      banner_label: label,
+    })
   };
   const renderMegaMenuCategoriesLists = (item, index) => {
     const {
@@ -83,7 +90,7 @@ const MegaMenuCategoriesAccordion = (props) => {
         block={`megamenucategoryList-container menu-${index}`}
         key={`menu-${index}`}
         ref={(ref) => (ScrollerRef.current[index] = ref)}
-        onClick={() => handleNestedCategoriesShowList(index)}
+        onClick={() => handleNestedCategoriesShowList(index,item)}
         id={`menu-${index}`}
       >
         <div block="megaMenuCategoryList" id={index} >
@@ -104,6 +111,9 @@ const MegaMenuCategoriesAccordion = (props) => {
                 isLoading={props.isCategoryLoading}
                 ScrollerRef={ScrollerRef}
                 key={`listMenu-${index}`}
+                parentCategory={label}
+                gender={gender}
+                subCategoryPosition={index+1}
               />
             ))}
           </div>
