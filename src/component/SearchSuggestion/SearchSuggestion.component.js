@@ -428,6 +428,8 @@ class SearchSuggestion extends PureComponent {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
         });
       } else {
@@ -436,6 +438,8 @@ class SearchSuggestion extends PureComponent {
           country: getCountryFromUrl().toUpperCase(),
           language: getLanguageFromUrl().toUpperCase(),
           search_term: query || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
         });
       }
@@ -484,6 +488,15 @@ class SearchSuggestion extends PureComponent {
 
     if(isMegaMenu) {
       if (!typeSuggetions?.length) {
+        if(typeSuggetions?.length === 0 && searchString && searchString.length > 3)
+        MOE_trackEvent(EVENT_GTM_NO_RESULT_SEARCH_SCREEN_VIEW, {
+          country: getCountryFromUrl().toUpperCase(),
+          language: getLanguageFromUrl().toUpperCase(),
+          search_term: searchString || "",
+          current_page: sessionStorage.getItem("currentScreen"),
+          gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+          app6thstreet_platform: "Web",
+        });
         return (
           <div
             block="SearchSuggestion"
