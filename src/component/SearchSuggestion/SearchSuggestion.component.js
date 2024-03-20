@@ -42,7 +42,7 @@ import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 import MobileRecentSearches from "Component/MobileMegaMenu/MobileRecentSearches";
 import { capitalizeFirstLetter, requestedGender } from "./utils/SearchSuggestion.helper";
-import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions, saveBrandRecentSearch } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { isMsiteMegaMenuBrandsRoute, getBrandSuggetions, saveBrandRecentSearch, getBrandUrl } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 var ESCAPE_KEY = 27;
@@ -385,13 +385,13 @@ class SearchSuggestion extends PureComponent {
       <li>
         <Link
           to={{
-            pathname: `/${url_path}.html?q=${encodeURIComponent(
+            pathname: `/${getBrandUrl(name)}.html?q=${encodeURIComponent(
               name
             )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
               name
             )}&dFR[gender][0]=${capitalizeFirstLetter(
               requestedGender(gender)
-            )}&dFR[in_stock][0]=${1}`
+            )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`
           }}
           key={i}
           onClick={() => this.onSearchQueryClick(name, gender, url_path)}
@@ -490,6 +490,7 @@ class SearchSuggestion extends PureComponent {
             elem="Item"
             className="NoBrandSearchSuggestions"
           >
+            <div block="noResultFound">{__("No result found")}</div>
             <p>{__("Oops! We couldn't find the brand you are looking for")}</p>
           </div>
         );
