@@ -218,7 +218,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const { link = "", text, url, plp_config, height, width, text_align, image_url = "",label ="" } = item;
     const { megamenuType = false, gender = "women" } = this.props;
     const { isArabic } = this.state;
-    let parseLink = megamenuType && (label === "Brands" || label === "Slider 1") ? `/brands-menu` : formatCDNLink(link);
+    let parseLink = megamenuType && (label === "Brands" || i === 0) ? `/brands-menu` : formatCDNLink(link);
     const wd = `${width?.toString()}px`;
     const ht = `${height?.toString()}px`;
     const modifiedText = text ? text : megamenuType && label ? label : null;

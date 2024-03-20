@@ -8,7 +8,8 @@
         flex-direction: row;
         justify-content: space-between;
         margin: 11px 0px 0px 0px;
-        background-color: #e9e9e9;
+        background-color: rgba(244,244,244,1);
+        border-radius: 5px;
         cursor: pointer;
 
         .Image {
@@ -95,6 +96,7 @@
         &::before {
             display: none;
         }
-        padding-left: 18px;
+        padding-left: 0px;
+        margin: 10px 20px;
     }
 }

@@ -1,5 +1,10 @@
 .brand-selection-directory-main-container {
     font-family: "Aviner Next";
+    padding-left: 20px;
+    &_isArabicValue {
+        padding-left: 0px;
+        padding-right: 20px;
+    }
     .Brands {
         &-Heading {
             font-family: 'Avenir Next';
