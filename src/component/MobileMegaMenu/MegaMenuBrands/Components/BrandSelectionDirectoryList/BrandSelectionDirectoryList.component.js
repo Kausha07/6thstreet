@@ -161,7 +161,7 @@ const BrandSelectionDirectoryList = (props) => {
   };
  
   return (
-    <div block="brand-selection-directory-main-container" id="brand-selection-directory-main-container-id">
+    <div block="brand-selection-directory-main-container" id="brand-selection-directory-main-container-id" mods={{isArabicValue}}>
       <Loader isLoading={props?.isLoading} />
       <h2 block="Brands" elem="Heading">
         {__("A-Z Brands")}
