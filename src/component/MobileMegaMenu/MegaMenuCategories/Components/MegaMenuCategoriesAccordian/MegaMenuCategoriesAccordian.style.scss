@@ -68,6 +68,11 @@
                         opacity: 0.3;
                     }
                 }
+                .active {
+                    &::after {
+                        transform: rotate(225deg);
+                    }
+                }
                 &_isArabicValue {
                     .accordian {
                         &::after {
