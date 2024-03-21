@@ -218,13 +218,13 @@ class MobileBottomBar extends NavigationAbstract {
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
     } else {
       const countryFromURL = getCountryFromUrl()?.toLowerCase();
-      const labelURL = getLanguageFromUrl()?.toUpperCase() === "EN" ? bottomNavConfig[countryFromURL]?.alternateLink_en : bottomNavConfig[countryFromURL]?.alternateLink_ar; 
+      const labelURL = getLanguageFromUrl()?.toUpperCase() === "EN" ? bottomNavConfig?.[countryFromURL]?.alternateLink_en : bottomNavConfig?.[countryFromURL]?.alternateLink_ar; 
       MOE_trackEvent(event, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         isLoggedIn: isSignedIn,
         app6thstreet_platform: "Web",
-        label_name: bottomNavConfig[countryFromURL].label_en,
+        label_name: bottomNavConfig?.[countryFromURL].label_en,
         label_URL: labelURL,
         gender: gender,
       });
@@ -339,11 +339,11 @@ class MobileBottomBar extends NavigationAbstract {
             className={`nav-bar-item-button ${isCustomOption ? 'selected' : ''}`}>
             <img className="nav-bar-item-icon"
               src={isCustomOption
-                ? bottomNavConfig[country]?.selectedIcon
-                : bottomNavConfig[country]?.icon}
-              alt={bottomNavConfig[country]?.label} width={24} height={24} />
+                ? bottomNavConfig?.[country]?.selectedIcon
+                : bottomNavConfig?.[country]?.icon}
+              alt={bottomNavConfig?.[country]?.label} width={24} height={24} />
             <div className={`nav-bar-item-label ${isCustomOption ? 'selected' : ''}`}>
-              {language == 'en' ? bottomNavConfig[country]?.label_en : bottomNavConfig[country]?.label_ar}</div>
+              {language == 'en' ? bottomNavConfig?.[country]?.label_en : bottomNavConfig?.[country]?.label_ar}</div>
           </button>
         </div>
       );

@@ -87,3 +87,14 @@ export const saveBrandRecentSearch = (brandSearchQuery) => {
     localStorage.setItem("brandRecentSearches", JSON.stringify(tempObj));
   }
 };
+
+export const getBrandUrl = (brandName = "") => {
+  const url = brandName
+    .replace(/'/g, "")
+    .replace(/[(\s+).&]/g, "-")
+    .replace(/-{2,}/g, "-")
+    .replace(/\-$/, "")
+    .replace("@", "at")
+    .toLowerCase();
+  return url;
+};

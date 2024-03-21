@@ -3,11 +3,9 @@ import { isArabic } from "Util/App";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import Algolia from "Util/API/provider/Algolia";
-import { HistoryType, LocationType } from "Type/Common";
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
-import { getAllBrands } from "Util/API/endpoint/Catalogue/Brand/Brand.endpoint";
 import BrandSelectionDirectoryList from "./BrandSelectionDirectoryList.component";
-import { setMegaMenuBrandsData, setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action"
+import { setMegaMenuBrandsData, setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
 import { setGender } from "Store/AppState/AppState.action";
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender
@@ -95,50 +93,27 @@ const BrandSelectionDirectoryListContainer = (props) => {
     const { setMegaMenuBrandsData } = props;
     try {
       const activeBrandsList = await requestBrands(gender);
-      getAllBrands().then((brandResponse) => {
-        const groupedBrands = groupByName(brandResponse.result) || {};
-        const sortedBrands = Object.entries(groupedBrands)?.sort(
-          ([letter1], [letter2]) => {
-            if (letter1 !== letter2) {
-              if (letter1 < letter2) {
-                return -1;
-              }
-              return 1;
-            }
-            if (letter1 === "0-9") {
-              return 1;
-            }
-            if (letter2 === "0-9") {
+      const resultantBrandsObject = activeBrandsList?.map((key) => ({ name: key }));
+      const groupByNameResult =  groupByName(resultantBrandsObject,true) || {};
+      const sortedBrands = Object.entries(groupByNameResult)?.sort(
+        ([letter1], [letter2]) => {
+          if (letter1 !== letter2) {
+            if (letter1 < letter2) {
               return -1;
             }
+            return 1;
           }
-        );
-
-        const activeBrands = [];
-        let newActiveBrands = {};
-        sortedBrands?.map((data) => {
-          let filteredbrand = [];
-          let combinedArr = [];
-          Object.values(data[1])?.filter((brand) => {
-            const { name, name_ar, url_path, objectID } = brand;
-            if (
-              activeBrandsList?.includes(name) ||
-              activeBrandsList?.includes(name_ar)
-            ) {
-              filteredbrand.push({name, name_ar, url_path, objectID});
-            }
-          });
-          if (filteredbrand.length > 0) {
-            combinedArr.push(data[0]);
-            combinedArr.push(filteredbrand);
-            activeBrands.push(combinedArr);
-            newActiveBrands[data[0]] = filteredbrand;
+          if (letter1 === "0-9") {
+            return 1;
           }
-        });
-        setMegaMenuBrandsData(newActiveBrands);
-        setBrands(activeBrands);
-        setIsLoading(false);
-      });
+          if (letter2 === "0-9") {
+            return -1;
+          }
+        }
+      );
+      setMegaMenuBrandsData(groupByNameResult);
+      setBrands(sortedBrands);
+      setIsLoading(false);
     } catch (e) {
       setBrands([]);
       console.error(e);

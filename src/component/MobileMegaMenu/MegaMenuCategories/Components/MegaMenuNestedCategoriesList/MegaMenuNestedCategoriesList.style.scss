@@ -1,12 +1,13 @@
 .nested-categories-list-container {
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
 
     .nested-categories-list {
         display: flex;
         flex-direction: row;
-        height: 50px;
-        padding: 0px 25px;
+        height: 40px;
+        align-items: center;
 
         .Image {
             .LazyLoad-wrapper {
@@ -23,14 +24,11 @@
         }
 
         .categoryLabel {
-            margin: 3% 0px 0px 20px;
+            margin: 0px 20px;
             font-family: 'Avenir Next';
             font-weight: 400;
             font-size: 14px;
             color: #606060;
-            &_isArabicValue {
-                margin: 5% 25px 0px 20px;
-            }
         }
     }
 }

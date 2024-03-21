@@ -26,4 +26,6 @@ export const ABOUT = "about";
 export const STORE = "store";
 export const INFLUENCER = "influencer";
 export const INFLUENCER_STORE = "store";
-export const INFLUENCER_COLLECTION = "collection"
+export const INFLUENCER_COLLECTION = "collection";
+export const MEGAMENU = "megamenu";
+export const BRANDSMENU = "brands-menu";

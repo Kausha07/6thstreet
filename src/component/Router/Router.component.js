@@ -28,6 +28,8 @@ import {
   INFLUENCER,
   INFLUENCER_COLLECTION,
   INFLUENCER_STORE,
+  MEGAMENU,
+  BRANDSMENU,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
@@ -341,7 +343,7 @@ export class Router extends SourceRouter {
         <SentryRoute
           path={withStoreRegex("megamenu")}
           render={(props) => (
-            <GTMRouteWrapper route={"megamenu"}>
+            <GTMRouteWrapper route={MEGAMENU}>
               {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MobileMegaMenu {...props} /> : <NoMatch />}
             </GTMRouteWrapper>
           )}
@@ -354,7 +356,7 @@ export class Router extends SourceRouter {
         <SentryRoute
           path={withStoreRegex("brands-menu")}
           render={(props) => (
-            <GTMRouteWrapper route={BRANDS}>
+            <GTMRouteWrapper route={BRANDSMENU}>
               {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MegaMenuBrands {...props} />: <NoMatch />}
             </GTMRouteWrapper>
           )}

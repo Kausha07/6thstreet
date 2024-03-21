@@ -195,9 +195,7 @@ class HeaderSearch extends PureComponent {
   getPlaceholderText = () => {
     const {mobileMegaMenuPageOpenFlag = ""} = this.props;
     if(isMobile.any() || isMobile.tablet()) {
-      if(isMsiteMegaMenuCategoriesRoute()) {
-        return __("Search for Categories");
-      } else if(isMsiteMegaMenuBrandsRoute()) {
+      if(isMsiteMegaMenuBrandsRoute()) {
         return __("Search for Brands");
       } else {
         return __("What are you looking for?");

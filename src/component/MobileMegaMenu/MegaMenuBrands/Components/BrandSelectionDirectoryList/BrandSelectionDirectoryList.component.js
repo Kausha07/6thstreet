@@ -4,6 +4,7 @@ import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import "./BrandSelectionDirectoryList.style.scss";
 import { brandAlphabetClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
+import { getBrandUrl } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 const BrandSelectionDirectoryList = (props) => {
   const [alphabet, setAlphabet] = useState("");
   const isArabicValue = isArabic();
@@ -112,7 +113,7 @@ const BrandSelectionDirectoryList = (props) => {
           <h3>{alphabet}</h3>
           {alphabeticalBrands?.map((individualBrand,index) => (
             <Link
-              to={`/${individualBrand?.url_path}.html?q=${encodeURIComponent(
+              to={`/${getBrandUrl(individualBrand?.name)}.html?q=${encodeURIComponent(
                 individualBrand?.name
               )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
                 individualBrand?.name
@@ -122,7 +123,7 @@ const BrandSelectionDirectoryList = (props) => {
               block="BrandLink"
               key={index}
             >
-              {isArabicValue ? individualBrand?.name_ar : individualBrand?.name}
+              {individualBrand?.name}
             </Link>
           ))}
           <div block="horizatal-line" mods={{isArabicValue}}></div>
@@ -136,7 +137,7 @@ const BrandSelectionDirectoryList = (props) => {
         const element =  alphabetRefs?.current?.[key];
         const elementRect = element.getBoundingClientRect();
         const elementTop = elementRect.top + window.scrollY;
-        const scrollToOffset = elementTop - 90; 
+        const scrollToOffset = elementTop - 100; 
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);
       handleScroll();
@@ -166,7 +167,7 @@ const BrandSelectionDirectoryList = (props) => {
   };
  
   return (
-    <div block="brand-selection-directory-main-container" id="brand-selection-directory-main-container-id">
+    <div block="brand-selection-directory-main-container" id="brand-selection-directory-main-container-id" mods={{isArabicValue}}>
       <Loader isLoading={props?.isLoading} />
       <h2 block="Brands" elem="Heading">
         {__("A-Z Brands")}

@@ -65,7 +65,7 @@ const MegaMenuCategoriesAccordion = (props) => {
         const element = ScrollerRef.current[index];
         const elementRect = element.getBoundingClientRect();
         const elementTop = elementRect.top + window.scrollY;
-        const scrollToOffset = elementTop - 90; 
+        const scrollToOffset = elementTop - 100; 
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);
     }
