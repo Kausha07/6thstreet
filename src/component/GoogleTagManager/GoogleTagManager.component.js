@@ -52,6 +52,7 @@ import {
   EVENT_MYORDERPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_VISIT,
   EVENT_ORDERDETAILPAGE_CHANNEL,
+  EVENT_CATEGORY_EXPANDED,
 
 } from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
@@ -119,6 +120,7 @@ import ProductRating from "./events/ProductRating.event";
 import ProductRatingClear from "./events/ProductRatingClear.event";
 import MyOrder from "./events/MyOrder.event";
 import MyOrderChannel from "./events/MyOrderChannel.event";
+import MegaMenuEvent from "./events/MegaMenuEvents/MegaMenuEvent.event"
 
 /**
  * Event list
@@ -245,6 +247,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_MYORDERPAGE_VISIT] :MyOrder,
     [EVENT_ORDERDETAILPAGE_VISIT] :MyOrder,
     [EVENT_ORDERDETAILPAGE_CHANNEL] :MyOrderChannel,
+    [EVENT_CATEGORY_EXPANDED]: MegaMenuEvent,
 
   };
 

@@ -71,8 +71,8 @@ const MegaMenuCategoriesAccordion = (props) => {
     }
     categoryExpandEvent({
       gender: gender,
-      banner_position: index+1,
-      banner_label: label,
+      category_name: label,
+      category_position: index+1,
     })
   };
   const renderMegaMenuCategoriesLists = (item, index) => {

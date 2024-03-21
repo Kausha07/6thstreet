@@ -24,6 +24,7 @@ export const megaMenuCarousalEvent = (options) => {
 
 export const categoryExpandEvent = (options) => {
   MOE_trackEvent(EVENT_CATEGORY_EXPANDED, options);
+  Event.dispatch(EVENT_CATEGORY_EXPANDED, options);
 };
 
 export const subCategoryClickEvent = (options) => {
