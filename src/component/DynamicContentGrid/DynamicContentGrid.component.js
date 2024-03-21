@@ -59,19 +59,31 @@ class DynamicContentGrid extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+    const { items = [], brandGridItem = [] } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+    if(isMsiteMegaMenuBrandsRoute()) {
+      brandGridItem.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_id: item.label || "",
+          promotion_name: item?.label || "",
+          store_code: getStoreName || "",
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    } else {
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
+      });
+    }
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, isMsiteMegaMenuBrandsRoute() ? brandGridItem : items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {

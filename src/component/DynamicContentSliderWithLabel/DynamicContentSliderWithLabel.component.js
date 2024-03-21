@@ -134,19 +134,37 @@ class DynamicContentSliderWithLabel extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+      const { items = [], megamenuType, megeMenuHorizontalSliderData = []  } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+    if(megamenuType) {
+      megeMenuHorizontalSliderData.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_name: item?.label || "",
+          tag: item?.itemName || "",
+          url:item?.image_url || "",
+          link:item?.link || '',
+          store_code: item?.label || "",
+          indexValue: index + 1,
+          default_Index: getIndexId || 0,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    } else {
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
+      });
+
+    }
+    Event.dispatch(
+      HOME_PAGE_BANNER_IMPRESSIONS,
+      megamenuType ? megeMenuHorizontalSliderData : items
+    );
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -231,6 +249,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const wd = `${width?.toString()}px`;
     const ht = `${height?.toString()}px`;
     const modifiedText = text ? text : megamenuType && label ? label : null;
+    const modifiedItem = megamenuType ? {
+      promotion_id: `${modifiedText}_${i+1}`,
+      promotion_name: modifiedText,
+      ...item
+    } : item;
     return (
       <div
         block="SliderWithLabel"
@@ -247,7 +270,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
-            this.onclick(item);
+            this.onclick(modifiedItem);
           }}
         >
           <Image

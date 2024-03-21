@@ -23,7 +23,6 @@ const MegaMenuNestedCategoriesList = ({
           data-banner-type="banner"
           data-promotion-name={promotion_name ? promotion_name : ""}
           onClick={()=>{
-            console.log("test indexvalue")
             subCategoryClickEvent({
               gender: gender,
               parent_category: parentCategory,
