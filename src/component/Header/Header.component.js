@@ -19,6 +19,7 @@ import {
 } from "Route/UrlRewrites/UrlRewrites.config";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper.js";
 import isMobile from "Util/Mobile";
 import "./Header.style";
 
@@ -29,6 +30,7 @@ export const mapStateToProps = (state) => {
     isLive: state.LiveParty.isLive,
     is_live_party_enabled: state.AppConfig.is_live_party_enabled,
     mobileMegaMenuPageOpenFlag: state.CategoriesListReducer.mobileMegaMenuPageOpenFlag,
+    is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
   };
 };
 export const mapDispatchToProps = (dispatch) => ({
@@ -246,6 +248,7 @@ export class Header extends PureComponent {
   render() {
     const {
       navigationState: { name },
+      is_msite_megamenu_enabled = false,
     } = this.props;
     const { isMobile } = this.state;
 
@@ -260,7 +263,7 @@ export class Header extends PureComponent {
           )
             ? null
             : this.renderHeaderSections()}
-          <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
+          {(!is_msite_megamenu_enabled && !isMsiteMegaMenuRoute() && isMobile) && <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />}
         </header>
         <OfflineNotice />
       </>

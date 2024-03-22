@@ -229,8 +229,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ref={this.itemRef}
         key={i * 10}
       >
-        <a
-          href={parseLink}
+        <Link
+          to={parseLink}
           key={i * 10}
           block="SliderWithLabel"
           elem="Link"
@@ -247,7 +247,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             block="Image"
             style={{ maxWidth: wd }}
           />
-        </a>
+        </Link>
         {modifiedText ? (
           <div block={`SliderText${megamenuType ? " megaMenuSliderText": ""}`} style={{ textAlign: text_align }}>
             {modifiedText}
