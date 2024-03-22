@@ -56,6 +56,7 @@ export const mapStateToProps = (state) => ({
   displaySearch: state.PDP.displaySearch,
   gender: state.AppState.gender,
   indexCodeRedux: state.SearchSuggestions.algoliaIndex?.indexName,
+  is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -325,13 +326,18 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderGenderSwitcher() {
-    const { changeMenuGender, activeOverlay } = this.props;
+    const { changeMenuGender, activeOverlay, is_msite_megamenu_enabled = false } = this.props;
     const { showPLPSearch, isArabic } = this.state;
     const pathNamesIncludesArrow = [
       "/influencer.html/Collection",
       "/influencer.html/Store",
     ];
-    if (isMobile.any() && (activeOverlay === MOBILE_MENU_SIDEBAR_ID && !isMsiteMegaMenuCategoriesRoute())) {
+    if (
+      !isMsiteMegaMenuRoute() &&
+      !is_msite_megamenu_enabled &&
+      isMobile.any() &&
+      activeOverlay === MOBILE_MENU_SIDEBAR_ID
+    ) {
       return null;
     }
     return (this.isPLP() ||

@@ -63,8 +63,8 @@ const MegaMenuCategoriesAccordion = (props) => {
     if (ScrollerRef && ScrollerRef.current && ScrollerRef.current[index]) {
       setTimeout(() => {
         const element = ScrollerRef.current[index];
-        const elementRect = element.getBoundingClientRect();
-        const elementTop = elementRect.top + window.scrollY;
+        const elementRect = element?.getBoundingClientRect();
+        const elementTop = elementRect?.top + window.scrollY;
         const scrollToOffset = elementTop - 100; 
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);

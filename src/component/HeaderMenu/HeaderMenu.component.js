@@ -6,8 +6,8 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Menu from "Component/Menu";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import browserHistory from "Util/History";
-import categorySVG from "Component/MobileBottomBar/icons/categories.svg";
-import categoryActiveSVG from "Component/MobileBottomBar/icons/categories-active.svg";
+import categoryActive from "Component/MobileBottomBar/icons/categoryActive.gif";
+import categoryInActive from "Component/MobileBottomBar/icons/categoryInactive.gif";
 import isMobile from "Util/Mobile";
 import {bottomNavClickTrackingEvent} from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
@@ -105,8 +105,8 @@ class HeaderMenu extends PureComponent {
         <div className={`nav-bar-item-button ${expanded ? 'selected' : ''} `}>
           <img className="nav-bar-item-icon"
             src={expanded
-              ? categoryActiveSVG
-              : categorySVG}
+              ? categoryActive
+              : categoryInActive}
             alt="Wishlist" width={24} height={24} />
           <div className={`nav-bar-item-label ${expanded ? 'selected' : ''}`}>
             {__("Categories")}</div>
