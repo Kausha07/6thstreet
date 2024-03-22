@@ -9,6 +9,7 @@ import browserHistory from "Util/History";
 import categorySVG from "Component/MobileBottomBar/icons/categories.svg";
 import categoryActiveSVG from "Component/MobileBottomBar/icons/categories-active.svg";
 import isMobile from "Util/Mobile";
+import {bottomNavClickTrackingEvent} from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 import "./HeaderMenu.style";
@@ -58,6 +59,11 @@ class HeaderMenu extends PureComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
     });
+    bottomNavClickTrackingEvent({
+      label_name: "categories",
+      gender: gender,
+      prev_screen_name: sessionStorage.getItem("prevScreen")
+    })
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");

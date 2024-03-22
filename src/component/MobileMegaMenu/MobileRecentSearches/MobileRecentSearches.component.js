@@ -4,12 +4,17 @@ import "./MobileRecentSearches.style";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import CDN from "Util/API/provider/CDN";
-import { getCountryFromUrl } from "Util/Url";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {
   capitalizeFirstLetter,
   requestedGender,
   saveBrandRecentSearch,
 } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import Event, {
+  EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
+  MOE_trackEvent
+} from "Util/Event";
+
 
 function MobileRecentSearches({ isArabic, recentSearches = [] }) {
   const [trendingBrands, setTrendingBrands] = useState([]);
@@ -39,8 +44,17 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
     }
   }
 
-  const onSearchQueryClick = (search) => {
+  const onSearchQueryClick = (search, i) => {
     saveBrandRecentSearch(search);
+    MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
+      country: getCountryFromUrl()?.toUpperCase(),
+      language: getLanguageFromUrl()?.toUpperCase(),
+      search_term: search || "",
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+      suggestion_position: i+1,
+      app6thstreet_platform: "Web",
+    })
   };
 
   const renderNewRecentSearch = ({ name, link }, i) => {
@@ -54,7 +68,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
                   name
                 )}&p=0&dFR[gender][0]=${gender}&prevPage=brands-menu`
           }
-          onClick={() => onSearchQueryClick(name)}
+          onClick={() => onSearchQueryClick(name, i)}
           key={name}
         >
           <div
@@ -80,9 +94,21 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
     ) : null;
   };
 
+  const handleSearchSuggestionClick = (query,i) => {
+    MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
+      country: getCountryFromUrl()?.toUpperCase(),
+      language: getLanguageFromUrl()?.toUpperCase(),
+      search_term: query || "",
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+      suggestion_position: i+1,
+      app6thstreet_platform: "Web",
+    })
+  }
+
   const renderNewTrendingBrand = (brand, i) => {
     const { en_brand = "", ar_brand = "", url_path = "", rk = "" } = brand;
-
+    const requestedBrandName = isArabic ? ar_brand : en_brand;
     return (
       <li key={i}>
         <Link
@@ -95,6 +121,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
               requestedGender(gender)
             )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`,
           }}
+          onClick={() => handleSearchSuggestionClick(requestedBrandName,i)}
         >
           <div
             block="SearchSuggestionNew"

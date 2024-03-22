@@ -256,6 +256,8 @@ export class HeaderSearchContainer extends PureComponent {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         search_term: SearchValue || "",
+        gender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+        current_page: sessionStorage.getItem("currentScreen"),
         app6thstreet_platform: "Web",
       });
       if (sessionStorage.hasOwnProperty("Searched_value")) {
@@ -270,8 +272,12 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   render() {
+    const {
+      AppState: { gender },
+    } = getStore().getState();
+    const genderValue = isArabic() ? getGenderInArabic(gender) : gender; 
     return (
-      <HeaderSearch {...this.containerFunctions} {...this.containerProps()} />
+      <HeaderSearch {...this.containerFunctions} {...this.containerProps()} gender={genderValue} />
     );
   }
 }

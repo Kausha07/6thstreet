@@ -3,11 +3,15 @@ import Link from "Component/Link";
 import Loader from "Component/Loader";
 import { isArabic } from "Util/App";
 import "./MegaMenuNestedCategoriesList.style.scss";
+import { subCategoryClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 const MegaMenuNestedCategoriesList = ({
   isLoading,
   nestedCategoiresList = [],
+  parentCategory = "",
+  gender="women",
+  subCategoryPosition = 1
 }) => {
-  const renderCategoriesList = (item = {}, index) => {
+  const renderCategoriesList = (item = {}) => {
     const { label = "", link = "", image = "", promotion_name = "" } = item;
     const isArabicValue = isArabic();
 
@@ -15,9 +19,17 @@ const MegaMenuNestedCategoriesList = ({
       <li>
         <Link
           to={link}
-          key={index}
+          key={subCategoryPosition}
           data-banner-type="banner"
           data-promotion-name={promotion_name ? promotion_name : ""}
+          onClick={()=>{
+            subCategoryClickEvent({
+              gender: gender,
+              parent_category: parentCategory,
+              subcategory_name: label,
+              subcategory_position: subCategoryPosition
+            })
+          }}
         >
           <div block="nested-categories-list">
             <Image

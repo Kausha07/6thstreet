@@ -18,6 +18,7 @@ import Event, {
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import {isMsiteMegaMenuRoute, isMsiteMegaMenuCategoriesRoute, isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import { brandSearchClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 export const URL_REWRITE = "url-rewrite";
 class HeaderSearch extends PureComponent {
@@ -79,11 +80,16 @@ class HeaderSearch extends PureComponent {
     }
 
     if (showSearch && !prevShowSearch) {
+      if(isMsiteMegaMenuBrandsRoute()) {
+        brandSearchClickEvent({ gender: this.props?.gender });
+      }
       Event.dispatch(EVENT_GTM_GO_TO_SEARCH);
       MOE_trackEvent(EVENT_GTM_GO_TO_SEARCH, {
         country: getCountryFromUrl().toUpperCase(),
         language: getLanguageFromUrl().toUpperCase(),
         screen_name: this.getPageType(),
+        gender: this.props?.gender,
+        current_page: sessionStorage.getItem("currentScreen"),
         isLoggedIn: isSignedIn(),
         app6thstreet_platform: "Web",
       });
@@ -166,6 +172,8 @@ class HeaderSearch extends PureComponent {
       country: getCountryFromUrl().toUpperCase(),
       language: getLanguageFromUrl().toUpperCase(),
       search_term: search || "",
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender: this.props?.gender,
       app6thstreet_platform: "Web",
     });
   };

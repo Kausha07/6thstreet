@@ -14,7 +14,8 @@ import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper"
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import { clickBrandBannerEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import "./DynamicContentGrid.style";
 
 class DynamicContentGrid extends PureComponent {
@@ -58,19 +59,31 @@ class DynamicContentGrid extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+    const { items = [], brandGridItem = [] } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+    if(isMsiteMegaMenuBrandsRoute()) {
+      brandGridItem.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_id: item.label || "",
+          promotion_name: item?.label || "",
+          store_code: getStoreName || "",
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    } else {
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
+      });
+    }
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, isMsiteMegaMenuBrandsRoute() ? brandGridItem : items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -84,7 +97,7 @@ class DynamicContentGrid extends PureComponent {
       }
     });
   };
-  onclick = (item) => {
+  onclick = (item, i) => {
     const { index } = this.props;
     let banner = {
       link: item.link,
@@ -179,6 +192,11 @@ class DynamicContentGrid extends PureComponent {
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);
+            clickBrandBannerEvent({
+              gender : gender,
+              banner_position: i+1,
+              banner_label:promotionName,
+            })
           }}
         >
           <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
