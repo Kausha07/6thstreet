@@ -5,23 +5,32 @@ import { withRouter } from "react-router";
 import Algolia from "Util/API/provider/Algolia";
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
 import BrandSelectionDirectoryList from "./BrandSelectionDirectoryList.component";
-import { setMegaMenuBrandsData, setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import { setMegaMenuBrandsData, setMobileMegaMenuPageOpenFlag, setMegaMenuHeaderGenderChange } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
 import { setGender } from "Store/AppState/AppState.action";
+let globalGender = "";
 export const mapStateToProps = (state) => ({
-  gender: state.AppState.gender
+  gender: state.AppState.gender,
+  megamenuDynmaicBannerSliderData: state?.CategoriesListReducer?.megamenuDynmaicBannerSliderData,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   setMegaMenuBrandsData: (megaMenuBrandsData) => dispatch(setMegaMenuBrandsData(megaMenuBrandsData)),
   setMobileMegaMenuPageOpenFlag: (mobileMegaMenuPageOpenFlag) => dispatch(setMobileMegaMenuPageOpenFlag(mobileMegaMenuPageOpenFlag)),
-  setGender: (gender) => dispatch(setGender(gender))
+  setGender: (gender) => dispatch(setGender(gender)),
+  requestMegaMenuBannerAndDynamicSliderData: (gender) =>
+    CategoriesListDispatcher.requestMegaMenuBannerAndDynamicSliderData(
+      gender,
+      dispatch
+    ),
+  setMegaMenuHeaderGenderChange: (megamenuHeaderGenderChange) => dispatch(setMegaMenuHeaderGenderChange(megamenuHeaderGenderChange)),
 
 });
 
 const BrandSelectionDirectoryListContainer = (props) => {
   const [brands, setBrands] = useState([]);
   const [brandMapping, setBrandMapping] = useState(null);
-  const { isLoading, setIsLoading } = props;
+  const { isLoading, setIsLoading, megamenuDynmaicBannerSliderData, requestMegaMenuBannerAndDynamicSliderData, setMegaMenuHeaderGenderChange } = props;
   const isArabicValue = isArabic();
   const gender = props?.gender;
 
@@ -33,23 +42,17 @@ const BrandSelectionDirectoryListContainer = (props) => {
       : "Boy,Girl";
     requestShopbyBrands(brandType === "kids" ? kidsGender : genderTab);
     props?.setMobileMegaMenuPageOpenFlag("menu-brands");
-  }, []);
-
-  useEffect(() => {
-    let brandType = gender;
-    const genderTab = isArabicValue ? getGenderInAR(brandType) : brandType;
-    const kidsGender = isArabicValue
-      ? `${getGenderInAR("Boy")},${getGenderInAR("Girl")}`
-      : "Boy,Girl";
-    requestShopbyBrands(brandType === "kids" ? kidsGender : genderTab);
-    props?.setMobileMegaMenuPageOpenFlag("menu-brands");
-  }, [gender]);
-
-  useEffect(() => {
+    if(globalGender !== gender && megamenuDynmaicBannerSliderData?.[gender]?.length === 0) {
+      globalGender = gender;
+       requestMegaMenuBannerAndDynamicSliderData(gender);
+    }
+    setMegaMenuHeaderGenderChange(true);
     return () => {
       props?.setMobileMegaMenuPageOpenFlag("");
+      setMegaMenuHeaderGenderChange(false);
     }
-  },[])
+  }, [gender]);
+
   const getGenderInAR = (gender) => {
     switch (gender) {
       case "men":

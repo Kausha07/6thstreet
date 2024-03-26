@@ -33,7 +33,8 @@ class GenderButton extends PureComponent {
       label,
       urlKey,
       isUnsetStyle,
-      icon
+      icon,
+      megamenuHeaderGenderChange = false,
     } = this.props;
 
     if (!urlKey) {
@@ -63,7 +64,7 @@ class GenderButton extends PureComponent {
         </Link>
       );
     }
-   if(isMsiteMegaMenuRoute()) {
+   if(megamenuHeaderGenderChange) {
       return <>
          {icon ? icon : <></>}
           <button

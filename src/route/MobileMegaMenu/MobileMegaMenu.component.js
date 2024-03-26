@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "Component/Loader";
 import { connect } from "react-redux";
 import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
-import { setMobileMegaMenuPageOpenFlag } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import { setMobileMegaMenuPageOpenFlag, setMegaMenuHeaderGenderChange } from "Store/MegaMenuCategoriesList/CategoriesList.action";
 import {renderBannerAnimationShimper, renderMegaMenuAnimationShimer} from "../../component/MobileMegaMenu/Utils/MegaMenuShimers.helper"
 import MegaMenuBannerSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuBannerSlider/MegaMenuBannerSlider.component";
 import MegaMenuHorizontalSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuHorizontalSlider/MegaMenuHorizontalSlider.component";
@@ -26,15 +26,20 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   setMobileMegaMenuPageOpenFlag: (mobileMegaMenuPageOpenFlag) =>
     setMobileMegaMenuPageOpenFlag(mobileMegaMenuPageOpenFlag),
+  setMegaMenuHeaderGenderChange: (megamenuHeaderGenderChange) => dispatch(setMegaMenuHeaderGenderChange(megamenuHeaderGenderChange))
 });
 const MobileMegaMenu = (props) => {
-  const { requestMegaMenuBannerAndDynamicSliderData, gender, megamenuDynmaicBannerSliderData } = props;
+  const { requestMegaMenuBannerAndDynamicSliderData, gender, megamenuDynmaicBannerSliderData, setMegaMenuHeaderGenderChange } = props;
 
 
   useEffect(() => {
     if(globalGender !== gender && megamenuDynmaicBannerSliderData?.[gender]?.length === 0) {
      globalGender = gender;
       requestMegaMenuBannerAndDynamicSliderData(gender);
+    }
+    setMegaMenuHeaderGenderChange(true);
+    return () => {
+      setMegaMenuHeaderGenderChange(false);
     }
   }, [gender]);
 

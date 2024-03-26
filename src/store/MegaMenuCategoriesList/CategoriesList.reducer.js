@@ -1,4 +1,4 @@
-import { SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG, SET_MEGAMENU_BRANDS_DATA, SET_MOBILE_MEGAMENU_CATEGORY_LOADER, SET_MEGAMENU_CATEGORIES_DATA, SET_MEGAMENU_DYNAMIC_BANNER_SLIDER_DATA } from './CategoriesList.action';
+import { SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG, SET_MEGAMENU_BRANDS_DATA, SET_MOBILE_MEGAMENU_CATEGORY_LOADER, SET_MEGAMENU_CATEGORIES_DATA, SET_MEGAMENU_DYNAMIC_BANNER_SLIDER_DATA, SET_MEGAMENU_HEADER_GENDER_CHANGE } from './CategoriesList.action';
 
 export const getInitialState = () => ({
     isLoading: true,
@@ -17,10 +17,11 @@ export const getInitialState = () => ({
     },
     mobileMegaMenuPageOpenFlag: "",
     megaMenuBrands: {},
+    megamenuHeaderGenderChange: false,
 });
 
 const CategoriesListReducer = (state = getInitialState(), action) => {
-    const { type, mobileMegaMenuPageOpenFlag, megaMenuBrands } = action;
+    const { type, mobileMegaMenuPageOpenFlag, megaMenuBrands, megamenuHeaderGenderChange } = action;
 
     switch (type) {
     case SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG: {
@@ -77,6 +78,12 @@ const CategoriesListReducer = (state = getInitialState(), action) => {
                 [gender]: data,
             },
         };
+    }
+    case SET_MEGAMENU_HEADER_GENDER_CHANGE: {
+        return {
+            ...state,
+            megamenuHeaderGenderChange,
+        }
     }
 
     default:
