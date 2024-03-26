@@ -10,14 +10,17 @@ import MyAccountOrderList from "./MyAccountOrderList.component";
 
 import Event, { MOE_trackEvent, EVENT_MYORDERPAGE_VISIT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { setLastLimit } from "Store/MyAccount/MyAccount.action";
 
 export const mapStateToProps = (state) => ({
   eddResponse: state.MyAccountReducer.eddResponse,
+  myOrderLastOffsetLimit: state.MyAccountReducer.myOrderLastOffsetLimit,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   showErrorNotification: (error) => dispatch(showNotification("error", error)),
   getOrders: (limit, offset) => MyAccountDispatcher.getOrders(limit, offset),
+  setLastLimit: (Lastlimit) => dispatch(setLastLimit(Lastlimit)),
 });
 
 export class MyAccountOrderListContainer extends SourceComponent {
@@ -31,6 +34,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
     nextOffset: 0,
     orders: [],
     isGetNewOrders: true,
+    currentOffset: 0,
   };
 
   componentDidMount() {
@@ -39,7 +43,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
 
     this.getOrderList(limit);
 
-    window.addEventListener("scroll", this.handleScroll);    
+    window.addEventListener("scroll", this.handleScroll);
     Event.dispatch(EVENT_MYORDERPAGE_VISIT, {
       page: "Orders",
     });
@@ -76,6 +80,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
       isGetNewOrders
     ) {
       this.setState({ isLoading: true }, () => this.getOrderList(limit));
+      this.props.setLastLimit({ id: null, currentOffset: 0 });
     }
   };
 
@@ -84,18 +89,26 @@ export class MyAccountOrderListContainer extends SourceComponent {
   }
 
   containerProps = () => {
-    const { orders, isLoading, requestInProgress } = this.state;
+    const { orders, isLoading, requestInProgress, currentOffset } = this.state;
     const { eddResponse } = this.props;
-    return { orders, isLoading, requestInProgress, eddResponse };
+    return { orders, isLoading, requestInProgress, eddResponse, currentOffset };
   };
 
   getOrderList(limit = 15) {
     const { getOrders, showErrorNotification } = this.props;
-    const { orders, nextOffset } = this.state;
+    const { orders, nextOffset, isLoading } = this.state;
 
     this.setState({ requestInProgress: true });
+    const finalOffset =
+      this.props?.myOrderLastOffsetLimit?.currentOffset && !isLoading
+        ? 0
+        : nextOffset;
+    const finalLimit =
+      this.props?.myOrderLastOffsetLimit?.currentOffset && !isLoading
+        ? this.props?.myOrderLastOffsetLimit?.currentOffset
+        : limit;
 
-    getOrders(limit, nextOffset)
+    getOrders(finalLimit, finalOffset)
       .then(({ data, meta }) => {
         this.setState({
           orders: data ? [...orders, ...data] : orders,
@@ -104,6 +117,9 @@ export class MyAccountOrderListContainer extends SourceComponent {
           requestInProgress: false,
           limit,
           isGetNewOrders: !!meta.next_offset,
+        });
+        this.setState({
+          currentOffset: meta?.next_offset,
         });
       })
       .catch(() => {
