@@ -1164,6 +1164,12 @@ class PDPSummary extends PureComponent {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
+    if(this.state.tagsFromAddToCart.length){
+      this.state.tagsFromAddToCart.map((tag)=>{
+        tags.push(__(tag));
+      })
+    }
+
     // Commenting this code, because we are showing this tag other where to with different logic
     // if (
     //   simple_products &&
