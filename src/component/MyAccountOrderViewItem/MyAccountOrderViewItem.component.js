@@ -14,10 +14,28 @@ import {
   DEFAULT_READY_SPLIT_KEY,
 } from "../../util/Common/index";
 import { SPECIAL_COLORS } from "../../util/Common";
-import Event, { EVENT_GTM_EDD_VISIBILITY } from "Util/Event";
+import Event, { EVENT_GTM_EDD_VISIBILITY, MOE_trackEvent, EVENT_PRODUCT_RATING_CLICK, EVENT_PRODUCT_RATING_CLEAR, EVENT_PRODUCT_RATING_VALUE } from "Util/Event";
 import { Store } from "../Icons";
+import Image from "Component/Image";
+import Tick from "./icons/tick.png";
+import HollowStar from "./icons/hollow-star.png";
+import RatingStar from "./icons/rating_star.png";
+
+import { updateStarRating, deleteStarRating } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
+import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import { ThreeDots } from "react-loader-spinner";
+
+
 
 export class MyAccountOrderViewItem extends SourceComponent {
+
+  state = {
+    starHover: 0,
+    isRatingSubmited: false,
+    isRatingProccessing: false
+  };
+
+
   renderDetails() {
     let {
       currency,
@@ -42,7 +60,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
       international_shipping_fee,
     } = this.props;
     const isIntlBrand =
-      ( parseInt(cross_border) === 1 &&
+      (parseInt(cross_border) === 1 &&
         edd_info &&
         edd_info.has_cross_border_enabled) ||
       int_shipment === "1";
@@ -230,7 +248,185 @@ export class MyAccountOrderViewItem extends SourceComponent {
       </div>
     );
   };
+
+  renderProductRating() {
+    const {
+      item: {
+        sku,
+        config_sku,
+      } = {},
+      productsRating,
+    } = this.props;
+
+    return (
+      <div className="productRatingSection">
+        <h3 className="title">{__("Rate the quality of the product")}</h3>
+        <div className="ratingBox">
+          {this.renderStarRating()}
+          <div className="ratingActions">
+            {(this.state.isRatingProccessing && !this.state.isRatingSubmited) && <ThreeDots color="black" height={6} width={"100%"} />}
+              {(this.state.isRatingSubmited && !this.state.isRatingProccessing) &&
+                <div className="ratingSubmitIcon">
+                  <Image
+                    lazyLoad={false}
+                    src={Tick}
+                    className="lineImg"
+                    alt="Tick"
+                  />
+                </div>
+              }
+              {((productsRating[sku] > 0 && productsRating[sku]) && !this.state.isRatingProccessing) && <button className="submitRating" onClick={() => this.handleDeleteStarRating(sku, config_sku)}>{__("Clear")}</button>}
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+  renderStarRating() {
+    const {
+      item: {
+        sku,
+        config_sku,
+      } = {},
+      productsRating,
+    } = this.props;
+    return (
+      <div className="ratingStars">
+        {[...Array(5)].map((star, index) => {
+          index += 1;
+          return (
+            <button
+              className="starIcons"
+              type="button"
+              key={`starIcon_${index}`}
+              onClick={() => this.handleStarClick(index)}
+              onMouseEnter={() => this.handleStarHoverEnter(index)}
+              onMouseLeave={() => this.handleStarHoverLeave()}
+            >
+              <Image
+                lazyLoad={false}
+                src={index <= (this.state.starHover || productsRating[sku]) ? RatingStar : HollowStar}
+                className="starIcon"
+                alt="star"
+              />
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+  handleStarHoverLeave() {
+    this.setState({ starHover: 0 })
+  }
+  handleStarHoverEnter(value) {
+    this.setState({ starHover: value })
+  }
+
+  extractIfHasEXPrefix(inputString) {
+    if (inputString.startsWith("EX-") || inputString.startsWith("RAE")) {
+      return inputString.substring(3);
+    } else {
+      return inputString;
+    }
+  }
+
+  async handleStarClick(value) {
+    const {
+      item: {
+        sku,
+        config_sku,
+      } = {},
+      incrementId,
+      productsRating,
+      updateRating
+    } = this.props;
+
+    if (sku &&  config_sku && productsRating[sku] !== value && !this.state.isRatingProccessing && !this.state.isRatingSubmited) {
+      this.setState({ isRatingProccessing: true });
+      await updateStarRating({
+        "simple_sku": sku,
+        "config_sku": config_sku,
+        "order_id": +this.extractIfHasEXPrefix(incrementId),
+        "rating": value
+      }).then((resp) => {
+        if(resp.success){
+          this.setState({ isRatingProccessing: false });
+          this.setState({ isRatingSubmited: true });
+          setTimeout(() => {
+            this.setState({ isRatingSubmited: false });
+          }, 2000);
+
+          if(!productsRating[sku]){
+            Event.dispatch(EVENT_PRODUCT_RATING_CLICK, {
+              sku: sku || "",
+              rating: value || "",
+            });
+    
+            MOE_trackEvent(EVENT_PRODUCT_RATING_CLICK, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              app6thstreet_platform: "Web",
+              sku: sku || "",
+              rating: value || "",
+            });
+          }else{
+            Event.dispatch(EVENT_PRODUCT_RATING_VALUE, {
+              sku: sku || "",
+              rating: value || "",
+            });
+    
+            MOE_trackEvent(EVENT_PRODUCT_RATING_VALUE, {
+              country: getCountryFromUrl().toUpperCase(),
+              language: getLanguageFromUrl().toUpperCase(),
+              app6thstreet_platform: "Web",
+              sku: sku || "",
+              rating: value || "",
+            });
+          }
+          updateRating(sku, value)        
+        }else{
+          this.setState({ isRatingProccessing: false });
+          this.setState({ isRatingSubmited: false });
+        }
+      })
+
+    }
+  }
+
+
+  async handleDeleteStarRating(productSimpleSku, productConfigSku) {
+    const {
+      item: {
+        sku,
+        config_sku,
+      } = {},
+      incrementId,
+      productsRating,
+      updateRating
+    } = this.props;
+    if (!this.state.isRatingProccessing && !this.state.isRatingSubmited) {
+      this.setState({ isRatingProccessing: true });
+      const incmntId = this.extractIfHasEXPrefix(incrementId)
+      await deleteStarRating(productSimpleSku,encodeURIComponent(productConfigSku), +incmntId).then((resp) => {
+        if(resp.success){
+          this.setState({ isRatingProccessing: false });
+          Event.dispatch(EVENT_PRODUCT_RATING_CLEAR);
+          MOE_trackEvent(EVENT_PRODUCT_RATING_CLEAR, {
+            country: getCountryFromUrl().toUpperCase(),
+            language: getLanguageFromUrl().toUpperCase(),
+            app6thstreet_platform: "Web",
+          });
+          updateRating(sku, 0);
+        }else{
+          this.setState({ isRatingProccessing: false });
+        }       
+        
+      })
+    }
+  }
+
   render() {
+    const { item, itemStatus, isProductRatingEnabled } = this.props;
     return (
       <div
         block="MyAccountOrderViewItem"
@@ -240,6 +436,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
           {this.renderImage()}
           {this.renderDetails()}
         </div>
+        {itemStatus && itemStatus === "delivery_successful" && isProductRatingEnabled && this.renderProductRating()}
+
       </div>
     );
   }

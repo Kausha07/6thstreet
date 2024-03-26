@@ -924,6 +924,7 @@ export class PLPContainer extends PureComponent {
       pages,
       newSelectedActiveFilters = {},
     } = this.props;
+    let newMoreActiveFilters = {};
     const { isLoading: isCategoriesLoading } = this.state;
     const currentIsLoading = this.getIsLoading();
     const requestOptions = PLPContainer.getRequestOptions();
@@ -1032,12 +1033,43 @@ export class PLPContainer extends PureComponent {
           });
         });
       }
-      newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
+
+      // moreFilters - adding more filters into state, when the component get updated
+      const selectedMoreFiltersArr = [];
+      const selectedMoreFilters = this.props.moreFilters;
+      const option =
+        selectedMoreFilters && selectedMoreFilters.option
+          ? selectedMoreFilters.option
+            : {};
+      {Object.entries(option).map(function (filter, index) {
+        const key = filter[0]
+        const values = filter[1]
+        if (values) {
+          return Object.values(values).map(function (value, index) {
+          if (value) {
+            return Object.values(value).map(function (val, index) {
+                if (val && val.is_selected === true) {
+                    const newVAl = {...val, type: "MoreFilter"};
+                    selectedMoreFiltersArr.push(newVAl);
+                  }
+                });
+              }
+            });
+          }
+        })}
+      {newActiveFilters["categories_without_path"] = newActiveFilters["categories_without_path"]
         ? [...newActiveFilters["categories_without_path"], ...tempArray]
         : [...tempArray];
+
+      newMoreActiveFilters["categories_without_path"] = newMoreActiveFilters["categories_without_path"]
+        ? [...newMoreActiveFilters["categories_without_path"], ...selectedMoreFiltersArr]
+        : [...selectedMoreFiltersArr];
+      }
+      
       this.setState({
         activeFilters: newActiveFilters,
         newActiveFilters: newSelectedActiveFilters,
+        moreActiveFilters: newMoreActiveFilters,
       });
     }
     let element = document.getElementById(lastHomeItem);
