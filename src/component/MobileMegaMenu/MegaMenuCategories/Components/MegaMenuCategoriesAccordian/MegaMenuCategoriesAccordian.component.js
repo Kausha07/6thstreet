@@ -33,7 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 const MegaMenuCategoriesAccordion = (props) => {
-  const [clickedIndex, setClickedIndex] = useState(null);
+  const [clickedIndex, setClickedIndex] = useState(-1);
   const isArabicValue = isArabic();
   const ScrollerRef = useRef({});
   const { requestMegaMenuCategoriesList, setLoaderforCategory,  gender, data = [], megaMenuCategoriesData } = props;
@@ -69,11 +69,13 @@ const MegaMenuCategoriesAccordion = (props) => {
         window.scrollTo({ top: scrollToOffset, behavior: 'smooth' });
       }, 1);
     }
-    categoryExpandEvent({
-      gender: gender,
-      category_name: label,
-      category_position: index+1,
-    })
+    if(clickedIndex !== index) {
+      categoryExpandEvent({
+        gender: gender,
+        category_name: label,
+        category_position: index+1,
+      })
+    }
   };
   const renderMegaMenuCategoriesLists = (item, index) => {
     const {
