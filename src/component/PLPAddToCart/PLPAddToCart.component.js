@@ -731,6 +731,7 @@ class PLPAddToCart extends PureComponent {
             };
             payload["qty"] = parseInt(item?.full_item_info?.available_qty);
             payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty) : "";
+            payload["brand"] = item?.full_item_info?.brand_name;
             items.push(payload);
           }
         });
