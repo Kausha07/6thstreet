@@ -29,13 +29,11 @@ class MyAccountOrderList extends SourceComponent {
   scrollToOrder = (orderId) => {
     const orderRef = this.orderItemRefs?.[orderId];
     if (orderRef) {
-      setTimeout(() => {
-        const elementRect = orderRef.getBoundingClientRect();
-        const elementTop = elementRect.top + window.scrollY;
-        const headerOffset = isMobile.any() ? 70 : 160;
-        const scrollToOffset = elementTop - headerOffset;
-        window.scrollTo({ top: scrollToOffset, behavior: "smooth" });
-      }, 100);
+      const elementRect = orderRef?.getBoundingClientRect();
+      const elementTop = elementRect?.top + window.scrollY;
+      const headerOffset = isMobile.any() ? 70 : 160;
+      const scrollToOffset = elementTop - headerOffset;
+      window.scrollTo({ top: scrollToOffset, behavior: "smooth" });
     }
   };
 
