@@ -112,7 +112,7 @@
     }
     @include mobile {
       grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: 10px;
+      grid-gap: 20px 10px;
       width: 100%;
       padding-bottom: 80px;
     }
