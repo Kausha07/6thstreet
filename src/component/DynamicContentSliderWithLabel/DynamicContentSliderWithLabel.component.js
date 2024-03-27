@@ -134,24 +134,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-      const { items = [], megamenuType, megeMenuHorizontalSliderData = []  } = this.props;
+      const { items = [] } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    if(megamenuType) {
-      megeMenuHorizontalSliderData.forEach((item, index) => {
-        Object.assign(item, {
-          promotion_name: item?.label || "",
-          tag: item?.itemName || "",
-          url:item?.image_url || "",
-          link:item?.link || '',
-          store_code: item?.label || "",
-          indexValue: index + 1,
-          default_Index: getIndexId || 0,
-        });
-      });
-    } else {
       items.forEach((item, index) => {
         Object.assign(item, {
           store_code: getStoreName,
@@ -160,11 +147,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         });
       });
 
-    }
-    Event.dispatch(
-      HOME_PAGE_BANNER_IMPRESSIONS,
-      megamenuType ? megeMenuHorizontalSliderData : items
-    );
+    Event.dispatch( HOME_PAGE_BANNER_IMPRESSIONS,items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -192,19 +175,34 @@ class DynamicContentSliderWithLabel extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    const { items = [] } = this.props;
+    const { items = [], megamenuType, megeMenuHorizontalSliderData = []  } = this.props;
     const getStoreName = this.props?.promotion_name
       ? this.props?.promotion_name
       : "";
     const getIndexId = this.props?.index ? this.props.index : "";
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+    if(megamenuType) {
+      megeMenuHorizontalSliderData.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_name: item?.label || "",
+          tag: item?.itemName || "",
+          url:item?.image_url || "",
+          link:item?.link || '',
+          store_code: item?.label || "",
+          indexValue: index + 1,
+          default_Index: getIndexId || 0,
+        });
       });
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    } else {
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
+      });
+
+    }
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, megamenuType ? megeMenuHorizontalSliderData : items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
