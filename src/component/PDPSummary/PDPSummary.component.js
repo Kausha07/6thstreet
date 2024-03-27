@@ -156,6 +156,7 @@ class PDPSummary extends PureComponent {
               payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
               payload["qty"] = parseInt(item?.full_item_info?.available_qty);
               payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+              payload["brand"] = item?.full_item_info?.brand_name;
               items.push(payload);
             }
           })
@@ -189,6 +190,7 @@ class PDPSummary extends PureComponent {
           payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && edd_info.international_vendors && item.full_item_info.international_vendor && edd_info.international_vendors.indexOf(item.full_item_info.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
           payload["qty"] = parseInt(item?.full_item_info?.available_qty);
           payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+          payload["brand"] = item?.full_item_info?.brand_name;
           items.push(payload);
         }
       });
@@ -285,7 +287,16 @@ class PDPSummary extends PureComponent {
   }
 
   getEddForPDP(areaSelected = null) {
-    const { estimateEddResponseForPDP, edd_info, product : { simple_products = {}, cross_border=0, international_vendor = null } } = this.props;
+    const {
+      estimateEddResponseForPDP,
+      edd_info,
+      product: {
+        simple_products = {},
+        cross_border = 0,
+        international_vendor = null,
+        brand_name = "",
+      },
+    } = this.props;
     if(edd_info &&
       edd_info.is_enable &&
       edd_info.has_pdp && edd_info.has_item_level) {
@@ -338,6 +349,7 @@ class PDPSummary extends PureComponent {
 
             payload["qty"] = parseInt(simple_products?.[sku]?.quantity);
             payload["cross_border_qty"] = parseInt(simple_products?.[sku]?.cross_border_qty) ? parseInt(simple_products?.[sku]?.cross_border_qty): "";
+            payload["brand"] = brand_name;
 
             items.push(payload);
           });
@@ -540,6 +552,7 @@ class PDPSummary extends PureComponent {
             payload = { sku : item.sku, intl_vendor : item?.full_item_info?.cross_border && item?.full_item_info?.international_vendor && edd_info.international_vendors && edd_info.international_vendors.indexOf(item?.full_item_info?.international_vendor)>-1 ? item?.full_item_info?.international_vendor : null}
             payload["qty"] = parseInt(item?.full_item_info?.available_qty);
             payload["cross_border_qty"] = parseInt(item?.full_item_info?.cross_border_qty) ? parseInt(item?.full_item_info?.cross_border_qty): "";
+            payload["brand"] = item?.full_item_info?.brand_name;
             items.push(payload);
           }
         });
