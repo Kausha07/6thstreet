@@ -2,7 +2,12 @@ import { getStore } from "Store";
 import { showNotification } from 'Store/Notification/Notification.action';
 import { getCardType } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import { setSavedCards, setSavedCardsLoading, setNewCardVisible } from './CreditCard.action';
-import { addNewCreditCard, saveCreditCard, getSavedCards } from 'Util/API/endpoint/CreditCard/CreditCard.enpoint';
+import {
+  addNewCreditCard,
+  saveCreditCard,
+  getSavedCards,
+  deleteCreditCard,
+} from "Util/API/endpoint/CreditCard/CreditCard.enpoint";
 
 export class CreditCardDispatcher {
     /* eslint-disable-next-line */
@@ -26,6 +31,10 @@ export class CreditCardDispatcher {
 
     async saveCreditCard(_, data) {
         return saveCreditCard(data);
+    }
+
+    async deleteCreditCard(dispatch, gatewayToken) {
+        return deleteCreditCard(gatewayToken)
     }
 
     async toggleNewCardVisible(dispatch, data) {
