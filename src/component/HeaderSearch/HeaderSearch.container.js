@@ -219,7 +219,6 @@ export class HeaderSearchContainer extends PureComponent {
       isPDPSearchVisible,
       isPLP,
       handleHomeSearchClick,
-      mobileMegaMenuPageOpenFlag,
       showMegaMenuHeaderSearchStyle,
     } = this.props;
     const { search } = this.state;
@@ -232,7 +231,6 @@ export class HeaderSearchContainer extends PureComponent {
       isPDPSearchVisible,
       isPLP,
       handleHomeSearchClick,
-      mobileMegaMenuPageOpenFlag,
       showMegaMenuHeaderSearchStyle,
     };
   };

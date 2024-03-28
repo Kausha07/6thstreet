@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Loader from "Component/Loader";
+import React from "react";
 import Link from "Component/Link";
 import Image from "Component/Image";
 import isMobile from "Util/Mobile";
@@ -37,21 +36,23 @@ const MegamenuBannerSlider = (props) => {
 
 const sendImpressions = () => {
   const { BannerInformation } = props;
-  let items = [BannerInformation];
-  const getStoreName = (BannerInformation?.button_label)? BannerInformation?.button_label :  "";
-    const getIndexId = props?.index ? props.index : 1;
-    items.forEach((item, index) => {
-      Object.assign(item, {
-        promotion_name: item?.button_label || "",
-        tag: item?.description || "",
-        url:item?.image_url || "",
-        link:item?.link || '',
-        store_code: getStoreName,
-        indexValue: index + 1,
-        default_Index: getIndexId,
+  if(BannerInformation && Object.keys( props?.BannerInformation?.length > 0)) {
+    let items = [BannerInformation];
+    const getStoreName = (BannerInformation?.button_label)? BannerInformation?.button_label :  "";
+      const getIndexId = props?.index ? props.index : 1;
+      items.forEach((item, index) => {
+        Object.assign(item, {
+          promotion_name: item?.button_label || "",
+          tag: item?.description || "",
+          url:item?.image_url || "",
+          link:item?.link || '',
+          store_code: getStoreName,
+          indexValue: index + 1,
+          default_Index: getIndexId,
+        });
       });
-    });
-  Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+  }
 }
 
 const sendBannerClickImpression = (item) => {
@@ -106,7 +107,6 @@ const renderImage = (item) => {
   };
 
   return <div block="MegaMenuBannerImage" >
-    <Loader isLoading={props?.isLoading}/>
     {props && props?.BannerInformation && Object.keys( props?.BannerInformation?.length > 0) && renderImage(props?.BannerInformation)}
     {sendImpressions()}
   </div>;

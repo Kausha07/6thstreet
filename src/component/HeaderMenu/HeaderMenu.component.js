@@ -48,7 +48,7 @@ class HeaderMenu extends PureComponent {
   }
 
   onCategoriesClick = () => {
-    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled, setMobileMegaMenuPageOpenFlag } =
+    const { toggleOverlayByKey, gender, setGender, setLastTapItemOnHome, is_msite_megamenu_enabled } =
       this.props;
 
     if (gender === "home_beauty_women" || gender === "influencer") {
@@ -70,7 +70,6 @@ class HeaderMenu extends PureComponent {
 
     if(is_msite_megamenu_enabled && isMobile.any()) {
       browserHistory.push("/megamenu");
-      setMobileMegaMenuPageOpenFlag("megamenu");
     }else {
       if (gender !== "all") {
         browserHistory.push(
@@ -85,9 +84,9 @@ class HeaderMenu extends PureComponent {
     }
 
   renderMenu() {
-    const { newMenuGender, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
+    const { newMenuGender } = this.props;
 
-    return <Menu newMenuGender={newMenuGender} setMobileMegaMenuPageOpenFlag={setMobileMegaMenuPageOpenFlag} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>;
+    return <Menu newMenuGender={newMenuGender} />;
   }
 
   renderCategoriesButton() {

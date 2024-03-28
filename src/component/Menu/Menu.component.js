@@ -9,7 +9,6 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import BrowserDatabase from "Util/BrowserDatabase";
 import MobileMegaMenu from "../../route/MobileMegaMenu";
-import { isMsiteMegaMenuCategoriesRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 import "./Menu.style";
 
 class Menu extends PureComponent {
@@ -92,8 +91,6 @@ class Menu extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { mobileMegaMenuPageOpenFlag = "" } = this.props;
-    const mobileMegaMenuStyle = isMsiteMegaMenuCategoriesRoute()? { marginTop : "0px"}  : {};
     return (
       <div block="Menu" elem="Container">
        <div block="Menu" elem="Header-Mobile">
@@ -104,7 +101,7 @@ class Menu extends PureComponent {
               mods: { isArabic },
             }}
           >
-            <HeaderGenders isMenu={true} isMobileMegaMenu={this.props?.is_msite_megamenu_enabled && isMobile.any() ? true : false} mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}/>
+            <HeaderGenders isMenu={true} isMobileMegaMenu={this.props?.is_msite_megamenu_enabled && isMobile.any() ? true : false}/>
           </div>
         </div>
         <div
@@ -112,7 +109,6 @@ class Menu extends PureComponent {
             block: `Menu ${this.props.gender}-menu`,
             mods: { isArabic },
           }}
-          style={mobileMegaMenuStyle}
         >
           {this.renderCategories()}
         </div>

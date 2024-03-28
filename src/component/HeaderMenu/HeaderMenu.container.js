@@ -30,8 +30,8 @@ export class HeaderMenuContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled = false,setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag = "" } = this.props;
-    return { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled, setMobileMegaMenuPageOpenFlag, mobileMegaMenuPageOpenFlag};
+    const { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled = false } = this.props;
+    return { activeOverlay, newMenuGender, gender, is_msite_megamenu_enabled };
   };
 
   render() {
