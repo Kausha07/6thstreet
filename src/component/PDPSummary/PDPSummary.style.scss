@@ -27,6 +27,12 @@
       display: flex;
       justify-content: center;
       @include desktop() { 
+        &.isArabic {
+          position: absolute;
+          left: 0;
+          right: auto;
+          top: 0px;
+        }
         position: absolute;
         right: 14px;
         top: 0px;
