@@ -31,9 +31,9 @@ class MyAccountOrderList extends SourceComponent {
     if (orderRef) {
       const elementRect = orderRef?.getBoundingClientRect();
       const elementTop = elementRect?.top + window.scrollY;
-      const headerOffset = isMobile.any() ? 70 : 160;
+      const headerOffset = isMobile.any() ? 90 : 180;
       const scrollToOffset = elementTop - headerOffset;
-      window.scrollTo({ top: scrollToOffset, behavior: "smooth" });
+      window.scrollTo({ top: scrollToOffset, behavior: "instant" });
     }
   };
 
