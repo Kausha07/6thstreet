@@ -123,8 +123,8 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderRightIconsContainer() {
-    const { isArabic } = this.state;
-    if (this.isPDP() && isMobile.any()) {
+    const { isArabic, showPLPSearch } = this.state;
+    if ((this.isPDP() && isMobile.any()) || (showPLPSearch && isMsiteMegaMenuRoute())) {
       return null;
     }
     return (
@@ -798,7 +798,6 @@ class HeaderMainSection extends NavigationAbstract {
           hideSearchBar={this.hideSearchBar}
           renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
-          mobileMegaMenuPageOpenFlag={this.props?.mobileMegaMenuPageOpenFlag}
           key="searchDesktop"
         />
       </div>
@@ -806,7 +805,7 @@ class HeaderMainSection extends NavigationAbstract {
   }
 
   renderSearch = () => {
-    const { displaySearch,mobileMegaMenuPageOpenFlag } = this.props;
+    const { displaySearch } = this.props;
     const { showPLPSearch } = this.state;
     const isPDPSearchVisible = this.isPDP() && displaySearch;
     let isPDP = this.isPDP();
@@ -822,7 +821,6 @@ class HeaderMainSection extends NavigationAbstract {
             isPDPSearchVisible={isPDPSearchVisible}
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
-            mobileMegaMenuPageOpenFlag={mobileMegaMenuPageOpenFlag}
             showMegaMenuHeaderSearchStyle={showMegaMenuHeaderSearchStyle}
           />
         </div>

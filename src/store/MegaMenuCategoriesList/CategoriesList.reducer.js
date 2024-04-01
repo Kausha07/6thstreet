@@ -15,23 +15,14 @@ export const getInitialState = () => ({
         men: [],
         kids: [],
     },
-    mobileMegaMenuPageOpenFlag: "",
     megaMenuBrands: {},
     megamenuHeaderGenderChange: false,
 });
 
 const CategoriesListReducer = (state = getInitialState(), action) => {
-    const { type, mobileMegaMenuPageOpenFlag, megaMenuBrands, megamenuHeaderGenderChange } = action;
+    const { type, megaMenuBrands, megamenuHeaderGenderChange } = action;
 
     switch (type) {
-    case SET_MOBILE_MEGAMENU_PAGE_OPEN_FLAG: {
-
-        return {
-            ...state,
-            isLoading: false,
-            mobileMegaMenuPageOpenFlag
-        }
-    }
     case SET_MEGAMENU_BRANDS_DATA:{
 
         return {

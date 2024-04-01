@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import Loader from "Component/Loader";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import CategoriesListDispatcher from "Store/MegaMenuCategoriesList/CategoriesList.dispatcher";
-import { setMobileMegaMenuPageOpenFlag, setMegaMenuHeaderGenderChange } from "Store/MegaMenuCategoriesList/CategoriesList.action";
+import { setMegaMenuHeaderGenderChange } from "Store/MegaMenuCategoriesList/CategoriesList.action";
 import {renderBannerAnimationShimper, renderMegaMenuAnimationShimer} from "../../component/MobileMegaMenu/Utils/MegaMenuShimers.helper"
 import MegaMenuBannerSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuBannerSlider/MegaMenuBannerSlider.component";
 import MegaMenuHorizontalSlider from "../../component/MobileMegaMenu/MegaMenuCategories/Components/MegaMenuHorizontalSlider/MegaMenuHorizontalSlider.component";
@@ -13,8 +12,6 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   isLoading: state?.CategoriesListReducer?.isLoading,
-  mobileMegaMenuPageOpenFlag:
-    state.CategoriesListReducer.mobileMegaMenuPageOpenFlag,
   megamenuDynmaicBannerSliderData: state?.CategoriesListReducer?.megamenuDynmaicBannerSliderData
 });
 
@@ -24,8 +21,6 @@ export const mapDispatchToProps = (dispatch) => ({
       gender,
       dispatch
     ),
-  setMobileMegaMenuPageOpenFlag: (mobileMegaMenuPageOpenFlag) =>
-    setMobileMegaMenuPageOpenFlag(mobileMegaMenuPageOpenFlag),
   setMegaMenuHeaderGenderChange: (megamenuHeaderGenderChange) => dispatch(setMegaMenuHeaderGenderChange(megamenuHeaderGenderChange))
 });
 const MobileMegaMenu = (props) => {
@@ -59,7 +54,6 @@ const MobileMegaMenu = (props) => {
   const renderMegaMenuContent = () => {
     return (
       <>
-        <Loader isLoading={props?.isLoading} />
         <MegaMenuBannerSlider
           BannerInformation={BannerInformation}
           isLoading={props?.isLoading}

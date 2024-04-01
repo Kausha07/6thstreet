@@ -29,6 +29,7 @@ export const mapStateToProps = (state) => ({
   suggestionEnabled: state.AppConfig.suggestionEnabled,
   config: state.AppConfig.config,
   megaMenuBrands: state.CategoriesListReducer.megaMenuBrands,
+  is_msite_megamenu_enabled: state.AppConfig.is_msite_megamenu_enabled,
   // wishlistData: state.WishlistReducer.items,
 });
 
@@ -357,11 +358,12 @@ export class SearchSuggestionContainer extends PureComponent {
       suggestionEnabled,
       config: { countries = {} },
       megaMenuBrands,
+      is_msite_megamenu_enabled = false
     } = this.props;
     const isEmpty = search === "";
     const inNothingFound = data?.brands?.length + data?.products?.length === 0;
     const countryCode = getCountryFromUrl();
-    const isMsiteMegamenuEnabled = countries[countryCode]?.is_msite_megamenu_enabled || false;
+
     return {
       searchString: search,
       brands: data?.brands || [],
@@ -385,7 +387,7 @@ export class SearchSuggestionContainer extends PureComponent {
       exploreMoreData,
       suggestionEnabled,
       // wishlistData,
-      isMsiteMegamenuEnabled,
+      is_msite_megamenu_enabled,
       megaMenuBrands,
     };
   };

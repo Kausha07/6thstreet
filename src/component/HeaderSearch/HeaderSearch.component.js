@@ -193,7 +193,6 @@ class HeaderSearch extends PureComponent {
   };
 
   getPlaceholderText = () => {
-    const {mobileMegaMenuPageOpenFlag = ""} = this.props;
     if(isMobile.any() || isMobile.tablet()) {
       if(isMsiteMegaMenuBrandsRoute()) {
         return __("Search for Brands");
@@ -205,7 +204,7 @@ class HeaderSearch extends PureComponent {
     }
   }
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean, isPLP, mobileMegaMenuPageOpenFlag = "" } =
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
       this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
     const  modifiedPlaceholderText = this.getPlaceholderText(); 
@@ -261,7 +260,7 @@ class HeaderSearch extends PureComponent {
             />
           </button>
         </Form>
-        {showSearch && !isMsiteMegaMenuRoute() ? (
+        {showSearch ? (
           <div
             block="SearchSuggestion"
             elem="CloseContainer"
@@ -316,13 +315,13 @@ class HeaderSearch extends PureComponent {
   }
 
   render() {
-    const { isArabic } = this.state;
+    const { isArabic, showSearch } = this.state;
     const { isPDP, isPDPSearchVisible, isPLP, showMegaMenuHeaderSearchStyle = false } = this.props;
     const mobileMegaMenuStyle = showMegaMenuHeaderSearchStyle
       ? {
           top: "5px",
-          width: "75%",
-          left: isArabic ? "15%": "8%",
+          width: showSearch ? "90%" : "75%",
+          left: isArabic ? (showSearch ? "0" : "15%") : "8%",
           height: "39px",
         }
       : {};

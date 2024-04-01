@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { setGender } from 'Store/AppState/AppState.action';
 import MenuDispatcher from 'Store/Menu/Menu.dispatcher';
-import CategoriesListDispatcher from 'Store/MegaMenuCategoriesList/CategoriesList.dispatcher'
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 import Menu from './Menu.component';
 
@@ -65,13 +65,15 @@ export class MenuContainer extends PureComponent {
     };
 
     requestCategories() {
-        const { requestCategories, gender } = this.props;
+        const { requestCategories, gender, is_msite_megamenu_enabled = false } = this.props;
 
         // ignore menu request if there is no gender passed
         if (!gender) {
             return;
         }    
-        requestCategories(gender);
+        if(!is_msite_megamenu_enabled && !isMsiteMegaMenuRoute()) {
+            requestCategories(gender);
+        }
     }
 
     containerProps = () => {
@@ -84,8 +86,6 @@ export class MenuContainer extends PureComponent {
             setGender,
             categories,
             is_msite_megamenu_enabled,
-            setMobileMegaMenuPageOpenFlag,
-            mobileMegaMenuPageOpenFlag,
         } = this.props;
 
         return {
@@ -94,8 +94,6 @@ export class MenuContainer extends PureComponent {
             gender,
             setGender,
             is_msite_megamenu_enabled,
-            setMobileMegaMenuPageOpenFlag,
-            mobileMegaMenuPageOpenFlag
         };
     };
 

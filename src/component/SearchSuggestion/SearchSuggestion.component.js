@@ -480,7 +480,7 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestions(isMegaMenu = false) {
     const { 
       querySuggestions = [],
-      isMsiteMegamenuEnabled,
+      is_msite_megamenu_enabled = false,
       megaMenuBrands = {},
       searchString= "",
      } = this.props;
@@ -511,7 +511,7 @@ class SearchSuggestion extends PureComponent {
       return (
         <div block="SearchSuggestion" elem="Item"
           className={
-            isMsiteMegamenuEnabled && isMegaMenu ? "newSearchSuggestionMsite" : ""
+            is_msite_megamenu_enabled && isMegaMenu ? "newSearchSuggestionMsite" : ""
           }
         >
           {typeSuggetions?.length > 0 ? (
@@ -1091,11 +1091,10 @@ class SearchSuggestion extends PureComponent {
       recentSearches = [],
       trendingBrands = [],
       recentSearchesBrands = [],
-      isMsiteMegamenuEnabled,
+      is_msite_megamenu_enabled = false,
     } = this.props;
     const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
-
-    if (isBrandsMenu && isMobile && isMsiteMegamenuEnabled) {
+    if (isBrandsMenu && isMobile && is_msite_megamenu_enabled) {
       return (
         <>
           <MobileRecentSearches
