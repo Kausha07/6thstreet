@@ -321,7 +321,7 @@ class HeaderSearch extends PureComponent {
       ? {
           top: "5px",
           width: showSearch ? "90%" : "75%",
-          left: isArabic ? (showSearch ? "0" : "15%") : "8%",
+          left: isArabic ? (showSearch ? "0" : "15%") : "10%",
           height: "39px",
         }
       : {};
