@@ -45,6 +45,9 @@ const MegaMenuCategoriesAccordion = (props) => {
       setLoaderforCategory();
       requestMegaMenuCategoriesList(gender, locale);
     }
+    if(globalGenderAccordian !== gender) {
+      setClickedIndex(-1);
+    }
   }, [gender]);
 
   const renderImage = (image_url = "", description = "") => {
