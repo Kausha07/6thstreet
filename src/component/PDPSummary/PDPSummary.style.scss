@@ -90,7 +90,7 @@
     font-size: 24px;
     margin: 0.4px 0 0 0;
     text-decoration: none;
-
+    max-width: calc(100% - 110px);
     @include before-desktop {
       font-size: 16px;
       font-weight: 500;
