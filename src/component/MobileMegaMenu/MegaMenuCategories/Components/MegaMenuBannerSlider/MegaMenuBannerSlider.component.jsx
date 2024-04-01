@@ -36,11 +36,15 @@ const MegamenuBannerSlider = (props) => {
 
 const sendImpressions = () => {
   const { BannerInformation } = props;
-  if(BannerInformation && Object.keys( props?.BannerInformation?.length > 0)) {
+  let isItemEmpty = false; 
+  if(BannerInformation && Object.keys(BannerInformation)?.length > 0) {
     let items = [BannerInformation];
     const getStoreName = (BannerInformation?.button_label)? BannerInformation?.button_label :  "";
       const getIndexId = props?.index ? props.index : 1;
       items.forEach((item, index) => {
+        if(!item?.button_label) {
+          isItemEmpty = true;
+        }
         Object.assign(item, {
           promotion_name: item?.button_label || "",
           tag: item?.description || "",
@@ -51,7 +55,9 @@ const sendImpressions = () => {
           default_Index: getIndexId,
         });
       });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    if(!isItemEmpty) {
+      Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    }
   }
 }
 
