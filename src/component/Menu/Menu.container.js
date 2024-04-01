@@ -65,13 +65,13 @@ export class MenuContainer extends PureComponent {
     };
 
     requestCategories() {
-        const { requestCategories, gender, is_msite_megamenu_enabled = false } = this.props;
+        const { requestCategories, gender } = this.props;
 
         // ignore menu request if there is no gender passed
         if (!gender) {
             return;
         }    
-        if(!is_msite_megamenu_enabled && !isMsiteMegaMenuRoute()) {
+        if(!isMsiteMegaMenuRoute()) {
             requestCategories(gender);
         }
     }

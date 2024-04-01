@@ -19,6 +19,7 @@ import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.c
 import "./DynamicContentSliderWithLabel.style";
 import DynamicContentCountDownTimer from "../DynamicContentCountDownTimer"
 import { megaMenuCarousalEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
+import { isMsiteMegaMenuCategoriesRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -96,6 +97,18 @@ class DynamicContentSliderWithLabel extends PureComponent {
     this.registerViewPortEvent();
     this.showWidgetPostRender()
   }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props?.gender !== prevProps?.gender &&
+      isMsiteMegaMenuCategoriesRoute() &&
+      this.props?.megeMenuHorizontalSliderData &&
+      this.props?.megeMenuHorizontalSliderData?.length > 0 &&
+      isMobile.any()
+    ) {
+      this.sendImpressions();
+    }
+  }
+  
   componentWillUnmount() {
     this.timerStartRef.current && clearTimeout(this.timerStartRef.current);
     this.timerEndRef.current && clearTimeout(this.timerEndRef.current);
