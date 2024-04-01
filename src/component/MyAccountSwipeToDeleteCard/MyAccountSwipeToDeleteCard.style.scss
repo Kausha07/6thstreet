@@ -98,7 +98,7 @@
     border-radius: 0px;
 }
 
-.cardDeleteActionItem {
+.deleteActionItem {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -114,25 +114,93 @@
         line-height: 19px;
         text-transform: none;
         display: block;
-        width: fit-content;
+        width: 96px;
+
+        @include mobile {
+          width: auto;
+        }
     }
 
     img {
         width: 17px;
         height: 19px;
-        margin-bottom: 12px;
     }
+}
 
-    &-delete {
-        width: 100%;
-        padding: 0 15px;
-        background-color: transparent;
+
+
+.MyAccountPaymentCard {
+  
+    background: var(--my-acc-background);
+    width: 100%;
+    font-size: 14px;
+    line-height: 19px;
+    padding: 10px 24px 17px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    &-DetailWrapper {
+      display: flex;
+      align-items: center;
+    }
+    &-DetailBlock {
+      padding: 0 8px;
+      margin-left: 16px;
+
+      img:hover {
         cursor: pointer;
+      }
+      
+    }
+  
+    &:hover {
+      cursor: pointer;
+    }
+  
+    @include desktop() {
+      &:hover {
+        cursor: auto;
+      }
+    }
+  
+    &-Default {
+      color: var(--my-acc-default);
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+  
+    &-Picture {
+      img {
+        width: 50px !important;
+        height: 30px !important;
+      }
+    }
+  
+    &-Name {
+      font: 12px sans-serif;
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      line-height: 16px;
+      word-break: break-all;
+    }
+  
+    &-cardNum {
+      word-break: break-all;
+    }
+  
+    &-ExpDate {
+      color: var(--fw-expDate);
+      span {
+        color: var(--fw-expDate);
+      }
     }
 
-    &-imgWrapper {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
+
+}
+
+.isActive .MyAccountPaymentCard {        
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
 }

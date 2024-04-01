@@ -43,7 +43,7 @@ export class CreditCardContainer extends PureComponent {
         toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
         selectSavedCard: this.selectSavedCard.bind(this),
         cardNumberValidator: this.cardNumberValidator,
-        deleteCreditCard: this.deleteCreditCard.bind(this),
+        deleteCreditCard: this.deleteCreditCard,
     };
 
     containerProps = () => {
@@ -125,7 +125,7 @@ export class CreditCardContainer extends PureComponent {
         }
     }
 
-    deleteCreditCard(gatewayToken) {
+    deleteCreditCard = (gatewayToken) => {
         this.props.deleteCreditCard(gatewayToken);
     }
 

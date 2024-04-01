@@ -383,6 +383,7 @@ class CreditCard extends PureComponent {
                               renderMiniCard={this.renderMiniCard}
                               deleteCreditCard={deleteCreditCard}
                               isArabic={isArabic}
+                              key={cardNum}
                             />
                           );
                         }

@@ -60,21 +60,29 @@ const Item = ({ children, isSwiping, isArabic }) => {
   );
 };
 
-const handleSwipeRemoveItem = (handleDeleteBtnClick) => {
+const HandleSwipeRemoveItem = ({ handleDeleteBtnClick }) => {
+  const onHandleClick = (e) => {
+    e.stopPropagation();
+    handleDeleteBtnClick();
+  };
   return (
-    <div block="deleteActionItem">
-      <button
-        block="deleteActionItem"
+    <div block="cardDeleteActionItem">
+      <div
+        block="cardDeleteActionItem"
         name="RemoveItem"
         elem="delete"
         aria-label="Remove expired card"
-        onClick={handleDeleteBtnClick()}
+        onClick={(e) => {
+          onHandleClick(e);
+        }}
       >
-        <img src={trash} alt="trash" />
-        <span block="deleteActionItem" elem="title">
+        <div block="cardDeleteActionItem" elem="imgWrapper">
+          <img src={trash} alt="trash" />
+        </div>
+        <span block="cardDeleteActionItem" elem="title">
           {__("Delete")}
         </span>
-      </button>
+      </div>
     </div>
   );
 };
@@ -128,7 +136,11 @@ export const CreditCardSwipeToDelete = (props) => {
           </div>
         </div>
         <div block="DeleteButton" mods={{ isArabic }}>
-          {handleSwipeRemoveItem(handleDeleteBtnClick)}
+          {
+            <HandleSwipeRemoveItem
+              handleDeleteBtnClick={handleDeleteBtnClick}
+            />
+          }
         </div>
       </Item>
     </div>
