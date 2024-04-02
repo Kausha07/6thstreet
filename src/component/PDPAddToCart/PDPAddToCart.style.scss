@@ -123,8 +123,8 @@ $select-arrow-width: 6px !default;
     flex-direction: row;
 
     @include desktop {
-      width: 363px;
-      padding-bottom: 19px;
+      // width: 363px;
+      padding-bottom: 0;
       align-items: center;
     }
   }
