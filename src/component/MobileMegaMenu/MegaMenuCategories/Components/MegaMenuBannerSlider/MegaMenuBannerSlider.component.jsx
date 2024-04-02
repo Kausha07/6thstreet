@@ -112,10 +112,17 @@ const renderImage = (item) => {
     );
   };
 
-  return <div block="MegaMenuBannerImage" >
-    {props && props?.BannerInformation && Object.keys( props?.BannerInformation?.length > 0) && renderImage(props?.BannerInformation)}
-    {sendImpressions()}
-  </div>;
+  return (
+    <div block="MegaMenuBannerImage">
+      {props &&
+      props?.BannerInformation &&
+      Object.keys(props?.BannerInformation)?.length > 0 &&
+      props?.BannerInformation?.image_url
+        ? renderImage(props?.BannerInformation)
+        : null}
+      {sendImpressions()}
+    </div>
+  );
 };
 
 export default MegamenuBannerSlider;

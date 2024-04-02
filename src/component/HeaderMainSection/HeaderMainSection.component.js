@@ -219,6 +219,9 @@ class HeaderMainSection extends NavigationAbstract {
       clearInterval(this.interval);
       this.interval = setInterval(this.tick, delay);
     }
+    if(this.props.location.pathname !== prevProps.location.pathname) {
+      this.getPlaceholderText();
+    }
   }
 
   componentWillUnmount() {
@@ -246,6 +249,18 @@ class HeaderMainSection extends NavigationAbstract {
   isPDP() {
     const { type } = this.state;
     return TYPE_PRODUCT === type;
+  }
+
+  getPlaceholderText = () => {
+    if(isMobile.any() || isMobile.tablet()) {
+      if(isMsiteMegaMenuBrandsRoute()) {
+        return __("Search for Brands");
+      } else {
+        return __("What are you looking for?");
+      } 
+    } else {
+      return __("Search for items, brands, inspiration and styles");
+    }
   }
 
   getPageType() {
@@ -822,6 +837,7 @@ class HeaderMainSection extends NavigationAbstract {
             hideSearchBar={this.hidePDPSearchBar}
             focusInput={isPDPSearchVisible ? true : false}
             showMegaMenuHeaderSearchStyle={showMegaMenuHeaderSearchStyle}
+            PlaceholderText={this.getPlaceholderText()}
           />
         </div>
       );
