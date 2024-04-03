@@ -161,7 +161,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
         ? renderMegaMenuAnimationShimer(
             "CategoiresAccordianWrapper",
             "CategoiresAccordianCard",
-            10
+            5
           )
         : renderNewTrendingBrands()}
     </>

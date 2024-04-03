@@ -1,13 +1,14 @@
 .megamenu-categories-accordian-container {
     width: 100%;
     background: #FFFFFF;
+    margin-top: 10px;
 
     .megaMenuCategoryList {
         height: 110px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        margin: 11px 0px 0px 0px;
+        margin: 0px 0px 10px 0px;
         background-color: rgba(244,244,244,1);
         border-radius: 5px;
         align-items: center;

@@ -125,9 +125,9 @@ const BrandSelectionDirectoryListContainer = (props) => {
     }
   };
   return (
-    <div>
+    <>
       <BrandSelectionDirectoryList brands={brands} isLoading={isLoading} gender={props?.gender} />
-    </div>
+    </>
   );
 };
 export default withRouter(
