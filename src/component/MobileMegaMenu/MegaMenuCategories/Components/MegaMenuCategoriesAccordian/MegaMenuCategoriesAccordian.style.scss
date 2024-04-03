@@ -10,12 +10,14 @@
         margin: 11px 0px 0px 0px;
         background-color: rgba(244,244,244,1);
         border-radius: 5px;
+        align-items: center;
         cursor: pointer;
 
         .Image {
             .LazyLoad-wrapper {
                 .Image-Image {
                     max-width: 120px;
+                    max-height: 110px;
                     height: 100%;
                 }
             }
@@ -25,10 +27,8 @@
             display: flex;
             flex-direction: column;
             white-space: wrap;
-            line-height: 0px;
             max-height: 70px;
             left: 28px;
-            top: 24px;
             &_isArabicValue {
                 left: 0;
                 right: 28px;
@@ -44,6 +44,12 @@
                     letter-spacing: 0.7px;
                     text-transform: uppercase;
                     color:#000000;
+                    display: block;
+                    max-width: 160px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin: 0px 0px;
                 }
 
                 .accordian {
@@ -63,7 +69,6 @@
                         padding: 3px 6px 6px 3px;
                         margin: 0 auto;
                         transform: rotate(45deg);
-                        top: 18px;
                         left: 36px;
                         opacity: 0.3;
                     }

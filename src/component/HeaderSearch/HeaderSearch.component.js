@@ -17,7 +17,7 @@ import Event, {
 } from "Util/Event";
 import { isSignedIn } from "Util/Auth";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
-import {isMsiteMegaMenuRoute, isMsiteMegaMenuCategoriesRoute, isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
+import { isMsiteMegaMenuBrandsRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 import { brandSearchClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 export const URL_REWRITE = "url-rewrite";
@@ -192,22 +192,10 @@ class HeaderSearch extends PureComponent {
     }
   };
 
-  getPlaceholderText = () => {
-    if(isMobile.any() || isMobile.tablet()) {
-      if(isMsiteMegaMenuBrandsRoute()) {
-        return __("Search for Brands");
-      } else {
-        return __("What are you looking for?");
-      } 
-    } else {
-      return __("Search for items, brands, inspiration and styles");
-    }
-  }
   renderField() {
-    const { search, onSearchChange, isVisible, onSearchClean, isPLP } =
+    const { search, onSearchChange, isVisible, onSearchClean, isPLP, PlaceholderText } =
       this.props;
     const { isClearVisible, isArabic, showSearch } = this.state;
-    const  modifiedPlaceholderText = this.getPlaceholderText(); 
     return (
       <>
         <Form
@@ -224,7 +212,7 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={modifiedPlaceholderText}
+            placeholder={PlaceholderText}
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}
@@ -323,6 +311,7 @@ class HeaderSearch extends PureComponent {
           width: showSearch ? "90%" : "75%",
           left: isArabic ? (showSearch ? "0" : "15%") : "10%",
           height: "39px",
+          padding: "5px 0px 0px 0px"
         }
       : {};
 

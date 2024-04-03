@@ -172,7 +172,7 @@ class HeaderGenders extends PureComponent {
         let countryList = ['BH'];
         let showAllStatus = countryList.includes(getCountryFromUrl());
         const { isMenu = false } = this.props;
-        const megaMenuGenderList = isMsiteMegaMenuRoute()
+        const megaMenuGenderList = (isMsiteMegaMenuRoute() && isMobile?.any())
           ? this.megamenuGenderList
           : (isMenu)
           ? this.genderList?.slice(0, this.genderList?.length - 1)

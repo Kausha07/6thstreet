@@ -220,6 +220,7 @@ export class HeaderSearchContainer extends PureComponent {
       isPLP,
       handleHomeSearchClick,
       showMegaMenuHeaderSearchStyle,
+      PlaceholderText,
     } = this.props;
     const { search } = this.state;
 
@@ -232,6 +233,7 @@ export class HeaderSearchContainer extends PureComponent {
       isPLP,
       handleHomeSearchClick,
       showMegaMenuHeaderSearchStyle,
+      PlaceholderText,
     };
   };
 

@@ -1070,7 +1070,7 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
-        <h2>{__("Recent searches")}</h2>
+        <h2>{__("Recent Searches")}</h2>
         <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
           {recentSearches.map(this.renderRecentSearch)}
         </ul>
@@ -1147,7 +1147,7 @@ class SearchSuggestion extends PureComponent {
     if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 2) {
+    if (searchString.length > 0) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();

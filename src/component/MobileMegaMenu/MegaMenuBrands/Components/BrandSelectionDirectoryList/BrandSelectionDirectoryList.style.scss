@@ -11,6 +11,7 @@
             font-size: 18px;
             font-weight: 600;
             color: #606060;
+            margin: 10px 0px;
         }
     }
         .brands-list-alphabetically-container {
@@ -41,14 +42,21 @@
                 &-isVisible {
                     position: fixed;
                 }
+                &-Scroll {
+                    right: -10px;
+                    &_isArabicValue {
+                        left: 0px;
+                        right: 7px !important;
+                    }
+                }
                 &-FixScroll {
                     position: fixed;
                     top: 25vh;
-                    right: 10px;
+                    right: 0px;
     
                     &_isArabicValue {
-                        left: 10px;
-                        right: 0px;
+                        left: 0px;
+                        right: 7px;
                     }
                 }
     
@@ -71,6 +79,7 @@
                 font-size: 26px;
                 font-weight: 400;
                 opacity: 0.8;
+                margin: 10px 0px;
             }
 
             .BrandLink {

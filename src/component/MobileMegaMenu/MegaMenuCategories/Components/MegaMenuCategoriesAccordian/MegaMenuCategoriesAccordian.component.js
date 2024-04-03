@@ -101,7 +101,7 @@ const MegaMenuCategoriesAccordion = (props) => {
         <div block="megaMenuCategoryList" id={index} >
           <div block="megaMenuContentBlock" mods={{isArabicValue}}>
             <div block="megeMenuCategoriesHeader" mods={{isArabicValue}}>
-              <h3 block="categoriesL2names">{truncate(label,17)}</h3>
+              <h3 block="categoriesL2names">{label}</h3>
               <span block={`accordian${isClicked ? " active" : ""}`}></span>
             </div>
             <div block="megaMenuCategoriesDescription">{truncate(desc,28)}</div>
