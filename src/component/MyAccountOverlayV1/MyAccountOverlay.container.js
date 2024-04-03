@@ -381,7 +381,7 @@ export class MyAccountOverlayContainer extends PureComponent {
       prevScreen: prevScreenName,
       ...(data?.failedReason && { failedReason: data?.failedReason }),
       ...(data?.mode && { loginMode: data?.mode }),
-      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
+      // ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }), //check with data team if required any time
       ...(data?.email && { email: data?.email }),
       ...(data?.gender && { gender: data?.gender }),
       ...(data?.phone && { phone: data?.phone }),
@@ -394,7 +394,9 @@ export class MyAccountOverlayContainer extends PureComponent {
     try {
       await signIn(fields);
       onSignIn();
-      const eventAdditionalData = { mode: "Email", isPhone: false };
+      const eventAdditionalData = { mode: "Email", 
+      // isPhone: false 
+    };
       this.sendEvents(EVENT_LOGIN, eventAdditionalData);
       this.checkForOrder();
     } catch (e) {
@@ -605,7 +607,9 @@ export class MyAccountOverlayContainer extends PureComponent {
             this.sendEvents(EVENT_REGISTER, eventAdditionalData);
           }
           if (Object.entries(customerLoginData)?.length) {
-            const eventAdditionalData = { mode: "Phone", isPhone: true };
+            const eventAdditionalData = { mode: "Phone", 
+            // isPhone: true 
+          };
             this.sendEvents(EVENT_LOGIN, eventAdditionalData);
           }
           try {

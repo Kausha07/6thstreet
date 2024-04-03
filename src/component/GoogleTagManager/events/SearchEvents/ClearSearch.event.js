@@ -41,7 +41,6 @@ class ClearSearchEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: EVENT_TYPE,
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: search || "",
     });

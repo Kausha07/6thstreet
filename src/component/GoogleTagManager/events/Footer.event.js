@@ -47,7 +47,6 @@ class FooterEvent extends BaseEvent {
       eventAction: (data == "feedback_form_submit") ? "feedback_form_submitted" : data,
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
     });
   }

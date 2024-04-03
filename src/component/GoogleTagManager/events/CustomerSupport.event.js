@@ -44,7 +44,6 @@ class CustomerSupportEvent extends BaseEvent {
       eventAction: data + "_click",
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
     });
   }

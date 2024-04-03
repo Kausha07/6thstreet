@@ -492,7 +492,6 @@ class GoogleTagManager extends PureComponent {
         eventCategory: null,
         eventAction: null,
         UserType: isSignedIn() ? "Logged In" : "Logged Out",
-        CustomerID: null,
         PageType: null,
         SearchTerm: null,
         BannerName: null,
@@ -513,11 +512,7 @@ class GoogleTagManager extends PureComponent {
         ...((data?.isLoggedIn === undefined || data?.isLoggedIn === null) && {
           isLoggedIn: isSignedIn(),
         }),
-        ...(data?.CustomerID === undefined && {
-          CustomerID: isCustomerID,
-        }),
         vip_customer: isVipCustomer || false,
-        uuid: uuid,
         device_id: uuid,
         user_id: isCustomerID,
       };

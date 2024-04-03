@@ -41,7 +41,6 @@ class CancelSearchEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "cancel_search",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      CustomerID: this.getCustomerId(),
       PageType: this.getPageType(),
       SearchTerm: search,
     });
