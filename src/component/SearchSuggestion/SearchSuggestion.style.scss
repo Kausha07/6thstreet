@@ -7,6 +7,7 @@
 .SearchSuggestion {
   position: absolute;
   width: 100%;
+  background: #ffffff;
 
   @include before-desktop {
     height: 100%;
@@ -52,8 +53,8 @@
     @include before-desktop {
       height: 100%;
       margin-left: 0;
-      max-height: 100vh;
-      // max-height: calc(100vh - 160px);
+      // max-height: 100vh;
+      max-height: calc(100vh - 160px);
       overflow-y: auto;
       padding: 82px 0;
       padding-top: 0;
@@ -71,7 +72,6 @@
     &_isBrandsMenu {
       @include mobile {
         top: 50px;
-        max-height: fit-content;
       }
     }
   }

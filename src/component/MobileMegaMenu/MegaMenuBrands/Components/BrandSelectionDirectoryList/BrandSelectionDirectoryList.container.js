@@ -45,10 +45,15 @@ const BrandSelectionDirectoryListContainer = (props) => {
        requestMegaMenuBannerAndDynamicSliderData(gender);
     }
     setMegaMenuHeaderGenderChange(true);
+    scrollToTop();
     return () => {
       setMegaMenuHeaderGenderChange(false);
     }
   }, [gender]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: "100px", behavior: "smooth" });
+  };
 
   const getGenderInAR = (gender) => {
     switch (gender) {

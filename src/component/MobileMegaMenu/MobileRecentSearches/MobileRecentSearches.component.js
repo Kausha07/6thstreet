@@ -14,10 +14,12 @@ import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   MOE_trackEvent
 } from "Util/Event";
+import { renderMegaMenuAnimationShimer } from "Component/MobileMegaMenu/Utils/MegaMenuShimers.helper";
 
 
 function MobileRecentSearches({ isArabic, recentSearches = [] }) {
   const [trendingBrands, setTrendingBrands] = useState([]);
+  const [trandingBrandsLoading, setTrandingBrandsLoading] = useState(true);
   const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
   let recentSearchesObj =  JSON.parse(localStorage.getItem("brandRecentSearches")) || {};
   let recentSearchesBrands =  recentSearchesObj[gender] ? recentSearchesObj[gender] : [];
@@ -38,9 +40,11 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
         // Sort the array based on the "rk" property
         tempData.sort((a, b) => parseInt(a.rk) - parseInt(b.rk));
         setTrendingBrands(tempData);
+        setTrandingBrandsLoading(false);
       }
     } catch (error) {
       console.error(error);
+      setTrandingBrandsLoading(false);
     }
   }
 
@@ -137,7 +141,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
 
   const renderNewTrendingBrands = () => {
     return trendingBrands.length > 0 ? (
-      <div block="NewRecentSearches">
+      <div block="NewRecentSearches" id="newTrendingBrands">
         <h3>{__("Popular Searches")}</h3>
         <ul block="NewRecentSearches" elem="searchList" mods={{ isArabic }}>
           {trendingBrands.map(renderNewTrendingBrand)}
@@ -153,7 +157,13 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
   return (
     <>
       {renderNewRecentSearches()}
-      {renderNewTrendingBrands()}
+      {trandingBrandsLoading
+        ? renderMegaMenuAnimationShimer(
+            "CategoiresAccordianWrapper",
+            "CategoiresAccordianCard",
+            10
+          )
+        : renderNewTrendingBrands()}
     </>
   );
 }

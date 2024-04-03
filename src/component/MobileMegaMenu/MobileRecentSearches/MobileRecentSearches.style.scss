@@ -58,3 +58,31 @@
         margin-top: 0px;
     }
 }
+
+#newTrendingBrands {
+    background-color: #ffffff;
+}
+
+.CategoiresAccordianWrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 10px;
+    overflow: hidden;
+
+    @include tablet {
+        min-width: 21.224vw;
+    }
+
+    @include mobile {
+        min-width: 41vw;
+    }
+
+    &-CategoiresAccordianCard {
+        width: 100%;
+        height: 20px;
+        margin: 5px 0px;
+        background-image: var(--placeholder-image);
+        background-size: var(--placeholder-size);
+        animation: var(--placeholder-animation);
+    }
+}
