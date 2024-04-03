@@ -181,7 +181,7 @@ class DynamicContentGrid extends PureComponent {
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const promotionName = label ? label : promotion_name;
     const imageUrl = image_url ? image_url : url;
-    const imageStyle = isMsiteMegaMenu ? {borderRadius: "5px"} : {};
+    const imageStyle = isMsiteMegaMenu ? {borderRadius: "5px", maxHeight: "75px"} : {};
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
@@ -199,8 +199,7 @@ class DynamicContentGrid extends PureComponent {
             })
           }}
         >
-          <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
-
+          {imageUrl && <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>}
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
