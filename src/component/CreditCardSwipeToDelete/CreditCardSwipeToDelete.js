@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./CreditCardSwipeToDelete.style";
 import crossIcon from "Component/CreditCard/icons/crossIcon.svg";
-import trash from "./trash.png";
+import trash from "Component/MyAccountSwipeToDeleteCard/trash.svg";
 
 const Item = ({ children, isSwiping, isArabic }) => {
   const ref = useRef();
