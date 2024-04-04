@@ -556,7 +556,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       this.viewElement = el;
     };
     const { isArabic } = this.state;
-    const { index, start_time, end_time } = this.props;
+    const { index = 0, start_time, end_time } = this.props;
 
     if (start_time && end_time) {
       if (!this.state.isHideWidget) {
