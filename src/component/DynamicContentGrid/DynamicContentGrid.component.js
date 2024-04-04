@@ -182,7 +182,7 @@ class DynamicContentGrid extends PureComponent {
     const promotionName = label ? label : promotion_name;
     const imageUrl = image_url ? image_url : url;
     const imageStyle = isMsiteMegaMenu ? {borderRadius: "5px"} : {};
-    return (
+    return imageUrl && (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
           to={formatCDNLink(link)}
@@ -199,7 +199,7 @@ class DynamicContentGrid extends PureComponent {
             })
           }}
         >
-          {imageUrl && <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>}
+          <Image lazyLoad={index === 34 ? false : true} style={imageStyle} src={imageUrl} alt={promotionName ? promotionName : "categoryItemsImage"}/>
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (

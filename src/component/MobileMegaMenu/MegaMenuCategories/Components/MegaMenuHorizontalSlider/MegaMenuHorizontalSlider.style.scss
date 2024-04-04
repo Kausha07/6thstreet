@@ -1,13 +1,12 @@
 .megemenu-horizantal-slider-container {
-    max-height: 136px;
-    .DynamicContentSliderWithLabel {
-        margin-top: 5px;
+    .DynamicContentSliderWithLabel {      
         margin-bottom: 0px !important;
         .SliderHelper {
             min-width: 0px;
         }
     }
     .DynamicContentSliderWithLabel img {
+        margin-bottom: 5px !important;
         min-width: 26vw;
         min-height: 107px;
         border-radius: 6px;
