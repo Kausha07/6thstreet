@@ -41,7 +41,6 @@ class GoToSearchEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "go_to_search",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      PageType: this.getPageType(),
       SearchTerm: "",
     });
   }

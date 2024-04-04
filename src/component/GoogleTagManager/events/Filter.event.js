@@ -63,7 +63,6 @@ class FilterEvent extends BaseEvent {
       ...(eventName == "set_preferences_gender" && { selectGender: eventValue }),
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      PageType: this.getPageType(),
     });
   }
 

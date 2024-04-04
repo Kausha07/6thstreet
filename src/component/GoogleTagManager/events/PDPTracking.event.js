@@ -53,7 +53,6 @@ class PDPTrackingEvent extends BaseEvent {
       ...(data.imagesScrolled && { imagesScrolled: data.imagesScrolled }),
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      PageType: this.getPageType(),
     });
     }
   }

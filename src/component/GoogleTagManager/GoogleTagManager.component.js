@@ -492,7 +492,6 @@ class GoogleTagManager extends PureComponent {
         eventCategory: null,
         eventAction: null,
         UserType: isSignedIn() ? "Logged In" : "Logged Out",
-        PageType: null,
         SearchTerm: null,
         BannerName: null,
       });

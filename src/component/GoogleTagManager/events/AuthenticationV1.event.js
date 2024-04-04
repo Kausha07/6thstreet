@@ -54,7 +54,6 @@ class AuthenticationV1Event extends BaseEvent {
       ClientID: this.getGAID(),
       ...(data?.failedReason && { failedReason: data?.failedReason }),
       ...(data.loginMode && { loginMode: data?.loginMode }),
-      ...(data.isPhone !== undefined && { isPhone: data?.isPhone }),
       ...(data.name == EVENT_WISHLIST_ICON_CLICK && {
         eventCategory: "PLP_Search_PDP_Home",
         eventAction: EVENT_WISHLIST_ICON_CLICK,
@@ -73,7 +72,6 @@ class AuthenticationV1Event extends BaseEvent {
       prev_screen_name: data.prevScreen ? data.prevScreen : this.getPageType(),
       ...(data?.failedReason && { failedReason: data?.failedReason }),
       ...(data?.loginMode && { loginMode: data?.loginMode }),
-      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
       ...(data?.email && { email: data?.email }),
       ...(data?.gender && { gender: data?.gender }),
       ...(data?.phone && { phone: data?.phone }),

@@ -236,7 +236,6 @@ class MobileBottomBar extends NavigationAbstract {
       name: EVENT_SIGN_IN_SCREEN_VIEWED,
       category: "user_login",
       action: EVENT_SIGN_IN_SCREEN_VIEWED,
-      popupSource: source,
     };
     Event.dispatch(EVENT_GTM_AUTHENTICATION, popupEventData);
   }

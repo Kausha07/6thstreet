@@ -42,7 +42,6 @@ class SearchWishlistClickEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "search_wish_list_click",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      PageType: this.getPageType(),
       SearchTerm: data?.search || "",
       index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });

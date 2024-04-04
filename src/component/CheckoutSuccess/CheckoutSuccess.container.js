@@ -314,7 +314,6 @@ export class CheckoutSuccessContainer extends PureComponent {
       prevScreen: "checkout",
       ...(data.failedReason && { failedReason: data?.failedReason }),
       ...(data?.mode && { loginMode: data?.mode }),
-      ...(data?.isPhone !== undefined && { isPhone: data?.isPhone }),
     };
     if (newSignUpEnabled){
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
@@ -421,8 +420,8 @@ export class CheckoutSuccessContainer extends PureComponent {
           if (newSignUpEnabled) {
             this.sendEvents(EVENT_OTP_VERIFY);
             const eventAdditionalData = shouldLoginWithOtpOnEmail
-              ? { mode: "Email", isPhone: false }
-              : { mode: "Phone", isPhone: true };
+              ? { mode: "Email", }
+              : { mode: "Phone", };
             this.sendEvents(EVENT_LOGIN, eventAdditionalData);
           }          
           try {

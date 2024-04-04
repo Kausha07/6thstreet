@@ -41,7 +41,6 @@ class ExploreMoreClickEvent extends BaseEvent {
             eventCategory: EVENT_TYPE,
             eventAction: EVENT_TYPE,
             UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Guest User",
-            PageType: this.getPageType(),
             BannerName: data || "",
         });
     }

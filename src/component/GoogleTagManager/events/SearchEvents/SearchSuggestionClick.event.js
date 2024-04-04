@@ -43,7 +43,6 @@ class SearchSuggesionClickEvent extends BaseEvent {
       eventAction: "search result",
       UserType:
         this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      PageType: this.getPageType(),
       SearchTerm: data?.search || "",
       index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });
