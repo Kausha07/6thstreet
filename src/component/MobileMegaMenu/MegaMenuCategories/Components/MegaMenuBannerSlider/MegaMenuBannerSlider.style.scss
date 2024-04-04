@@ -3,7 +3,7 @@
         &-Image {
             max-height: 157px;
             object-fit: cover;
-            margin-top: 10px;
+            margin-top: 5px;
             @include mobile {
                 max-width: 100%;
             }
