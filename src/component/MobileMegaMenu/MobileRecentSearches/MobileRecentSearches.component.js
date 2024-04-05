@@ -52,7 +52,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
   const onSearchQueryClick = (search, i) => {
     saveBrandRecentSearch(search);
     clickRecentSearch({
-      current_page: sessionStorage.getItem("currentScreen"),
+      screen_name: sessionStorage.getItem("currentScreen"),
       gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
       search_term: search || "",
     })
@@ -115,7 +115,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
       app6thstreet_platform: "Web",
     })
     clickPopularSearch({
-      current_page: sessionStorage.getItem("currentScreen"),
+      screen_name: sessionStorage.getItem("currentScreen"),
       gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
       brand_name: query || "",
     })

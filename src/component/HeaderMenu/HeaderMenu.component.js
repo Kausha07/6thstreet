@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router";
-import { EVENT_MOE_CATEGORIES_TAB_ICON, MOE_trackEvent } from "Util/Event";
+import Event, { EVENT_MOE_CATEGORIES_TAB_ICON, MOE_trackEvent } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import Menu from "Component/Menu";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
@@ -64,6 +64,13 @@ class HeaderMenu extends PureComponent {
       gender: gender,
       prev_screen_name: sessionStorage.getItem("prevScreen")
     })
+  
+    Event.dispatch(EVENT_MOE_CATEGORIES_TAB_ICON, {
+      gender: gender || "",
+      prev_screen_name: sessionStorage.getItem("prevScreen"),
+      screen_name: sessionStorage.getItem("currentScreen"),
+    })
+
     this.setState(({ expanded }) => ({ expanded: !expanded }));
     toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     setLastTapItemOnHome("");
