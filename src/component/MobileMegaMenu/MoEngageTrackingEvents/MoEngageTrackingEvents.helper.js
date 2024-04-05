@@ -7,6 +7,8 @@ import Event, {
   EVENT_CLICK_BRAND_BANNER,
   EVENT_CLICK_BRAND_ALPHABET,
   EVENT_CLICK_BRAND_SEARCH_SCREEN,
+  EVENT_CLICK_RECENT_SEARCH,
+  EVENT_CLICK_POPULAR_SEARCH,
   MOE_trackEvent,
 } from "Util/Event";
 
@@ -41,4 +43,12 @@ export const brandAlphabetClickEvent = (options) => {
 
 export const brandSearchClickEvent = (options) => {
     MOE_trackEvent(EVENT_CLICK_BRAND_SEARCH_SCREEN, options);
+}
+
+export const clickRecentSearch = (options) => {
+  MOE_trackEvent(EVENT_CLICK_RECENT_SEARCH, options);
+}
+
+export const clickPopularSearch = (options) => {
+  MOE_trackEvent(EVENT_CLICK_POPULAR_SEARCH, options);
 }

@@ -231,14 +231,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   onclick = (item) => {
-    const { index, megamenuType = false, gender = "women", label = "" } = this.props;
+    const { index = 0, megamenuType = false, gender = "women", label = "" } = this.props;
     let banner = {
       link: item?.link,
       promotion_name: item?.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    if(megamenuType) {
+    if(megamenuType && label) {
       megaMenuCarousalEvent({
         gender: gender,
         prev_screen_name: sessionStorage.getItem("prevScreen"),

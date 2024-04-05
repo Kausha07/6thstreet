@@ -15,6 +15,7 @@ import Event, {
   MOE_trackEvent
 } from "Util/Event";
 import { renderMegaMenuAnimationShimer } from "Component/MobileMegaMenu/Utils/MegaMenuShimers.helper";
+import { clickPopularSearch, clickRecentSearch } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 
 
 function MobileRecentSearches({ isArabic, recentSearches = [] }) {
@@ -50,6 +51,11 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
 
   const onSearchQueryClick = (search, i) => {
     saveBrandRecentSearch(search);
+    clickRecentSearch({
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+      search_term: search || "",
+    })
     MOE_trackEvent(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, {
       country: getCountryFromUrl()?.toUpperCase(),
       language: getLanguageFromUrl()?.toUpperCase(),
@@ -107,6 +113,11 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
       gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
       suggestion_position: i+1,
       app6thstreet_platform: "Web",
+    })
+    clickPopularSearch({
+      current_page: sessionStorage.getItem("currentScreen"),
+      gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+      brand_name: query || "",
     })
   }
 

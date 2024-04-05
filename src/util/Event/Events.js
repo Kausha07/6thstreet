@@ -343,3 +343,5 @@ export const EVENT_CLICK_BRAND_NAME = "click_brand_name";
 export const EVENT_CLICK_BRAND_ALPHABET = "click_brand_alphabet";
 export const EVENT_CLICK_BRAND_SEARCH_SCREEN = "click_brand_search";
 export const EVENT_NO_RESULT_SEARCH_SCREEN_VIEW = "no_result_search_screen_view";
+export const EVENT_CLICK_RECENT_SEARCH = "click_recent_search";
+export const EVENT_CLICK_POPULAR_SEARCH = "click_popular_search";
