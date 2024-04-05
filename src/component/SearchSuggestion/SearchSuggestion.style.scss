@@ -71,8 +71,8 @@
     &_isBrandsMenu {
       @include mobile {
         top: 50px;
-        height: 100vh;
-        max-height: 100vh;
+        height: calc(100vh - 100px);
+        max-height: calc(100vh - 100px);
         background-color: #ffffff;
       }
     }
