@@ -3,7 +3,7 @@ import Loader from "Component/Loader";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import "./BrandSelectionDirectoryList.style.scss";
-import { brandAlphabetClickEvent } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
+import { brandAlphabetClickEvent, clickBrandName } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import { getBrandUrl } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 const BrandSelectionDirectoryList = (props) => {
   const [alphabet, setAlphabet] = useState("");
@@ -97,7 +97,13 @@ const BrandSelectionDirectoryList = (props) => {
     }
   }
  
- 
+  const handleBrandClick = (brandName = "") => {
+    const { gender = "women" } = props;
+    clickBrandName({
+      gender: gender,
+      brand_name: brandName
+    });
+  };
   const renderBrandGroups = () => {
     const { brands = [], gender = "women" } = props;
     const refinedData = alphabet ? getFilteredData() : brands;
@@ -122,6 +128,7 @@ const BrandSelectionDirectoryList = (props) => {
               )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`}
               block="BrandLink"
               key={index}
+              onClick={() => handleBrandClick(individualBrand?.name)}
             >
               {individualBrand?.name}
             </Link>

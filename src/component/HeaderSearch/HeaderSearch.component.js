@@ -175,6 +175,7 @@ class HeaderSearch extends PureComponent {
       current_page: sessionStorage.getItem("currentScreen"),
       gender: this.props?.gender,
       app6thstreet_platform: "Web",
+      screen_name: sessionStorage.getItem("currentScreen") || "",
     });
   };
   closeSearch = () => {

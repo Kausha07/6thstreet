@@ -230,20 +230,20 @@ class DynamicContentSliderWithLabel extends PureComponent {
     });
   };
 
-  onclick = (item) => {
-    const { index = 0, megamenuType = false, gender = "women", label = "" } = this.props;
+  onclick = (item, i = 0) => {
+    const { index = 0, megamenuType = false, gender = "women" } = this.props;
     let banner = {
       link: item?.link,
       promotion_name: item?.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
-    if(megamenuType && label) {
+    if(megamenuType && item?.label) {
       megaMenuCarousalEvent({
         gender: gender,
         prev_screen_name: sessionStorage.getItem("prevScreen"),
-        banner_label: label,
-        banner_position: index+1,
+        banner_label: item?.label,
+        banner_position: i+1,
       });
     }
     (!megamenuType) && this.props?.setLastTapItemOnHome(`DynamicContentSliderWithLabel${index}`);
@@ -281,7 +281,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
-            this.onclick(modifiedItem);
+            this.onclick(modifiedItem, i);
           }}
         >
           <Image

@@ -259,6 +259,7 @@ export class HeaderSearchContainer extends PureComponent {
         gender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
         current_page: sessionStorage.getItem("currentScreen"),
         app6thstreet_platform: "Web",
+        screen_name: sessionStorage.getItem("currentScreen"),
       });
       if (sessionStorage.hasOwnProperty("Searched_value")) {
         sessionStorage.removeItem("Searched_value");

@@ -9,7 +9,7 @@ export class CategoriesListDispatcher {
   async requestMegaMenuCategoriesList(gender,locale, dispatch) {
     if(gender !== "influencer" || gender !== "home"){
       try {
-        const categories = await MobileAPI.get(`/megamenu/${gender}?locale=${locale}&device=app&category_level=3`);
+        const categories = await MobileAPI.get(`/megamenu/${gender}?locale=${locale}&device=app&category_level=2`);
         if(categories && categories?.data && categories?.data?.length > 0) {
           dispatch(setMegaMenuCategoriesData(gender, categories?.data));
         }
