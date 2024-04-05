@@ -70,7 +70,7 @@ class CouponEvent extends BaseEvent {
         event: event.name,
         eventCategory: "checkout_tracking",
         eventAction: event.name,
-        couponCode: event.coupon,
+        coupon: event.coupon,
         products: formattedImpressions,
         UserType:
           this.getCustomerId().toString().length > 0

@@ -32,7 +32,7 @@ class TrendingTagsClickEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "trending_tag_click",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      SearchTerm: trendingTags || "",
+      search_term: trendingTags || "",
       ecommerce: {
         click: {
           trendingTags: trendingTags,

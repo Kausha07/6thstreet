@@ -72,7 +72,7 @@ export const EVENT_CLICK_TOP_SEARCHES_CLICK = "top_searches_click";
 export const EVENT_CLICK_RECOMMENDATION_CLICK = "recommendation_clicked";
 export const EVENT_SEARCH_SUGGESTION_PRODUCT_CLICK =
   "search_product_suggestion_click";
-export const EVENT_PAGE_NOT_FOUND = "pageNotFound";
+export const EVENT_PAGE_NOT_FOUND = "404_error";
 export const EVENT_GTM_FOOTER = "gtm_footer_events";
 export const EVENT_GTM_COUPON = "gtm_coupon_events";
 export const EVENT_GTM_SORT = "gtm_sort_events";

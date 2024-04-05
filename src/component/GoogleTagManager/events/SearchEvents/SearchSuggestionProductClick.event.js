@@ -42,7 +42,7 @@ class SearchSuggestionProductClickEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "search result",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      SearchTerm: product?.search || "",
+      search_term: product?.search || "",
       index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });
   }

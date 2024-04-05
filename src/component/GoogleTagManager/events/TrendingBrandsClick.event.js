@@ -33,7 +33,7 @@ class TrendingBrandsClickEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "trending_brand_click",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      SearchTerm: trendingBrands || "",
+      search_term: trendingBrands || "",
       ecommerce: {
         click: {
           trendingBrands: trendingBrands,

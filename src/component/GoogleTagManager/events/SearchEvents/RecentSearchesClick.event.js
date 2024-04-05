@@ -42,7 +42,7 @@ class RecentSearchesClickEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: "recent_searches_click",
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      SearchTerm: data?.search || "",
+      search_term: data?.search || "",
       index_code: getAlgoliaIndexCode(data?.indexCodeRedux) || "",
     });
   }

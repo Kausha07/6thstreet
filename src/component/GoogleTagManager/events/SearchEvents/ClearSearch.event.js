@@ -41,7 +41,7 @@ class ClearSearchEvent extends BaseEvent {
       eventCategory: "search",
       eventAction: EVENT_TYPE,
       UserType: this.getCustomerId().toString().length > 0 ? "Logged In" : "Logged Out",
-      SearchTerm: search || "",
+      search_term: search || "",
     });
   }
   getCustomerId() {
