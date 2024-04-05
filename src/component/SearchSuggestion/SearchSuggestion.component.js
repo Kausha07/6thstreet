@@ -1128,7 +1128,18 @@ class SearchSuggestion extends PureComponent {
       inNothingFound,
       querySuggestions = [],
       searchString,
+      is_msite_megamenu_enabled = false
     } = this.props;
+
+    const isBrandsMenu = isMsiteMegaMenuBrandsRoute();
+    if (isBrandsMenu && isMobile && is_msite_megamenu_enabled) {
+      if (searchString.length > 2) {
+        return this.renderSuggestions();
+      } else {
+        return this.renderEmptySearch();
+      }
+    }
+
 
     if (!isActive) {
       return null;
@@ -1147,7 +1158,7 @@ class SearchSuggestion extends PureComponent {
     if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
-    if (searchString.length > 0) {
+    if (searchString.length > 2) {
       return this.renderSuggestions();
     } else {
       return this.renderEmptySearch();
