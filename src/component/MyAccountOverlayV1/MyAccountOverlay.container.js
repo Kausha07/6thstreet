@@ -379,8 +379,8 @@ export class MyAccountOverlayContainer extends PureComponent {
       name: event,
       screen: screenName || "",
       prevScreen: prevScreenName,
-      ...(data?.failedReason && { failedReason: data?.failedReason }),
-      ...(data?.mode && { loginMode: data?.mode }),
+      ...(data?.failed_reason && { failed_reason: data?.failed_reason }),
+      ...(data?.mode && { login_mode: data?.mode }),
       ...(data?.email && { email: data?.email }),
       ...(data?.gender && { gender: data?.gender }),
       ...(data?.phone && { phone: data?.phone }),
@@ -399,7 +399,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     } catch (e) {
       this.setState({ isLoading: false });
       showNotification("error", e.message);
-      const eventAdditionalData = { failedReason: e.message, mode: "Email" };
+      const eventAdditionalData = { failed_reason: e.message, mode: "Email" };
       this.sendEvents(EVENT_LOGIN_FAILED, eventAdditionalData);
     }
   }
@@ -457,7 +457,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         this.sendEvents(EVENT_VERIFICATION_CODE_SCREEN_VIEW);
       } else {
         if (code && code === "AUT-04" && error && typeof error === "string") {
-          const eventAdditionalData = { failedReason: error, mode: "Phone" };
+          const eventAdditionalData = { failed_reason: error, mode: "Phone" };
           if (error == "Account with phone number does not exist") {
             showError(__("Account with phone number does not exist"));
           } else {
@@ -611,7 +611,7 @@ export class MyAccountOverlayContainer extends PureComponent {
             await signInOTP(response);
             this.checkForOrder();
           } catch (e) {
-            const eventAdditionalData = { failedReason: e, mode: "Phone" };
+            const eventAdditionalData = { failed_reason: e, mode: "Phone" };
             if (
               Object.entries(customerRegisterData)?.length &&
               prevOverlayState !== STATE_SIGN_IN
@@ -638,7 +638,7 @@ export class MyAccountOverlayContainer extends PureComponent {
             otpError: response,
             otpAttempt: otpAttempt + 1,
           });
-          const eventAdditionalData = { failedReason: response, mode: "Phone" };
+          const eventAdditionalData = { failed_reason: response, mode: "Phone" };
           this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
           if (
             Object.entries(customerRegisterData)?.length &&
@@ -658,7 +658,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     } catch (err) {
       const { otpAttempt, customerLoginData, customerRegisterData } =
         this.state;
-      const eventAdditionalData = { failedReason: err, mode: "Phone" };
+      const eventAdditionalData = { failed_reason: err, mode: "Phone" };
       this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
       this.setState({ isLoading: false, otpAttempt: otpAttempt + 1 });
       if (
@@ -744,7 +744,7 @@ export class MyAccountOverlayContainer extends PureComponent {
           ? showError(__("Account with %s already exist", email))
           : showError(__(`Account with ${email} already exist`));
         const eventAdditionalData = {
-          failedReason: "Account with same email already exist",
+          failed_reason: "Account with same email already exist",
         };
         this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
       } else {
@@ -762,7 +762,7 @@ export class MyAccountOverlayContainer extends PureComponent {
           if (error === "Account with same phone number already exist") {
             this.updateAccountViewState(STATE_SIGN_IN);
           }
-          const eventAdditionalData = { failedReason: error };
+          const eventAdditionalData = { failed_reason: error };
           showError(error);
           this.sendEvents(EVENT_REGISTER_FAILED, eventAdditionalData);
         }
@@ -779,7 +779,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     forgotPassword(fields).then((res) => {
       if (typeof res === "string") {
-        const eventAdditionalData = { failedReason: res };
+        const eventAdditionalData = { failed_reason: res };
         showNotification("error", __(res));
         this.stopLoading();
         this.sendEvents(EVENT_RESET_YOUR_PASSWORD_FAILED, eventAdditionalData);

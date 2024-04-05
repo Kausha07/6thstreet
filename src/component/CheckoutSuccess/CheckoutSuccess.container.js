@@ -312,8 +312,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       name: name,
       screen: "checkout",
       prevScreen: "checkout",
-      ...(data.failedReason && { failedReason: data?.failedReason }),
-      ...(data?.mode && { loginMode: data?.mode }),
+      ...(data.failed_reason && { failed_reason: data?.failed_reason }),
+      ...(data?.mode && { login_mode: data?.mode }),
     };
     if (newSignUpEnabled){
       Event.dispatch(EVENT_GTM_NEW_AUTHENTICATION, eventData);
@@ -351,7 +351,7 @@ export class CheckoutSuccessContainer extends PureComponent {
             } else {
               if (newSignUpEnabled) {
                 const eventAdditionalData = {
-                  failedReason: "Wrong Verification Code. Please re-enter",
+                  failed_reason: "Wrong Verification Code. Please re-enter",
                 };
                 this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
               }
@@ -379,7 +379,7 @@ export class CheckoutSuccessContainer extends PureComponent {
           } else {
             if (newSignUpEnabled) {
               const eventAdditionalData = {
-                failedReason:
+                failed_reason:
                   "Verification failed. Please enter valid verification code",
               };
               this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
@@ -442,7 +442,7 @@ export class CheckoutSuccessContainer extends PureComponent {
           showNotification("error", response);
           if (newSignUpEnabled) {
             const eventAdditionalData = {
-              failedReason: response,
+              failed_reason: response,
             };
             this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
           }
@@ -455,7 +455,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       console.error("Error while creating customer", err);
       if (newSignUpEnabled) {
         const eventAdditionalData = {
-          failedReason: err ? err : "Error while creating customer",
+          failed_reason: err ? err : "Error while creating customer",
         };
         this.sendEvents(EVENT_OTP_VERIFY_FAILED, eventAdditionalData);
       }
