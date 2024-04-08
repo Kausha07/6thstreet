@@ -53,6 +53,7 @@ export const VUE_PLACE_ORDER = "placeOrder";
 export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
 export const EVENT_GTM_VIEW_PROMOTION = "view_promotion";
 export const EVENT_CLICK_PROMOTION_IMPRESSION = "promotionClick";
+export const EVENT_GTM_SELECT_PROMOTION = "select_promotion";
 export const EVENT_PRODUCT_IMPRESSION = "productImpression";
 
 export const EVENT_GTM_CANCEL_SEARCH = "cancel_search";

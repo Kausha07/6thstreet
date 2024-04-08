@@ -1,6 +1,6 @@
 import Event,  {
   EVENT_GTM_VIEW_PROMOTION,
-  EVENT_CLICK_PROMOTION_IMPRESSION,
+  EVENT_GTM_SELECT_PROMOTION,
   EVENT_MOE_PROMOTION_IMPRESSION,
   EVENT_MOE_PROMOTION_CLICK,
   MOE_trackEvent
@@ -52,7 +52,7 @@ class BannerImpressionEvent extends BaseEvent {
       }
     });
     Event.observer(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, (impression) => {
-      this.handle(EVENT_CLICK_PROMOTION_IMPRESSION, impression, "promoClick");
+      this.handle(EVENT_GTM_SELECT_PROMOTION, impression, "promoClick");
     });
   }
 
@@ -117,7 +117,7 @@ class BannerImpressionEvent extends BaseEvent {
     const MoeEventType =
       EVENT_TYPE == EVENT_GTM_VIEW_PROMOTION
         ? EVENT_MOE_PROMOTION_IMPRESSION
-        : EVENT_TYPE == "promotionClick"
+        : EVENT_TYPE == EVENT_GTM_SELECT_PROMOTION
           ? EVENT_MOE_PROMOTION_CLICK
           : null;
     const currentPageType = this.getPageType() || "";
