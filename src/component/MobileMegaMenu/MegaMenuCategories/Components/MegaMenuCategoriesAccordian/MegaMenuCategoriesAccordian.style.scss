@@ -69,7 +69,7 @@
                         padding: 3px 6px 6px 3px;
                         margin: 0 auto;
                         transform: rotate(45deg);
-                        left: 36px;
+                        left: 25px;
                         opacity: 0.3;
                     }
                 }
@@ -82,7 +82,6 @@
                     .accordian {
                         &::after {
                             left:0;
-                            right: 10px;
                         }
                     }
                 }
