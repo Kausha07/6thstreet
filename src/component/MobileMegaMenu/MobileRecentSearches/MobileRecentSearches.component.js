@@ -61,10 +61,11 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
       language: getLanguageFromUrl()?.toUpperCase(),
       search_term: search || "",
       current_page: sessionStorage.getItem("currentScreen"),
-      gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
-      suggestion_position: i+1,
+      gender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
+      suggestion_position: i + 1,
       app6thstreet_platform: "Web",
-    })
+      screen_name: sessionStorage.getItem("currentScreen"),
+    });
   };
 
   const renderNewRecentSearch = ({ name, link }, i) => {
@@ -113,6 +114,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
       gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
       suggestion_position: i+1,
       app6thstreet_platform: "Web",
+      screen_name: sessionStorage.getItem("currentScreen"),
     })
     clickPopularSearch({
       screen_name: sessionStorage.getItem("currentScreen"),

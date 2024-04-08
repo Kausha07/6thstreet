@@ -431,6 +431,7 @@ class SearchSuggestion extends PureComponent {
           current_page: sessionStorage.getItem("currentScreen"),
           gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
         });
       } else {
         Event.dispatch(EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK, eventData);
@@ -441,6 +442,7 @@ class SearchSuggestion extends PureComponent {
           current_page: sessionStorage.getItem("currentScreen"),
           gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
         });
       }
       this.onSearchQueryClick(query)
@@ -496,6 +498,7 @@ class SearchSuggestion extends PureComponent {
           current_page: sessionStorage.getItem("currentScreen"),
           gender : BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender,
           app6thstreet_platform: "Web",
+          screen_name: sessionStorage.getItem("currentScreen"),
         });
         return (
           <div

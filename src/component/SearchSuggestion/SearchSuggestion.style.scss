@@ -75,6 +75,7 @@
         max-height: calc(100vh - 100px);
         background-color: #ffffff;
         overflow-y: scroll;
+        z-index: 999;
       }
     }
   }
