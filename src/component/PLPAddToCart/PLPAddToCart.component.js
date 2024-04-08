@@ -142,7 +142,7 @@ class PLPAddToCart extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      product: { name, sku, size_eu, size_uk, size_us, simple_products = [] },
+      product: { name, sku, size_eu, size_uk, size_us, simple_products = [], brand_name, color, categories, price },
     } = this.props;
     const { selectedSizeType, selectedSizeCode } = this.state;
 
@@ -167,6 +167,7 @@ class PLPAddToCart extends PureComponent {
         selectedSizeCode !== prevState?.selectedSizeCode ||
         selectedSizeType !== prevState?.selectedSizeType
       ) {
+        const currency_code = getCurrency();
         const eventData = {
           name: EVENT_SELECT_SIZE,
           size_type: selectedSizeType,
@@ -174,6 +175,27 @@ class PLPAddToCart extends PureComponent {
           product_name: name,
           product_id: sku,
           action: "select_size_no_option",
+          ecommerce : {
+            currency: currency_code || "",
+              items: [
+                {
+                  item_name: name,
+                  item_id: sku,
+                  item_brand: brand_name,
+                  item_category: categories?.level1.length > 0 ? categories?.level1[0] : "",
+                  item_category2: categories?.level2?.length > 1 ? categories?.level2[0] : "",
+                  item_category3: categories?.level3?.length > 2 ? categories?.level3[0] : "",
+                  item_category4: categories?.level4?.length > 3 ? categories?.level4[0] : "",
+                  item_category5: categories?.level5?.length > 4 ? categories?.level5[0] : "",
+                  item_variant: color,
+                  // item_list_name: 'Product_LIST_NAME_HERE',
+                  // item_list_id: 'Product_LIST_ID_HERE',
+                  price: price[0][currency_code].default_formated,
+                  item_size: optionValue,
+                  item_size_type: selectedSizeType,
+                }
+              ]
+            }
         };
         Event.dispatch(EVENT_GTM_PDP_TRACKING, eventData);
         this.sendMoEImpressions(EVENT_SELECT_SIZE);
