@@ -34,7 +34,12 @@ export class CreditCardDispatcher {
     }
 
     async deleteCreditCard(dispatch, gatewayToken) {
-        return deleteCreditCard(gatewayToken)
+        dispatch(setSavedCardsLoading(true));
+        const resp = await deleteCreditCard(gatewayToken);
+        if(resp){
+           await this.getSavedCards(dispatch);
+        }
+        return resp;
     }
 
     async toggleNewCardVisible(dispatch, data) {
