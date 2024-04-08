@@ -7,6 +7,7 @@ import MyAccountDispatcher, {
 import BrowserDatabase from "Util/BrowserDatabase";
 import {
   EVENT_PROMOTION_IMPRESSION,
+  EVENT_GTM_VIEW_PROMOTION,
   EVENT_PRODUCT_IMPRESSION,
   EVENT_GTM_CANCEL_SEARCH,
   EVENT_GTM_CLEAR_SEARCH,
@@ -198,7 +199,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_BRANDS_CLICK]: BrandsClickEvent,
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
-    [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
+    [EVENT_GTM_VIEW_PROMOTION]: BannerImpressionEvent,
     [EVENT_PRODUCT_IMPRESSION]: ProductImpressionEvent,
     [EVENT_GTM_CANCEL_SEARCH]: CancelSearchEvent,
     [EVENT_GTM_CLEAR_SEARCH]: ClearSearchEvent,
