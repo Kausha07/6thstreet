@@ -15,6 +15,7 @@ export const getInitialState = () => (
         is_live_party_enabled:false,
         isAlgoliaEventsEnabled: false,
         isVIPEnabled: false,
+        is_msite_megamenu_enabled: false,
     }
 );
 
@@ -46,6 +47,7 @@ export const AppConfigReducer = (state = getInitialState(), action) => {
                 isVIPEnabled: config.countries[getCountryCode]?.isVipEnabled || false,
                 isClubApparelEnabled: config.countries[getCountryCode]?.isClubApparelEnabled || false,
                 isProductRatingEnabled: config.countries[getCountryCode]?.isProductRatingEnabled || false,
+                is_msite_megamenu_enabled: config.countries[getCountryCode]?.is_msite_megamenu_enabled || false,
             };
 
             // this will invalidate config after one year

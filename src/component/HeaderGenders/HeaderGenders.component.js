@@ -8,6 +8,7 @@ import { FlashAnimation } from "../Icons";
 
 import './HeaderGenders.style';
 import { getCountryFromUrl } from "Util/Url/Url";
+import { isMsiteMegaMenuRoute } from "Component/MobileMegaMenu/Utils/MobileMegaMenu.helper";
 import Event,  {
     EVENT_INFLUENCER_HOME_SCREEN_VIEW,
     EVENT_GTM_INFLUENCER
@@ -76,6 +77,20 @@ class HeaderGenders extends PureComponent {
         }
     ];
     
+    megamenuGenderList = [
+        {
+            label: __('Women'),
+            key: 'women'
+        },
+        {
+            label: __('Men'),
+            key: 'men'
+        },
+        {
+            label: __('Kids'),
+            key: 'kids'
+        },
+    ]
     getNewActiveMenuGender = (key) => {
         const { currentGenderButton } = this.state;
         if (currentGenderButton !== key) {
@@ -152,11 +167,17 @@ class HeaderGenders extends PureComponent {
         );
     };
 
+
     renderGenders() {
         let countryList = ['BH'];
         let showAllStatus = countryList.includes(getCountryFromUrl());
-
-        return this.genderList.map((value) => {
+        const { isMenu = false } = this.props;
+        const megaMenuGenderList = (isMsiteMegaMenuRoute() && isMobile?.any())
+          ? this.megamenuGenderList
+          : (isMenu)
+          ? this.genderList?.slice(0, this.genderList?.length - 1)
+          : this.genderList;
+        return megaMenuGenderList?.map((value) => {
             if (showAllStatus) {
                 return this.renderGender(value)
             } else {
@@ -173,10 +194,10 @@ class HeaderGenders extends PureComponent {
     render() {
         const { isArabic } = this.state;
         const { isMobile } = this.props;
-
+        const isMegaMenuValue = isMsiteMegaMenuRoute();
         return (
             <div
-                mix={{ block: `${this.props.currContentGender === "influencer" ? "moveUpGenders" : "moveDownGenders"} HeaderGenders`, mods: { isArabic, isMobile } }}
+                mix={{ block: `${this.props.currContentGender === "influencer" ? "moveUpGenders" : "moveDownGenders"} HeaderGenders ${(isMegaMenuValue) ? "mobileMegaMenuHeaderGender" : ""}`, mods: { isArabic, isMobile } }}
             >
                 {this.renderGenders()}
             </div>
