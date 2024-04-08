@@ -156,7 +156,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
     return trendingBrands.length > 0 ? (
       <div block="NewRecentSearches" id="newTrendingBrands">
         <h3>{__("Popular Searches")}</h3>
-        <ul block="NewRecentSearches" elem="searchList" mods={{ isArabic }}>
+        <ul block="NewRecentSearches" elem="searchList" className="popularSearch" mods={{ isArabic }}>
           {trendingBrands.map(renderNewTrendingBrand)}
         </ul>
       </div>
