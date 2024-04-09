@@ -73,9 +73,9 @@ class BannerImpressionEvent extends BaseEvent {
     // }
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id, store_code, tag, indexValue }, index) => ({
-        id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : "",
+        id: id ? id : promotion_name ? promotion_name.split(" ").join("-") : label || "",
         name: (store_code ? store_code + "-" : "") + (label || promotion_name),
-        creative: tag || promotion_name || "",
+        creative: tag || promotion_name || label || "",
         position: indexValue ? indexValue : index + 1,
       })
     );
@@ -84,9 +84,9 @@ class BannerImpressionEvent extends BaseEvent {
     const currentAppState = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
 
     formattedImpressions.forEach((item) => {
-      promoName.push(item?.name);
-      promoID.push(item?.id);
-      promoIndex.push(item?.position);
+      promoName.push(item?.name || item?.label);
+      promoID.push(item?.id || item?.label);
+      promoIndex.push(item?.position || item?.indexValue);
     });
     
     storage.impressions = formattedImpressions;

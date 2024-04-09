@@ -28,17 +28,22 @@ import {
   INFLUENCER,
   INFLUENCER_COLLECTION,
   INFLUENCER_STORE,
+  MEGAMENU,
+  BRANDSMENU,
 } from "Component/Header/Header.config";
 import NavigationTabs from "Component/NavigationTabs";
 import NewVersionPopup from "Component/NewVersionPopup";
 import NotificationList from "Component/NotificationList";
 import Seo from "Component/Seo";
+import isMobile from "Util/Mobile";
 
 const NoMatch = lazy(() => import(/* webpackChunkName: 'NoMatch' */ "Route/NoMatch"));
 const LocaleWizard = lazy(() => import(/* webpackChunkName: 'LocaleWizard' */ "Route/LocaleWizard"));
 const UrlRewrites = lazy(() => import(/* webpackChunkName: 'UrlRewrites' */ "Route/UrlRewrites"));
 const VuePLP = lazy(() => import(/* webpackChunkName: 'VuePLP' */ "Route/VuePLP/VuePLP.component"));
 const LiveExperience = lazy(() => import(/* webpackChunkName: 'LiveExperience' */ "Route/LiveExperience"));
+const MobileMegaMenu = lazy(() => import(/* webpackChunkName: 'MobileMegaMenu' */ "Route/MobileMegaMenu/MobileMegaMenu.component"));
+const MegaMenuBrands = lazy(() => import(/* webpackChunkName: 'MegaMenuBrands'*/ "Route/MegaMenuBrands/MegaMenuBrands.component"))
 const About = lazy(() => import(/* webpackChunkName: 'About' */ "Route/About"));
 const WelcomeHomePage = lazy(() => import(/* webpackChunkName: 'WelcomeHomePage' */ "Component/WelcomeHomePage"));
 const BrandCMS = lazy(() => import(/* webpackChunkName: 'BrandCMS' */ "Route/BrandCMS"));
@@ -332,6 +337,32 @@ export class Router extends SourceRouter {
         />
       ),
       position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("megamenu")}
+          render={(props) => (
+            <GTMRouteWrapper route={MEGAMENU}>
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MobileMegaMenu {...props} /> : <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 95,
+    },
+    {
+      component: (
+        <SentryRoute
+          path={withStoreRegex("brands-menu")}
+          render={(props) => (
+            <GTMRouteWrapper route={BRANDSMENU}>
+              {this.props?.is_msite_megamenu_enabled && isMobile.any() ? <MegaMenuBrands {...props} />: <NoMatch />}
+            </GTMRouteWrapper>
+          )}
+        />
+      ),
+      position: 90,
     },
     {
       component: (

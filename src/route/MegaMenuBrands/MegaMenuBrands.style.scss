@@ -1,0 +1,30 @@
+.megamenu-brands-main-container {
+    padding-top: 150px;
+    overflow-y: scroll;
+    padding: 85px 10px 80px 10px;
+}
+
+.BrandSelectionGridWrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 8px;
+    margin: 20px 0px;
+    min-height: 157px;
+
+    @include tablet {
+        min-width: 21.224vw;
+    }
+
+    @include mobile {
+        min-width: 41vw;
+    }
+
+    &-BrandSelectionGridCard {
+        max-width: 193px;
+        min-height: 83px;
+        border-radius: 10px;
+        background-image: var(--placeholder-image);
+        background-size: var(--placeholder-size);
+        animation: var(--placeholder-animation);
+    }
+}

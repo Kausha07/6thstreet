@@ -48,6 +48,86 @@ main {
       top: 49px;
     }
   }
+
+  .mobileMegaMenuStyle {
+    @include mobile {
+      top:5px;
+      width : 300px;
+      left : 10%;  
+    }
+  }
+}
+
+.HeaderSearchMegaMenuSection {
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: top;
+      padding-top: 5px;
+      height: 54px;
+      top: 49px;
+    }
+
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      padding-top: 5px;
+      justify-content: center;
+      align-items: top;
+      height: 54px;
+      top: 49px;
+    }
+    .Form {
+      border-radius: 10px;
+      width: 300px;
+      background-color: var(--gray);
+      height: 39px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.HeaderSearchMegaMenuSection {
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: top;
+      padding-top: 5px;
+      height: 54px;
+      top: 49px;
+    }
+
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      padding-top: 5px;
+      justify-content: center;
+      align-items: top;
+      height: 54px;
+      top: 49px;
+    }
+    .Form {
+      border-radius: 10px;
+      width: 300px;
+      background-color: var(--gray);
+      height: 39px;
+      display: flex;
+      align-items: center;
+    }
+  }
 }
 
 .HeaderMainSection {
@@ -85,7 +165,7 @@ main {
     display: flex;
     &_showPLPSearch {
       &[data-visible="true"] {
-        z-index: 9999 !important;
+        z-index: 9999;
       }
     }
 
@@ -433,7 +513,7 @@ main {
     @include mobile {
       top: 100px;
       background-color: #ffffff;
-      padding-top: 10px;
+      padding-top: 11px;
       padding-bottom: 18px;
     }
     @include tablet {
@@ -644,5 +724,90 @@ main {
     }
 
     z-index: 95;
+  }
+}
+
+.MegaMenuHeaderSectionContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 95;
+
+  .megaMenuHeaderSearchContainer {
+    .HeaderSearchSection {
+      .HeaderSearch {
+        width: 300px;
+        height: 39px;
+        top: 0px;
+      }
+    }
+  }
+  .megaMenuBackArrow {
+    height : 30px;
+    .BackArrow {
+      height: 40px;
+      width: 40px;
+      border-radius: 20px;
+  
+      @include mobile {
+        height: 30px;
+      }
+  
+      position: fixed;
+      top: 11px;
+      left: 15px;
+  
+      background: $white;
+  
+      &_isArabic {
+        right: 15px;
+        left: unset;
+  
+        .BackArrow {
+          &-Button {
+            right: 5px;
+            left: unset;
+  
+            &::before {
+              right: 5px;
+              left: unset;
+              transform: rotate(-45deg);
+              -webkit-transform: rotate(-45deg);
+            }
+          }
+        }
+      }
+  
+      &-Button {
+        top: 0;
+        left: 5px;
+        background-size: 30px;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+  
+        p {
+          display: none;
+        }
+  
+        &::before {
+          content: "";
+          position: absolute;
+          top: 10px;
+          left: 5px;
+          border: solid $black;
+          border-width: 0 2px 2px 0;
+          display: inline-block;
+          padding: 4px;
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
+        }
+      }
+  
+      @include after-mobile {
+        display: none;
+      }
+    }
   }
 }

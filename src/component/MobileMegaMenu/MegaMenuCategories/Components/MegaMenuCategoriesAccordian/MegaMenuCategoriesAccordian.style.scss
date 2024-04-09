@@ -1,0 +1,111 @@
+.megamenu-categories-accordian-container {
+    width: 100%;
+    background: #FFFFFF;
+
+    .megaMenuCategoryList {
+        height: 120px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0px 0px 10px 0px;
+        background-color: rgba(244,244,244,1);
+        border-radius: 5px;
+        align-items: center;
+        cursor: pointer;
+
+        .Image {
+            .LazyLoad-wrapper {
+                .Image-Image {
+                    max-width: 120px;
+                    max-height: 120px;
+                    height: 100%;
+                }
+            }
+        }
+
+        .megaMenuContentBlock {
+            display: flex;
+            flex-direction: column;
+            white-space: wrap;
+            max-height: 70px;
+            left: 28px;
+            &_isArabicValue {
+                left: 0;
+                right: 28px;
+            }
+
+            .megeMenuCategoriesHeader {
+                display: flex;
+
+                h3 {
+                    font-family: 'Avenir Next';
+                    font-weight: 700;
+                    font-size: 18px;
+                    letter-spacing: 0.7px;
+                    text-transform: uppercase;
+                    color:#000000;
+                    display: block;
+                    max-width: 140px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin: 0px 0px;
+                }
+
+                .accordian {
+                    margin-right: 30px;
+                    float: right;
+                    font-size: 12px;
+                    color: #8D8D8D;
+                    top: 3px;
+                    &::after {
+                        position: absolute;
+                        content: "";
+                        width: 0;
+                        height: 0;
+                        border: solid var(--black-color);
+                        border-width: 0 1px 1px 0;
+                        display: inline-block;
+                        padding: 3px 6px 6px 3px;
+                        margin: 0 auto;
+                        transform: rotate(45deg);
+                        left: 25px;
+                        opacity: 0.3;
+                    }
+                }
+                .active {
+                    &::after {
+                        transform: rotate(225deg);
+                    }
+                }
+                &_isArabicValue {
+                    .accordian {
+                        &::after {
+                            left:0;
+                        }
+                    }
+                }
+            }
+            .megaMenuCategoriesDescription {
+                font-family: 'Avenir Next';
+                font-size: 12px;
+                font-weight: 500;
+                opacity: 0.6;
+                color: #606060;
+            }
+
+            .MegamenImage {
+                width: 168px;
+                height:110px;
+                object-fit: unset;
+            }
+        }
+    }
+    li {
+        &::before {
+            display: none;
+        }
+        padding-left: 0px;
+        margin: 10px 20px;
+    }
+}
