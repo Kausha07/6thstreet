@@ -3,6 +3,7 @@ import Loader from "Component/Loader";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
 import "./BrandSelectionDirectoryList.style.scss";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { brandAlphabetClickEvent, clickBrandName } from "Component/MobileMegaMenu/MoEngageTrackingEvents/MoEngageTrackingEvents.helper";
 import { getBrandUrl } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
 const BrandSelectionDirectoryList = (props) => {
@@ -124,7 +125,7 @@ const BrandSelectionDirectoryList = (props) => {
               )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
                 individualBrand?.name
               )}&dFR[gender][0]=${capitalizeFirstLetter(
-                requestedGender(gender)
+                requestedGender(isArabicValue ? getGenderInArabic(gender): gender)
               )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`}
               block="BrandLink"
               key={index}
