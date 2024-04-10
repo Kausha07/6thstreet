@@ -10,6 +10,7 @@ import MyAccountOrderList from "./MyAccountOrderList.component";
 
 import Event, { MOE_trackEvent, EVENT_MYORDERPAGE_VISIT } from "Util/Event";
 import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
+import browserHistory from "Util/History";
 import { setLastLimit } from "Store/MyAccount/MyAccount.action";
 
 export const mapStateToProps = (state) => ({
@@ -53,6 +54,17 @@ export class MyAccountOrderListContainer extends SourceComponent {
       language: getLanguageFromUrl().toUpperCase(),
       app6thstreet_platform: "Web",
       page: "Orders",
+    });
+
+    let prevLocation;
+    let finalPrevLocation;
+    browserHistory.listen((nextLocation) => {
+      finalPrevLocation = prevLocation;
+      prevLocation = nextLocation;
+
+      if (!finalPrevLocation?.pathname?.includes("/my-account/my-orders/")) {
+        this.props.setLastLimit({ id: null, currentOffset: 0 });
+      }
     });
   }
 
