@@ -125,7 +125,7 @@ const BrandSelectionDirectoryList = (props) => {
               )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
                 individualBrand?.name
               )}&dFR[gender][0]=${capitalizeFirstLetter(
-                requestedGender(isArabic ? getGenderInArabic(gender): gender)
+                requestedGender(isArabicValue ? getGenderInArabic(gender): gender)
               )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`}
               block="BrandLink"
               key={index}
