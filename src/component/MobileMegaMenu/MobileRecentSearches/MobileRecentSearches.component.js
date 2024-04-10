@@ -78,7 +78,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&p=0&dFR[gender][0]=${gender}&prevPage=brands-menu`
+                )}&p=0&dFR[gender][0]=${capitalizeFirstLetter(requestedGender(isArabic ? getGenderInArabic(gender): gender))}&prevPage=brands-menu`
           }
           onClick={() => onSearchQueryClick(name, i)}
           key={name}
