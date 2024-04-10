@@ -10,6 +10,7 @@ import {
   requestedGender,
   saveBrandRecentSearch,
 } from "Component/SearchSuggestion/utils/SearchSuggestion.helper";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Event, {
   EVENT_CLICK_SEARCH_QUERY_SUGGESSTION_CLICK,
   MOE_trackEvent
@@ -135,7 +136,7 @@ function MobileRecentSearches({ isArabic, recentSearches = [] }) {
             )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
               isArabic ? ar_brand : en_brand
             )}&dFR[gender][0]=${capitalizeFirstLetter(
-              requestedGender(gender)
+              requestedGender(isArabic ? getGenderInArabic(gender): gender)
             )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`,
           }}
           onClick={() => handleSearchSuggestionClick(requestedBrandName,i)}

@@ -390,7 +390,7 @@ class SearchSuggestion extends PureComponent {
             )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
               name
             )}&dFR[gender][0]=${capitalizeFirstLetter(
-              requestedGender(gender)
+              requestedGender(isArabic ? getGenderInArabic(gender): gender)
             )}&dFR[in_stock][0]=${1}&prevPage=brands-menu`
           }}
           key={i}
