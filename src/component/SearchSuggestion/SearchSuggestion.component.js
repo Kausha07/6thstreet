@@ -380,7 +380,7 @@ class SearchSuggestion extends PureComponent {
     const { name = "", name_ar= "", objectID= "", url_path= "" } = querySuggestion;
     const { searchString= "" } = this.props;
     const gender =  BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
-
+    const { isArabic } = this.state;
     return (
       <li>
         <Link
