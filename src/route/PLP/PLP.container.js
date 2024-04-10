@@ -1200,21 +1200,21 @@ export class PLPContainer extends PureComponent {
       ? pagePathName.split(".html")[0].substring(1).split("/")
       : null;
     const staticMetaData =
-      getCategoryLevel.length == 5 && metaContent
+      getCategoryLevel?.length == 5 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]?.[getCategoryLevel[4]]
-        : getCategoryLevel.length == 4 && metaContent
+        : getCategoryLevel?.length == 4 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]?.[getCategoryLevel[3]]
-        : getCategoryLevel.length == 3 && metaContent
+        : getCategoryLevel?.length == 3 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]?.[
             getCategoryLevel[2]
           ]
-        : getCategoryLevel.length == 2 && metaContent
+        : getCategoryLevel?.length == 2 && metaContent
         ? metaContent?.[getCategoryLevel[0]]?.[getCategoryLevel[1]]
-        : getCategoryLevel.length == 1 && metaContent
+        : getCategoryLevel?.length == 1 && metaContent
         ? metaContent?.[getCategoryLevel[0]]
         : null;
     const PLPMetaTitle =
