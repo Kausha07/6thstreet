@@ -1093,7 +1093,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <div block="PriceContainer">
-        <Price price={price} renderSpecialPrice={true} />
+        <Price price={price} renderSpecialPrice={true} pageType="PDPPage" />
         {isMobile.any() && this.renderPDPSummaryHeader()}
         {!edd_info || (edd_info && !edd_info.has_cross_border_enabled) && additional_shipping_info ? (
           <span block="AdditionShippingInformation">

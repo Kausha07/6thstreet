@@ -46,6 +46,7 @@ export class PriceContainer extends PureComponent {
     const specialPrice = priceData?.["6s_special_price"] || priceData?.default
     const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true;
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
+    const isSidewideCouponEnabled = config?.countries[country]?.isSidewideCouponEnabled;
     return {
       basePrice,
       specialPrice,
@@ -58,6 +59,7 @@ export class PriceContainer extends PureComponent {
       showDiscountPercentage,
       pageType,
       itemType,
+      isSidewideCouponEnabled,
     };
   };
 

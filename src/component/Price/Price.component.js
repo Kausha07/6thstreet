@@ -34,8 +34,11 @@ class Price extends PureComponent {
   }
 
   renderDiscountSpecialPrice(onSale, specialPrice) {
-    const { country, showDiscountPercentage } = this.props;
+    const { country, showDiscountPercentage, isSidewideCouponEnabled } = this.props;
     const currency = getCurrency();
+    if(isSidewideCouponEnabled) {
+      return null;
+    }
     return (
       <span
         block="Price"
@@ -151,6 +154,49 @@ class Price extends PureComponent {
     );
   };
 
+  getBlockForSideWide() {
+    const { pageType = "" } = this.props;
+
+    if (pageType === "PDPPage") {
+      return "PDPSideWideCouponInfo";
+    } else {
+      return "ProductItem";
+    }
+  }
+
+  renderSideWideCouponInfo() {
+    const { basePrice, specialPrice, pageType = "", config } = this.props;
+    const countryCode = getCountryFromUrl();
+    const sidewideCouponCode = config?.countries[countryCode]?.sidewideCouponCode;
+    const { isArabic } = this.state;
+
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+    if (discountPercentage === 0) {
+      discountPercentage = 1;
+    }
+
+    if (pageType !== "PDPPage" && pageType !== "plp") {
+      return null;
+    }
+
+    return (
+      <div
+        block={this.getBlockForSideWide()}
+        elem="sidewideCoupon"
+        mods={{ isArabic }}
+      >
+        <span>
+          {discountPercentage}%{isArabic ? "" : <>&nbsp;</>}
+          {__("OFF")}
+        </span>
+        <span>&nbsp;|&nbsp;</span>
+        <span>
+          {__("CODE:")}&nbsp;{sidewideCouponCode}
+        </span>
+      </div>
+    );
+  }
+
   renderPrice() {
     const {
       basePrice,
@@ -254,8 +300,9 @@ class Price extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { pageType = "" } = this.props;
+    const { pageType = "", isSidewideCouponEnabled } = this.props;
     return (
+      <>
       <div
         block={`Price ${this.haveDiscount() ? "discount" : ""}`}
         mix={{ block: "Price", mods: { isArabic } }}
@@ -264,6 +311,8 @@ class Price extends PureComponent {
           ? this.renderFinalPriceOnly()
           : this.renderPrice()}
       </div>
+        {isSidewideCouponEnabled ? this.renderSideWideCouponInfo() : null}
+      </>
     );
   }
 }
