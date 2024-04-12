@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   @include mobile {
-    justify-content: initial;
+    justify-content: space-around;
     overflow-x: scroll;
   }
   

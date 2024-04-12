@@ -43,10 +43,6 @@ const MobileMegaMenu = (props) => {
     window.scrollTo({ top: "100px", behavior: "smooth" });
   }
   
-  const BannerInformation =
-    megamenuDynmaicBannerSliderData?.[gender]?.[0]?.data?.filter(d => d?.type==="banner")?.[0] || {};
-  const HorizantalSliderInformation =
-    megamenuDynmaicBannerSliderData?.[gender]?.[0]?.data?.filter(d => d?.type==="slider")?.[0] || [];
   const renderLoaders = () => {
     return (
       <>
