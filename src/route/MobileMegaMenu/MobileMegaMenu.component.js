@@ -56,19 +56,40 @@ const MobileMegaMenu = (props) => {
       </>
     );
   };
+
+  const renderMegaMenuInformation = () => {
+    return (
+      megamenuDynmaicBannerSliderData?.[gender]?.[0]?.data?.map((item, index) => {
+        if (item?.type === "banner") {
+          return (
+            <MegaMenuBannerSlider
+              key={`megamenuBannner${index}`}
+              BannerInformation={item}
+              isLoading={props?.isLoading}
+              gender={props?.gender}
+            />
+          );
+        } else if (item?.type === "slider") {
+          return (
+            <MegaMenuHorizontalSlider
+              key={`megamenuHorizantalSlider${index}`} 
+              HorizantalSliderInformation={item}
+              isLoading={props?.isLoading}
+              gender={props?.gender}
+            />
+          );
+        } else {
+          return null;
+        }
+      }) || null
+    );
+  };
+  
+
   const renderMegaMenuContent = () => {
     return (
       <>
-        <MegaMenuBannerSlider
-          BannerInformation={BannerInformation}
-          isLoading={props?.isLoading}
-          gender={props?.gender}
-        />
-        <MegaMenuHorizontalSlider
-          HorizantalSliderInformation={HorizantalSliderInformation}
-          isLoading={props?.isLoading}
-          gender={props?.gender}
-        />
+        {renderMegaMenuInformation()}
         <MegaMenuCategoriesAccordian />
       </>
     );
