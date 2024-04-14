@@ -197,6 +197,24 @@ class Price extends PureComponent {
     );
   }
 
+  renderCartPageFinalPrice() {
+    const { specialPrice, finalPrice } = this.props;
+    const { isArabic } = this.state;
+
+    return (
+      <span
+        block="Price"
+        elem="Special"
+        mods={{ discount: this.haveDiscount() }}
+      >
+        {this.renderCurrency()}
+        &nbsp;
+        {finalPrice ? (1 * finalPrice).toFixed(3) : specialPrice}
+        {!isArabic && <>&nbsp;</>}
+      </span>
+    );
+  }
+
   renderPrice() {
     const {
       basePrice,
@@ -204,6 +222,11 @@ class Price extends PureComponent {
       renderSpecialPrice,
       pageType,
       itemType = "",
+      isSidewideCouponEnabled,
+      totals: {
+        site_wide_applied = 0,
+        coupon_code = "",
+      },
     } = this.props;
     const { isArabic } = this.state;
 
@@ -241,6 +264,32 @@ class Price extends PureComponent {
           {this.discountPercentage()}
         </span>
       );
+    }
+
+    if (pageType === "CartPage" && isSidewideCouponEnabled) {
+      if (site_wide_applied || coupon_code) {
+        return (
+          <>
+            <span block="Price" elem="Wrapper">
+              {coupon_code ? this.renderCartPageFinalPrice() : this.renderSpecialPrice()}
+              {isArabic && <>&nbsp;</>}
+              <del block="Price" elem="Del">
+                {this.renderBasePrice()}
+              </del>
+            </span>
+            {this.discountPercentage(basePrice, specialPrice)}
+          </>
+        );
+      } else {
+        return (
+          <span block="Price" elem="Wrapper">
+            {isArabic && <>&nbsp;</>}
+            <span block="Price" elem="NoDel" className="noramlBasePrice">
+              {this.renderBasePrice()}
+            </span>
+          </span>
+        );
+      }
     }
 
     if (itemType === "Cart") {

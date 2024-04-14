@@ -903,6 +903,15 @@ padding: auto ;
                 }
             }
         }
+        &_couponSavings {
+            .CartPage {
+                &-Price {
+                    font-size: 13px;
+                    font-weight: var(--fw-demi);
+                    color: #13CA75;
+                }
+            }
+        }
         &:last-child {
             margin-bottom: 0;
         }
@@ -911,10 +920,10 @@ padding: auto ;
     // Cart Coupon block
     .cartCouponBlock {
         width: 100%;
-        margin-bottom: 20px;
         box-sizing: border-box;
         background-color: #f4fffc;
         cursor: pointer;
+        border: 1px dashed #28D9AA;
         .showCouponBtnLeftBlock{
             display: flex;
             justify-content: space-between;
@@ -1016,6 +1025,48 @@ padding: auto ;
             border-top: 1px dashed #28d9aa;
             border-bottom: 1px dashed #28d9aa;
         }
+        &-sidewideNotApplyed {
+            .showCouponBtn {
+                height: 50px;
+                padding: 0 15px;
+            }
+
+            .couponText {
+                margin-left: 10px;
+                font-family: "Avenir Next";
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 12px;
+                text-align: left;
+            }
+
+            .sidewideSelectText {
+                font-family: Avenir Next;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 17.76px;
+                text-align: center;
+                color: black;
+            }
+        }
+
+        &-recommendedCode {
+            font-size: 13px;
+        }
+    }
+    .otherCouponBlock {
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #f4fffc;
+        cursor: pointer;
+        text-align: center;
+        font-size: 12px;
+        line-height: 20px;
+        text-decoration: underline;
+        font-family: "Avenir Next";
+        font-weight: 500;
+        height: 35px;
+        line-height: 35px;
     }
     &_isArabic {
         .cartCouponBlock .appliedCouponBlock .appliedCouponBtn {
@@ -1323,4 +1374,12 @@ padding: auto ;
 }
 .Empty-cart-spacing {
     margin-top: 120px;
+}
+
+.discountPercent {
+    color: #D12229;
+}
+
+.taxesIncluded {
+    color: #9B9B9B;
 }

@@ -85,6 +85,7 @@ export const mapStateToProps = (state) => {
     wishListProducts: state.WishlistReducer.items,
     totalsForProduct: state.CartReducer.cartItems,
     isClubApparelEnabled: state.AppConfig.isClubApparelEnabled,
+    isCouponRequest: state.CartReducer.isCouponRequest,
   };
 };
 
@@ -586,6 +587,9 @@ export class CartPageContainer extends PureComponent {
     const cartWidgetApiData = this.state.cartWidgetApiData;
     const youMayAlsoLikeData = this.state.youMayAlsoLikeData;
     const lookingForThisData = this.state.lookingForThisData;
+    const { config } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     return cartWidgetApiData && youMayAlsoLikeData ? (
       <CartPage
         {...this.props}
@@ -595,6 +599,7 @@ export class CartPageContainer extends PureComponent {
         youMayAlsoLikeData={youMayAlsoLikeData}
         lookingForThisData={lookingForThisData}
         tabMap={tabMap}
+        isSidewideCouponEnabled={isSidewideCouponEnabled}
       />
     ) : (
       <CartPage
@@ -605,6 +610,7 @@ export class CartPageContainer extends PureComponent {
         cartWidgetApiData={[]}
         youMayAlsoLikeData={[]}
         tabMap={tabMap}
+        isSidewideCouponEnabled={isSidewideCouponEnabled}
       />
     );
   }

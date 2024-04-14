@@ -11,6 +11,7 @@ import { FIXED_CURRENCIES } from "./Price.config";
 export const mapStateToProps = (state) => ({
   config: state.AppConfig.config,
   country: state.AppState.country,
+  totals: state.CartReducer.cartTotals,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -39,11 +40,13 @@ export class PriceContainer extends PureComponent {
       config,
       pageType,
       itemType,
+      totals,
     } = this.props;
     const priceObj = Array.isArray(price) ? price[0] : price;
     const [currency, priceData] = Object.entries(priceObj)[0];
     const basePrice = priceData?.["6s_base_price"] || priceData?.default
     const specialPrice = priceData?.["6s_special_price"] || priceData?.default
+    const finalPrice = priceData?.["finalPrice"] || priceData?.default;
     const showDiscountPercentage = config?.countries[country]?.price_show_discount_percent ?? true;
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
     const isSidewideCouponEnabled = config?.countries[country]?.isSidewideCouponEnabled;
@@ -60,6 +63,8 @@ export class PriceContainer extends PureComponent {
       pageType,
       itemType,
       isSidewideCouponEnabled,
+      totals,
+      finalPrice,
     };
   };
 
