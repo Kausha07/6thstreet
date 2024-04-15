@@ -252,7 +252,6 @@
         &_isArabic {
           left: 8px;
           transform: translateX(0);
-          direction: ltr;
         }
       }
 
@@ -268,8 +267,8 @@
         margin-left : 5px;
         font-weight: bold;
         &_isArabic {
-          margin-left : 6px;
-          margin-right: 0px;
+          margin-left : 0px;
+          margin-right: 6px;
         }
       }
     }
