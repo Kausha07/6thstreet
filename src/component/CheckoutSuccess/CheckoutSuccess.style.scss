@@ -537,6 +537,9 @@
         &-Price {
           margin-left: auto;
           font-weight: var(--fw-demi);
+          &_couponSavings {
+            color: #13CA75;
+          }
         }
 
         &-TotalTitles {

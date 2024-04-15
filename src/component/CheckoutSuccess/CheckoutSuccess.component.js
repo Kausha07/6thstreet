@@ -51,6 +51,7 @@ import { getCountryFromUrl, getLanguageFromUrl } from "Util/Url";
 import { isSignedIn as isSignedInFn } from "Util/Auth";
 import { SECONDS_TO_RESEND_OTP } from "./../MyAccountOverlayV1/MyAccountOverlay.config";
 import { lazy, Suspense } from "react";
+import { getSideWideSavingPercentages } from "Component/SideWideCoupon/utils/SideWideCoupon.helper";
 
 const DynamicContentReferralBanner = lazy(() =>
   import(
@@ -776,12 +777,39 @@ export class CheckoutSuccess extends PureComponent {
     );
   }
 
+  renderDiscountPriceLine(price, name, mods, allowZero = false) {
+    if(!price && !allowZero) {
+      return null;
+    }
+
+    const {
+      initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [], quote_currency_code },
+    } = this.props;
+    const finalPrice = getFinalPrice(price, quote_currency_code);
+
+    return (
+      <div block="Totals">
+        <div block="Totals" elem="Title">
+          <span>{name}&nbsp;<span className="discountPercent">
+            {`(-${getSideWideSavingPercentages(total_segments)}%)`}
+            </span></span>
+        </div>
+        <div block="Totals" elem="Price" mods={mods}>
+          {`${
+            parseFloat(price) || price === 0 ? quote_currency_code : ""
+          } ${finalPrice}`}
+        </div>
+      </div>
+    );
+  }
+
   renderTotals = () => {
     const { isArabic } = this.state;
     const {
       cashOnDeliveryFee,
       initialTotals: { coupon_code: couponCode, discount, total_segments = [], items = [] },
       international_shipping_fee,
+      isSidewideCouponEnabled,
     } = this.props;
     let inventory_level_cross_border = false;
     items?.map((item) => {
@@ -796,14 +824,24 @@ export class CheckoutSuccess extends PureComponent {
 
     return (
       <div block="PriceTotals" mods={{ isArabic }}>
-        {this.renderPriceLine(
-          getDiscountFromTotals(total_segments, "subtotal"),
-          __("Subtotal")
-        )}
-         {(!inventory_level_cross_border || !international_shipping_fee) &&
+        {isSidewideCouponEnabled
+          ? this.renderPriceLine(
+              getDiscountFromTotals(total_segments, "total_mrp"),
+              __("Total MRP")
+            )
+          : this.renderPriceLine(
+              getDiscountFromTotals(total_segments, "subtotal"),
+              __("Subtotal")
+            )}
+        {isSidewideCouponEnabled ? this.renderDiscountPriceLine(
+          getDiscountFromTotals(total_segments, "total_discount"),
+          __("Coupon Savings"),
+          { couponSavings: true }
+        ) : null}
+        {(!inventory_level_cross_border || !international_shipping_fee) &&
           this.renderPriceLine(
             getDiscountFromTotals(total_segments, "shipping") || __("FREE"),
-            __("Shipping")
+            __("Shipping Fee")
           )}
         {inventory_level_cross_border &&
           international_shipping_fee &&
@@ -812,12 +850,14 @@ export class CheckoutSuccess extends PureComponent {
               __("FREE"),
             __("International Shipping Fee")
           )}
-        {cashOnDeliveryFee ? this.renderPriceLine(
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
-          getCountryFromUrl() === "QA"
-            ? __("Cash on Receiving Fee")
-            : __("Cash on Delivery Fee")
-        ) : null}
+        {cashOnDeliveryFee
+          ? this.renderPriceLine(
+              getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+              getCountryFromUrl() === "QA"
+                ? __("Cash on Receiving Fee")
+                : __("Cash on Delivery Fee")
+            )
+          : null}
         {this.renderPriceLine(
           getDiscountFromTotals(total_segments, "customerbalance"),
           __("Store Credit")
@@ -826,7 +866,7 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-        {couponCode || (discount && discount != 0)
+        {!isSidewideCouponEnabled && (couponCode || (discount && discount != 0))
           ? this.renderPriceLine(discount, __("Discount"))
           : null}
 

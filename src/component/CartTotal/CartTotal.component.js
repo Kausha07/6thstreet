@@ -88,7 +88,7 @@ function CartTotal(props) {
           {!isInternationalShipment
             ? renderPriceLine(
                 getValueFromTotals(totals, "shipping") || __("FREE"),
-                __("Shipping Charges")
+                __("Shipping Fee")
               )
             : null}
           {isInternationalShipment

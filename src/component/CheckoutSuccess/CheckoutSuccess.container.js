@@ -36,6 +36,7 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
 import { Config } from "Util/API/endpoint/Config/Config.type";
+import { getCountryFromUrl } from "Util/Url";
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
@@ -257,7 +258,9 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isMobileVerification,
     } = this.state;
-    const { isFailed, country } = this.props;
+    const { isFailed, country, config } = this.props;
+    const countryCode = getCountryFromUrl();
+    const isSidewideCouponEnabled = config?.countries[countryCode]?.isSidewideCouponEnabled;
     return {
       clubApparelMember,
       isPhoneVerified,
@@ -265,7 +268,8 @@ export class CheckoutSuccessContainer extends PureComponent {
       phone,
       isFailed,
       isMobileVerification,
-      country
+      country,
+      isSidewideCouponEnabled
     };
   };
 
